@@ -1,0 +1,46 @@
+componentsVersion: VERSION
+projects:
+  concept-fetch:
+    path: components/concept/fetch
+    description: 'An abstract definition of an HTTP client for fetching resources.'
+    publish: true
+  service-glean:
+    path: components/service/glean
+    description: 'A client-side telemetry SDK for collecting metrics and sending them to the Mozilla telemetry service'
+    publish: true
+  support-base:
+    path: components/support/base
+    description: 'Base component containing building blocks for components.'
+    publish: true
+  support-ktx:
+    path: components/support/ktx
+    description: 'A set of Kotlin extensions.'
+    publish: true
+  support-test:
+    path: components/support/test
+    description: 'A collection of helpers for testing components (local unit tests).'
+    publish: true
+  support-utils:
+    path: components/support/utils
+    description: 'A collection of generic helper classes.'
+    publish: true
+  lib-fetch-httpurlconnection:
+    path: components/lib/fetch-httpurlconnection
+    description: 'An implementation of lib-fetch based on HttpUrlConnection.'
+    publish: true
+  lib-fetch-okhttp:
+    path: components/lib/fetch-okhttp
+    description: 'An implementation of lib-fetch based on OkHttp.'
+    publish: true
+  tooling-detekt:
+    path: components/tooling/detekt
+    description: 'Custom Detekt rules for internal use.'
+    publish: false
+  tooling-lint:
+    path: components/tooling/lint
+    description: 'Custom Lint checks for using and writing components.'
+    publish: false
+  tooling-fetch-tests:
+    path: components/tooling/fetch-tests
+    description: 'Test cases for concept-fetch implementations.'
+    publish: false

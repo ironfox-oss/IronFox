@@ -1,0 +1,964 @@
+diff --git a/app/src/main/java/com/adjust/sdk/Adjust.java b/app/src/main/java/com/adjust/sdk/Adjust.java
+new file mode 100644
+index 000000000..ee2489b0c
+--- /dev/null
++++ b/app/src/main/java/com/adjust/sdk/Adjust.java
+@@ -0,0 +1,39 @@
++/*
++ * Copyright (c) 2012-2017 adjust GmbH,
++ * http://www.adjust.com
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining
++ * a copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sublicense, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be
++ * included in all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
++ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++package com.adjust.sdk;
++
++public class Adjust {
++    public static void onCreate(AdjustConfig adjustConfig) {
++    }
++
++    public static void onResume() {
++    }
++
++    public static void onPause() {
++    }
++
++    public static void setEnabled(boolean enabled) {
++    }
++}
+diff --git a/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
+new file mode 100644
+index 000000000..ab6b3badb
+--- /dev/null
++++ b/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (c) 2012-2017 adjust GmbH,
++ * http://www.adjust.com
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining
++ * a copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sublicense, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be
++ * included in all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
++ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++package com.adjust.sdk;
++
++import java.io.Serializable;
++
++public class AdjustAttribution implements Serializable {
++    public String network;
++    public String campaign;
++    public String adgroup;
++    public String creative;
++
++    @Override
++    public boolean equals(Object other) {
++        return false;
++    }
++
++    @Override
++    public int hashCode() {
++        return 0;
++    }
++
++    @Override
++    public String toString() {
++        return "";
++    }
++}
+diff --git a/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/app/src/main/java/com/adjust/sdk/AdjustConfig.java
+new file mode 100644
+index 000000000..6753dd7d9
+--- /dev/null
++++ b/app/src/main/java/com/adjust/sdk/AdjustConfig.java
+@@ -0,0 +1,46 @@
++/*
++ * Copyright (c) 2012-2017 adjust GmbH,
++ * http://www.adjust.com
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining
++ * a copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sublicense, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be
++ * included in all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
++ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++package com.adjust.sdk;
++
++import android.content.Context;
++
++import java.util.List;
++
++public class AdjustConfig {
++    public static final String ENVIRONMENT_SANDBOX = "sandbox";
++    public static final String ENVIRONMENT_PRODUCTION = "production";
++
++    public AdjustConfig(Context context, String appToken, String environment) {
++    }
++
++    public AdjustConfig(Context context, String appToken, String environment, boolean allowSuppressLogLevel) {
++    }
++
++    public void setOnAttributionChangedListener(OnAttributionChangedListener onAttributionChangedListener) {
++    }
++
++    public void setLogLevel(LogLevel logLevel) {
++    }
++}
+diff --git a/app/src/main/java/com/adjust/sdk/LogLevel.java b/app/src/main/java/com/adjust/sdk/LogLevel.java
+new file mode 100644
+index 000000000..27ac3de54
+--- /dev/null
++++ b/app/src/main/java/com/adjust/sdk/LogLevel.java
+@@ -0,0 +1,43 @@
++/*
++ * Copyright (c) 2012-2017 adjust GmbH,
++ * http://www.adjust.com
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining
++ * a copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sublicense, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be
++ * included in all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
++ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++package com.adjust.sdk;
++
++import android.util.Log;
++
++/**
++ * Created by pfms on 11/03/15.
++ */
++public enum LogLevel {
++    VERBOSE(Log.VERBOSE), DEBUG(Log.DEBUG), INFO(Log.INFO), WARN(Log.WARN), ERROR(Log.ERROR), ASSERT(Log.ASSERT), SUPRESS(8);
++    final int androidLogLevel;
++
++    LogLevel(final int androidLogLevel) {
++        this.androidLogLevel = androidLogLevel;
++    }
++
++    public int getAndroidLogLevel() {
++        return androidLogLevel;
++    }
++}
+diff --git a/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java b/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
+new file mode 100644
+index 000000000..7efa1c680
+--- /dev/null
++++ b/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
+@@ -0,0 +1,29 @@
++/*
++ * Copyright (c) 2012-2017 adjust GmbH,
++ * http://www.adjust.com
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining
++ * a copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sublicense, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be
++ * included in all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
++ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++package com.adjust.sdk;
++
++public interface OnAttributionChangedListener {
++    void onAttributionChanged(AdjustAttribution attribution);
++}
+diff --git a/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java b/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java
+new file mode 100644
+index 000000000..0f2a47b14
+--- /dev/null
++++ b/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java
+@@ -0,0 +1,23 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package com.google.android.gms.ads.identifier;
++
++import android.content.Context;
++
++public class AdvertisingIdClient {
++
++    public static final class Info {
++
++        public String getId() {
++            return "";
++        }
++
++    }
++
++    public static Info getAdvertisingIdInfo(Context context) {
++        return new Info();
++    }
++
++}
+diff --git a/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java
+new file mode 100644
+index 000000000..d3bff1249
+--- /dev/null
++++ b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java
+@@ -0,0 +1,8 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package com.google.android.gms.common;
++
++public class GooglePlayServicesNotAvailableException extends Exception {
++}
+diff --git a/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java
+new file mode 100644
+index 000000000..b72a7cdb1
+--- /dev/null
++++ b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java
+@@ -0,0 +1,8 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package com.google.android.gms.common;
++
++public class GooglePlayServicesRepairableException extends Exception {
++}
+diff --git a/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
+new file mode 100644
+index 000000000..4d5fd8153
+--- /dev/null
++++ b/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
+@@ -0,0 +1,42 @@
++// Copyright 2020 Google LLC
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++package com.google.firebase.messaging;
++
++import android.app.Service;
++import android.content.Intent;
++import android.os.Binder;
++import android.os.IBinder;
++
++public class FirebaseMessagingService extends Service {
++
++    private final IBinder mBinder = new Binder();
++
++    public void onMessageReceived(RemoteMessage message) {
++    }
++
++    public void onMessageSent(String msgId) {
++    }
++
++    public void onNewToken(String token) {
++    }
++
++    public void onSendError(String msgId, Exception exception) {
++    }
++
++    @Override
++    public IBinder onBind(Intent intent) {
++        return mBinder;
++    }
++
++}
+diff --git a/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java b/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
+new file mode 100644
+index 000000000..9ad59a31e
+--- /dev/null
++++ b/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
+@@ -0,0 +1,33 @@
++// Copyright 2020 Google LLC
++//
++// Licensed under the Apache License, Version 2.0 (the "License");
++// you may not use this file except in compliance with the License.
++// You may obtain a copy of the License at
++//
++//      http://www.apache.org/licenses/LICENSE-2.0
++//
++// Unless required by applicable law or agreed to in writing, software
++// distributed under the License is distributed on an "AS IS" BASIS,
++// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++// See the License for the specific language governing permissions and
++// limitations under the License.
++package com.google.firebase.messaging;
++
++import android.os.Parcel;
++import android.os.Parcelable;
++import java.util.Map;
++
++public class RemoteMessage implements Parcelable {
++
++    public int describeContents() {
++        return 0;
++    }
++
++    public void writeToParcel(Parcel out, int flags) {
++    }
++
++    public Map<String, String> getData() {
++        return null;
++    }
++
++}
+diff --git a/app/src/main/java/com/leanplum/Leanplum.java b/app/src/main/java/com/leanplum/Leanplum.java
+new file mode 100644
+index 000000000..8149c5017
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/Leanplum.java
+@@ -0,0 +1,91 @@
++/*
++ * Copyright 2016, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum;
++
++import android.content.Context;
++import com.leanplum.callbacks.StartCallback;
++import java.util.Map;
++
++public class Leanplum {
++  public static void setAppIdForDevelopmentMode(String appId, String accessKey) {
++  }
++
++  public static void setAppIdForProductionMode(String appId, String accessKey) {
++  }
++
++  public static void setApplicationContext(Context context) {
++  }
++
++  public static void setDeviceId(String deviceId) {
++  }
++
++  public static void setIsTestModeEnabled(boolean isTestModeEnabled) {
++  }
++
++  public static void setUserAttributes(Map<String, Object> userAttributes) {
++  }
++
++  public static void start(Context context) {
++  }
++
++  public static void start(Context context, StartCallback callback) {
++  }
++
++  public static void start(Context context, Map<String, ?> userAttributes) {
++  }
++
++  public static void start(Context context, String userId) {
++  }
++
++  public static void start(Context context, String userId, StartCallback callback) {
++  }
++
++  public static void start(Context context, String userId, Map<String, ?> userAttributes) {
++  }
++
++  public static synchronized void start(final Context context, String userId, Map<String, ?> attributes, StartCallback response) {
++  }
++
++  static synchronized void start(final Context context, final String userId, final Map<String, ?> attributes, StartCallback response, final Boolean isBackground) {
++  }
++
++  public static void track(final String event, double value, String info, Map<String, ?> params) {
++  }
++
++  public static void track(String event) {
++  }
++
++  public static void track(String event, double value) {
++  }
++
++  public static void track(String event, String info) {
++  }
++
++  public static void track(String event, Map<String, ?> params) {
++  }
++
++  public static void track(String event, double value, Map<String, ?> params) {
++  }
++
++  public static void track(String event, double value, String info) {
++  }
++}
+diff --git a/app/src/main/java/com/leanplum/LeanplumActivityHelper.java b/app/src/main/java/com/leanplum/LeanplumActivityHelper.java
+new file mode 100644
+index 000000000..489871cf5
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/LeanplumActivityHelper.java
+@@ -0,0 +1,29 @@
++/*
++ * Copyright 2013, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum;
++
++import android.app.Application;
++
++public class LeanplumActivityHelper {
++  public static void enableLifecycleCallbacks(final Application app) {
++  }
++}
+diff --git a/app/src/main/java/com/leanplum/LeanplumPushFirebaseMessagingService.java b/app/src/main/java/com/leanplum/LeanplumPushFirebaseMessagingService.java
+new file mode 100644
+index 000000000..57d2f8580
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/LeanplumPushFirebaseMessagingService.java
+@@ -0,0 +1,44 @@
++/*
++ * Copyright 2016, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum;
++
++import android.annotation.SuppressLint;
++import android.os.Build;
++import android.os.Bundle;
++
++import com.google.firebase.messaging.FirebaseMessagingService;
++import com.google.firebase.messaging.RemoteMessage;
++
++@SuppressLint("Registered")
++public class LeanplumPushFirebaseMessagingService extends FirebaseMessagingService {
++  @Override
++  public void onCreate() {
++  }
++
++  @Override
++  public void onNewToken(String token) {
++  }
++
++  @Override
++  public void onMessageReceived(RemoteMessage remoteMessage) {
++  }
++}
+diff --git a/app/src/main/java/com/leanplum/LeanplumPushNotificationCustomizer.java b/app/src/main/java/com/leanplum/LeanplumPushNotificationCustomizer.java
+new file mode 100644
+index 000000000..f827eb180
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/LeanplumPushNotificationCustomizer.java
+@@ -0,0 +1,65 @@
++/*
++ * Copyright 2015, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum;
++
++import android.app.Notification;
++import android.os.Bundle;
++import androidx.annotation.Nullable;
++import androidx.core.app.NotificationCompat;
++
++/**
++ * Implement LeanplumPushNotificationCustomizer to customize the appearance of notifications.
++ */
++public interface LeanplumPushNotificationCustomizer {
++  /**
++   * Implement this method to customize push notification. Please call {@link
++   * LeanplumPushService#setCustomizer(LeanplumPushNotificationCustomizer)} to activate this method.
++   * Leave this method empty if you want to support 2 lines of text
++   * in BigPicture style push notification and implement {@link
++   * LeanplumPushNotificationCustomizer#customize(Notification.Builder, Bundle, Notification.Style)}
++   *
++   * @param builder NotificationCompat.Builder for push notification.
++   * @param notificationPayload Bundle notification payload.
++   */
++  void customize(NotificationCompat.Builder builder, Bundle notificationPayload);
++
++  /**
++   * Implement this method to support 2 lines of text in BigPicture style push notification,
++   * otherwise implement {@link
++   * LeanplumPushNotificationCustomizer#customize(NotificationCompat.Builder, Bundle)}  and leave
++   * this method empty. Please call {@link
++   * LeanplumPushService#setCustomizer(LeanplumPushNotificationCustomizer, boolean)}  with true
++   * value to activate this method.
++   *
++   * @param builder Notification.Builder for push notification.
++   * @param notificationPayload Bundle notification payload.
++   * @param notificationStyle - Notification.BigPictureStyle or null - BigPicture style for current
++   * push notification. Call ((Notification.BigPictureStyle) notificationStyle).bigLargeIcon(largeIcon)
++   * if you want to set large icon on expanded push notification. If notificationStyle wasn't null
++   * it will be set to push notification. Note: If you call notificationStyle = new
++   * Notification.BigPictureStyle() or other Notification.Style - there will be no support 2 lines
++   * of text on BigPicture push and you need to call builder.setStyle(notificationStyle) to set
++   * yours expanded layout for push notification.
++   */
++  void customize(Notification.Builder builder, Bundle notificationPayload,
++      @Nullable Notification.Style notificationStyle);
++}
+diff --git a/app/src/main/java/com/leanplum/LeanplumPushService.java b/app/src/main/java/com/leanplum/LeanplumPushService.java
+new file mode 100644
+index 000000000..436cba348
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/LeanplumPushService.java
+@@ -0,0 +1,31 @@
++/*
++ * Copyright 2014, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum;
++
++public class LeanplumPushService {
++  public static void setCustomizer(LeanplumPushNotificationCustomizer customizer) {
++  }
++
++  public static void setCustomizer(LeanplumPushNotificationCustomizer customizer,
++      boolean useNotificationBuilderCustomizer) {
++  }
++}
+diff --git a/app/src/main/java/com/leanplum/annotations/Parser.java b/app/src/main/java/com/leanplum/annotations/Parser.java
+new file mode 100644
+index 000000000..2bb6d2b2a
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/annotations/Parser.java
+@@ -0,0 +1,27 @@
++/*
++ * Copyright 2013, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum.annotations;
++
++public class Parser {
++  public static void parseVariables(Object... instances) {
++  }
++}
+diff --git a/app/src/main/java/com/leanplum/callbacks/StartCallback.java b/app/src/main/java/com/leanplum/callbacks/StartCallback.java
+new file mode 100644
+index 000000000..30d437d30
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/callbacks/StartCallback.java
+@@ -0,0 +1,41 @@
++/*
++ * Copyright 2013, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum.callbacks;
++
++/**
++ * Callback that gets run when Leanplum is started.
++ *
++ * @author Andrew First
++ */
++public abstract class StartCallback implements Runnable {
++  private boolean success;
++
++  public void setSuccess(boolean success) {
++    this.success = success;
++  }
++
++  public void run() {
++    this.onResponse(success);
++  }
++
++  public abstract void onResponse(boolean success);
++}
+diff --git a/app/src/main/java/com/leanplum/internal/LeanplumInternal.java b/app/src/main/java/com/leanplum/internal/LeanplumInternal.java
+new file mode 100644
+index 000000000..8ca36a6b4
+--- /dev/null
++++ b/app/src/main/java/com/leanplum/internal/LeanplumInternal.java
+@@ -0,0 +1,33 @@
++/*
++ * Copyright 2016, Leanplum, Inc. All rights reserved.
++ *
++ * Licensed to the Apache Software Foundation (ASF) under one
++ * or more contributor license agreements.  See the NOTICE file
++ * distributed with this work for additional information
++ * regarding copyright ownership.  The ASF licenses this file
++ * to you under the Apache License, Version 2.0 (the
++ * "License"); you may not use this file except in compliance
++ * with the License.  You may obtain a copy of the License at
++ *
++ *        http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing,
++ * software distributed under the License is distributed on an
++ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied.  See the License for the
++ * specific language governing permissions and limitations
++ * under the License.
++ */
++
++package com.leanplum.internal;
++
++public class LeanplumInternal {
++  public static void setCalledStart(boolean calledStart) {
++  }
++
++  public static void setHasStarted(boolean hasStarted) {
++  }
++
++  public static void setStartedInBackground(boolean startedInBackground) {
++  }
++}
+diff --git a/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
+new file mode 100644
+index 000000000..b50a6f03a
+--- /dev/null
++++ b/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
+@@ -0,0 +1,32 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.lib.push.firebase
++
++import android.content.Context
++import com.google.firebase.messaging.FirebaseMessagingService
++import com.google.firebase.messaging.RemoteMessage
++import mozilla.components.concept.push.PushService
++
++abstract class AbstractFirebasePushService() : FirebaseMessagingService(), PushService {
++
++    override fun start(context: Context) {
++    }
++
++    override fun onNewToken(newToken: String) {
++    }
++
++    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
++    }
++
++    final override fun stop() {
++    }
++
++    override fun deleteToken() {
++    }
++
++    override fun isServiceAvailable(context: Context): Boolean {
++        return false
++    }
++}
+diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
+index 19b1f6ec3..e1779b9dd 100644
+--- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
++++ b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
+@@ -7,7 +7,6 @@ package org.mozilla.fenix.components
+ import android.app.Activity
+ import android.content.Context
+ import androidx.annotation.VisibleForTesting
+-import com.google.android.play.core.review.ReviewManagerFactory
+ import kotlinx.coroutines.Dispatchers.Main
+ import kotlinx.coroutines.withContext
+ import org.mozilla.fenix.utils.Settings
+@@ -44,17 +43,7 @@ class ReviewPromptController(
+     private val context: Context,
+     private val reviewSettings: ReviewSettings,
+     private val timeNowInMillis: () -> Long = { System.currentTimeMillis() },
+-    private val tryPromptReview: suspend (Activity) -> Unit = { activity ->
+-        val manager = ReviewManagerFactory.create(context)
+-        val flow = manager.requestReviewFlow()
+-
+-        withContext(Main) {
+-            flow.addOnCompleteListener {
+-                if (it.isSuccessful) {
+-                    manager.launchReviewFlow(activity, it.result)
+-                }
+-            }
+-        }
++    private val tryPromptReview: suspend (Activity) -> Unit = { _ ->
+     }
+ ) {
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 095242545..9bfbd6dd4 100644
+--- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -269,17 +269,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     val isTelemetryEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_telemetry),
+-        default = true
++        default = false
+     )
+ 
+     val isMarketingTelemetryEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
+-        default = true
++        default = false
+     )
+ 
+     val isExperimentationEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_experimentation),
+-        default = true
++        default = false
+     )
+ 
+     private var trackingProtectionOnboardingShownThisSession = false
+diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
+index e1f18cd8c..11104f2f6 100644
+--- a/app/src/main/res/xml/preferences.xml
++++ b/app/src/main/res/xml/preferences.xml
+@@ -119,11 +119,6 @@
+             android:key="@string/pref_key_notifications"
+             android:title="@string/preferences_notifications" />
+ 
+-        <androidx.preference.Preference
+-            android:icon="@drawable/ic_data_collection"
+-            android:key="@string/pref_key_data_choices"
+-            android:title="@string/preferences_data_collection" />
+-
+     </androidx.preference.PreferenceCategory>
+ 
+     <PreferenceCategory
+@@ -167,11 +162,6 @@
+         android:title="@string/preferences_category_about"
+         app:iconSpaceReserved="false"
+         android:layout="@layout/preference_category_main_style">
+-        <androidx.preference.Preference
+-            android:icon="@drawable/ic_bookmark_outline"
+-            android:key="@string/pref_key_rate"
+-            android:title="@string/preferences_rate" />
+-
+         <androidx.preference.Preference
+             android:icon="@drawable/ic_info"
+             android:key="@string/pref_key_about"
+diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
+index c10b9775e..415d0b5bd 100644
+--- a/buildSrc/src/main/java/Dependencies.kt
++++ b/buildSrc/src/main/java/Dependencies.kt
+@@ -68,8 +68,6 @@ object Deps {
+     const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
+ 
+     const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
+-    const val mozilla_browser_engine_gecko_nightly = "org.mozilla.components:browser-engine-gecko-nightly:${Versions.mozilla_android_components}"
+-    const val mozilla_browser_engine_gecko_beta = "org.mozilla.components:browser-engine-gecko-beta:${Versions.mozilla_android_components}"
+     const val mozilla_browser_engine_gecko_release = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
+     const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
+     const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
+@@ -133,7 +131,6 @@ object Deps {
+     const val mozilla_ui_widgets = "org.mozilla.components:ui-widgets:${Versions.mozilla_android_components}"
+ 
+     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
+-    const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
+     const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
+ 
+     const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
+@@ -151,9 +148,6 @@ object Deps {
+     const val sentry = "io.sentry:sentry-android:${Versions.sentry}"
+     const val leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
+ 
+-    const val leanplum_core = "com.leanplum:leanplum-core:${Versions.leanplum}"
+-    const val leanplum_fcm = "com.leanplum:leanplum-fcm:${Versions.leanplum}"
+-
+     const val androidx_annotation = "androidx.annotation:annotation:${Versions.androidx_annotation}"
+     const val androidx_biometric = "androidx.biometric:biometric:${Versions.androidx_biometric}"
+     const val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
+@@ -177,9 +171,6 @@ object Deps {
+     const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
+     const val google_material = "com.google.android.material:material:${Versions.google_material}"
+ 
+-    const val adjust = "com.adjust.sdk:adjust-android:${Versions.adjust}"
+-    const val installreferrer = "com.android.installreferrer:installreferrer:${Versions.installreferrer}"
+-
+     const val junit = "junit:junit:${Versions.junit}"
+     const val mockk = "io.mockk:mockk:${Versions.mockk}"
+ 
+@@ -209,11 +200,6 @@ object Deps {
+     const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
+     const val robolectric = "org.robolectric:robolectric:4.3.1"
+ 
+-    const val google_ads_id = "com.google.android.gms:play-services-ads-identifier:${Versions.google_ads_id_version}"
+-
+-    // Required for in-app reviews
+-    const val google_play_store = "com.google.android.play:core:${Versions.google_play_store_version}"
+-
+     const val lottie = "com.airbnb.android:lottie:${Versions.airbnb_lottie}"
+ 
+     const val detektApi = "io.gitlab.arturbosch.detekt:detekt-api:${Versions.detekt}"
