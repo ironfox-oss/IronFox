@@ -68,7 +68,8 @@ sed -i \
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
 # Let it be Fennec
-sed -i -e 's/Firefox/Fennec/g' app/src/*/res/values*/*strings.xml
+sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
+    app/src/*/res/values*/*strings.xml
 
 # Replace proprietary artwork
 rm app/src/release/res/drawable/ic_launcher_foreground.xml
