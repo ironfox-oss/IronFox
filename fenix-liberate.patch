@@ -380,10 +380,10 @@ index 000000000..9ad59a31e
 +}
 diff --git a/app/src/main/java/com/leanplum/Leanplum.java b/app/src/main/java/com/leanplum/Leanplum.java
 new file mode 100644
-index 000000000..8149c5017
+index 000000000..ab854e03a
 --- /dev/null
 +++ b/app/src/main/java/com/leanplum/Leanplum.java
-@@ -0,0 +1,91 @@
+@@ -0,0 +1,99 @@
 +/*
 + * Copyright 2016, Leanplum, Inc. All rights reserved.
 + *
@@ -412,6 +412,14 @@ index 000000000..8149c5017
 +import java.util.Map;
 +
 +public class Leanplum {
++  public static String getDeviceId() {
++    return null;
++  }
++
++  public static String getUserId() {
++    return null;
++  }
++
 +  public static void setAppIdForDevelopmentMode(String appId, String accessKey) {
 +  }
 +
