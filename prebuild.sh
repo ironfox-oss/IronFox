@@ -215,6 +215,9 @@ fi
 sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/mobile.js
 cat << EOF >> mobile/android/app/mobile.js
 
+// Disable Encrypted Media Extensions
+pref("media.eme.enabled", false);
+
 // Disable Gecko Media Plugins
 pref("media.gmp-provider.enabled", false);
 
