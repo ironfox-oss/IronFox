@@ -54,11 +54,17 @@ sed -i \
     -e '/Deps.google_play_store/d' \
     app/build.gradle
 
+# Disable crash reporting
+sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
+
+# Disable MetricController
+sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
+
 # Use mavenLocal()
 sed -i -e '/content {/,/}$/d' build.gradle
 localize_maven
 
-# We need only GeckoView
+# We need only stable GeckoView
 sed -i \
     -e '/Deps.mozilla_browser_engine_gecko_nightly/d' \
     -e '/Deps.mozilla_browser_engine_gecko_beta/d' \
