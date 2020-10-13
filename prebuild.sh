@@ -45,6 +45,9 @@ sed -i \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
     -e "s/Config.generateFennecVersionCode(abi)/$2/" \
     app/build.gradle
+sed -i \
+    -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
+    app/src/release/res/xml/shortcuts.xml
 
 # Remove proprietary and tracking libraries
 sed -i \
