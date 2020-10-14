@@ -34,7 +34,7 @@ rustup default 1.46.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
-cargo install --force --vers 0.14.5 cbindgen
+cargo install --force --vers 0.15.0 cbindgen
 
 # Set up Python
 PYENV_ROOT=$(realpath "$pyenv")
