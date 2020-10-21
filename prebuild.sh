@@ -84,6 +84,8 @@ sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
 rm app/src/release/res/drawable/ic_launcher_foreground.xml
 rm app/src/release/res/mipmap-*/ic_launcher.png
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
+sed -i -e '/"ic_launcher_background"/s/#ff20123a/#ff0092c2/' \
+    app/src/release/res/values/colors.xml
 find "$patches/fenix-overlay" -type f | while read -r src; do
     dst="app/src/release/${src#$patches/fenix-overlay/}"
     mkdir -p "$(dirname "$dst")"
