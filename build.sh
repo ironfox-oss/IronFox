@@ -30,7 +30,7 @@ source "$(dirname "$0")/paths.sh"
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090
 source "$HOME/.cargo/env"
-rustup default 1.46.0
+rustup default 1.47.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -41,8 +41,8 @@ PYENV_ROOT=$(realpath "$pyenv")
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_ROOT
 eval "$(pyenv init -)"
-pyenv install 3.8.5
-pyenv global 3.8.5
+pyenv install 3.9.0
+pyenv global 3.9.0
 
 pushd "$mozilla_release"
 LLVM_OBJDUMP=$(command -v llvm-objdump-6.0)

@@ -20,6 +20,10 @@ projects:
     path: components/support/test
     description: 'A collection of helpers for testing components (local unit tests).'
     publish: true
+  support-android-test:
+    path: components/support/android-test
+    description: 'A collection of helpers for testing components from instrumented (on device) tests.'
+    publish: true
   support-utils:
     path: components/support/utils
     description: 'A collection of generic helper classes.'
@@ -44,3 +48,8 @@ projects:
     path: components/tooling/fetch-tests
     description: 'Test cases for concept-fetch implementations.'
     publish: false
+  tooling-glean-gradle:
+    path: components/tooling/glean-gradle-plugin
+    description: 'A Gradle plugin to generate code for Glean metrics.'
+    publish: true
+    artifact-type: jar
