@@ -190,6 +190,14 @@ popd
 
 pushd "$mozilla_release"
 
+# Remove proprietary libraries
+sed -i \
+    -e '/com.google.android.gms/d' \
+    mobile/android/geckoview/build.gradle
+
+# Patch the use of proprietary libraries
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
+
 # Remove Mozilla repositories substitution and explicitly add the required ones
 sed -i \
     -e '/maven {/,/}$/d; /gradle.mozconfig.substs/,/}$/d' \

@@ -865,10 +865,10 @@ index 19b1f6ec3..e1779b9dd 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 095242545..9bfbd6dd4 100644
+index f1a50f454..dd3345a39 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -269,17 +269,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -286,17 +286,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -890,7 +890,7 @@ index 095242545..9bfbd6dd4 100644
  
      private var trackingProtectionOnboardingShownThisSession = false
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index e1f18cd8c..11104f2f6 100644
+index 62403f75d..e6f94e259 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
 @@ -119,11 +119,6 @@
@@ -905,7 +905,7 @@ index e1f18cd8c..11104f2f6 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -167,11 +162,6 @@
+@@ -172,11 +167,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_main_style">
@@ -918,10 +918,10 @@ index e1f18cd8c..11104f2f6 100644
              android:icon="@drawable/ic_info"
              android:key="@string/pref_key_about"
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index c10b9775e..415d0b5bd 100644
+index 67c256090..810c6b894 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -68,8 +68,6 @@ object Deps {
+@@ -74,8 +74,6 @@ object Deps {
      const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
  
      const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
@@ -930,7 +930,7 @@ index c10b9775e..415d0b5bd 100644
      const val mozilla_browser_engine_gecko_release = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
      const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
      const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
-@@ -133,7 +131,6 @@ object Deps {
+@@ -140,7 +138,6 @@ object Deps {
      const val mozilla_ui_widgets = "org.mozilla.components:ui-widgets:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
@@ -938,7 +938,7 @@ index c10b9775e..415d0b5bd 100644
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
-@@ -151,9 +148,6 @@ object Deps {
+@@ -158,9 +155,6 @@ object Deps {
      const val sentry = "io.sentry:sentry-android:${Versions.sentry}"
      const val leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
  
@@ -948,17 +948,17 @@ index c10b9775e..415d0b5bd 100644
      const val androidx_annotation = "androidx.annotation:annotation:${Versions.androidx_annotation}"
      const val androidx_biometric = "androidx.biometric:biometric:${Versions.androidx_biometric}"
      const val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
-@@ -177,9 +171,6 @@ object Deps {
+@@ -184,9 +178,6 @@ object Deps {
      const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
      const val google_material = "com.google.android.material:material:${Versions.google_material}"
  
 -    const val adjust = "com.adjust.sdk:adjust-android:${Versions.adjust}"
 -    const val installreferrer = "com.android.installreferrer:installreferrer:${Versions.installreferrer}"
 -
-     const val junit = "junit:junit:${Versions.junit}"
-     const val mockk = "io.mockk:mockk:${Versions.mockk}"
+     const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
-@@ -209,11 +200,6 @@ object Deps {
+     const val junit = "junit:junit:${Versions.junit}"
+@@ -218,11 +209,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:4.3.1"
  
@@ -967,6 +967,6 @@ index c10b9775e..415d0b5bd 100644
 -    // Required for in-app reviews
 -    const val google_play_store = "com.google.android.play:core:${Versions.google_play_store_version}"
 -
-     const val lottie = "com.airbnb.android:lottie:${Versions.airbnb_lottie}"
- 
      const val detektApi = "io.gitlab.arturbosch.detekt:detekt-api:${Versions.detekt}"
+     const val detektTest = "io.gitlab.arturbosch.detekt:detekt-test:${Versions.detekt}"
+     const val junitApi = "org.junit.jupiter:junit-jupiter-api:${Versions.junit}"
