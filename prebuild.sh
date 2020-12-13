@@ -95,11 +95,6 @@ sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/engine/GeckoProvider.kt
 
-# Expose "Wait Until First Paint To Show Page Content" secret setting
-sed -i \
-    -e 's/waitUntilPaintToDraw = Config.channel.isNightlyOrDebug/waitUntilPaintToDraw = true/' \
-    app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-
 # Expose "Custom Add-on collection" setting
 sed -i \
     -e 's/Config.channel.isNightlyOrDebug && //' \
