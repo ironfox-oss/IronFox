@@ -206,9 +206,8 @@ sed -i \
     build.gradle
 
 # Configure
-sed -i -e "s/'libclang\.so\.1'/'libclang.so.*'/" build/moz.configure/bindgen.configure
-sed -i -e "/check_android_tools('emulator'/d" build/moz.configure/android-sdk.configure
-sed -i -e "s/'r20'/'r20b'/" python/mozboot/mozboot/android.py
+sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+sed -i -e 's/"r20"/"r20b"/' python/mozboot/mozboot/android.py
 ndk="${ANDROID_NDK%r[1-9][0-9]*}r20b"
 cat << EOF > mozconfig
 ac_add_options --disable-crashreporter

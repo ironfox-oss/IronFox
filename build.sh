@@ -30,11 +30,12 @@ source "$(dirname "$0")/paths.sh"
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090
 source "$HOME/.cargo/env"
-rustup default 1.47.0
+rustup default 1.48.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
 cargo install --force --vers 0.15.0 cbindgen
+cargo install --force --vers 0.6.1 uniffi_bindgen
 
 # Set up Python
 PYENV_ROOT=$(realpath "$pyenv")
