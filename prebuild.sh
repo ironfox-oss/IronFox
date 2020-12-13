@@ -100,6 +100,14 @@ sed -i \
     -e 's/waitUntilPaintToDraw = Config.channel.isNightlyOrDebug/waitUntilPaintToDraw = true/' \
     app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
+# Expose "Custom Add-on collection" setting
+sed -i \
+    -e 's/Config.channel.isNightlyOrDebug && //' \
+    app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i \
+    -e 's/Config.channel.isNightlyOrDebug && //' \
+    app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+
 # Set up target parameters
 case $(echo "$2" | cut -c 5) in
     0)
