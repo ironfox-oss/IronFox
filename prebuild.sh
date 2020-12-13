@@ -142,10 +142,6 @@ sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
 # Glean
 #
 
-pushd "$glean_as"
-echo "rust.targets=$rusttarget" >> local.properties
-localize_maven
-popd
 pushd "$glean"
 echo "rust.targets=$rusttarget" >> local.properties
 localize_maven
