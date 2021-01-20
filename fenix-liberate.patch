@@ -865,7 +865,7 @@ index 19b1f6ec3..e1779b9dd 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c1b7f4ae7..e868dbdfd 100644
+index 008f42687..702395976 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -223,17 +223,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -882,7 +882,7 @@ index c1b7f4ae7..e868dbdfd 100644
 +        default = false
      )
  
-     val isExperimentationEnabled by booleanPreference(
+     var isExperimentationEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_experimentation),
 -        default = true
 +        default = false
@@ -890,7 +890,7 @@ index c1b7f4ae7..e868dbdfd 100644
  
      private var trackingProtectionOnboardingShownThisSession = false
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index d2b4fc4fd..6d571fc09 100644
+index e2b1c7688..c8476fdba 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
 @@ -118,11 +118,6 @@
@@ -905,20 +905,20 @@ index d2b4fc4fd..6d571fc09 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -171,11 +166,6 @@
-         android:title="@string/preferences_category_about"
+@@ -172,11 +167,6 @@
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_cat_style">
--        <androidx.preference.Preference
+         <androidx.preference.Preference
 -            android:icon="@drawable/ic_bookmark_outline"
 -            android:key="@string/pref_key_rate"
 -            android:title="@string/preferences_rate" />
 -
-         <androidx.preference.Preference
+-        <androidx.preference.Preference
              android:icon="@drawable/ic_info"
              android:key="@string/pref_key_about"
+             android:title="@string/preferences_about" />
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 52d3dcfa6..2a841942b 100644
+index 38b482f51..62e0edb1a 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
 @@ -76,8 +76,6 @@ object Deps {
@@ -931,14 +931,14 @@ index 52d3dcfa6..2a841942b 100644
      const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
      const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
 @@ -142,7 +140,6 @@ object Deps {
-     const val mozilla_ui_widgets = "org.mozilla.components:ui-widgets:${Versions.mozilla_android_components}"
+     const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
 -    const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
-@@ -160,9 +157,6 @@ object Deps {
+@@ -161,9 +158,6 @@ object Deps {
      const val sentry = "io.sentry:sentry-android:${Versions.sentry}"
      const val leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
  
@@ -948,7 +948,7 @@ index 52d3dcfa6..2a841942b 100644
      const val androidx_annotation = "androidx.annotation:annotation:${Versions.androidx_annotation}"
      const val androidx_biometric = "androidx.biometric:biometric:${Versions.androidx_biometric}"
      const val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
-@@ -186,9 +180,6 @@ object Deps {
+@@ -187,9 +181,6 @@ object Deps {
      const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
      const val google_material = "com.google.android.material:material:${Versions.google_material}"
  
@@ -958,7 +958,7 @@ index 52d3dcfa6..2a841942b 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -220,11 +211,6 @@ object Deps {
+@@ -221,11 +212,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  
