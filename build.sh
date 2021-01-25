@@ -53,8 +53,12 @@ export MACH_USE_SYSTEM_PYTHON=yes
 gradle publishWithGeckoBinariesReleasePublicationToMavenLocal
 popd
 
-pushd "$glean"
+pushd "$glean_as"
 export TARGET_CFLAGS=-DNDEBUG
+gradle publishToMavenLocal
+popd
+
+pushd "$glean"
 gradle publishToMavenLocal
 popd
 
