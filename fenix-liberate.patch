@@ -865,7 +865,7 @@ index 19b1f6ec3..e1779b9dd 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 008f42687..702395976 100644
+index e12cc12f7..770b48394 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -223,17 +223,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -890,10 +890,10 @@ index 008f42687..702395976 100644
  
      private var trackingProtectionOnboardingShownThisSession = false
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index e2b1c7688..c8476fdba 100644
+index 16ae3f11e..84ee88031 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
-@@ -118,11 +118,6 @@
+@@ -119,11 +119,6 @@
              android:key="@string/pref_key_notifications"
              android:title="@string/preferences_notifications" />
  
@@ -917,8 +917,44 @@ index e2b1c7688..c8476fdba 100644
              android:icon="@drawable/ic_info"
              android:key="@string/pref_key_about"
              android:title="@string/preferences_about" />
+diff --git a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+index 9b8c85283..0bbfb7260 100644
+--- a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
++++ b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+@@ -3,7 +3,8 @@
+    - License, v. 2.0. If a copy of the MPL was not distributed with this
+    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+ <androidx.preference.PreferenceScreen
+-        xmlns:android="http://schemas.android.com/apk/res/android">
++        xmlns:android="http://schemas.android.com/apk/res/android"
++        xmlns:app="http://schemas.android.com/apk/res-auto">
+     <androidx.preference.Preference
+             android:icon="@drawable/ic_camera_enabled"
+             android:key="@string/pref_key_phone_feature_camera"
+@@ -38,7 +39,8 @@
+         android:icon="@drawable/ic_link"
+         android:key="@string/pref_key_browser_feature_media_key_system_access"
+         android:title="@string/preference_phone_feature_media_key_system_access"
+-        android:summary="@string/preference_option_phone_feature_ask_to_allow"/>
++        android:summary="@string/preference_option_phone_feature_ask_to_allow"
++        app:isPreferenceVisible="false"/>
+ 
+     <androidx.preference.Preference
+         android:icon="@drawable/ic_autoplay"
+diff --git a/app/src/main/res/xml/site_permissions_preferences.xml b/app/src/main/res/xml/site_permissions_preferences.xml
+index b51956e70..66da0a159 100644
+--- a/app/src/main/res/xml/site_permissions_preferences.xml
++++ b/app/src/main/res/xml/site_permissions_preferences.xml
+@@ -48,6 +48,7 @@
+         android:key="@string/pref_key_browser_feature_media_key_system_access"
+         android:title="@string/preference_phone_feature_media_key_system_access"
+         android:summary="@string/preference_option_phone_feature_ask_to_allow"
++        app:isPreferenceVisible="false"
+         app:allowDividerBelow="true"/>
+ 
+     <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 38b482f51..62e0edb1a 100644
+index 27d9d713f..6b38cce18 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
 @@ -76,8 +76,6 @@ object Deps {
@@ -930,7 +966,7 @@ index 38b482f51..62e0edb1a 100644
      const val mozilla_browser_engine_gecko_release = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
      const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
      const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
-@@ -142,7 +140,6 @@ object Deps {
+@@ -143,7 +141,6 @@ object Deps {
      const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
@@ -938,7 +974,7 @@ index 38b482f51..62e0edb1a 100644
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
-@@ -161,9 +158,6 @@ object Deps {
+@@ -162,9 +159,6 @@ object Deps {
      const val sentry = "io.sentry:sentry-android:${Versions.sentry}"
      const val leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
  
@@ -948,7 +984,7 @@ index 38b482f51..62e0edb1a 100644
      const val androidx_annotation = "androidx.annotation:annotation:${Versions.androidx_annotation}"
      const val androidx_biometric = "androidx.biometric:biometric:${Versions.androidx_biometric}"
      const val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
-@@ -187,9 +181,6 @@ object Deps {
+@@ -188,9 +182,6 @@ object Deps {
      const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
      const val google_material = "com.google.android.material:material:${Versions.google_material}"
  
@@ -958,7 +994,7 @@ index 38b482f51..62e0edb1a 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -221,11 +212,6 @@ object Deps {
+@@ -222,11 +213,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  

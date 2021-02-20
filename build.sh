@@ -30,7 +30,7 @@ source "$(dirname "$0")/paths.sh"
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090
 source "$HOME/.cargo/env"
-rustup default 1.49.0
+rustup default 1.50.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
