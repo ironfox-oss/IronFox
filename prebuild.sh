@@ -63,9 +63,11 @@ sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 # Disable MetricController
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 
-# Use mavenLocal()
-sed -i -e '/content {/,/}$/d' build.gradle
-localize_maven
+# Replace custom Maven repositories with mavenLocal()
+sed -i \
+    -e '/repositories {/a\        mavenLocal()' \
+    -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
+    -e '/^ \{12\}maven {/,/^ \{12\}}/d' build.gradle
 
 # We need only stable GeckoView
 sed -i \
@@ -185,6 +187,7 @@ sed -i \
     -e 's/ext.libsRootDir/rootProject.rootDir/' \
     build.gradle
 localize_maven
+sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle components/external/nimbus-sdk/android/build.gradle
 popd
 
 #
@@ -211,8 +214,8 @@ sed -i \
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
-sed -i -e 's/"r20"/"r20b"/' python/mozboot/mozboot/android.py
-ndk="${ANDROID_NDK%r[1-9][0-9]*}r20b"
+sed -i -e 's/"r21d"/"r21e"/' python/mozboot/mozboot/android.py
+ndk=$ANDROID_NDK
 cat << EOF > mozconfig
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug

@@ -34,15 +34,15 @@ rustup default 1.50.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
-cargo install --force --vers 0.16.0 cbindgen
+cargo install --force --vers 0.18.0 cbindgen
 
 # Set up Python
 PYENV_ROOT=$(realpath "$pyenv")
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_ROOT
 eval "$(pyenv init -)"
-pyenv install 3.9.1
-pyenv global 3.9.1
+pyenv install 3.9.2
+pyenv global 3.9.2
 
 pushd "$mozilla_release"
 LLVM_OBJDUMP=$(command -v llvm-objdump-6.0)
@@ -74,7 +74,7 @@ export NSS_STATIC=1
 ./libs/verify-desktop-environment.sh
 ./libs/verify-android-environment.sh
 pushd components/external/nimbus-sdk
-cargo install --force --vers 0.5.0 uniffi_bindgen
+cargo install --force --vers 0.7.0 uniffi_bindgen
 cargo build
 popd
 gradle publishToMavenLocal
