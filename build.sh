@@ -45,8 +45,6 @@ pyenv install 3.9.2
 pyenv global 3.9.2
 
 pushd "$mozilla_release"
-LLVM_OBJDUMP=$(command -v llvm-objdump-6.0)
-export LLVM_OBJDUMP
 export MACH_USE_SYSTEM_PYTHON=yes
 ./mach build
 gradle publishWithGeckoBinariesReleasePublicationToMavenLocal
