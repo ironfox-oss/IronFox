@@ -26,23 +26,26 @@ source "$(dirname "$0")/paths.sh"
 # auto-publication workflow because the latter does not work for Gradle
 # plugins (Glean).
 
+# Set up Android SDK
+"$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;30.0.2'
+
 # Set up Rust
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090
 source "$HOME/.cargo/env"
-rustup default 1.50.0
+rustup default 1.51.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
-cargo install --force --vers 0.18.0 cbindgen
+cargo install --force --vers 0.19.0 cbindgen
 
 # Set up Python
 PYENV_ROOT=$(realpath "$pyenv")
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_ROOT
 eval "$(pyenv init -)"
-pyenv install 3.9.2
-pyenv global 3.9.2
+pyenv install 3.9.4
+pyenv global 3.9.4
 
 pushd "$mozilla_release"
 export MACH_USE_SYSTEM_PYTHON=yes

@@ -833,24 +833,46 @@ index 000000000..b50a6f03a
 +        return false
 +    }
 +}
+diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index c451185f9..980a51c03 100644
+--- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -8,7 +8,6 @@ import android.app.Application
+ import android.content.Context
+ import android.content.Intent
+ import androidx.core.net.toUri
+-import com.google.android.play.core.review.ReviewManagerFactory
+ import mozilla.components.feature.addons.AddonManager
+ import mozilla.components.feature.addons.amo.AddonCollectionProvider
+ import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
+@@ -155,7 +154,6 @@ class Components(private val context: Context) {
+ 
+     val reviewPromptController by lazyMonitored {
+         ReviewPromptController(
+-            manager = ReviewManagerFactory.create(context),
+             reviewSettings = FenixReviewSettings(settings)
+         )
+     }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-index 19b1f6ec3..e1779b9dd 100644
+index 2e8c185be..201996668 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-@@ -7,7 +7,6 @@ package org.mozilla.fenix.components
+@@ -6,7 +6,6 @@ package org.mozilla.fenix.components
+ 
  import android.app.Activity
- import android.content.Context
  import androidx.annotation.VisibleForTesting
--import com.google.android.play.core.review.ReviewManagerFactory
+-import com.google.android.play.core.review.ReviewManager
  import kotlinx.coroutines.Dispatchers.Main
  import kotlinx.coroutines.withContext
  import org.mozilla.fenix.utils.Settings
-@@ -44,17 +43,7 @@ class ReviewPromptController(
-     private val context: Context,
+@@ -40,19 +39,9 @@ class FenixReviewSettings(
+  * Controls the Review Prompt behavior.
+  */
+ class ReviewPromptController(
+-    private val manager: ReviewManager,
      private val reviewSettings: ReviewSettings,
      private val timeNowInMillis: () -> Long = { System.currentTimeMillis() },
 -    private val tryPromptReview: suspend (Activity) -> Unit = { activity ->
--        val manager = ReviewManagerFactory.create(context)
 -        val flow = manager.requestReviewFlow()
 -
 -        withContext(Main) {
@@ -865,10 +887,10 @@ index 19b1f6ec3..e1779b9dd 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index e12cc12f7..770b48394 100644
+index 24478b24a..b98030d18 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -223,17 +223,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -217,17 +217,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -905,18 +927,18 @@ index 16ae3f11e..84ee88031 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -172,11 +167,6 @@
+@@ -171,11 +166,6 @@
+         android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_cat_style">
-         <androidx.preference.Preference
+-        <androidx.preference.Preference
 -            android:icon="@drawable/ic_bookmark_outline"
 -            android:key="@string/pref_key_rate"
 -            android:title="@string/preferences_rate" />
 -
--        <androidx.preference.Preference
+         <androidx.preference.Preference
              android:icon="@drawable/ic_info"
              android:key="@string/pref_key_about"
-             android:title="@string/preferences_about" />
 diff --git a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 index 9b8c85283..0bbfb7260 100644
 --- a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
@@ -954,7 +976,7 @@ index b51956e70..66da0a159 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 27d9d713f..6b38cce18 100644
+index 3e117e06c..2b9d2c439 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
 @@ -76,8 +76,6 @@ object Deps {
@@ -966,7 +988,7 @@ index 27d9d713f..6b38cce18 100644
      const val mozilla_browser_engine_gecko_release = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
      const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
      const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
-@@ -143,7 +141,6 @@ object Deps {
+@@ -147,7 +145,6 @@ object Deps {
      const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
@@ -974,7 +996,7 @@ index 27d9d713f..6b38cce18 100644
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
-@@ -162,9 +159,6 @@ object Deps {
+@@ -166,9 +163,6 @@ object Deps {
      const val sentry = "io.sentry:sentry-android:${Versions.sentry}"
      const val leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
  
@@ -984,7 +1006,7 @@ index 27d9d713f..6b38cce18 100644
      const val androidx_annotation = "androidx.annotation:annotation:${Versions.androidx_annotation}"
      const val androidx_biometric = "androidx.biometric:biometric:${Versions.androidx_biometric}"
      const val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
-@@ -188,9 +182,6 @@ object Deps {
+@@ -192,9 +186,6 @@ object Deps {
      const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
      const val google_material = "com.google.android.material:material:${Versions.google_material}"
  
@@ -994,7 +1016,7 @@ index 27d9d713f..6b38cce18 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -222,11 +213,6 @@ object Deps {
+@@ -226,11 +217,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  

@@ -68,6 +68,8 @@ sed -i \
     -e '/repositories {/a\        mavenLocal()' \
     -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
     -e '/^ \{12\}maven {/,/^ \{12\}}/d' build.gradle
+sed -i \
+    -e '/^ \{8\}maven {/,/^ \{8\}}/d' buildSrc/build.gradle
 
 # We need only stable GeckoView
 sed -i \
@@ -181,13 +183,7 @@ popd
 pushd "$application_services"
 echo "rust.targets=$rusttarget" >> local.properties
 sed -i -e '/NDK_VERSION/d' libs/android_defaults.sh
-sed -i \
-    -e '/useDownloadedLibs.*{/,/^}/d' \
-    -e '/useDownloadedLibs/d' \
-    -e 's/ext.libsRootDir/rootProject.rootDir/' \
-    build.gradle
-localize_maven
-sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle components/external/nimbus-sdk/android/build.gradle
+sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle
 popd
 
 #
