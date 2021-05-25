@@ -1,0 +1,13 @@
+{
+  "default": {
+    "searchDefault": "DuckDuckGo",
+    "searchOrder": ["DuckDuckGo", "Google", "Bing", "Wikipedia"],
+    "visibleDefaultEngines": [
+      "ddg", "google", "bing", "wikipedia"
+    ]
+  },
+  "regionOverrides": {
+  },
+  "locales": {
+  }
+}

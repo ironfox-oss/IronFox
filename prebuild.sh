@@ -164,6 +164,9 @@ localize_maven
 popd
 
 pushd "$android_components"
+find "$patches/a-c-overlay" -type f | while read -r src; do
+    cp "$src" "${src#$patches/a-c-overlay/}"
+done
 # We only need a release Gecko
 rm -fR components/browser/engine-gecko-{beta,nightly}
 gvver=$(echo "$1" | cut -d. -f1)
