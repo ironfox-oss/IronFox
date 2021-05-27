@@ -853,6 +853,27 @@ index c451185f9..980a51c03 100644
              reviewSettings = FenixReviewSettings(settings)
          )
      }
+diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index a560f1288..a7b6cbaab 100644
+--- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -338,8 +338,14 @@ class Core(
+                 } else {
+                     defaultTopSites.add(
+                         Pair(
+-                            context.getString(R.string.default_top_site_google),
+-                            SupportUtils.GOOGLE_URL
++                            context.getString(R.string.default_top_site_fdroid),
++                            SupportUtils.FDROID_URL
++                        )
++                    )
++                    defaultTopSites.add(
++                        Pair(
++                            context.getString(R.string.default_top_site_eff),
++                            SupportUtils.EFF_URL
+                         )
+                     )
+ 
 diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 index 2e8c185be..201996668 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
@@ -886,6 +907,36 @@ index 2e8c185be..201996668 100644
      }
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+diff --git a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
+index 48c4ee3e1..f753a65ad 100644
+--- a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
++++ b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
+@@ -79,6 +79,12 @@ class TopSiteItemViewHolder(
+             SupportUtils.JD_URL -> {
+                 favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_jd))
+             }
++            SupportUtils.FDROID_URL -> {
++                favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_fdroid))
++            }
++            SupportUtils.EFF_URL -> {
++                favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_eff))
++            }
+             else -> {
+                 itemView.context.components.core.icons.loadIntoView(favicon_image, topSite.url)
+             }
+diff --git a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+index 7a7f3634d..102bb4ed7 100644
+--- a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
++++ b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+@@ -34,6 +34,8 @@ object SupportUtils {
+             "AEwdRGF0cMhIAVB5ZFAETBVAaXRwyFQdcKydLSUpaCEtYFAIXN2UrWCUyIgdVK1slXVZaCCtZFAMWDg%3D%3D"
+     const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
+     const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
++    const val FDROID_URL = "https://f-droid.org/"
++    const val EFF_URL = "https://www.eff.org/"
+ 
+     enum class SumoTopic(internal val topicStr: String) {
+         FENIX_MOVING("sync-delist"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 24478b24a..b98030d18 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
@@ -911,6 +962,20 @@ index 24478b24a..b98030d18 100644
      )
  
      private var trackingProtectionOnboardingShownThisSession = false
+diff --git a/app/src/main/res/values/static_strings_extra.xml b/app/src/main/res/values/static_strings_extra.xml
+new file mode 100644
+index 000000000..101f4e0d0
+--- /dev/null
++++ b/app/src/main/res/values/static_strings_extra.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8" standalone="yes"?>
++<!-- This Source Code Form is subject to the terms of the Mozilla Public
++   - License, v. 2.0. If a copy of the MPL was not distributed with this
++   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
++<resources>
++    <string name="default_top_site_fdroid" translatable="false">F-Droid</string>
++    <string name="default_top_site_eff" translatable="false">EFF</string>
++</resources>
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
 index 16ae3f11e..84ee88031 100644
 --- a/app/src/main/res/xml/preferences.xml
@@ -927,18 +992,18 @@ index 16ae3f11e..84ee88031 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -171,11 +166,6 @@
-         android:title="@string/preferences_category_about"
+@@ -172,11 +167,6 @@
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_cat_style">
--        <androidx.preference.Preference
+         <androidx.preference.Preference
 -            android:icon="@drawable/ic_bookmark_outline"
 -            android:key="@string/pref_key_rate"
 -            android:title="@string/preferences_rate" />
 -
-         <androidx.preference.Preference
+-        <androidx.preference.Preference
              android:icon="@drawable/ic_info"
              android:key="@string/pref_key_about"
+             android:title="@string/preferences_about" />
 diff --git a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 index 9b8c85283..0bbfb7260 100644
 --- a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
