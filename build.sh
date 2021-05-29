@@ -33,7 +33,7 @@ source "$(dirname "$0")/paths.sh"
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090
 source "$HOME/.cargo/env"
-rustup default 1.51.0
+rustup default 1.52.1
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -43,9 +43,9 @@ cargo install --force --vers 0.19.0 cbindgen
 PYENV_ROOT=$(realpath "$pyenv")
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_ROOT
-eval "$(pyenv init -)"
-pyenv install 3.9.4
-pyenv global 3.9.4
+eval "$(pyenv init --path)"
+pyenv install 3.9.5
+pyenv global 3.9.5
 
 pushd "$mozilla_release"
 export MACH_USE_SYSTEM_PYTHON=yes

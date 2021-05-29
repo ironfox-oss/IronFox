@@ -51,7 +51,6 @@ sed -i \
 
 # Remove proprietary and tracking libraries
 sed -i \
-    -e '/Deps.leanplum/d' \
     -e '/Deps.mozilla_lib_push_firebase/d' \
     -e '/Deps.adjust/d; /Deps.installreferrer/d; /Deps.google_ads_id/d' \
     -e '/Deps.google_play_store/d' \

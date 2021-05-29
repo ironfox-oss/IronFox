@@ -378,423 +378,6 @@ index 000000000..9ad59a31e
 +    }
 +
 +}
-diff --git a/app/src/main/java/com/leanplum/Leanplum.java b/app/src/main/java/com/leanplum/Leanplum.java
-new file mode 100644
-index 000000000..ab854e03a
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/Leanplum.java
-@@ -0,0 +1,99 @@
-+/*
-+ * Copyright 2016, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum;
-+
-+import android.content.Context;
-+import com.leanplum.callbacks.StartCallback;
-+import java.util.Map;
-+
-+public class Leanplum {
-+  public static String getDeviceId() {
-+    return null;
-+  }
-+
-+  public static String getUserId() {
-+    return null;
-+  }
-+
-+  public static void setAppIdForDevelopmentMode(String appId, String accessKey) {
-+  }
-+
-+  public static void setAppIdForProductionMode(String appId, String accessKey) {
-+  }
-+
-+  public static void setApplicationContext(Context context) {
-+  }
-+
-+  public static void setDeviceId(String deviceId) {
-+  }
-+
-+  public static void setIsTestModeEnabled(boolean isTestModeEnabled) {
-+  }
-+
-+  public static void setUserAttributes(Map<String, Object> userAttributes) {
-+  }
-+
-+  public static void start(Context context) {
-+  }
-+
-+  public static void start(Context context, StartCallback callback) {
-+  }
-+
-+  public static void start(Context context, Map<String, ?> userAttributes) {
-+  }
-+
-+  public static void start(Context context, String userId) {
-+  }
-+
-+  public static void start(Context context, String userId, StartCallback callback) {
-+  }
-+
-+  public static void start(Context context, String userId, Map<String, ?> userAttributes) {
-+  }
-+
-+  public static synchronized void start(final Context context, String userId, Map<String, ?> attributes, StartCallback response) {
-+  }
-+
-+  static synchronized void start(final Context context, final String userId, final Map<String, ?> attributes, StartCallback response, final Boolean isBackground) {
-+  }
-+
-+  public static void track(final String event, double value, String info, Map<String, ?> params) {
-+  }
-+
-+  public static void track(String event) {
-+  }
-+
-+  public static void track(String event, double value) {
-+  }
-+
-+  public static void track(String event, String info) {
-+  }
-+
-+  public static void track(String event, Map<String, ?> params) {
-+  }
-+
-+  public static void track(String event, double value, Map<String, ?> params) {
-+  }
-+
-+  public static void track(String event, double value, String info) {
-+  }
-+}
-diff --git a/app/src/main/java/com/leanplum/LeanplumActivityHelper.java b/app/src/main/java/com/leanplum/LeanplumActivityHelper.java
-new file mode 100644
-index 000000000..489871cf5
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/LeanplumActivityHelper.java
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright 2013, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum;
-+
-+import android.app.Application;
-+
-+public class LeanplumActivityHelper {
-+  public static void enableLifecycleCallbacks(final Application app) {
-+  }
-+}
-diff --git a/app/src/main/java/com/leanplum/LeanplumPushFirebaseMessagingService.java b/app/src/main/java/com/leanplum/LeanplumPushFirebaseMessagingService.java
-new file mode 100644
-index 000000000..57d2f8580
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/LeanplumPushFirebaseMessagingService.java
-@@ -0,0 +1,44 @@
-+/*
-+ * Copyright 2016, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum;
-+
-+import android.annotation.SuppressLint;
-+import android.os.Build;
-+import android.os.Bundle;
-+
-+import com.google.firebase.messaging.FirebaseMessagingService;
-+import com.google.firebase.messaging.RemoteMessage;
-+
-+@SuppressLint("Registered")
-+public class LeanplumPushFirebaseMessagingService extends FirebaseMessagingService {
-+  @Override
-+  public void onCreate() {
-+  }
-+
-+  @Override
-+  public void onNewToken(String token) {
-+  }
-+
-+  @Override
-+  public void onMessageReceived(RemoteMessage remoteMessage) {
-+  }
-+}
-diff --git a/app/src/main/java/com/leanplum/LeanplumPushNotificationCustomizer.java b/app/src/main/java/com/leanplum/LeanplumPushNotificationCustomizer.java
-new file mode 100644
-index 000000000..f827eb180
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/LeanplumPushNotificationCustomizer.java
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright 2015, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum;
-+
-+import android.app.Notification;
-+import android.os.Bundle;
-+import androidx.annotation.Nullable;
-+import androidx.core.app.NotificationCompat;
-+
-+/**
-+ * Implement LeanplumPushNotificationCustomizer to customize the appearance of notifications.
-+ */
-+public interface LeanplumPushNotificationCustomizer {
-+  /**
-+   * Implement this method to customize push notification. Please call {@link
-+   * LeanplumPushService#setCustomizer(LeanplumPushNotificationCustomizer)} to activate this method.
-+   * Leave this method empty if you want to support 2 lines of text
-+   * in BigPicture style push notification and implement {@link
-+   * LeanplumPushNotificationCustomizer#customize(Notification.Builder, Bundle, Notification.Style)}
-+   *
-+   * @param builder NotificationCompat.Builder for push notification.
-+   * @param notificationPayload Bundle notification payload.
-+   */
-+  void customize(NotificationCompat.Builder builder, Bundle notificationPayload);
-+
-+  /**
-+   * Implement this method to support 2 lines of text in BigPicture style push notification,
-+   * otherwise implement {@link
-+   * LeanplumPushNotificationCustomizer#customize(NotificationCompat.Builder, Bundle)}  and leave
-+   * this method empty. Please call {@link
-+   * LeanplumPushService#setCustomizer(LeanplumPushNotificationCustomizer, boolean)}  with true
-+   * value to activate this method.
-+   *
-+   * @param builder Notification.Builder for push notification.
-+   * @param notificationPayload Bundle notification payload.
-+   * @param notificationStyle - Notification.BigPictureStyle or null - BigPicture style for current
-+   * push notification. Call ((Notification.BigPictureStyle) notificationStyle).bigLargeIcon(largeIcon)
-+   * if you want to set large icon on expanded push notification. If notificationStyle wasn't null
-+   * it will be set to push notification. Note: If you call notificationStyle = new
-+   * Notification.BigPictureStyle() or other Notification.Style - there will be no support 2 lines
-+   * of text on BigPicture push and you need to call builder.setStyle(notificationStyle) to set
-+   * yours expanded layout for push notification.
-+   */
-+  void customize(Notification.Builder builder, Bundle notificationPayload,
-+      @Nullable Notification.Style notificationStyle);
-+}
-diff --git a/app/src/main/java/com/leanplum/LeanplumPushService.java b/app/src/main/java/com/leanplum/LeanplumPushService.java
-new file mode 100644
-index 000000000..436cba348
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/LeanplumPushService.java
-@@ -0,0 +1,31 @@
-+/*
-+ * Copyright 2014, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum;
-+
-+public class LeanplumPushService {
-+  public static void setCustomizer(LeanplumPushNotificationCustomizer customizer) {
-+  }
-+
-+  public static void setCustomizer(LeanplumPushNotificationCustomizer customizer,
-+      boolean useNotificationBuilderCustomizer) {
-+  }
-+}
-diff --git a/app/src/main/java/com/leanplum/annotations/Parser.java b/app/src/main/java/com/leanplum/annotations/Parser.java
-new file mode 100644
-index 000000000..2bb6d2b2a
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/annotations/Parser.java
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright 2013, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum.annotations;
-+
-+public class Parser {
-+  public static void parseVariables(Object... instances) {
-+  }
-+}
-diff --git a/app/src/main/java/com/leanplum/callbacks/StartCallback.java b/app/src/main/java/com/leanplum/callbacks/StartCallback.java
-new file mode 100644
-index 000000000..30d437d30
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/callbacks/StartCallback.java
-@@ -0,0 +1,41 @@
-+/*
-+ * Copyright 2013, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum.callbacks;
-+
-+/**
-+ * Callback that gets run when Leanplum is started.
-+ *
-+ * @author Andrew First
-+ */
-+public abstract class StartCallback implements Runnable {
-+  private boolean success;
-+
-+  public void setSuccess(boolean success) {
-+    this.success = success;
-+  }
-+
-+  public void run() {
-+    this.onResponse(success);
-+  }
-+
-+  public abstract void onResponse(boolean success);
-+}
-diff --git a/app/src/main/java/com/leanplum/internal/LeanplumInternal.java b/app/src/main/java/com/leanplum/internal/LeanplumInternal.java
-new file mode 100644
-index 000000000..8ca36a6b4
---- /dev/null
-+++ b/app/src/main/java/com/leanplum/internal/LeanplumInternal.java
-@@ -0,0 +1,33 @@
-+/*
-+ * Copyright 2016, Leanplum, Inc. All rights reserved.
-+ *
-+ * Licensed to the Apache Software Foundation (ASF) under one
-+ * or more contributor license agreements.  See the NOTICE file
-+ * distributed with this work for additional information
-+ * regarding copyright ownership.  The ASF licenses this file
-+ * to you under the Apache License, Version 2.0 (the
-+ * "License"); you may not use this file except in compliance
-+ * with the License.  You may obtain a copy of the License at
-+ *
-+ *        http://www.apache.org/licenses/LICENSE-2.0
-+ *
-+ * Unless required by applicable law or agreed to in writing,
-+ * software distributed under the License is distributed on an
-+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-+ * KIND, either express or implied.  See the License for the
-+ * specific language governing permissions and limitations
-+ * under the License.
-+ */
-+
-+package com.leanplum.internal;
-+
-+public class LeanplumInternal {
-+  public static void setCalledStart(boolean calledStart) {
-+  }
-+
-+  public static void setHasStarted(boolean hasStarted) {
-+  }
-+
-+  public static void setStartedInBackground(boolean startedInBackground) {
-+  }
-+}
 diff --git a/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 new file mode 100644
 index 000000000..b50a6f03a
@@ -834,7 +417,7 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index c451185f9..980a51c03 100644
+index ef2fb1274..e0962ee5d 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -8,7 +8,6 @@ import android.app.Application
@@ -845,7 +428,7 @@ index c451185f9..980a51c03 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -155,7 +154,6 @@ class Components(private val context: Context) {
+@@ -159,7 +158,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -854,10 +437,10 @@ index c451185f9..980a51c03 100644
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index a560f1288..a7b6cbaab 100644
+index 837d00ee4..cc2203b22 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -338,8 +338,14 @@ class Core(
+@@ -347,8 +347,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -908,12 +491,12 @@ index 2e8c185be..201996668 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-index 48c4ee3e1..f753a65ad 100644
+index 5ee55eb98..f859860e8 100644
 --- a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
 +++ b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-@@ -79,6 +79,12 @@ class TopSiteItemViewHolder(
-             SupportUtils.JD_URL -> {
-                 favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_jd))
+@@ -83,6 +83,12 @@ class TopSiteItemViewHolder(
+             SupportUtils.PDD_URL -> {
+                 favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_pdd))
              }
 +            SupportUtils.FDROID_URL -> {
 +                favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_fdroid))
@@ -925,11 +508,11 @@ index 48c4ee3e1..f753a65ad 100644
                  itemView.context.components.core.icons.loadIntoView(favicon_image, topSite.url)
              }
 diff --git a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 7a7f3634d..102bb4ed7 100644
+index 5c6681103..8f601f815 100644
 --- a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -34,6 +34,8 @@ object SupportUtils {
-             "AEwdRGF0cMhIAVB5ZFAETBVAaXRwyFQdcKydLSUpaCEtYFAIXN2UrWCUyIgdVK1slXVZaCCtZFAMWDg%3D%3D"
+@@ -36,6 +36,8 @@ object SupportUtils {
+             "cpsSign=CM_210309_13289095_194240604_8bcfd56d5db3c43d983014d2658ec26e&duoduo_type=2"
      const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
      const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
 +    const val FDROID_URL = "https://f-droid.org/"
@@ -938,10 +521,10 @@ index 7a7f3634d..102bb4ed7 100644
      enum class SumoTopic(internal val topicStr: String) {
          FENIX_MOVING("sync-delist"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 24478b24a..b98030d18 100644
+index d9b1914b9..86cea0aba 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -217,17 +217,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -222,17 +222,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -977,33 +560,33 @@ index 000000000..101f4e0d0
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index 16ae3f11e..84ee88031 100644
+index fa3778b13..f961618eb 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
-@@ -119,11 +119,6 @@
-             android:key="@string/pref_key_notifications"
+@@ -126,11 +126,6 @@
+             app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
 -        <androidx.preference.Preference
--            android:icon="@drawable/ic_data_collection"
 -            android:key="@string/pref_key_data_choices"
+-            app:iconSpaceReserved="false"
 -            android:title="@string/preferences_data_collection" />
 -
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -172,11 +167,6 @@
+@@ -177,11 +172,6 @@
+         android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
-         android:layout="@layout/preference_cat_style">
-         <androidx.preference.Preference
--            android:icon="@drawable/ic_bookmark_outline"
+         android:layout="@layout/preference_category_no_icon_style">
+-        <androidx.preference.Preference
 -            android:key="@string/pref_key_rate"
+-            app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />
 -
--        <androidx.preference.Preference
-             android:icon="@drawable/ic_info"
+         <androidx.preference.Preference
              android:key="@string/pref_key_about"
-             android:title="@string/preferences_about" />
+             app:iconSpaceReserved="false"
 diff --git a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 index 9b8c85283..0bbfb7260 100644
 --- a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
@@ -1041,10 +624,10 @@ index b51956e70..66da0a159 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 3e117e06c..2b9d2c439 100644
+index 524d7d1c6..dfac7813d 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -76,8 +76,6 @@ object Deps {
+@@ -75,8 +75,6 @@ object Deps {
      const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
  
      const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
@@ -1053,7 +636,7 @@ index 3e117e06c..2b9d2c439 100644
      const val mozilla_browser_engine_gecko_release = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
      const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
      const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
-@@ -147,7 +145,6 @@ object Deps {
+@@ -146,7 +144,6 @@ object Deps {
      const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
@@ -1061,17 +644,7 @@ index 3e117e06c..2b9d2c439 100644
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
-@@ -166,9 +163,6 @@ object Deps {
-     const val sentry = "io.sentry:sentry-android:${Versions.sentry}"
-     const val leakcanary = "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
- 
--    const val leanplum_core = "com.leanplum:leanplum-core:${Versions.leanplum}"
--    const val leanplum_fcm = "com.leanplum:leanplum-fcm:${Versions.leanplum}"
--
-     const val androidx_annotation = "androidx.annotation:annotation:${Versions.androidx_annotation}"
-     const val androidx_biometric = "androidx.biometric:biometric:${Versions.androidx_biometric}"
-     const val androidx_fragment = "androidx.fragment:fragment-ktx:${Versions.androidx_fragment}"
-@@ -192,9 +186,6 @@ object Deps {
+@@ -188,9 +185,6 @@ object Deps {
      const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
      const val google_material = "com.google.android.material:material:${Versions.google_material}"
  
@@ -1081,7 +654,7 @@ index 3e117e06c..2b9d2c439 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -226,11 +217,6 @@ object Deps {
+@@ -222,11 +216,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  
