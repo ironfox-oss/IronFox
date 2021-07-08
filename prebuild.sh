@@ -171,10 +171,7 @@ rm -fR components/browser/engine-gecko-{beta,nightly}
 gvver=$(echo "$1" | cut -d. -f1)
 sed -i \
     -e "s/version = \"$gvver\.[0-9.]*\"/version = \"$gvver.+\"/" \
-    -e 's/:geckoview:/:geckoview-default:/' \
     buildSrc/src/main/java/Gecko.kt
-sed -i -e 's/Gecko\.geckoview_nightly/Gecko.geckoview_release/' \
-    components/lib/crash/build.gradle
 localize_maven
 popd
 
@@ -222,6 +219,7 @@ ac_add_options --disable-tests
 ac_add_options --disable-updater
 ac_add_options --enable-application=mobile/android
 ac_add_options --enable-release
+ac_add_options --enable-update-channel=release
 ac_add_options --target=$target
 ac_add_options --with-android-min-sdk=$minsdk
 ac_add_options --with-android-ndk="$ndk"

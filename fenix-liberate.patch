@@ -417,7 +417,7 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index ef2fb1274..e0962ee5d 100644
+index 25e60d7c8..871e09dc7 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -8,7 +8,6 @@ import android.app.Application
@@ -428,7 +428,7 @@ index ef2fb1274..e0962ee5d 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -159,7 +158,6 @@ class Components(private val context: Context) {
+@@ -161,7 +160,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -437,10 +437,10 @@ index ef2fb1274..e0962ee5d 100644
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 837d00ee4..cc2203b22 100644
+index c18624e34..b602553dd 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -347,8 +347,14 @@ class Core(
+@@ -350,8 +350,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -491,10 +491,10 @@ index 2e8c185be..201996668 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-index 5ee55eb98..f859860e8 100644
+index 7ca0da2ca..f773a7d67 100644
 --- a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
 +++ b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-@@ -83,6 +83,12 @@ class TopSiteItemViewHolder(
+@@ -85,6 +85,12 @@ class TopSiteItemViewHolder(
              SupportUtils.PDD_URL -> {
                  favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_pdd))
              }
@@ -521,7 +521,7 @@ index 5c6681103..8f601f815 100644
      enum class SumoTopic(internal val topicStr: String) {
          FENIX_MOVING("sync-delist"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index d9b1914b9..86cea0aba 100644
+index 25dbe9310..ef5582f23 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -222,17 +222,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -560,10 +560,10 @@ index 000000000..101f4e0d0
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index fa3778b13..f961618eb 100644
+index ab16a037d..909a6a4f7 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
-@@ -126,11 +126,6 @@
+@@ -125,11 +125,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -575,7 +575,7 @@ index fa3778b13..f961618eb 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -177,11 +172,6 @@
+@@ -176,11 +171,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
@@ -624,27 +624,18 @@ index b51956e70..66da0a159 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 524d7d1c6..dfac7813d 100644
+index 10e683ab1..c027edc44 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -75,8 +75,6 @@ object Deps {
-     const val mozilla_concept_sync = "org.mozilla.components:concept-sync:${Versions.mozilla_android_components}"
- 
-     const val mozilla_browser_awesomebar = "org.mozilla.components:browser-awesomebar:${Versions.mozilla_android_components}"
--    const val mozilla_browser_engine_gecko_nightly = "org.mozilla.components:browser-engine-gecko-nightly:${Versions.mozilla_android_components}"
--    const val mozilla_browser_engine_gecko_beta = "org.mozilla.components:browser-engine-gecko-beta:${Versions.mozilla_android_components}"
-     const val mozilla_browser_engine_gecko_release = "org.mozilla.components:browser-engine-gecko:${Versions.mozilla_android_components}"
-     const val mozilla_browser_domains = "org.mozilla.components:browser-domains:${Versions.mozilla_android_components}"
-     const val mozilla_browser_icons = "org.mozilla.components:browser-icons:${Versions.mozilla_android_components}"
-@@ -146,7 +144,6 @@ object Deps {
+@@ -143,7 +143,6 @@ object Deps {
      const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
 -    const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
+     const val mozilla_lib_state = "org.mozilla.components:lib-state:${Versions.mozilla_android_components}"
  
-     const val mozilla_lib_publicsuffixlist = "org.mozilla.components:lib-publicsuffixlist:${Versions.mozilla_android_components}"
-@@ -188,9 +185,6 @@ object Deps {
+@@ -186,9 +185,6 @@ object Deps {
      const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
      const val google_material = "com.google.android.material:material:${Versions.google_material}"
  
@@ -654,7 +645,7 @@ index 524d7d1c6..dfac7813d 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -222,11 +216,6 @@ object Deps {
+@@ -220,11 +216,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  

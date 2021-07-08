@@ -33,7 +33,7 @@ source "$(dirname "$0")/paths.sh"
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090
 source "$HOME/.cargo/env"
-rustup default 1.52.1
+rustup default 1.53.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -44,8 +44,8 @@ PYENV_ROOT=$(realpath "$pyenv")
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_ROOT
 eval "$(pyenv init --path)"
-pyenv install 3.9.5
-pyenv global 3.9.5
+pyenv install 3.9.6
+pyenv global 3.9.6
 
 pushd "$mozilla_release"
 export MACH_USE_SYSTEM_PYTHON=yes
@@ -74,10 +74,6 @@ export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
 ./libs/verify-desktop-environment.sh
 ./libs/verify-android-environment.sh
-pushd components/external/nimbus-sdk
-cargo install --force --vers 0.7.0 uniffi_bindgen
-cargo build
-popd
 gradle publishToMavenLocal
 popd
 
