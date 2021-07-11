@@ -183,6 +183,8 @@ pushd "$application_services"
 echo "rust.targets=$rusttarget" >> local.properties
 sed -i -e '/NDK_VERSION/d' libs/android_defaults.sh
 sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle
+sed -i -e '/content {/,/}/d' build.gradle
+localize_maven
 popd
 
 #
