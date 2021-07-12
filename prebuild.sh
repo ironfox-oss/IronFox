@@ -96,7 +96,7 @@ done
 # Enable about:config
 sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
-    app/src/*/java/org/mozilla/fenix/engine/GeckoProvider.kt
+    app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Expose "Custom Add-on collection" setting
 sed -i \
