@@ -1,6 +1,6 @@
-diff -r 89dfe973d35d mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Mon Apr 12 17:40:20 2021 +0000
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Fri Apr 16 07:35:41 2021 +0000
+diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Wed Aug 04 18:26:58 2021 +0000
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Fri Aug 06 06:58:48 2021 +0000
 @@ -19,62 +19,7 @@
  import android.util.Base64;
  import android.util.Log;
@@ -458,3 +458,29 @@ diff -r 89dfe973d35d mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      }
  
      @WrapForJNI(dispatchTo = "gecko")
+@@ -529,25 +127,7 @@
+ 
+     @WrapForJNI(calledFrom = "gecko")
+     private static GeckoResult<Boolean> webAuthnIsUserVerifyingPlatformAuthenticatorAvailable() {
+-        final Task<Boolean> task;
+-        if (BuildConfig.MOZILLA_OFFICIAL) {
+-            final Fido2PrivilegedApiClient fidoClient =
+-                    Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
+-            task = fidoClient.isUserVerifyingPlatformAuthenticatorAvailable();
+-        } else {
+-            final Fido2ApiClient fidoClient =
+-                    Fido.getFido2ApiClient(GeckoAppShell.getApplicationContext());
+-            task = fidoClient.isUserVerifyingPlatformAuthenticatorAvailable();
+-        }
+-
+         final GeckoResult<Boolean> res = new GeckoResult<>();
+-        task.addOnSuccessListener(isUVPAA -> {
+-            res.complete(isUVPAA);
+-        });
+-        task.addOnFailureListener(e -> {
+-            Log.w(LOGTAG, "isUserVerifyingPlatformAuthenticatorAvailable is failed", e);
+-            res.complete(false);
+-        });
+         return res;
+     }
+ }

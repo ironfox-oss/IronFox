@@ -1,9 +1,9 @@
 diff --git a/app/src/main/java/com/adjust/sdk/Adjust.java b/app/src/main/java/com/adjust/sdk/Adjust.java
 new file mode 100644
-index 000000000..ee2489b0c
+index 000000000..7e644e2fa
 --- /dev/null
 +++ b/app/src/main/java/com/adjust/sdk/Adjust.java
-@@ -0,0 +1,39 @@
+@@ -0,0 +1,44 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
 + * http://www.adjust.com
@@ -30,6 +30,8 @@ index 000000000..ee2489b0c
 +
 +package com.adjust.sdk;
 +
++import android.content.Context;
++
 +public class Adjust {
 +    public static void onCreate(AdjustConfig adjustConfig) {
 +    }
@@ -41,6 +43,9 @@ index 000000000..ee2489b0c
 +    }
 +
 +    public static void setEnabled(boolean enabled) {
++    }
++
++    public static void gdprForgetMe(final Context context) {
 +    }
 +}
 diff --git a/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
@@ -417,7 +422,7 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 25e60d7c8..871e09dc7 100644
+index 6eb0a70e5..b4a74c668 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -8,7 +8,6 @@ import android.app.Application
@@ -428,7 +433,7 @@ index 25e60d7c8..871e09dc7 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -161,7 +160,6 @@ class Components(private val context: Context) {
+@@ -152,7 +151,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -437,7 +442,7 @@ index 25e60d7c8..871e09dc7 100644
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index c18624e34..b602553dd 100644
+index 975c6d24a..ee0cf1aa8 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -350,8 +350,14 @@ class Core(
@@ -458,7 +463,7 @@ index c18624e34..b602553dd 100644
                      )
  
 diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-index 2e8c185be..201996668 100644
+index 9793c0112..bd6040c5b 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 @@ -6,7 +6,6 @@ package org.mozilla.fenix.components
@@ -491,10 +496,10 @@ index 2e8c185be..201996668 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-index 7ca0da2ca..f773a7d67 100644
+index e337a2b4b..a63866d62 100644
 --- a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
 +++ b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-@@ -85,6 +85,12 @@ class TopSiteItemViewHolder(
+@@ -84,6 +84,12 @@ class TopSiteItemViewHolder(
              SupportUtils.PDD_URL -> {
                  favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_pdd))
              }
@@ -521,10 +526,10 @@ index 5c6681103..8f601f815 100644
      enum class SumoTopic(internal val topicStr: String) {
          FENIX_MOVING("sync-delist"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 25dbe9310..ef5582f23 100644
+index 76d16897a..943bb1446 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -222,17 +222,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -224,17 +224,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -575,20 +580,20 @@ index ab16a037d..909a6a4f7 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -176,11 +171,6 @@
-         android:title="@string/preferences_category_about"
+@@ -177,11 +172,6 @@
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
--        <androidx.preference.Preference
+         <androidx.preference.Preference
 -            android:key="@string/pref_key_rate"
 -            app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />
 -
-         <androidx.preference.Preference
+-        <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
+             android:title="@string/preferences_about" />
 diff --git a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
-index 9b8c85283..0bbfb7260 100644
+index 69b25a706..20043dbd4 100644
 --- a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 +++ b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 @@ -3,7 +3,8 @@
@@ -612,7 +617,7 @@ index 9b8c85283..0bbfb7260 100644
      <androidx.preference.Preference
          android:icon="@drawable/ic_autoplay"
 diff --git a/app/src/main/res/xml/site_permissions_preferences.xml b/app/src/main/res/xml/site_permissions_preferences.xml
-index b51956e70..66da0a159 100644
+index fa965a579..daebcce40 100644
 --- a/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/app/src/main/res/xml/site_permissions_preferences.xml
 @@ -48,6 +48,7 @@
@@ -624,10 +629,10 @@ index b51956e70..66da0a159 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 10e683ab1..c027edc44 100644
+index 19832e82c..388ae1371 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -143,7 +143,6 @@ object Deps {
+@@ -142,7 +142,6 @@ object Deps {
      const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
@@ -635,7 +640,7 @@ index 10e683ab1..c027edc44 100644
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
      const val mozilla_lib_state = "org.mozilla.components:lib-state:${Versions.mozilla_android_components}"
  
-@@ -186,9 +185,6 @@ object Deps {
+@@ -185,9 +184,6 @@ object Deps {
      const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
      const val google_material = "com.google.android.material:material:${Versions.google_material}"
  
@@ -645,7 +650,7 @@ index 10e683ab1..c027edc44 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -220,11 +216,6 @@ object Deps {
+@@ -219,11 +215,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  
