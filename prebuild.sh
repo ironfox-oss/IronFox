@@ -106,6 +106,11 @@ sed -i \
     -e 's/Config.channel.isNightlyOrDebug && //' \
     app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 
+# Disable periodic user notification to set as default browser
+sed -i \
+    -e 's/!defaultBrowserNotificationDisplayed && !isDefaultBrowserBlocking()/false/' \
+    app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+
 # Set up target parameters
 case $(echo "$2" | cut -c 5) in
     0)
