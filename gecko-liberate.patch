@@ -1,6 +1,6 @@
-diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Wed Aug 04 18:26:58 2021 +0000
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Fri Aug 06 06:58:48 2021 +0000
+diff -r 74a9748f9065 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Fri Sep 03 21:00:08 2021 +0000
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Sep 07 10:13:13 2021 +0300
 @@ -19,62 +19,7 @@
  import android.util.Base64;
  import android.util.Log;
@@ -99,7 +99,7 @@ diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      public static class MakeCredentialResponse {
          public final byte[] clientDataJson;
          public final byte[] keyHandle;
-@@ -138,160 +61,7 @@
+@@ -138,161 +61,7 @@
                                                                       final WebAuthnTokenManager.WebAuthnPublicCredential[] excludeList,
                                                                       final GeckoBundle authenticatorSelection,
                                                                       final GeckoBundle extensions) {
@@ -141,10 +141,11 @@ diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -
 -        final AuthenticatorSelectionCriteria.Builder selBuild =
 -                new AuthenticatorSelectionCriteria.Builder();
--        if (extensions.containsKey("requirePlatformAttachment")) {
--            if (authenticatorSelection.getInt("requirePlatformAttachment") == 1) {
--                selBuild.setAttachment(Attachment.PLATFORM);
--            }
+-        if (authenticatorSelection.getInt("requirePlatformAttachment", 0) == 1) {
+-            selBuild.setAttachment(Attachment.PLATFORM);
+-        }
+-        if (authenticatorSelection.getInt("requireCrossPlatformAttachment", 0) == 1) {
+-            selBuild.setAttachment(Attachment.CROSS_PLATFORM);
 -        }
 -        final AuthenticatorSelectionCriteria sel = selBuild.build();
 -
@@ -260,7 +261,7 @@ diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
          return result;
      }
  
-@@ -303,41 +73,6 @@
+@@ -304,41 +73,6 @@
                                                 final ByteBuffer transportList,
                                                 final GeckoBundle authenticatorSelection,
                                                 final GeckoBundle extensions) {
@@ -302,7 +303,7 @@ diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      }
  
      @WrapForJNI(dispatchTo = "gecko")
-@@ -365,120 +100,11 @@
+@@ -366,120 +100,11 @@
          }
      }
  
@@ -423,7 +424,7 @@ diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
          return result;
      }
  
-@@ -488,34 +114,6 @@
+@@ -489,34 +114,6 @@
                                               final ByteBuffer transportList,
                                               final GeckoBundle assertionBundle,
                                               final GeckoBundle extensions) {
@@ -458,7 +459,7 @@ diff -r f51367289e74 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      }
  
      @WrapForJNI(dispatchTo = "gecko")
-@@ -529,25 +127,7 @@
+@@ -530,25 +127,7 @@
  
      @WrapForJNI(calledFrom = "gecko")
      private static GeckoResult<Boolean> webAuthnIsUserVerifyingPlatformAuthenticatorAvailable() {

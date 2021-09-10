@@ -43,7 +43,7 @@ function localize_maven {
 sed -i \
     -e 's|\.firefox|.fennec_fdroid|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(abi)/$2/" \
+    -e "s/Config.generateFennecVersionCode(arch)/$2/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
@@ -68,7 +68,9 @@ sed -i \
     -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
     -e '/^ \{12\}maven {/,/^ \{12\}}/d' build.gradle
 sed -i \
-    -e '/^ \{8\}maven {/,/^ \{8\}}/d' buildSrc/build.gradle
+    -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
+    buildSrc/build.gradle \
+    mozilla-lint-rules/build.gradle
 
 # We need only stable GeckoView
 sed -i \
@@ -191,10 +193,15 @@ popd
 #
 
 pushd "$application_services"
-echo "rust.targets=$rusttarget" >> local.properties
+echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK_VERSION/d' libs/android_defaults.sh
 sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle
+sed -i -e '/ndkVersion:/a\        ndkPath: System.getenv("ANDROID_NDK"),' \
+    build.gradle
 sed -i -e '/content {/,/}/d' build.gradle
+sed -i -e '/ndkVersion/a\    ndkPath rootProject.ext.build.ndkPath' \
+    build-scripts/component-common.gradle \
+    megazords/full/android/build.gradle
 localize_maven
 popd
 
@@ -233,6 +240,7 @@ ac_add_options --disable-updater
 ac_add_options --enable-application=mobile/android
 ac_add_options --enable-release
 ac_add_options --enable-update-channel=release
+ac_add_options --enable-geckoview-lite
 ac_add_options --target=$target
 ac_add_options --with-android-min-sdk=$minsdk
 ac_add_options --with-android-ndk="$ndk"

@@ -26,3 +26,4 @@ readonly glean=$(realpath ../srclib/MozGlean)
 readonly mozilla_release=$(realpath ../srclib/MozFennec)
 readonly rustup=$(realpath ../srclib/rustup)
 readonly pyenv=$(realpath ../srclib/pyenv)
+readonly java11=/usr/lib/jvm/java-11-openjdk-amd64
