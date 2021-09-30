@@ -501,13 +501,13 @@ index e337a2b4b..a63866d62 100644
 +++ b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
 @@ -84,6 +84,12 @@ class TopSiteItemViewHolder(
              SupportUtils.PDD_URL -> {
-                 favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_pdd))
+                 binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_pdd))
              }
 +            SupportUtils.FDROID_URL -> {
-+                favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_fdroid))
++                binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_fdroid))
 +            }
 +            SupportUtils.EFF_URL -> {
-+                favicon_image.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_eff))
++                binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_eff))
 +            }
              else -> {
                  itemView.context.components.core.icons.loadIntoView(favicon_image, topSite.url)
