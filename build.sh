@@ -33,7 +33,7 @@ source "$(dirname "$0")/paths.sh"
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1091
 source "$HOME/.cargo/env"
-rustup default 1.54.0
+rustup default 1.55.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -59,7 +59,7 @@ gradle publishToMavenLocal
 popd
 
 pushd "$glean"
-gradle publishToMavenLocal
+JAVA_HOME="$java11" gradle publishToMavenLocal
 popd
 
 pushd "$android_components_as"
@@ -72,8 +72,8 @@ export SQLCIPHER_LIB_DIR="$application_services/libs/desktop/linux-x86-64/sqlcip
 export SQLCIPHER_INCLUDE_DIR="$application_services/libs/desktop/linux-x86-64/sqlcipher/include"
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
-./libs/verify-android-environment.sh
-gradle publishToMavenLocal
+JAVA_HOME="$java11" ./libs/verify-android-environment.sh
+JAVA_HOME="$java11" gradle publishToMavenLocal
 popd
 
 pushd "$android_components"

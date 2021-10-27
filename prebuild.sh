@@ -158,7 +158,10 @@ echo "rust.targets=$rusttarget" >> local.properties
 localize_maven
 popd
 pushd "$glean"
-echo "rust.targets=$rusttarget" >> local.properties
+echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
+sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle
+sed -i -e '/ndkVersion:/a\        ndkPath: System.getenv("ANDROID_NDK"),' \
+    build.gradle
 localize_maven
 popd
 
@@ -202,6 +205,7 @@ sed -i -e '/content {/,/}/d' build.gradle
 sed -i -e '/ndkVersion/a\    ndkPath rootProject.ext.build.ndkPath' \
     build-scripts/component-common.gradle \
     megazords/full/android/build.gradle
+sed -i -e '/sdkmanager/d' libs/verify-android-ci-environment.sh
 localize_maven
 popd
 
@@ -240,7 +244,6 @@ ac_add_options --disable-updater
 ac_add_options --enable-application=mobile/android
 ac_add_options --enable-release
 ac_add_options --enable-update-channel=release
-ac_add_options --enable-geckoview-lite
 ac_add_options --target=$target
 ac_add_options --with-android-min-sdk=$minsdk
 ac_add_options --with-android-ndk="$ndk"
