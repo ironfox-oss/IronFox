@@ -421,6 +421,19 @@ index 000000000..b50a6f03a
 +        return false
 +    }
 +}
+diff --git a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index 9d514cc91..4a9c6663c 100644
+--- a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+@@ -84,7 +84,7 @@ object FeatureFlags {
+     fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
+         val langTag = LocaleManager.getCurrentLocale(context)
+             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+-        return listOf("en-US", "en-CA").contains(langTag)
++        return false && listOf("en-US", "en-CA").contains(langTag)
+     }
+ 
+     /**
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
 index 954f27cfd..ba2c66d21 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
@@ -526,7 +539,7 @@ index 7fffad498..b228693b9 100644
      enum class SumoTopic(internal val topicStr: String) {
          FENIX_MOVING("sync-delist"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 74114ad6b..cf505003f 100644
+index 74114ad6b..2b0af343f 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -227,17 +227,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -550,6 +563,14 @@ index 74114ad6b..cf505003f 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
+@@ -1239,6 +1239,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
+         featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
+-        default = { appContext.components.analytics.features.homeScreen.isPocketRecommendationsActive() },
++        default = { false },
+     )
+ }
 diff --git a/app/src/main/res/values/static_strings_extra.xml b/app/src/main/res/values/static_strings_extra.xml
 new file mode 100644
 index 000000000..101f4e0d0
