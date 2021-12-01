@@ -422,18 +422,18 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 6eb0a70e5..b4a74c668 100644
+index 954f27cfd..ba2c66d21 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -8,7 +8,6 @@ import android.app.Application
- import android.content.Context
- import android.content.Intent
+@@ -10,7 +10,6 @@ import android.content.Intent
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.platform.LocalContext
  import androidx.core.net.toUri
 -import com.google.android.play.core.review.ReviewManagerFactory
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -152,7 +151,6 @@ class Components(private val context: Context) {
+@@ -156,7 +155,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -442,10 +442,10 @@ index 6eb0a70e5..b4a74c668 100644
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 975c6d24a..ee0cf1aa8 100644
+index f89d5a455..f16756fee 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -350,8 +350,14 @@ class Core(
+@@ -362,8 +362,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -495,13 +495,13 @@ index 9793c0112..bd6040c5b 100644
      }
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-diff --git a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-index e337a2b4b..a63866d62 100644
---- a/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-+++ b/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/viewholders/topsites/TopSiteItemViewHolder.kt
-@@ -84,6 +84,12 @@ class TopSiteItemViewHolder(
-             SupportUtils.PDD_URL -> {
-                 binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_pdd))
+diff --git a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
+index 2e2b2b8eb..6cb1a2f58 100644
+--- a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
++++ b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
+@@ -88,6 +88,12 @@ class TopSiteItemViewHolder(
+             SupportUtils.TC_URL -> {
+                 binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_tc))
              }
 +            SupportUtils.FDROID_URL -> {
 +                binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_fdroid))
@@ -510,14 +510,14 @@ index e337a2b4b..a63866d62 100644
 +                binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_eff))
 +            }
              else -> {
-                 itemView.context.components.core.icons.loadIntoView(favicon_image, topSite.url)
+                 itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
              }
 diff --git a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 5c6681103..8f601f815 100644
+index 7fffad498..b228693b9 100644
 --- a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -36,6 +36,8 @@ object SupportUtils {
-             "cpsSign=CM_210309_13289095_194240604_8bcfd56d5db3c43d983014d2658ec26e&duoduo_type=2"
+@@ -37,6 +37,8 @@ object SupportUtils {
+     const val TC_URL = "https://jumpluna.58.com/i/29HU"
      const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
      const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
 +    const val FDROID_URL = "https://f-droid.org/"
@@ -526,10 +526,10 @@ index 5c6681103..8f601f815 100644
      enum class SumoTopic(internal val topicStr: String) {
          FENIX_MOVING("sync-delist"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 76d16897a..943bb1446 100644
+index 74114ad6b..cf505003f 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -224,17 +224,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -227,17 +227,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -549,7 +549,7 @@ index 76d16897a..943bb1446 100644
 +        default = false
      )
  
-     private var trackingProtectionOnboardingShownThisSession = false
+     var isOverrideTPPopupsForPerformanceTest = false
 diff --git a/app/src/main/res/values/static_strings_extra.xml b/app/src/main/res/values/static_strings_extra.xml
 new file mode 100644
 index 000000000..101f4e0d0
@@ -565,10 +565,10 @@ index 000000000..101f4e0d0
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index ab16a037d..909a6a4f7 100644
+index e1e9be315..daf79e0f5 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
-@@ -125,11 +125,6 @@
+@@ -130,11 +130,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -580,18 +580,18 @@ index ab16a037d..909a6a4f7 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -177,11 +172,6 @@
+@@ -181,11 +176,6 @@
+         android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
-         <androidx.preference.Preference
+-        <androidx.preference.Preference
 -            android:key="@string/pref_key_rate"
 -            app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />
 -
--        <androidx.preference.Preference
+         <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
-             android:title="@string/preferences_about" />
 diff --git a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 index 69b25a706..20043dbd4 100644
 --- a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
@@ -629,10 +629,10 @@ index fa965a579..daebcce40 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 19832e82c..388ae1371 100644
+index 195260060..81e223f19 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -142,7 +142,6 @@ object Deps {
+@@ -152,7 +152,6 @@ object Deps {
      const val mozilla_ui_tabcounter = "org.mozilla.components:ui-tabcounter:${Versions.mozilla_android_components}"
  
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
@@ -640,9 +640,9 @@ index 19832e82c..388ae1371 100644
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
      const val mozilla_lib_state = "org.mozilla.components:lib-state:${Versions.mozilla_android_components}"
  
-@@ -185,9 +184,6 @@ object Deps {
-     const val androidx_work_testing = "androidx.work:work-testing:${Versions.androidx_work}"
-     const val google_material = "com.google.android.material:material:${Versions.google_material}"
+@@ -208,9 +207,6 @@ object Deps {
+     const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${Versions.protobuf}"
+     const val protobuf_compiler = "com.google.protobuf:protoc:${Versions.protobuf}"
  
 -    const val adjust = "com.adjust.sdk:adjust-android:${Versions.adjust}"
 -    const val installreferrer = "com.android.installreferrer:installreferrer:${Versions.installreferrer}"
@@ -650,7 +650,7 @@ index 19832e82c..388ae1371 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -219,11 +215,6 @@ object Deps {
+@@ -242,11 +238,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  
