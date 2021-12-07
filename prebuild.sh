@@ -241,7 +241,6 @@ ac_add_options --disable-debug
 ac_add_options --disable-nodejs
 ac_add_options --disable-tests
 ac_add_options --disable-updater
-ac_add_options --without-wasm-sandboxed-libraries
 ac_add_options --enable-application=mobile/android
 ac_add_options --enable-release
 ac_add_options --enable-update-channel=release
@@ -250,8 +249,11 @@ ac_add_options --with-android-min-sdk=$minsdk
 ac_add_options --with-android-ndk="$ndk"
 ac_add_options --with-android-sdk="$ANDROID_SDK"
 ac_add_options --with-gradle=$(command -v gradle)
+ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
 ac_add_options CC="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang"
 ac_add_options CXX="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
+ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
+ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 EOF
 if [ "$target" != aarch64-linux-android ]; then

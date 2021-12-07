@@ -28,6 +28,7 @@ source "$(dirname "$0")/paths.sh"
 
 # Set up Android SDK
 "$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;30.0.2'
+"$ANDROID_HOME/tools/bin/sdkmanager" 'cmake;3.18.1' # required by WASI SDK
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
@@ -46,6 +47,13 @@ export PYENV_ROOT
 eval "$(pyenv init --path)"
 pyenv install 3.9.9
 pyenv global 3.9.9
+
+# Build WASI SDK
+pushd "$wasi"
+mkdir -p build/install/wasi
+touch build/compiler-rt.BUILT # fool the build system
+make PATH="$ANDROID_HOME/cmake/3.18.1/bin:$PATH" PREFIX=/wasi build -j"$(nproc)"
+popd
 
 pushd "$mozilla_release"
 export MACH_USE_SYSTEM_PYTHON=yes
