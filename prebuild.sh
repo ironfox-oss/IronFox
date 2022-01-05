@@ -159,7 +159,6 @@ localize_maven
 popd
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
-sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle
 sed -i -e '/ndkVersion:/a\        ndkPath: System.getenv("ANDROID_NDK"),' \
     build.gradle
 localize_maven
@@ -198,7 +197,6 @@ popd
 pushd "$application_services"
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK_VERSION/d' libs/android_defaults.sh
-sed -i -e 's/21.3.6528147/21.4.7075529/' build.gradle
 sed -i -e '/ndkVersion:/a\        ndkPath: System.getenv("ANDROID_NDK"),' \
     build.gradle
 sed -i -e '/content {/,/}/d' build.gradle
@@ -233,8 +231,6 @@ sed -i \
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
-sed -i -e 's/"r21d"/"r21e"/' python/mozboot/mozboot/android.py
-ndk=$ANDROID_NDK
 cat << EOF > mozconfig
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
@@ -246,12 +242,12 @@ ac_add_options --enable-release
 ac_add_options --enable-update-channel=release
 ac_add_options --target=$target
 ac_add_options --with-android-min-sdk=$minsdk
-ac_add_options --with-android-ndk="$ndk"
+ac_add_options --with-android-ndk="$ANDROID_NDK"
 ac_add_options --with-android-sdk="$ANDROID_SDK"
 ac_add_options --with-gradle=$(command -v gradle)
 ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
-ac_add_options CC="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang"
-ac_add_options CXX="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
+ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang"
+ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
 ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
