@@ -27,8 +27,8 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-"$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;30.0.2'
-"$ANDROID_HOME/tools/bin/sdkmanager" 'cmake;3.18.1' # required by WASI SDK
+JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;30.0.2'
+JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'cmake;3.18.1' # required by WASI SDK
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
@@ -67,7 +67,7 @@ gradle publishToMavenLocal
 popd
 
 pushd "$glean"
-JAVA_HOME="$java11" gradle publishToMavenLocal
+gradle publishToMavenLocal
 popd
 
 pushd "$android_components_as"
@@ -80,12 +80,12 @@ export SQLCIPHER_LIB_DIR="$application_services/libs/desktop/linux-x86-64/sqlcip
 export SQLCIPHER_INCLUDE_DIR="$application_services/libs/desktop/linux-x86-64/sqlcipher/include"
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
-JAVA_HOME="$java11" ./libs/verify-android-environment.sh
-JAVA_HOME="$java11" gradle publishToMavenLocal
+./libs/verify-android-environment.sh
+gradle publishToMavenLocal
 popd
 
 pushd "$android_components"
-JAVA_HOME="$java11" gradle publishToMavenLocal
+gradle publishToMavenLocal
 popd
 
-JAVA_HOME="$java11" gradle assembleRelease
+gradle assembleRelease
