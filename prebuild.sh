@@ -234,6 +234,7 @@ sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.co
 cat << EOF > mozconfig
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
+ac_add_options --disable-elf-hack
 ac_add_options --disable-nodejs
 ac_add_options --disable-tests
 ac_add_options --disable-updater
@@ -253,9 +254,6 @@ ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 EOF
-if [ "$target" != aarch64-linux-android ]; then
-    echo 'ac_add_options --disable-elf-hack' >> mozconfig
-fi
 
 # Disable Gecko Media Plugins and casting
 sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/mobile.js
