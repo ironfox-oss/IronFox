@@ -229,12 +229,18 @@ sed -i \
     -e '/repositories {/a\        google()' \
     build.gradle
 
+# Replace the uses of std::is_xxx_v<T> traits with std::is_xxx<T>::value
+# because they are not supported by libstdc++ 6.3.0 (we're still on Debian 9)
+sed -i -E \
+    -e 's/std::is_([_a-z]*)_v<([_A-Za-z][_A-Za-z0-9]*)>/std::is_\1<\2>::value/' \
+    -e 's/std::is_([_a-z]*)_v<([_A-Za-z][_A-Za-z0-9]*), ([_A-Za-z][_A-Za-z0-9]*)>/std::is_\1<\2, \3>::value/' \
+    mfbt/*.h
+
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 cat << EOF > mozconfig
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
-ac_add_options --disable-elf-hack
 ac_add_options --disable-nodejs
 ac_add_options --disable-tests
 ac_add_options --disable-updater
