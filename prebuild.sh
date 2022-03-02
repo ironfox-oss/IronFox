@@ -223,7 +223,7 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
 sed -i \
-    -e '/maven {/,/}$/d; /gradle.mozconfig.substs/,/}$/d' \
+    -e '/maven {/,/}$/d; /gradle.mozconfig.substs/,/}$/{N;d;}' \
     -e '/repositories {/a\        mavenLocal()' \
     -e '/repositories {/a\        maven { url "https://plugins.gradle.org/m2/" }' \
     -e '/repositories {/a\        google()' \

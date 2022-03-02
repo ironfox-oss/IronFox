@@ -27,14 +27,14 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;30.0.2'
+JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;31.0.0'
 JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'cmake;3.18.1' # required by WASI SDK
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1091
 source "$HOME/.cargo/env"
-rustup default 1.58.1
+rustup default 1.59.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -59,6 +59,7 @@ pushd "$mozilla_release"
 export MACH_USE_SYSTEM_PYTHON=yes
 ./mach build
 gradle publishWithGeckoBinariesReleasePublicationToMavenLocal
+gradle exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$glean_as"
