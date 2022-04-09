@@ -120,26 +120,24 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 
 # Set up target parameters
+minsdk=21
 case $(echo "$2" | cut -c 5) in
     0)
         abi=armeabi-v7a
         target=arm-linux-androideabi
         rusttarget=arm
-        minsdk=16
         triplet="armv7a-linux-androideabi$minsdk"
         ;;
     1)
         abi=x86
         target=i686-linux-android
         rusttarget=x86
-        minsdk=16
         triplet="$target$minsdk"
         ;;
     2)
         abi=arm64-v8a
         target=aarch64-linux-android
         rusttarget=arm64
-        minsdk=21
         triplet="$target$minsdk"
         ;;
     *)
