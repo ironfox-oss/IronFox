@@ -121,7 +121,7 @@ sed -i \
 
 # Set up target parameters
 minsdk=21
-case $(echo "$2" | cut -c 5) in
+case $(echo "$2" | cut -c 6) in
     0)
         abi=armeabi-v7a
         target=arm-linux-androideabi
