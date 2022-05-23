@@ -38,15 +38,15 @@ rustup default 1.59.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
-cargo install --force --vers 0.20.0 cbindgen
+cargo install --force --vers 0.23.0 cbindgen
 
 # Set up Python
 PYENV_ROOT=$(realpath "$pyenv")
 export PATH="$PYENV_ROOT/bin:$PATH"
 export PYENV_ROOT
 eval "$(pyenv init --path)"
-pyenv install 3.9.12
-pyenv global 3.9.12
+pyenv install 3.9.13
+pyenv global 3.9.13
 
 # Build WASI SDK
 pushd "$wasi"
