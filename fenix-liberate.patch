@@ -508,7 +508,7 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index c805b481f..4d83238a0 100644
+index c805b481f..b34675348 100644
 --- a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -59,7 +59,7 @@ object FeatureFlags {
@@ -520,15 +520,6 @@ index c805b481f..4d83238a0 100644
      }
  
      /**
-@@ -80,7 +80,7 @@ object FeatureFlags {
-     /**
-      * Enables the Contile top sites.
-      */
--    const val contileFeature = true
-+    const val contileFeature = false
- 
-     /**
-      * Enables history improvement features.
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
 index 2b7be407c..9be7fb1fa 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
