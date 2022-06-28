@@ -201,7 +201,7 @@ sed -i -e '/content {/,/}/d' build.gradle
 sed -i -e '/ndkVersion/a\    ndkPath rootProject.ext.build.ndkPath' \
     build-scripts/component-common.gradle \
     megazords/full/android/build.gradle
-sed -i -e '/sdkmanager/d' libs/verify-android-ci-environment.sh
+sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 localize_maven
 popd
 
