@@ -34,11 +34,11 @@ JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'cmake;3.18.1' # require
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1091
 source "$HOME/.cargo/env"
-rustup default 1.59.0
+rustup default 1.62.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
-cargo install --force --vers 0.23.0 cbindgen
+cargo install --force --vers 0.24.3 cbindgen
 
 # Set up Python
 PYENV_ROOT=$(realpath "$pyenv")
