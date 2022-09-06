@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>Metager</ShortName>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA1VBMVEX/gAD/jh3/5sz/4sX/2rT/woT/nz7/kiX/////5Mj/kyb/9+//lCj/5cv/1ar/1av/4MH/+fL/587/gAH/smT/hAj/u3f//fv/pEj/vHn/ypT/q1b/hQr/+fP/ixb/zJn/vXr/797/9uz/06b/9u3/qVP/xIj/69b/zZv/1qz/t2//yJH//fr/zZr/xYv/2rX/kyf/xoz/okT/nDj/7t3/8uX/6NH/lSr/njz/z5//rVr/o0f/+vT/1Kj/27f//v3/5s3/hw7/48b/mjT/27b/2bP/wYIVxnflAAAA1klEQVQ4y73T1xKCMBAF0LVfbFixi7333rv+/yf5IsEVhPHF+5QlZybDbkL0nzicPC63x8uAD8ZIfhuAQJCDUFhEjkQBIBZnIPF+ZlJJAUh/B0QZAFkGchzkC4AkqqKqlpIfvx4Bypa9kYGKJagCtd9AvcHT/AQtYy85aFuBjqJ0ewCAfmMwNAE18W1ERGM7MLEDU62o2IGZAHNzoA9rIcCSiFZaoY97LcCGiBSt2AqwFWC3Vw/H1/qkX7m42+zSjt76fJYN+xcfn+7Vc5P0h3N/rOh/eQLhhxrRgtfb4wAAAABJRU5ErkJggg==</Image>
+<Url type="text/html" method="GET" template="https://metager.org/meta/meta.ger3">
+  <Param name="eingabe" value="{searchTerms}"/>
+</Url>
+<SearchForm>https://metager.org/</SearchForm>
+</SearchPlugin>

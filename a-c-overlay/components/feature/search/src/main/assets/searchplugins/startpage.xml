@@ -1,0 +1,19 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>Startpage</ShortName>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="32" height="32">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEUUlEQVRYhb2XW2xUZRDHf7NsLb1YESq0oAlGrBBqLaXFIikmggGLYCEbhWCsEhOCiZcQIMjFByKoaYmx8mQkkReBBLWGhAdQQ3igtRJBrImIFUq1BdtS6HV7trvjw+nuuezZbdHaSU72fDPfzPef78xtxTDCeSIcUtUFIvgYB1IVRKgHKsUwwnUiWjoeB8cDoV4MI6x2pgiojtdaIxIKDQ0vBXBgcfGEcBhaWuHvDjBCkJEO9+dC9mRFZGR9r3e/7UKIJ5PX1y+cPC3UnYOefnEdoczIFZaWKSWFgs+ncfrJ3uM+gZuamuHg58LtbkvVDsHu0+xZsGGdkpGezKKTkgJoaoYDBwXDGL3B6bmweaOSNnGUAKwYAPu36esX3v1QuNUjpseqIPDADJgzC9LSlI5O4cIv5l5TLihQlK+8ul4R8YoJsO5R7TEQFZh06ox5eJSbmgovBZR5j2IzrKxZIRyphYYLlpXzjXD5D8h7yO1vfBx4Fp5wWDj7gxP3K2uVooJ4r9ImKpXPK/mPgGjUR+HM985gTUQ+VQEEVetpaYXeXhBVRJVZM5WCOcTk7v0+HwSeVROBms+l3xPvt6/9UY/seXyjXYZdMb2Y/XAEEecVisvBqdlC6Xy4ecviGSFIvSvevl3fFYQmNV0VrlyD+6bAPVmQPRkyM5Jm67+mEevA6Em51tKGDnuZ4vczPXfaiFp+NyN6NeFwmM6bt2hra2cgOMjjJQWAxNX2KF1svERg/Vux9fx5czn82f64fW59f3yuQnd3H0+Vv8zt7t4Y79An7/FEaaENpPVNh4YivL//U4eNhQsKPeqA3UlT3zMNs7IyWLSwyMHbvP0DLjZetnFM48GgwbZd1Zz7sTHGnjDBx+pVSz0Pd+t7BiHA1WutrAq8xkBwMLbfnzKB8mWLKVtUTNbdmVxuaubosRO0/Hnd0SQqVi6hau+WEQAQBRDWRP36+Inv2LKjCo0M5zhWyY39Rp2xpWXVvq08t2JJnD3P9UjzQO3xb9i1p4bBQVtHUixAHgDunZRF7dEDTM+darPpPQ/YYsB7HqhYuYTaIx/zZFnJcDGxwKGmWk5OtsNMV1c3b27dh2GEHLa83u+oDrT81cbZuvM0t7QSCg2RPWUShY/NoXhePrv3fMSxr046HKx8sYKd2zbinCCcNGaFyDAM1m/Yyk8/X3Lwa6p3sPzpxYkBJJoHEs+IYO/ndrp+o5M1616nvaMrxsvMSOfLwzU8OHOGp76rDiSa4ew8TSjPmTaFmuqdpKRYBba3r583tuxlYGDQU3/M/4gUF81l9/ZNDny//naFL74+5bnfcx5wP8n6udd6baCcFwLPWKcoBIODo58HLLJ4ifq5tXbK33l7E909vXx7up7ionwCq5c5ekPSeWAsKRJRfL7EaehXJQLyv/0pFRHP9m3KzCxocDLjr9ctT37gnehLvRjGUB5wCCh1CfFOxf8uVyUiQgNQ+Q/LESVT7byGNwAAAABJRU5ErkJggg==</Image>
+<Url type="application/x-suggestions+json" method="GET" template="https://www.startpage.com/suggestions">
+  <Param name="query" value="{searchTerms}"/>
+  <Param name="format" value="opensearch"/>
+</Url>
+<Url type="text/html" method="GET" template="https://www.startpage.com/sp/search">
+  <Param name="query" value="{searchTerms}"/>
+  <Param name="cat" value="web"/>
+  <Param name="pl" value="opensearch"/>
+</Url>
+<SearchForm>https://www.startpage.com/</SearchForm>
+</SearchPlugin>

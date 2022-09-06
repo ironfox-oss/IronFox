@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>Mojeek</ShortName>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA8pJREFUeNrsVk1vG0UY3tnvtb3+SJpgO01cmkQKUhURqBCC8iE+EoSKED1QBBUKB0r7AzjwB+BSUX4AXDkhFATHCJAKKpSegDZqRVFpGtLETmI72fV+zvDsDnV2VwUu4ZY52KN55n2feZ953rEJY0z4PwfZJ9gn2EOCle7StY2Lf3ave6EzYNRnai80ytNYv7F5+ee1xXXrD8bCoXzjsdFXa+YkD7m+8cNS88K6dTMIPVMbmK7OTt/37D0I2s7qZ1feRyI3tEUiEYGELNCk3Nzk2Q17+cfbCyH1JSJjd8C8vFKef+j8oDHy+dUPlprfURZGIYRQGlKBPnXo1MtT72YJtr2ND78/aftdviSLKj6ZQP3QxUSRdCEqkyFRxEG9onZAEpWWdUuTczQWQCRiHMIcf/vNmXMPVmf7BBFgqoOPjp7oBd1qYXykOIXUEbMgqpKB7H7oYIJcPnVjem3H22o7a1iBmJpsaJLBIZQO4ku3F5IVyPzrkYOvDOcPQ0Gc4qOLr7fsZYkomEOB2Yl3jtaPEyIu3vj40sqCIuooBRBknJs4c3TkJcbo4u+f/LTyBSAZldm3nGBHlwspgopeq9Rq8ZThjJEkRPBC+4nGG8+Pn+Z7ZifO/LL+NQpCcYCebJx6bvxtDs1NnP117RufOigDGqIgXSjsSpQcvWDb9tvQFELpsvn42Mk+pMo6bp6iKoEacvFY47VdSNJ1OY9ScD6oqop66g6Sw/a3ncCCICENhnJjg7mDfcjxLS/sifAYoPwYrLwLBRYciGyQtKBWcD3/SGB5W14kAsHWslHFJA31BBJlKWrDQgLa8TbdwI7MymgpDWUJsBWuj+1Li9pQEoKboS/hkJ6G3BaHwF0xakkoS9B1W9jETV1KE3TdZkjvDXXcJo0uIPbLfxE0/+5AQkr6cCqLsx4lj/2egeIo3nFSWa/+K4HTRGq+1dQOZAj4lYiinFXPbcUQQ6MV01FZAggNm0MERdRMdSBzTBLZF42iovnT1ugQ/lowyrViAks1WtIq0cPCqCLnc2q5v44A3H/UHwz9UcgnIAx09V1dxa+una8YdUMxTzzwXrYCj/YsPzoLFRiyGLLZh+BCy2uT6JGghlJAfDKwolc5h0yU5c7VyytfXln71vY7WQLb67R7q8gFDBKhPxOVbW45dzwOSbqS6FWMh+sv4kF0AwuPBErE/eE1XN35LSsRxH36/nnoEfdqI9kvSPrM4bdI3MbDhUMZYUdLR+Znzl24+SkeWkMp1s3JqaFjY6Uje/+TyX9/9v9V7BPs7fhLgAEAm6sRCKh1afsAAAAASUVORK5CYII=</Image>
+<Url type="text/html" method="GET" template="https://www.mojeek.com/search">
+  <Param name="q" value="{searchTerms}"/>
+</Url>
+<SearchForm>https://www.mojeek.com/</SearchForm>
+</SearchPlugin>

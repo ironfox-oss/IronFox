@@ -1,0 +1,13 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>Alexandria</ShortName>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAABD0lEQVQoz4XNsSuEARzG8c973nA5dXUTkZuMUmdjMNxgwnKZSDHpBruS8gdYZGI5i/fqFhaDjVU3KMqsC3VKnXqVnMHd9S7y/S1P356eH0kKIlWFpAp6acSupiNsydnXSNbSdpzImxWJzMo7sSP9uxBYUXJgxZdPhygbEIpsqzkL1Jw79W3aojkfGHLjQl1g1VLg2rG/2ewzbsKrKcPq3ns3Y8yrKfeBjCuXFhQNKGsh49Bn16a0PNjzYFlVSiyWUrXcsa2w9y2nIusJoYpcV6f8Q5jIL+at4k4km1zol9evaQNv3rCh2bFCRW3r2p6VEmtdWwzcehQbFGolChlfYoMmQ2kxYtBQwZrRTjmW/gHcxlG3bKA4DQAAAABJRU5ErkJggg==</Image>
+<Url type="text/html" method="GET" template="https://www.alexandria.org/">
+  <Param name="q" value="{searchTerms}"/>
+</Url>
+<SearchForm>https://www.alexandria.org/</SearchForm>
+</SearchPlugin>
