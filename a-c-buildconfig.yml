@@ -8,6 +8,22 @@ projects:
     path: components/concept/fetch
     description: 'An abstract definition of an HTTP client for fetching resources.'
     publish: true
+  concept-engine:
+    path: components/concept/engine
+    description: 'An abstract layer hiding the actual browser engine implementation.'
+    publish: true
+  concept-storage:
+    path: components/concept/storage
+    description: 'An abstract definition of a browser storage layer.'
+    publish: true
+  browser-errorpages:
+    path: components/browser/errorpages
+    description: 'Responsive browser error pages for Android apps.'
+    publish: true
+  ui-icons:
+    path: components/ui/icons
+    description: 'A collection of often used browser icons.'
+    publish: true
   service-glean:
     path: components/service/glean
     description: 'A client-side telemetry SDK for collecting metrics and sending them to the Mozilla telemetry service'
@@ -23,6 +39,10 @@ projects:
   support-test:
     path: components/support/test
     description: 'A collection of helpers for testing components (local unit tests).'
+    publish: true
+  support-test-fakes:
+    path: components/support/test-fakes
+    description: 'A collection of fake implementations for testing purposes.'
     publish: true
   support-android-test:
     path: components/support/android-test
