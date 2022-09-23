@@ -52,7 +52,14 @@ pyenv global 3.9.13
 pushd "$wasi"
 mkdir -p build/install/wasi
 touch build/compiler-rt.BUILT # fool the build system
-make PATH="$ANDROID_HOME/cmake/3.18.1/bin:$PATH" PREFIX=/wasi build -j"$(nproc)"
+# BULK_MEMORY_SOURCES= disables -mbulk-memory which is not supported by wasm2c
+make \
+    PATH="$ANDROID_HOME/cmake/3.18.1/bin:$PATH" \
+    BULK_MEMORY_SOURCES= \
+    PREFIX=/wasi \
+    build/wasi-libc.BUILT \
+    build/libcxx.BUILT \
+    -j"$(nproc)"
 popd
 
 pushd "$mozilla_release"
