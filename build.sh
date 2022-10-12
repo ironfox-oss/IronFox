@@ -27,7 +27,7 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;31.0.0'
+sdkmanager 'build-tools;31.0.0'
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
