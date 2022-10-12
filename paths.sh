@@ -26,4 +26,3 @@ readonly glean=$(realpath ../srclib/MozGlean)
 readonly mozilla_release=$(realpath ../srclib/MozFennec)
 readonly rustup=$(realpath ../srclib/rustup)
 readonly wasi=$(realpath ../srclib/wasi-sdk)
-readonly java8=/usr/lib/jvm/java-8-openjdk-amd64
