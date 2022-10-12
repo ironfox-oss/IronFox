@@ -40,14 +40,6 @@ rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
 cargo install --force --vers 0.24.3 cbindgen
 
-# Set up Python
-PYENV_ROOT=$(realpath "$pyenv")
-export PATH="$PYENV_ROOT/bin:$PATH"
-export PYENV_ROOT
-eval "$(pyenv init --path)"
-pyenv install 3.9.13
-pyenv global 3.9.13
-
 # Build WASI SDK
 pushd "$wasi"
 mkdir -p build/install/wasi

@@ -25,6 +25,5 @@ readonly glean_as=$(realpath ../srclib/MozGleanAS)
 readonly glean=$(realpath ../srclib/MozGlean)
 readonly mozilla_release=$(realpath ../srclib/MozFennec)
 readonly rustup=$(realpath ../srclib/rustup)
-readonly pyenv=$(realpath ../srclib/pyenv)
 readonly wasi=$(realpath ../srclib/wasi-sdk)
 readonly java8=/usr/lib/jvm/java-8-openjdk-amd64
