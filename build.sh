@@ -28,7 +28,6 @@ source "$(dirname "$0")/paths.sh"
 
 # Set up Android SDK
 JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;31.0.0'
-JAVA_HOME="$java8" "$ANDROID_HOME/tools/bin/sdkmanager" 'cmake;3.18.1' # required by WASI SDK
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
@@ -46,7 +45,6 @@ mkdir -p build/install/wasi
 touch build/compiler-rt.BUILT # fool the build system
 # BULK_MEMORY_SOURCES= disables -mbulk-memory which is not supported by wasm2c
 make \
-    PATH="$ANDROID_HOME/cmake/3.18.1/bin:$PATH" \
     BULK_MEMORY_SOURCES= \
     PREFIX=/wasi \
     build/wasi-libc.BUILT \
