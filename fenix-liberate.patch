@@ -508,10 +508,10 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 590e18993..195b1c98b 100644
+index 5f5f1b4f3..854169c80 100644
 --- a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -59,7 +59,7 @@ object FeatureFlags {
+@@ -69,7 +69,7 @@ object FeatureFlags {
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
          val langTag = LocaleManager.getCurrentLocale(context)
              ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
@@ -521,7 +521,7 @@ index 590e18993..195b1c98b 100644
  
      /**
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 883571c33..cf78cba54 100644
+index 8eb528cdf..dcf304ebf 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -11,7 +11,6 @@ import android.os.StrictMode
@@ -532,37 +532,37 @@ index 883571c33..cf78cba54 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -179,7 +178,6 @@ class Components(private val context: Context) {
+@@ -174,7 +173,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
 -            manager = ReviewManagerFactory.create(context),
-             reviewSettings = FenixReviewSettings(settings)
+             reviewSettings = FenixReviewSettings(settings),
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cc21ee48a..3a2331516 100644
+index 5dfc2c576..79a10321c 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -447,8 +447,14 @@ class Core(
+@@ -451,8 +451,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
 -                            context.getString(R.string.default_top_site_google),
--                            SupportUtils.GOOGLE_URL
+-                            SupportUtils.GOOGLE_URL,
 +                            context.getString(R.string.default_top_site_fdroid),
-+                            SupportUtils.FDROID_URL
-+                        )
++                            SupportUtils.FDROID_URL,
++                        ),
 +                    )
 +                    defaultTopSites.add(
 +                        Pair(
 +                            context.getString(R.string.default_top_site_eff),
-+                            SupportUtils.EFF_URL
-                         )
++                            SupportUtils.EFF_URL,
+                         ),
                      )
  
 diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-index 9793c0112..bd6040c5b 100644
+index 87c3a831b..55b0074ee 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 @@ -6,7 +6,6 @@ package org.mozilla.fenix.components
@@ -591,11 +591,11 @@ index 9793c0112..bd6040c5b 100644
 -            }
 -        }
 +    private val tryPromptReview: suspend (Activity) -> Unit = { _ ->
-     }
+     },
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-index 08c3f8d79..d919c23df 100644
+index ab13c2abb..a9f63b8b1 100644
 --- a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 +++ b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 @@ -116,6 +116,12 @@ class TopSiteItemViewHolder(
@@ -612,7 +612,7 @@ index 08c3f8d79..d919c23df 100644
                      itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
                  }
 diff --git a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 59e463638..14333a641 100644
+index ef150cafd..fd4f49275 100644
 --- a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -36,6 +36,8 @@ object SupportUtils {
@@ -625,36 +625,45 @@ index 59e463638..14333a641 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 4b96e6eb8..74c1b7ed4 100644
+index 9980410c9..61c2f221a 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -244,17 +243,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -274,17 +274,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
--        default = true
-+        default = false
+-        default = true,
++        default = false,
      )
  
      var isMarketingTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
--        default = !Config.channel.isMozillaOnline
-+        default = false
+-        default = !Config.channel.isMozillaOnline,
++        default = false,
      )
  
      var isExperimentationEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_experimentation),
--        default = true
-+        default = false
+-        default = true,
++        default = false,
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1278,7 +1277,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1333,7 +1333,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
 -        default = { homescreenSections[HomeScreenSection.POCKET] == true },
 +        default = { false },
+     )
+ 
+     /**
+@@ -1359,7 +1359,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var showContileFeature by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
+-        default = true,
++        default = false,
      )
  
      /**
@@ -673,10 +682,10 @@ index 000000000..101f4e0d0
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index 9e78617b0..bfa8fc98a 100644
+index 01c1bd7ff..a7fefefaa 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
-@@ -135,11 +135,6 @@
+@@ -127,11 +127,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -688,7 +697,7 @@ index 9e78617b0..bfa8fc98a 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -186,11 +181,6 @@
+@@ -178,11 +173,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
@@ -737,10 +746,10 @@ index d053c49e9..7dd704407 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 61a458a54..bee965ac2 100644
+index 6055ee605..d04d4a02d 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -157,7 +157,6 @@ object Deps {
+@@ -160,7 +160,6 @@ object Deps {
      const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
      const val lib_crash_sentry =
          "org.mozilla.components:lib-crash-sentry:${Versions.mozilla_android_components}"
@@ -748,7 +757,7 @@ index 61a458a54..bee965ac2 100644
      const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
      const val mozilla_lib_state = "org.mozilla.components:lib-state:${Versions.mozilla_android_components}"
  
-@@ -213,9 +212,6 @@ object Deps {
+@@ -220,9 +219,6 @@ object Deps {
      const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${Versions.protobuf}"
      const val protobuf_compiler = "com.google.protobuf:protoc:${Versions.protobuf}"
  
@@ -758,7 +767,7 @@ index 61a458a54..bee965ac2 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -248,11 +244,6 @@ object Deps {
+@@ -255,11 +251,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  
