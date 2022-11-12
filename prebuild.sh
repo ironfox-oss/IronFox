@@ -257,6 +257,7 @@ ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$tripl
 ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
 ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
+mk_add_options MOZ_PARALLEL_BUILD=4 # A workaround for various build failures
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 EOF
 
