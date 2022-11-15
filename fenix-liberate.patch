@@ -1,3 +1,18 @@
+diff --git a/app/build.gradle b/app/build.gradle
+index c23a12a92..c7184babe 100644
+--- a/app/build.gradle
++++ b/app/build.gradle
+@@ -590,10 +590,6 @@ dependencies {
+ 
+     implementation Deps.google_ads_id // Required for the Google Advertising ID
+ 
+-    // Required for in-app reviews
+-    implementation Deps.google_play_review
+-    implementation Deps.google_play_review_ktx
+-
+     androidTestImplementation Deps.uiautomator
+     androidTestImplementation "tools.fastlane:screengrab:2.0.0"
+     // This Falcon version is added to maven central now required for Screengrab
 diff --git a/app/proguard-rules.pro b/app/proguard-rules.pro
 index e269f6577..e870f06be 100644
 --- a/app/proguard-rules.pro
@@ -508,10 +523,19 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 5f5f1b4f3..854169c80 100644
+index c17efab61..d6d774777 100644
 --- a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -69,7 +69,7 @@ object FeatureFlags {
+@@ -18,7 +18,7 @@ object FeatureFlags {
+      * This feature does not only depend on this flag. It requires the AMO collection override to
+      * be enabled which is behind the Secret Settings.
+      * */
+-    val customExtensionCollectionFeature = Config.channel.isNightlyOrDebug || Config.channel.isBeta
++    val customExtensionCollectionFeature = true
+ 
+     /**
+      * Pull-to-refresh allows you to pull the web content down far enough to have the page to
+@@ -77,7 +77,7 @@ object FeatureFlags {
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
          val langTag = LocaleManager.getCurrentLocale(context)
              ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
@@ -520,11 +544,32 @@ index 5f5f1b4f3..854169c80 100644
      }
  
      /**
+diff --git a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+index 7ca831f45..f1e9bb92b 100644
+--- a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
++++ b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+@@ -121,15 +121,7 @@ class Analytics(
+         MetricController.create(
+             listOf(
+                 GleanMetricsService(context),
+-                AdjustMetricsService(
+-                    application = context as Application,
+-                    storage = DefaultMetricsStorage(
+-                        context = context,
+-                        settings = context.settings(),
+-                        checkDefaultBrowser = { BrowsersCache.all(context).isDefaultBrowser },
+-                    ),
+-                    crashReporter = crashReporter,
+-                ),
++                AdjustMetricsService(context as Application),
+             ),
+             isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
+             isMarketingDataTelemetryEnabled = { context.settings().isMarketingTelemetryEnabled },
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 8eb528cdf..dcf304ebf 100644
+index 787651bd1..706bee64c 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -11,7 +11,6 @@ import android.os.StrictMode
+@@ -12,7 +12,6 @@ import android.os.StrictMode
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.LocalContext
  import androidx.core.net.toUri
@@ -532,7 +577,7 @@ index 8eb528cdf..dcf304ebf 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -174,7 +173,6 @@ class Components(private val context: Context) {
+@@ -177,7 +176,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -541,7 +586,7 @@ index 8eb528cdf..dcf304ebf 100644
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 5dfc2c576..79a10321c 100644
+index 08c747749..e59ef28ac 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -451,8 +451,14 @@ class Core(
@@ -594,11 +639,65 @@ index 87c3a831b..55b0074ee 100644
      },
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+diff --git a/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+index bf32cb29c..58886aa6d 100644
+--- a/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
++++ b/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+@@ -10,23 +10,12 @@ import android.os.Bundle
+ import android.util.Log
+ import com.adjust.sdk.Adjust
+ import com.adjust.sdk.AdjustConfig
+-import com.adjust.sdk.AdjustEvent
+ import com.adjust.sdk.LogLevel
+-import kotlinx.coroutines.CoroutineDispatcher
+-import kotlinx.coroutines.CoroutineScope
+-import kotlinx.coroutines.Dispatchers
+-import kotlinx.coroutines.launch
+-import mozilla.components.lib.crash.CrashReporter
+ import org.mozilla.fenix.BuildConfig
+ import org.mozilla.fenix.Config
+ import org.mozilla.fenix.ext.settings
+ 
+-class AdjustMetricsService(
+-    private val application: Application,
+-    private val storage: MetricsStorage,
+-    private val crashReporter: CrashReporter,
+-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+-) : MetricsService {
++class AdjustMetricsService(private val application: Application) : MetricsService {
+     override val type = MetricServiceType.Marketing
+ 
+     override fun start() {
+@@ -81,22 +70,8 @@ class AdjustMetricsService(
+         Adjust.gdprForgetMe(application.applicationContext)
+     }
+ 
+-    @Suppress("TooGenericExceptionCaught")
+-    override fun track(event: Event) {
+-        CoroutineScope(dispatcher).launch {
+-            try {
+-                if (event is Event.GrowthData && storage.shouldTrack(event)) {
+-                    Adjust.trackEvent(AdjustEvent(event.tokenName))
+-                    storage.updateSentState(event)
+-                }
+-            } catch (e: Exception) {
+-                crashReporter.submitCaughtException(e)
+-            }
+-        }
+-    }
+-
+-    override fun shouldTrack(event: Event): Boolean =
+-        event is Event.GrowthData
++    override fun track(event: Event) { /* noop */ }
++    override fun shouldTrack(event: Event): Boolean = false
+ 
+     companion object {
+         private const val LOGTAG = "AdjustMetricsService"
 diff --git a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-index ab13c2abb..a9f63b8b1 100644
+index ea0dddeef..9bbfdf671 100644
 --- a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 +++ b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-@@ -116,6 +116,12 @@ class TopSiteItemViewHolder(
+@@ -149,6 +149,12 @@ class TopSiteItemViewHolder(
                  SupportUtils.MEITUAN_URL -> {
                      binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_meituan))
                  }
@@ -625,10 +724,10 @@ index ef150cafd..fd4f49275 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9980410c9..61c2f221a 100644
+index d1eb333cf..e3143142e 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -274,17 +274,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -284,17 +284,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -649,7 +748,7 @@ index 9980410c9..61c2f221a 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1333,7 +1333,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1344,7 +1344,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -658,7 +757,7 @@ index 9980410c9..61c2f221a 100644
      )
  
      /**
-@@ -1359,7 +1359,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1370,7 +1370,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -746,7 +845,7 @@ index d053c49e9..7dd704407 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 6055ee605..d04d4a02d 100644
+index 0ac991013..81edcae45 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
 @@ -160,7 +160,6 @@ object Deps {
@@ -767,14 +866,15 @@ index 6055ee605..d04d4a02d 100644
      const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
  
      const val junit = "junit:junit:${Versions.junit}"
-@@ -255,11 +251,6 @@ object Deps {
+@@ -257,12 +253,6 @@ object Deps {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
  
 -    const val google_ads_id = "com.google.android.gms:play-services-ads-identifier:${Versions.google_ads_id_version}"
 -
 -    // Required for in-app reviews
--    const val google_play_store = "com.google.android.play:core:${Versions.google_play_store_version}"
+-    const val google_play_review = "com.google.android.play:review:${Versions.google_play_review_version}"
+-    const val google_play_review_ktx = "com.google.android.play:review-ktx:${Versions.google_play_review_version}"
 -
      const val detektApi = "io.gitlab.arturbosch.detekt:detekt-api:${Versions.detekt}"
      const val detektTest = "io.gitlab.arturbosch.detekt:detekt-test:${Versions.detekt}"

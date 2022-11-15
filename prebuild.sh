@@ -170,6 +170,8 @@ pushd "$android_components_as"
 acver=$(git name-rev --tags --name-only "$(git rev-parse HEAD)")
 acver=${acver#v}
 sed -e "s/VERSION/$acver/" "$patches/a-c-buildconfig.yml" > .buildconfig.yml
+# Temporary workaround
+sed -i 's/50.1.3/51.2.0/' buildSrc/src/main/java/Dependencies.kt
 # We don't need Gecko while building A-C for A-S
 rm -fR components/browser/engine-gecko*
 localize_maven
