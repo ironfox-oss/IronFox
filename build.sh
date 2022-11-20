@@ -54,7 +54,7 @@ make \
 popd
 
 pushd "$mozilla_release"
-./mach build
+./mach --verbose build
 gradle publishWithGeckoBinariesReleasePublicationToMavenLocal
 gradle exoplayer2:publishReleasePublicationToMavenLocal
 popd
