@@ -54,8 +54,6 @@ make \
 popd
 
 pushd "$mozilla_release"
-./mach configure
-make -C obj config/.deps/cbindgen-metadata.json.stub # Make before other targets
 ./mach build
 gradle publishWithGeckoBinariesReleasePublicationToMavenLocal
 gradle exoplayer2:publishReleasePublicationToMavenLocal
