@@ -21,10 +21,10 @@ images := $(foreach x,hdpi mdpi xhdpi xxhdpi xxxhdpi, \
                     $(outdir)/mipmap-$(x)/ic_launcher.png \
                     $(outdir)/mipmap-$(x)/ic_launcher_foreground.png \
                     $(outdir)/drawable-$(x)/ic_logo_wordmark_normal.png \
-                    $(outdir)/drawable-$(x)/ic_logo_wordmark_private.png \
-                    $(outdir)/drawable-$(x)/ic_wordmark_text_normal.png \
-                    $(outdir)/drawable-$(x)/ic_wordmark_text_private.png \
-                    $(outdir)/drawable-$(x)/ic_wordmark_logo.png)
+                    $(outdir)/drawable-$(x)/ic_logo_wordmark_private.png) \
+          $(outdir)/drawable/ic_wordmark_text_normal.png \
+          $(outdir)/drawable/ic_wordmark_text_private.png \
+          $(outdir)/drawable/ic_wordmark_logo.png
 
 all: $(images)
 
@@ -109,53 +109,17 @@ $(outdir)/drawable-xxxhdpi/ic_logo_wordmark_private.png : ic_logo_wordmark_priva
 
 # Wordmark normal, text-only
 
-$(outdir)/drawable-mdpi/ic_wordmark_text_normal.png : ic_logo_wordmark_normal.svg
-	$(call rasterize,64:0:300:46,80)
-
-$(outdir)/drawable-hdpi/ic_wordmark_text_normal.png : ic_logo_wordmark_normal.svg
-	$(call rasterize,64:0:300:46,120)
-
-$(outdir)/drawable-xhdpi/ic_wordmark_text_normal.png : ic_logo_wordmark_normal.svg
-	$(call rasterize,64:0:300:46,160)
-
-$(outdir)/drawable-xxhdpi/ic_wordmark_text_normal.png : ic_logo_wordmark_normal.svg
-	$(call rasterize,64:0:300:46,240)
-
-$(outdir)/drawable-xxxhdpi/ic_wordmark_text_normal.png : ic_logo_wordmark_normal.svg
-	$(call rasterize,64:0:300:46,320)
+$(outdir)/drawable/ic_wordmark_text_normal.png : ic_logo_wordmark_normal.svg
+	$(call rasterize,64:10:300:35,70)
 
 # Wordmark private, text-only
 
-$(outdir)/drawable-mdpi/ic_wordmark_text_private.png : ic_logo_wordmark_private.svg
-	$(call rasterize,64:0:300:46,80)
-
-$(outdir)/drawable-hdpi/ic_wordmark_text_private.png : ic_logo_wordmark_private.svg
-	$(call rasterize,64:0:300:46,120)
-
-$(outdir)/drawable-xhdpi/ic_wordmark_text_private.png : ic_logo_wordmark_private.svg
-	$(call rasterize,64:0:300:46,160)
-
-$(outdir)/drawable-xxhdpi/ic_wordmark_text_private.png : ic_logo_wordmark_private.svg
-	$(call rasterize,64:0:300:46,240)
-
-$(outdir)/drawable-xxxhdpi/ic_wordmark_text_private.png : ic_logo_wordmark_private.svg
-	$(call rasterize,64:0:300:46,320)
+$(outdir)/drawable/ic_wordmark_text_private.png : ic_logo_wordmark_private.svg
+	$(call rasterize,64:10:300:35,70)
 
 # Wordmark logo
 
-$(outdir)/drawable-mdpi/ic_wordmark_logo.png : ic_launcher_foreground.svg
-	$(call rasterize,24:24:84:84,80)
-
-$(outdir)/drawable-hdpi/ic_wordmark_logo.png : ic_launcher_foreground.svg
-	$(call rasterize,24:24:84:84,120)
-
-$(outdir)/drawable-xhdpi/ic_wordmark_logo.png : ic_launcher_foreground.svg
-	$(call rasterize,24:24:84:84,160)
-
-$(outdir)/drawable-xxhdpi/ic_wordmark_logo.png : ic_launcher_foreground.svg
-	$(call rasterize,24:24:84:84,240)
-
-$(outdir)/drawable-xxxhdpi/ic_wordmark_logo.png : ic_launcher_foreground.svg
-	$(call rasterize,24:24:84:84,320)
+$(outdir)/drawable/ic_wordmark_logo.png : ic_launcher_foreground.svg
+	$(call rasterize,28:28:80:80,160)
 
 .PNONY: all clean
