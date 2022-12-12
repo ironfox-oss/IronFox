@@ -1,8 +1,8 @@
 diff --git a/app/build.gradle b/app/build.gradle
-index c23a12a92..c7184babe 100644
+index 4d5e9064d..b996af000 100644
 --- a/app/build.gradle
 +++ b/app/build.gradle
-@@ -590,10 +590,6 @@ dependencies {
+@@ -606,10 +606,6 @@ dependencies {
  
      implementation Deps.google_ads_id // Required for the Google Advertising ID
  
@@ -523,7 +523,7 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index c17efab61..d6d774777 100644
+index ebba96913..c9186065b 100644
 --- a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -18,7 +18,7 @@ object FeatureFlags {
@@ -535,7 +535,7 @@ index c17efab61..d6d774777 100644
  
      /**
       * Pull-to-refresh allows you to pull the web content down far enough to have the page to
-@@ -77,7 +77,7 @@ object FeatureFlags {
+@@ -72,7 +72,7 @@ object FeatureFlags {
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
          val langTag = LocaleManager.getCurrentLocale(context)
              ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
@@ -545,7 +545,7 @@ index c17efab61..d6d774777 100644
  
      /**
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index 7ca831f45..f1e9bb92b 100644
+index 1a6549702..d0a76d8dd 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 @@ -121,15 +121,7 @@ class Analytics(
@@ -566,18 +566,18 @@ index 7ca831f45..f1e9bb92b 100644
              isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
              isMarketingDataTelemetryEnabled = { context.settings().isMarketingTelemetryEnabled },
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 787651bd1..706bee64c 100644
+index ef1a737e5..e8d60800b 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -12,7 +12,6 @@ import android.os.StrictMode
+@@ -9,7 +9,6 @@ import android.app.Application
+ import android.content.Context
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.LocalContext
- import androidx.core.net.toUri
 -import com.google.android.play.core.review.ReviewManagerFactory
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -177,7 +176,6 @@ class Components(private val context: Context) {
+@@ -159,7 +158,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -586,10 +586,10 @@ index 787651bd1..706bee64c 100644
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 08c747749..e59ef28ac 100644
+index 8ef188e3f..b9931f3ff 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -451,8 +451,14 @@ class Core(
+@@ -453,8 +453,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -607,18 +607,19 @@ index 08c747749..e59ef28ac 100644
                      )
  
 diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-index 87c3a831b..55b0074ee 100644
+index 33e8704ad..ffa85e3e4 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-@@ -6,7 +6,6 @@ package org.mozilla.fenix.components
+@@ -6,8 +6,6 @@ package org.mozilla.fenix.components
  
  import android.app.Activity
  import androidx.annotation.VisibleForTesting
+-import com.google.android.play.core.review.ReviewInfo
 -import com.google.android.play.core.review.ReviewManager
  import kotlinx.coroutines.Dispatchers.Main
  import kotlinx.coroutines.withContext
- import org.mozilla.fenix.utils.Settings
-@@ -40,19 +39,9 @@ class FenixReviewSettings(
+ import org.mozilla.fenix.GleanMetrics.ReviewPrompt
+@@ -45,24 +43,9 @@ class FenixReviewSettings(
   * Controls the Review Prompt behavior.
   */
  class ReviewPromptController(
@@ -632,6 +633,11 @@ index 87c3a831b..55b0074ee 100644
 -            flow.addOnCompleteListener {
 -                if (it.isSuccessful) {
 -                    manager.launchReviewFlow(activity, it.result)
+-                    recordReviewPromptEvent(
+-                        it.result.toString(),
+-                        reviewSettings.numberOfAppLaunches,
+-                        Date(),
+-                    )
 -                }
 -            }
 -        }
@@ -694,10 +700,10 @@ index bf32cb29c..58886aa6d 100644
      companion object {
          private const val LOGTAG = "AdjustMetricsService"
 diff --git a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-index ea0dddeef..9bbfdf671 100644
+index 2176cd000..bead0a1c6 100644
 --- a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 +++ b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-@@ -149,6 +149,12 @@ class TopSiteItemViewHolder(
+@@ -164,6 +164,12 @@ class TopSiteItemViewHolder(
                  SupportUtils.MEITUAN_URL -> {
                      binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_meituan))
                  }
@@ -724,10 +730,10 @@ index ef150cafd..fd4f49275 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index d1eb333cf..e3143142e 100644
+index 00e845292..4a64bc788 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -284,17 +284,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -291,17 +291,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -748,7 +754,7 @@ index d1eb333cf..e3143142e 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1344,7 +1344,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1346,7 +1346,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -757,7 +763,7 @@ index d1eb333cf..e3143142e 100644
      )
  
      /**
-@@ -1370,7 +1370,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1372,7 +1372,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -845,7 +851,7 @@ index d053c49e9..7dd704407 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 0ac991013..81edcae45 100644
+index 6e56ff141..3bfeabfcc 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
 @@ -160,7 +160,6 @@ object Deps {
