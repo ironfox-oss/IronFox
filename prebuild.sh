@@ -197,7 +197,7 @@ rm -fR components/browser/engine-gecko-{beta,nightly}
 gvver=$(echo "$1" | cut -d. -f1)
 sed -i \
     -e "s/version = \"$gvver\.[0-9.]*\"/version = \"$gvver.+\"/" \
-    buildSrc/src/main/java/Gecko.kt
+    plugins/dependencies/src/main/java/Gecko.kt
 localize_maven
 popd
 
