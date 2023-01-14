@@ -90,7 +90,7 @@ rm app/src/release/res/drawable/ic_launcher_foreground.xml
 rm app/src/release/res/mipmap-*/ic_launcher.png
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 find "$patches/fenix-overlay" -type f | while read -r src; do
-    dst="app/src/release/${src#$patches/fenix-overlay/}"
+    dst=app/src/release/${src#"$patches/fenix-overlay/"}
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
 done
@@ -190,7 +190,7 @@ popd
 
 pushd "$android_components"
 find "$patches/a-c-overlay" -type f | while read -r src; do
-    cp "$src" "${src#$patches/a-c-overlay/}"
+    cp "$src" "${src#"$patches/a-c-overlay/"}"
 done
 # We only need a release Gecko
 rm -fR components/browser/engine-gecko-{beta,nightly}
