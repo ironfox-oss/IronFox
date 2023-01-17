@@ -34,7 +34,7 @@ sdkmanager 'ndk;25.1.8937393' # for Glean
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
-# shellcheck disable=SC1091
+# shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
 rustup default 1.63.0
 rustup target add thumbv7neon-linux-androideabi
