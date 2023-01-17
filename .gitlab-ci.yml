@@ -1,0 +1,8 @@
+---
+before_script:
+  - apt-get --quiet update --yes
+  - apt-get --quiet install --yes yamllint shellcheck
+build:
+  script:
+    - yamllint .gitlab-ci.yml
+    - shellcheck -x prebuild.sh build.sh
