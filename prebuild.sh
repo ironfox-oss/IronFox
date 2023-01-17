@@ -119,10 +119,9 @@ sed -i \
     -e '/val settings = context.components.settings/d' \
     app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 
-# Expose "Pull to refresh" setting and enable tab reordering
+# Expose "Pull to refresh" setting
 sed -i \
     -e '/pullToRefreshEnabled = /s/Config.channel.isNightlyOrDebug/true/' \
-    -e '/tabReorderingFeature = /s/Config.channel.isNightlyOrDebug/true/' \
     app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Disable "Pull to refresh" by default
