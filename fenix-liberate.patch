@@ -1,16 +1,29 @@
 diff --git a/app/build.gradle b/app/build.gradle
-index 4d5e9064d..b996af000 100644
+index ab552ab84..4bb0b5ea7 100644
 --- a/app/build.gradle
 +++ b/app/build.gradle
-@@ -606,10 +606,6 @@ dependencies {
+@@ -571,7 +571,6 @@ dependencies {
  
-     implementation Deps.google_ads_id // Required for the Google Advertising ID
+     implementation FenixDependencies.mozilla_lib_crash
+     implementation FenixDependencies.lib_crash_sentry
+-    implementation FenixDependencies.mozilla_lib_push_firebase
+     implementation FenixDependencies.mozilla_lib_state
+     implementation FenixDependencies.mozilla_lib_dataprotect
+     debugImplementation FenixDependencies.leakcanary
+@@ -602,15 +601,6 @@ dependencies {
+     implementation FenixDependencies.protobuf_javalite
+     implementation FenixDependencies.google_material
  
--    // Required for in-app reviews
--    implementation Deps.google_play_review
--    implementation Deps.google_play_review_ktx
+-    implementation FenixDependencies.adjust
+-    implementation FenixDependencies.installreferrer // Required by Adjust
 -
-     androidTestImplementation Deps.uiautomator
+-    implementation FenixDependencies.google_ads_id // Required for the Google Advertising ID
+-
+-    // Required for in-app reviews
+-    implementation FenixDependencies.google_play_review
+-    implementation FenixDependencies.google_play_review_ktx
+-
+     androidTestImplementation FenixDependencies.uiautomator
      androidTestImplementation "tools.fastlane:screengrab:2.0.0"
      // This Falcon version is added to maven central now required for Screengrab
 diff --git a/app/proguard-rules.pro b/app/proguard-rules.pro
@@ -523,7 +536,7 @@ index 000000000..b50a6f03a
 +    }
 +}
 diff --git a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index ebba96913..c9186065b 100644
+index 11c267ce5..7a7e499b1 100644
 --- a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -18,7 +18,7 @@ object FeatureFlags {
@@ -535,7 +548,7 @@ index ebba96913..c9186065b 100644
  
      /**
       * Pull-to-refresh allows you to pull the web content down far enough to have the page to
-@@ -72,7 +72,7 @@ object FeatureFlags {
+@@ -37,7 +37,7 @@ object FeatureFlags {
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
          val langTag = LocaleManager.getCurrentLocale(context)
              ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
@@ -545,20 +558,16 @@ index ebba96913..c9186065b 100644
  
      /**
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index 1a6549702..d0a76d8dd 100644
+index f684f3caf..b6b22fc5b 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -121,15 +121,7 @@ class Analytics(
+@@ -130,11 +130,7 @@ class Analytics(
          MetricController.create(
              listOf(
                  GleanMetricsService(context),
 -                AdjustMetricsService(
 -                    application = context as Application,
--                    storage = DefaultMetricsStorage(
--                        context = context,
--                        settings = context.settings(),
--                        checkDefaultBrowser = { BrowsersCache.all(context).isDefaultBrowser },
--                    ),
+-                    storage = metricsStorage,
 -                    crashReporter = crashReporter,
 -                ),
 +                AdjustMetricsService(context as Application),
@@ -586,10 +595,10 @@ index ef1a737e5..e8d60800b 100644
          )
      }
 diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 8ef188e3f..b9931f3ff 100644
+index fd3b644c3..d0fd6a324 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -453,8 +453,14 @@ class Core(
+@@ -458,8 +458,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -700,10 +709,10 @@ index bf32cb29c..58886aa6d 100644
      companion object {
          private const val LOGTAG = "AdjustMetricsService"
 diff --git a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-index 2176cd000..bead0a1c6 100644
+index a015a69eb..610c24cb0 100644
 --- a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 +++ b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-@@ -164,6 +164,12 @@ class TopSiteItemViewHolder(
+@@ -177,6 +177,12 @@ class TopSiteItemViewHolder(
                  SupportUtils.MEITUAN_URL -> {
                      binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_meituan))
                  }
@@ -717,7 +726,7 @@ index 2176cd000..bead0a1c6 100644
                      itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
                  }
 diff --git a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index ef150cafd..fd4f49275 100644
+index 3814632f7..505b26bc2 100644
 --- a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -36,6 +36,8 @@ object SupportUtils {
@@ -730,10 +739,10 @@ index ef150cafd..fd4f49275 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 00e845292..4a64bc788 100644
+index ceffea3e7..114532a65 100644
 --- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -291,17 +291,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -294,17 +294,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -754,7 +763,7 @@ index 00e845292..4a64bc788 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1346,7 +1346,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1425,7 +1425,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -763,7 +772,7 @@ index 00e845292..4a64bc788 100644
      )
  
      /**
-@@ -1372,7 +1372,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1451,7 +1451,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -787,10 +796,10 @@ index 000000000..101f4e0d0
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
 diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index 01c1bd7ff..a7fefefaa 100644
+index 7b4958abe..eda9ca630 100644
 --- a/app/src/main/res/xml/preferences.xml
 +++ b/app/src/main/res/xml/preferences.xml
-@@ -127,11 +127,6 @@
+@@ -133,11 +133,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -802,7 +811,7 @@ index 01c1bd7ff..a7fefefaa 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -178,11 +173,6 @@
+@@ -184,11 +179,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
@@ -851,37 +860,37 @@ index d053c49e9..7dd704407 100644
  
      <androidx.preference.Preference
 diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index 6e56ff141..3bfeabfcc 100644
+index af5b29598..9fc0c422e 100644
 --- a/buildSrc/src/main/java/Dependencies.kt
 +++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -160,7 +160,6 @@ object Deps {
-     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${Versions.mozilla_android_components}"
+@@ -160,7 +160,6 @@ object FenixDependencies {
+     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${FenixVersions.mozilla_android_components}"
      const val lib_crash_sentry =
-         "org.mozilla.components:lib-crash-sentry:${Versions.mozilla_android_components}"
--    const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${Versions.mozilla_android_components}"
-     const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${Versions.mozilla_android_components}"
-     const val mozilla_lib_state = "org.mozilla.components:lib-state:${Versions.mozilla_android_components}"
+         "org.mozilla.components:lib-crash-sentry:${FenixVersions.mozilla_android_components}"
+-    const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${FenixVersions.mozilla_android_components}"
+     const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${FenixVersions.mozilla_android_components}"
+     const val mozilla_lib_state = "org.mozilla.components:lib-state:${FenixVersions.mozilla_android_components}"
  
-@@ -220,9 +219,6 @@ object Deps {
-     const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${Versions.protobuf}"
-     const val protobuf_compiler = "com.google.protobuf:protoc:${Versions.protobuf}"
+@@ -220,9 +219,6 @@ object FenixDependencies {
+     const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${FenixVersions.protobuf}"
+     const val protobuf_compiler = "com.google.protobuf:protoc:${FenixVersions.protobuf}"
  
--    const val adjust = "com.adjust.sdk:adjust-android:${Versions.adjust}"
--    const val installreferrer = "com.android.installreferrer:installreferrer:${Versions.installreferrer}"
+-    const val adjust = "com.adjust.sdk:adjust-android:${FenixVersions.adjust}"
+-    const val installreferrer = "com.android.installreferrer:installreferrer:${FenixVersions.installreferrer}"
 -
-     const val jna = "net.java.dev.jna:jna:${Versions.jna}@jar"
+     const val jna = "net.java.dev.jna:jna:${FenixVersions.jna}@jar"
  
-     const val junit = "junit:junit:${Versions.junit}"
-@@ -257,12 +253,6 @@ object Deps {
-     const val uiautomator = "androidx.test.uiautomator:uiautomator:${Versions.uiautomator}"
-     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
+     const val junit = "junit:junit:${FenixVersions.junit}"
+@@ -259,12 +255,6 @@ object FenixDependencies {
+     const val uiautomator = "androidx.test.uiautomator:uiautomator:${FenixVersions.uiautomator}"
+     const val robolectric = "org.robolectric:robolectric:${FenixVersions.robolectric}"
  
--    const val google_ads_id = "com.google.android.gms:play-services-ads-identifier:${Versions.google_ads_id_version}"
+-    const val google_ads_id = "com.google.android.gms:play-services-ads-identifier:${FenixVersions.google_ads_id_version}"
 -
 -    // Required for in-app reviews
--    const val google_play_review = "com.google.android.play:review:${Versions.google_play_review_version}"
--    const val google_play_review_ktx = "com.google.android.play:review-ktx:${Versions.google_play_review_version}"
+-    const val google_play_review = "com.google.android.play:review:${FenixVersions.google_play_review_version}"
+-    const val google_play_review_ktx = "com.google.android.play:review-ktx:${FenixVersions.google_play_review_version}"
 -
-     const val detektApi = "io.gitlab.arturbosch.detekt:detekt-api:${Versions.detekt}"
-     const val detektTest = "io.gitlab.arturbosch.detekt:detekt-test:${Versions.detekt}"
-     const val junitApi = "org.junit.jupiter:junit-jupiter-api:${Versions.junit}"
+     const val detektApi = "io.gitlab.arturbosch.detekt:detekt-api:${FenixVersions.detekt}"
+     const val detektTest = "io.gitlab.arturbosch.detekt:detekt-test:${FenixVersions.detekt}"
+     const val junitApi = "org.junit.jupiter:junit-jupiter-api:${FenixVersions.junit}"

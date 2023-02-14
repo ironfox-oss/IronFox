@@ -18,7 +18,7 @@
 #
 
 readonly patches=$(dirname "$(realpath "$0")")
-readonly android_components_as=$(realpath ../srclib/MozAndroidComponentsAS)
+readonly android_components_as=$(realpath ../srclib/FirefoxAndroidAS/android-components)
 readonly android_components=$(realpath ../srclib/FirefoxAndroid/android-components)
 readonly application_services=$(realpath ../srclib/MozAppServices)
 readonly glean_as=$(realpath ../srclib/MozGleanAS)
