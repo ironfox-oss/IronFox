@@ -159,25 +159,24 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 
 # Set up target parameters
-minsdk=21
 case $(echo "$2" | cut -c 6) in
     0)
         abi=armeabi-v7a
         target=arm-linux-androideabi
         rusttarget=arm
-        triplet="armv7a-linux-androideabi$minsdk"
+        triplet=armv7a-linux-androideabi21
         ;;
     1)
         abi=x86
         target=i686-linux-android
         rusttarget=x86
-        triplet="$target$minsdk"
+        triplet="${target}21"
         ;;
     2)
         abi=arm64-v8a
         target=aarch64-linux-android
         rusttarget=arm64
-        triplet="$target$minsdk"
+        triplet="${target}21"
         ;;
     *)
         echo "Unknown target code in $2." >&2
@@ -303,7 +302,6 @@ ac_add_options --enable-release
 ac_add_options --enable-minify=properties # JS minification breaks addons
 ac_add_options --enable-update-channel=release
 ac_add_options --target=$target
-ac_add_options --with-android-min-sdk=$minsdk
 ac_add_options --with-android-ndk="$ANDROID_NDK"
 ac_add_options --with-android-sdk="$ANDROID_SDK"
 ac_add_options --with-java-bin-path="/usr/bin"
