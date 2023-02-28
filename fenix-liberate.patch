@@ -1,16 +1,16 @@
-diff --git a/app/build.gradle b/app/build.gradle
-index ab552ab84..4bb0b5ea7 100644
---- a/app/build.gradle
-+++ b/app/build.gradle
-@@ -571,7 +571,6 @@ dependencies {
+diff --git a/fenix/app/build.gradle b/fenix/app/build.gradle
+index 58e997e0c5..dc065e41e2 100644
+--- a/fenix/app/build.gradle
++++ b/fenix/app/build.gradle
+@@ -579,7 +579,6 @@ dependencies {
  
-     implementation FenixDependencies.mozilla_lib_crash
-     implementation FenixDependencies.lib_crash_sentry
--    implementation FenixDependencies.mozilla_lib_push_firebase
-     implementation FenixDependencies.mozilla_lib_state
-     implementation FenixDependencies.mozilla_lib_dataprotect
-     debugImplementation FenixDependencies.leakcanary
-@@ -602,15 +601,6 @@ dependencies {
+     implementation project(':lib-crash')
+     implementation project(':lib-crash-sentry')
+-    implementation project(':lib-push-firebase')
+     implementation project(':lib-state')
+     implementation project(':lib-dataprotect')
+ 
+@@ -611,15 +610,6 @@ dependencies {
      implementation FenixDependencies.protobuf_javalite
      implementation FenixDependencies.google_material
  
@@ -26,10 +26,10 @@ index ab552ab84..4bb0b5ea7 100644
      androidTestImplementation FenixDependencies.uiautomator
      androidTestImplementation "tools.fastlane:screengrab:2.0.0"
      // This Falcon version is added to maven central now required for Screengrab
-diff --git a/app/proguard-rules.pro b/app/proguard-rules.pro
-index e269f6577..e870f06be 100644
---- a/app/proguard-rules.pro
-+++ b/app/proguard-rules.pro
+diff --git a/fenix/app/proguard-rules.pro b/fenix/app/proguard-rules.pro
+index e269f65775..e870f06bef 100644
+--- a/fenix/app/proguard-rules.pro
++++ b/fenix/app/proguard-rules.pro
 @@ -1,22 +1,5 @@
  -dontobfuscate
  
@@ -112,11 +112,11 @@ index e269f6577..e870f06be 100644
  # Keep Android Lifecycle methods
  # https://bugzilla.mozilla.org/show_bug.cgi?id=1596302
  -keep class androidx.lifecycle.** { *; }
-diff --git a/app/src/main/java/com/adjust/sdk/Adjust.java b/app/src/main/java/com/adjust/sdk/Adjust.java
+diff --git a/fenix/app/src/main/java/com/adjust/sdk/Adjust.java b/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 new file mode 100644
-index 000000000..7e644e2fa
+index 0000000000..7e644e2fa2
 --- /dev/null
-+++ b/app/src/main/java/com/adjust/sdk/Adjust.java
++++ b/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 @@ -0,0 +1,44 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -162,11 +162,11 @@ index 000000000..7e644e2fa
 +    public static void gdprForgetMe(final Context context) {
 +    }
 +}
-diff --git a/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
+diff --git a/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
 new file mode 100644
-index 000000000..ab6b3badb
+index 0000000000..ab6b3badbd
 --- /dev/null
-+++ b/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
++++ b/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
 @@ -0,0 +1,49 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -217,11 +217,11 @@ index 000000000..ab6b3badb
 +        return "";
 +    }
 +}
-diff --git a/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/app/src/main/java/com/adjust/sdk/AdjustConfig.java
+diff --git a/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 new file mode 100644
-index 000000000..6753dd7d9
+index 0000000000..6753dd7d9f
 --- /dev/null
-+++ b/app/src/main/java/com/adjust/sdk/AdjustConfig.java
++++ b/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 @@ -0,0 +1,46 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -269,11 +269,11 @@ index 000000000..6753dd7d9
 +    public void setLogLevel(LogLevel logLevel) {
 +    }
 +}
-diff --git a/app/src/main/java/com/adjust/sdk/LogLevel.java b/app/src/main/java/com/adjust/sdk/LogLevel.java
+diff --git a/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java b/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
 new file mode 100644
-index 000000000..27ac3de54
+index 0000000000..27ac3de544
 --- /dev/null
-+++ b/app/src/main/java/com/adjust/sdk/LogLevel.java
++++ b/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
 @@ -0,0 +1,43 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -318,11 +318,11 @@ index 000000000..27ac3de54
 +        return androidLogLevel;
 +    }
 +}
-diff --git a/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java b/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
+diff --git a/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java b/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
 new file mode 100644
-index 000000000..7efa1c680
+index 0000000000..7efa1c6804
 --- /dev/null
-+++ b/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
++++ b/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
 @@ -0,0 +1,29 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -353,11 +353,11 @@ index 000000000..7efa1c680
 +public interface OnAttributionChangedListener {
 +    void onAttributionChanged(AdjustAttribution attribution);
 +}
-diff --git a/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java b/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java
+diff --git a/fenix/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java b/fenix/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java
 new file mode 100644
-index 000000000..0f2a47b14
+index 0000000000..0f2a47b141
 --- /dev/null
-+++ b/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java
++++ b/fenix/app/src/main/java/com/google/android/gms/ads/identifier/AdvertisingIdClient.java
 @@ -0,0 +1,23 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -382,11 +382,11 @@ index 000000000..0f2a47b14
 +    }
 +
 +}
-diff --git a/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java
+diff --git a/fenix/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java b/fenix/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java
 new file mode 100644
-index 000000000..d3bff1249
+index 0000000000..d3bff12497
 --- /dev/null
-+++ b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java
++++ b/fenix/app/src/main/java/com/google/android/gms/common/GooglePlayServicesNotAvailableException.java
 @@ -0,0 +1,8 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -396,11 +396,11 @@ index 000000000..d3bff1249
 +
 +public class GooglePlayServicesNotAvailableException extends Exception {
 +}
-diff --git a/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java
+diff --git a/fenix/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java b/fenix/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java
 new file mode 100644
-index 000000000..b72a7cdb1
+index 0000000000..b72a7cdb16
 --- /dev/null
-+++ b/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java
++++ b/fenix/app/src/main/java/com/google/android/gms/common/GooglePlayServicesRepairableException.java
 @@ -0,0 +1,8 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -410,11 +410,11 @@ index 000000000..b72a7cdb1
 +
 +public class GooglePlayServicesRepairableException extends Exception {
 +}
-diff --git a/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
+diff --git a/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
-index 000000000..4d5fd8153
+index 0000000000..4d5fd8153d
 --- /dev/null
-+++ b/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
++++ b/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 @@ -0,0 +1,42 @@
 +// Copyright 2020 Google LLC
 +//
@@ -458,11 +458,11 @@ index 000000000..4d5fd8153
 +    }
 +
 +}
-diff --git a/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java b/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
+diff --git a/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java b/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
 new file mode 100644
-index 000000000..9ad59a31e
+index 0000000000..9ad59a31e4
 --- /dev/null
-+++ b/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
++++ b/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
 @@ -0,0 +1,33 @@
 +// Copyright 2020 Google LLC
 +//
@@ -497,11 +497,11 @@ index 000000000..9ad59a31e
 +    }
 +
 +}
-diff --git a/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
+diff --git a/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 new file mode 100644
-index 000000000..b50a6f03a
+index 0000000000..b50a6f03a2
 --- /dev/null
-+++ b/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
++++ b/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 @@ -0,0 +1,32 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -535,10 +535,10 @@ index 000000000..b50a6f03a
 +        return false
 +    }
 +}
-diff --git a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 11c267ce5..7a7e499b1 100644
---- a/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index 11c267ce53..7a7e499b12 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -18,7 +18,7 @@ object FeatureFlags {
       * This feature does not only depend on this flag. It requires the AMO collection override to
       * be enabled which is behind the Secret Settings.
@@ -557,10 +557,10 @@ index 11c267ce5..7a7e499b1 100644
      }
  
      /**
-diff --git a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index f684f3caf..b6b22fc5b 100644
---- a/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-+++ b/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+index f684f3caff..b6b22fc5b0 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 @@ -130,11 +130,7 @@ class Analytics(
          MetricController.create(
              listOf(
@@ -574,10 +574,10 @@ index f684f3caf..b6b22fc5b 100644
              ),
              isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
              isMarketingDataTelemetryEnabled = { context.settings().isMarketingTelemetryEnabled },
-diff --git a/app/src/main/java/org/mozilla/fenix/components/Components.kt b/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index ef1a737e5..e8d60800b 100644
---- a/app/src/main/java/org/mozilla/fenix/components/Components.kt
-+++ b/app/src/main/java/org/mozilla/fenix/components/Components.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index ef1a737e5c..e8d60800b0 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -9,7 +9,6 @@ import android.app.Application
  import android.content.Context
  import androidx.compose.runtime.Composable
@@ -594,10 +594,10 @@ index ef1a737e5..e8d60800b 100644
              reviewSettings = FenixReviewSettings(settings),
          )
      }
-diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index fd3b644c3..d0fd6a324 100644
---- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
-+++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index fd3b644c33..d0fd6a324f 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -458,8 +458,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
@@ -615,10 +615,10 @@ index fd3b644c3..d0fd6a324 100644
                          ),
                      )
  
-diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-index 33e8704ad..ffa85e3e4 100644
---- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-+++ b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
+index 33e8704adc..ffa85e3e46 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 @@ -6,8 +6,6 @@ package org.mozilla.fenix.components
  
  import android.app.Activity
@@ -654,10 +654,10 @@ index 33e8704ad..ffa85e3e4 100644
      },
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-diff --git a/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-index bf32cb29c..58886aa6d 100644
---- a/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-+++ b/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+index bf32cb29cc..58886aa6d3 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 @@ -10,23 +10,12 @@ import android.os.Bundle
  import android.util.Log
  import com.adjust.sdk.Adjust
@@ -708,10 +708,10 @@ index bf32cb29c..58886aa6d 100644
  
      companion object {
          private const val LOGTAG = "AdjustMetricsService"
-diff --git a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-index a015a69eb..610c24cb0 100644
---- a/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-+++ b/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
+index a015a69eb7..610c24cb08 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 @@ -177,6 +177,12 @@ class TopSiteItemViewHolder(
                  SupportUtils.MEITUAN_URL -> {
                      binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_meituan))
@@ -725,10 +725,10 @@ index a015a69eb..610c24cb0 100644
                  else -> {
                      itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
                  }
-diff --git a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 3814632f7..505b26bc2 100644
---- a/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-+++ b/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+index 3814632f7b..505b26bc29 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -36,6 +36,8 @@ object SupportUtils {
      const val MEITUAN_URL = "https://tb.j5k6.com/6ZSOp"
      const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
@@ -738,10 +738,10 @@ index 3814632f7..505b26bc2 100644
  
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
-diff --git a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index ceffea3e7..114532a65 100644
---- a/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index ceffea3e7e..114532a653 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -294,17 +294,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
@@ -781,11 +781,11 @@ index ceffea3e7..114532a65 100644
      )
  
      /**
-diff --git a/app/src/main/res/values/static_strings_extra.xml b/app/src/main/res/values/static_strings_extra.xml
+diff --git a/fenix/app/src/main/res/values/static_strings_extra.xml b/fenix/app/src/main/res/values/static_strings_extra.xml
 new file mode 100644
-index 000000000..101f4e0d0
+index 0000000000..101f4e0d0a
 --- /dev/null
-+++ b/app/src/main/res/values/static_strings_extra.xml
++++ b/fenix/app/src/main/res/values/static_strings_extra.xml
 @@ -0,0 +1,8 @@
 +<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 +<!-- This Source Code Form is subject to the terms of the Mozilla Public
@@ -795,10 +795,10 @@ index 000000000..101f4e0d0
 +    <string name="default_top_site_fdroid" translatable="false">F-Droid</string>
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
-diff --git a/app/src/main/res/xml/preferences.xml b/app/src/main/res/xml/preferences.xml
-index 7b4958abe..eda9ca630 100644
---- a/app/src/main/res/xml/preferences.xml
-+++ b/app/src/main/res/xml/preferences.xml
+diff --git a/fenix/app/src/main/res/xml/preferences.xml b/fenix/app/src/main/res/xml/preferences.xml
+index 7b4958abe8..eda9ca6304 100644
+--- a/fenix/app/src/main/res/xml/preferences.xml
++++ b/fenix/app/src/main/res/xml/preferences.xml
 @@ -133,11 +133,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
@@ -823,10 +823,10 @@ index 7b4958abe..eda9ca630 100644
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
-diff --git a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
-index 6bb8cfbbe..1c15b5897 100644
---- a/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
-+++ b/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+diff --git a/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+index 6bb8cfbbe6..1c15b5897c 100644
+--- a/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
++++ b/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 @@ -3,7 +3,8 @@
     - License, v. 2.0. If a copy of the MPL was not distributed with this
     - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
@@ -847,10 +847,10 @@ index 6bb8cfbbe..1c15b5897 100644
  
      <androidx.preference.Preference
          android:icon="@drawable/ic_autoplay"
-diff --git a/app/src/main/res/xml/site_permissions_preferences.xml b/app/src/main/res/xml/site_permissions_preferences.xml
-index d053c49e9..7dd704407 100644
---- a/app/src/main/res/xml/site_permissions_preferences.xml
-+++ b/app/src/main/res/xml/site_permissions_preferences.xml
+diff --git a/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+index d053c49e94..7dd704407e 100644
+--- a/fenix/app/src/main/res/xml/site_permissions_preferences.xml
++++ b/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 @@ -55,6 +55,7 @@
          android:key="@string/pref_key_browser_feature_media_key_system_access"
          android:title="@string/preference_phone_feature_media_key_system_access"
@@ -859,19 +859,11 @@ index d053c49e9..7dd704407 100644
          app:allowDividerBelow="true"/>
  
      <androidx.preference.Preference
-diff --git a/buildSrc/src/main/java/Dependencies.kt b/buildSrc/src/main/java/Dependencies.kt
-index af5b29598..9fc0c422e 100644
---- a/buildSrc/src/main/java/Dependencies.kt
-+++ b/buildSrc/src/main/java/Dependencies.kt
-@@ -160,7 +160,6 @@ object FenixDependencies {
-     const val mozilla_lib_crash = "org.mozilla.components:lib-crash:${FenixVersions.mozilla_android_components}"
-     const val lib_crash_sentry =
-         "org.mozilla.components:lib-crash-sentry:${FenixVersions.mozilla_android_components}"
--    const val mozilla_lib_push_firebase = "org.mozilla.components:lib-push-firebase:${FenixVersions.mozilla_android_components}"
-     const val mozilla_lib_dataprotect = "org.mozilla.components:lib-dataprotect:${FenixVersions.mozilla_android_components}"
-     const val mozilla_lib_state = "org.mozilla.components:lib-state:${FenixVersions.mozilla_android_components}"
- 
-@@ -220,9 +219,6 @@ object FenixDependencies {
+diff --git a/fenix/buildSrc/src/main/java/Dependencies.kt b/fenix/buildSrc/src/main/java/Dependencies.kt
+index a8e6e1dfc4..1e2725ef21 100644
+--- a/fenix/buildSrc/src/main/java/Dependencies.kt
++++ b/fenix/buildSrc/src/main/java/Dependencies.kt
+@@ -117,9 +117,6 @@ object FenixDependencies {
      const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${FenixVersions.protobuf}"
      const val protobuf_compiler = "com.google.protobuf:protoc:${FenixVersions.protobuf}"
  
@@ -881,7 +873,7 @@ index af5b29598..9fc0c422e 100644
      const val jna = "net.java.dev.jna:jna:${FenixVersions.jna}@jar"
  
      const val junit = "junit:junit:${FenixVersions.junit}"
-@@ -259,12 +255,6 @@ object FenixDependencies {
+@@ -156,12 +153,6 @@ object FenixDependencies {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${FenixVersions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${FenixVersions.robolectric}"
  

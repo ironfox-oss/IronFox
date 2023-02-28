@@ -39,6 +39,14 @@ function localize_maven {
     done
 }
 
+# Remove unnecessary projects
+rm -fR focus-android
+
+# Hack to prevent too long string from breaking build
+sed -i '/val statusCmd/,+3d' fenix/buildSrc/src/main/java/Config.kt
+sed -i '/val revision = /a \        val statusSuffix = "+"' fenix/buildSrc/src/main/java/Config.kt
+
+pushd "$fenix"
 # Set up the app ID, version name and version code
 sed -i \
     -e 's|\.firefox|.fennec_fdroid|' \
@@ -77,10 +85,12 @@ sed -i \
     -e '/Deps.mozilla_browser_engine_gecko_nightly/d' \
     -e '/Deps.mozilla_browser_engine_gecko_beta/d' \
     app/build.gradle
+popd
 
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
+pushd "$fenix"
 # Let it be Fennec
 sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
     app/src/*/res/values*/*strings.xml
@@ -156,6 +166,7 @@ case $(echo "$2" | cut -c 6) in
     ;;
 esac
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
+popd
 
 #
 # Glean
