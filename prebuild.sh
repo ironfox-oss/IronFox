@@ -139,6 +139,11 @@ sed -i \
     -e '/pref_key_website_pull_to_refresh/{n; s/default = true/default = false/}' \
     app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 
+# Fixup dependency on GMS
+sed -i \
+    -e 's/com.google.android.gms.common.util.VisibleForTesting/androidx.annotation.VisibleForTesting/' \
+    app/src/main/java/org/mozilla/fenix/widget/VoiceSearchActivity.kt
+
 # Set up target parameters
 minsdk=21
 case $(echo "$2" | cut -c 6) in
@@ -194,6 +199,7 @@ sed -e "s/VERSION/$acver/" "$patches/a-c-buildconfig.yml" > .buildconfig.yml
 # We don't need Gecko while building A-C for A-S
 rm -fR components/browser/engine-gecko*
 localize_maven
+sed -i -e 's/51.8.2/52.0.0/' buildSrc/src/main/java/Dependencies.kt
 popd
 
 pushd "$android_components"
