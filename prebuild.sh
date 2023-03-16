@@ -46,6 +46,13 @@ rm -fR focus-android
 sed -i '/val statusCmd/,+3d' fenix/buildSrc/src/main/java/Config.kt
 sed -i '/val revision = /a \        val statusSuffix = "+"' fenix/buildSrc/src/main/java/Config.kt
 
+# Patch the use of proprietary and tracking libraries
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
+
+#
+# Fenix
+#
+
 pushd "$fenix"
 # Set up the app ID, version name and version code
 sed -i \
@@ -78,12 +85,7 @@ sed -i \
     -e '/Deps.mozilla_browser_engine_gecko_nightly/d' \
     -e '/Deps.mozilla_browser_engine_gecko_beta/d' \
     app/build.gradle
-popd
 
-# Patch the use of proprietary and tracking libraries
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
-
-pushd "$fenix"
 # Let it be Fennec
 sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
     app/src/*/res/values*/*strings.xml
