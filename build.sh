@@ -37,7 +37,7 @@ sdkmanager 'ndk;25.1.8937393' # for Glean
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.66.1
+rustup default 1.68.2
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android

@@ -1,8 +1,8 @@
 diff --git a/fenix/app/build.gradle b/fenix/app/build.gradle
-index 58e997e0c5..dc065e41e2 100644
+index f9b677fb3f..58052580c7 100644
 --- a/fenix/app/build.gradle
 +++ b/fenix/app/build.gradle
-@@ -579,7 +579,6 @@ dependencies {
+@@ -591,7 +591,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -10,7 +10,7 @@ index 58e997e0c5..dc065e41e2 100644
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
  
-@@ -611,15 +610,6 @@ dependencies {
+@@ -623,15 +622,6 @@ dependencies {
      implementation FenixDependencies.protobuf_javalite
      implementation FenixDependencies.google_material
  
@@ -536,7 +536,7 @@ index 0000000000..b50a6f03a2
 +    }
 +}
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 11c267ce53..7a7e499b12 100644
+index dc415c0f6b..5aeb436d63 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -18,7 +18,7 @@ object FeatureFlags {
@@ -575,7 +575,7 @@ index f684f3caff..b6b22fc5b0 100644
              isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
              isMarketingDataTelemetryEnabled = { context.settings().isMarketingTelemetryEnabled },
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index ef1a737e5c..e8d60800b0 100644
+index 56b7798b1f..875d987098 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -9,7 +9,6 @@ import android.app.Application
@@ -595,10 +595,10 @@ index ef1a737e5c..e8d60800b0 100644
          )
      }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index fd3b644c33..d0fd6a324f 100644
+index fef2fa74ff..ccff2903ed 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -458,8 +458,14 @@ class Core(
+@@ -485,8 +485,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -739,10 +739,10 @@ index 3814632f7b..505b26bc29 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index ceffea3e7e..114532a653 100644
+index ab49a39673..24ec8aeee4 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -294,17 +294,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -297,17 +297,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -763,7 +763,7 @@ index ceffea3e7e..114532a653 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1425,7 +1425,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1486,7 +1486,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -772,7 +772,7 @@ index ceffea3e7e..114532a653 100644
      )
  
      /**
-@@ -1451,7 +1451,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1544,7 +1544,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -796,7 +796,7 @@ index 0000000000..101f4e0d0a
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
 diff --git a/fenix/app/src/main/res/xml/preferences.xml b/fenix/app/src/main/res/xml/preferences.xml
-index 7b4958abe8..eda9ca6304 100644
+index d4bb27a49c..449b8cf499 100644
 --- a/fenix/app/src/main/res/xml/preferences.xml
 +++ b/fenix/app/src/main/res/xml/preferences.xml
 @@ -133,11 +133,6 @@
@@ -811,7 +811,7 @@ index 7b4958abe8..eda9ca6304 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -184,11 +179,6 @@
+@@ -183,11 +178,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
@@ -859,10 +859,10 @@ index d053c49e94..7dd704407e 100644
          app:allowDividerBelow="true"/>
  
      <androidx.preference.Preference
-diff --git a/fenix/buildSrc/src/main/java/Dependencies.kt b/fenix/buildSrc/src/main/java/Dependencies.kt
-index a8e6e1dfc4..1e2725ef21 100644
---- a/fenix/buildSrc/src/main/java/Dependencies.kt
-+++ b/fenix/buildSrc/src/main/java/Dependencies.kt
+diff --git a/fenix/buildSrc/src/main/java/FenixDependencies.kt b/fenix/buildSrc/src/main/java/FenixDependencies.kt
+index 596991fff6..05075166aa 100644
+--- a/fenix/buildSrc/src/main/java/FenixDependencies.kt
++++ b/fenix/buildSrc/src/main/java/FenixDependencies.kt
 @@ -117,9 +117,6 @@ object FenixDependencies {
      const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${FenixVersions.protobuf}"
      const val protobuf_compiler = "com.google.protobuf:protoc:${FenixVersions.protobuf}"
