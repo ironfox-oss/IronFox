@@ -41,6 +41,7 @@ function localize_maven {
 
 # Remove unnecessary projects
 rm -fR focus-android
+rm -f fenix/app/src/test/java/org/mozilla/fenix/components/ReviewPromptControllerTest.kt
 
 # Hack to prevent too long string from breaking build
 sed -i '/val statusCmd/,+3d' fenix/buildSrc/src/main/java/Config.kt
@@ -196,12 +197,6 @@ rm -fR components/browser/engine-gecko*
 # Remove unnecessary projects
 rm -fR ../focus-android
 localize_maven
-# Keep in sync with AS glean to prevent compiling glean three times
-sed -i -e 's/51.8.2/52.2.0/' plugins/dependencies/src/main/java/DependenciesPlugin.kt
-# Workaround build failure like in f6fd8d9069e839cdf16ccf661ecf84b8ec854991
-sed -i -e '/EventExtraKey/d' components/service/glean/src/main/java/mozilla/components/service/glean/private/MetricAliases.kt
-sed -i -e '/NoExtraKeys/d' components/service/glean/src/main/java/mozilla/components/service/glean/private/MetricAliases.kt
-sed -i -e 's/, E//g' components/service/glean/src/main/java/mozilla/components/service/glean/private/MetricAliases.kt
 popd
 
 pushd "$android_components"
@@ -249,6 +244,28 @@ sed -i \
 
 # Patch the use of proprietary libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
+
+# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1820876
+sed -i \
+    -e 's/r23c/r21d/' \
+    python/mozboot/mozboot/android.py
+
+# Remove the <sdk21 fallback
+sed -i \
+    -e '29i #  define CV_USE_CLOCK_API' \
+    mozglue/misc/ConditionVariable_posix.cpp
+
+# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1821221
+rm -f build/android/libgcc.a
+sed -i \
+    -e 's|LDFLAGS="$extra_android_flags -L$_topsrcdir/build/android $LDFLAGS"|LDFLAGS="$extra_android_flags $LDFLAGS"|' \
+    build/autoconf/android.m4
+sed -i \
+    -e 's/info.version < "13.0":/info.version < "8.0":/' \
+     build/moz.configure/toolchain.configure
+sed -i \
+    -e '1410i \ \ \ \ \ \ \ \ if host_or_target.os == "Android":\n\ \ \ \ \ \ \ \ \ \ \ \ flags.append("--rtlib=libgcc")' \
+     build/moz.configure/toolchain.configure
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
 sed -i \

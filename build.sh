@@ -32,12 +32,13 @@ sdkmanager 'build-tools;33.0.0'
 sdkmanager 'build-tools;33.0.1'
 sdkmanager 'ndk;25.0.8775105' # for GleanAS
 sdkmanager 'ndk;25.1.8937393' # for Glean
+sdkmanager 'ndk;25.2.9519653'
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.68.2
+rustup default 1.69.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android

@@ -1,8 +1,8 @@
 diff --git a/fenix/app/build.gradle b/fenix/app/build.gradle
-index f9b677fb3f..58052580c7 100644
+index 36bca88725..f92a44344e 100644
 --- a/fenix/app/build.gradle
 +++ b/fenix/app/build.gradle
-@@ -591,7 +591,6 @@ dependencies {
+@@ -578,7 +578,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -10,7 +10,7 @@ index f9b677fb3f..58052580c7 100644
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
  
-@@ -623,15 +622,6 @@ dependencies {
+@@ -613,15 +612,6 @@ dependencies {
      implementation FenixDependencies.protobuf_javalite
      implementation FenixDependencies.google_material
  
@@ -23,9 +23,9 @@ index f9b677fb3f..58052580c7 100644
 -    implementation FenixDependencies.google_play_review
 -    implementation FenixDependencies.google_play_review_ktx
 -
+     implementation FenixDependencies.androidx_profileinstaller
+ 
      androidTestImplementation FenixDependencies.uiautomator
-     androidTestImplementation "tools.fastlane:screengrab:2.0.0"
-     // This Falcon version is added to maven central now required for Screengrab
 diff --git a/fenix/app/proguard-rules.pro b/fenix/app/proguard-rules.pro
 index e269f65775..e870f06bef 100644
 --- a/fenix/app/proguard-rules.pro
@@ -558,10 +558,10 @@ index dc415c0f6b..5aeb436d63 100644
  
      /**
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index f684f3caff..b6b22fc5b0 100644
+index be42af1f47..8acd3359e3 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -130,11 +130,7 @@ class Analytics(
+@@ -131,11 +131,7 @@ class Analytics(
          MetricController.create(
              listOf(
                  GleanMetricsService(context),
@@ -575,18 +575,18 @@ index f684f3caff..b6b22fc5b0 100644
              isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
              isMarketingDataTelemetryEnabled = { context.settings().isMarketingTelemetryEnabled },
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 56b7798b1f..875d987098 100644
+index 35300eb4f0..8040b7cb83 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -9,7 +9,6 @@ import android.app.Application
- import android.content.Context
+@@ -10,7 +10,6 @@ import android.content.Context
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.LocalContext
+ import androidx.core.app.NotificationManagerCompat
 -import com.google.android.play.core.review.ReviewManagerFactory
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -159,7 +158,6 @@ class Components(private val context: Context) {
+@@ -169,7 +168,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -595,10 +595,10 @@ index 56b7798b1f..875d987098 100644
          )
      }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index fef2fa74ff..ccff2903ed 100644
+index fee96e2cb0..1bffeaeff9 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -485,8 +485,14 @@ class Core(
+@@ -486,8 +486,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -655,10 +655,10 @@ index 33e8704adc..ffa85e3e46 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-index bf32cb29cc..58886aa6d3 100644
+index 48213b60a4..d74b91c6ab 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-@@ -10,23 +10,12 @@ import android.os.Bundle
+@@ -10,24 +10,13 @@ import android.os.Bundle
  import android.util.Log
  import com.adjust.sdk.Adjust
  import com.adjust.sdk.AdjustConfig
@@ -671,6 +671,7 @@ index bf32cb29cc..58886aa6d3 100644
 -import mozilla.components.lib.crash.CrashReporter
  import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.Config
+ import org.mozilla.fenix.GleanMetrics.FirstSession
  import org.mozilla.fenix.ext.settings
  
 -class AdjustMetricsService(
@@ -683,7 +684,7 @@ index bf32cb29cc..58886aa6d3 100644
      override val type = MetricServiceType.Marketing
  
      override fun start() {
-@@ -81,22 +70,8 @@ class AdjustMetricsService(
+@@ -84,22 +73,8 @@ class AdjustMetricsService(
          Adjust.gdprForgetMe(application.applicationContext)
      }
  
@@ -726,23 +727,23 @@ index a015a69eb7..610c24cb08 100644
                      itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
                  }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 3814632f7b..505b26bc29 100644
+index b566fe0d43..e768d6098f 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -36,6 +36,8 @@ object SupportUtils {
-     const val MEITUAN_URL = "https://tb.j5k6.com/6ZSOp"
+@@ -38,6 +38,8 @@ object SupportUtils {
      const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
      const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
+     const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
 +    const val FDROID_URL = "https://f-droid.org/"
 +    const val EFF_URL = "https://www.eff.org/"
  
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index ab49a39673..24ec8aeee4 100644
+index 6bc1ce49c5..cb5485d45e 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -297,17 +297,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -307,17 +307,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -763,7 +764,7 @@ index ab49a39673..24ec8aeee4 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1486,7 +1486,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1496,7 +1496,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -772,7 +773,7 @@ index ab49a39673..24ec8aeee4 100644
      )
  
      /**
-@@ -1544,7 +1544,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1554,7 +1554,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -860,7 +861,7 @@ index d053c49e94..7dd704407e 100644
  
      <androidx.preference.Preference
 diff --git a/fenix/buildSrc/src/main/java/FenixDependencies.kt b/fenix/buildSrc/src/main/java/FenixDependencies.kt
-index 596991fff6..05075166aa 100644
+index 739ffcffc5..0d3c1aaf51 100644
 --- a/fenix/buildSrc/src/main/java/FenixDependencies.kt
 +++ b/fenix/buildSrc/src/main/java/FenixDependencies.kt
 @@ -117,9 +117,6 @@ object FenixDependencies {
@@ -870,10 +871,10 @@ index 596991fff6..05075166aa 100644
 -    const val adjust = "com.adjust.sdk:adjust-android:${FenixVersions.adjust}"
 -    const val installreferrer = "com.android.installreferrer:installreferrer:${FenixVersions.installreferrer}"
 -
-     const val jna = "net.java.dev.jna:jna:${FenixVersions.jna}@jar"
- 
      const val junit = "junit:junit:${FenixVersions.junit}"
-@@ -156,12 +153,6 @@ object FenixDependencies {
+     const val mockk = "io.mockk:mockk:${FenixVersions.mockk}"
+     const val mockk_android = "io.mockk:mockk-android:${FenixVersions.mockk}"
+@@ -154,12 +151,6 @@ object FenixDependencies {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${FenixVersions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${FenixVersions.robolectric}"
  
