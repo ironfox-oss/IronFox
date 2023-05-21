@@ -257,6 +257,7 @@ sed -i \
 
 # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1821221
 rm -f build/android/libgcc.a
+# shellcheck disable=SC2016
 sed -i \
     -e 's|LDFLAGS="$extra_android_flags -L$_topsrcdir/build/android $LDFLAGS"|LDFLAGS="$extra_android_flags $LDFLAGS"|' \
     build/autoconf/android.m4
