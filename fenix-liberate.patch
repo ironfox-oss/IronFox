@@ -1,8 +1,8 @@
 diff --git a/fenix/app/build.gradle b/fenix/app/build.gradle
-index 36bca88725..f92a44344e 100644
+index c23bd3088a..43b74dfaf4 100644
 --- a/fenix/app/build.gradle
 +++ b/fenix/app/build.gradle
-@@ -578,7 +578,6 @@ dependencies {
+@@ -579,7 +579,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -10,7 +10,7 @@ index 36bca88725..f92a44344e 100644
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
  
-@@ -613,15 +612,6 @@ dependencies {
+@@ -616,15 +615,6 @@ dependencies {
      implementation FenixDependencies.protobuf_javalite
      implementation FenixDependencies.google_material
  
@@ -536,7 +536,7 @@ index 0000000000..b50a6f03a2
 +    }
 +}
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index dc415c0f6b..5aeb436d63 100644
+index d5a1ed5765..2a667b6c05 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -18,7 +18,7 @@ object FeatureFlags {
@@ -558,10 +558,10 @@ index dc415c0f6b..5aeb436d63 100644
  
      /**
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index be42af1f47..8acd3359e3 100644
+index 05c3a6161e..d59b49315c 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -131,11 +131,7 @@ class Analytics(
+@@ -132,11 +132,7 @@ class Analytics(
          MetricController.create(
              listOf(
                  GleanMetricsService(context),
@@ -571,11 +571,11 @@ index be42af1f47..8acd3359e3 100644
 -                    crashReporter = crashReporter,
 -                ),
 +                AdjustMetricsService(context as Application),
+                 InstallReferrerMetricsService(context),
              ),
              isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
-             isMarketingDataTelemetryEnabled = { context.settings().isMarketingTelemetryEnabled },
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 35300eb4f0..8040b7cb83 100644
+index a054c12f51..20f87d4631 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,6 @@ import android.content.Context
@@ -586,7 +586,7 @@ index 35300eb4f0..8040b7cb83 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AddonCollectionProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -169,7 +168,6 @@ class Components(private val context: Context) {
+@@ -171,7 +170,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -595,10 +595,10 @@ index 35300eb4f0..8040b7cb83 100644
          )
      }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index fee96e2cb0..1bffeaeff9 100644
+index b620c393fe..8ad5cad402 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -486,8 +486,14 @@ class Core(
+@@ -497,8 +497,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -655,7 +655,7 @@ index 33e8704adc..ffa85e3e46 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-index 48213b60a4..d74b91c6ab 100644
+index 862f7fe31a..d74b91c6ab 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 @@ -10,24 +10,13 @@ import android.os.Bundle
@@ -684,7 +684,7 @@ index 48213b60a4..d74b91c6ab 100644
      override val type = MetricServiceType.Marketing
  
      override fun start() {
-@@ -84,22 +73,8 @@ class AdjustMetricsService(
+@@ -84,26 +73,8 @@ class AdjustMetricsService(
          Adjust.gdprForgetMe(application.applicationContext)
      }
  
@@ -692,9 +692,13 @@ index 48213b60a4..d74b91c6ab 100644
 -    override fun track(event: Event) {
 -        CoroutineScope(dispatcher).launch {
 -            try {
--                if (event is Event.GrowthData && storage.shouldTrack(event)) {
--                    Adjust.trackEvent(AdjustEvent(event.tokenName))
--                    storage.updateSentState(event)
+-                if (event is Event.GrowthData) {
+-                    if (storage.shouldTrack(event)) {
+-                        Adjust.trackEvent(AdjustEvent(event.tokenName))
+-                        storage.updateSentState(event)
+-                    } else {
+-                        storage.updatePersistentState(event)
+-                    }
 -                }
 -            } catch (e: Exception) {
 -                crashReporter.submitCaughtException(e)
@@ -709,6 +713,81 @@ index 48213b60a4..d74b91c6ab 100644
  
      companion object {
          private const val LOGTAG = "AdjustMetricsService"
+diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+index a65690bdce..5e88212347 100644
+--- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
++++ b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+@@ -8,8 +8,6 @@ import android.content.Context
+ import android.net.UrlQuerySanitizer
+ import android.os.RemoteException
+ import androidx.annotation.VisibleForTesting
+-import com.android.installreferrer.api.InstallReferrerClient
+-import com.android.installreferrer.api.InstallReferrerStateListener
+ import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.utils.Settings
+@@ -23,60 +21,13 @@ import java.net.URLDecoder
+ class InstallReferrerMetricsService(private val context: Context) : MetricsService {
+     override val type = MetricServiceType.Marketing
+ 
+-    private var referrerClient: InstallReferrerClient? = null
+-
+     override fun start() {
+         if (context.settings().utmParamsKnown) {
+             return
+         }
+-
+-        val timerId = PlayStoreAttribution.attributionTime.start()
+-        val client = InstallReferrerClient.newBuilder(context).build()
+-        referrerClient = client
+-
+-        client.startConnection(
+-            object : InstallReferrerStateListener {
+-                override fun onInstallReferrerSetupFinished(responseCode: Int) {
+-                    PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
+-                    when (responseCode) {
+-                        InstallReferrerClient.InstallReferrerResponse.OK -> {
+-                            // Connection established.
+-                            try {
+-                                val response = client.installReferrer
+-                                recordInstallReferrer(context.settings(), response.installReferrer)
+-                                context.settings().utmParamsKnown = true
+-                            } catch (e: RemoteException) {
+-                                // NOOP.
+-                                // We can't do anything about this.
+-                            }
+-                        }
+-
+-                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
+-                            // API not available on the current Play Store app.
+-                            context.settings().utmParamsKnown = true
+-                        }
+-
+-                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {
+-                            // Connection couldn't be established.
+-                        }
+-                    }
+-                    // End the connection, and null out the client.
+-                    stop()
+-                }
+-
+-                override fun onInstallReferrerServiceDisconnected() {
+-                    // Try to restart the connection on the next request to
+-                    // Google Play by calling the startConnection() method.
+-                    referrerClient = null
+-                }
+-            },
+-        )
+     }
+ 
+-    override fun stop() {
+-        referrerClient?.endConnection()
+-        referrerClient = null
+-    }
++    override fun stop() { /* noop */ }
+ 
+     override fun track(event: Event) = Unit
+ 
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 index a015a69eb7..610c24cb08 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
@@ -727,7 +806,7 @@ index a015a69eb7..610c24cb08 100644
                      itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
                  }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index b566fe0d43..e768d6098f 100644
+index e867be39f2..a1667b1c2b 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -38,6 +38,8 @@ object SupportUtils {
@@ -740,10 +819,10 @@ index b566fe0d43..e768d6098f 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6bc1ce49c5..cb5485d45e 100644
+index 32f2e60355..4cb149f378 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -307,17 +307,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -336,17 +336,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -764,7 +843,7 @@ index 6bc1ce49c5..cb5485d45e 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1496,7 +1496,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1530,7 +1530,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -773,7 +852,7 @@ index 6bc1ce49c5..cb5485d45e 100644
      )
  
      /**
-@@ -1554,7 +1554,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1588,7 +1588,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -861,10 +940,10 @@ index d053c49e94..7dd704407e 100644
  
      <androidx.preference.Preference
 diff --git a/fenix/buildSrc/src/main/java/FenixDependencies.kt b/fenix/buildSrc/src/main/java/FenixDependencies.kt
-index 739ffcffc5..0d3c1aaf51 100644
+index 35ac680448..a160cd1fdc 100644
 --- a/fenix/buildSrc/src/main/java/FenixDependencies.kt
 +++ b/fenix/buildSrc/src/main/java/FenixDependencies.kt
-@@ -117,9 +117,6 @@ object FenixDependencies {
+@@ -121,9 +121,6 @@ object FenixDependencies {
      const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${FenixVersions.protobuf}"
      const val protobuf_compiler = "com.google.protobuf:protoc:${FenixVersions.protobuf}"
  
@@ -874,7 +953,7 @@ index 739ffcffc5..0d3c1aaf51 100644
      const val junit = "junit:junit:${FenixVersions.junit}"
      const val mockk = "io.mockk:mockk:${FenixVersions.mockk}"
      const val mockk_android = "io.mockk:mockk-android:${FenixVersions.mockk}"
-@@ -154,12 +151,6 @@ object FenixDependencies {
+@@ -158,12 +155,6 @@ object FenixDependencies {
      const val uiautomator = "androidx.test.uiautomator:uiautomator:${FenixVersions.uiautomator}"
      const val robolectric = "org.robolectric:robolectric:${FenixVersions.robolectric}"
  

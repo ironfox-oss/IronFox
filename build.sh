@@ -38,7 +38,7 @@ sdkmanager 'ndk;25.2.9519653'
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.69.0
+rustup default 1.70.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -79,7 +79,6 @@ gradle publishToMavenLocal
 popd
 
 pushd "$application_services"
-export ANDROID_NDK_ROOT="$ANDROID_NDK"
 export SQLCIPHER_LIB_DIR="$application_services/libs/desktop/linux-x86-64/sqlcipher/lib"
 export SQLCIPHER_INCLUDE_DIR="$application_services/libs/desktop/linux-x86-64/sqlcipher/include"
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"

@@ -138,7 +138,7 @@ sed -i \
 # Fixup dependency on GMS
 sed -i \
     -e 's/com.google.android.gms.common.util.VisibleForTesting/androidx.annotation.VisibleForTesting/' \
-    app/src/main/java/org/mozilla/fenix/widget/VoiceSearchActivity.kt
+    app/src/main/java/org/mozilla/fenix/browser/readermode/ReaderModeController.kt
 
 # Set up target parameters
 minsdk=21
@@ -179,8 +179,6 @@ localize_maven
 popd
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
-sed -i -e '/ndkVersion:/a\        ndkPath: System.getenv("ANDROID_NDK"),' \
-    build.gradle
 localize_maven
 popd
 
@@ -197,6 +195,7 @@ rm -fR components/browser/engine-gecko*
 # Remove unnecessary projects
 rm -fR ../focus-android
 localize_maven
+sed -i -e 's/52.3.0/52.6.0/' plugins/dependencies/src/main/java/DependenciesPlugin.kt
 popd
 
 pushd "$android_components"
@@ -218,13 +217,7 @@ popd
 
 pushd "$application_services"
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
-sed -i -e '/NDK_VERSION/d' libs/android_defaults.sh
-sed -i -e '/ndkVersion:/a\        ndkPath: System.getenv("ANDROID_NDK"),' \
-    build.gradle
 sed -i -e '/content {/,/}/d' build.gradle
-sed -i -e '/ndkVersion/a\    ndkPath rootProject.ext.build.ndkPath' \
-    build-scripts/component-common.gradle \
-    megazords/full/android/build.gradle
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 localize_maven
 # Fix stray

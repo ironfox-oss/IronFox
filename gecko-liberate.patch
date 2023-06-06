@@ -1,7 +1,7 @@
 diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Mar 22 21:12:21 2022 +0000
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Wed Mar 30 13:50:19 2022 -0400
-@@ -5,79 +5,12 @@
+@@ -5,80 +5,12 @@
  
  package org.mozilla.geckoview;
  
@@ -34,6 +34,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -import com.google.android.gms.fido.fido2.api.common.PublicKeyCredentialType;
 -import com.google.android.gms.fido.fido2.api.common.PublicKeyCredentialUserEntity;
 -import com.google.android.gms.fido.fido2.api.common.RSAAlgorithm;
+-import com.google.android.gms.fido.fido2.api.common.ResidentKeyRequirement;
 -import com.google.android.gms.tasks.Task;
  import java.nio.ByteBuffer;
  import java.util.ArrayList;
@@ -81,7 +82,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
  
    public static class WebAuthnPublicCredential {
      public final byte[] id;
-@@ -90,34 +23,12 @@
+@@ -90,34 +22,12 @@
  
      static ArrayList<WebAuthnPublicCredential> CombineBuffers(
          final Object[] idObjectList, final ByteBuffer transportList) {
@@ -116,7 +117,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
    @WrapForJNI
    public static class MakeCredentialResponse {
      public final byte[] clientDataJson;
-@@ -145,174 +56,7 @@
+@@ -145,187 +55,7 @@
        final WebAuthnTokenManager.WebAuthnPublicCredential[] excludeList,
        final GeckoBundle authenticatorSelection,
        final GeckoBundle extensions) {
@@ -163,6 +164,20 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -    if (authenticatorSelection.getInt("requireCrossPlatformAttachment", 0) == 1) {
 -      selBuild.setAttachment(Attachment.CROSS_PLATFORM);
 -    }
+-    final String residentKey = authenticatorSelection.getString("residentKey", "");
+-    if (residentKey.equals("required")) {
+-      selBuild
+-          .setRequireResidentKey(true)
+-          .setResidentKeyRequirement(ResidentKeyRequirement.RESIDENT_KEY_REQUIRED);
+-    } else if (residentKey.equals("preferred")) {
+-      selBuild
+-          .setRequireResidentKey(false)
+-          .setResidentKeyRequirement(ResidentKeyRequirement.RESIDENT_KEY_PREFERRED);
+-    } else if (residentKey.equals("discouraged")) {
+-      selBuild
+-          .setRequireResidentKey(false)
+-          .setResidentKeyRequirement(ResidentKeyRequirement.RESIDENT_KEY_DISCOURAGED);
+-    }
 -    final AuthenticatorSelectionCriteria sel = selBuild.build();
 -
 -    final AuthenticationExtensions.Builder extBuilder = new AuthenticationExtensions.Builder();
@@ -171,8 +186,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -    }
 -    final AuthenticationExtensions ext = extBuilder.build();
 -
--    // requireResidentKey andrequireUserVerification are not yet
--    // consumed by Android's API
+-    // requireUserVerification are not yet consumed by Android's API
 -
 -    final List<PublicKeyCredentialDescriptor> excludedList =
 -        new ArrayList<PublicKeyCredentialDescriptor>();
@@ -291,7 +305,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      return result;
    }
  
-@@ -325,36 +69,8 @@
+@@ -325,36 +55,8 @@
        final ByteBuffer transportList,
        final GeckoBundle authenticatorSelection,
        final GeckoBundle extensions) {
@@ -330,7 +344,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
    }
  
    @WrapForJNI
-@@ -379,138 +95,12 @@
+@@ -379,138 +81,12 @@
      }
    }
  
@@ -469,7 +483,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      return result;
    }
  
-@@ -521,52 +111,13 @@
+@@ -521,52 +97,13 @@
        final ByteBuffer transportList,
        final GeckoBundle assertionBundle,
        final GeckoBundle extensions) {
