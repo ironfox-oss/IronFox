@@ -655,7 +655,7 @@ index 33e8704adc..ffa85e3e46 100644
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-index 862f7fe31a..d74b91c6ab 100644
+index f5eecf1893..d74b91c6ab 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 @@ -10,24 +10,13 @@ import android.os.Bundle
@@ -684,7 +684,15 @@ index 862f7fe31a..d74b91c6ab 100644
      override val type = MetricServiceType.Marketing
  
      override fun start() {
-@@ -84,26 +73,8 @@ class AdjustMetricsService(
+@@ -47,7 +36,6 @@ class AdjustMetricsService(
+             AdjustConfig.ENVIRONMENT_PRODUCTION,
+             true,
+         )
+-        config.setPreinstallTrackingEnabled(true)
+ 
+         val installationPing = FirstSessionPing(application)
+ 
+@@ -85,26 +73,8 @@ class AdjustMetricsService(
          Adjust.gdprForgetMe(application.applicationContext)
      }
  
