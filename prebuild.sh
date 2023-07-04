@@ -209,6 +209,11 @@ sed -i \
     -e "s/version = \"$gvver\.[0-9.]*\"/version = \"$gvver.+\"/" \
     plugins/dependencies/src/main/java/Gecko.kt
 localize_maven
+
+# Add the added search engines as `general` engines
+sed -i \
+    -e '41i \ \ \ \ "brave",\n\ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "metager",\n\ \ \ \ "mojeek",\n\ \ \ \ "qwantlite",\n\ \ \ \ "startpage",' \
+     components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 popd
 
 #
@@ -243,11 +248,6 @@ sed -i \
     -e 's/r23c/r21d/' \
     python/mozboot/mozboot/android.py
 
-# Remove the <sdk21 fallback
-sed -i \
-    -e '29i #  define CV_USE_CLOCK_API' \
-    mozglue/misc/ConditionVariable_posix.cpp
-
 # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1821221
 rm -f build/android/libgcc.a
 # shellcheck disable=SC2016
@@ -256,9 +256,6 @@ sed -i \
     build/autoconf/android.m4
 sed -i \
     -e 's/info.version < "13.0":/info.version < "8.0":/' \
-     build/moz.configure/toolchain.configure
-sed -i \
-    -e '1410i \ \ \ \ \ \ \ \ if host_or_target.os == "Android":\n\ \ \ \ \ \ \ \ \ \ \ \ flags.append("--rtlib=libgcc")' \
      build/moz.configure/toolchain.configure
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
