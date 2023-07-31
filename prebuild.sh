@@ -44,8 +44,8 @@ rm -fR focus-android
 rm -f fenix/app/src/test/java/org/mozilla/fenix/components/ReviewPromptControllerTest.kt
 
 # Hack to prevent too long string from breaking build
-sed -i '/val statusCmd/,+3d' fenix/buildSrc/src/main/java/Config.kt
-sed -i '/val revision = /a \        val statusSuffix = "+"' fenix/buildSrc/src/main/java/Config.kt
+sed -i '/val statusCmd/,+3d' android-components/plugins/config/src/main/java/ConfigPlugin.kt
+sed -i '/val revision = /a \        val statusSuffix = "+"' android-components/plugins/config/src/main/java/ConfigPlugin.kt
 
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
@@ -79,6 +79,7 @@ sed -i \
 sed -i \
     -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
     buildSrc/build.gradle \
+    plugins/fenixdependencies/build.gradle \
     mozilla-lint-rules/build.gradle
 
 # We need only stable GeckoView
@@ -94,6 +95,7 @@ sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
 # Replace proprietary artwork
 rm app/src/release/res/drawable/ic_launcher_foreground.xml
 rm app/src/release/res/mipmap-*/ic_launcher.png
+rm app/src/main/res/values-v24/styles.xml
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 find "$patches/fenix-overlay" -type f | while read -r src; do
     dst=app/src/release/${src#"$patches/fenix-overlay/"}
@@ -195,7 +197,6 @@ rm -fR components/browser/engine-gecko*
 # Remove unnecessary projects
 rm -fR ../focus-android
 localize_maven
-sed -i -e 's/52.3.0/52.6.0/' plugins/dependencies/src/main/java/DependenciesPlugin.kt
 popd
 
 pushd "$android_components"
