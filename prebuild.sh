@@ -50,6 +50,9 @@ sed -i '/val revision = /a \        val statusSuffix = "+"' android-components/p
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
+# Add wallpaper URL
+echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > fenix/.wallpaper_url
+
 #
 # Fenix
 #
