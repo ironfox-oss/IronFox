@@ -83,9 +83,9 @@ sed -i \
     -e '/^ \{12\}maven {/,/^ \{12\}}/d' build.gradle
 sed -i \
     -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
-    buildSrc/build.gradle \
     plugins/fenixdependencies/build.gradle \
-    mozilla-lint-rules/build.gradle
+    mozilla-lint-rules/build.gradle \
+    plugins/apksize/build.gradle
 
 # We need only stable GeckoView
 sed -i \
@@ -250,6 +250,11 @@ sed -i \
 
 # Patch the use of proprietary libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
+
+# Fixup, unsupported on Android
+sed -i \
+    -e '/AT_EACCESS/d' \
+    dom/base/ChromeUtils.cpp
 
 # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1820876
 sed -i \
