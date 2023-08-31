@@ -98,6 +98,8 @@ sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
     app/src/*/res/values*/*strings.xml
 
 # Replace proprietary artwork
+sed -i -e 's|@drawable/animated_splash_screen<|@drawable/splash_screen<|' \
+    app/src/main/res/values-v*/styles.xml
 find "$patches/fenix-overlay" -type f | while read -r src; do
     dst=app/src/release/${src#"$patches/fenix-overlay/"}
     mkdir -p "$(dirname "$dst")"
