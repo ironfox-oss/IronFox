@@ -1,8 +1,8 @@
 diff --git a/fenix/app/build.gradle b/fenix/app/build.gradle
-index 8c2568e570..2acc3f530d 100644
+index 78d698dad9..0fbf4cb1cf 100644
 --- a/fenix/app/build.gradle
 +++ b/fenix/app/build.gradle
-@@ -577,7 +577,6 @@ dependencies {
+@@ -576,7 +576,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -536,7 +536,7 @@ index 0000000000..b50a6f03a2
 +    }
 +}
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index dbd09b2956..724c94d112 100644
+index d3d63c17b9..7228e67716 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -18,7 +18,7 @@ object FeatureFlags {
@@ -575,7 +575,7 @@ index 3cd954a5bb..31f4e6fe34 100644
              ),
              isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index a054c12f51..20f87d4631 100644
+index d077ca2972..a55a167ad5 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,6 @@ import android.content.Context
@@ -584,7 +584,7 @@ index a054c12f51..20f87d4631 100644
  import androidx.core.app.NotificationManagerCompat
 -import com.google.android.play.core.review.ReviewManagerFactory
  import mozilla.components.feature.addons.AddonManager
- import mozilla.components.feature.addons.amo.AddonCollectionProvider
+ import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
 @@ -171,7 +170,6 @@ class Components(private val context: Context) {
  
@@ -595,10 +595,10 @@ index a054c12f51..20f87d4631 100644
          )
      }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index f44d928687..a354f71d13 100644
+index f6d7a2b0df..366c256bdb 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -507,8 +507,14 @@ class Core(
+@@ -510,8 +510,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -836,7 +836,7 @@ index e867be39f2..a1667b1c2b 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 422338c2e9..4a6c0011be 100644
+index 01ed68bbe6..c35ab607f7 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -332,17 +332,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -957,10 +957,10 @@ index 64c90b599b..621f184e68 100644
  
      <androidx.preference.Preference
 diff --git a/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt b/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
-index 26a3602760..9f2e21b559 100644
+index fff754c099..35599805e6 100644
 --- a/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
 +++ b/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
-@@ -72,9 +72,6 @@ object FenixDependencies {
+@@ -70,9 +70,6 @@ object FenixDependencies {
      const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${FenixVersions.protobuf}"
      const val protobuf_compiler = "com.google.protobuf:protoc:${FenixVersions.protobuf}"
  
@@ -970,7 +970,7 @@ index 26a3602760..9f2e21b559 100644
      const val mockk = "io.mockk:mockk:${FenixVersions.mockk}"
      const val mockk_android = "io.mockk:mockk-android:${FenixVersions.mockk}"
      const val falcon = "com.jraska:falcon:${FenixVersions.falcon}"
-@@ -99,12 +96,6 @@ object FenixDependencies {
+@@ -97,12 +94,6 @@ object FenixDependencies {
  
      const val mockwebserver = "com.squareup.okhttp3:mockwebserver:${FenixVersions.mockwebserver}"
  

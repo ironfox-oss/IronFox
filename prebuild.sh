@@ -143,11 +143,6 @@ sed -i \
     -e '/pref_key_website_pull_to_refresh/{n; s/default = true/default = false/}' \
     app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 
-# Fixup dependency on GMS
-sed -i \
-    -e 's/com.google.android.gms.common.util.VisibleForTesting/androidx.annotation.VisibleForTesting/' \
-    app/src/main/java/org/mozilla/fenix/browser/readermode/ReaderModeController.kt
-
 # Set up target parameters
 minsdk=21
 case $(echo "$2" | cut -c 6) in
@@ -248,6 +243,9 @@ popd
 
 pushd "$mozilla_release"
 
+# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1845651
+hg revert media/openmax_dl -r ebd43acaeeb3a5b82ab6a9027ab88fa2a72aea81
+
 # Remove proprietary libraries
 sed -i \
     -e '/com.google.android.gms/d' \
@@ -265,6 +263,11 @@ sed -i \
 sed -i \
     -e 's/r23c/r21d/' \
     python/mozboot/mozboot/android.py
+
+# Fixup
+sed -i \
+    -e 's/__ANDROID_API_T__/33/' \
+    hal/android/AndroidPerformanceHintManager.cpp
 
 # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1821221
 rm -f build/android/libgcc.a
