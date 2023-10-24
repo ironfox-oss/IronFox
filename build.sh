@@ -42,7 +42,7 @@ rustup default 1.70.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
-cargo install --force --vers 0.24.3 cbindgen
+cargo install --force --vers 0.26.0 cbindgen
 
 # Build WASI SDK
 pushd "$wasi"

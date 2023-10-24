@@ -1,6 +1,6 @@
-diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Mar 22 21:12:21 2022 +0000
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Wed Mar 30 13:50:19 2022 -0400
+diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Oct 24 12:48:19 2023 +0000
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Oct 24 14:47:07 2023 -0400
 @@ -5,80 +5,12 @@
  
  package org.mozilla.geckoview;
@@ -82,7 +82,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
  
    public static class WebAuthnPublicCredential {
      public final byte[] id;
-@@ -90,34 +22,12 @@
+@@ -91,34 +23,12 @@
  
      static ArrayList<WebAuthnPublicCredential> CombineBuffers(
          final Object[] idObjectList, final ByteBuffer transportList) {
@@ -117,7 +117,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
    @WrapForJNI
    public static class MakeCredentialResponse {
      public final byte[] clientDataJson;
-@@ -145,187 +55,7 @@
+@@ -151,191 +61,7 @@
        final WebAuthnTokenManager.WebAuthnPublicCredential[] excludeList,
        final GeckoBundle authenticatorSelection,
        final GeckoBundle extensions) {
@@ -143,7 +143,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -        new PublicKeyCredentialUserEntity(
 -            userId,
 -            credentialBundle.getString("userName", ""),
--            credentialBundle.getString("userIcon", ""),
+-            /* deprecated userIcon field */ "",
 -            credentialBundle.getString("userDisplayName", ""));
 -
 -    AttestationConveyancePreference pref = AttestationConveyancePreference.NONE;
@@ -202,7 +202,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -        new PublicKeyCredentialRpEntity(
 -            credentialBundle.getString("rpId"),
 -            credentialBundle.getString("rpName", ""),
--            credentialBundle.getString("rpIcon", ""));
+-            /* deprecated rpIcon field */ "");
 -
 -    final PublicKeyCredentialCreationOptions requestOptions =
 -        requestBuilder
@@ -283,11 +283,15 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -                              + Base64.encodeToString(
 -                                  responseData.getAttestationObject(), Base64.DEFAULT));
 -
+-                      Log.d(
+-                          LOGTAG, "transports: " + String.join(", ", responseData.getTransports()));
+-
 -                      result.complete(
 -                          new WebAuthnTokenManager.MakeCredentialResponse(
 -                              responseData.getClientDataJSON(),
 -                              responseData.getKeyHandle(),
--                              responseData.getAttestationObject()));
+-                              responseData.getAttestationObject(),
+-                              responseData.getTransports()));
 -                    }
 -                  },
 -                  e -> {
@@ -305,7 +309,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      return result;
    }
  
-@@ -325,36 +55,8 @@
+@@ -348,36 +74,8 @@
        final ByteBuffer transportList,
        final GeckoBundle authenticatorSelection,
        final GeckoBundle extensions) {
@@ -344,7 +348,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
    }
  
    @WrapForJNI
-@@ -379,138 +81,12 @@
+@@ -402,138 +100,12 @@
      }
    }
  
@@ -483,7 +487,7 @@ diff -r 1f1e28055e77 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      return result;
    }
  
-@@ -521,52 +97,13 @@
+@@ -544,52 +116,13 @@
        final ByteBuffer transportList,
        final GeckoBundle assertionBundle,
        final GeckoBundle extensions) {
