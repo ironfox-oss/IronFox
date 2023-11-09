@@ -57,6 +57,16 @@ make \
     -j"$(nproc)"
 popd
 
+# Build microG libraries
+pushd "$gmscore"
+gradle -x javaDocReleaseGeneration \
+    :play-services-ads-identifier:publishToMavenLocal \
+    :play-services-base:publishToMavenLocal \
+    :play-services-basement:publishToMavenLocal \
+    :play-services-fido:publishToMavenLocal \
+    :play-services-tasks:publishToMavenLocal
+popd
+
 pushd "$mozilla_release"
 MOZ_CHROME_MULTILOCALE=$(< "$patches/locales")
 export MOZ_CHROME_MULTILOCALE

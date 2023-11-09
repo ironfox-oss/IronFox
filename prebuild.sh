@@ -258,12 +258,7 @@ hg revert media/openmax_dl -r ebd43acaeeb3a5b82ab6a9027ab88fa2a72aea81
 # Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1836826
 hg revert media/libvpx -r 699059262f56
 
-# Remove proprietary libraries
-sed -i \
-    -e '/com.google.android.gms/d' \
-    mobile/android/geckoview/build.gradle
-
-# Patch the use of proprietary libraries
+# Replace GMS with microG client library
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 
 # Fixup, unsupported on Android
@@ -344,9 +339,6 @@ pref("media.gmp-gmpopenh264.enabled", false);
 
 // Disable casting (Roku, Chromecast)
 pref("browser.casting.enabled", false);
-
-// Disable WebAuthn, since it is a stub
-pref("security.webauth.webauthn", false);
 EOF
 
 popd
