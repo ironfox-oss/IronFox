@@ -1,7 +1,7 @@
-diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Oct 24 12:48:19 2023 +0000
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Oct 24 14:47:07 2023 -0400
-@@ -5,80 +5,12 @@
+diff -r 2d7ee05a65e0 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Thu Nov 16 17:51:50 2023 +0000
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Mon Nov 20 19:43:22 2023 -0500
+@@ -5,83 +5,12 @@
  
  package org.mozilla.geckoview;
  
@@ -46,10 +46,11 @@ diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
  /* package */ class WebAuthnTokenManager {
 -  private static final String LOGTAG = "WebAuthnTokenManager";
 -
--  // from u2fhid-capi.h
+-  // from dom/webauthn/WebAuthnTransportIdentifiers.h
 -  private static final byte AUTHENTICATOR_TRANSPORT_USB = 1;
 -  private static final byte AUTHENTICATOR_TRANSPORT_NFC = 2;
 -  private static final byte AUTHENTICATOR_TRANSPORT_BLE = 4;
+-  private static final byte AUTHENTICATOR_TRANSPORT_INTERNAL = 8;
 -
 -  private static final Algorithm[] SUPPORTED_ALGORITHMS = {
 -    EC2Algorithm.ES256,
@@ -76,13 +77,15 @@ diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
 -    if ((transports & AUTHENTICATOR_TRANSPORT_BLE) == AUTHENTICATOR_TRANSPORT_BLE) {
 -      result.add(Transport.BLUETOOTH_LOW_ENERGY);
 -    }
--
+-    if ((transports & AUTHENTICATOR_TRANSPORT_INTERNAL) == AUTHENTICATOR_TRANSPORT_INTERNAL) {
+-      result.add(Transport.INTERNAL);
+-    }
 -    return result;
 -  }
  
    public static class WebAuthnPublicCredential {
      public final byte[] id;
-@@ -91,34 +23,12 @@
+@@ -94,34 +23,12 @@
  
      static ArrayList<WebAuthnPublicCredential> CombineBuffers(
          final Object[] idObjectList, final ByteBuffer transportList) {
@@ -117,7 +120,7 @@ diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
    @WrapForJNI
    public static class MakeCredentialResponse {
      public final byte[] clientDataJson;
-@@ -151,191 +61,7 @@
+@@ -154,191 +61,7 @@
        final WebAuthnTokenManager.WebAuthnPublicCredential[] excludeList,
        final GeckoBundle authenticatorSelection,
        final GeckoBundle extensions) {
@@ -309,7 +312,7 @@ diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      return result;
    }
  
-@@ -348,36 +74,8 @@
+@@ -351,36 +74,8 @@
        final ByteBuffer transportList,
        final GeckoBundle authenticatorSelection,
        final GeckoBundle extensions) {
@@ -348,7 +351,7 @@ diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
    }
  
    @WrapForJNI
-@@ -402,138 +100,12 @@
+@@ -405,138 +100,12 @@
      }
    }
  
@@ -487,7 +490,7 @@ diff -r bff94ce13643 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
      return result;
    }
  
-@@ -544,52 +116,13 @@
+@@ -547,52 +116,13 @@
        final ByteBuffer transportList,
        final GeckoBundle assertionBundle,
        final GeckoBundle extensions) {
