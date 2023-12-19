@@ -38,7 +38,7 @@ sdkmanager 'ndk;25.2.9519653'
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.70.0
+rustup default 1.73.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -48,9 +48,7 @@ cargo install --force --vers 0.26.0 cbindgen
 pushd "$wasi"
 mkdir -p build/install/wasi
 touch build/compiler-rt.BUILT # fool the build system
-# BULK_MEMORY_SOURCES= disables -mbulk-memory which is not supported by wasm2c
 make \
-    BULK_MEMORY_SOURCES= \
     PREFIX=/wasi \
     build/wasi-libc.BUILT \
     build/libcxx.BUILT \

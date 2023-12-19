@@ -1,8 +1,8 @@
 diff --git a/fenix/app/build.gradle b/fenix/app/build.gradle
-index ecf270db09..eeb42dc674 100644
+index db786e75e3..737cc2194f 100644
 --- a/fenix/app/build.gradle
 +++ b/fenix/app/build.gradle
-@@ -599,7 +599,6 @@ dependencies {
+@@ -608,7 +608,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -10,7 +10,7 @@ index ecf270db09..eeb42dc674 100644
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
  
-@@ -638,15 +637,8 @@ dependencies {
+@@ -647,15 +646,8 @@ dependencies {
      implementation FenixDependencies.protobuf_javalite
      implementation ComponentsDependencies.google_material
  
@@ -479,7 +479,7 @@ index 0000000000..b50a6f03a2
 +    }
 +}
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index dbfd66328a..dad70c421f 100644
+index a0b87e1040..98e0dc9508 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -18,7 +18,7 @@ object FeatureFlags {
@@ -501,7 +501,7 @@ index dbfd66328a..dad70c421f 100644
  
      /**
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-index 03e1b6b832..33bdbe364b 100644
+index f810667c45..5743ee8353 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 @@ -839,17 +839,14 @@ abstract class BaseBrowserFragment :
@@ -568,10 +568,10 @@ index fb5dc10724..76e2de470e 100644
          )
      }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index aece11e5ac..583f777fa8 100644
+index b9a73a5df0..423db6e9d8 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -508,8 +508,14 @@ class Core(
+@@ -509,8 +509,14 @@ class Core(
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -704,20 +704,26 @@ index b979a08026..ae125ebd52 100644
      companion object {
          private const val LOGTAG = "AdjustMetricsService"
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-index a65690bdce..5e88212347 100644
+index ecbe4cf895..cc1e502a94 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-@@ -8,8 +8,6 @@ import android.content.Context
- import android.net.UrlQuerySanitizer
+@@ -6,14 +6,10 @@ package org.mozilla.fenix.components.metrics
+ 
+ import android.content.Context
  import android.os.RemoteException
- import androidx.annotation.VisibleForTesting
 -import com.android.installreferrer.api.InstallReferrerClient
 -import com.android.installreferrer.api.InstallReferrerStateListener
- import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
+ import mozilla.components.support.base.log.logger.Logger
+ import org.json.JSONException
+ import org.json.JSONObject
+ import org.mozilla.fenix.FeatureFlags
+-import org.mozilla.fenix.GleanMetrics.MetaAttribution
+-import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
-@@ -23,60 +21,13 @@ import java.net.URLDecoder
- class InstallReferrerMetricsService(private val context: Context) : MetricsService {
+ import java.io.UnsupportedEncodingException
+@@ -29,74 +25,13 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+     private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Marketing
  
 -    private var referrerClient: InstallReferrerClient? = null
@@ -738,14 +744,28 @@ index a65690bdce..5e88212347 100644
 -                    when (responseCode) {
 -                        InstallReferrerClient.InstallReferrerResponse.OK -> {
 -                            // Connection established.
--                            try {
--                                val response = client.installReferrer
--                                recordInstallReferrer(context.settings(), response.installReferrer)
--                                context.settings().utmParamsKnown = true
+-                            val installReferrerResponse = try {
+-                                client.installReferrer.installReferrer
 -                            } catch (e: RemoteException) {
--                                // NOOP.
 -                                // We can't do anything about this.
+-                                logger.error("Failed to retrieve install referrer response", e)
+-                                null
 -                            }
+-
+-                            if (installReferrerResponse.isNullOrBlank()) {
+-                                return
+-                            }
+-
+-                            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
+-
+-                            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
+-                            if (FeatureFlags.metaAttributionEnabled) {
+-                                MetaParams.extractMetaAttribution(utmParams.content)
+-                                    ?.recordMetaAttribution()
+-                            }
+-
+-                            utmParams.recordInstallReferrer(context.settings())
+-                            context.settings().utmParamsKnown = true
 -                        }
 -
 -                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
@@ -778,6 +798,30 @@ index a65690bdce..5e88212347 100644
  
      override fun track(event: Event) = Unit
  
+@@ -214,12 +149,6 @@ data class UTMParams(
+             return
+         }
+         intoSettings(settings)
+-
+-        PlayStoreAttribution.source.set(source)
+-        PlayStoreAttribution.medium.set(medium)
+-        PlayStoreAttribution.campaign.set(campaign)
+-        PlayStoreAttribution.content.set(content)
+-        PlayStoreAttribution.term.set(term)
+     }
+ }
+ 
+@@ -314,9 +243,6 @@ data class MetaParams(
+      * record META attribution params to telemetry
+      */
+     fun recordMetaAttribution() {
+-        MetaAttribution.app.set(app)
+-        MetaAttribution.t.set(t)
+-        MetaAttribution.data.set(data)
+-        MetaAttribution.nonce.set(nonce)
++        return
+     }
+ }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
 index d69f27e570..171f54a6d5 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
@@ -796,7 +840,7 @@ index d69f27e570..171f54a6d5 100644
                      itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
                  }
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 961ea541c3..7bb88bd7c2 100644
+index 67870bd867..196cba65d4 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -38,6 +38,8 @@ object SupportUtils {
@@ -809,10 +853,10 @@ index 961ea541c3..7bb88bd7c2 100644
      enum class SumoTopic(internal val topicStr: String) {
          HELP("faq-android"),
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 4e4e6f38e9..37d64fd5fe 100644
+index 6f43974113..92b5e2f58b 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -334,17 +334,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -339,17 +339,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -833,7 +877,7 @@ index 4e4e6f38e9..37d64fd5fe 100644
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1593,7 +1593,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1591,7 +1591,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -842,7 +886,7 @@ index 4e4e6f38e9..37d64fd5fe 100644
      )
  
      /**
-@@ -1651,7 +1651,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1649,7 +1649,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -866,7 +910,7 @@ index 0000000000..101f4e0d0a
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
 diff --git a/fenix/app/src/main/res/xml/preferences.xml b/fenix/app/src/main/res/xml/preferences.xml
-index 9f62309f1e..d9732e9c03 100644
+index 8639c95004..c10d50d194 100644
 --- a/fenix/app/src/main/res/xml/preferences.xml
 +++ b/fenix/app/src/main/res/xml/preferences.xml
 @@ -133,11 +133,6 @@
@@ -930,7 +974,7 @@ index 64c90b599b..621f184e68 100644
  
      <androidx.preference.Preference
 diff --git a/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt b/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
-index 5d61a9bdbd..d55e93b5f1 100644
+index 61d408b9e8..8922ea5962 100644
 --- a/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
 +++ b/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
 @@ -28,16 +28,9 @@ object FenixVersions {
