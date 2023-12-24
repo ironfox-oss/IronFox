@@ -35,7 +35,7 @@ sdkmanager 'ndk;25.1.8937393' # for Glean
 sdkmanager 'ndk;25.2.9519653'
 
 # Set up Rust
-"$rustup"/rustup-init.sh -y
+"$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
 rustup default 1.73.0
