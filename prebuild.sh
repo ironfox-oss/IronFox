@@ -99,6 +99,14 @@ sed -i \
 # Let it be Fennec
 sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
     app/src/*/res/values*/*strings.xml
+# Fenix uses reflection to create a instance of profile based on the text of
+# the label, see
+# app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
+sed -i \
+    -e '/Firefox(.*, .*)/s/Firefox/Fennec/' \
+    -e 's/firefox_threads/fennec_threads/' \
+    -e 's/firefox_features/fennec_features/' \
+    app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
 
 # Replace proprietary artwork
 sed -i -e 's|@drawable/animated_splash_screen<|@drawable/splash_screen<|' \
