@@ -114,10 +114,10 @@ index e269f65775..e870f06bef 100644
  -keep class androidx.lifecycle.** { *; }
 diff --git a/fenix/app/src/main/java/com/adjust/sdk/Adjust.java b/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 new file mode 100644
-index 0000000000..7e644e2fa2
+index 0000000000..ec7ad9bc42
 --- /dev/null
 +++ b/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,47 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
 + * http://www.adjust.com
@@ -148,6 +148,9 @@ index 0000000000..7e644e2fa2
 +
 +public class Adjust {
 +    public static void onCreate(AdjustConfig adjustConfig) {
++    }
++
++    public static void trackEvent(AdjustEvent event) {
 +    }
 +
 +    public static void onResume() {
@@ -219,10 +222,10 @@ index 0000000000..ab6b3badbd
 +}
 diff --git a/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 new file mode 100644
-index 0000000000..6753dd7d9f
+index 0000000000..4ba8a2711f
 --- /dev/null
 +++ b/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
-@@ -0,0 +1,46 @@
+@@ -0,0 +1,49 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
 + * http://www.adjust.com
@@ -266,8 +269,72 @@ index 0000000000..6753dd7d9f
 +    public void setOnAttributionChangedListener(OnAttributionChangedListener onAttributionChangedListener) {
 +    }
 +
++    public void setPreinstallTrackingEnabled(boolean preinstallTrackingEnabled) {
++    }
++
 +    public void setLogLevel(LogLevel logLevel) {
 +    }
++}
+diff --git a/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java b/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
+new file mode 100644
+index 0000000000..0b4d80ed4b
+--- /dev/null
++++ b/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
+@@ -0,0 +1,31 @@
++package com.adjust.sdk;
++
++/**
++ * Created by pfms on 05/11/14.
++ */
++public class AdjustEvent {
++
++    public AdjustEvent(String eventToken) {
++    }
++
++    public void setRevenue(double revenue, String currency) {
++    }
++
++    public void addCallbackParameter(String key, String value) {
++    }
++
++    public void addPartnerParameter(String key, String value) {
++    }
++
++    public void setOrderId(String orderId) {
++    }
++
++    public void setCallbackId(String callbackId) {
++    }
++
++    public void setProductId(String productId) {
++    }
++
++    public void setPurchaseToken(String purchaseToken) {
++    }
++}
+diff --git a/fenix/app/src/main/java/com/adjust/sdk/Constants.java b/fenix/app/src/main/java/com/adjust/sdk/Constants.java
+new file mode 100644
+index 0000000000..bfaeee26e8
+--- /dev/null
++++ b/fenix/app/src/main/java/com/adjust/sdk/Constants.java
+@@ -0,0 +1,18 @@
++//
++//  Constants.java
++//  Adjust
++//
++//  Created by keyboardsurfer on 2013-11-08.
++//  Copyright (c) 2012-2014 adjust GmbH. All rights reserved.
++//  See the file MIT-LICENSE for copying permission.
++//
++
++package com.adjust.sdk;
++
++/**
++ * @author keyboardsurfer
++ * @since 8.11.13
++ */
++public interface Constants {
++    String ADJUST_PREINSTALL_SYSTEM_PROPERTY_PATH = "adjust.preinstall.path";
 +}
 diff --git a/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java b/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
 new file mode 100644
@@ -530,23 +597,6 @@ index f810667c45..5743ee8353 100644
  
          screenOrientationFeature.set(
              feature = ScreenOrientationFeature(
-diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index da0fe53ea0..6ce3c2a4d6 100644
---- a/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-+++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -147,11 +147,7 @@ class Analytics(
-         MetricController.create(
-             listOf(
-                 GleanMetricsService(context),
--                AdjustMetricsService(
--                    application = context as Application,
--                    storage = metricsStorage,
--                    crashReporter = crashReporter,
--                ),
-+                AdjustMetricsService(context as Application),
-                 InstallReferrerMetricsService(context),
-             ),
-             isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 index fb5dc10724..76e2de470e 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
@@ -627,82 +677,6 @@ index 33e8704adc..ffa85e3e46 100644
      },
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-index b979a08026..ae125ebd52 100644
---- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-+++ b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-@@ -10,25 +10,13 @@ import android.os.Bundle
- import android.util.Log
- import com.adjust.sdk.Adjust
- import com.adjust.sdk.AdjustConfig
--import com.adjust.sdk.AdjustEvent
--import com.adjust.sdk.Constants.ADJUST_PREINSTALL_SYSTEM_PROPERTY_PATH
- import com.adjust.sdk.LogLevel
--import kotlinx.coroutines.CoroutineDispatcher
--import kotlinx.coroutines.CoroutineScope
--import kotlinx.coroutines.Dispatchers
--import kotlinx.coroutines.launch
--import mozilla.components.lib.crash.CrashReporter
- import org.mozilla.fenix.BuildConfig
- import org.mozilla.fenix.Config
- import org.mozilla.fenix.GleanMetrics.FirstSession
- import org.mozilla.fenix.ext.settings
- 
--class AdjustMetricsService(
--    private val application: Application,
--    private val storage: MetricsStorage,
--    private val crashReporter: CrashReporter,
--    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
--) : MetricsService {
-+class AdjustMetricsService(private val application: Application) : MetricsService {
-     override val type = MetricServiceType.Marketing
- 
-     override fun start() {
-@@ -42,15 +30,12 @@ class AdjustMetricsService(
-             return
-         }
- 
--        System.setProperty(ADJUST_PREINSTALL_SYSTEM_PROPERTY_PATH, "/preload/etc/adjust.preinstall")
--
-         val config = AdjustConfig(
-             application,
-             BuildConfig.ADJUST_TOKEN,
-             AdjustConfig.ENVIRONMENT_PRODUCTION,
-             true,
-         )
--        config.setPreinstallTrackingEnabled(true)
- 
-         val installationPing = FirstSessionPing(application)
- 
-@@ -94,26 +79,8 @@ class AdjustMetricsService(
-         Adjust.gdprForgetMe(application.applicationContext)
-     }
- 
--    @Suppress("TooGenericExceptionCaught")
--    override fun track(event: Event) {
--        CoroutineScope(dispatcher).launch {
--            try {
--                if (event is Event.GrowthData) {
--                    if (storage.shouldTrack(event)) {
--                        Adjust.trackEvent(AdjustEvent(event.tokenName))
--                        storage.updateSentState(event)
--                    } else {
--                        storage.updatePersistentState(event)
--                    }
--                }
--            } catch (e: Exception) {
--                crashReporter.submitCaughtException(e)
--            }
--        }
--    }
--
--    override fun shouldTrack(event: Event): Boolean =
--        event is Event.GrowthData
-+    override fun track(event: Event) { /* noop */ }
-+    override fun shouldTrack(event: Event): Boolean = false
- 
-     companion object {
-         private const val LOGTAG = "AdjustMetricsService"
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 index ecbe4cf895..cc1e502a94 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
