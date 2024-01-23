@@ -71,7 +71,12 @@ sed -i \
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
     -e '/ : null/a \ \ \ \ applicationServicesDir = "../../srclib/MozAppServices/"' \
-    app/build.gradle;
+    app/build.gradle
+
+# Fixup R8 minification error
+echo "-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull" >> app/proguard-rules.pro
+echo "-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf" >> app/proguard-rules.pro
+echo "-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull" >> app/proguard-rules.pro
 
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
@@ -181,15 +186,6 @@ sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
 popd
 
 #
-# WASI SDK
-#
-
-pushd "$wasi"
-# Fixup https://github.com/llvm/llvm-project/commit/ff1681ddb303223973653f7f5f3f3435b48a1983
-sed -i '18i#include <cstdint>' src/llvm-project/llvm/include/llvm/Support/Signals.h
-popd
-
-#
 # Glean
 #
 
@@ -231,8 +227,9 @@ localize_maven
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
     -e '/ : null/a \ \ \ \ applicationServicesDir = "../../srclib/MozAppServices/"' \
-    components/service/nimbus/build.gradle \
-    components/browser/engine-gecko/build.gradle;
+    components/browser/engine-gecko/build.gradle \
+    components/feature/fxsuggest/build.gradle \
+    components/service/nimbus/build.gradle
 # Add the added search engines as `general` engines
 sed -i \
     -e '41i \ \ \ \ "brave",\n\ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "metager",\n\ \ \ \ "mojeek",\n\ \ \ \ "qwantlite",\n\ \ \ \ "startpage",' \
@@ -260,39 +257,8 @@ popd
 
 pushd "$mozilla_release"
 
-# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1845651
-hg revert media/openmax_dl -r ebd43acaeeb3a5b82ab6a9027ab88fa2a72aea81
-
-# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1836826
-hg revert media/libvpx -r 699059262f56
-
 # Replace GMS with microG client library
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
-
-# Fixup, unsupported on Android
-sed -i \
-    -e '/AT_EACCESS/d' \
-    dom/base/ChromeUtils.cpp
-
-# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1820876
-sed -i \
-    -e 's/r23c/r21d/' \
-    python/mozboot/mozboot/android.py
-
-# Fixup
-sed -i \
-    -e 's/__ANDROID_API_T__/33/' \
-    hal/android/AndroidPerformanceHintManager.cpp
-
-# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1821221
-rm -f build/android/libgcc.a
-# shellcheck disable=SC2016
-sed -i \
-    -e 's|LDFLAGS="$extra_android_flags -L$_topsrcdir/build/android $LDFLAGS"|LDFLAGS="$extra_android_flags $LDFLAGS"|' \
-    build/autoconf/android.m4
-sed -i \
-    -e 's/info.version < "13.0":/info.version < "8.0":/' \
-     build/moz.configure/toolchain.configure
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
 sed -i \
@@ -323,7 +289,7 @@ ac_add_options --with-gradle=$(command -v gradle)
 ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
 ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang"
 ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
-ac_add_options STRIP="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/$target/bin/strip"
+ac_add_options STRIP="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip"
 ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
