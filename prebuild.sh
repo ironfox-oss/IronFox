@@ -74,9 +74,11 @@ sed -i \
     app/build.gradle
 
 # Fixup R8 minification error
-echo "-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull" >> app/proguard-rules.pro
-echo "-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf" >> app/proguard-rules.pro
-echo "-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull" >> app/proguard-rules.pro
+cat << EOF >> app/proguard-rules.pro
+-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull
+-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
+-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
+EOF
 
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
