@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #    Fennec build scripts
-#    Copyright (C) 2020-2022  Andrew Nayenko
+#    Copyright (C) 2020-2024  Andrew Nayenko
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
