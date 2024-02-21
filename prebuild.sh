@@ -243,6 +243,7 @@ popd
 #
 
 pushd "$application_services"
+sed -i -e 's/56.0.0/56.1.0/'  build.gradle
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/content {/,/}/d' build.gradle
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
