@@ -253,6 +253,15 @@ sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 popd
 
+
+#
+# WASI SDK
+#
+
+pushd "$wasi"
+patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+popd
+
 #
 # GeckoView
 #
@@ -261,6 +270,17 @@ pushd "$mozilla_release"
 
 # Replace GMS with microG client library
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
+
+# Fix v125 compile error
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
+
+# Revert 1879852 and 1876067 to fix empty aar generation
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-publishing.patch"
+sed -i \
+    -e 's/com.android.tools.build:gradle:8.0.2/com.android.tools.build:gradle:7.4.2/' \
+    -e 's/com.sourcegraph:semanticdb-kotlinc:0.4.0/com.sourcegraph:semanticdb-kotlinc:0.3.2/' \
+    -e 's/1.9.22/1.8.21/' \
+    build.gradle
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
 sed -i \
@@ -289,8 +309,8 @@ ac_add_options --with-android-sdk="$ANDROID_SDK"
 ac_add_options --with-java-bin-path="/usr/bin"
 ac_add_options --with-gradle=$(command -v gradle)
 ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
-ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang"
-ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
+ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang"
+ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
 ac_add_options STRIP="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip"
 ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"

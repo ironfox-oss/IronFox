@@ -1,0 +1,24 @@
+diff -r c5ee44e41355 mfbt/SmallPointerArray.h
+--- a/mfbt/SmallPointerArray.h	Mon Apr 08 04:40:01 2024 +0000
++++ b/mfbt/SmallPointerArray.h	Thu Apr 25 10:39:31 2024 +0000
+@@ -201,9 +201,9 @@
+  private:
+   T** beginInternal() const {
+     if (first()) {
+-      static_assert(sizeof(T*) == sizeof(Element),
++      static_assert(sizeof(T*) == sizeof(SmallArrayElement),
+                     "pointer ops on &first() must produce adjacent "
+-                    "Element::mValue arms");
++                    "SmallArrayElement::mValue arms");
+       return &first();
+     }
+ 
+@@ -259,7 +259,7 @@
+   // When !mArray[0].mValue && mArray[1].mVector, mArray[1].mVector contains
+   // the contents of an array of arbitrary size (even less than two if it ever
+   // contained three elements and elements were removed).
+-  union Element {
++  union SmallArrayElement {
+     T* mValue;
+     std::vector<T*>* mVector;
+   } mArray[2];

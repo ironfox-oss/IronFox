@@ -7,7 +7,7 @@ diff -r d80eefe94738 mobile/android/geckoview/build.gradle
  
 -    implementation "com.google.android.gms:play-services-fido:20.0.1"
 +    implementation "org.microg.gms:play-services-fido:0.3.+"
-     implementation "org.yaml:snakeyaml:2.0"
+     implementation "org.yaml:snakeyaml:2.2"
  
      implementation "androidx.lifecycle:lifecycle-common:2.6.1"
 diff -r d80eefe94738 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
