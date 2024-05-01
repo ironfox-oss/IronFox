@@ -164,19 +164,16 @@ case $(echo "$2" | cut -c 6) in
         abi=armeabi-v7a
         target=arm-linux-androideabi
         rusttarget=arm
-        triplet=armv7a-linux-androideabi21
         ;;
     1)
         abi=x86
         target=i686-linux-android
         rusttarget=x86
-        triplet="${target}21"
         ;;
     2)
         abi=arm64-v8a
         target=aarch64-linux-android
         rusttarget=arm64
-        triplet="${target}21"
         ;;
     *)
         echo "Unknown target code in $2." >&2
