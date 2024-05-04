@@ -135,16 +135,6 @@ sed -i \
     -e '/val settings = context.components.settings/d' \
     app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 
-# Expose "Pull to refresh" setting
-sed -i \
-    -e '/pullToRefreshEnabled = /s/Config.channel.isNightlyOrDebug/true/' \
-    app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Disable "Pull to refresh" by default
-sed -i \
-    -e '/pref_key_website_pull_to_refresh/{n; s/default = true/default = false/}' \
-    app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-
 # Set up target parameters
 case $(echo "$2" | cut -c 6) in
     0)
