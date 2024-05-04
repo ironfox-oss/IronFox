@@ -129,14 +129,6 @@ sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
-# Expose "Custom Add-on collection" setting
-sed -i \
-    -e 's/Config.channel.isNightlyOrDebug && //' \
-    app/src/main/java/org/mozilla/fenix/components/Components.kt
-sed -i \
-    -e 's/Config.channel.isNightlyOrDebug && //' \
-    app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-
 # Disable periodic user notification to set as default browser
 sed -i \
     -e 's/!defaultBrowserNotificationDisplayed && !isDefaultBrowserBlocking()/false/' \
