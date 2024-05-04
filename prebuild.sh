@@ -129,11 +129,6 @@ sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
-# Disable periodic user notification to set as default browser
-sed -i \
-    -e 's/!defaultBrowserNotificationDisplayed && !isDefaultBrowserBlocking()/false/' \
-    app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-
 # Always show the Quit button
 sed -i \
     -e 's/if (settings.shouldDeleteBrowsingDataOnQuit) quitItem else null/quitItem/' \
