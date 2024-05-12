@@ -46,9 +46,6 @@ rm -f fenix/app/src/test/java/org/mozilla/fenix/components/ReviewPromptControlle
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
-# Add wallpaper URL
-echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > fenix/.wallpaper_url
-
 #
 # Fenix
 #
@@ -130,6 +127,9 @@ sed -i \
     -e 's/if (settings.shouldDeleteBrowsingDataOnQuit) quitItem else null/quitItem/' \
     -e '/val settings = context.components.settings/d' \
     app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
+
+# Add wallpaper URL
+echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > .wallpaper_url
 
 # Set up target parameters
 case $(echo "$2" | cut -c 6) in
