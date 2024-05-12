@@ -31,13 +31,8 @@ sdkmanager 'build-tools;34.0.0' # for GeckoView
 sdkmanager 'ndk;25.2.9519653' # for GleanAS
 
 # Set up Rust
-"$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.76.0
-rustup target add thumbv7neon-linux-androideabi
-rustup target add armv7-linux-androideabi
-rustup target add aarch64-linux-android
 cargo install --force --vers 0.26.0 cbindgen
 
 # Build WASI SDK

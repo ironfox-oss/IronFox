@@ -39,6 +39,12 @@ function localize_maven {
     done
 }
 
+# Set up Rust
+"$rustup"/rustup-init.sh -y --no-update-default-toolchain
+# shellcheck disable=SC1090,SC1091
+source "$HOME/.cargo/env"
+rustup default 1.76.0
+
 # Remove unnecessary projects
 rm -fR focus-android
 rm -f fenix/app/src/test/java/org/mozilla/fenix/components/ReviewPromptControllerTest.kt
@@ -137,16 +143,20 @@ case $(echo "$2" | cut -c 6) in
         abi=armeabi-v7a
         target=arm-linux-androideabi
         rusttarget=arm
+        rustup target add thumbv7neon-linux-androideabi
+        rustup target add armv7-linux-androideabi
         ;;
     1)
         abi=x86
         target=i686-linux-android
         rusttarget=x86
+        rustup target add i686-linux-android
         ;;
     2)
         abi=arm64-v8a
         target=aarch64-linux-android
         rusttarget=arm64
+        rustup target add aarch64-linux-android
         ;;
     *)
         echo "Unknown target code in $2." >&2
