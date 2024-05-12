@@ -43,10 +43,6 @@ function localize_maven {
 rm -fR focus-android
 rm -f fenix/app/src/test/java/org/mozilla/fenix/components/ReviewPromptControllerTest.kt
 
-# Hack to prevent too long string from breaking build
-sed -i '/val statusCmd/,+3d' android-components/plugins/config/src/main/java/ConfigPlugin.kt
-sed -i '/val revision = /a \        val statusSuffix = "+"' android-components/plugins/config/src/main/java/ConfigPlugin.kt
-
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
@@ -209,6 +205,9 @@ sed -i \
 sed -i \
     -e '41i \ \ \ \ "brave",\n\ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "metager",\n\ \ \ \ "mojeek",\n\ \ \ \ "qwantlite",\n\ \ \ \ "startpage",' \
      components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
+# Hack to prevent too long string from breaking build
+sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
+sed -i '/val revision = /a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
 popd
 
 #
