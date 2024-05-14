@@ -6,7 +6,7 @@ diff -r d80eefe94738 mobile/android/geckoview/build.gradle
      implementation "androidx.legacy:legacy-support-v4:1.0.0"
  
 -    implementation "com.google.android.gms:play-services-fido:20.0.1"
-+    implementation "org.microg.gms:play-services-fido:0.3.+"
++    implementation "org.microg.gms:play-services-fido:0.3.2.240913"
      implementation "org.yaml:snakeyaml:2.2"
  
      implementation "androidx.lifecycle:lifecycle-common:2.6.1"

@@ -45,13 +45,6 @@ function localize_maven {
 source "$HOME/.cargo/env"
 rustup default 1.76.0
 
-# Remove unnecessary projects
-rm -fR focus-android
-rm -f fenix/app/src/test/java/org/mozilla/fenix/components/ReviewPromptControllerTest.kt
-
-# Patch the use of proprietary and tracking libraries
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
-
 #
 # Fenix
 #
@@ -69,10 +62,10 @@ sed -i \
 
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
-    -e '/ : null/a \ \ \ \ applicationServicesDir = "../../srclib/MozAppServices/"' \
+    -e '/ : null/a \ \ \ \ applicationServicesDir = "../../../../../srclib/MozAppServices/"' \
     app/build.gradle
 
-# Fixup R8 minification error
+# Fixup R8 minification error #TODO: still necessary?
 cat << EOF >> app/proguard-rules.pro
 -dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull
 -dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
@@ -84,17 +77,6 @@ sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
 # Disable MetricController
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
-
-# Replace custom Maven repositories with mavenLocal()
-sed -i \
-    -e '/repositories {/a\        mavenLocal()' \
-    -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
-    -e '/^ \{12\}maven {/,/^ \{12\}}/d' build.gradle
-sed -i \
-    -e '/^ \{8\}maven {/,/^ \{8\}}/d' \
-    plugins/fenixdependencies/build.gradle \
-    mozilla-lint-rules/build.gradle \
-    plugins/apksize/build.gradle
 
 # We need only stable GeckoView
 sed -i \
@@ -127,12 +109,6 @@ done
 sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-
-# Always show the Quit button
-sed -i \
-    -e 's/if (settings.shouldDeleteBrowsingDataOnQuit) quitItem else null/quitItem/' \
-    -e '/val settings = context.components.settings/d' \
-    app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 
 # Add wallpaper URL
 echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > .wallpaper_url
@@ -189,8 +165,6 @@ acver=${acver#v}
 sed -e "s/VERSION/$acver/" "$patches/a-c-buildconfig.yml" > .buildconfig.yml
 # We don't need Gecko while building A-C for A-S
 rm -fR components/browser/engine-gecko*
-# Remove unnecessary projects
-rm -fR ../focus-android
 localize_maven
 popd
 
@@ -200,14 +174,9 @@ find "$patches/a-c-overlay" -type f | while read -r src; do
 done
 # We only need a release Gecko
 rm -fR components/browser/engine-gecko-{beta,nightly}
-gvver=$(echo "$1" | cut -d. -f1)
-sed -i \
-    -e "s/version = \"$gvver\.[0-9.]*\"/version = \"$gvver.+\"/" \
-    plugins/dependencies/src/main/java/Gecko.kt
-localize_maven
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
-    -e '/ : null/a \ \ \ \ applicationServicesDir = "../../srclib/MozAppServices/"' \
+    -e '/ : null/a \ \ \ \ applicationServicesDir = "../../../../../srclib/MozAppServices/"' \
     components/browser/engine-gecko/build.gradle \
     components/feature/fxsuggest/build.gradle \
     components/service/nimbus/build.gradle
@@ -217,7 +186,7 @@ sed -i \
      components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 # Hack to prevent too long string from breaking build
 sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
-sed -i '/val revision = /a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
+sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
 popd
 
 #
@@ -249,28 +218,25 @@ popd
 #
 
 pushd "$mozilla_release"
+# Remove Mozilla repositories substitution and explicitly add the required ones
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-localize_maven.patch"
 
 # Replace GMS with microG client library
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 
+# Patch the use of proprietary and tracking libraries
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
+
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
 
-# Revert 1879852 and 1876067 to fix empty aar generation
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-publishing.patch"
+# Fix v125 aar output not including native libraries
 sed -i \
-    -e 's/com.android.tools.build:gradle:8.0.2/com.android.tools.build:gradle:7.4.2/' \
-    -e 's/com.sourcegraph:semanticdb-kotlinc:0.4.0/com.sourcegraph:semanticdb-kotlinc:0.3.2/' \
-    -e 's/1.9.22/1.8.21/' \
-    build.gradle
-
-# Remove Mozilla repositories substitution and explicitly add the required ones
+    -e 's/singleVariant("debug")/singleVariant("release")/' \
+    mobile/android/exoplayer2/build.gradle
 sed -i \
-    -e '/maven {/,/}$/d; /gradle.mozconfig.substs/,/}$/{N;d;}' \
-    -e '/repositories {/a\        mavenLocal()' \
-    -e '/repositories {/a\        maven { url "https://plugins.gradle.org/m2/" }' \
-    -e '/repositories {/a\        google()' \
-    build.gradle
+    -e "s/singleVariant('withGeckoBinariesDebug')/singleVariant('withGeckoBinariesRelease')/" \
+    mobile/android/geckoview/build.gradle
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure

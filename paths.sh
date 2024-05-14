@@ -19,11 +19,11 @@
 
 readonly patches=$(dirname "$(realpath "$0")")
 readonly android_components_as=$(realpath ../srclib/FirefoxAndroidAS/android-components)
-readonly android_components=$(realpath ./android-components)
+readonly android_components=$(realpath ../srclib/MozFennec/mobile/android/android-components)
 readonly application_services=$(realpath ../srclib/MozAppServices)
 readonly glean_as=$(realpath ../srclib/MozGleanAS)
 readonly glean=$(realpath ../srclib/MozGlean)
-readonly fenix=$(realpath ./fenix)
+readonly fenix=$(realpath ../srclib/MozFennec/mobile/android/fenix)
 readonly mozilla_release=$(realpath ../srclib/MozFennec)
 readonly rustup=$(realpath ../srclib/rustup)
 readonly wasi=$(realpath ../srclib/wasi-sdk)

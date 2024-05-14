@@ -56,14 +56,6 @@ gradle -x javaDocReleaseGeneration \
     :play-services-tasks:publishToMavenLocal
 popd
 
-pushd "$mozilla_release"
-MOZ_CHROME_MULTILOCALE=$(< "$patches/locales")
-export MOZ_CHROME_MULTILOCALE
-./mach --verbose build
-./mach gradle geckoview:publishWithGeckoBinariesReleasePublicationToMavenLocal
-./mach gradle exoplayer2:publishReleasePublicationToMavenLocal
-popd
-
 pushd "$glean_as"
 export TARGET_CFLAGS=-DNDEBUG
 gradle publishToMavenLocal
@@ -84,6 +76,14 @@ export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
 ./libs/verify-android-environment.sh
 gradle publishToMavenLocal
+popd
+
+pushd "$mozilla_release"
+MOZ_CHROME_MULTILOCALE=$(< "$patches/locales")
+export MOZ_CHROME_MULTILOCALE
+./mach --verbose build
+./mach gradle geckoview:publishWithGeckoBinariesReleasePublicationToMavenLocal
+./mach gradle exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$android_components"
