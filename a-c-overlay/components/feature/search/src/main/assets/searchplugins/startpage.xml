@@ -9,6 +9,7 @@
 <Url type="application/x-suggestions+json" method="GET" template="https://www.startpage.com/suggestions">
   <Param name="query" value="{searchTerms}"/>
   <Param name="format" value="opensearch"/>
+  <Param name="segment" value="startpage.defaultffx"/>
 </Url>
 <Url type="text/html" method="GET" template="https://www.startpage.com/sp/search">
   <Param name="query" value="{searchTerms}"/>
