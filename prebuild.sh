@@ -62,7 +62,7 @@ sed -i \
 
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
-    -e '/ : null/a \ \ \ \ applicationServicesDir = "../../../../../srclib/MozAppServices/"' \
+    -e '/ : null/a \ \ \ \ applicationServicesDir = "'$application_services'/"' \
     app/build.gradle
 
 # Fixup R8 minification error #TODO: still necessary?
@@ -176,7 +176,7 @@ done
 rm -fR components/browser/engine-gecko-{beta,nightly}
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
-    -e '/ : null/a \ \ \ \ applicationServicesDir = "../../../../../srclib/MozAppServices/"' \
+    -e '/ : null/a \ \ \ \ applicationServicesDir = "'$application_services'/"' \
     components/browser/engine-gecko/build.gradle \
     components/feature/fxsuggest/build.gradle \
     components/service/nimbus/build.gradle
@@ -194,6 +194,7 @@ popd
 #
 
 pushd "$application_services"
+sed -i -e 's/60.0.0/60.0.1/'  gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/content {/,/}/d' build.gradle
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
@@ -218,6 +219,9 @@ popd
 #
 
 pushd "$mozilla_release"
+# Revert https://bugzilla.mozilla.org/show_bug.cgi?id=1892493
+hg revert build/unix/elfhack/relrhack.cpp -r 4033da509139
+
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-localize_maven.patch"
 
