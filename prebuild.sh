@@ -65,13 +65,6 @@ sed -i \
     -e "/ : null/a\    applicationServicesDir = \"$application_services\"" \
     app/build.gradle
 
-# Fixup R8 minification error #TODO: still necessary?
-cat << EOF >> app/proguard-rules.pro
--dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull
--dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
--dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
-EOF
-
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
