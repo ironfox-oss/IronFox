@@ -62,7 +62,7 @@ sed -i \
 
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
-    -e '/ : null/a \ \ \ \ applicationServicesDir = "'$application_services'/"' \
+    -e "/ : null/a\    applicationServicesDir = \"$application_services\"" \
     app/build.gradle
 
 # Fixup R8 minification error #TODO: still necessary?
@@ -176,7 +176,7 @@ done
 rm -fR components/browser/engine-gecko-{beta,nightly}
 # Compile nimbus-fml instead of using prebuilt
 sed -i \
-    -e '/ : null/a \ \ \ \ applicationServicesDir = "'$application_services'/"' \
+    -e "/ : null/a\    applicationServicesDir = \"$application_services\"" \
     components/browser/engine-gecko/build.gradle \
     components/feature/fxsuggest/build.gradle \
     components/service/nimbus/build.gradle
