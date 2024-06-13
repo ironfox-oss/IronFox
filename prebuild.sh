@@ -235,6 +235,12 @@ sed -i \
     -e "s/singleVariant('withGeckoBinariesDebug')/singleVariant('withGeckoBinariesRelease')/" \
     mobile/android/geckoview/build.gradle
 
+# Hack the timeout for
+# geckoview:generateJNIWrappersForGeneratedWithGeckoBinariesDebug
+sed -i \
+    -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
+    mobile/android/gradle.py
+
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 cat << EOF > mozconfig
