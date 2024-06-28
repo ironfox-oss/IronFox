@@ -1,7 +1,7 @@
 ---
 before_script:
   - apt-get --quiet update --yes
-  - apt-get --quiet install --yes yamllint shellcheck make inkscape webp
+  - apt-get --quiet install --yes yamllint shellcheck make inkscape webp optipng
 lint:
   script:
     - yamllint .gitlab-ci.yml
