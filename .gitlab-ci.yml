@@ -1,8 +1,11 @@
 ---
 before_script:
   - apt-get --quiet update --yes
-  - apt-get --quiet install --yes yamllint shellcheck
-build:
+  - apt-get --quiet install --yes yamllint shellcheck make inkscape webp
+lint:
   script:
     - yamllint .gitlab-ci.yml
     - shellcheck -x prebuild.sh build.sh
+rasterize:
+  script:
+    - make -C fenix-artwork -B -j`nproc`
