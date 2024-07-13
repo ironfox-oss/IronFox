@@ -34,7 +34,7 @@ function localize_maven {
             -e '/maven {/{:loop;N;/}$/!b loop;/plugins.gradle.org/!s/maven .*/mavenLocal()/};p'
     # Make gradlew scripts call our Gradle wrapper
     find ./* -name gradlew -type f | while read -r gradlew; do
-        echo 'gradle "$@"' > "$gradlew"
+        echo -e '#!/bin/sh\ngradle "$@"' > "$gradlew"
         chmod 755 "$gradlew"
     done
 }
@@ -43,13 +43,14 @@ function localize_maven {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.76.0
+rustup default 1.78.0
 
 #
 # Fenix
 #
 
 pushd "$fenix"
+
 # Set up the app ID, version name and version code
 sed -i \
     -e 's|\.firefox|.fennec_fdroid|' \
@@ -60,26 +61,16 @@ sed -i \
     -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
     app/src/release/res/xml/shortcuts.xml
 
-# Compile nimbus-fml instead of using prebuilt
-sed -i \
-    -e "/ : null/a\    applicationServicesDir = \"$application_services\"" \
-    app/build.gradle
-
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
 # Disable MetricController
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 
-# We need only stable GeckoView
-sed -i \
-    -e '/Deps.mozilla_browser_engine_gecko_nightly/d' \
-    -e '/Deps.mozilla_browser_engine_gecko_beta/d' \
-    app/build.gradle
-
 # Let it be Fennec
 sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
     app/src/*/res/values*/*strings.xml
+
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
 # app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
@@ -133,6 +124,10 @@ case $(echo "$2" | cut -c 6) in
     ;;
 esac
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
+
+# Enable the auto-publication workflow
+echo "autoPublish.application-services.dir=$application_services" >> local.properties
+
 popd
 
 #
@@ -152,27 +147,10 @@ popd
 # Android Components
 #
 
-pushd "$android_components_as"
-acver=$(git name-rev --tags --name-only "$(git rev-parse HEAD)")
-acver=${acver#v}
-sed -e "s/VERSION/$acver/" "$patches/a-c-buildconfig.yml" > .buildconfig.yml
-# We don't need Gecko while building A-C for A-S
-rm -fR components/browser/engine-gecko*
-localize_maven
-popd
-
 pushd "$android_components"
 find "$patches/a-c-overlay" -type f | while read -r src; do
     cp "$src" "${src#"$patches/a-c-overlay/"}"
 done
-# We only need a release Gecko
-rm -fR components/browser/engine-gecko-{beta,nightly}
-# Compile nimbus-fml instead of using prebuilt
-sed -i \
-    -e "/ : null/a\    applicationServicesDir = \"$application_services\"" \
-    components/browser/engine-gecko/build.gradle \
-    components/feature/fxsuggest/build.gradle \
-    components/service/nimbus/build.gradle
 # Add the added search engines as `general` engines
 sed -i \
     -e '41i \ \ \ \ "brave",\n\ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "metager",\n\ \ \ \ "mojeek",\n\ \ \ \ "qwantlite",\n\ \ \ \ "startpage",' \
@@ -187,10 +165,11 @@ popd
 #
 
 pushd "$application_services"
-sed -i -e 's/60.0.0/60.0.1/'  gradle/libs.versions.toml
+# Break the dependency on older A-C
+sed -i -e '/android-components = /s/126.0.1/128.0.1/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
-sed -i -e '/content {/,/}/d' build.gradle
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
+sed -i -e '/content {/,/}/d' build.gradle
 localize_maven
 # Fix stray
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle

@@ -61,32 +61,31 @@ export TARGET_CFLAGS=-DNDEBUG
 gradle publishToMavenLocal
 popd
 
-pushd "$glean"
-gradle publishToMavenLocal
-popd
-
-pushd "$android_components_as"
-gradle publishToMavenLocal
-popd
-
 pushd "$application_services"
-export SQLCIPHER_LIB_DIR="$application_services/libs/desktop/linux-x86-64/sqlcipher/lib"
-export SQLCIPHER_INCLUDE_DIR="$application_services/libs/desktop/linux-x86-64/sqlcipher/include"
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
 ./libs/verify-android-environment.sh
+gradle :tooling-nimbus-gradle:publishToMavenLocal
+popd
+
+pushd "$glean"
 gradle publishToMavenLocal
 popd
 
 pushd "$mozilla_release"
 MOZ_CHROME_MULTILOCALE=$(< "$patches/locales")
 export MOZ_CHROME_MULTILOCALE
-./mach --verbose build
-./mach gradle geckoview:publishWithGeckoBinariesReleasePublicationToMavenLocal
-./mach gradle exoplayer2:publishReleasePublicationToMavenLocal
+./mach build
+gradle :geckoview:publishWithGeckoBinariesReleasePublicationToMavenLocal
+gradle :exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$android_components"
+# Publish concept-fetch (required by A-S) with auto-publication disabled,
+# otherwise automatically triggered publication of A-S will fail
+gradle :concept-fetch:publishToMavenLocal
+# Enable the auto-publication workflow now that concept-fetch is published
+echo "autoPublish.application-services.dir=$application_services" >> local.properties
 gradle publishToMavenLocal
 popd
 

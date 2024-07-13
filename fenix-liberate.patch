@@ -1,6 +1,63 @@
-diff -r cfd3e02d8411 mobile/android/fenix/app/build.gradle
---- a/mobile/android/fenix/app/build.gradle	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/build.gradle	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/android-components/.buildconfig.yml
+--- a/mobile/android/android-components/.buildconfig.yml	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/android-components/.buildconfig.yml	Sun Jul 21 19:05:28 2024 +0000
+@@ -1593,16 +1593,6 @@
+     - support-base
+     - support-test
+     - tooling-lint
+-  lib-push-firebase:
+-    description: An implementation of concept-push for the Firebase Message Service.
+-    path: components/lib/push-firebase
+-    publish: true
+-    upstream_dependencies:
+-    - concept-base
+-    - concept-push
+-    - support-base
+-    - support-test
+-    - tooling-lint
+   lib-state:
+     description: A library for maintaining application state.
+     path: components/lib/state
+diff -r 0c2c5365d46c mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt
+--- a/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt	Sat Jul 20 12:12:54 2024 +0000
+@@ -90,12 +90,9 @@
+     }
+ 
+     object Firebase {
+-        const val messaging = "24.0.0"
+     }
+ 
+     object Google {
+-        const val play_review = "2.0.1"
+-        const val play_services = "18.4.0"
+     }
+ }
+ 
+@@ -219,9 +216,4 @@
+     const val thirdparty_disklrucache = "com.jakewharton:disklrucache:${Versions.disklrucache}"
+     const val thirdparty_androidsvg = "com.caverock:androidsvg-aar:${Versions.androidsvg}"
+ 
+-    const val firebase_messaging = "com.google.firebase:firebase-messaging:${Versions.Firebase.messaging}"
+-
+-    const val play_review = "com.google.android.play:review:${Versions.Google.play_review}"
+-    const val play_review_ktx = "com.google.android.play:review-ktx:${Versions.Google.play_review}"
+-    const val play_services_base = "com.google.android.gms:play-services-base:${Versions.Google.play_services}"
+ }
+diff -r 0c2c5365d46c mobile/android/fenix/.buildconfig.yml
+--- a/mobile/android/fenix/.buildconfig.yml	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/.buildconfig.yml	Sun Jul 21 19:05:28 2024 +0000
+@@ -63,7 +63,6 @@
+     - lib-crash-sentry
+     - lib-dataprotect
+     - lib-publicsuffixlist
+-    - lib-push-firebase
+     - lib-state
+     - service-contile
+     - service-digitalassetlinks
+diff -r 0c2c5365d46c mobile/android/fenix/app/build.gradle
+--- a/mobile/android/fenix/app/build.gradle	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/build.gradle	Sat Jul 20 12:12:54 2024 +0000
 @@ -643,7 +643,6 @@
  
      implementation project(':lib-crash')
@@ -9,7 +66,7 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/build.gradle
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
      testImplementation project(':support-test-fakes')
-@@ -686,15 +685,8 @@
+@@ -687,15 +686,8 @@
      implementation FenixDependencies.protobuf_javalite
      implementation ComponentsDependencies.google_material
  
@@ -19,15 +76,15 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/build.gradle
      implementation FenixDependencies.google_ads_id // Required for the Google Advertising ID
  
 -    // Required for in-app reviews
--    implementation FenixDependencies.google_play_review
--    implementation FenixDependencies.google_play_review_ktx
+-    implementation ComponentsDependencies.play_review
+-    implementation ComponentsDependencies.play_review_ktx
 -
      implementation FenixDependencies.androidx_profileinstaller
  
      androidTestImplementation ComponentsDependencies.androidx_test_uiautomator
-diff -r cfd3e02d8411 mobile/android/fenix/app/proguard-rules.pro
---- a/mobile/android/fenix/app/proguard-rules.pro	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/proguard-rules.pro	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/proguard-rules.pro
+--- a/mobile/android/fenix/app/proguard-rules.pro	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/proguard-rules.pro	Sat Jul 20 12:12:54 2024 +0000
 @@ -1,23 +1,6 @@
  -dontobfuscate
  
@@ -123,9 +180,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/proguard-rules.pro
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,47 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -174,9 +231,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +    public static void gdprForgetMe(final Context context) {
 +    }
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,49 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -227,9 +284,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +        return "";
 +    }
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,49 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -280,9 +337,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +    public void setLogLevel(LogLevel logLevel) {
 +    }
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,31 @@
 +package com.adjust.sdk;
 +
@@ -315,9 +372,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjus
 +    public void setPurchaseToken(String purchaseToken) {
 +    }
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,18 @@
 +//
 +//  Constants.java
@@ -337,9 +394,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Const
 +public interface Constants {
 +    String ADJUST_PREINSTALL_SYSTEM_PROPERTY_PATH = "adjust.preinstall.path";
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,43 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -384,9 +441,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLe
 +        return androidLogLevel;
 +    }
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,29 @@
 +/*
 + * Copyright (c) 2012-2017 adjust GmbH,
@@ -417,9 +474,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAtt
 +public interface OnAttributionChangedListener {
 +    void onAttributionChanged(AdjustAttribution attribution);
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,42 @@
 +// Copyright 2020 Google LLC
 +//
@@ -463,9 +520,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/google/firebase/
 +    }
 +
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,33 @@
 +// Copyright 2020 Google LLC
 +//
@@ -500,9 +557,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/com/google/firebase/
 +    }
 +
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,32 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -536,9 +593,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/mozilla/components/l
 +        return false
 +    }
 +}
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -18,7 +18,7 @@
       * This feature does not only depend on this flag. It requires the AMO collection override to
       * be enabled which is behind the Secret Settings.
@@ -557,10 +614,10 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/Fe
      }
  
      /**
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt	Thu Jun 13 09:01:09 2024 +0300
-@@ -942,19 +942,16 @@
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt	Sat Jul 20 12:12:54 2024 +0000
+@@ -947,19 +947,16 @@
              view = view,
          )
  
@@ -590,9 +647,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/br
  
          screenOrientationFeature.set(
              feature = ScreenOrientationFeature(
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -10,7 +10,6 @@
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.LocalContext
@@ -609,9 +666,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
              reviewSettings = FenixReviewSettings(settings),
          )
      }
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -538,8 +538,14 @@
                  } else {
                      defaultTopSites.add(
@@ -629,9 +686,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
                          ),
                      )
  
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -6,8 +6,6 @@
  
  import android.app.Activity
@@ -667,9 +724,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
      },
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -6,14 +6,10 @@
  
  import android.content.Context
@@ -785,10 +842,10 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 +        return
      }
  }
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt	Thu Jun 13 09:01:09 2024 +0300
-@@ -176,6 +176,12 @@
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt	Sat Jul 20 12:12:54 2024 +0000
+@@ -162,6 +162,12 @@
                  SupportUtils.MEITUAN_URL -> {
                      binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_meituan))
                  }
@@ -801,9 +858,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ho
                  else -> {
                      itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
                  }
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -38,6 +38,8 @@
      const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
      const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
@@ -813,9 +870,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/se
  
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
      // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Sat Jul 20 12:12:54 2024 +0000
 @@ -340,17 +340,17 @@
  
      var isTelemetryEnabled by booleanPreference(
@@ -837,7 +894,7 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ut
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1637,7 +1637,7 @@
+@@ -1629,7 +1629,7 @@
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -846,7 +903,7 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ut
      )
  
      /**
-@@ -1695,7 +1695,7 @@
+@@ -1687,7 +1687,7 @@
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -855,9 +912,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ut
      )
  
      /**
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml
 --- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml	Thu Jun 13 09:01:09 2024 +0300
++++ b/mobile/android/fenix/app/src/main/res/values/static_strings_extra.xml	Sat Jul 20 12:12:54 2024 +0000
 @@ -0,0 +1,8 @@
 +<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 +<!-- This Source Code Form is subject to the terms of the Mozilla Public
@@ -867,9 +924,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/values/static_strings
 +    <string name="default_top_site_fdroid" translatable="false">F-Droid</string>
 +    <string name="default_top_site_eff" translatable="false">EFF</string>
 +</resources>
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/xml/preferences.xml
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/res/xml/preferences.xml
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml	Sat Jul 20 12:12:54 2024 +0000
 @@ -139,11 +139,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
@@ -894,9 +951,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/xml/preferences.xml
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
              android:title="@string/preferences_about" />
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
---- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+--- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml	Sat Jul 20 12:12:54 2024 +0000
 @@ -3,7 +3,8 @@
     - License, v. 2.0. If a copy of the MPL was not distributed with this
     - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
@@ -917,9 +974,9 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/xml/site_permissions_
  
      <androidx.preference.Preference
          android:icon="@drawable/ic_autoplay"
-diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
---- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml	Thu Jun 13 09:01:09 2024 +0300
+diff -r 0c2c5365d46c mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+--- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml	Sat Jul 20 12:12:54 2024 +0000
 @@ -64,6 +64,7 @@
          android:key="@string/pref_key_browser_feature_media_key_system_access"
          android:title="@string/preference_phone_feature_media_key_system_access"
@@ -928,27 +985,25 @@ diff -r cfd3e02d8411 mobile/android/fenix/app/src/main/res/xml/site_permissions_
          app:allowDividerBelow="true"/>
  
      <androidx.preference.Preference
-diff -r cfd3e02d8411 mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
---- a/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt	Thu Jun 06 18:17:11 2024 +0000
-+++ b/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt	Thu Jun 13 09:01:09 2024 +0300
-@@ -25,16 +25,9 @@
-     const val androidx_transition = "1.5.0"
+diff -r 0c2c5365d46c mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
+--- a/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt	Sat Jul 20 12:12:54 2024 +0000
+@@ -26,14 +26,9 @@
+     const val androidx_viewpager2 = "1.1.0"
      const val google_accompanist = "0.32.0"
  
 -    const val adjust = "4.38.2"
 -    const val installreferrer = "2.2"
 -
      const val junit = "5.10.2"
-     const val mockk = "1.13.10"
+     const val mockk = "1.13.11"
  
 -    const val google_ads_id_version = "16.0.0"
--
--    const val google_play_review_version = "2.0.1"
 -
      // keep in sync with the versions used in AS.
      const val protobuf = "3.21.10"
      const val protobuf_plugin = "0.9.4"
-@@ -58,9 +51,6 @@
+@@ -58,9 +53,6 @@
      const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${FenixVersions.protobuf}"
      const val protobuf_compiler = "com.google.protobuf:protoc:${FenixVersions.protobuf}"
  
@@ -958,16 +1013,26 @@ diff -r cfd3e02d8411 mobile/android/fenix/plugins/fenixdependencies/src/main/jav
      const val mockk = "io.mockk:mockk:${FenixVersions.mockk}"
      const val mockk_android = "io.mockk:mockk-android:${FenixVersions.mockk}"
      const val falcon = "com.jraska:falcon:${FenixVersions.falcon}"
-@@ -83,11 +73,7 @@
+@@ -83,7 +75,7 @@
      // Test services is unused
      // --- END AndroidX test dependencies --- //
  
 -    const val google_ads_id = "com.google.android.gms:play-services-ads-identifier:${FenixVersions.google_ads_id_version}"
--
--    // Required for in-app reviews
--    const val google_play_review = "com.google.android.play:review:${FenixVersions.google_play_review_version}"
--    const val google_play_review_ktx = "com.google.android.play:review-ktx:${FenixVersions.google_play_review_version}"
 +    const val google_ads_id = "org.microg.gms:play-services-ads-identifier:0.3.2.240913"
  
      const val junitApi = "org.junit.jupiter:junit-jupiter-api:${FenixVersions.junit}"
      const val junitParams = "org.junit.jupiter:junit-jupiter-params:${FenixVersions.junit}"
+diff -r 0c2c5365d46c mobile/android/focus-android/app/build.gradle
+--- a/mobile/android/focus-android/app/build.gradle	Mon Jul 15 14:24:25 2024 +0000
++++ b/mobile/android/focus-android/app/build.gradle	Sat Jul 20 12:12:54 2024 +0000
+@@ -297,10 +297,6 @@
+     implementation ComponentsDependencies.androidx_work_runtime
+     implementation ComponentsDependencies.androidx_datastore_preferences
+ 
+-    // Required for in-app reviews
+-    implementation ComponentsDependencies.play_review
+-    implementation ComponentsDependencies.play_review_ktx
+-
+     implementation ComponentsDependencies.google_material
+ 
+     implementation ComponentsDependencies.thirdparty_sentry
