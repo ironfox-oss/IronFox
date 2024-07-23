@@ -166,7 +166,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/126.0.1/128.0.1/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/126.0.1/128.0.2/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
