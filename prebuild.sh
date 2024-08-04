@@ -136,6 +136,8 @@ popd
 
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
+# Hack to fix `Unresolved reference: HistogramBase`
+echo "typealias HistogramMetricBase = mozilla.telemetry.glean.private.HistogramBase" >> glean-core/android/src/main/java/mozilla/telemetry/glean/private/HistogramBase.kt
 localize_maven
 popd
 
@@ -154,6 +156,8 @@ sed -i \
 # Hack to prevent too long string from breaking build
 sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
 sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
+# Hack to fix `Unresolved reference: HistogramBase`
+echo "typealias HistogramBase = mozilla.telemetry.glean.private.HistogramBase" >> components/service/glean/src/main/java/mozilla/components/service/glean/private/MetricAliases.kt
 popd
 
 #
@@ -162,7 +166,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/126.0.1/128.0.3/' gradle/libs.versions.toml
+sed -i -e "/android-components = /s/126.0.1/${1%.0}/" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
