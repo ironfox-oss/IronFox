@@ -134,10 +134,6 @@ popd
 # Glean
 #
 
-pushd "$glean_as"
-echo "rust.targets=$rusttarget" >> local.properties
-localize_maven
-popd
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 localize_maven
