@@ -1,0 +1,11 @@
+<ul>
+ <li>Široka zbirka dodatkov, vključno z zaviralci oglasov.</li>
+ <li>Izboljšana zaščita pred sledenjem.</li>
+ <li>Zasebni način je na voljo z enim dotikom.</li>
+ <li>Prilagodljiva postavitev začetnega zaslona in položaj navigacijske vrstice (zgoraj ali spodaj).</li>
+ <li>Temna tema.</li>
+ <li>Zbirke zavihkov.</li>
+ <li>Sinhronizacija zavihkov, zaznamkov, gesel itd. v več napravah prek Firefox Sync.</li>
+ <li>Način slika v sliki.</li>
+</ul>
+<p>Fennec F-Droid temelji na najnovejši izdaji brskalnika Mozilla Firefox. Ima lastniški bitovi in telemetrija odstranjeni, vendar se še vedno povezuje z različnimi Mozillami storitve, ki lahko sledijo uporabnikom.</p>
