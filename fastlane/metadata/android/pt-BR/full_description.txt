@@ -1,0 +1,11 @@
+<ul>
+  <li>Coleção ampla de extensões, incluindo bloqueadores de anúncio.</li>
+  <li>Proteção aprimorada contra rastreamento.</li>
+  <li>Modo privado disponível em um único toque.</li>
+  <li>Layout da tela inicial e a posição da barra de navegação (embaixo ou em cima) customizáveis.</li>
+  <li>Tema escuro.</li>
+  <li>Coleções de abas.</li>
+  <li>Sincronização de abas, favoritos, senhas, e outros entre vários dispositivos com o Firefox Sync.</li>
+  <li>Modo picture-in-picture.</li>
+</ul>
+<p>O Fennec F-Droid é baseado no lançamento mais recente do Mozilla Firefox. Partes proprietárias, e a telemetria foram removidas, porém ainda conecta a vários serviços da Mozilla que podem rastrear usuários.</p>
