@@ -7,6 +7,11 @@ Scripts and patches to compile [Fennec F-Droid](https://f-droid.org/packages/org
 
 where VERCODE is a version code number.
 
+Want to translate the description?
+----------------------------------
+
+Feel free to translate the Fennec F-Droid [description](https://f-droid.org/packages/org.mozilla.fennec_fdroid/) via [Codeberg Translate](https://translate.codeberg.org/projects/fennec/).
+
 Licenses
 --------
 
