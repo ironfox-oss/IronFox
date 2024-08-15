@@ -1,0 +1,11 @@
+<ul>
+ <li>Široká zbierka doplnkov vrátane blokovačov reklám.</li>
+ <li>Vylepšená ochrana pred sledovaním.</li>
+ <li>Súkromný režim dostupný jediným klepnutím.</li>
+ <li>Prispôsobiteľné rozloženie úvodnej obrazovky a poloha navigačného panela (hore alebo dole).</li>
+ <li>Tmavý motív.</li>
+ <li>Kolekcie kariet.</li>
+ <li>Synchronizácia kariet, záložiek, hesiel atď. na viacerých zariadeniach prostredníctvom nástroja Firefox Sync.</li>
+ <li>Režim obrazu v obraze.</li>
+</ul>
+<p>Fennec F-Droid je založený na najnovšom vydaní prehliadača Mozilla Firefox. Má proprietárne bity a telemetria boli odstránené, ale stále sa pripája k rôznym Mozille služby, ktoré môžu sledovať používateľov.</p>
