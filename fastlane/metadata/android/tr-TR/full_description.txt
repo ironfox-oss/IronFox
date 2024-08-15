@@ -1,0 +1,11 @@
+<ul>
+<li>Reklam engelleyiciler de dahil olmak üzere geniş eklenti koleksiyonu.</li>
+<li>Geliştirilmiş izleme koruması.</li>
+<li>Tek bir dokunuşla kullanılabilen özel mod.</li>
+<li>Özelleştirilebilir başlangıç ekranı düzeni ve gezinme çubuğu konumu (üst veya alt).</li>
+<li>Koyu tema.</li>
+<li>Sekme koleksiyonları.</li>
+<li>Firefox Sync aracılığıyla birden fazla cihazda sekmelerin, yer imlerinin, parolaların vb. senkronizasyonu.</li>
+<li>Resim içinde resim modu.</li>
+</ul>
+<p>Fennec F-Droid, en son Mozilla Firefox sürümüne dayanmaktadır. Tescilli bitler ve telemetri kaldırılmıştır, ancak yine de kullanıcıları izleyebilen çeşitli Mozilla hizmetlerine bağlanır.</p>
