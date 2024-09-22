@@ -8,4 +8,4 @@
   <li>Sincronização de abas, favoritos, senhas, e outros entre vários dispositivos com o Firefox Sync.</li>
   <li>Modo picture-in-picture.</li>
 </ul>
-<p>O Fennec F-Droid é baseado no lançamento mais recente do Mozilla Firefox. Partes proprietárias, e a telemetria foram removidas, porém ainda conecta a vários serviços da Mozilla que podem rastrear usuários.</p>
+<p>O Fennec F-Droid é baseado no lançamento mais recente do Mozilla Firefox. Partes proprietárias, e a telemetria foram removidas, porém ainda se conecta a vários serviços da Mozilla que podem rastrear seus usuários.</p>
