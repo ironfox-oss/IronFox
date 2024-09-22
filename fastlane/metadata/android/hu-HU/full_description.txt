@@ -1,13 +1,11 @@
 <ul>
- <li>Kiegészítők széles gyűjteménye, beleértve a hirdetésblokkolókat is.</li>
- <li>Továbbfejlesztett követési védelem.</li>
- <li>A privát mód egyetlen érintéssel elérhető.</li>
- <li>Testreszabható kezdőképernyő elrendezése és navigációs sáv pozíciója (fent vagy lent).</li>
- <li>Sötét téma.</li>
- <li>A lapok gyűjteményei.</li>
- <li>Fülek, könyvjelzők, jelszavak stb. szinkronizálása több eszközön a Firefox Sync segítségével.</li>
- <li>Kép a képben mód.</li>
+  <li>kiegészítők széles gyűjteménye, beleértve a hirdetésblokkolókat is.</li>
+  <li>továbbfejlesztett Követésvédelem.</li>
+  <li>privát mód egyetlen érintéssel elérhető.</li>
+  <li>testreszabható kezdőképernyő elrendezés és navigációs sáv pozíció (felső vagy alsó).</li>
+  <li>sötét téma.</li>
+  <li>lapok gyűjteményei.</li>
+  <li>fülek, könyvjelzők, jelszavak stb. több eszközön keresztül Firefox Sync.</li>
+  <li>kép a képben mód.</li>
 </ul>
-<p>A Fennec F-Droid a Mozilla Firefox legújabb kiadásán alapul. Megvan
-A szabadalmaztatott bitek és a telemetria eltávolítva, de továbbra is csatlakozik a különféle Mozillához
-szolgáltatások, amelyek nyomon követhetik a felhasználókat.</p>
+<p>Fennec F-Droid alapul a legújabb Mozilla Firefox kiadás. Védett biteket és telemetriát távolítottak el, de továbbra is csatlakozik a Mozilla különféle szolgáltatásaihoz, amelyek nyomon követhetik a felhasználókat.</p>
