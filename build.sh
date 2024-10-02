@@ -27,7 +27,7 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-sdkmanager 'build-tools;34.0.0' # for GeckoView
+sdkmanager 'build-tools;35.0.0' # for GeckoView
 sdkmanager 'ndk;25.2.9519653' # for GleanAS
 
 # Set up Rust

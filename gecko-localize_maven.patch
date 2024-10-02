@@ -1,6 +1,6 @@
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 build.gradle
---- a/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 build.gradle
+--- a/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -4,14 +4,9 @@
  
  buildscript {
@@ -37,9 +37,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 build.gradle
      }
  
      // Use the semanticdb-javac and semanticdb-kotlinc plugins to generate semanticdb files for Searchfox
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/build.gradle
---- a/mobile/android/android-components/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/build.gradle
+--- a/mobile/android/android-components/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -9,14 +9,9 @@
  
  buildscript {
@@ -76,9 +76,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/build.gra
  
          maven {
              url "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/components/browser/engine-gecko/build.gradle
---- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/components/browser/engine-gecko/build.gradle
+--- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -4,14 +4,9 @@
  
  buildscript {
@@ -97,9 +97,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/component
      }
  
      dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/components/lib/crash/build.gradle
---- a/mobile/android/android-components/components/lib/crash/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/components/lib/crash/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/components/lib/crash/build.gradle
+--- a/mobile/android/android-components/components/lib/crash/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/components/lib/crash/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -4,14 +4,9 @@
  
  buildscript {
@@ -118,9 +118,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/component
      }
  
      dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/components/service/nimbus/build.gradle
---- a/mobile/android/android-components/components/service/nimbus/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/components/service/nimbus/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/components/service/nimbus/build.gradle
+--- a/mobile/android/android-components/components/service/nimbus/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/components/service/nimbus/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -4,14 +4,9 @@
  
  buildscript {
@@ -139,9 +139,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/component
      }
  
      dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/components/support/remotesettings/build.gradle
---- a/mobile/android/android-components/components/support/remotesettings/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/components/support/remotesettings/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/components/support/remotesettings/build.gradle
+--- a/mobile/android/android-components/components/support/remotesettings/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/components/support/remotesettings/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -3,14 +3,9 @@
   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
  buildscript {
@@ -160,9 +160,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/component
      }
      dependencies {
          classpath  ComponentsDependencies.plugin_serialization
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/config/build.gradle
---- a/mobile/android/android-components/plugins/config/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/plugins/config/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/plugins/config/build.gradle
+--- a/mobile/android/android-components/plugins/config/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/plugins/config/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -7,14 +7,9 @@
  }
  
@@ -181,11 +181,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/c
  }
  
  gradlePlugin {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/config/settings.gradle
---- a/mobile/android/android-components/plugins/config/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/plugins/config/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -7,13 +7,8 @@
-     apply from: file('../../../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/plugins/config/settings.gradle
+--- a/mobile/android/android-components/plugins/config/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/plugins/config/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -9,13 +9,8 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -201,9 +201,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/c
 +        google()
      }
  }
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/dependencies/build.gradle
---- a/mobile/android/android-components/plugins/dependencies/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/plugins/dependencies/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/plugins/dependencies/build.gradle
+--- a/mobile/android/android-components/plugins/dependencies/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/plugins/dependencies/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -7,14 +7,9 @@
  }
  
@@ -222,11 +222,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/d
  }
  
  gradlePlugin {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/dependencies/settings.gradle
---- a/mobile/android/android-components/plugins/dependencies/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/plugins/dependencies/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -7,13 +7,8 @@
-     apply from: file('../../../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/plugins/dependencies/settings.gradle
+--- a/mobile/android/android-components/plugins/dependencies/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/plugins/dependencies/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -9,13 +9,8 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -242,9 +242,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/d
 +        google()
      }
  }
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/publicsuffixlist/build.gradle
---- a/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/plugins/publicsuffixlist/build.gradle
+--- a/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/plugins/publicsuffixlist/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -7,14 +7,9 @@
  }
  
@@ -263,11 +263,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/p
  }
  
  dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/publicsuffixlist/settings.gradle
---- a/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -8,14 +8,9 @@
-     apply from: file('../../../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/plugins/publicsuffixlist/settings.gradle
+--- a/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/plugins/publicsuffixlist/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -10,14 +10,9 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -284,9 +284,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/plugins/p
      }
  
      includeBuild("../dependencies")
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/samples/glean/build.gradle
---- a/mobile/android/android-components/samples/glean/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/samples/glean/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/samples/glean/build.gradle
+--- a/mobile/android/android-components/samples/glean/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/samples/glean/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -4,14 +4,9 @@
  
  buildscript {
@@ -305,9 +305,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/samples/g
  
          dependencies {
              classpath "org.mozilla.telemetry:glean-gradle-plugin:${Versions.mozilla_glean}"
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
---- a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
+--- a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -4,14 +4,9 @@
  
  buildscript {
@@ -326,11 +326,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/samples/g
  
          dependencies {
              classpath "org.mozilla.telemetry:glean-gradle-plugin:${Versions.mozilla_glean}"
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/settings.gradle
---- a/mobile/android/android-components/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/android-components/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -6,14 +6,9 @@
-     apply from: file('../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/android-components/settings.gradle
+--- a/mobile/android/android-components/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/android-components/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -8,14 +8,9 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -347,9 +347,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/android-components/settings.
      }
  
      includeBuild("plugins/dependencies")
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/app/build.gradle
---- a/mobile/android/fenix/app/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/app/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/app/build.gradle
+--- a/mobile/android/fenix/app/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/app/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -3,14 +3,9 @@
  
  buildscript {
@@ -368,9 +368,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/app/build.gradle
      }
  
      dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/build.gradle
---- a/mobile/android/fenix/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/build.gradle
+--- a/mobile/android/fenix/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -10,14 +10,9 @@
  buildscript {
      // This logic is duplicated in the allprojects block: I don't know how to fix that.
@@ -407,9 +407,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/build.gradle
  
          maven {
              url "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/mozilla-lint-rules/build.gradle
---- a/mobile/android/fenix/mozilla-lint-rules/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/mozilla-lint-rules/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/mozilla-lint-rules/build.gradle
+--- a/mobile/android/fenix/mozilla-lint-rules/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/mozilla-lint-rules/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -6,14 +6,9 @@
  apply plugin: 'kotlin'
  
@@ -428,9 +428,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/mozilla-lint-rules/bui
  }
  
  dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/apksize/build.gradle
---- a/mobile/android/fenix/plugins/apksize/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/plugins/apksize/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/plugins/apksize/build.gradle
+--- a/mobile/android/fenix/plugins/apksize/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/plugins/apksize/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -7,14 +7,9 @@
  }
  
@@ -449,11 +449,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/apksize/build.
  }
  
  dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/apksize/settings.gradle
---- a/mobile/android/fenix/plugins/apksize/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/plugins/apksize/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -7,13 +7,8 @@
-     apply from: file('../../../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/plugins/apksize/settings.gradle
+--- a/mobile/android/fenix/plugins/apksize/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/plugins/apksize/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -9,13 +9,8 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -469,9 +469,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/apksize/settin
 +        google()
      }
  }
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/fenixdependencies/build.gradle
---- a/mobile/android/fenix/plugins/fenixdependencies/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/plugins/fenixdependencies/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/plugins/fenixdependencies/build.gradle
+--- a/mobile/android/fenix/plugins/fenixdependencies/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/plugins/fenixdependencies/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -7,14 +7,9 @@
  }
  
@@ -490,11 +490,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/fenixdependenc
  }
  
  gradlePlugin {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/fenixdependencies/settings.gradle
---- a/mobile/android/fenix/plugins/fenixdependencies/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/plugins/fenixdependencies/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -7,13 +7,8 @@
-     apply from: file('../../../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/plugins/fenixdependencies/settings.gradle
+--- a/mobile/android/fenix/plugins/fenixdependencies/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/plugins/fenixdependencies/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -9,13 +9,8 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -510,11 +510,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/plugins/fenixdependenc
 +        google()
      }
  }
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/settings.gradle
---- a/mobile/android/fenix/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/fenix/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -6,14 +6,9 @@
-     apply from: file('../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/fenix/settings.gradle
+--- a/mobile/android/fenix/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/fenix/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -8,14 +8,9 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -531,9 +531,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/fenix/settings.gradle
      }
  
      includeBuild("../android-components/plugins/publicsuffixlist")
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/build.gradle
---- a/mobile/android/focus-android/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/focus-android/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/focus-android/build.gradle
+--- a/mobile/android/focus-android/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/focus-android/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -7,14 +7,9 @@
  
  buildscript {
@@ -570,9 +570,9 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/build.gradle
  
          maven {
              url "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/plugins/focusdependencies/build.gradle
---- a/mobile/android/focus-android/plugins/focusdependencies/build.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/focus-android/plugins/focusdependencies/build.gradle	Tue Sep 03 14:03:45 2024 -0400
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/focus-android/plugins/focusdependencies/build.gradle
+--- a/mobile/android/focus-android/plugins/focusdependencies/build.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/focus-android/plugins/focusdependencies/build.gradle	Wed Oct 02 10:43:39 2024 -0400
 @@ -7,14 +7,9 @@
  }
  
@@ -591,11 +591,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/plugins/focusd
  }
  
  gradlePlugin {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/plugins/focusdependencies/settings.gradle
---- a/mobile/android/focus-android/plugins/focusdependencies/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/focus-android/plugins/focusdependencies/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -7,13 +7,8 @@
-     apply from: file('../../../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/focus-android/plugins/focusdependencies/settings.gradle
+--- a/mobile/android/focus-android/plugins/focusdependencies/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/focus-android/plugins/focusdependencies/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -9,13 +9,8 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -611,11 +611,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/plugins/focusd
 +        google()
      }
  }
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/settings.gradle
---- a/mobile/android/focus-android/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/focus-android/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -6,14 +6,9 @@
-     apply from: file('../gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/focus-android/settings.gradle
+--- a/mobile/android/focus-android/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/focus-android/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -8,14 +8,9 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -632,11 +632,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/focus-android/settings.gradl
      }
  
      includeBuild("../android-components/plugins/publicsuffixlist")
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/shared-settings.gradle
---- a/mobile/android/shared-settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/mobile/android/shared-settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -8,14 +8,9 @@
-     apply from: file('./gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 mobile/android/shared-settings.gradle
+--- a/mobile/android/shared-settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/mobile/android/shared-settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -10,14 +10,9 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
@@ -653,11 +653,11 @@ diff -r b73ccdf1f861 -r 7a5e0a2b6726 mobile/android/shared-settings.gradle
      }
  
      dependencies {
-diff -r b73ccdf1f861 -r 7a5e0a2b6726 settings.gradle
---- a/settings.gradle	Thu Aug 29 07:50:02 2024 +0000
-+++ b/settings.gradle	Tue Sep 03 14:03:45 2024 -0400
-@@ -2,14 +2,9 @@
-     apply from: file('mobile/android/gradle/mozconfig.gradle')
+diff -r 61268a890b3c -r 4d9f6aa91414 settings.gradle
+--- a/settings.gradle	Mon Sep 23 13:47:12 2024 +0000
++++ b/settings.gradle	Wed Oct 02 10:43:39 2024 -0400
+@@ -4,14 +4,9 @@
+     }
  
      repositories {
 -        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
