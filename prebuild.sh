@@ -102,6 +102,7 @@ case $(echo "$2" | cut -c 6) in
     0)
         abi=armeabi-v7a
         target=arm-linux-androideabi
+        echo "ARM" > "$llvm/targets_to_build"
         rusttarget=arm
         rustup target add thumbv7neon-linux-androideabi
         rustup target add armv7-linux-androideabi
@@ -109,12 +110,14 @@ case $(echo "$2" | cut -c 6) in
     1)
         abi=x86
         target=i686-linux-android
+        echo "X86" > "$llvm/targets_to_build"
         rusttarget=x86
         rustup target add i686-linux-android
         ;;
     2)
         abi=arm64-v8a
         target=aarch64-linux-android
+        echo "AArch64" > "$llvm/targets_to_build"
         rusttarget=arm64
         rustup target add aarch64-linux-android
         ;;
@@ -214,6 +217,14 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
+# Patch the LLVM source code
+# Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
+LLVM_SVN='522817'
+python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
+    --svn_version "$LLVM_SVN" \
+    --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
+    --src_path "$llvm"
+
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 cat << EOF > mozconfig
@@ -229,6 +240,7 @@ ac_add_options --enable-update-channel=release
 ac_add_options --target=$target
 ac_add_options --with-android-ndk="$ANDROID_NDK"
 ac_add_options --with-android-sdk="$ANDROID_SDK"
+ac_add_options --with-libclang-path="$llvm/out/lib"
 ac_add_options --with-java-bin-path="/usr/bin"
 ac_add_options --with-gradle=$(command -v gradle)
 ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
