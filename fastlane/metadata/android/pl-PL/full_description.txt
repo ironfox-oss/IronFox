@@ -1,0 +1,11 @@
+<ul>
+  <li>Szeroki wybór rozszerzeń, w tym ad blocki.</li>
+  <li>Ulepszona ochrona przed śledzeniem w sieci.</li>
+  <li>Przełączanie w tryb prywatny za pomocą jednego kliknięcia.</li>
+  <li>Możliwość dostosowania strony startowej i pozycji paska nawigacji (na dole lub na górze).</li>
+  <li>Ciemny motyw.</li>
+  <li>Kolekcja kart.</li>
+  <li>Synchronizacja kart, zakładek, paseł itp. pomiędzy wieloma urządzeniami za pomocą Firefox Sync.</li>
+  <li>Funkcja obraz w obrazie.</li>
+</ul>
+<p>Fennec F-Droid jest oparty na najnowszym wydaniu Mozilla Firefox. Usunięto z niego własnościowe części kodu i zbieranie danych telemetrycznych, ale nadal łączy się z różnymi usługami Mozilli, które mogą śledzić użytkowników.</p>
