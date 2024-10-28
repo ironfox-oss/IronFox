@@ -1,6 +1,6 @@
-diff -r c5ee44e41355 mfbt/SmallPointerArray.h
---- a/mfbt/SmallPointerArray.h	Mon Apr 08 04:40:01 2024 +0000
-+++ b/mfbt/SmallPointerArray.h	Thu Apr 25 10:39:31 2024 +0000
+diff -r 2df6d3fa14ca -r f0a2d70cf468 mfbt/SmallPointerArray.h
+--- a/mfbt/SmallPointerArray.h	Mon Oct 28 08:39:49 2024 -0400
++++ b/mfbt/SmallPointerArray.h	Mon Oct 28 08:40:23 2024 -0400
 @@ -201,9 +201,9 @@
   private:
    T** beginInternal() const {

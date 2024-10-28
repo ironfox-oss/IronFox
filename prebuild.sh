@@ -165,7 +165,8 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e "/android-components = /s/128.0.2/${1%.0}/" gradle/libs.versions.toml
+sed -i -e "/android-components = /s/130.0.1/${1%.0}/" gradle/libs.versions.toml
+sed -i -e "/glean = /s/61.1.0/61.2.0/" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -208,7 +209,7 @@ sed -i \
     -e 's/singleVariant("debug")/singleVariant("release")/' \
     mobile/android/exoplayer2/build.gradle
 sed -i \
-    -e "s/singleVariant('withGeckoBinariesDebug')/singleVariant('withGeckoBinariesRelease')/" \
+    -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
 
 # Hack the timeout for

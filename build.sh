@@ -83,7 +83,7 @@ pushd "$mozilla_release"
 MOZ_CHROME_MULTILOCALE=$(< "$patches/locales")
 export MOZ_CHROME_MULTILOCALE
 ./mach build
-gradle :geckoview:publishWithGeckoBinariesReleasePublicationToMavenLocal
+gradle :geckoview:publishReleasePublicationToMavenLocal
 gradle :exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
