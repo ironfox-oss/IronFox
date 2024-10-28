@@ -88,6 +88,11 @@ find "$patches/fenix-overlay" -type f | while read -r src; do
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
 done
+sed -i \
+    -e 's/googleg_standard_color_18/ic_download/' \
+    app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
+    app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
+    app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
 # Enable about:config
 sed -i \
