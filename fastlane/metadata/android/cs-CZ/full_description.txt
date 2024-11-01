@@ -4,8 +4,8 @@
  <li>Soukromý režim dostupný jediným klepnutím.</li>
  <li>Přizpůsobitelné rozvržení úvodní obrazovky a umístění navigační lišty (nahoře nebo dole).</li>
  <li>Tmavý motiv.</li>
- <li>Kolekce karet.</li>
- <li>Synchronizace karet, záložek, hesel atd. mezi více zařízeními prostřednictvím Firefox Sync.</li>
- <li>Režim obraz v obraze.</li>
+ <li>Sbírky panelů.</li>
+ <li>Synchronizace karet, záložek, hesel atd. mezi více zařízeními prostřednictvím služby Firefox Sync.</li>
+ <li>Režim obrazu v obraze.</li>
 </ul>
-<p>Fennec F-Droid je založen na nejnovější verzi Mozilla Firefox. Má to proprietární bity a telemetrie odstraněny, ale stále se připojuje k různým Mozille služby, které mohou sledovat uživatele.</p>
+<p>Fennec F-Droid je založen na nejnovější verzi prohlížeče Mozilla Firefox. Má odstraněné proprietární bity a telemetrii, ale stále se připojuje k různým službám organizace Mozilla, které mohou sledovat uživatele.</p>
