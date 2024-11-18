@@ -43,7 +43,7 @@ function localize_maven {
 "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.81.0
+rustup default 1.82.0
 
 #
 # Fenix
@@ -179,8 +179,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e "/android-components = /s/130.0.1/${1%.0}/" gradle/libs.versions.toml
-sed -i -e "/glean = /s/61.1.0/61.2.0/" gradle/libs.versions.toml
+sed -i -e '/android-components = /s/131\.0\.2/133.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -213,7 +212,6 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 
 # Patch the use of proprietary and tracking libraries
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/remove_stray_firebase_reference.patch"
 
 # Set strict ETP by default
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/strict_etp.patch"

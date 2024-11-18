@@ -1,18 +1,18 @@
-diff -r c45f2c445215 -r 1ae8827716f1 mobile/android/geckoview/build.gradle
---- a/mobile/android/geckoview/build.gradle	Mon Oct 28 08:32:50 2024 -0400
-+++ b/mobile/android/geckoview/build.gradle	Mon Oct 28 08:33:27 2024 -0400
+diff -r 0a6479ef0332 mobile/android/geckoview/build.gradle
+--- a/mobile/android/geckoview/build.gradle	Mon Nov 18 12:58:35 2024 +0000
++++ b/mobile/android/geckoview/build.gradle	Tue Nov 19 09:11:18 2024 +0000
 @@ -216,7 +216,7 @@
      implementation ComponentsDependencies.androidx_collection
      implementation ComponentsDependencies.androidx_core
  
 -    implementation ComponentsDependencies.play_services_fido
-+    implementation "org.microg.gms:play-services-fido:0.3.2.240913"
++    implementation "org.microg.gms:play-services-fido:0.3.4.240913"
      implementation "org.yaml:snakeyaml:2.2"
      implementation 'androidx.core:core:1.12.0'
  
-diff -r c45f2c445215 -r 1ae8827716f1 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Mon Oct 28 08:32:50 2024 -0400
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Mon Oct 28 08:33:27 2024 -0400
+diff -r 0a6479ef0332 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Mon Nov 18 12:58:35 2024 +0000
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Nov 19 09:11:18 2024 +0000
 @@ -193,27 +193,14 @@
  
        final Task<PendingIntent> intentTask;
