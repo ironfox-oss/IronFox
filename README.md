@@ -63,9 +63,9 @@ wget https://dl.google.com/android/repository/tools_r25.2.3-linux.zip
 unzip tools_r*-linux.zip -d android/
 android update sdk --no-ui
 android update sdk --no-ui --filter build-tools-30.0.2,android-30,build-tools-30.0.0-preview,build-tools-29.0.3,android-29,build-tools-28.0.3,android-28 --all
-wget https://dl.google.com/android/repository/android-ndk-r27b-linux.zip
-unzip android-ndk-r27b-linux.zip -d android-ndk/
-echo "ndk_paths = { '27.1.12297006': \"\$ANDROID_NDK\" }" >> fdroiddata/config.py
+wget https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
+unzip android-ndk-r27c-linux.zip -d android-ndk/
+echo "ndk_paths = { '27.2.12479018: \"\$ANDROID_NDK\" }" >> fdroiddata/config.py
 ```
 - Add the following to your .bashrc
 ```
