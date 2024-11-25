@@ -53,12 +53,14 @@ pushd "$fenix"
 
 # Set up the app ID, version name and version code
 sed -i \
-    -e 's|\.firefox|.fennec_fdroid|' \
+    -e 's|applicationId "org.mozilla"|applicationId "us.spotco"|' \
+    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".fennec_dos"|' \
+    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "us.spotco.fennec_dos.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
     -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
     app/build.gradle
 sed -i \
-    -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
+    -e '/android:targetPackage/s/org.mozilla.firefox/us.spotco.fennec_dos/' \
     app/src/release/res/xml/shortcuts.xml
 
 # Disable crash reporting
@@ -67,22 +69,28 @@ sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 # Disable MetricController
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 
-# Let it be Fennec
-sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
+# Let it be Mull
+sed -i \
+    -e 's/Firefox Daylight/Mull/; s/Firefox/Mull/g' \
+    -e '/about_content/s/Mozilla/Divested Computing Group/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
 # app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
 sed -i \
-    -e '/Firefox(.*, .*)/s/Firefox/Fennec/' \
-    -e 's/firefox_threads/fennec_threads/' \
-    -e 's/firefox_features/fennec_features/' \
+    -e '/Firefox(.*, .*)/s/Firefox/Mull/' \
+    -e 's/firefox_threads/mull_threads/' \
+    -e 's/firefox_features/mull_features/' \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
 
 # Replace proprietary artwork
-sed -i -e 's|@drawable/animated_splash_screen<|@drawable/splash_screen<|' \
-    app/src/main/res/values-v*/styles.xml
+rm app/src/release/res/drawable/ic_launcher_foreground.xml
+rm app/src/release/res/mipmap-*/ic_launcher.webp
+rm app/src/release/res/values/colors.xml
+rm app/src/main/res/values-v24/styles.xml
+sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
+sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
 find "$patches/fenix-overlay" -type f | while read -r src; do
     dst=app/src/release/${src#"$patches/fenix-overlay/"}
     mkdir -p "$(dirname "$dst")"
@@ -99,11 +107,12 @@ sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
-# Add wallpaper URL
-echo 'https://gitlab.com/relan/fennecmedia/-/raw/master/wallpapers/android' > .wallpaper_url
+# Enable cookie banner handling
+sed -i \
+    -e '168s/channel: developer/channel: release/' app/nimbus.fml.yaml
 
 # Set up target parameters
-case $(echo "$2" | cut -c 6) in
+case $(echo "$2" | cut -c 7) in
     0)
         abi=armeabi-v7a
         target=arm-linux-androideabi
@@ -206,6 +215,12 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/remove_stray_firebase_reference.patch"
 
+# Set strict ETP by default
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/strict_etp.patch"
+
+# Enable HTTPS only mode by default
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/https_only.patch"
+
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
 
@@ -226,10 +241,10 @@ sed -i \
 # Patch the LLVM source code
 # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
 LLVM_SVN='522817'
-python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
-    --svn_version "$LLVM_SVN" \
-    --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
-    --src_path "$llvm"
+python3 $toolchain_utils/llvm_tools/patch_manager.py \
+    --svn_version $LLVM_SVN \
+    --patch_metadata_file $llvm_android/patches/PATCHES.json \
+    --src_path $llvm
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
@@ -237,12 +252,18 @@ cat << EOF > mozconfig
 ac_add_options --disable-crashreporter
 ac_add_options --disable-debug
 ac_add_options --disable-nodejs
+ac_add_options --disable-profiling
+ac_add_options --disable-rust-debug
 ac_add_options --disable-tests
 ac_add_options --disable-updater
 ac_add_options --enable-application=mobile/android
+ac_add_options --enable-hardening
+ac_add_options --enable-optimize
 ac_add_options --enable-release
 ac_add_options --enable-minify=properties # JS minification breaks addons
 ac_add_options --enable-update-channel=release
+ac_add_options --enable-rust-simd
+ac_add_options --enable-strip
 ac_add_options --target=$target
 ac_add_options --with-android-ndk="$ANDROID_NDK"
 ac_add_options --with-android-sdk="$ANDROID_SDK"
@@ -277,5 +298,8 @@ pref("media.gmp-gmpopenh264.enabled", false);
 // Disable casting (Roku, Chromecast)
 pref("browser.casting.enabled", false);
 EOF
+
+cat "$patches/preferences/userjs-arkenfox.js" >> mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/userjs-brace.js" >> mobile/android/app/geckoview-prefs.js
 
 popd

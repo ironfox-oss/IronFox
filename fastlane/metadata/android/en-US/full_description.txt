@@ -1,11 +1,1 @@
-<ul>
-  <li>Wide collection of addons, including ad blockers.</li>
-  <li>Improved tracking protection.</li>
-  <li>Private mode available in a single tap.</li>
-  <li>Customizable start screen layout and navigation bar position (top or bottom).</li>
-  <li>Dark theme.</li>
-  <li>Collections of tabs.</li>
-  <li>Synchronization of tabs, bookmarks, passwords, etc. across multiple devices via Firefox Sync.</li>
-  <li>Picture-in-picture mode.</li>
-</ul>
-<p>Fennec F-Droid is based on the latest Mozilla Firefox release. It has proprietary bits and telemetry removed, but still connects to various Mozilla services that can track users.</p>
+This is a privacy oriented and deblobbed web browser based on Mozilla technology. It enables many features upstreamed by the [https://wiki.mozilla.org/Security/Tor_Uplift Tor Uplift project] using preferences from the [https://github.com/arkenfox/user.js arkenfox-user.js project]. It is compiled from source and proprietary blobs are removed using scripts by Relan from [https://gitlab.com/relan/fennecbuild here]. It is recommended to install 'uBlock Origin'.

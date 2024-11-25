@@ -1,0 +1,12 @@
+diff -r a29897d2381c -r 2df6d3fa14ca mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Oct 28 08:39:05 2024 -0400
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Oct 28 08:39:49 2024 -0400
+@@ -615,7 +615,7 @@
+ 
+     var shouldUseHttpsOnly by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_https_only),
+-        default = false,
++        default = true,
+     )
+ 
+     var shouldUseHttpsOnlyInAllTabs by booleanPreference(
