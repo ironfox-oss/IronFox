@@ -1,7 +1,6 @@
 AntiFeatures:
   Tracking:
-    en-US: Connects to various Mozilla services that can track users.
-      https://divestos.org/pages/network_connections#mull
+    en-US: Connects to various Mozilla services that can track users. https://divestos.org/pages/network_connections#mull
   UpstreamNonFree:
     en-US: Telemetry and proprietary bits are removed.
 Categories:
@@ -4006,102 +4005,6 @@ Builds:
     build: ./build.sh
     ndk: 27.1.12297006
 
-  - versionName: 132.0.1
-    versionCode: 21320100
-    commit: v132.0.1
-    timeout: 36000
-    sudo:
-      - apt-get update
-      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
-        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
-        lld-16 libssl-dev
-    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
-    srclibs:
-      - MozFennec@FIREFOX_132_0_1_RELEASE
-      - MozAppServices@50d90349a4af01553c3e228ef28cbfc46eb8d314
-      - MozGlean@v61.2.0
-      - gmscore@v0.3.2.240913
-      - rustup@1.27.1
-      - wasi-sdk@wasi-sdk-20
-      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
-      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
-      - toolchain-utils@760c253c1ed00ce9abd48f8546f08516e57485fe
-    prebuild: ./prebuild.sh $$VERSION$$ $$VERCODE$$
-    build: ./build.sh
-    ndk: 27.1.12297006
-
-  - versionName: 132.0.1
-    versionCode: 21320120
-    commit: v132.0.1
-    timeout: 36000
-    sudo:
-      - apt-get update
-      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
-        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
-        lld-16 libssl-dev
-    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
-    srclibs:
-      - MozFennec@FIREFOX_132_0_1_RELEASE
-      - MozAppServices@50d90349a4af01553c3e228ef28cbfc46eb8d314
-      - MozGlean@v61.2.0
-      - gmscore@v0.3.2.240913
-      - rustup@1.27.1
-      - wasi-sdk@wasi-sdk-20
-      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
-      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
-      - toolchain-utils@760c253c1ed00ce9abd48f8546f08516e57485fe
-    prebuild: ./prebuild.sh $$VERSION$$ $$VERCODE$$
-    build: ./build.sh
-    ndk: 27.1.12297006
-
-  - versionName: 132.0.2
-    versionCode: 21320200
-    commit: v132.0.2
-    timeout: 36000
-    sudo:
-      - apt-get update
-      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
-        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
-        lld-16 libssl-dev
-    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
-    srclibs:
-      - MozFennec@FIREFOX_132_0_2_RELEASE
-      - MozAppServices@50d90349a4af01553c3e228ef28cbfc46eb8d314
-      - MozGlean@v61.2.0
-      - gmscore@v0.3.2.240913
-      - rustup@1.27.1
-      - wasi-sdk@wasi-sdk-20
-      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
-      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
-      - toolchain-utils@760c253c1ed00ce9abd48f8546f08516e57485fe
-    prebuild: ./prebuild.sh $$VERSION$$ $$VERCODE$$
-    build: ./build.sh
-    ndk: 27.1.12297006
-
-  - versionName: 132.0.2
-    versionCode: 21320220
-    commit: v132.0.2
-    timeout: 36000
-    sudo:
-      - apt-get update
-      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
-        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
-        lld-16 libssl-dev
-    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
-    srclibs:
-      - MozFennec@FIREFOX_132_0_2_RELEASE
-      - MozAppServices@50d90349a4af01553c3e228ef28cbfc46eb8d314
-      - MozGlean@v61.2.0
-      - gmscore@v0.3.2.240913
-      - rustup@1.27.1
-      - wasi-sdk@wasi-sdk-20
-      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
-      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
-      - toolchain-utils@760c253c1ed00ce9abd48f8546f08516e57485fe
-    prebuild: ./prebuild.sh $$VERSION$$ $$VERCODE$$
-    build: ./build.sh
-    ndk: 27.1.12297006
-
   - versionName: 133.0.0
     versionCode: 21330000
     commit: v133.0.0
@@ -4113,7 +4016,7 @@ Builds:
         lld-16 libssl-dev
     output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
     srclibs:
-      - MozFennec@FIREFOX-ANDROID_133_0_BUILD2
+      - MozFennec@FIREFOX-ANDROID_133_0_RELEASE
       - MozAppServices@v133.0
       - MozGlean@v61.2.0
       - gmscore@v0.3.4.240913
@@ -4137,7 +4040,55 @@ Builds:
         lld-16 libssl-dev
     output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
     srclibs:
-      - MozFennec@FIREFOX-ANDROID_133_0_BUILD2
+      - MozFennec@FIREFOX-ANDROID_133_0_RELEASE
+      - MozAppServices@v133.0
+      - MozGlean@v61.2.0
+      - gmscore@v0.3.4.240913
+      - rustup@1.27.1
+      - wasi-sdk@wasi-sdk-20
+      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
+      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
+      - toolchain-utils@dd1ee45a84cb07337f9d5d0a6769d9b865c6e620
+    prebuild: ./prebuild.sh $$VERSION$$ $$VERCODE$$
+    build: ./build.sh
+    ndk: 27.2.12479018
+
+  - versionName: 133.0.3
+    versionCode: 21330300
+    commit: v133.0.3
+    timeout: 36000
+    sudo:
+      - apt-get update
+      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
+        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
+        lld-16 libssl-dev
+    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
+    srclibs:
+      - MozFennec@FIREFOX-ANDROID_133_0_3_RELEASE
+      - MozAppServices@v133.0
+      - MozGlean@v61.2.0
+      - gmscore@v0.3.4.240913
+      - rustup@1.27.1
+      - wasi-sdk@wasi-sdk-20
+      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
+      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
+      - toolchain-utils@dd1ee45a84cb07337f9d5d0a6769d9b865c6e620
+    prebuild: ./prebuild.sh $$VERSION$$ $$VERCODE$$
+    build: ./build.sh
+    ndk: 27.2.12479018
+
+  - versionName: 133.0.3
+    versionCode: 21330320
+    commit: v133.0.3
+    timeout: 36000
+    sudo:
+      - apt-get update
+      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
+        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
+        lld-16 libssl-dev
+    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
+    srclibs:
+      - MozFennec@FIREFOX-ANDROID_133_0_3_RELEASE
       - MozAppServices@v133.0
       - MozGlean@v61.2.0
       - gmscore@v0.3.4.240913
@@ -4171,5 +4122,5 @@ MaintainerNotes: |-
 ArchivePolicy: 6
 AutoUpdateMode: None
 UpdateCheckMode: None
-CurrentVersion: 133.0.0
-CurrentVersionCode: 21330020
+CurrentVersion: 133.0.3
+CurrentVersionCode: 21330320
