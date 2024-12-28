@@ -12,7 +12,7 @@ from tqdm import tqdm
 def download(url, filepath: Path):
     if filepath.exists():
         print(f"{filepath} already exists.")
-        if query_yes_no("Do want to re-download?", default="yes"):
+        if query_yes_no("Do want to re-download?", default="no"):
             print(f"Removing {filepath}...")
             os.remove(filepath)
         else:
