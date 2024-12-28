@@ -181,7 +181,7 @@ popd
 # Application Services
 
 pushd "$application_services"
-chmod +x libs/verify-android-environment.sh
+chmod +x libs/verify-*.sh
 # Break the dependency on older A-C
 sed -i -e '/android-components = /s/131\.0\.2/133.0.3/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
