@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install required packages
-sudo dnf install make \
+sudo dnf install -y make \
                 cmake \
                 clang \
                 java-1.8.0-openjdk-devel \
