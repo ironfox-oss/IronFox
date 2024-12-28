@@ -40,7 +40,10 @@ if __name__ == "__main__":
 
     get_sources(paths)
 
-    with open(paths.rootdir / "scripts/paths_local.sh") as f:
+    paths_sh = paths.rootdir / "scripts/paths_local.sh"
+    print(f"Writing {paths_sh}...")
+    
+    with open(paths_sh, "w") as f:
         f.write(
             f"""
 readonly paths_source="true"
