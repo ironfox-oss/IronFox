@@ -10,7 +10,7 @@ if [ "$ANDROID_HOME" == "" ]; then
 fi
 
 if [ "$ANDROID_NDK" == "" ]; then
-    export ANDROID_NDK=$ANDROID_HOME/ndk/android-ndk-${NDK_VERSION}
+    export ANDROID_NDK=$ANDROID_HOME/ndk/android-ndk-r${NDK_VERSION}
 fi
 
 if [ ! -d "$ANDROID_HOME" ]; then
