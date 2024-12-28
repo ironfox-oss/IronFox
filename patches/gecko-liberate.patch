@@ -6,7 +6,7 @@ diff -r 0a6479ef0332 mobile/android/geckoview/build.gradle
      implementation ComponentsDependencies.androidx_core
  
 -    implementation ComponentsDependencies.play_services_fido
-+    implementation "org.microg.gms:play-services-fido:0.3.4.240913"
++    implementation "org.microg.gms:play-services-fido:0.0.0.244735"
      implementation "org.yaml:snakeyaml:2.2"
      implementation 'androidx.core:core:1.12.0'
  
