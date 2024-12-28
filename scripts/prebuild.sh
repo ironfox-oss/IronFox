@@ -120,7 +120,7 @@ case $(echo "$2" | cut -c 7) in
 0)
     abi=armeabi-v7a
     target=arm-linux-androideabi
-    echo "ARM" >"$llvm/targets_to_build"
+    echo "ARM" >"$builddir/targets_to_build"
     rusttarget=arm
     rustup target add thumbv7neon-linux-androideabi
     rustup target add armv7-linux-androideabi
@@ -128,14 +128,14 @@ case $(echo "$2" | cut -c 7) in
 1)
     abi=x86
     target=i686-linux-android
-    echo "X86" >"$llvm/targets_to_build"
+    echo "X86" >"$builddir/targets_to_build"
     rusttarget=x86
     rustup target add i686-linux-android
     ;;
 2)
     abi=arm64-v8a
     target=aarch64-linux-android
-    echo "AArch64" >"$llvm/targets_to_build"
+    echo "AArch64" >"$builddir/targets_to_build"
     rusttarget=arm64
     rustup target add aarch64-linux-android
     ;;

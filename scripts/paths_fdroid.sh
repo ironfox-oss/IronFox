@@ -18,6 +18,7 @@
 #
 
 export rootdir=$(dirname $(dirname "$(realpath "$0")"))
+export builddir="$rootdir/build"
 export patches="$rootdir/patches"
 export android_components=$(realpath ../srclib/MozFennec/mobile/android/android-components)
 export application_services=$(realpath ../srclib/MozAppServices)

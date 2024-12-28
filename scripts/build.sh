@@ -47,7 +47,7 @@ cargo install --force --vers 0.26.0 cbindgen
 if [[ "$fdroid_build" == "true" ]]; then
     # Build LLVM
     pushd $llvm
-    llvmtarget=$(cat "$llvm/targets_to_build")
+    llvmtarget=$(cat "$builddir/targets_to_build")
     echo "building llvm for $llvmtarget"
     if grep -q "Fedora" /etc/os-release; then
         cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang-18 \
