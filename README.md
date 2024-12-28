@@ -10,6 +10,30 @@ From Mull : https://divestos.org/index.php?page=broken#mull
 
 Issues caused due to our changes will be listed here.
 
+Building
+--------
+
+When building on Fedora, the following steps can be followd :
+
+```
+sudo dnf install m4 make cmake clang java-1.8.0-openjdk
+
+# Currently, Fenix requires Python 3.9 to build
+python3.9 -m venv env
+source env/bin/activate
+
+# Ensure JDK 17 is used by default
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export PATH=$JAVA_HOME/bin:$PATH
+
+source ./scripts/get_sources.py
+source ./scripts/setup-android-sdk.sh
+source ./scripts/paths_local.sh
+
+./scripts/prebuild.sh <version-name> <version-code>
+./scripts/build.sh
+```
+
 Updating
 --------
 
