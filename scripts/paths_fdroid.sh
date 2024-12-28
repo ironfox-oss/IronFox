@@ -29,3 +29,4 @@ readonly gmscore=$(realpath ../srclib/gmscore)
 readonly llvm=$(realpath ../srclib/llvm)
 readonly llvm_android=$(realpath ../srclib/llvm_android)
 readonly toolchain_utils=$(realpath ../srclib/toolchain-utils)
+readonly fdroid_build="true"

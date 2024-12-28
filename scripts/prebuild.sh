@@ -39,11 +39,13 @@ function localize_maven {
     done
 }
 
-# Set up Rust
-"$rustup"/rustup-init.sh -y --no-update-default-toolchain
-# shellcheck disable=SC1090,SC1091
-source "$HOME/.cargo/env"
-rustup default 1.82.0
+if [[ "$fdroid_build" == "true" ]]; then
+    # Set up Rust
+    "$rustup"/rustup-init.sh -y --no-update-default-toolchain
+    # shellcheck disable=SC1090,SC1091
+    source "$HOME/.cargo/env"
+    rustup default 1.82.0
+fi
 
 #
 # Fenix
@@ -173,9 +175,7 @@ sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
 sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
 popd
 
-#
 # Application Services
-#
 
 pushd "$application_services"
 # Break the dependency on older A-C
@@ -191,19 +191,16 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 popd
 
 
-#
-# WASI SDK
-#
+if [[ "$fdroid_build" == "true" ]]; then
+    # WASI SDK
+    pushd "$wasi"
+    patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+    popd
+fi
 
-pushd "$wasi"
-patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
-popd
-
-#
 # GeckoView
-#
-
 pushd "$mozilla_release"
+
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-localize_maven.patch"
 
@@ -236,45 +233,53 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
-# Patch the LLVM source code
-# Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
-LLVM_SVN='522817'
-python3 $toolchain_utils/llvm_tools/patch_manager.py \
-    --svn_version $LLVM_SVN \
-    --patch_metadata_file $llvm_android/patches/PATCHES.json \
-    --src_path $llvm
+if [[ "$fdroid_build" == "true" ]]; then
+    # Patch the LLVM source code
+    # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
+    LLVM_SVN='522817'
+    python3 $toolchain_utils/llvm_tools/patch_manager.py \
+        --svn_version $LLVM_SVN \
+        --patch_metadata_file $llvm_android/patches/PATCHES.json \
+        --src_path $llvm
+fi
+
+echo "" > mozconfig
+echo 'ac_add_options --disable-crashreporter' >> mozconfig
+echo 'ac_add_options --disable-debug' >> mozconfig
+echo 'ac_add_options --disable-nodejs' >> mozconfig
+echo 'ac_add_options --disable-profiling' >> mozconfig
+echo 'ac_add_options --disable-rust-debug' >> mozconfig
+echo 'ac_add_options --disable-tests' >> mozconfig
+echo 'ac_add_options --disable-updater' >> mozconfig
+echo 'ac_add_options --enable-application=mobile/android' >> mozconfig
+echo 'ac_add_options --enable-hardening' >> mozconfig
+echo 'ac_add_options --enable-optimize' >> mozconfig
+echo 'ac_add_options --enable-release' >> mozconfig
+echo 'ac_add_options --enable-minify=properties' >> mozconfig
+echo 'ac_add_options --enable-update-channel=release' >> mozconfig
+echo 'ac_add_options --enable-rust-simd' >> mozconfig
+echo 'ac_add_options --enable-strip' >> mozconfig
+echo 'ac_add_options --with-java-bin-path="/usr/bin"' >> mozconfig
+echo "ac_add_options --target=$target" >> mozconfig
+echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >> mozconfig
+echo "ac_add_options --with-android-sdk=\"$ANDROID_SDK\"" >> mozconfig
+echo "ac_add_options --with-gradle=$(command -v gradle)" >> mozconfig
+echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\"" >> mozconfig
+echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\"" >> mozconfig
+echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >> mozconfig
+
+if [[ "$fdroid_build" == "true" ]]; then
+    echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >> mozconfig
+else
+    echo "ac_add_options --with-libclang-path=\"$llvm/out/lib\"" >> mozconfig
+    echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >> mozconfig
+    echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >> mozconfig
+    echo "ac_add_options WASM_CXX=\"$wasi/build/install/wasi/bin/clang++\"" >> mozconfig
+fi
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 cat << EOF > mozconfig
-ac_add_options --disable-crashreporter
-ac_add_options --disable-debug
-ac_add_options --disable-nodejs
-ac_add_options --disable-profiling
-ac_add_options --disable-rust-debug
-ac_add_options --disable-tests
-ac_add_options --disable-updater
-ac_add_options --enable-application=mobile/android
-ac_add_options --enable-hardening
-ac_add_options --enable-optimize
-ac_add_options --enable-release
-ac_add_options --enable-minify=properties # JS minification breaks addons
-ac_add_options --enable-update-channel=release
-ac_add_options --enable-rust-simd
-ac_add_options --enable-strip
-ac_add_options --target=$target
-ac_add_options --with-android-ndk="$ANDROID_NDK"
-ac_add_options --with-android-sdk="$ANDROID_SDK"
-ac_add_options --with-libclang-path="$llvm/out/lib"
-ac_add_options --with-java-bin-path="/usr/bin"
-ac_add_options --with-gradle=$(command -v gradle)
-ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
-ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang"
-ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
-ac_add_options STRIP="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip"
-ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
-ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 EOF
 
 # Disable Gecko Media Plugins and casting
