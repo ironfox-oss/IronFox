@@ -46,11 +46,6 @@ jobs:
           export JAVA_HOME=$JAVA_HOME_17_X64
           export PATH=$JAVA_HOME/bin:$PATH
 
-      - name: Get sources
-        run: |
-          python3.9 -m pip install tqdm requests
-          python3.9 ./scripts/get_sources.py
-
       - name: Build
         run: |
           unset ANDROID_HOME
@@ -58,6 +53,9 @@ jobs:
 
           python3.9 -m venv env
           source env/bin/activate
+
+          python -m pip install tqdm requests
+          python ./scripts/get_sources.py
 
           source scripts/setup-android-sdk.sh
           source scripts/paths_local.sh
