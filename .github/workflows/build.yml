@@ -20,7 +20,8 @@ jobs:
         name: Setup Android NDK
         with:
           ndk-version: r27c
-          add-to-path: false
+          add-to-path: true
+          link-to-sdk: true
       - name: Install packages
         run: |
           sudo apt update
