@@ -7,13 +7,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          source scripts/setup_ubuntu.sh
+        name: Checkout
+      - uses: actions/setup-java@v4
+        name: Setup JDK 8
+        with:
+          distribution: 'temurin'
+          version: '8'
+      - uses: actions/setup-java@v4
+        name: Setup JDK 17
+        with:
+          distribution: 'temurin'
+          version: '17'
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        name: Setup Android NDK
+        with:
+          ndk-version: r21e
+          add-to-path: false
+      - name: Install packages
+        run: |
+          sudo apt update
+          sudo apt install -y make \
+                    cmake \
+                    clang \
+                    openjdk-8-jdk \
+                    openjdk-17-jdk \
+                    wget \
+                    unzip
+      - name: Setup Gradle
+        run: |
+          mkdir -p $HOME/bin
+          wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "$HOME/bin/gradle"
+          chmod +x "$HOME/bin/gradle"
 
+          mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+      - run: |
+          export PATH=$PATH:$HOME/bin
+          
           python -m pip install tqdm requests
-          python ./scripts/get_source.py
+          python ./scripts/get_sources.py
 
           source scripts/paths_local.sh
 
           ./scripts/prebuild.sh
           ./scripts/build.sh
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
