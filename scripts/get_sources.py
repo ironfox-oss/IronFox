@@ -46,13 +46,13 @@ if __name__ == "__main__":
     with open(paths_sh, "w") as f:
         f.write(
             f"""
-readonly paths_source="true"
-readonly patches={paths.patchdir}
-readonly android_components={paths.android_components}
-readonly application_services={paths.appservicesdir}
-readonly glean={paths.gleandir}
-readonly fenix={paths.fenix}
-readonly mozilla_release={paths.geckodir}
-readonly gmscore={paths.gmscoredir}
+paths_source="true"
+patches={paths.patchdir}
+android_components={paths.android_components}
+application_services={paths.appservicesdir}
+glean={paths.gleandir}
+fenix={paths.fenix}
+mozilla_release={paths.geckodir}
+gmscore={paths.gmscoredir}
                 """
         )
