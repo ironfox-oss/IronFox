@@ -31,10 +31,10 @@ function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -print0 | xargs -0 \
         sed -n -i \
-            -e '/maven {/{:loop;N;/}$/!b loop;/plugins.gradle.org/!s/maven .*/mavenLocal()/};p'
+        -e '/maven {/{:loop;N;/}$/!b loop;/plugins.gradle.org/!s/maven .*/mavenLocal()/};p'
     # Make gradlew scripts call our Gradle wrapper
     find ./* -name gradlew -type f | while read -r gradlew; do
-        echo -e '#!/bin/sh\ngradle "$@"' > "$gradlew"
+        echo -e '#!/bin/sh\ngradle "$@"' >"$gradlew"
         chmod 755 "$gradlew"
     done
 }
@@ -115,37 +115,37 @@ sed -i \
 
 # Set up target parameters
 case $(echo "$2" | cut -c 7) in
-    0)
-        abi=armeabi-v7a
-        target=arm-linux-androideabi
-        echo "ARM" > "$llvm/targets_to_build"
-        rusttarget=arm
-        rustup target add thumbv7neon-linux-androideabi
-        rustup target add armv7-linux-androideabi
-        ;;
-    1)
-        abi=x86
-        target=i686-linux-android
-        echo "X86" > "$llvm/targets_to_build"
-        rusttarget=x86
-        rustup target add i686-linux-android
-        ;;
-    2)
-        abi=arm64-v8a
-        target=aarch64-linux-android
-        echo "AArch64" > "$llvm/targets_to_build"
-        rusttarget=arm64
-        rustup target add aarch64-linux-android
-        ;;
-    *)
-        echo "Unknown target code in $2." >&2
-        exit 1
+0)
+    abi=armeabi-v7a
+    target=arm-linux-androideabi
+    echo "ARM" >"$llvm/targets_to_build"
+    rusttarget=arm
+    rustup target add thumbv7neon-linux-androideabi
+    rustup target add armv7-linux-androideabi
+    ;;
+1)
+    abi=x86
+    target=i686-linux-android
+    echo "X86" >"$llvm/targets_to_build"
+    rusttarget=x86
+    rustup target add i686-linux-android
+    ;;
+2)
+    abi=arm64-v8a
+    target=aarch64-linux-android
+    echo "AArch64" >"$llvm/targets_to_build"
+    rusttarget=arm64
+    rustup target add aarch64-linux-android
+    ;;
+*)
+    echo "Unknown target code in $2." >&2
+    exit 1
     ;;
 esac
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
 
 # Enable the auto-publication workflow
-echo "autoPublish.application-services.dir=$application_services" >> local.properties
+echo "autoPublish.application-services.dir=$application_services" >>local.properties
 
 popd
 
@@ -154,7 +154,7 @@ popd
 #
 
 pushd "$glean"
-echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
+echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 localize_maven
 popd
 
@@ -169,7 +169,7 @@ done
 # Add the added search engines as `general` engines
 sed -i \
     -e '41i \ \ \ \ "brave",\n\ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "metager",\n\ \ \ \ "mojeek",\n\ \ \ \ "qwantlite",\n\ \ \ \ "startpage",' \
-     components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
+    components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 # Hack to prevent too long string from breaking build
 sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
 sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
@@ -180,7 +180,7 @@ popd
 pushd "$application_services"
 # Break the dependency on older A-C
 sed -i -e '/android-components = /s/131\.0\.2/133.0.3/' gradle/libs.versions.toml
-echo "rust.targets=linux-x86-64,$rusttarget" >> local.properties
+echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
 localize_maven
@@ -190,11 +190,10 @@ sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 popd
 
-
 if [[ "$fdroid_build" == "true" ]]; then
     # WASI SDK
     pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch --quiet < "$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+    patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
     popd
 fi
 
@@ -202,22 +201,22 @@ fi
 pushd "$mozilla_release"
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-localize_maven.patch"
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-localize_maven.patch"
 
 # Replace GMS with microG client library
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-liberate.patch"
 
 # Patch the use of proprietary and tracking libraries
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/fenix-liberate.patch"
 
 # Set strict ETP by default
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/strict_etp.patch"
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/strict_etp.patch"
 
 # Enable HTTPS only mode by default
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/https_only.patch"
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/https_only.patch"
 
 # Fix v125 compile error
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-fix-125-compile.patch"
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"
 
 # Fix v125 aar output not including native libraries
 sed -i \
@@ -243,48 +242,48 @@ if [[ "$fdroid_build" == "true" ]]; then
         --src_path $llvm
 fi
 
-echo "" > mozconfig
-echo 'ac_add_options --disable-crashreporter' >> mozconfig
-echo 'ac_add_options --disable-debug' >> mozconfig
-echo 'ac_add_options --disable-nodejs' >> mozconfig
-echo 'ac_add_options --disable-profiling' >> mozconfig
-echo 'ac_add_options --disable-rust-debug' >> mozconfig
-echo 'ac_add_options --disable-tests' >> mozconfig
-echo 'ac_add_options --disable-updater' >> mozconfig
-echo 'ac_add_options --enable-application=mobile/android' >> mozconfig
-echo 'ac_add_options --enable-hardening' >> mozconfig
-echo 'ac_add_options --enable-optimize' >> mozconfig
-echo 'ac_add_options --enable-release' >> mozconfig
-echo 'ac_add_options --enable-minify=properties' >> mozconfig
-echo 'ac_add_options --enable-update-channel=release' >> mozconfig
-echo 'ac_add_options --enable-rust-simd' >> mozconfig
-echo 'ac_add_options --enable-strip' >> mozconfig
-echo 'ac_add_options --with-java-bin-path="/usr/bin"' >> mozconfig
-echo "ac_add_options --target=$target" >> mozconfig
-echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >> mozconfig
-echo "ac_add_options --with-android-sdk=\"$ANDROID_SDK\"" >> mozconfig
-echo "ac_add_options --with-gradle=$(command -v gradle)" >> mozconfig
-echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\"" >> mozconfig
-echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\"" >> mozconfig
-echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >> mozconfig
+echo "" >mozconfig
+echo 'ac_add_options --disable-crashreporter' >>mozconfig
+echo 'ac_add_options --disable-debug' >>mozconfig
+echo 'ac_add_options --disable-nodejs' >>mozconfig
+echo 'ac_add_options --disable-profiling' >>mozconfig
+echo 'ac_add_options --disable-rust-debug' >>mozconfig
+echo 'ac_add_options --disable-tests' >>mozconfig
+echo 'ac_add_options --disable-updater' >>mozconfig
+echo 'ac_add_options --enable-application=mobile/android' >>mozconfig
+echo 'ac_add_options --enable-hardening' >>mozconfig
+echo 'ac_add_options --enable-optimize' >>mozconfig
+echo 'ac_add_options --enable-release' >>mozconfig
+echo 'ac_add_options --enable-minify=properties' >>mozconfig
+echo 'ac_add_options --enable-update-channel=release' >>mozconfig
+echo 'ac_add_options --enable-rust-simd' >>mozconfig
+echo 'ac_add_options --enable-strip' >>mozconfig
+echo 'ac_add_options --with-java-bin-path="/usr/bin"' >>mozconfig
+echo "ac_add_options --target=$target" >>mozconfig
+echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >>mozconfig
+echo "ac_add_options --with-android-sdk=\"$ANDROID_SDK\"" >>mozconfig
+echo "ac_add_options --with-gradle=$(command -v gradle)" >>mozconfig
+echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\"" >>mozconfig
+echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\"" >>mozconfig
+echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >>mozconfig
 
 if [[ "$fdroid_build" == "true" ]]; then
-    echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >> mozconfig
+    echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >>mozconfig
 else
-    echo "ac_add_options --with-libclang-path=\"$llvm/out/lib\"" >> mozconfig
-    echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >> mozconfig
-    echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >> mozconfig
-    echo "ac_add_options WASM_CXX=\"$wasi/build/install/wasi/bin/clang++\"" >> mozconfig
+    echo "ac_add_options --with-libclang-path=\"$llvm/out/lib\"" >>mozconfig
+    echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >>mozconfig
+    echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >>mozconfig
+    echo "ac_add_options WASM_CXX=\"$wasi/build/install/wasi/bin/clang++\"" >>mozconfig
 fi
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
-cat << EOF > mozconfig
+cat <<EOF >mozconfig
 EOF
 
 # Disable Gecko Media Plugins and casting
 sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/geckoview-prefs.js
-cat << EOF >> mobile/android/app/geckoview-prefs.js
+cat <<EOF >>mobile/android/app/geckoview-prefs.js
 
 // Disable Encrypted Media Extensions
 pref("media.eme.enabled", false);
@@ -302,7 +301,7 @@ pref("media.gmp-gmpopenh264.enabled", false);
 pref("browser.casting.enabled", false);
 EOF
 
-cat "$patches/preferences/userjs-arkenfox.js" >> mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/userjs-brace.js" >> mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/userjs-arkenfox.js" >>mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/userjs-brace.js" >>mobile/android/app/geckoview-prefs.js
 
 popd
