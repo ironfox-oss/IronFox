@@ -17,17 +17,17 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-readonly paths_source="true"
-readonly patches=$(dirname "$(realpath "$0")")
-readonly android_components=$(realpath ../srclib/MozFennec/mobile/android/android-components)
-readonly application_services=$(realpath ../srclib/MozAppServices)
-readonly glean=$(realpath ../srclib/MozGlean)
-readonly fenix=$(realpath ../srclib/MozFennec/mobile/android/fenix)
-readonly mozilla_release=$(realpath ../srclib/MozFennec)
-readonly rustup=$(realpath ../srclib/rustup)
-readonly wasi=$(realpath ../srclib/wasi-sdk)
-readonly gmscore=$(realpath ../srclib/gmscore)
-readonly llvm=$(realpath ../srclib/llvm)
-readonly llvm_android=$(realpath ../srclib/llvm_android)
-readonly toolchain_utils=$(realpath ../srclib/toolchain-utils)
-readonly fdroid_build="true"
+export patches=$(dirname "$(realpath "$0")")
+export android_components=$(realpath ../srclib/MozFennec/mobile/android/android-components)
+export application_services=$(realpath ../srclib/MozAppServices)
+export glean=$(realpath ../srclib/MozGlean)
+export fenix=$(realpath ../srclib/MozFennec/mobile/android/fenix)
+export mozilla_release=$(realpath ../srclib/MozFennec)
+export rustup=$(realpath ../srclib/rustup)
+export wasi=$(realpath ../srclib/wasi-sdk)
+export gmscore=$(realpath ../srclib/gmscore)
+export llvm=$(realpath ../srclib/llvm)
+export llvm_android=$(realpath ../srclib/llvm_android)
+export toolchain_utils=$(realpath ../srclib/toolchain-utils)
+export fdroid_build="true"
+export paths_source="true"
