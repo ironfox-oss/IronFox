@@ -54,17 +54,14 @@ jobs:
           python3.9 -m venv env
           source env/bin/activate
 
-          python -m pip install tqdm requests
-          python ./scripts/get_sources.py
+          pip install tqdm requests
+          $GITHUB_WORKSPACE/scripts/get_sources.py
 
-          pwd
-          ls -hal scripts
+          source $GITHUB_WORKSPACE/scripts/paths_local.sh
+          source $GITHUB_WORKSPACE/scripts/setup-android-sdk.sh
 
-          source ./scripts/setup-android-sdk.sh
-          source ./scripts/paths_local.sh
-
-          ./scripts/prebuild.sh
-          ./scripts/build.sh
+          $GITHUB_WORKSPACE/scripts/prebuild.sh
+          $GITHUB_WORKSPACE/scripts/build.sh
       
       - name: Upload APKs
         uses: actions/upload-artifact@v4
