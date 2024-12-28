@@ -30,9 +30,9 @@ fi
 
 # Set up Android SDK
 if grep -q "Fedora" /etc/os-release; then
-    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" "$ANDROID_HOME/tools/bin/sdkmanager" 'build-tools;35.0.0' # for GeckoView
-    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" "$ANDROID_HOME/tools/bin/sdkmanager" 'ndk;26.2.11394342'  # for GleanAS
-    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" "$ANDROID_HOME/tools/bin/sdkmanager" 'ndk;27.0.12077973'  # for application-services
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" sdkmanager 'build-tools;35.0.0' # for GeckoView
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" sdkmanager 'ndk;26.2.11394342'  # for GleanAS
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" sdkmanager 'ndk;27.0.12077973'  # for application-services
 else
     sdkmanager 'build-tools;35.0.0' # for GeckoView
     sdkmanager 'ndk;26.2.11394342'  # for GleanAS

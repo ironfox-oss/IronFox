@@ -14,7 +14,7 @@ if [ "$ANDROID_NDK" == "" ]; then
 fi
 
 if [ ! -d "$ANDROID_HOME" ]; then
-    mkdir -p "$ANDROID_HOME"
+    mkdir -p "$ANDROID_HOME/cmdline-tools"
     cd "$ANDROID_HOME/.."
     rm -Rf "$(basename "$ANDROID_HOME")"
 
@@ -22,7 +22,8 @@ if [ ! -d "$ANDROID_HOME" ]; then
     echo "Downloading Android SDK..."
     wget https://dl.google.com/android/repository/${ANDROID_SDK_FILE} -O tools-$SDK_REVISION.zip
     rm -Rf $ANDROID_HOME
-    unzip -q tools-$SDK_REVISION.zip -d "$ANDROID_HOME"
+    unzip -q tools-$SDK_REVISION.zip -d "$ANDROID_HOME/cmdline-tools"
+    mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
 fi
 
 if [ -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
@@ -50,3 +51,5 @@ fi
 
 echo "INFO: Using sdkmanager ... $SDK_MANAGER"
 echo "INFO: Using NDK ... $ANDROID_NDK"
+
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
