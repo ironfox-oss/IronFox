@@ -15,13 +15,6 @@ jobs:
           java-version: |
             8
             17
-      - uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        name: Setup Android NDK
-        with:
-          ndk-version: r27c
-          add-to-path: true
-          link-to-sdk: true
       - name: Install packages
         run: |
           sudo apt update
@@ -53,12 +46,11 @@ jobs:
 
       - name: Build
         run: |
+          source scripts/setup-android-sdk.sh
           source scripts/paths_local.sh
 
           ./scripts/prebuild.sh
           ./scripts/build.sh
-        env:
-          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
       
       - name: Upload APKs
         uses: actions/upload-artifact@v4
