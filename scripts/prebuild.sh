@@ -273,7 +273,7 @@ echo 'ac_add_options --enable-minify=properties' >>mozconfig
 echo 'ac_add_options --enable-update-channel=release' >>mozconfig
 echo 'ac_add_options --enable-rust-simd' >>mozconfig
 echo 'ac_add_options --enable-strip' >>mozconfig
-echo 'ac_add_options --with-java-bin-path="/usr/bin"' >>mozconfig
+echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\"" >>mozconfig
 echo "ac_add_options --target=$target" >>mozconfig
 echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >>mozconfig
 echo "ac_add_options --with-android-sdk=\"$ANDROID_SDK\"" >>mozconfig
