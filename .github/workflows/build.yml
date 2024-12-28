@@ -33,7 +33,9 @@ jobs:
           wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "$HOME/bin/gradle"
           chmod +x "$HOME/bin/gradle"
 
-          mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+          mkdir -p ~/.gradle
+          echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+          echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
       - name: Setup Environment
         run: |
           export PATH=$PATH:$HOME/bin
