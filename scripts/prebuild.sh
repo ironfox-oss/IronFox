@@ -44,15 +44,16 @@ function localize_maven {
 if [[ "$fdroid_build" == "true" ]]; then
     # Set up Rust
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
-    # shellcheck disable=SC1090,SC1091
-    source "$HOME/.cargo/env"
-    rustup default 1.82.0
+else
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
 fi
 
-#
-# Fenix
-#
+# shellcheck disable=SC1090,SC1091
+source "$HOME/.cargo/env"
+rustup default 1.82.0
 
+
+# Fenix
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
