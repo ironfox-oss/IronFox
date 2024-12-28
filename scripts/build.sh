@@ -19,8 +19,10 @@
 
 set -e
 
-# shellcheck source=paths.sh
-source "$(dirname "$0")/paths.sh"
+if [[ "$paths_source" != "true" ]]; then
+    echo "Use 'source scripts/paths_local.sh' before calling prebuild or build (scripts/paths_fdroid.sh for F-Droid builds)."
+    exit 1
+fi
 
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle

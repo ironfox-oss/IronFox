@@ -17,6 +17,7 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+readonly paths_source="true"
 readonly patches=$(dirname "$(realpath "$0")")
 readonly android_components=$(realpath ../srclib/MozFennec/mobile/android/android-components)
 readonly application_services=$(realpath ../srclib/MozAppServices)

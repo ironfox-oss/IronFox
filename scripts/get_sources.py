@@ -45,6 +45,7 @@ if __name__ == "__main__":
     with open(paths.rootdir / "scripts/paths_local.sh") as f:
         f.write(
             f"""
+readonly paths_source="true"
 readonly patches={paths.patchdir}
 readonly android_components={paths.android_components}
 readonly application_services={paths.appservicesdir}
