@@ -40,7 +40,7 @@ jobs:
           mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
       - run: |
           export PATH=$PATH:$HOME/bin
-          export JAVA_HOME=$JAVA_HOME_17_X64"
+          export JAVA_HOME=$JAVA_HOME_17_X64
           export PATH=$PATH:$JAVA_HOME/bin
 
           realpath $(which java)
