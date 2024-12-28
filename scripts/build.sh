@@ -24,7 +24,7 @@ if [[ "$paths_source" != "true" ]]; then
     exit 1
 fi
 
-yes | $SDK_MANAGER --sdk_root="$ANDROID_HOME" --licenses
+yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
 
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle
