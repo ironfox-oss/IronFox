@@ -60,7 +60,7 @@ jobs:
           source $GITHUB_WORKSPACE/scripts/paths_local.sh
           source $GITHUB_WORKSPACE/scripts/setup-android-sdk.sh
 
-          $GITHUB_WORKSPACE/scripts/prebuild.sh
+          $GITHUB_WORKSPACE/scripts/prebuild.sh v133.0.3 21330320
           $GITHUB_WORKSPACE/scripts/build.sh
       
       - name: Upload APKs
