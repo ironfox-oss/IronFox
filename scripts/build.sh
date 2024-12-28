@@ -80,6 +80,9 @@ fi
 
 # Build microG libraries
 pushd "$gmscore"
+if [[ "$fdroid_build" != "true" ]]; then
+    export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
+fi
 gradle -x javaDocReleaseGeneration \
     :play-services-ads-identifier:publishToMavenLocal \
     :play-services-base:publishToMavenLocal \
