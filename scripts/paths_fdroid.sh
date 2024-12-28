@@ -17,7 +17,8 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-export patches=$(dirname "$(realpath "$0")")
+export rootdir=$(dirname $(dirname "$(realpath "$0")"))
+export patches="$rootdir/patches"
 export android_components=$(realpath ../srclib/MozFennec/mobile/android/android-components)
 export application_services=$(realpath ../srclib/MozAppServices)
 export glean=$(realpath ../srclib/MozGlean)

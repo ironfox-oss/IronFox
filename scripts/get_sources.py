@@ -47,6 +47,7 @@ if __name__ == "__main__":
         f.write(
             f"""
 export patches={paths.patchdir}
+export rootdir={paths.rootdir}
 export android_components={paths.android_components}
 export application_services={paths.appservicesdir}
 export glean={paths.gleandir}
