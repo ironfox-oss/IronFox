@@ -30,6 +30,7 @@ jobs:
                     clang \
                     openjdk-8-jdk \
                     openjdk-17-jdk \
+                    patch \
                     wget \
                     unzip
       - name: Setup Gradle
@@ -39,17 +40,28 @@ jobs:
           chmod +x "$HOME/bin/gradle"
 
           mkdir -p ~/.gradle && echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-      - run: |
+      - name: Setup Environment
+        run: |
           export PATH=$PATH:$HOME/bin
           export JAVA_HOME=$JAVA_HOME_17_X64
           export PATH=$PATH:$JAVA_HOME/bin
-          
+
+      - name: Get sources
+        run: |
           python -m pip install tqdm requests
           python ./scripts/get_sources.py
 
+      - name: Build
+        run: |
           source scripts/paths_local.sh
 
           ./scripts/prebuild.sh
           ./scripts/build.sh
         env:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+      
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: IronFox APKs
+          path: gecko/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
