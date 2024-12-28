@@ -207,12 +207,10 @@ sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 popd
 
-if [[ "$fdroid_build" == "true" ]]; then
-    # WASI SDK
-    pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
-    popd
-fi
+# WASI SDK
+pushd "$wasi"
+patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+popd
 
 # GeckoView
 pushd "$mozilla_release"
@@ -280,15 +278,15 @@ echo "ac_add_options --target=$target" >>mozconfig
 echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >>mozconfig
 echo "ac_add_options --with-android-sdk=\"$ANDROID_SDK\"" >>mozconfig
 echo "ac_add_options --with-gradle=$(command -v gradle)" >>mozconfig
+echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >>mozconfig
+echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >>mozconfig
+echo "ac_add_options WASM_CXX=\"$wasi/build/install/wasi/bin/clang++\"" >>mozconfig
 echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\"" >>mozconfig
 echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\"" >>mozconfig
 echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >>mozconfig
 
 if [[ "$fdroid_build" == "true" ]]; then
     echo "ac_add_options --with-libclang-path=\"$llvm/out/lib\"" >>mozconfig
-    echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >>mozconfig
-    echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >>mozconfig
-    echo "ac_add_options WASM_CXX=\"$wasi/build/install/wasi/bin/clang++\"" >>mozconfig
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >>mozconfig
 else
     echo 'ac_add_options --with-libclang-path="/usr/lib64"' >>mozconfig

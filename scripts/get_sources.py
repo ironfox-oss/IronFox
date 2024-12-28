@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import os
-from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, MOZILLA_REF_DOWNLOADS, MOZILLA_REF_URL, GeckoPaths
-from utils import download, query_yes_no, rmdirrec, zipextract_rmtoplevel
+import subprocess
+from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, MOZILLA_REF_DOWNLOADS, MOZILLA_REF_URL, WASI_REPO, GeckoPaths
+from utils import download, zipextract_rmtoplevel
 
 def get_sources(paths: GeckoPaths):
     print("Downloading sources...")
@@ -12,6 +13,9 @@ def get_sources(paths: GeckoPaths):
         
     for repo_name, repo, ref in MOZILLA_REF_DOWNLOADS:
         do_download(repo_name, MOZILLA_REF_URL.format(repo, ref))
+        
+    print("Cloning wasi-sdk...")
+    subprocess.check_call(["git", "clone", "--recursive", "--depth=1", WASI_REPO], cwd=paths.rootdir)
 
 def do_download(repo_name, url):
     repo_zip = paths.builddir / ("{}.zip".format(repo_name))
@@ -51,6 +55,7 @@ export glean={paths.gleandir}
 export fenix={paths.fenix}
 export mozilla_release={paths.geckodir}
 export gmscore={paths.gmscoredir}
+export wasi={paths.wasisdkdir}
 export paths_source="true"
 """
         )

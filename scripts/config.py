@@ -20,6 +20,8 @@ MOZILLA_REF_DOWNLOADS = {
     ("gecko", "mozilla-release", "FIREFOX-ANDROID_133_0_3_RELEASE"),
 }
 
+WASI_REPO = "https://github.com/WebAssembly/wasi-sdk"
+
 class GeckoPaths:
     def __init__(self):
         self.rootdir = Path(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -29,6 +31,7 @@ class GeckoPaths:
         self.gleandir = self.rootdir / "glean"
         self.appservicesdir = self.rootdir / "appservices"
         self.gmscoredir = self.rootdir / "gmscore"
+        self.wasisdkdir = self.rootdir / "wasi-sdk"
         
         self.android_components = self.geckodir / "mobile/android/android-components"
         self.fenix = self.geckodir / "mobile/android/fenix"

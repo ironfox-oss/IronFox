@@ -65,18 +65,18 @@ if [[ "$fdroid_build" == "true" ]]; then
     cmake --build build -j"$(nproc)"
     cmake --build build --target install -j"$(nproc)"
     popd
-
-    # Build WASI SDK
-    pushd "$wasi"
-    mkdir -p build/install/wasi
-    touch build/compiler-rt.BUILT # fool the build system
-    make \
-        PREFIX=/wasi \
-        build/wasi-libc.BUILT \
-        build/libcxx.BUILT \
-        -j"$(nproc)"
-    popd
 fi
+
+# Build WASI SDK
+pushd "$wasi"
+mkdir -p build/install/wasi
+touch build/compiler-rt.BUILT # fool the build system
+make \
+    PREFIX=/wasi \
+    build/wasi-libc.BUILT \
+    build/libcxx.BUILT \
+    -j"$(nproc)"
+popd
 
 # Build microG libraries
 pushd "$gmscore"
