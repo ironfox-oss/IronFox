@@ -41,6 +41,19 @@ if [[ "$paths_source" != "true" ]]; then
     exit 1
 fi
 
+if [ -d "$ANDROID_HOME" ]; then
+  echo "\$ANDROID_HOME does exist."
+  exit 1
+fi
+
+if [ -d "$ANDROID_NDK" ]; then
+  echo "\$ANDROID_NDK does exist."
+  exit 1
+fi
+
+JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
+[ "$JAVA_VER" -ge 15 ] || $(echo "Java 17 or newer must be set as default JDK" && exit 1)
+
 if [[ "$fdroid_build" == "true" ]]; then
     # Set up Rust
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
