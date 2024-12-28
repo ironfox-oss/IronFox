@@ -13,7 +13,7 @@ def get_sources(paths: GeckoPaths):
         download(GITHUB_REF_URL.format(repo, ref), repo_zip)
 
         if not repo_zip.exists():
-            raise RuntimeError("Source archive for Fennec does not exist.")
+            raise RuntimeError(f"Source archive for {repo_name} does not exist.")
 
         if repo_path.exists():
             if len(os.listdir(repo_path)) > 0:
@@ -22,7 +22,7 @@ def get_sources(paths: GeckoPaths):
                     print(f"Deleting {repo_path}...")
                     rmdirrec(repo_path)
                 else:
-                    return
+                    continue
 
         if not repo_path.exists():
             repo_path.mkdir(parents=True)
