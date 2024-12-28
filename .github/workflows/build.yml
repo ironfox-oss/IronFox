@@ -15,6 +15,9 @@ jobs:
           java-version: |
             8
             17
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
       - name: Install packages
         run: |
           sudo apt update
@@ -24,7 +27,6 @@ jobs:
                     openjdk-8-jdk \
                     openjdk-17-jdk \
                     patch \
-                    python3.9 \
                     wget \
                     unzip
       - name: Setup Gradle
