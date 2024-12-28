@@ -215,6 +215,9 @@ popd
 # GeckoView
 pushd "$mozilla_release"
 
+# Since we download ZIP files, the executable permissions are lost
+chmod +x build/cargo-*
+
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-localize_maven.patch"
 

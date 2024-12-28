@@ -9,6 +9,10 @@ MOZILLA_REF_URL = "https://hg.mozilla.org/releases/{}/archive/{}.zip"
 GITHUB_REF_DOWNLOADS = {
     # When changing names below, also change in class GeckoPaths
     
+    # TODO: tags from github can be cloned as .tar.gz archive
+    # zip files do not preserve file permissions
+    # mozilla mercurial refs do not seem to offer .tar.gz archives
+    
     # (name, repository, ref)
     ("glean", "mozilla/glean", "refs/tags/v61.2.0"),
     ("appservices", "mozilla/application-services" , "refs/tags/v133.0"),
