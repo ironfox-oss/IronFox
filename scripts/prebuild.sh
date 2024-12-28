@@ -280,8 +280,6 @@ fi
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
-cat <<EOF >mozconfig
-EOF
 
 # Disable Gecko Media Plugins and casting
 sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/geckoview-prefs.js

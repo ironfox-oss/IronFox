@@ -1,0 +1,19 @@
+name: build-mull
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          source scripts/setup_ubuntu.sh
+
+          python -m pip install tqdm requests
+          python ./scripts/get_source.py
+
+          source scripts/paths_local.sh
+
+          ./scripts/prebuild.sh
+          ./scripts/build.sh

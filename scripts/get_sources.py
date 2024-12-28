@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-from argparse import ArgumentParser
 import os
 from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, GeckoPaths
 from utils import download, query_yes_no, rmdirrec, zipextract_rmtoplevel
-
 
 def get_sources(paths: GeckoPaths):
     print("Downloading sources...")
