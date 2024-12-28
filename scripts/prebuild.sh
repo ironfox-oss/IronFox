@@ -19,16 +19,6 @@
 
 set -e
 
-if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Usage: $0 versionName versionCode" >&1
-    exit 1
-fi
-
-if [[ "$paths_source" != "true" ]]; then
-    echo "Use 'source scripts/paths_local.sh' before calling prebuild or build (scripts/paths_fdroid.sh for F-Droid builds)."
-    exit 1
-fi
-
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -print0 | xargs -0 \
@@ -40,6 +30,16 @@ function localize_maven {
         chmod 755 "$gradlew"
     done
 }
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: $0 versionName versionCode" >&1
+    exit 1
+fi
+
+if [[ "$paths_source" != "true" ]]; then
+    echo "Use 'source scripts/paths_local.sh' before calling prebuild or build (scripts/paths_fdroid.sh for F-Droid builds)."
+    exit 1
+fi
 
 if [[ "$fdroid_build" == "true" ]]; then
     # Set up Rust
@@ -58,14 +58,14 @@ pushd "$fenix"
 
 # Set up the app ID, version name and version code
 sed -i \
-    -e 's|applicationId "org.mozilla"|applicationId "us.spotco"|' \
-    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".fennec_dos"|' \
-    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "us.spotco.fennec_dos.sharedID"|' \
+    -e 's|applicationId "org.mozilla"|applicationId "com.itsaky"|' \
+    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
+    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "com.itsaky.ironfox.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
     -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
     app/build.gradle
 sed -i \
-    -e '/android:targetPackage/s/org.mozilla.firefox/us.spotco.fennec_dos/' \
+    -e '/android:targetPackage/s/org.mozilla.firefox/com.itsaky.ironfox/' \
     app/src/release/res/xml/shortcuts.xml
 
 # Disable crash reporting
@@ -74,19 +74,19 @@ sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 # Disable MetricController
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 
-# Let it be Mull
+# Let it be IronFox
 sed -i \
-    -e 's/Firefox Daylight/Mull/; s/Firefox/Mull/g' \
-    -e '/about_content/s/Mozilla/Divested Computing Group/' \
+    -e 's/Firefox Daylight/IronFox/; s/Firefox/IronFox/g' \
+    -e '/about_content/s/Mozilla/Akash Yadav/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
 # app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
 sed -i \
-    -e '/Firefox(.*, .*)/s/Firefox/Mull/' \
-    -e 's/firefox_threads/mull_threads/' \
-    -e 's/firefox_features/mull_features/' \
+    -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
+    -e 's/firefox_threads/ironfox_threads/' \
+    -e 's/firefox_features/ironfox_features/' \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
 
 # Replace proprietary artwork

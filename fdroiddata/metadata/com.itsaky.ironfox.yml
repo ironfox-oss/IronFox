@@ -1,0 +1,90 @@
+AntiFeatures:
+  Tracking:
+    en-US: Connects to various Mozilla services that can track users. https://divestos.org/pages/network_connections#mull
+  UpstreamNonFree:
+    en-US: Telemetry and proprietary bits are removed.
+Categories:
+  - Internet
+License: MPL-2.0
+AuthorName: Akash Yadav
+AuthorWebSite: https://itsaky.com
+SourceCode: https://github.com/itsaky/ironfox
+IssueTracker: https://github.com/itsaky/ironfox/issues
+
+Name: IronFox
+
+RepoType: git
+Repo: https://github.com/itsaky/ironfox.git
+
+Builds:
+  - versionName: 133.0.3
+    versionCode: 21330300
+    commit: v133.0.3
+    timeout: 36000
+    sudo:
+      - apt-get update
+      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
+        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
+        lld-16 libssl-dev
+    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
+    srclibs:
+      - MozFennec@FIREFOX-ANDROID_133_0_3_RELEASE
+      - MozAppServices@v133.0
+      - MozGlean@v61.2.0
+      - gmscore@v0.3.4.240913
+      - rustup@1.27.1
+      - wasi-sdk@wasi-sdk-20
+      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
+      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
+      - toolchain-utils@dd1ee45a84cb07337f9d5d0a6769d9b865c6e620
+    prebuild: ./scripts/prebuild.sh $$VERSION$$ $$VERCODE$$
+    build: ./scripts/build.sh
+    ndk: 27.2.12479018
+
+  - versionName: 133.0.3
+    versionCode: 21330320
+    commit: v133.0.3
+    timeout: 36000
+    sudo:
+      - apt-get update
+      - apt-get install -y cmake make m4 pkg-config python-is-python3 python3-venv
+        tcl gyp ninja-build bzip2 libffi-dev libsqlite3-dev binutils-dev clang-16
+        lld-16 libssl-dev
+    output: ../srclib/MozFennec/mobile/android/fenix/app/build/outputs/apk/fenix/release/app-*-release-unsigned.apk
+    srclibs:
+      - MozFennec@FIREFOX-ANDROID_133_0_3_RELEASE
+      - MozAppServices@v133.0
+      - MozGlean@v61.2.0
+      - gmscore@v0.3.4.240913
+      - rustup@1.27.1
+      - wasi-sdk@wasi-sdk-20
+      - llvm@3c92011b600bdf70424e2547594dd461fe411a41
+      - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
+      - toolchain-utils@dd1ee45a84cb07337f9d5d0a6769d9b865c6e620
+    prebuild: ./scripts/prebuild.sh $$VERSION$$ $$VERCODE$$
+    build: ./scripts/build.sh
+    ndk: 27.2.12479018
+
+MaintainerNotes: |-
+  Version code scheme:
+  XYZAR, where X.Y.Z is upstream version, A is architecture (0 = ARMv7, 1 = x86, 2 = ARMv8), R is revision (if we need to re-release).
+  * Example: 530210 = Firefox 53.0.2 for x86, initial revision
+  * Example: 550021 = Firefox 55.0 for ARMv8, second revision
+
+  Determining versions:
+  * MozFennec: https://hg.mozilla.org/releases/mozilla-release/tags
+  * MozAppServices: `VERSION` in https://hg.mozilla.org/releases/mozilla-release/file/$tag/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt
+  * MozGlean: `mozilla_glean` in https://hg.mozilla.org/releases/mozilla-release/file/$tag/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt
+  * rustup: https://github.com/rust-lang/rustup/tags
+  * wasi-sdk: https://github.com/WebAssembly/wasi-sdk/releases
+  * ndk: https://hg.mozilla.org/releases/mozilla-release/file/$tag/python/mozboot/mozboot/android.py
+  * llvm_android: https://android.googlesource.com/toolchain/llvm_android.git/+refs
+  * toolchain-utils: https://android.googlesource.com/platform/external/toolchain-utils.git/+log/refs/heads/main
+
+  Scanner detects 'com/google/firebase/messaging/FirebaseMessagingService' from stubs and 'com/google/android/gms/...' from microG libs for webauth
+
+ArchivePolicy: 6
+AutoUpdateMode: None
+UpdateCheckMode: None
+CurrentVersion: 133.0.3
+CurrentVersionCode: 21330320
