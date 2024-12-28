@@ -19,7 +19,7 @@ jobs:
         id: setup-ndk
         name: Setup Android NDK
         with:
-          ndk-version: r21e
+          ndk-version: r27c
           add-to-path: false
       - name: Install packages
         run: |
