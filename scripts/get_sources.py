@@ -23,6 +23,8 @@ def get_sources(paths: GeckoPaths):
                 if query_yes_no("Do you want to overwrite its contents?"):
                     print(f"Deleting {repo_path}...")
                     rmdirrec(repo_path)
+                else:
+                    return
 
         if not repo_path.exists():
             repo_path.mkdir(parents=True)
