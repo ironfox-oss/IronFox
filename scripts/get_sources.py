@@ -45,18 +45,12 @@ if __name__ == "__main__":
     with open(paths.rootdir / "scripts/paths_local.sh") as f:
         f.write(
             f"""
-                readonly patches={paths.patchdir}
-                readonly android_components={paths.android_components}
-                readonly application_services={paths.appservicesdir}
-                readonly glean={paths.gleandir}
-                readonly fenix={paths.fenix}
-                readonly mozilla_release={paths.geckodir}
-                readonly gmscore={paths.gmscoredir}
-                
-                readonly rustup=$(realpath ../srclib/rustup)
-                readonly wasi=$(realpath ../srclib/wasi-sdk)
-                readonly llvm=$(realpath ../srclib/llvm)
-                readonly llvm_android=$(realpath ../srclib/llvm_android)
-                readonly toolchain_utils=$(realpath ../srclib/toolchain-utils)
+readonly patches={paths.patchdir}
+readonly android_components={paths.android_components}
+readonly application_services={paths.appservicesdir}
+readonly glean={paths.gleandir}
+readonly fenix={paths.fenix}
+readonly mozilla_release={paths.geckodir}
+readonly gmscore={paths.gmscoredir}
                 """
         )
