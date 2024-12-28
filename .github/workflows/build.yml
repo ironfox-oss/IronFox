@@ -57,8 +57,11 @@ jobs:
           python -m pip install tqdm requests
           python ./scripts/get_sources.py
 
-          source scripts/setup-android-sdk.sh
-          source scripts/paths_local.sh
+          pwd
+          ls -hal scripts
+
+          source ./scripts/setup-android-sdk.sh
+          source ./scripts/paths_local.sh
 
           ./scripts/prebuild.sh
           ./scripts/build.sh
