@@ -2,7 +2,7 @@
 
 import os
 import subprocess
-from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, MOZILLA_REF_DOWNLOADS, MOZILLA_REF_URL, WASI_REPO, GeckoPaths
+from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, MOZILLA_REF_DOWNLOADS, MOZILLA_REF_URL, WASI_REPO, WASI_TAG, GeckoPaths
 from utils import download, zipextract_rmtoplevel
 
 def get_sources(paths: GeckoPaths):
@@ -15,7 +15,8 @@ def get_sources(paths: GeckoPaths):
         do_download(repo_name, MOZILLA_REF_URL.format(repo, ref))
         
     print("Cloning wasi-sdk...")
-    subprocess.check_call(["git", "clone", "--recursive", "--depth=1", WASI_REPO], cwd=paths.rootdir)
+    subprocess.check_call(["git", "clone", "--branch", WASI_TAG, "--depth=1", WASI_REPO], cwd=paths.rootdir)
+    subprocess.check_call(["git", "submodule", "update", "--init", "--depth=1"], cwd=paths.wasisdkdir)
 
 def do_download(repo_name, url):
     repo_zip = paths.builddir / ("{}.zip".format(repo_name))

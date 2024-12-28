@@ -21,6 +21,7 @@ MOZILLA_REF_DOWNLOADS = {
 }
 
 WASI_REPO = "https://github.com/WebAssembly/wasi-sdk"
+WASI_TAG = "wasi-sdk-20"
 
 class GeckoPaths:
     def __init__(self):
