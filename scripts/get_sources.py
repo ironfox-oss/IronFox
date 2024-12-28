@@ -1,27 +1,32 @@
 #!/usr/bin/env python
 
 import os
-from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, GeckoPaths
+from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, MOZILLA_REF_DOWNLOADS, MOZILLA_REF_URL, GeckoPaths
 from utils import download, query_yes_no, rmdirrec, zipextract_rmtoplevel
 
 def get_sources(paths: GeckoPaths):
     print("Downloading sources...")
 
     for repo_name, repo, ref in GITHUB_REF_DOWNLOADS:
-        repo_zip = paths.builddir / ("{}.zip".format(repo_name))
-        repo_path = paths.rootdir / repo_name
-        download(GITHUB_REF_URL.format(repo, ref), repo_zip)
+        do_download(repo_name, GITHUB_REF_URL.format(repo, ref))
+        
+    for repo_name, repo, ref in MOZILLA_REF_DOWNLOADS:
+        do_download(repo_name, MOZILLA_REF_URL.format(repo, ref))
 
-        if not repo_zip.exists():
-            raise RuntimeError(f"Source archive for {repo_name} does not exist.")
+def do_download(repo_name, url):
+    repo_zip = paths.builddir / ("{}.zip".format(repo_name))
+    repo_path = paths.rootdir / repo_name
+    download(url, repo_zip)
 
-        if not repo_path.exists():
-            repo_path.mkdir(parents=True)
+    if not repo_zip.exists():
+        raise RuntimeError(f"Source archive for {repo_name} does not exist.")
 
-        print(f"Extracting {repo_zip}")
-        zipextract_rmtoplevel(repo_zip, repo_path)
-        print("\n")
+    if not repo_path.exists():
+        repo_path.mkdir(parents=True)
 
+    print(f"Extracting {repo_zip}")
+    zipextract_rmtoplevel(repo_zip, repo_path)
+    print("\n")
 
 if __name__ == "__main__":
     paths = GeckoPaths()

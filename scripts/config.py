@@ -5,14 +5,19 @@ from pathlib import Path
 
 
 GITHUB_REF_URL = "https://github.com/{}/archive/{}.zip"
+MOZILLA_REF_URL = "https://hg.mozilla.org/releases/{}/archive/{}.zip"
 GITHUB_REF_DOWNLOADS = {
     # When changing names below, also change in class GeckoPaths
     
     # (name, repository, ref)
-    ("gecko", "mozilla/gecko-dev", "060aab7e8df0a8c92693ee77cf5a7ad8408ab083"),
     ("glean", "mozilla/glean", "refs/tags/v61.2.0"),
     ("appservices", "mozilla/application-services" , "refs/tags/v133.0"),
     ("gmscore", "microg/GmsCore", "refs/tags/v0.3.6.244735"),
+}
+
+MOZILLA_REF_DOWNLOADS = {
+    # (name, repository, ref)
+    ("gecko", "mozilla-release", "FIREFOX-ANDROID_133_0_3_RELEASE"),
 }
 
 class GeckoPaths:
