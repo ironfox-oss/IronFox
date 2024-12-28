@@ -16,7 +16,17 @@ Building
 When building on Fedora, the following steps can be followd :
 
 ```
-sudo dnf install m4 make cmake clang java-1.8.0-openjdk
+sudo dnf install -y \
+    m4 \
+    make \
+    cmake \
+    clang \
+    gyp \
+    java-1.8.0-openjdk-devel \
+    java-17-openjdk-devel \
+    ninja-build \
+    shasum \
+    zlib-devel  
 
 # Currently, Fenix requires Python 3.9 to build
 python3.9 -m venv env

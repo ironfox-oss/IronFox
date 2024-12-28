@@ -24,11 +24,13 @@ jobs:
           sudo apt install -y make \
                     cmake \
                     clang \
-                    openjdk-8-jdk \
-                    openjdk-17-jdk \
+                    gyp \
+                    ninja-build \
                     patch \
+                    perl \
                     wget \
-                    unzip
+                    unzip \
+                    zlib1g-dev
       - name: Setup Gradle
         run: |
           mkdir -p $HOME/bin
