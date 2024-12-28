@@ -15,15 +15,6 @@ def get_sources(paths: GeckoPaths):
         if not repo_zip.exists():
             raise RuntimeError(f"Source archive for {repo_name} does not exist.")
 
-        if repo_path.exists():
-            if len(os.listdir(repo_path)) > 0:
-                print(f"{repo_path} already exists and is not an empty directory.")
-                if query_yes_no("Do you want to overwrite its contents?"):
-                    print(f"Deleting {repo_path}...")
-                    rmdirrec(repo_path)
-                else:
-                    continue
-
         if not repo_path.exists():
             repo_path.mkdir(parents=True)
 
