@@ -5,8 +5,13 @@ NDK_VERSION=27c
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 ANDROID_NDK_FILE=android-ndk-r${NDK_VERSION}-linux.zip
 
+if [ "$ANDROID_HOME" != "$ANDROID_SDK_ROOT" ]; then
+    export ANDROID_HOME="$ANDROID_SDK_ROOT"
+fi
+
 if [ "$ANDROID_HOME" == "" ]; then
     export ANDROID_HOME=$HOME/android-sdk
+    export ANDROID_SDK_ROOT=$ANDROID_HOME
 fi
 
 if [ "$ANDROID_NDK" == "" ]; then
