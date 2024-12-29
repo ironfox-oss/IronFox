@@ -55,6 +55,18 @@ JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '
 [ "$JAVA_VER" -ge 15 ] || $(echo "Java 17 or newer must be set as default JDK" && exit 1)
 
 if [[ "$fdroid_build" == "true" ]]; then
+    libclang="$llvm/out/lib"
+else
+    libclang=$(find /usr -type f -regextype posix-extended -regex ".*/libclang(-[0-9]+)?\.so(\.[0-9]+)*" 2>/dev/null)
+    if [[ ! -f "$libclang" ]]; then
+        echo "Unable to find path to libclang.so"
+        exit 1
+    else
+        libclang=$(dirname "$libclang")
+    fi
+fi
+
+if [[ "$fdroid_build" == "true" ]]; then
     # Set up Rust
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 else
@@ -284,6 +296,7 @@ echo "ac_add_options --target=$target" >>mozconfig
 echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >>mozconfig
 echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\"" >>mozconfig
 echo "ac_add_options --with-gradle=$(command -v gradle)" >>mozconfig
+echo "ac_add_options --with-libclang-path=\"$libclang\"" >>mozconfig
 echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >>mozconfig
 echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >>mozconfig
 echo "ac_add_options WASM_CXX=\"$wasi/build/install/wasi/bin/clang++\"" >>mozconfig
@@ -292,10 +305,8 @@ echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bi
 echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >>mozconfig
 
 if [[ "$fdroid_build" == "true" ]]; then
-    echo "ac_add_options --with-libclang-path=\"$llvm/out/lib\"" >>mozconfig
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >>mozconfig
 else
-    echo 'ac_add_options --with-libclang-path="/usr/lib64"' >>mozconfig
     echo "mk_add_options MOZ_OBJDIR=$builddir/obj" >>mozconfig
 fi
 

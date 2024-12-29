@@ -25,6 +25,7 @@ sudo dnf install -y \
     java-1.8.0-openjdk-devel \
     java-17-openjdk-devel \
     ninja-build \
+    perl \
     shasum \
     zlib-devel  
 
