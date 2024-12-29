@@ -1,16 +1,10 @@
 #!/bin/bash
 
 libclang=""
-if [[ "$fdroid_build" == "true" ]]; then
-    libclang="$llvm/out/lib"
+if grep -q "Fedora" /etc/os-release; then
+    libclang="/usr/lib64"
 else
-    libclang=$(find /usr -type f -regextype posix-extended -regex ".*/libclang(-[0-9]+)?\.so(\.[0-9]+)*" 2>/dev/null)
-    if [[ ! -f "$libclang" ]]; then
-        echo "Unable to find path to libclang.so. Search result:\n$libclang"
-        exit 1
-    else
-        libclang=$(dirname "$libclang")
-    fi
+    libclang="/usr/lib/x86_64-linux-gnu"
 fi
 
 export libclang
