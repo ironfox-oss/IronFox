@@ -2,21 +2,23 @@
 
 import os
 import subprocess
-from config import GITHUB_REF_DOWNLOADS, GITHUB_REF_URL, MOZILLA_REF_DOWNLOADS, MOZILLA_REF_URL, WASI_REPO, WASI_TAG, GeckoPaths
+from config import GIT_CLONE_REPOS, GIT_CLONE_SUBMODULE_REPOS, MOZILLA_REF_DOWNLOADS, MOZILLA_REF_URL, GeckoPaths
 from utils import download, zipextract_rmtoplevel
 
 def get_sources(paths: GeckoPaths):
     print("Downloading sources...")
 
-    for repo_name, repo, ref in GITHUB_REF_DOWNLOADS:
-        do_download(repo_name, GITHUB_REF_URL.format(repo, ref))
+    for repo_name, repo, ref in GIT_CLONE_REPOS:
+        print(f"Cloning {repo_name}...")
+        subprocess.check_call(["git", "clone", "--branch", ref, "--depth=1", repo, str(paths.rootdir / repo_name)])
+    
+    for repo_name, repo, ref in GIT_CLONE_SUBMODULE_REPOS:
+        print(f"Cloning {repo_name}...")
+        subprocess.check_call(["git", "clone", "--branch", ref, "--depth=1", repo, str(paths.rootdir / repo_name)])
+        subprocess.check_call(["git", "submodule", "update", "--init", "--depth=1"], cwd=(paths.rootdir / repo_name))
         
     for repo_name, repo, ref in MOZILLA_REF_DOWNLOADS:
         do_download(repo_name, MOZILLA_REF_URL.format(repo, ref))
-        
-    print("Cloning wasi-sdk...")
-    subprocess.check_call(["git", "clone", "--branch", WASI_TAG, "--depth=1", WASI_REPO], cwd=paths.rootdir)
-    subprocess.check_call(["git", "submodule", "update", "--init", "--depth=1"], cwd=paths.wasisdkdir)
 
 def do_download(repo_name, url):
     repo_zip = paths.builddir / ("{}.zip".format(repo_name))

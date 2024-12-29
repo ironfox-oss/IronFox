@@ -4,28 +4,23 @@ import os
 from pathlib import Path
 
 
-GITHUB_REF_URL = "https://github.com/{}/archive/{}.zip"
 MOZILLA_REF_URL = "https://hg.mozilla.org/releases/{}/archive/{}.zip"
-GITHUB_REF_DOWNLOADS = {
-    # When changing names below, also change in class GeckoPaths
-    
-    # TODO: tags from github can be cloned as .tar.gz archive
-    # zip files do not preserve file permissions
-    # mozilla mercurial refs do not seem to offer .tar.gz archives
-    
-    # (name, repository, ref)
-    ("glean", "mozilla/glean", "refs/tags/v61.2.0"),
-    ("appservices", "mozilla/application-services" , "refs/tags/v133.0"),
-    ("gmscore", "microg/GmsCore", "refs/tags/v0.3.6.244735"),
-}
-
 MOZILLA_REF_DOWNLOADS = {
     # (name, repository, ref)
     ("gecko", "mozilla-release", "FIREFOX-ANDROID_133_0_3_RELEASE"),
 }
 
-WASI_REPO = "https://github.com/WebAssembly/wasi-sdk"
-WASI_TAG = "wasi-sdk-20"
+GIT_CLONE_REPOS = {
+    # (name, repository, ref)
+    ("glean", "https://github.com/mozilla/glean", "v61.2.0"),
+    ("gmscore", "https://github.com/microg/GmsCore", "v0.3.6.244735"),
+}
+
+GIT_CLONE_SUBMODULE_REPOS = {
+    # (name, repository, ref)
+    ("wasi-sdk", "https://github.com/WebAssembly/wasi-sdk", "wasi-sdk-20"),
+    ("appservices", "https://github.com/mozilla/application-services", "v133.0")
+}
 
 class GeckoPaths:
     def __init__(self):
