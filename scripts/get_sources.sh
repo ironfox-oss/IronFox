@@ -24,7 +24,7 @@ FENIX="${GECKODIR}/mobile/android/fenix"
 download() {
     local url="$1"
     local filepath="$2"
-    
+
     if [ -f "$filepath" ]; then
         echo "$filepath already exists."
         read -p "Do you want to re-download? [y/N] " -n 1 -r
@@ -36,9 +36,9 @@ download() {
             return 0
         fi
     fi
-    
+
     echo "Downloading $url"
-    wget -q --show-progress --progress=bar:force:noscroll "$url" -O "$filepath"
+    wget "$url" -O "$filepath"
 }
 
 # Extract zip removing top level directory
@@ -66,19 +66,19 @@ extract_rmtoplevel() {
             exit 1
             ;;
     esac
-    
+
     local top_dir=$(ls "$temp_dir")
-    
+
     mkdir -p "$extract_to"
     mv "$temp_dir/$top_dir"/* "$extract_to/"
-    
+
     rm -rf "$temp_dir"
 }
 
 do_download() {
     local repo_name="$1"
     local url="$2"
-    
+
     local extension
     if [[ "$url" =~ \.tar\.xz$ ]]; then
         extension=".tar.xz"
@@ -87,19 +87,19 @@ do_download() {
     else
         extension=".zip"
     fi
-    
+
     local repo_archive="${BUILDDIR}/${repo_name}${extension}"
     local repo_path="${ROOTDIR}/${repo_name}"
-    
+
     download "$url" "$repo_archive"
-    
+
     if [ ! -f "$repo_archive" ]; then
         echo "Source archive for $repo_name does not exist."
         exit 1
     fi
-    
+
     mkdir -p "$repo_path"
-    
+
     echo "Extracting $repo_archive"
     extract_rmtoplevel "$repo_archive" "$repo_path"
     echo
