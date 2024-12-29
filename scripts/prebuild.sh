@@ -218,6 +218,7 @@ popd
 pushd "$mozilla_release"
 
 # Since we download ZIP files, the executable permissions are lost
+chmod +x mach
 chmod +x build/cargo-*
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
