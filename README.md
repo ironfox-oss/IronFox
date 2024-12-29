@@ -17,17 +17,18 @@ When building on Fedora, the following steps can be followd :
 
 ```
 sudo dnf install -y \
-    m4 \
-    make \
     cmake \
     clang \
     gyp \
     java-1.8.0-openjdk-devel \
     java-17-openjdk-devel \
+    m4 \
+    make \
     ninja-build \
     perl \
     shasum \
-    zlib-devel  
+    xz \
+    zlib-devel 
 
 # Currently, Fenix requires Python 3.9 to build
 python3.9 -m venv env
@@ -38,7 +39,7 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 export PATH=$JAVA_HOME/bin:$PATH
 
 # Download sources (may take some time)
-./scripts/get_sources.py
+./scripts/get_sources.sh
 
 source ./scripts/setup-android-sdk.sh
 source ./scripts/paths_local.sh

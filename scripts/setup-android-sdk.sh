@@ -32,9 +32,6 @@ if [ ! -d "$ANDROID_HOME" ]; then
     mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
 fi
 
-echo "INFO: Using sdkmanager ... $SDK_MANAGER"
-echo "INFO: Using NDK ... $ANDROID_NDK"
-
 if [ -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
     SDK_MANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
 elif [ -x "$ANDROID_HOME/cmdline-tools/bin/sdkmanager" ]; then
@@ -66,3 +63,6 @@ if [ ! -d "$ANDROID_NDK" ]; then
     export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
     [ -d "$ANDROID_NDK" ] || $(echo "$ANDROID_NDK does not exist." && return)
 fi
+
+echo "INFO: Using sdkmanager ... $SDK_MANAGER"
+echo "INFO: Using NDK ... $ANDROID_NDK"

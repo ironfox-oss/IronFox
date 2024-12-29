@@ -28,7 +28,7 @@ fi
 # auto-publication workflow because the latter does not work for Gradle
 # plugins (Glean).
 
-if [[ "$fdroid_build" == "true" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Build LLVM
     pushd $llvm
     llvmtarget=$(cat "$builddir/targets_to_build")
@@ -49,20 +49,22 @@ if [[ "$fdroid_build" == "true" ]]; then
     popd
 fi
 
-# Build WASI SDK
-pushd "$wasi"
-mkdir -p build/install/wasi
-touch build/compiler-rt.BUILT # fool the build system
-make \
-    PREFIX=/wasi \
-    build/wasi-libc.BUILT \
-    build/libcxx.BUILT \
-    -j"$(nproc)"
-popd
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    # Build WASI SDK
+    pushd "$wasi"
+    mkdir -p build/install/wasi
+    touch build/compiler-rt.BUILT # fool the build system
+    make \
+        PREFIX=/wasi \
+        build/wasi-libc.BUILT \
+        build/libcxx.BUILT \
+        -j"$(nproc)"
+    popd
+fi
 
 # Build microG libraries
 pushd "$gmscore"
-if [[ "$fdroid_build" != "true" ]]; then
+if ! [[ -n ${FDROID_BUILD+x} ]]; then
     export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
 fi
 gradle -x javaDocReleaseGeneration \

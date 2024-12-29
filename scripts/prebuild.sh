@@ -54,12 +54,24 @@ fi
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
 [ "$JAVA_VER" -ge 15 ] || $(echo "Java 17 or newer must be set as default JDK" && exit 1)
 
-if [[ "$fdroid_build" == "true" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Set up Rust
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 else
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
 fi
+
+if grep -q "Fedora" /etc/os-release; then
+    export libclang=/usr/lib64
+else
+    export libclang="${builddir}/libclang"
+    mkdir -p "$libclang"
+
+    # TODO: Maybe find a way to not hardcode this?
+    ln -sf "/usr/lib/x86_64-linux-gnu/libclang-18.so.1" "$libclang/libclang.so"
+fi
+
+echo "...libclang dir set to ${libclang}"
 
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
@@ -210,22 +222,14 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 popd
 
 # WASI SDK
-if [[ "$fdroid_build" == "true" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
     popd
 
     export wasi_install=$wasi/build/install/wasi
 else
-    pushd $builddir
-    echo "Downloading prebuilt WASI SDK sysroot..."
-    wget https://github.com/itsaky/ironfox/releases/download/wasi-sdk-20/wasi-sdk-20-firefox.tar.xz -O $builddir/wasi-sdk.tar.xz
-
-    echo ""
-    echo "Extracting WASI SDK sysroot..."
-    tar -xJf wasi-sdk-20-firefox.tar.xz
-    export wasi_install=$builddir/wasi
-    popd
+    export wasi_install=$wasi
 fi
 
 # GeckoView
@@ -267,7 +271,7 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
-if [[ "$fdroid_build" == "true" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
     LLVM_SVN='522817'
@@ -305,12 +309,7 @@ echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\"" >>mozconfig
 echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\"" >>mozconfig
 echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\"" >>mozconfig
 echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >>mozconfig
-
-if [[ "$fdroid_build" == "true" ]]; then
-    echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >>mozconfig
-else
-    echo "mk_add_options MOZ_OBJDIR=$builddir/obj" >>mozconfig
-fi
+echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >>mozconfig
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
