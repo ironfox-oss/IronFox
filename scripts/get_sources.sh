@@ -69,8 +69,8 @@ extract_rmtoplevel() {
 
     local top_dir=$(ls "$temp_dir")
 
-    mkdir -p "$extract_to"
-    mv "$temp_dir/$top_dir"/* "$extract_to/"
+    mkdir -p $(dirname "$extract_to")
+    mv "$temp_dir/$top_dir" "$extract_to/"
 
     rm -rf "$temp_dir"
 }
