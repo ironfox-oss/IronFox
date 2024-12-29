@@ -281,7 +281,7 @@ echo 'ac_add_options --enable-strip' >>mozconfig
 echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\"" >>mozconfig
 echo "ac_add_options --target=$target" >>mozconfig
 echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >>mozconfig
-echo "ac_add_options --with-android-sdk=\"$ANDROID_SDK\"" >>mozconfig
+echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\"" >>mozconfig
 echo "ac_add_options --with-gradle=$(command -v gradle)" >>mozconfig
 echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >>mozconfig
 echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >>mozconfig
