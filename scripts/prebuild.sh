@@ -210,9 +210,23 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 popd
 
 # WASI SDK
-pushd "$wasi"
-patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
-popd
+if [[ "$fdroid_build" == "true" ]]; then
+    pushd "$wasi"
+    patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+    popd
+
+    export wasi_install=$wasi/build/install/wasi
+else
+    pushd $builddir
+    echo "Downloading prebuilt WASI SDK sysroot..."
+    wget https://github.com/itsaky/ironfox/releases/download/wasi-sdk-20/wasi-sdk-20-firefox.tar.xz -O $builddir/wasi-sdk.tar.xz
+
+    echo ""
+    echo "Extracting WASI SDK sysroot..."
+    tar -xJf wasi-sdk-20-firefox.tar.xz
+    export wasi_install=$builddir/wasi
+    popd
+fi
 
 # GeckoView
 pushd "$mozilla_release"
@@ -285,9 +299,9 @@ echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >>mozconfig
 echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\"" >>mozconfig
 echo "ac_add_options --with-gradle=$(command -v gradle)" >>mozconfig
 echo "ac_add_options --with-libclang-path=\"$libclang\"" >>mozconfig
-echo "ac_add_options --with-wasi-sysroot=\"$wasi/build/install/wasi/share/wasi-sysroot\"" >>mozconfig
-echo "ac_add_options WASM_CC=\"$wasi/build/install/wasi/bin/clang\"" >>mozconfig
-echo "ac_add_options WASM_CXX=\"$wasi/build/install/wasi/bin/clang++\"" >>mozconfig
+echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\"" >>mozconfig
+echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\"" >>mozconfig
+echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\"" >>mozconfig
 echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\"" >>mozconfig
 echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\"" >>mozconfig
 echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >>mozconfig
