@@ -36,7 +36,9 @@ source env/bin/activate
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 export PATH=$JAVA_HOME/bin:$PATH
 
-source ./scripts/get_sources.py
+# Download sources (may take some time)
+./scripts/get_sources.py
+
 source ./scripts/setup-android-sdk.sh
 source ./scripts/paths_local.sh
 
