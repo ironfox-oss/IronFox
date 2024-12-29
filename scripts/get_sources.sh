@@ -68,9 +68,11 @@ extract_rmtoplevel() {
     esac
 
     local top_dir=$(ls "$temp_dir")
+    local to_parent=$(dirname "$extract_to")
 
-    mkdir -p $(dirname "$extract_to")
-    mv "$temp_dir/$top_dir" "$extract_to/"
+    rm -rf "$extract_to"
+    mkdir -p "$to_parent"
+    mv "$temp_dir/$top_dir" "$to_parent"
 
     rm -rf "$temp_dir"
 }
