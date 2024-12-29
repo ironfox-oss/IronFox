@@ -24,27 +24,9 @@ if [[ "$paths_source" != "true" ]]; then
     exit 1
 fi
 
-yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
-
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle
 # plugins (Glean).
-
-# Set up Android SDK
-if grep -q "Fedora" /etc/os-release; then
-    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" sdkmanager 'build-tools;35.0.0' # for GeckoView
-    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" sdkmanager 'ndk;26.2.11394342'  # for GleanAS
-    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" sdkmanager 'ndk;27.0.12077973'  # for application-services
-else
-    sdkmanager 'build-tools;35.0.0' # for GeckoView
-    sdkmanager 'ndk;26.2.11394342'  # for GleanAS
-    sdkmanager 'ndk;27.0.12077973'  # for application-services
-fi
-
-# Set up Rust
-# shellcheck disable=SC1090,SC1091
-source "$HOME/.cargo/env"
-cargo install --force --vers 0.26.0 cbindgen
 
 if [[ "$fdroid_build" == "true" ]]; then
     # Build LLVM

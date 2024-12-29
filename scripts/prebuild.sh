@@ -64,7 +64,7 @@ fi
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
 rustup default 1.82.0
-
+cargo install --vers 0.26.0 cbindgen
 
 # Fenix
 pushd "$fenix"

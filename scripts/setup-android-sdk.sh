@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 SDK_REVISION=9123335
 NDK_VERSION=27c
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
@@ -32,6 +34,9 @@ if [ ! -d "$ANDROID_HOME" ]; then
     mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
 fi
 
+echo "INFO: Using sdkmanager ... $SDK_MANAGER"
+echo "INFO: Using NDK ... $ANDROID_NDK"
+
 if [ -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
     SDK_MANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
 elif [ -x "$ANDROID_HOME/cmdline-tools/bin/sdkmanager" ]; then
@@ -40,22 +45,26 @@ else
     echo "ERROR: no usable sdkmanager found in $ANDROID_HOME" >&2
     echo "Checking other possible paths: (empty if not found)" >&2
     find "$ANDROID_HOME" -type f -name sdkmanager >&2
-    exit 1
+    return
+fi
+
+export PATH=$PATH:$(dirname $SDK_MANAGER)
+
+# Accept licenses
+yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
+
+# Set up Android SDK
+if grep -q "Fedora" /etc/os-release; then
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" $SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" $SDK_MANAGER 'ndk;27.2.12479018'  # for application-services
+else
+    $SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
+    $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
+    $SDK_MANAGER 'ndk;27.2.12479018'  # for application-services
 fi
 
 if [ ! -d "$ANDROID_NDK" ]; then
-    mkdir -p "$ANDROID_NDK"
-    cd "$ANDROID_NDK/.."
-    rm -Rf "$(basename "$NDK")"
-
-    # https://developer.android.com/ndk/downloads
-    echo "Downloading Android NDK..."
-    wget https://dl.google.com/android/repository/${ANDROID_NDK_FILE} -O ndk-r${NDK_VERSION}.zip
-    rm -Rf android-ndk-r$NDK_VERSION
-    unzip -q ndk-r${NDK_VERSION}.zip
+    export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
+    [ -d "$ANDROID_NDK" ] || $(echo "$ANDROID_NDK does not exist." && return)
 fi
-
-echo "INFO: Using sdkmanager ... $SDK_MANAGER"
-echo "INFO: Using NDK ... $ANDROID_NDK"
-
-export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
