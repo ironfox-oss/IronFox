@@ -28,7 +28,9 @@ sudo dnf install -y \
     perl \
     shasum \
     xz \
-    zlib-devel 
+    zlib-devel \
+    wget \
+    git
 
 # Currently, Fenix requires Python 3.9 to build
 python3.9 -m venv env
