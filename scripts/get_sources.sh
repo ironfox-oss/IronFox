@@ -45,6 +45,7 @@ download() {
 extract_rmtoplevel() {
     local archive_path="$1"
     local extract_to="$2"
+    local to_name=$(basename $extract_to)
     
     # Create temporary directory for extraction
     local temp_dir=$(mktemp -d)
@@ -72,7 +73,7 @@ extract_rmtoplevel() {
 
     rm -rf "$extract_to"
     mkdir -p "$to_parent"
-    mv "$temp_dir/$top_dir" "$to_parent"
+    mv "$temp_dir/$top_dir" "$to_parent/$to_name"
 
     rm -rf "$temp_dir"
 }
@@ -99,8 +100,6 @@ do_download() {
         echo "Source archive for $repo_name does not exist."
         exit 1
     fi
-
-    mkdir -p "$repo_path"
 
     echo "Extracting $repo_archive"
     extract_rmtoplevel "$repo_archive" "$repo_path"
