@@ -33,3 +33,5 @@ export llvm_android=$(realpath ../srclib/llvm_android)
 export toolchain_utils=$(realpath ../srclib/toolchain-utils)
 export fdroid_build="true"
 export paths_source="true"
+
+source "$rootdir/scripts/libclang.sh"

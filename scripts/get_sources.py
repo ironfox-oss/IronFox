@@ -60,5 +60,7 @@ export mozilla_release={paths.geckodir}
 export gmscore={paths.gmscoredir}
 export wasi={paths.wasisdkdir}
 export paths_source="true"
+
+source "$rootdir/scripts/libclang.sh"
 """
         )

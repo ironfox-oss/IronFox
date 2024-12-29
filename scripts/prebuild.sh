@@ -55,18 +55,6 @@ JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '
 [ "$JAVA_VER" -ge 15 ] || $(echo "Java 17 or newer must be set as default JDK" && exit 1)
 
 if [[ "$fdroid_build" == "true" ]]; then
-    libclang="$llvm/out/lib"
-else
-    libclang=$(find /usr -type f -regextype posix-extended -regex ".*/libclang(-[0-9]+)?\.so(\.[0-9]+)*" 2>/dev/null)
-    if [[ ! -f "$libclang" ]]; then
-        echo "Unable to find path to libclang.so"
-        exit 1
-    else
-        libclang=$(dirname "$libclang")
-    fi
-fi
-
-if [[ "$fdroid_build" == "true" ]]; then
     # Set up Rust
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 else
