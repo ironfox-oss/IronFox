@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 SDK_REVISION=9123335
 NDK_VERSION=27c
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
