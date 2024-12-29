@@ -44,8 +44,8 @@ download() {
 # Extract zip removing top level directory
 extract_rmtoplevel() {
     local archive_path="$1"
-    local extract_to="$2"
-    local to_name=$(basename $extract_to)
+    local to_name="$2"
+    local extract_to="${ROOTDIR}/$to_name"
     
     # Create temporary directory for extraction
     local temp_dir=$(mktemp -d)
@@ -102,7 +102,7 @@ do_download() {
     fi
 
     echo "Extracting $repo_archive"
-    extract_rmtoplevel "$repo_archive" "$repo_path"
+    extract_rmtoplevel "$repo_archive" "$repo_name"
     echo
 }
 
