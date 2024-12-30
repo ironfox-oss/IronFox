@@ -6,4 +6,5 @@ __pycache__
 /glean
 /appservices
 /gmscore
+/wasi-sdk
 /scripts/paths_local.sh
