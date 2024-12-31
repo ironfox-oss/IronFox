@@ -5,4 +5,8 @@ before_script:
 build:
   script:
     - yamllint .gitlab-ci.yml
-    - shellcheck -x scripts/build.sh scripts/get_source.sh scripts/prebuild.sh scripts/setup-android-sdk.sh
+    - shellcheck -x \
+      scripts/build.sh \
+      scripts/get_source.sh \
+      scripts/prebuild.sh \
+      scripts/setup-android-sdk.sh
