@@ -5,4 +5,4 @@ before_script:
 build:
   script:
     - yamllint .gitlab-ci.yml
-    - shellcheck -x prebuild.sh build.sh
+    - shellcheck -x scripts/*.sh
