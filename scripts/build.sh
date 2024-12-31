@@ -19,6 +19,7 @@
 
 set -e
 
+# shellcheck disable=SC2154
 if [[ "$paths_source" != "true" ]]; then
     echo "Use 'source scripts/paths_local.sh' before calling prebuild or build (scripts/paths_fdroid.sh for F-Droid builds)."
     exit 1
@@ -30,7 +31,10 @@ fi
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Build LLVM
-    pushd $llvm
+    # shellcheck disable=SC2154
+    pushd "$llvm"
+
+    # shellcheck disable=SC2154
     llvmtarget=$(cat "$builddir/targets_to_build")
     echo "building llvm for $llvmtarget"
     if grep -q "Fedora" /etc/os-release; then
@@ -51,7 +55,9 @@ fi
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Build WASI SDK
+    # shellcheck disable=SC2154
     pushd "$wasi"
+
     mkdir -p build/install/wasi
     touch build/compiler-rt.BUILT # fool the build system
     make \
@@ -63,6 +69,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 fi
 
 # Build microG libraries
+# shellcheck disable=SC2154
 pushd "$gmscore"
 if ! [[ -n ${FDROID_BUILD+x} ]]; then
     export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
@@ -75,11 +82,13 @@ gradle -x javaDocReleaseGeneration \
     :play-services-tasks:publishToMavenLocal
 popd
 
+# shellcheck disable=SC2154
 pushd "$glean"
 export TARGET_CFLAGS=-DNDEBUG
 gradle publishToMavenLocal
 popd
 
+# shellcheck disable=SC2154
 pushd "$application_services"
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
@@ -87,7 +96,10 @@ export NSS_STATIC=1
 gradle :tooling-nimbus-gradle:publishToMavenLocal
 popd
 
+# shellcheck disable=SC2154
 pushd "$mozilla_release"
+
+# shellcheck disable=SC2154
 MOZ_CHROME_MULTILOCALE=$(<"$patches/locales")
 export MOZ_CHROME_MULTILOCALE
 ./mach build
@@ -95,6 +107,7 @@ gradle :geckoview:publishReleasePublicationToMavenLocal
 gradle :exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
+# shellcheck disable=SC2154
 pushd "$android_components"
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
 # otherwise automatically triggered publication of A-S will fail
@@ -104,6 +117,7 @@ echo "autoPublish.application-services.dir=$application_services" >>local.proper
 gradle publishToMavenLocal
 popd
 
+# shellcheck disable=SC2154
 pushd "$fenix"
 gradle assembleRelease
 popd

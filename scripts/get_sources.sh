@@ -48,7 +48,8 @@ extract_rmtoplevel() {
     local extract_to="${ROOTDIR}/$to_name"
     
     # Create temporary directory for extraction
-    local temp_dir=$(mktemp -d)
+    temp_dir=$(mktemp -d)
+    local temp_dir
     
     # Extract based on file extension
     case "$archive_path" in
@@ -68,8 +69,11 @@ extract_rmtoplevel() {
             ;;
     esac
 
-    local top_dir=$(ls "$temp_dir")
-    local to_parent=$(dirname "$extract_to")
+    top_dir=$(ls "$temp_dir")
+    local top_dir
+
+    to_parent=$(dirname "$extract_to")
+    local to_parent
 
     rm -rf "$extract_to"
     mkdir -p "$to_parent"
@@ -91,8 +95,8 @@ do_download() {
         extension=".zip"
     fi
 
-    local repo_archive="${BUILDDIR}/${repo_name}${extension}"
-    local repo_path="${ROOTDIR}/${repo_name}"
+    repo_archive="${BUILDDIR}/${repo_name}${extension}"
+    local repo_archive
 
     download "$url" "$repo_archive"
 
@@ -127,7 +131,7 @@ echo "Cloning appservices..."
 git clone --branch "$APPSERVICES_TAG" --depth=1 "https://github.com/mozilla/application-services" "$APPSERVICESDIR"
 (cd "$APPSERVICESDIR" && git submodule update --init --depth=1)
 
-do_download "gecko" "https://hg.mozilla.org/releases/mozilla-release/archive/FIREFOX-ANDROID_133_0_3_RELEASE.zip"
+do_download "gecko" "https://hg.mozilla.org/releases/mozilla-release/archive/${FIREFOX_TAG}.zip"
 
 echo "Writing ${PATHS_SH}..."
 cat > "$PATHS_SH" << EOF

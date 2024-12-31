@@ -36,6 +36,7 @@ if [ -z "$1" ] || [ -z "$2" ]; then
     exit 1
 fi
 
+# shellcheck disable=SC2154
 if [[ "$paths_source" != "true" ]]; then
     echo "Use 'source scripts/paths_local.sh' before calling prebuild or build (scripts/paths_fdroid.sh for F-Droid builds)."
     exit 1
@@ -52,10 +53,11 @@ if [ ! -d "$ANDROID_NDK" ]; then
 fi
 
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
-[ "$JAVA_VER" -ge 15 ] || $(echo "Java 17 or newer must be set as default JDK" && exit 1)
+[ "$JAVA_VER" -ge 15 ] || { echo "Java 17 or newer must be set as default JDK"; exit 1; };
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Set up Rust
+    # shellcheck disable=SC2154
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 else
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
@@ -64,6 +66,7 @@ fi
 if grep -q "Fedora" /etc/os-release; then
     export libclang=/usr/lib64
 else
+    # shellcheck disable=SC2154
     export libclang="${builddir}/libclang"
     mkdir -p "$libclang"
 
@@ -79,6 +82,7 @@ rustup default 1.82.0
 cargo install --vers 0.26.0 cbindgen
 
 # Fenix
+# shellcheck disable=SC2154
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
@@ -121,6 +125,7 @@ rm app/src/release/res/values/colors.xml
 rm app/src/main/res/values-v24/styles.xml
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
+# shellcheck disable=SC2154
 find "$patches/fenix-overlay" -type f | while read -r src; do
     dst=app/src/release/${src#"$patches/fenix-overlay/"}
     mkdir -p "$(dirname "$dst")"
@@ -173,6 +178,7 @@ esac
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
 
 # Enable the auto-publication workflow
+# shellcheck disable=SC2154
 echo "autoPublish.application-services.dir=$application_services" >>local.properties
 
 popd
@@ -181,6 +187,7 @@ popd
 # Glean
 #
 
+# shellcheck disable=SC2154
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 localize_maven
@@ -190,6 +197,7 @@ popd
 # Android Components
 #
 
+# shellcheck disable=SC2154
 pushd "$android_components"
 chmod +x automation/publish_to_maven_local_if_modified.py
 find "$patches/a-c-overlay" -type f | while read -r src; do
@@ -222,6 +230,7 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 popd
 
 # WASI SDK
+# shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
@@ -271,51 +280,53 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
+# shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
     LLVM_SVN='522817'
-    python3 $toolchain_utils/llvm_tools/patch_manager.py \
+    python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
         --svn_version $LLVM_SVN \
-        --patch_metadata_file $llvm_android/patches/PATCHES.json \
-        --src_path $llvm
+        --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
+        --src_path "$llvm"
 fi
-
-echo "" >mozconfig
-echo 'ac_add_options --disable-crashreporter' >>mozconfig
-echo 'ac_add_options --disable-debug' >>mozconfig
-echo 'ac_add_options --disable-nodejs' >>mozconfig
-echo 'ac_add_options --disable-profiling' >>mozconfig
-echo 'ac_add_options --disable-rust-debug' >>mozconfig
-echo 'ac_add_options --disable-tests' >>mozconfig
-echo 'ac_add_options --disable-updater' >>mozconfig
-echo 'ac_add_options --enable-application=mobile/android' >>mozconfig
-echo 'ac_add_options --enable-hardening' >>mozconfig
-echo 'ac_add_options --enable-optimize' >>mozconfig
-echo 'ac_add_options --enable-release' >>mozconfig
-echo 'ac_add_options --enable-minify=properties' >>mozconfig
-echo 'ac_add_options --enable-update-channel=release' >>mozconfig
-echo 'ac_add_options --enable-rust-simd' >>mozconfig
-echo 'ac_add_options --enable-strip' >>mozconfig
-echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\"" >>mozconfig
-echo "ac_add_options --target=$target" >>mozconfig
-echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\"" >>mozconfig
-echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\"" >>mozconfig
-echo "ac_add_options --with-gradle=$(command -v gradle)" >>mozconfig
-echo "ac_add_options --with-libclang-path=\"$libclang\"" >>mozconfig
-echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\"" >>mozconfig
-echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\"" >>mozconfig
-echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\"" >>mozconfig
-echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\"" >>mozconfig
-echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\"" >>mozconfig
-echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\"" >>mozconfig
-echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj' >>mozconfig
+{
+    echo 'ac_add_options --disable-crashreporter'
+    echo 'ac_add_options --disable-debug'
+    echo 'ac_add_options --disable-nodejs'
+    echo 'ac_add_options --disable-profiling'
+    echo 'ac_add_options --disable-rust-debug'
+    echo 'ac_add_options --disable-tests'
+    echo 'ac_add_options --disable-updater'
+    echo 'ac_add_options --enable-application=mobile/android'
+    echo 'ac_add_options --enable-hardening'
+    echo 'ac_add_options --enable-optimize'
+    echo 'ac_add_options --enable-release'
+    echo 'ac_add_options --enable-minify=properties'
+    echo 'ac_add_options --enable-update-channel=release'
+    echo 'ac_add_options --enable-rust-simd'
+    echo 'ac_add_options --enable-strip'
+    echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
+    echo "ac_add_options --target=$target"
+    echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\""
+    echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\""
+    echo "ac_add_options --with-gradle=$(command -v gradle)"
+    echo "ac_add_options --with-libclang-path=\"$libclang\""
+    echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
+    echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
+    echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
+    echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
+    echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
+    echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
+    echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
+} >> mozconfig
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 
 # Disable Gecko Media Plugins and casting
 sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/geckoview-prefs.js
+# shellcheck disable=SC2129
 cat <<EOF >>mobile/android/app/geckoview-prefs.js
 
 // Disable Encrypted Media Extensions
