@@ -111,6 +111,24 @@ to build IronFox.
 
 ### Build setup
 
+- Setup F-Droid's `gradle` script to be available in your `PATH` :
+
+    ```
+    mkdir -p $HOME/bin
+    wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "$HOME/bin/gradle"
+    chmod +x "$HOME/bin/gradle"
+
+    export PATH=$HOME/bin:$PATH
+    ```
+
+- Disable Gradle Daemons and configuration cache :
+
+    ```
+    mkdir -p ~/.gradle
+    echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+    echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
+    ```
+
 - Create a new Python 3.9 virtual environment, then activate it :
     ```
     python3.9 -m venv env
