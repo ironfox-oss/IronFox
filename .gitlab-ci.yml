@@ -7,6 +7,6 @@ build:
     - yamllint .gitlab-ci.yml
     - shellcheck -x \
       scripts/build.sh \
-      scripts/get_source.sh \
+      scripts/get_sources.sh \
       scripts/prebuild.sh \
       scripts/setup-android-sdk.sh

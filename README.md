@@ -57,6 +57,29 @@ Follow the below instructions based on the OS you're using.
 
 <details>
 <summary>When building on Ubuntu</summary>
+
+```
+sudo apt update
+sudo apt install -y make \
+        cmake \
+        clang-18 \
+        gyp \
+        ninja-build \
+        patch \
+        perl \
+        wget \
+        tar \
+        unzip \
+        xz-utils \
+        zlib1g-dev
+
+```
+
+Apart from the above packages, you need to install Python 3.9. You can use [PPA from the `deadsnakes` team](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa).
+
+You also need to install JDK 8 AND JDK 17. JDK 17 should be set as the
+default JDK.
+
 </details>
 
 <details>
@@ -134,7 +157,7 @@ Next, you need to patch the files with :
 
 Here `<version-name>` is the display name of the version (e.g. `v133.0.3`) and
 `<version-code>` is the numeric identifier of the version you want to build. We follow
-version code convention similar to that of Mull.
+version code convention similar to Mull. See [version code convention](#version-code-convention).
 
 ### Build
 
@@ -171,7 +194,7 @@ to existing releases.
 ```
 Version code : 31330320
 
-2       - version code prefix
+3       - version code prefix
 13303   - version code for v133.0.3
 2       - arm64-v8a
 0       - initial build
@@ -184,7 +207,8 @@ Licenses
 
 The scripts are licensed under the GNU Affero General Public License version 3 or later.
 
-Changes in the patch are licensed according to the header in the files this patch adds or modifies (Apache 2.0 or MPL 2.0).
+Changes in the patch are licensed according to the header in the files this patch adds 
+or modifies (Apache 2.0 or MPL 2.0).
 
 The userjs-00-arkenfox.js file is licensed under MIT.
 
