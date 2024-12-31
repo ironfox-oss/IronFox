@@ -95,6 +95,7 @@ sudo dnf install -y \
     m4 \
     make \
     ninja-build \
+    patch \
     perl \
     python3.9 \
     shasum \
