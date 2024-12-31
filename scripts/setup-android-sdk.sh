@@ -3,7 +3,6 @@
 SDK_REVISION=9123335
 NDK_VERSION=27c
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
-ANDROID_NDK_FILE=android-ndk-r${NDK_VERSION}-linux.zip
 
 if [ "$ANDROID_HOME" != "$ANDROID_SDK_ROOT" ]; then
     export ANDROID_HOME="$ANDROID_SDK_ROOT"
@@ -20,13 +19,13 @@ fi
 
 if [ ! -d "$ANDROID_HOME" ]; then
     mkdir -p "$ANDROID_HOME"
-    cd "$ANDROID_HOME/.."
+    cd "$ANDROID_HOME/.." || exit 1
     rm -Rf "$(basename "$ANDROID_HOME")"
 
     # https://developer.android.com/studio/index.html#command-tools
     echo "Downloading Android SDK..."
     wget https://dl.google.com/android/repository/${ANDROID_SDK_FILE} -O tools-$SDK_REVISION.zip
-    rm -Rf $ANDROID_HOME
+    rm -Rf "$ANDROID_HOME"
     mkdir -p "$ANDROID_HOME/cmdline-tools"
     unzip -q tools-$SDK_REVISION.zip -d "$ANDROID_HOME/cmdline-tools"
     mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
@@ -43,7 +42,8 @@ else
     return
 fi
 
-export PATH=$PATH:$(dirname $SDK_MANAGER)
+PATH=$PATH:$(dirname "$SDK_MANAGER")
+export PATH
 
 # Accept licenses
 yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
@@ -61,7 +61,7 @@ fi
 
 if [ ! -d "$ANDROID_NDK" ]; then
     export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
-    [ -d "$ANDROID_NDK" ] || $(echo "$ANDROID_NDK does not exist." && return)
+    [ -d "$ANDROID_NDK" ] || { echo "$ANDROID_NDK does not exist."; return; };
 fi
 
 echo "INFO: Using sdkmanager ... $SDK_MANAGER"
