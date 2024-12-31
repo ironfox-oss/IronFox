@@ -46,11 +46,10 @@ extract_rmtoplevel() {
     local archive_path="$1"
     local to_name="$2"
     local extract_to="${ROOTDIR}/$to_name"
-    
+
     # Create temporary directory for extraction
-    temp_dir=$(mktemp -d)
-    local temp_dir
-    
+    local temp_dir=$(mktemp -d)
+
     # Extract based on file extension
     case "$archive_path" in
         *.zip)
@@ -69,11 +68,8 @@ extract_rmtoplevel() {
             ;;
     esac
 
-    top_dir=$(ls "$temp_dir")
-    local top_dir
-
-    to_parent=$(dirname "$extract_to")
-    local to_parent
+    local top_dir=$(ls "$temp_dir")
+    local to_parent=$(dirname "$extract_to")
 
     rm -rf "$extract_to"
     mkdir -p "$to_parent"
@@ -95,8 +91,7 @@ do_download() {
         extension=".zip"
     fi
 
-    repo_archive="${BUILDDIR}/${repo_name}${extension}"
-    local repo_archive
+    local repo_archive="${BUILDDIR}/${repo_name}${extension}"
 
     download "$url" "$repo_archive"
 
