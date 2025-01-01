@@ -87,14 +87,14 @@ pushd "$fenix"
 
 # Set up the app ID, version name and version code
 sed -i \
-    -e 's|applicationId "org.mozilla"|applicationId "com.itsaky"|' \
-    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
-    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "com.itsaky.ironfox.sharedID"|' \
+    -e 's|applicationId "org.mozilla"|applicationId "io.ironfox"|' \
+    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".android"|' \
+    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "io.ironfox.android.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
     -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
     app/build.gradle
 sed -i \
-    -e '/android:targetPackage/s/org.mozilla.firefox/com.itsaky.ironfox/' \
+    -e '/android:targetPackage/s/org.mozilla.firefox/io.ironfox.android/' \
     app/src/release/res/xml/shortcuts.xml
 
 # Disable crash reporting
