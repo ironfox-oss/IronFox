@@ -106,7 +106,7 @@ sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 # Let it be IronFox
 sed -i \
     -e 's/Firefox Daylight/IronFox/; s/Firefox/IronFox/g' \
-    -e '/about_content/s/Mozilla/Akash Yadav/' \
+    -e '/about_content/s/Mozilla/the IronFox Developers/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
