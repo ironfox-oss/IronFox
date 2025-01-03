@@ -339,9 +339,6 @@ sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/geckoview-pre
 # shellcheck disable=SC2129
 cat <<EOF >>mobile/android/app/geckoview-prefs.js
 
-// Disable Encrypted Media Extensions
-pref("media.eme.enabled", false);
-
 // Disable Gecko Media Plugins
 pref("media.gmp-provider.enabled", false);
 
