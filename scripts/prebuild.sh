@@ -228,7 +228,7 @@ pushd "$application_services"
 chmod +x libs/*.sh
 chmod +x automation/publish_to_maven_local_if_modified.py
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/131\.0\.2/133.0.3/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/132\.0/134.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
