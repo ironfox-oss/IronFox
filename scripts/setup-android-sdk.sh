@@ -5,6 +5,8 @@ NDK_VERSION=27c
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [ "$ANDROID_HOME" != "$ANDROID_SDK_ROOT" ]; then
+    echo "\$ANDROID_HOME and \$ANDROID_SDK_ROOT are set to different values."
+    echo "Setting \$ANDROID_HOME to \$ANDROID_SDK_ROOT..."
     export ANDROID_HOME="$ANDROID_SDK_ROOT"
 fi
 
