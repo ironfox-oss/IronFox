@@ -60,6 +60,9 @@ fi
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
 [ "$JAVA_VER" -ge 15 ] || { echo "Java 17 or newer must be set as default JDK"; exit 1; };
 
+# Create build directory
+mkdir -p "$rootdir/build"
+
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Set up Rust
     # shellcheck disable=SC2154
