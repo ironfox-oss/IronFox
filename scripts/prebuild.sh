@@ -156,7 +156,7 @@ case $(echo "$2" | cut -c 7) in
 0)
     abi=armeabi-v7a
     target=arm-linux-androideabi
-    echo "ARM" >"$builddir/targets_to_build"
+    llvmtarget="ARM"
     rusttarget=arm
     rustup target add thumbv7neon-linux-androideabi
     rustup target add armv7-linux-androideabi
@@ -164,14 +164,14 @@ case $(echo "$2" | cut -c 7) in
 1)
     abi=x86
     target=i686-linux-android
-    echo "X86" >"$builddir/targets_to_build"
+    llmvtarget="X86"
     rusttarget=x86
     rustup target add i686-linux-android
     ;;
 2)
     abi=arm64-v8a
     target=aarch64-linux-android
-    echo "AArch64" >"$builddir/targets_to_build"
+    llvmtarget="AArch64"
     rusttarget=arm64
     rustup target add aarch64-linux-android
     ;;
@@ -180,7 +180,9 @@ case $(echo "$2" | cut -c 7) in
     exit 1
     ;;
 esac
+
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
+echo "$llvmtarget" >"$builddir/targets_to_build"
 
 # Enable the auto-publication workflow
 # shellcheck disable=SC2154
