@@ -21,18 +21,18 @@ export rootdir=$(dirname $(dirname "$(realpath "$0")"))
 export builddir="$rootdir/build"
 export patches="$rootdir/patches"
 
-export FDROID_SRCLIB="../../srclib"
+export FDROID_SRCLIB=$(realpath "$rootdir/../srclib")
 
-export android_components=$(realpath $FDROID_SRCLIB/MozFennec/mobile/android/android-components)
-export application_services=$(realpath $FDROID_SRCLIB/MozAppServices)
-export glean=$(realpath $FDROID_SRCLIB/MozGlean)
-export fenix=$(realpath $FDROID_SRCLIB/MozFennec/mobile/android/fenix)
-export mozilla_release=$(realpath $FDROID_SRCLIB/MozFennec)
-export rustup=$(realpath $FDROID_SRCLIB/rustup)
-export wasi=$(realpath $FDROID_SRCLIB/wasi-sdk)
-export gmscore=$(realpath $FDROID_SRCLIB/gmscore)
-export llvm=$(realpath $FDROID_SRCLIB/llvm)
-export llvm_android=$(realpath $FDROID_SRCLIB/llvm_android)
-export toolchain_utils=$(realpath $FDROID_SRCLIB/toolchain-utils)
+export android_components="$FDROID_SRCLIB/MozFennec/mobile/android/android-components"
+export application_services="$FDROID_SRCLIB/MozAppServices"
+export glean="$FDROID_SRCLIB/MozGlean"
+export fenix="$FDROID_SRCLIB/MozFennec/mobile/android/fenix"
+export mozilla_release="$FDROID_SRCLIB/MozFennec"
+export rustup="$FDROID_SRCLIB/rustup"
+export wasi="$FDROID_SRCLIB/wasi-sdk"
+export gmscore="$FDROID_SRCLIB/gmscore"
+export llvm="$FDROID_SRCLIB/llvm"
+export llvm_android="$FDROID_SRCLIB/llvm_android"
+export toolchain_utils="$FDROID_SRCLIB/toolchain-utils"
 
 export paths_source="true"
