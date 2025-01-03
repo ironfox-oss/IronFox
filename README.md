@@ -8,29 +8,27 @@ Known Issues
 Please see the list of known issues and workarounds before opening an issue!
 
 <details>
-<summary>Issues originally in <a href="https://divestos.org/index.php?page=broken#mull)">Mull</a> (contents copied directly from DivestOS's website) </summary>
+<summary>Issues inherited from <a href="https://divestos.org/index.php?page=broken#mull)">Mull</a> that still apply to IronFox *(contents adapted from DivestOS's website)* </summary>
 
-*   On DivestOS 19.1 and 20.0 the initial install of Mull may not have Internet access, go to its \`App info\` screen then \`Mobile data & Wi-Fi\` and enable \`Allow network access\`. \[likely fixed\]
-*   Only uBlock Origin is recommended and supported.
+*   uBlock Origin is the only recommended and supported content blocker.
 *   Some fonts, particularly ones used for displaying Korean text, [may not display correctly](https://bugzilla.mozilla.org/show_bug.cgi?id=1881993) due the font restrictions by resist fingerprinting. Please do not disable RFP. This should be hopefully fixed in future versions such as v126.
-*   Dark Reader is known to be incompatible with the Mull changes and will cause significant breakage/slowdowns.
+*   Dark Reader is known to be incompatible with IronFox's changes and will cause significant breakage/slowdowns.
 *   Dark mode for websites is disabled due to resist fingerprinting. Please do not disable RFP.
 *   Refresh rate is capped to 60hz due to resist fingerprinting. Please do not disable RFP.
 *   Multitouch gestures will not work due to resist fingerprinting. Please do not disable RFP.
 *   If audio/video content fails to play in private tabs navigate to `about:config` and change `browser.privatebrowsing.forceMediaMemoryCache` to false, this is however a privacy risk.
-*   Mull disables the JavaScript JIT to increase security at the cost of slowing down webapps, complex websites, and the PDF viewer. Navigate to `about:config` and change `javascript.options.ion` and `javascript.options.baselinejit` to true to restore their performance.
-*   Mull has strict certificate revocation checks. The CA revocation servers are frequently down/blocked/inaccessible and will result in a "Secure Connection Failed" error. Navigate to `about:config` and change `security.OCSP.require` to false, this is however a security and privacy risk.
-*   Mull requires safe renegotiation for connections. Some few websites do not support this and will result in a "Secure Connection Failed" error. Navigate to `about:config` and change `security.ssl.require_safe_negotiation` to false, this is however a security and privacy risk.
-*   Mull has strict certificate pinning. If you are using a proxy or VPN that does HTTPS manipulation you'll encounter a "Secure Connection Failed" error. Navigate to `about:config` and change `security.cert_pinning.enforcement_level` from 2 to 1, this is however a security and privacy risk.
-*   Mull does not trust user-added CA certificates, you can optionally enable them at your own extreme risk: Settings > About Mull > Tap Mull logo until debug settings are enabled > back a menu > Secret Settings > Use third party CA certificates > Enabled, this is however a security and privacy risk.
-*   Mull has stripped referrers. This often breaks loading of images on websites with hotlink protection. Navigate to `about:config` and change `network.http.referer.XOriginPolicy` from 2 to 1, this is however a privacy risk.
-*   Mull has visted link highlighting disabled by default. Navigate to `about:config` and change `layout.css.visited_links_enabled` to true if needed, this is however a privacy risk.
-*   Mull has WebAssembly disabled by default. This is often used for web apps. Navigate to `about:config` and change `javascript.options.wasm` to true if needed, this is however a security risk.
-*   Mull has WebGL disabled by default. This is often used for games and maps. Navigate to `about:config` and change `webgl.disabled` to false if needed, this is however a privacy risk.
-*   Mull has WebRTC disabled by default. This is often used for audio/video calls. Navigate to `about:config` and change `media.peerconnection.enabled` to true if needed, this is however a privacy risk.
-*   If the button to "Accept the risk & continue" doesn't work: navigate to `about:config` and change `browser.ssl_override_behavior` from 1 to 2.
-*   If you want to access Onions using Mull and Orbot: navigate to `about:config` and change `network.dns.blockDotOnion` to false. Tor Browser for Android however should be preferred.
-*   If you have issues playing some videos: navigate to `about:config` and change `media.android-media-codec.preferred` from true to false. This may reduce battery life.
+*   IronFox disables the JavaScript JIT to increase security at the cost of slowing down webapps, complex websites, and the PDF viewer. Navigate to `about:config` and change `javascript.options.ion` and `javascript.options.baselinejit` to `true` to restore their performance, though this is not recommended.
+*   IronFox has strict certificate revocation checks. The CA revocation servers are occasionally down/blocked/inaccessible, so you may see a "Secure Connection Failed" error from time to time. Navigate to `about:config` and change `security.OCSP.require` to `false`, this is however a security and privacy risk.
+*   IronFox requires safe renegotiation for connections. Certain websites do not support this and will result in a "Secure Connection Failed" error. **Please report these errors to the impacted websites.** You can navigate to `about:config` and set `security.ssl.require_safe_negotiation` to `false` to disable the requirement for safe renegotiations, this is however a security and privacy risk.
+*   IronFox has strict certificate pinning. If you are using a proxy or VPN that does HTTPS manipulation, you may encounter a "Secure Connection Failed" error. Navigate to `about:config` and change `security.cert_pinning.enforcement_level` from `2` to `1` to disable strict certificate pinning; this is however a security and privacy risk.
+*   IronFox does not trust user-added CA certificates, you can optionally enable them at your own extreme risk: Settings > About IronFox > Tap IronFox logo until debug settings are enabled > back a menu > Secret Settings > Use third party CA certificates > Enabled, this is however a security and privacy risk.
+*   IronFox has stripped referrers. This often breaks loading of images on websites with hotlink protection. Navigate to `about:config` and change `network.http.referer.XOriginPolicy` from `2` to `1` *(or `0` if you're still having issues)*, this is however a privacy risk.
+*   IronFox has visited link highlighting disabled by default. Navigate to `about:config` and change `layout.css.visited_links_enabled` to `true` if needed, this is however a privacy risk.
+*   IronFox has WebAssembly disabled by default. This is often used for web apps. Navigate to `about:config` and change `javascript.options.wasm` to `true` if needed, this is however a security risk.
+*   IronFox has WebGL disabled by default. This is often used for games and maps. Navigate to `about:config` and change `webgl.disabled` to `false` if needed, this is however a privacy risk.
+*   IronFox forcibly excludes private IP addresses from being leaked over WebRTC. This may cause issues with audio/video calls. Navigate to `about:config` and change `media.peerconnection.ice.no_host` to `false` if needed, this is however a privacy risk. If you still have issues, you should also set `media.peerconnection.ice.default_address_only` to `false`.
+*   If you want to access Onions using IronFox and Orbot: navigate to `about:config` and change `network.dns.blockDotOnion` to `false`. Tor Browser for Android however should be preferred.
+*   If you have issues playing some videos: navigate to `about:config` and change `media.android-media-codec.preferred` from `true` to `false`. This may reduce battery life.
 *   When adding a custom search engine that contains a \`:\` you must replace it with \`%3A\` to workaround an upstream substitution bug.
 *   Upstream issues: [background timers](https://github.com/mozilla-mobile/fenix/issues/26220), [bookmark import/export](https://bugzilla.mozilla.org/show_bug.cgi?id=1806482), [disable images](https://bugzilla.mozilla.org/show_bug.cgi?id=1807116), [download location](https://bugzilla.mozilla.org/show_bug.cgi?id=1812815), [duplicate tab](https://bugzilla.mozilla.org/show_bug.cgi?id=1812931), [FIDO](https://gitlab.com/relan/fennecbuild/-/issues/34), [Fission](https://bugzilla.mozilla.org/show_bug.cgi?id=1610822), [isolatedProcess](https://bugzilla.mozilla.org/show_bug.cgi?id=1565196), [language issues](https://bugzilla.mozilla.org/show_bug.cgi?id=1765375), [open .html file](https://bugzilla.mozilla.org/show_bug.cgi?id=1809954), [RFP canvas exception](https://bugzilla.mozilla.org/show_bug.cgi?id=1801733), [Sync broken by RFP](https://bugzilla.mozilla.org/show_bug.cgi?id=1810741), [touch gestures](https://bugzilla.mozilla.org/show_bug.cgi?id=1800567)
 
@@ -42,6 +40,8 @@ Please see the list of known issues and workarounds before opening an issue!
 _None yet._
 
 </details>
+
+You should also see [here](https://phoenix.celenity.dev/compat) for a list of websites with known issues due to hardening, and what you may need to do to fix them. This list is maintained by [Phoenix](https://phoenix.celenity.dev/) - so while it isn't specific to IronFox or Mull, many of these problems do still apply.
 
 Building
 --------

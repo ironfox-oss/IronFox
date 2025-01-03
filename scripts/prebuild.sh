@@ -355,7 +355,8 @@ pref("media.gmp-gmpopenh264.enabled", false);
 pref("browser.casting.enabled", false);
 EOF
 
-cat "$patches/preferences/userjs-arkenfox.js" >>mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/userjs-brace.js" >>mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/phoenix.js" >>mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/phoenix-extended.js" >>mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/ironfox.js" >>mobile/android/app/geckoview-prefs.js
 
 popd
