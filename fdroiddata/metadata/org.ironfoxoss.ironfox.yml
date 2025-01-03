@@ -6,19 +6,19 @@ AntiFeatures:
 Categories:
   - Internet
 License: MPL-2.0
-AuthorName: Akash Yadav
-AuthorWebSite: https://itsaky.com
-SourceCode: https://github.com/itsaky/ironfox
-IssueTracker: https://github.com/itsaky/ironfox/issues
+AuthorName: IronFox Developers
+AuthorWebSite: https://gitlab.com/IronFox-OSS
+SourceCode: https://gitlab.com/IronFox-OSS/IronFox
+IssueTracker: https://gitlab.com/IronFox-OSS/IronFox/-/issues
 
 Name: IronFox
 
 RepoType: git
-Repo: https://github.com/itsaky/ironfox.git
+Repo: https://gitlab.com/IronFox-OSS/IronFox.git
 
 Builds:
   - versionName: 133.0.3
-    versionCode: 21330300
+    versionCode: 31330300
     commit: v133.0.3
     timeout: 36000
     sudo:
@@ -31,18 +31,18 @@ Builds:
       - MozFennec@FIREFOX-ANDROID_133_0_3_RELEASE
       - MozAppServices@v133.0
       - MozGlean@v61.2.0
-      - gmscore@v0.3.4.240913
+      - gmscore@v0.3.6.244735
       - rustup@1.27.1
       - wasi-sdk@wasi-sdk-20
       - llvm@3c92011b600bdf70424e2547594dd461fe411a41
       - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
       - toolchain-utils@dd1ee45a84cb07337f9d5d0a6769d9b865c6e620
-    prebuild: ./scripts/prebuild.sh $$VERSION$$ $$VERCODE$$
-    build: ./scripts/build.sh
+    prebuild: FDROID_BUILD=1 ./scripts/prebuild.sh $$VERSION$$ $$VERCODE$$
+    build: FDROID_BUILD=1 ./scripts/build.sh
     ndk: 27.2.12479018
 
   - versionName: 133.0.3
-    versionCode: 21330320
+    versionCode: 31330320
     commit: v133.0.3
     timeout: 36000
     sudo:
@@ -55,14 +55,14 @@ Builds:
       - MozFennec@FIREFOX-ANDROID_133_0_3_RELEASE
       - MozAppServices@v133.0
       - MozGlean@v61.2.0
-      - gmscore@v0.3.4.240913
+      - gmscore@v0.3.6.244735
       - rustup@1.27.1
       - wasi-sdk@wasi-sdk-20
       - llvm@3c92011b600bdf70424e2547594dd461fe411a41
       - llvm_android@2a4ee244d6dd0dcb8365590b898f7a40ec3cb87a
       - toolchain-utils@dd1ee45a84cb07337f9d5d0a6769d9b865c6e620
-    prebuild: ./scripts/prebuild.sh $$VERSION$$ $$VERCODE$$
-    build: ./scripts/build.sh
+    prebuild: FDROID_BUILD=1 ./scripts/prebuild.sh $$VERSION$$ $$VERCODE$$
+    build: FDROID_BUILD=1 ./scripts/build.sh
     ndk: 27.2.12479018
 
 MaintainerNotes: |-
@@ -87,4 +87,4 @@ ArchivePolicy: 6
 AutoUpdateMode: None
 UpdateCheckMode: None
 CurrentVersion: 133.0.3
-CurrentVersionCode: 21330320
+CurrentVersionCode: 31330320
