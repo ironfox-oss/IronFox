@@ -13,6 +13,8 @@ pref("general.aboutConfig.enable", true);
 /// Disable annoying warnings when attempting to access the about:config
 pref("general.warnOnAboutConfig", false);
 
+pref("browser.phoenix.000.applied", true);
+
 // 001 DATA COLLECTION
 
 /// Shield Studies/Normandy/Nimbus
@@ -24,17 +26,17 @@ pref("general.warnOnAboutConfig", false);
 // https://experimenter.info/
 // resource://nimbus/ExperimentAPI.sys.mjs
 
-pref("app.normandy.api_url", "");
-pref("app.normandy.enabled", false);
-pref("app.normandy.first_run", false);
-pref("app.normandy.last_seen_buildid", "");
-pref("app.normandy.logging.level", 70); // Limits logging to fatal only
-pref("app.normandy.user_id", "");
-pref("app.shield.optoutstudies.enabled", false);
+pref("app.normandy.api_url", ""); // [HIDDEN]
+pref("app.normandy.enabled", false); // [HIDDEN]
+pref("app.normandy.first_run", false); // [HIDDEN]
+pref("app.normandy.last_seen_buildid", ""); // [HIDDEN]
+pref("app.normandy.logging.level", 70);  // [HIDDEN], Limits logging to fatal only
+pref("app.normandy.user_id", ""); // [HIDDEN]
+pref("app.shield.optoutstudies.enabled", false); // [HIDDEN]
 pref("messaging-system.log", "off"); // Disables logging
-pref("messaging-system.rsexperimentloader.enabled", false);
-pref("messaging-system.rsexperimentloader.collection_id", "");
-pref("nimbus.appId", ""); // https://searchfox.org/mozilla-central/source/toolkit/components/backgroundtasks/defaults/backgroundtasks_browser.js
+pref("messaging-system.rsexperimentloader.enabled", false); // [HIDDEN]
+pref("messaging-system.rsexperimentloader.collection_id", ""); // [HIDDEN]
+pref("nimbus.appId", "");  // [HIDDEN], https://searchfox.org/mozilla-central/source/toolkit/components/backgroundtasks/defaults/backgroundtasks_browser.js
 pref("toolkit.telemetry.pioneer-new-studies-available", false); // [HIDDEN]
 
 /// WebVTT Testing Events
@@ -147,6 +149,8 @@ pref("extensions.recommendations.privacyPolicyUrl", ""); // [DEFAULT]
 pref("toolkit.crashreporter.infoURL", ""); // [HIDDEN]
 pref("toolkit.datacollection.infoURL", ""); // [HIDDEN]
 
+pref("browser.phoenix.001.applied", true);
+
 // 002 MOZILLA CRAP™
 
 /// Firefox Recommendations & "Discovery"
@@ -184,6 +188,8 @@ pref("extensions.getAddons.search.browseURL", "https://addons.mozilla.org/%LOCAL
 pref("extensions.webcompat-reporter.enabled", false); // [DEFAULT except for Beta & Nightly releases...]
 pref("extensions.webcompat-reporter.newIssueEndpoint", "");
 
+pref("browser.phoenix.002.applied", true);
+
 // 003 Search & URL Bar
 
 /// Allow using a different search engine in Private Windows vs. Normal Windows
@@ -198,6 +204,8 @@ pref("browser.search.separatePrivateDefault.urlbarResult.enabled", true); // [HI
 // https://wikipedia.org/wiki/IDN_homograph_attack
 
 pref("network.IDN_show_punycode", true);
+
+pref("browser.phoenix.003.applied", true);
 
 // 004 Implicit Connections
 
@@ -218,6 +226,8 @@ pref("network.prefetch-next", false);
 
 pref("browser.search.suggest.enabled", false);
 pref("browser.search.suggest.enabled.private", false);
+
+pref("browser.phoenix.004.applied", true);
 
 // 005 HTTP(S) - Mixed Content & General Network Hardening
 
@@ -307,6 +317,8 @@ pref("network.proxy.failover_direct", false);
 pref("network.proxy.socks_remote_dns", true);
 pref("network.proxy.socks5_remote_dns", true); // [DEFAULT]
 
+pref("browser.phoenix.005.applied", true);
+
 // 006 DNS
 
 /// Disable Mozilla's DoH Rollout
@@ -317,7 +329,7 @@ pref("doh-rollout.skipHeuristicsCheck", true); // [HIDDEN]
 pref("doh-rollout.uri", ""); // [HIDDEN]
 pref("network.trr.default_provider_uri", "");
 
-/// Set Quad9 as default DoH resolver
+/// Enable DoH & Set to Quad9 by default
 
 pref("network.trr.custom_uri", "https://dns.quad9.net/dns-query");
 pref("network.trr.mode", 3);
@@ -351,6 +363,8 @@ pref("network.dns.native_https_query", true); // [DEFAULT]
 
 pref("network.dns.preferIPv6", true);
 
+pref("browser.phoenix.006.applied", true);
+
 // 007 CERTIFICATES
 
 /// Enforce OCSP & Stapling
@@ -381,6 +395,8 @@ pref("security.pki.certificate_transparency.mode", 2); // [Default = 0]
 pref("security.pki.certificate_transparency.disable_for_hosts", ""); // [DEFAULT]
 pref("security.pki.certificate_transparency.disable_for_spki_hashes", ""); // [DEFAULT]
 
+pref("browser.phoenix.007.applied", true);
+
 // 008 DOWNLOADS
 
 /// Always prompt before downloading files
@@ -391,6 +407,8 @@ pref("browser.download.useDownloadDir", false);
 // Enforce blocking insecure downloads
 
 pref("dom.block_download_insecure", true); // [DEFAULT]
+
+pref("browser.phoenix.008.applied", true);
 
 // 009 SAFE BROWSING
 
@@ -448,6 +466,8 @@ pref("browser.safebrowsing.reportPhishURL", "https://safebrowsing.google.com/saf
 pref("browser.safebrowsing.provider.google.reportURL", "https://transparencyreport.google.com/safe-browsing/search?url=");
 pref("browser.safebrowsing.provider.google4.reportURL", "https://transparencyreport.google.com/safe-browsing/search?url=");
 
+pref("browser.phoenix.009.applied", true);
+
 // 010 GEOLOCATION
 
 /// Prevent Wi-Fi Scanning
@@ -466,12 +486,16 @@ pref("browser.region.update.enabled", false);
 
 pref("geo.provider.network.url", "https://beacondb.net/v1/geolocate");
 
+pref("browser.phoenix.010.applied", true);
+
 // 011 AI
 // https://support.mozilla.org/kb/ai-chatbot
 
 /// Ensure that AI functionality is disabled by default
 
 pref("browser.ml.enable", false); // [DEFAULT, except for Nightly] - "Experimental Machine Learning Inference Engine"
+
+pref("browser.phoenix.011.applied", true);
 
 // 012 WEBRTC
 
@@ -484,6 +508,8 @@ pref("media.peerconnection.ice.obfuscate_host_addresses", true);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1790270
 
 pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true);
+
+pref("browser.phoenix.012.applied", true);
 
 // 013 DISK AVOIDANCE
 
@@ -527,6 +553,8 @@ pref("layout.css.visited_links_enabled", false);
 
 pref("browser.pagethumbnails.capturing_disabled", true); // [HIDDEN]
 
+pref("browser.phoenix.013.applied", true);
+
 // 014 EXTENSIONS
 
 // Only allow installing extensions from profile & application directories (Prevents extensions being installed from the system/via other software)
@@ -549,6 +577,8 @@ pref("xpinstall.signatures.weakSignaturesTemporarilyAllowed", false); // [HIDDEN
 // Enforce Extension Blocklist
 
 pref("extensions.blocklist.enabled", true); // [DEFAULT]
+
+pref("browser.phoenix.014.applied", true);
 
 // 015 PDF.js
 
@@ -576,6 +606,8 @@ pref("browser.download.open_pdf_attachments_inline", true); // [DEFAULT]
 /// Show sidebar by default when viewing PDFs
 
 pref("pdfjs.sidebarViewOnLoad", 2); // [HIDDEN]
+
+pref("browser.phoenix.015.applied", true);
 
 // 016 FINGERPRINTING PROTECTION
 
@@ -608,6 +640,8 @@ pref("webgl.disable-fail-if-major-performance-caveat", false);
 /// Prevent using system colors
 
 pref("browser.display.use_system_colors", false); // [DEFAULT]
+
+pref("browser.phoenix.016.applied", true);
 
 // 017 MISC. PRIVACY
 
@@ -691,6 +725,8 @@ pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _hsenc _ope
 
 pref("privacy.query_stripping.strip_on_share.enabled", true);
 
+pref("browser.phoenix.017.applied", true);
+
 // 018 PASSWORDS & AUTHENTICATION
 
 /// Disable Autofill
@@ -746,6 +782,8 @@ pref("network.microsoft-sso-authority-list", ""); // DEFENSE IN DEPTH
 
 pref("network.negotiate-auth.trusted-uris", ""); // [DEFAULT]
 
+pref("browser.phoenix.018.applied", true);
+
 // 019 ATTACK SURFACE REDUCTION
 
 /// Disable JavaScript Just-in-time Compilation (JIT)
@@ -773,7 +811,22 @@ pref("mathml.disabled", true);
 pref("gfx.font_rendering.graphite.enabled", false);
 pref("gfx.font_rendering.opentype_svg.enabled", false);
 
-// 022 MISC. SECURITY
+pref("browser.phoenix.019.applied", true);
+
+// 020 MISC. SECURITY
+
+// Prevent websites from automatically downloading as many files as they want to a user's device...
+// Can be used for denial of service
+// Allows overriding for specific downloads if needed
+// https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/41764
+// Ex. also enabled by Tor Browser
+
+pref("browser.download.enable_spam_prevention", true);
+
+// Do not disable Spectre mitigations for isolated content...
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8689
+
+pref("javascript.options.spectre.disable_for_isolated_content", false);
 
 // If a website asks for a certificate, always prompt the user
 // Never automatically select one...
@@ -805,6 +858,7 @@ pref("browser.contentanalysis.interception_point.print.enabled", false);
 
 pref("dom.ipc.processCount.webIsolated", 1); // [DEFAULT]
 pref("fission.autostart", true);
+pref("fission.autostart.session", true);
 
 /// Enable GPU Sandboxing
 
@@ -856,13 +910,17 @@ pref("network.protocol-handler.warn-external.tel", true);
 pref("network.protocol-handler.warn-external.vnd.youtube", true);
 pref("security.external_protocol_requires_permission", true); // [DEFAULT]
 
-// 023 BLOCK COOKIE BANNERS
+pref("browser.phoenix.020.applied", true);
+
+// 021 BLOCK COOKIE BANNERS
 
 pref("cookiebanners.service.mode", 1);
 pref("cookiebanners.service.mode.privateBrowsing", 1); // [DEFAULT on Nightly]
 pref("cookiebanners.service.enableGlobalRules", true); // [DEFAULT]
 
-// 024 MEDIA
+pref("browser.phoenix.021.applied", true);
+
+// 022 MEDIA
 
 /// Enforce validating signature for GMP when updating
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/all.js
@@ -889,14 +947,18 @@ pref("media.eme.require-app-approval", true); // [DEFAULT - DEFENSE IN DEPTH]: E
 pref("media.gmp-widevinecdm.visible", false);
 pref("media.mediadrm-widevinecdm.visible", false); // https://searchfox.org/mozilla-central/source/mobile/android/app/geckoview-prefs.js#320
 
-// 025 UPDATES
+pref("browser.phoenix.022.applied", true);
+
+// 023 UPDATES
 
 /// Ensure we're always updating extensions by default
 
 pref("extensions.systemAddon.update.enabled", true); // [DEFAULT]
 pref("extensions.update.enabled", true); // [DEFAULT]
 
-// 026 DEBUGGING
+pref("browser.phoenix.023.applied", true);
+
+// 024 DEBUGGING
 
 /// Enforce local debugging only
 
@@ -912,7 +974,9 @@ pref("devtools.debugger.prompt-connection", true); // [DEFAULT]
 
 pref("reader.errors.includeURLs", false); // [DEFAULT]
 
-/// 027 MISC.
+pref("browser.phoenix.024.applied", true);
+
+/// 025 MISC.
 
 /// Always allow installing "incompatible" add-ons
 
@@ -951,7 +1015,9 @@ pref("dom.disable_window_move_resize", true); // [DEFAULT]
 
 pref("media.webspeech.synth.dont_notify_on_error", true); // [HIDDEN]
 
-// 028 PERFORMANCE
+pref("browser.phoenix.025.applied", true);
+
+// 026 PERFORMANCE
 // A lot of these taken from https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 
 pref("browser.sessionstore.max_tabs_undo", 7); // [Default = 10]
@@ -974,11 +1040,15 @@ pref("network.http.max-persistent-connections-per-proxy", 48); // [Default = 20]
 pref("network.http.max-persistent-connections-per-server", 10); // [Default = 6]
 pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // [Default = 3]
 
-// 029 SMOOTH SCROLLING
+pref("browser.phoenix.026.applied", true);
+
+// 027 SMOOTH SCROLLING
 
 pref("general.smoothScroll", true); // [DEFAULT]
 
-// Personal Touch 💜
+pref("browser.phoenix.027.applied", true);
+
+// 028 Personal Touch 💜
 
 /// Things that are  nice to have™
 // Not directly privacy & security related
@@ -996,7 +1066,9 @@ pref("full-screen-api.warning.timeout", 0); // [Default = 3000]
 pref("security.xfocsp.hideOpenInNewWindow", false);
 pref("view_source.wrap_long_lines", true); // [DEFAULT]
 
-// Sync more prefs
+pref("browser.phoenix.028.applied", true);
+
+// 029 Sync more prefs
 // Note that for this to work, the below prefs must be set on BOTH the device you are syncing from & to...
 // Useful especially if you override our defaults
 
@@ -1101,3 +1173,7 @@ pref("services.sync.prefs.sync.network.http.max-persistent-connections-per-serve
 pref("services.sync.prefs.sync.network.http.max-urgent-start-excessive-connections-per-host", true);
 pref("services.sync.prefs.sync.network.http.referer.XOriginPolicy", true);
 pref("services.sync.prefs.sync.webgl.disabled", true);
+
+pref("browser.phoenix.029.applied", true);
+
+pref("browser.phoenix.applied", true);
