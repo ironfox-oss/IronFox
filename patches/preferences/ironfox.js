@@ -14,3 +14,5 @@ pref("browser.safebrowsing.blockedURIs.enabled", false);
 pref("browser.safebrowsing.downloads.enabled", false); // [DEFAULT]
 pref("browser.safebrowsing.malware.enabled", false);
 pref("browser.safebrowsing.phishing.enabled", false);
+
+pref("browser.ironfox.applied", true);
