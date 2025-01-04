@@ -347,7 +347,6 @@ pref("media.gmp-manager.url.override", "data:text/plain,");
 
 // Disable openh264 if it is already downloaded
 pref("media.gmp-gmpopenh264.enabled", false);
-
 EOF
 
 cat "$patches/preferences/phoenix.js" >>mobile/android/app/geckoview-prefs.js
