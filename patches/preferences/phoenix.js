@@ -2,6 +2,8 @@
 // The Phoenix shall rise from the ashes of what fell before it.
 // RIP Mull.
 
+pref("browser.phoenix.version", "05January2025v1");
+
 // Let's begin.
 
 // 000 ABOUT:CONFIG
@@ -268,6 +270,10 @@ pref("browser.xul.error_pages.expert_bad_cert", true);
 // https://github.com/tlswg/tls13-spec/issues/1001
 
 pref("security.tls.enable_0rtt_data", false);
+
+// Require safe renegotiations - Disables RFC 5746
+
+pref("security.ssl.require_safe_negotiation", true);
 
 /// Enforce preloading intermediates
 // https://wiki.mozilla.org/Security/CryptoEngineering/Intermediate_Preloading
@@ -653,12 +659,17 @@ pref("browser.contentblocking.category", "strict");
 /// Usually unnecessary & covered by enabling ETP Strict - though based on my testing, these don't appear to be always set automatically for Fenix.
 
 pref("network.cookie.cookieBehavior", 5); // [DEFAULT]
+pref("network.cookie.cookieBehavior.optInPartitioning", true);
 pref("network.cookie.cookieBehavior.pbmode", 5); // [DEFAULT]
-pref("privacy.fingerprintingProtection", true);
 pref("network.http.referer.disallowCrossSiteRelaxingDefault", true); // [DEFAULT]
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true); // [DEFAULT]
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true); // [DEFAULT]
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
+pref("privacy.fingerprintingProtection", true);
+pref("privacy.fingerprintingProtection.pbmode", true); // [DEFAULT]
+pref("privacy.partition.always_partition_third_party_non_cookie_storage", true); // [DEFAULT]
+pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false); // [DEFAULT]
+pref("privacy.partition.bloburl_per_partition_key", true); // [DEFAULT]
 pref("privacy.partition.network_state.ocsp_cache", true); // [DEFAULT]
 pref("privacy.partition.network_state.ocsp_cache.pbmode", true); // [DEFAULT]
 pref("privacy.query_stripping.enabled", true);
@@ -669,6 +680,7 @@ pref("privacy.trackingprotection.emailtracking.enabled", true); // [DEFAULT]
 pref("privacy.trackingprotection.emailtracking.pbmode.enabled", true); // [DEFAULT]
 pref("privacy.trackingprotection.enabled", true);
 pref("privacy.trackingprotection.fingerprinting.enabled", true); // [DEFAULT]
+pref("privacy.trackingprotection.pbmode.enabled", true);
 pref("privacy.trackingprotection.socialtracking.enabled", true); // [DEFAULT]
 
 /// Enforce Do Not Track & Global Privacy Control
@@ -954,7 +966,13 @@ pref("browser.phoenix.022.applied", true);
 /// Ensure we're always updating extensions by default
 
 pref("extensions.systemAddon.update.enabled", true); // [DEFAULT]
+pref("extensions.update.autoUpdateDefault", true); // [HIDDEN]
 pref("extensions.update.enabled", true); // [DEFAULT]
+
+/// Ensure we always notify users for extension updates by default
+// https://searchfox.org/mozilla-central/source/remote/shared/RecommendedPreferences.sys.mjs#253
+
+pref("extensions.update.notifyUser", true); // [HIDDEN]
 
 pref("browser.phoenix.023.applied", true);
 

@@ -3,15 +3,7 @@
 
 // We can do better.
 
-// 001 NETWORKING
-
-// Require safe renegotiations - Disables RFC 5746
-
-pref("security.ssl.require_safe_negotiation", true);
-
-pref("browser.phoenix.extended.001.applied", true);
-
-// 002 FINGERPRINTING PROTECTION
+// 001 ADVANCED FINGERPRINTING PROTECTION
 
 /// Enable RFP (resistFingerprinting)
 // https://github.com/arkenfox/user.js/blob/master/user.js#L745
@@ -25,18 +17,18 @@ pref("privacy.resistFingerprinting", true);
 
 pref("webgl.disabled", true);
 
-pref("browser.phoenix.extended.002.applied", true);
+pref("browser.phoenix.extended.001.applied", true);
 
-/// 003 WEBRTC
+/// 002 WEBRTC
 
 // Never leak IP addresses - This *will* break WebRTC
 
 pref("media.peerconnection.ice.default_address_only", true);
 pref("media.peerconnection.ice.no_host", true);
 
-pref("browser.phoenix.extended.003.applied", true);
+pref("browser.phoenix.extended.002.applied", true);
 
-// 004 MISC. PRIVACY
+// 003 MISC. PRIVACY
 
 /// Disable ETP WebCompat & Heuristics
 
@@ -50,18 +42,18 @@ pref("privacy.restrict3rdpartystorage.heuristic.window_open", false); // [DEFAUL
 
 pref("network.http.referer.XOriginPolicy", 2);
 
-pref("browser.phoenix.extended.004.applied", true);
+pref("browser.phoenix.extended.003.applied", true);
 
-// 005 ATTACK SURFACE REDUCTION
+// 004 ATTACK SURFACE REDUCTION
 
 /// Disable WebAssembly
 // https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly
 
 pref("javascript.options.wasm", false);
 
-pref("browser.phoenix.extended.005.applied", true);
+pref("browser.phoenix.extended.004.applied", true);
 
-// 006 MISC.
+// 005 MISC.
 
 /// Prevent sites from automatically refreshing
 
@@ -71,6 +63,6 @@ pref("browser.meta_refresh_when_inactive.disabled", true); // [DEFAULT]
 
 pref("media.autoplay.blocking_policy", 2); // [Default = 0]
 
-pref("browser.phoenix.extended.006.applied", true);
+pref("browser.phoenix.extended.005.applied", true);
 
 pref("browser.phoenix.extended.applied", true);
