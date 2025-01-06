@@ -1,6 +1,4 @@
 AntiFeatures:
-  Tracking:
-    en-US: Connects to various Mozilla services that can track users. https://divestos.org/pages/network_connections#mull
   UpstreamNonFree:
     en-US: Telemetry and proprietary bits are removed.
 Categories:
