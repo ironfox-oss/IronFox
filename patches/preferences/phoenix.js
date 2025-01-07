@@ -2,7 +2,7 @@
 // The Phoenix shall rise from the ashes of what fell before it.
 // RIP Mull.
 
-pref("browser.phoenix.version", "2025.01.05.1");
+pref("browser.phoenix.version", "2025.01.06.1");
 
 // Let's begin.
 
@@ -103,7 +103,7 @@ pref("network.jar.record_failure_reason", false); // [DEFAULT] - https://searchf
 pref("network.traffic_analyzer.enabled", false); // https://searchfox.org/mozilla-release/source/modules/libpref/init/StaticPrefList.yaml#13298
 pref("network.trr.confirmation_telemetry_enabled", false);
 pref("nimbus.telemetry.targetingContextEnabled", false); // [HIDDEN] https://searchfox.org/mozilla-central/source/browser/app/profile/firefox.js#2001
-pref("privacy.imageInputTelemetry.enableTestMode", false); // [DEFAULT] https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15549
+pref("privacy.imageInputTelemetry.enableTestMode", false); // [DEFAULT] "Event Telemetry" https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15549
 pref("privacy.trackingprotection.emailtracking.data_collection.enabled", false);
 pref("toolkit.content-background-hang-monitor.disabled", true);
 pref("toolkit.telemetry.archive.enabled", false); // [HIDDEN]
@@ -244,6 +244,7 @@ pref("dom.security.https_only_mode.upgrade_local", true);
 pref("dom.security.https_only_mode_pbm", true);
 pref("security.mixed_content.block_active_content", true); // [DEFAULT]
 pref("security.mixed_content.block_display_content", true);
+pref("security.mixed_content.block_object_subrequest", true);
 pref("security.mixed_content.upgrade_display_content", true);
 pref("security.mixed_content.upgrade_display_content.audio", true); // [DEFAULT]
 pref("security.mixed_content.upgrade_display_content.image", true); // [DEFAULT]
@@ -712,6 +713,13 @@ pref("dom.reporting.header.enabled", false); // [DEFAULT]
 
 pref("network.http.network_error_logging.enabled", false); // [DEFAULT]
 
+/// Disable Network Information API
+// https://developer.mozilla.org/docs/Web/API/Network_Information_API
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1057169
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1637922
+
+pref("dom.netinfo.enabled", false); // [DEFAULT]
+
 /// Trim cross-origin referers (Like Safari)
 
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
@@ -921,6 +929,18 @@ pref("network.protocol-handler.warn-external.sms", true);
 pref("network.protocol-handler.warn-external.tel", true);
 pref("network.protocol-handler.warn-external.vnd.youtube", true);
 pref("security.external_protocol_requires_permission", true); // [DEFAULT]
+
+/// Never skip the assertion that about:pages don't have content security policies (CSP)
+// https://searchfox.org/comm-central/source/mozilla/modules/libpref/init/StaticPrefList.yaml#3987
+
+pref("dom.security.skip_about_page_has_csp_assert", false); // [DEFAULT]
+
+/// Enable Trusted Types (Like Chromium)
+// https://w3c.github.io/trusted-types/dist/spec/
+// https://developer.mozilla.org/docs/Web/API/Trusted_Types_API
+// https://www.theregister.com/2023/12/21/mozilla_decides_trusted_types_is/
+
+pref("dom.security.trusted_types.enabled", true);
 
 pref("browser.phoenix.020.applied", true);
 
