@@ -323,6 +323,11 @@ fi
     echo "ac_add_options --with-gradle=$(command -v gradle)"
     echo "ac_add_options --with-libclang-path=\"$libclang\""
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
+
+    if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
+        echo "--with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
+    fi
+
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
     echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
