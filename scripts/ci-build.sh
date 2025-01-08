@@ -4,6 +4,7 @@
 ## DO NOT execute this manually!
 
 set -eu
+set -o xtrace
 
 rootdir="$(dirname "$0")/.."
 
