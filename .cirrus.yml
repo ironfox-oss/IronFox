@@ -16,10 +16,10 @@ build_task:
         VERSION_CODE: 31340020
   android_sdk_script: source ./scripts/setup-android-sdk.sh
   sources_script: ./scripts/get_sources.sh
-  paths_script: source ./scripts/paths_local.sh
   sb_gapi_script: mkdir -p $(dirname ${SB_GAPI_KEY_FILE}) && echo "${SB_GAPI_KEY}" > ${SB_GAPI_KEY_FILE}
   print_mozconfig_script: echo "gecko/mozconfig"
-  build_script: ./scripts/prebuild.sh ${VERSION_NAME} ${VERSION_CODE}
+  prebuild_script: source ./scripts/paths_local.sh && ./scripts/prebuild.sh ${VERSION_NAME} ${VERSION_CODE}
+  build_script: ./scripts/build.sh
   build_aab_script: pushd gecko/mobile/android/fenix; gradle :app:bundleRelease; popd
   apk_artifacts:
     path: gecko/mobile/android/fenix/app/build/outputs/apk/fenix/release/*.apk
