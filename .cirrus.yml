@@ -4,7 +4,7 @@ skip: >
   $CIRRUS_COMMIT_MESSAGE =~ '.*\[ci skip\].*'
 
 container:
-  image: registry.gitlab.com/ironfox-oss/ironfox:main
+  image: registry.gitlab.com/ironfox-oss/ironfox:rewrite-env-logic--ci-incl
   cpu: 8
   memory: 32G
 
