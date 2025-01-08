@@ -228,7 +228,7 @@ pushd "$application_services"
 chmod +x libs/*.sh
 chmod +x automation/publish_to_maven_local_if_modified.py
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/131\.0\.2/133.0.3/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/132\.0/134.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -323,6 +323,11 @@ fi
     echo "ac_add_options --with-gradle=$(command -v gradle)"
     echo "ac_add_options --with-libclang-path=\"$libclang\""
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
+
+    if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
+        echo "--with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
+    fi
+
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
     echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
