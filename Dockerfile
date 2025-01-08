@@ -20,6 +20,8 @@ RUN dnf install -y \
     git
 
 # Set up Android SDK
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=$ANDROID_HOME
 ADD https://gitlab.com/ironfox-oss/IronFox/-/raw/main/scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
 RUN source /tmp/setup-android-sdk.sh
 
