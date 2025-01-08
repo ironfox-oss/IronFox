@@ -1,5 +1,5 @@
 container:
-  image: registry.gitlab.com/ironfox-oss/ironfox/ironfox-builder:latest
+  image: registry.gitlab.com/ironfox-oss/ironfox:main
   cpu: 8
   memory: 32G
 
