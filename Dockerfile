@@ -19,11 +19,13 @@ RUN dnf install -y \
     wget \
     git
 
+ENV BASHRC=/etc/bashrc
+
 # Set up Android SDK
-ENV ANDROID_HOME=/opt/android-sdk
-ENV ANDROID_SDK_ROOT=$ANDROID_HOME
 ADD https://gitlab.com/ironfox-oss/IronFox/-/raw/main/scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
-RUN source /tmp/setup-android-sdk.sh
+RUN bash /tmp/setup-android-sdk.sh
+RUN echo "export ANDROID_HOME=/opt/android-sdk" >> $BASHRC
+RUN echo "export ANDROID_SDK_ROOT=\$ANDROID_HOME" >> $BASHRC
 
 # Set up gradle from F-Droid
 RUN mkdir -p /root/bin
@@ -39,8 +41,8 @@ RUN mkdir -p /root/.gradle && \
 RUN python3.9 -m venv /root/env
 
 # Set JDK 17 as default
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-ENV PATH=${JAVA_HOME}/bin:/root/bin:/root/env/bin:${PATH}
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> $BASHRC
+RUN echo "export PATH=\${JAVA_HOME}/bin:/root/bin:/root/env/bin:\${PATH}" >> $BASHRC
 
 # cd into working directory
 WORKDIR /app
