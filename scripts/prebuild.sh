@@ -38,12 +38,12 @@ fi
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
     source "$(dirname "$0")/setup-android-sdk.sh"
-    source "$(dirname "$0")/paths_fdroid.sh"
+    source "$(dirname "$0")/env_fdroid.sh"
 fi
 
 # shellcheck disable=SC2154
-if [[ "$paths_source" != "true" ]]; then
-    echo "Use 'source scripts/paths_local.sh' before calling prebuild or build"
+if [[ "$env_source" != "true" ]]; then
+    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
     exit 1
 fi
 

@@ -10,7 +10,9 @@ container:
 
 build_task:
   name: Build IronFox
-  only_if: $CIRRUS_BRANCH == "main"
+  only_if: >
+    $CIRRUS_BRANCH == "main" ||
+    $CIRRUS_BRANCH =~ ".*--ci-incl$"
   timeout_in: 120m
   env:
     SB_GAPI_KEY: ENCRYPTED[!3da25d528d0c34be6d3f3bbe73d2cbce960b8e55ed7b54906a1140b4929032b026a1ea5f0876fe46b0f0044711cc08bd!]
