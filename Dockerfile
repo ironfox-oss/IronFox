@@ -21,7 +21,7 @@ RUN dnf install -y \
 
 # Set up Android SDK
 ADD https://gitlab.com/ironfox-oss/IronFox/-/raw/main/scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
-RUN bash /tmp/setup-android-sdk.sh
+RUN source /tmp/setup-android-sdk.sh
 
 # Set up gradle from F-Droid
 RUN mkdir -p /root/bin
