@@ -48,7 +48,7 @@ PATH=$PATH:$(dirname "$SDK_MANAGER")
 export PATH
 
 # Accept licenses
-yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
+{ yes || true; } | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
 
 # Set up Android SDK
 if grep -q "Fedora" /etc/os-release; then
