@@ -1,3 +1,8 @@
+skip: >
+  $CIRRUS_COMMIT_MESSAGE =~ '.*\[cirrus:skip\].*' ||
+  $CIRRUS_COMMIT_MESSAGE =~ '.*\[skip ci\].*' ||
+  $CIRRUS_COMMIT_MESSAGE =~ '.*\[ci skip\].*'
+
 container:
   image: registry.gitlab.com/ironfox-oss/ironfox:main
   cpu: 8
