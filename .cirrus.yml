@@ -1,0 +1,18 @@
+container:
+  image: registry.gitlab.com/ironfox-oss/ironfox/ironfox-builder:latest
+  cpu: 8
+  memory: 32G
+
+build_task:
+  name: Build IronFox
+  only_if: $CIRRUS_BRANCH == "main"
+  env:
+    matrix:
+      - VERSION_NAME: "134.0"
+        VERSION_CODE: 31340000
+      - VERSION_NAME: "134.0"
+        VERSION_CODE: 31340020
+  android_sdk_script: source ./scripts/setup-android-sdk.sh
+  sources_script: ./scripts/get_sources.sh
+  paths_script: source ./scripts/paths_local.sh
+  build_script: ./scripts/prebuild.sh ${VERSION_NAME} ${VERSION_CODE}
