@@ -11,13 +11,17 @@ rootdir="$(dirname "$0")/.."
 source "$rootdir/scripts/setup-android-sdk.sh"
 
 # Download sources
-./scripts/get_sources.sh
+"$rootdir/scripts/get_sources.sh"
 
 # Setup API key for Google Safe Browsing
 mkdir -p "$(dirname "${SB_GAPI_KEY_FILE}")" && echo "${SB_GAPI_KEY}" > "${SB_GAPI_KEY_FILE}"
 
 # Print the mozconfig for debugging purposes
-echo "gecko/mozconfig"
+echo ""
+echo "########################"
+cat  "$rootdir/gecko/mozconfig"
+echo "########################"
+echo ""
 
 # Setup paths
 source "$rootdir/scripts/paths_local.sh"
