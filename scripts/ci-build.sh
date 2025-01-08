@@ -10,7 +10,7 @@ rootdir="$(dirname "$0")/.."
 rootdir=$(realpath "$rootdir")
 
 # Setup paths
-source "$rootdir/scripts/paths_local.sh"
+source "$rootdir/scripts/env_local.sh"
 
 # Patch
 "$rootdir/scripts/prebuild.sh" "${VERSION_NAME}" "${VERSION_CODE}"
@@ -23,7 +23,7 @@ echo "########################"
 echo ""
 
 # Build
-bash "$rootdir/scripts/build.sh"
+source "$rootdir/scripts/build.sh"
 
 # Build AAB
 pushd "$rootdir/gecko/mobile/android/fenix"
