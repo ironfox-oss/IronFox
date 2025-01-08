@@ -325,7 +325,7 @@ fi
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
 
     if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
-        echo "--with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
+        echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
     fi
 
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
