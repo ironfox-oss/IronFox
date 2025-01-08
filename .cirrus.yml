@@ -14,6 +14,8 @@ build_task:
         VERSION_CODE: 31340000
       - VERSION_NAME: "134.0"
         VERSION_CODE: 31340020
+  sb_gapi_script: mkdir -p "$(dirname "${SB_GAPI_KEY_FILE}")" && echo "${SB_GAPI_KEY}" > "${SB_GAPI_KEY_FILE}"
+  sources_scripts: ./scripts/get_sources.sh
   build_script: ./scripts/ci-build.sh
   apk_artifacts:
     path: gecko/mobile/android/fenix/app/build/outputs/apk/fenix/release/*.apk
