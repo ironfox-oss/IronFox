@@ -20,5 +20,8 @@ build_task:
   sb_gapi_script: mkdir -p $(dirname ${SB_GAPI_KEY_FILE}) && echo "${SB_GAPI_KEY}" > ${SB_GAPI_KEY_FILE}
   print_mozconfig_script: echo "gecko/mozconfig"
   build_script: ./scripts/prebuild.sh ${VERSION_NAME} ${VERSION_CODE}
+  build_aab_script: pushd gecko/mobile/android/fenix; gradle :app:bundleRelease; popd
   apk_artifacts:
     path: gecko/mobile/android/fenix/app/build/outputs/apk/fenix/release/*.apk
+  aab_artifacts:
+    path: gecko/mobile/android/fenix/app/build/outputs/bundle/fenixRelease/*.aab
