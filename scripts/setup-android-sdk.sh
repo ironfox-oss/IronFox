@@ -4,19 +4,19 @@ SDK_REVISION=9123335
 NDK_VERSION=27c
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
-if [ "$ANDROID_HOME" != "$ANDROID_SDK_ROOT" ]; then
-    echo "\$ANDROID_HOME and \$ANDROID_SDK_ROOT are set to different values."
-    echo "Setting \$ANDROID_HOME to \$ANDROID_SDK_ROOT..."
-    export ANDROID_HOME="$ANDROID_SDK_ROOT"
-fi
-
-if [ "$ANDROID_HOME" == "" ]; then
+if [[ "${ANDROID_HOME+}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
     export ANDROID_SDK_ROOT=$ANDROID_HOME
 fi
 
-if [ "$ANDROID_NDK" == "" ]; then
+if [[ "${ANDROID_NDK+}" == "" ]]; then
     export ANDROID_NDK=$ANDROID_HOME/ndk/android-ndk-r${NDK_VERSION}
+fi
+
+if [ "$ANDROID_HOME" != "$ANDROID_SDK_ROOT" ]; then
+    echo "\$ANDROID_HOME and \$ANDROID_SDK_ROOT are set to different values."
+    echo "Setting \$ANDROID_HOME to \$ANDROID_SDK_ROOT..."
+    export ANDROID_HOME="$ANDROID_SDK_ROOT"
 fi
 
 if [ ! -d "$ANDROID_HOME" ]; then
