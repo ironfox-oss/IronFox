@@ -13,7 +13,7 @@ IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull B
 
 ### Want to join the IronFox Community?
 
-We'd love to see you over on [Matrix](https://matrix.to/#/#ironfox:unredacted.org) *(Recommended)* or [Discord](https://discord.gg/zbdzfRVyVh)!
+We'd love to see you over on [Matrix](https://matrix.to/#/#ironfox:unredacted.org) *(Recommended)* and [Discord](https://discord.gg/zbdzfRVyVh)!
 
 Known Issues
 ------------
