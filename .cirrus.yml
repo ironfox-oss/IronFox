@@ -7,6 +7,8 @@ build_task:
   name: Build IronFox
   only_if: $CIRRUS_BRANCH == "main"
   env:
+    SB_GAPI_KEY: ENCRYPTED[!3da25d528d0c34be6d3f3bbe73d2cbce960b8e55ed7b54906a1140b4929032b026a1ea5f0876fe46b0f0044711cc08bd!]
+    SB_GAPI_KEY_FILE: /opt/sb-gapi.data
     matrix:
       - VERSION_NAME: "134.0"
         VERSION_CODE: 31340000
@@ -15,4 +17,6 @@ build_task:
   android_sdk_script: source ./scripts/setup-android-sdk.sh
   sources_script: ./scripts/get_sources.sh
   paths_script: source ./scripts/paths_local.sh
+  sb_gapi_script: mkdir -p $(dirname ${SB_GAPI_KEY_FILE}) && echo "${SB_GAPI_KEY}" > ${SB_GAPI_KEY_FILE}
+  print_mozconfig_script: echo "gecko/mozconfig"
   build_script: ./scripts/prebuild.sh ${VERSION_NAME} ${VERSION_CODE}
