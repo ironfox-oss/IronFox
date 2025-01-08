@@ -1,14 +1,27 @@
-IronFox
+# IronFox
+<p align="center">
+    <img src="assets/ironfox.png"
+        alt="IronFox"
+        height="200">
+</p>
+
 ------------
 
-IronFox is a fork of DivestOS's [Mull Browser](https://github.com/Divested-Mobile/Mull-Fenix) based on Firefox. Our goal is to continue the legacy of Mull to provide a secure, hardened and privacy-oriented browser for daily use.
+IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull Browser](https://divestos.org/pages/our_apps#mull), based on [Mozilla Firefox](https://www.mozilla.org/firefox/). **Our goal is to continue the legacy of Mull by providing a free and open source, privacy and security-oriented web browser for daily use.**
+
+> [!NOTE]
+> While IronFox's home is [GitLab](https://gitlab.com/ironfox-oss/IronFox), this repo is also mirrored to both [Codeberg](https://codeberg.org/ironfox-oss/IronFox) & [GitHub](https://github.com/ironfox-oss/IronFox).
+
+### Want to join the IronFox Community?
+
+We'd love to see you over on [Matrix](https://matrix.to/#/#ironfox:unredacted.org) *(Recommended)* or [Discord](https://discord.gg/zbdzfRVyVh)!
 
 Known Issues
 ------------
 Please see the list of known issues and workarounds before opening an issue!
 
 <details>
-<summary>Issues inherited from <a href="https://divestos.org/index.php?page=broken#mull)">Mull</a> that still apply to IronFox *(contents adapted from DivestOS's website)* </summary>
+<summary>Issues inherited from Mull that still apply to IronFox - (contents adapted from <a href="https://divestos.org/index.php?page=broken#mull)">the DivestOS website</a>) </summary>
 
 *   uBlock Origin is the only recommended and supported content blocker.
 *   Some fonts, particularly ones used for displaying Korean text, [may not display correctly](https://bugzilla.mozilla.org/show_bug.cgi?id=1881993) due the font restrictions by resist fingerprinting. Please do not disable RFP. This should be hopefully fixed in future versions such as v126.
@@ -41,6 +54,8 @@ _None yet._
 
 </details>
 
+<br>
+
 You should also see [here](https://phoenix.celenity.dev/compat) for a list of websites with known issues due to hardening, and what you may need to do to fix them. This list is maintained by [Phoenix](https://phoenix.celenity.dev/) - so while it isn't specific to IronFox or Mull, many of these problems do still apply.
 
 Building
@@ -58,7 +73,7 @@ Follow the below instructions based on the OS you're using.
 <details>
 <summary>When building on Ubuntu</summary>
 
-```
+```sh
 sudo apt update
 sudo apt install -y make \
         cmake \
@@ -72,7 +87,6 @@ sudo apt install -y make \
         unzip \
         xz-utils \
         zlib1g-dev
-
 ```
 
 Apart from the above packages, you need to install Python 3.9. You can use [PPA from the `deadsnakes` team](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa).
@@ -85,7 +99,7 @@ default JDK.
 <details>
 <summary>When building on Fedora 41</summary>
 
-```
+```sh
 sudo dnf install -y \
     cmake \
     clang \
@@ -112,9 +126,9 @@ to build IronFox.
 
 ### Build setup
 
-- Setup F-Droid's `gradle` script to be available in your `PATH` :
+- Setup F-Droid's `gradle` script to be available in your `PATH`:
 
-    ```
+    ```sh
     mkdir -p $HOME/bin
     wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "$HOME/bin/gradle"
     chmod +x "$HOME/bin/gradle"
@@ -122,28 +136,40 @@ to build IronFox.
     export PATH=$HOME/bin:$PATH
     ```
 
-- Disable Gradle Daemons and configuration cache :
+- Disable Gradle Daemons and configuration cache:
 
-    ```
+    ```sh
     mkdir -p ~/.gradle
     echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
     echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
     ```
 
-- Create a new Python 3.9 virtual environment, then activate it :
-    ```
+- Create a new Python 3.9 virtual environment, then activate it:
+
+    ```sh
     python3.9 -m venv env
     source env/bin/activate
     ```
 
-- Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running :
-    ```bash
+- Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running:
+
+    **Don't forget to replace `/path/to/jdk-17` below with the actual path of your JDK 17 installation!**
+
+    ```sh
     export JAVA_HOME=/path/to/jdk-17
     export PATH=$JAVA_HOME/bin:$PATH
     ```
 
-- Ensure that `ANDROID_HOME` variable is set to point to a valid Android SDK installation. Otherwise, you can execute the following to install and set up the SDK :
-    ```bash
+    For instance, on **Fedora 41**, the default location of JDK 17 is `/usr/lib/jvm/java-17-openjdk`:
+
+    ```sh
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+    export PATH=$JAVA_HOME/bin:$PATH
+    ```
+
+- Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation. Otherwise, you can execute the following to install and set up the SDK:
+
+    ```sh
     source ./scripts/setup-android-sdk.sh
     ```
 
@@ -151,38 +177,37 @@ to build IronFox.
 
 Next, you need to download the source files to build. The `scripts/get_sources.sh` file can be used to download/clone the source files.
 
-```bash
-# This may take some time depending on your network speed
+*This may take some time depending on your network speed...*
+
+```sh
 ./scripts/get_sources.sh
 ```
 
-If you need to fetch sources for other versions of Firefox, you'll have to modify the
-script directly.
+If you need to fetch sources for a different version of Firefox than the one IronFox is currently based on, you'll have to modify the script directly.
 
 Once the source files are downloaded and extracted, you need to source the
-`scripts/paths_local.sh` script (generated by `get_sources.sh`) to set up the required 
-environment variables :
+`scripts/paths_local.sh` script *(generated by `get_sources.sh`)* to set up the required environment variables:
 
-```bash
+```sh
 source scripts/paths_local.sh
 ```
 
-Next, you need to patch the files with :
+Next, you need to patch the files with:
 
-```bash
-# Required to run once, after getting sources
+*This must be run once after getting your sources.*
+
+```sh
 ./scripts/prebuild.sh <version-name> <version-code>
 ```
 
 Here `<version-name>` is the display name of the version (e.g. `v133.0.3`) and
-`<version-code>` is the numeric identifier of the version you want to build. We follow
-version code convention similar to Mull. See [version code convention](#version-code-convention).
+`<version-code>` is the numeric identifier of the version you want to build. We follow version code convention similar to Mull. See [version code convention](#version-code-convention).
 
 ### Build
 
-Finally you can start the build process with :
+Finally, you can start the build process with:
 
-```bash
+```sh
 ./scripts/build.sh
 ```
 
@@ -190,13 +215,13 @@ Version code convention
 -----------------------
 
 Version codes are prepended with `3`, followed by the actual version code, the CPU ABI
-identifier and the revision number :
+identifier and the revision number:
 
 ```
 3<actual-version><abi-identifier><revision>
 ```
 
-CPU ABI identifier is one of the following :
+CPU ABI identifier is one of the following:
 
 | Identifier | CPU ABI       |
 | ---------- | ------------- |
@@ -204,8 +229,7 @@ CPU ABI identifier is one of the following :
 | 1          | `x86_64`      |
 | 2          | `arm64-v8a`   |
 
-Revision numbers start from 0 for each major release and are updated when we apply fixes 
-to existing releases.
+Revision numbers start from 0 for each major release and are updated when we apply fixes to existing releases.
 
 <details>
 <summary>Example</summary>
@@ -224,17 +248,16 @@ Version code : 31330320
 Licenses
 --------
 
-The scripts are licensed under the GNU Affero General Public License version 3 or later.
+The scripts are licensed under the [GNU Affero General Public License, version 3 or later](COPYING).
 
-Changes in the patch are licensed according to the header in the files this patch adds 
-or modifies (Apache 2.0 or MPL 2.0).
+Changes to patches are licensed according to the header in the files this patch adds or modifies ([Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) or [MPL 2.0](https://www.mozilla.org/MPL/)).
 
-The userjs-00-arkenfox.js file is licensed under MIT.
+[Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
 
 Notices
 -------
 
-Mozilla Firefox is a trademark of The Mozilla Foundation
+Mozilla Firefox is a trademark of The Mozilla Foundation.
 
 This is not an officially supported Mozilla product. IronFox is in no way affiliated with Mozilla.
 
@@ -242,4 +265,4 @@ IronFox is not sponsored or endorsed by Mozilla.
 
 IronFox is not associated with DivestOS or Divested Computing Group in any manner.
 
-Firefox source code is available at https://hg.mozilla.org
+Firefox source code is available at [https://hg.mozilla.org](https://hg.mozilla.org).
