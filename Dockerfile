@@ -19,10 +19,14 @@ RUN dnf install -y \
     wget \
     git
 
+# Set up Android SDK
+ADD https://gitlab.com/ironfox-oss/IronFox/-/raw/main/scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
+RUN bash /tmp/setup-android-sdk.sh
+
 # Set up gradle from F-Droid
-RUN mkdir -p /root/bin && \
-    wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "/root/bin/gradle" && \
-    chmod +x "/root/bin/gradle"
+RUN mkdir -p /root/bin
+ADD https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid /root/bin/gradle
+RUN chmod +x "/root/bin/gradle"
 
 # Set up gradle properties
 RUN mkdir -p /root/.gradle && \
