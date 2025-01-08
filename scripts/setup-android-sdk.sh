@@ -1,16 +1,11 @@
 #!/bin/bash
 
 SDK_REVISION=9123335
-NDK_VERSION=27c
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
     export ANDROID_SDK_ROOT=$ANDROID_HOME
-fi
-
-if [[ "${ANDROID_NDK+}" == "" ]]; then
-    export ANDROID_NDK=$ANDROID_HOME/ndk/android-ndk-r${NDK_VERSION}
 fi
 
 if [ "$ANDROID_HOME" != "$ANDROID_SDK_ROOT" ]; then
@@ -31,6 +26,7 @@ if [ ! -d "$ANDROID_HOME" ]; then
     mkdir -p "$ANDROID_HOME/cmdline-tools"
     unzip -q tools-$SDK_REVISION.zip -d "$ANDROID_HOME/cmdline-tools"
     mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+    rm -vf tools-$SDK_REVISION.zip
 fi
 
 if [ -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
@@ -41,7 +37,7 @@ else
     echo "ERROR: no usable sdkmanager found in $ANDROID_HOME" >&2
     echo "Checking other possible paths: (empty if not found)" >&2
     find "$ANDROID_HOME" -type f -name sdkmanager >&2
-    return
+    exit 1
 fi
 
 PATH=$PATH:$(dirname "$SDK_MANAGER")
@@ -61,10 +57,19 @@ else
     $SDK_MANAGER 'ndk;27.2.12479018'  # for application-services
 fi
 
-if [ ! -d "$ANDROID_NDK" ]; then
-    export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
-    [ -d "$ANDROID_NDK" ] || { echo "$ANDROID_NDK does not exist."; return; };
-fi
+export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
+[ -d "$ANDROID_NDK" ] || {
+    echo "$ANDROID_NDK does not exist."
+    exit 1
+};
 
 echo "INFO: Using sdkmanager ... $SDK_MANAGER"
 echo "INFO: Using NDK ... $ANDROID_NDK"
+
+echo "--------------------------"
+echo "Please update environment variables by running the following:"
+echo ""
+echo "    export ANDROID_HOME=$ANDROID_HOME"
+echo "    export ANDROID_NDK=$ANDROID_NDK"
+echo ""
+echo "--------------------------"

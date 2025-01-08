@@ -169,8 +169,11 @@ to build IronFox.
 - Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation. Otherwise, you can execute the following to install and set up the SDK:
 
     ```sh
-    source ./scripts/setup-android-sdk.sh
+    ./scripts/setup-android-sdk.sh
     ```
+
+    After the SDK installation is completed, you'll be prompted to update the environment variables. Follow the instructions provided in the
+    script output.
 
 ### Get & patch sources
 
