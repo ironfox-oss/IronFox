@@ -1,11 +1,11 @@
 AntiFeatures:
   UpstreamNonFree:
-    en-US: Telemetry and proprietary bits are removed.
+    en-US: Telemetry and proprietary libraries are removed.
 Categories:
   - Internet
 License: MPL-2.0
 AuthorName: IronFox Developers
-AuthorWebSite: https://gitlab.com/IronFox-OSS
+AuthorWebSite: https://ironfoxoss.org/
 SourceCode: https://gitlab.com/IronFox-OSS/IronFox
 IssueTracker: https://gitlab.com/IronFox-OSS/IronFox/-/issues
 
