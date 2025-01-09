@@ -48,12 +48,12 @@ if [[ "$env_source" != "true" ]]; then
 fi
 
 if [ ! -d "$ANDROID_HOME" ]; then
-    echo "\$ANDROID_HOME does not exist."
+    echo "\$ANDROID_HOME($ANDROID_HOME) does not exist."
     exit 1
 fi
 
 if [ ! -d "$ANDROID_NDK" ]; then
-    echo "\$ANDROID_NDK does not exist."
+    echo "\$ANDROID_NDK($ANDROID_NDK) does not exist."
     exit 1
 fi
 
