@@ -19,23 +19,24 @@ RUN dnf install -y \
     wget \
     git
 
-ENV ENTRYPOINT=/opt/entrypoint.sh
+ENV ENVDOCKER=/opt/env_docker.sh
 ENV ANDROID_HOME=/root/android-sdk
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 
-RUN echo "#!/bin/bash" > $ENTRYPOINT
+RUN echo "#!/bin/bash" >> $ENVDOCKER && \
+    echo 'source /root/env/bin/activate' >> $ENVDOCKER
 
 # Set up Android SDK
 ADD https://gitlab.com/ironfox-oss/IronFox/-/raw/main/scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
-RUN JAVA_HOME=$JAVA_HOME ANDROID_HOME=$ANDROID_HOME bash -x /tmp/setup-android-sdk.sh && \
-    echo "export ANDROID_HOME=$ANDROID_HOME" >> $ENTRYPOINT && \
-    echo "export ANDROID_SDK_ROOT=\$ANDROID_HOME" >> $ENTRYPOINT
+RUN bash -x /tmp/setup-android-sdk.sh && \
+    echo "export ANDROID_HOME=$ANDROID_HOME" >> $ENVDOCKER && \
+    echo "export ANDROID_SDK_ROOT=\$ANDROID_HOME" >> $ENVDOCKER
 
 # Set up gradle from F-Droid
 RUN mkdir -p /root/bin
 ADD https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid /root/bin/gradle
 RUN chmod +x "/root/bin/gradle" && \
-    echo "export PATH=\$PATH:/root/bin" >> $ENTRYPOINT
+    echo "export PATH=\$PATH:/root/bin" >> $ENVDOCKER
 
 # Set up gradle properties
 RUN mkdir -p /root/.gradle && \
@@ -46,17 +47,19 @@ RUN mkdir -p /root/.gradle && \
 RUN python3.9 -m venv /root/env
 
 # Set JDK 17 as default
-RUN echo "export JAVA_HOME=$JAVA_HOME" >> $ENTRYPOINT \
-    echo "export PATH=$JAVA_HOME/bin:/root/bin:/root/env/bin:\${PATH}" >> $ENTRYPOINT
+RUN echo "export JAVA_HOME=$JAVA_HOME" >> $ENVDOCKER && \
+    echo "export PATH=$JAVA_HOME/bin:/root/bin:/root/env/bin:\${PATH}" >> $ENVDOCKER
 
 # cd into working directory
 WORKDIR /app
 
 # Create entrypoint script to activate Python venv
-
+ENV ENTRYPOINT=/opt/entrypoint.sh
 RUN echo 'source /root/env/bin/activate' >> $ENTRYPOINT && \
+    echo "source $ENVDOCKER" >> $ENTRYPOINT && \
     echo 'exec "$@"' >> $ENTRYPOINT && \
     chmod +x $ENTRYPOINT
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
 CMD ["/bin/bash"]
+
