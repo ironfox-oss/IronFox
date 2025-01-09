@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index c32e92c..d2ebf83 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+@@ -71,7 +71,7 @@ object FeatureFlags {
+     /**
+      * Enable Meta attribution.
+      */
+-    const val metaAttributionEnabled = true
++    const val metaAttributionEnabled = false
+ 
+     /**
+      * Enables Navigation Toolbar.

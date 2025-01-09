@@ -1,0 +1,26 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 807c5c2..79ab9a1 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1027,7 +1027,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     val shouldShowSearchSuggestions by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions),
+-        default = true,
++        default = false,
+     )
+ 
+     val shouldAutocompleteInAwesomebar by booleanPreference(
+diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+index a4de5c1..e15e096 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+@@ -27,7 +27,7 @@
+         android:layout="@layout/preference_category_no_icon_style">
+          <SwitchPreference
+             app:iconSpaceReserved="false"
+-            android:defaultValue="true"
++            android:defaultValue="false"
+             android:key="@string/pref_key_show_search_suggestions"
+             android:title="@string/preferences_show_search_suggestions" />
+         <CheckBoxPreference

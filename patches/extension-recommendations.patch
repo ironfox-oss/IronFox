@@ -1,0 +1,19 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 807c5c2..450fa37 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1376,12 +1376,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     var overrideAmoUser by stringPreference(
+         appContext.getPreferenceKey(R.string.pref_key_override_amo_user),
+-        default = "",
++        default = "18588170",
+     )
+ 
+     var overrideAmoCollection by stringPreference(
+         appContext.getPreferenceKey(R.string.pref_key_override_amo_collection),
+-        default = "",
++        default = "IronFox",
+     )
+ 
+     var enableGeckoLogs by booleanPreference(

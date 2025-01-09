@@ -1,0 +1,22 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..f1b2c72 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -458,7 +458,7 @@ features:
+           Whether or not to disable SHIP. SHIP is enabled when set to false. SHIP is disabled when
+           set to true.
+         type: Boolean
+-        default: true
++        default: false
+ 
+   fission:
+     description: The feature that controls whether fission is enabled or not in Gecko.
+@@ -468,7 +468,7 @@ features:
+           Whether or not to enable fission. Fission is enabled when set to true. Fission is disabled when
+           set to false.
+         type: Boolean
+-        default: false
++        default: true
+ 
+   suggest-shipped-domains:
+     description: Feature that suggests domains from the shipped domain list.

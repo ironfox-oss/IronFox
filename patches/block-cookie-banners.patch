@@ -1,0 +1,57 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..7cd33bf 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -157,9 +157,9 @@ features:
+         type: Map<CookieBannersSection, Int>
+         default:
+           {
+-            "feature-ui": 0,
+-            "feature-setting-value": 0,
+-            "feature-setting-value-pbm": 0,
++            "feature-ui": 1,
++            "feature-setting-value": 1,
++            "feature-setting-value-pbm": 1,
+             "feature-setting-detect-only": 0,
+             "feature-setting-global-rules": 1,
+             "feature-setting-global-rules-sub-frames": 1,
+@@ -169,7 +169,7 @@ features:
+         value: {
+           "sections-enabled": {
+             "feature-ui": 1,
+-            "feature-setting-value": 0,
++            "feature-setting-value": 1,
+             "feature-setting-value-pbm": 1,
+             "feature-setting-detect-only": 0,
+             "feature-setting-global-rules": 1,
+@@ -180,7 +180,7 @@ features:
+         value: {
+           "sections-enabled": {
+             "feature-ui": 1,
+-            "feature-setting-value": 0,
++            "feature-setting-value": 1,
+             "feature-setting-value-pbm": 1,
+             "feature-setting-detect-only": 0,
+             "feature-setting-global-rules": 1,
+@@ -191,7 +191,7 @@ features:
+         value: {
+           "sections-enabled": {
+             "feature-ui": 1,
+-            "feature-setting-value": 0,
++            "feature-setting-value": 1,
+             "feature-setting-value-pbm": 1,
+             "feature-setting-detect-only": 0,
+             "feature-setting-global-rules": 1,
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index c03abd3..2abf25c 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -111,7 +111,7 @@
+         <org.mozilla.fenix.settings.cookiebannerhandling.CustomCBHSwitchPreference
+             android:key="@string/pref_key_cookie_banner_private_mode"
+             app:iconSpaceReserved="false"
+-            app:isPreferenceVisible="false"
++            app:isPreferenceVisible="true"
+             android:title="@string/preferences_cookie_banner_reduction_private_mode" />
+ 
+         <androidx.preference.Preference

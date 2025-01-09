@@ -1,0 +1,150 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 807c5c2..1ea8550 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -166,8 +166,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = 0L,
+     )
+ 
+-    val canShowCfr: Boolean
+-        get() = (System.currentTimeMillis() - lastCfrShownTimeInMillis) > THREE_DAYS_MS
++    val canShowCfr = false
+ 
+     var forceEnableZoom by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
+@@ -796,20 +795,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the total cookie protection CRF should be shown.
+      */
+-    var shouldShowEraseActionCFR by lazyFeatureFlagPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_should_show_erase_action_popup),
+-        featureFlag = true,
+-        default = { feltPrivateBrowsingEnabled },
+-    )
++    var shouldShowEraseActionCFR = false
+ 
+     /**
+      * Indicates if the cookie banners CRF should be shown.
+      */
+-    var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
+-        featureFlag = true,
+-        default = { shouldShowCookieBannerUI },
+-    )
++    var shouldShowCookieBannersCFR = false
+ 
+     val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_cookies_select),
+@@ -1061,23 +1052,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     private val userNeedsToVisitInstallableSites: Boolean
+         get() = pwaInstallableVisitCount.underMaxCount()
+ 
+-    val shouldShowPwaCfr: Boolean
+-        get() {
+-            if (!canShowCfr) return false
+-            // We only want to show this on the 3rd time a user visits a site
+-            if (userNeedsToVisitInstallableSites) return false
+-
+-            // ShortcutManager::pinnedShortcuts is only available on Oreo+
+-            if (!userKnowsAboutPwas && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+-                val manager = appContext.getSystemService(ShortcutManager::class.java)
+-                val alreadyHavePwaInstalled = manager != null && manager.pinnedShortcuts.size > 0
+-
+-                // Users know about PWAs onboarding if they already have PWAs installed.
+-                userKnowsAboutPwas = alreadyHavePwaInstalled
+-            }
+-            // Show dialog only if user does not know abut PWAs
+-            return !userKnowsAboutPwas
+-        }
++    val shouldShowPwaCfr = false
+ 
+     var userKnowsAboutPwas by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
+@@ -1089,8 +1064,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = true,
+     )
+ 
+-    val shouldShowOpenInAppCfr: Boolean
+-        get() = canShowCfr && shouldShowOpenInAppBanner
++    val shouldShowOpenInAppCfr = false
+ 
+     var shouldShowAutoCloseTabsBanner by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
+@@ -1284,32 +1258,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     var showedPrivateModeContextualFeatureRecommender by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_showed_private_mode_cfr),
+-        default = false,
++        default = true,
+     )
+ 
+     private val numTimesPrivateModeOpened = counterPreference(
+         appContext.getPreferenceKey(R.string.pref_key_private_mode_opened),
+     )
+ 
+-    val shouldShowPrivateModeCfr: Boolean
+-        get() {
+-            if (!canShowCfr) return false
+-            val focusInstalled = MozillaProductDetector
+-                .getInstalledMozillaProducts(appContext as Application)
+-                .contains(MozillaProductDetector.MozillaProducts.FOCUS.productName)
+-
+-            val showCondition = if (focusInstalled) {
+-                numTimesPrivateModeOpened.value >= CFR_COUNT_CONDITION_FOCUS_INSTALLED
+-            } else {
+-                numTimesPrivateModeOpened.value >= CFR_COUNT_CONDITION_FOCUS_NOT_INSTALLED
+-            }
+-
+-            if (showCondition && !showedPrivateModeContextualFeatureRecommender) {
+-                return true
+-            }
+-
+-            return false
+-        }
++    val shouldShowPrivateModeCfr = false
+ 
+     var openLinksInExternalAppOld by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_open_links_in_external_app_old),
+@@ -1551,11 +1507,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if sync onboarding CFR should be shown.
+      */
+-    var showSyncCFR by lazyFeatureFlagPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_should_show_sync_cfr),
+-        featureFlag = true,
+-        default = { mr2022Sections[Mr2022Section.SYNC_CFR] == true },
+-    )
++    var showSyncCFR = false
+ 
+     /**
+      * Indicates if home onboarding dialog should be shown.
+@@ -1742,26 +1694,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the navigation bar CFR should be displayed to the user.
+      */
+-    var shouldShowNavigationBarCFR by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_should_navbar_cfr),
+-        default = true,
+-    )
++    var shouldShowNavigationBarCFR = false
+ 
+     /**
+      * Indicates Navigation Bar's Navigation buttons CFR should be displayed to the user.
+      */
+-    var shouldShowNavigationButtonsCFR by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_toolbar_navigation_cfr),
+-        default = true,
+-    )
++    var shouldShowNavigationButtonsCFR = false
+ 
+     /**
+      * Indicates if the menu CFR should be displayed to the user.
+      */
+-    var shouldShowMenuCFR by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_menu_cfr),
+-        default = true,
+-    )
++    var shouldShowMenuCFR = false
+ 
+     /**
+      * Time in milliseconds since the user first opted in the review quality check feature.

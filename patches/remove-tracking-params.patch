@@ -1,0 +1,42 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..349d333 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -125,28 +125,28 @@ features:
+         type: Map<QueryParameterStrippingSection, String>
+         default:
+           {
+-            "query-parameter-stripping": "0",
+-            "query-parameter-stripping-pmb": "0",
++            "query-parameter-stripping": "1",
++            "query-parameter-stripping-pmb": "1",
+             "query-parameter-stripping-allow-list": "",
+-            "query-parameter-stripping-strip-list": "",
++            "query-parameter-stripping-strip-list": "__hsfp, __hssc, __hstc, __s, _hsenc, _openstat, dclid, fbclid, gbraid, gclid, hsCtaTracking, igshid, mc_eid, ml_subscriber, ml_subscriber_hash, msclkid, oft_c, oft_ck, oft_d, oft_id, oft_ids, oft_k, oft_lk, oft_sk, oly_anon_id, oly_enc_id, rb_clickid, s_cid, twclid, vero_conv, vero_id, wbraid, wickedid, yclid",
+           }
+     defaults:
+       - channel: developer
+         value: {
+           "sections-enabled": {
+-            "query-parameter-stripping": "0",
+-            "query-parameter-stripping-pmb": "0",
++            "query-parameter-stripping": "1",
++            "query-parameter-stripping-pmb": "1",
+             "query-parameter-stripping-allow-list": "",
+-            "query-parameter-stripping-strip-list": "",
++            "query-parameter-stripping-strip-list": "__hsfp, __hssc, __hstc, __s, _hsenc, _openstat, dclid, fbclid, gbraid, gclid, hsCtaTracking, igshid, mc_eid, ml_subscriber, ml_subscriber_hash, msclkid, oft_c, oft_ck, oft_d, oft_id, oft_ids, oft_k, oft_lk, oft_sk, oly_anon_id, oly_enc_id, rb_clickid, s_cid, twclid, vero_conv, vero_id, wbraid, wickedid, yclid",
+           }
+         }
+       - channel: nightly
+         value: {
+           "sections-enabled": {
+-            "query-parameter-stripping": "0",
+-            "query-parameter-stripping-pmb": "0",
++            "query-parameter-stripping": "1",
++            "query-parameter-stripping-pmb": "1",
+             "query-parameter-stripping-allow-list": "",
+-            "query-parameter-stripping-strip-list": "",
++            "query-parameter-stripping-strip-list": "__hsfp, __hssc, __hstc, __s, _hsenc, _openstat, dclid, fbclid, gbraid, gclid, hsCtaTracking, igshid, mc_eid, ml_subscriber, ml_subscriber_hash, msclkid, oft_c, oft_ck, oft_d, oft_id, oft_ids, oft_k, oft_lk, oft_sk, oly_anon_id, oly_enc_id, rb_clickid, s_cid, twclid, vero_conv, vero_id, wbraid, wickedid, yclid",
+           }
+         }
+   cookie-banners:

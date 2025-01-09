@@ -1,0 +1,17 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..73abf67 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -309,9 +309,9 @@ features:
+     defaults:
+       - channel: developer
+         value:
+-          enabled: true
+-          product-recommendations: true
+-          product-recommendations-exposure: true
++          enabled: false
++          product-recommendations: false
++          product-recommendations-exposure: false
+ 
+   print:
+     description: A feature for printing from the share or browser menu.

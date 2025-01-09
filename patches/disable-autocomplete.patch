@@ -1,0 +1,26 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 807c5c2..4e96345 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1032,7 +1032,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     val shouldAutocompleteInAwesomebar by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_enable_autocomplete_urls),
+-        default = true,
++        default = false,
+     )
+ 
+     var defaultTopSitesAdded by booleanPreference(
+diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+index a4de5c1..700b52e 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+@@ -92,7 +92,7 @@
+             android:title="@string/preferences_show_voice_search" />
+         <SwitchPreference
+             app:iconSpaceReserved="false"
+-            android:defaultValue="true"
++            android:defaultValue="false"
+             android:key="@string/pref_key_enable_autocomplete_urls"
+             android:title="@string/preferences_enable_autocomplete_urls" />
+     </PreferenceCategory>

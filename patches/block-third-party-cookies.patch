@@ -1,0 +1,19 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..a28a5dc 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -522,12 +522,12 @@ features:
+       enabled:
+         description: If true, the feature is active.
+         type: Boolean
+-        default: false
++        default: true
+       enabled-normal:
+         description: >
+           Enables / disables third-party cookie blocking in normal browsing mode.
+         type: Boolean
+-        default: false
++        default: true
+       enabled-private:
+         description: >
+           Enables / disables third-party cookie blocking in private browsing mode.

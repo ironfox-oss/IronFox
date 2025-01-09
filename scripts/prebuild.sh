@@ -273,6 +273,69 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/strict_etp.patch"
 # Enable HTTPS only mode by default
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/https_only.patch"
 
+# Enable Global Privacy Control by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/global-privacy-control.patch"
+
+# Disable search suggestions by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-search-suggestions.patch"
+
+# Disable autocomplete by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-autocomplete.patch"
+
+# Disable prompt to enable search suggestions in private windows
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-search-suggestions-pb-prompt.patch"
+
+# Disable password manager/autofill for login info by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-login-autofill.patch"
+
+# Disable credit card/address autofill by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-autofill.patch"
+
+# Clear open tabs, browsing history, cache, & download list on exit by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/sanitize-on-exit.patch"
+
+# Disable 'Meta Attribution' - just more telemetry - used to track referrals
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-meta-attribution.patch"
+
+# Disable Campaign Growth Data Measurement - more telemetry :/
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-campaign-growth-data-measurement.patch"
+
+# Disable Firefox Suggest
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-firefox-suggest.patch"
+
+# Enable "Zoom on all websites" by default - allows always zooming into websites, even if they try to block it...
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/force-enable-zoom.patch"
+
+# Disable Contextual Feature Recommendations
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-cfrs.patch"
+
+# Disable Pocket Sponsored Stories
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-sponsored-stories.patch"
+
+# Disable Mozilla Feedback Surveys (Microsurveys)
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-microsurveys.patch"
+
+# Enable per-site process isolation (Fission)
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fission.patch"
+
+# Enable FPP (Fingerprinting Protection)
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fingerprinting-protection.patch"
+
+# Disable Fakespot ("Shopping Experience"...)
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-shopping-experience.patch"
+
+# Remove tracking parameters from URLs
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-tracking-params.patch"
+
+# Block cookie banners by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/block-cookie-banners.patch"
+
+# Block third party cookies by default (Ex. how ETP Strict on desktop behaves...)
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/block-third-party-cookies.patch"
+
+# Switch the built-in extension recommendations page to use our collection instead of Mozilla's...
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/extension-recommendations.patch"
+
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"
 

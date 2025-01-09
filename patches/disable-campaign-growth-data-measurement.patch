@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..41f0e0c 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -209,7 +209,7 @@ features:
+     defaults:
+       - channel: release
+         value:
+-          enabled: true
++          enabled: false
+ 
+   re-engagement-notification:
+     description: A feature that shows the re-engagement notification if the user is inactive.

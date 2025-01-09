@@ -1,0 +1,28 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..3f4b0bf 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -492,12 +492,12 @@ features:
+       enabled:
+         description: If true, the feature is active.
+         type: Boolean
+-        default: false
++        default: true
+       enabled-normal:
+         description: >
+           Enables / disables fingerprinting protection in normal browsing mode.
+         type: Boolean
+-        default: false
++        default: true
+       enabled-private:
+         description: >
+           Enables / disables fingerprinting protection in private browsing mode.
+@@ -514,7 +514,7 @@ features:
+           Uses a different math backend for Math.sin/cos/tan in JavaScript that
+           exposes less entropy
+         type: Boolean
+-        default: false
++        default: true
+ 
+   third-party-cookie-blocking:
+     description: Control third-party cookie blocking.
