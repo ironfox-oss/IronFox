@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..7a8db7e 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -549,7 +549,7 @@ features:
+         description: >
+           When the feature is enabled then microsurveys can be used.
+         type: Boolean
+-        default: true
++        default: false
+ 
+   set-as-default-prompt:
+     description: >

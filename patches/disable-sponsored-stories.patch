@@ -1,0 +1,50 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..53f9f93 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -48,8 +48,8 @@ features:
+             "jump-back-in": true,
+             "bookmarks": true,
+             "recent-explorations": true,
+-            "pocket": true,
+-            "pocket-sponsored-stories": true,
++            "pocket": false,
++            "pocket-sponsored-stories": false,
+           }
+     defaults:
+       - channel: nightly
+@@ -59,7 +59,7 @@ features:
+             "jump-back-in": true,
+             "bookmarks": true,
+             "recent-explorations": true,
+-            "pocket": true,
++            "pocket": false,
+           }
+         }
+   nimbus-validation:
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index c32e92c..1469783 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+@@ -44,7 +44,7 @@ object FeatureFlags {
+      * Show Pocket sponsored stories in between Pocket recommended stories on home.
+      */
+     fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
+-        return isPocketRecommendationsFeatureEnabled(context)
++        return false
+     }
+ 
+     /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 807c5c2..9ccd3cd 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1625,7 +1625,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     val showPocketSponsoredStories by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
+-        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
++        default = { false },
+         featureFlag = FeatureFlags.isPocketSponsoredStoriesFeatureEnabled(appContext),
+     )
+ 
