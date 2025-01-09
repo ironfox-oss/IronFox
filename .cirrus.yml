@@ -18,6 +18,7 @@ build_task:
     SB_GAPI_KEY: ENCRYPTED[!3da25d528d0c34be6d3f3bbe73d2cbce960b8e55ed7b54906a1140b4929032b026a1ea5f0876fe46b0f0044711cc08bd!]
     SB_GAPI_KEY_FILE: /opt/sb-gapi.data
     ANDROID_HOME: /root/android-sdk
+    ANDROID_NDK: /root/android-sdk/ndk/27.2.12479018
     JAVA_HOME: /usr/lib/jvm/java-17-openjdk
     matrix:
       - VERSION_NAME: "134.0"
