@@ -1,3 +1,33 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index e70a2a9..7ac8f13 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -101,10 +101,10 @@ features:
+         default:
+           {
+             "home-onboarding-dialog-existing-users": true,
+-            "sync-cfr": true,
++            "sync-cfr": false,
+             "wallpapers-selection-tool": true,
+-            "jump-back-in-cfr": true,
+-            "tcp-cfr": true,
++            "jump-back-in-cfr": false,
++            "tcp-cfr": false,
+             "tcp-feature": true,
+           }
+     defaults:
+@@ -112,9 +112,9 @@ features:
+         value: {
+           "sections-enabled": {
+             "home-onboarding-dialog-existing-users": true,
+-            "sync-cfr": true,
++            "sync-cfr": false,
+             "wallpapers-selection-tool": true,
+-            "jump-back-in-cfr": true,
++            "jump-back-in-cfr": false,
+           }
+         }
+   query-parameter-stripping:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 807c5c2..1ea8550 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
