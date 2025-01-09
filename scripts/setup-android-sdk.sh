@@ -37,7 +37,7 @@ else
     echo "ERROR: no usable sdkmanager found in $ANDROID_HOME" >&2
     echo "Checking other possible paths: (empty if not found)" >&2
     find "$ANDROID_HOME" -type f -name sdkmanager >&2
-    exit 1
+    return
 fi
 
 PATH=$PATH:$(dirname "$SDK_MANAGER")
@@ -60,7 +60,7 @@ fi
 export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
 [ -d "$ANDROID_NDK" ] || {
     echo "$ANDROID_NDK does not exist."
-    exit 1
+    return
 };
 
 echo "INFO: Using sdkmanager ... $SDK_MANAGER"

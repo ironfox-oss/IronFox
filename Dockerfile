@@ -21,12 +21,6 @@ RUN dnf install -y \
 
 ENV BASHRC=/etc/bashrc
 
-# Set up Android SDK
-ADD https://gitlab.com/ironfox-oss/IronFox/-/raw/main/scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
-RUN bash /tmp/setup-android-sdk.sh
-RUN echo "export ANDROID_HOME=/opt/android-sdk" >> $BASHRC
-RUN echo "export ANDROID_SDK_ROOT=\$ANDROID_HOME" >> $BASHRC
-
 # Set up gradle from F-Droid
 RUN mkdir -p /root/bin
 ADD https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid /root/bin/gradle
