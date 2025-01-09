@@ -33,7 +33,7 @@ index c32e92c..1469783 100644
 -    fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
 -        return isPocketRecommendationsFeatureEnabled(context)
 -    }
-+    const val isPocketRecommendationsFeatureEnabled = false
++    const val isPocketSponsoredStoriesFeatureEnabled = false
  
      /**
       * Enables compose on the tabs tray items.
