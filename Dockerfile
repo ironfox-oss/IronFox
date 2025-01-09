@@ -24,7 +24,8 @@ ENV BASHRC=/etc/bashrc
 # Set up gradle from F-Droid
 RUN mkdir -p /root/bin
 ADD https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid /root/bin/gradle
-RUN chmod +x "/root/bin/gradle"
+RUN chmod +x "/root/bin/gradle" && \
+    echo "export PATH=\$PATH:/root/bin" >> $BASHRC
 
 # Set up gradle properties
 RUN mkdir -p /root/.gradle && \
@@ -35,18 +36,18 @@ RUN mkdir -p /root/.gradle && \
 RUN python3.9 -m venv /root/env
 
 # Set JDK 17 as default
-RUN echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> $BASHRC
-RUN echo "export PATH=\${JAVA_HOME}/bin:/root/bin:/root/env/bin:\${PATH}" >> $BASHRC
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk" >> $BASHRC \
+    echo "export PATH=\${JAVA_HOME}/bin:/root/bin:/root/env/bin:\${PATH}" >> $BASHRC
 
 # cd into working directory
 WORKDIR /app
 
 # Create entrypoint script to activate Python venv
 
-RUN echo '#!/bin/bash' > /opt/entrypoint.sh
-RUN echo 'source /root/env/bin/activate' >> /opt/entrypoint.sh
-RUN echo 'exec "$@"' >> /opt/entrypoint.sh
-RUN chmod +x /opt/entrypoint.sh
+RUN echo '#!/bin/bash' > /opt/entrypoint.sh && \
+    echo 'source /root/env/bin/activate' >> /opt/entrypoint.sh && \
+    echo 'exec "$@"' >> /opt/entrypoint.sh && \
+    chmod +x /opt/entrypoint.sh
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
 CMD ["/bin/bash"]
