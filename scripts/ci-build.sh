@@ -9,6 +9,9 @@ set -o xtrace
 rootdir="$(dirname "$0")/.."
 rootdir=$(realpath "$rootdir")
 
+# Setup environment variables
+source /opt/env_docker.sh
+
 # Setup paths
 source "$rootdir/scripts/env_local.sh"
 
