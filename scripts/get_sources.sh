@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-FIREFOX_TAG="FIREFOX-ANDROID_134_0_RELEASE"
+FIREFOX_TAG="134.0"
 WASI_TAG="wasi-sdk-20"
 GLEAN_TAG="v62.0.0"
 GMSCORE_TAG="v0.3.6.244735"
@@ -126,7 +126,7 @@ echo "Cloning appservices..."
 git clone --branch "$APPSERVICES_TAG" --depth=1 "https://github.com/mozilla/application-services" "$APPSERVICESDIR"
 (cd "$APPSERVICESDIR" && git submodule update --init --depth=1)
 
-do_download "gecko" "https://hg.mozilla.org/releases/mozilla-release/archive/${FIREFOX_TAG}.zip"
+do_download "gecko" "https://archive.mozilla.org/pub/firefox/releases/${FIREFOX_TAG}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
 
 echo "Writing ${ENV_SH}..."
 cat > "$ENV_SH" << EOF
