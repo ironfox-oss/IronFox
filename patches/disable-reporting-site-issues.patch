@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index e70a2a9..61d9584 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -550,7 +550,7 @@ features:
+       report-site-issue:
+         description: If true, report site issue menu item and preview is available.
+         type: Boolean
+-        default: true
++        default: false
+     defaults:
+       - channel: release
+         value:
