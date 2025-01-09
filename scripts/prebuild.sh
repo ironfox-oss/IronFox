@@ -312,8 +312,8 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/force-enable-zoom.patch"
 # Disable Contextual Feature Recommendations
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-cfrs.patch"
 
-# Disable Pocket Sponsored Stories
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-sponsored-stories.patch"
+# Disable more Pocket crap not already covered...
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/kill-pocket.patch"
 
 # Disable Mozilla Feedback Surveys (Microsurveys)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-microsurveys.patch"
