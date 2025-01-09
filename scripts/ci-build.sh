@@ -10,9 +10,6 @@ rootdir="$(dirname "$0")/.."
 rootdir=$(realpath "$rootdir")
 
 # Setup paths
-source "$rootdir/scripts/setup-android-sdk.sh"
-
-# Setup paths
 source "$rootdir/scripts/env_local.sh"
 
 # Patch
