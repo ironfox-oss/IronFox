@@ -26,15 +26,17 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFla
 index c32e92c..1469783 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -44,7 +44,7 @@ object FeatureFlags {
+@@ -43,9 +43,7 @@ object FeatureFlags {
+     /**
       * Show Pocket sponsored stories in between Pocket recommended stories on home.
       */
-     fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
+-    fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
 -        return isPocketRecommendationsFeatureEnabled(context)
-+        return false
-     }
+-    }
++    const val isPocketRecommendationsFeatureEnabled = false
  
      /**
+      * Enables compose on the tabs tray items.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 807c5c2..9ccd3cd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
