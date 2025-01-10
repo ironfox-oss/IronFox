@@ -21,12 +21,12 @@ set -e
 
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
-    source "$(dirname "$0")/paths_fdroid.sh"
+    source "$(dirname "$0")/env_fdroid.sh"
 fi
 
 # shellcheck disable=SC2154
-if [[ "$paths_source" != "true" ]]; then
-    echo "Use 'source scripts/paths_local.sh' before calling prebuild or build"
+if [[ "$env_source" != "true" ]]; then
+    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
     exit 1
 fi
 
@@ -90,8 +90,6 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$application_services"
-export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
-export NSS_STATIC=1
 ./libs/verify-android-environment.sh
 gradle :tooling-nimbus-gradle:publishToMavenLocal
 popd
@@ -99,9 +97,6 @@ popd
 # shellcheck disable=SC2154
 pushd "$mozilla_release"
 
-# shellcheck disable=SC2154
-MOZ_CHROME_MULTILOCALE=$(<"$patches/locales")
-export MOZ_CHROME_MULTILOCALE
 ./mach build
 gradle :geckoview:publishReleasePublicationToMavenLocal
 gradle :exoplayer2:publishReleasePublicationToMavenLocal

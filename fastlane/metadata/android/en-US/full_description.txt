@@ -1,1 +1,0 @@
-IronFox is a fork of Divested Computing Group's Mull Browser, based on Mozilla Firefox. Our goal is to continue the legacy of Mull by providing a free and open source, privacy and security-oriented web browser for daily use. It is recommended to install 'uBlock Origin'.
