@@ -1,6 +1,49 @@
+stages:
+  - build_fdroid
+  - build_docker
+
+update-fdroid-repo:
+  image: alpine:latest
+  stage: build_fdroid
+  rules:
+    - if: $CI_COMMIT_TAG
+  variables:
+    TARGET_REPO_PATH: ironfox-oss/fdroid
+    TARGET_REPO_BRANCH: dev
+    REPO_DIR: './repo'
+    VERSION_FILE: "version.txt"
+  before_script:
+    - apk add --no-cache git curl openssh-client jq
+    - git config --global user.email "release-manager@ironfoxoss.org"
+    - git config --global user.name "IronFox Release Manager"
+  script:
+    - git clone "https://gitlab.com/$TARGET_REPO_PATH.git" target-repo
+    - cd target-repo
+    - git remote add gitlab_ci_origin https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/$TARGET_REPO_PATH.git
+
+    - mkdir -p $REPO_DIR
+
+    # Download all assets from the release
+    - |
+      curl --header "PRIVATE-TOKEN: $CI_JOB_TOKEN" \
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases/${CI_COMMIT_TAG}/assets/links" \
+        | jq -c '.[] | select(.name | endswith(".apk"))' \
+        | while read -r asset; do
+          name=$(echo $asset | jq -r '.name')
+          url=$(echo $asset | jq -r '.direct_asset_url')
+          echo "Downloading $name from $url"
+          curl -L --header "JOB-TOKEN: $CI_JOB_TOKEN" "$url" -o "$REPO_DIR/$name"
+        done
+
+    - echo "$CI_COMMIT_TAG" > $VERSION_FILE
+
+    - git add $REPO_DIR $VERSION_FILE
+    - git commit -m "Update for release ${CI_COMMIT_TAG}"
+    - git push -n gitlab_ci_origin $TARGET_REPO_BRANCH
+
 docker-build:
   image: docker:cli
-  stage: build
+  stage: build_docker
   services:
     - docker:dind
   variables:
