@@ -1,1 +1,0 @@
-A privacy and security-oriented Firefox-based browser for Android.
