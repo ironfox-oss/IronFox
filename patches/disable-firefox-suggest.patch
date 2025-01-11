@@ -1,13 +1,27 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 8f6c6df..f2119e9 100644
+index e70a2a99fe..a73ae3c9ee 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -361,10 +361,10 @@ features:
+@@ -29,9 +29,9 @@ import:
+       awesomebar-suggestion-provider:
+         - value:
+             available-suggestion-types: {
+-              "amp": true,
++              "amp": false,
+               "ampMobile": false,
+-              "wikipedia": true,
++              "wikipedia": false,
+             }
+ 
+ features:
+@@ -366,11 +366,11 @@ features:
      defaults:
        - channel: developer
          value:
 -          enabled: true
+-          boost-amp-wiki: true
 +          enabled: false
++          boost-amp-wiki: false
        - channel: nightly
          value:
 -          enabled: true
