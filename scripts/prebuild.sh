@@ -342,6 +342,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/extension-recommendations.p
 # Disable menu item to report issues with websites to Mozilla...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-reporting-site-issues.patch"
 
+# Disable Safe Browsing by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-safe-browsing.patch"
+
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"
 
