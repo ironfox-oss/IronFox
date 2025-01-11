@@ -15,4 +15,12 @@ pref("browser.safebrowsing.downloads.enabled", false); // [DEFAULT]
 pref("browser.safebrowsing.malware.enabled", false);
 pref("browser.safebrowsing.phishing.enabled", false);
 
+/// Re-enable Password Manager & Autofill in GeckoView
+// We still disable these by default, just via Fenix's UI settings instead...
+// https://gitlab.com/ironfox-oss/IronFox/-/issues/11
+
+pref("extensions.formautofill.addresses.enabled", true); // [DEFAULT]
+pref("extensions.formautofill.creditCards.enabled", true); // [DEFAULT]
+pref("signon.rememberSignons", true); // [DEFAULT]
+
 pref("browser.ironfox.applied", true);
