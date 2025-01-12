@@ -2,7 +2,7 @@
 // The Phoenix shall rise from the ashes of what fell before it.
 // RIP Mull.
 
-pref("browser.phoenix.version", "2025.01.06.1");
+pref("browser.phoenix.version", "2025.01.12.1");
 
 // Let's begin.
 
@@ -40,11 +40,6 @@ pref("messaging-system.rsexperimentloader.enabled", false); // [HIDDEN]
 pref("messaging-system.rsexperimentloader.collection_id", ""); // [HIDDEN]
 pref("nimbus.appId", "");  // [HIDDEN], https://searchfox.org/mozilla-central/source/toolkit/components/backgroundtasks/defaults/backgroundtasks_browser.js
 pref("toolkit.telemetry.pioneer-new-studies-available", false); // [HIDDEN]
-
-/// WebVTT Testing Events
-// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
-
-pref("media.webvtt.testing.events", false); // [DEFAULT]
 
 /// Origin Trials
 // https://wiki.mozilla.org/Origin_Trials
@@ -224,6 +219,20 @@ pref("network.predictor.enable-prefetch", false);
 pref("network.predictor.enabled", false);
 pref("network.prefetch-next", false);
 
+/// Disable Preconnect
+// https://github.com/uBlockOrigin/uBlock-issues/issues/2913
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preconnect
+
+pref("network.preconnect", false);
+
+/// Disable Early Hints
+// https://developer.mozilla.org/docs/Web/HTTP/Status/103
+// https://github.com/bashi/early-hints-explainer/blob/main/explainer.md
+// Ex. like Cromite https://github.com/uazo/cromite/blob/master/build/patches/Client-hints-overrides.patch
+
+pref("network.early-hints.enabled", false);
+pref("network.early-hints.preconnect.enabled", false);
+
 /// Disable Search Suggestions
 
 pref("browser.search.suggest.enabled", false);
@@ -272,7 +281,8 @@ pref("browser.xul.error_pages.expert_bad_cert", true);
 
 pref("security.tls.enable_0rtt_data", false);
 
-// Require safe renegotiations - Disables RFC 5746
+/// Require safe renegotiations - Disables connections to servers without RFC 5746
+// https://wiki.mozilla.org/Security:Renegotiation
 
 pref("security.ssl.require_safe_negotiation", true);
 
@@ -354,8 +364,6 @@ pref("network.notify.checkForNRPT", false);
 pref("network.notify.checkForProxies", false);
 
 /// Enforce EncryptedClientHello
-// We also set "DisableEncryptedClientHello" in policies
-// https://mozilla.github.io/policy-templates/#disableencryptedclienthello
 // https://blog.cloudflare.com/announcing-encrypted-client-hello
 
 pref("network.dns.echconfig.enabled", true); // [DEFAULT]
@@ -392,11 +400,13 @@ pref("security.pki.crlite_mode", 2); // [DEFAULT on Nightly]
 pref("security.remote_settings.crlite_filters.enabled", true); // [DEFAULT on Nightly]
 
 /// Enforce Strict Certificate Pinning
+// https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning#How_to_use_pinning
 
 pref("security.cert_pinning.enforcement_level", 2);
 
 /// Enable & Enforce Certificate Transparency
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15868
+// https://wiki.mozilla.org/SecurityEngineering/Certificate_Transparency
 
 pref("security.pki.certificate_transparency.mode", 2); // [Default = 0]
 pref("security.pki.certificate_transparency.disable_for_hosts", ""); // [DEFAULT]
@@ -501,6 +511,11 @@ pref("browser.phoenix.010.applied", true);
 /// Ensure that AI functionality is disabled by default
 
 pref("browser.ml.enable", false); // [DEFAULT, except for Nightly] - "Experimental Machine Learning Inference Engine"
+
+/// Disable AI/ML "Autofill Experiment"...
+// https://searchfox.org/mozilla-central/source/toolkit/components/formautofill/MLAutofill.sys.mjs
+
+pref("extensions.formautofill.ml.experiment.enabled", false);
 
 pref("browser.phoenix.011.applied", true);
 
@@ -647,6 +662,12 @@ pref("webgl.disable-fail-if-major-performance-caveat", false);
 /// Prevent using system colors
 
 pref("browser.display.use_system_colors", false); // [DEFAULT]
+
+/// Enable fdlibm for Math.sin, Math.cos, and Math.tan
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8720
+// https://groups.google.com/a/mozilla.org/g/dev-platform/c/0dxAO-JsoXI/m/eEhjM9VsAgAJ
+
+pref("javascript.options.use_fdlibm_for_sin_cos_tan", true);
 
 pref("browser.phoenix.016.applied", true);
 
@@ -808,11 +829,15 @@ pref("browser.phoenix.018.applied", true);
 
 /// Disable JavaScript Just-in-time Compilation (JIT)
 // https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/
+// https://firefox-source-docs.mozilla.org/js/index.html#javascript-jits
+// https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/user-overrides.js#L60
 
-pref("javascript.options.baselinejit", false);
-pref("javascript.options.ion", false);
-pref("javascript.options.native_regexp", false); //  https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/21865 https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
-pref("javascript.options.wasm_baselinejit", false);
+pref("javascript.options.baselinejit", false); // Baseline Compiler
+pref("javascript.options.blinterp", false); // Baseline Interpreter 
+pref("javascript.options.ion", false); // WarpMonkey
+pref("javascript.options.main_process_disable_jit", true); // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8761
+pref("javascript.options.native_regexp", false); // irregexp https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/21865 https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
+pref("javascript.options.wasm_baselinejit", false); // WASM Baseline Compiler
 
 /// Disable ASM.JS (More JIT)
 // https://rh0dev.github.io/blog/2017/the-return-of-the-jit/
@@ -830,6 +855,16 @@ pref("mathml.disabled", true);
 
 pref("gfx.font_rendering.graphite.enabled", false);
 pref("gfx.font_rendering.opentype_svg.enabled", false);
+
+/// Disable SharedArrayBuffer using window.postMessage
+// https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
+// https://developer.mozilla.org/docs/Web/API/Window/postMessage
+// https://blog.mozilla.org/security/2018/01/03/mitigations-landing-new-class-timing-attack/
+// https://github.com/tc39/ecma262/issues/1435
+// By default, Firefox restricts the use of SharedArrayBuffer - this fully disables it.
+
+pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false); // [DEFAULT]
+pref("dom.postMessage.sharedArrayBuffer.withCOOP_COEP", false);
 
 pref("browser.phoenix.019.applied", true);
 
@@ -930,6 +965,18 @@ pref("network.protocol-handler.warn-external.tel", true);
 pref("network.protocol-handler.warn-external.vnd.youtube", true);
 pref("security.external_protocol_requires_permission", true); // [DEFAULT]
 
+/// Enforce various other important security-related prefs
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15473
+
+pref("dom.block_external_protocol_in_iframes", true); // [DEFAULT]
+pref("dom.block_external_protocol_navigation_from_sandbox", true); // [DEFAULT]
+pref("security.all_resource_uri_content_accessible", false); // [DEFAULT]
+pref("security.allow_eval_in_parent_process", false);
+pref("security.allow_eval_with_system_principal", false);
+pref("security.allow_parent_unrestricted_js_loads", false);
+pref("security.allow_unsafe_parent_loads", false); // [DEFAULT]
+pref("security.data_uri.block_toplevel_data_uri_navigations", true); // [DEFAULT]
+
 /// Never skip the assertion that about:pages don't have content security policies (CSP)
 // https://searchfox.org/comm-central/source/mozilla/modules/libpref/init/StaticPrefList.yaml#3987
 
@@ -941,6 +988,13 @@ pref("dom.security.skip_about_page_has_csp_assert", false); // [DEFAULT]
 // https://www.theregister.com/2023/12/21/mozilla_decides_trusted_types_is/
 
 pref("dom.security.trusted_types.enabled", true);
+
+/// Prevent marking JIT code pages as both writable and executable, only one or the other...
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8714
+// Might cause issues in certain specific set-ups
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1876632
+
+pref("javascript.options.content_process_write_protect_code", true);
 
 pref("browser.phoenix.020.applied", true);
 
@@ -1015,6 +1069,11 @@ pref("reader.errors.includeURLs", false); // [DEFAULT]
 pref("browser.phoenix.024.applied", true);
 
 /// 025 MISC.
+
+/// Disable WebVTT Testing Events
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
+
+pref("media.webvtt.testing.events", false); // [DEFAULT]
 
 /// Always allow installing "incompatible" add-ons
 
