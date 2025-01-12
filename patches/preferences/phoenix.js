@@ -38,7 +38,7 @@ pref("app.shield.optoutstudies.enabled", false, locked); // [HIDDEN]
 pref("messaging-system.log", "off", locked); // Disables logging
 pref("messaging-system.rsexperimentloader.enabled", false, locked); // [HIDDEN]
 pref("messaging-system.rsexperimentloader.collection_id", "", locked); // [HIDDEN]
-pref("nimbus.appId", "");  // [HIDDEN], https://searchfox.org/mozilla-central/source/toolkit/components/backgroundtasks/defaults/backgroundtasks_browser.js
+pref("nimbus.appId", "", locked);  // [HIDDEN], https://searchfox.org/mozilla-central/source/toolkit/components/backgroundtasks/defaults/backgroundtasks_browser.js
 pref("toolkit.telemetry.pioneer-new-studies-available", false, locked); // [HIDDEN]
 
 /// Origin Trials
