@@ -1,0 +1,15 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 966a527fc9..d28b5f65c6 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -380,10 +380,6 @@ class Core(
+                         },
+                     ).updateProviderList()
+                 }
+-                // Install the "ads" WebExtension to get the links in an partner page.
+-                adsTelemetry.install(engine, this@apply, providerList)
+-                // Install the "cookies" WebExtension and tracks user interaction with SERPs.
+-                searchTelemetry.install(engine, this@apply, providerList)
+             }
+ 
+             WebNotificationFeature(
