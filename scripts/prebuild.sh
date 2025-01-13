@@ -321,6 +321,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-microsurveys.patch"
 # Enable per-site process isolation (Fission)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fission.patch"
 
+# Expose UI option to toggle Fission, only available in Nightly by default...
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/control-fission.patch"
+
 # Enable FPP (Fingerprinting Protection)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fingerprinting-protection.patch"
 
