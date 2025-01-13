@@ -29,5 +29,3 @@ index 807c5c2..77abf7a 100644
      )
  
      var deleteDownloads by booleanPreference(
-diff --git a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-index a5cc8ca..ea74ef7 100644
