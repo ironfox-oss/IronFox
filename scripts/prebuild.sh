@@ -342,6 +342,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/block-third-party-cookies.p
 # Switch the built-in extension recommendations page to use our collection instead of Mozilla's...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/extension-recommendations.patch"
 
+# Switch Firefox's onboarding to recommend our extension(s) instead of Mozilla's...
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/extension-onboarding.patch"
+
 # Disable menu item to report issues with websites to Mozilla...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-reporting-site-issues.patch"
 
