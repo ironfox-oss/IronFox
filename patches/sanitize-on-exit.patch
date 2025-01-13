@@ -31,14 +31,3 @@ index 807c5c2..77abf7a 100644
      var deleteDownloads by booleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 index a5cc8ca..ea74ef7 100644
---- a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-@@ -5,7 +5,7 @@
- <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:app="http://schemas.android.com/apk/res-auto">
-     <SwitchPreference
--        android:defaultValue="false"
-+        android:defaultValue="true"
-         android:key="@string/pref_key_delete_browsing_data_on_quit"
-         android:summary="@string/preference_summary_delete_browsing_data_on_quit_2"
-         android:title="@string/preferences_delete_browsing_data_on_quit" />
