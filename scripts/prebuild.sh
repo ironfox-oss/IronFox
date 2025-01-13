@@ -354,6 +354,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-safe-browsing.patch
 # Tweak Safe Browsing (See '009 SAFE BROWSING' in Phoenix for more details...)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/configure-safe-browsing.patch"
 
+# Remove default top sites/shortcuts
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-default-sites.patch"
+
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"
 
