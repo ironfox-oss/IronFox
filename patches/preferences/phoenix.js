@@ -2,7 +2,7 @@
 // The Phoenix shall rise from the ashes of what fell before it.
 // RIP Mull.
 
-pref("browser.phoenix.version", "2025.01.12.2", locked);
+pref("browser.phoenix.version", "2025.01.13.1", locked);
 
 // Let's begin.
 
@@ -171,6 +171,7 @@ pref("toolkit.shopping.ohttpRelayURL", "", locked);
 pref("browser.tabs.remote.separatePrivilegedMozillaWebContentProcess", false, locked); // [DEFAULT]
 pref("browser.tabs.remote.separatedMozillaDomains", "", locked);
 pref("dom.ipc.processCount.privilegedmozilla", 0, locked);
+pref("extensions.webapi.testing", false, locked); // [DEFAULT] https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#5445
 pref("extensions.webextensions.restrictedDomains", "");
 pref("svg.context-properties.content.allowed-domains", "", locked); // [DEFAULT]
 
@@ -211,6 +212,8 @@ pref("browser.phoenix.003.applied", true, locked);
 
 pref("browser.places.speculativeConnect.enabled", false, locked); // [HIDDEN]
 pref("browser.urlbar.speculativeConnect.enabled", false, locked); // [HIDDEN]
+pref("dom.prefetch_dns_for_anchor_http_document", false, locked); // https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/42684
+pref("dom.prefetch_dns_for_anchor_https_document", false, locked); // [DEFAULT] https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/42684
 pref("network.dns.disablePrefetch", true, locked);
 pref("network.dns.disablePrefetchFromHTTPS", true, locked);
 pref("network.http.speculative-parallel-limit", 0, locked);
@@ -232,6 +235,7 @@ pref("network.preconnect", false, locked);
 
 pref("network.early-hints.enabled", false, locked);
 pref("network.early-hints.preconnect.enabled", false, locked);
+pref("network.early-hints.preconnect.max_connections", 0, locked);
 
 /// Disable Search Suggestions
 
@@ -305,6 +309,11 @@ pref("security.tls.hello_downgrade_check", true, locked); // [DEFAULT]
 
 pref("network.websocket.allowInsecureFromHTTPS", false, locked); // [DEFAULT]
 
+/// Block access to Addon Manager over insecure protocols...
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#5452
+
+pref("extensions.webapi.testing.http", false, locked); // [DEFAULT]
+
 /// Enable Post Quantum Key Agreement (Kyber)
 
 pref("media.webrtc.enable_pq_dtls", true, locked); // [DEFAULT]
@@ -344,13 +353,11 @@ pref("doh-rollout.disable-heuristics", true, locked); // [HIDDEN]
 pref("doh-rollout.enabled", false, locked); // [HIDDEN]
 pref("doh-rollout.skipHeuristicsCheck", true, locked); // [HIDDEN]
 pref("doh-rollout.uri", "", locked); // [HIDDEN]
-pref("network.trr.default_provider_uri", "");
 
 /// Enable DoH & Set to Quad9 by default
 
-pref("network.trr.custom_uri", "https://dns.quad9.net/dns-query");
+pref("network.trr.default_provider_uri", "https://dns.quad9.net/dns-query");
 pref("network.trr.mode", 3);
-pref("network.trr.uri", "https://dns.quad9.net/dns-query");
 
 /// Skip DoH Connectivity Checks
 
@@ -715,7 +722,7 @@ pref("privacy.globalprivacycontrol.pbmode.enabled", true, locked); // [DEFAULT]
 /// Disable "Privacy-Preserving Attribution"
 // https://support.mozilla.org/kb/privacy-preserving-attribution
 
-pref("dom.origin-trials.private-attribution.state", 0, locked);
+pref("dom.origin-trials.private-attribution.state", 2, locked); // [DEFAULT]
 pref("dom.private-attribution.submission.enabled", false, locked); // [DEFAULT]
 
 /// Disable Reporting API
@@ -765,6 +772,10 @@ pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _hsenc _ope
 /// Strip tracking parameters from URLs when shared by default
 
 pref("privacy.query_stripping.strip_on_share.enabled", true);
+
+/// Ensure we never save clipboard history/clipboard contents to the cloud...
+
+pref("clipboard.copyPrivateDataToClipboardCloudOrHistory", false, locked); // [DEFAULT]
 
 pref("browser.phoenix.017.applied", true, locked);
 
@@ -914,6 +925,14 @@ pref("browser.contentanalysis.interception_point.print.enabled", false, locked);
 pref("dom.ipc.processCount.webIsolated", 1); // [DEFAULT]
 pref("fission.autostart", true);
 pref("fission.autostart.session", true);
+pref("fission.disableSessionHistoryInParent", false); // SHIP, required for Fission
+
+/// Always run extensions OOP (out of process...)
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1613141
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1880856
+// https://groups.google.com/g/tb-planning/c/p4MUTMNYBVo
+
+pref("extensions.webextensions.remote", true, locked); // [DEFAULT]
 
 /// Yes, this is a real pref... 
 // https://searchfox.org/mozilla-central/source/testing/profiles/common/user.js
@@ -982,6 +1001,11 @@ pref("security.allow_parent_unrestricted_js_loads", false);
 pref("security.allow_unsafe_parent_loads", false); // [DEFAULT]
 pref("security.data_uri.block_toplevel_data_uri_navigations", true); // [DEFAULT]
 
+/// Always use a separate content process for `file://` URLs
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#1848
+
+pref("browser.tabs.remote.separateFileUriProcess", true);
+
 /// Never skip the assertion that about:pages don't have content security policies (CSP)
 // https://searchfox.org/comm-central/source/mozilla/modules/libpref/init/StaticPrefList.yaml#3987
 
@@ -1000,6 +1024,23 @@ pref("dom.security.trusted_types.enabled", true);
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1876632
 
 pref("javascript.options.content_process_write_protect_code", true);
+
+/// Enable Opaque Response Blocking
+// https://github.com/annevk/orb
+
+pref("browser.opaqueResponseBlocking", true);
+pref("browser.opaqueResponseBlocking.javascriptValidator", true); // [DEFAULT]
+
+/// Enable the 'credentialless' COEP (Cross-Origin-Embedder-Policy) Header
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#1829
+
+pref("browser.tabs.remote.coep.credentialless", true); // [DEFAULT on Nightly]
+pref("dom.origin-trials.coep-credentialless.state", 1); // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#3447
+
+/// Prevent remoteTypes from triggering process switches they shouldn't be able to...
+// https://searchfox.org/mozilla-central/source/browser/app/profile/firefox.js#1035
+
+pref("browser.tabs.remote.enforceRemoteTypeRestrictions", true);
 
 pref("browser.phoenix.020.applied", true, locked);
 
