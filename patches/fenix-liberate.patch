@@ -686,10 +686,10 @@ diff -r 8c35adfaf5ea mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
              reviewSettings = FenixReviewSettings(settings),
          )
      }
-diff -r 8c35adfaf5ea mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Mon Dec 30 18:43:12 2024 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Tue Dec 31 18:19:42 2024 +0530
-@@ -587,8 +587,14 @@
+diff -r b8005f63d9eb mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Mon Dec 30 15:13:46 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt	Tue Jan 07 15:54:13 2025 +0000
+@@ -587,20 +587,16 @@
                  } else {
                      defaultTopSites.add(
                          Pair(
@@ -697,15 +697,27 @@ diff -r 8c35adfaf5ea mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
 -                            SupportUtils.GOOGLE_URL,
 +                            context.getString(R.string.default_top_site_fdroid),
 +                            SupportUtils.FDROID_URL,
-+                        ),
-+                    )
+                         ),
+                     )
+-
+-                    if (LocaleManager.getSelectedLocale(context).language == "en") {
+-                        defaultTopSites.add(
+-                            Pair(
+-                                context.getString(R.string.pocket_pinned_top_articles),
+-                                SupportUtils.POCKET_TRENDING_URL,
+-                            ),
+-                        )
+-                    }
+-
 +                    defaultTopSites.add(
 +                        Pair(
 +                            context.getString(R.string.default_top_site_eff),
 +                            SupportUtils.EFF_URL,
-                         ),
-                     )
- 
++                        ),
++                    )
+                     defaultTopSites.add(
+                         Pair(
+                             context.getString(R.string.default_top_site_wikipedia),
 diff -r 8c35adfaf5ea mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Mon Dec 30 18:43:12 2024 +0000
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt	Tue Dec 31 18:19:42 2024 +0530
