@@ -360,6 +360,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-default-sites.patch"
 # By default, Fenix includes 2 hidden web extensions, used exclusively for telemetry: 'ads@mozac.org' & 'cookies@mozac.org' - This prevents installing them...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/do-not-install-telemetry-extensions.patch"
 
+# Ensure we're disabling telemetry at buildtime...
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/buildtime-disable-telemetry.patch"
+
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"
 
