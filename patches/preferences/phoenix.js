@@ -2,7 +2,7 @@
 // The Phoenix shall rise from the ashes of what fell before it.
 // RIP Mull.
 
-pref("browser.phoenix.version", "2025.01.13.1", locked);
+pref("browser.phoenix.version", "2025.01.14.1", locked);
 
 // Let's begin.
 
@@ -508,7 +508,7 @@ pref("browser.region.update.enabled", false, locked);
 /// Geo Provider
 // Enable BeaconDB as a fallback for retrieving geolocation instead of Google
 
-pref("geo.provider.network.url", "https://beacondb.net/v1/geolocate");
+pref("geo.provider.network.url", "https://api.beacondb.net/v1/geolocate");
 
 pref("browser.phoenix.010.applied", true, locked);
 
@@ -670,6 +670,10 @@ pref("webgl.disable-fail-if-major-performance-caveat", false, locked);
 
 pref("browser.display.use_system_colors", false, locked); // [DEFAULT]
 
+/// Prevent using system accent colors
+
+pref("widget.non-native-theme.use-theme-accent", false, locked);
+
 /// Enable fdlibm for Math.sin, Math.cos, and Math.tan
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8720
 // https://groups.google.com/a/mozilla.org/g/dev-platform/c/0dxAO-JsoXI/m/eEhjM9VsAgAJ
@@ -694,6 +698,7 @@ pref("network.http.referer.disallowCrossSiteRelaxingDefault", true, locked); // 
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true, locked); // [DEFAULT]
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true, locked); // [DEFAULT]
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true, locked);
+pref("privacy.bounceTrackingProtection.mode", 1, locked); // Fully enables Bounce Tracking Protection [DEFAULT on Nightly] - https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
 pref("privacy.fingerprintingProtection", true, locked);
 pref("privacy.fingerprintingProtection.pbmode", true, locked); // [DEFAULT]
 pref("privacy.partition.always_partition_third_party_non_cookie_storage", true, locked); // [DEFAULT]
