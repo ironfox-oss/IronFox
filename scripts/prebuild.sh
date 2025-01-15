@@ -219,7 +219,6 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$android_components"
-chmod +x automation/publish_to_maven_local_if_modified.py
 find "$patches/a-c-overlay" -type f | while read -r src; do
     cp "$src" "${src#"$patches/a-c-overlay/"}"
 done
@@ -235,8 +234,6 @@ popd
 # Application Services
 
 pushd "$application_services"
-chmod +x libs/*.sh
-chmod +x automation/publish_to_maven_local_if_modified.py
 # Break the dependency on older A-C
 sed -i -e '/android-components = /s/132\.0/134.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
@@ -263,10 +260,6 @@ fi
 
 # GeckoView
 pushd "$mozilla_release"
-
-# Since we download ZIP files, the executable permissions are lost
-chmod +x mach
-chmod +x build/cargo-*
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-localize_maven.patch"
