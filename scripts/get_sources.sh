@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-FIREFOX_TAG="134.0"
+FIREFOX_TAG="134.0.1"
 WASI_TAG="wasi-sdk-20"
 GLEAN_TAG="v62.0.0"
 GMSCORE_TAG="v0.3.6.244735"
