@@ -357,9 +357,6 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/configure-safe-browsing.pat
 # Remove default top sites/shortcuts
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-default-sites.patch"
 
-# By default, Fenix includes 2 hidden web extensions, used exclusively for telemetry: 'ads@mozac.org' & 'cookies@mozac.org' - This prevents installing them...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/do-not-install-telemetry-extensions.patch"
-
 # Ensure we're disabling telemetry at buildtime...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/buildtime-disable-telemetry.patch"
 
