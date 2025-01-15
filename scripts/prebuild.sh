@@ -295,7 +295,7 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-login-autofill.patc
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-autofill.patch"
 
 # Clear open tabs, browsing history, cache, & download list on exit by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/sanitize-on-exit.patch"
+#patch -p1 --no-backup-if-mismatch --quiet <"$patches/sanitize-on-exit.patch"
 
 # Disable 'Meta Attribution' - just more telemetry - used to track referrals
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-meta-attribution.patch"
