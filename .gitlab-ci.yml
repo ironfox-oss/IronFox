@@ -34,7 +34,7 @@ update-fdroid-repo:
         done
 
     - |
-      mapfile -t apk_files < <(find "$REPO_DIR" -name "*.apk")
+      apk_files=($REPO_DIR/*.apk)
       IFS=":" read -r vercode vername <<< "$($CI_PROJECT_DIR/scripts/get_latest_version.py "${apk_files[@]}")"
       sed -i \
         -e "s/CurrentVersion: .*/CurrentVersion: \"$vername\"/" \
