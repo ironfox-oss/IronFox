@@ -12,13 +12,6 @@
     alt="Get it on Obtainium"
     height="80">](obtainium://app/%7B%22id%22%3A%22org.ironfoxoss.ironfox%22%2C%22url%22%3A%22https%3A%2F%2Ffdroid.ironfoxoss.org%2Ffdroid%2Frepo%2F%22%2C%22author%22%3A%22IronFox%20OSS%22%2C%22name%22%3A%22IronFox%22%2C%22additionalSettings%22%3A%22%7B%5C%22appIdOrName%5C%22%3A%5C%22org.ironfoxoss.ironfox%5C%22%2C%5C%22pickHighestVersionCode%5C%22%3Afalse%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22IronFox%20is%20a%20secure%2C%20hardened%20and%20privacy-oriented%20web%20browser%20for%20Android%2C%20based%20on%20Firefox.%5C%22%7D%22%2C%22overrideSource%22%3A%22FDroidRepo%22%7D)
 
-**Package ID**: `org.ironfoxoss.ironfox`
-
-**SHA-256 Hash of Signing Certificate**: 
-```sh
-C5:E2:91:B5:A5:71:F9:C8:CD:9A:97:99:C2:C9:4E:02:EC:97:03:94:88:93:F2:CA:75:6D:67:B9:42:04:F9:04
-```
-
 ------------
 
 IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull Browser](https://divestos.org/pages/our_apps#mull), based on [Mozilla Firefox](https://www.mozilla.org/firefox/). **Our goal is to continue the legacy of Mull by providing a free and open source, privacy and security-oriented web browser for daily use.**
@@ -28,6 +21,16 @@ IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull B
 ### Want to join the IronFox Community?
 
 We'd love to see you over on [Matrix](https://matrix.to/#/#ironfox:unredacted.org) *(Recommended)* and [Discord](https://discord.gg/zbdzfRVyVh)!
+
+App Verification
+------------
+
+**Package ID**: `org.ironfoxoss.ironfox`
+
+**SHA-256 Hash of Signing Certificate**: 
+```sh
+C5:E2:91:B5:A5:71:F9:C8:CD:9A:97:99:C2:C9:4E:02:EC:97:03:94:88:93:F2:CA:75:6D:67:B9:42:04:F9:04
+```
 
 Known Issues
 ------------
