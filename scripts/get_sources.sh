@@ -10,7 +10,7 @@ APPSERVICES_TAG="v134.0"
 
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PATHS_SH="${ROOTDIR}/scripts/paths_local.sh"
+ENV_SH="${ROOTDIR}/scripts/env_local.sh"
 BUILDDIR="${ROOTDIR}/build"
 PATCHDIR="${ROOTDIR}/patches"
 GECKODIR="${ROOTDIR}/gecko"
@@ -128,8 +128,8 @@ git clone --branch "$APPSERVICES_TAG" --depth=1 "https://github.com/mozilla/appl
 
 do_download "gecko" "https://archive.mozilla.org/pub/firefox/releases/${FIREFOX_TAG}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
 
-echo "Writing ${PATHS_SH}..."
-cat > "$PATHS_SH" << EOF
+echo "Writing ${ENV_SH}..."
+cat > "$ENV_SH" << EOF
 export patches=${PATCHDIR}
 export rootdir=${ROOTDIR}
 export builddir="\$rootdir/build"
@@ -140,5 +140,6 @@ export fenix=${FENIX}
 export mozilla_release=${GECKODIR}
 export gmscore=${GMSCOREDIR}
 export wasi=${WASISDKDIR}
-export paths_source="true"
+
+source "\$rootdir/scripts/env_common.sh"
 EOF

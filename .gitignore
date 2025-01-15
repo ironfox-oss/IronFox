@@ -7,4 +7,4 @@ __pycache__
 /appservices
 /gmscore
 /wasi-sdk
-/scripts/paths_local.sh
+/scripts/env_local.sh
