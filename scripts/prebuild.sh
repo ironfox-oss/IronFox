@@ -60,6 +60,16 @@ fi
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
 [ "$JAVA_VER" -ge 15 ] || { echo "Java 17 or newer must be set as default JDK"; exit 1; };
 
+if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
+    echo "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
+    read -p "Do you want to continue [y/N] " -n 1 -r
+    echo ""
+    if ! [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Aborting..."
+        exit 1
+    fi
+fi
+
 # Create build directory
 mkdir -p "$rootdir/build"
 
