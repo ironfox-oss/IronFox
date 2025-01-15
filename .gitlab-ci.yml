@@ -34,7 +34,9 @@ update-fdroid-repo:
         done
 
     - |
-      IFS=":" read -r vercode vername <<< "$($CI_PROJECT_DIR/scripts/get_latest_version.py $(find "$REPO_DIR" -name "*.apk"))"
+      IFS=":" read vercode vername << EOF
+      $($CI_PROJECT_DIR/scripts/get_latest_version.py $(find "$REPO_DIR" -name "*.apk"))
+      EOF
       sed -i \
         -e "s/CurrentVersion: .*/CurrentVersion: \"$vername\"/" \
         -e "s/CurrentVersionCode: .*/CurrentVersionCode: $vercode/" $META_FILE
