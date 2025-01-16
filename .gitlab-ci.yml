@@ -93,6 +93,10 @@ build-apk:
       # See Dockerfile
       source /opt/env_docker.sh
 
+      # Set ANDROID_NDK
+      echo "export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018" >> scripts/env_local.sh
+      [ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };
+
       # Get sources
       ./scripts/get_sources.sh
 
