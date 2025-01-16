@@ -88,32 +88,26 @@ build-apk:
     SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
   before_script:
     - mkdir -p $(dirname "$SB_GAPI_KEY_FILE") && echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
-    - |
-      bash -x -c "\
 
-      # See Dockerfile
-      source /opt/env_docker.sh
+    # Setup environment variables. See Dockerfile.
+    - source /opt/env_docker.sh
+    
+    # Set ANDROID_NDK
+    - export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
+    - '[ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };'
 
-      # Set ANDROID_NDK
-      export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
-      [ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };
+    # Get sources
+    - bash -x ./scripts/get_sources.sh
 
-      # Get sources
-      bash -x ./scripts/get_sources.sh
-
-      # Update environment variables
-      source scripts/env_local.sh
-
-      # Patch source
-      bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
-      "
+    # Update environment variables for this build
+    - source scripts/env_local.sh
+    
+    # Prepare sources
+    - bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
   script:
-    - |
-      # Update environment variables
-      source scripts/env_local.sh
 
-      # Build
-      bash -x bash scripts/build.sh
+    # Build
+    - bash -x scripts/build.sh
   artifacts:
     untracked: false
     when: on_success
