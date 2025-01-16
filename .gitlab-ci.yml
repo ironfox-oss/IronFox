@@ -89,23 +89,23 @@ build-apk:
   before_script:
     - mkdir -p $(dirname "$SB_GAPI_KEY_FILE") && echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
     - |
-      bash -c "\
+      bash -x -c "\
 
       # See Dockerfile
       source /opt/env_docker.sh
 
       # Set ANDROID_NDK
-      echo "export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018" >> scripts/env_local.sh
+      export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
       [ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };
 
       # Get sources
-      ./scripts/get_sources.sh
+      bash -x ./scripts/get_sources.sh
 
       # Update environment variables
       source scripts/env_local.sh
 
       # Patch source
-      ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
+      bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
       "
   script:
     - |
@@ -113,7 +113,7 @@ build-apk:
       source scripts/env_local.sh
 
       # Build
-      bash scripts/build.sh
+      bash -x bash scripts/build.sh
   artifacts:
     untracked: false
     when: on_success
