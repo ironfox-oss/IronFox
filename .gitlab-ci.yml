@@ -73,6 +73,7 @@ build-docker:
 build-apk:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_apk
+  interruptible: true
   needs:
     - job: "build-docker"
       optional: true
