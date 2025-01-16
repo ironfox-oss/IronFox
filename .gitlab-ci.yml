@@ -82,7 +82,11 @@ build-apk:
     matrix:
       - VERSION_NAME: "134.0"
         VERSION_CODE: ["31340100", "31340120"]
+  variables:
+    # The name of this variable must match with the one in scripts/prebuild.sh
+    SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
   before_script:
+    - mkdir -p $(dirname "$SB_GAPI_KEY_FILE") && echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
     - |
       bash -c "\
 
