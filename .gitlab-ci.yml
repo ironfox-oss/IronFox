@@ -80,8 +80,8 @@ build-apk:
     - saas-linux-xlarge-amd64
   parallel:
     matrix:
-      - VERSION_NAME: 134.0
-        VERSION_CODE: [31340100, 31340120]
+      - VERSION_NAME: "134.0"
+        VERSION_CODE: ["31340100", "31340120"]
   before_script:
     - |
       bash -c "\
