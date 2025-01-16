@@ -71,7 +71,7 @@ build-docker:
         - Dockerfile
 
 build-apk:
-  image: $CI_REGISTRY_IMAGE
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_apk
   needs:
     - job: "build-docker"
