@@ -55,7 +55,7 @@ WORKDIR /app
 
 # Create entrypoint script to activate Python venv
 ENV ENTRYPOINT=/opt/entrypoint.sh
-RUN echo 'source /root/env/bin/activate' >> $ENTRYPOINT && \
+RUN echo '#!/bin/bash' > $ENTRYPOINT && \
     echo "source $ENVDOCKER" >> $ENTRYPOINT && \
     echo 'exec "$@"' >> $ENTRYPOINT && \
     chmod +x $ENTRYPOINT
