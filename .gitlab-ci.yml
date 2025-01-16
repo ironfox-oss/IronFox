@@ -91,7 +91,6 @@ build-apk:
       bash -c "\
 
       # See Dockerfile
-      source /root/env/activate
       source /opt/env_docker.sh
 
       # Get sources
