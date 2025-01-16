@@ -1,6 +1,7 @@
 stages:
   - build_fdroid
   - build_docker
+  - build_apk
 
 update-fdroid-repo:
   image: alpine:latest
@@ -45,7 +46,7 @@ update-fdroid-repo:
     - 'git commit -m "feat: update for release ${CI_COMMIT_TAG}"'
     - git push origin HEAD:$TARGET_REPO_BRANCH
 
-docker-build:
+build-docker:
   image: docker:cli
   stage: build_docker
   services:
@@ -68,3 +69,47 @@ docker-build:
         - Dockerfile
       changes:
         - Dockerfile
+
+build-apk:
+  image: $CI_REGISTRY_IMAGE
+  stage: build_apk
+  needs:
+    - job: "build-docker"
+      optional: true
+  tags:
+    - saas-linux-xlarge-amd64
+  parallel:
+    matrix:
+      - VERSION_NAME: 134.0
+        VERSION_CODE: [31340100, 31340120]
+  before_script:
+    - |
+      bash -c "\
+
+      # See Dockerfile
+      source /root/env/activate
+      source /opt/env_docker.sh
+
+      # Get sources
+      ./scripts/get_sources.sh
+
+      # Update environment variables
+      source scripts/env_local.sh
+
+      # Patch source
+      ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
+      "
+  script:
+    - |
+      # Update environment variables
+      source scripts/env_local.sh
+
+      # Build
+      bash scripts/build.sh
+  artifacts:
+    untracked: false
+    when: on_success
+    access: all
+    expire_in: "30 days"
+    paths:
+      - gecko/mobile/android/fenix/app/build/outputs/apk/fenix/release/*.apk
