@@ -78,6 +78,11 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
 fi
 
 if [[ "$BUILD_TYPE" == "apkset" ]]; then
+    # Build bundle
+    pushd "$fenix"
+    gradle :app:bundleRelease
+    popd
+
     # Build signed APK set
     AAB_IN="$(ls "$fenix"/app/build/outputs/bundle/release/*.aab)"
     APKS_OUT="$APKS_ARTIFACTS/IronFox-v${VERSION_NAME}.apks"
