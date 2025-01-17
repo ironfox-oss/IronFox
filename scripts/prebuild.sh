@@ -366,6 +366,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/configure-safe-browsing.pat
 # Remove default top sites/shortcuts
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-default-sites.patch"
 
+# Enable preference to toggle default desktop mode
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-default-desktop-mode.patch"
+
 # Ensure we're disabling telemetry at buildtime...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/buildtime-disable-telemetry.patch"
 
