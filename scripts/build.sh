@@ -24,6 +24,14 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+build_type="$1"
+
+if [ "$build_type" != "apk" ] && [ "$build_type" != "bundle" ]; then
+    echo "Unknown build type: '$build_type'" >&1
+    echo "Usage: $0 apk|bundle" >&1
+    exit 1
+fi
+
 if [[ -n ${FDROID_BUILD+x} ]]; then
     source "$(dirname "$0")/env_fdroid.sh"
 fi
