@@ -100,6 +100,7 @@ rustup default 1.82.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
+rustup target add x86_64-linux-android
 cargo install --vers 0.26.0 cbindgen
 
 # Fenix
@@ -177,18 +178,25 @@ case $(echo "$2" | cut -c 7) in
     rusttarget=arm
     ;;
 1)
+    # APK for x86_64
+    abi='"x86_64"'
+    target=x86_64-linux-android
+    llvmtarget="X86_64"
+    rusttarget=x86_64
+    ;;
+2)
     # APK for arm64-v8a
     abi='"arm64-v8a"'
     target=aarch64-linux-android
     llvmtarget="AArch64"
     rusttarget=arm64
     ;;
-2)
+3)
     # AAB for both armeabi-v7a and arm64-v8a
-    abi='"arm64-v8a", "armeabi-v7a"'
+    abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
     target=''
-    llvmtarget="AArch64;ARM"
-    rusttarget='arm64,arm'
+    llvmtarget="AArch64;ARM;X86_64"
+    rusttarget='arm64,arm,x86_64'
     ;;
 *)
     echo "Unknown target code in $2." >&2
