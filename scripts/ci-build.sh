@@ -9,11 +9,11 @@ set -o xtrace
 case $(echo "$VERSION_CODE" | cut -c 7) in
 0)
     BUILD_TYPE='apk'
-    BUILD_ABI='arm'
+    BUILD_ABI='armeabi-v7a'
     ;;
 1)
     BUILD_TYPE='apk'
-    BUILD_ABI='arm64'
+    BUILD_ABI='arm64-v8a'
     ;;
 2)
     BUILD_TYPE='apkset'
@@ -32,14 +32,6 @@ export AAR_ARTIFACTS=$ARTIFACTS/aar
 mkdir -p "$APK_ARTIFACTS"
 mkdir -p "$APKS_ARTIFACTS"
 mkdir -p "$AAR_ARTIFACTS"
-
-mkdir -p /opt/IronFox
-echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
-curl \
-  --request GET \
-  --header "JOB-TOKEN: $CI_JOB_TOKEN" \
-  "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/secure_files/$KEYSTORE_SECFILEID/download" \
-  --output "$KEYSTORE"
 
 
 # Setup environment variables. See Dockerfile.
@@ -60,8 +52,8 @@ bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
 
 # If we're building an APK set, the following environment variables are required
 if [[ "$BUILD_TYPE" == "apkset" ]]; then
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="$AAR_ARTIFACTS/geckoview-arm.aar"
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64.aar"
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="$AAR_ARTIFACTS/geckoview-armeabi-v7a.aar"
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64-v8a.aar"
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES="armeabi-v7a,arm64-v8a"
 fi
 
@@ -74,8 +66,8 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
         "$AAR_ARTIFACTS/geckoview-${BUILD_ABI}.aar"
 
     # Sign APK
-    APK_IN="$(ls "$fenix/app/build/outputs/apk/fenix/release/*.apk")"
-    APK_OUT="$APK_ARTIFACTS/$(basename "$APK_IN" | sed -e 's/unsigned/signed/g')"
+    APK_IN="$(ls "$fenix"/app/build/outputs/apk/fenix/release/*.apk)"
+    APK_OUT="$APK_ARTIFACTS/IronFox-v${VERSION_NAME}-${BUILD_ABI}.apk"
     "$ANDROID_HOME/build-tools/35.0.0/apksigner" sign \
       --ks "$KEYSTORE" \
       --ks-pass "$KEYSTORE_PASS" \
@@ -87,8 +79,8 @@ fi
 
 if [[ "$BUILD_TYPE" == "apkset" ]]; then
     # Build signed APK set
-    AAB_IN="$(ls "$fenix/app/build/outputs/bundle/release/*.aab")"
-    APKS_OUT="$APKS_ARTIFACTS/ironfox-${VERSION_NAME}.apks"
+    AAB_IN="$(ls "$fenix"/app/build/outputs/bundle/release/*.aab)"
+    APKS_OUT="$APKS_ARTIFACTS/IronFox-v${VERSION_NAME}.apks"
     bundletool build-apks \
         --bundle="$AAB_IN" \
         --output="$APKS_OUT" \
