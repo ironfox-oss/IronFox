@@ -129,10 +129,9 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$fenix"
-if [[ "$1" == "apk" ]]; then
+if [[ "$build_type" == "apk" ]]; then
     gradle :app:assembleRelease
-fi
-if [[ "$1" == "bundle" ]]; then
+elif [[ "$build_type" == "bundle" ]]; then
     gradle :app:bundleRelease -Paab
 fi
 popd
