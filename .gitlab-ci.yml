@@ -97,7 +97,7 @@ build-apk:
     - job: "build-docker"
       optional: true
   tags:
-    - saas-linux-2xlarge-amd64
+    - saas-linux-xlarge-amd64
   parallel:
     matrix:
       - VERSION_CODE: ["31340100", "31340110"]
@@ -125,7 +125,7 @@ build-apk-set:
       artifacts: true
       optional: false
   tags:
-    - saas-linux-2xlarge-amd64
+    - saas-linux-xlarge-amd64
   parallel:
     matrix:
       - VERSION_CODE: "31340120"
