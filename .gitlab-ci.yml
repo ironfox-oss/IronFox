@@ -153,8 +153,7 @@ publish-release:
     - job: "build-apk-set"
       artifacts: true
       optional: false
-  rules:
-    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+  
   variables:
     <<: *build_variables
     RELEASE_CLI_VERSION: v0.20.0
