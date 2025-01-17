@@ -33,11 +33,9 @@ export APKS_ARTIFACTS=$ARTIFACTS/apks
 RELEASE_NOTES_FILE=/opt/IronFox/release-notes.md
 CHECKSUMS_FILE=/opt/IronFox/asset-checksums
 
-# Upload packages to package registry
-echo "## Checksums" >> $RELEASE_NOTES_FILE
-echo "" >> $RELEASE_NOTES_FILE
-
 declare -a asset_flags
+
+# Upload packages to package registry
 for apk in "$APK_ARTIFACTS"/*.apk; do
     package_name="apk"
     file_name="$(basename "$apk")"
@@ -66,6 +64,9 @@ for apks in "$APKS_ARTIFACTS"/*.apks; do
 done
 
 {
+    if [[ -f "$CI_PROJECT_DIR/${VERSION_NAME}.md" ]]; then
+        cat "$CI_PROJECT_DIR/${VERSION_NAME}.md"
+    fi
     echo "## Checksums"
     echo ""
     echo "\`\`\`"
