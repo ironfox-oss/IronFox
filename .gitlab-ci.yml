@@ -112,7 +112,7 @@ build-apk:
     access: all
     expire_in: "30 days"
     paths:
-      - $CI_PROJECT_DIR/artifacts/apk/*
+      - $CI_PROJECT_DIR/**/*
 
 build-apk-set:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
