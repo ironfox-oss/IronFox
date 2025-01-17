@@ -2,6 +2,7 @@ stages:
   - build_fdroid
   - build_docker
   - build_apk
+  - build_apk_set
 
 update-fdroid-repo:
   image: alpine:latest
@@ -82,40 +83,54 @@ build-apk:
   parallel:
     matrix:
       - VERSION_NAME: "134.0"
-        VERSION_CODE: ["31340100", "31340120"]
+        VERSION_CODE: ["31340100", "31340110"]
   variables:
-    # The name of this variable must match with the one in scripts/prebuild.sh
     SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
-  before_script:
-    - mkdir -p $(dirname "$SB_GAPI_KEY_FILE") && echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
-
-    # Setup environment variables. See Dockerfile.
-    - source /opt/env_docker.sh
-    
-    # Set ANDROID_NDK
-    - export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
-    - '[ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };'
-
-    # Get sources
-    - bash -x ./scripts/get_sources.sh
-
-    # Update environment variables for this build
-    - source scripts/env_local.sh
-    
-    # Prepare sources
-    - bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
+    KEYSTORE: /opt/IronFox/signing-key.jks
   script:
-
-    # Print env vars for debugging purposes
-    - env
-
-    # Build
-    - bash -x scripts/build.sh
+    - bash -x scripts/ci-build.sh
   artifacts:
     untracked: false
     when: on_success
     access: all
     expire_in: "30 days"
     paths:
-      - gecko/mobile/android/fenix/app/build/outputs/apk/fenix/release/*.apk
-      - gecko/obj/gradle/build/mobile/android/geckoview/outputs/aar/geckoview-release.aar
+      - $CI_PROJECT_DIR/artifacts/apk/*
+
+build-apk-set:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: build_apk_set
+  interruptible: true
+  needs:
+    - job: "build-docker"
+      optional: true
+    - job: "build-apk"
+      artifacts: true
+      optional: false
+  tags:
+    - saas-linux-xlarge-amd64
+  parallel:
+    matrix:
+      - VERSION_NAME: "134.0"
+        VERSION_CODE: "31340120"
+  variables:
+    SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
+    KEYSTORE: /opt/IronFox/signing-key.jks
+    BUNDLETOOL: "1.18.0"
+  before_script:
+    - wget https://github.com/google/bundletool/releases/download/${BUNDLETOOL}/bundletool-all-${BUNDLETOOL}.jar -O /root/bin/bundletool.jar
+    - |
+      {
+        echo '#!/bin/bash'
+        echo 'exec java -jar /root/bin/bundletool.jar "$@"'
+      } > /root/bin/bundletool
+    - chmod +x /root/bin/bundletool
+  script:
+    - bash -x scripts/ci-build.sh
+  artifacts:
+    untracked: false
+    when: on_success
+    access: all
+    expire_in: "30 days"
+    paths:
+      - $CI_PROJECT_DIR/artifacts/**/*

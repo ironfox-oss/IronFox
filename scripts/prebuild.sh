@@ -97,6 +97,9 @@ echo "...libclang dir set to ${libclang}"
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
 rustup default 1.82.0
+rustup target add thumbv7neon-linux-androideabi
+rustup target add armv7-linux-androideabi
+rustup target add aarch64-linux-android
 cargo install --vers 0.26.0 cbindgen
 
 # Fenix
@@ -167,26 +170,25 @@ sed -i \
 # Set up target parameters
 case $(echo "$2" | cut -c 7) in
 0)
-    abi=armeabi-v7a
+    # APK for armeabi-v7a
+    abi='"armeabi-v7a"'
     target=arm-linux-androideabi
     llvmtarget="ARM"
     rusttarget=arm
-    rustup target add thumbv7neon-linux-androideabi
-    rustup target add armv7-linux-androideabi
     ;;
 1)
-    abi=x86
-    target=i686-linux-android
-    llmvtarget="X86"
-    rusttarget=x86
-    rustup target add i686-linux-android
-    ;;
-2)
-    abi=arm64-v8a
+    # APK for arm64-v8a
+    abi='"arm64-v8a"'
     target=aarch64-linux-android
     llvmtarget="AArch64"
     rusttarget=arm64
-    rustup target add aarch64-linux-android
+    ;;
+2)
+    # AAB for both armeabi-v7a and arm64-v8a
+    abi='"arm64-v8a", "armeabi-v7a"'
+    target=''
+    llvmtarget="AArch64;ARM"
+    rusttarget='arm64,arm'
     ;;
 *)
     echo "Unknown target code in $2." >&2
@@ -194,13 +196,12 @@ case $(echo "$2" | cut -c 7) in
     ;;
 esac
 
-sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
+sed -i -e "s/include \".*\"/include $abi/" app/build.gradle
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
 # Enable the auto-publication workflow
 # shellcheck disable=SC2154
 echo "autoPublish.application-services.dir=$application_services" >>local.properties
-
 popd
 
 #
@@ -404,7 +405,11 @@ fi
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
-    echo "ac_add_options --target=$target"
+    
+    if [[ -n "${target}" ]]; then
+        echo "ac_add_options --target=$target"
+    fi
+
     echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\""
     echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\""
     echo "ac_add_options --with-gradle=$(command -v gradle)"
