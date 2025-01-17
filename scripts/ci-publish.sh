@@ -13,22 +13,11 @@ upload_to_package_registry() {
         "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${package_name}/${VERSION_NAME}/${file_name}"
 }
 
-create_asset_link() {
-    local name="$1"
-    local url="$2"
-    
-    curl --request POST \
-        --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" \
-        --data name="${name}" \
-        --data url="${url}" \
-        --data direct_asset_path="/${name}" \
-        --data link_type="package" \
-        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases/v${VERSION_NAME}/assets/links"
-}
-
 export ARTIFACTS=$CI_PROJECT_DIR/artifacts
 export APK_ARTIFACTS=$ARTIFACTS/apk
 export APKS_ARTIFACTS=$ARTIFACTS/apks
+
+mkdir -p /opt/IronFox
 
 RELEASE_NOTES_FILE=/opt/IronFox/release-notes.md
 CHECKSUMS_FILE=/opt/IronFox/asset-checksums
@@ -64,9 +53,11 @@ for apks in "$APKS_ARTIFACTS"/*.apks; do
 done
 
 {
-    if [[ -f "$CI_PROJECT_DIR/${VERSION_NAME}.md" ]]; then
-        cat "$CI_PROJECT_DIR/${VERSION_NAME}.md"
+    changelog_file="$CI_PROJECT_DIR/changelogs/${VERSION_NAME}.md"
+    if [[ -f "$changelog_file" ]]; then
+        cat "$changelog_file"
     fi
+    
     echo "## Checksums"
     echo ""
     echo "\`\`\`"
