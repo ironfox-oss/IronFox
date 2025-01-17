@@ -249,7 +249,7 @@ Here `<version-name>` is the display name of the version (e.g. `v133.0.3`) and
 Finally, you can start the build process with:
 
 ```sh
-./scripts/build.sh
+./scripts/build.sh apk
 ```
 
 ### Version code convention
@@ -263,11 +263,12 @@ identifier and the revision number:
 
 CPU ABI identifier is one of the following:
 
-| Identifier | CPU ABI       |
-| ---------- | ------------- |
-| 0          | `armeabi-v7a` |
-| 1          | `x86_64`      |
-| 2          | `arm64-v8a`   |
+| Identifier | CPU ABI                 |
+| ---------- | ----------------------- |
+| 0          | `armeabi-v7a`           |
+| 1          | `x86_64`                |
+| 2          | `arm64-v8a`             |
+| 3          | AAB with all above ABIs |
 
 Revision numbers start from 0 for each major release and are updated when we apply fixes to existing releases.
 

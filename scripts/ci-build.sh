@@ -13,9 +13,13 @@ case $(echo "$VERSION_CODE" | cut -c 7) in
     ;;
 1)
     BUILD_TYPE='apk'
-    BUILD_ABI='arm64-v8a'
+    BUILD_ABI='x86_64'
     ;;
 2)
+    BUILD_TYPE='apk'
+    BUILD_ABI='arm64-v8a'
+    ;;
+3)
     BUILD_TYPE='bundle'
     ;;
 *)
@@ -44,7 +48,8 @@ bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
     export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="$AAR_ARTIFACTS/geckoview-armeabi-v7a.aar"
     export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64-v8a.aar"
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES="armeabi-v7a,arm64-v8a"
+    export MOZ_ANDROID_FAT_AAR_X86_64="$AAR_ARTIFACTS/geckoview-x86_64.aar"
+    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES="armeabi-v7a,arm64-v8a,x86_64"
 fi
 
 # Build
