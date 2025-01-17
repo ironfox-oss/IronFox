@@ -106,6 +106,9 @@ build-apk:
     - bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
   script:
 
+    # Print env vars for debugging purposes
+    - env
+
     # Build
     - bash -x scripts/build.sh
   artifacts:
