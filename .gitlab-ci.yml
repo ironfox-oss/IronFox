@@ -126,10 +126,8 @@ build-apk-set:
       optional: false
   tags:
     - saas-linux-xlarge-amd64
-  parallel:
-    matrix:
-      - VERSION_CODE: "31340120"
   variables:
+    VERSION_CODE: "31340120"
     <<: *build_variables
   <<: *build_setup_steps
   script:
