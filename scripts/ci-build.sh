@@ -16,23 +16,13 @@ case $(echo "$VERSION_CODE" | cut -c 7) in
     BUILD_ABI='arm64-v8a'
     ;;
 2)
-    BUILD_TYPE='apkset'
+    BUILD_TYPE='bundle'
     ;;
 *)
     echo "Unknown target code in $VERSION_CODE." >&2
     exit 1
     ;;
 esac
-
-export ARTIFACTS=$CI_PROJECT_DIR/artifacts
-export APK_ARTIFACTS=$ARTIFACTS/apk
-export APKS_ARTIFACTS=$ARTIFACTS/apks
-export AAR_ARTIFACTS=$ARTIFACTS/aar
-
-mkdir -p "$APK_ARTIFACTS"
-mkdir -p "$APKS_ARTIFACTS"
-mkdir -p "$AAR_ARTIFACTS"
-
 
 # Setup environment variables. See Dockerfile.
 source "/opt/env_docker.sh"
@@ -51,14 +41,14 @@ source "scripts/env_local.sh"
 bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
 
 # If we're building an APK set, the following environment variables are required
-if [[ "$BUILD_TYPE" == "apkset" ]]; then
+if [[ "$BUILD_TYPE" == "bundle" ]]; then
     export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="$AAR_ARTIFACTS/geckoview-armeabi-v7a.aar"
     export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64-v8a.aar"
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES="armeabi-v7a,arm64-v8a"
 fi
 
 # Build
-bash -x scripts/build.sh
+bash -x scripts/build.sh "$BUILD_TYPE"
 
 if [[ "$BUILD_TYPE" == "apk" ]]; then
     # Copy geckoview AAR
@@ -77,12 +67,7 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
       "$APK_IN"
 fi
 
-if [[ "$BUILD_TYPE" == "apkset" ]]; then
-    # Build bundle
-    pushd "$fenix"
-    gradle :app:bundleRelease
-    popd
-
+if [[ "$BUILD_TYPE" == "bundle" ]]; then
     # Build signed APK set
     AAB_IN="$(ls "$fenix"/app/build/outputs/bundle/release/*.aab)"
     APKS_OUT="$APKS_ARTIFACTS/IronFox-v${VERSION_NAME}.apks"

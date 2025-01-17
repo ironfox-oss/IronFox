@@ -19,6 +19,10 @@
 
 set -e
 
+if [ -z "$1" ]; then
+    echo "Usage: $0 apk|bundle" >&1
+    exit 1
+fi
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
     source "$(dirname "$0")/env_fdroid.sh"
@@ -117,5 +121,10 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$fenix"
-gradle assembleRelease
+if [[ "$1" == "apk" ]]; then
+    gradle :app:assembleRelease
+fi
+if [[ "$1" == "bundle" ]]; then
+    gradle :app:bundleRelease -Paab
+fi
 popd
