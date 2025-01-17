@@ -90,8 +90,11 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$application_services"
-./libs/verify-android-environment.sh
-gradle :tooling-nimbus-gradle:publishToMavenLocal
+
+# When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
+# skips building the libraries as they are expected to be already downloaded in a CI environment
+# However, we want build those libraries always, so we set CI='' before invoking the script
+CI='' bash -c './libs/verify-android-environment.sh && gradle :tooling-nimbus-gradle:publishToMavenLocal'
 popd
 
 # shellcheck disable=SC2154
