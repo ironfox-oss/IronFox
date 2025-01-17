@@ -86,13 +86,6 @@ build-apk:
   variables:
     # The name of this variable must match with the one in scripts/prebuild.sh
     SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
-
-    # These variables are also set in env_common.sh, which we source
-    # But for some reason, they are not recognized and are set to
-    # appservices/libs/android/arm64-v8a/nss
-    # which does not exist, resulting in a build failure
-    NSS_DIR: $CI_PROJECT_DIR/appservices/libs/desktop/linux-x86-64/nss
-    NSS_STATIC: 1
   before_script:
     - mkdir -p $(dirname "$SB_GAPI_KEY_FILE") && echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
 
