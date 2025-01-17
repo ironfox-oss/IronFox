@@ -30,7 +30,7 @@ esac
 
 # Setup environment variables. See Dockerfile.
 source "/opt/env_docker.sh"
-    
+
 # Set ANDROID_NDK
 export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
 [ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };
@@ -78,7 +78,7 @@ fi
 
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
     # Build signed APK set
-    AAB_IN="$(ls "$fenix"/app/build/outputs/bundle/release/*.aab)"
+    AAB_IN="$(ls "$fenix"/app/build/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="$APKS_ARTIFACTS/IronFox-v${VERSION_NAME}.apks"
     bundletool build-apks \
         --bundle="$AAB_IN" \
