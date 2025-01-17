@@ -52,6 +52,10 @@ if [[ "$BUILD_TYPE" == "bundle" ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES="armeabi-v7a,arm64-v8a,x86_64"
 fi
 
+# Set the build date to the date of commmit to ensure that the
+# MOZ_BUILDID is consistent across CI build jobs
+export MOZ_BUILD_DATE="$(date -d "$CI_COMMIT_TIMESTAMP" "+%Y%m%d%H%M%S")"
+
 # Build
 bash -x scripts/build.sh "$BUILD_TYPE"
 
