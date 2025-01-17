@@ -6,29 +6,94 @@
 set -eu
 set -o xtrace
 
-rootdir="$(dirname "$0")/.."
-rootdir=$(realpath "$rootdir")
+case $(echo "$VERSION_CODE" | cut -c 7) in
+0)
+    BUILD_TYPE='apk'
+    BUILD_ABI='arm'
+    ;;
+1)
+    BUILD_TYPE='apk'
+    BUILD_ABI='arm64'
+    ;;
+2)
+    BUILD_TYPE='apkset'
+    ;;
+*)
+    echo "Unknown target code in $VERSION_CODE." >&2
+    exit 1
+    ;;
+esac
 
-# Setup environment variables
-source /opt/env_docker.sh
+export ARTIFACTS=$CI_PROJECT_DIR/artifacts
+export APK_ARTIFACTS=$ARTIFACTS/apk
+export APKS_ARTIFACTS=$ARTIFACTS/apks
+export AAR_ARTIFACTS=$ARTIFACTS/aar
 
-# Setup paths
-source "$rootdir/scripts/env_local.sh"
+mkdir -p "$APK_ARTIFACTS"
+mkdir -p "$APKS_ARTIFACTS"
+mkdir -p "$AAR_ARTIFACTS"
 
-# Patch
-"$rootdir/scripts/prebuild.sh" "${VERSION_NAME}" "${VERSION_CODE}"
+mkdir -p /opt/IronFox
+echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
+curl \
+  --request GET \
+  --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+  "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/secure_files/$KEYSTORE_SECFILEID/download" \
+  --output "$KEYSTORE"
 
-# Print the mozconfig for debugging purposes
-echo ""
-echo "########################"
-cat  "$rootdir/gecko/mozconfig"
-echo "########################"
-echo ""
+
+# Setup environment variables. See Dockerfile.
+source "/opt/env_docker.sh"
+    
+# Set ANDROID_NDK
+export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
+[ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };
+
+# Get sources
+bash -x ./scripts/get_sources.sh
+
+# Update environment variables for this build
+source "scripts/env_local.sh"
+
+# Prepare sources
+bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
+
+# If we're building an APK set, the following environment variables are required
+if [[ "$BUILD_TYPE" == "apkset" ]]; then
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="$AAR_ARTIFACTS/geckoview-arm.aar"
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64.aar"
+    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES="armeabi-v7a,arm64-v8a"
+fi
 
 # Build
-source "$rootdir/scripts/build.sh"
+bash -x scripts/build.sh
 
-# Build AAB
-pushd "$rootdir/gecko/mobile/android/fenix"
-gradle :app:bundleRelease
-popd
+if [[ "$BUILD_TYPE" == "apk" ]]; then
+    # Copy geckoview AAR
+    cp -v gecko/obj/gradle/build/mobile/android/geckoview/outputs/aar/geckoview-release.aar \
+        "$AAR_ARTIFACTS/geckoview-${BUILD_ABI}.aar"
+
+    # Sign APK
+    APK_IN="$(ls "$fenix/app/build/outputs/apk/fenix/release/*.apk")"
+    APK_OUT="$APK_ARTIFACTS/$(basename "$APK_IN" | sed -e 's/unsigned/signed/g')"
+    "$ANDROID_HOME/build-tools/35.0.0/apksigner" sign \
+      --ks "$KEYSTORE" \
+      --ks-pass "$KEYSTORE_PASS" \
+      --ks-key-alias "$KEYSTORE_KEY_ALIAS" \
+      --key-pass "$KEYSTORE_KEY_PASS" \
+      --out "$APK_OUT" \
+      "$APK_IN"
+fi
+
+if [[ "$BUILD_TYPE" == "apkset" ]]; then
+    # Build signed APK set
+    AAB_IN="$(ls "$fenix/app/build/outputs/bundle/release/*.aab")"
+    APKS_OUT="$APKS_ARTIFACTS/ironfox-${VERSION_NAME}.apks"
+    bundletool build-apks \
+        --bundle="$AAB_IN" \
+        --output="$APKS_OUT" \
+        --ks="$KEYSTORE" \
+        --ks-pass="pass:$KEYSTORE_PASS" \
+        --ks-key-alias="$KEYSTORE_KEY_ALIAS" \
+        --key-pass="pass:$KEYSTORE_KEY_PASS"
+fi
