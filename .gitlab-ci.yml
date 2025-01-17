@@ -8,13 +8,6 @@
         --header "JOB-TOKEN: $CI_JOB_TOKEN" \
         "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/secure_files/$KEYSTORE_SECFILEID/download" \
         --output "$KEYSTORE"
-    - wget https://github.com/google/bundletool/releases/download/${BUNDLETOOL}/bundletool-all-${BUNDLETOOL}.jar -O /root/bin/bundletool.jar
-    - |
-      {
-        echo '#!/bin/bash'
-        echo 'exec java -jar /root/bin/bundletool.jar "$@"'
-      } > /root/bin/bundletool
-    - chmod +x /root/bin/bundletool
 
 variables: &build_variables
   PRODUCTION_BRANCH: main

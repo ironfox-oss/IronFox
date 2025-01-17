@@ -7,6 +7,7 @@ WASI_TAG="wasi-sdk-20"
 GLEAN_TAG="v62.0.0"
 GMSCORE_TAG="v0.3.6.244735"
 APPSERVICES_TAG="v134.0"
+BUNDLETOOL_TAG="1.18.0"
 
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -106,6 +107,23 @@ do_download() {
 }
 
 mkdir -p "$BUILDDIR"
+
+if ! [[ -f "$BUILDDIR/bundletool.jar" ]]; then
+    echo "Downloading bundletool..."
+    wget https://github.com/google/bundletool/releases/download/${BUNDLETOOL_TAG}/bundletool-all-${BUNDLETOOL_TAG}.jar \
+        -O "$BUILDDIR/bundletool.jar"
+fi
+
+if ! [[ -f "$BUILDDIR/bundletool" ]]; then
+    echo "Creating bundletool script..."
+    {
+        echo '#!/bin/bash'
+        echo "exec java -jar ${BUILDDIR}/bundletool.jar \"\$@\""
+    } > "$BUILDDIR/bundletool"
+    chmod +x "$BUILDDIR/bundletool"
+fi
+
+echo "'bundletool' is set up at $BUILDDIR/bundletool"
 
 echo "Cloning glean..."
 git clone --branch "$GLEAN_TAG" --depth=1 "https://github.com/mozilla/glean" "$GLEANDIR"
