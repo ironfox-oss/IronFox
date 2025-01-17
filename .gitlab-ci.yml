@@ -115,3 +115,4 @@ build-apk:
     expire_in: "30 days"
     paths:
       - gecko/mobile/android/fenix/app/build/outputs/apk/fenix/release/*.apk
+      - gecko/obj/gradle/build/mobile/android/geckoview/outputs/aar/geckoview-release.aar
