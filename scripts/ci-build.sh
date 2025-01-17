@@ -59,11 +59,11 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
     APK_IN="$(ls "$fenix"/app/build/outputs/apk/fenix/release/*.apk)"
     APK_OUT="$APK_ARTIFACTS/IronFox-v${VERSION_NAME}-${BUILD_ABI}.apk"
     "$ANDROID_HOME/build-tools/35.0.0/apksigner" sign \
-      --ks "$KEYSTORE" \
-      --ks-pass "$KEYSTORE_PASS" \
-      --ks-key-alias "$KEYSTORE_KEY_ALIAS" \
-      --key-pass "$KEYSTORE_KEY_PASS" \
-      --out "$APK_OUT" \
+      --ks="$KEYSTORE" \
+      --ks-pass="pass:$KEYSTORE_PASS" \
+      --ks-key-alias="$KEYSTORE_KEY_ALIAS" \
+      --key-pass="pass:$KEYSTORE_KEY_PASS" \
+      --out="$APK_OUT" \
       "$APK_IN"
 fi
 
