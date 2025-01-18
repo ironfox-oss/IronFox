@@ -21,4 +21,9 @@ pref("extensions.formautofill.addresses.enabled", true); // [DEFAULT]
 pref("extensions.formautofill.creditCards.enabled", true); // [DEFAULT]
 pref("signon.rememberSignons", true); // [DEFAULT]
 
+/// Disable automatic translation
+// We need to handle this by the UI instead...
+
+pref("browser.translations.alwaysTranslateLanguages", ""); // [DEFAULT]
+
 pref("browser.ironfox.applied", true);
