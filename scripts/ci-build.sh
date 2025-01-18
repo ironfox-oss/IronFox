@@ -80,7 +80,7 @@ if [[ "$BUILD_TYPE" == "bundle" ]]; then
     # Build signed APK set
     AAB_IN="$(ls "$fenix"/app/build/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="$APKS_ARTIFACTS/IronFox-v${VERSION_NAME}.apks"
-    bundletool build-apks \
+    "$builddir"/bundletool build-apks \
         --bundle="$AAB_IN" \
         --output="$APKS_OUT" \
         --ks="$KEYSTORE" \
