@@ -92,7 +92,6 @@ build-docker:
 build-apk:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
-  interruptible: true
   timeout: 2h
   needs:
     - job: "build-docker"
@@ -118,7 +117,6 @@ build-apk:
 build-apk-set:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
-  interruptible: true
   timeout: 2h
   needs:
     - job: "build-docker"
