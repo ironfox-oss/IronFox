@@ -5,11 +5,10 @@
 
 // 001 ADVANCED FINGERPRINTING PROTECTION
 
-/// Enable RFP (resistFingerprinting)
-// https://github.com/arkenfox/user.js/blob/master/user.js#L745
-// NOTE: You can add site exceptions to `privacy.resistFingerprinting.exemptedDomains` in your about:config
+/// Further harden FPP...
+// As explained here: https://codeberg.org/celenity/Phoenix/issues/46
 
-pref("privacy.resistFingerprinting", true);
+pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasImageExtractionPrompt,-CanvasExtractionBeforeUserInputIsBlocked,-CSSPrefersColorScheme,-FrameRate");
 
 /// Disable WebGL
 // https://blog.browserscan.net/docs/webgl-fingerprinting
