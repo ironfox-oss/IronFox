@@ -27,7 +27,7 @@ pref("signon.rememberSignons", true); // [DEFAULT]
 pref("browser.translations.alwaysTranslateLanguages", ""); // [DEFAULT]
 
 /// Set light/dark mode to match system
-// We're going to patch to set this to light mode via UI instead...
+// We're going to patch to set this to light mode by default via UI instead...
 
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
