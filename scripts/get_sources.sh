@@ -131,7 +131,7 @@ git clone --branch "$GLEAN_TAG" --depth=1 "https://github.com/mozilla/glean" "$G
 echo "Cloning gmscore..."
 git clone --branch "$GMSCORE_TAG" --depth=1 "https://github.com/microg/GmsCore" "$GMSCOREDIR"
 
-if [[ -z ${FDROID_BUILD+x} ]]; then
+if [[ -z "${FDROID_BUILD:-}" ]]; then
     echo "Downloading prebuilt wasi-sdk..."
     do_download "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
 else
