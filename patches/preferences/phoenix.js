@@ -2,7 +2,7 @@
 // The Phoenix shall rise from the ashes of what fell before it.
 // RIP Mull.
 
-pref("browser.phoenix.version", "2025.01.20.1", locked);
+pref("browser.phoenix.version", "2025.01.20.2", locked);
 
 // Let's begin.
 
@@ -662,7 +662,9 @@ pref("browser.contentblocking.category", "strict", locked);
 
 pref("network.cookie.cookieBehavior", 5); // [DEFAULT]
 pref("network.cookie.cookieBehavior.optInPartitioning", true);
+pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
 pref("network.cookie.cookieBehavior.pbmode", 5); // [DEFAULT]
+pref("network.cookie.cookieBehavior.trackerCookieBlocking", true);
 pref("network.http.referer.disallowCrossSiteRelaxingDefault", true); // [DEFAULT]
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true); // [DEFAULT]
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true); // [DEFAULT]
@@ -744,6 +746,20 @@ pref("privacy.query_stripping.strip_on_share.enabled", true);
 /// Ensure we never save clipboard history/clipboard contents to the cloud...
 
 pref("clipboard.copyPrivateDataToClipboardCloudOrHistory", false); // [DEFAULT]
+
+/// Enable Smartblock Embeds/Placeholders
+// Makes certain resources click to load
+
+pref("extensions.webcompat.smartblockEmbeds.enabled", true); // [DEFAULT on Nightly]
+
+/// Enable Cookies Having Independent Partitioned State (CHIPS)
+// This allows websites to set cookies with a 'Partitioned' attribute, meaning they're limited in scope
+// We still use ETP Strict for partioning anyways, so this could be useful as a defense in depth if a user decides to allow a specific domain (or domains) to access a third party cookie
+// https://developer.mozilla.org/docs/Web/HTTP/Headers/Set-Cookie#partitioned
+// https://developer.mozilla.org/docs/Web/Privacy/Privacy_sandbox/Partitioned_cookies
+// https://github.com/privacycg/CHIPS
+
+pref("network.cookie.CHIPS.enabled", true); // [DEFAULT on Nightly]
 
 pref("browser.phoenix.cfg.core.status", "016", locked);
 
