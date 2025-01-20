@@ -120,12 +120,13 @@ sudo apt install -y make \
         cmake \
         clang-18 \
         gyp \
+        nasm \
         ninja-build \
         patch \
         perl \
-        wget \
         tar \
         unzip \
+        wget \
         xz-utils \
         zlib1g-dev
 ```
@@ -144,20 +145,21 @@ default JDK.
 sudo dnf install -y \
     cmake \
     clang \
+    git \
     gyp \
     java-1.8.0-openjdk-devel \
     java-17-openjdk-devel \
     m4 \
     make \
+    nasm \
     ninja-build \
     patch \
     perl \
     python3.9 \
     shasum \
-    xz \
-    zlib-devel \
     wget \
-    git
+    xz \
+    zlib-devel
 ```
 
 The above command installs all packages (including `python3.9`) that are required
