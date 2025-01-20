@@ -16,7 +16,7 @@ pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasImageExtr
 
 pref("webgl.disabled", true);
 
-pref("browser.phoenix.extended.001.applied", true);
+pref("browser.phoenix.cfg.extended.status", "001", locked);
 
 /// 002 WEBRTC
 
@@ -25,13 +25,13 @@ pref("browser.phoenix.extended.001.applied", true);
 pref("media.peerconnection.ice.default_address_only", true);
 pref("media.peerconnection.ice.no_host", true);
 
-pref("browser.phoenix.extended.002.applied", true);
+pref("browser.phoenix.cfg.extended.status", "002", locked);
 
 // 003 MISC. PRIVACY
 
-/// Disable ETP WebCompat & Heuristics
+/// Disable dFPI Heuristics
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15404
 
-pref("privacy.antitracking.enableWebcompat", false);
 pref("privacy.restrict3rdpartystorage.heuristic.opened_window_after_interaction", false);
 pref("privacy.restrict3rdpartystorage.heuristic.recently_visited", false);
 pref("privacy.restrict3rdpartystorage.heuristic.redirect", false); // [DEFAULT]
@@ -41,7 +41,7 @@ pref("privacy.restrict3rdpartystorage.heuristic.window_open", false); // [DEFAUL
 
 pref("network.http.referer.XOriginPolicy", 2);
 
-pref("browser.phoenix.extended.003.applied", true);
+pref("browser.phoenix.cfg.extended.status", "003", locked);
 
 // 004 ATTACK SURFACE REDUCTION
 
@@ -50,7 +50,7 @@ pref("browser.phoenix.extended.003.applied", true);
 
 pref("javascript.options.wasm", false);
 
-pref("browser.phoenix.extended.004.applied", true);
+pref("browser.phoenix.cfg.extended.status", "004", locked);
 
 // 005 MISC.
 
@@ -62,6 +62,6 @@ pref("browser.meta_refresh_when_inactive.disabled", true); // [DEFAULT]
 
 pref("media.autoplay.blocking_policy", 2); // [Default = 0]
 
-pref("browser.phoenix.extended.005.applied", true);
+pref("browser.phoenix.cfg.extended.status", "005", locked);
 
-pref("browser.phoenix.extended.applied", true);
+pref("browser.phoenix.cfg.extended.status", "successfully applied :D", locked);

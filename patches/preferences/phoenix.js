@@ -2,7 +2,7 @@
 // The Phoenix shall rise from the ashes of what fell before it.
 // RIP Mull.
 
-pref("browser.phoenix.version", "2025.01.19.1", locked);
+pref("browser.phoenix.version", "2025.01.20.1", locked);
 
 // Let's begin.
 
@@ -15,7 +15,7 @@ pref("general.aboutConfig.enable", true, locked);
 /// Disable annoying warnings when attempting to access the about:config
 pref("general.warnOnAboutConfig", false);
 
-pref("browser.phoenix.000.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "000", locked);
 
 // 001 DATA COLLECTION
 
@@ -145,7 +145,7 @@ pref("extensions.recommendations.privacyPolicyUrl", ""); // [DEFAULT]
 pref("toolkit.crashreporter.infoURL", ""); // [HIDDEN]
 pref("toolkit.datacollection.infoURL", ""); // [HIDDEN]
 
-pref("browser.phoenix.001.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "001", locked);
 
 // 002 MOZILLA CRAP™
 
@@ -191,7 +191,7 @@ pref("extensions.getAddons.search.browseURL", "https://addons.mozilla.org/%LOCAL
 pref("extensions.webcompat-reporter.enabled", false, locked); // [DEFAULT except for Beta & Nightly releases...]
 pref("extensions.webcompat-reporter.newIssueEndpoint", "", locked);
 
-pref("browser.phoenix.002.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "002", locked);
 
 // 003 Search & URL Bar
 
@@ -208,7 +208,7 @@ pref("browser.search.separatePrivateDefault.urlbarResult.enabled", true); // [HI
 
 pref("network.IDN_show_punycode", true);
 
-pref("browser.phoenix.003.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "003", locked);
 
 // 004 Implicit Connections
 
@@ -221,6 +221,7 @@ pref("dom.prefetch_dns_for_anchor_http_document", false); // https://gitlab.torp
 pref("dom.prefetch_dns_for_anchor_https_document", false); // [DEFAULT] https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/42684
 pref("network.dns.disablePrefetch", true);
 pref("network.dns.disablePrefetchFromHTTPS", true);
+pref("network.dns.prefetch_via_proxy", false); // [DEFAULT]
 pref("network.http.speculative-parallel-limit", 0);
 pref("network.predictor.enable-hover-on-ssl", false); // [DEFAULT]
 pref("network.predictor.enable-prefetch", false);
@@ -247,7 +248,7 @@ pref("network.early-hints.preconnect.max_connections", 0);
 pref("browser.search.suggest.enabled", false);
 pref("browser.search.suggest.enabled.private", false);
 
-pref("browser.phoenix.004.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "004", locked);
 
 // 005 HTTP(S) - Mixed Content & General Network Hardening
 
@@ -285,9 +286,10 @@ pref("security.warn_submit_secure_to_insecure", true); // [DEFAULT] - Warn when 
 
 pref("browser.xul.error_pages.expert_bad_cert", true);
 
-/// Disable TLS1.3 0-RTT (Not forward secret)
+/// Disable TLS 1.3 0-RTT (Not forward secret)
 // https://github.com/tlswg/tls13-spec/issues/1001
 
+pref("network.http.http3.enable_0rtt", false); // For HTTP3 https://bugzilla.mozilla.org/show_bug.cgi?id=1689550
 pref("security.tls.enable_0rtt_data", false);
 
 /// Require safe renegotiations - Disables connections to servers without RFC 5746
@@ -347,7 +349,7 @@ pref("network.proxy.failover_direct", false);
 pref("network.proxy.socks_remote_dns", true);
 pref("network.proxy.socks5_remote_dns", true); // [DEFAULT]
 
-pref("browser.phoenix.005.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "005", locked);
 
 // 006 DNS
 
@@ -389,7 +391,7 @@ pref("network.dns.native_https_query", true); // [DEFAULT]
 
 pref("network.dns.preferIPv6", true);
 
-pref("browser.phoenix.006.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "006", locked);
 
 // 007 CERTIFICATES
 
@@ -430,7 +432,7 @@ pref("security.pki.certificate_transparency.mode", 2); // [Default = 0]
 pref("security.pki.certificate_transparency.disable_for_hosts", ""); // [DEFAULT]
 pref("security.pki.certificate_transparency.disable_for_spki_hashes", ""); // [DEFAULT]
 
-pref("browser.phoenix.007.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "007", locked);
 
 // 008 DOWNLOADS
 
@@ -443,7 +445,7 @@ pref("browser.download.useDownloadDir", false);
 
 pref("dom.block_download_insecure", true); // [DEFAULT]
 
-pref("browser.phoenix.008.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "008", locked);
 
 // 009 SAFE BROWSING
 
@@ -503,7 +505,7 @@ pref("browser.safebrowsing.reportPhishURL", "https://safebrowsing.google.com/saf
 pref("browser.safebrowsing.provider.google.reportURL", "https://transparencyreport.google.com/safe-browsing/search?url=");
 pref("browser.safebrowsing.provider.google4.reportURL", "https://transparencyreport.google.com/safe-browsing/search?url=");
 
-pref("browser.phoenix.009.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "009", locked);
 
 // 010 GEOLOCATION
 
@@ -523,7 +525,7 @@ pref("browser.region.update.enabled", false);
 
 pref("geo.provider.network.url", "https://api.beacondb.net/v1/geolocate");
 
-pref("browser.phoenix.010.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "010", locked);
 
 // 011 AI
 // https://support.mozilla.org/kb/ai-chatbot
@@ -537,7 +539,7 @@ pref("browser.ml.enable", false); // [DEFAULT, except for Nightly] - "Experiment
 
 pref("extensions.formautofill.ml.experiment.enabled", false);
 
-pref("browser.phoenix.011.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "011", locked);
 
 // 012 WEBRTC
 
@@ -551,7 +553,7 @@ pref("media.peerconnection.ice.obfuscate_host_addresses", true);
 
 pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true);
 
-pref("browser.phoenix.012.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "012", locked);
 
 // 013 DISK AVOIDANCE
 
@@ -593,7 +595,7 @@ pref("layout.css.visited_links_enabled", false);
 
 pref("browser.pagethumbnails.capturing_disabled", true); // [HIDDEN]
 
-pref("browser.phoenix.013.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "013", locked);
 
 // 014 EXTENSIONS
 
@@ -618,7 +620,7 @@ pref("xpinstall.signatures.weakSignaturesTemporarilyAllowed", false); // [HIDDEN
 
 pref("extensions.blocklist.enabled", true); // [DEFAULT]
 
-pref("browser.phoenix.014.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "014", locked);
 
 // 015 PDF.js
 
@@ -647,7 +649,7 @@ pref("browser.download.open_pdf_attachments_inline", true); // [DEFAULT]
 
 pref("pdfjs.sidebarViewOnLoad", 2); // [HIDDEN]
 
-pref("browser.phoenix.015.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "015", locked);
 
 // 016 MISC. PRIVACY
 
@@ -743,7 +745,7 @@ pref("privacy.query_stripping.strip_on_share.enabled", true);
 
 pref("clipboard.copyPrivateDataToClipboardCloudOrHistory", false); // [DEFAULT]
 
-pref("browser.phoenix.016.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "016", locked);
 
 // 017 FINGERPRINTING PROTECTION
 
@@ -780,6 +782,11 @@ pref("privacy.resistFingerprinting.target_video_res", 1080); // [DEFAULT for Nig
 
 pref("privacy.spoof_english", 2);
 
+/// Enable light mode by default
+// This matches with RFP...
+
+pref("layout.css.prefers-color-scheme.content-override", 1);
+
 /// Disable WebGPU
 // https://browserleaks.com/webgpu
 
@@ -804,7 +811,7 @@ pref("widget.non-native-theme.use-theme-accent", false);
 
 pref("javascript.options.use_fdlibm_for_sin_cos_tan", true);
 
-pref("browser.phoenix.017.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "017", locked);
 
 // 018 PASSWORDS & AUTHENTICATION
 
@@ -861,7 +868,7 @@ pref("network.microsoft-sso-authority-list", ""); // DEFENSE IN DEPTH
 
 pref("network.negotiate-auth.trusted-uris", ""); // [DEFAULT]
 
-pref("browser.phoenix.018.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "018", locked);
 
 // 019 ATTACK SURFACE REDUCTION
 
@@ -909,7 +916,7 @@ pref("gfx.font_rendering.opentype_svg.enabled", false);
 pref("dom.postMessage.sharedArrayBuffer.bypassCOOP_COEP.insecure.enabled", false); // [DEFAULT]
 pref("dom.postMessage.sharedArrayBuffer.withCOOP_COEP", false);
 
-pref("browser.phoenix.019.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "019", locked);
 
 // 020 MISC. SECURITY
 
@@ -933,7 +940,8 @@ pref("javascript.options.spectre.disable_for_isolated_content", false);
 pref("security.default_personal_cert", "Ask Every Time", locked); // [DEFAULT]
 
 /// Disable Accessibility Services
-// https://support.mozilla.org/kb/accessibility-services#w_malware-and-adware
+// https://web.archive.org/web/20240608190300/support.mozilla.org/en-US/kb/accessibility-services
+// "Firefox Accessibility Service is a technology built into Firefox that provides 3rd party applications running on the same device the ability to inspect, monitor, visualize, and alter web page content hosted within Firefox."
 
 pref("accessibility.force_disabled", 1);
 
@@ -1075,7 +1083,7 @@ pref("dom.origin-trials.coep-credentialless.state", 1); // https://searchfox.org
 
 pref("browser.tabs.remote.enforceRemoteTypeRestrictions", true);
 
-pref("browser.phoenix.020.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "020", locked);
 
 // 021 BLOCK COOKIE BANNERS
 
@@ -1083,7 +1091,7 @@ pref("cookiebanners.service.mode", 1);
 pref("cookiebanners.service.mode.privateBrowsing", 1); // [DEFAULT on Nightly]
 pref("cookiebanners.service.enableGlobalRules", true); // [DEFAULT]
 
-pref("browser.phoenix.021.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "021", locked);
 
 // 022 MEDIA
 
@@ -1112,7 +1120,7 @@ pref("media.eme.require-app-approval", true); // [DEFAULT - DEFENSE IN DEPTH]: E
 pref("media.gmp-widevinecdm.visible", false);
 pref("media.mediadrm-widevinecdm.visible", false); // https://searchfox.org/mozilla-central/source/mobile/android/app/geckoview-prefs.js#320
 
-pref("browser.phoenix.022.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "022", locked);
 
 // 023 UPDATES
 
@@ -1127,7 +1135,7 @@ pref("extensions.update.enabled", true); // [DEFAULT]
 
 pref("extensions.update.notifyUser", true); // [HIDDEN]
 
-pref("browser.phoenix.023.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "023", locked);
 
 // 024 DEBUGGING
 
@@ -1148,7 +1156,7 @@ pref("devtools.debugger.prompt-connection", true, locked); // [DEFAULT]
 
 pref("reader.errors.includeURLs", false); // [DEFAULT]
 
-pref("browser.phoenix.024.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "024", locked);
 
 /// 025 MISC.
 
@@ -1194,7 +1202,7 @@ pref("dom.disable_window_move_resize", true); // [DEFAULT]
 
 pref("media.webspeech.synth.dont_notify_on_error", true); // [HIDDEN]
 
-pref("browser.phoenix.025.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "025", locked);
 
 // 026 PERFORMANCE
 // A lot of these taken from https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
@@ -1218,13 +1226,13 @@ pref("network.http.max-persistent-connections-per-proxy", 48); // [Default = 20]
 pref("network.http.max-persistent-connections-per-server", 10); // [Default = 6]
 pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // [Default = 3]
 
-pref("browser.phoenix.026.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "026", locked);
 
 // 027 SMOOTH SCROLLING
 
 pref("general.smoothScroll", true); // [DEFAULT]
 
-pref("browser.phoenix.027.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "027", locked);
 
 // 028 Personal Touch 💜
 
@@ -1244,7 +1252,7 @@ pref("full-screen-api.warning.timeout", 0); // [Default = 3000]
 pref("security.xfocsp.hideOpenInNewWindow", false);
 pref("view_source.wrap_long_lines", true); // [DEFAULT]
 
-pref("browser.phoenix.028.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "028", locked);
 
 // 029 Sync more prefs
 // Note that for this to work, the below prefs must be set on BOTH the device you are syncing from & to...
@@ -1352,6 +1360,6 @@ pref("services.sync.prefs.sync.network.http.max-urgent-start-excessive-connectio
 pref("services.sync.prefs.sync.network.http.referer.XOriginPolicy", true);
 pref("services.sync.prefs.sync.webgl.disabled", true);
 
-pref("browser.phoenix.029.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "029", locked);
 
-pref("browser.phoenix.applied", true, locked);
+pref("browser.phoenix.cfg.core.status", "successfully applied :D", locked);
