@@ -390,7 +390,7 @@ sed -i \
     mobile/android/gradle.py
 
 # Set the Safe Browsing API URL to our proxy
-sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.itsaky.workers.dev/v4/|g" \
+sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
 # shellcheck disable=SC2154
