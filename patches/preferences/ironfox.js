@@ -7,11 +7,14 @@
 
 pref("network.trr.mode", 5);
 
-/// Disable Safe Browsing by default
-// We're going to look into proxying this in the future; but for the time being, we decided it's best to leave off by default. It's unfortunate this isn't exposed in the UI or by some kind of onboarding from Mozilla :/
-
+/// Enable Safe Browsing by default
 pref("browser.safebrowsing.features.malware.update", false);
 pref("browser.safebrowsing.features.phishing.update", false);
+
+/// Set Safe Browsing API proxy
+pref("browser.safebrowsing.provider.google4.updateURL", "https://safebrowsing.itsaky.workers.dev/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
+pref("browser.safebrowsing.provider.google4.gethashURL", "https://safebrowsing.itsaky.workers.dev/v4/fullHashes:find?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
+pref("browser.safebrowsing.provider.google4.dataSharingURL", "https://safebrowsing.itsaky.workers.dev/v4/threatHits?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
 
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via Fenix's UI settings instead...
