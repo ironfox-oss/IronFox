@@ -389,6 +389,10 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
+# Set the Safe Browsing API URL to our proxy
+sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.itsaky.workers.dev/v4/|g" \
+    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
+
 # shellcheck disable=SC2154
 if [[ -n "${FDROID_BUILD:-}" ]]; then
     # Patch the LLVM source code
@@ -416,7 +420,7 @@ fi
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
-    
+
     if [[ -n "${target}" ]]; then
         echo "ac_add_options --target=$target"
     fi
