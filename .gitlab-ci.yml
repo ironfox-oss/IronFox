@@ -164,10 +164,10 @@ publish-release:
   needs:
     - job: "build-apk"
       artifacts: true
-      optional: false
+      optional: true
     - job: "build-apk-set"
       artifacts: true
-      optional: false
+      optional: true
   rules:
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
   variables:
