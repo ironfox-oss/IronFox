@@ -8,8 +8,8 @@
 pref("network.trr.mode", 5);
 
 /// Enable Safe Browsing by default
-pref("browser.safebrowsing.features.malware.update", false);
-pref("browser.safebrowsing.features.phishing.update", false);
+pref("browser.safebrowsing.features.malware.update", true);
+pref("browser.safebrowsing.features.phishing.update", true);
 
 /// Set Safe Browsing API proxy
 pref("browser.safebrowsing.provider.google4.updateURL", "https://safebrowsing.ironfoxoss.org/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
