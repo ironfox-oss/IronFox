@@ -36,7 +36,7 @@ if [ -z "$1" ] || [ -z "$2" ]; then
     exit 1
 fi
 
-if [[ -n "${FDROID_BUILD:-}" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     source "$(dirname "$0")/setup-android-sdk.sh"
     source "$(dirname "$0")/env_fdroid.sh"
 fi
@@ -73,7 +73,7 @@ fi
 # Create build directory
 mkdir -p "$rootdir/build"
 
-if [[ -n "${FDROID_BUILD:-}" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Set up Rust
     # shellcheck disable=SC2154
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
@@ -257,7 +257,7 @@ popd
 
 # WASI SDK
 # shellcheck disable=SC2154
-if [[ -n "${FDROID_BUILD:-}" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
     popd
@@ -397,7 +397,7 @@ sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
 # shellcheck disable=SC2154
-if [[ -n "${FDROID_BUILD:-}" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
     LLVM_SVN='522817'
@@ -434,7 +434,7 @@ fi
     echo "ac_add_options --with-libclang-path=\"$libclang\""
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
 
-    if [[ -n "${SB_GAPI_KEY_FILE:-}" ]]; then
+    if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
     fi
 

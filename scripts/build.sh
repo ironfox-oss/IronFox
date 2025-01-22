@@ -32,7 +32,7 @@ if [ "$build_type" != "apk" ] && [ "$build_type" != "bundle" ]; then
     exit 1
 fi
 
-if [[ -n "${FDROID_BUILD:-}" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     source "$(dirname "$0")/env_fdroid.sh"
 fi
 
@@ -48,7 +48,7 @@ source "$HOME/.cargo/env"
 # auto-publication workflow because the latter does not work for Gradle
 # plugins (Glean).
 
-if [[ -n "${FDROID_BUILD:-}" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Build LLVM
     # shellcheck disable=SC2154
     pushd "$llvm"
@@ -65,7 +65,7 @@ if [[ -n "${FDROID_BUILD:-}" ]]; then
     popd
 fi
 
-if [[ -n "${FDROID_BUILD:-}" ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Build WASI SDK
     # shellcheck disable=SC2154
     pushd "$wasi"
@@ -83,7 +83,7 @@ fi
 # Build microG libraries
 # shellcheck disable=SC2154
 pushd "$gmscore"
-if [[ -z "${FDROID_BUILD:-}" ]]; then
+if ! [[ -n ${FDROID_BUILD+x} ]]; then
     export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
 fi
 gradle -x javaDocReleaseGeneration \
