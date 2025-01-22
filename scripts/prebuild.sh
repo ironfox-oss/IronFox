@@ -457,8 +457,7 @@ pref("media.gmp-manager.url.override", "data:text/plain,");
 pref("media.gmp-gmpopenh264.enabled", false);
 EOF
 
-cat "$patches/preferences/phoenix.js" >>mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/phoenix-extended.js" >>mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/phoenix-extended-android.js" >>mobile/android/app/geckoview-prefs.js
 cat "$patches/preferences/ironfox.js" >>mobile/android/app/geckoview-prefs.js
 
 popd
