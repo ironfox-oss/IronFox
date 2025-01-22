@@ -19,12 +19,12 @@ curl --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" \
     curl -L --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" "$url" -o "$REPO_DIR/$name"
 done
 
-IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py "$(find "$REPO_DIR" -name "*.apk")")"
+IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py "$(ls "$REPO_DIR"/*.apk)")"
 
 sed -i \
     -e "s/CurrentVersion: .*/CurrentVersion: \"$vername\"/" \
     -e "s/CurrentVersionCode: .*/CurrentVersionCode: $vercode/" "$META_FILE"
 
-git add "$REPO_DIR $META_FILE"
+git add "$REPO_DIR" "$META_FILE"
 git commit -m "feat: update for release ${CI_COMMIT_TAG}"
 git push origin "HEAD:$TARGET_REPO_BRANCH"
