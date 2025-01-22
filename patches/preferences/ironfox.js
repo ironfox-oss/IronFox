@@ -34,4 +34,4 @@ pref("browser.translations.alwaysTranslateLanguages", ""); // [DEFAULT]
 
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
-pref("browser.ironfox.applied", true);
+pref("browser.ironfox.applied", true, locked);
