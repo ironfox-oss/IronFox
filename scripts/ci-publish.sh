@@ -17,10 +17,13 @@ export ARTIFACTS=$CI_PROJECT_DIR/artifacts
 export APK_ARTIFACTS=$ARTIFACTS/apk
 export APKS_ARTIFACTS=$ARTIFACTS/apks
 
-mkdir -p /opt/IronFox
+mkdir -p "$CI_PROJECT_DIR/build"
 
-RELEASE_NOTES_FILE=/opt/IronFox/release-notes.md
-CHECKSUMS_FILE=/opt/IronFox/asset-checksums
+RELEASE_NOTES_FILE=$CI_PROJECT_DIR/build/release-notes.md
+CHECKSUMS_FILE=$CI_PROJECT_DIR/build/asset-checksums
+
+echo -n "" > "$RELEASE_NOTES_FILE"
+echo -n "" > "$CHECKSUMS_FILE"
 
 declare -a asset_flags
 
@@ -28,7 +31,7 @@ declare -a asset_flags
 for apk in "$APK_ARTIFACTS"/*.apk; do
     package_name="apk"
     file_name="$(basename "$apk")"
-    sha256sum -b "$apk" >> "$CHECKSUMS_FILE"
+    echo "$(sha256sum -b "$apk" | cut -d ' ' -f 1)  ${file_name}" >> "$CHECKSUMS_FILE"
     upload_to_package_registry "$apk" "$package_name"
 
     asset_flags+=(--assets-link "{
@@ -41,7 +44,7 @@ done
 for apks in "$APKS_ARTIFACTS"/*.apks; do
     package_name="apkset"
     file_name=$(basename "$apks")
-    sha256sum -b "$apks" >> "$CHECKSUMS_FILE"
+    echo "$(sha256sum -b "$apks" | cut -d ' ' -f 1)  ${file_name}" >> "$CHECKSUMS_FILE"
     upload_to_package_registry "$apks" "$package_name"
 
     asset_flags+=(--assets-link "{
