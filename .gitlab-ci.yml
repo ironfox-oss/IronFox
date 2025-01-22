@@ -164,6 +164,8 @@ publish-release:
   stage: release
   interruptible: true
   needs:
+    - job: "build-docker"
+      optional: true
     - job: "build-apk"
       artifacts: true
       optional: true
