@@ -19,8 +19,20 @@
 
 set -e
 
+if [ -z "$1" ]; then
+    echo "Usage: $0 apk|bundle" >&1
+    exit 1
+fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+build_type="$1"
+
+if [ "$build_type" != "apk" ] && [ "$build_type" != "bundle" ]; then
+    echo "Unknown build type: '$build_type'" >&1
+    echo "Usage: $0 apk|bundle" >&1
+    exit 1
+fi
+
+if [[ -n "${FDROID_BUILD:-}" ]]; then
     source "$(dirname "$0")/env_fdroid.sh"
 fi
 
@@ -36,7 +48,7 @@ source "$HOME/.cargo/env"
 # auto-publication workflow because the latter does not work for Gradle
 # plugins (Glean).
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD:-}" ]]; then
     # Build LLVM
     # shellcheck disable=SC2154
     pushd "$llvm"
@@ -53,7 +65,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     popd
 fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD:-}" ]]; then
     # Build WASI SDK
     # shellcheck disable=SC2154
     pushd "$wasi"
@@ -71,7 +83,7 @@ fi
 # Build microG libraries
 # shellcheck disable=SC2154
 pushd "$gmscore"
-if ! [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -z "${FDROID_BUILD:-}" ]]; then
     export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
 fi
 gradle -x javaDocReleaseGeneration \
@@ -90,8 +102,11 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$application_services"
-./libs/verify-android-environment.sh
-gradle :tooling-nimbus-gradle:publishToMavenLocal
+
+# When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
+# skips building the libraries as they are expected to be already downloaded in a CI environment
+# However, we want build those libraries always, so we set CI='' before invoking the script
+CI='' bash -c './libs/verify-android-environment.sh && gradle :tooling-nimbus-gradle:publishToMavenLocal'
 popd
 
 # shellcheck disable=SC2154
@@ -114,5 +129,9 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$fenix"
-gradle assembleRelease
+if [[ "$build_type" == "apk" ]]; then
+    gradle :app:assembleRelease
+elif [[ "$build_type" == "bundle" ]]; then
+    gradle :app:bundleRelease -Paab
+fi
 popd

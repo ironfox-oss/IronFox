@@ -36,7 +36,7 @@ if [ -z "$1" ] || [ -z "$2" ]; then
     exit 1
 fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD:-}" ]]; then
     source "$(dirname "$0")/setup-android-sdk.sh"
     source "$(dirname "$0")/env_fdroid.sh"
 fi
@@ -73,7 +73,7 @@ fi
 # Create build directory
 mkdir -p "$rootdir/build"
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD:-}" ]]; then
     # Set up Rust
     # shellcheck disable=SC2154
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
@@ -97,6 +97,10 @@ echo "...libclang dir set to ${libclang}"
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
 rustup default 1.82.0
+rustup target add thumbv7neon-linux-androideabi
+rustup target add armv7-linux-androideabi
+rustup target add aarch64-linux-android
+rustup target add x86_64-linux-android
 cargo install --vers 0.26.0 cbindgen
 
 # Fenix
@@ -167,26 +171,32 @@ sed -i \
 # Set up target parameters
 case $(echo "$2" | cut -c 7) in
 0)
-    abi=armeabi-v7a
+    # APK for armeabi-v7a
+    abi='"armeabi-v7a"'
     target=arm-linux-androideabi
     llvmtarget="ARM"
     rusttarget=arm
-    rustup target add thumbv7neon-linux-androideabi
-    rustup target add armv7-linux-androideabi
     ;;
 1)
-    abi=x86
-    target=i686-linux-android
-    llmvtarget="X86"
-    rusttarget=x86
-    rustup target add i686-linux-android
+    # APK for x86_64
+    abi='"x86_64"'
+    target=x86_64-linux-android
+    llvmtarget="X86_64"
+    rusttarget=x86_64
     ;;
 2)
-    abi=arm64-v8a
+    # APK for arm64-v8a
+    abi='"arm64-v8a"'
     target=aarch64-linux-android
     llvmtarget="AArch64"
     rusttarget=arm64
-    rustup target add aarch64-linux-android
+    ;;
+3)
+    # AAB for both armeabi-v7a and arm64-v8a
+    abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
+    target=''
+    llvmtarget="AArch64;ARM;X86_64"
+    rusttarget='arm64,arm,x86_64'
     ;;
 *)
     echo "Unknown target code in $2." >&2
@@ -194,13 +204,12 @@ case $(echo "$2" | cut -c 7) in
     ;;
 esac
 
-sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
+sed -i -e "s/include \".*\"/include $abi/" app/build.gradle
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
 # Enable the auto-publication workflow
 # shellcheck disable=SC2154
 echo "autoPublish.application-services.dir=$application_services" >>local.properties
-
 popd
 
 #
@@ -235,7 +244,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/132\.0/134.0.1/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/132\.0/134.0.2/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -248,7 +257,7 @@ popd
 
 # WASI SDK
 # shellcheck disable=SC2154
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD:-}" ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
     popd
@@ -330,6 +339,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/control-fission.patch"
 # Enable FPP (Fingerprinting Protection)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fingerprinting-protection.patch"
 
+# Enable light mode by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-light-mode-by-default.patch"
+
 # Disable Fakespot ("Shopping Experience"...)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-shopping-experience.patch"
 
@@ -357,6 +369,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/configure-safe-browsing.pat
 # Remove default top sites/shortcuts
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-default-sites.patch"
 
+# Enable preference to toggle default desktop mode
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-default-desktop-mode.patch"
+
 # Ensure we're disabling telemetry at buildtime...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/buildtime-disable-telemetry.patch"
 
@@ -377,8 +392,12 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
+# Set the Safe Browsing API URL to our proxy
+sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
+    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
+
 # shellcheck disable=SC2154
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD:-}" ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
     LLVM_SVN='522817'
@@ -404,14 +423,18 @@ fi
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
-    echo "ac_add_options --target=$target"
+
+    if [[ -n "${target}" ]]; then
+        echo "ac_add_options --target=$target"
+    fi
+
     echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\""
     echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\""
     echo "ac_add_options --with-gradle=$(command -v gradle)"
     echo "ac_add_options --with-libclang-path=\"$libclang\""
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
 
-    if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
+    if [[ -n "${SB_GAPI_KEY_FILE:-}" ]]; then
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
     fi
 
@@ -441,8 +464,7 @@ pref("media.gmp-manager.url.override", "data:text/plain,");
 pref("media.gmp-gmpopenh264.enabled", false);
 EOF
 
-cat "$patches/preferences/phoenix.js" >>mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/phoenix-extended.js" >>mobile/android/app/geckoview-prefs.js
+cat "$patches/preferences/phoenix-extended-android.js" >>mobile/android/app/geckoview-prefs.js
 cat "$patches/preferences/ironfox.js" >>mobile/android/app/geckoview-prefs.js
 
 popd

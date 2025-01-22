@@ -3,7 +3,7 @@
 SDK_REVISION=9123335
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
-if [[ "${ANDROID_HOME+}" == "" ]]; then
+if [[ "${ANDROID_HOME:-}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
     export ANDROID_SDK_ROOT=$ANDROID_HOME
 fi
