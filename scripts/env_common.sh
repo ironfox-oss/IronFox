@@ -9,4 +9,13 @@ export MOZ_CHROME_MULTILOCALE
 export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
 export NSS_STATIC=1
 
+export ARTIFACTS="$rootdir/artifacts"
+export APK_ARTIFACTS=$ARTIFACTS/apk
+export APKS_ARTIFACTS=$ARTIFACTS/apks
+export AAR_ARTIFACTS=$ARTIFACTS/aar
+
+mkdir -p "$APK_ARTIFACTS"
+mkdir -p "$APKS_ARTIFACTS"
+mkdir -p "$AAR_ARTIFACTS"
+
 export env_source="true"

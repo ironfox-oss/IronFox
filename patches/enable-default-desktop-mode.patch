@@ -1,0 +1,12 @@
+diff -r 8c35adfaf5ea mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/desktopmode/DefaultDesktopModeFeatureFlag.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/desktopmode/DefaultDesktopModeFeatureFlag.kt         Mon Dec 30 18:43:12 2024 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/desktopmode/DefaultDesktopModeFeatureFlag.kt         Fri Jan 17 13:53:04 2025 +0000
+@@ -11,7 +11,7 @@
+  */
+ class DefaultDesktopModeFeatureFlagImpl : DefaultDesktopModeFeatureFlag {
+ 
+-    override fun isDesktopModeEnabled(): Boolean = Config.channel.isDebug
++    override fun isDesktopModeEnabled(): Boolean = true
+ }
+ 
+ /**

@@ -4,20 +4,21 @@ FROM fedora:41
 RUN dnf install -y \
     cmake \
     clang \
+    git \
     gyp \
     java-1.8.0-openjdk-devel \
     java-17-openjdk-devel \
     m4 \
     make \
+    nasm \
     ninja-build \
     patch \
     perl \
     python3.9 \
     shasum \
-    xz \
-    zlib-devel \
     wget \
-    git
+    xz \
+    zlib-devel
 
 ENV ENVDOCKER=/opt/env_docker.sh
 ENV ANDROID_HOME=/root/android-sdk
@@ -55,7 +56,7 @@ WORKDIR /app
 
 # Create entrypoint script to activate Python venv
 ENV ENTRYPOINT=/opt/entrypoint.sh
-RUN echo 'source /root/env/bin/activate' >> $ENTRYPOINT && \
+RUN echo '#!/bin/bash' > $ENTRYPOINT && \
     echo "source $ENVDOCKER" >> $ENTRYPOINT && \
     echo 'exec "$@"' >> $ENTRYPOINT && \
     chmod +x $ENTRYPOINT

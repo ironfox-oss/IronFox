@@ -1,6 +1,26 @@
+.build_setup_steps: &build_setup_steps
+  before_script:
+    - mkdir -p /opt/IronFox
+    - echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
+    - |
+      curl \
+        --request GET \
+        --header "JOB-TOKEN: $CI_JOB_TOKEN" \
+        "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/secure_files/$KEYSTORE_SECFILEID/download" \
+        --output "$KEYSTORE"
+
+variables: &build_variables
+  PRODUCTION_BRANCH: main
+  VERSION_NAME: "134.0.2"
+  SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
+  KEYSTORE: /opt/IronFox/signing-key.jks
+  BUNDLETOOL: 1.18.0
+
 stages:
   - build_fdroid
   - build_docker
+  - build_ironfox
+  - release
 
 update-fdroid-repo:
   image: alpine:latest
@@ -10,8 +30,8 @@ update-fdroid-repo:
   variables:
     TARGET_REPO_PATH: ironfox-oss/fdroid
     TARGET_REPO_BRANCH: dev
-    META_FILE: './fdroid/metadata/org.ironfoxoss.ironfox.yml'
-    REPO_DIR: './fdroid/repo'
+    META_FILE: "./fdroid/metadata/org.ironfoxoss.ironfox.yml"
+    REPO_DIR: "./fdroid/repo"
   before_script:
     - apk add --no-cache git curl openssh-client jq
     - git config --global user.email "ci@ironfoxoss.org"
@@ -45,7 +65,7 @@ update-fdroid-repo:
     - 'git commit -m "feat: update for release ${CI_COMMIT_TAG}"'
     - git push origin HEAD:$TARGET_REPO_BRANCH
 
-docker-build:
+build-docker:
   image: docker:cli
   stage: build_docker
   services:
@@ -68,3 +88,94 @@ docker-build:
         - Dockerfile
       changes:
         - Dockerfile
+
+build-apk:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: build_ironfox
+  timeout: 2h
+  needs:
+    - job: "build-docker"
+      optional: true
+  tags:
+    - saas-linux-xlarge-amd64
+  parallel:
+    matrix:
+      - VERSION_CODE: ["31340200", "31340210", "31340220"]
+  variables:
+    <<: *build_variables
+  <<: *build_setup_steps
+  script:
+    - bash -x scripts/ci-build.sh
+  artifacts:
+    untracked: false
+    when: on_success
+    access: all
+    expire_in: "30 days"
+    paths:
+      - $CI_PROJECT_DIR/artifacts/apk/**/*
+      - $CI_PROJECT_DIR/artifacts/aar/**/*
+  rules:
+    - when: never
+      changes:
+      - "*.md"
+      - assets/*
+      - .gitignore
+      - LICENSE
+    - when: always
+
+build-apk-set:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  stage: build_ironfox
+  timeout: 2h
+  needs:
+    - job: "build-docker"
+      optional: true
+    - job: "build-apk"
+      artifacts: true
+      optional: false
+  tags:
+    - saas-linux-xlarge-amd64
+  variables:
+    VERSION_CODE: "31340230"
+    <<: *build_variables
+  <<: *build_setup_steps
+  script:
+    - bash -x scripts/ci-build.sh
+  artifacts:
+    untracked: false
+    when: on_success
+    access: all
+    expire_in: "30 days"
+    paths:
+      - $CI_PROJECT_DIR/artifacts/apks/**/*
+  rules:
+    - when: never
+      changes:
+      - "*.md"
+      - assets/*
+      - .gitignore
+      - LICENSE
+    - when: always
+
+publish-release:
+  image: alpine:latest
+  stage: release
+  interruptible: true
+  needs:
+    - job: "build-apk"
+      artifacts: true
+      optional: false
+    - job: "build-apk-set"
+      artifacts: true
+      optional: false
+  rules:
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+  variables:
+    <<: *build_variables
+    RELEASE_CLI_VERSION: v0.20.0
+  <<: *build_setup_steps
+  script:
+    - apk add --update --no-cache curl jq python3
+    - wget https://gitlab.com/gitlab-org/release-cli/-/releases/${RELEASE_CLI_VERSION}/downloads/bin/release-cli-linux-amd64 -O /root/bin/release-cli
+    - chmod +x /root/bin/release-cli
+    - bash -x scripts/ci-publish.sh

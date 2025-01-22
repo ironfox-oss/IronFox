@@ -7,11 +7,14 @@
 
 pref("network.trr.mode", 5);
 
-/// Disable Safe Browsing by default
-// We're going to look into proxying this in the future; but for the time being, we decided it's best to leave off by default. It's unfortunate this isn't exposed in the UI or by some kind of onboarding from Mozilla :/
+/// Enable Safe Browsing by default
+pref("browser.safebrowsing.features.malware.update", true);
+pref("browser.safebrowsing.features.phishing.update", true);
 
-pref("browser.safebrowsing.features.malware.update", false);
-pref("browser.safebrowsing.features.phishing.update", false);
+/// Set Safe Browsing API proxy
+pref("browser.safebrowsing.provider.google4.updateURL", "https://safebrowsing.ironfoxoss.org/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
+pref("browser.safebrowsing.provider.google4.gethashURL", "https://safebrowsing.ironfoxoss.org/v4/fullHashes:find?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
+pref("browser.safebrowsing.provider.google4.dataSharingURL", "https://safebrowsing.ironfoxoss.org/v4/threatHits?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
 
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via Fenix's UI settings instead...
@@ -21,4 +24,14 @@ pref("extensions.formautofill.addresses.enabled", true); // [DEFAULT]
 pref("extensions.formautofill.creditCards.enabled", true); // [DEFAULT]
 pref("signon.rememberSignons", true); // [DEFAULT]
 
-pref("browser.ironfox.applied", true);
+/// Disable automatic translation
+// We need to handle this by the UI instead...
+
+pref("browser.translations.alwaysTranslateLanguages", ""); // [DEFAULT]
+
+/// Set light/dark mode to match system
+// We're going to patch to set this to light mode by default via UI instead...
+
+pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
+
+pref("browser.ironfox.applied", true, locked);
