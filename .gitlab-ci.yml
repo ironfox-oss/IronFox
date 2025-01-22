@@ -153,7 +153,7 @@ publish-release:
     RELEASE_CLI_VERSION: v0.20.0
   <<: *build_setup_steps
   script:
-    - apk add --update --no-cache curl jq python3
+    - apk add --update --no-cache bash curl jq python3
     - wget https://gitlab.com/gitlab-org/release-cli/-/releases/${RELEASE_CLI_VERSION}/downloads/bin/release-cli-linux-amd64 -O /root/bin/release-cli
     - chmod +x /root/bin/release-cli
     - bash -x scripts/ci-publish.sh
