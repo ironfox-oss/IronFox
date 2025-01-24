@@ -372,6 +372,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-default-desktop-mode
 # Ensure we're disabling telemetry at buildtime...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/buildtime-disable-telemetry.patch"
 
+# Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-felt-privacy.patch"
+
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"
 
