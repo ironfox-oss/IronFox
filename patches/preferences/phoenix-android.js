@@ -4,7 +4,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.01.22.2", locked);
+pref("browser.phoenix.version", "2025.01.24.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -652,10 +652,26 @@ pref("network.trr.mode", 3);
 
 pref("doh-rollout.provider-list", '[{"UIName":"Quad9 - Real-time Malware Protection","uri":"https://dns.quad9.net/dns-query"}, {"UIName":"DNS0 (ZERO) - Hardened Real-time Malware Protection","uri":"https://zero.dns0.eu"}, {"UIName":"DNS0 - Real-time Malware Protection","uri":"https://dns0.eu"}, {"UIName":"Mullvad - Ad/Tracking/Limited Malware Protection","uri":"https://base.dns.mullvad.net/dns-query"}, {"UIName":"AdGuard (Public) - Ad/Tracking Protection","uri":"https://dns.adguard-dns.com/dns-query"}, {"UIName":"Mullvad - No Filtering","uri":"https://dns.mullvad.net/dns-query"}, {"UIName":"Wikimedia - No Filtering","uri":"https://wikimedia-dns.org/dns-query"}, {"UIName":"AdGuard (Public) - No Filtering","uri":"https://unfiltered.adguard-dns.com/dns-query"}, {"UIName":"DNS0 - Kids","uri":"https://kids.dns0.eu"}, {"UIName":"Mullvad - Family","uri":"https://family.dns.mullvad.net/dns-query"}, {"UIName":"AdGuard (Public) - Family Protection","uri":"https://family.adguard-dns.com/dns-query"}, {"UIName":"Mullvad - Ad/Tracking/Limited Malware/Social Media Protection","uri":"https://extended.dns.mullvad.net/dns-query"}, {"UIName":"Mullvad - Ad/Tracking/Limited Malware/Social Media/Adult/Gambling Protection","uri":"https://all.dns.mullvad.net/dns-query"}]');
 
+/// Explicitly disable EDNS Client Subnet (ECS) to prevent leaking general location data to authoritative DNS servers...
+// https://wikipedia.org/wiki/EDNS_Client_Subnet
+
+pref("network.trr.disable-ECS", true); // [DEFAULT]
+
+/// Disable sending headers for DoH requests...
+
+pref("network.trr.send_accept-language_headers", false); // [DEFAULT]
+pref("network.trr.send_empty_accept-encoding_headers", true); // [DEFAULT]
+pref("network.trr.send_user-agent_headers", false); // [DEFAULT]
+
 /// Skip DoH Connectivity Checks
 
 pref("network.connectivity-service.DNS_HTTPS.domain", "");
 pref("network.trr.confirmationNS", "skip");
+
+/// Always warn before falling back from DoH to native DNS...
+
+pref("network.trr.display_fallback_warning", true);
+pref("network.trr_ui.show_fallback_warning_option", true);
 
 /// Never disable DoH from registry checks
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
@@ -672,6 +688,12 @@ pref("network.dns.http3_echconfig.enabled", true); // [DEFAULT]
 /// Enable Native DNS HTTPS Lookups
 
 pref("network.dns.native_https_query", true); // [DEFAULT]
+
+/// Disable falling back to native DNS...
+// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#13855
+
+pref("network.trr.retry_on_recoverable_errors", true); // [DEFAULT]
+pref("network.trr.strict_native_fallback", true); // https://searchfox.org/mozilla-central/source/toolkit/components/telemetry/docs/data/environment.rst#438
 
 /// Fix IPv6 connectivity when DoH is enabled
 // https://codeberg.org/divested/brace/pulls/5
@@ -757,10 +779,19 @@ pref("browser.phoenix.core.status", "008");
 
 pref("browser.safebrowsing.blockedURIs.enabled", true); // [DEFAULT]
 pref("browser.safebrowsing.downloads.enabled", true);
+pref("browser.safebrowsing.downloads.remote.url", "https://sb-ssl.google.com/safebrowsing/clientreport/download?key=%GOOGLE_SAFEBROWSING_API_KEY%"); // [DEFAULT]
 pref("browser.safebrowsing.malware.enabled", true); // [DEFAULT]
 pref("browser.safebrowsing.phishing.enabled", true); // [DEFAULT]
-pref("browser.safebrowsing.provider.google.gethashURL", "https://safebrowsing.google.com/safebrowsing/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2"); // [DEFAULT]
-pref("browser.safebrowsing.provider.google.updateURL", "https://safebrowsing.google.com/safebrowsing/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2&key=%GOOGLE_SAFEBROWSING_API_KEY%"); // [DEFAULT]
+
+/// Disable the legacy Safe Browsing API (v2.2...)
+// https://code.google.com/archive/p/google-safe-browsing/wikis/Protocolv2Spec.wiki
+// Has been nonfunctional since October 2018
+// https://security.googleblog.com/2018/01/announcing-turndown-of-deprecated.html
+// Let's make sure it's not used for defense in depth (and attack surface reduction...)
+
+pref("browser.safebrowsing.provider.google.advisoryName", "Google Safe Browsing (Legacy)"); // Label it so it's clearly distinguishable if it is ever enabled for whatever reason...
+pref("browser.safebrowsing.provider.google.gethashURL", "");
+pref("browser.safebrowsing.provider.google.updateURL", "");
 
 /// Proxy Safe Browsing
 // These are using the servers we've set up for IronFox, hosted on our Cloudflare storage bucket (in EU jurisdiction)
@@ -773,7 +804,6 @@ pref("browser.safebrowsing.provider.google4.updateURL", "https://safebrowsing.ir
 // https://feeding.cloud.geek.nz/posts/how-safe-browsing-works-in-firefox/
 
 pref("browser.safebrowsing.downloads.remote.enabled", false);
-pref("browser.safebrowsing.downloads.remote.url", "https://sb-ssl.google.com/safebrowsing/clientreport/download?key=%GOOGLE_SAFEBROWSING_API_KEY%"); // [DEFAULT]
 
 /// Enforce that no data is shared with Google
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1351147
@@ -1363,6 +1393,7 @@ pref("browser.contentanalysis.show_blocked_result", true, locked); // [DEFAULT] 
 /// Enforce Site Isolation & Isolate all websites
 // https://wiki.mozilla.org/Project_Fission
 
+pref("browser.sessionstore.disable_platform_collection", false); // [DEFAULT - except Thunderbird :/] https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#1737
 pref("dom.ipc.processCount.webIsolated", 1);
 pref("fission.autostart", true); // [DEFAULT]
 pref("fission.autostart.session", true); // [DEFAULT]
@@ -1504,9 +1535,11 @@ pref("browser.phoenix.core.status", "020");
 
 // 021 BLOCK COOKIE BANNERS
 
+pref("cookiebanners.cookieInjector.enabled", true); // [DEFAULT]
 pref("cookiebanners.service.mode", 1);
 pref("cookiebanners.service.mode.privateBrowsing", 1);
-pref("cookiebanners.service.enableGlobalRules", true);
+pref("cookiebanners.service.enableGlobalRules", true); // [DEFAULT]
+pref("cookiebanners.service.enableGlobalRules.subFrames", true); // [DEFAULT]
 pref("cookiebanners.ui.desktop.enabled", true);
 
 pref("browser.phoenix.core.status", "021");
