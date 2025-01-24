@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json b/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
-index 0c1fc1628c..7905f9fe6d 100644
+index 0c1fc1628c..1b44090dd0 100644
 --- a/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
 +++ b/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
 @@ -87,7 +87,7 @@
@@ -82,9 +82,12 @@ index 0c1fc1628c..7905f9fe6d 100644
                          }
                        ]
                      }
-@@ -250,7 +214,7 @@
+@@ -248,9 +212,9 @@
+           ]
+         }
        ],
-       "targeting": "((is_already_enrolled) || ((isFirstRun == 'true') && (app_version|versionCompare('134.!') >= 0) && (enrollments_map['long-term-holdback-2025-h1-growth-android'] == 'delivery')))",
+-      "targeting": "((is_already_enrolled) || ((isFirstRun == 'true') && (app_version|versionCompare('134.!') >= 0) && (enrollments_map['long-term-holdback-2025-h1-growth-android'] == 'delivery')))",
++      "targeting": "((is_already_enrolled) || ((isFirstRun == 'true')",
        "startDate": "2024-12-12",
 -      "enrollmentEndDate": "2025-01-16",
 +      "enrollmentEndDate": null,
