@@ -8,3 +8,4 @@ __pycache__
 /gmscore
 /wasi-sdk
 /scripts/env_local.sh
+.DS_Store
