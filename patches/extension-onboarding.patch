@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json b/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
-index 0c1fc1628c..1b44090dd0 100644
+index 0c1fc1628c..e12e48f72b 100644
 --- a/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
 +++ b/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
 @@ -87,7 +87,7 @@
@@ -82,7 +82,7 @@ index 0c1fc1628c..1b44090dd0 100644
                          }
                        ]
                      }
-@@ -248,9 +212,9 @@
+@@ -248,13 +212,13 @@
            ]
          }
        ],
@@ -94,3 +94,8 @@ index 0c1fc1628c..1b44090dd0 100644
        "endDate": null,
        "proposedDuration": 28,
        "proposedEnrollment": 14,
+-      "referenceBranch": "control",
++      "referenceBranch": "treatment-a",
+       "featureValidationOptOut": false,
+       "localizations": null,
+       "locales": null,
