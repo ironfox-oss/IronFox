@@ -4,6 +4,8 @@
 # This script is expected to be run in a CI environment
 # DO NOT execute this manually!
 
+set -eu
+
 git clone "https://oauth2:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$TARGET_REPO_PATH.git" target-repo
 cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 mkdir -p "$REPO_DIR"
@@ -19,7 +21,8 @@ curl --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" \
     curl -L --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" "$url" -o "$REPO_DIR/$name"
 done
 
-IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py "$(ls "$REPO_DIR"/*.apk)")"
+# shellcheck disable=SC2046
+IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py $(ls "$REPO_DIR"/*.apk))"
 
 sed -i \
     -e "s/CurrentVersion: .*/CurrentVersion: \"$vername\"/" \

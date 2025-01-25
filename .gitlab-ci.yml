@@ -134,7 +134,7 @@ build-apk-set:
       - LICENSE
     - when: always
 
-publish-release:
+prepare-release:
   image: alpine:latest
   stage: release
   interruptible: true
@@ -148,13 +148,40 @@ publish-release:
       artifacts: true
       optional: true
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+  before_script:
+    - apk add --update --no-cache bash curl jq
+  script:
+    - bash -x scripts/ci-publish-packages.sh
+  artifacts:
+    untracked: false
+    when: on_success
+    access: all
+    expire_in: "30 days"
+    paths:
+      - build/release.yml
+
+publish-release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: release
+  interruptible: true
+  needs:
+    - job: "prepare-release"
+      artifacts: true
+      optional: false
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
   variables:
     <<: *build_variables
-    RELEASE_CLI_VERSION: v0.20.0
-  <<: *build_setup_steps
   script:
-    - apk add --update --no-cache bash curl jq python3
-    - wget https://gitlab.com/gitlab-org/release-cli/-/releases/${RELEASE_CLI_VERSION}/downloads/bin/release-cli-linux-amd64 -O /root/bin/release-cli
-    - chmod +x /root/bin/release-cli
-    - bash -x scripts/ci-publish.sh
+    - |
+      release-cli \
+        --server-url "$CI_SERVER_URL" \
+        --project-id "$CI_PROJECT_ID" \
+        --private-token "$GITLAB_CI_API_TOKEN" \
+        create-from-file \
+        --file build/release.yml
