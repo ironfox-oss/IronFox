@@ -102,7 +102,7 @@ index 82269e0a5d..363f923c80 100644
 +          ]
 +        }
 +      ],
-+      "targeting": "((is_already_enrolled) || ((isFirstRun == 'true') && (app_version|versionCompare('134.!') >= 0)",
++      "targeting": "((is_already_enrolled) || ((isFirstRun == 'true')",
 +      "startDate": "2024-12-13",
 +      "enrollmentEndDate": null,
 +      "endDate": null,
