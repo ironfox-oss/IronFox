@@ -1,0 +1,20 @@
+diff --git a/mobile/android/fenix/app/pbm.fml.yaml b/mobile/android/fenix/app/pbm.fml.yaml
+index 7b22ed8a33..91c31f1354 100644
+--- a/mobile/android/fenix/app/pbm.fml.yaml
++++ b/mobile/android/fenix/app/pbm.fml.yaml
+@@ -8,12 +8,12 @@ features:
+       felt-privacy-enabled:
+         description: if true, enable felt privacy related UI
+         type: Boolean
+-        default: false
++        default: true
+ 
+     defaults:
+       - channel: developer
+         value:
+-          felt-privacy-enabled: false
++          felt-privacy-enabled: true
+       - channel: nightly
+         value:
+-          felt-privacy-enabled: false
++          felt-privacy-enabled: true

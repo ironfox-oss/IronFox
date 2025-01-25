@@ -11,7 +11,7 @@
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  VERSION_NAME: "134.0.2"
+  VERSION_NAME: "134.0.2-1"
   SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
   KEYSTORE: /opt/IronFox/signing-key.jks
   BUNDLETOOL: 1.18.0
@@ -23,7 +23,7 @@ stages:
   - release
 
 update-fdroid-repo:
-  image: alpine:latest
+  image: fedora:41
   stage: build_fdroid
   rules:
     - if: $CI_COMMIT_TAG
@@ -34,7 +34,8 @@ update-fdroid-repo:
     REPO_DIR: "./fdroid/repo"
     <<: *build_variables
   before_script:
-    - apk add --no-cache git curl openssh-client jq
+    - sudo dnf install -y bash curl git jq make python3 python3-pip
+    - pip install androguard
     - git config --global user.email "ci@ironfoxoss.org"
     - git config --global user.name "IronFox CI"
   script:
@@ -76,7 +77,7 @@ build-apk:
     - saas-linux-xlarge-amd64
   parallel:
     matrix:
-      - VERSION_CODE: ["31340200", "31340210", "31340220"]
+      - VERSION_CODE: ["31340201", "31340211", "31340221"]
   variables:
     <<: *build_variables
   <<: *build_setup_steps
@@ -112,7 +113,7 @@ build-apk-set:
   tags:
     - saas-linux-xlarge-amd64
   variables:
-    VERSION_CODE: "31340230"
+    VERSION_CODE: "31340231"
     <<: *build_variables
   <<: *build_setup_steps
   script:
@@ -133,7 +134,7 @@ build-apk-set:
       - LICENSE
     - when: always
 
-publish-release:
+prepare-release:
   image: alpine:latest
   stage: release
   interruptible: true
@@ -147,13 +148,42 @@ publish-release:
       artifacts: true
       optional: true
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
   variables:
     <<: *build_variables
-    RELEASE_CLI_VERSION: v0.20.0
-  <<: *build_setup_steps
+  before_script:
+    - apk add --update --no-cache bash curl jq
   script:
-    - apk add --update --no-cache curl jq python3
-    - wget https://gitlab.com/gitlab-org/release-cli/-/releases/${RELEASE_CLI_VERSION}/downloads/bin/release-cli-linux-amd64 -O /root/bin/release-cli
-    - chmod +x /root/bin/release-cli
-    - bash -x scripts/ci-publish.sh
+    - bash -x scripts/ci-publish-packages.sh
+  artifacts:
+    untracked: false
+    when: on_success
+    access: all
+    expire_in: "30 days"
+    paths:
+      - build/release.yml
+
+publish-release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: release
+  interruptible: true
+  needs:
+    - job: "prepare-release"
+      artifacts: true
+      optional: false
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+  variables:
+    <<: *build_variables
+  script:
+    - |
+      release-cli \
+        --server-url "$CI_SERVER_URL" \
+        --project-id "$CI_PROJECT_ID" \
+        --private-token "$GITLAB_CI_API_TOKEN" \
+        create-from-file \
+        --file build/release.yml

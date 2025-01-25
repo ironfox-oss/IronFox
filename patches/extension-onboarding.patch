@@ -1,8 +1,17 @@
 diff --git a/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json b/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
-index 82269e0a5d..0716e68d8e 100644
+index 0c1fc1628c..e12e48f72b 100644
 --- a/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
 +++ b/mobile/android/fenix/app/src/main/res/raw/initial_experiments.json
-@@ -218,30 +218,12 @@
+@@ -87,7 +87,7 @@
+       "channel": "release",
+       "userFacingName": "Promote Add Ons in Onboarding - Release",
+       "userFacingDescription": "Test Promoting Add Ons in Onboarding v2",
+-      "isEnrollmentPaused": true,
++      "isEnrollmentPaused": false,
+       "isRollout": false,
+       "bucketConfig": {
+         "randomizationUnit": "nimbus_id",
+@@ -156,30 +156,12 @@
                        "add-ons-data": [
                          {
                            "id": "uBlock0@raymondhill.net",
@@ -34,7 +43,7 @@ index 82269e0a5d..0716e68d8e 100644
                          }
                        ]
                      }
-@@ -275,31 +257,13 @@
+@@ -213,31 +195,13 @@
                      "extra-data": {
                        "add-ons-data": [
                          {
@@ -73,3 +82,20 @@ index 82269e0a5d..0716e68d8e 100644
                          }
                        ]
                      }
+@@ -248,13 +212,13 @@
+           ]
+         }
+       ],
+-      "targeting": "((is_already_enrolled) || ((isFirstRun == 'true') && (app_version|versionCompare('134.!') >= 0) && (enrollments_map['long-term-holdback-2025-h1-growth-android'] == 'delivery')))",
++      "targeting": "((is_already_enrolled) || ((isFirstRun == 'true')",
+       "startDate": "2024-12-12",
+-      "enrollmentEndDate": "2025-01-16",
++      "enrollmentEndDate": null,
+       "endDate": null,
+       "proposedDuration": 28,
+       "proposedEnrollment": 14,
+-      "referenceBranch": "control",
++      "referenceBranch": "treatment-a",
+       "featureValidationOptOut": false,
+       "localizations": null,
+       "locales": null,

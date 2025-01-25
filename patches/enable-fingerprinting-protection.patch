@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 8f6c6df..3f4b0bf 100644
+index e70a2a99fe..6cfdf3a042 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -492,12 +492,12 @@ features:
+@@ -498,12 +498,12 @@ features:
        enabled:
          description: If true, the feature is active.
          type: Boolean
@@ -17,7 +17,14 @@ index 8f6c6df..3f4b0bf 100644
        enabled-private:
          description: >
            Enables / disables fingerprinting protection in private browsing mode.
-@@ -514,7 +514,7 @@ features:
+@@ -514,13 +514,13 @@ features:
+           The protection overrides to add or remove fingerprinting protection
+           targets. Please check RFPTargets.inc for all supported targets.
+         type: String
+-        default: ""
++        default: "+AllTargets,-CanvasImageExtractionPrompt,-CanvasExtractionBeforeUserInputIsBlocked,-CSSPrefersColorScheme,-FrameRate"
+       fdlibm-math:
+         description: >
            Uses a different math backend for Math.sin/cos/tan in JavaScript that
            exposes less entropy
          type: Boolean

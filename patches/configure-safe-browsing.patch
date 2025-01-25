@@ -1,20 +1,28 @@
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
-index b761e1126e..1cb27627f2 100644
+index b761e1126e..df47710155 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
-@@ -41,9 +41,9 @@ public class ContentBlocking {
-               "https://safebrowsing.google.com/safebrowsing/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2&key=%GOOGLE_SAFEBROWSING_API_KEY%")
+@@ -38,14 +38,14 @@ public class ContentBlocking {
+               "goog-malware-shavar",
+               "goog-unwanted-shavar")
+           .updateUrl(
+-              "https://safebrowsing.google.com/safebrowsing/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2&key=%GOOGLE_SAFEBROWSING_API_KEY%")
++              "")
            .getHashUrl(
-               "https://safebrowsing.google.com/safebrowsing/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2")
+-              "https://safebrowsing.google.com/safebrowsing/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2")
 -          .reportUrl("https://safebrowsing.google.com/safebrowsing/diagnostic?site=")
 -          .reportPhishingMistakeUrl("https://%LOCALE%.phish-error.mozilla.com/?url=")
 -          .reportMalwareMistakeUrl("https://%LOCALE%.malware-error.mozilla.com/?url=")
++              "")
 +          .reportUrl("https://transparencyreport.google.com/safe-browsing/search?url=")
 +          .reportPhishingMistakeUrl("https://safebrowsing.google.com/safebrowsing/report_error/?tpl=mozilla&url=")
 +          .reportMalwareMistakeUrl("https://safebrowsing.google.com/safebrowsing/report_error/?tpl=mozilla&url=")
            .advisoryUrl("https://developers.google.com/safe-browsing/v4/advisory")
-           .advisoryName("Google Safe Browsing")
+-          .advisoryName("Google Safe Browsing")
++          .advisoryName("Google Safe Browsing (Legacy)")
            .build();
+ 
+   /** {@link SafeBrowsingProvider} configuration for Google's SafeBrowsing server. */
 @@ -64,13 +64,13 @@ public class ContentBlocking {
                "https://safebrowsing.googleapis.com/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST")
            .getHashUrl(
