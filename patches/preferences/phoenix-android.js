@@ -4,7 +4,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.01.24.1", locked);
+pref("browser.phoenix.version", "2025.01.27.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -103,6 +103,8 @@ pref("browser.search.serpEventTelemetryCategorization.enabled", false, locked);
 pref("browser.search.serpEventTelemetryCategorization.regionEnabled", false, locked); // [DEFAULT, at least on Nightly]
 pref("browser.urlbar.quicksuggest.dataCollection.enabled", false, locked); // [DEFAULT]
 pref("browser.urlbar.quicksuggest.onboardingDialogChoice", "reject_2", locked); // [HIDDEN] https://searchfox.org/mozilla-central/source/browser/components/urlbar/docs/firefox-suggest-telemetry.rst https://searchfox.org/mozilla-central/source/toolkit/components/telemetry/docs/data/environment.rst https://searchfox.org/mozilla-central/source/browser/components/urlbar/tests/quicksuggest/browser/browser_quicksuggest_onboardingDialog.js
+pref("captchadetection.actor.enabled", false, locked); // [DEFAULT, except Nightly] Disable CAPTCHA Detection Pings https://searchfox.org/mozilla-central/source/toolkit/components/captchadetection
+pref("captchadetection.loglevel", "Off");
 pref("datareporting.dau.cachedUsageProfileID", "beefbeef-beef-beef-beef-beeefbeefbee", locked); // [HIDDEN] https://searchfox.org/mozilla-central/source/toolkit/components/telemetry/app/ClientID.sys.mjs#44
 pref("datareporting.healthreport.documentServerURI", "", locked); // [HIDDEN]
 pref("datareporting.healthreport.logging.consoleEnabled", false); // [HIDDEN]
@@ -113,6 +115,7 @@ pref("datareporting.policy.dataSubmissionEnabled", false, locked);
 pref("datareporting.policy.dataSubmissionPolicyAccepted", false, locked);
 pref("datareporting.policy.dataSubmissionPolicyBypassNotification", true, locked);
 pref("datareporting.policy.firstRunURL", "", locked);
+pref("datareporting.usage.uploadEnabled", false, locked); // Disables sending "daily usage pings" to Mozilla - currently only on Nightly
 pref("dom.security.unexpected_system_load_telemetry_enabled", false, locked);
 pref("identity.fxaccounts.telemetry.clientAssociationPing.enabled", false, locked);
 pref("identity.fxaccounts.account.telemetry.sanitized_uid", "", locked);
@@ -1271,7 +1274,9 @@ pref("signon.generation.enabled", true); // [DEFAULT]
 
 /// Prevent cross-origin sub-resources from opening HTTP authentication dialogs
 
+pref("network.auth.non-web-content-triggered-resources-http-auth-allow", false); // [DEFAULT]
 pref("network.auth.subresource-http-auth-allow", 1);
+pref("network.auth.subresource-img-cross-origin-http-auth-allow", false); // [DEFAULT]
 
 /// Disable Windows SSO
 
@@ -1792,6 +1797,8 @@ pref("devtools.command-button-rulers.enabled", true);
 pref("devtools.command-button-screenshot.enabled", true);
 pref("devtools.dom.enabled", true);
 pref("devtools.debugger.ui.editor-wrapping", true);
+pref("devtools.netmonitor.persistlog", true); // Do not automatically clear log messages after page reloads/navigation
+pref("devtools.webconsole.persistlog", true); // Do not automatically clear log messages after page reloads/navigation
 pref("devtools.webconsole.timestampMessages", true); // Enable timestamps in the web console by default
 pref("findbar.highlightAll", true);
 pref("full-screen-api.transition-duration.enter", "0 0"); // [Default = 200 200]
@@ -1801,6 +1808,7 @@ pref("full-screen-api.warning.timeout", 0); // [Default = 3000]
 pref("security.xfocsp.hideOpenInNewWindow", false);
 pref("toolkit.cosmeticAnimations.enabled", true); // [DEFAULT, HIDDEN] Allows disabling browser animations, exposes it in the about:config https://searchfox.org/mozilla-release/source/remote/test/puppeteer/packages/browsers/src/browser-data/firefox.ts#389
 pref("ui.prefersReducedMotion", 0); // [DEFAULT, HIDDEN] Allows disabling certain UI animations, exposes it in the about:config https://searchfox.org/mozilla-release/source/browser/tools/mozscreenshots/mozscreenshots/extension/TestRunner.sys.mjs#122
+pref("view_source.syntax_highlight", true); // [DEFAULT]
 pref("view_source.wrap_long_lines", true); // [DEFAULT]
 
 pref("browser.phoenix.core.status", "028");
@@ -2011,6 +2019,8 @@ pref("network.http.referer.disallowCrossSiteRelaxingDefault", true);
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true);
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true);
 pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
+pref("privacy.annotate_channels.strict_list.enabled", true);
+pref("privacy.annotate_channels.strict_list.pbmode.enabled", true);
 pref("privacy.bounceTrackingProtection.enabled", true);
 pref("privacy.bounceTrackingProtection.mode", 1); // Fully enables Bounce Tracking Protection - https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
 pref("privacy.fingerprintingProtection", true);
@@ -2018,10 +2028,14 @@ pref("privacy.fingerprintingProtection.pbmode", true);
 pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
 pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
 pref("privacy.partition.bloburl_per_partition_key", true);
+pref("privacy.partition.network_state", true);
 pref("privacy.partition.network_state.ocsp_cache", true);
 pref("privacy.partition.network_state.ocsp_cache.pbmode", true);
+pref("privacy.partition.serviceWorkers", true);
 pref("privacy.query_stripping.enabled", true);
 pref("privacy.query_stripping.enabled.pbmode", true);
+pref("privacy.query_stripping.redirect", true);
+pref("privacy.reduceTimerPrecision", true);
 pref("privacy.socialtracking.block_cookies.enabled", true);
 pref("privacy.trackingprotection.cryptomining.enabled", true);
 pref("privacy.trackingprotection.emailtracking.enabled", true);
@@ -2079,7 +2093,15 @@ pref("privacy.resistFingerprinting.letterboxing", true); // [HIDDEN]
 
 pref("browser.phoenix.android.status", "004");
 
-// 005 MISC. SECURITY
+// 005 ATTACK SURFACE REDUCTION
+
+// Re-enable the JIT Baseline Interpreter, due to severe performance issues some users have been experiencing...
+// ex. https://gitlab.com/ironfox-oss/IronFox/-/issues/18
+pref("javascript.options.blinterp", true); // [DEFAULT]
+
+pref("browser.phoenix.android.status", "005");
+
+// 006 MISC. SECURITY
 
 // Always warn users before launching other apps...
 
@@ -2088,7 +2110,7 @@ pref("network.protocol-handler.warn-external.sms", true);
 pref("network.protocol-handler.warn-external.tel", true);
 pref("network.protocol-handler.warn-external.vnd.youtube", true);
 
-pref("browser.phoenix.android.status", "005");
+pref("browser.phoenix.android.status", "006");
 
 pref("browser.phoenix.android.status", "successfully applied :D", locked);
 
