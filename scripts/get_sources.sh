@@ -8,6 +8,7 @@ GLEAN_TAG="v62.0.0"
 GMSCORE_TAG="v0.3.6.244735"
 APPSERVICES_TAG="v134.0"
 BUNDLETOOL_TAG="1.18.0"
+UBO_TAG="1.61.0"
 
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -197,6 +198,9 @@ clone_repo "https://github.com/mozilla/application-services" "$APPSERVICESDIR" "
 
 # Download Firefox Source
 download_and_extract "gecko" "https://archive.mozilla.org/pub/firefox/releases/${FIREFOX_TAG}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
+
+# Download uBlock Origin
+download "https://github.com/gorhill/uBlock/releases/download/${UBO_TAG}/uBlock0_${UBO_TAG}.firefox.signed.xpi" "${BUILDDIR}/ubo.xpi"
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."
