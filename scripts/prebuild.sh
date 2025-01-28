@@ -107,6 +107,15 @@ cargo install --vers 0.26.0 cbindgen
 # shellcheck disable=SC2154
 pushd "$fenix"
 
+# Copy uBlock Origin extension file
+ubo_dir=app/src/main/assets/extensions/ubo
+mkdir -p "$ubo_dir"
+(cd "$ubo_dir" &&
+ unzip -o "$builddir/ubo.xpi" &&
+ cp -vr "$patches/ubo/*" ./ &&
+ rm -rvf META-INF
+)
+
 # Set up the app ID, version name and version code
 sed -i \
     -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
@@ -386,6 +395,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/buildtime-disable-telemetry
 
 # Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-felt-privacy.patch"
+
+# Install uBlock Origin on startup and allow it to be shown in AddonsFragment
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/install-ublock.patch"
 
 # Fix v125 compile error
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"

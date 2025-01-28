@@ -1,0 +1,52 @@
+diff -r 33bb8362cc38 mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
+--- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt	Wed Jan 15 22:37:08 2025 +0000
++++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt	Tue Jan 28 22:05:45 2025 +0000
+@@ -107,7 +107,7 @@
+ 
+             // Build a list of installed extensions that are not built-in extensions.
+             val installedAddons = installedExtensions
+-                .filterValues { !it.isBuiltIn() }
++                .filterValues { !it.isBuiltIn() || it.id == "uBlock0@raymondhill.net" }
+                 .map {
+                     val extension = it.value
+                     val installedState = toInstalledState(extension)
+diff -r 33bb8362cc38 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt	Wed Jan 15 22:37:08 2025 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt	Tue Jan 28 22:05:45 2025 +0000
+@@ -82,6 +82,7 @@
+ import mozilla.components.concept.sync.AuthType
+ import mozilla.components.concept.sync.OAuthAccount
+ import mozilla.components.feature.accounts.push.SendTabUseCases
++import mozilla.components.feature.addons.logger
+ import mozilla.components.feature.tab.collections.TabCollection
+ import mozilla.components.feature.top.sites.TopSite
+ import mozilla.components.feature.top.sites.TopSitesConfig
+@@ -342,6 +343,28 @@
+             }
+         }
+ 
++        components.core.engine.installBuiltInWebExtension(
++            "uBlock0@raymondhill.net",
++            "resource://android/assets/extensions/ubo/",
++            onSuccess = { installedExtension ->
++                components.core.engine.setAllowedInPrivateBrowsing(
++                    extension = installedExtension,
++                    allowed = true,
++                    onSuccess = {
++                        logger.info("uBlock Origin is now allowed to run in private mode!")
++                    },
++                    onError = { err ->
++                        logger.error("Failed to allow uBlock Origin in private mode", err)
++                    }
++                )
++                components.addonUpdater.registerForFutureUpdates(installedExtension.id)
++                logger.info("Successfully installed uBlock Origin")
++            },
++            onError = { err ->
++                logger.error("Failed to install uBlock Origin", err)
++            }
++        )
++
+         if (requireContext().settings().isExperimentationEnabled) {
+             messagingFeatureHomescreen.set(
+                 feature = MessagingFeature(
