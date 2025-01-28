@@ -297,9 +297,6 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-autocomplete.patch"
 # Disable shipped domains - These haven't been updated in several years, posing security concerns - and are also just annoying...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-shipped-domains.patch"
 
-# Disable prompt to enable search suggestions in private windows
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-search-suggestions-pb-prompt.patch"
-
 # Disable password manager/autofill for login info by default
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-login-autofill.patch"
 
