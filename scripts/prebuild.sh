@@ -363,6 +363,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-reporting-site-issu
 # Tweak Safe Browsing (See '009 SAFE BROWSING' in Phoenix for more details...)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/configure-safe-browsing.patch"
 
+# Tweak PDF.js (We currently disable JavaScript & XFA + enable sidebar by default)
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/configure-pdfjs.patch"
+
 # Remove default top sites/shortcuts
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-default-sites.patch"
 
