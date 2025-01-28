@@ -1,0 +1,31 @@
+diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
+index 4be106d4ba..a785f1a2f2 100644
+--- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
++++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
+@@ -654,7 +654,7 @@ const defaultOptions = {
+     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   enableScripting: {
+-    value: true,
++    value: false,
+     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   enableUpdatedAddImage: {
+@@ -710,7 +710,7 @@ const defaultOptions = {
+     kind: OptionKind.VIEWER
+   },
+   sidebarViewOnLoad: {
+-    value: -1,
++    value: 2,
+     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   scrollModeOnLoad: {
+@@ -762,7 +762,7 @@ const defaultOptions = {
+     kind: OptionKind.API + OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   enableXfa: {
+-    value: true,
++    value: false,
+     kind: OptionKind.API + OptionKind.PREFERENCE
+   },
+   fontExtraProperties: {
