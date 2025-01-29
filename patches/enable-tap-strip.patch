@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
+index 495024dad1..cb6b7b9b52 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
+@@ -21,7 +21,7 @@ fun Context.isTabStripEnabled(): Boolean =
+  * Returns true for channels that have the tab strip enabled.
+  */
+ private fun ReleaseChannel.isTabStripChannel(): Boolean =
+-    isBeta || isNightlyOrDebug
++    isReleaseOrBeta || isNightlyOrDebug
+ 
+ /**
+  * Returns true if the the device has the prerequisites to enable the tab strip.
