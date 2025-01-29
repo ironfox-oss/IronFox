@@ -107,14 +107,18 @@ cargo install --vers 0.26.0 cbindgen
 # shellcheck disable=SC2154
 pushd "$fenix"
 
-# Copy uBlock Origin extension file
-ubo_dir=app/src/main/assets/extensions/ubo
-mkdir -p "$ubo_dir"
-(cd "$ubo_dir" &&
- unzip -o "$builddir/ubo.xpi" &&
- cp -vr "$patches/ubo/*" ./ &&
- rm -rvf META-INF
-)
+# Copy uBlock Origin extension and configure with our patches
+ubo_work_dir="$builddir/ubo"
+ubo_dir="$fenix/app/src/main/assets/extensions/ubo"
+mkdir -p "$ubo_work_dir"
+mkdir -p "$(dirname "$ubo_dir")"
+rm -rf "$ubo_dir"
+pushd "$ubo_work_dir"
+unzip -o "$builddir/ubo.xpi"
+cp -vr $patches/ubo/* ./
+rm -rf META-INF 
+popd
+mv "$ubo_work_dir" "$ubo_dir"
 
 # Set up the app ID, version name and version code
 sed -i \
