@@ -1,0 +1,211 @@
+From 79e9257a5472f1d770b2887ad83231ce2463b291 Mon Sep 17 00:00:00 2001
+From: Alex Catarineu <acat@torproject.org>
+Date: Sun, 18 Oct 2020 23:09:12 +0200
+Subject: [PATCH] TB 40087 [android]: Implement a switch for spoof English.
+
+Originally, fenix#40087 and android-components#40019.
+---
+ .../browser/engine/gecko/GeckoEngine.kt       | 10 ++++++++
+ .../components/concept/engine/Settings.kt     |  3 +++
+ .../java/org/mozilla/fenix/components/Core.kt |  1 +
+ .../DefaultLocaleSettingsController.kt        |  5 ++++
+ .../advanced/LocaleSettingsFragment.kt        | 15 +++++++++++-
+ .../java/org/mozilla/fenix/utils/Settings.kt  |  5 ++++
+ .../res/layout/fragment_locale_settings.xml   | 23 ++++++++++++++++---
+ .../src/main/res/values/preference_keys.xml   |  2 ++
+ 8 files changed, 60 insertions(+), 4 deletions(-)
+
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+index 401e9a9745d75..6af0229ccb391 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
++++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+@@ -1331,6 +1331,15 @@ class GeckoEngine(
+         override var globalPrivacyControlEnabled: Boolean
+             get() = runtime.settings.globalPrivacyControl
+             set(value) { runtime.settings.setGlobalPrivacyControl(value) }
++
++        override var spoofEnglish: Boolean
++            get() = runtime.settings.spoofEnglish
++            set(value) {
++                value.let {
++                    runtime.settings.spoofEnglish = it
++                    localeUpdater.updateValue()
++                }
++            }
+     }.apply {
+         defaultSettings?.let {
+             this.javascriptEnabled = it.javascriptEnabled
+@@ -1357,6 +1366,7 @@ class GeckoEngine(
+             this.cookieBannerHandlingGlobalRulesSubFrames = it.cookieBannerHandlingGlobalRulesSubFrames
+             this.globalPrivacyControlEnabled = it.globalPrivacyControlEnabled
+             this.emailTrackerBlockingPrivateBrowsing = it.emailTrackerBlockingPrivateBrowsing
++            this.spoofEnglish = it.spoofEnglish
+         }
+     }
+ 
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+index b76377cfeefe5..0ce912137aa73 100644
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+@@ -251,6 +251,8 @@ abstract class Settings {
+      * Setting to control the email tracker blocking feature in the private browsing mode.
+      */
+     open var emailTrackerBlockingPrivateBrowsing: Boolean by UnsupportedSetting()
++
++    open var spoofEnglish: Boolean by UnsupportedSetting()
+ }
+ 
+ /**
+@@ -301,6 +303,7 @@ data class DefaultSettings(
+     override var queryParameterStrippingAllowList: String = "",
+     override var queryParameterStrippingStripList: String = "",
+     override var emailTrackerBlockingPrivateBrowsing: Boolean = false,
++    override var spoofEnglish: Boolean = false,
+ ) : Settings()
+ 
+ class UnsupportedSetting<T> {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index ab04b1e48b009..b7cb3d642183c 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -157,6 +157,7 @@ class Core(
+             cookieBannerHandlingGlobalRules = context.settings().shouldEnableCookieBannerGlobalRules,
+             cookieBannerHandlingGlobalRulesSubFrames = context.settings().shouldEnableCookieBannerGlobalRulesSubFrame,
+             emailTrackerBlockingPrivateBrowsing = false,
++            spoofEnglish = context.settings().spoofEnglish,
+         )
+ 
+         GeckoEngine(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
+index 23956e62f94a5..a45b32ad9b27e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
+@@ -12,6 +12,7 @@ import mozilla.components.browser.state.store.BrowserStore
+ import mozilla.components.support.locale.LocaleManager
+ import mozilla.components.support.locale.LocaleUseCases
+ import org.mozilla.fenix.nimbus.FxNimbus
++import org.mozilla.fenix.ext.components
+ import java.util.Locale
+ 
+ interface LocaleSettingsController {
+@@ -83,5 +84,9 @@ class DefaultLocaleSettingsController(
+         config.setLocale(locale)
+         config.setLayoutDirection(locale)
+         resources.updateConfiguration(config, resources.displayMetrics)
++        // A slightly hacky way of triggering a `runtime.settings.locales` update,
++        // so that the locales are updated in GeckoView.
++        val spoofEnglish = context.components.core.engine.settings.spoofEnglish
++        context.components.core.engine.settings.spoofEnglish = spoofEnglish
+     }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt
+index 91929aab38cdf..a45b807f84958 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt
+@@ -23,6 +23,8 @@ import org.mozilla.fenix.R
+ import org.mozilla.fenix.components.StoreProvider
+ import org.mozilla.fenix.databinding.FragmentLocaleSettingsBinding
+ import org.mozilla.fenix.ext.components
++import org.mozilla.fenix.ext.requireComponents
++import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.ext.showToolbar
+ 
+ class LocaleSettingsFragment : Fragment(), MenuProvider {
+@@ -46,6 +48,8 @@ class LocaleSettingsFragment : Fragment(), MenuProvider {
+         _binding = FragmentLocaleSettingsBinding.inflate(inflater, container, false)
+         val view = binding.root
+ 
++        bindEnableSwitch()
++
+         val browserStore = requireContext().components.core.store
+         val localeUseCase = LocaleUseCases(browserStore)
+ 
+@@ -62,10 +66,19 @@ class LocaleSettingsFragment : Fragment(), MenuProvider {
+                 localeUseCase = localeUseCase,
+             ),
+         )
+-        localeView = LocaleSettingsView(binding.root, interactor)
++        localeView = LocaleSettingsView(binding.localeContainer, interactor)
+         return view
+     }
+ 
++    private fun bindEnableSwitch() {
++        val switch = binding.enableSwitch
++        switch.isChecked = requireComponents.core.engine.settings.spoofEnglish
++        switch.setOnCheckedChangeListener { _, isChecked ->
++            context?.settings()?.spoofEnglish = isChecked
++            requireComponents.core.engine.settings.spoofEnglish = isChecked
++        }
++    }
++
+     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+         inflater.inflate(R.menu.languages_list, menu)
+         val searchItem = menu.findItem(R.id.search)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index f362ce19523b3..7735054d63c86 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -306,6 +306,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         false,
+     )
+ 
++    var spoofEnglish by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
++        default = false
++    )
++
+     var defaultSearchEngineName by stringPreference(
+         appContext.getPreferenceKey(R.string.pref_key_search_engine),
+         default = "",
+diff --git a/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml b/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml
+index d235e7043fcbc..1014505aba6b8 100644
+--- a/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml
++++ b/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml
+@@ -7,13 +7,30 @@
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
+ 
+-    <FrameLayout
++    <com.google.android.material.switchmaterial.SwitchMaterial
++        android:id="@+id/enable_switch"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_gravity="center_vertical|end"
++        android:background="?android:attr/selectableItemBackground"
++        android:checked="true"
++        android:clickable="true"
++        android:focusable="true"
++        android:layout_marginStart="54dp"
++        android:padding="16dp"
++        android:text="@string/tor_spoof_english"
++        android:textColor="?textPrimary"
++        android:textSize="16sp"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent"  />
++    <androidx.constraintlayout.widget.ConstraintLayout
+         android:id="@+id/locale_container"
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent"
++        android:layout_height="0dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
++        app:layout_constraintTop_toBottomOf="@id/enable_switch" />
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+index f5a25b14ee07c..ce251f55881d3 100644
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -399,4 +399,6 @@
+     <string name="pref_key_noscript_installed" translatable="false">pref_key_noscript_installed</string>
+     <string name="pref_key_noscript_updated" translatable="false">pref_key_noscript_updated</string>
+     <string name="pref_key_https_everywhere_removed" translatable="false">pref_key_https_everywhere_removed</string>
++
++    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+ </resources>
+-- 
+GitLab
+
