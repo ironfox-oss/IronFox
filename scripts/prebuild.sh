@@ -342,6 +342,9 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/control-fission.patch"
 # Enable FPP (Fingerprinting Protection)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fingerprinting-protection.patch"
 
+# Enable light mode by default
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-light-mode-by-default.patch"
+
 # Disable Fakespot ("Shopping Experience"...)
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-shopping-experience.patch"
 
