@@ -35,10 +35,10 @@ index 77127f5e36..2de0ee9b08 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1357,6 +1366,7 @@ class GeckoEngine(
-             this.cookieBannerHandlingGlobalRulesSubFrames = it.cookieBannerHandlingGlobalRulesSubFrames
-             this.globalPrivacyControlEnabled = it.globalPrivacyControlEnabled
-             this.emailTrackerBlockingPrivateBrowsing = it.emailTrackerBlockingPrivateBrowsing
+@@ -1421,6 +1421,7 @@ class GeckoEngine(
+             this.parallelMarkingEnabled = it.parallelMarkingEnabled
+             this.cookieBehaviorOptInPartitioning = it.cookieBehaviorOptInPartitioning
+             this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
 +            this.spoofEnglish = it.spoofEnglish
          }
      }
