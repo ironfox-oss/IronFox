@@ -16,13 +16,13 @@ Originally, fenix#40087 and android-components#40019.
  8 files changed, 60 insertions(+), 4 deletions(-)
 
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 401e9a9745d75..6af0229ccb391 100644
+index 77127f5e36..2de0ee9b08 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1331,6 +1331,15 @@ class GeckoEngine(
-         override var globalPrivacyControlEnabled: Boolean
-             get() = runtime.settings.globalPrivacyControl
-             set(value) { runtime.settings.setGlobalPrivacyControl(value) }
+@@ -1385,6 +1385,15 @@ class GeckoEngine(
+         override var cookieBehaviorOptInPartitioningPBM: Boolean
+             get() = runtime.settings.cookieBehaviorOptInPartitioningPBM
+             set(value) { runtime.settings.setCookieBehaviorOptInPartitioningPBM(value) }
 +
 +        override var spoofEnglish: Boolean
 +            get() = runtime.settings.spoofEnglish
@@ -44,38 +44,38 @@ index 401e9a9745d75..6af0229ccb391 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index b76377cfeefe5..0ce912137aa73 100644
+index 8159404f02..da51ab837a 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -251,6 +251,8 @@ abstract class Settings {
-      * Setting to control the email tracker blocking feature in the private browsing mode.
+@@ -309,6 +309,8 @@ abstract class Settings {
+      * Setting to control the cookie behavior opt-in partitioning in private browsing mode.
       */
-     open var emailTrackerBlockingPrivateBrowsing: Boolean by UnsupportedSetting()
+     open var cookieBehaviorOptInPartitioningPBM: Boolean by UnsupportedSetting()
 +
 +    open var spoofEnglish: Boolean by UnsupportedSetting()
  }
  
  /**
-@@ -301,6 +303,7 @@ data class DefaultSettings(
-     override var queryParameterStrippingAllowList: String = "",
-     override var queryParameterStrippingStripList: String = "",
-     override var emailTrackerBlockingPrivateBrowsing: Boolean = false,
+@@ -371,6 +373,7 @@ data class DefaultSettings(
+     val getDesktopMode: () -> Boolean = { false },
+     override var cookieBehaviorOptInPartitioning: Boolean = false,
+     override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
 +    override var spoofEnglish: Boolean = false,
- ) : Settings()
- 
- class UnsupportedSetting<T> {
+ ) : Settings() {
+     override val desktopModeEnabled: Boolean
+         get() = getDesktopMode()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index ab04b1e48b009..b7cb3d642183c 100644
+index 966a527fc9..e48a15f80d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -157,6 +157,7 @@ class Core(
-             cookieBannerHandlingGlobalRules = context.settings().shouldEnableCookieBannerGlobalRules,
-             cookieBannerHandlingGlobalRulesSubFrames = context.settings().shouldEnableCookieBannerGlobalRulesSubFrame,
-             emailTrackerBlockingPrivateBrowsing = false,
-+            spoofEnglish = context.settings().spoofEnglish,
+@@ -180,6 +180,7 @@ class Core(
+             webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_HIGH_VALUE,
+             fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
+             parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
++            spoofEnglish = context.settings().spoofEnglish
          )
  
-         GeckoEngine(
+         // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 index 23956e62f94a5..a45b32ad9b27e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
