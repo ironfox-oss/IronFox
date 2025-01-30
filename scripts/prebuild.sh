@@ -283,7 +283,7 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/fenix-liberate.patch"
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/tor-spoof-english.patch"
 
 # Add a toggle in settings for spoofing locale to 'en-US'
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/tor-spoof-english-toggle.patch"
+patch -p1 --no-backup-if-mismatch --quiet <"$patches/tor-spoof-english-switch.patch"
 
 # Spoof locale to 'en-US' by default...
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/spoof-english-by-default.patch"
