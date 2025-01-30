@@ -4,7 +4,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.01.27.1", locked);
+pref("browser.phoenix.version", "2025.01.30.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -198,11 +198,13 @@ pref("extensions.getAddons.discovery.api_url", "data;"); // https://searchfox.or
 pref("extensions.getAddons.showPane", false);
 pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 pref("extensions.recommendations.themeRecommendationUrl", "");
+pref("extensions.ui.lastCategory", "addons://list/extension"); // [HIDDEN] Ensure default view of `about:addons` is local/installed extensions...
 pref("extensions.webservice.discoverURL", "");
 
 /// Fakespot
 
 pref("browser.newtabpage.activity-stream.contextualContent.fakespot.enabled", false);
+pref("browser.newtabpage.activity-stream.discoverystream.contextualContent.fakespot.enabled", false);
 pref("browser.shopping.experience2023.active", false);
 pref("browser.shopping.experience2023.ads.enabled", false, locked); // [DEFAULT]
 pref("browser.shopping.experience2023.ads.exposure", false, locked); // [HIDDEN]
@@ -508,6 +510,7 @@ pref("network.preconnect", false);
 // Ex. like Cromite https://github.com/uazo/cromite/blob/master/build/patches/Client-hints-overrides.patch
 
 pref("network.early-hints.enabled", false);
+pref("network.early-hints.over-http-v1-1.enabled", false);
 pref("network.early-hints.preconnect.enabled", false);
 pref("network.early-hints.preconnect.max_connections", 0);
 
@@ -1018,11 +1021,17 @@ pref("browser.phoenix.core.status", "013");
 
 pref("extensions.autoDisableScopes", 15, locked); // [DEFAULT] Defense in depth, ensures extensions installed via directories are disabled by default...
 pref("extensions.enabledScopes", 5); // [DEFAULT]
+pref("extensions.installDistroAddons", false); // https://support.mozilla.org/kb/deploying-firefox-with-extensions
 
 /// Only allow signed extensions
 
 pref("extensions.langpacks.signatures.required", true); // [DEFAULT]
 pref("xpinstall.whitelist.required", true); // [DEFAULT]
+
+/// Only allow installation and updates for extensions using Firefox's built-in certs...
+
+pref("extensions.install.requireBuiltInCerts", true, locked); // [HIDDEN]
+pref("extensions.update.requireBuiltInCerts", true, locked); // [HIDDEN]
 
 /// Block extensions signed with weak signature algorithms
 
@@ -1036,6 +1045,11 @@ pref("extensions.blocklist.enabled", true); // [DEFAULT]
 
 pref("extensions.postDownloadThirdPartyPrompt", false, locked);
 
+/// Prevent unprivileged extensions from accessing experimental APIs by default
+// https://searchfox.org/mozilla-central/source/toolkit/components/extensions/docs/basics.rst#142
+
+pref("extensions.experiments.enabled", false); // [DEFAULT, except on ex. Nightly...]
+
 /// Allow LocalCDN to work on quarantined domains
 
 pref("extensions.quarantineIgnoredByUser.{b86e4813-687a-43e6-ab65-0bde4ab75758}", true);
@@ -1043,6 +1057,34 @@ pref("extensions.quarantineIgnoredByUser.{b86e4813-687a-43e6-ab65-0bde4ab75758}"
 /// Allow Mullvad's extension to work on quarantined domains
 
 pref("extensions.quarantineIgnoredByUser.{d19a89b9-76c1-4a61-bcd4-49e8de916403}", true);
+
+/// Block our search 'extensions' from accessing quarantined domains...
+
+pref("extensions.quarantineIgnoredByUser.ddg@celenity.dev", false, locked); // DuckDuckGo
+pref("extensions.quarantineIgnoredByUser.duckduckgo-html@celenity.dev", false, locked); // DuckDuckGo HTML
+pref("extensions.quarantineIgnoredByUser.duckduckgo-lite@celenity.dev", false, locked); // DuckDuckGo Lite
+pref("extensions.quarantineIgnoredByUser.ecosia@celenity.dev", false, locked); // Ecosia
+pref("extensions.quarantineIgnoredByUser.mojeek@celenity.dev", false, locked); // Mojeek
+pref("extensions.quarantineIgnoredByUser.no-search@celenity.dev", false, locked); // No Search
+pref("extensions.quarantineIgnoredByUser.qwant@celenity.dev", false, locked); // Qwant
+pref("extensions.quarantineIgnoredByUser.qwant-junior@celenity.dev", false, locked); // Qwant Junior
+pref("extensions.quarantineIgnoredByUser.startpage@celenity.dev", false, locked); // Startpage
+pref("extensions.quarantineIgnoredByUser.swisscows@celenity.dev", false, locked); // Startpage
+
+/// We can also include our deprecated search 'extensions' for defense in depth...
+
+pref("extensions.quarantineIgnoredByUser.bravesearch@celenity.dev", false, locked); // Brave Search
+pref("extensions.quarantineIgnoredByUser.kagi@celenity.dev", false, locked); // Kagi
+pref("extensions.quarantineIgnoredByUser.kagi-html@celenity.dev", false, locked); // Kagi HTML
+pref("extensions.quarantineIgnoredByUser.leta-brave@celenity.dev", false, locked); // Mullvad Leta (Brave)
+pref("extensions.quarantineIgnoredByUser.leta-google@celenity.dev", false, locked); // Mullvad Leta (Google)
+pref("extensions.quarantineIgnoredByUser.metager@celenity.dev", false, locked); // MetaGer
+
+/// Block certain Mozilla extensions from accessing quarantined domains...
+
+pref("extensions.quarantineIgnoredByUser.ads@mozac.org", false, locked); // Mozilla Android Components - Ads Telemetry...
+pref("extensions.quarantineIgnoredByUser.cookies@mozac.org", false, locked); // Mozilla Android Components - Search Telemetry...
+pref("extensions.quarantineIgnoredByUser.wikipedia@search.mozilla.org", false, locked); // Wikipedia (en) - search engine...
 
 pref("browser.phoenix.core.status", "014");
 
@@ -1068,8 +1110,8 @@ pref("pdfjs.enablePermissions", false); // [DEFAULT]
 /// Prevent checking if default PDF viewer
 // https://searchfox.org/mozilla-central/source/browser/app/profile/firefox.js
 
-pref("browser.shell.checkpDF", false);
-pref("browser.shell.checkpDF.silencedByUser", true);
+pref("browser.shell.checkDefaultPDF", false);
+pref("browser.shell.checkDefaultPDF.silencedByUser", true);
 
 /// Never open Microsoft Edge for PDFs
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
@@ -1178,11 +1220,6 @@ pref("browser.phoenix.core.status", "016");
 
 // 017 FINGERPRINTING PROTECTION
 
-/// Unbreak websites with FPP (if enabled)
-// Currently covers Apple Maps (completely broken)
-
-pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"apple.com\", \"overrides\": \"-WebGLRenderCapability\"}]");
-
 /// Round window sizes
 
 pref("privacy.window.maxInnerHeight", 900);
@@ -1194,9 +1231,9 @@ pref("privacy.window.maxInnerWidth", 1600);
 
 pref("privacy.resistFingerprinting.target_video_res", 1080); // [DEFAULT for Nightly]
 
-/// Spoof locale to English by default
+/// Prompt to spoof locale to en-US
 
-pref("privacy.spoof_english", 2);
+pref("privacy.spoof_english", 0); // [DEFAULT]
 
 /// Enable light mode by default
 // This matches with RFP...
@@ -2010,6 +2047,9 @@ pref("browser.phoenix.core.status", "successfully applied :D", locked);
 // This config manually enables various protections from ETP/Strict
 // Useful for ex. Android & Thunderbird, where ETP Strict either isn't supported or doesn't cover the same protections.
 
+pref("extensions.webcompat.enable_shims", true); // [HIDDEN]
+pref("extensions.webcompat.perform_injections", true); // [HIDDEN]
+pref("extensions.webcompat.perform_ua_overrides", true); // [HIDDEN]
 pref("network.cookie.cookieBehavior", 5);
 pref("network.cookie.cookieBehavior.optInPartitioning", true);
 pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
@@ -2085,6 +2125,26 @@ pref("browser.phoenix.android.status", "003");
 // Easily build your own (global) override list: https://raw.githack.com/rindeal/Firefox-FPP-Override-List-Editor/master/FirefoxFPPOverrideListEditor.html
 
 pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-CSSPrefersColorScheme,-FrameRate,-JSDateTimeUTC");
+
+/// Unbreak websites with FPP (if the related target is enabled...)
+// Currently covers:
+// Bluesky (bsky.app) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
+// Brave Search (brave.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues on Maps
+// Discord (discord.com) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (arcticfoxes.net) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (aria.im) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (mozilla.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (element.io) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (unredacted.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Favicon.io (favicon.io)  - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks downloading converted files
+// GitLab (gitlab.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
+// Photopea (photopea.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes complete breakage
+// Pornhub (pornhub.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks thumbnail seeking
+// Proton Mail (proton.me) - Disables timezone spoofing (-JSDateTimeUTC)
+// Watch Duty (watchduty.org) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues
+// X/Twitter (x.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
+
+pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"mozilla.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}]");
 
 /// Enable dynamic rounding of content dimensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1407366
