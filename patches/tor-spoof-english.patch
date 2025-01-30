@@ -64,10 +64,10 @@ index 9c181c1dbd40a..6e1309527abfe 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -634,6 +645,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       new Pref<Boolean>("privacy.globalprivacycontrol.pbmode.enabled", true);
-   /* package */ final Pref<Boolean> mGlobalPrivacyControlFunctionalityEnabled =
-       new Pref<Boolean>("privacy.globalprivacycontrol.functionality.enabled", true);
+@@ -681,6 +681,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+       new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning", false);
+   /* package */ final Pref<Boolean> mCookieBehaviorOptInPartitioningPBM =
+       new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning.pbmode", false);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 0);
  
    /* package */ int mPreferredColorScheme = COLOR_SCHEME_SYSTEM;
