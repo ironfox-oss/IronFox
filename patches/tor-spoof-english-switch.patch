@@ -206,6 +206,18 @@ index c4f3b3dfc0..3636ec1628 100644
 +
 +    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
  </resources>
+diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+index 240dcdacf7..97505ac91c 100644
+--- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
++++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+@@ -224,4 +224,7 @@
+     <string name="glean_debug_tools_send_baseline_ping_toast_message">Sent baseline ping</string>
+     <!-- The send metrics pings toast message -->
+     <string name="glean_debug_tools_send_metrics_ping_toast_message">Sent metrics ping</string>
++
++    <!-- Spoof locale to English -->
++    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
+ </resources>
 -- 
 GitLab
 
