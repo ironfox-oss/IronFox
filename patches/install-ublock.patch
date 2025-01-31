@@ -1,8 +1,7 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 07557ec0e0..e540325bec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-@@ -121,6 +121,9 @@ class WebExtensionPromptFeature(
+@@ -121,6 +121,9 @@
      private fun handlePostInstallationRequest(
          addon: Addon,
      ) {
@@ -12,7 +11,7 @@ index 07557ec0e0..e540325bec 100644
          showPostInstallationDialog(addon)
      }
  
-@@ -128,6 +131,14 @@ class WebExtensionPromptFeature(
+@@ -128,6 +131,14 @@
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
      ) {
@@ -27,7 +26,7 @@ index 07557ec0e0..e540325bec 100644
          showPermissionDialog(addon = addon, promptRequest = promptRequest, permissions = promptRequest.permissions)
      }
  
-@@ -136,6 +147,14 @@ class WebExtensionPromptFeature(
+@@ -136,6 +147,14 @@
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
      ) {
@@ -43,10 +42,9 @@ index 07557ec0e0..e540325bec 100644
  
          // If we don't have any promptable permissions, just proceed.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-index 558fd4384c..fb76a72c97 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-@@ -323,6 +323,10 @@ class HomeFragment : Fragment() {
+@@ -321,6 +321,11 @@
  
          components.appStore.dispatch(AppAction.ModeChange(browsingModeManager.mode))
  
@@ -54,12 +52,27 @@ index 558fd4384c..fb76a72c97 100644
 +            org.mozilla.fenix.utils.installIFAddons(components)
 +        }
 +
++
          lifecycleScope.launch(IO) {
-             if (requireContext().settings().showPocketRecommendationsFeature) {
-                 val categories = components.core.pocketStoriesService.getStories()
+             // Show Merino content recommendations.
+             val showContentRecommendations = requireContext().settings().showContentRecommendations
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+@@ -101,6 +101,11 @@
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         val context = requireContext()
++
++        androidx.lifecycle.lifecycleScope.launch {
++            org.mozilla.fenix.utils.installIFAddons(components)
++        }
++
+         if (pagesToDisplay.isEmpty()) {
+             /* do not continue if there's no onboarding pages to display */
+             onFinish(null)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 new file mode 100644
-index 0000000000..d76d53a52d
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 @@ -0,0 +1,34 @@
@@ -98,14 +111,13 @@ index 0000000000..d76d53a52d
 +    }
 +}
 diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
-index 7340546f37..6097cef49f 100644
 --- a/toolkit/components/extensions/parent/ext-storage.js
 +++ b/toolkit/components/extensions/parent/ext-storage.js
-@@ -403,6 +403,14 @@ this.storage = class extends ExtensionAPIPersistent {
+@@ -403,6 +403,15 @@
  
              let data = await lookup;
              if (!data) {
-+              const assetsBootstrapLocation = Services.prefs.getStringPref("ironfox.uBO.assetsBootstrapLocation", undefined);
++              const assetsBootstrapLocation = Services.prefs.getStringPref("ironfox.uBO.assetsBootstrapLocation", >
 +              if (extension.id == "uBlock0@raymondhill.net" && assetsBootstrapLocation) {
 +                return {
 +                  adminSettings: {
@@ -113,6 +125,7 @@ index 7340546f37..6097cef49f 100644
 +                  }
 +                }
 +              }
++
                return Promise.reject({
                  message: "Managed storage manifest not found",
                });
