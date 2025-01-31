@@ -75,10 +75,13 @@ mkdir -p "$rootdir/build"
 
 # Check patch files
 source "$rootdir/scripts/patches.sh"
+
+pushd "$mozilla_release"
 if ! check_patches; then
     echo "Patch validation failed. Please check the patch files and try again."
     exit 1
 fi
+popd
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Set up Rust
@@ -276,6 +279,9 @@ fi
 
 # GeckoView
 pushd "$mozilla_release"
+
+# Apply patches
+apply_patches
 
 # Fix v125 aar output not including native libraries
 sed -i \
