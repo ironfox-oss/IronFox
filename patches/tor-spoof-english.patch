@@ -1,24 +1,203 @@
-From e9634f42d728f690e41bfec889f4e93ded2ffbf4 Mon Sep 17 00:00:00 2001
-From: Alex Catarineu <acat@torproject.org>
-Date: Fri, 16 Oct 2020 10:45:17 +0200
-Subject: [PATCH] BB 30605: Honor privacy.spoof_english in Android
-
-This checks `privacy.spoof_english` whenever `setLocales` is
-called from Fenix side and sets `intl.accept_languages`
-accordingly.
-
-Bug 40198: Expose privacy.spoof_english pref in GeckoView
----
- mobile/android/geckoview/api.txt              |  3 ++
- .../geckoview/GeckoRuntimeSettings.java       | 32 +++++++++++++++++++
- .../geckoview/GeckoViewStartup.sys.mjs        |  5 +++
- 3 files changed, 40 insertions(+)
-
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+--- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
++++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+@@ -1386,6 +1386,15 @@
+             get() = runtime.settings.cookieBehaviorOptInPartitioningPBM
+             set(value) { runtime.settings.setCookieBehaviorOptInPartitioningPBM(value) }
+ 
++        override var spoofEnglish: Boolean
++            get() = runtime.settings.spoofEnglish
++            set(value) {
++                value.let {
++                    runtime.settings.spoofEnglish = it
++                    localeUpdater.updateValue()
++                }
++            }
++
+         override var certificateTransparencyMode: Int
+             get() = runtime.settings.certificateTransparencyMode
+             set(value) { runtime.settings.setCertificateTransparencyMode(value) }
+@@ -1425,6 +1434,7 @@
+             this.parallelMarkingEnabled = it.parallelMarkingEnabled
+             this.cookieBehaviorOptInPartitioning = it.cookieBehaviorOptInPartitioning
+             this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
++            this.spoofEnglish = it.spoofEnglish
+             this.certificateTransparencyMode = it.certificateTransparencyMode
+         }
+     }
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+@@ -310,6 +310,8 @@
+      */
+     open var cookieBehaviorOptInPartitioningPBM: Boolean by UnsupportedSetting()
+ 
++    open var spoofEnglish: Boolean by UnsupportedSetting()
++
+     /**
+      * Setting to control how Certificate Transparency information is processed.
+      */
+@@ -376,6 +378,7 @@
+     val getDesktopMode: () -> Boolean = { false },
+     override var cookieBehaviorOptInPartitioning: Boolean = false,
+     override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
++    override var spoofEnglish: Boolean = false,
+     override var certificateTransparencyMode: Int = 0,
+ ) : Settings() {
+     override val desktopModeEnabled: Boolean
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -186,6 +186,7 @@
+             webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_HIGH_VALUE,
+             fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
+             parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
++            spoofEnglish = context.settings().spoofEnglish
+             certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
+         )
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
+@@ -12,6 +12,7 @@
+ import mozilla.components.support.locale.LocaleManager
+ import mozilla.components.support.locale.LocaleUseCases
+ import org.mozilla.fenix.nimbus.FxNimbus
++import org.mozilla.fenix.ext.components
+ import java.util.Locale
+ 
+ interface LocaleSettingsController {
+@@ -83,5 +84,9 @@
+         config.setLocale(locale)
+         config.setLayoutDirection(locale)
+         resources.updateConfiguration(config, resources.displayMetrics)
++        // A slightly hacky way of triggering a `runtime.settings.locales` update,
++        // so that the locales are updated in GeckoView.
++        val spoofEnglish = context.components.core.engine.settings.spoofEnglish
++        context.components.core.engine.settings.spoofEnglish = spoofEnglish
+     }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/LocaleSettingsFragment.kt
+@@ -23,6 +23,8 @@
+ import org.mozilla.fenix.components.StoreProvider
+ import org.mozilla.fenix.databinding.FragmentLocaleSettingsBinding
+ import org.mozilla.fenix.ext.components
++import org.mozilla.fenix.ext.requireComponents
++import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.ext.showToolbar
+ 
+ class LocaleSettingsFragment : Fragment(), MenuProvider {
+@@ -46,6 +48,8 @@
+         _binding = FragmentLocaleSettingsBinding.inflate(inflater, container, false)
+         val view = binding.root
+ 
++        bindEnableSwitch()
++
+         val browserStore = requireContext().components.core.store
+         val localeUseCase = LocaleUseCases(browserStore)
+ 
+@@ -62,10 +66,19 @@
+                 localeUseCase = localeUseCase,
+             ),
+         )
+-        localeView = LocaleSettingsView(binding.root, interactor)
++        localeView = LocaleSettingsView(binding.localeContainer, interactor)
+         return view
+     }
+ 
++    private fun bindEnableSwitch() {
++        val switch = binding.enableSwitch
++        switch.isChecked = requireComponents.core.engine.settings.spoofEnglish
++        switch.setOnCheckedChangeListener { _, isChecked ->
++            context?.settings()?.spoofEnglish = isChecked
++            requireComponents.core.engine.settings.spoofEnglish = isChecked
++        }
++    }
++
+     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+         inflater.inflate(R.menu.languages_list, menu)
+         val searchItem = menu.findItem(R.id.search)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -307,6 +307,11 @@
+         false,
+     )
+ 
++    var spoofEnglish by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
++        default = false
++    )
++
+     var defaultSearchEngineName by stringPreference(
+         appContext.getPreferenceKey(R.string.pref_key_search_engine),
+         default = "",
+diff --git a/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml b/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml
+--- a/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml
++++ b/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settings.xml
+@@ -7,13 +7,31 @@
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
+ 
+-    <FrameLayout
++    <com.google.android.material.switchmaterial.SwitchMaterial
++        android:id="@+id/enable_switch"
++        android:layout_width="match_parent"
++        android:layout_height="wrap_content"
++        android:layout_gravity="center_vertical|end"
++        android:background="?android:attr/selectableItemBackground"
++        android:checked="true"
++        android:clickable="true"
++        android:focusable="true"
++        android:layout_marginStart="54dp"
++        android:padding="16dp"
++        android:text="@string/tor_spoof_english"
++        android:textColor="?textPrimary"
++        android:textSize="16sp"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent"  />
++    <androidx.constraintlayout.widget.ConstraintLayout
++
+         android:id="@+id/locale_container"
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent"
++        android:layout_height="0dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
++        app:layout_constraintTop_toBottomOf="@id/enable_switch" />
+ 
+ </androidx.constraintlayout.widget.ConstraintLayout>
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -431,6 +431,8 @@
+     <!-- Bookmarks -->
+     <string name="pref_key_use_new_bookmarks_ui" translatable="false">pref_key_use_new_bookmarks_ui</string>
+ 
++    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
++
+     <!-- Glean usage profile id -->
+     <string name="pref_key_glean_usage_profile_id" translatable="false">pref_key_glean_usage_profile_id</string>
+ </resources>
+diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+--- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
++++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+@@ -229,4 +229,6 @@
+     <string name="glean_debug_tools_send_baseline_ping_toast_message">Sent baseline ping</string>
+     <!-- The send metrics pings toast message -->
+     <string name="glean_debug_tools_send_metrics_ping_toast_message">Sent metrics ping</string>
++    <!-- Spoof locale to English -->
++    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
+ </resources>
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index 61e6895733658..3d5b67e9ffa7d 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -886,6 +886,7 @@ package org.mozilla.geckoview {
+@@ -901,6 +901,7 @@
      method public boolean getRemoteDebuggingEnabled();
      method @Nullable public GeckoRuntime getRuntime();
      method @Nullable public Rect getScreenSizeOverride();
@@ -26,15 +205,15 @@ index 61e6895733658..3d5b67e9ffa7d 100644
      method public boolean getTranslationsOfferPopup();
      method @NonNull public String getTrustedRecursiveResolverUri();
      method public int getTrustedRecusiveResolverMode();
-@@ -915,6 +916,7 @@ package org.mozilla.geckoview {
-     method @NonNull public GeckoRuntimeSettings setLoginAutofillEnabled(boolean);
+@@ -941,6 +942,7 @@
+     method @NonNull public GeckoRuntimeSettings setParallelMarkingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setPreferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings setRemoteDebuggingEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
      method @NonNull public GeckoRuntimeSettings setTranslationsOfferPopup(boolean);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverMode(int);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverUri(@NonNull String);
-@@ -968,6 +970,7 @@ package org.mozilla.geckoview {
+@@ -1001,6 +1003,7 @@
      method @NonNull public GeckoRuntimeSettings.Builder preferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings.Builder remoteDebuggingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder screenSizeOverride(int, int);
@@ -43,10 +222,9 @@ index 61e6895733658..3d5b67e9ffa7d 100644
      method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverMode(int);
      method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverUri(@NonNull String);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 9c181c1dbd40a..6e1309527abfe 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -565,6 +565,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -588,6 +588,17 @@
        getSettings().setLargeKeepaliveFactor(factor);
        return this;
      }
@@ -64,15 +242,15 @@ index 9c181c1dbd40a..6e1309527abfe 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -681,6 +681,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning", false);
-   /* package */ final Pref<Boolean> mCookieBehaviorOptInPartitioningPBM =
+@@ -683,6 +694,7 @@
        new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning.pbmode", false);
+   /* package */ final Pref<Integer> mCertificateTransparencyMode =
+       new Pref<Integer>("security.pki.certificate_transparency.mode", 0);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 0);
  
    /* package */ int mPreferredColorScheme = COLOR_SCHEME_SYSTEM;
  
-@@ -1625,6 +1637,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -1959,6 +1971,27 @@
      return this;
    }
  
@@ -96,14 +274,14 @@ index 9c181c1dbd40a..6e1309527abfe 100644
 +    return this;
 +  }
 +
++
    @Override // Parcelable
    public void writeToParcel(final Parcel out, final int flags) {
      super.writeToParcel(out, flags);
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 4483941f8e5e4..1ca52f75bc6d8 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-@@ -11,6 +11,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+@@ -11,6 +11,7 @@
    ActorManagerParent: "resource://gre/modules/ActorManagerParent.sys.mjs",
    EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
    PdfJs: "resource://pdf.js/PdfJs.sys.mjs",
@@ -111,7 +289,7 @@ index 4483941f8e5e4..1ca52f75bc6d8 100644
  });
  
  const { debug, warn } = GeckoViewUtils.initLogging("Startup");
-@@ -339,6 +340,10 @@ export class GeckoViewStartup {
+@@ -339,6 +340,10 @@
          if (aData.requestedLocales) {
            Services.locale.requestedLocales = aData.requestedLocales;
          }
@@ -122,6 +300,3 @@ index 4483941f8e5e4..1ca52f75bc6d8 100644
          const pls = Cc["@mozilla.org/pref-localizedstring;1"].createInstance(
            Ci.nsIPrefLocalizedString
          );
--- 
-GitLab
-
