@@ -282,9 +282,6 @@ patch -p1 --no-backup-if-mismatch --quiet <"$patches/fenix-liberate.patch"
 # Support spoofing locale to 'en-US'
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/tor-spoof-english.patch"
 
-# Add a toggle in settings for spoofing locale to 'en-US'
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/tor-spoof-english-switch.patch"
-
 # Set strict ETP by default
 patch -p1 --no-backup-if-mismatch --quiet <"$patches/strict_etp.patch"
 
