@@ -2,11 +2,13 @@
 
 set -euo pipefail
 
-FIREFOX_TAG="134.0.2"
+FIREFOX_TAG="135.0"
+FIREFOX_RC_BUILD_NAME="build2"
+FIREFOX_RELEASE_PATH="candidates/${FIREFOX_TAG}-candidates/${FIREFOX_RC_BUILD_NAME}"
 WASI_TAG="wasi-sdk-20"
-GLEAN_TAG="v62.0.0"
+GLEAN_TAG="v63.0.0"
 GMSCORE_TAG="v0.3.6.244735"
-APPSERVICES_TAG="v134.0"
+APPSERVICES_TAG="v135.0"
 BUNDLETOOL_TAG="1.18.0"
 
 # Configuration
@@ -196,7 +198,7 @@ clone_repo "https://github.com/mozilla/application-services" "$APPSERVICESDIR" "
 (cd "$APPSERVICESDIR" && git submodule update --init --depth=1)
 
 # Download Firefox Source
-download_and_extract "gecko" "https://archive.mozilla.org/pub/firefox/releases/${FIREFOX_TAG}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
+download_and_extract "gecko" "https://archive.mozilla.org/pub/firefox/${FIREFOX_RELEASE_PATH}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."
