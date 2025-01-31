@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 07557ec0e0..a488124ecc 100644
+index 07557ec0e0..e540325bec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 @@ -121,6 +121,9 @@ class WebExtensionPromptFeature(
@@ -42,15 +42,6 @@ index 07557ec0e0..a488124ecc 100644
          val shouldGrantWithoutPrompt = Addon.localizePermissions(promptRequest.permissions, context).isEmpty()
  
          // If we don't have any promptable permissions, just proceed.
-@@ -396,7 +415,7 @@ class WebExtensionPromptFeature(
-     }
- 
-     private fun showPostInstallationDialog(addon: Addon) {
--        if (!isInstallationInProgress && !hasExistingAddonPostInstallationDialogFragment()) {
-+        if (!isInstallationInProgress && !hasExistingAddonPostInstallationDialogFragment() && !org.mozilla.fenix.utils.isUBlock(addon)) {
-             val dialog = AddonInstallationDialogFragment.newInstance(
-                 addon = addon,
-                 promptsStyling = AddonDialogFragment.PromptsStyling(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
 index 558fd4384c..fb76a72c97 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
@@ -68,21 +59,19 @@ index 558fd4384c..fb76a72c97 100644
                  val categories = components.core.pocketStoriesService.getStories()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 new file mode 100644
-index 0000000000..cb7ef2ddef
+index 0000000000..d76d53a52d
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
-@@ -0,0 +1,39 @@
+@@ -0,0 +1,34 @@
 +package org.mozilla.fenix.utils
 +
 +import kotlinx.coroutines.Dispatchers
-+import kotlinx.coroutines.launch
 +import kotlinx.coroutines.withContext
 +import mozilla.components.concept.engine.webextension.InstallationMethod
 +import mozilla.components.feature.addons.Addon
 +import mozilla.components.feature.addons.logger
 +import org.mozilla.fenix.components.Components
 +
-+private const val UBO_ASSETS_JSON = "https://gitlab.com/ironfox-oss/IronFox/-/raw/ubo/patches/ubo/assets/assets.json"
 +private val UBLOCK = Addon(
 +    id = "uBlock0@raymondhill.net",
 +    downloadUrl = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
@@ -94,9 +83,6 @@ index 0000000000..cb7ef2ddef
 +    val addonManager = components.addonManager
 +    val addons = addonManager.getAddons(waitForPendingActions = true)
 +    if (addons.none { it.id == UBLOCK.id && it.isInstalled() }) {
-+        launch {
-+            components.core.geckoRuntime.settings.setUBOAssetsBootstrapLocation(UBO_ASSETS_JSON)
-+        }
 +        withContext(Dispatchers.Main) {
 +            addonManager.installAddon(
 +                url = UBLOCK.downloadUrl,
@@ -111,45 +97,6 @@ index 0000000000..cb7ef2ddef
 +        }
 +    }
 +}
-diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index cf8972ddc9..784970bd9a 100644
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -602,6 +602,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-     return mContentBlocking;
-   }
- 
-+  /* package */ final Pref<String> mUBOAssetsBootstrapLocation = new Pref<String>("ironfox.uBO.assetsBootstrapLocation", "");
-   /* package */ final Pref<Boolean> mWebManifest = new Pref<Boolean>("dom.manifest.enabled", true);
-   /* package */ final Pref<Boolean> mJavaScript = new Pref<Boolean>("javascript.enabled", true);
-   /* package */ final Pref<Boolean> mRemoteDebugging =
-@@ -1272,6 +1273,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-     return locales;
-   }
- 
-+  /**
-+   * Set the location of the `assets.json` file for uBlock Origin.
-+   *
-+   * @param location The new file location.
-+   * @return This GeckoRuntimeSettings instance.
-+   */
-+  public @NonNull GeckoRuntimeSettings setUBOAssetsBootstrapLocation(final String location) {
-+    mUBOAssetsBootstrapLocation.commit(location);
-+    return this;
-+  }
-+
-+  /**
-+   * Get the current location of the assets.json file for uBlock Origin.
-+   *
-+   * @return The location of the assets.json file for uBlock Origin.
-+   */
-+  public String getUBOAssetsBootstrapLocation() {
-+    return mUBOAssetsBootstrapLocation.get();
-+  }
-+
-   /**
-    * Sets whether Web Manifest processing support is enabled.
-    *
 diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
 index 7340546f37..6097cef49f 100644
 --- a/toolkit/components/extensions/parent/ext-storage.js

@@ -25,4 +25,7 @@ pref("browser.translations.alwaysTranslateLanguages", ""); // [DEFAULT]
 
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
+/// Set the URL for the custom assets.json file
+pref("ironfox.uBO.assetsBootstrapLocation", "https://gitlab.com/ironfox-oss/IronFox/-/raw/ubo/patches/ubo/assets/assets.json");
+
 pref("browser.ironfox.applied", true, locked);

@@ -5,12 +5,6 @@
 		"contentURL": [
 			"https://gitlab.com/ironfox-oss/IronFox/-/raw/ubo/patches/ubo/assets/assets.json",
 			"assets/assets.json"
-		],
-		"cdnURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/ublock/assets.json",
-			"https://ublockorigin.pages.dev/ublock/assets.json",
-			"https://cdn.jsdelivr.net/gh/gorhill/uBlock@master/assets/assets.json",
-			"https://cdn.statically.io/gh/gorhill/uBlock/master/assets/assets.json"
 		]
 	},
 	"public_suffix_list.dat": {
