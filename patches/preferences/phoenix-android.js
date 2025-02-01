@@ -4,7 +4,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.01.30.1", locked);
+pref("browser.phoenix.version", "2025.02.01.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -859,6 +859,12 @@ pref("geo.wifi.scan", false); // [HIDDEN] https://searchfox.org/mozilla-release/
 pref("browser.region.network.url", "");
 pref("browser.region.update.enabled", false);
 
+/// Disable logging Geolocation requests by default
+// This is already Firefox's default setting - but setting here exposes it in the about:config since it's hidden...
+// https://searchfox.org/mozilla-central/source/dom/system/NetworkGeolocationProvider.sys.mjs#21
+
+pref("geo.provider.network.logging.enabled", false); // [DEFAULT - HIDDEN]
+
 /// Geolocation Provider
 
 /// Set BeaconDB as the network Geolocation provider instead of Google...
@@ -1011,6 +1017,12 @@ pref("layout.css.visited_links_enabled", false);
 
 pref("browser.pagethumbnails.capturing_disabled", true); // [HIDDEN]
 
+/// Allow permissions manager to write to disk
+// This is already Firefox's default - but it's hidden, so this exposes it to the about:config
+// https://searchfox.org/mozilla-central/source/extensions/permissions/PermissionManager.cpp#758
+
+pref("permissions.memory_only", false); // [HIDDEN - DEFAULT]
+
 pref("browser.phoenix.core.status", "013");
 
 // 014 EXTENSIONS
@@ -1049,6 +1061,11 @@ pref("extensions.postDownloadThirdPartyPrompt", false, locked);
 // https://searchfox.org/mozilla-central/source/toolkit/components/extensions/docs/basics.rst#142
 
 pref("extensions.experiments.enabled", false); // [DEFAULT, except on ex. Nightly...]
+
+/// Enable restricted/quarantined domains by default
+// https://support.mozilla.org/kb/quarantined-domains
+
+pref("extensions.quarantinedDomains.enabled", true); // [DEFAULT]
 
 /// Allow LocalCDN to work on quarantined domains
 
@@ -1134,6 +1151,54 @@ pref("browser.phoenix.core.status", "015");
 
 pref("browser.contentblocking.category", "strict", locked);
 
+/// Manually enable ETP Strict protections...
+// These are typically configured by ETP Strict - but unfortunately Firefox doesn't set ETP Strict on the browser's first run :/
+// So we need to also manually configure them. We still also use ETP Strict (not 'Custom') due to our enforcement of it, so we should be covered by Mozilla changes/updates for protections.
+// Manually specifying these is also useful for cases like Android: where all protections aren't enabled with ETP Strict, and on Thunderbird: where ETP Strict doesn't exist at all...
+// We're also configuring the 'CookieBehavior' & 'EnableTrackingProtection' policies on desktop.
+
+pref("network.cookie.cookieBehavior", 5);
+pref("network.cookie.cookieBehavior.optInPartitioning", true);
+pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
+pref("network.cookie.cookieBehavior.pbmode", 5);
+pref("network.cookie.cookieBehavior.trackerCookieBlocking", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
+pref("privacy.annotate_channels.strict_list.enabled", true);
+pref("privacy.annotate_channels.strict_list.pbmode.enabled", true);
+pref("privacy.bounceTrackingProtection.enabled", true);
+pref("privacy.bounceTrackingProtection.mode", 1); // Fully enables Bounce Tracking Protection - https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
+pref("privacy.fingerprintingProtection", true);
+pref("privacy.fingerprintingProtection.pbmode", true);
+pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
+pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
+pref("privacy.partition.bloburl_per_partition_key", true);
+pref("privacy.partition.network_state", true);
+pref("privacy.partition.network_state.ocsp_cache", true);
+pref("privacy.partition.network_state.ocsp_cache.pbmode", true);
+pref("privacy.partition.serviceWorkers", true);
+pref("privacy.query_stripping.enabled", true);
+pref("privacy.query_stripping.enabled.pbmode", true);
+pref("privacy.query_stripping.redirect", true);
+pref("privacy.reduceTimerPrecision", true);
+pref("privacy.socialtracking.block_cookies.enabled", true);
+pref("privacy.trackingprotection.cryptomining.enabled", true);
+pref("privacy.trackingprotection.emailtracking.enabled", true);
+pref("privacy.trackingprotection.emailtracking.pbmode.enabled", true);
+pref("privacy.trackingprotection.enabled", true);
+pref("privacy.trackingprotection.fingerprinting.enabled", true);
+pref("privacy.trackingprotection.pbmode.enabled", true);
+pref("privacy.trackingprotection.socialtracking.enabled", true);
+
+// Enable SmartBlock & UA overrides/injections
+// Also typically covered by ETP/Strict
+
+pref("extensions.webcompat.enable_shims", true); // [HIDDEN]
+pref("extensions.webcompat.perform_injections", true); // [HIDDEN]
+pref("extensions.webcompat.perform_ua_overrides", true); // [HIDDEN]
+
 /// Enforce container isolation of about:home content
 
 pref("browser.discovery.containers.enabled", true); // [DEFAULT]
@@ -1154,7 +1219,23 @@ pref("dom.reporting.enabled", false); // [DEFAULT]
 pref("dom.reporting.featurePolicy.enabled", false);
 pref("dom.reporting.header.enabled", false);
 
+/// Disable Beacon API (Navigator.sendBeacon)
+// I was originally against disabling this, but after careful consideration, I've changed my position.
+// The explicit, stated purpose/use case of this API is for analytics/tracking.
+// Websites *can* obtain the data shared from this API through other means; though the other ways to obtain it are more disruptive and less reliable.
+// Analytics/tracking is evidently not a use case that we, as the user agent, should support or assist with.
+// I don't see a justification for adding APIs/features to support this hostile behavior.
+// https://developer.mozilla.org/docs/Web/API/Beacon_API
+// https://developer.mozilla.org/docs/Web/API/Navigator/sendBeacon
+// https://udn.realityripple.com/docs/Web/API/Navigator/sendBeacon
+// https://w3c.github.io/beacon/#privacy-and-security
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1454252
+// Also disabled by ex. Cromite: https://github.com/uazo/cromite/blob/master/docs/FEATURES.md https://github.com/uazo/cromite/issues/1454
+
+pref("beacon.enabled", false);
+
 /// Disable Network Error Logging
+// https://developer.mozilla.org/docs/Web/HTTP/Network_Error_Logging
 // https://w3c.github.io/network-error-logging/
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1145235
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#12829
@@ -1676,12 +1757,6 @@ pref("browser.phoenix.core.status", "024");
 
 /// 025 MISC.
 
-/// Block Web Notifications
-/// I have yet to see a legitimate use-case for websites using push notifications...
-// but I see them constantly abused for malicious purposes & spam
-
-pref("permissions.default.desktop-notification", 2);
-
 /// Enable Firefox's newer 'Felt privacy' design for Private Browsing & Certificate Errors
 
 pref("browser.privatebrowsing.felt-privacy-v1", true);
@@ -1816,7 +1891,9 @@ pref("browser.newtabpage.activity-stream.section.highlights.includeBookmarks", f
 pref("browser.newtabpage.activity-stream.section.highlights.includeDownloads", false);
 pref("browser.newtabpage.activity-stream.section.highlights.includeVisited", false);
 pref("browser.newtabpage.activity-stream.showRecentSaves", false);
-pref("browser.preferences.experimental", true);
+pref("browser.policies.loglevel", "error"); // [DEFAULT - HIDDEN] This pref allows controlling the log level of policies (extremely useful for troubleshooting...), set here to the default value so that it's exposed in the about:config https://searchfox.org/mozilla-central/source/browser/components/BrowserGlue.sys.mjs#967
+pref("browser.preferences.experimental", true); // [DEFAULT]
+pref("browser.preferences.experimental.hidden", false); // [DEFAULT]
 pref("browser.privateWindowSeparation.enabled", false);
 pref("browser.search.openintab", true);
 pref("browser.search.widget.inNavBar", true);
@@ -1884,29 +1961,21 @@ pref("services.sync.prefs.sync.devtools.command-button-rulers.enabled", true);
 pref("services.sync.prefs.sync.devtools.command-button-screenshot.enabled", true);
 pref("services.sync.prefs.sync.devtools.debugger.ui.editor-wrapping", true);
 pref("services.sync.prefs.sync.devtools.dom.enabled", true);
+pref("services.sync.prefs.sync.dom.security.https_only_mode_send_http_background_request", true);
 pref("services.sync.prefs.sync.findbar.highlightAll", true);
 pref("services.sync.prefs.sync.full-screen-api.transition-duration.enter", true);
 pref("services.sync.prefs.sync.full-screen-api.transition-duration.leave", true);
 pref("services.sync.prefs.sync.full-screen-api.warning.delay", true);
 pref("services.sync.prefs.sync.full-screen-api.warning.timeout", true);
-pref("services.sync.prefs.sync.security.xfocsp.hideOpenInNewWindow", true);
-pref("services.sync.prefs.sync.toolkit.legacyUserProfileCustomizations.stylesheets", true);
-pref("services.sync.prefs.sync.view_source.wrap_long_lines", true);
+pref("services.sync.prefs.sync.general.warnOnAboutConfig", true);
 pref("services.sync.prefs.sync.media.autoplay.blocking_policy", true);
 pref("services.sync.prefs.sync.media.gmp-gmpopenh264.enabled", true);
 pref("services.sync.prefs.sync.media.gmp-gmpopenh264.provider.enabled", true);
 pref("services.sync.prefs.sync.media.gmp-gmpopenh264.visible", true);
 pref("services.sync.prefs.sync.media.gmp-provider.enabled", true);
-pref("services.sync.prefs.sync.general.warnOnAboutConfig", true);
-pref("services.sync.prefs.sync.extensions.webextensions.restrictedDomains", true);
-pref("services.sync.prefs.sync.app.releaseNotesURL", true);
-pref("services.sync.prefs.sync.app.releaseNotesURL.aboutDialog", true);
-pref("services.sync.prefs.sync.app.releaseNotesURL.prompt", true);
-pref("services.sync.prefs.sync.extensions.getAddons.search.browseURL", true);
-pref("services.sync.prefs.sync.browser.firefox-view.search.enabled", true);
-pref("services.sync.prefs.sync.browser.firefox-view.virtual-list.enabled", true);
-pref("services.sync.prefs.sync.browser.tabs.firefox-view-newIcon", true);
-pref("services.sync.prefs.sync.browser.tabs.firefox-view-next", true);
+pref("services.sync.prefs.sync.security.xfocsp.hideOpenInNewWindow", true);
+pref("services.sync.prefs.sync.toolkit.legacyUserProfileCustomizations.stylesheets", true);
+pref("services.sync.prefs.sync.view_source.wrap_long_lines", true);
 pref("services.sync.prefs.sync.browser.urlbar.update2.engineAliasRefresh", true);
 pref("services.sync.prefs.sync.browser.search.separatePrivateDefault.ui.enabled", true);
 pref("services.sync.prefs.sync.browser.search.separatePrivateDefault.urlbarResult.enabled", true);
@@ -1953,8 +2022,6 @@ pref("services.sync.prefs.sync.extensions.quarantineIgnoredByUser.{b86e4813-687a
 pref("services.sync.prefs.sync.extensions.quarantineIgnoredByUser.{d19a89b9-76c1-4a61-bcd4-49e8de916403}", true);
 pref("services.sync.prefs.sync.browser.download.open_pdf_attachments_inline", true);
 pref("services.sync.prefs.sync.pdfjs.sidebarViewOnLoad", true);
-pref("services.sync.prefs.sync.intl.accept_languages", true);
-pref("services.sync.prefs.sync.intl.locale.requested", true);
 pref("services.sync.prefs.sync.middlemouse.paste", true);
 pref("services.sync.prefs.sync.privacy.antitracking.enableWebcompat", true);
 pref("services.sync.prefs.sync.privacy.fingerprintingProtection.remoteOverrides.enabled", true);
@@ -1989,7 +2056,6 @@ pref("services.sync.prefs.sync.browser.sessionhistory.max_total_viewers", true);
 pref("services.sync.prefs.sync.browser.tabs.min_inactive_duration_before_unload", true);
 pref("services.sync.prefs.sync.browser.toolbars.bookmarks.visibility", true);
 pref("services.sync.prefs.sync.content.notify.interval", true);
-pref("services.sync.prefs.sync.dom.security.https_only_mode_send_http_background_request", true);
 pref("services.sync.prefs.sync.extensions.logging.enabled", true);
 pref("services.sync.prefs.sync.general.smoothScroll.currentVelocityWeighting", true);
 pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", true);
@@ -2014,15 +2080,13 @@ pref("services.sync.prefs.sync.media.cache_readahead_limit", true);
 pref("services.sync.prefs.sync.media.cache_resume_threshold", true);
 pref("services.sync.prefs.sync.media.ffmpeg.vaapi.enabled", true);
 pref("services.sync.prefs.sync.media.memory_cache_max_size", true);
+pref("services.sync.prefs.sync.media.peerconnection.enabled", true);
 pref("services.sync.prefs.sync.media.peerconnection.ice.default_address_only", true);
 pref("services.sync.prefs.sync.media.peerconnection.ice.no_host", true);
-pref("services.sync.prefs.sync.mousewheel.default.delta_multiplier_y", true);
-pref("services.sync.prefs.sync.network.buffer.cache.count", true);
-pref("services.sync.prefs.sync.network.buffer.cache.size", true);
+pref("services.sync.prefs.sync.media.peerconnection.ice.relay_only", true);
 pref("services.sync.prefs.sync.network.dnsCacheEntries", true);
 pref("services.sync.prefs.sync.network.dnsCacheExpiration", true);
 pref("services.sync.prefs.sync.network.dnsCacheExpirationGracePeriod", true);
-pref("services.sync.prefs.sync.network.http.max-connections", true);
 pref("services.sync.prefs.sync.network.http.max-persistent-connections-per-proxy", true);
 pref("services.sync.prefs.sync.network.http.max-persistent-connections-per-server", true);
 pref("services.sync.prefs.sync.network.http.max-urgent-start-excessive-connections-per-host", true);
@@ -2042,50 +2106,6 @@ pref("autoadmin.refresh_interval", 60);
 pref("browser.phoenix.core.status", "030");
 
 pref("browser.phoenix.core.status", "successfully applied :D", locked);
-
-//
-// This config manually enables various protections from ETP/Strict
-// Useful for ex. Android & Thunderbird, where ETP Strict either isn't supported or doesn't cover the same protections.
-
-pref("extensions.webcompat.enable_shims", true); // [HIDDEN]
-pref("extensions.webcompat.perform_injections", true); // [HIDDEN]
-pref("extensions.webcompat.perform_ua_overrides", true); // [HIDDEN]
-pref("network.cookie.cookieBehavior", 5);
-pref("network.cookie.cookieBehavior.optInPartitioning", true);
-pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
-pref("network.cookie.cookieBehavior.pbmode", 5);
-pref("network.cookie.cookieBehavior.trackerCookieBlocking", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
-pref("privacy.annotate_channels.strict_list.enabled", true);
-pref("privacy.annotate_channels.strict_list.pbmode.enabled", true);
-pref("privacy.bounceTrackingProtection.enabled", true);
-pref("privacy.bounceTrackingProtection.mode", 1); // Fully enables Bounce Tracking Protection - https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
-pref("privacy.fingerprintingProtection", true);
-pref("privacy.fingerprintingProtection.pbmode", true);
-pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
-pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
-pref("privacy.partition.bloburl_per_partition_key", true);
-pref("privacy.partition.network_state", true);
-pref("privacy.partition.network_state.ocsp_cache", true);
-pref("privacy.partition.network_state.ocsp_cache.pbmode", true);
-pref("privacy.partition.serviceWorkers", true);
-pref("privacy.query_stripping.enabled", true);
-pref("privacy.query_stripping.enabled.pbmode", true);
-pref("privacy.query_stripping.redirect", true);
-pref("privacy.reduceTimerPrecision", true);
-pref("privacy.socialtracking.block_cookies.enabled", true);
-pref("privacy.trackingprotection.cryptomining.enabled", true);
-pref("privacy.trackingprotection.emailtracking.enabled", true);
-pref("privacy.trackingprotection.emailtracking.pbmode.enabled", true);
-pref("privacy.trackingprotection.enabled", true);
-pref("privacy.trackingprotection.fingerprinting.enabled", true);
-pref("privacy.trackingprotection.pbmode.enabled", true);
-pref("privacy.trackingprotection.socialtracking.enabled", true);
-
-pref("browser.phoenix.etp-strict.status", "successfully applied :D", locked);
 
 //
 
