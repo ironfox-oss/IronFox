@@ -59,13 +59,24 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeF
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -101,6 +101,11 @@
+@@ -18,8 +18,10 @@
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.platform.ComposeView
+ import androidx.fragment.app.Fragment
++import androidx.lifecycle.lifecycleScope
+ import androidx.localbroadcastmanager.content.LocalBroadcastManager
+ import androidx.navigation.fragment.findNavController
++import kotlinx.coroutines.launch
+ import mozilla.components.concept.engine.webextension.InstallationMethod
+ import mozilla.components.service.nimbus.evalJexlSafe
+ import mozilla.components.service.nimbus.messaging.use
+@@ -101,6 +103,11 @@
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
          val context = requireContext()
 +
-+        androidx.lifecycle.lifecycleScope.launch {
-+            org.mozilla.fenix.utils.installIFAddons(components)
++        lifecycleScope.launch {
++            org.mozilla.fenix.utils.installIFAddons(requireComponents)
 +        }
 +
          if (pagesToDisplay.isEmpty()) {
