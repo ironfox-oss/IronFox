@@ -52,7 +52,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
              webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_HIGH_VALUE,
              fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
              parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
-+            spoofEnglish = context.settings().spoofEnglish
++            spoofEnglish = context.settings().spoofEnglish,
              certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
          )
  
