@@ -1,3 +1,11 @@
+# HG changeset patch
+# User Akash Yadav <contact@itsaky.com>
+# Date 1738675359 0
+#      Tue Feb 04 13:22:39 2025 +0000
+# Node ID 8ffba345178b7d8e1e0d7d4c81e0bece88803b75
+# Parent  4531b509dc4b525fcafa9cdbf69798d062b52594
+feat: install uBlock Origin on first install on Android devices
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
@@ -113,7 +121,7 @@ diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/compo
  
              let data = await lookup;
              if (!data) {
-+              const assetsBootstrapLocation = Services.prefs.getStringPref("ironfox.uBO.assetsBootstrapLocation", >
++              const assetsBootstrapLocation = Services.prefs.getStringPref("ironfox.uBO.assetsBootstrapLocation", undefined);
 +              if (extension.id == "uBlock0@raymondhill.net" && assetsBootstrapLocation) {
 +                return {
 +                  adminSettings: {
