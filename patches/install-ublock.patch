@@ -114,22 +114,3 @@ new file mode 100644
 +        }
 +    }
 +}
-diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
---- a/toolkit/components/extensions/parent/ext-storage.js
-+++ b/toolkit/components/extensions/parent/ext-storage.js
-@@ -403,6 +403,15 @@
- 
-             let data = await lookup;
-             if (!data) {
-+              const assetsBootstrapLocation = Services.prefs.getStringPref("ironfox.uBO.assetsBootstrapLocation", undefined);
-+              if (extension.id == "uBlock0@raymondhill.net" && assetsBootstrapLocation) {
-+                return {
-+                  adminSettings: {
-+                    assetsBootstrapLocation
-+                  }
-+                }
-+              }
-+
-               return Promise.reject({
-                 message: "Managed storage manifest not found",
-               });
