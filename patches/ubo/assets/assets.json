@@ -3,7 +3,7 @@
 		"content": "internal",
 		"updateAfter": 13,
 		"contentURL": [
-			"https://gitlab.com/ironfox-oss/IronFox/-/raw/ubo/patches/ubo/assets/assets.json",
+			"https://gitlab.com/ironfox-oss/IronFox/-/raw/main/patches/main/assets/assets.json",
 			"assets/assets.json"
 		]
 	},
