@@ -13,12 +13,17 @@ pref("webgl.disabled", true);
 pref("browser.phoenix.extended.core.status", "001");
 
 // 002 WEBRTC
+// This will likely break WebRTC...
 
-/// Never leak IP addresses, even in trusted scenarios
-// This *will* break WebRTC
-
+/// Force a single candidate for ICE generation
 pref("media.peerconnection.ice.default_address_only", true);
+
+/// Forcefully exclude local IP addresses, even in trusted scenarios
 pref("media.peerconnection.ice.no_host", true);
+
+/// Only use TURN servers/relays, no p2p...
+// https://gitlab.torproject.org/tpo/applications/mullvad-browser/-/issues/40#note_2884663
+pref("media.peerconnection.ice.relay_only", true);
 
 pref("browser.phoenix.extended.core.status", "002");
 

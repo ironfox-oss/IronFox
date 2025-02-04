@@ -1,8 +1,7 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index e70a2a9..7ac8f13 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -101,10 +101,10 @@ features:
+@@ -101,10 +101,10 @@
          default:
            {
              "home-onboarding-dialog-existing-users": true,
@@ -16,7 +15,7 @@ index e70a2a9..7ac8f13 100644
              "tcp-feature": true,
            }
      defaults:
-@@ -112,9 +112,9 @@ features:
+@@ -112,9 +112,9 @@
          value: {
            "sections-enabled": {
              "home-onboarding-dialog-existing-users": true,
@@ -29,20 +28,19 @@ index e70a2a9..7ac8f13 100644
          }
    query-parameter-stripping:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 807c5c2..1ea8550 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -166,8 +166,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -167,8 +167,7 @@
          default = 0L,
      )
  
 -    val canShowCfr: Boolean
 -        get() = (System.currentTimeMillis() - lastCfrShownTimeInMillis) > THREE_DAYS_MS
-+    val canShowCfr = false
++    val canShowCfr: Boolean = false
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -796,20 +795,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -797,20 +796,12 @@
      /**
       * Indicates if the total cookie protection CRF should be shown.
       */
@@ -63,9 +61,9 @@ index 807c5c2..1ea8550 100644
 -    )
 +    var shouldShowCookieBannersCFR = false
  
-     val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_cookies_select),
-@@ -1061,23 +1052,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var shouldShowTabSwipeCFR by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_toolbar_tab_swipe_cfr),
+@@ -1072,23 +1063,7 @@
      private val userNeedsToVisitInstallableSites: Boolean
          get() = pwaInstallableVisitCount.underMaxCount()
  
@@ -86,21 +84,21 @@ index 807c5c2..1ea8550 100644
 -            // Show dialog only if user does not know abut PWAs
 -            return !userKnowsAboutPwas
 -        }
-+    val shouldShowPwaCfr = false
++    val shouldShowPwaCfr: Boolean = false
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
-@@ -1089,8 +1064,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1100,8 +1075,7 @@
          default = true,
      )
  
 -    val shouldShowOpenInAppCfr: Boolean
 -        get() = canShowCfr && shouldShowOpenInAppBanner
-+    val shouldShowOpenInAppCfr = false
++    val shouldShowOpenInAppCfr: Boolean = false
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
-@@ -1284,32 +1258,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1295,32 +1269,14 @@
  
      var showedPrivateModeContextualFeatureRecommender by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_showed_private_mode_cfr),
@@ -131,11 +129,11 @@ index 807c5c2..1ea8550 100644
 -
 -            return false
 -        }
-+    val shouldShowPrivateModeCfr = false
++    val shouldShowPrivateModeCfr: Boolean = false
  
      var openLinksInExternalAppOld by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_open_links_in_external_app_old),
-@@ -1551,11 +1507,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1570,11 +1526,7 @@
      /**
       * Indicates if sync onboarding CFR should be shown.
       */
@@ -148,7 +146,7 @@ index 807c5c2..1ea8550 100644
  
      /**
       * Indicates if home onboarding dialog should be shown.
-@@ -1742,26 +1694,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1769,26 +1721,17 @@
      /**
       * Indicates if the navigation bar CFR should be displayed to the user.
       */

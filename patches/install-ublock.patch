@@ -1,0 +1,116 @@
+# HG changeset patch
+# User Akash Yadav <contact@itsaky.com>
+# Date 1738675359 0
+#      Tue Feb 04 13:22:39 2025 +0000
+# Node ID 8ffba345178b7d8e1e0d7d4c81e0bece88803b75
+# Parent  4531b509dc4b525fcafa9cdbf69798d062b52594
+feat: install uBlock Origin on first install on Android devices
+
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
+@@ -121,6 +121,9 @@
+     private fun handlePostInstallationRequest(
+         addon: Addon,
+     ) {
++        if (org.mozilla.fenix.utils.isUBlock(addon)) {
++            return
++        }
+         showPostInstallationDialog(addon)
+     }
+ 
+@@ -128,6 +131,14 @@
+         addon: Addon,
+         promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
+     ) {
++        if (org.mozilla.fenix.utils.isUBlock(addon)) {
++            handlePermissions(
++                promptRequest = promptRequest,
++                granted = true,
++                privateBrowsingAllowed = true
++            )
++            return
++        }
+         showPermissionDialog(addon = addon, promptRequest = promptRequest, permissions = promptRequest.permissions)
+     }
+ 
+@@ -136,6 +147,14 @@
+         addon: Addon,
+         promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
+     ) {
++        if (org.mozilla.fenix.utils.isUBlock(addon)) {
++            handlePermissions(
++                promptRequest = promptRequest,
++                granted = true,
++                privateBrowsingAllowed = true
++            )
++            return
++        }
+         val shouldGrantWithoutPrompt = Addon.localizePermissions(promptRequest.permissions, context).isEmpty()
+ 
+         // If we don't have any promptable permissions, just proceed.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+@@ -18,8 +18,10 @@
+ import androidx.compose.runtime.Composable
+ import androidx.compose.ui.platform.ComposeView
+ import androidx.fragment.app.Fragment
++import androidx.lifecycle.lifecycleScope
+ import androidx.localbroadcastmanager.content.LocalBroadcastManager
+ import androidx.navigation.fragment.findNavController
++import kotlinx.coroutines.launch
+ import mozilla.components.concept.engine.webextension.InstallationMethod
+ import mozilla.components.service.nimbus.evalJexlSafe
+ import mozilla.components.service.nimbus.messaging.use
+@@ -101,6 +103,11 @@
+     override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         val context = requireContext()
++
++        lifecycleScope.launch {
++            org.mozilla.fenix.utils.installIFAddons(requireComponents)
++        }
++
+         if (pagesToDisplay.isEmpty()) {
+             /* do not continue if there's no onboarding pages to display */
+             onFinish(null)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
+new file mode 100644
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
+@@ -0,0 +1,34 @@
++package org.mozilla.fenix.utils
++
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++import mozilla.components.concept.engine.webextension.InstallationMethod
++import mozilla.components.feature.addons.Addon
++import mozilla.components.feature.addons.logger
++import org.mozilla.fenix.components.Components
++
++private val UBLOCK = Addon(
++    id = "uBlock0@raymondhill.net",
++    downloadUrl = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
++)
++
++fun isUBlock(addon: Addon) = addon.id == UBLOCK.id
++
++suspend fun installIFAddons(components: Components) = withContext(Dispatchers.IO) {
++    val addonManager = components.addonManager
++    val addons = addonManager.getAddons(waitForPendingActions = true)
++    if (addons.none { it.id == UBLOCK.id && it.isInstalled() }) {
++        withContext(Dispatchers.Main) {
++            addonManager.installAddon(
++                url = UBLOCK.downloadUrl,
++                installationMethod = InstallationMethod.MANAGER,
++                onSuccess = {
++                    logger.info("UBlock Origin installed.")
++                },
++                onError = { err ->
++                    logger.error("UBlock Origin install failed", err)
++                }
++            )
++        }
++    }
++}

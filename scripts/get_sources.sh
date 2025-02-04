@@ -2,11 +2,14 @@
 
 set -euo pipefail
 
-FIREFOX_TAG="134.0.2"
+FIREFOX_TAG="135.0"
+FIREFOX_RELEASE_PATH="releases/${FIREFOX_TAG}"
+# FIREFOX_RC_BUILD_NAME="build2"
+# FIREFOX_RELEASE_PATH="candidates/${FIREFOX_TAG}-candidates/${FIREFOX_RC_BUILD_NAME}"
 WASI_TAG="wasi-sdk-20"
-GLEAN_TAG="v62.0.0"
+GLEAN_TAG="v63.0.0"
 GMSCORE_TAG="v0.3.6.244735"
-APPSERVICES_TAG="v134.0"
+APPSERVICES_TAG="release-v135"
 BUNDLETOOL_TAG="1.18.0"
 
 # Configuration
@@ -22,9 +25,52 @@ WASISDKDIR="${ROOTDIR}/wasi-sdk"
 ANDROID_COMPONENTS="${GECKODIR}/mobile/android/android-components"
 FENIX="${GECKODIR}/mobile/android/fenix"
 
+clone_repo() {
+    url="$1"
+    path="$2"
+    tag="$3"
+
+    if [[ "$url" == "" ]]; then
+        echo "URL missing for clone"
+        exit 1
+    fi
+
+    if [[ "$path" == "" ]]; then
+        echo "Path is required for cloning '$url'"
+        exit 1
+    fi
+
+    if [[ "$tag" == "" ]]; then
+        echo "Tag name is required for cloning '$url'"
+        exit 1
+    fi
+
+    if [[ -f "$path" ]]; then
+        echo "'$path' exists and is not a directory"
+        exit 1
+    fi
+
+    if [[ -d "$path" ]]; then
+        echo "'$path' already exists"
+        read -p "Do you want to re-clone this repository? [y/N] " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Nn]$ ]]; then
+            return 0
+        fi
+    fi
+
+    echo "Cloning $url::$tag"
+    git clone --branch "$tag" --depth=1 "$url" "$path"
+}
+
 download() {
     local url="$1"
     local filepath="$2"
+
+    if [[ "$url" == "" ]]; then
+        echo "URL is required (file: '$filepath')"
+        exit 1
+    fi
 
     if [ -f "$filepath" ]; then
         echo "$filepath already exists."
@@ -38,6 +84,8 @@ download() {
         fi
     fi
 
+    mkdir -p "$(dirname "$filepath")"
+
     echo "Downloading $url"
     wget "$url" -O "$filepath"
 }
@@ -47,6 +95,10 @@ extract_rmtoplevel() {
     local archive_path="$1"
     local to_name="$2"
     local extract_to="${ROOTDIR}/$to_name"
+
+    if ! [[ -f "$archive_path" ]]; then
+        echo "Archive '$archive_path' does not exist!"
+    fi
 
     # Create temporary directory for extraction
     local temp_dir=$(mktemp -d)
@@ -79,7 +131,7 @@ extract_rmtoplevel() {
     rm -rf "$temp_dir"
 }
 
-do_download() {
+download_and_extract() {
     local repo_name="$1"
     local url="$2"
 
@@ -125,32 +177,36 @@ fi
 
 echo "'bundletool' is set up at $BUILDDIR/bundletool"
 
-echo "Cloning glean..."
-git clone --branch "$GLEAN_TAG" --depth=1 "https://github.com/mozilla/glean" "$GLEANDIR"
+# Clone Glean
+clone_repo "https://github.com/mozilla/glean" "$GLEANDIR" "$GLEAN_TAG"
 
-echo "Cloning gmscore..."
-git clone --branch "$GMSCORE_TAG" --depth=1 "https://github.com/microg/GmsCore" "$GMSCOREDIR"
+# Clone MicroG
+clone_repo "https://github.com/microg/GmsCore" "$GMSCOREDIR" "$GMSCORE_TAG"
 
+# Get WebAssembly SDK
 if [[ -z ${FDROID_BUILD+x} ]]; then
     echo "Downloading prebuilt wasi-sdk..."
-    do_download "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
+    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
 else
     echo "Cloning wasi-sdk..."
-    git clone --branch "$WASI_TAG" --depth=1 "https://github.com/WebAssembly/wasi-sdk" "$WASISDKDIR"
+    clone_repo "https://github.com/WebAssembly/wasi-sdk" "$WASISDKDIR" "$WASI_TAG"
     (cd "$WASISDKDIR" && git submodule update --init --depth=1)
 fi
 
+# Clone application-services
 echo "Cloning appservices..."
-git clone --branch "$APPSERVICES_TAG" --depth=1 "https://github.com/mozilla/application-services" "$APPSERVICESDIR"
+clone_repo "https://github.com/mozilla/application-services" "$APPSERVICESDIR" "$APPSERVICES_TAG"
 (cd "$APPSERVICESDIR" && git submodule update --init --depth=1)
 
-do_download "gecko" "https://archive.mozilla.org/pub/firefox/releases/${FIREFOX_TAG}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
+# Download Firefox Source
+download_and_extract "gecko" "https://archive.mozilla.org/pub/firefox/${FIREFOX_RELEASE_PATH}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
 
+# Write env_local.sh
 echo "Writing ${ENV_SH}..."
 cat > "$ENV_SH" << EOF
 export patches=${PATCHDIR}
 export rootdir=${ROOTDIR}
-export builddir="\$rootdir/build"
+export builddir="${BUILDDIR}"
 export android_components=${ANDROID_COMPONENTS}
 export application_services=${APPSERVICESDIR}
 export glean=${GLEANDIR}

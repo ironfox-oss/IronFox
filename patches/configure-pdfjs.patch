@@ -1,0 +1,62 @@
+diff --git a/toolkit/components/pdfjs/content/web/viewer.mjs b/toolkit/components/pdfjs/content/web/viewer.mjs
+index fa35d19c69..4a5f7a4068 100644
+--- a/toolkit/components/pdfjs/content/web/viewer.mjs
++++ b/toolkit/components/pdfjs/content/web/viewer.mjs
+@@ -1444,7 +1444,7 @@ class BasePreferences {
+     enableNewAltTextWhenAddingImage: true,
+     enablePermissions: false,
+     enablePrintAutoRotate: true,
+-    enableScripting: true,
++    enableScripting: false,
+     enableUpdatedAddImage: false,
+     externalLinkTarget: 0,
+     highlightEditorColors: "yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F",
+@@ -1454,7 +1454,7 @@ class BasePreferences {
+     pageColorsBackground: "Canvas",
+     pageColorsForeground: "CanvasText",
+     pdfBugEnabled: false,
+-    sidebarViewOnLoad: -1,
++    sidebarViewOnLoad: 2,
+     scrollModeOnLoad: -1,
+     spreadModeOnLoad: -1,
+     textLayerMode: 1,
+@@ -1464,7 +1464,7 @@ class BasePreferences {
+     disableRange: false,
+     disableStream: false,
+     enableHWA: false,
+-    enableXfa: true
++    enableXfa: false
+   });
+   #initializedPromise = null;
+   constructor() {
+diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
+index 4be106d4ba..a785f1a2f2 100644
+--- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
++++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
+@@ -654,7 +654,7 @@ const defaultOptions = {
+     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   enableScripting: {
+-    value: true,
++    value: false,
+     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   enableUpdatedAddImage: {
+@@ -710,7 +710,7 @@ const defaultOptions = {
+     kind: OptionKind.VIEWER
+   },
+   sidebarViewOnLoad: {
+-    value: -1,
++    value: 2,
+     kind: OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   scrollModeOnLoad: {
+@@ -762,7 +762,7 @@ const defaultOptions = {
+     kind: OptionKind.API + OptionKind.VIEWER + OptionKind.PREFERENCE
+   },
+   enableXfa: {
+-    value: true,
++    value: false,
+     kind: OptionKind.API + OptionKind.PREFERENCE
+   },
+   fontExtraProperties: {
