@@ -3,7 +3,7 @@
 set -euo pipefail
 
 FIREFOX_TAG="135.0"
-FIREFOX_RELEASE_PATH="releases"
+FIREFOX_RELEASE_PATH="releases/${FIREFOX_TAG}"
 # FIREFOX_RC_BUILD_NAME="build2"
 # FIREFOX_RELEASE_PATH="candidates/${FIREFOX_TAG}-candidates/${FIREFOX_RC_BUILD_NAME}"
 WASI_TAG="wasi-sdk-20"
