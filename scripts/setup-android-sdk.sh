@@ -5,14 +5,9 @@ ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
-    export ANDROID_SDK_ROOT=$ANDROID_HOME
 fi
 
-if [ "$ANDROID_HOME" != "$ANDROID_SDK_ROOT" ]; then
-    echo "\$ANDROID_HOME and \$ANDROID_SDK_ROOT are set to different values."
-    echo "Setting \$ANDROID_HOME to \$ANDROID_SDK_ROOT..."
-    export ANDROID_HOME="$ANDROID_SDK_ROOT"
-fi
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
 if [ ! -d "$ANDROID_HOME" ]; then
     mkdir -p "$ANDROID_HOME"
@@ -61,15 +56,7 @@ export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
 [ -d "$ANDROID_NDK" ] || {
     echo "$ANDROID_NDK does not exist."
     return
-};
+}
 
 echo "INFO: Using sdkmanager ... $SDK_MANAGER"
 echo "INFO: Using NDK ... $ANDROID_NDK"
-
-echo "--------------------------"
-echo "Please update environment variables by running the following:"
-echo ""
-echo "    export ANDROID_HOME=$ANDROID_HOME"
-echo "    export ANDROID_NDK=$ANDROID_NDK"
-echo ""
-echo "--------------------------"
