@@ -73,6 +73,16 @@ fi
 # Create build directory
 mkdir -p "$rootdir/build"
 
+# Check patch files
+source "$rootdir/scripts/patches.sh"
+
+pushd "$mozilla_release"
+if ! check_patches; then
+    echo "Patch validation failed. Please check the patch files and try again."
+    exit 1
+fi
+popd
+
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Set up Rust
     # shellcheck disable=SC2154
@@ -244,7 +254,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/132\.0/134.0.2/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/133\.0/135.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -270,116 +280,8 @@ fi
 # GeckoView
 pushd "$mozilla_release"
 
-# Remove Mozilla repositories substitution and explicitly add the required ones
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-localize_maven.patch"
-
-# Replace GMS with microG client library
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-liberate.patch"
-
-# Patch the use of proprietary and tracking libraries
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/fenix-liberate.patch"
-
-# Set strict ETP by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/strict_etp.patch"
-
-# Enable HTTPS only mode by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/https_only.patch"
-
-# Enable Global Privacy Control by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/global-privacy-control.patch"
-
-# Disable search suggestions by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-search-suggestions.patch"
-
-# Disable autocomplete by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-autocomplete.patch"
-
-# Disable shipped domains - These haven't been updated in several years, posing security concerns - and are also just annoying...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-shipped-domains.patch"
-
-# Disable prompt to enable search suggestions in private windows
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-search-suggestions-pb-prompt.patch"
-
-# Disable password manager/autofill for login info by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-login-autofill.patch"
-
-# Disable credit card/address autofill by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-autofill.patch"
-
-# Clear open tabs, browsing history, cache, & download list on exit by default
-#patch -p1 --no-backup-if-mismatch --quiet <"$patches/sanitize-on-exit.patch"
-
-# Disable 'Meta Attribution' - just more telemetry - used to track referrals
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-meta-attribution.patch"
-
-# Disable Campaign Growth Data Measurement - more telemetry :/
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-campaign-growth-data-measurement.patch"
-
-# Disable Firefox Suggest
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-firefox-suggest.patch"
-
-# Enable "Zoom on all websites" by default - allows always zooming into websites, even if they try to block it...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/force-enable-zoom.patch"
-
-# Disable Contextual Feature Recommendations
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-cfrs.patch"
-
-# Disable more Pocket crap not already covered...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/kill-pocket.patch"
-
-# Disable Mozilla Feedback Surveys (Microsurveys)
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-microsurveys.patch"
-
-# Enable per-site process isolation (Fission)
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fission.patch"
-
-# Expose UI option to toggle Fission, only available in Nightly by default...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/control-fission.patch"
-
-# Enable FPP (Fingerprinting Protection)
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-fingerprinting-protection.patch"
-
-# Enable light mode by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-light-mode-by-default.patch"
-
-# Disable Fakespot ("Shopping Experience"...)
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-shopping-experience.patch"
-
-# Remove tracking parameters from URLs
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-tracking-params.patch"
-
-# Block cookie banners by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/block-cookie-banners.patch"
-
-# Block third party cookies by default (Ex. how ETP Strict on desktop behaves...)
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/block-third-party-cookies.patch"
-
-# Switch the built-in extension recommendations page to use our collection instead of Mozilla's...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/extension-recommendations.patch"
-
-# Switch Firefox's onboarding to recommend our extension(s) instead of Mozilla's...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/extension-onboarding.patch"
-
-# Disable menu item to report issues with websites to Mozilla...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/disable-reporting-site-issues.patch"
-
-# Tweak Safe Browsing (See '009 SAFE BROWSING' in Phoenix for more details...)
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/configure-safe-browsing.patch"
-
-# Remove default top sites/shortcuts
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/remove-default-sites.patch"
-
-# Enable preference to toggle default desktop mode
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-default-desktop-mode.patch"
-
-# Ensure we're disabling telemetry at buildtime...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/buildtime-disable-telemetry.patch"
-
-# Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/enable-felt-privacy.patch"
-
-# Fix v125 compile error
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/gecko-fix-125-compile.patch"
+# Apply patches
+apply_patches
 
 # Fix v125 aar output not including native libraries
 sed -i \

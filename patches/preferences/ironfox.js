@@ -25,4 +25,9 @@ pref("browser.translations.alwaysTranslateLanguages", ""); // [DEFAULT]
 
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
+/// Set the URL for the custom assets.json file
+// Used in toolkit/components/extensions/parent/ext-storage.js to return custom adminSettings
+// Disabled - does not seem to work on Android. Needs more testing.
+// pref("ironfox.uBO.assetsBootstrapLocation", "https://gitlab.com/ironfox-oss/IronFox/-/raw/main/patches/main/assets/assets.json");
+
 pref("browser.ironfox.applied", true, locked);

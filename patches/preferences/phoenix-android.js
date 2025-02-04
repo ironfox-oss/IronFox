@@ -4,7 +4,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.01.24.1", locked);
+pref("browser.phoenix.version", "2025.02.01.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -103,6 +103,8 @@ pref("browser.search.serpEventTelemetryCategorization.enabled", false, locked);
 pref("browser.search.serpEventTelemetryCategorization.regionEnabled", false, locked); // [DEFAULT, at least on Nightly]
 pref("browser.urlbar.quicksuggest.dataCollection.enabled", false, locked); // [DEFAULT]
 pref("browser.urlbar.quicksuggest.onboardingDialogChoice", "reject_2", locked); // [HIDDEN] https://searchfox.org/mozilla-central/source/browser/components/urlbar/docs/firefox-suggest-telemetry.rst https://searchfox.org/mozilla-central/source/toolkit/components/telemetry/docs/data/environment.rst https://searchfox.org/mozilla-central/source/browser/components/urlbar/tests/quicksuggest/browser/browser_quicksuggest_onboardingDialog.js
+pref("captchadetection.actor.enabled", false, locked); // [DEFAULT, except Nightly] Disable CAPTCHA Detection Pings https://searchfox.org/mozilla-central/source/toolkit/components/captchadetection
+pref("captchadetection.loglevel", "Off");
 pref("datareporting.dau.cachedUsageProfileID", "beefbeef-beef-beef-beef-beeefbeefbee", locked); // [HIDDEN] https://searchfox.org/mozilla-central/source/toolkit/components/telemetry/app/ClientID.sys.mjs#44
 pref("datareporting.healthreport.documentServerURI", "", locked); // [HIDDEN]
 pref("datareporting.healthreport.logging.consoleEnabled", false); // [HIDDEN]
@@ -113,6 +115,7 @@ pref("datareporting.policy.dataSubmissionEnabled", false, locked);
 pref("datareporting.policy.dataSubmissionPolicyAccepted", false, locked);
 pref("datareporting.policy.dataSubmissionPolicyBypassNotification", true, locked);
 pref("datareporting.policy.firstRunURL", "", locked);
+pref("datareporting.usage.uploadEnabled", false, locked); // Disables sending "daily usage pings" to Mozilla - currently only on Nightly
 pref("dom.security.unexpected_system_load_telemetry_enabled", false, locked);
 pref("identity.fxaccounts.telemetry.clientAssociationPing.enabled", false, locked);
 pref("identity.fxaccounts.account.telemetry.sanitized_uid", "", locked);
@@ -195,11 +198,13 @@ pref("extensions.getAddons.discovery.api_url", "data;"); // https://searchfox.or
 pref("extensions.getAddons.showPane", false);
 pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 pref("extensions.recommendations.themeRecommendationUrl", "");
+pref("extensions.ui.lastCategory", "addons://list/extension"); // [HIDDEN] Ensure default view of `about:addons` is local/installed extensions...
 pref("extensions.webservice.discoverURL", "");
 
 /// Fakespot
 
 pref("browser.newtabpage.activity-stream.contextualContent.fakespot.enabled", false);
+pref("browser.newtabpage.activity-stream.discoverystream.contextualContent.fakespot.enabled", false);
 pref("browser.shopping.experience2023.active", false);
 pref("browser.shopping.experience2023.ads.enabled", false, locked); // [DEFAULT]
 pref("browser.shopping.experience2023.ads.exposure", false, locked); // [HIDDEN]
@@ -505,6 +510,7 @@ pref("network.preconnect", false);
 // Ex. like Cromite https://github.com/uazo/cromite/blob/master/build/patches/Client-hints-overrides.patch
 
 pref("network.early-hints.enabled", false);
+pref("network.early-hints.over-http-v1-1.enabled", false);
 pref("network.early-hints.preconnect.enabled", false);
 pref("network.early-hints.preconnect.max_connections", 0);
 
@@ -853,6 +859,12 @@ pref("geo.wifi.scan", false); // [HIDDEN] https://searchfox.org/mozilla-release/
 pref("browser.region.network.url", "");
 pref("browser.region.update.enabled", false);
 
+/// Disable logging Geolocation requests by default
+// This is already Firefox's default setting - but setting here exposes it in the about:config since it's hidden...
+// https://searchfox.org/mozilla-central/source/dom/system/NetworkGeolocationProvider.sys.mjs#21
+
+pref("geo.provider.network.logging.enabled", false); // [DEFAULT - HIDDEN]
+
 /// Geolocation Provider
 
 /// Set BeaconDB as the network Geolocation provider instead of Google...
@@ -1005,6 +1017,12 @@ pref("layout.css.visited_links_enabled", false);
 
 pref("browser.pagethumbnails.capturing_disabled", true); // [HIDDEN]
 
+/// Allow permissions manager to write to disk
+// This is already Firefox's default - but it's hidden, so this exposes it to the about:config
+// https://searchfox.org/mozilla-central/source/extensions/permissions/PermissionManager.cpp#758
+
+pref("permissions.memory_only", false); // [HIDDEN - DEFAULT]
+
 pref("browser.phoenix.core.status", "013");
 
 // 014 EXTENSIONS
@@ -1015,11 +1033,17 @@ pref("browser.phoenix.core.status", "013");
 
 pref("extensions.autoDisableScopes", 15, locked); // [DEFAULT] Defense in depth, ensures extensions installed via directories are disabled by default...
 pref("extensions.enabledScopes", 5); // [DEFAULT]
+pref("extensions.installDistroAddons", false); // https://support.mozilla.org/kb/deploying-firefox-with-extensions
 
 /// Only allow signed extensions
 
 pref("extensions.langpacks.signatures.required", true); // [DEFAULT]
 pref("xpinstall.whitelist.required", true); // [DEFAULT]
+
+/// Only allow installation and updates for extensions using Firefox's built-in certs...
+
+pref("extensions.install.requireBuiltInCerts", true, locked); // [HIDDEN]
+pref("extensions.update.requireBuiltInCerts", true, locked); // [HIDDEN]
 
 /// Block extensions signed with weak signature algorithms
 
@@ -1033,6 +1057,16 @@ pref("extensions.blocklist.enabled", true); // [DEFAULT]
 
 pref("extensions.postDownloadThirdPartyPrompt", false, locked);
 
+/// Prevent unprivileged extensions from accessing experimental APIs by default
+// https://searchfox.org/mozilla-central/source/toolkit/components/extensions/docs/basics.rst#142
+
+pref("extensions.experiments.enabled", false); // [DEFAULT, except on ex. Nightly...]
+
+/// Enable restricted/quarantined domains by default
+// https://support.mozilla.org/kb/quarantined-domains
+
+pref("extensions.quarantinedDomains.enabled", true); // [DEFAULT]
+
 /// Allow LocalCDN to work on quarantined domains
 
 pref("extensions.quarantineIgnoredByUser.{b86e4813-687a-43e6-ab65-0bde4ab75758}", true);
@@ -1040,6 +1074,34 @@ pref("extensions.quarantineIgnoredByUser.{b86e4813-687a-43e6-ab65-0bde4ab75758}"
 /// Allow Mullvad's extension to work on quarantined domains
 
 pref("extensions.quarantineIgnoredByUser.{d19a89b9-76c1-4a61-bcd4-49e8de916403}", true);
+
+/// Block our search 'extensions' from accessing quarantined domains...
+
+pref("extensions.quarantineIgnoredByUser.ddg@celenity.dev", false, locked); // DuckDuckGo
+pref("extensions.quarantineIgnoredByUser.duckduckgo-html@celenity.dev", false, locked); // DuckDuckGo HTML
+pref("extensions.quarantineIgnoredByUser.duckduckgo-lite@celenity.dev", false, locked); // DuckDuckGo Lite
+pref("extensions.quarantineIgnoredByUser.ecosia@celenity.dev", false, locked); // Ecosia
+pref("extensions.quarantineIgnoredByUser.mojeek@celenity.dev", false, locked); // Mojeek
+pref("extensions.quarantineIgnoredByUser.no-search@celenity.dev", false, locked); // No Search
+pref("extensions.quarantineIgnoredByUser.qwant@celenity.dev", false, locked); // Qwant
+pref("extensions.quarantineIgnoredByUser.qwant-junior@celenity.dev", false, locked); // Qwant Junior
+pref("extensions.quarantineIgnoredByUser.startpage@celenity.dev", false, locked); // Startpage
+pref("extensions.quarantineIgnoredByUser.swisscows@celenity.dev", false, locked); // Startpage
+
+/// We can also include our deprecated search 'extensions' for defense in depth...
+
+pref("extensions.quarantineIgnoredByUser.bravesearch@celenity.dev", false, locked); // Brave Search
+pref("extensions.quarantineIgnoredByUser.kagi@celenity.dev", false, locked); // Kagi
+pref("extensions.quarantineIgnoredByUser.kagi-html@celenity.dev", false, locked); // Kagi HTML
+pref("extensions.quarantineIgnoredByUser.leta-brave@celenity.dev", false, locked); // Mullvad Leta (Brave)
+pref("extensions.quarantineIgnoredByUser.leta-google@celenity.dev", false, locked); // Mullvad Leta (Google)
+pref("extensions.quarantineIgnoredByUser.metager@celenity.dev", false, locked); // MetaGer
+
+/// Block certain Mozilla extensions from accessing quarantined domains...
+
+pref("extensions.quarantineIgnoredByUser.ads@mozac.org", false, locked); // Mozilla Android Components - Ads Telemetry...
+pref("extensions.quarantineIgnoredByUser.cookies@mozac.org", false, locked); // Mozilla Android Components - Search Telemetry...
+pref("extensions.quarantineIgnoredByUser.wikipedia@search.mozilla.org", false, locked); // Wikipedia (en) - search engine...
 
 pref("browser.phoenix.core.status", "014");
 
@@ -1065,8 +1127,8 @@ pref("pdfjs.enablePermissions", false); // [DEFAULT]
 /// Prevent checking if default PDF viewer
 // https://searchfox.org/mozilla-central/source/browser/app/profile/firefox.js
 
-pref("browser.shell.checkpDF", false);
-pref("browser.shell.checkpDF.silencedByUser", true);
+pref("browser.shell.checkDefaultPDF", false);
+pref("browser.shell.checkDefaultPDF.silencedByUser", true);
 
 /// Never open Microsoft Edge for PDFs
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml
@@ -1089,6 +1151,54 @@ pref("browser.phoenix.core.status", "015");
 
 pref("browser.contentblocking.category", "strict", locked);
 
+/// Manually enable ETP Strict protections...
+// These are typically configured by ETP Strict - but unfortunately Firefox doesn't set ETP Strict on the browser's first run :/
+// So we need to also manually configure them. We still also use ETP Strict (not 'Custom') due to our enforcement of it, so we should be covered by Mozilla changes/updates for protections.
+// Manually specifying these is also useful for cases like Android: where all protections aren't enabled with ETP Strict, and on Thunderbird: where ETP Strict doesn't exist at all...
+// We're also configuring the 'CookieBehavior' & 'EnableTrackingProtection' policies on desktop.
+
+pref("network.cookie.cookieBehavior", 5);
+pref("network.cookie.cookieBehavior.optInPartitioning", true);
+pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
+pref("network.cookie.cookieBehavior.pbmode", 5);
+pref("network.cookie.cookieBehavior.trackerCookieBlocking", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true);
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
+pref("privacy.annotate_channels.strict_list.enabled", true);
+pref("privacy.annotate_channels.strict_list.pbmode.enabled", true);
+pref("privacy.bounceTrackingProtection.enabled", true);
+pref("privacy.bounceTrackingProtection.mode", 1); // Fully enables Bounce Tracking Protection - https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
+pref("privacy.fingerprintingProtection", true);
+pref("privacy.fingerprintingProtection.pbmode", true);
+pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
+pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
+pref("privacy.partition.bloburl_per_partition_key", true);
+pref("privacy.partition.network_state", true);
+pref("privacy.partition.network_state.ocsp_cache", true);
+pref("privacy.partition.network_state.ocsp_cache.pbmode", true);
+pref("privacy.partition.serviceWorkers", true);
+pref("privacy.query_stripping.enabled", true);
+pref("privacy.query_stripping.enabled.pbmode", true);
+pref("privacy.query_stripping.redirect", true);
+pref("privacy.reduceTimerPrecision", true);
+pref("privacy.socialtracking.block_cookies.enabled", true);
+pref("privacy.trackingprotection.cryptomining.enabled", true);
+pref("privacy.trackingprotection.emailtracking.enabled", true);
+pref("privacy.trackingprotection.emailtracking.pbmode.enabled", true);
+pref("privacy.trackingprotection.enabled", true);
+pref("privacy.trackingprotection.fingerprinting.enabled", true);
+pref("privacy.trackingprotection.pbmode.enabled", true);
+pref("privacy.trackingprotection.socialtracking.enabled", true);
+
+// Enable SmartBlock & UA overrides/injections
+// Also typically covered by ETP/Strict
+
+pref("extensions.webcompat.enable_shims", true); // [HIDDEN]
+pref("extensions.webcompat.perform_injections", true); // [HIDDEN]
+pref("extensions.webcompat.perform_ua_overrides", true); // [HIDDEN]
+
 /// Enforce container isolation of about:home content
 
 pref("browser.discovery.containers.enabled", true); // [DEFAULT]
@@ -1109,7 +1219,23 @@ pref("dom.reporting.enabled", false); // [DEFAULT]
 pref("dom.reporting.featurePolicy.enabled", false);
 pref("dom.reporting.header.enabled", false);
 
+/// Disable Beacon API (Navigator.sendBeacon)
+// I was originally against disabling this, but after careful consideration, I've changed my position.
+// The explicit, stated purpose/use case of this API is for analytics/tracking.
+// Websites *can* obtain the data shared from this API through other means; though the other ways to obtain it are more disruptive and less reliable.
+// Analytics/tracking is evidently not a use case that we, as the user agent, should support or assist with.
+// I don't see a justification for adding APIs/features to support this hostile behavior.
+// https://developer.mozilla.org/docs/Web/API/Beacon_API
+// https://developer.mozilla.org/docs/Web/API/Navigator/sendBeacon
+// https://udn.realityripple.com/docs/Web/API/Navigator/sendBeacon
+// https://w3c.github.io/beacon/#privacy-and-security
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1454252
+// Also disabled by ex. Cromite: https://github.com/uazo/cromite/blob/master/docs/FEATURES.md https://github.com/uazo/cromite/issues/1454
+
+pref("beacon.enabled", false);
+
 /// Disable Network Error Logging
+// https://developer.mozilla.org/docs/Web/HTTP/Network_Error_Logging
 // https://w3c.github.io/network-error-logging/
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1145235
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#12829
@@ -1175,11 +1301,6 @@ pref("browser.phoenix.core.status", "016");
 
 // 017 FINGERPRINTING PROTECTION
 
-/// Unbreak websites with FPP (if enabled)
-// Currently covers Apple Maps (completely broken)
-
-pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"apple.com\", \"overrides\": \"-WebGLRenderCapability\"}]");
-
 /// Round window sizes
 
 pref("privacy.window.maxInnerHeight", 900);
@@ -1191,9 +1312,9 @@ pref("privacy.window.maxInnerWidth", 1600);
 
 pref("privacy.resistFingerprinting.target_video_res", 1080); // [DEFAULT for Nightly]
 
-/// Spoof locale to English by default
+/// Prompt to spoof locale to en-US
 
-pref("privacy.spoof_english", 2);
+pref("privacy.spoof_english", 0); // [DEFAULT]
 
 /// Enable light mode by default
 // This matches with RFP...
@@ -1271,7 +1392,9 @@ pref("signon.generation.enabled", true); // [DEFAULT]
 
 /// Prevent cross-origin sub-resources from opening HTTP authentication dialogs
 
+pref("network.auth.non-web-content-triggered-resources-http-auth-allow", false); // [DEFAULT]
 pref("network.auth.subresource-http-auth-allow", 1);
+pref("network.auth.subresource-img-cross-origin-http-auth-allow", false); // [DEFAULT]
 
 /// Disable Windows SSO
 
@@ -1634,12 +1757,6 @@ pref("browser.phoenix.core.status", "024");
 
 /// 025 MISC.
 
-/// Block Web Notifications
-/// I have yet to see a legitimate use-case for websites using push notifications...
-// but I see them constantly abused for malicious purposes & spam
-
-pref("permissions.default.desktop-notification", 2);
-
 /// Enable Firefox's newer 'Felt privacy' design for Private Browsing & Certificate Errors
 
 pref("browser.privatebrowsing.felt-privacy-v1", true);
@@ -1774,7 +1891,9 @@ pref("browser.newtabpage.activity-stream.section.highlights.includeBookmarks", f
 pref("browser.newtabpage.activity-stream.section.highlights.includeDownloads", false);
 pref("browser.newtabpage.activity-stream.section.highlights.includeVisited", false);
 pref("browser.newtabpage.activity-stream.showRecentSaves", false);
-pref("browser.preferences.experimental", true);
+pref("browser.policies.loglevel", "error"); // [DEFAULT - HIDDEN] This pref allows controlling the log level of policies (extremely useful for troubleshooting...), set here to the default value so that it's exposed in the about:config https://searchfox.org/mozilla-central/source/browser/components/BrowserGlue.sys.mjs#967
+pref("browser.preferences.experimental", true); // [DEFAULT]
+pref("browser.preferences.experimental.hidden", false); // [DEFAULT]
 pref("browser.privateWindowSeparation.enabled", false);
 pref("browser.search.openintab", true);
 pref("browser.search.widget.inNavBar", true);
@@ -1792,6 +1911,8 @@ pref("devtools.command-button-rulers.enabled", true);
 pref("devtools.command-button-screenshot.enabled", true);
 pref("devtools.dom.enabled", true);
 pref("devtools.debugger.ui.editor-wrapping", true);
+pref("devtools.netmonitor.persistlog", true); // Do not automatically clear log messages after page reloads/navigation
+pref("devtools.webconsole.persistlog", true); // Do not automatically clear log messages after page reloads/navigation
 pref("devtools.webconsole.timestampMessages", true); // Enable timestamps in the web console by default
 pref("findbar.highlightAll", true);
 pref("full-screen-api.transition-duration.enter", "0 0"); // [Default = 200 200]
@@ -1801,6 +1922,7 @@ pref("full-screen-api.warning.timeout", 0); // [Default = 3000]
 pref("security.xfocsp.hideOpenInNewWindow", false);
 pref("toolkit.cosmeticAnimations.enabled", true); // [DEFAULT, HIDDEN] Allows disabling browser animations, exposes it in the about:config https://searchfox.org/mozilla-release/source/remote/test/puppeteer/packages/browsers/src/browser-data/firefox.ts#389
 pref("ui.prefersReducedMotion", 0); // [DEFAULT, HIDDEN] Allows disabling certain UI animations, exposes it in the about:config https://searchfox.org/mozilla-release/source/browser/tools/mozscreenshots/mozscreenshots/extension/TestRunner.sys.mjs#122
+pref("view_source.syntax_highlight", true); // [DEFAULT]
 pref("view_source.wrap_long_lines", true); // [DEFAULT]
 
 pref("browser.phoenix.core.status", "028");
@@ -1839,29 +1961,21 @@ pref("services.sync.prefs.sync.devtools.command-button-rulers.enabled", true);
 pref("services.sync.prefs.sync.devtools.command-button-screenshot.enabled", true);
 pref("services.sync.prefs.sync.devtools.debugger.ui.editor-wrapping", true);
 pref("services.sync.prefs.sync.devtools.dom.enabled", true);
+pref("services.sync.prefs.sync.dom.security.https_only_mode_send_http_background_request", true);
 pref("services.sync.prefs.sync.findbar.highlightAll", true);
 pref("services.sync.prefs.sync.full-screen-api.transition-duration.enter", true);
 pref("services.sync.prefs.sync.full-screen-api.transition-duration.leave", true);
 pref("services.sync.prefs.sync.full-screen-api.warning.delay", true);
 pref("services.sync.prefs.sync.full-screen-api.warning.timeout", true);
-pref("services.sync.prefs.sync.security.xfocsp.hideOpenInNewWindow", true);
-pref("services.sync.prefs.sync.toolkit.legacyUserProfileCustomizations.stylesheets", true);
-pref("services.sync.prefs.sync.view_source.wrap_long_lines", true);
+pref("services.sync.prefs.sync.general.warnOnAboutConfig", true);
 pref("services.sync.prefs.sync.media.autoplay.blocking_policy", true);
 pref("services.sync.prefs.sync.media.gmp-gmpopenh264.enabled", true);
 pref("services.sync.prefs.sync.media.gmp-gmpopenh264.provider.enabled", true);
 pref("services.sync.prefs.sync.media.gmp-gmpopenh264.visible", true);
 pref("services.sync.prefs.sync.media.gmp-provider.enabled", true);
-pref("services.sync.prefs.sync.general.warnOnAboutConfig", true);
-pref("services.sync.prefs.sync.extensions.webextensions.restrictedDomains", true);
-pref("services.sync.prefs.sync.app.releaseNotesURL", true);
-pref("services.sync.prefs.sync.app.releaseNotesURL.aboutDialog", true);
-pref("services.sync.prefs.sync.app.releaseNotesURL.prompt", true);
-pref("services.sync.prefs.sync.extensions.getAddons.search.browseURL", true);
-pref("services.sync.prefs.sync.browser.firefox-view.search.enabled", true);
-pref("services.sync.prefs.sync.browser.firefox-view.virtual-list.enabled", true);
-pref("services.sync.prefs.sync.browser.tabs.firefox-view-newIcon", true);
-pref("services.sync.prefs.sync.browser.tabs.firefox-view-next", true);
+pref("services.sync.prefs.sync.security.xfocsp.hideOpenInNewWindow", true);
+pref("services.sync.prefs.sync.toolkit.legacyUserProfileCustomizations.stylesheets", true);
+pref("services.sync.prefs.sync.view_source.wrap_long_lines", true);
 pref("services.sync.prefs.sync.browser.urlbar.update2.engineAliasRefresh", true);
 pref("services.sync.prefs.sync.browser.search.separatePrivateDefault.ui.enabled", true);
 pref("services.sync.prefs.sync.browser.search.separatePrivateDefault.urlbarResult.enabled", true);
@@ -1908,8 +2022,6 @@ pref("services.sync.prefs.sync.extensions.quarantineIgnoredByUser.{b86e4813-687a
 pref("services.sync.prefs.sync.extensions.quarantineIgnoredByUser.{d19a89b9-76c1-4a61-bcd4-49e8de916403}", true);
 pref("services.sync.prefs.sync.browser.download.open_pdf_attachments_inline", true);
 pref("services.sync.prefs.sync.pdfjs.sidebarViewOnLoad", true);
-pref("services.sync.prefs.sync.intl.accept_languages", true);
-pref("services.sync.prefs.sync.intl.locale.requested", true);
 pref("services.sync.prefs.sync.middlemouse.paste", true);
 pref("services.sync.prefs.sync.privacy.antitracking.enableWebcompat", true);
 pref("services.sync.prefs.sync.privacy.fingerprintingProtection.remoteOverrides.enabled", true);
@@ -1944,7 +2056,6 @@ pref("services.sync.prefs.sync.browser.sessionhistory.max_total_viewers", true);
 pref("services.sync.prefs.sync.browser.tabs.min_inactive_duration_before_unload", true);
 pref("services.sync.prefs.sync.browser.toolbars.bookmarks.visibility", true);
 pref("services.sync.prefs.sync.content.notify.interval", true);
-pref("services.sync.prefs.sync.dom.security.https_only_mode_send_http_background_request", true);
 pref("services.sync.prefs.sync.extensions.logging.enabled", true);
 pref("services.sync.prefs.sync.general.smoothScroll.currentVelocityWeighting", true);
 pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", true);
@@ -1969,15 +2080,13 @@ pref("services.sync.prefs.sync.media.cache_readahead_limit", true);
 pref("services.sync.prefs.sync.media.cache_resume_threshold", true);
 pref("services.sync.prefs.sync.media.ffmpeg.vaapi.enabled", true);
 pref("services.sync.prefs.sync.media.memory_cache_max_size", true);
+pref("services.sync.prefs.sync.media.peerconnection.enabled", true);
 pref("services.sync.prefs.sync.media.peerconnection.ice.default_address_only", true);
 pref("services.sync.prefs.sync.media.peerconnection.ice.no_host", true);
-pref("services.sync.prefs.sync.mousewheel.default.delta_multiplier_y", true);
-pref("services.sync.prefs.sync.network.buffer.cache.count", true);
-pref("services.sync.prefs.sync.network.buffer.cache.size", true);
+pref("services.sync.prefs.sync.media.peerconnection.ice.relay_only", true);
 pref("services.sync.prefs.sync.network.dnsCacheEntries", true);
 pref("services.sync.prefs.sync.network.dnsCacheExpiration", true);
 pref("services.sync.prefs.sync.network.dnsCacheExpirationGracePeriod", true);
-pref("services.sync.prefs.sync.network.http.max-connections", true);
 pref("services.sync.prefs.sync.network.http.max-persistent-connections-per-proxy", true);
 pref("services.sync.prefs.sync.network.http.max-persistent-connections-per-server", true);
 pref("services.sync.prefs.sync.network.http.max-urgent-start-excessive-connections-per-host", true);
@@ -1997,41 +2106,6 @@ pref("autoadmin.refresh_interval", 60);
 pref("browser.phoenix.core.status", "030");
 
 pref("browser.phoenix.core.status", "successfully applied :D", locked);
-
-//
-// This config manually enables various protections from ETP/Strict
-// Useful for ex. Android & Thunderbird, where ETP Strict either isn't supported or doesn't cover the same protections.
-
-pref("network.cookie.cookieBehavior", 5);
-pref("network.cookie.cookieBehavior.optInPartitioning", true);
-pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
-pref("network.cookie.cookieBehavior.pbmode", 5);
-pref("network.cookie.cookieBehavior.trackerCookieBlocking", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.pbmode.top_navigation", true);
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
-pref("privacy.bounceTrackingProtection.enabled", true);
-pref("privacy.bounceTrackingProtection.mode", 1); // Fully enables Bounce Tracking Protection - https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
-pref("privacy.fingerprintingProtection", true);
-pref("privacy.fingerprintingProtection.pbmode", true);
-pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
-pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
-pref("privacy.partition.bloburl_per_partition_key", true);
-pref("privacy.partition.network_state.ocsp_cache", true);
-pref("privacy.partition.network_state.ocsp_cache.pbmode", true);
-pref("privacy.query_stripping.enabled", true);
-pref("privacy.query_stripping.enabled.pbmode", true);
-pref("privacy.socialtracking.block_cookies.enabled", true);
-pref("privacy.trackingprotection.cryptomining.enabled", true);
-pref("privacy.trackingprotection.emailtracking.enabled", true);
-pref("privacy.trackingprotection.emailtracking.pbmode.enabled", true);
-pref("privacy.trackingprotection.enabled", true);
-pref("privacy.trackingprotection.fingerprinting.enabled", true);
-pref("privacy.trackingprotection.pbmode.enabled", true);
-pref("privacy.trackingprotection.socialtracking.enabled", true);
-
-pref("browser.phoenix.etp-strict.status", "successfully applied :D", locked);
 
 //
 
@@ -2072,6 +2146,26 @@ pref("browser.phoenix.android.status", "003");
 
 pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-CSSPrefersColorScheme,-FrameRate,-JSDateTimeUTC");
 
+/// Unbreak websites with FPP (if the related target is enabled...)
+// Currently covers:
+// Bluesky (bsky.app) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
+// Brave Search (brave.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues on Maps
+// Discord (discord.com) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (arcticfoxes.net) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (aria.im) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (mozilla.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (element.io) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (unredacted.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Favicon.io (favicon.io)  - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks downloading converted files
+// GitLab (gitlab.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
+// Photopea (photopea.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes complete breakage
+// Pornhub (pornhub.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks thumbnail seeking
+// Proton Mail (proton.me) - Disables timezone spoofing (-JSDateTimeUTC)
+// Watch Duty (watchduty.org) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues
+// X/Twitter (x.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
+
+pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"mozilla.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}]");
+
 /// Enable dynamic rounding of content dimensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1407366
 
@@ -2079,7 +2173,15 @@ pref("privacy.resistFingerprinting.letterboxing", true); // [HIDDEN]
 
 pref("browser.phoenix.android.status", "004");
 
-// 005 MISC. SECURITY
+// 005 ATTACK SURFACE REDUCTION
+
+// Re-enable the JIT Baseline Interpreter, due to severe performance issues some users have been experiencing...
+// ex. https://gitlab.com/ironfox-oss/IronFox/-/issues/18
+pref("javascript.options.blinterp", true); // [DEFAULT]
+
+pref("browser.phoenix.android.status", "005");
+
+// 006 MISC. SECURITY
 
 // Always warn users before launching other apps...
 
@@ -2088,7 +2190,7 @@ pref("network.protocol-handler.warn-external.sms", true);
 pref("network.protocol-handler.warn-external.tel", true);
 pref("network.protocol-handler.warn-external.vnd.youtube", true);
 
-pref("browser.phoenix.android.status", "005");
+pref("browser.phoenix.android.status", "006");
 
 pref("browser.phoenix.android.status", "successfully applied :D", locked);
 

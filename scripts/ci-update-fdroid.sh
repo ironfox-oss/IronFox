@@ -25,7 +25,7 @@ done
 IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py $(ls "$REPO_DIR"/*.apk))"
 
 sed -i \
-    -e "s/CurrentVersion: .*/CurrentVersion: \"$vername\"/" \
+    -e "s/CurrentVersion: .*/CurrentVersion: \"v$vername\"/" \
     -e "s/CurrentVersionCode: .*/CurrentVersionCode: $vercode/" "$META_FILE"
 
 git add "$REPO_DIR" "$META_FILE"

@@ -308,6 +308,8 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
 
+`tor-spoof-english.patch` & `tor-spoof-english-switch.patch` are taken from the [Tor Project](https://support.torproject.org/about/distribute-tor/).
+
 ## Notices
 
 Mozilla Firefox is a trademark of The Mozilla Foundation.

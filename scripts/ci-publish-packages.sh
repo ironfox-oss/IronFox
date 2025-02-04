@@ -63,7 +63,6 @@ done
     echo ""
     echo "\`\`\`"
     cat $CHECKSUMS_FILE
-    echo ""
     echo "\`\`\`"
     echo ""
 
@@ -72,12 +71,10 @@ done
     echo ""
 } >> "$RELEASE_NOTES_FILE"
 
-
-# Update environment variables
 {
     echo "---"
     echo "name: IronFox v${VERSION_NAME}"
-    echo "tag_name: v${VERSION_NAME}"
+    echo "tag-name: v${VERSION_NAME}"
     echo "description: |"
     awk '{print "  " $0}' < "$RELEASE_NOTES_FILE"
     echo "assets-link:"
