@@ -41,21 +41,6 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/
          val shouldGrantWithoutPrompt = Addon.localizePermissions(promptRequest.permissions, context).isEmpty()
  
          // If we don't have any promptable permissions, just proceed.
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-@@ -321,6 +321,11 @@
- 
-         components.appStore.dispatch(AppAction.ModeChange(browsingModeManager.mode))
- 
-+        lifecycleScope.launch {
-+            org.mozilla.fenix.utils.installIFAddons(components)
-+        }
-+
-+
-         lifecycleScope.launch(IO) {
-             // Show Merino content recommendations.
-             val showContentRecommendations = requireContext().settings().showContentRecommendations
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
