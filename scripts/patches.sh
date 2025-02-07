@@ -124,6 +124,12 @@ PATCH_FILES=(
     # Enforce Certificate Transparency
     "enforce-certificate-transparency.patch"
 
+    # Disable Firefox Sync by default
+    "disable-sync-by-default.patch"
+
+    # Block autoplay by default...
+    "block-autoplay-by-default.patch"
+
     # Fix v125 compile error
     "gecko-fix-125-compile.patch"
 )
