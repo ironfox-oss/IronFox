@@ -1,5 +1,17 @@
 //
 
+//
+// Copyright (C) 2024-2025 celenity
+//
+// This file is part of Phoenix.
+//
+// Phoenix is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// Phoenix is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with Phoenix. If not, see https://www.gnu.org/licenses/.
+//
+
 // This file contains preferences shared across Phoenix 'Extended' configs.
 
 // 001 ADVANCED FINGERPRINTING PROTECTION
@@ -29,8 +41,8 @@ pref("browser.phoenix.extended.core.status", "002");
 
 // 003 MISC. PRIVACY
 
-/// Disable dFPI Heuristics
-// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15404
+/// Disable TCP/dFPI storage access heuristics
+// https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
 
 pref("privacy.restrict3rdpartystorage.heuristic.opened_window_after_interaction", false);
 pref("privacy.restrict3rdpartystorage.heuristic.recently_visited", false);
@@ -67,6 +79,18 @@ pref("browser.phoenix.extended.core.status", "005");
 
 pref("browser.phoenix.extended.core.status", "successfully applied :D", locked);
 
+//
+
+//
+// Copyright (C) 2024-2025 celenity
+//
+// This file is part of Phoenix.
+//
+// Phoenix is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+//
+// Phoenix is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with Phoenix. If not, see https://www.gnu.org/licenses/.
 //
 
 // This file contains preferences specific to Phoenix (Extended) on Android.
