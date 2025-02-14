@@ -1,9 +1,9 @@
 {
   "default": {
     "searchDefault": "DuckDuckGo",
-    "searchOrder": ["DuckDuckGo", "DuckDuckGo HTML", "DuckDuckGo Lite", "Ecosia", "Mojeek", "Qwant", "Startpage", "Wikipedia"],
+    "searchOrder": ["DuckDuckGo", "DuckDuckGo HTML", "DuckDuckGo Lite", "Ecosia", "Mojeek", "Qwant", "Startpage", "Swisscows", "Wikipedia"],
     "visibleDefaultEngines": [
-      "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+      "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
     ]
   },
   "regionOverrides": {
@@ -12,784 +12,784 @@
     "ach": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
         ]
       }
     },
     "an": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-an"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-an"
         ]
       }
     },
     "ar": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ar"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ar"
         ]
       }
     },
     "as": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-as"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-as"
         ]
       }
     },
     "ast": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ast"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ast"
         ]
       }
     },
     "az": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-az"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-az"
         ]
       }
     },
     "be": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-be"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-be"
         ]
       }
     },
     "bg": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-bg"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-bg"
         ]
       }
     },
     "bn": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-bn"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-bn"
         ]
       }
     },
     "bn-BD": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-bn"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-bn"
         ]
       }
     },
     "bn-IN": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-bn"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-bn"
         ]
       }
     },
     "br": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-br"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-br"
         ]
       }
     },
     "bs": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-bs"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-bs"
         ]
       }
     },
     "ca": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ca"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ca"
         ]
       }
     },
     "cak": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "cs": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-cz"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-cz"
         ]
       }
     },
     "cy": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-cy"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-cy"
         ]
       }
     },
     "da": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-da"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-da"
         ]
       }
     },
     "de": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-de"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-de"
         ]
       }
     },
     "de-AT": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-de"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-de"
         ]
       }
     },
     "dsb": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-dsb"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-dsb"
         ]
       }
     },
     "el": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-el"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-el"
         ]
       }
     },
     "en-AU": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
         ]
       }
     },
     "en-CA": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
         ]
       }
     },
     "en-IE": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
         ]
       }
     },
     "en-GB": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
         ]
       }
     },
     "en-US": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
         ]
       }
     },
     "en-ZA": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia"
         ]
       }
     },
     "eo": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-eo"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-eo"
         ]
       }
     },
     "es-AR": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "es-CL": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "es-ES": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "es-MX": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "et": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-et"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-et"
         ]
       }
     },
     "eu": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-eu"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-eu"
         ]
       }
     },
     "fa": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fa"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fa"
         ]
       }
     },
     "ff": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fr"
         ]
       }
     },
     "fi": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fi"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fi"
         ]
       }
     },
     "fr-BE": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fr"
         ]
       }
     },
     "fr-CA": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fr"
         ]
       }
     },
     "fr-FR": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fr"
         ]
       }
     },
     "fr": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fr"
         ]
       }
     },
     "fy-NL": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fy-NL"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fy-NL"
         ]
       }
     },
     "ga-IE": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ga-IE"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ga-IE"
         ]
       }
     },
     "gd": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-gd"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-gd"
         ]
       }
     },
     "gl": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-gl"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-gl"
         ]
       }
     },
     "gn": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-gn"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-gn"
         ]
       }
     },
     "gu-IN": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-gu"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-gu"
         ]
       }
     },
     "he": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-he"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-he"
         ]
       }
     },
     "hi-IN": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-hi"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-hi"
         ]
       }
     },
     "hr": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-hr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-hr"
         ]
       }
     },
     "hsb": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-hsb"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-hsb"
         ]
       }
     },
     "hu": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-hu"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-hu"
         ]
       }
     },
     "hy-AM": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-hy-AM"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-hy-AM"
         ]
       }
     },
     "ia": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ia"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ia"
         ]
       }
     },
     "id": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-id"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-id"
         ]
       }
     },
     "is": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-is"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-is"
         ]
       }
     },
     "it": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-it"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-it"
         ]
       }
     },
     "ja": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ja"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ja"
         ]
       }
     },
     "ka": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ka"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ka"
         ]
       }
     },
     "kab": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-kab"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-kab"
         ]
       }
     },
     "kk": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-kk"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-kk"
         ]
       }
     },
     "km": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-km"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-km"
         ]
       }
     },
     "kn": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-kn"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-kn"
         ]
       }
     },
     "ko": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ko"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ko"
         ]
       }
     },
     "lij": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-lij"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-lij"
         ]
       }
     },
     "lo": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-lo"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-lo"
         ]
       }
     },
     "lt": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-lt"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-lt"
         ]
       }
     },
     "ltg": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ltg"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ltg"
         ]
       }
     },
     "lv": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-lv"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-lv"
         ]
       }
     },
     "mai": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-hi"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-hi"
         ]
       }
     },
     "meh": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "mix": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "ml": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ml"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ml"
         ]
       }
     },
     "mr": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-mr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-mr"
         ]
       }
     },
     "ms": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ms"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ms"
         ]
       }
     },
     "my": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-my"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-my"
         ]
       }
     },
     "nb-NO": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-NO"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-NO"
         ]
       }
     },
     "ne-NP": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ne"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ne"
         ]
       }
     },
     "nl-NL": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-nl"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-nl"
         ]
       }
     },
     "nl": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-nl"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-nl"
         ]
       }
     },
     "nn-NO": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-NN"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-NN"
         ]
       }
     },
     "oc": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-oc"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-oc"
         ]
       }
     },
     "or": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-or"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-or"
         ]
       }
     },
     "pa-IN": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-pa"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-pa"
         ]
       }
     },
     "pl": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-pl"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-pl"
         ]
       }
     },
     "pt-BR": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-pt"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-pt"
         ]
       }
     },
     "pt-PT": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-pt"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-pt"
         ]
       }
     },
     "rm": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-rm"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-rm"
         ]
       }
     },
     "ro": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ro"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ro"
         ]
       }
     },
     "ru": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ru"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ru"
         ]
       }
     },
     "sk": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-sk"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-sk"
         ]
       }
     },
     "sl": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-sl"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-sl"
         ]
       }
     },
     "son": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-fr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-fr"
         ]
       }
     },
     "sq": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-sq"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-sq"
         ]
       }
     },
     "sr": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-sr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-sr"
         ]
       }
     },
     "sv-SE": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-sv-SE"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-sv-SE"
         ]
       }
     },
     "ta": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ta"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ta"
         ]
       }
     },
     "te": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-te"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-te"
         ]
       }
     },
     "th": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-th"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-th"
         ]
       }
     },
     "tl": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-tl"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-tl"
         ]
       }
     },
     "tr": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-tr"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-tr"
         ]
       }
     },
     "trs": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "uk": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-uk"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-uk"
         ]
       }
     },
     "ur": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-ur"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-ur"
         ]
       }
     },
     "uz": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-uz"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-uz"
         ]
       }
     },
     "vi": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-vi"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-vi"
         ]
       }
     },
     "wo": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-wo"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-wo"
         ]
       }
     },
     "xh": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-xh"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-xh"
         ]
       }
     },
     "zam": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-es"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-es"
         ]
       }
     },
     "zh-CN": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-zh-CN"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-zh-CN"
         ]
       }
     },
     "zh-TW": {
       "default": {
         "visibleDefaultEngines": [
-          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "wikipedia-zh-TW"
+          "ddg", "ddghtml", "ddglite", "ecosia", "mojeek", "qwant", "qwantjunior", "startpage", "swisscows", "wikipedia-zh-TW"
         ]
       }
     }
