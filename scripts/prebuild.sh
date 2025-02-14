@@ -354,21 +354,6 @@ fi
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 
-# Disable Gecko Media Plugins and casting
-sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/geckoview-prefs.js
-# shellcheck disable=SC2129
-cat <<EOF >>mobile/android/app/geckoview-prefs.js
-
-// Disable Gecko Media Plugins
-pref("media.gmp-provider.enabled", false);
-
-// Avoid openh264 being downloaded
-pref("media.gmp-manager.url.override", "data:text/plain,");
-
-// Disable openh264 if it is already downloaded
-pref("media.gmp-gmpopenh264.enabled", false);
-EOF
-
 cat "$patches/preferences/phoenix-android.js" >>mobile/android/app/geckoview-prefs.js
 cat "$patches/preferences/phoenix-extended-android.js" >>mobile/android/app/geckoview-prefs.js
 cat "$patches/preferences/ironfox.js" >>mobile/android/app/geckoview-prefs.js
