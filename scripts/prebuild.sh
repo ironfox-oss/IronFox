@@ -174,10 +174,6 @@ sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
-# Enable cookie banner handling
-sed -i \
-    -e '168s/channel: developer/channel: release/' app/nimbus.fml.yaml
-
 # Set up target parameters
 case $(echo "$2" | cut -c 7) in
 0)
