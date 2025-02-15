@@ -16,7 +16,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.02.13.1", locked);
+pref("browser.phoenix.version", "2025.02.14.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -187,17 +187,6 @@ pref("toolkit.shopping.ohttpRelayURL", "");
 /// Firefox Relay
 
 pref("signon.firefoxRelay.feature", "disabled"); // [HIDDEN - Thunderbird]
-
-/// Misc. Promotions
-
-pref("browser.privatebrowsing.vpnpromourl", "", locked); // [HIDDEN - Android/Thunderbird]
-
-/// Kill about:welcome & onboarding
-
-pref("startup.homepage_override_url", ""); // [HIDDEN - Android/Thunderbird]
-pref("startup.homepage_override_url_nimbus", ""); // [DEFAULT, HIDDEN - Android/Thunderbird]
-pref("startup.homepage_welcome_url", ""); // [HIDDEN - Android/Thunderbird]
-pref("startup.homepage_welcome_url.additional", ""); // [DEFAULT, HIDDEN - Android/Thunderbird]
 
 /// Prevent Mozilla domains from having special privileges
 // https://firefox-source-docs.mozilla.org/dom/ipc/process_model.html#privileged-mozilla-content
@@ -1472,11 +1461,6 @@ pref("media.gmp-manager.updateEnabled", true); // [DEFAULT, HIDDEN]
 
 pref("extensions.update.notifyUser", true); // [HIDDEN]
 
-/// Allow "What's New" Pages by default
-// This lets us expose it in the about:config for Android/Thunderbird
-
-pref("startup.homepage_override_nimbus_disable_wnp", false); // [DEFAULT, HIDDEN - Android/Thunderbird]
-
 pref("browser.phoenix.core.status", "023");
 
 // 024 DEBUGGING
@@ -1584,7 +1568,7 @@ pref("browser.phoenix.core.status", "027");
 /// Things that are  nice to have™
 // Not directly privacy & security related
 
-pref("browser.translations.alwaysTranslateLanguages", "bg,ca,cs,da,de,el,en,es,et,fi,fr,hr,hu,id,it,lv,lt,nl,pl,pt,ro,ru,sk,sl,sr,sv,tr,uk,vi");
+pref("browser.translations.alwaysTranslateLanguages", "bg,ca,cs,da,de,el,en,es,et,fi,fr,hr,hu,id,it,ja,ko,lv,lt,nl,pl,pt,ro,ru,sk,sl,sr,sv,tr,uk,vi,zh-Hans");
 pref("browser.translations.automaticallyPopup", true); // [DEFAULT]
 pref("browser.translations.enable", true); // [DEFAULT - non-Thunderbird]
 pref("browser.translations.select.enable", true); // [DEFAULT - non-Android/Thunderbird]
@@ -1601,177 +1585,7 @@ pref("view_source.wrap_long_lines", true); // [DEFAULT - Android]
 
 pref("browser.phoenix.core.status", "028");
 
-// 029 Sync more prefs
-// Note that for this to work, the below prefs must be set on BOTH the device you are syncing from & to...
-// Useful especially if you override our defaults
-
-pref("services.sync.prefs.sync.browser.aboutConfig.showWarning", true);
-pref("services.sync.prefs.sync.browser.bookmarks.autoExportHTML", true);
-pref("services.sync.prefs.sync.browser.bookmarks.openInTabClosesMenu", true);
-pref("services.sync.prefs.sync.browser.compactmode.show", true);
-pref("services.sync.prefs.sync.browser.mailto.dualPrompt", true);
-pref("services.sync.prefs.sync.browser.mailto.prompt.os", true);
-pref("services.sync.prefs.sync.browser.meta_refresh_when_inactive.disabled", true);
-pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.discoverystream.recentSaves.enabled", true);
-pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.feeds.places", true);
-pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.improvesearch.handoffToAwesomebar", true);
-pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.newtabWallpapers.enabled", true);
-pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.newtabWallpapers.v2.enabled", true);
-pref("services.sync.prefs.sync.browser.newtabpage.activity-stream.showRecentSaves", true);
-pref("services.sync.prefs.sync.browser.preferences.experimental", true);
-pref("services.sync.prefs.sync.browser.privateWindowSeparation.enabled", true);
-pref("services.sync.prefs.sync.browser.search.openintab", true);
-pref("services.sync.prefs.sync.browser.spin_cursor_while_busy", true);
-pref("services.sync.prefs.sync.browser.tabs.loadBookmarksInTabs", true);
-pref("services.sync.prefs.sync.browser.translations.alwaysTranslateLanguages", true);
-pref("services.sync.prefs.sync.browser.translations.automaticallyPopup", true);
-pref("services.sync.prefs.sync.browser.translations.enable", true);
-pref("services.sync.prefs.sync.browser.translations.newSettingsUI.enable", true);
-pref("services.sync.prefs.sync.browser.translations.select.enable", true);
-pref("services.sync.prefs.sync.browser.urlbar.openintab", true);
-pref("services.sync.prefs.sync.devtools.chrome.enabled", true);
-pref("services.sync.prefs.sync.devtools.command-button-measure.enabled", true);
-pref("services.sync.prefs.sync.devtools.command-button-rulers.enabled", true);
-pref("services.sync.prefs.sync.devtools.command-button-screenshot.enabled", true);
-pref("services.sync.prefs.sync.devtools.debugger.ui.editor-wrapping", true);
-pref("services.sync.prefs.sync.devtools.dom.enabled", true);
-pref("services.sync.prefs.sync.dom.security.https_only_mode_send_http_background_request", true);
-pref("services.sync.prefs.sync.findbar.highlightAll", true);
-pref("services.sync.prefs.sync.full-screen-api.transition-duration.enter", true);
-pref("services.sync.prefs.sync.full-screen-api.transition-duration.leave", true);
-pref("services.sync.prefs.sync.full-screen-api.warning.delay", true);
-pref("services.sync.prefs.sync.full-screen-api.warning.timeout", true);
-pref("services.sync.prefs.sync.general.warnOnAboutConfig", true);
-pref("services.sync.prefs.sync.media.autoplay.blocking_policy", true);
-pref("services.sync.prefs.sync.media.gmp-gmpopenh264.enabled", true);
-pref("services.sync.prefs.sync.media.gmp-gmpopenh264.provider.enabled", true);
-pref("services.sync.prefs.sync.media.gmp-gmpopenh264.visible", true);
-pref("services.sync.prefs.sync.media.gmp-provider.enabled", true);
-pref("services.sync.prefs.sync.security.xfocsp.hideOpenInNewWindow", true);
-pref("services.sync.prefs.sync.toolkit.legacyUserProfileCustomizations.stylesheets", true);
-pref("services.sync.prefs.sync.view_source.wrap_long_lines", true);
-pref("services.sync.prefs.sync.browser.urlbar.update2.engineAliasRefresh", true);
-pref("services.sync.prefs.sync.browser.search.separatePrivateDefault.ui.enabled", true);
-pref("services.sync.prefs.sync.browser.search.separatePrivateDefault.urlbarResult.enabled", true);
-pref("services.sync.prefs.sync.network.IDN_show_punycode", true);
-pref("services.sync.prefs.sync.browser.urlbar.clipboard.featureGate", true);
-pref("services.sync.prefs.sync.browser.urlbar.suggest.calculator", true);
-pref("services.sync.prefs.sync.browser.urlbar.suggest.clipboard", true);
-pref("services.sync.prefs.sync.browser.urlbar.unitConversion.enabled", true);
-pref("services.sync.prefs.sync.dom.security.https_only_mode_error_page_user_suggestions", true);
-pref("services.sync.prefs.sync.browser.xul.error_pages.expert_bad_cert", true);
-pref("services.sync.prefs.sync.network.trr.custom_uri", true);
-pref("services.sync.prefs.sync.network.trr.mode", true);
-pref("services.sync.prefs.sync.network.trr.uri", true);
-pref("services.sync.prefs.sync.doh-rollout.provider-list", true);
-pref("services.sync.prefs.sync.network.dns.native_https_query", true);
-pref("services.sync.prefs.sync.security.OCSP.require", true);
-pref("services.sync.prefs.sync.security.ssl.require_safe_negotiation", true);
-pref("services.sync.prefs.sync.browser.xul.error_pages.show_safe_browsing_details_on_load", true);
-pref("services.sync.prefs.sync.browser.safebrowsing.provider.google.reportMalwareMistakeURL", true);
-pref("services.sync.prefs.sync.browser.safebrowsing.provider.google.reportPhishMistakeURL", true);
-pref("services.sync.prefs.sync.browser.safebrowsing.provider.google4.reportMalwareMistakeURL", true);
-pref("services.sync.prefs.sync.browser.safebrowsing.provider.google4.reportPhishMistakeURL", true);
-pref("services.sync.prefs.sync.browser.safebrowsing.reportPhishURL", true);
-pref("services.sync.prefs.sync.browser.safebrowsing.provider.google.reportURL", true);
-pref("services.sync.prefs.sync.browser.safebrowsing.provider.google4.reportURL", true);
-pref("services.sync.prefs.sync.permissions.default.camera", true);
-pref("services.sync.prefs.sync.permissions.default.geo", true);
-pref("services.sync.prefs.sync.permissions.default.microphone", true);
-pref("services.sync.prefs.sync.geo.provider.network.url", true);
-pref("services.sync.prefs.sync.geo.provider.use_corelocation", true);
-pref("services.sync.prefs.sync.geo.provider.use_geoclue", true);
-pref("services.sync.prefs.sync.geo.provider.ms-windows-location", true);
-pref("services.sync.prefs.sync.browser.geolocation.warning.infoURL", true);
-pref("services.sync.prefs.sync.privacy.webrtc.globalMuteToggles", true);
-pref("services.sync.prefs.sync.browser.cache.disk.enable", true);
-pref("services.sync.prefs.sync.browser.cache.disk_cache_ssl", true);
-pref("services.sync.prefs.sync.browser.cache.memory.enable", true);
-pref("services.sync.prefs.sync.browser.cache.memory.capacity", true);
-pref("services.sync.prefs.sync.privacy.clearHistory.historyFormDataAndDownloads", true);
-pref("services.sync.prefs.sync.privacy.clearSiteData.historyFormDataAndDownloads", true);
-pref("services.sync.prefs.sync.privacy.sanitize.timeSpan", true);
-pref("services.sync.prefs.sync.browser.privatebrowsing.resetPBM.enabled", true);
-pref("services.sync.prefs.sync.extensions.quarantineIgnoredByUser.{b86e4813-687a-43e6-ab65-0bde4ab75758}", true);
-pref("services.sync.prefs.sync.extensions.quarantineIgnoredByUser.{d19a89b9-76c1-4a61-bcd4-49e8de916403}", true);
-pref("services.sync.prefs.sync.browser.download.open_pdf_attachments_inline", true);
-pref("services.sync.prefs.sync.pdfjs.sidebarViewOnLoad", true);
-pref("services.sync.prefs.sync.middlemouse.paste", true);
-pref("services.sync.prefs.sync.privacy.antitracking.enableWebcompat", true);
-pref("services.sync.prefs.sync.privacy.fingerprintingProtection.remoteOverrides.enabled", true);
-pref("services.sync.prefs.sync.privacy.spoof_english", true);
-pref("services.sync.prefs.sync.privacy.resistFingerprinting", true);
-pref("services.sync.prefs.sync.privacy.resistFingerprinting.letterboxing", true);
-pref("services.sync.prefs.sync.privacy.restrict3rdpartystorage.heuristic.opened_window_after_interaction", true);
-pref("services.sync.prefs.sync.privacy.restrict3rdpartystorage.heuristic.recently_visited", true);
-pref("services.sync.prefs.sync.privacy.restrict3rdpartystorage.heuristic.redirect", true);
-pref("services.sync.prefs.sync.privacy.restrict3rdpartystorage.heuristic.window_open", true);
-pref("services.sync.prefs.sync.privacy.query_stripping.strip_list", true);
-pref("services.sync.prefs.sync.layout.forms.reveal-password-button.enabled", true);
-pref("services.sync.prefs.sync.layout.forms.reveal-password-context-menu.enabled", true);
-pref("services.sync.prefs.sync.signon.management.page.vulnerable-passwords.enabled", true);
-pref("services.sync.prefs.sync.network.negotiate-auth.trusted-uris", true);
-pref("services.sync.prefs.sync.cookiebanners.service.mode", true);
-pref("services.sync.prefs.sync.cookiebanners.service.mode.privateBrowsing", true);
-pref("services.sync.prefs.sync.cookiebanners.service.enableGlobalRules", true);
-pref("services.sync.prefs.sync.cookiebanners.ui.desktop.enabled", true);
-pref("services.sync.prefs.sync.userContent.player.click_to_play", true);
-pref("services.sync.prefs.sync.app.update.badgeWaitTime", true);
-pref("services.sync.prefs.sync.app.update.notifyDuringDownload", true);
-pref("services.sync.prefs.sync.app.update.promptWaitTime", 3600);
-pref("services.sync.prefs.sync.privacy.userContext.ui.enabled", true);
-pref("services.sync.prefs.sync.browser.profiles.enabled", true);
-pref("services.sync.prefs.sync.privacy.popups.showBrowserMessage", true);
-pref("services.sync.prefs.sync.browser.cache.disk.metadata_memory_limit", true);
-pref("services.sync.prefs.sync.browser.cache.jsbc_compression_level", true);
-pref("services.sync.prefs.sync.browser.sessionstore.interval", true);
-pref("services.sync.prefs.sync.browser.sessionstore.max_tabs_undo", true);
-pref("services.sync.prefs.sync.browser.sessionhistory.max_total_viewers", true);
-pref("services.sync.prefs.sync.browser.tabs.min_inactive_duration_before_unload", true);
-pref("services.sync.prefs.sync.browser.toolbars.bookmarks.visibility", true);
-pref("services.sync.prefs.sync.content.notify.interval", true);
-pref("services.sync.prefs.sync.extensions.logging.enabled", true);
-pref("services.sync.prefs.sync.general.smoothScroll.currentVelocityWeighting", true);
-pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", true);
-pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.enabled", true);
-pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.motionBeginSpringConstant", true);
-pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.regularSpringConstant", true);
-pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.slowdownMinDeltaMS", true);
-pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.slowdownMinDeltaRatio", true);
-pref("services.sync.prefs.sync.general.smoothScroll.msdPhysics.slowdownSpringConstant", true);
-pref("services.sync.prefs.sync.general.smoothScroll.stopDecelerationWeighting", true);
-pref("services.sync.prefs.sync.gfx.canvas.accelerated.cache-items", true);
-pref("services.sync.prefs.sync.gfx.canvas.accelerated.cache-size", true);
-pref("services.sync.prefs.sync.gfx.content.skia-font-cache-size", true);
-pref("services.sync.prefs.sync.gfx.webrender.all", true);
-pref("services.sync.prefs.sync.gfx.webrender.compositor", true);
-pref("services.sync.prefs.sync.image.mem.decode_bytes_at_a_time", true);
-pref("services.sync.prefs.sync.image.mem.shared.unmap.min_expiration_ms", true);
-pref("services.sync.prefs.sync.javascript.options.wasm", true);
-pref("services.sync.prefs.sync.layout.css.grid-template-masonry-value.enabled", true);
-pref("services.sync.prefs.sync.layout.css.report_errors", true);
-pref("services.sync.prefs.sync.media.cache_readahead_limit", true);
-pref("services.sync.prefs.sync.media.cache_resume_threshold", true);
-pref("services.sync.prefs.sync.media.ffmpeg.vaapi.enabled", true);
-pref("services.sync.prefs.sync.media.memory_cache_max_size", true);
-pref("services.sync.prefs.sync.media.peerconnection.enabled", true);
-pref("services.sync.prefs.sync.media.peerconnection.ice.default_address_only", true);
-pref("services.sync.prefs.sync.media.peerconnection.ice.no_host", true);
-pref("services.sync.prefs.sync.media.peerconnection.ice.relay_only", true);
-pref("services.sync.prefs.sync.network.dnsCacheEntries", true);
-pref("services.sync.prefs.sync.network.dnsCacheExpiration", true);
-pref("services.sync.prefs.sync.network.dnsCacheExpirationGracePeriod", true);
-pref("services.sync.prefs.sync.network.http.max-persistent-connections-per-proxy", true);
-pref("services.sync.prefs.sync.network.http.max-persistent-connections-per-server", true);
-pref("services.sync.prefs.sync.network.http.max-urgent-start-excessive-connections-per-host", true);
-pref("services.sync.prefs.sync.network.http.referer.XOriginPolicy", true);
-pref("services.sync.prefs.sync.webgl.disabled", true);
-pref("services.sync.prefs.sync.startup.homepage_override_nimbus_disable_wnp", true);
-pref("services.sync.prefs.sync.browser.newtab.feature-tour", true);
-
-pref("browser.phoenix.core.status", "029");
-
-// 030 Specialized/Custom configs
+// 029 Specialized/Custom configs
 
 /// Configure the behavior of remote autoconfig files (if active)
 
@@ -1779,7 +1593,7 @@ pref("autoadmin.failover_to_cached", true);
 pref("autoadmin.offline_failover", true);
 pref("autoadmin.refresh_interval", 60);
 
-pref("browser.phoenix.core.status", "030");
+pref("browser.phoenix.core.status", "029");
 
 pref("browser.phoenix.core.status", "successfully applied :D", locked);
 
