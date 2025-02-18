@@ -91,7 +91,7 @@ new file mode 100644
 +
 +private val UBLOCK = Addon(
 +    id = "uBlock0@raymondhill.net",
-+    downloadUrl = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
++    downloadUrl = "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi"
 +)
 +
 +fun isUBlock(addon: Addon) = addon.id == UBLOCK.id
