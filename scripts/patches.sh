@@ -121,6 +121,15 @@ PATCH_FILES=(
     # Install uBlock Origin on startup and allow it to be shown in AddonsFragment
     "install-ublock.patch"
 
+    # Enforce Certificate Transparency
+    "enforce-certificate-transparency.patch"
+
+    # Disable Firefox Sync by default
+    "disable-sync-by-default.patch"
+
+    # Block autoplay by default...
+    "block-autoplay-by-default.patch"
+
     # Fix v125 compile error
     "gecko-fix-125-compile.patch"
 )
