@@ -14,13 +14,6 @@
     height="80">](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904)
 [<img src="assets/obtainium.png"
     alt="Get it on Obtainium"
-    height="80">](obtainium://app/%7B%22id%22%3A%22org.ironfoxoss.ironfox%22%2C%22url%22%3A%22https%3A%2F%2Fgitlab.com%2Fironfox-oss%2Fironfox%22%2C%22author%22%3A%22ironfox-oss%22%2C%22name%22%3A%22ironfox%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22IronFox%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22A%20privacy%20and%20security-oriented%20Firefox-based%20browser%20for%20Android.%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%7D%22%2C%22overrideSource%22%3A%22GitLab%22%7D)
-
-[<img src="assets/f-droid.png"
-    alt="Get it on F-Droid"
-    height="80">](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904)
-[<img src="assets/obtainium.png"
-    alt="Get it on Obtainium"
     height="80">](obtainium://app/%7B%22id%22%3A%22org.ironfoxoss.ironfox%22%2C%22url%22%3A%22https%3A%2F%2Ffdroid.ironfoxoss.org%2Ffdroid%2Frepo%2F%22%2C%22author%22%3A%22IronFox%20OSS%22%2C%22name%22%3A%22IronFox%22%2C%22additionalSettings%22%3A%22%7B%5C%22appIdOrName%5C%22%3A%5C%22org.ironfoxoss.ironfox%5C%22%2C%5C%22pickHighestVersionCode%5C%22%3Afalse%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22IronFox%20is%20a%20secure%2C%20hardened%20and%20privacy-oriented%20web%20browser%20for%20Android%2C%20based%20on%20Firefox.%5C%22%7D%22%2C%22overrideSource%22%3A%22FDroidRepo%22%7D)
 
 ------------
@@ -77,11 +70,11 @@ Please see the list of known issues and workarounds before opening an issue!
 <summary>Issues inherited from Mull that still apply to IronFox - (contents adapted from <a href="https://divestos.org/index.php?page=broken#mull)">the DivestOS website</a>) </summary>
 
 * **GrapheneOS** users may encounter a crash with the error `IronFox tried to perform DCL via memory`. Unfortunately, Firefox is incompatible with this hardening feature, so it's not just limited to IronFox. You can fix this issue by navigating to IronFox's app info, scrolling down to the `Exploit protection` section, and setting `Dynamic code loading via memory` to `Allowed`. You can then navigate to `Dynamic code loading via storage`, and set that to `Restricted` - as this hardening feature **is** compatible with Firefox.
-* uBlock Origin is the only recommended and supported content blocker.
-* Some fonts, particularly ones used for displaying Korean text, [may not display correctly](https://bugzilla.mozilla.org/show_bug.cgi?id=1881993) due the font restrictions by resist fingerprinting. Please do not disable RFP. This should be hopefully fixed in future versions such as v126.
+* uBlock Origin is the only recommended and supported content blocker (included by default).
+* ~~Some fonts, particularly ones used for displaying Korean text, [may not display correctly](https://bugzilla.mozilla.org/show_bug.cgi?id=1881993) due the font restrictions by resist fingerprinting. Please do not disable RFP. This should be hopefully fixed in future versions such as v126.~~
 * Dark Reader is known to be incompatible with IronFox's changes and will cause significant breakage/slowdowns.
 * Dark mode for websites is disabled due to resist fingerprinting. Please do not disable RFP.
-* Refresh rate is capped to 60hz due to resist fingerprinting. Please do not disable RFP.
+* ~~Refresh rate is capped to 60hz due to resist fingerprinting. Please do not disable RFP.~~
 * Multitouch gestures will not work due to resist fingerprinting. Please do not disable RFP.
 * If audio/video content fails to play in private tabs navigate to `about:config` and change `browser.privatebrowsing.forceMediaMemoryCache` to false, this is however a privacy risk.
 * IronFox disables the JavaScript JIT to increase security at the cost of slowing down webapps, complex websites, and the PDF viewer. Navigate to `about:config` and change `javascript.options.ion` and `javascript.options.baselinejit` to `true` to restore their performance, though this is not recommended.
@@ -115,10 +108,31 @@ You should also see [here](https://phoenix.celenity.dev/compat) for a list of we
 ## Building
 
 IronFox makes it easier (and faster) to build the project locally.
-For example, prebuilt versions of wasi-sdk sysroot and llvm-project are used instead
-of building them locally. F-Droid builds still build those from source.
+For example, prebuilt versions of wasi-sdk sysroot and llvm-project are used instead of building them locally. ~~F-Droid builds still build those from source.~~
 
-### Build environment
+**It is recommended to use the Docker image for building IronFox.**
+
+### Build with Docker
+
+Pull the docker image with :
+
+```sh
+docker pull registry.gitlab.com/ironfox-oss/ironfox:latest
+```
+
+You can also use the `main` tag to pull the image which was used to
+build the latest IronFox release. Or you can use exact version names
+to pull images for those versions.
+
+For example :
+
+```
+docker pull registry.gitlab.com/ironfox-oss/ironfox:v135-0
+```
+
+Then, you need to [set up the source files](#get--patch-sources).
+
+### Build without Docker
 
 You need to install a few packages on your machine to be able to build IronFox.
 Follow the below instructions based on the OS you're using.
@@ -179,7 +193,7 @@ to build IronFox.
 
 </details>
 
-### Build setup
+Once the packages have been installed successfully, follow the instructions to set up the build environment:
 
 * Setup F-Droid's `gradle` script to be available in your `PATH`:
 
@@ -222,7 +236,7 @@ to build IronFox.
     export PATH=$JAVA_HOME/bin:$PATH
     ```
 
-* Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation. Otherwise, you can execute the following to install and set up the SDK:
+* Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation (default location is `$HOME/android-sdk`). Otherwise, you can execute the following to install and set up the SDK:
 
     ```sh
     source ./scripts/setup-android-sdk.sh
@@ -277,14 +291,14 @@ identifier and the revision number:
 
 CPU ABI identifier is one of the following:
 
-| Identifier | CPU ABI                 |
-| ---------- | ----------------------- |
-| 0          | `armeabi-v7a`           |
-| 1          | `x86_64`                |
-| 2          | `arm64-v8a`             |
-| 3          | AAB with all above ABIs |
+| Identifier | CPU ABI                     |
+| ---------- | --------------------------- |
+| 0          | `armeabi-v7a`               |
+| 1          | `x86_64`                    |
+| 2          | `arm64-v8a`                 |
+| 3          | AAB with all supported ABIs |
 
-Revision numbers start from 0 for each major release and are updated when we apply fixes to existing releases.
+Revision numbers start from 0 after each release and are incremented by 1 thereafter.
 
 <details>
 <summary>Example</summary>
@@ -308,7 +322,7 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
 
-`tor-spoof-english.patch` & `tor-spoof-english-switch.patch` are taken from the [Tor Project](https://support.torproject.org/about/distribute-tor/).
+`tor-spoof-english.patch` is taken from the [Tor Project](https://support.torproject.org/about/distribute-tor/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
 ## Notices
 

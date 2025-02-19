@@ -1,8 +1,26 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 807c5c2..77abf7a 100644
+index df8ac39bb3..ff4229dc03 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -909,7 +909,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -487,7 +487,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var openHomepageAfterFourHoursOfInactivity by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_start_on_home_after_four_hours),
+-        default = true,
++        default = false,
+     )
+ 
+     /**
+@@ -495,7 +495,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var alwaysOpenTheHomepageWhenOpeningTheApp by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_start_on_home_always),
+-        default = false,
++        default = true,
+     )
+ 
+     /**
+@@ -920,7 +920,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldDeleteBrowsingDataOnQuit by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_browsing_data_on_quit),
@@ -11,7 +29,7 @@ index 807c5c2..77abf7a 100644
      )
  
      var deleteOpenTabs by booleanPreference(
-@@ -924,7 +924,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -935,7 +935,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var deleteCookies by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_cookies_now),
@@ -20,7 +38,7 @@ index 807c5c2..77abf7a 100644
      )
  
      var deleteCache by booleanPreference(
-@@ -934,7 +934,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -945,7 +945,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var deleteSitePermissions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_permissions_now),
@@ -29,3 +47,47 @@ index 807c5c2..77abf7a 100644
      )
  
      var deleteDownloads by booleanPreference(
+@@ -1001,7 +1001,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         }
+ 
+     fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
+-        preferences.getBoolean(type.getPreferenceKey(appContext), false)
++        preferences.getBoolean(type.getPreferenceKey(appContext), true)
+ 
+     fun setDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType, value: Boolean) {
+         preferences.edit().putBoolean(type.getPreferenceKey(appContext), value).apply()
+diff --git a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
+index a5cc8cabb6..ea74ef7ee4 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
+@@ -5,7 +5,7 @@
+ <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto">
+     <SwitchPreference
+-        android:defaultValue="false"
++        android:defaultValue="true"
+         android:key="@string/pref_key_delete_browsing_data_on_quit"
+         android:summary="@string/preference_summary_delete_browsing_data_on_quit_2"
+         android:title="@string/preferences_delete_browsing_data_on_quit" />
+diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+index 5ca4cff86d..81e541b4ab 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+@@ -49,7 +49,7 @@
+         app:iconSpaceReserved="false">
+ 
+         <org.mozilla.fenix.settings.RadioButtonPreference
+-            android:defaultValue="false"
++            android:defaultValue="true"
+             android:key="@string/pref_key_start_on_home_always"
+             android:title="@string/opening_screen_homepage" />
+ 
+@@ -59,7 +59,7 @@
+             android:title="@string/opening_screen_last_tab" />
+ 
+         <org.mozilla.fenix.settings.RadioButtonPreference
+-            android:defaultValue="true"
++            android:defaultValue="false"
+             android:key="@string/pref_key_start_on_home_after_four_hours"
+             android:title="@string/opening_screen_after_four_hours_of_inactivity" />
+ 

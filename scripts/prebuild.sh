@@ -174,10 +174,6 @@ sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
     app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
-# Enable cookie banner handling
-sed -i \
-    -e '168s/channel: developer/channel: release/' app/nimbus.fml.yaml
-
 # Set up target parameters
 case $(echo "$2" | cut -c 7) in
 0)
@@ -254,7 +250,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/133\.0/135.0/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/133\.0/135.0.1/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -353,21 +349,6 @@ fi
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
-
-# Disable Gecko Media Plugins and casting
-sed -i -e '/gmp-provider/d; /casting.enabled/d' mobile/android/app/geckoview-prefs.js
-# shellcheck disable=SC2129
-cat <<EOF >>mobile/android/app/geckoview-prefs.js
-
-// Disable Gecko Media Plugins
-pref("media.gmp-provider.enabled", false);
-
-// Avoid openh264 being downloaded
-pref("media.gmp-manager.url.override", "data:text/plain,");
-
-// Disable openh264 if it is already downloaded
-pref("media.gmp-gmpopenh264.enabled", false);
-EOF
 
 cat "$patches/preferences/phoenix-android.js" >>mobile/android/app/geckoview-prefs.js
 cat "$patches/preferences/phoenix-extended-android.js" >>mobile/android/app/geckoview-prefs.js
