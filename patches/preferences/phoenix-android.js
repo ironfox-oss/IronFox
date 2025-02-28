@@ -16,7 +16,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.02.21.1", locked);
+pref("browser.phoenix.version", "2025.02.28.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -207,7 +207,17 @@ pref("extensions.webcompat-reporter.newIssueEndpoint", "");
 
 /// Remove Mozilla URL tracking params
 
+pref("browser.backup.template.fallback-download.aurora", "https://www.mozilla.org/firefox/channel/desktop/#developer");
+pref("browser.backup.template.fallback-download.beta", "https://www.mozilla.org/firefox/channel/desktop/#beta");
+pref("browser.backup.template.fallback-download.esr", "https://www.mozilla.org/firefox/enterprise/#download");
+pref("browser.backup.template.fallback-download.nightly", "https://www.mozilla.org/firefox/channel/desktop/#nightly");
+pref("browser.backup.template.fallback-download.release", "https://www.mozilla.org/firefox/download/thanks/?s=direct");
 pref("signon.firefoxRelay.manage_url", "https://relay.firefox.com/accounts/profile/");
+
+/// Disable Remote Settings 'Preview' Buckets by default
+// Nice to expose via about:config
+
+pref("services.settings.preview_enabled", false); // [HIDDEN, DEFAULT]
 
 pref("browser.phoenix.status.core", "002");
 
@@ -234,11 +244,10 @@ pref("browser.phoenix.status.core", "003");
 /// Disable Network Prefetching
 // https://developer.mozilla.org/docs/Glossary/Prefetch
 
-pref("browser.places.speculativeConnect.enabled", false);
 pref("dom.prefetch_dns_for_anchor_http_document", false); // https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/42684
 pref("dom.prefetch_dns_for_anchor_https_document", false); // [DEFAULT] https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/42684
 pref("network.dns.disablePrefetch", true);
-pref("network.dns.disablePrefetchFromHTTPS", true); // [DEFAULT]
+pref("network.dns.disablePrefetchFromHTTPS", true);
 pref("network.dns.prefetch_via_proxy", false); // [DEFAULT]
 pref("network.http.speculative-parallel-limit", 0); // [DEFAULT - Thunderbird]
 pref("network.predictor.enable-hover-on-ssl", false); // [DEFAULT]
@@ -415,6 +424,15 @@ pref("doh-rollout.uri", "", locked); // [HIDDEN]
 
 pref("network.trr.default_provider_uri", "https://dns.quad9.net/dns-query");
 pref("network.trr.mode", 3);
+
+/// Expose the DoH bootstrap pref, but don't configure by default
+// This is the DNS server Firefox uses to resolve the address of your DoH server
+// By default, Firefox just uses the system DNS
+// This value MUST match the address of the DoH server you're using
+// Ex. you could set this to "9.9.9.9" for Quad9
+// We won't configure this by default to prevent unexpected breakage for users when switching DNS providers, but it's hidden - so we can at least expose it in the about:config
+
+pref("network.trr.bootstrapAddr", ""); // [DEFAULT, HIDDEN]
 
 /// Explicitly disable EDNS Client Subnet (ECS) to prevent leaking general location data to authoritative DNS servers...
 // https://wikipedia.org/wiki/EDNS_Client_Subnet
@@ -791,6 +809,21 @@ pref("extensions.postDownloadThirdPartyPrompt", false, locked); // [HIDDEN - And
 
 pref("extensions.experiments.enabled", false); // [DEFAULT - non-Thunderbird]
 
+/// Enable Add-on Distribution Control (Install Origins)
+// Allows extensions to only be installed from websites they specify in their manifest
+// https://groups.google.com/g/firefox-dev/c/U7GpHE4R-ZY
+// https://searchfox.org/mozilla-central/source/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs#403
+
+pref("extensions.install_origins.enabled", true);
+
+/// Harden CSP policy
+// Currently disables WebAssembly (WASM) & upgrades insecure requests
+
+pref("extensions.webextensions.base-content-security-policy", "script-src 'self' https://* http://localhost:* http://127.0.0.1:* moz-extension: blob: filesystem: 'unsafe-eval' 'unsafe-inline'; upgrade-insecure-requests;");
+pref("extensions.webextensions.base-content-security-policy.v3", "script-src 'self'; upgrade-insecure-requests;");
+pref("extensions.webextensions.default-content-security-policy", "script-src 'self'; upgrade-insecure-requests;");
+pref("extensions.webextensions.default-content-security-policy.v3", "script-src 'self'; upgrade-insecure-requests;"); // [DEFAULT]
+
 /// Enable restricted/quarantined domains by default
 // https://support.mozilla.org/kb/quarantined-domains
 
@@ -1075,6 +1108,8 @@ pref("privacy.spoof_english", 0); // [DEFAULT]
 pref("layout.css.prefers-color-scheme.content-override", 1);
 
 /// Disable WebGPU
+// https://gpuweb.github.io/gpuweb/#privacy-considerations
+// https://gpuweb.github.io/gpuweb/#security-considerations
 // https://browserleaks.com/webgpu
 
 pref("dom.webgpu.enabled", false); // [DEFAULT - non-Nightly]
@@ -1108,7 +1143,15 @@ pref("signon.autofillForms", false);
 pref("signon.autofillForms.http", false); // [DEFAULT]
 
 /// Disable formless capture of log-in credentials
+// This gets very complicated very fast, and there's very little documentation on this - but TL;DR:
+// Firefox's built-in password manager has historically prompted users to save passwords by detecting standard <form> elements and waiting for specific events (ex. `onsubmit`)
+// The problem is that not all websites use <form> elements for password fields, meaning Firefox can't always use this standard method.
+// So, in order to detect these "formless" password entries (to ask users whether they want to save the password), Firefox uses a heuristic that temporarily monitors & stores user keystrokes...
+// Note that with this disabled, Firefox will still show a password icon in the URL bar that allows you to store credentials, this only impacts the actual pop-up (for sites with these "formless" password entires)
+// Unfortunately, it appears that Fenix doesn't support showing a password icon in the URL bar like Firefox on desktop does - so we're going to override this (`signon.formlessCapture.enabled`) for Android (but we'll still keep formless capture disabled in private browsing with `signon.privateBrowsingCapture.enabled`, and we still disable the password manager itself by default anyways...)
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1119035#c2
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1166947
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1119077#c1
 
 pref("signon.formlessCapture.enabled", false);
 pref("signon.privateBrowsingCapture.enabled", false);
@@ -1119,9 +1162,10 @@ pref("signon.privateBrowsingCapture.enabled", false);
 pref("layout.forms.reveal-password-button.enabled", true);
 
 /// Prevent websites from dictating whether to allow filling passwords
+// https://bugzilla.mozilla.org/show_bug.cgi?id=956906
 // https://blog.0xbadc0de.be/archives/124
 
-pref("signon.storeWhenAutocompleteOff", false);
+pref("signon.storeWhenAutocompleteOff", true); // [DEFAULT]
 
 /// Disable password truncation
 // https://www.ghacks.net/2020/05/18/firefox-77-wont-truncate-text-exceeding-max-length-to-address-password-pasting-issues/
@@ -1129,7 +1173,8 @@ pref("signon.storeWhenAutocompleteOff", false);
 pref("editor.truncate_user_pastes", false);
 
 /// Disable Password Manager by default - Insecure & unencrypted
-/// You should instead use something like Bitwarden or Proton Pass
+// You should instead use a proper solution (ex. Bitwarden)
+// https://www.wired.com/2016/08/browser-password-manager-probably-isnt-enough/
 // https://support.mozilla.org/kb/manage-your-logins-firefox-password-manager
 // https://wiki.mozilla.org/Firefox/Features/Form_Autofill
 
@@ -1224,15 +1269,6 @@ pref("dom.postMessage.sharedArrayBuffer.withCOOP_COEP", false);
 pref("browser.phoenix.status.core", "019");
 
 // 020 MISC. SECURITY
-
-// Prevent websites from automatically downloading as many files as they want to a user's device...
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1731668
-// Can be used for denial of service
-// Allows overriding for specific downloads if needed
-// https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/41764
-// Ex. also enabled by Tor Browser
-
-pref("browser.download.enable_spam_prevention", true);
 
 // Do not disable Spectre mitigations for isolated content...
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8689
@@ -1362,6 +1398,17 @@ pref("dom.security.skip_about_page_has_csp_assert", false); // [DEFAULT - non-Th
 
 pref("security.browser_xhtml_csp.enabled", true); // [DEFAULT, HIDDEN - Thunderbird]
 
+/// Enable the Sanitizer API
+// https://github.com/WICG/sanitizer-api
+
+pref("dom.security.sanitizer.enabled", true);
+
+/// Enable Element.setHTML
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1805632
+// https://webdocs.dev/en-us/docs/web/api/element/sethtml
+
+pref("dom.security.setHTML.enabled", true);
+
 /// Enable Trusted Types (Like Chromium)
 // https://w3c.github.io/trusted-types/dist/spec/
 // https://developer.mozilla.org/docs/Web/API/Trusted_Types_API
@@ -1400,6 +1447,12 @@ pref("browser.tabs.remote.enforceRemoteTypeRestrictions", true); // [DEFAULT - N
 // https://developer.mozilla.org/docs/Web/XML/Guides/OpenSearch#supporting_automatic_updates_for_opensearch_plugins
 
 pref("browser.search.update", false); // [DEFAULT - Android]
+
+/// Sync with Remote Settings hourly, rather than the default of only once a day
+// This is used for delivering lots of security-critical databases (Ex. CRLite/revocation checks, malicious add-on blocklists, etc...)
+// So let's make sure our users are up to date as quick as possible
+
+pref("services.settings.poll_interval", 3600);
 
 pref("browser.phoenix.status.core", "020");
 
@@ -1443,6 +1496,19 @@ pref("media.gmp-widevinecdm.enabled", false);
 pref("media.gmp-widevinecdm.visible", false);
 pref("media.gmp-widevinecdm-l1.enabled", false); // [DEFAULT (Except for Nightly) - HIDDEN]
 pref("media.gmp-widevinecdm-l1.visible", false); // [DEFAULT (Except for Nightly) - HIDDEN]
+
+/// Disable OpenH264 in favor of hardware decoding
+// Mozilla is currently shipping OpenH264 2.3.2, which is around ~2 years out of date... https://github.com/cisco/openh264/releases/tag/v2.3.1
+// Currently susceptible to a high severity CVE: https://www.cve.org/CVERecord?id=CVE-2025-27091
+// https://bugzilla.mozilla.org/show_bug.cgi?id=CVE-2025-27091
+// Downloads are also still distributed over standard, unencrypted HTTP...
+// https://searchfox.org/mozilla-central/source/toolkit/content/gmp-sources/openh264.json
+
+pref("media.ffmpeg.allow-openh264", false); // [DEFAULT - non-Nightly]
+pref("media.gmp-gmpopenh264.enabled", false);
+pref("media.gmp-gmpopenh264.provider.enabled", false); // [HIDDEN]
+pref("media.gmp-gmpopenh264.visible", false);
+pref("media.webrtc.hw.h264.enabled", true); // [DEFAULT - Android] Enables H264 hardware decoding https://bugzilla.mozilla.org/show_bug.cgi?id=1717679
 
 pref("browser.phoenix.status.core", "022");
 
@@ -1549,7 +1615,6 @@ pref("layout.css.report_errors", false); // [DEFAULT - Android] https://searchfo
 pref("media.cache_readahead_limit", 7200);
 pref("media.cache_resume_threshold", 3600);
 pref("media.memory_cache_max_size", 65536); // [Default = 8192]
-pref("media.webrtc.hw.h264.enabled", true); // [DEFAULT - Android] Enables H264 hardware decoding, helps with performance + nice for folks who disable GMP/OpenH264, also enabled by LibreWolf https://bugzilla.mozilla.org/show_bug.cgi?id=1717679
 pref("network.dnsCacheEntries", 1000); // [Default = 800 - Nightly Desktop, 400 - Non-Nightly Desktop]
 pref("network.dnsCacheExpiration", 3600); // [Default = 60]
 pref("network.dnsCacheExpirationGracePeriod", 240); // [Default = 60]
@@ -1584,6 +1649,8 @@ pref("full-screen-api.transition-duration.leave", "0 0"); // [Default = 200 200]
 pref("full-screen-api.warning.delay", -1); // [Default = 500, -1 = Automatic]
 pref("full-screen-api.warning.timeout", 0); // [Default = 3000]
 pref("security.xfocsp.hideOpenInNewWindow", false);
+pref("services.settings.loglevel", "warn"); // [DEFAULT, HIDDEN] This pref allows controlling the log level of Remote Settings, set here to the default value so that it's exposed in the `about:config`
+pref("toolkit.backgroundtasks.loglevel", "error"); // [DEFAULT, HIDDEN] To expose via the `about:config` https://searchfox.org/mozilla-central/source/toolkit/components/backgroundtasks/BackgroundTasksManager.sys.mjs
 pref("ui.key.menuAccessKeyFocuses", false); // [DEFAULT - non-Windows/Linux] Prevent alt key from toggling menu bar by default
 pref("view_source.syntax_highlight", true); // [DEFAULT - non-Thunderbird]
 pref("view_source.wrap_long_lines", true); // [DEFAULT - Android]
@@ -1642,6 +1709,7 @@ pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractio
 // Chipotle (chipotle.com) - Disables timezone spoofing (-JSDateTimeUTC) for order confirmation/estimated arrival times
 // Cinny (cinny.in) - Disables timezone spoofing (-JSDateTimeUTC)
 // Discord (discord.com) - Disables timezone spoofing (-JSDateTimeUTC)
+// DoorDash (doordash.com) - Disables timezone spoofing (-JSDateTimeUTC) for estimated delivery times
 // Element (arcticfoxes.net) - Disables timezone spoofing (-JSDateTimeUTC)
 // Element (aria.im) - Disables timezone spoofing (-JSDateTimeUTC)
 // Element (mozilla.org) - Disables timezone spoofing (-JSDateTimeUTC)
@@ -1655,7 +1723,7 @@ pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractio
 // Watch Duty (watchduty.org) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues
 // X/Twitter (x.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
 
-pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"chipotle.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"cinny.in\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"mozilla.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}]");
+pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"chipotle.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"cinny.in\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"doordash.com\", \"overrides\": \"-JSDateTimeUTC\"},  {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"mozilla.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}]");
 
 /// Enable dynamic rounding of content dimensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1407366
@@ -1664,27 +1732,38 @@ pref("privacy.resistFingerprinting.letterboxing", true); // [HIDDEN]
 
 pref("browser.phoenix.status.android", "003");
 
-// 004 ATTACK SURFACE REDUCTION
+// 004 PASSWORDS & AUTHENTICATION
 
-// Re-enable the JIT Baseline Interpreter, due to severe performance issues some users have been experiencing...
+/// Re-enable formless capture in standard windows
+// See `018` at `Phoenix-Core` for details
+// We still keep formless capture disabled in private browsing with `signon.privateBrowsingCapture.enabled`, and we still disable the password manager itself by default anyways...
+// https://gitlab.com/ironfox-oss/IronFox/-/issues/11
+
+pref("signon.formlessCapture.enabled", true); // [DEFAULT]
+
+pref("browser.phoenix.status.android", "004");
+
+// 005 ATTACK SURFACE REDUCTION
+
+/// Re-enable the JIT Baseline Interpreter, due to severe performance issues some users have been experiencing...
 // ex. https://gitlab.com/ironfox-oss/IronFox/-/issues/18
 
 pref("javascript.options.blinterp", true); // [DEFAULT]
 
-pref("browser.phoenix.status.android", "004");
+pref("browser.phoenix.status.android", "005");
 
-// 005 MISC. SECURITY
+// 006 MISC. SECURITY
 
-// Always warn users before launching other apps...
+/// Always warn users before launching other apps...
 
 pref("network.protocol-handler.warn-external.file", true);
 pref("network.protocol-handler.warn-external.sms", true);
 pref("network.protocol-handler.warn-external.tel", true);
 pref("network.protocol-handler.warn-external.vnd.youtube", true);
 
-pref("browser.phoenix.status.android", "005");
+pref("browser.phoenix.status.android", "006");
 
-// 006 MEDIA
+// 007 MEDIA
 
 /// Disable Widevine MediaDrm/MediaKeySystem
 // https://developer.android.com/reference/android/media/MediaDrm
@@ -1692,14 +1771,14 @@ pref("browser.phoenix.status.android", "005");
 
 pref("media.mediadrm-widevinecdm.visible", false);
 
-pref("browser.phoenix.status.android", "006");
+pref("browser.phoenix.status.android", "007");
 
-// 007 PERFORMANCE
+// 008 PERFORMANCE
 
 pref("browser.sessionstore.max_tabs_undo", 7);
 pref("network.http.max-connections", 256); // [Default = 128]
 
-pref("browser.phoenix.status.android", "007");
+pref("browser.phoenix.status.android", "008");
 
 pref("browser.phoenix.status.android", "successfully applied :D", locked);
 
