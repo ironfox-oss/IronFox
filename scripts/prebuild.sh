@@ -169,6 +169,10 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
+# Remove Reddit & YouTube as built-in search engines (due to poor privacy practices)
+rm app/src/main/assets/searchplugins/reddit.xml
+rm app/src/main/assets/searchplugins/youtube.xml
+
 # Enable about:config
 sed -i \
     -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
