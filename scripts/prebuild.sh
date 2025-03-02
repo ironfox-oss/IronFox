@@ -239,7 +239,7 @@ find "$patches/a-c-overlay" -type f | while read -r src; do
 done
 # Add the added search engines as `general` engines
 sed -i \
-    -e '41i \ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "mojeek",\n\ \ \ \ "nosearch",\n\ \ \ \ "qwantjunior",\n\ \ \ \ "startpage",\n\ \ \ \ "swisscows",' \
+    -e '41i \ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "mojeek",\n\ \ \ \ "nosearch",\n\ \ \ \ "startpage",\n\ \ \ \ "swisscows",' \
     components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 # Hack to prevent too long string from breaking build
 sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
