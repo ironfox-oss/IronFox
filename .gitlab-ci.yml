@@ -91,12 +91,12 @@ build-apk:
     paths:
       - $CI_PROJECT_DIR/artifacts/apk/**/*
       - $CI_PROJECT_DIR/artifacts/aar/**/*
-  except:
-      changes:
-      - "*.md"
-      - assets/*
-      - .gitignore
-      - LICENSE
+  rules:
+    - changes:
+      - patches/**
+      - scripts/**
+      - Dockerfile
+      - .gitlab-ci.yml
 
 build-apk-set:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
@@ -123,12 +123,12 @@ build-apk-set:
     expire_in: "30 days"
     paths:
       - $CI_PROJECT_DIR/artifacts/apks/**/*
-  except:
-      changes:
-      - "*.md"
-      - assets/*
-      - .gitignore
-      - LICENSE
+  rules:
+    - changes:
+      - patches/**
+      - scripts/**
+      - Dockerfile
+      - .gitlab-ci.yml
 
 prepare-release:
   image: alpine:latest
