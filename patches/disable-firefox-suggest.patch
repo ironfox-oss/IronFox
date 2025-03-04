@@ -1,8 +1,7 @@
 diff --git a/mobile/android/fenix/app/.experimenter.yaml b/mobile/android/fenix/app/.experimenter.yaml
-index d78513f57c..59f317c5a8 100644
 --- a/mobile/android/fenix/app/.experimenter.yaml
 +++ b/mobile/android/fenix/app/.experimenter.yaml
-@@ -17,7 +17,7 @@ extensions-process:
+@@ -17,7 +17,7 @@
        description: "If true, the extensions process is enabled."
  fx-suggest:
    description: A feature that provides Firefox Suggest search suggestions.
@@ -12,10 +11,9 @@ index d78513f57c..59f317c5a8 100644
    variables:
      enabled:
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index e70a2a99fe..a73ae3c9ee 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -29,9 +29,9 @@ import:
+@@ -29,9 +29,9 @@
        awesomebar-suggestion-provider:
          - value:
              available-suggestion-types: {
@@ -27,7 +25,7 @@ index e70a2a99fe..a73ae3c9ee 100644
              }
  
  features:
-@@ -366,11 +366,11 @@ features:
+@@ -348,11 +348,11 @@
      defaults:
        - channel: developer
          value:
@@ -43,15 +41,14 @@ index e70a2a99fe..a73ae3c9ee 100644
    nimbus-is-ready:
      description: >
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index c32e92c..ddbdb01 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -66,7 +66,7 @@ object FeatureFlags {
+@@ -61,7 +61,7 @@
      /**
       * Allows users to enable Firefox Suggest.
       */
--    const val fxSuggest = true
-+    const val fxSuggest = false
+-    const val FX_SUGGEST = true
++    const val FX_SUGGEST = false
  
      /**
       * Enable Meta attribution.
