@@ -58,7 +58,10 @@ if [ ! -d "$ANDROID_NDK" ]; then
 fi
 
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
-[ "$JAVA_VER" -ge 15 ] || { echo "Java 17 or newer must be set as default JDK"; exit 1; };
+[ "$JAVA_VER" -ge 15 ] || {
+    echo "Java 17 or newer must be set as default JDK"
+    exit 1
+}
 
 if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
     echo "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
@@ -254,7 +257,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/133\.0/135.0.1/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/135\.0\.1/136.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -349,13 +352,15 @@ fi
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
-} >> mozconfig
+} >>mozconfig
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 
-cat "$patches/preferences/phoenix-android.js" >>mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/phoenix-extended-android.js" >>mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/ironfox.js" >>mobile/android/app/geckoview-prefs.js
+{
+    cat "$patches/preferences/phoenix-android.js"
+    cat "$patches/preferences/phoenix-extended-android.js"
+    cat "$patches/preferences/ironfox.js"
+} >>mobile/android/app/geckoview-prefs.js
 
 popd
