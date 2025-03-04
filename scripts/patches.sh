@@ -80,7 +80,8 @@ PATCH_FILES=(
     "enable-light-mode-by-default.patch"
 
     # Disable Fakespot ("Shopping Experience"...)
-    "disable-shopping-experience.patch"
+    # ..not applicable anymore
+    # "disable-shopping-experience.patch"
 
     # Remove tracking parameters from URLs
     "remove-tracking-params.patch"

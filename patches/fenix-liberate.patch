@@ -1,7 +1,7 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1576,16 +1576,6 @@
+@@ -1586,16 +1586,6 @@
      - support-base
      - support-test
      - tooling-lint
@@ -64,7 +64,7 @@ diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.build
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -656,7 +656,6 @@
+@@ -657,7 +657,6 @@
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -72,7 +72,7 @@ diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/bu
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
      testImplementation project(':support-test-fakes')
-@@ -707,16 +706,6 @@
+@@ -708,16 +707,6 @@
      implementation ComponentsDependencies.protobuf_javalite
      implementation ComponentsDependencies.google_material
  
@@ -634,7 +634,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFla
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1120,19 +1120,16 @@
+@@ -1124,19 +1124,16 @@
              view = view,
          )
  
@@ -675,7 +675,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -178,7 +177,6 @@
+@@ -177,7 +176,6 @@
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -739,13 +739,13 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
-@@ -30,84 +26,9 @@
+@@ -30,83 +26,10 @@
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
 -    private var referrerClient: InstallReferrerClient? = null
 -
--    override fun start() {
+     override fun start() {
 -        if (context.settings().utmParamsKnown) {
 -            return
 -        }
@@ -778,10 +778,9 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -                            }
 -
 -                            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
-+    override fun start() { /* noop */ }
- 
+-
 -                            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
--                            if (FeatureFlags.metaAttributionEnabled) {
+-                            if (FeatureFlags.META_ATTRIBUTION_ENABLED) {
 -                                MetaParams.extractMetaAttribution(utmParams.content)
 -                                    ?.recordMetaAttribution()
 -                            }
@@ -816,17 +815,15 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -                }
 -            },
 -        )
--    }
--
--    override fun stop() {
+     }
+ 
+     override fun stop() {
 -        referrerClient?.endConnection()
 -        referrerClient = null
--    }
-+    override fun stop() { /* noop */ }
+     }
  
      override fun track(event: Event) = Unit
- 
-@@ -225,12 +146,6 @@
+@@ -225,12 +148,6 @@
              return
          }
          intoSettings(settings)
@@ -839,7 +836,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  }
  
-@@ -325,9 +240,6 @@
+@@ -325,9 +242,6 @@
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -895,7 +892,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -341,7 +341,7 @@
+@@ -351,7 +351,7 @@
  
      var isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
@@ -904,7 +901,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
      )
  
      var isMarketingTelemetryEnabled by booleanPreference(
-@@ -351,7 +351,7 @@
+@@ -377,7 +377,7 @@
  
      var isExperimentationEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
@@ -913,7 +910,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
      )
  
      var isOverrideTPPopupsForPerformanceTest = false
-@@ -1636,7 +1636,7 @@
+@@ -1662,7 +1662,7 @@
      var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
          featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
@@ -922,7 +919,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
      )
  
      /**
-@@ -1710,7 +1710,7 @@
+@@ -1746,7 +1746,7 @@
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),

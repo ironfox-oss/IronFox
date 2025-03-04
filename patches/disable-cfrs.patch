@@ -30,7 +30,7 @@ diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -167,8 +167,7 @@
+@@ -172,8 +172,7 @@
          default = 0L,
      )
  
@@ -40,7 +40,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -797,20 +796,12 @@
+@@ -823,20 +822,12 @@
      /**
       * Indicates if the total cookie protection CRF should be shown.
       */
@@ -63,7 +63,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var shouldShowTabSwipeCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_toolbar_tab_swipe_cfr),
-@@ -1072,23 +1063,7 @@
+@@ -1098,23 +1089,7 @@
      private val userNeedsToVisitInstallableSites: Boolean
          get() = pwaInstallableVisitCount.underMaxCount()
  
@@ -88,7 +88,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
-@@ -1100,8 +1075,7 @@
+@@ -1126,8 +1101,7 @@
          default = true,
      )
  
@@ -98,7 +98,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
-@@ -1295,32 +1269,14 @@
+@@ -1321,32 +1295,14 @@
  
      var showedPrivateModeContextualFeatureRecommender by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_showed_private_mode_cfr),
@@ -133,7 +133,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var openLinksInExternalAppOld by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_open_links_in_external_app_old),
-@@ -1570,11 +1526,7 @@
+@@ -1596,11 +1552,7 @@
      /**
       * Indicates if sync onboarding CFR should be shown.
       */
@@ -146,7 +146,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      /**
       * Indicates if home onboarding dialog should be shown.
-@@ -1769,26 +1721,17 @@
+@@ -1789,34 +1741,22 @@
      /**
       * Indicates if the navigation bar CFR should be displayed to the user.
       */
@@ -155,6 +155,15 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
 -        default = true,
 -    )
 +    var shouldShowNavigationBarCFR = false
+ 
+     /**
+      * Indicates if the search bar CFR should be displayed to the user.
+      */
+-    var shouldShowSearchBarCFR by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_should_searchbar_cfr),
+-        default = false,
+-    )
++    var shouldShowSearchBarCFR = false
  
      /**
       * Indicates Navigation Bar's Navigation buttons CFR should be displayed to the user.
@@ -175,4 +184,4 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
 +    var shouldShowMenuCFR = false
  
      /**
-      * Time in milliseconds since the user first opted in the review quality check feature.
+      * Get the current mode for how https-only is enabled.
