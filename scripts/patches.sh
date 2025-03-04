@@ -16,6 +16,12 @@ PATCH_FILES=(
     # Patch the use of proprietary and tracking libraries
     "fenix-liberate.patch"
 
+    # Disable Telemetry
+    "disable-telemetry.patch"
+
+    # Disable Pocket/Contile
+    "disable-pocket.patch"
+
     # Support spoofing locale to 'en-US'
     "tor-spoof-english.patch"
 
@@ -37,20 +43,11 @@ PATCH_FILES=(
     # Disable shipped domains - These haven't been updated in several years, posing security concerns - and are also just annoying...
     "disable-shipped-domains.patch"
 
-    # Disable password manager/autofill for login info by default
-    "disable-login-autofill.patch"
-
-    # Disable credit card/address autofill by default
+    # Disable password manager/autofill by default
     "disable-autofill.patch"
 
     # Clear open tabs, browsing history, cache, & download list on exit by default
     #"sanitize-on-exit.patch"
-
-    # Disable 'Meta Attribution' - just more telemetry - used to track referrals
-    "disable-meta-attribution.patch"
-
-    # Disable Campaign Growth Data Measurement - more telemetry :/
-    "disable-campaign-growth-data-measurement.patch"
 
     # Disable Firefox Suggest
     "disable-firefox-suggest.patch"
@@ -61,17 +58,11 @@ PATCH_FILES=(
     # Disable Contextual Feature Recommendations
     "disable-cfrs.patch"
 
-    # Disable more Pocket crap not already covered...
-    "kill-pocket.patch"
-
     # Disable Mozilla Feedback Surveys (Microsurveys)
     "disable-microsurveys.patch"
 
-    # Enable per-site process isolation (Fission)
+    # Enable per-site process isolation (Fission) + a UI option to toggle it
     "enable-fission.patch"
-
-    # Expose UI option to toggle Fission, only available in Nightly by default...
-    "control-fission.patch"
 
     # Enable FPP (Fingerprinting Protection)
     "enable-fingerprinting-protection.patch"
@@ -108,9 +99,6 @@ PATCH_FILES=(
 
     # Enable preference to toggle tap strip https://gitlab.com/ironfox-oss/IronFox/-/issues/27
     "enable-tap-strip.patch"
-
-    # Ensure we're disabling telemetry at buildtime...
-    "buildtime-disable-telemetry.patch"
 
     # Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
     "enable-felt-privacy.patch"
