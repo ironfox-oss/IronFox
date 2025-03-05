@@ -49,7 +49,7 @@ if grep -q "Fedora" /etc/os-release; then
 else
     $SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
     $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
-    $SDK_MANAGER 'ndk;27.2.12479018'  # for application-services
+    $SDK_MANAGER 'ndk;28.0.13004108'  # for application-services
 fi
 
 export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
