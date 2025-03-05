@@ -64,6 +64,7 @@ build-docker:
         - Dockerfile
       changes:
         - Dockerfile
+        - scripts/setup-android-sdk.sh
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
 
 build-apk:
