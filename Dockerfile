@@ -20,6 +20,8 @@ RUN dnf install -y \
     xz \
     zlib-devel
 
+RUN perl -MCPAN -e "install File::Slurp"
+
 ENV ENVDOCKER=/opt/env_docker.sh
 ENV ANDROID_HOME=/root/android-sdk
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
