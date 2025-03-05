@@ -45,14 +45,16 @@ export PATH
 if grep -q "Fedora" /etc/os-release; then
     JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" $SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
     JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
+    JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" $SDK_MANAGER 'ndk;27.2.12479018'  # for mozbuild
     JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk" $SDK_MANAGER 'ndk;28.0.13004108'  # for application-services
 else
     $SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
     $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
+    $SDK_MANAGER 'ndk;27.2.12479018'  # for mozbuild
     $SDK_MANAGER 'ndk;28.0.13004108'  # for application-services
 fi
 
-export ANDROID_NDK=$ANDROID_HOME/ndk/28.0.13004108
+export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
 [ -d "$ANDROID_NDK" ] || {
     echo "$ANDROID_NDK does not exist."
     return
