@@ -28,7 +28,7 @@ RUN echo "#!/bin/bash" >> $ENVDOCKER && \
     echo 'source /root/env/bin/activate' >> $ENVDOCKER
 
 # Set up Android SDK
-ADD https://gitlab.com/ironfox-oss/IronFox/-/raw/main/scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
+COPY scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
 RUN bash -x /tmp/setup-android-sdk.sh && \
     echo "export ANDROID_HOME=$ANDROID_HOME" >> $ENVDOCKER && \
     echo "export ANDROID_SDK_ROOT=\$ANDROID_HOME" >> $ENVDOCKER
