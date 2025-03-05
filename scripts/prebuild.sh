@@ -254,8 +254,6 @@ popd
 # Application Services
 
 pushd "$application_services"
-# Temporary workaround - I'm certain there's a better way to do this, but to hell with this...
-patch -p1 --no-backup-if-mismatch --quiet <"$patches/prepare-maven.patch"
 # Break the dependency on older A-C
 sed -i -e '/android-components = /s/135\.0\.1/136.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
