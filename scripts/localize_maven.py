@@ -47,7 +47,7 @@ def localize_maven(file_path):
             continue
 
         # Track maven blocks
-        if not in_maven_block and len(re.findall(r'maven.*\{', line)) > 0:
+        if not in_maven_block and len(re.findall(r'maven\s*\{', line)) > 0:
             in_maven_block = True
             brace_depth = 1
             maven_block_content = [line]
