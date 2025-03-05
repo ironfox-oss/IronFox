@@ -22,6 +22,7 @@ index 777a555948..c4d74f0de2 100644
 +    var showSearchSuggestionsInPrivateOnboardingFinished = true
  
      fun incrementVisitedInstallableCount() = pwaInstallableVisitCount.increment()
+     
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 index a4de5c1..e15e096 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
