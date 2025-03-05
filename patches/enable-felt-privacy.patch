@@ -18,3 +18,18 @@ index 7b22ed8a33..91c31f1354 100644
          value:
 -          felt-privacy-enabled: false
 +          felt-privacy-enabled: true
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 777a555948..1f058455cf 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1781,9 +1781,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_should_enable_felt_privacy),
+         featureFlag = true,
+-        default = {
+-            FxNimbus.features.privateBrowsing.value().feltPrivacyEnabled
+-        },
++        default = { true },
+     )
+ 
+     /**

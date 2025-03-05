@@ -48,7 +48,7 @@ diff --git a/mobile/android/android-components/components/concept/engine/src/mai
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -186,6 +186,7 @@
+@@ -188,6 +188,7 @@
              webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_HIGH_VALUE,
              fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
              parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
@@ -122,7 +122,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/a
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -307,6 +307,11 @@
+@@ -317,6 +317,11 @@
          false,
      )
  
@@ -175,7 +175,7 @@ diff --git a/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settin
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -431,6 +431,8 @@
+@@ -435,6 +435,8 @@
      <!-- Bookmarks -->
      <string name="pref_key_use_new_bookmarks_ui" translatable="false">pref_key_use_new_bookmarks_ui</string>
  
@@ -187,10 +187,10 @@ diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-@@ -229,4 +229,6 @@
-     <string name="glean_debug_tools_send_baseline_ping_toast_message">Sent baseline ping</string>
-     <!-- The send metrics pings toast message -->
-     <string name="glean_debug_tools_send_metrics_ping_toast_message">Sent metrics ping</string>
+@@ -217,4 +217,6 @@
+     <string name="glean_debug_tools_send_ping_button_text">Send Ping</string>
+     <!-- The send pings toast message. The first parameter is the type of ping -->
+     <string name="glean_debug_tools_send_ping_toast_message">Sent %1$s ping</string>
 +    <!-- Spoof locale to English -->
 +    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
  </resources>
@@ -203,17 +203,17 @@ diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
      method @Nullable public Rect getScreenSizeOverride();
 +    method public boolean getSpoofEnglish();
      method public boolean getTranslationsOfferPopup();
+     method @NonNull public List<String> getTrustedRecursiveResolverExcludedDomains();
      method @NonNull public String getTrustedRecursiveResolverUri();
-     method public int getTrustedRecusiveResolverMode();
-@@ -941,6 +942,7 @@
+@@ -942,6 +943,7 @@
      method @NonNull public GeckoRuntimeSettings setParallelMarkingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setPreferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings setRemoteDebuggingEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
      method @NonNull public GeckoRuntimeSettings setTranslationsOfferPopup(boolean);
+     method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverExcludedDomains(@NonNull List<String>);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverMode(int);
-     method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverUri(@NonNull String);
-@@ -1001,6 +1003,7 @@
+@@ -1003,6 +1005,7 @@
      method @NonNull public GeckoRuntimeSettings.Builder preferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings.Builder remoteDebuggingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder screenSizeOverride(int, int);
@@ -224,7 +224,7 @@ diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -588,6 +588,17 @@
+@@ -590,6 +590,17 @@
        getSettings().setLargeKeepaliveFactor(factor);
        return this;
      }
@@ -242,7 +242,7 @@ diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoR
    }
  
    private GeckoRuntime mRuntime;
-@@ -683,6 +694,7 @@
+@@ -687,6 +698,7 @@
        new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning.pbmode", false);
    /* package */ final Pref<Integer> mCertificateTransparencyMode =
        new Pref<Integer>("security.pki.certificate_transparency.mode", 0);
@@ -250,7 +250,7 @@ diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoR
  
    /* package */ int mPreferredColorScheme = COLOR_SCHEME_SYSTEM;
  
-@@ -1959,6 +1971,27 @@
+@@ -1989,6 +2001,27 @@
      return this;
    }
  

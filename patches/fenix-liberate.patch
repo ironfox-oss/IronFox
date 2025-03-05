@@ -1,7 +1,7 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1576,16 +1576,6 @@
+@@ -1586,16 +1586,6 @@
      - support-base
      - support-test
      - tooling-lint
@@ -64,7 +64,7 @@ diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.build
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -656,7 +656,6 @@
+@@ -657,7 +657,6 @@
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -72,7 +72,7 @@ diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/bu
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
      testImplementation project(':support-test-fakes')
-@@ -707,16 +706,6 @@
+@@ -708,16 +707,6 @@
      implementation ComponentsDependencies.protobuf_javalite
      implementation ComponentsDependencies.google_material
  
@@ -610,31 +610,10 @@ new file mode 100644
 +        return false
 +    }
 +}
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -18,7 +18,7 @@
-      * This feature does not only depend on this flag. It requires the AMO collection override to
-      * be enabled which is behind the Secret Settings.
-      * */
--    val customExtensionCollectionFeature = Config.channel.isNightlyOrDebug || Config.channel.isBeta
-+    val customExtensionCollectionFeature = true
- 
-     /**
-      * Pull-to-refresh allows you to pull the web content down far enough to have the page to
-@@ -37,7 +37,7 @@
-     fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
-         val langTag = LocaleManager.getCurrentLocale(context)
-             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
--        return listOf("en-US", "en-CA").contains(langTag)
-+        return false && listOf("en-US", "en-CA").contains(langTag)
-     }
- 
-     /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1120,19 +1120,16 @@
+@@ -1124,19 +1124,16 @@
              view = view,
          )
  
@@ -675,7 +654,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -178,7 +177,6 @@
+@@ -177,7 +176,6 @@
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -739,13 +718,13 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
-@@ -30,84 +26,9 @@
+@@ -30,83 +26,10 @@
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
 -    private var referrerClient: InstallReferrerClient? = null
 -
--    override fun start() {
+     override fun start() {
 -        if (context.settings().utmParamsKnown) {
 -            return
 -        }
@@ -778,10 +757,9 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -                            }
 -
 -                            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
-+    override fun start() { /* noop */ }
- 
+-
 -                            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
--                            if (FeatureFlags.metaAttributionEnabled) {
+-                            if (FeatureFlags.META_ATTRIBUTION_ENABLED) {
 -                                MetaParams.extractMetaAttribution(utmParams.content)
 -                                    ?.recordMetaAttribution()
 -                            }
@@ -816,17 +794,15 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -                }
 -            },
 -        )
--    }
--
--    override fun stop() {
+     }
+ 
+     override fun stop() {
 -        referrerClient?.endConnection()
 -        referrerClient = null
--    }
-+    override fun stop() { /* noop */ }
+     }
  
      override fun track(event: Event) = Unit
- 
-@@ -225,12 +146,6 @@
+@@ -225,12 +148,6 @@
              return
          }
          intoSettings(settings)
@@ -839,7 +815,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  }
  
-@@ -325,9 +240,6 @@
+@@ -325,9 +242,6 @@
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -892,72 +868,6 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  
      /**
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -341,7 +341,7 @@
- 
-     var isTelemetryEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_telemetry),
--        default = true,
-+        default = false,
-     )
- 
-     var isMarketingTelemetryEnabled by booleanPreference(
-@@ -351,7 +351,7 @@
- 
-     var isExperimentationEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
--        default = isTelemetryEnabled,
-+        default = false,
-     )
- 
-     var isOverrideTPPopupsForPerformanceTest = false
-@@ -1636,7 +1636,7 @@
-     var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
-         featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
--        default = { homescreenSections[HomeScreenSection.POCKET] == true },
-+        default = { false },
-     )
- 
-     /**
-@@ -1710,7 +1710,7 @@
-      */
-     var showContileFeature by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
--        default = true,
-+        default = false,
-     )
- 
-     /**
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -139,11 +139,6 @@
-             app:iconSpaceReserved="false"
-             android:title="@string/preferences_notifications" />
- 
--        <androidx.preference.Preference
--            android:key="@string/pref_key_data_choices"
--            app:iconSpaceReserved="false"
--            android:title="@string/preferences_data_collection" />
--
-     </androidx.preference.PreferenceCategory>
- 
-     <PreferenceCategory
-@@ -201,11 +196,6 @@
-         app:iconSpaceReserved="false"
-         android:layout="@layout/preference_category_no_icon_style">
-         <androidx.preference.Preference
--            android:key="@string/pref_key_rate"
--            app:iconSpaceReserved="false"
--            android:title="@string/preferences_rate" />
--
--        <androidx.preference.Preference
-             android:key="@string/pref_key_about"
-             app:iconSpaceReserved="false"
-             android:title="@string/preferences_about" />
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml

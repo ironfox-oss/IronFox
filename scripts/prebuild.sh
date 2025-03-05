@@ -21,9 +21,7 @@ set -e
 
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
-    find ./* -name '*.gradle' -type f -print0 | xargs -0 \
-        sed -n -i \
-        -e '/maven {/{:loop;N;/}$/!b loop;/plugins.gradle.org/!s/maven .*/mavenLocal()/};p'
+    find ./* -name '*.gradle' -type f -exec python3 "$rootdir/scripts/localize_maven.py" {} \;
     # Make gradlew scripts call our Gradle wrapper
     find ./* -name gradlew -type f | while read -r gradlew; do
         echo -e '#!/bin/sh\ngradle "$@"' >"$gradlew"
@@ -58,7 +56,10 @@ if [ ! -d "$ANDROID_NDK" ]; then
 fi
 
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
-[ "$JAVA_VER" -ge 15 ] || { echo "Java 17 or newer must be set as default JDK"; exit 1; };
+[ "$JAVA_VER" -ge 15 ] || {
+    echo "Java 17 or newer must be set as default JDK"
+    exit 1
+}
 
 if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
     echo "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
@@ -106,7 +107,7 @@ echo "...libclang dir set to ${libclang}"
 
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.82.0
+rustup default 1.83.0
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
@@ -168,6 +169,10 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
+
+# Remove Reddit & YouTube as built-in search engines (due to poor privacy practices)
+rm app/src/main/assets/searchplugins/reddit.xml
+rm app/src/main/assets/searchplugins/youtube.xml
 
 # Enable about:config
 sed -i \
@@ -239,7 +244,7 @@ find "$patches/a-c-overlay" -type f | while read -r src; do
 done
 # Add the added search engines as `general` engines
 sed -i \
-    -e '41i \ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "mojeek",\n\ \ \ \ "nosearch",\n\ \ \ \ "qwantjunior",\n\ \ \ \ "startpage",\n\ \ \ \ "swisscows",' \
+    -e '41i \ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "mojeek",\n\ \ \ \ "nosearch",\n\ \ \ \ "startpage",\n\ \ \ \ "swisscows",' \
     components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 # Hack to prevent too long string from breaking build
 sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
@@ -250,7 +255,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/133\.0/135.0.1/' gradle/libs.versions.toml
+sed -i -e '/android-components = /s/133\.0/136.0/' gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -345,13 +350,15 @@ fi
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
-} >> mozconfig
+} >>mozconfig
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 
-cat "$patches/preferences/phoenix-android.js" >>mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/phoenix-extended-android.js" >>mobile/android/app/geckoview-prefs.js
-cat "$patches/preferences/ironfox.js" >>mobile/android/app/geckoview-prefs.js
+{
+    cat "$patches/preferences/phoenix-android.js"
+    cat "$patches/preferences/phoenix-extended-android.js"
+    cat "$patches/preferences/ironfox.js"
+} >>mobile/android/app/geckoview-prefs.js
 
 popd
