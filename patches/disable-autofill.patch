@@ -1,8 +1,23 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 807c5c2..2496b81 100644
+index 777a555948..eef6aa478b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1597,7 +1597,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1272,12 +1272,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     var shouldPromptToSaveLogins by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_save_logins),
+-        default = true,
++        default = false,
+     )
+ 
+     var shouldAutofillLogins by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_autofill_logins),
+-        default = true,
++        default = false,
+     )
+ 
+     /**
+@@ -1642,7 +1642,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillCreditCardDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_credit_cards_save_and_autofill_cards),
@@ -11,7 +26,7 @@ index 807c5c2..2496b81 100644
      )
  
      /**
-@@ -1608,7 +1608,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1653,7 +1653,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillAddressDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_addresses_save_and_autofill_addresses),
@@ -55,3 +70,34 @@ index 00caf8e..b4efbb8 100644
          android:key="@string/pref_key_credit_cards_save_and_autofill_cards"
          android:summary="@string/preferences_credit_cards_save_and_autofill_cards_summary_2"
          android:title="@string/preferences_credit_cards_save_and_autofill_cards_2" />
+diff --git a/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml
+index 1a8810e..1f3ad71 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml
+@@ -9,7 +9,7 @@
+         android:summary="@string/preferences_passwords_save_logins_ask_to_save"
+         android:title="@string/preferences_passwords_save_logins_2" />
+     <SwitchPreference
+-        android:defaultValue="true"
++        android:defaultValue="false"
+         android:key="@string/pref_key_autofill_logins"
+         android:title="@string/preferences_passwords_autofill2"
+         android:summary="@string/preferences_passwords_autofill_description" />
+diff --git a/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml
+index 3fc38f2..1c88040 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml
+@@ -4,11 +4,11 @@
+    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+ <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+     <org.mozilla.fenix.settings.RadioButtonPreference
+-        android:defaultValue="true"
++        android:defaultValue="false"
+         android:key="@string/pref_key_save_logins"
+         android:title="@string/preferences_passwords_save_logins_ask_to_save" />
+     <org.mozilla.fenix.settings.RadioButtonPreference
+-        android:defaultValue="false"
++        android:defaultValue="true"
+         android:key="@string/pref_key_never_save_logins"
+         android:title="@string/preferences_passwords_save_logins_never_save" />
+ </PreferenceScreen>         

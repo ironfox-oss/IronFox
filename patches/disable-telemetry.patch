@@ -1,0 +1,173 @@
+diff --git a/browser/moz.configure b/browser/moz.configure
+index e605019172..73268e5d35 100644
+--- a/browser/moz.configure
++++ b/browser/moz.configure
+@@ -5,11 +5,11 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ imply_option("MOZ_PLACES", True)
+-imply_option("MOZ_SERVICES_HEALTHREPORT", True)
++imply_option("MOZ_SERVICES_HEALTHREPORT", False)
+ imply_option("MOZ_SERVICES_SYNC", True)
+ imply_option("MOZ_DEDICATED_PROFILES", True)
+ imply_option("MOZ_BLOCK_PROFILE_DOWNGRADE", True)
+-imply_option("MOZ_NORMANDY", True)
++imply_option("MOZ_NORMANDY", False)
+ imply_option("MOZ_PROFILE_MIGRATOR", True)
+ 
+ 
+diff --git a/mobile/android/fenix/app/.experimenter.yaml b/mobile/android/fenix/app/.experimenter.yaml
+index d78513f57c..df0285c038 100644
+--- a/mobile/android/fenix/app/.experimenter.yaml
++++ b/mobile/android/fenix/app/.experimenter.yaml
+@@ -36,7 +36,7 @@ glean:
+       description: "A map of metric base-identifiers to booleans representing the state of the 'enabled' flag for that metric."
+ growth-data:
+   description: A feature measuring campaign growth data
+-  hasExposure: true
++  hasExposure: false
+   exposureDescription: ""
+   variables:
+     enabled:
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 8f6c6df..41f0e0c 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -209,7 +209,7 @@ features:
+     defaults:
+       - channel: release
+         value:
+-          enabled: true
++          enabled: false
+ 
+   re-engagement-notification:
+     description: A feature that shows the re-engagement notification if the user is inactive.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+@@ -66,7 +66,7 @@
+     /**
+      * Enable Meta attribution.
+      */
+-    const val META_ATTRIBUTION_ENABLED = true
++    const val META_ATTRIBUTION_ENABLED = false
+ 
+     /**
+      * Enables the Compose Homepage.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 777a555948..dc1bb31f93 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -337,48 +337,24 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = true,
+     )
+ 
+-    val isCrashReportingEnabled: Boolean
+-        get() = isCrashReportEnabledInBuild &&
+-            preferences.getBoolean(
+-                appContext.getPreferenceKey(R.string.pref_key_crash_reporter),
+-                true,
+-            )
++    val isCrashReportingEnabled: Boolean = false
+ 
+     val isRemoteDebuggingEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
+         default = false,
+     )
+ 
+-    var isTelemetryEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_telemetry),
+-        default = true,
+-    )
++    var isTelemetryEnabled = false
+ 
+-    var isMarketingTelemetryEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
+-        default = false,
+-    )
++    var isMarketingTelemetryEnabled = false
+ 
+-    var hasMadeMarketingTelemetrySelection by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry_selection_made),
+-        default = false,
+-    )
++    var hasMadeMarketingTelemetrySelection = true
+ 
+-    var hasAcceptedTermsOfService by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
+-        default = false,
+-    )
++    var hasAcceptedTermsOfService = true
+ 
+-    var isDailyUsagePingEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_daily_usage_ping),
+-        default = isTelemetryEnabled,
+-        persistDefaultIfNotExists = true,
+-    )
++    var isDailyUsagePingEnabled = false
+ 
+-    var isExperimentationEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
+-        default = isTelemetryEnabled,
+-    )
++    var isExperimentationEnabled = false
+ 
+     var isOverrideTPPopupsForPerformanceTest = false
+     
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index c03abd3b27..f9afd34c8d 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -139,11 +139,6 @@
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_notifications" />
+ 
+-        <androidx.preference.Preference
+-            android:key="@string/pref_key_data_choices"
+-            app:iconSpaceReserved="false"
+-            android:title="@string/preferences_data_collection" />
+-
+     </androidx.preference.PreferenceCategory>
+ 
+     <PreferenceCategory
+@@ -200,11 +195,6 @@
+         android:title="@string/preferences_category_about"
+         app:iconSpaceReserved="false"
+         android:layout="@layout/preference_category_no_icon_style">
+-        <androidx.preference.Preference
+-            android:key="@string/pref_key_rate"
+-            app:iconSpaceReserved="false"
+-            android:title="@string/preferences_rate" />
+-
+         <androidx.preference.Preference
+             android:key="@string/pref_key_about"
+             app:iconSpaceReserved="false"
+diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
+index dad9a16c7a..dc180eaf6d 100644
+--- a/mobile/android/moz.configure
++++ b/mobile/android/moz.configure
+@@ -78,7 +78,7 @@ def android_subproject(value):
+ set_config("MOZ_ANDROID_SUBPROJECT", android_subproject)
+ 
+ imply_option("MOZ_NORMANDY", False)
+-imply_option("MOZ_SERVICES_HEALTHREPORT", True)
++imply_option("MOZ_SERVICES_HEALTHREPORT", False)
+ imply_option("MOZ_GECKOVIEW_HISTORY", True)
+ 
+ imply_option("MOZ_APP_UA_NAME", "Firefox")
+diff --git a/python/mach/mach/telemetry.py b/python/mach/mach/telemetry.py
+index c73498a066..b02315266a 100644
+--- a/python/mach/mach/telemetry.py
++++ b/python/mach/mach/telemetry.py
+@@ -95,10 +95,7 @@ def is_applicable_telemetry_environment():
+ 
+ 
+ def is_telemetry_enabled(settings):
+-    if os.environ.get("DISABLE_TELEMETRY") == "1":
+-        return False
+-
+-    return settings.mach_telemetry.is_enabled
++    return False
+ 
+ 
+ def arcrc_path():

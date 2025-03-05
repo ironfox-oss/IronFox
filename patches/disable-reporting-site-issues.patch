@@ -1,8 +1,7 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index e70a2a9..61d9584 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -550,7 +550,7 @@ features:
+@@ -532,7 +532,7 @@
        report-site-issue:
          description: If true, report site issue menu item and preview is available.
          type: Boolean
@@ -12,13 +11,14 @@ index e70a2a9..61d9584 100644
        - channel: release
          value:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index e01481d1f2..740d353d50 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -106,5 +106,5 @@ object FeatureFlags {
+@@ -91,7 +91,7 @@
      /**
       * Enables native WebCompat Reporter.
       */
--    val webCompatReporter = Config.channel.isDebug
-+    val webCompatReporter = false
- }
+-    const val webCompatReporter = true
++    const val webCompatReporter = false
+ 
+     /**
+      * Enables the tab swipe to dismiss rewrite.
