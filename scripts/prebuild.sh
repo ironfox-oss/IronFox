@@ -21,9 +21,7 @@ set -e
 
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
-    find ./* -name '*.gradle' -type f -print0 | xargs -0 \
-        sed -n -i \
-        -e '/maven {/{:loop;N;/}$/!b loop;/plugins.gradle.org/!s/maven .*/mavenLocal()/};p'
+    find ./* -name '*.gradle' -type f -exec python3 "$rootdir/scripts/localize_maven.py" {} \;
     # Make gradlew scripts call our Gradle wrapper
     find ./* -name gradlew -type f | while read -r gradlew; do
         echo -e '#!/bin/sh\ngradle "$@"' >"$gradlew"
