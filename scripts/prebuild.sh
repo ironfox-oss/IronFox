@@ -22,8 +22,8 @@ set -e
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -print0 | xargs -0 \
-        perl "$rootdir/scripts/localize_maven.pl"
-
+        sed -n -i \
+        -e '/maven {/{:loop;N;/}$/!b loop;/plugins.gradle.org/!s/maven .*/mavenLocal()/};p'
     # Make gradlew scripts call our Gradle wrapper
     find ./* -name gradlew -type f | while read -r gradlew; do
         echo -e '#!/bin/sh\ngradle "$@"' >"$gradlew"
@@ -115,10 +115,6 @@ rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
 rustup target add x86_64-linux-android
 cargo install --vers 0.26.0 cbindgen
-
-## Install perl modules
-echo 'Installing File::Slurp perl module...'
-sudo perl -MCPAN -e 'install File::Slurp'
 
 # Fenix
 # shellcheck disable=SC2154

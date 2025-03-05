@@ -195,11 +195,6 @@ to build IronFox.
 
 Once the packages have been installed successfully, follow the instructions to set up the build environment:
 
-* Install `File::Slurp` module :
-    ```
-    sudo perl -MCPAN -e "install File::Slurp"
-    ```
-
 * Setup F-Droid's `gradle` script to be available in your `PATH`:
 
     ```sh
