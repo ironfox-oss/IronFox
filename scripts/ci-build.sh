@@ -32,7 +32,7 @@ esac
 source "/opt/env_docker.sh"
 
 # Set ANDROID_NDK
-export ANDROID_NDK=$ANDROID_HOME/ndk/28.0.13004108
+export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
 [ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };
 
 # Get sources
