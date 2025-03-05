@@ -1,0 +1,24 @@
+diff --git a/settings.gradle b/settings.gradle
+index 3ad67a3e..ba31dc58 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -40,7 +40,6 @@ buildscript {
+             }
+         }
+     }
+-}
+ 
+ rootProject.name = "appservices"
+ 
+diff --git a/tools/nimbus-gradle-plugin/settings.gradle b/tools/nimbus-gradle-plugin/settings.gradle
+index 9f90ad25..e813cd4f 100644
+--- a/tools/nimbus-gradle-plugin/settings.gradle
++++ b/tools/nimbus-gradle-plugin/settings.gradle
+@@ -27,7 +27,6 @@ buildscript {
+             }
+         }
+     }
+-}
+ 
+ def yaml = new Yaml()
+ def buildconfig = yaml.load(new File(rootDir, '../../.buildconfig-android.yml').newInputStream())
