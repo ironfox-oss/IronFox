@@ -113,6 +113,7 @@ index 777a555948..dc1bb31f93 100644
 +    var isExperimentationEnabled = false
  
      var isOverrideTPPopupsForPerformanceTest = false
+     
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index c03abd3b27..f9afd34c8d 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
