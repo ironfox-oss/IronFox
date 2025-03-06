@@ -23,25 +23,14 @@ index 8f6c6df..53f9f93 100644
          }
    nimbus-validation:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 6c25d015dd..c9bf9584e3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -35,16 +35,14 @@ object FeatureFlags {
-      * Show Pocket recommended stories on home.
-      */
+@@ -37,7 +37,7 @@
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
--        val langTag = LocaleManager.getCurrentLocale(context)
--            ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+         val langTag = LocaleManager.getCurrentLocale(context)
+             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
 -        return listOf("en-US", "en-CA").contains(langTag)
-+        return false
-     }
- 
-     /**
-      * Show Pocket sponsored stories in between Pocket recommended stories on home.
-      */
-     fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
--        return isPocketRecommendationsFeatureEnabled(context)
-+        return false
++        return false && listOf("en-US", "en-CA").contains(langTag)
      }
  
      /**
@@ -95,3 +84,35 @@ index 777a555948..89ec49b650 100644
  
      /**
       * Indicates if the Unified Search feature should be visible.
+diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+index 5ca4cff86d..3507b6d24e 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+@@ -13,7 +13,8 @@
+         android:dependency="@string/pref_key_show_top_sites"
+         android:layout="@layout/checkbox_left_sub_preference"
+         android:key="@string/pref_key_enable_contile"
+-        android:title="@string/customize_toggle_contile" />
++        android:title="@string/customize_toggle_contile"
++        app:isPreferenceVisible="false" />
+ 
+     <androidx.preference.SwitchPreference
+         android:key="@string/pref_key_recent_tabs"
+@@ -30,13 +31,15 @@
+     <androidx.preference.SwitchPreference
+         android:key="@string/pref_key_pocket_homescreen_recommendations"
+         android:title="@string/customize_toggle_pocket_2"
+-        android:summary="@string/customize_toggle_pocket_summary" />
++        android:summary="@string/customize_toggle_pocket_summary"
++        app:isPreferenceVisible="false" />
+ 
+     <androidx.preference.CheckBoxPreference
+         android:dependency="@string/pref_key_pocket_homescreen_recommendations"
+         android:layout="@layout/checkbox_left_sub_preference"
+         android:key="@string/pref_key_pocket_sponsored_stories"
+-        android:title="@string/customize_toggle_pocket_sponsored" />
++        android:title="@string/customize_toggle_pocket_sponsored"
++        app:isPreferenceVisible="false" />
+ 
+     <androidx.preference.Preference
+         android:key="@string/pref_key_wallpapers"
