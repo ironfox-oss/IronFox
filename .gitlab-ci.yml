@@ -11,7 +11,7 @@
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  VERSION_NAME: "136.0.0"
+  VERSION_NAME: "136.0.0.1"
   SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
   KEYSTORE: /opt/IronFox/signing-key.jks
   BUNDLETOOL: 1.18.0
@@ -95,8 +95,8 @@ build-apk:
       - $CI_PROJECT_DIR/artifacts/aar/**/*
   rules:
     - changes:
-      - patches/**
-      - scripts/**
+      - patches/**/*
+      - scripts/**/*
       - Dockerfile
       - .gitlab-ci.yml
 
@@ -127,8 +127,8 @@ build-apk-set:
       - $CI_PROJECT_DIR/artifacts/apks/**/*
   rules:
     - changes:
-      - patches/**
-      - scripts/**
+      - patches/**/*
+      - scripts/**/*
       - Dockerfile
       - .gitlab-ci.yml
 
