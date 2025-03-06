@@ -239,13 +239,62 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$android_components"
+
+# Remove questionable built-in search engines (due to poor privacy practices)
+rm components/feature/search/src/main/assets/searchplugins/amazon-jp.xml
+rm components/feature/search/src/main/assets/searchplugins/baidu.xml
+rm components/feature/search/src/main/assets/searchplugins/bing.xml
+rm components/feature/search/src/main/assets/searchplugins/ceneje.xml
+rm components/feature/search/src/main/assets/searchplugins/coccoc.xml
+rm components/feature/search/src/main/assets/searchplugins/daum-kr.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-at.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-au.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-befr.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-ca.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-ch.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-co-uk.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-de.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-es.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-fr.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-ie.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-it.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-nl.xml
+rm components/feature/search/src/main/assets/searchplugins/ebay-pl.xml
+rm components/feature/search/src/main/assets/searchplugins/ecosia.xml
+rm components/feature/search/src/main/assets/searchplugins/google-b-1-m.xml
+rm components/feature/search/src/main/assets/searchplugins/google-b-m.xml
+rm components/feature/search/src/main/assets/searchplugins/google-b-tf.xml
+rm components/feature/search/src/main/assets/searchplugins/google-b-vv.xml
+rm components/feature/search/src/main/assets/searchplugins/google-com-nocodes.xml
+rm components/feature/search/src/main/assets/searchplugins/gulesider-mobile-NO.xml
+rm components/feature/search/src/main/assets/searchplugins/leo_ende_de.xml
+rm components/feature/search/src/main/assets/searchplugins/mapy-cz.xml
+rm components/feature/search/src/main/assets/searchplugins/mercadolibre-ar.xml
+rm components/feature/search/src/main/assets/searchplugins/mercadolibre-cl.xml
+rm components/feature/search/src/main/assets/searchplugins/mercadolibre-mx.xml
+rm components/feature/search/src/main/assets/searchplugins/odpiralni.xml
+rm components/feature/search/src/main/assets/searchplugins/pazaruvaj.xml
+rm components/feature/search/src/main/assets/searchplugins/prisjakt-sv-SE.xml
+rm components/feature/search/src/main/assets/searchplugins/qwant.xml
+rm components/feature/search/src/main/assets/searchplugins/rakuten.xml
+rm components/feature/search/src/main/assets/searchplugins/reddit.xml
+rm components/feature/search/src/main/assets/searchplugins/salidzinilv.xml
+rm components/feature/search/src/main/assets/searchplugins/seznam-cz.xml
+rm components/feature/search/src/main/assets/searchplugins/vatera.xml
+rm components/feature/search/src/main/assets/searchplugins/yahoo-jp.xml
+rm components/feature/search/src/main/assets/searchplugins/yahoo-jp-auctions.xml
+rm components/feature/search/src/main/assets/searchplugins/yandex.xml
+rm components/feature/search/src/main/assets/searchplugins/yandex.by.xml
+rm components/feature/search/src/main/assets/searchplugins/yandex-en.xml
+rm components/feature/search/src/main/assets/searchplugins/yandex-ru.xml
+rm components/feature/search/src/main/assets/searchplugins/yandex-tr.xml
+rm components/feature/search/src/main/assets/searchplugins/youtube.xml
+
 find "$patches/a-c-overlay" -type f | while read -r src; do
     cp "$src" "${src#"$patches/a-c-overlay/"}"
 done
-# Add the added search engines as `general` engines
-sed -i \
-    -e '41i \ \ \ \ "ddghtml",\n\ \ \ \ "ddglite",\n\ \ \ \ "mojeek",\n\ \ \ \ "nosearch",\n\ \ \ \ "startpage",\n\ \ \ \ "swisscows",' \
-    components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
+
 # Hack to prevent too long string from breaking build
 sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
 sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
