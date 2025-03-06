@@ -264,7 +264,6 @@ rm components/feature/search/src/main/assets/searchplugins/ebay-pl.xml
 rm components/feature/search/src/main/assets/searchplugins/ecosia.xml
 rm components/feature/search/src/main/assets/searchplugins/google-b-1-m.xml
 rm components/feature/search/src/main/assets/searchplugins/google-b-m.xml
-rm components/feature/search/src/main/assets/searchplugins/google-b-tf.xml
 rm components/feature/search/src/main/assets/searchplugins/google-b-vv.xml
 rm components/feature/search/src/main/assets/searchplugins/google-com-nocodes.xml
 rm components/feature/search/src/main/assets/searchplugins/gulesider-mobile-NO.xml
