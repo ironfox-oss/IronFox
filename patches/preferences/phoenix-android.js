@@ -16,7 +16,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.02.28.1", locked);
+pref("browser.phoenix.version", "2025.03.05.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -297,9 +297,9 @@ pref("dom.security.https_first", true);
 pref("dom.security.https_first_for_custom_ports", true); // [DEFAULT, DEFENSE IN DEPTH]
 pref("dom.security.https_first_pbm", true); // [DEFAULT]
 pref("dom.security.https_first_schemeless", true);
-pref("dom.security.https_only_mode", true, locked);
+pref("dom.security.https_only_mode", true);
 pref("dom.security.https_only_mode.upgrade_local", true);
-pref("dom.security.https_only_mode_pbm", true, locked);
+pref("dom.security.https_only_mode_pbm", true);
 pref("security.mixed_content.block_active_content", true);
 pref("security.mixed_content.block_display_content", true);
 pref("security.mixed_content.block_object_subrequest", true);
@@ -322,7 +322,11 @@ pref("dom.security.https_only_mode_error_page_user_suggestions", true);
 pref("security.insecure_connection_text.enabled", true);
 pref("security.insecure_connection_text.pbmode.enabled", true);
 pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
-pref("security.warn_submit_secure_to_insecure", true); // [DEFAULT] Warn when submitting a form from HTTP to HTTPS
+
+/// Always warn when submitting a form from HTTP to HTTPS, even on local IP addresses
+
+pref("security.insecure_field_warning.ignore_local_ip_address", false);
+pref("security.warn_submit_secure_to_insecure", true); // [DEFAULT]
 
 /// Show detailed information on insecure warning pages
 
@@ -734,9 +738,17 @@ pref("privacy.clearOnShutdown.cache", true);
 pref("privacy.clearOnShutdown.downloads", true); // [HIDDEN - Android/Thunderbird]
 pref("privacy.clearOnShutdown.history", true); // [HIDDEN - Android/Thunderbird]
 pref("privacy.clearOnShutdown.sessions", true); // [HIDDEN - Android/Thunderbird]
-pref("privacy.clearOnShutdown_v2.cache", true);
+pref("privacy.clearOnShutdown_v2.browsingHistoryAndDownloads", true); // [DEFAULT, HIDDEN - Android/Thunderbird]
+pref("privacy.clearOnShutdown_v2.cache", true); // [DEFAULT]
+pref("privacy.clearOnShutdown_v2.downloads", true); // [HIDDEN]
+pref("privacy.clearOnShutdown_v2.formdata", true); // [HIDDEN - Android/Thunderbird]
 pref("privacy.clearOnShutdown_v2.historyFormDataAndDownloads", true); // [HIDDEN - Android/Thunderbird]
 pref("privacy.sanitize.sanitizeOnShutdown", true);
+
+/// Ensure we're not clearing passwords & site settings by default
+
+pref("privacy.clearOnShutdown.siteSettings", false); // [DEFAULT, HIDDEN - Android/Thunderbird]
+pref("privacy.clearOnShutdown_v2.siteSettings", false); // [DEFAULT, HIDDEN - Android/Thunderbird]
 
 /// Prevent logging blocked domains in about:protections
 
@@ -837,32 +849,11 @@ pref("extensions.quarantineIgnoredByUser.{b86e4813-687a-43e6-ab65-0bde4ab75758}"
 
 pref("extensions.quarantineIgnoredByUser.{d19a89b9-76c1-4a61-bcd4-49e8de916403}", true);
 
-/// Block our search 'extensions' from accessing quarantined domains...
-
-pref("extensions.quarantineIgnoredByUser.ddg@celenity.dev", false, locked); // DuckDuckGo
-pref("extensions.quarantineIgnoredByUser.duckduckgo-html@celenity.dev", false, locked); // DuckDuckGo HTML
-pref("extensions.quarantineIgnoredByUser.duckduckgo-lite@celenity.dev", false, locked); // DuckDuckGo Lite
-pref("extensions.quarantineIgnoredByUser.ecosia@celenity.dev", false, locked); // Ecosia
-pref("extensions.quarantineIgnoredByUser.mojeek@celenity.dev", false, locked); // Mojeek
-pref("extensions.quarantineIgnoredByUser.no-search@celenity.dev", false, locked); // No Search
-pref("extensions.quarantineIgnoredByUser.qwant@celenity.dev", false, locked); // Qwant
-pref("extensions.quarantineIgnoredByUser.qwant-junior@celenity.dev", false, locked); // Qwant Junior
-pref("extensions.quarantineIgnoredByUser.startpage@celenity.dev", false, locked); // Startpage
-pref("extensions.quarantineIgnoredByUser.swisscows@celenity.dev", false, locked); // Startpage
-
-/// We can also include our deprecated search 'extensions' for defense in depth...
-
-pref("extensions.quarantineIgnoredByUser.bravesearch@celenity.dev", false, locked); // Brave Search
-pref("extensions.quarantineIgnoredByUser.kagi@celenity.dev", false, locked); // Kagi
-pref("extensions.quarantineIgnoredByUser.kagi-html@celenity.dev", false, locked); // Kagi HTML
-pref("extensions.quarantineIgnoredByUser.leta-brave@celenity.dev", false, locked); // Mullvad Leta (Brave)
-pref("extensions.quarantineIgnoredByUser.leta-google@celenity.dev", false, locked); // Mullvad Leta (Google)
-pref("extensions.quarantineIgnoredByUser.metager@celenity.dev", false, locked); // MetaGer
-
 /// Block certain Mozilla extensions from accessing quarantined domains...
 
 pref("extensions.quarantineIgnoredByUser.ads@mozac.org", false, locked); // Mozilla Android Components - Ads Telemetry...
 pref("extensions.quarantineIgnoredByUser.cookies@mozac.org", false, locked); // Mozilla Android Components - Search Telemetry...
+pref("extensions.quarantineIgnoredByUser.ddg@search.mozilla.org", false, locked); // DuckDuckGo - search engine...
 pref("extensions.quarantineIgnoredByUser.wikipedia@search.mozilla.org", false, locked); // Wikipedia (en) - search engine...
 
 pref("browser.phoenix.status.core", "014");
@@ -910,7 +901,7 @@ pref("browser.contentblocking.category", "strict", locked); // [HIDDEN]
 // Manually specifying these is also useful for cases like Android: where all protections aren't enabled with ETP Strict, and on Thunderbird: where ETP Strict doesn't exist at all...
 // We're also configuring the 'CookieBehavior' & 'EnableTrackingProtection' policies on desktop.
 
-// Enable TCP/dFPI
+/// Enable TCP/dFPI
 // https://support.mozilla.org/kb/introducing-total-cookie-protection-standard-mode
 // https://searchfox.org/mozilla-central/source/toolkit/components/nimbus/FeatureManifest.yaml#2828
 
@@ -919,7 +910,7 @@ pref("network.cookie.cookieBehavior.optInPartitioning", true);
 pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
 pref("network.cookie.cookieBehavior.pbmode", 5);
 
-// Enable State Partitioning
+/// Enable State Partitioning
 
 pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
 pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
@@ -929,7 +920,7 @@ pref("privacy.partition.network_state.ocsp_cache", true);
 pref("privacy.partition.network_state.ocsp_cache.pbmode", true);
 pref("privacy.partition.serviceWorkers", true);
 
-// Ignore less restricted referer policies (than the default)
+/// Ignore less restricted referer policies (than the default)
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#12979
 
 pref("network.http.referer.disallowCrossSiteRelaxingDefault", true); // for cross-site requests
@@ -953,14 +944,14 @@ pref("privacy.trackingprotection.annotate_channels", true);
 pref("privacy.trackingprotection.enabled", true);
 pref("privacy.trackingprotection.pbmode.enabled", true);
 
-// Block known tracking resources using the `strict` (Level 2) list
+/// Block known tracking resources using the `strict` (Level 2) list
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15192
 // https://searchfox.org/mozilla-central/source/toolkit/components/nimbus/FeatureManifest.yaml#2804
 
 pref("privacy.annotate_channels.strict_list.enabled", true);
 pref("privacy.annotate_channels.strict_list.pbmode.enabled", true);
 
-// Block known third-party tracking cookies
+/// Block known third-party tracking cookies
 
 pref("network.cookie.cookieBehavior.trackerCookieBlocking", true);
 pref("privacy.socialtracking.block_cookies.enabled", true);
@@ -982,28 +973,28 @@ pref("privacy.trackingprotection.fingerprinting.enabled", true);
 
 pref("privacy.trackingprotection.socialtracking.enabled", true);
 
-// Enable Bounce Tracking Protection
+/// Enable Bounce Tracking Protection
 // https://support.mozilla.org/kb/enhanced-tracking-protection-firefox-desktop#w_bounce-tracking-protection
 // https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
 
 pref("privacy.bounceTrackingProtection.enabled", true); // [HIDDEN - non-Thunderbird]
 pref("privacy.bounceTrackingProtection.mode", 1); // [HIDDEN - Thunderbird]
 
-// Enable Suspected Fingerprinters Protection
+/// Enable Suspected Fingerprinters Protection
 // https://support.mozilla.org/kb/firefox-protection-against-fingerprinting#w_suspected-fingerprinters
 
 pref("privacy.fingerprintingProtection", true);
 pref("privacy.fingerprintingProtection.pbmode", true);
 pref("privacy.reduceTimerPrecision", true); // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15353
 
-// Enable Query Parameter Stripping
+/// Enable Query Parameter Stripping
 // https://firefox-source-docs.mozilla.org/toolkit/components/antitracking/anti-tracking/query-stripping/index.html
 
 pref("privacy.query_stripping.enabled", true);
 pref("privacy.query_stripping.enabled.pbmode", true);
 pref("privacy.query_stripping.redirect", true);
 
-// Enable SmartBlock & UA overrides/injections
+/// Enable SmartBlock & UA overrides/injections
 // Also typically covered by ETP/Strict
 
 pref("extensions.webcompat.enable_shims", true); // [HIDDEN]
@@ -1409,13 +1400,6 @@ pref("dom.security.sanitizer.enabled", true);
 
 pref("dom.security.setHTML.enabled", true);
 
-/// Enable Trusted Types (Like Chromium)
-// https://w3c.github.io/trusted-types/dist/spec/
-// https://developer.mozilla.org/docs/Web/API/Trusted_Types_API
-// https://www.theregister.com/2023/12/21/mozilla_decides_trusted_types_is/
-
-pref("dom.security.trusted_types.enabled", true);
-
 /// Prevent marking JIT code pages as both writable and executable, only one or the other...
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8714
 // Might cause issues in certain specific set-ups
@@ -1717,13 +1701,14 @@ pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractio
 // Element (unredacted.org) - Disables timezone spoofing (-JSDateTimeUTC)
 // Favicon.io (favicon.io)  - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks downloading converted files
 // GitLab (gitlab.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
+// miniPaint (viliusle.github.io) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks extracting/saving projects (https://codeberg.org/celenity/Phoenix/issues/68)
 // Photopea (photopea.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes complete breakage
 // Pornhub (pornhub.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks thumbnail seeking
 // Proton Mail (proton.me) - Disables timezone spoofing (-JSDateTimeUTC)
 // Watch Duty (watchduty.org) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues
 // X/Twitter (x.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
 
-pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"chipotle.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"cinny.in\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"doordash.com\", \"overrides\": \"-JSDateTimeUTC\"},  {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"mozilla.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}]");
+pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"chipotle.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"cinny.in\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"doordash.com\", \"overrides\": \"-JSDateTimeUTC\"},  {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"mozilla.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"viliusle.github.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}]");
 
 /// Enable dynamic rounding of content dimensions
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1407366
