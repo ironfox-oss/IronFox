@@ -23,14 +23,25 @@ index 8f6c6df..53f9f93 100644
          }
    nimbus-validation:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index 6c25d015dd..c9bf9584e3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -37,7 +37,7 @@
+@@ -35,16 +35,14 @@ object FeatureFlags {
+      * Show Pocket recommended stories on home.
+      */
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
-         val langTag = LocaleManager.getCurrentLocale(context)
-             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+-        val langTag = LocaleManager.getCurrentLocale(context)
+-            ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
 -        return listOf("en-US", "en-CA").contains(langTag)
-+        return false && listOf("en-US", "en-CA").contains(langTag)
++        return false
+     }
+ 
+     /**
+      * Show Pocket sponsored stories in between Pocket recommended stories on home.
+      */
+     fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
+-        return isPocketRecommendationsFeatureEnabled(context)
++        return false
      }
  
      /**
