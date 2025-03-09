@@ -105,10 +105,10 @@ new file mode 100644
 +                url = UBLOCK.downloadUrl,
 +                installationMethod = InstallationMethod.MANAGER,
 +                onSuccess = {
-+                    logger.info("UBlock Origin installed.")
++                    logger.info("uBlock Origin installed.")
 +                },
 +                onError = { err ->
-+                    logger.error("UBlock Origin install failed", err)
++                    logger.error("uBlock Origin install failed.", err)
 +                }
 +            )
 +        }
