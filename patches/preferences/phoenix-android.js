@@ -16,7 +16,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.03.05.1", locked);
+pref("browser.phoenix.version", "2025.03.12.1", locked);
 
 // 000 ABOUT:CONFIG
 
@@ -1079,6 +1079,11 @@ pref("extensions.webcompat.smartblockEmbeds.enabled", true); // [DEFAULT - Night
 // https://github.com/privacycg/CHIPS
 
 pref("network.cookie.CHIPS.enabled", true); // [DEFAULT - Nightly]
+
+/// Exclude third party trackers from TCP/dFPI storage access heuristics
+// https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
+
+pref("privacy.restrict3rdpartystorage.heuristic.exclude_third_party_trackers", true); // [DEFAULT - Nightly]
 
 pref("browser.phoenix.status.core", "016");
 
