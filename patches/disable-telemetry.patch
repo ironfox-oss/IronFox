@@ -142,6 +142,19 @@ index c03abd3b27..f9afd34c8d 100644
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
+index eb00f87b41..ce8e2b7a03 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
+@@ -38,7 +38,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
+   private static final String LOGTAG = "GeckoCrashHandler";
+   private static final Thread MAIN_THREAD = Thread.currentThread();
+   private static final String DEFAULT_SERVER_URL =
+-      "https://crash-reports.mozilla.com/submit?id=%1$s&version=%2$s&buildid=%3$s";
++      "";
+ 
+   // Context for getting device information
+   private @Nullable final Context mAppContext;
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index dad9a16c7a..dc180eaf6d 100644
 --- a/mobile/android/moz.configure
