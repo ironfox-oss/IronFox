@@ -19,6 +19,9 @@
 
 set -e
 
+# Include version info
+source "$rootdir/scripts/versions.sh"
+
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -exec python3 "$rootdir/scripts/localize_maven.py" {} \;
@@ -60,6 +63,11 @@ JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '
     echo "Java 17 or newer must be set as default JDK"
     exit 1
 }
+
+if [[ -z "$FIREFOX_TAG" ]]; then
+    echo "\$FIREFOX_TAG is not set! Aborting..."]
+    exit 1
+fi
 
 if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
     echo "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
@@ -303,7 +311,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e '/android-components = /s/133\.0/136.0/' gradle/libs.versions.toml
+sed -i -e "/android-components = /s/133\.0/${FIREFOX_TAG}/" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
