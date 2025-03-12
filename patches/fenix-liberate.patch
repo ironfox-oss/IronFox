@@ -910,13 +910,14 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  
      /**
-@@ -90,15 +35,9 @@
+@@ -90,15 +35,10 @@
       * showing the marketing onboarding flow.
       */
      companion object {
 -        private val marketingPrefixes = listOf(GCLID_PREFIX, ADJUST_REFTAG_PREFIX)
 -
          @VisibleForTesting
++        @Suppress("UNUSED_PARAMETER")
          internal fun shouldShowMarketingOnboarding(installReferrerResponse: String?): Boolean {
 -            if (installReferrerResponse.isNullOrBlank()) {
 -                return false
