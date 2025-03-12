@@ -829,22 +829,20 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-@@ -4,14 +4,6 @@
- 
+@@ -5,12 +5,7 @@
  package org.mozilla.fenix.components.metrics
  
--import android.content.Context
+ import android.content.Context
 -import android.os.RemoteException
--import androidx.annotation.VisibleForTesting
+ import androidx.annotation.VisibleForTesting
 -import com.android.installreferrer.api.InstallReferrerClient
 -import com.android.installreferrer.api.InstallReferrerStateListener
 -import mozilla.components.support.base.log.logger.Logger
 -import org.mozilla.fenix.ext.settings
--
+ 
  const val GCLID_PREFIX = "gclid="
  const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
- 
-@@ -22,67 +14,17 @@
+@@ -22,67 +17,17 @@
   * This should be only used when user has not gone through the onboarding flow.
   */
  class MarketingAttributionService(private val context: Context) {
@@ -912,7 +910,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  
      /**
-@@ -90,15 +32,9 @@
+@@ -90,15 +35,9 @@
       * showing the marketing onboarding flow.
       */
      companion object {
