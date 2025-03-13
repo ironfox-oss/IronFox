@@ -19,7 +19,6 @@ Note that anything between <!- - and - -> won't be shown when your issue is crea
 
 ### Confirmation
 <!-- Please confirm that this issue is NOT related to a website breakage or compatibility issue as described above, by typing "I confirm." below.
-
 -->
 
 <!-- I confirm.
