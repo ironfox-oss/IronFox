@@ -1,0 +1,31 @@
+name: Bug
+description: For any general issues or unexpected/unintended behavior you come across while using IronFox.
+title: "[BUG] PLEASE REPLACE THIS TEXT WITH A SUMMARY OF YOUR ISSUE..."
+labels: ["bug"]
+body:
+  - type: textarea
+    id: version
+    attributes:
+      label: What version of IronFox are you using?
+      description: |
+        An easy way to tell is by navigating to `Settings` -> `About` -> `About IronFox`.
+    validations:
+      required: true
+
+  - type: textarea
+    id: android
+    attributes:
+      label: What version of Android are you using with IronFox?
+      description: |
+        Steps will vary depending on your OEM, but on AOSP, this can be typically be found by navigating to your `Settings` app -> `About (`phone` or `tablet`, depending on your device)` -> `Device details` -> `Android version`.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Please explain the issue you are experiencing.
+      description: |
+        Be sure to include as many relevant details as possible! :)
+    validations:
+      required: true
