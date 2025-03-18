@@ -104,8 +104,7 @@ build-apk:
   variables:
     <<: *build_variables
   <<: *build_setup_steps
-  cache:
-    <<: *build_cache
+  cache: *build_cache
   script:
     - bash -x scripts/ci-build.sh
   artifacts:
@@ -139,8 +138,7 @@ build-apk-set:
     VERSION_CODE: "31360130"
     <<: *build_variables
   <<: *build_setup_steps
-  cache:
-    <<: *build_cache
+  cache: *build_cache
   script:
     - bash -x scripts/ci-build.sh
   artifacts:
