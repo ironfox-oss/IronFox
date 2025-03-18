@@ -9,11 +9,32 @@
         "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/secure_files/$KEYSTORE_SECFILEID/download" \
         --output "$KEYSTORE"
 
+default:
+  cache: &build_cache
+    - key: cache-cargo-$CI_COMMIT_REF_SLUG
+      policy: pull-push
+      paths:
+        # Cargo cache
+        # See: https://doc.rust-lang.org/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
+        - .cache/cargo/.crates.toml
+        - .cache/cargo/.crates2.json
+        - .cache/cargo/bin/
+        - .cache/cargo/registry/index/
+        - .cache/cargo/registry/cache/
+        - .cache/cargo/git/db/
+    - key: cache-gradle-$CI_COMMIT_REF_SLUG
+      policy: pull-push
+      paths:
+        - .cache/gradle/caches
+        - .cache/gradle/wrapper
+
 variables: &build_variables
   PRODUCTION_BRANCH: main
   VERSION_NAME: "136.0.1"
   SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
   KEYSTORE: /opt/IronFox/signing-key.jks
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.cache/gradle"
+  CARGO_HOME: "$CI_PROJECT_DIR/.cache/cargo"
   BUNDLETOOL: 1.18.0
 
 stages:
@@ -83,6 +104,8 @@ build-apk:
   variables:
     <<: *build_variables
   <<: *build_setup_steps
+  cache:
+    <<: *build_cache
   script:
     - bash -x scripts/ci-build.sh
   artifacts:
@@ -116,6 +139,8 @@ build-apk-set:
     VERSION_CODE: "31360130"
     <<: *build_variables
   <<: *build_setup_steps
+  cache:
+    <<: *build_cache
   script:
     - bash -x scripts/ci-build.sh
   artifacts:
