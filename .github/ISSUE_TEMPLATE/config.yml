@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Web Compat (Codeberg)
+    url: https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml
+    about: Please report issues with breakage or unexpected/unintended behavior on specific websites here.
+  - name: Web Compat (GitLab)
+    url: https://gitlab.com/celenityy/Phoenix/-/issues/new?issuable_template=web-compat#
+    about: Please report issues with breakage or unexpected/unintended behavior on specific websites here.
+  - name: Web Compat (GitHub)
+    url: https://github.com/celenityy/Phoenix/issues
+    about: Please report issues with breakage or unexpected/unintended behavior on specific websites here.
