@@ -50,7 +50,7 @@ PATCH_FILES=(
     "disable-autofill.patch"
 
     # Clear open tabs, browsing history, cache, & download list on exit by default
-    #"sanitize-on-exit.patch"
+    "sanitize-on-exit.patch"
 
     # Disable Firefox Suggest
     "disable-firefox-suggest.patch"
