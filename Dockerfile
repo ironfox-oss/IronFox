@@ -39,11 +39,6 @@ ADD https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid /root/bin
 RUN chmod +x "/root/bin/gradle" && \
     echo "export PATH=\$PATH:/root/bin" >> $ENVDOCKER
 
-# Set up gradle properties
-RUN mkdir -p /root/.gradle && \
-    echo "org.gradle.daemon=false" >> /root/.gradle/gradle.properties && \
-    echo "org.gradle.configuration-cache=false" >> /root/.gradle/gradle.properties
-
 # Set up Python virtual environment
 RUN python3.9 -m venv /root/env
 
