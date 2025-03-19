@@ -1,5 +1,7 @@
 .build_setup_steps: &build_setup_steps
   before_script:
+    - mkdir -p "$GRADLE_USER_HOME"
+    - mkdir -p "$CARGO_HOME"
     - mkdir -p /opt/IronFox
     - echo "$SB_GAPI_KEY" > "$SB_GAPI_KEY_FILE"
     - |
