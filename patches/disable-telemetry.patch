@@ -207,6 +207,45 @@ index c03abd3b27..f9afd34c8d 100644
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
+index c1b54d7f27..01fd0d7427 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
+@@ -42,34 +42,7 @@ class NimbusBranchesController(
+ ) : NimbusBranchesAdapterDelegate {
+ 
+     override fun onBranchItemClicked(branch: Branch) {
+-        val telemetryEnabled = context.settings().isTelemetryEnabled
+-        val experimentsEnabled = context.settings().isExperimentationEnabled
+-
+         updateOptInState(branch)
+-
+-        if (!telemetryEnabled && !experimentsEnabled) {
+-            context.getRootView()?.let { v ->
+-                Snackbar.make(
+-                    snackBarParentView = v,
+-                    snackbarState = SnackbarState(
+-                        message = context.getString(R.string.experiments_snackbar),
+-                        duration = SnackbarState.Duration.Preset.Long,
+-                        action = Action(
+-                            label = context.getString(R.string.experiments_snackbar_button),
+-                            onClick = {
+-                                navController.navigateWithBreadcrumb(
+-                                    directions = NimbusBranchesFragmentDirections
+-                                        .actionNimbusBranchesFragmentToDataChoicesFragment(),
+-                                    navigateFrom = "NimbusBranchesController",
+-                                    navigateTo = "ActionNimbusBranchesFragmentToDataChoicesFragment",
+-                                    crashReporter = context.components.analytics.crashReporter,
+-                                )
+-                            },
+-                        ),
+-                    ),
+-                ).show()
+-            }
+-        }
+     }
+ 
+     private fun updateOptInState(branch: Branch) {
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
 index eb00f87b41..ce8e2b7a03 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
