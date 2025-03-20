@@ -16,6 +16,9 @@ PATCH_FILES=(
     # Patch the use of proprietary and tracking libraries
     "fenix-liberate.patch"
 
+    # Make it IronFox...
+    "branding.patch"
+
     # Add our custom search engines
     "search-engines.patch"
 

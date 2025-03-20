@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+index 53750cda56..6a4c16c8f0 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+@@ -37,7 +37,7 @@ object SupportUtils {
+     const val MEITUAN_URL = "https://tb.j5k6.com/6ZSOp"
+     const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
+     const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
+-    const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
++    const val WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"
+     const val FXACCOUNT_SUMO_URL = "https://support.mozilla.org/kb/access-mozilla-services-firefox-account"
+ 
+     // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
