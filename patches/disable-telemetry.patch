@@ -357,3 +357,16 @@ index ea5260e5c6..5f5df88dba 100644
      log::trace!("Getting OHTTP config from {}", OHTTP_CONFIG_URL);
      let parsed_config_url = Url::parse(OHTTP_CONFIG_URL)?;
      Ok(Request::get(parsed_config_url).send()?.body)
+diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+index bc38bfd022..5ac2d01d6a 100644
+--- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
++++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+@@ -18,7 +18,7 @@ const IS_MAIN_PROCESS =
+   Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
+ 
+ const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
+-const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
++const COLLECTION_ID_FALLBACK = "";
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+   "COLLECTION_ID",
