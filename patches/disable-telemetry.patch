@@ -288,3 +288,72 @@ index c73498a066..b02315266a 100644
  
  
  def arcrc_path():
+diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
+index 441048499f..c6481c6974 100644
+--- a/toolkit/components/glean/src/init/mod.rs
++++ b/toolkit/components/glean/src/init/mod.rs
+@@ -72,7 +72,7 @@ pub extern "C" fn fog_init(
+     disable_internal_pings: bool,
+ ) -> nsresult {
+     // On Android always enable Glean upload.
+-    let upload_enabled = true;
++    let upload_enabled = false;
+     // Don't set up an uploader.
+     let uploader = None;
+ 
+@@ -150,12 +150,12 @@ fn build_configuration(
+ 
+     let localhost_port = static_prefs::pref!("telemetry.fog.test.localhost_port");
+     let server = if localhost_port > 0 {
+-        format!("http://localhost:{}", localhost_port)
++        format!("", localhost_port)
+     } else {
+         if app_id_override == "thunderbird.desktop" {
+-            String::from("https://incoming.thunderbird.net")
++            String::from("")
+         } else {
+-            String::from("https://incoming.telemetry.mozilla.org")
++            String::from("")
+         }
+     };
+ 
+@@ -192,7 +192,7 @@ fn build_configuration(
+         rate_limit,
+         enable_event_timestamps: true,
+         experimentation_id: None,
+-        enable_internal_pings: true,
++        enable_internal_pings: false,
+         ping_schedule: pings::ping_schedule(),
+         ping_lifetime_threshold: 0,
+         ping_lifetime_max_time: Duration::ZERO,
+@@ -373,7 +373,7 @@ fn fog_test_reset_internal(
+     let (mut conf, client_info) = build_configuration(data_path_override, app_id_override)?;
+ 
+     // On Android always enable Glean upload.
+-    conf.upload_enabled = true;
++    conf.upload_enabled = false;
+ 
+     // Don't accidentally send "main" pings during tests.
+     conf.use_core_mps = false;
+diff --git a/toolkit/components/glean/src/init/viaduct_uploader.rs b/toolkit/components/glean/src/init/viaduct_uploader.rs
+index ea5260e5c6..5f5df88dba 100644
+--- a/toolkit/components/glean/src/init/viaduct_uploader.rs
++++ b/toolkit/components/glean/src/init/viaduct_uploader.rs
+@@ -109,7 +109,7 @@ fn ohttp_upload(upload_request: PingUploadRequest) -> Result<UploadResult, Viadu
+     let ohttp_request = ohttp::ClientRequest::from_encoded_config(config)?;
+     let (capsule, ohttp_response) = ohttp_request.encapsulate(&binary_request)?;
+ 
+-    const OHTTP_RELAY_URL: &str = "https://mozilla-ohttp.fastly-edge.com/";
++    const OHTTP_RELAY_URL: &str = "";
+     let parsed_relay_url = Url::parse(OHTTP_RELAY_URL)?;
+ 
+     log::trace!("FOG ohttp uploader uploading to {}", parsed_relay_url);
+@@ -140,7 +140,7 @@ fn ohttp_upload(upload_request: PingUploadRequest) -> Result<UploadResult, Viadu
+ 
+ fn get_config() -> Result<Vec<u8>, ViaductUploaderError> {
+     const OHTTP_CONFIG_URL: &str =
+-        "https://prod.ohttp-gateway.prod.webservices.mozgcp.net/ohttp-configs";
++        "";
+     log::trace!("Getting OHTTP config from {}", OHTTP_CONFIG_URL);
+     let parsed_config_url = Url::parse(OHTTP_CONFIG_URL)?;
+     Ok(Request::get(parsed_config_url).send()?.body)
