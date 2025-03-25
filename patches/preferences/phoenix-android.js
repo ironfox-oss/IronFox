@@ -16,7 +16,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.03.20.1", locked);
+pref("browser.phoenix.version", "2025.03.25.1", locked);
 
 /* INDEX 
 
@@ -42,13 +42,14 @@ pref("browser.phoenix.version", "2025.03.20.1", locked);
 019: PDF.js
 020: SAFE BROWSING
 021: DEBUGGING
-022: MISC. PRIVACY
-023: MISC. SECURITY
-024: MISC.
-025: PERFORMANCE
-026: SCROLLING
-027: Personal Touch 💜
-028: UPDATES
+022: MISC. PRIVACY + SECURITY
+023: MISC. PRIVACY
+024: MISC. SECURITY
+025: MISC.
+026: PERFORMANCE
+027: SCROLLING
+028: Personal Touch 💜
+029: UPDATES
 
 */
 
@@ -65,6 +66,7 @@ pref("browser.phoenix.status.core", "000");
 /*** 001 DATA COLLECTION ***/
 
 // A lot of defense in depth...
+// These also provide Attack Surface Reduction
 
 /// Disable Coverage
 // https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/
@@ -115,6 +117,8 @@ pref("network.traffic_analyzer.enabled", false, locked); // https://searchfox.or
 pref("network.trr.confirmation_telemetry_enabled", false, locked);
 pref("privacy.imageInputTelemetry.enableTestMode", false, locked); // [HIDDEN] "Event Telemetry" https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15549
 pref("privacy.trackingprotection.emailtracking.data_collection.enabled", false, locked);
+pref("telemetry.fog.init_on_shutdown", false, locked); // Ensure Glean never initializes on shutdown https://searchfox.org/mozilla-central/source/toolkit/components/glean/docs/dev/preferences.md#49
+pref("telemetry.fog.test.localhost_port", 70000, locked); // Force telemetry pings to be sent to localhost instead of Mozilla's servers, if they're somehow enabled... (port just has to be higher than 0, I chose 70000 as its invalid) - https://searchfox.org/mozilla-central/source/toolkit/components/glean/docs/dev/preferences.md#15
 pref("toolkit.content-background-hang-monitor.disabled", true, locked); // BHR https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#16720
 pref("toolkit.telemetry.archive.enabled", false, locked);
 pref("toolkit.telemetry.bhrPing.enabled", false, locked);
@@ -178,6 +182,8 @@ pref("browser.phoenix.status.core", "001");
 
 /*** 002 MOZILLA CRAP™ ***/
 
+// These also provide Attack Surface Reduction
+
 /// Disable the DoH Rollout
 pref("doh-rollout.disable-heuristics", true, locked); // [HIDDEN]
 pref("doh-rollout.enabled", false, locked); // [HIDDEN]
@@ -208,8 +214,8 @@ pref("extensions.webservice.discoverURL", ""); // [HIDDEN - non-Thunderbird]
 pref("services.settings.preview_enabled", false); // [HIDDEN, DEFAULT]
 
 /// Disable the Web Compatibility Reporter
-// Harmless from a privacy perspective - We just don't want to waste Mozilla's time due to our custom set-up...
-// Also acts as attack surface reduction & a potential performance improvement
+// Harmless - We just don't want to waste Mozilla's time due to our custom set-up...
+// Also acts as a potential performance improvement
 pref("extensions.webcompat-reporter.enabled", false); // [DEFAULT on non-Nightly/ESR]
 pref("extensions.webcompat-reporter.newIssueEndpoint", "");
 
@@ -336,13 +342,6 @@ pref("browser.phoenix.status.core", "003");
 /// Disable failIfMajorPerformanceCaveat in WebGL contexts
 // https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/18603
 pref("webgl.disable-fail-if-major-performance-caveat", true); // [DEFAULT]
-
-/// Disable WebGPU
-// Also provides attack surface reduction
-// https://gpuweb.github.io/gpuweb/#privacy-considerations
-// https://gpuweb.github.io/gpuweb/#security-considerations
-// https://browserleaks.com/webgpu
-pref("dom.webgpu.enabled", false); // [DEFAULT - non-Nightly]
 
 /// Enable fdlibm for Math.sin, Math.cos, and Math.tan
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8720
@@ -888,10 +887,10 @@ pref("browser.phoenix.status.core", "015");
 
 /*** 016 EXTENSIONS ***/
 
-/// Allow LocalCDN to work on quarantined domains (if installed) by default
+/// Allow LocalCDN (if installed) to work on restricted/quarantined domains by default
 pref("extensions.quarantineIgnoredByUser.{b86e4813-687a-43e6-ab65-0bde4ab75758}", true);
 
-/// Allow Mullvad's extension to work on quarantined domains (if installed) by default
+/// Allow Mullvad's extension (if installed) to work on restricted/quarantined domains by default
 pref("extensions.quarantineIgnoredByUser.{d19a89b9-76c1-4a61-bcd4-49e8de916403}", true);
 
 /// Block extensions signed with weak signature algorithms
@@ -902,7 +901,7 @@ pref("xpinstall.signatures.weakSignaturesTemporarilyAllowed", false); // [DEFAUL
 pref("extensions.installDistroAddons", false); // [HIDDEN - non-Android, DEFAULT - Android]
 
 /// Enable Add-on Distribution Control (Install Origins)
-// Allows extensions to only be installed from websites they specify in their manifest
+// Prevents extensions being installed from websites that they don't specify in their manifest
 // https://groups.google.com/g/firefox-dev/c/U7GpHE4R-ZY
 // https://searchfox.org/mozilla-central/source/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs#403
 pref("extensions.install_origins.enabled", true);
@@ -1095,21 +1094,85 @@ pref("devtools.debugger.remote-enabled", false, sticky); // [DEFAULT - non-Thund
 
 pref("browser.phoenix.status.core", "021");
 
-/*** 022 MISC. PRIVACY ***/
+/*** 022 MISC. PRIVACY + SECURITY ***/
+
+/// Disable Accessibility Services
+// PRIVACY: Can be used to monitor users by design
+// SECURITY: Can be easily abused by bad actors, Attack Surface Reduction
+// "Firefox Accessibility Service is a technology built into Firefox that provides 3rd party applications running on the same device the ability to inspect, monitor, visualize, and alter web page content hosted within Firefox."
+// We need to ensure we're still accomodating for impaired users, but I feel this is something that must be handled by the browser instead of external software
+// https://web.archive.org/web/20240608190300/support.mozilla.org/en-US/kb/accessibility-services
+pref("accessibility.force_disabled", 1);
+pref("devtools.accessibility.enabled", false); // [HIDDEN - Android] https://firefox-source-docs.mozilla.org/devtools-user/accessibility_inspector/
+
+/// Disable automatic updates for OpenSearch engines
+// PRIVACY: Unsolicited connections to search providers
+// SECURITY: Could be abused to alter a user's search engine(s) without consent
+// Doesn't appear to impact Mozilla's built-in search engines
+// https://firefox-source-docs.mozilla.org/toolkit/search/Preferences.html#hidden
+// https://developer.mozilla.org/docs/Web/XML/Guides/OpenSearch#supporting_automatic_updates_for_opensearch_plugins
+pref("browser.search.update", false); // [DEFAULT - Android]
 
 /// Disable Beacon API (Navigator.sendBeacon)
+// PRIVACY: Used for analytics/tracking by design, see explanation below
+// SECURITY: Attack Surface Reduction
 // I was originally against disabling this, but after careful consideration, I've changed my position.
 // The explicit, stated purpose/use case of this API is for analytics/tracking.
 // Websites *can* obtain the data shared from this API through other means; though the other ways to obtain it are more disruptive and less reliable.
 // Analytics/tracking is evidently not a use case that we, as the user agent, should support or assist with.
 // I don't see a justification for adding APIs/features to support this hostile behavior. We are the user agent and must act in the best interest of users...
+// Also disabled by ex. Cromite: https://github.com/uazo/cromite/blob/master/docs/FEATURES.md https://github.com/uazo/cromite/issues/1454
 // https://developer.mozilla.org/docs/Web/API/Beacon_API
 // https://developer.mozilla.org/docs/Web/API/Navigator/sendBeacon
 // https://udn.realityripple.com/docs/Web/API/Navigator/sendBeacon
 // https://w3c.github.io/beacon/#privacy-and-security
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1454252
-// Also disabled by ex. Cromite: https://github.com/uazo/cromite/blob/master/docs/FEATURES.md https://github.com/uazo/cromite/issues/1454
 pref("beacon.enabled", false);
+
+/// Disable Content Analysis SDK
+// PRIVACY: Used for monitoring users by design
+// SECURITY: Can be easily abused by bad actors, Attack Surface Reduction
+// DESKTOP: We also set "ContentAnalysis" in policies
+// https://mozilla.github.io/policy-templates/#contentanalysis
+// https://github.com/chromium/content_analysis_sdk
+pref("browser.contentanalysis.default_result", 0, locked); // [DEFAULT]
+pref("browser.contentanalysis.enabled", false, locked); // [DEFAULT]
+pref("browser.contentanalysis.interception_point.clipboard.enabled", false, locked); // [HIDDEN - Thunderbird]
+pref("browser.contentanalysis.interception_point.drag_and_drop.enabled", false, locked); // [HIDDEN - Thunderbird]
+pref("browser.contentanalysis.interception_point.file_upload.enabled", false, locked); // [HIDDEN - Thunderbird]
+pref("browser.contentanalysis.interception_point.print.enabled", false, locked); // [HIDDEN - Thunderbird]
+pref("browser.contentanalysis.show_blocked_result", true, locked); // [DEFAULT] - Always notify users when Content Analysis blocks access to something...
+
+/// Disable Reporting API
+// PRIVACY: Fingerprinting concerns, Used for analytics by design
+// SECURITY: Attack Surface Reduction
+// https://w3c.github.io/reporting/
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1492036
+pref("dom.reporting.crash.enabled", false); // [DEFAULT]
+pref("dom.reporting.enabled", false); // [DEFAULT]
+pref("dom.reporting.featurePolicy.enabled", false); // [DEFAULT]
+pref("dom.reporting.header.enabled", false); // [DEFAULT]
+
+/// Disable WebGPU
+// PRIVACY: Fingerprinting concerns
+// SECURITY: Attack Surface Reduction
+// https://gpuweb.github.io/gpuweb/#privacy-considerations
+// https://gpuweb.github.io/gpuweb/#security-considerations
+// https://browserleaks.com/webgpu
+pref("dom.webgpu.enabled", false); // [DEFAULT - non-Nightly]
+
+/// Enable Messaging Layer Security (MLS)
+// PRIVACY: Ensures messages are only received by the intended recipient
+// SECURITY: Protects the authenticity and integrity of messages
+// Security layer for E2EE messaging
+// https://wikipedia.org/wiki/Messaging_Layer_Security
+// https://blog.mozilla.org/mozilla/messaging-layer-security-is-now-an-internet-standard/
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1876002
+pref("dom.origin-trials.mls.state", 1);
+
+pref("browser.phoenix.status.core", "022");
+
+/*** 023 MISC. PRIVACY ***/
 
 /// Disable Hyperlink Auditing (Click Tracking)
 // https://www.bleepingcomputer.com/news/software/major-browsers-to-prevent-disabling-of-click-tracking-privacy-risk/
@@ -1118,19 +1181,12 @@ pref("browser.send_pings.max_per_link", 0); // [DEFENSE IN DEPTH]
 pref("browser.send_pings.require_same_host", true); // [DEFENSE IN DEPTH]
 
 /// Disable Network Error Logging
+// Fingerprinting concerns, Used for analytics by design
 // https://developer.mozilla.org/docs/Web/HTTP/Network_Error_Logging
 // https://w3c.github.io/network-error-logging/
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1145235
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#12829
 pref("network.http.network_error_logging.enabled", false); // [DEFAULT, HIDDEN - Thunderbird]
-
-/// Disable Reporting API
-// https://w3c.github.io/reporting/
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1492036
-pref("dom.reporting.crash.enabled", false); // [DEFAULT]
-pref("dom.reporting.enabled", false); // [DEFAULT]
-pref("dom.reporting.featurePolicy.enabled", false); // [DEFAULT]
-pref("dom.reporting.header.enabled", false); // [DEFAULT]
 
 /// Enable Cookie Banner Reduction
 // https://support.mozilla.org/kb/cookie-banner-reduction
@@ -1148,6 +1204,7 @@ pref("cookiebanners.service.enableGlobalRules.subFrames", true); // [DEFAULT]
 // https://developer.mozilla.org/docs/Web/HTTP/Headers/Set-Cookie#partitioned
 // https://github.com/privacycg/CHIPS
 pref("network.cookie.CHIPS.enabled", true); // [DEFAULT - Nightly]
+pref("network.cookie.chips.partitionLimitDryRun", false); // [DEFAULT - Nightly]
 
 /// Enable Do Not Track & Global Privacy Control
 // Do Not Track is also covered by ETP Strict, pref to be removed soon...
@@ -1183,9 +1240,9 @@ pref("privacy.query_stripping.strip_on_share.enabled", true); // [DEFAULT - non-
 // https://wiki.mozilla.org/Security/Referrer
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
 
-pref("browser.phoenix.status.core", "022");
+pref("browser.phoenix.status.core", "023");
 
-/*** 023 MISC. SECURITY ***/
+/*** 024 MISC. SECURITY ***/
 
 /// Always prompt users for a certificate when websites request one, rather than automatically selecting one...
 // https://www.stigviewer.com/stig/mozilla_firefox/2023-06-05/finding/V-251547
@@ -1204,31 +1261,6 @@ pref("security.external_protocol_requires_permission", true); // [DEFAULT - non-
 
 /// Apply CSP to internal browser.xhtml
 pref("security.browser_xhtml_csp.enabled", true); // [DEFAULT, HIDDEN - Thunderbird]
-
-/// Disable Accessibility Services
-// "Firefox Accessibility Service is a technology built into Firefox that provides 3rd party applications running on the same device the ability to inspect, monitor, visualize, and alter web page content hosted within Firefox."
-// https://web.archive.org/web/20240608190300/support.mozilla.org/en-US/kb/accessibility-services
-pref("accessibility.force_disabled", 1);
-pref("devtools.accessibility.enabled", false); // [HIDDEN - Android] https://firefox-source-docs.mozilla.org/devtools-user/accessibility_inspector/
-
-/// Disable automatic updates for OpenSearch engines
-// Doesn't appear to impact Mozilla's built-in search engines
-// Also has privacy implications (extra unsolicited connections)
-// https://firefox-source-docs.mozilla.org/toolkit/search/Preferences.html#hidden
-// https://developer.mozilla.org/docs/Web/XML/Guides/OpenSearch#supporting_automatic_updates_for_opensearch_plugins
-pref("browser.search.update", false); // [DEFAULT - Android]
-
-/// Disable Content Analysis
-/// We also set "ContentAnalysis" in policies
-// https://mozilla.github.io/policy-templates/#contentanalysis
-// https://github.com/chromium/content_analysis_sdk
-pref("browser.contentanalysis.default_result", 0, locked); // [DEFAULT]
-pref("browser.contentanalysis.enabled", false, locked); // [DEFAULT]
-pref("browser.contentanalysis.interception_point.clipboard.enabled", false, locked); // [HIDDEN - Thunderbird]
-pref("browser.contentanalysis.interception_point.drag_and_drop.enabled", false, locked); // [HIDDEN - Thunderbird]
-pref("browser.contentanalysis.interception_point.file_upload.enabled", false, locked); // [HIDDEN - Thunderbird]
-pref("browser.contentanalysis.interception_point.print.enabled", false, locked); // [HIDDEN - Thunderbird]
-pref("browser.contentanalysis.show_blocked_result", true, locked); // [DEFAULT] - Always notify users when Content Analysis blocks access to something...
 
 /// Disable Navigator Media Objects & getUserMedia Support in insecure contexts
 // https://developer.mozilla.org/docs/Web/API/Navigator/mediaDevices
@@ -1259,7 +1291,7 @@ pref("browser.opaqueResponseBlocking.javascriptValidator", true); // [DEFAULT]
 pref("dom.security.sanitizer.enabled", true);
 
 /// Enable Spectre mitigations for isolated content
-// Like Tor Browser
+// Also enabled by ex. Tor Browser
 pref("javascript.options.spectre.disable_for_isolated_content", false);
 
 /// Enforce Site Isolation + isolate all websites
@@ -1317,6 +1349,7 @@ pref("network.cookie.sameSite.schemeful", true); // [DEFAULT - Nightly]
 
 /// Protect against MIME Exploits
 // https://www.pcmag.com/encyclopedia/term/mime-exploit
+pref("dom.workers.importScripts.enforceStrictMimeType", true); // [DEFAULT]
 pref("security.block_fileuri_script_with_wrong_mime", true);
 pref("security.block_Worker_with_wrong_mime", true); // [DEFAULT]
 
@@ -1327,9 +1360,9 @@ pref("browser.tabs.remote.separateFileUriProcess", true); // [DEFAULT - non-Andr
 // https://searchfox.org/mozilla-central/source/testing/profiles/common/user.js
 pref("security.turn_off_all_security_so_that_viruses_can_take_over_this_computer", false, locked); // [DEFAULT, HIDDEN]
 
-pref("browser.phoenix.status.core", "023");
+pref("browser.phoenix.status.core", "024");
 
-/*** 024 MISC. ***/
+/*** 025 MISC. ***/
 
 /// Always allow installing "incompatible" add-ons
 // Especially useful on Android & Thunderbird...
@@ -1365,9 +1398,9 @@ pref("dom.popup_allowed_events", "click dblclick");
 pref("dom.disable_window_flip", true); // [DEFAULT - non-Android]
 pref("dom.disable_window_move_resize", true); // [DEFAULT - Android]
 
-pref("browser.phoenix.status.core", "024");
+pref("browser.phoenix.status.core", "025");
 
-/*** 025 PERFORMANCE ***/
+/*** 026 PERFORMANCE ***/
 
 // A lot of these taken from https://github.com/yokoffing/Betterfox/blob/main/Fastfox.js
 
@@ -1383,6 +1416,7 @@ pref("gfx.content.skia-font-cache-size", 20); // [Default = 5]
 pref("gfx.webrender.compositor", true); // [DEFAULT - macOS/Windows]
 pref("image.mem.decode_bytes_at_a_time", 32768); // [Default = 16384]
 pref("image.mem.shared.unmap.min_expiration_ms", 120000); // [Default = 60000]
+pref("layout.css.grid-template-masonry-value.enabled", true); // [DEFAULT - Nightly & Thunderbird] Enable CSS Masonry Layout - https://www.smashingmagazine.com/native-css-masonry-layout-css-grid/ - for testing: https://codepen.io/rachelandrew/pen/wvWmZWB 
 pref("layout.css.report_errors", false); // [DEFAULT - Android] https://searchfox.org/mozilla-central/source/mobile/android/app/geckoview-prefs.js#299
 pref("media.cache_readahead_limit", 7200);
 pref("media.cache_resume_threshold", 3600);
@@ -1393,19 +1427,21 @@ pref("network.dnsCacheExpirationGracePeriod", 240); // [Default = 60]
 pref("network.http.max-persistent-connections-per-proxy", 48); // [Default = 20 - Android, 32 - non-Android]
 pref("network.http.max-persistent-connections-per-server", 10); // [Default = 6]
 pref("network.http.max-urgent-start-excessive-connections-per-host", 5); // [Default = 3]
+pref("network.http.pacing.requests.enabled", false); // Disable pacing requests - https://codeberg.org/celenity/Phoenix/issues/84
+pref("network.ssl_tokens_cache_capacity", 10240); // [Default = 2048] Increase TLS token caching - https://codeberg.org/celenity/Phoenix/issues/84
 
-pref("browser.phoenix.status.core", "025");
+pref("browser.phoenix.status.core", "026");
 
-/*** 026 SCROLLING ***/
+/*** 027 SCROLLING ***/
 
 pref("apz.autoscroll.enabled", true); // [DEFAULT]
 pref("apz.overscroll.enabled", true); // [DEFAULT - non-Thunderbird]
 pref("general.autoScroll", true); // [DEFAULT - non-Unix (excluding macOS)/Thunderbird, HIDDEN - Android]
 pref("general.smoothScroll", true); // [DEFAULT - non-Thunderbird]
 
-pref("browser.phoenix.status.core", "026");
+pref("browser.phoenix.status.core", "027");
 
-/*** 027 Personal Touch 💜 ***/
+/*** 028 Personal Touch 💜 ***/
 
 /// Things that are  nice to have™
 // Not directly privacy & security related
@@ -1419,6 +1455,7 @@ pref("full-screen-api.transition-duration.enter", "0 0"); // [Default = 200 200]
 pref("full-screen-api.transition-duration.leave", "0 0"); // [Default = 200 200]
 pref("full-screen-api.warning.delay", -1); // [Default = 500, -1 = Automatic]
 pref("full-screen-api.warning.timeout", 0); // [Default = 3000]
+pref("layout.word_select.eat_space_to_next_word", false); // [DEFAULT - non-Windows] Prevent including the space next to words when double-clicking/selecting text - https://codeberg.org/celenity/Phoenix/issues/84#issuecomment-3097957
 pref("media.webspeech.synth.dont_notify_on_error", true); // [HIDDEN] Disable annoying Web Speech API errors, especially relevant on Linux - https://searchfox.org/mozilla-central/source/browser/actors/SpeechDispatcherParent.sys.mjs#8
 pref("security.xfocsp.hideOpenInNewWindow", false);
 pref("services.settings.loglevel", "warn"); // [DEFAULT, HIDDEN] This pref allows controlling the log level of Remote Settings, set here to the default value so that it's exposed in the `about:config`
@@ -1427,9 +1464,9 @@ pref("ui.key.menuAccessKeyFocuses", false); // [DEFAULT - non-Windows/Linux] Pre
 pref("view_source.syntax_highlight", true); // [DEFAULT - non-Thunderbird]
 pref("view_source.wrap_long_lines", true); // [DEFAULT - Android]
 
-pref("browser.phoenix.status.core", "027");
+pref("browser.phoenix.status.core", "028");
 
-/*** 028 UPDATES ***/
+/*** 029 UPDATES ***/
 
 /// Automatically update extensions by default
 pref("extensions.systemAddon.update.enabled", true); // [DEFAULT]
@@ -1450,7 +1487,7 @@ pref("extensions.update.notifyUser", true); // [HIDDEN]
 // So let's make sure our users are up to date as quick as possible
 pref("services.settings.poll_interval", 3600);
 
-pref("browser.phoenix.status.core", "028");
+pref("browser.phoenix.status.core", "029");
 
 pref("browser.phoenix.status.core", "successfully applied :D", locked);
 
@@ -1498,6 +1535,7 @@ pref("privacy.resistFingerprinting.letterboxing", true); // [HIDDEN]
 
 /// Harden FPP (which we enable at `003` in `Phoenix-Core`) to match RFP with a few exceptions...
 // As explained here: https://codeberg.org/celenity/Phoenix/wiki/Android#fingerprinting
+// This also improves security - Attack Surface Reduction, reduced timer precision
 // List of targets: https://searchfox.org/mozilla-central/source/toolkit/components/resistfingerprinting/RFPTargets.inc
 // Easily build your own (global) override list: https://raw.githack.com/rindeal/Firefox-FPP-Override-List-Editor/master/FirefoxFPPOverrideListEditor.html
 pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-CSSPrefersColorScheme,-FrameRate,-JSDateTimeUTC");
@@ -1508,14 +1546,38 @@ pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractio
 // Brave Search (brave.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues on Maps
 // Chipotle (chipotle.com) - Disables timezone spoofing (-JSDateTimeUTC) for order confirmation/estimated arrival times
 // Cinny (cinny.in) - Disables timezone spoofing (-JSDateTimeUTC)
+// Cinny (pendora.io) - Disables timezone spoofing (-JSDateTimeUTC)
+// Cinny/Element (transfem.dev) - Disables timezone spoofing (-JSDateTimeUTC)
+// Cinny/SchildiChat (the-apothecary.club) - Disables timezone spoofing (-JSDateTimeUTC)
 // City Barbeque (citybbq.com) - Disables timezone spoofing (-JSDateTimeUTC) for estimated delivery times
 // Discord (discord.com) - Disables timezone spoofing (-JSDateTimeUTC)
 // DoorDash (doordash.com) - Disables timezone spoofing (-JSDateTimeUTC) for estimated delivery times
 // Element (arcticfoxes.net) - Disables timezone spoofing (-JSDateTimeUTC)
 // Element (aria.im) - Disables timezone spoofing (-JSDateTimeUTC)
-// Element (mozilla.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (bitcoinist.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (chatwave.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (duesen.chat) - Disables timezone spoofing (-JSDateTimeUTC)
 // Element (element.io) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (flieger.chat) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (g24.at) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (gemeinsam.jetzt) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (gnulinux.club) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (hot-chilli.im) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (kosmikdog.eu) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (mtrx.nz) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (neat.chat) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (nitro.chat) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (nope.chat) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (oblak.be) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (pcriot.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (rollenspiel.chat) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (socialnetwork24.com) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (studichat.de) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (synod.im) - Disables timezone spoofing (-JSDateTimeUTC)
 // Element (unredacted.org) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (utwente.io) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (we2.ee) - Disables timezone spoofing (-JSDateTimeUTC)
+// Element (yatrix.org) - Disables timezone spoofing (-JSDateTimeUTC)
 // Favicon.io (favicon.io)  - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks downloading converted files
 // GitLab (gitlab.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
 // Jersey Mike's (jerseymikes.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues on Maps
@@ -1525,7 +1587,7 @@ pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractio
 // Proton Mail (proton.me) - Disables timezone spoofing (-JSDateTimeUTC)
 // Watch Duty (watchduty.org) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Causes display issues
 // X/Twitter (x.com) - Allows (randomized) first party canvas data extraction (-CanvasExtractionBeforeUserInputIsBlocked & -CanvasImageExtractionPrompt) - Breaks uploading profile pictures...
-pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"chipotle.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"cinny.in\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"citybbq.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"doordash.com\", \"overrides\": \"-JSDateTimeUTC\"},  {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"jerseymikes.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"mozilla.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"viliusle.github.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}]");
+pref("privacy.fingerprintingProtection.granularOverrides", "[{\"firstPartyDomain\": \"arcticfoxes.net\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"aria.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bitcoinist.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"bsky.app\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"brave.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"chatwave.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"chipotle.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"cinny.in\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"citybbq.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"discord.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"doordash.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"duesen.chat\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"element.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"favicon.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"flieger.chat\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"g24.at\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"gemeinsam.jetzt\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"gitlab.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"gnulinux.club\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"hot-chilli.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"jerseymikes.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"kosmikdog.eu\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"mtrx.nz\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"neat.chat\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"nitro.chat\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"nope.chat\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"oblak.be\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"pcriot.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"pendora.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"photopea.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"pornhub.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"proton.me\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"rollenspiel.chat\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"socialnetwork24.com\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"studichat.de\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"synod.im\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"the-apothecary.club\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"transfem.dev\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"unredacted.org\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"utwente.io\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"viliusle.github.io\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"watchduty.org\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"we2.ee\", \"overrides\": \"-JSDateTimeUTC\"}, {\"firstPartyDomain\": \"x.com\", \"overrides\": \"-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt\"}, {\"firstPartyDomain\": \"yatrix.org\", \"overrides\": \"-JSDateTimeUTC\"}]");
 
 pref("browser.phoenix.status.android", "002");
 
