@@ -306,7 +306,7 @@ index 441048499f..c6481c6974 100644
      let localhost_port = static_prefs::pref!("telemetry.fog.test.localhost_port");
      let server = if localhost_port > 0 {
 -        format!("http://localhost:{}", localhost_port)
-+        format!("", localhost_port)
++        String::from("")
      } else {
          if app_id_override == "thunderbird.desktop" {
 -            String::from("https://incoming.thunderbird.net")
