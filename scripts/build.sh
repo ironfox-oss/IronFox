@@ -42,7 +42,7 @@ if [[ "$env_source" != "true" ]]; then
     exit 1
 fi
 
-source "$HOME/.cargo/env"
+source "$CARGO_HOME/env"
 
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle
