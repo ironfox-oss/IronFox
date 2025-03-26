@@ -26,3 +26,11 @@ mkdir -p "$APKS_ARTIFACTS"
 mkdir -p "$AAR_ARTIFACTS"
 
 export env_source="true"
+
+if [[ -z ${CARGO_HOME+x} ]]; then
+    export CARGO_HOME=$HOME/.cargo
+fi
+
+if [[ -z ${GRADLE_USER_HOME+x} ]]; then
+    export GRADLE_USER_HOME=$HOME/.gradle
+fi
