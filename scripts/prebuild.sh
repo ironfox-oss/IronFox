@@ -419,7 +419,7 @@ fi
     echo 'export MOZ_APP_DISPLAYNAME=IronFox'
     echo 'export MOZ_APP_NAME=ironfox'
     echo 'export MOZ_APP_REMOTINGNAME=ironfox'
-    echo "export MOZ_APP_UA_NAME="Firefox""
+    echo 'export MOZ_APP_UA_NAME="Firefox"'
     echo 'export MOZ_CRASHREPORTER='
     echo 'export MOZ_DATA_REPORTING='
     echo 'export MOZ_DISABLE_PARENTAL_CONTROLS=1'
