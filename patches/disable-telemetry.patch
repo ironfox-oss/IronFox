@@ -793,13 +793,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
          val intent = Intent(context, HomeActivity::class.java).apply {
              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
          }
-@@ -117,15 +50,14 @@
-             context = context,
-             services = services,
-             telemetryServices = listOf(GleanCrashReporterService(context)),
--            shouldPrompt = CrashReporter.Prompt.ALWAYS,
-+            shouldPrompt = CrashReporter.Prompt.NEVER,
-             promptConfiguration = CrashReporter.PromptConfiguration(
+@@ -122,10 +55,9 @@
                  appName = context.getString(R.string.app_name),
                  organizationName = "Mozilla",
              ),
