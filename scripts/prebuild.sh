@@ -369,7 +369,10 @@ sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
 # Remove glean telemetry URL
 remove_glean_telemetry "${glean}"
 remove_glean_telemetry "${application_services}"
-remove_glean_telemetry "${mozilla_release}"
+remove_glean_telemetry "${mozilla_release}/browser"
+remove_glean_telemetry "${mozilla_release}/modules"
+remove_glean_telemetry "${mozilla_release}/toolkit"
+remove_glean_telemetry "${mozilla_release}/netwerk"
 
 
 # shellcheck disable=SC2154
