@@ -371,7 +371,10 @@ fi
 {
     echo 'ac_add_options --disable-crashreporter'
     echo 'ac_add_options --disable-debug'
+    echo 'ac_add_options --disable-debug-js-modules'
+    echo 'ac_add_options --disable-debug-symbols'
     echo 'ac_add_options --disable-nodejs'
+    echo 'ac_add_options --disable-parental-controls'
     echo 'ac_add_options --disable-profiling'
     echo 'ac_add_options --disable-rust-debug'
     echo 'ac_add_options --disable-tests'
@@ -384,6 +387,9 @@ fi
     echo 'ac_add_options --enable-update-channel=release'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
+    echo 'ac_add_options --with-app-basename=IronFox'
+    echo 'ac_add_options --with-app-name=ironfox'
+    echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
     if [[ -n "${target}" ]]; then
@@ -405,7 +411,13 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
+    echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
+    echo 'mk_add_options MOZ_SERVICES_HEALTHREPORT=0'
+    echo 'export MOZ_CRASHREPORTER='
+    echo 'export MOZ_DATA_REPORTING='
+    echo 'export MOZ_REQUIRE_SIGNING='
+    echo 'export MOZ_TELEMETRY_REPORTING='
 } >>mozconfig
 
 # Configure
