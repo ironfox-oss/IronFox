@@ -411,7 +411,7 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
-    echo "mk_add_options MOZ_APP_VENDOR="IronFox OSS""
+    echo 'mk_add_options MOZ_APP_VENDOR="IronFox OSS"'
     echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
     echo 'mk_add_options MOZ_SERVICES_HEALTHREPORT=0'
