@@ -107,6 +107,20 @@ index 24ba347127..1cdeb4b96d 100644
          internal const val REMOTE_PROD_ENDPOINT_URL = "https://firefox.settings.services.mozilla.com"
          internal const val REMOTE_STAGE_ENDPOINT_URL = "https://firefox.settings.services.allizom.org"
      }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
+index a708898f06..b2b9f45fd2 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
+@@ -59,7 +59,7 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
+     Glean.initialize(
+         applicationContext = applicationContext,
+         configuration = configuration.setCustomEndpointIfAvailable(customEndpoint),
+-        uploadEnabled = isTelemetryUploadEnabled,
++        uploadEnabled = false,
+         buildInfo = GleanBuildInfo.buildInfo,
+     )
+ }
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
