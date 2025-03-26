@@ -370,3 +370,283 @@ index bc38bfd022..5ac2d01d6a 100644
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "COLLECTION_ID",
+diff --git a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
+index d2024ce95d..cd0e8dc31f 100644
+--- a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
++++ b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
+@@ -58,10 +58,7 @@ export var TelemetryArchive = {
+  * @return {Boolean} True if pings should be archived, false otherwise.
+  */
+ function shouldArchivePings() {
+-  return Services.prefs.getBoolPref(
+-    TelemetryUtils.Preferences.ArchiveEnabled,
+-    false
+-  );
++  return false;
+ }
+ 
+ var TelemetryArchiveImpl = {
+diff --git a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
+index cf0a7bd372..a8b2b03990 100644
+--- a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
++++ b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
+@@ -31,7 +31,7 @@ var gLogAppenderDump = null;
+ export var TelemetryControllerBase = Object.freeze({
+   // Whether the FHR/Telemetry unification features are enabled.
+   // Changing this pref requires a restart.
+-  IS_UNIFIED_TELEMETRY: Services.prefs.getBoolPref(Preferences.Unified, false),
++  IS_UNIFIED_TELEMETRY: false,
+ 
+   Preferences,
+ 
+@@ -40,7 +40,7 @@ export var TelemetryControllerBase = Object.freeze({
+    * it correctly evaluates to a boolean type.
+    */
+   get isTelemetryEnabled() {
+-    return Services.prefs.getBoolPref(PREF_TELEMETRY_ENABLED, false) === true;
++    return false;
+   },
+ 
+   get log() {
+@@ -87,28 +87,8 @@ export var TelemetryControllerBase = Object.freeze({
+   setTelemetryRecordingFlags() {
+     // Enable extended Telemetry on pre-release channels and disable it
+     // on Release/ESR.
+-    let prereleaseChannels = [
+-      "nightly",
+-      "nightly-autoland",
+-      "nightly-try",
+-      "aurora",
+-      "beta",
+-    ];
+-    if (!AppConstants.MOZILLA_OFFICIAL) {
+-      // Turn extended telemetry for local developer builds.
+-      prereleaseChannels.push("default");
+-    }
+-    const isPrereleaseChannel = prereleaseChannels.includes(
+-      AppConstants.MOZ_UPDATE_CHANNEL
+-    );
+-    const isReleaseCandidateOnBeta =
+-      AppConstants.MOZ_UPDATE_CHANNEL === "release" &&
+-      Services.prefs.getCharPref("app.update.channel", null) === "beta";
+-    Services.telemetry.canRecordBase = true;
+-    Services.telemetry.canRecordExtended =
+-      isPrereleaseChannel ||
+-      isReleaseCandidateOnBeta ||
+-      Services.prefs.getBoolPref(this.Preferences.OverridePreRelease, false);
++    Services.telemetry.canRecordBase = false;
++    Services.telemetry.canRecordExtended = false;
+   },
+ 
+   /**
+@@ -125,8 +105,7 @@ export var TelemetryControllerBase = Object.freeze({
+     } else {
+       // We're not on unified Telemetry, stick to the old behaviour for
+       // supporting Fennec.
+-      Services.telemetry.canRecordBase = Services.telemetry.canRecordExtended =
+-        this.isTelemetryEnabled;
++      Services.telemetry.canRecordBase = Services.telemetry.canRecordExtended = false;
+     }
+ 
+     this.log.config(
+diff --git a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
+index 0c52bf5c52..3160c4b4d8 100644
+--- a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
++++ b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
+@@ -274,11 +274,7 @@ var TelemetryReportingPolicyImpl = {
+    * false, we never request upload or deletion.
+    */
+   get dataSubmissionEnabled() {
+-    // Default is true because we are opt-out.
+-    return Services.prefs.getBoolPref(
+-      TelemetryUtils.Preferences.DataSubmissionEnabled,
+-      true
+-    );
++    return false;
+   },
+ 
+   get currentPolicyVersion() {
+@@ -334,20 +330,6 @@ var TelemetryReportingPolicyImpl = {
+    *         false otherwise.
+    */
+   get isUserNotifiedOfCurrentPolicy() {
+-    // If we don't have a sane notification date, the user was not notified yet.
+-    if (
+-      !this.dataSubmissionPolicyNotifiedDate ||
+-      this.dataSubmissionPolicyNotifiedDate.getTime() <= 0
+-    ) {
+-      return false;
+-    }
+-
+-    // The accepted policy version should not be less than the minimum policy version.
+-    if (this.dataSubmissionPolicyAcceptedVersion < this.minimumPolicyVersion) {
+-      return false;
+-    }
+-
+-    // Otherwise the user was already notified.
+     return true;
+   },
+ 
+@@ -401,19 +383,7 @@ var TelemetryReportingPolicyImpl = {
+    * @return {Boolean} True if we are allowed to upload data, false otherwise.
+    */
+   canUpload() {
+-    // If data submission is disabled, there's no point in showing the infobar. Just
+-    // forbid to upload.
+-    if (!this.dataSubmissionEnabled) {
+-      return false;
+-    }
+-
+-    // Submission is enabled. We enable upload if user is notified or we need to bypass
+-    // the policy.
+-    const bypassNotification = Services.prefs.getBoolPref(
+-      TelemetryUtils.Preferences.BypassNotification,
+-      false
+-    );
+-    return this.isUserNotifiedOfCurrentPolicy || bypassNotification;
++    return false;
+   },
+ 
+   isFirstRun() {
+@@ -440,32 +410,7 @@ var TelemetryReportingPolicyImpl = {
+    * Determine whether the user should be notified.
+    */
+   _shouldNotify() {
+-    if (!this.dataSubmissionEnabled) {
+-      this._log.trace(
+-        "_shouldNotify - Data submission disabled by the policy."
+-      );
+-      return false;
+-    }
+-
+-    const bypassNotification = Services.prefs.getBoolPref(
+-      TelemetryUtils.Preferences.BypassNotification,
+-      false
+-    );
+-    if (this.isUserNotifiedOfCurrentPolicy || bypassNotification) {
+-      this._log.trace(
+-        "_shouldNotify - User already notified or bypassing the policy."
+-      );
+-      return false;
+-    }
+-
+-    if (this._notificationInProgress) {
+-      this._log.trace(
+-        "_shouldNotify - User not notified, notification already in progress."
+-      );
+-      return false;
+-    }
+-
+-    return true;
++    return false;
+   },
+ 
+   /**
+@@ -711,7 +656,7 @@ var TelemetryReportingPolicyImpl = {
+     return this._ensureUserIsNotifiedPromise.then(() => {
+       // The user has been notified and interacted with the modal.
+       // Glean can now init on shutdown if necessary.
+-      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", true);
++      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", false);
+     });
+   },
+ 
+diff --git a/toolkit/components/telemetry/app/UsageReporting.sys.mjs b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
+index 6134754282..c0da15a006 100644
+--- a/toolkit/components/telemetry/app/UsageReporting.sys.mjs
++++ b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
+@@ -34,21 +34,18 @@ export var UsageReporting = {
+ 
+     this._initPromise = (async () => {
+       let profileID = await lazy.ClientID.getUsageProfileID();
+-      const uploadEnabled = Services.prefs.getBoolPref(
+-        "datareporting.usage.uploadEnabled",
+-        false
+-      );
++      const uploadEnabled = false;
+       this._log.trace(
+         `${SLUG}: uploadEnabled=${uploadEnabled}, profileID='${profileID}'`
+       );
+ 
+       // Usage deletion requests can always be sent.  They are
+       // always sent in response to user action.
+-      GleanPings.usageDeletionRequest.setEnabled(true);
++      GleanPings.usageDeletionRequest.setEnabled(false);
+ 
+       // Usage pings should only be sent when upload is enabled.
+       // Eventually, Glean will persist this setting.
+-      GleanPings.usageReporting.setEnabled(uploadEnabled);
++      GleanPings.usageReporting.setEnabled(false);
+ 
+       if (
+         uploadEnabled &&
+@@ -103,10 +100,7 @@ export var UsageReporting = {
+       return;
+     }
+ 
+-    const uploadEnabled = Services.prefs.getBoolPref(
+-      "datareporting.usage.uploadEnabled",
+-      false
+-    );
++    const uploadEnabled = false;
+ 
+     if (uploadEnabled) {
+       // Rising edge: enable "usage-reporting" ping.
+@@ -137,17 +131,14 @@ export var UsageReporting = {
+    * preference.
+    */
+   adoptDataReportingPreference() {
+-    const generalEnabled = Services.prefs.getBoolPref(
+-      "datareporting.healthreport.uploadEnabled",
+-      false
+-    );
++    const generalEnabled = false;
+     this._log.info(
+       `adoptDataReportingPreference: setting usage reporting preference to ${generalEnabled}`
+     );
+ 
+     Services.prefs.setBoolPref(
+       "datareporting.usage.uploadEnabled",
+-      generalEnabled
++      false
+     );
+   },
+ 
+diff --git a/toolkit/components/telemetry/core/TelemetryCommon.cpp b/toolkit/components/telemetry/core/TelemetryCommon.cpp
+index a52d8e0a64..9bec7accff 100644
+--- a/toolkit/components/telemetry/core/TelemetryCommon.cpp
++++ b/toolkit/components/telemetry/core/TelemetryCommon.cpp
+@@ -50,14 +50,13 @@ bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
+   // If we are extended telemetry is enabled, we are allowed to record
+   // regardless of the dataset.
+   if (aCanRecordExtended) {
+-    return true;
++    return false;
+   }
+ 
+   // If base telemetry data is enabled and we're trying to record base
+   // telemetry, allow it.
+-  if (aCanRecordBase &&
+-      IsInDataset(aDataset, nsITelemetry::DATASET_ALL_CHANNELS)) {
+-    return true;
++  if (aCanRecordBase) {
++    return false;
+   }
+ 
+   // We're not recording extended telemetry or this is not the base
+diff --git a/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs b/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
+index b411c0b54a..d9b3ba25f6 100644
+--- a/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
++++ b/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
+@@ -46,10 +46,7 @@ const LOGGER_PREFIX =
+ 
+ // Whether the FHR/Telemetry unification features are enabled.
+ // Changing this pref requires a restart.
+-const IS_UNIFIED_TELEMETRY = Services.prefs.getBoolPref(
+-  TelemetryUtils.Preferences.Unified,
+-  false
+-);
++const IS_UNIFIED_TELEMETRY = false;
+ 
+ var gWasDebuggerAttached = false;
+ 
