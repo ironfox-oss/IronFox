@@ -411,11 +411,19 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
+    echo "mk_add_options MOZ_APP_VENDOR="IronFox OSS""
     echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
     echo 'mk_add_options MOZ_SERVICES_HEALTHREPORT=0'
+    echo 'export MOZ_APP_BASENAME=IronFox'
+    echo 'export MOZ_APP_DISPLAYNAME=IronFox'
+    echo 'export MOZ_APP_NAME=IronFox'
+    echo 'export MOZ_APP_REMOTINGNAME=ironfox'
+    echo "export MOZ_APP_UA_NAME="Firefox""
     echo 'export MOZ_CRASHREPORTER='
     echo 'export MOZ_DATA_REPORTING='
+    echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
+    echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
     echo 'export MOZ_REQUIRE_SIGNING='
     echo 'export MOZ_TELEMETRY_REPORTING='
 } >>mozconfig
