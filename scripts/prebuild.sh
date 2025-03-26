@@ -32,6 +32,14 @@ function localize_maven {
     done
 }
 
+function remove_glean_telemetry() {
+    local dir="$1"
+    local telemetry_url="https://incoming.telemetry.mozilla.org"
+
+    # Set telemetry URL to an invalid localhost address
+    grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -e "s|${telemetry_url}|http://localhost:70000|g"
+}
+
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo "Usage: $0 versionName versionCode" >&1
     exit 1
@@ -357,6 +365,12 @@ sed -i \
 # Set the Safe Browsing API URL to our proxy
 sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
+
+# Remove glean telemetry URL
+remove_glean_telemetry "${glean}"
+remove_glean_telemetry "${application_services}"
+remove_glean_telemetry "${mozilla_release}"
+
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
