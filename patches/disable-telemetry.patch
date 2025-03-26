@@ -255,11 +255,13 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
          channel = BuildConfig.BUILD_TYPE,
          httpClient = ConceptFetchHttpUploader(
              lazy(LazyThreadSafetyMode.NONE) { client },
-@@ -59,7 +52,7 @@
+@@ -58,8 +51,8 @@
+ 
      Glean.initialize(
          applicationContext = applicationContext,
-         configuration = configuration.setCustomEndpointIfAvailable(customEndpoint),
+-        configuration = configuration.setCustomEndpointIfAvailable(customEndpoint),
 -        uploadEnabled = isTelemetryUploadEnabled,
++        configuration = configuration,
 +        uploadEnabled = false,
          buildInfo = GleanBuildInfo.buildInfo,
      )
