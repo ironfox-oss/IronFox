@@ -98,7 +98,6 @@ index bec617c4cc..f7d2f16e49 100644
 -            distributionId = distributionId,
 -        )
 -        services.add(socorroService)
-+        val distributionId = ""
  
          val intent = Intent(context, HomeActivity::class.java).apply {
              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -161,7 +160,6 @@ index bec617c4cc..f7d2f16e49 100644
 -        ReleaseChannel.Beta -> "$baseUrl/?project=6295551"
 -        else -> null
 -    }
-+    val baseUrl = ""
 +    return null
  }
 
