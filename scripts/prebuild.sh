@@ -422,6 +422,7 @@ fi
     echo "export MOZ_APP_UA_NAME="Firefox""
     echo 'export MOZ_CRASHREPORTER='
     echo 'export MOZ_DATA_REPORTING='
+    echo 'export MOZ_DISABLE_PARENTAL_CONTROLS=1'
     echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
     echo 'export MOZ_REQUIRE_SIGNING='
