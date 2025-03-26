@@ -34,10 +34,10 @@ function localize_maven {
 
 function remove_glean_telemetry() {
     local dir="$1"
-    local telemetry_url="https://incoming.telemetry.mozilla.org"
+    local telemetry_url="incoming.telemetry.mozilla.org"
 
     # Set telemetry URL to an invalid localhost address
-    grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -e "s|${telemetry_url}|http://localhost:70000|g"
+    grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -r -e "s|${telemetry_url}|localhost:70000|g"
 }
 
 if [ -z "$1" ] || [ -z "$2" ]; then
