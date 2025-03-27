@@ -52,6 +52,7 @@ update-fdroid-repo:
     - if: $CI_COMMIT_TAG
   tags:
     - saas-linux-medium-amd64
+  cache: []
   variables:
     TARGET_REPO_PATH: ironfox-oss/fdroid
     TARGET_REPO_BRANCH: dev
