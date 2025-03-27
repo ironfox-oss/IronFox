@@ -126,6 +126,8 @@ build-apk:
       - scripts/**/*
       - Dockerfile
       - .gitlab-ci.yml
+    - if: $CI_COMMIT_TAG
+      when: never
 
 build-apk-set:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
@@ -159,6 +161,8 @@ build-apk-set:
       - scripts/**/*
       - Dockerfile
       - .gitlab-ci.yml
+    - if: $CI_COMMIT_TAG
+      when: never
 
 prepare-release:
   image: alpine:latest
