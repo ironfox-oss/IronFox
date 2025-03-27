@@ -32,6 +32,14 @@ function localize_maven {
     done
 }
 
+function remove_glean_telemetry() {
+    local dir="$1"
+    local telemetry_url="incoming.telemetry.mozilla.org"
+
+    # Set telemetry URL to an invalid localhost address
+    grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -r -e "s|${telemetry_url}|localhost:70000|g"
+}
+
 if [ -z "$1" ] || [ -z "$2" ]; then
     echo "Usage: $0 versionName versionCode" >&1
     exit 1
@@ -358,6 +366,15 @@ sed -i \
 sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
+# Remove glean telemetry URL
+remove_glean_telemetry "${glean}"
+remove_glean_telemetry "${application_services}"
+remove_glean_telemetry "${mozilla_release}/browser"
+remove_glean_telemetry "${mozilla_release}/modules"
+remove_glean_telemetry "${mozilla_release}/toolkit"
+remove_glean_telemetry "${mozilla_release}/netwerk"
+
+
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Patch the LLVM source code
@@ -371,7 +388,10 @@ fi
 {
     echo 'ac_add_options --disable-crashreporter'
     echo 'ac_add_options --disable-debug'
+    echo 'ac_add_options --disable-debug-js-modules'
+    echo 'ac_add_options --disable-debug-symbols'
     echo 'ac_add_options --disable-nodejs'
+    echo 'ac_add_options --disable-parental-controls'
     echo 'ac_add_options --disable-profiling'
     echo 'ac_add_options --disable-rust-debug'
     echo 'ac_add_options --disable-tests'
@@ -384,6 +404,9 @@ fi
     echo 'ac_add_options --enable-update-channel=release'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
+    echo 'ac_add_options --with-app-basename=IronFox'
+    echo 'ac_add_options --with-app-name=ironfox'
+    echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
     if [[ -n "${target}" ]]; then
@@ -405,7 +428,22 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
+    echo 'mk_add_options MOZ_APP_VENDOR="IronFox OSS"'
+    echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
+    echo 'mk_add_options MOZ_SERVICES_HEALTHREPORT=0'
+    echo 'export MOZ_APP_BASENAME=IronFox'
+    echo 'export MOZ_APP_DISPLAYNAME=IronFox'
+    echo 'export MOZ_APP_NAME=ironfox'
+    echo 'export MOZ_APP_REMOTINGNAME=ironfox'
+    echo 'export MOZ_APP_UA_NAME="Firefox"'
+    echo 'export MOZ_CRASHREPORTER='
+    echo 'export MOZ_DATA_REPORTING='
+    echo 'export MOZ_DISABLE_PARENTAL_CONTROLS=1'
+    echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
+    echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
+    echo 'export MOZ_REQUIRE_SIGNING='
+    echo 'export MOZ_TELEMETRY_REPORTING='
 } >>mozconfig
 
 # Configure
