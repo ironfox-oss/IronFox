@@ -3,13 +3,6 @@
 # Caution: Should not be sourced directly!
 # Use 'env_local.sh' or 'env_fdroid.sh' instead.
 
-# Allow users to install unsigned extensions
-# We still require extensions to be signed by default - this just allows users to disable this requirement via `xpinstall.signatures.required` in their `about:config` if desired (though NOT recommended)
-# https://gitlab.com/ironfox-oss/IronFox/-/issues/41
-
-MOZ_REQUIRE_SIGNING=
-export MOZ_REQUIRE_SIGNING
-
 MOZ_CHROME_MULTILOCALE=$(<"$patches/locales")
 export MOZ_CHROME_MULTILOCALE
 
@@ -26,3 +19,11 @@ mkdir -p "$APKS_ARTIFACTS"
 mkdir -p "$AAR_ARTIFACTS"
 
 export env_source="true"
+
+if [[ -z ${CARGO_HOME+x} ]]; then
+    export CARGO_HOME=$HOME/.cargo
+fi
+
+if [[ -z ${GRADLE_USER_HOME+x} ]]; then
+    export GRADLE_USER_HOME=$HOME/.gradle
+fi
