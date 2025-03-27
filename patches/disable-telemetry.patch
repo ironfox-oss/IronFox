@@ -1,5 +1,4 @@
 diff --git a/browser/moz.configure b/browser/moz.configure
-index e605019172..73268e5d35 100644
 --- a/browser/moz.configure
 +++ b/browser/moz.configure
 @@ -5,11 +5,11 @@
@@ -16,11 +15,647 @@ index e605019172..73268e5d35 100644
  imply_option("MOZ_PROFILE_MIGRATOR", True)
  
  
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
+@@ -5,53 +5,10 @@
+ package mozilla.components.lib.crash.service
+ 
+ import android.content.Context
+-import android.os.SystemClock
+ import androidx.annotation.VisibleForTesting
+-import kotlinx.serialization.ExperimentalSerializationApi
+-import kotlinx.serialization.SerialName
+-import kotlinx.serialization.Serializable
+-import kotlinx.serialization.SerializationException
+-import kotlinx.serialization.json.DecodeSequenceMode
+-import kotlinx.serialization.json.Json
+-import kotlinx.serialization.json.JsonArray
+-import kotlinx.serialization.json.JsonElement
+-import kotlinx.serialization.json.JsonNull
+-import kotlinx.serialization.json.JsonObject
+-import kotlinx.serialization.json.JsonPrimitive
+-import kotlinx.serialization.json.decodeFromJsonElement
+-import kotlinx.serialization.json.decodeFromStream
+-import kotlinx.serialization.json.decodeToSequence
+-import kotlinx.serialization.json.encodeToStream
+-import kotlinx.serialization.json.jsonArray
+-import kotlinx.serialization.json.jsonObject
+-import kotlinx.serialization.json.jsonPrimitive
+-import kotlinx.serialization.json.long
+ import mozilla.components.lib.crash.Crash
+-import mozilla.components.lib.crash.GleanMetrics.Crash.AsyncShutdownTimeoutObject
+-import mozilla.components.lib.crash.GleanMetrics.Crash.QuotaManagerShutdownTimeoutObject
+-import mozilla.components.lib.crash.GleanMetrics.Crash.StackTracesObject
+-import mozilla.components.lib.crash.GleanMetrics.CrashMetrics
+-import mozilla.components.lib.crash.GleanMetrics.Pings
+-import mozilla.components.lib.crash.MinidumpAnalyzer
+-import mozilla.components.lib.crash.db.Breadcrumb
+-import mozilla.components.lib.crash.db.toBreadcrumb
+ import mozilla.components.support.base.log.logger.Logger
+-import mozilla.components.support.ktx.android.content.isMainProcess
+-import mozilla.telemetry.glean.private.BooleanMetricType
+-import mozilla.telemetry.glean.private.ObjectMetricType
+-import mozilla.telemetry.glean.private.QuantityMetricType
+-import mozilla.telemetry.glean.private.StringListMetricType
+-import mozilla.telemetry.glean.private.StringMetricType
+ import java.io.File
+-import java.io.FileOutputStream
+-import java.io.IOException
+-import java.security.MessageDigest
+-import java.util.Date
+-import mozilla.components.lib.crash.GleanMetrics.Crash as GleanCrash
+-import mozilla.components.lib.crash.GleanMetrics.Environment as GleanEnvironment
+-import mozilla.components.lib.crash.GleanMetrics.Memory as GleanMemory
+-
+-private val logger = Logger("glean/GleanCrashReporterService")
+ 
+ /**
+  * A [CrashReporterService] implementation for recording metrics with Glean.  The purpose of this
+@@ -79,579 +36,14 @@
+         const val MAIN_PROCESS_NATIVE_CODE_CRASH_KEY = "main_proc_native_code_crash"
+         const val FOREGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY = "fg_proc_native_code_crash"
+         const val BACKGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY = "bg_proc_native_code_crash"
+-
+-        private const val MINIDUMP_READ_BUFFER_SIZE: Int = 8192
+-    }
+-
+-    /**
+-     * The subclasses of GleanCrashAction are used to persist Glean actions to handle them later
+-     * (in the application which has Glean initialized). They are serialized to JSON objects and
+-     * appended to a file, in case multiple crashes occur prior to being able to submit the metrics
+-     * to Glean.
+-     */
+-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+-    @Serializable
+-    internal sealed class GleanCrashAction {
+-        /**
+-         * Submit the glean metrics/pings.
+-         */
+-        abstract fun submit()
+-
+-        @Serializable
+-        @SerialName("count")
+-        data class Count(val label: String) : GleanCrashAction() {
+-            override fun submit() {
+-                CrashMetrics.crashCount[label].add()
+-            }
+-        }
+-
+-        @Serializable
+-        sealed class PingCause {
+-            abstract fun setMetrics()
+-
+-            @Serializable
+-            @SerialName("os_fault")
+-            data class OsFault(
+-                val remoteType: String?,
+-                val extras: JsonObject?,
+-                val minidumpHash: String?,
+-            ) : PingCause() {
+-                override fun setMetrics() {
+-                    GleanCrash.cause.set("os_fault")
+-                    remoteType?.let { GleanCrash.remoteType.set(it) }
+-                    minidumpHash?.let { GleanCrash.minidumpSha256Hash.set(it) }
+-
+-                    extras?.let(::setExtraMetrics)
+-                }
+-
+-                private fun setExtraMetrics(extras: JsonObject) {
+-                    // We ignore RemoteType and UptimeTS from extras as we have that information in
+-                    // the Crash object or tracked manually (respectively).
+-
+-                    GleanCrash.appChannel.setIfNonNull(extras["ReleaseChannel"])
+-                    GleanCrash.appDisplayVersion.setIfNonNull(extras["Version"])
+-                    GleanCrash.appBuild.setIfNonNull(extras["BuildID"])
+-                    GleanCrash.asyncShutdownTimeout.setAsyncShutdownTimeoutIfNonNull(extras["AsyncShutdownTimeout"])
+-                    GleanCrash.backgroundTaskName.setIfNonNull(extras["BackgroundTaskName"])
+-                    GleanCrash.eventLoopNestingLevel.setIfNonNull(extras["EventLoopNestingLevel"])
+-                    GleanCrash.fontName.setIfNonNull(extras["FontName"])
+-                    GleanCrash.gpuProcessLaunch.setIfNonNull(extras["GPUProcessLaunchCount"])
+-                    GleanCrash.ipcChannelError.setIfNonNull(extras["ipc_channel_error"])
+-                    GleanCrash.isGarbageCollecting.setIfNonNull(extras["IsGarbageCollecting"])
+-                    GleanCrash.mainThreadRunnableName.setIfNonNull(extras["MainThreadRunnableName"])
+-                    GleanCrash.mozCrashReason.setIfNonNull(extras["MozCrashReason"])
+-                    GleanCrash.profilerChildShutdownPhase.setIfNonNull(extras["ProfilerChildShutdownPhase"])
+-                    GleanCrash.quotaManagerShutdownTimeout.setQuotaManagerShutdownTimeoutIfNonNull(
+-                        extras["QuotaManagerShutdownTimeout"],
+-                    )
+-                    GleanCrash.shutdownProgress.setIfNonNull(extras["ShutdownProgress"])
+-                    GleanCrash.stackTraces.setStackTracesIfNonNull(extras["StackTraces"])
+-                    // Overrides the original `startup` parameter to `Ping` when present
+-                    GleanCrash.startup.setIfNonNull(extras["StartupCrash"])
+-
+-                    GleanEnvironment.experimentalFeatures.setExperimentalFeaturesIfNonNull(
+-                        extras["ExperimentalFeatures"],
+-                    )
+-                    GleanEnvironment.headlessMode.setIfNonNull(extras["HeadlessMode"])
+-
+-                    GleanMemory.availableCommit.setIfNonNull(extras["AvailablePageFile"])
+-                    GleanMemory.availablePhysical.setIfNonNull(extras["AvailablePhysicalMemory"])
+-                    GleanMemory.availableSwap.setIfNonNull(extras["AvailableSwapMemory"])
+-                    GleanMemory.availableVirtual.setIfNonNull(extras["AvailableVirtualMemory"])
+-                    GleanMemory.lowPhysical.setIfNonNull(extras["LowPhysicalMemoryEvents"])
+-                    GleanMemory.oomAllocationSize.setIfNonNull(extras["OOMAllocationSize"])
+-                    GleanMemory.purgeablePhysical.setIfNonNull(extras["PurgeablePhysicalMemory"])
+-                    GleanMemory.systemUsePercentage.setIfNonNull(extras["SystemMemoryUsePercentage"])
+-                    GleanMemory.texture.setIfNonNull(extras["TextureUsage"])
+-                    GleanMemory.totalPageFile.setIfNonNull(extras["TotalPageFile"])
+-                    GleanMemory.totalPhysical.setIfNonNull(extras["TotalPhysicalMemory"])
+-                    GleanMemory.totalVirtual.setIfNonNull(extras["TotalVirtualMemory"])
+-                }
+-
+-                private fun StringMetricType.setIfNonNull(element: JsonElement?) {
+-                    element?.jsonPrimitive?.content?.let(::set)
+-                }
+-
+-                private fun BooleanMetricType.setIfNonNull(element: JsonElement?) {
+-                    element?.jsonPrimitive?.content?.let { this.set(it == "1") }
+-                }
+-
+-                private fun QuantityMetricType.setIfNonNull(element: JsonElement?) {
+-                    element?.jsonPrimitive?.long?.let(::set)
+-                }
+-
+-                private fun StringListMetricType.setExperimentalFeaturesIfNonNull(
+-                    element: JsonElement?,
+-                ) {
+-                    element?.let {
+-                        // Split on commas
+-                        set(it.jsonPrimitive.content.split(',').filter(String::isNotEmpty))
+-                    }
+-                }
+-
+-                private fun ObjectMetricType<AsyncShutdownTimeoutObject>.setAsyncShutdownTimeoutIfNonNull(
+-                    element: JsonElement?,
+-                ) {
+-                    element?.jsonPrimitive?.content?.let { content ->
+-                        val a =
+-                            Json.decodeFromString<JsonObject>(content).mapValues { (key, value) ->
+-                                // The conditions object is sent as a serialized string.
+-                                if (key == "conditions") JsonPrimitive(value.toString()) else value
+-                            }
+-                        set(Json.decodeFromJsonElement(JsonObject(a)))
+-                    }
+-                }
+-
+-                private fun ObjectMetricType<QuotaManagerShutdownTimeoutObject>.setQuotaManagerShutdownTimeoutIfNonNull(
+-                    element: JsonElement?,
+-                ) {
+-                    element?.let {
+-                        // The Glean metric is an array of the lines.
+-                        set(
+-                            Json.decodeFromJsonElement(
+-                                JsonArray(
+-                                    it.jsonPrimitive.content.split('\n')
+-                                        .map { s -> JsonPrimitive(s) },
+-                                ),
+-                            ),
+-                        )
+-                    }
+-                }
+-
+-                private fun crashInfoEntries(crashInfo: JsonObject): List<Pair<String, JsonElement>> =
+-                    crashInfo.mapNotNull { (k, v) ->
+-                        when (k) {
+-                            "type" -> "crashType"
+-                            "address" -> "crashAddress"
+-                            "crashing_thread" -> "crashThread"
+-                            else -> null
+-                        }?.let { it to v }
+-                    }
+-
+-                private fun modulesEntries(modules: JsonArray): List<Pair<String, JsonElement>> =
+-                    listOf(
+-                        "modules" to modules.map {
+-                            it.jsonObject.mapNotNull { (key, value) ->
+-                                when (key) {
+-                                    "base_addr" -> "baseAddress"
+-                                    "end_addr" -> "endAddress"
+-                                    "code_id" -> "codeId"
+-                                    "debug_file" -> "debugFile"
+-                                    "debug_id" -> "debugId"
+-                                    "filename", "version" -> key
+-                                    else -> null
+-                                }?.let { it to value }
+-                            }.toMap()
+-                                .let(::JsonObject)
+-                        }.let(::JsonArray),
+-                    )
+-
+-                private fun threadsEntries(threads: JsonArray): List<Pair<String, JsonElement>> =
+-                    listOf(
+-                        "threads" to threads.map {
+-                            it.jsonObject.mapNotNull { (key, value) ->
+-                                when (key) {
+-                                    "frames" -> "frames" to value.jsonArray.map { frame ->
+-                                        frame.jsonObject.mapNotNull { (k, v) ->
+-                                            when (k) {
+-                                                "module_index" -> "moduleIndex"
+-                                                "ip", "trust" -> k
+-                                                else -> null
+-                                            }?.let { it to v }
+-                                        }.toMap().let(::JsonObject)
+-                                    }.let(::JsonArray)
+-
+-                                    else -> null
+-                                }
+-                            }.toMap()
+-                                .let(::JsonObject)
+-                        }.let(::JsonArray),
+-                    )
+-
+-                private fun ObjectMetricType<StackTracesObject>.setStackTracesIfNonNull(
+-                    element: JsonElement?,
+-                ) {
+-                    // No matter what happens, if an exception occurs we need to catch it to prevent
+-                    // it from stopping the ping from being sent. Stack traces are optional data, so
+-                    // we'd rather send a ping without it than not send the ping at all.
+-                    @Suppress("TooGenericExceptionCaught")
+-                    try {
+-                        element?.jsonObject?.let { obj ->
+-                            // The Glean metric has a slightly different layout. We
+-                            // explicitly set/filter to the values we support, in
+-                            // case there are new values in the object.
+-                            val m = obj.mapNotNull { (key, value) ->
+-                                when (key) {
+-                                    "status" -> if (value.jsonPrimitive.content != "OK") {
+-                                        listOf("error" to value)
+-                                    } else {
+-                                        null
+-                                    }
+-
+-                                    "crash_info" -> (value as? JsonObject)?.let(::crashInfoEntries)
+-                                    "modules" -> (value as? JsonArray)?.let(::modulesEntries)
+-                                    "threads" -> (value as? JsonArray)?.let(::threadsEntries)
+-                                    "main_module" -> listOf("mainModule" to value)
+-                                    else -> null
+-                                }
+-                            }
+-                                .flatten()
+-                                .toMap()
+-                            set(Json.decodeFromJsonElement(JsonObject(m)))
+-                        }
+-                    } catch (e: Exception) {
+-                        logger.error("failed to populate stackTraces field: bad JSON input", e)
+-                    }
+-                }
+-            }
+-
+-            @Serializable
+-            @SerialName("java_exception")
+-            data class JavaException(
+-                val throwableJson: JsonElement,
+-                val breadcrumbs: List<Breadcrumb>? = null,
+-            ) : PingCause() {
+-                override fun setMetrics() {
+-                    GleanCrash.cause.set("java_exception")
+-                    GleanCrash.javaException.set(
+-                        Json.decodeFromJsonElement<GleanCrash.JavaExceptionObject>(throwableJson),
+-                    )
+-                }
+-            }
+-        }
+-
+-        @Serializable
+-        @SerialName("ping")
+-        data class Ping(
+-            val uptimeNanos: Long,
+-            val processType: String,
+-            val timeMillis: Long,
+-            val reason: Pings.crashReasonCodes,
+-            val cause: PingCause,
+-            val breadcrumbs: List<Breadcrumb> = listOf(),
+-            val startup: Boolean = false,
+-        ) : GleanCrashAction() {
+-            override fun submit() {
+-                GleanEnvironment.uptime.setRawNanos(uptimeNanos)
+-                GleanCrash.processType.set(processType)
+-                GleanCrash.time.set(Date(timeMillis))
+-                GleanCrash.startup.set(startup)
+-                cause.setMetrics()
+-
+-                if (breadcrumbs.isNotEmpty()) {
+-                    GleanCrash.breadcrumbs.set(
+-                        Json.decodeFromJsonElement<GleanCrash.BreadcrumbsObject>(
+-                            JsonArray(
+-                                breadcrumbs.map { breadcrumb ->
+-                                    JsonObject(
+-                                        mapOf(
+-                                            "timestamp" to JsonPrimitive(breadcrumb.timestamp),
+-                                            "category" to JsonPrimitive(breadcrumb.category),
+-                                            "type" to JsonPrimitive(breadcrumb.type),
+-                                            "level" to JsonPrimitive(breadcrumb.level),
+-                                            "message" to JsonPrimitive(breadcrumb.message),
+-                                            "data" to JsonArray(
+-                                                breadcrumb.data.map {
+-                                                    JsonObject(
+-                                                        mapOf(
+-                                                            "key" to JsonPrimitive(it.key),
+-                                                            "value" to JsonPrimitive(it.value),
+-                                                        ),
+-                                                    )
+-                                                },
+-                                            ),
+-                                        ),
+-                                    )
+-                                },
+-                            ),
+-                        ),
+-                    )
+-                }
+-
+-                Pings.crash.submit(reason)
+-            }
+-        }
+-    }
+-
+-    private val creationTime = SystemClock.elapsedRealtimeNanos()
+-
+-    init {
+-        run {
+-            // We only want to record things on the main process because that is the only one in which
+-            // Glean is properly initialized.  Checking to see if we are on the main process here will
+-            // prevent the situation that arises because the integrating app's Application will be
+-            // re-created when prompting to report the crash, and Glean is not initialized there since
+-            // it's not technically the main process.
+-            if (!context.isMainProcess()) {
+-                logger.info("GleanCrashReporterService initialized off of main process")
+-                return@run
+-            }
+-
+-            if (!checkFileConditions()) {
+-                // checkFileConditions() internally logs error conditions
+-                return@run
+-            }
+-
+-            // Parse the persisted crashes
+-            parseCrashFile()
+-
+-            // Clear persisted counts by deleting the file
+-            file.delete()
+-        }
+-    }
+-
+-    /**
+-     * Calculates the application uptime based on the creation time of this class (assuming it is
+-     * created in the application's `OnCreate`).
+-     */
+-    private fun uptime() = SystemClock.elapsedRealtimeNanos() - creationTime
+-
+-    /**
+-     * Checks the file conditions to ensure it can be opened and read.
+-     *
+-     * @return True if the file exists and is able to be read, otherwise false
+-     */
+-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+-    internal fun checkFileConditions(): Boolean {
+-        return if (!file.exists()) {
+-            // This is just an info line, as most of the time we hope there is no file which means
+-            // there were no crashes
+-            logger.info("No crashes to record, or file not found.")
+-            false
+-        } else if (!file.canRead()) {
+-            logger.error("Cannot read file")
+-            false
+-        } else if (!file.isFile) {
+-            logger.error("Expected file, but found directory")
+-            false
+-        } else {
+-            true
+-        }
+-    }
+-
+-    /**
+-     * Parses the crashes collected in the persisted crash file. The format of this file is simple,
+-     * a stream of serialized JSON GleanCrashAction objects.
+-     *
+-     * Example:
+-     *
+-     * <--Beginning of file-->
+-     * {"type":"count","label":"uncaught_exception"}\n
+-     * {"type":"count","label":"uncaught_exception"}\n
+-     * {"type":"count","label":"main_process_native_code_crash"}\n
+-     * {"type":"ping","uptimeNanos":2000000,"processType":"main","timeMillis":42000000000,
+-     *  "startup":false}\n
+-     * <--End of file-->
+-     *
+-     * It is unlikely that there will be more than one crash in a file, but not impossible.  This
+-     * could happen, for instance, if the application crashed again before the file could be
+-     * processed.
+-     */
+-    @Suppress("ComplexMethod")
+-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+-    internal fun parseCrashFile() {
+-        try {
+-            @OptIn(ExperimentalSerializationApi::class)
+-            val actionSequence = Json.decodeToSequence<GleanCrashAction>(
+-                file.inputStream(),
+-                DecodeSequenceMode.WHITESPACE_SEPARATED,
+-            )
+-            for (action in actionSequence) {
+-                action.submit()
+-            }
+-        } catch (e: IOException) {
+-            logger.error("Error reading crash file", e)
+-            return
+-        } catch (e: SerializationException) {
+-            logger.error("Error deserializing crash file", e)
+-            return
+-        }
+-    }
+-
+-    /**
+-     * This function handles the actual recording of the crash to the persisted crash file. We are
+-     * only guaranteed runtime for the lifetime of the [CrashReporterService.report] function,
+-     * anything that we do in this function **MUST** be synchronous and blocking.  We cannot spawn
+-     * work to background processes or threads here if we want to guarantee that the work is
+-     * completed. Also, since the [CrashReporterService.report] functions are called synchronously,
+-     * and from lib-crash's own process, it is unlikely that this would be called from more than one
+-     * place at the same time.
+-     *
+-     * @param action Pass in the crash action to record.
+-     */
+-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+-    internal fun recordCrashAction(action: GleanCrashAction) {
+-        // Persist the crash in a file so that it can be recorded on the next application start. We
+-        // cannot directly record to Glean here because CrashHandler process is not the same process
+-        // as Glean is initialized in.
+-        // Create the file if it doesn't exist
+-        if (!file.exists()) {
+-            try {
+-                file.createNewFile()
+-            } catch (e: IOException) {
+-                logger.error("Failed to create crash file", e)
+-            }
+-        }
+-
+-        // Add a line representing the crash that was received
+-        if (file.canWrite()) {
+-            try {
+-                @OptIn(ExperimentalSerializationApi::class)
+-                Json.encodeToStream(action, FileOutputStream(file, true))
+-                file.appendText("\n")
+-            } catch (e: IOException) {
+-                logger.error("Failed to write to crash file", e)
+-            }
+-        }
+     }
+ 
+     override fun record(crash: Crash.UncaughtExceptionCrash) {
+-        recordCrashAction(GleanCrashAction.Count(UNCAUGHT_EXCEPTION_KEY))
+-        recordCrashAction(
+-            GleanCrashAction.Ping(
+-                uptimeNanos = uptime(),
+-                processType = "main",
+-                timeMillis = crash.timestamp,
+-                reason = Pings.crashReasonCodes.crash,
+-                cause = GleanCrashAction.PingCause.JavaException(crash.throwable.toJson()),
+-                breadcrumbs = crash.breadcrumbs.map { it.toBreadcrumb() },
+-            ),
+-        )
+-    }
+-
+-    private fun getExtrasJson(path: String): JsonObject? {
+-        val extrasFile = File(path)
+-        if (extrasFile.exists()) {
+-            try {
+-                @OptIn(ExperimentalSerializationApi::class)
+-                return Json.decodeFromStream<JsonObject>(extrasFile.inputStream())
+-            } catch (e: IOException) {
+-                logger.error("Error reading crash extra file", e)
+-            } catch (e: SerializationException) {
+-                logger.error("Error deserializing crash extra file", e)
+-            }
+-        } else {
+-            logger.warn("Crash extra file missing: $path")
+-        }
+-        return null
+-    }
+-
+-    @Throws()
+-    private fun calculateMinidumpHash(path: String): String? {
+-        val minidumpFile = File(path)
+-        if (!minidumpFile.exists()) return null
+-        try {
+-            val digest = MessageDigest.getInstance("SHA-256")
+-            val input = minidumpFile.inputStream()
+-
+-            val buffer = ByteArray(MINIDUMP_READ_BUFFER_SIZE)
+-            var n = 0
+-            while (n != -1) {
+-                digest.update(buffer, 0, n)
+-                n = input.read(buffer)
+-            }
+-
+-            val hexString = StringBuilder()
+-            for (b in digest.digest()) {
+-                hexString.append("%02x".format(b))
+-            }
+-            return hexString.toString()
+-        } catch (e: IOException) {
+-            logger.error("Failed to generate minidump hash", e)
+-            return null
+-        }
+-    }
+-
+-    private fun Throwable.toJson(): JsonElement {
+-        val messages =
+-            generateSequence(this) { it.cause }.mapNotNull { it.message }.map { JsonPrimitive(it) }
+-                .toList()
+-
+-        val stack = this.stackTrace.map { element ->
+-            mapOf(
+-                "file" to element.fileName.let(::JsonPrimitive),
+-                "line" to element.lineNumber.takeIf { it >= 0 }.let(::JsonPrimitive),
+-                "className" to element.className.let(::JsonPrimitive),
+-                "methodName" to element.methodName.let(::JsonPrimitive),
+-                "isNative" to JsonPrimitive(element.isNativeMethod),
+-            ).filterValues { it !is JsonNull }.let(::JsonObject)
+-        }
+-
+-        return JsonObject(
+-            mapOf(
+-                "messages" to JsonArray(messages),
+-                "stack" to JsonArray(stack),
+-            ),
+-        )
+     }
+ 
+     override fun record(crash: Crash.NativeCodeCrash) {
+-        when (crash.processType) {
+-            Crash.NativeCodeCrash.PROCESS_TYPE_MAIN ->
+-                recordCrashAction(GleanCrashAction.Count(MAIN_PROCESS_NATIVE_CODE_CRASH_KEY))
+-            Crash.NativeCodeCrash.PROCESS_TYPE_FOREGROUND_CHILD ->
+-                recordCrashAction(
+-                    GleanCrashAction.Count(
+-                        FOREGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY,
+-                    ),
+-                )
+-            Crash.NativeCodeCrash.PROCESS_TYPE_BACKGROUND_CHILD ->
+-                recordCrashAction(
+-                    GleanCrashAction.Count(
+-                        BACKGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY,
+-                    ),
+-                )
+-        }
+-
+-        // The `processType` property on a crash is a bit confusing because it does not map to the actual process types
+-        // (like main, content, gpu, etc.). This property indicates what UI we should show to users given that "main"
+-        // crashes essentially kill the app, "foreground child" crashes are likely tab crashes, and "background child"
+-        // crashes are occurring in other processes (like GPU and extensions) for which users shouldn't notice anything
+-        // (because there shouldn't be any noticeable impact in the app and the processes will be recreated
+-        // automatically).
+-        val processType = when (crash.processType) {
+-            Crash.NativeCodeCrash.PROCESS_TYPE_MAIN -> "main"
+-
+-            Crash.NativeCodeCrash.PROCESS_TYPE_BACKGROUND_CHILD -> {
+-                when (crash.remoteType) {
+-                    // The extensions process is a content process as per:
+-                    // https://firefox-source-docs.mozilla.org/dom/ipc/process_model.html#webextensions
+-                    "extension" -> "content"
+-
+-                    else -> "utility"
+-                }
+-            }
+-
+-            Crash.NativeCodeCrash.PROCESS_TYPE_FOREGROUND_CHILD -> "content"
+-
+-            else -> "main"
+-        }
+-
+-        if (crash.minidumpPath != null && crash.extrasPath != null) {
+-            MinidumpAnalyzer.load()?.run(crash.minidumpPath, crash.extrasPath, false)
+-        }
+-
+-        val extrasJson = crash.extrasPath?.let { getExtrasJson(it) }
+-
+-        val minidumpHash = crash.minidumpPath?.let { calculateMinidumpHash(it) }
+-
+-        recordCrashAction(
+-            GleanCrashAction.Ping(
+-                uptimeNanos = uptime(),
+-                processType = processType,
+-                timeMillis = crash.timestamp,
+-                reason = Pings.crashReasonCodes.crash,
+-                cause = GleanCrashAction.PingCause.OsFault(
+-                    remoteType = crash.remoteType,
+-                    extras = extrasJson,
+-                    minidumpHash = minidumpHash,
+-                ),
+-                breadcrumbs = crash.breadcrumbs.map { it.toBreadcrumb() },
+-            ),
+-        )
+     }
+ 
+     override fun record(throwable: Throwable) {
+-        recordCrashAction(GleanCrashAction.Count(CAUGHT_EXCEPTION_KEY))
+     }
+ }
 diff --git a/mobile/android/fenix/app/.experimenter.yaml b/mobile/android/fenix/app/.experimenter.yaml
-index d78513f57c..df0285c038 100644
 --- a/mobile/android/fenix/app/.experimenter.yaml
 +++ b/mobile/android/fenix/app/.experimenter.yaml
-@@ -36,7 +36,7 @@ glean:
+@@ -36,7 +36,7 @@
        description: "A map of metric base-identifiers to booleans representing the state of the 'enabled' flag for that metric."
  growth-data:
    description: A feature measuring campaign growth data
@@ -30,10 +665,9 @@ index d78513f57c..df0285c038 100644
    variables:
      enabled:
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 8f6c6df..41f0e0c 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -209,7 +209,7 @@ features:
+@@ -209,7 +209,7 @@
      defaults:
        - channel: release
          value:
@@ -42,13 +676,191 @@ index 8f6c6df..41f0e0c 100644
  
    re-engagement-notification:
      description: A feature that shows the re-engagement notification if the user is inactive.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+@@ -66,7 +66,7 @@
+     /**
+      * Enable Meta attribution.
+      */
+-    const val META_ATTRIBUTION_ENABLED = true
++    const val META_ATTRIBUTION_ENABLED = false
+ 
+     /**
+      * Enables Homepage as a New Tab.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+@@ -4,100 +4,33 @@
+ 
+ package org.mozilla.fenix.components
+ 
+-import android.app.Application
+ import android.app.PendingIntent
+ import android.content.Context
+ import android.content.Intent
+ import android.os.Build
+ import mozilla.components.lib.crash.CrashReporter
+-import mozilla.components.lib.crash.sentry.SentryService
+ import mozilla.components.lib.crash.service.CrashReporterService
+ import mozilla.components.lib.crash.service.GleanCrashReporterService
+-import mozilla.components.lib.crash.service.MozillaSocorroService
+-import mozilla.components.support.ktx.android.content.isMainProcess
+ import mozilla.components.support.utils.BrowsersCache
+ import mozilla.components.support.utils.RunWhenReadyQueue
+-import org.mozilla.fenix.BuildConfig
+-import org.mozilla.fenix.Config
+ import org.mozilla.fenix.HomeActivity
+ import org.mozilla.fenix.R
+-import org.mozilla.fenix.ReleaseChannel
+-import org.mozilla.fenix.components.metrics.AdjustMetricsService
+ import org.mozilla.fenix.components.metrics.DefaultMetricsStorage
+-import org.mozilla.fenix.components.metrics.GleanMetricsService
+-import org.mozilla.fenix.components.metrics.GleanProfileIdPreferenceStore
+-import org.mozilla.fenix.components.metrics.GleanUsageReportingMetricsService
+-import org.mozilla.fenix.components.metrics.InstallReferrerMetricsService
+ import org.mozilla.fenix.components.metrics.MetricController
+ import org.mozilla.fenix.components.metrics.MetricsStorage
+ import org.mozilla.fenix.crashes.CrashFactCollector
+ import org.mozilla.fenix.crashes.ReleaseRuntimeTagProvider
+-import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.perf.lazyMonitored
+-import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
+-import org.mozilla.geckoview.BuildConfig.MOZ_APP_VENDOR
+-import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
+-import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
+ 
+ /**
+  * Component group for all functionality related to analytics e.g. crash reporting and telemetry.
+  */
+ class Analytics(
+-    private val context: Context,
+-    private val runWhenReadyQueue: RunWhenReadyQueue,
++    private val context: Context
+ ) {
+     val crashReporter: CrashReporter by lazyMonitored {
+         val services = mutableListOf<CrashReporterService>()
+-        val distributionId = when (Config.channel.isMozillaOnline) {
+-            true -> "MozillaOnline"
+-            false -> "Mozilla"
+-        }
+-
+-        if (isSentryEnabled()) {
+-            // We treat caught exceptions similar to debug logging.
+-            // On the release channel volume of these is too high for our Sentry instances, and
+-            // we get most value out of nightly/beta logging anyway.
+-            val shouldSendCaughtExceptions = when (Config.channel) {
+-                ReleaseChannel.Release -> false
+-                else -> true
+-            }
+-            val sentryService = SentryService(
+-                context,
+-                BuildConfig.SENTRY_TOKEN,
+-                tags = mapOf(
+-                    "geckoview" to "$MOZ_APP_VERSION-$MOZ_APP_BUILDID",
+-                    "fenix.git" to BuildConfig.VCS_HASH,
+-                ),
+-                environment = BuildConfig.BUILD_TYPE,
+-                sendEventForNativeCrashes = false, // Do not send native crashes to Sentry
+-                sendCaughtExceptions = shouldSendCaughtExceptions,
+-                sentryProjectUrl = getSentryProjectUrl(),
+-            )
+-
+-            // We only want to initialize Sentry on startup on the main process.
+-            if (context.isMainProcess()) {
+-                runWhenReadyQueue.runIfReadyOrQueue {
+-                    sentryService.initIfNeeded()
+-                }
+-            }
+-
+-            services.add(sentryService)
+-        }
+-
+-        // The name "Fenix" here matches the product name on Socorro and is unrelated to the actual app name:
+-        // https://bugzilla.mozilla.org/show_bug.cgi?id=1523284
+-        val socorroService = MozillaSocorroService(
+-            context,
+-            appName = "Fenix",
+-            version = MOZ_APP_VERSION,
+-            buildId = MOZ_APP_BUILDID,
+-            vendor = MOZ_APP_VENDOR,
+-            releaseChannel = MOZ_UPDATE_CHANNEL,
+-            distributionId = distributionId,
+-        )
+-        services.add(socorroService)
+-
+         val intent = Intent(context, HomeActivity::class.java).apply {
+             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+         }
+@@ -122,10 +55,9 @@
+                 appName = context.getString(R.string.app_name),
+                 organizationName = "Mozilla",
+             ),
+-            enabled = true,
++            enabled = false,
+             nonFatalCrashIntent = pendingIntent,
+-            useLegacyReporting = !context.settings().crashReportAlwaysSend &&
+-                !context.settings().useNewCrashReporterDialog,
++            useLegacyReporting = false,
+             runtimeTagProviders = listOf(ReleaseRuntimeTagProvider()),
+         )
+     }
+@@ -144,34 +76,11 @@
+ 
+     val metrics: MetricController by lazyMonitored {
+         MetricController.create(
+-            listOf(
+-                GleanMetricsService(context),
+-                AdjustMetricsService(
+-                    application = context as Application,
+-                    storage = metricsStorage,
+-                    crashReporter = crashReporter,
+-                ),
+-                InstallReferrerMetricsService(context),
+-                GleanUsageReportingMetricsService(gleanProfileIdStore = GleanProfileIdPreferenceStore(context)),
+-            ),
+-            isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
+-            isMarketingDataTelemetryEnabled = {
+-                context.settings().isMarketingTelemetryEnabled && context.settings().hasMadeMarketingTelemetrySelection
+-            },
+-            isUsageTelemetryEnabled = { context.settings().isDailyUsagePingEnabled },
++            listOf(),
++            isDataTelemetryEnabled = { false },
++            isMarketingDataTelemetryEnabled = { false },
++            isUsageTelemetryEnabled = { false },
+             context.settings(),
+         )
+     }
+ }
+-
+-private fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()
+-
+-private fun getSentryProjectUrl(): String? {
+-    val baseUrl = "https://sentry.io/organizations/mozilla/issues"
+-    return when (Config.channel) {
+-        ReleaseChannel.Nightly -> "$baseUrl/?project=6295546"
+-        ReleaseChannel.Release -> "$baseUrl/?project=6375561"
+-        ReleaseChannel.Beta -> "$baseUrl/?project=6295551"
+-        else -> null
+-    }
+-}
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -166,7 +166,7 @@
+         AddonManager(core.store, core.engine, addonsProvider, addonUpdater)
+     }
+ 
+-    val analytics by lazyMonitored { Analytics(context, performance.visualCompletenessQueue.queue) }
++    val analytics by lazyMonitored { Analytics(context) }
+     val nimbus by lazyMonitored { NimbusComponents(context) }
+     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
+     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index e10e2c1611..8dc252f08b 100644
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 24ba347127..1cdeb4b96d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -329,7 +329,6 @@ class Core(
+@@ -330,7 +330,6 @@
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -56,7 +868,7 @@ index 24ba347127..1cdeb4b96d 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -364,26 +363,6 @@ class Core(
+@@ -365,26 +364,6 @@
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -83,7 +895,7 @@ index 24ba347127..1cdeb4b96d 100644
              WebNotificationFeature(
                  context,
                  engine,
-@@ -428,14 +407,6 @@ class Core(
+@@ -429,14 +408,6 @@
          context.components.analytics.metrics
      }
  
@@ -98,7 +910,7 @@ index 24ba347127..1cdeb4b96d 100644
      /**
       * Shortcut component for managing shortcuts on the device home screen.
       */
-@@ -718,7 +689,7 @@ class Core(
+@@ -734,7 +705,7 @@
          const val METADATA_SHORTCUT_SUGGESTION_LIMIT = 20
  
          // collection name to fetch from server for SERP telemetry
@@ -107,23 +919,79 @@ index 24ba347127..1cdeb4b96d 100644
          internal const val REMOTE_PROD_ENDPOINT_URL = "https://firefox.settings.services.mozilla.com"
          internal const val REMOTE_STAGE_ENDPOINT_URL = "https://firefox.settings.services.allizom.org"
      }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -66,7 +66,7 @@
-     /**
-      * Enable Meta attribution.
-      */
--    const val META_ATTRIBUTION_ENABLED = true
-+    const val META_ATTRIBUTION_ENABLED = false
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
+@@ -29,15 +29,8 @@
+ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUploadEnabled: Boolean, client: Client) {
+     logger.debug("Initializing Glean (uploadEnabled=$isTelemetryUploadEnabled})")
  
-     /**
-      * Enables the Compose Homepage.
+-    // for performance reasons, this is only available in Nightly or Debug builds
+-    val customEndpoint = if (Config.channel.isNightlyOrDebug) {
+-        // for testing, if custom glean server url is set in the secret menu, use it to initialize Glean
+-        getCustomGleanServerUrlIfAvailable(applicationContext)
+-    } else {
+-        null
+-    }
+-
+     val configuration = Configuration(
++        serverEndpoint = "",
+         channel = BuildConfig.BUILD_TYPE,
+         httpClient = ConceptFetchHttpUploader(
+             lazy(LazyThreadSafetyMode.NONE) { client },
+@@ -58,8 +51,8 @@
+ 
+     Glean.initialize(
+         applicationContext = applicationContext,
+-        configuration = configuration.setCustomEndpointIfAvailable(customEndpoint),
+-        uploadEnabled = isTelemetryUploadEnabled,
++        configuration = configuration,
++        uploadEnabled = false,
+         buildInfo = GleanBuildInfo.buildInfo,
+     )
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
+@@ -42,34 +42,7 @@
+ ) : NimbusBranchesAdapterDelegate {
+ 
+     override fun onBranchItemClicked(branch: Branch) {
+-        val telemetryEnabled = context.settings().isTelemetryEnabled
+-        val experimentsEnabled = context.settings().isExperimentationEnabled
+-
+         updateOptInState(branch)
+-
+-        if (!telemetryEnabled && !experimentsEnabled) {
+-            context.getRootView()?.let { v ->
+-                Snackbar.make(
+-                    snackBarParentView = v,
+-                    snackbarState = SnackbarState(
+-                        message = context.getString(R.string.experiments_snackbar),
+-                        duration = SnackbarState.Duration.Preset.Long,
+-                        action = Action(
+-                            label = context.getString(R.string.experiments_snackbar_button),
+-                            onClick = {
+-                                navController.navigateWithBreadcrumb(
+-                                    directions = NimbusBranchesFragmentDirections
+-                                        .actionNimbusBranchesFragmentToDataChoicesFragment(),
+-                                    navigateFrom = "NimbusBranchesController",
+-                                    navigateTo = "ActionNimbusBranchesFragmentToDataChoicesFragment",
+-                                    crashReporter = context.components.analytics.crashReporter,
+-                                )
+-                            },
+-                        ),
+-                    ),
+-                ).show()
+-            }
+-        }
+     }
+ 
+     private fun updateOptInState(branch: Branch) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 777a555948..dc1bb31f93 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -337,48 +337,24 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -334,48 +334,24 @@
          default = true,
      )
  
@@ -178,12 +1046,11 @@ index 777a555948..dc1bb31f93 100644
 +    var isExperimentationEnabled = false
  
      var isOverrideTPPopupsForPerformanceTest = false
-     
+ 
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index c03abd3b27..f9afd34c8d 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -139,11 +139,6 @@
+@@ -146,11 +146,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -195,23 +1062,22 @@ index c03abd3b27..f9afd34c8d 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -200,11 +195,6 @@
-         android:title="@string/preferences_category_about"
+@@ -213,11 +208,6 @@
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
--        <androidx.preference.Preference
+         <androidx.preference.Preference
 -            android:key="@string/pref_key_rate"
 -            app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />
 -
-         <androidx.preference.Preference
+-        <androidx.preference.Preference
              android:key="@string/pref_key_about"
              app:iconSpaceReserved="false"
+             android:title="@string/preferences_about" />
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
-index eb00f87b41..ce8e2b7a03 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
-@@ -38,7 +38,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
+@@ -38,7 +38,7 @@
    private static final String LOGTAG = "GeckoCrashHandler";
    private static final Thread MAIN_THREAD = Thread.currentThread();
    private static final String DEFAULT_SERVER_URL =
@@ -221,10 +1087,9 @@ index eb00f87b41..ce8e2b7a03 100644
    // Context for getting device information
    private @Nullable final Context mAppContext;
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
-index dad9a16c7a..dc180eaf6d 100644
 --- a/mobile/android/moz.configure
 +++ b/mobile/android/moz.configure
-@@ -78,7 +78,7 @@ def android_subproject(value):
+@@ -78,7 +78,7 @@
  set_config("MOZ_ANDROID_SUBPROJECT", android_subproject)
  
  imply_option("MOZ_NORMANDY", False)
@@ -234,10 +1099,9 @@ index dad9a16c7a..dc180eaf6d 100644
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
 diff --git a/python/mach/mach/telemetry.py b/python/mach/mach/telemetry.py
-index c73498a066..b02315266a 100644
 --- a/python/mach/mach/telemetry.py
 +++ b/python/mach/mach/telemetry.py
-@@ -95,10 +95,7 @@ def is_applicable_telemetry_environment():
+@@ -95,10 +95,7 @@
  
  
  def is_telemetry_enabled(settings):
@@ -249,3 +1113,356 @@ index c73498a066..b02315266a 100644
  
  
  def arcrc_path():
+diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
+--- a/toolkit/components/glean/src/init/mod.rs
++++ b/toolkit/components/glean/src/init/mod.rs
+@@ -72,7 +72,7 @@
+     disable_internal_pings: bool,
+ ) -> nsresult {
+     // On Android always enable Glean upload.
+-    let upload_enabled = true;
++    let upload_enabled = false;
+     // Don't set up an uploader.
+     let uploader = None;
+ 
+@@ -150,12 +150,12 @@
+ 
+     let localhost_port = static_prefs::pref!("telemetry.fog.test.localhost_port");
+     let server = if localhost_port > 0 {
+-        format!("http://localhost:{}", localhost_port)
++        String::from("")
+     } else {
+         if app_id_override == "thunderbird.desktop" {
+-            String::from("https://incoming.thunderbird.net")
++            String::from("")
+         } else {
+-            String::from("https://incoming.telemetry.mozilla.org")
++            String::from("")
+         }
+     };
+ 
+@@ -192,7 +192,7 @@
+         rate_limit,
+         enable_event_timestamps: true,
+         experimentation_id: None,
+-        enable_internal_pings: true,
++        enable_internal_pings: false,
+         ping_schedule: pings::ping_schedule(),
+         ping_lifetime_threshold: 0,
+         ping_lifetime_max_time: Duration::ZERO,
+@@ -374,7 +374,7 @@
+     let (mut conf, client_info) = build_configuration(data_path_override, app_id_override)?;
+ 
+     // On Android always enable Glean upload.
+-    conf.upload_enabled = true;
++    conf.upload_enabled = false;
+ 
+     // Don't accidentally send "main" pings during tests.
+     conf.use_core_mps = false;
+diff --git a/toolkit/components/glean/src/init/viaduct_uploader.rs b/toolkit/components/glean/src/init/viaduct_uploader.rs
+--- a/toolkit/components/glean/src/init/viaduct_uploader.rs
++++ b/toolkit/components/glean/src/init/viaduct_uploader.rs
+@@ -109,7 +109,7 @@
+     let ohttp_request = ohttp::ClientRequest::from_encoded_config(config)?;
+     let (capsule, ohttp_response) = ohttp_request.encapsulate(&binary_request)?;
+ 
+-    const OHTTP_RELAY_URL: &str = "https://mozilla-ohttp.fastly-edge.com/";
++    const OHTTP_RELAY_URL: &str = "";
+     let parsed_relay_url = Url::parse(OHTTP_RELAY_URL)?;
+ 
+     log::trace!("FOG ohttp uploader uploading to {}", parsed_relay_url);
+@@ -140,7 +140,7 @@
+ 
+ fn get_config() -> Result<Vec<u8>, ViaductUploaderError> {
+     const OHTTP_CONFIG_URL: &str =
+-        "https://prod.ohttp-gateway.prod.webservices.mozgcp.net/ohttp-configs";
++        "";
+     log::trace!("Getting OHTTP config from {}", OHTTP_CONFIG_URL);
+     let parsed_config_url = Url::parse(OHTTP_CONFIG_URL)?;
+     Ok(Request::get(parsed_config_url).send()?.body)
+diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+--- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
++++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+@@ -31,7 +31,7 @@
+   Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
+ 
+ const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
+-const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
++const COLLECTION_ID_FALLBACK = "";
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+   "COLLECTION_ID",
+diff --git a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
+--- a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
++++ b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
+@@ -58,10 +58,7 @@
+  * @return {Boolean} True if pings should be archived, false otherwise.
+  */
+ function shouldArchivePings() {
+-  return Services.prefs.getBoolPref(
+-    TelemetryUtils.Preferences.ArchiveEnabled,
+-    false
+-  );
++  return false;
+ }
+ 
+ var TelemetryArchiveImpl = {
+diff --git a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
+--- a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
++++ b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
+@@ -31,7 +31,7 @@
+ export var TelemetryControllerBase = Object.freeze({
+   // Whether the FHR/Telemetry unification features are enabled.
+   // Changing this pref requires a restart.
+-  IS_UNIFIED_TELEMETRY: Services.prefs.getBoolPref(Preferences.Unified, false),
++  IS_UNIFIED_TELEMETRY: false,
+ 
+   Preferences,
+ 
+@@ -40,7 +40,7 @@
+    * it correctly evaluates to a boolean type.
+    */
+   get isTelemetryEnabled() {
+-    return Services.prefs.getBoolPref(PREF_TELEMETRY_ENABLED, false) === true;
++    return false;
+   },
+ 
+   get log() {
+@@ -87,28 +87,8 @@
+   setTelemetryRecordingFlags() {
+     // Enable extended Telemetry on pre-release channels and disable it
+     // on Release/ESR.
+-    let prereleaseChannels = [
+-      "nightly",
+-      "nightly-autoland",
+-      "nightly-try",
+-      "aurora",
+-      "beta",
+-    ];
+-    if (!AppConstants.MOZILLA_OFFICIAL) {
+-      // Turn extended telemetry for local developer builds.
+-      prereleaseChannels.push("default");
+-    }
+-    const isPrereleaseChannel = prereleaseChannels.includes(
+-      AppConstants.MOZ_UPDATE_CHANNEL
+-    );
+-    const isReleaseCandidateOnBeta =
+-      AppConstants.MOZ_UPDATE_CHANNEL === "release" &&
+-      Services.prefs.getCharPref("app.update.channel", null) === "beta";
+-    Services.telemetry.canRecordBase = true;
+-    Services.telemetry.canRecordExtended =
+-      isPrereleaseChannel ||
+-      isReleaseCandidateOnBeta ||
+-      Services.prefs.getBoolPref(this.Preferences.OverridePreRelease, false);
++    Services.telemetry.canRecordBase = false;
++    Services.telemetry.canRecordExtended = false;
+   },
+ 
+   /**
+@@ -125,8 +105,7 @@
+     } else {
+       // We're not on unified Telemetry, stick to the old behaviour for
+       // supporting Fennec.
+-      Services.telemetry.canRecordBase = Services.telemetry.canRecordExtended =
+-        this.isTelemetryEnabled;
++      Services.telemetry.canRecordBase = Services.telemetry.canRecordExtended = false;
+     }
+ 
+     this.log.config(
+diff --git a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
+--- a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
++++ b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
+@@ -280,11 +280,7 @@
+    * false, we never request upload or deletion.
+    */
+   get dataSubmissionEnabled() {
+-    // Default is true because we are opt-out.
+-    return Services.prefs.getBoolPref(
+-      TelemetryUtils.Preferences.DataSubmissionEnabled,
+-      true
+-    );
++    return false;
+   },
+ 
+   get currentPolicyVersion() {
+@@ -340,20 +336,6 @@
+    *         false otherwise.
+    */
+   get isUserNotifiedOfCurrentPolicy() {
+-    // If we don't have a sane notification date, the user was not notified yet.
+-    if (
+-      !this.dataSubmissionPolicyNotifiedDate ||
+-      this.dataSubmissionPolicyNotifiedDate.getTime() <= 0
+-    ) {
+-      return false;
+-    }
+-
+-    // The accepted policy version should not be less than the minimum policy version.
+-    if (this.dataSubmissionPolicyAcceptedVersion < this.minimumPolicyVersion) {
+-      return false;
+-    }
+-
+-    // Otherwise the user was already notified.
+     return true;
+   },
+ 
+@@ -407,19 +389,7 @@
+    * @return {Boolean} True if we are allowed to upload data, false otherwise.
+    */
+   canUpload() {
+-    // If data submission is disabled, there's no point in showing the infobar. Just
+-    // forbid to upload.
+-    if (!this.dataSubmissionEnabled) {
+-      return false;
+-    }
+-
+-    // Submission is enabled. We enable upload if user is notified or we need to bypass
+-    // the policy.
+-    const bypassNotification = Services.prefs.getBoolPref(
+-      TelemetryUtils.Preferences.BypassNotification,
+-      false
+-    );
+-    return this.isUserNotifiedOfCurrentPolicy || bypassNotification;
++    return false;
+   },
+ 
+   isFirstRun() {
+@@ -446,32 +416,7 @@
+    * Determine whether the user should be notified.
+    */
+   _shouldNotify() {
+-    if (!this.dataSubmissionEnabled) {
+-      this._log.trace(
+-        "_shouldNotify - Data submission disabled by the policy."
+-      );
+-      return false;
+-    }
+-
+-    const bypassNotification = Services.prefs.getBoolPref(
+-      TelemetryUtils.Preferences.BypassNotification,
+-      false
+-    );
+-    if (this.isUserNotifiedOfCurrentPolicy || bypassNotification) {
+-      this._log.trace(
+-        "_shouldNotify - User already notified or bypassing the policy."
+-      );
+-      return false;
+-    }
+-
+-    if (this._notificationInProgress) {
+-      this._log.trace(
+-        "_shouldNotify - User not notified, notification already in progress."
+-      );
+-      return false;
+-    }
+-
+-    return true;
++    return false;
+   },
+ 
+   /**
+@@ -717,7 +662,7 @@
+     return this._ensureUserIsNotifiedPromise.then(() => {
+       // The user has been notified and interacted with the modal.
+       // Glean can now init on shutdown if necessary.
+-      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", true);
++      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", false);
+     });
+   },
+ 
+diff --git a/toolkit/components/telemetry/app/UsageReporting.sys.mjs b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
+--- a/toolkit/components/telemetry/app/UsageReporting.sys.mjs
++++ b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
+@@ -34,21 +34,18 @@
+ 
+     this._initPromise = (async () => {
+       let profileID = await lazy.ClientID.getUsageProfileID();
+-      const uploadEnabled = Services.prefs.getBoolPref(
+-        "datareporting.usage.uploadEnabled",
+-        false
+-      );
++      const uploadEnabled = false;
+       this._log.trace(
+         `${SLUG}: uploadEnabled=${uploadEnabled}, profileID='${profileID}'`
+       );
+ 
+       // Usage deletion requests can always be sent.  They are
+       // always sent in response to user action.
+-      GleanPings.usageDeletionRequest.setEnabled(true);
++      GleanPings.usageDeletionRequest.setEnabled(false);
+ 
+       // Usage pings should only be sent when upload is enabled.
+       // Eventually, Glean will persist this setting.
+-      GleanPings.usageReporting.setEnabled(uploadEnabled);
++      GleanPings.usageReporting.setEnabled(false);
+ 
+       if (
+         uploadEnabled &&
+@@ -103,10 +100,7 @@
+       return;
+     }
+ 
+-    const uploadEnabled = Services.prefs.getBoolPref(
+-      "datareporting.usage.uploadEnabled",
+-      false
+-    );
++    const uploadEnabled = false;
+ 
+     if (uploadEnabled) {
+       // Rising edge: enable "usage-reporting" ping.
+@@ -137,17 +131,14 @@
+    * preference.
+    */
+   adoptDataReportingPreference() {
+-    const generalEnabled = Services.prefs.getBoolPref(
+-      "datareporting.healthreport.uploadEnabled",
+-      false
+-    );
++    const generalEnabled = false;
+     this._log.info(
+       `adoptDataReportingPreference: setting usage reporting preference to ${generalEnabled}`
+     );
+ 
+     Services.prefs.setBoolPref(
+       "datareporting.usage.uploadEnabled",
+-      generalEnabled
++      false
+     );
+   },
+ 
+diff --git a/toolkit/components/telemetry/core/TelemetryCommon.cpp b/toolkit/components/telemetry/core/TelemetryCommon.cpp
+--- a/toolkit/components/telemetry/core/TelemetryCommon.cpp
++++ b/toolkit/components/telemetry/core/TelemetryCommon.cpp
+@@ -50,14 +50,13 @@
+   // If we are extended telemetry is enabled, we are allowed to record
+   // regardless of the dataset.
+   if (aCanRecordExtended) {
+-    return true;
++    return false;
+   }
+ 
+   // If base telemetry data is enabled and we're trying to record base
+   // telemetry, allow it.
+-  if (aCanRecordBase &&
+-      IsInDataset(aDataset, nsITelemetry::DATASET_ALL_CHANNELS)) {
+-    return true;
++  if (aCanRecordBase) {
++    return false;
+   }
+ 
+   // We're not recording extended telemetry or this is not the base
+diff --git a/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs b/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
+--- a/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
++++ b/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
+@@ -46,10 +46,7 @@
+ 
+ // Whether the FHR/Telemetry unification features are enabled.
+ // Changing this pref requires a restart.
+-const IS_UNIFIED_TELEMETRY = Services.prefs.getBoolPref(
+-  TelemetryUtils.Preferences.Unified,
+-  false
+-);
++const IS_UNIFIED_TELEMETRY = false;
+ 
+ var gWasDebuggerAttached = false;
+ 

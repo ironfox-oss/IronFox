@@ -14,36 +14,55 @@
 
 // This file contains preferences shared across Phoenix 'Extended' configs.
 
-// 001 ADVANCED FINGERPRINTING PROTECTION
+/* INDEX 
 
-/// Disable WebGL
-// https://blog.browserscan.net/docs/webgl-fingerprinting
-// https://security.stackexchange.com/questions/13799/is-webgl-a-security-concern
+001: WEBRTC
+002: ATTACK SURFACE REDUCTION
+003: MISC. PRIVACY + SECURITY
+004: MISC. PRIVACY
+005: MISC.
 
-pref("webgl.disabled", true);
+*/
 
-pref("browser.phoenix.status.extended", "001");
-
-// 002 WEBRTC
+/*** 001 WEBRTC ***/
 // This will likely break WebRTC...
+
+/// Always exclude local IP addresses, even in trusted scenarios
+pref("media.peerconnection.ice.no_host", true);
 
 /// Force a single candidate for ICE generation
 pref("media.peerconnection.ice.default_address_only", true);
 
-/// Forcefully exclude local IP addresses, even in trusted scenarios
-pref("media.peerconnection.ice.no_host", true);
-
-/// Only use TURN servers/relays, no p2p...
+/// Only use TURN servers/relays
+// No P2P
 // https://gitlab.torproject.org/tpo/applications/mullvad-browser/-/issues/40#note_2884663
 pref("media.peerconnection.ice.relay_only", true);
 
+pref("browser.phoenix.status.extended", "001");
+
+/*** 002 ATTACK SURFACE REDUCTION ***/
+
+/// Disable WebAssembly
+// https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly
+pref("javascript.options.wasm", false);
+
 pref("browser.phoenix.status.extended", "002");
 
-// 003 MISC. PRIVACY
+/*** 003 MISC. PRIVACY + SECURITY ***/
+
+/// Disable WebGL
+// PRIVACY: Fingerprinting concerns
+// SECURITY: Attack Surface Reduction
+// https://blog.browserscan.net/docs/webgl-fingerprinting
+// https://security.stackexchange.com/questions/13799/is-webgl-a-security-concern
+pref("webgl.disabled", true);
+
+pref("browser.phoenix.status.extended", "003");
+
+/*** 004 MISC. PRIVACY ***/
 
 /// Disable TCP/dFPI storage access heuristics
 // https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
-
 pref("privacy.restrict3rdpartystorage.heuristic.opened_window_after_interaction", false);
 pref("privacy.restrict3rdpartystorage.heuristic.recently_visited", false);
 pref("privacy.restrict3rdpartystorage.heuristic.redirect", false); // [DEFAULT - Android]
@@ -51,30 +70,19 @@ pref("privacy.restrict3rdpartystorage.heuristic.window_open", false); // [DEFAUL
 
 /// Only send cross-origin referers if hosts match
 // https://wiki.mozilla.org/Security/Referrer
-
 pref("network.http.referer.XOriginPolicy", 2);
-
-pref("browser.phoenix.status.extended", "003");
-
-// 004 ATTACK SURFACE REDUCTION
-
-/// Disable WebAssembly
-// https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly
-
-pref("javascript.options.wasm", false);
 
 pref("browser.phoenix.status.extended", "004");
 
-// 005 MISC.
+/*** 005 MISC. ***/
 
 /// Prevent sites from automatically refreshing
-
 pref("accessibility.blockautorefresh", true);
 pref("browser.meta_refresh_when_inactive.disabled", true); // [DEFAULT - Android]
 
-/// Stricter Autoplay Blocking
-
-pref("media.autoplay.blocking_policy", 2); // [Default = 0]
+/// Use stricter media autoplay blocking
+// Default = 0
+pref("media.autoplay.blocking_policy", 2);
 
 pref("browser.phoenix.status.extended", "005");
 
@@ -96,12 +104,17 @@ pref("browser.phoenix.status.extended", "successfully applied :D", locked);
 
 // This file contains preferences specific to Phoenix (Extended) on Android.
 
-// 001 ADVANCED FINGERPRINTING PROTECTION
+/* INDEX 
+
+001: FINGERPRINTING PROTECTION
+
+*/
+
+/*** 001 FINGERPRINTING PROTECTION ***/
 
 /// Further harden FPP...
-// As explained here: https://codeberg.org/celenity/Phoenix/issues/46
-// Compared to standard, this just removes '-JSDateTimeUTC' - meaning timezone is spoofed to UTC-0...
-
+// As explained here: https://codeberg.org/celenity/Phoenix/wiki/Extended#fingerprinting
+// Compared to standard, this just removes '-JSDateTimeUTC' - meaning timezone is spoofed to UTC-0
 pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasImageExtractionPrompt,-CanvasExtractionBeforeUserInputIsBlocked,-CSSPrefersColorScheme,-FrameRate");
 
 pref("browser.phoenix.status.extended.android", "successfully applied :D", locked);
