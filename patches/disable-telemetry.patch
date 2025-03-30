@@ -15,6 +15,48 @@ diff --git a/browser/moz.configure b/browser/moz.configure
  imply_option("MOZ_PROFILE_MIGRATOR", True)
  
  
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+index ddda6eadd0..c39b37cbab 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
++++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+@@ -58,7 +58,7 @@ android {
+ // Set configuration for the Glean parser to extract metrics.yaml
+ // file from AAR dependencies of this project rather than look
+ // for it into the project directory.
+-ext.allowMetricsFromAAR = true
++ext.allowMetricsFromAAR = false
+ 
+ dependencies {
+     implementation project(':concept-engine')
+
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt
+index d337fb244c..bf6e1c8460 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt
+@@ -85,7 +85,7 @@ class CrashReporterActivity : AppCompatActivity() {
+         }
+ 
+         binding.sendCheckbox.text = getString(R.string.mozac_lib_crash_dialog_checkbox, organizationName)
+-        binding.sendCheckbox.isChecked = sharedPreferences.getBoolean(PREFERENCE_KEY_SEND_REPORT, true)
++        binding.sendCheckbox.isChecked = false;
+ 
+         binding.restartButton.apply {
+             text = getString(R.string.mozac_lib_crash_dialog_button_restart, appName)
+
+diff --git a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+index bc9ae7fe5b..e89859e038 100644
+--- a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
++++ b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+@@ -44,7 +44,7 @@ class SentryService(
+     private val environment: String? = null,
+     private val sendEventForNativeCrashes: Boolean = false,
+     private val sentryProjectUrl: String? = null,
+-    private val sendCaughtExceptions: Boolean = true,
++    private val sendCaughtExceptions: Boolean = false,
+ ) : CrashReporterService {
+ 
+     override val id: String = "new-sentry-instance"
+
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
@@ -652,6 +694,29 @@ diff --git a/mobile/android/android-components/components/lib/crash/src/main/jav
 -        recordCrashAction(GleanCrashAction.Count(CAUGHT_EXCEPTION_KEY))
      }
  }
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+index 334ed8a978..b95b810e9b 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+@@ -103,7 +103,7 @@ class MozillaSocorroService(
+     override val name: String = "Socorro"
+ 
+     override fun createCrashReportUrl(identifier: String): String? {
+-        return "https://crash-stats.mozilla.org/report/index/$identifier"
++        return ""
+     }
+ 
+     init {
+@@ -556,7 +556,7 @@ class MozillaSocorroService(
+     }
+ 
+     internal fun buildServerUrl(versionName: String): String =
+-        Uri.parse("https://crash-reports.mozilla.com/submit")
++        Uri.parse("")
+             .buildUpon()
+             .appendQueryParameter("id", appId)
+             .appendQueryParameter("version", versionName)
+
 diff --git a/mobile/android/fenix/app/.experimenter.yaml b/mobile/android/fenix/app/.experimenter.yaml
 --- a/mobile/android/fenix/app/.experimenter.yaml
 +++ b/mobile/android/fenix/app/.experimenter.yaml
@@ -989,9 +1054,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/con
  
      private fun updateOptInState(branch: Branch) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 45049272b7..a5d13ba20c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -334,48 +334,24 @@
+@@ -337,48 +337,24 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = true,
      )
  
@@ -1047,6 +1113,18 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var isOverrideTPPopupsForPerformanceTest = false
  
+@@ -2264,10 +2240,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * A user preference indicating that crash reports should always be automatically sent. This can be updated
+      * through the unsubmitted crash dialog or through data choice preferences.
+      */
+-    var crashReportAlwaysSend by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_always_report),
+-        default = false,
+-    )
++    var crashReportAlwaysSend = false
+ 
+     /**
+      * Indicates whether or not we should use the new crash reporter dialog.
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
@@ -1192,6 +1270,19 @@ diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/component
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "COLLECTION_ID",
+diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+index 990f33aca8..2eb3c336b4 100644
+--- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
++++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+@@ -36,7 +36,7 @@ XPCOMUtils.defineLazyServiceGetter(
+ );
+ 
+ const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
+-const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
++const COLLECTION_ID_FALLBACK = "";
+ const ENABLED_PREF = "messaging-system.rsexperimentloader.enabled";
+ const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
+   "nimbus.telemetry.targetingContextEnabled";
 diff --git a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
 --- a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
 +++ b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
@@ -1466,3 +1557,16 @@ diff --git a/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs b/toolk
  
  var gWasDebuggerAttached = false;
  
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index 5873dbec0a..efb590d8e6 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -3193,7 +3193,7 @@ set_define("MOZ_WINCONSOLE", True, when=depends("MOZ_WINCONSOLE")(lambda x: x))
+ option(
+     "--with-crashreporter-url",
+     env="MOZ_CRASHREPORTER_URL",
+-    default="https://crash-reports.mozilla.com/",
++    default="",
+     nargs=1,
+     help="Set an alternative crashreporter url",
+ )
