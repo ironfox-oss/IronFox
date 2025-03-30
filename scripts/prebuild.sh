@@ -155,7 +155,7 @@ sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 # Let it be IronFox
 sed -i \
     -e 's/Firefox Daylight/IronFox/; s/Firefox/IronFox/g' \
-    -e '/about_content/s/Mozilla/the IronFox Developers/' \
+    -e '/about_content/s/Mozilla/IronFox OSS/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
@@ -345,6 +345,12 @@ fi
 # GeckoView
 pushd "$mozilla_release"
 
+find "$patches/gecko-overlay/branding" -type f | while read -r src; do
+    dst=mobile/android/branding/${src#"$patches/gecko-overlay/branding/"}
+    mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+done
+
 # Apply patches
 apply_patches
 
@@ -406,6 +412,7 @@ fi
     echo 'ac_add_options --enable-strip'
     echo 'ac_add_options --with-app-basename=IronFox'
     echo 'ac_add_options --with-app-name=ironfox'
+    echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
     echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
@@ -428,6 +435,7 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
+    echo 'mk_add_options MOZ_APP_DISPLAYNAME="IronFox"'
     echo 'mk_add_options MOZ_APP_VENDOR="IronFox OSS"'
     echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
