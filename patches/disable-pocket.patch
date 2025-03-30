@@ -1,3 +1,41 @@
+diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
+index b8430171ec..63f92e4dde 100644
+--- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
++++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
+@@ -29,14 +29,14 @@ import java.io.File
+ import java.io.IOException
+ import java.util.Date
+ 
+-private const val MARS_ENDPOINT_URL = "https://ads.mozilla.org/v1/ads"
++private const val MARS_ENDPOINT_URL = ""
+ 
+ private const val REQUEST_BODY_CONTEXT_ID_KEY = "context_id"
+ private const val REQUEST_BODY_PLACEMENTS_KEY = "placements"
+ private const val REQUEST_BODY_PLACEMENT_KEY = "placement"
+ private const val REQUEST_BODY_COUNT_KEY = "count"
+ 
+-internal const val CACHE_FILE_NAME = "mozilla_components_service_mars_tiles.json"
++internal const val CACHE_FILE_NAME = ""
+ 
+ /**
+  * Provides access to the MARS API for fetching top sites tile.
+
+diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
+index 6f1de67d54..5037c18b66 100644
+--- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
++++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
+@@ -29,8 +29,8 @@ import java.io.File
+ import java.io.IOException
+ import java.util.Date
+ 
+-internal const val CONTILE_ENDPOINT_URL = "https://contile.services.mozilla.com/v1/tiles"
+-internal const val CACHE_FILE_NAME = "mozilla_components_service_contile.json"
++internal const val CONTILE_ENDPOINT_URL = ""
++internal const val CACHE_FILE_NAME = ""
+ internal const val CACHE_VALID_FOR_KEY = "valid_for"
+ internal const val CACHE_TOP_SITES_KEY = "tiles"
+ 
+
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
@@ -21,6 +59,22 @@ diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app
            }
          }
    nimbus-validation:
+diff --git a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt b/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
+index 81bf2dd7e2..7a43fac926 100644
+--- a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
++++ b/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
+@@ -24,8 +24,8 @@ import org.json.JSONObject
+ import java.io.IOException
+ import java.util.UUID
+ 
+-private const val SPOCS_ENDPOINT_DEV_BASE_URL = "https://spocs.getpocket.dev/"
+-private const val SPOCS_ENDPOINT_PROD_BASE_URL = "https://spocs.getpocket.com/"
++private const val SPOCS_ENDPOINT_DEV_BASE_URL = ""
++private const val SPOCS_ENDPOINT_PROD_BASE_URL = ""
+ private const val SPOCS_ENDPOINT_DOWNLOAD_SPOCS_PATH = "spocs"
+ private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
+ private const val SPOCS_PROXY_VERSION_KEY = "version"
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
@@ -46,6 +100,20 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFla
      }
  
      /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+index fc4f8d9b4b..ee0fd74e23 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+@@ -22,7 +22,7 @@ import java.util.Locale
+ 
+ object SupportUtils {
+     const val RATE_APP_URL = "market://details?id=" + BuildConfig.APPLICATION_ID
+-    const val POCKET_TRENDING_URL = "https://getpocket.com/fenix-top-articles"
++    const val POCKET_TRENDING_URL = ""
+     const val WIKIPEDIA_URL = "https://www.wikipedia.org/"
+     const val FENIX_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+     const val GOOGLE_URL = "https://www.google.com/"
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 45049272b7..4d1d613e20 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
