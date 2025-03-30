@@ -19,6 +19,9 @@ PATCH_FILES=(
     # Make it IronFox...
     "branding.patch"
 
+    # Enable about:config
+    "enable-aboutconfig.patch"
+
     # Add our custom search engines
     "search-engines.patch"
 

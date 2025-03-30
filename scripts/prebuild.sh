@@ -195,11 +195,6 @@ sed -i \
 rm app/src/main/assets/searchplugins/reddit.xml
 rm app/src/main/assets/searchplugins/youtube.xml
 
-# Enable about:config
-sed -i \
-    -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' \
-    app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-
 # Set up target parameters
 case $(echo "$2" | cut -c 7) in
 0)
