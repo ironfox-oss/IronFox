@@ -1,0 +1,22 @@
+diff --git a/browser/components/doh/DoHHeuristics.sys.mjs b/browser/components/doh/DoHHeuristics.sys.mjs
+index ecbc0f5b77..59237cff92 100644
+--- a/browser/components/doh/DoHHeuristics.sys.mjs
++++ b/browser/components/doh/DoHHeuristics.sys.mjs
+@@ -29,7 +29,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   DoHConfigController: "resource:///modules/DoHConfig.sys.mjs",
+ });
+ 
+-const GLOBAL_CANARY = "use-application-dns.net.";
++const GLOBAL_CANARY = "";
+ 
+ const NXDOMAIN_ERR = "NS_ERROR_UNKNOWN_HOST";
+ 
+@@ -354,7 +354,7 @@ async function safeSearch() {
+ }
+ 
+ async function zscalerCanary() {
+-  const ZSCALER_CANARY = "sitereview.zscaler.com.";
++  const ZSCALER_CANARY = "";
+ 
+   let { addresses } = await dnsLookup(ZSCALER_CANARY);
+   for (let address of addresses) {
