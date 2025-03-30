@@ -180,8 +180,8 @@ rm app/src/main/res/values-v24/styles.xml
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
 # shellcheck disable=SC2154
-find "$patches/fenix-overlay" -type f | while read -r src; do
-    dst=app/src/release/${src#"$patches/fenix-overlay/"}
+find "$patches/fenix-overlay/branding" -type f | while read -r src; do
+    dst=app/src/release/${src#"$patches/fenix-overlay/branding/"}
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
 done
@@ -190,6 +190,13 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
+
+# Add experiment for toggling Fission
+find "$patches/fenix-overlay/fission" -type f | while read -r src; do
+    dst=app/src/main/res/raw/${src#"$patches/fenix-overlay/fission/"}
+    mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+done
 
 # Remove Reddit & YouTube as built-in search engines (due to poor privacy practices)
 rm app/src/main/assets/searchplugins/reddit.xml
