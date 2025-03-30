@@ -152,6 +152,11 @@ sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 # Disable MetricController
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 
+# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
+# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
+# We're also setting the "MOZILLA_OFFICIAL" env variable below
+sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+
 # Let it be IronFox
 sed -i \
     -e 's/Firefox Daylight/IronFox/; s/Firefox/IronFox/g' \
@@ -452,6 +457,7 @@ fi
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
     echo 'export MOZ_REQUIRE_SIGNING='
     echo 'export MOZ_TELEMETRY_REPORTING='
+    echo 'export MOZILLA_OFFICIAL=1'
 } >>mozconfig
 
 # Configure
