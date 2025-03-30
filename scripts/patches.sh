@@ -31,6 +31,9 @@ PATCH_FILES=(
     # Disable Pocket/Contile
     "disable-pocket.patch"
 
+    # Disable DoH canary requests
+    "disable-doh-canary.patch"
+
     # Support spoofing locale to 'en-US'
     "tor-spoof-english.patch"
 
