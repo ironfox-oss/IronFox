@@ -306,6 +306,14 @@ rm components/feature/search/src/main/assets/searchplugins/yandex-ru.xml
 rm components/feature/search/src/main/assets/searchplugins/yandex-tr.xml
 rm components/feature/search/src/main/assets/searchplugins/youtube.xml
 
+# Nuke the "Mozilla Android Components - Ads Telemetry" & "Mozilla Android Components - Search Telemetry" extensions
+# We don't install these with disable-telemetry.patch - so no need to keep the files around...
+rm -rf components/feature/search/src/main/assets/extensions/ads
+rm -rf components/feature/search/src/main/assets/extensions/search
+
+# Remove 'search telemetry' config...
+rm components/feature/search/src/main/assets/search/search_telemetry_v2.json
+
 find "$patches/a-c-overlay" -type f | while read -r src; do
     cp "$src" "${src#"$patches/a-c-overlay/"}"
 done
