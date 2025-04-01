@@ -191,9 +191,9 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
-# Add experiment for toggling Fission
-find "$patches/fenix-overlay/fission" -type f | while read -r src; do
-    dst=app/src/main/res/raw/${src#"$patches/fenix-overlay/fission/"}
+# Remove Mozilla's `initial` experiments
+find "$patches/fenix-overlay/initial_experiments" -type f | while read -r src; do
+    dst=app/src/main/res/raw/${src#"$patches/fenix-overlay/initial_experiments/"}
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
 done
@@ -395,6 +395,50 @@ remove_glean_telemetry "${mozilla_release}/modules"
 remove_glean_telemetry "${mozilla_release}/toolkit"
 remove_glean_telemetry "${mozilla_release}/netwerk"
 
+# Take back control of preferences
+## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...
+## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
+## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
+sed -i \
+    -e 's/^$browser.safebrowsing.malware.enabled$/z99.ignore.\1/' \
+    -e 's/^$browser.safebrowsing.phishing.enabled$/z99.ignore.\1/' \
+    -e 's/^$cookiebanners.service.enableGlobalRules$/z99.ignore.\1/' \
+    -e 's/^$cookiebanners.service.enableGlobalRules.subFrames$/z99.ignore.\1/' \
+    -e 's/^$cookiebanners.service.mode$/z99.ignore.\1/' \
+    -e 's/^$privacy.query_stripping.allow_list$/z99.ignore.\1/' \
+    -e 's/^$privacy.query_stripping.enabled$/z99.ignore.\1/' \
+    -e 's/^$privacy.query_stripping.enabled.pbmode$/z99.ignore.\1/' \
+    -e 's/^$privacy.query_stripping.strip_list$/z99.ignore.\1/' \
+    -e 's/^$security.pki.certificate_transparency.mode$/z99.ignore.\1/' \
+    -e 's/^$toolkit.telemetry.user_characteristics_ping.current_version$/z99.ignore.\1/' \
+    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
+
+sed -i \
+    -e 's/^$dom.manifest.enabled$/z99.ignore.\1/' \
+    -e 's/^$extensions.webapi.enabled$/z99.ignore.\1/' \
+    -e 's/^$fission.autostart$/z99.ignore.\1/' \
+    -e 's/^$fission.disableSessionHistoryInParent$/z99.ignore.\1/' \
+    -e 's/^$fission.webContentIsolationStrategy$/z99.ignore.\1/' \
+    -e 's/^$general.aboutConfig.enable$/z99.ignore.\1/' \
+    -e 's/^$javascript.enabled$/z99.ignore.\1/' \
+    -e 's/^$javascript.options.mem.gc_parallel_marking$/z99.ignore.\1/' \
+    -e 's/^$javascript.options.use_fdlibm_for_sin_cos_tan$/z99.ignore.\1/' \
+    -e 's/^$network.cookie.cookieBehavior.optInPartitioning$/z99.ignore.\1/' \
+    -e 's/^$network.cookie.cookieBehavior.optInPartitioning.pbmode$/z99.ignore.\1/' \
+    -e 's/^$network.fetchpriority.enabled$/z99.ignore.\1/' \
+    -e 's/^$network.http.largeKeepaliveFactor$/z99.ignore.\1/' \
+    -e 's/^$network.trr.excluded-domains$/z99.ignore.\1/' \
+    -e 's/^$network.trr.mode$/z99.ignore.\1/' \
+    -e 's/^$network.trr.uri$/z99.ignore.\1/' \
+    -e 's/^$privacy.fingerprintingProtection$/z99.ignore.\1/' \
+    -e 's/^$privacy.fingerprintingProtection.overrides$/z99.ignore.\1/' \
+    -e 's/^$privacy.fingerprintingProtection.pbmode$/z99.ignore.\1/' \
+    -e 's/^$privacy.globalprivacycontrol.enabled$/z99.ignore.\1/' \
+    -e 's/^$privacy.globalprivacycontrol.functionality.enabled$/z99.ignore.\1/' \
+    -e 's/^$privacy.globalprivacycontrol.pbmode.enabled$/z99.ignore.\1/' \
+    -e 's/^$security.pki.certificate_transparency.mode$/z99.ignore.\1/' \
+    -e 's/^$toolkit.telemetry.user_characteristics_ping.current_version$/z99.ignore.\1/' \
+    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then

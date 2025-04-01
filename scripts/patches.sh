@@ -43,7 +43,7 @@ PATCH_FILES=(
     # Enable HTTPS only mode by default
     "https_only.patch"
 
-    # Enable Global Privacy Control by default
+    # Hide the UI setting for Global Privacy Control
     "global-privacy-control.patch"
 
     # Disable search suggestions by default
@@ -73,23 +73,11 @@ PATCH_FILES=(
     # Disable Mozilla Feedback Surveys (Microsurveys)
     "disable-microsurveys.patch"
 
-    # Enable per-site process isolation (Fission) + a UI option to toggle it
-    "enable-fission.patch"
-
-    # Enable FPP (Fingerprinting Protection)
-    "enable-fingerprinting-protection.patch"
-
     # Enable light mode by default
     "enable-light-mode-by-default.patch"
 
-    # Remove tracking parameters from URLs
-    "remove-tracking-params.patch"
-
     # Block cookie banners by default
     "block-cookie-banners.patch"
-
-    # Block third party cookies by default (Ex. how ETP Strict on desktop behaves...)
-    "block-third-party-cookies.patch"
 
     # Switch the built-in extension recommendations page to use our collection instead of Mozilla's...
     "extension-recommendations.patch"
@@ -120,9 +108,6 @@ PATCH_FILES=(
 
     # Install uBlock Origin on startup and allow it to be shown in AddonsFragment
     "install-ublock.patch"
-
-    # Enforce Certificate Transparency
-    "enforce-certificate-transparency.patch"
 
     # Disable Firefox Sync by default
     "disable-sync-by-default.patch"
