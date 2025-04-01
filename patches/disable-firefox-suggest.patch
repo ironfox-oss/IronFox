@@ -1,61 +1,20 @@
-diff --git a/mobile/android/fenix/app/.experimenter.yaml b/mobile/android/fenix/app/.experimenter.yaml
---- a/mobile/android/fenix/app/.experimenter.yaml
-+++ b/mobile/android/fenix/app/.experimenter.yaml
-@@ -17,7 +17,7 @@
-       description: "If true, the extensions process is enabled."
- fx-suggest:
-   description: A feature that provides Firefox Suggest search suggestions.
--  hasExposure: true
-+  hasExposure: false
-   exposureDescription: ""
-   variables:
-     enabled:
-diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
---- a/mobile/android/fenix/app/nimbus.fml.yaml
-+++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -29,9 +29,9 @@
-       awesomebar-suggestion-provider:
-         - value:
-             available-suggestion-types: {
--              "amp": true,
-+              "amp": false,
-               "ampMobile": false,
--              "wikipedia": true,
-+              "wikipedia": false,
-             }
- 
- features:
-@@ -375,11 +375,11 @@
-     defaults:
-       - channel: developer
-         value:
--          enabled: true
--          boost-amp-wiki: true
-+          enabled: false
-+          boost-amp-wiki: false
-       - channel: nightly
-         value:
--          enabled: true
-+          enabled: false
- 
-   nimbus-is-ready:
-     description: >
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -61,7 +61,7 @@
-     /**
-      * Allows users to enable Firefox Suggest.
-      */
--    const val FX_SUGGEST = true
-+    const val FX_SUGGEST = false
- 
-     /**
-      * Enable Meta attribution.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..4e7e477336 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1694,11 +1694,7 @@
+@@ -1094,10 +1094,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * Indicates if the user have enabled trending search in search suggestions.
+      */
+     @VisibleForTesting
+-    internal var trendingSearchSuggestionsEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_show_trending_search_suggestions),
+-        default = true,
+-    )
++    internal var trendingSearchSuggestionsEnabled = false
+ 
+     /**
+      * Returns true if trending searches should be shown to the user.
+@@ -1694,11 +1691,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Merino content recommendations should be shown.
       */
@@ -68,20 +27,40 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      /**
       *  Whether or not to display the Pocket sponsored stories parameter secret settings.
-@@ -2009,10 +2005,9 @@
+@@ -1948,11 +1941,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if Trending Searches is enabled.
+      */
+-    var isTrendingSearchesVisible by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_enable_trending_searches),
+-        default = { FxNimbus.features.trendingSearches.value().enabled },
+-        featureFlag = true,
+-    )
++    var isTrendingSearchesVisible = false
+ 
+     /**
+      * Adjust Activated User sent
+@@ -2009,17 +1998,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Firefox Suggest is enabled.
       */
 -    var enableFxSuggest by lazyFeatureFlagPreference(
-+    var enableFxSuggest by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
+-        key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
 -        default = { FxNimbus.features.fxSuggest.value().enabled },
 -        featureFlag = FeatureFlags.FX_SUGGEST,
-+        default = false,
-     )
+-    )
++    var enableFxSuggest = false
  
      /**
-@@ -2033,21 +2028,16 @@
+      * Indicates if boosting AMP/wiki suggestions is enabled.
+      */
+-    val boostAmpWikiSuggestions: Boolean
+-        get() = FxNimbus.features.fxSuggest.value().boostAmpWiki
++    val boostAmpWikiSuggestions: Boolean = false
+ 
+     /**
+      * Indicates first time engaging with signup
+@@ -2033,22 +2017,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
       * The default value is computed lazily, and based on whether Firefox Suggest is enabled.
       */
@@ -98,11 +77,11 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
       * is enabled.
       */
 -    var showNonSponsoredSuggestions by lazyFeatureFlagPreference(
-+    var showNonSponsoredSuggestions by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),
+-        key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),
 -        default = { enableFxSuggest },
 -        featureFlag = FeatureFlags.FX_SUGGEST,
-+        default = false,
-     )
+-    )
++    var showNonSponsoredSuggestions = false
  
      /**
+      * Indicates that the user does not want warned of a translations
