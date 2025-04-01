@@ -1,13 +1,22 @@
-diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index e70a2a9..e627d4d 100644
---- a/mobile/android/fenix/app/nimbus.fml.yaml
-+++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -483,7 +483,7 @@ features:
-         description: >
-           Suggest domains from the shipped domain list.
-         type: Boolean
--        default: true
-+        default: false
-     defaults:
-       - channel: nightly
-         value:
+diff --git a/mobile/android/android-components/components/browser/domains/src/main/java/mozilla/components/browser/domains/DomainAutoCompleteProvider.kt b/mobile/android/android-components/components/browser/domains/src/main/java/mozilla/components/browser/domains/DomainAutoCompleteProvider.kt
+index 1e66582660..d0830dfbed 100644
+--- a/mobile/android/android-components/components/browser/domains/src/main/java/mozilla/components/browser/domains/DomainAutoCompleteProvider.kt
++++ b/mobile/android/android-components/components/browser/domains/src/main/java/mozilla/components/browser/domains/DomainAutoCompleteProvider.kt
+@@ -52,7 +52,7 @@ class DomainAutoCompleteProvider {
+     @Volatile
+     internal var shippedDomains = emptyList<Domain>()
+     private var useCustomDomains = false
+-    private var useShippedDomains = true
++    private var useShippedDomains = false
+ 
+     /**
+      * Computes an autocomplete suggestion for the given text, and invokes the
+@@ -95,7 +95,7 @@ class DomainAutoCompleteProvider {
+      */
+     fun initialize(
+         context: Context,
+-        useShippedDomains: Boolean = true,
++        useShippedDomains: Boolean = false,
+         useCustomDomains: Boolean = false,
+         loadDomainsFromDisk: Boolean = true,
+     ) {
