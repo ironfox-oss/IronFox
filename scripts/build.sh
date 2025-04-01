@@ -114,7 +114,7 @@ pushd "$mozilla_release"
 
 ./mach build && \
 ./mach package && \
-./mach package-multi-locale --locales $(IRONFOX_LOCALES)
+./mach package-multi-locale --locales ${IRONFOX_LOCALES}
 
 MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 export MOZ_CHROME_MULTILOCALE
