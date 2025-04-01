@@ -85,3 +85,16 @@ index b800c22431..4e7e477336 100644
  
      /**
       * Indicates that the user does not want warned of a translations
+diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+index da8132091b..6714cd63a7 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+@@ -38,7 +38,7 @@
+             android:title="@string/preferences_show_search_suggestions_in_private"
+             app:iconSpaceReserved="false" />
+         <CheckBoxPreference
+-            android:defaultValue="true"
++            android:defaultValue="false"
+             android:dependency="@string/pref_key_show_search_suggestions"
+             android:key="@string/pref_key_show_trending_search_suggestions"
+             android:layout="@layout/checkbox_left_preference"
