@@ -1,0 +1,32 @@
+diff --git a/toolkit/components/extensions/NativeManifests.sys.mjs b/toolkit/components/extensions/NativeManifests.sys.mjs
+index 282597c2db..9a630fa942 100644
+--- a/toolkit/components/extensions/NativeManifests.sys.mjs
++++ b/toolkit/components/extensions/NativeManifests.sys.mjs
+@@ -36,7 +36,7 @@ export var NativeManifests = {
+       let platform = AppConstants.platform;
+       if (platform == "win") {
+         this._lookup = this._winLookup;
+-      } else if (platform == "macosx" || platform == "linux") {
++      } else if (platform == "macosx" || platform == "linux" || platform == "android") {
+         let dirs = [
+           Services.dirsvc.get("XREUserNativeManifests", Ci.nsIFile).path,
+           Services.dirsvc.get("XRESysNativeManifests", Ci.nsIFile).path,
+diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
+index 7340546f37..6097cef49f 100644
+--- a/toolkit/components/extensions/parent/ext-storage.js
++++ b/toolkit/components/extensions/parent/ext-storage.js
+@@ -403,6 +403,14 @@ this.storage = class extends ExtensionAPIPersistent {
+ 
+             let data = await lookup;
+             if (!data) {
++              const assetsBootstrapLocation = Services.prefs.getStringPref("browser.ironfox.uBO.assetsBootstrapLocation", undefined);
++              if (extension.id == "uBlock0@raymondhill.net" && assetsBootstrapLocation) {
++                return {
++                  adminSettings: {
++                    assetsBootstrapLocation
++                  }
++                }
++              }
+               return Promise.reject({
+                 message: "Managed storage manifest not found",
+               });

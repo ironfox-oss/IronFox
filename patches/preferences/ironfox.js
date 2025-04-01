@@ -17,9 +17,8 @@ pref("signon.rememberSignons", true); // [DEFAULT]
 // We're using a patch to set light mode by default
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
-/// Set the URL for the custom assets.json file
-// Used in toolkit/components/extensions/parent/ext-storage.js to return custom adminSettings
-// Disabled - does not seem to work on Android. Needs more testing.
-// pref("ironfox.uBO.assetsBootstrapLocation", "https://gitlab.com/ironfox-oss/IronFox/-/raw/main/patches/main/assets/assets.json");
+/// Set uBlock Origin to use our custom/enhanced config by default
+// Switch this to `https://gitlab.com/ironfox-oss/IronFox/-/raw/dev/uBlock/assets.dev.json` for testing
+pref("browser.ironfox.uBO.assetsBootstrapLocation", "https://gitlab.com/ironfox-oss/IronFox/-/raw/main/uBlock/assets.json");
 
 pref("browser.ironfox.applied", true, locked);
