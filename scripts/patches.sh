@@ -115,6 +115,9 @@ PATCH_FILES=(
     # Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
     "enable-felt-privacy.patch"
 
+    # Set uBlock Origin to use our custom/enhanced config by default
+    "ublock-assets.patch"
+
     # Install uBlock Origin on startup and allow it to be shown in AddonsFragment
     "install-ublock.patch"
 
