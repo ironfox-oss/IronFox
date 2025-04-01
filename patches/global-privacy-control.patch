@@ -11,21 +11,3 @@ diff --git a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_prefe
      <Preference android:layout="@layout/preference_divider" />
      <Preference
          android:icon="@drawable/ic_internet"
-diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -673,11 +673,11 @@
-   /* package */ final PrefWithoutDefault<Integer> mExtensionsProcessCrashThreshold =
-       new PrefWithoutDefault<Integer>("extensions.webextensions.crash.threshold");
-   /* package */ final Pref<Boolean> mGlobalPrivacyControlEnabled =
--      new Pref<Boolean>("privacy.globalprivacycontrol.enabled", false);
-+      new Pref<Boolean>("z99.this.is.not", false);
-   /* package */ final Pref<Boolean> mGlobalPrivacyControlEnabledPrivateMode =
--      new Pref<Boolean>("privacy.globalprivacycontrol.pbmode.enabled", true);
-+      new Pref<Boolean>("z999.the.droid", true);
-   /* package */ final Pref<Boolean> mGlobalPrivacyControlFunctionalityEnabled =
--      new Pref<Boolean>("privacy.globalprivacycontrol.functionality.enabled", true);
-+      new Pref<Boolean>("z9999.youre.looking.for", true);
-   /* package */ final PrefWithoutDefault<Boolean> mFingerprintingProtection =
-       new PrefWithoutDefault<Boolean>("privacy.fingerprintingProtection");
-   /* package */ final PrefWithoutDefault<Boolean> mFingerprintingProtectionPrivateMode =
