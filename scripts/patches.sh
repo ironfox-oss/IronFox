@@ -5,6 +5,10 @@ if [[ "$env_source" != "true" ]]; then
     return 1
 fi
 
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+NC="\033[0m"
+
 declare -a PATCH_FILES
 PATCH_FILES=(
     # Remove Mozilla repositories substitution and explicitly add the required ones
@@ -141,7 +145,7 @@ check_patch() {
         return 1
     fi
 
-    if ! patch -p1 --quiet --dry-run <"$patch"; then
+    if ! patch -p1 -f --quiet --dry-run <"$patch"; then
         echo "Incompatible patch: '$patch'"
         return 1
     fi
@@ -151,6 +155,16 @@ check_patches() {
     for patch in "${PATCH_FILES[@]}"; do
         if ! check_patch "$patch"; then
             return 1
+        fi
+    done
+}
+
+test_patches() {
+    for patch in "${PATCH_FILES[@]}"; do
+        if ! check_patch "$patch">/dev/null 2>&1; then
+            printf "${RED}%-45s: FAILED${NC}\n" "$(basename "$patch")"
+        else
+            printf "${GREEN}%-45s: OK${NC}\n" "$(basename "$patch")"
         fi
     done
 }
