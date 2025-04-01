@@ -115,29 +115,31 @@ index fc4f8d9b4b..ee0fd74e23 100644
      const val GOOGLE_URL = "https://www.google.com/"
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 45049272b7..4d1d613e20 100644
+index b800c22431..f84a9a30b8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -334,7 +334,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
- 
-     var showCollectionsPlaceholderOnHome by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
--        default = true,
-+        default = false,
+@@ -329,10 +329,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
      )
  
+-    var showCollectionsPlaceholderOnHome by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
+-        default = true,
+-    )
++    var showCollectionsPlaceholderOnHome = false
+ 
      val isCrashReportingEnabled: Boolean
-@@ -1659,20 +1659,15 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         get() = isCrashReportEnabledInBuild &&
+@@ -1658,20 +1655,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Pocket recommended stories homescreen section should be shown.
       */
 -    var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
-+    var showPocketRecommendationsFeature by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
+-        appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
 -        featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
 -        default = { homescreenSections[HomeScreenSection.POCKET] == true },
-+        default = false,
-     )
+-    )
++    var showPocketRecommendationsFeature = false
  
      /**
       * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.
@@ -151,7 +153,7 @@ index 45049272b7..4d1d613e20 100644
  
      /**
       * Get the profile id to use in the sponsored stories communications with the Pocket endpoint.
-@@ -1735,19 +1730,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1735,19 +1724,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the MARS API integration is used for sponsored content.
       */
@@ -160,7 +162,7 @@ index 45049272b7..4d1d613e20 100644
 -        default = { FxNimbus.features.mars.value().enabled },
 -        featureFlag = true,
 -    )
-+    var marsAPIEnabled = false
++    var marsAPIEnabled  = false
  
      /**
       * Indicates if the Contile functionality should be visible.
@@ -169,7 +171,7 @@ index 45049272b7..4d1d613e20 100644
 -        key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
 -        default = true,
 -    )
-+    var showContileFeature = false
++    var showContileFeature  = false
  
      /**
       * Indicates if the Unified Search feature should be visible.
