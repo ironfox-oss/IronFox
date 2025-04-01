@@ -1,8 +1,7 @@
 diff --git a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
-index cdc1f9b2df..f7958c77db 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
-@@ -106,7 +106,8 @@
+@@ -93,7 +93,8 @@
      <androidx.preference.SwitchPreference
          android:defaultValue="false"
          android:key="@string/pref_key_privacy_enable_global_privacy_control"
@@ -13,10 +12,9 @@ index cdc1f9b2df..f7958c77db 100644
      <Preference
          android:icon="@drawable/ic_internet"
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 98820f8989..75eed0599b 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -671,11 +671,11 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -673,11 +673,11 @@
    /* package */ final PrefWithoutDefault<Integer> mExtensionsProcessCrashThreshold =
        new PrefWithoutDefault<Integer>("extensions.webextensions.crash.threshold");
    /* package */ final Pref<Boolean> mGlobalPrivacyControlEnabled =
@@ -28,7 +26,6 @@ index 98820f8989..75eed0599b 100644
    /* package */ final Pref<Boolean> mGlobalPrivacyControlFunctionalityEnabled =
 -      new Pref<Boolean>("privacy.globalprivacycontrol.functionality.enabled", true);
 +      new Pref<Boolean>("z9999.youre.looking.for", true);
-   /* package */ final Pref<Boolean> mFingerprintingProtection =
-       new Pref<Boolean>("privacy.fingerprintingProtection", false);
-   /* package */ final Pref<Boolean> mFingerprintingProtectionPrivateMode =
-
+   /* package */ final PrefWithoutDefault<Boolean> mFingerprintingProtection =
+       new PrefWithoutDefault<Boolean>("privacy.fingerprintingProtection");
+   /* package */ final PrefWithoutDefault<Boolean> mFingerprintingProtectionPrivateMode =

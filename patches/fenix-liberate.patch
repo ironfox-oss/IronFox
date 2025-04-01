@@ -76,8 +76,8 @@ diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/bu
      implementation ComponentsDependencies.protobuf_javalite
      implementation ComponentsDependencies.google_material
  
--    implementation FenixDependencies.adjust
--    implementation FenixDependencies.installreferrer // Required by Adjust
+-    implementation(libs.adjust)
+-    implementation(libs.installreferrer)
 -
 -    // Required for the Google Advertising ID
 -    implementation ComponentsDependencies.play_services_ads_id
@@ -613,7 +613,7 @@ new file mode 100644
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BaseBrowserFragment.kt
-@@ -1124,19 +1124,16 @@
+@@ -1126,19 +1126,16 @@
              view = view,
          )
  
@@ -654,7 +654,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -177,7 +176,6 @@
+@@ -180,7 +179,6 @@
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -715,10 +715,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import org.mozilla.fenix.FeatureFlags
 -import org.mozilla.fenix.GleanMetrics.MetaAttribution
 -import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
- import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
-@@ -30,83 +26,10 @@
+ import java.io.UnsupportedEncodingException
+@@ -29,83 +25,10 @@
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
@@ -737,7 +737,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -            object : InstallReferrerStateListener {
 -                override fun onInstallReferrerSetupFinished(responseCode: Int) {
 -                    PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
--                    val firstSession = FirstSessionPing(context, context.components.core.store)
+-                    val firstSession = FirstSessionPing(context)
 -                    when (responseCode) {
 -                        InstallReferrerClient.InstallReferrerResponse.OK -> {
 -                            // Connection established.
@@ -802,7 +802,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  
      override fun track(event: Event) = Unit
-@@ -225,12 +148,6 @@
+@@ -224,12 +147,6 @@
              return
          }
          intoSettings(settings)
@@ -815,7 +815,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  }
  
-@@ -325,9 +242,6 @@
+@@ -324,9 +241,6 @@
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -1011,7 +1011,7 @@ diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-@@ -83,6 +83,7 @@
+@@ -81,6 +81,7 @@
              android:key="@string/pref_key_browser_feature_media_key_system_access"
              android:title="@string/preference_phone_feature_media_key_system_access"
              android:summary="@string/preference_option_phone_feature_ask_to_allow"
@@ -1019,27 +1019,6 @@ diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferen
              app:allowDividerBelow="true"/>
  
          <androidx.preference.Preference
-diff --git a/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt b/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
---- a/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
-+++ b/mobile/android/fenix/plugins/fenixdependencies/src/main/java/FenixDependenciesPlugin.kt
-@@ -12,17 +12,6 @@
-     override fun apply(settings: Settings) = Unit
- }
- 
--object FenixVersions {
--    const val adjust = "4.38.2"
--    const val installreferrer = "2.2"
--}
--
--@Suppress("unused")
--object FenixDependencies {
--    const val adjust = "com.adjust.sdk:adjust-android:${FenixVersions.adjust}"
--    const val installreferrer = "com.android.installreferrer:installreferrer:${FenixVersions.installreferrer}"
--}
--
- /**
-  * Functionality to limit specific dependencies to specific repositories. These are typically expected to be used by
-  * dependency group name (i.e. with `include/excludeGroup`). For additional info, see:
 diff --git a/mobile/android/focus-android/app/build.gradle b/mobile/android/focus-android/app/build.gradle
 --- a/mobile/android/focus-android/app/build.gradle
 +++ b/mobile/android/focus-android/app/build.gradle

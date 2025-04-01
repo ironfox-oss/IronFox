@@ -1,20 +1,20 @@
 diff --git a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
-index 167c13a..32db813 100644
 --- a/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
 +++ b/toolkit/components/pdfjs/PdfJsDefaultPrefs.js
-@@ -36,9 +36,9 @@ pref("pdfjs.enableHighlightFloatingButton", false);
+@@ -37,10 +37,10 @@
  pref("pdfjs.enableNewAltTextWhenAddingImage", true);
  pref("pdfjs.enablePermissions", false);
  pref("pdfjs.enablePrintAutoRotate", true);
 -pref("pdfjs.enableScripting", true);
 +pref("pdfjs.enableScripting", false);
+ pref("pdfjs.enableSignatureEditor", false);
  pref("pdfjs.enableUpdatedAddImage", false);
 -pref("pdfjs.enableXfa", true);
 +pref("pdfjs.enableXfa", false);
  pref("pdfjs.externalLinkTarget", 0);
  pref("pdfjs.forcePageColors", false);
  pref("pdfjs.highlightEditorColors", "yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F");
-@@ -48,7 +48,7 @@ pref("pdfjs.pageColorsBackground", "Canvas");
+@@ -50,7 +50,7 @@
  pref("pdfjs.pageColorsForeground", "CanvasText");
  pref("pdfjs.pdfBugEnabled", false);
  pref("pdfjs.scrollModeOnLoad", -1);
