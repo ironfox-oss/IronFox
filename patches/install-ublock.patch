@@ -1,11 +1,3 @@
-# HG changeset patch
-# User Akash Yadav <contact@itsaky.com>
-# Date 1738675359 0
-#      Tue Feb 04 13:22:39 2025 +0000
-# Node ID 8ffba345178b7d8e1e0d7d4c81e0bece88803b75
-# Parent  4531b509dc4b525fcafa9cdbf69798d062b52594
-feat: install uBlock Origin on first install on Android devices
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
@@ -19,7 +11,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/
          showPostInstallationDialog(addon)
      }
  
-@@ -128,6 +131,14 @@
+@@ -128,6 +131,15 @@
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
      ) {
@@ -31,10 +23,11 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/
 +            )
 +            return
 +        }
-         showPermissionDialog(addon = addon, promptRequest = promptRequest, permissions = promptRequest.permissions)
-     }
- 
-@@ -136,6 +147,14 @@
++
+         showPermissionDialog(
+             addon = addon,
+             promptRequest = promptRequest,
+@@ -141,6 +153,15 @@
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
      ) {
@@ -46,13 +39,14 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/
 +            )
 +            return
 +        }
-         val shouldGrantWithoutPrompt = Addon.localizePermissions(promptRequest.permissions, context).isEmpty()
- 
-         // If we don't have any promptable permissions, just proceed.
++
+         val shouldGrantWithoutPrompt = Addon.localizePermissions(
+             promptRequest.permissions,
+             context,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -18,8 +18,10 @@
+@@ -19,8 +19,10 @@
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.ComposeView
  import androidx.fragment.app.Fragment
@@ -63,7 +57,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding
  import mozilla.components.concept.engine.webextension.InstallationMethod
  import mozilla.components.service.nimbus.evalJexlSafe
  import mozilla.components.service.nimbus.messaging.use
-@@ -101,6 +103,11 @@
+@@ -116,6 +118,11 @@
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
          val context = requireContext()

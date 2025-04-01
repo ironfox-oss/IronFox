@@ -25,7 +25,7 @@ diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app
              }
  
  features:
-@@ -348,11 +348,11 @@
+@@ -375,11 +375,11 @@
      defaults:
        - channel: developer
          value:
@@ -53,19 +53,22 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFla
      /**
       * Enable Meta attribution.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 777a555948..e31405f021 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1697,7 +1697,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1694,11 +1694,7 @@
+     /**
+      * Indicates if Merino content recommendations should be shown.
       */
-     var showContentRecommendations by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_pocket_content_recommendations),
--        default = FeatureFlags.MERINO_CONTENT_RECOMMENDATIONS,
-+        default = false,
-     )
+-    var showContentRecommendations by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_pocket_content_recommendations),
+-        default = { FxNimbus.features.merinoRecommendations.value().enabled },
+-        featureFlag = true,
+-    )
++    var showContentRecommendations = false
  
      /**
-@@ -1991,10 +1991,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      *  Whether or not to display the Pocket sponsored stories parameter secret settings.
+@@ -2009,10 +2005,9 @@
      /**
       * Indicates if Firefox Suggest is enabled.
       */
@@ -78,7 +81,7 @@ index 777a555948..e31405f021 100644
      )
  
      /**
-@@ -2015,21 +2014,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2033,21 +2028,16 @@
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
       * The default value is computed lazily, and based on whether Firefox Suggest is enabled.
       */
