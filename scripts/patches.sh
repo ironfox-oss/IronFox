@@ -23,6 +23,9 @@ PATCH_FILES=(
     # Make it IronFox...
     "branding.patch"
 
+    # Disable "Sent from Firefox" footer/link sharing
+    "disable-link-sharing.patch"
+
     # Enable about:config
     "enable-aboutconfig.patch"
 

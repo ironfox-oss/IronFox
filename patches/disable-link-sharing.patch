@@ -1,0 +1,23 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..b79ca9bc01 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -616,16 +616,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         }
+     }
+ 
+-    var whatsappLinkSharingEnabled by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_link_sharing),
+-        featureFlag = true,
+-        default = { FxNimbus.features.sentFromFirefox.value().enabled },
+-    )
++    var whatsappLinkSharingEnabled = false
+ 
+-    var linkSharingSettingsSnackbarShown by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_link_sharing_settings_snackbar),
+-        default = false,
+-    )
++    var linkSharingSettingsSnackbarShown = true
+ 
+     /**
+      * Get the display string for the current open links in apps setting
