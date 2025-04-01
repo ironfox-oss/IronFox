@@ -112,7 +112,13 @@ popd
 # shellcheck disable=SC2154
 pushd "$mozilla_release"
 
-./mach build
+./mach build && \
+./mach package && \
+./mach package-multi-locale --locales $(IRONFOX_LOCALES)
+
+MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
+export MOZ_CHROME_MULTILOCALE
+
 gradle :geckoview:publishReleasePublicationToMavenLocal
 gradle :exoplayer2:publishReleasePublicationToMavenLocal
 popd
