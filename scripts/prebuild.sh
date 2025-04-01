@@ -427,9 +427,6 @@ sed -i \
     -e 's/^$network.cookie.cookieBehavior.optInPartitioning.pbmode$/z99.ignore.\1/' \
     -e 's/^$network.fetchpriority.enabled$/z99.ignore.\1/' \
     -e 's/^$network.http.largeKeepaliveFactor$/z99.ignore.\1/' \
-    -e 's/^$network.trr.excluded-domains$/z99.ignore.\1/' \
-    -e 's/^$network.trr.mode$/z99.ignore.\1/' \
-    -e 's/^$network.trr.uri$/z99.ignore.\1/' \
     -e 's/^$privacy.fingerprintingProtection$/z99.ignore.\1/' \
     -e 's/^$privacy.fingerprintingProtection.overrides$/z99.ignore.\1/' \
     -e 's/^$privacy.fingerprintingProtection.pbmode$/z99.ignore.\1/' \
