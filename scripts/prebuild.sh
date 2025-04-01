@@ -426,6 +426,7 @@ sed -i \
     -e 's/^$network.cookie.cookieBehavior.optInPartitioning$/z99.ignore.\1/' \
     -e 's/^$network.cookie.cookieBehavior.optInPartitioning.pbmode$/z99.ignore.\1/' \
     -e 's/^$network.fetchpriority.enabled$/z99.ignore.\1/' \
+    -e 's/^$network.http.http3.enable_kyber$/z99.ignore.\1/' \
     -e 's/^$network.http.largeKeepaliveFactor$/z99.ignore.\1/' \
     -e 's/^$privacy.fingerprintingProtection$/z99.ignore.\1/' \
     -e 's/^$privacy.fingerprintingProtection.overrides$/z99.ignore.\1/' \
@@ -434,6 +435,7 @@ sed -i \
     -e 's/^$privacy.globalprivacycontrol.functionality.enabled$/z99.ignore.\1/' \
     -e 's/^$privacy.globalprivacycontrol.pbmode.enabled$/z99.ignore.\1/' \
     -e 's/^$security.pki.certificate_transparency.mode$/z99.ignore.\1/' \
+    -e 's/^$security.tls.enable_kyber$/z99.ignore.\1/' \
     -e 's/^$toolkit.telemetry.user_characteristics_ping.current_version$/z99.ignore.\1/' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
