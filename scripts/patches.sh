@@ -110,9 +110,6 @@ PATCH_FILES=(
     # Remove default top sites/shortcuts
     "remove-default-sites.patch"
 
-    # Enable preference to toggle default desktop mode
-    "enable-default-desktop-mode.patch"
-
     # Enable preference to toggle tap strip https://gitlab.com/ironfox-oss/IronFox/-/issues/27
     "enable-tap-strip.patch"
 
