@@ -252,3 +252,42 @@ index 334ee5ac0b..7fb7a7c69b 100644
      <SwitchPreference
          android:key="@string/pref_key_remote_server_prod"
          app:iconSpaceReserved="false"
+diff --git a/mobile/android/fenix/app/src/main/res/xml/sponsored_stories_settings.xml b/mobile/android/fenix/app/src/main/res/xml/sponsored_stories_settings.xml
+index 426b1cb195..a21218133f 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/sponsored_stories_settings.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/sponsored_stories_settings.xml
+@@ -7,26 +7,30 @@
+         android:defaultValue="false"
+         android:key="@string/pref_key_custom_sponsored_stories_parameters_enabled"
+         android:title="@string/preferences_debug_settings_custom_sponsored_stories_parameters_enabled"
+-        app:iconSpaceReserved="false" />
++        app:iconSpaceReserved="false"
++        app:isPreferenceVisible="false" />
+     <EditTextPreference
+         android:dependency="@string/pref_key_custom_sponsored_stories_parameters_enabled"
+         android:inputType="text"
+         android:key="@string/pref_key_custom_sponsored_stories_site_id"
+         android:title="@string/preferences_debug_settings_custom_sponsored_stories_parameters_site"
+         app:iconSpaceReserved="false"
+-        app:useSimpleSummaryProvider="true" />
++        app:useSimpleSummaryProvider="true"
++        app:isPreferenceVisible="false" />
+     <EditTextPreference
+         android:dependency="@string/pref_key_custom_sponsored_stories_parameters_enabled"
+         android:key="@string/pref_key_custom_sponsored_stories_country"
+         android:title="@string/preferences_debug_settings_custom_sponsored_stories_country"
+         android:inputType="text"
+         app:useSimpleSummaryProvider="true"
+-        app:iconSpaceReserved="false" />
++        app:iconSpaceReserved="false"
++        app:isPreferenceVisible="false" />
+     <EditTextPreference
+         android:dependency="@string/pref_key_custom_sponsored_stories_parameters_enabled"
+         android:key="@string/pref_key_custom_sponsored_stories_city"
+         android:title="@string/preferences_debug_settings_custom_sponsored_stories_city"
+         android:inputType="text"
+         app:useSimpleSummaryProvider="true"
+-        app:iconSpaceReserved="false" />
++        app:iconSpaceReserved="false"
++        app:isPreferenceVisible="false" />
+ </androidx.preference.PreferenceScreen>
