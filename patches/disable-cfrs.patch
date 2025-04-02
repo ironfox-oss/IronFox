@@ -28,10 +28,9 @@ diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app
          }
    query-parameter-stripping:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 777a555948..e2e4490ca2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -172,8 +172,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -169,8 +169,7 @@
          default = 0L,
      )
  
@@ -41,7 +40,7 @@ index 777a555948..e2e4490ca2 100644
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -823,30 +822,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -831,30 +830,16 @@
      /**
       * Indicates if the total cookie protection CRF should be shown.
       */
@@ -76,7 +75,7 @@ index 777a555948..e2e4490ca2 100644
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_cookies_select),
-@@ -1098,23 +1083,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1122,23 +1107,7 @@
      private val userNeedsToVisitInstallableSites: Boolean
          get() = pwaInstallableVisitCount.underMaxCount()
  
@@ -101,7 +100,7 @@ index 777a555948..e2e4490ca2 100644
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
-@@ -1126,8 +1095,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1150,8 +1119,7 @@
          default = true,
      )
  
@@ -111,44 +110,7 @@ index 777a555948..e2e4490ca2 100644
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
-@@ -1319,34 +1287,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
- 
-     fun incrementNumTimesPrivateModeOpened() = numTimesPrivateModeOpened.increment()
- 
--    var showedPrivateModeContextualFeatureRecommender by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_showed_private_mode_cfr),
--        default = false,
--    )
-+    var showedPrivateModeContextualFeatureRecommender = true
- 
-     private val numTimesPrivateModeOpened = counterPreference(
-         appContext.getPreferenceKey(R.string.pref_key_private_mode_opened),
-     )
- 
--    val shouldShowPrivateModeCfr: Boolean
--        get() {
--            if (!canShowCfr) return false
--            val focusInstalled = MozillaProductDetector
--                .getInstalledMozillaProducts(appContext as Application)
--                .contains(MozillaProductDetector.MozillaProducts.FOCUS.productName)
--
--            val showCondition = if (focusInstalled) {
--                numTimesPrivateModeOpened.value >= CFR_COUNT_CONDITION_FOCUS_INSTALLED
--            } else {
--                numTimesPrivateModeOpened.value >= CFR_COUNT_CONDITION_FOCUS_NOT_INSTALLED
--            }
--
--            if (showCondition && !showedPrivateModeContextualFeatureRecommender) {
--                return true
--            }
--
--            return false
--        }
-+    val shouldShowPrivateModeCfr: Boolean = false
- 
-     var openLinksInExternalAppOld by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_open_links_in_external_app_old),
-@@ -1596,11 +1543,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1595,11 +1563,7 @@
      /**
       * Indicates if sync onboarding CFR should be shown.
       */
@@ -161,7 +123,7 @@ index 777a555948..e2e4490ca2 100644
  
      /**
       * Indicates if home onboarding dialog should be shown.
-@@ -1789,34 +1732,22 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1797,34 +1761,22 @@
      /**
       * Indicates if the navigation bar CFR should be displayed to the user.
       */

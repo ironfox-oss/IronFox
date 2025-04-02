@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index df8ac39bb3..27308c8f49 100644
+index b800c22431..09b5d24039 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1166,7 +1166,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1216,7 +1216,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * either [AUTOPLAY_ALLOW_ALL] or [AUTOPLAY_BLOCK_ALL]. Because of this, we are forced to save
       * the user selected setting as well.
       */
@@ -11,7 +11,7 @@ index df8ac39bb3..27308c8f49 100644
  
      private fun getSitePermissionsPhoneFeatureAutoplayAction(
          feature: PhoneFeature,
-@@ -1195,7 +1195,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1245,7 +1245,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              ),
              autoplayInaudible = getSitePermissionsPhoneFeatureAutoplayAction(
                  feature = PhoneFeature.AUTOPLAY_INAUDIBLE,

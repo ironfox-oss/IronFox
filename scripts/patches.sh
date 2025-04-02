@@ -5,6 +5,10 @@ if [[ "$env_source" != "true" ]]; then
     return 1
 fi
 
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+NC="\033[0m"
+
 declare -a PATCH_FILES
 PATCH_FILES=(
     # Remove Mozilla repositories substitution and explicitly add the required ones
@@ -18,6 +22,9 @@ PATCH_FILES=(
 
     # Make it IronFox...
     "branding.patch"
+
+    # Disable "Sent from Firefox" footer/link sharing
+    "disable-link-sharing.patch"
 
     # Enable about:config
     "enable-aboutconfig.patch"
@@ -85,6 +92,9 @@ PATCH_FILES=(
     # Disable menu item to report issues with websites to Mozilla...
     "disable-reporting-site-issues.patch"
 
+    # Configure DNS over HTTPS
+    "configure-doh.patch"
+
     # Tweak Safe Browsing (See '009 SAFE BROWSING' in Phoenix for more details...)
     "configure-safe-browsing.patch"
 
@@ -94,11 +104,8 @@ PATCH_FILES=(
     # Remove default top sites/shortcuts
     "remove-default-sites.patch"
 
-    # Enable preference to toggle default desktop mode
-    "enable-default-desktop-mode.patch"
-
-    # Enable preference to toggle tap strip https://gitlab.com/ironfox-oss/IronFox/-/issues/27
-    "enable-tap-strip.patch"
+    # Enable preference to toggle tab strip https://gitlab.com/ironfox-oss/IronFox/-/issues/27
+    "enable-tab-strip.patch"
 
     # Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
     "enable-felt-privacy.patch"
@@ -115,6 +122,9 @@ PATCH_FILES=(
     # Block autoplay by default...
     "block-autoplay-by-default.patch"
 
+    # Ensure users can toggle certain `secret` settings if desired
+    "enable-secret-settings.patch"
+
     # Fix v125 compile error
     "gecko-fix-125-compile.patch"
 )
@@ -126,7 +136,7 @@ check_patch() {
         return 1
     fi
 
-    if ! patch -p1 --quiet --dry-run <"$patch"; then
+    if ! patch -p1 -f --quiet --dry-run <"$patch"; then
         echo "Incompatible patch: '$patch'"
         return 1
     fi
@@ -136,6 +146,16 @@ check_patches() {
     for patch in "${PATCH_FILES[@]}"; do
         if ! check_patch "$patch"; then
             return 1
+        fi
+    done
+}
+
+test_patches() {
+    for patch in "${PATCH_FILES[@]}"; do
+        if ! check_patch "$patch">/dev/null 2>&1; then
+            printf "${RED}%-45s: FAILED${NC}\n" "$(basename "$patch")"
+        else
+            printf "${GREEN}%-45s: OK${NC}\n" "$(basename "$patch")"
         fi
     done
 }

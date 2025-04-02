@@ -1,7 +1,7 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1386,6 +1386,15 @@
+@@ -1465,6 +1465,15 @@
              get() = runtime.settings.cookieBehaviorOptInPartitioningPBM
              set(value) { runtime.settings.setCookieBehaviorOptInPartitioningPBM(value) }
  
@@ -17,18 +17,18 @@ diff --git a/mobile/android/android-components/components/browser/engine-gecko/s
          override var certificateTransparencyMode: Int
              get() = runtime.settings.certificateTransparencyMode
              set(value) { runtime.settings.setCertificateTransparencyMode(value) }
-@@ -1425,6 +1434,7 @@
+@@ -1508,6 +1517,7 @@
              this.parallelMarkingEnabled = it.parallelMarkingEnabled
              this.cookieBehaviorOptInPartitioning = it.cookieBehaviorOptInPartitioning
              this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
 +            this.spoofEnglish = it.spoofEnglish
              this.certificateTransparencyMode = it.certificateTransparencyMode
+             this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
          }
-     }
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -310,6 +310,8 @@
+@@ -330,6 +330,8 @@
       */
      open var cookieBehaviorOptInPartitioningPBM: Boolean by UnsupportedSetting()
  
@@ -37,25 +37,25 @@ diff --git a/mobile/android/android-components/components/concept/engine/src/mai
      /**
       * Setting to control how Certificate Transparency information is processed.
       */
-@@ -376,6 +378,7 @@
+@@ -406,6 +408,7 @@
      val getDesktopMode: () -> Boolean = { false },
      override var cookieBehaviorOptInPartitioning: Boolean = false,
      override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
 +    override var spoofEnglish: Boolean = false,
      override var certificateTransparencyMode: Int = 0,
+     override var postQuantumKeyExchangeEnabled: Boolean = false,
  ) : Settings() {
-     override val desktopModeEnabled: Boolean
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -188,6 +188,7 @@
+@@ -178,6 +178,7 @@
              webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_HIGH_VALUE,
              fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
              parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
 +            spoofEnglish = context.settings().spoofEnglish,
              certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
+             postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
          )
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
@@ -122,7 +122,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/a
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -317,6 +317,11 @@
+@@ -314,6 +314,11 @@
          false,
      )
  
@@ -175,9 +175,9 @@ diff --git a/mobile/android/fenix/app/src/main/res/layout/fragment_locale_settin
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -435,6 +435,8 @@
-     <!-- Bookmarks -->
-     <string name="pref_key_use_new_bookmarks_ui" translatable="false">pref_key_use_new_bookmarks_ui</string>
+@@ -445,6 +445,8 @@
+     <!-- DNS over HTTPS Secret settings -->
+     <string name="pref_key_doh_settings_enabled" translatable="false">pref_key_doh_settings_enabled</string>
  
 +    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
 +
@@ -187,7 +187,7 @@ diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/
 diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 --- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-@@ -217,4 +217,6 @@
+@@ -220,4 +220,6 @@
      <string name="glean_debug_tools_send_ping_button_text">Send Ping</string>
      <!-- The send pings toast message. The first parameter is the type of ping -->
      <string name="glean_debug_tools_send_ping_toast_message">Sent %1$s ping</string>
@@ -197,7 +197,7 @@ diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/m
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -901,6 +901,7 @@
+@@ -905,6 +905,7 @@
      method public boolean getRemoteDebuggingEnabled();
      method @Nullable public GeckoRuntime getRuntime();
      method @Nullable public Rect getScreenSizeOverride();
@@ -205,15 +205,15 @@ diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
      method public boolean getTranslationsOfferPopup();
      method @NonNull public List<String> getTrustedRecursiveResolverExcludedDomains();
      method @NonNull public String getTrustedRecursiveResolverUri();
-@@ -942,6 +943,7 @@
-     method @NonNull public GeckoRuntimeSettings setParallelMarkingEnabled(boolean);
+@@ -948,6 +949,7 @@
+     method @NonNull public GeckoRuntimeSettings setPostQuantumKeyExchangeEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setPreferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings setRemoteDebuggingEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
      method @NonNull public GeckoRuntimeSettings setTranslationsOfferPopup(boolean);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverExcludedDomains(@NonNull List<String>);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverMode(int);
-@@ -1003,6 +1005,7 @@
+@@ -1010,6 +1012,7 @@
      method @NonNull public GeckoRuntimeSettings.Builder preferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings.Builder remoteDebuggingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder screenSizeOverride(int, int);
@@ -224,7 +224,7 @@ diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -590,6 +590,17 @@
+@@ -601,6 +601,17 @@
        getSettings().setLargeKeepaliveFactor(factor);
        return this;
      }
@@ -242,15 +242,15 @@ diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoR
    }
  
    private GeckoRuntime mRuntime;
-@@ -687,6 +698,7 @@
+@@ -700,6 +711,7 @@
        new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning.pbmode", false);
    /* package */ final Pref<Integer> mCertificateTransparencyMode =
        new Pref<Integer>("security.pki.certificate_transparency.mode", 0);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 0);
- 
-   /* package */ int mPreferredColorScheme = COLOR_SCHEME_SYSTEM;
- 
-@@ -1989,6 +2001,27 @@
+   /* package */ final Pref<Boolean> mPostQuantumKeyExchangeTLSEnabled =
+       new Pref<Boolean>("security.tls.enable_kyber", false);
+   /* package */ final Pref<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
+@@ -2048,6 +2060,27 @@
      return this;
    }
  
