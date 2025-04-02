@@ -13,6 +13,10 @@ pref("extensions.formautofill.addresses.enabled", true); // [DEFAULT]
 pref("extensions.formautofill.creditCards.enabled", true); // [DEFAULT]
 pref("signon.rememberSignons", true); // [DEFAULT]
 
+/// Re-enable WebGL
+// We're now blocking this by default with uBlock Origin - I'm going to remove this from Phoenix as well for next release
+pref("webgl.disabled", false); // [DEFAULT]
+
 /// Set light/dark mode to match system
 // We're using a patch to set light mode by default
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
