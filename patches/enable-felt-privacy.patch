@@ -1,35 +1,19 @@
-diff --git a/mobile/android/fenix/app/pbm.fml.yaml b/mobile/android/fenix/app/pbm.fml.yaml
-index 7b22ed8a33..91c31f1354 100644
---- a/mobile/android/fenix/app/pbm.fml.yaml
-+++ b/mobile/android/fenix/app/pbm.fml.yaml
-@@ -8,12 +8,12 @@ features:
-       felt-privacy-enabled:
-         description: if true, enable felt privacy related UI
-         type: Boolean
--        default: false
-+        default: true
- 
-     defaults:
-       - channel: developer
-         value:
--          felt-privacy-enabled: false
-+          felt-privacy-enabled: true
-       - channel: nightly
-         value:
--          felt-privacy-enabled: false
-+          felt-privacy-enabled: true
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 777a555948..1f058455cf 100644
+index b800c22431..ea5b12a62a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1781,9 +1781,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
+@@ -1786,12 +1786,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = true,
+     )
+ 
+-    val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
++    val feltPrivateBrowsingEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_should_enable_felt_privacy),
-         featureFlag = true,
+-        featureFlag = true,
 -        default = {
 -            FxNimbus.features.privateBrowsing.value().feltPrivacyEnabled
 -        },
-+        default = { true },
++        default = true,
      )
  
      /**
