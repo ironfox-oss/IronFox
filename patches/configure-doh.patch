@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-index cd46b47680..81a7324bde 100644
+index cd46b47680..d6c25458eb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 @@ -31,21 +31,76 @@ internal class DefaultDohSettingsProvider(
@@ -138,44 +138,44 @@ index cd46b47680..81a7324bde 100644
      companion object {
          @VisibleForTesting
 -        val cloudflareUri = "mozilla.cloudflare-dns.com"
-+        val quad9Uri = "dns.quad9.net"
++        val quad9Uri = "https://dns.quad9.net/dns-query"
 +
 +        @VisibleForTesting
-+        val dns0ZeroUri = "zero.dns0.eu"
++        val dns0ZeroUri = "https://zero.dns0.eu"
 +
 +        @VisibleForTesting
-+        val dns0StandardUri = "dns0.eu"
++        val dns0StandardUri = "https://dns0.eu"
 +
 +        @VisibleForTesting
-+        val mullvadBaseUri = "base.dns.mullvad.net"
++        val mullvadBaseUri = "https://base.dns.mullvad.net/dns-query"
 +
 +        @VisibleForTesting
-+        val adGuardStandardUri = "dns.adguard-dns.com"
++        val adGuardStandardUri = "https://dns.adguard-dns.com/dns-query"
 +
 +        @VisibleForTesting
-+        val mullvadUnfilteredUri = "dns.mullvad.net"
++        val mullvadUnfilteredUri = "https://dns.mullvad.net/dns-query"
 +
 +        @VisibleForTesting
-+        val wikimediaUri = "wikimedia-dns.org"
++        val wikimediaUri = "https://wikimedia-dns.org/dns-query"
 +
 +        @VisibleForTesting
-+        val adGuardUnfilteredUri = "unfiltered.adguard-dns.com"
++        val adGuardUnfilteredUri = "https://unfiltered.adguard-dns.com/dns-query"
 +
 +        @VisibleForTesting
-+        val dns0KidsUri = "kids.dns0.eu"
++        val dns0KidsUri = "https://kids.dns0.eu"
 +
 +        @VisibleForTesting
-+        val mullvadFamilyUri = "family.dns.mullvad.net"
++        val mullvadFamilyUri = "https://family.dns.mullvad.net/dns-query"
 +
 +        @VisibleForTesting
-+        val adGuardFamilyUri = "family.adguard-dns.com"
++        val adGuardFamilyUri = "https://family.adguard-dns.com/dns-query"
 +
 +        @VisibleForTesting
-+        val mullvadExtendedUri = "extended.dns.mullvad.net"
++        val mullvadExtendedUri = "https://extended.dns.mullvad.net/dns-query"
  
          @VisibleForTesting
 -        val nextDnsUri = "firefox.dns.nextdns.io"
-+        val mullvadAllUri = "all.dns.mullvad.net"
++        val mullvadAllUri = "https://all.dns.mullvad.net/dns-query"
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsState.kt
