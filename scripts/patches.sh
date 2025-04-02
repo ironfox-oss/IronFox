@@ -101,8 +101,8 @@ PATCH_FILES=(
     # Remove default top sites/shortcuts
     "remove-default-sites.patch"
 
-    # Enable preference to toggle tap strip https://gitlab.com/ironfox-oss/IronFox/-/issues/27
-    "enable-tap-strip.patch"
+    # Enable preference to toggle tab strip https://gitlab.com/ironfox-oss/IronFox/-/issues/27
+    "enable-tab-strip.patch"
 
     # Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
     "enable-felt-privacy.patch"
