@@ -27,3 +27,13 @@ fi
 if [[ -z ${GRADLE_USER_HOME+x} ]]; then
     export GRADLE_USER_HOME=$HOME/.gradle
 fi
+
+export IRONFOX_UBO_ASSETS_URL_FORMAT="https://gitlab.com/ironfox-oss/IronFox/-/raw/%1\$s/uBlock/assets.%1\$s.json"
+if [[ -z ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
+    # Default to development assets
+    # shellcheck disable=SC2059
+    IRONFOX_UBO_ASSETS_URL="$(printf ${IRONFOX_UBO_ASSETS_URL_FORMAT} "dev")"
+    export IRONFOX_UBO_ASSETS_URL
+
+    echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
+fi

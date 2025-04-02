@@ -28,6 +28,15 @@ case $(echo "$VERSION_CODE" | cut -c 7) in
     ;;
 esac
 
+if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
+    # Set uBO assets to production variant
+    # shellcheck disable=2059
+    IRONFOX_UBO_ASSETS_URL="$(printf "${IRONFOX_UBO_ASSETS_URL_FORMAT}" "${PRODUCTION_BRANCH}")"
+    export IRONFOX_UBO_ASSETS_URL
+
+    echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
+fi
+
 # Setup environment variables. See Dockerfile.
 source "/opt/env_docker.sh"
 
