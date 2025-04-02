@@ -122,6 +122,9 @@ PATCH_FILES=(
     # Ensure users can toggle certain `secret` settings if desired
     "enable-secret-settings.patch"
 
+    # Temporarily remove DoH UI settings - doesn't appear to be fully implemented/production ready in stable yet, so for now let's control this with prefs to ensure we don't encounter unexpected behavior from users...
+    "disable-doh-entrypoint.patch"
+
     # Fix v125 compile error
     "gecko-fix-125-compile.patch"
 )
