@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-index cd46b47680..42ae9ae281 100644
+index cd46b47680..81a7324bde 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 @@ -31,21 +31,76 @@ internal class DefaultDohSettingsProvider(
@@ -15,7 +15,7 @@ index cd46b47680..42ae9ae281 100644
 -        default = dohDefaultProviderUrl.isNullOrBlank() || dohDefaultProviderUrl == cloudflareUri,
 +    private val quad9 = Provider.BuiltIn(
 +        url = quad9Uri,
-+        name = "Quad9 - Real-time Malware Protection",
++        name = "Quad9",
 +        default = dohDefaultProviderUrl.isNullOrBlank() || dohDefaultProviderUrl == quad9Uri,
      )
 -    private val nextDns = Provider.BuiltIn(
@@ -24,37 +24,37 @@ index cd46b47680..42ae9ae281 100644
 -        default = dohDefaultProviderUrl == nextDnsUri,
 +    private val dns0Zero = Provider.BuiltIn(
 +        url = dns0ZeroUri,
-+        name = "DNS0 (ZERO) - Hardened Real-time Malware Protection",
++        name = "DNS0 (ZERO)",
 +        default = dohDefaultProviderUrl == dns0ZeroUri,
 +    )
 +    private val dns0Standard = Provider.BuiltIn(
 +        url = dns0StandardUri,
-+        name = "DNS0 - Real-time Malware Protection",
++        name = "DNS0",
 +        default = dohDefaultProviderUrl == dns0StandardUri,
 +    )
 +    private val mullvadBase = Provider.BuiltIn(
 +        url = mullvadBaseUri,
-+        name = "Mullvad - Ad/Tracking/Limited Malware Protection",
++        name = "Mullvad - Base",
 +        default = dohDefaultProviderUrl == mullvadBaseUri,
 +    )
 +    private val adGuardStandard = Provider.BuiltIn(
 +        url = adGuardStandardUri,
-+        name = "AdGuard (Public) - Ad/Tracking Protection",
++        name = "AdGuard - Standard",
 +        default = dohDefaultProviderUrl == adGuardStandardUri,
 +    )
 +    private val mullvadUnfiltered = Provider.BuiltIn(
 +        url = mullvadUnfilteredUri,
-+        name = "Mullvad - No Filtering",
++        name = "Mullvad - Unfiltered",
 +        default = dohDefaultProviderUrl == mullvadUnfilteredUri,
 +    )
 +    private val wikimedia = Provider.BuiltIn(
 +        url = wikimediaUri,
-+        name = "Wikimedia - No Filtering",
++        name = "Wikimedia",
 +        default = dohDefaultProviderUrl == wikimediaUri,
 +    )
 +    private val adGuardUnfiltered = Provider.BuiltIn(
 +        url = adGuardUnfilteredUri,
-+        name = "AdGuard (Public) - No Filtering",
++        name = "AdGuard - Unfiltered",
 +        default = dohDefaultProviderUrl == adGuardUnfilteredUri,
 +    )
 +    private val dns0Kids = Provider.BuiltIn(
@@ -69,17 +69,17 @@ index cd46b47680..42ae9ae281 100644
 +    )
 +    private val adGuardFamily = Provider.BuiltIn(
 +        url = adGuardFamilyUri,
-+        name = "AdGuard (Public) - Family Protection",
++        name = "AdGuard - Family",
 +        default = dohDefaultProviderUrl == adGuardFamilyUri,
 +    )
 +    private val mullvadExtended = Provider.BuiltIn(
 +        url = mullvadExtendedUri,
-+        name = "Mullvad - Ad/Tracking/Limited Malware/Social Media Protection",
++        name = "Mullvad - Extended",
 +        default = dohDefaultProviderUrl == mullvadExtendedUri,
 +    )
 +    private val mullvadAll = Provider.BuiltIn(
 +        url = mullvadAllUri,
-+        name = "Mullvad - Ad/Tracking/Limited Malware/Social Media/Adult/Gambling Protection",
++        name = "Mullvad - All",
 +        default = dohDefaultProviderUrl == mullvadAllUri,
      )
      private val providerUrl = engine.settings.dohProviderUrl
