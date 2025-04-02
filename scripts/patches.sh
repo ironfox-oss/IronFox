@@ -119,6 +119,9 @@ PATCH_FILES=(
     # Block autoplay by default...
     "block-autoplay-by-default.patch"
 
+    # Ensure users can toggle certain `secret` settings if desired
+    "enable-secret-settings.patch"
+
     # Fix v125 compile error
     "gecko-fix-125-compile.patch"
 )
