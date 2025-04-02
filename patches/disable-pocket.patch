@@ -100,6 +100,29 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFla
      }
  
      /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 3d7ff49e55..2256998544 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -96,7 +96,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_mars_api_enabled).apply {
+-            isChecked = context.settings().marsAPIEnabled
++            isVisible = false
++            isChecked = false
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+                     activity?.recreate()
+@@ -179,7 +180,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<Preference>(R.string.pref_key_custom_sponsored_stories_parameters).apply {
+-            isVisible = Config.channel.isNightlyOrDebug
++            isVisible = false
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 index fc4f8d9b4b..ee0fd74e23 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
