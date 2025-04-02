@@ -3,9 +3,6 @@
 
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
-/// Disable DNS Over HTTPS by default
-pref("network.trr.mode", 5);
-
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via Fenix's UI settings instead...
 // https://gitlab.com/ironfox-oss/IronFox/-/issues/11
