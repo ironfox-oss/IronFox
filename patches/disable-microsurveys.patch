@@ -39,3 +39,17 @@ index b800c22431..020c7d59cc 100644
  
      /**
       * Indicates if the Set as default browser prompt for existing users feature is enabled.
+diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+index 334ee5ac0b..9a6808bca9 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+@@ -81,7 +81,8 @@
+         android:defaultValue="false"
+         android:key="@string/pref_key_microsurvey_feature_enabled"
+         android:title="@string/preferences_debug_settings_microsurvey_feature"
+-        app:iconSpaceReserved="false" />
++        app:iconSpaceReserved="false"
++        app:isPreferenceVisible="false" />
+     <SwitchPreference
+         android:defaultValue="false"
+         android:key="@string/pref_key_set_as_default_browser_prompt_enabled"
