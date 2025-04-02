@@ -426,6 +426,10 @@ sed -i \
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
+    -e 's|"network.trr.default_provider_uri"|"z99.ignore.network.trr.default_provider_uri"|' \
+    -e 's|"network.trr.excluded-domains"|"z99.ignore.network.trr.excluded-domains"|' \
+    -e 's|"network.trr.mode"|"z99.ignore.network.trr.mode"|' \
+    -e 's|"network.trr.uri"|"z99.ignore.network.trr.uri"|' \
     -e 's|"privacy.fingerprintingProtection"|"z99.ignore.privacy.fingerprintingProtection"|' \
     -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.privacy.fingerprintingProtection.overrides"|' \
     -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.privacy.fingerprintingProtection.pbmode"|' \

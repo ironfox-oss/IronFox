@@ -1,0 +1,43 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 3d7ff49e55..857f2c40b8 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -149,8 +149,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_doh_settings_enabled).apply {
+-            isVisible = Config.channel.isDebug
+-            isChecked = context.settings().showDohEntryPoint
++            isVisible = false
++            isChecked = false
+             onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..3d0047b08e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2304,8 +2304,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates whether or not to show the entry point for the DNS over HTTPS settings
+      */
+-    val showDohEntryPoint by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_enabled),
+-        default = false,
+-    )
++    val showDohEntryPoint = false
+ }
+diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+index 334ee5ac0b..230d3596d4 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+@@ -90,7 +90,8 @@
+     <SwitchPreference
+         android:key="@string/pref_key_doh_settings_enabled"
+         android:title="@string/preferences_debug_settings_enable_doh_settings"
+-        app:iconSpaceReserved="false" />
++        app:iconSpaceReserved="false"
++        app:isPreferenceVisible="false" />
+     <EditTextPreference
+         android:key="@string/pref_key_custom_glean_server_url"
+         android:title="@string/preferences_debug_settings_custom_glean_server_url"
