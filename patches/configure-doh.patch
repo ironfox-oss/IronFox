@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-index cd46b47680..c110577d3e 100644
+index cd46b47680..b9713fda1a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 @@ -31,21 +31,76 @@ internal class DefaultDohSettingsProvider(
@@ -27,7 +27,7 @@ index cd46b47680..c110577d3e 100644
 +        name = "DNS0 (ZERO) - Hardened Real-time Malware Protection",
 +        default = dohDefaultProviderUrl == dns0ZeroUri,
 +    )
-+    private val dns0 = Provider.BuiltIn(
++    private val dns0-standard = Provider.BuiltIn(
 +        url = dns0Uri,
 +        name = "DNS0 - Real-time Malware Protection",
 +        default = dohDefaultProviderUrl == dns0Uri,
@@ -37,12 +37,12 @@ index cd46b47680..c110577d3e 100644
 +        name = "Mullvad - Ad/Tracking/Limited Malware Protection",
 +        default = dohDefaultProviderUrl == mullvadBaseUri,
 +    )
-+    private val adguard = Provider.BuiltIn(
++    private val adguard-standard = Provider.BuiltIn(
 +        url = adGuardUri,
 +        name = "AdGuard (Public) - Ad/Tracking Protection",
 +        default = dohDefaultProviderUrl == adGuardUri,
 +    )
-+    private val mullvad = Provider.BuiltIn(
++    private val mullvad-unfiltered = Provider.BuiltIn(
 +        url = mullvadUri,
 +        name = "Mullvad - No Filtering",
 +        default = dohDefaultProviderUrl == mullvadUri,
@@ -97,10 +97,10 @@ index cd46b47680..c110577d3e 100644
 -        nextDns,
 +        quad9,
 +        dns0-zero,
-+        dns0,
++        dns0-standard,
 +        mullvad-base,
-+        adguard,
-+        mullvad,
++        adguard-standard,
++        mullvad-unfiltered,
 +        wikimedia,
 +        adguard-unfiltered,
 +        dns0-kids,
@@ -111,7 +111,7 @@ index cd46b47680..c110577d3e 100644
          custom,
      )
  
-@@ -75,8 +141,20 @@ internal class DefaultDohSettingsProvider(
+@@ -75,8 +141,19 @@ internal class DefaultDohSettingsProvider(
  
              else -> {
                  when (engine.settings.dohProviderUrl) {
@@ -119,11 +119,10 @@ index cd46b47680..c110577d3e 100644
 -                    nextDnsUri -> nextDns
 +                    quad9Uri -> quad9
 +                    dns0ZeroUri -> dns0-zero
-+                    dns0Uri -> dns0
++                    dns0Uri -> dns0-standard
 +                    mullvadBaseUri -> mullvad-base
-+                    quad9Uri -> quad9
-+                    adGuardUri -> adguard
-+                    mullvadUri -> mullvad
++                    adGuardUri -> adguard-standard
++                    mullvadUri -> mullvad-unfiltered
 +                    wikimediaUri -> wikimedia
 +                    adGuardUnfilteredUri -> adguard-unfiltered
 +                    dns0KidsUri -> dns0-kids
@@ -134,7 +133,7 @@ index cd46b47680..c110577d3e 100644
                      "" -> getDefaultProviders().first()
                      else -> custom
                  }
-@@ -117,9 +195,42 @@ internal class DefaultDohSettingsProvider(
+@@ -117,9 +194,42 @@ internal class DefaultDohSettingsProvider(
  
      companion object {
          @VisibleForTesting
