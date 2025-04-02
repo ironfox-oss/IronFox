@@ -32,7 +32,7 @@ default:
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  VERSION_NAME: "137.0.0-build2"
+  VERSION_NAME: "137.0.0"
   SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
   KEYSTORE: /opt/IronFox/signing-key.jks
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.cache/gradle"
