@@ -522,6 +522,11 @@ sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.co
     cat "$patches/preferences/phoenix-android.js"
     cat "$patches/preferences/phoenix-extended-android.js"
     cat "$patches/preferences/ironfox.js"
+
+    if [[ -n ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
+        # Set uBlock Origin to use our custom/enhanced config by default
+        echo "pref(\"browser.ironfox.uBO.assetsBootstrapLocation\", \"${IRONFOX_UBO_ASSETS_URL}\");"
+    fi
 } >>mobile/android/app/geckoview-prefs.js
 
 popd

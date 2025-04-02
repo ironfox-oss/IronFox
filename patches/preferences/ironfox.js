@@ -21,8 +21,4 @@ pref("webgl.disabled", false); // [DEFAULT]
 // We're using a patch to set light mode by default
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
-/// Set uBlock Origin to use our custom/enhanced config by default
-// Switch this to `https://gitlab.com/ironfox-oss/IronFox/-/raw/dev/uBlock/assets.dev.json` for testing
-pref("browser.ironfox.uBO.assetsBootstrapLocation", "https://gitlab.com/ironfox-oss/IronFox/-/raw/main/uBlock/assets.json");
-
 pref("browser.ironfox.applied", true, locked);
