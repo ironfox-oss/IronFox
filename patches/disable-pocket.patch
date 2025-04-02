@@ -229,3 +229,26 @@ diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mo
  
      <androidx.preference.Preference
          android:key="@string/pref_key_wallpapers"
+diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+index 334ee5ac0b..7fb7a7c69b 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+@@ -39,7 +39,8 @@
+         android:defaultValue="false"
+         android:key="@string/pref_key_mars_api_enabled"
+         android:title="@string/preferences_debug_settings_mars_api"
+-        app:iconSpaceReserved="false" />
++        app:iconSpaceReserved="false"
++        app:isPreferenceVisible="false" />
+     <SwitchPreference
+         android:defaultValue="false"
+         android:key="@string/pref_key_pocket_content_recommendations"
+@@ -101,7 +102,7 @@
+         android:key="@string/pref_key_custom_sponsored_stories_parameters"
+         app:iconSpaceReserved="false"
+         android:title="@string/preferences_debug_settings_custom_sponsored_stories_parameters"
+-        />
++        app:isPreferenceVisible="false" />
+     <SwitchPreference
+         android:key="@string/pref_key_remote_server_prod"
+         app:iconSpaceReserved="false"
