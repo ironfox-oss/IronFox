@@ -11,3 +11,39 @@ index 53750cda56..6a4c16c8f0 100644
      const val FXACCOUNT_SUMO_URL = "https://support.mozilla.org/kb/access-mozilla-services-firefox-account"
  
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
+diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
+index dad9a16c7a..386de41582 100644
+--- a/mobile/android/moz.configure
++++ b/mobile/android/moz.configure
+@@ -82,7 +82,7 @@ imply_option("MOZ_SERVICES_HEALTHREPORT", True)
+ imply_option("MOZ_GECKOVIEW_HISTORY", True)
+ 
+ imply_option("MOZ_APP_UA_NAME", "Firefox")
+-imply_option("MOZ_APP_VENDOR", "Mozilla")
++imply_option("MOZ_APP_VENDOR", "IronFox OSS")
+ imply_option("MOZ_APP_ID", "{aa3c5121-dab2-40e2-81ca-7ea25febc110}")
+ imply_option("BROWSER_CHROME_URL", "chrome://geckoview/content/geckoview.xhtml")
+ 
+
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index e5e517635d..d5398ccbf1 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -90,7 +90,7 @@ set_config("MOZ_INCLUDE_SOURCE_INFO", True, when="MOZ_INCLUDE_SOURCE_INFO")
+ option(
+     "--with-distribution-id",
+     nargs=1,
+-    default="org.mozilla",
++    default="org.ironfoxoss",
+     help="Set distribution-specific id",
+ )
+ set_config("MOZ_DISTRIBUTION_ID", depends("--with-distribution-id")(lambda v: v[0]))
+@@ -3262,7 +3262,7 @@ def android_package_name(value, moz_app_name):
+         return value[0]
+     if moz_app_name == "fennec":
+         return "org.mozilla.fennec_aurora"
+-    return "org.mozilla.%s" % moz_app_name
++    return "org.ironfoxoss.%s" % moz_app_name
+ 
+ 
+ set_config("ANDROID_PACKAGE_NAME", android_package_name)

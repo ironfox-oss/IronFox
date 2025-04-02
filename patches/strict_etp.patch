@@ -1,7 +1,8 @@
-diff -r 5cafe8ddd023 -r a29897d2381c mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Oct 28 08:38:19 2024 -0400
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Oct 28 08:39:05 2024 -0400
-@@ -740,12 +740,12 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..c3222dcee1 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -784,12 +784,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val useStandardTrackingProtection by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),

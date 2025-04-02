@@ -1,13 +1,18 @@
-diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index e70a2a9..e627d4d 100644
---- a/mobile/android/fenix/app/nimbus.fml.yaml
-+++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -483,7 +483,7 @@ features:
-         description: >
-           Suggest domains from the shipped domain list.
-         type: Boolean
--        default: true
-+        default: false
-     defaults:
-       - channel: nightly
-         value:
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 3ab8ea1acd..992865d78f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -497,12 +497,7 @@ class Core(
+     val bookmarksStorage: PlacesBookmarksStorage get() = lazyBookmarksStorage.value
+     val passwordsStorage: SyncableLoginsStorage get() = lazyPasswordsStorage.value
+     val autofillStorage: AutofillCreditCardsAddressesStorage get() = lazyAutofillStorage.value
+-    val domainsAutocompleteProvider: BaseDomainAutocompleteProvider? get() =
+-        if (FxNimbus.features.suggestShippedDomains.value().enabled) {
+-            lazyDomainsAutocompleteProvider.value
+-        } else {
+-            null
+-        }
++    val domainsAutocompleteProvider: BaseDomainAutocompleteProvider? get() = null
+     val sessionAutocompleteProvider: SessionAutocompleteProvider get() = lazySessionAutocompleteProvider.value
+ 
+     val tabCollectionStorage by lazyMonitored {
