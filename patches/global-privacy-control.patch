@@ -1,8 +1,7 @@
 diff --git a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
-index cdc1f9b2df..f7958c77db 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
-@@ -106,7 +106,8 @@
+@@ -93,7 +93,8 @@
      <androidx.preference.SwitchPreference
          android:defaultValue="false"
          android:key="@string/pref_key_privacy_enable_global_privacy_control"

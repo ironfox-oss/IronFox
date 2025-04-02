@@ -1,0 +1,240 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -149,7 +149,7 @@
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_doh_settings_enabled).apply {
+-            isVisible = Config.channel.isDebug
++            isVisible = true
+             isChecked = context.settings().showDohEntryPoint
+             onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
+@@ -31,21 +31,76 @@
+     }
+ 
+     // Bug 1946867 - Load DoH Provider List from Gecko instead of hardcoding
+-    private val dohDefaultProviderUrl = engine.settings.dohDefaultProviderUrl
++    private val dohDefaultProviderUrl = quad9Uri
+ 
+-    private val cloudflare = Provider.BuiltIn(
+-        url = cloudflareUri,
+-        name = "Cloudflare",
+-        default = dohDefaultProviderUrl.isNullOrBlank() || dohDefaultProviderUrl == cloudflareUri,
++    private val quad9 = Provider.BuiltIn(
++        url = quad9Uri,
++        name = "Quad9",
++        default = dohDefaultProviderUrl.isNullOrBlank() || dohDefaultProviderUrl == quad9Uri,
++    )
++    private val dns0Zero = Provider.BuiltIn(
++        url = dns0ZeroUri,
++        name = "DNS0 (ZERO)",
++        default = dohDefaultProviderUrl == dns0ZeroUri,
++    )
++    private val dns0Standard = Provider.BuiltIn(
++        url = dns0StandardUri,
++        name = "DNS0",
++        default = dohDefaultProviderUrl == dns0StandardUri,
++    )
++    private val mullvadBase = Provider.BuiltIn(
++        url = mullvadBaseUri,
++        name = "Mullvad - Base",
++        default = dohDefaultProviderUrl == mullvadBaseUri,
++    )
++    private val adGuardStandard = Provider.BuiltIn(
++        url = adGuardStandardUri,
++        name = "AdGuard - Standard",
++        default = dohDefaultProviderUrl == adGuardStandardUri,
++    )
++    private val mullvadUnfiltered = Provider.BuiltIn(
++        url = mullvadUnfilteredUri,
++        name = "Mullvad - Unfiltered",
++        default = dohDefaultProviderUrl == mullvadUnfilteredUri,
+     )
+-    private val nextDns = Provider.BuiltIn(
+-        url = nextDnsUri,
+-        name = "NextDNS",
+-        default = dohDefaultProviderUrl == nextDnsUri,
++    private val wikimedia = Provider.BuiltIn(
++        url = wikimediaUri,
++        name = "Wikimedia",
++        default = dohDefaultProviderUrl == wikimediaUri,
++    )
++    private val adGuardUnfiltered = Provider.BuiltIn(
++        url = adGuardUnfilteredUri,
++        name = "AdGuard - Unfiltered",
++        default = dohDefaultProviderUrl == adGuardUnfilteredUri,
++    )
++    private val dns0Kids = Provider.BuiltIn(
++        url = dns0KidsUri,
++        name = "DNS0 - Kids",
++        default = dohDefaultProviderUrl == dns0KidsUri,
++    )
++    private val mullvadFamily = Provider.BuiltIn(
++        url = mullvadFamilyUri,
++        name = "Mullvad - Family",
++        default = dohDefaultProviderUrl == mullvadFamilyUri,
++    )
++    private val adGuardFamily = Provider.BuiltIn(
++        url = adGuardFamilyUri,
++        name = "AdGuard - Family",
++        default = dohDefaultProviderUrl == adGuardFamilyUri,
++    )
++    private val mullvadExtended = Provider.BuiltIn(
++        url = mullvadExtendedUri,
++        name = "Mullvad - Extended",
++        default = dohDefaultProviderUrl == mullvadExtendedUri,
++    )
++    private val mullvadAll = Provider.BuiltIn(
++        url = mullvadAllUri,
++        name = "Mullvad - All",
++        default = dohDefaultProviderUrl == mullvadAllUri,
+     )
+     private val providerUrl = engine.settings.dohProviderUrl
+     private val custom = Provider.Custom(
+-        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri) {
++        url = if (providerUrl != quad9Uri && providerUrl != dns0ZeroUri && providerUrl != dns0StandardUri && providerUrl != mullvadBaseUri && providerUrl != adGuardStandardUri && providerUrl != mullvadUnfilteredUri && providerUrl != wikimediaUri && providerUrl != adGuardUnfilteredUri && providerUrl != dns0KidsUri && providerUrl != mullvadFamilyUri && providerUrl != adGuardFamilyUri && providerUrl != mullvadExtendedUri && providerUrl != mullvadAllUri) {
+             providerUrl
+         } else {
+             ""
+@@ -53,8 +108,19 @@
+     )
+ 
+     override fun getDefaultProviders(): List<Provider> = listOf(
+-        cloudflare,
+-        nextDns,
++        quad9,
++        dns0Zero,
++        dns0Standard,
++        mullvadBase,
++        adGuardStandard,
++        mullvadUnfiltered,
++        wikimedia,
++        adGuardUnfiltered,
++        dns0Kids,
++        mullvadFamily,
++        adGuardFamily,
++        mullvadExtended,
++        mullvadAll,
+         custom,
+     )
+ 
+@@ -75,8 +141,19 @@
+ 
+             else -> {
+                 when (engine.settings.dohProviderUrl) {
+-                    cloudflareUri -> cloudflare
+-                    nextDnsUri -> nextDns
++                    quad9Uri -> quad9
++                    dns0ZeroUri -> dns0Zero
++                    dns0StandardUri -> dns0Standard
++                    mullvadBaseUri -> mullvadBase
++                    adGuardStandardUri -> adGuardStandard
++                    mullvadUnfilteredUri -> mullvadUnfiltered
++                    wikimediaUri -> wikimedia
++                    adGuardUnfilteredUri -> adGuardUnfiltered
++                    dns0KidsUri -> dns0Kids
++                    mullvadFamilyUri -> mullvadFamily
++                    adGuardFamilyUri -> adGuardFamily
++                    mullvadExtendedUri -> mullvadExtended
++                    mullvadAllUri -> mullvadAll
+                     "" -> getDefaultProviders().first()
+                     else -> custom
+                 }
+@@ -117,9 +194,42 @@
+ 
+     companion object {
+         @VisibleForTesting
+-        val cloudflareUri = "mozilla.cloudflare-dns.com"
++        val quad9Uri = "https://dns.quad9.net/dns-query"
++
++        @VisibleForTesting
++        val dns0ZeroUri = "https://zero.dns0.eu"
++
++        @VisibleForTesting
++        val dns0StandardUri = "https://dns0.eu"
++
++        @VisibleForTesting
++        val mullvadBaseUri = "https://base.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val adGuardStandardUri = "https://dns.adguard-dns.com/dns-query"
++
++        @VisibleForTesting
++        val mullvadUnfilteredUri = "https://dns.mullvad.net/dns-query"
+ 
+         @VisibleForTesting
+-        val nextDnsUri = "firefox.dns.nextdns.io"
++        val wikimediaUri = "https://wikimedia-dns.org/dns-query"
++
++        @VisibleForTesting
++        val adGuardUnfilteredUri = "https://unfiltered.adguard-dns.com/dns-query"
++
++        @VisibleForTesting
++        val dns0KidsUri = "https://kids.dns0.eu"
++
++        @VisibleForTesting
++        val mullvadFamilyUri = "https://family.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val adGuardFamilyUri = "https://family.adguard-dns.com/dns-query"
++
++        @VisibleForTesting
++        val mullvadExtendedUri = "https://extended.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val mullvadAllUri = "https://all.dns.mullvad.net/dns-query"
+     }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsState.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsState.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsState.kt
+@@ -20,7 +20,7 @@
+  */
+ internal data class DohSettingsState(
+     val allProtectionLevels: List<ProtectionLevel> = emptyList(),
+-    val selectedProtectionLevel: ProtectionLevel = ProtectionLevel.Default,
++    val selectedProtectionLevel: ProtectionLevel = ProtectionLevel.Max,
+     val providers: List<Provider> = emptyList(),
+     val selectedProvider: Provider? = null,
+     val exceptionsList: List<String> = emptyList(),
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2306,6 +2306,6 @@
+      */
+     val showDohEntryPoint by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_enabled),
+-        default = false,
++        default = true,
+     )
+ }
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -112,7 +112,7 @@
+         <androidx.preference.Preference
+             android:key="@string/pref_key_doh_settings"
+             app:iconSpaceReserved="false"
+-            app:isPreferenceVisible="false"
++            app:isPreferenceVisible="true"
+             android:title="@string/preference_doh_title" />
+ 
+         <org.mozilla.fenix.settings.cookiebannerhandling.CustomCBHSwitchPreference
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+@@ -653,8 +653,8 @@
+       new Pref<Boolean>("dom.security.https_only_mode", false);
+   /* package */ final Pref<Boolean> mHttpsOnlyPrivateMode =
+       new Pref<Boolean>("dom.security.https_only_mode_pbm", false);
+-  /* package */ final PrefWithoutDefault<Integer> mTrustedRecursiveResolverMode =
+-      new PrefWithoutDefault<>("network.trr.mode");
++  /* package */ final Pref<Integer> mTrustedRecursiveResolverMode =
++      new Pref<>("network.trr.mode", 3);
+   /* package */ final PrefWithoutDefault<String> mTrustedRecursiveResolverUri =
+       new PrefWithoutDefault<>("network.trr.uri");
+   /* package */ final PrefWithoutDefault<String> mDefaultRecursiveResolverUri =

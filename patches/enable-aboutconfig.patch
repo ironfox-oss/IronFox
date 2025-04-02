@@ -1,43 +1,21 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 16888323d7..a020f155e3 100644
+index e95ff966b3..d8b92dc9e1 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -99,7 +99,7 @@ static const RedirEntry kRedirMap[] = {
- #ifndef MOZ_WIDGET_ANDROID
-     {"config", "chrome://global/content/aboutconfig/aboutconfig.html",
+@@ -101,8 +101,7 @@ static const RedirEntry kRedirMap[] = {
       nsIAboutModule::IS_SECURE_CHROME_UI},
--#elif defined(NIGHTLY_BUILD) || !defined(MOZILLA_OFFICIAL)
-+#else
+ #else
      {"config", "chrome://geckoview/content/config.xhtml",
-      nsIAboutModule::IS_SECURE_CHROME_UI},
+-     nsIAboutModule::IS_SECURE_CHROME_UI |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++     nsIAboutModule::IS_SECURE_CHROME_UI},
  #endif
-diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index cf209ba3e1..cf72802ddf 100644
---- a/docshell/build/components.conf
-+++ b/docshell/build/components.conf
-@@ -9,6 +9,7 @@ about_pages = [
-     'buildconfig',
-     'certificate',
-     'checkerboard',
-+    'config',
-     'crashcontent',
-     'crashparent',
-     'crashgpu',
-@@ -36,8 +37,6 @@ about_pages = [
- 
- if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
-     about_pages.append('addons')
--if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android' or defined('NIGHTLY_BUILD') or not defined('MOZILLA_OFFICIAL'):
--    about_pages.append('config')
- if defined('MOZ_CRASHREPORTER'):
-     about_pages.append('crashes')
- if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
-
+ #ifdef MOZ_CRASHREPORTER
+     {"crashes", "chrome://global/content/crashes.html",
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-index 0c1920116b..0d9cc118a7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-@@ -134,7 +134,7 @@ object GeckoProvider {
+@@ -134,7 +134,7 @@
              )
              .consoleOutput(context.components.settings.enableGeckoLogs)
              .debugLogging(Config.channel.isDebug || context.components.settings.enableGeckoLogs)

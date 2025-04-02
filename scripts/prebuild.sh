@@ -334,7 +334,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e "/android-components = /s/133\.0/${FIREFOX_TAG}/" gradle/libs.versions.toml
+sed -i -e "/android-components = /s/135\.0\.1/${FIREFOX_TAG}/" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -400,41 +400,41 @@ remove_glean_telemetry "${mozilla_release}/netwerk"
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
 sed -i \
-    -e 's/^$browser.safebrowsing.malware.enabled$/z99.ignore.\1/' \
-    -e 's/^$browser.safebrowsing.phishing.enabled$/z99.ignore.\1/' \
-    -e 's/^$cookiebanners.service.enableGlobalRules$/z99.ignore.\1/' \
-    -e 's/^$cookiebanners.service.enableGlobalRules.subFrames$/z99.ignore.\1/' \
-    -e 's/^$cookiebanners.service.mode$/z99.ignore.\1/' \
-    -e 's/^$privacy.query_stripping.allow_list$/z99.ignore.\1/' \
-    -e 's/^$privacy.query_stripping.enabled$/z99.ignore.\1/' \
-    -e 's/^$privacy.query_stripping.enabled.pbmode$/z99.ignore.\1/' \
-    -e 's/^$privacy.query_stripping.strip_list$/z99.ignore.\1/' \
-    -e 's/^$security.pki.certificate_transparency.mode$/z99.ignore.\1/' \
-    -e 's/^$toolkit.telemetry.user_characteristics_ping.current_version$/z99.ignore.\1/' \
+    -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
+    -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
+    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.cookiebanners.service.enableGlobalRules"|' \
+    -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
+    -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
+    -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.privacy.query_stripping.allow_list"|' \
+    -e 's|"privacy.query_stripping.enabled"|"z99.ignore.privacy.query_stripping.enabled"|' \
+    -e 's|"privacy.query_stripping.enabled.pbmode"|"z99.ignore.privacy.query_stripping.enabled.pbmode"|' \
+    -e 's|"privacy.query_stripping.strip_list"|"z99.ignore.privacy.query_stripping.strip_list"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
 sed -i \
-    -e 's/^$dom.manifest.enabled$/z99.ignore.\1/' \
-    -e 's/^$extensions.webapi.enabled$/z99.ignore.\1/' \
-    -e 's/^$fission.autostart$/z99.ignore.\1/' \
-    -e 's/^$fission.disableSessionHistoryInParent$/z99.ignore.\1/' \
-    -e 's/^$fission.webContentIsolationStrategy$/z99.ignore.\1/' \
-    -e 's/^$general.aboutConfig.enable$/z99.ignore.\1/' \
-    -e 's/^$javascript.enabled$/z99.ignore.\1/' \
-    -e 's/^$javascript.options.mem.gc_parallel_marking$/z99.ignore.\1/' \
-    -e 's/^$javascript.options.use_fdlibm_for_sin_cos_tan$/z99.ignore.\1/' \
-    -e 's/^$network.cookie.cookieBehavior.optInPartitioning$/z99.ignore.\1/' \
-    -e 's/^$network.cookie.cookieBehavior.optInPartitioning.pbmode$/z99.ignore.\1/' \
-    -e 's/^$network.fetchpriority.enabled$/z99.ignore.\1/' \
-    -e 's/^$network.http.largeKeepaliveFactor$/z99.ignore.\1/' \
-    -e 's/^$privacy.fingerprintingProtection$/z99.ignore.\1/' \
-    -e 's/^$privacy.fingerprintingProtection.overrides$/z99.ignore.\1/' \
-    -e 's/^$privacy.fingerprintingProtection.pbmode$/z99.ignore.\1/' \
-    -e 's/^$privacy.globalprivacycontrol.enabled$/z99.ignore.\1/' \
-    -e 's/^$privacy.globalprivacycontrol.functionality.enabled$/z99.ignore.\1/' \
-    -e 's/^$privacy.globalprivacycontrol.pbmode.enabled$/z99.ignore.\1/' \
-    -e 's/^$security.pki.certificate_transparency.mode$/z99.ignore.\1/' \
-    -e 's/^$toolkit.telemetry.user_characteristics_ping.current_version$/z99.ignore.\1/' \
+    -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
+    -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
+    -e 's|"fission.autostart"|"z99.ignore.fission.autostart"|' \
+    -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
+    -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
+    -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
+    -e 's|"javascript.enabled"|"z99.ignore.javascript.enabled"|' \
+    -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
+    -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
+    -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
+    -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning.pbmode"|' \
+    -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
+    -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
+    -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
+    -e 's|"privacy.fingerprintingProtection"|"z99.ignore.privacy.fingerprintingProtection"|' \
+    -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.privacy.fingerprintingProtection.overrides"|' \
+    -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.privacy.fingerprintingProtection.pbmode"|' \
+    -e 's|"privacy.globalprivacycontrol.enabled"|"z99.ignore.privacy.globalprivacycontrol.enabled"|' \
+    -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.privacy.globalprivacycontrol.functionality.enabled"|' \
+    -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.privacy.globalprivacycontrol.pbmode.enabled"|' \
+    -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.security.pki.certificate_transparency.mode"|' \
+    -e 's|"security.tls.enable_kyber"|"z99.ignore.security.tls.enable_kyber"|' \
+    -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.toolkit.telemetry.user_characteristics_ping.current_version"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
 # shellcheck disable=SC2154
@@ -518,6 +518,11 @@ sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.co
     cat "$patches/preferences/phoenix-android.js"
     cat "$patches/preferences/phoenix-extended-android.js"
     cat "$patches/preferences/ironfox.js"
+
+    if [[ -n ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
+        # Set uBlock Origin to use our custom/enhanced config by default
+        echo "pref(\"browser.ironfox.uBO.assetsBootstrapLocation\", \"${IRONFOX_UBO_ASSETS_URL}\");"
+    fi
 } >>mobile/android/app/geckoview-prefs.js
 
 popd
