@@ -18,9 +18,8 @@
 
 001: WEBRTC
 002: ATTACK SURFACE REDUCTION
-003: MISC. PRIVACY + SECURITY
-004: MISC. PRIVACY
-005: MISC.
+003: MISC. PRIVACY
+004: MISC.
 
 */
 
@@ -42,39 +41,21 @@ pref("browser.phoenix.status.extended", "001");
 
 /*** 002 ATTACK SURFACE REDUCTION ***/
 
-/// Disable WebAssembly
+/// Disable WebAssembly (WASM)
 // https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly
 pref("javascript.options.wasm", false);
 
 pref("browser.phoenix.status.extended", "002");
 
-/*** 003 MISC. PRIVACY + SECURITY ***/
-
-/// Disable WebGL
-// PRIVACY: Fingerprinting concerns
-// SECURITY: Attack Surface Reduction
-// https://blog.browserscan.net/docs/webgl-fingerprinting
-// https://security.stackexchange.com/questions/13799/is-webgl-a-security-concern
-pref("webgl.disabled", true);
-
-pref("browser.phoenix.status.extended", "003");
-
-/*** 004 MISC. PRIVACY ***/
-
-/// Disable TCP/dFPI storage access heuristics
-// https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
-pref("privacy.restrict3rdpartystorage.heuristic.opened_window_after_interaction", false);
-pref("privacy.restrict3rdpartystorage.heuristic.recently_visited", false);
-pref("privacy.restrict3rdpartystorage.heuristic.redirect", false); // [DEFAULT - Android]
-pref("privacy.restrict3rdpartystorage.heuristic.window_open", false); // [DEFAULT - Android]
+/*** 003 MISC. PRIVACY ***/
 
 /// Only send cross-origin referers if hosts match
 // https://wiki.mozilla.org/Security/Referrer
 pref("network.http.referer.XOriginPolicy", 2);
 
-pref("browser.phoenix.status.extended", "004");
+pref("browser.phoenix.status.extended", "003");
 
-/*** 005 MISC. ***/
+/*** 004 MISC. ***/
 
 /// Prevent sites from automatically refreshing
 pref("accessibility.blockautorefresh", true);
@@ -84,7 +65,7 @@ pref("browser.meta_refresh_when_inactive.disabled", true); // [DEFAULT - Android
 // Default = 0
 pref("media.autoplay.blocking_policy", 2);
 
-pref("browser.phoenix.status.extended", "005");
+pref("browser.phoenix.status.extended", "004");
 
 pref("browser.phoenix.status.extended", "successfully applied :D", locked);
 
@@ -115,7 +96,21 @@ pref("browser.phoenix.status.extended", "successfully applied :D", locked);
 /// Further harden FPP...
 // As explained here: https://codeberg.org/celenity/Phoenix/wiki/Extended#fingerprinting
 // Compared to standard, this just removes '-JSDateTimeUTC' - meaning timezone is spoofed to UTC-0
-pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasImageExtractionPrompt,-CanvasExtractionBeforeUserInputIsBlocked,-CSSPrefersColorScheme,-FrameRate");
+pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasImageExtractionPrompt,-CanvasExtractionBeforeUserInputIsBlocked,-CSSPrefersColorScheme,-FrameRate,-JSLocale");
+
+pref("browser.phoenix.status.extended.android", "001");
+
+/*** 002 MISC. PRIVACY + SECURITY ***/
+
+/// Disable WebGL
+// PRIVACY: Fingerprinting concerns
+// SECURITY: Attack Surface Reduction
+// https://blog.browserscan.net/docs/webgl-fingerprinting
+// https://security.stackexchange.com/questions/13799/is-webgl-a-security-concern
+// On desktop we're no longer setting/recommending this in favor of the built-in `Block WebGL` filterlist in uBlock Origin (and I'm sure we'll also override this on IronFox once we get our custom config working...), but on Android we can't control uBlock Origin/set policies, so let's make sure this is disabled.
+pref("webgl.disabled", true);
+
+pref("browser.phoenix.status.extended.android", "002");
 
 pref("browser.phoenix.status.extended.android", "successfully applied :D", locked);
 
