@@ -11,24 +11,26 @@
         "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/secure_files/$KEYSTORE_SECFILEID/download" \
         --output "$KEYSTORE"
 
+.build_cache: &build_cache
+  - key: cache-cargo-$CI_COMMIT_REF_SLUG
+    policy: pull-push
+    paths:
+      # Cargo cache
+      # See: https://doc.rust-lang.org/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
+      - .cache/cargo/.crates.toml
+      - .cache/cargo/.crates2.json
+      - .cache/cargo/bin/
+      - .cache/cargo/registry/index/
+      - .cache/cargo/registry/cache/
+      - .cache/cargo/git/db/
+  - key: cache-gradle-$CI_COMMIT_REF_SLUG
+    policy: pull-push
+    paths:
+      - .cache/gradle/caches
+      - .cache/gradle/wrapper
+
 default:
-  cache: &build_cache
-    - key: cache-cargo-$CI_COMMIT_REF_SLUG
-      policy: pull-push
-      paths:
-        # Cargo cache
-        # See: https://doc.rust-lang.org/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
-        - .cache/cargo/.crates.toml
-        - .cache/cargo/.crates2.json
-        - .cache/cargo/bin/
-        - .cache/cargo/registry/index/
-        - .cache/cargo/registry/cache/
-        - .cache/cargo/git/db/
-    - key: cache-gradle-$CI_COMMIT_REF_SLUG
-      policy: pull-push
-      paths:
-        - .cache/gradle/caches
-        - .cache/gradle/wrapper
+  cache: []
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
@@ -50,7 +52,6 @@ update-fdroid-repo:
   stage: build_fdroid
   rules:
     - if: $CI_COMMIT_TAG
-  cache: []
   variables:
     TARGET_REPO_PATH: ironfox-oss/fdroid
     TARGET_REPO_BRANCH: dev
