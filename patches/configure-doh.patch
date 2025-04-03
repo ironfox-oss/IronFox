@@ -113,7 +113,7 @@ index d7aa305e66..1355fbde13 100644
  internal class DohSettingsMiddleware(
      private val getNavController: () -> NavController,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-index cd46b47680..d172493fd5 100644
+index cd46b47680..b48ef700cc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 @@ -6,6 +6,7 @@ package org.mozilla.fenix.settings.doh
@@ -132,7 +132,7 @@ index cd46b47680..d172493fd5 100644
  ) : DohSettingsProvider {
      override fun getProtectionLevels(): List<ProtectionLevel> {
          return listOf(
-@@ -31,21 +33,76 @@ internal class DefaultDohSettingsProvider(
+@@ -31,21 +33,91 @@ internal class DefaultDohSettingsProvider(
      }
  
      // Bug 1946867 - Load DoH Provider List from Gecko instead of hardcoding
@@ -180,7 +180,7 @@ index cd46b47680..d172493fd5 100644
 +    )
 +    private val wikimedia = Provider.BuiltIn(
 +        url = wikimediaUri,
-+        name = "Wikimedia",
++        name = "Wikimedia - Unfiltered",
 +        default = dohDefaultProviderUrl == wikimediaUri,
 +    )
 +    private val adGuardUnfiltered = Provider.BuiltIn(
@@ -213,14 +213,29 @@ index cd46b47680..d172493fd5 100644
 +        name = "Mullvad - All",
 +        default = dohDefaultProviderUrl == mullvadAllUri,
 +    )
++    private val cloudflareMalware = Provider.BuiltIn(
++        url = cloudflareMalwareUri,
++        name = "Cloudflare - Malware Protection",
++        default = dohDefaultProviderUrl == cloudflareMalwareUri,
++    )
++    private val cloudflareMozilla = Provider.BuiltIn(
++        url = cloudflareMozillaUri,
++        name = "Cloudflare - Unfiltered",
++        default = dohDefaultProviderUrl == cloudflareMozillaUri,
++    )
++    private val cloudflareFamily = Provider.BuiltIn(
++        url = cloudflareFamilyUri,
++        name = "Cloudflare - Family",
++        default = dohDefaultProviderUrl == cloudflareFamilyUri,
++    )
 +    private val providerUrl = settings.dohProviderUrl
      private val custom = Provider.Custom(
 -        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri) {
-+        url = if (providerUrl != quad9Uri && providerUrl != dns0ZeroUri && providerUrl != dns0StandardUri && providerUrl != mullvadBaseUri && providerUrl != adGuardStandardUri && providerUrl != mullvadUnfilteredUri && providerUrl != wikimediaUri && providerUrl != adGuardUnfilteredUri && providerUrl != dns0KidsUri && providerUrl != mullvadFamilyUri && providerUrl != adGuardFamilyUri && providerUrl != mullvadExtendedUri && providerUrl != mullvadAllUri) {
++        url = if (providerUrl != quad9Uri && providerUrl != dns0ZeroUri && providerUrl != dns0StandardUri && providerUrl != mullvadBaseUri && providerUrl != adGuardStandardUri && providerUrl != mullvadUnfilteredUri && providerUrl != wikimediaUri && providerUrl != adGuardUnfilteredUri && providerUrl != dns0KidsUri && providerUrl != mullvadFamilyUri && providerUrl != adGuardFamilyUri && providerUrl != mullvadExtendedUri && providerUrl != mullvadAllUri && providerUrl != cloudflareMalwareUri && providerUrl != cloudflareMozillaUri && providerUrl != cloudflareFamilyUri) {
              providerUrl
          } else {
              ""
-@@ -53,13 +110,24 @@ internal class DefaultDohSettingsProvider(
+@@ -53,13 +125,27 @@ internal class DefaultDohSettingsProvider(
      )
  
      override fun getDefaultProviders(): List<Provider> = listOf(
@@ -239,6 +254,9 @@ index cd46b47680..d172493fd5 100644
 +        adGuardFamily,
 +        mullvadExtended,
 +        mullvadAll,
++        cloudflareMalware,
++        cloudflareMozilla,
++        cloudflareFamily,
          custom,
      )
  
@@ -248,7 +266,7 @@ index cd46b47680..d172493fd5 100644
              Engine.DohSettingsMode.DEFAULT -> ProtectionLevel.Default
              Engine.DohSettingsMode.INCREASED -> ProtectionLevel.Increased
              Engine.DohSettingsMode.MAX -> ProtectionLevel.Max
-@@ -68,15 +136,26 @@ internal class DefaultDohSettingsProvider(
+@@ -68,15 +154,29 @@ internal class DefaultDohSettingsProvider(
      }
  
      override fun getSelectedProvider(): Provider? {
@@ -276,10 +294,13 @@ index cd46b47680..d172493fd5 100644
 +                    adGuardFamilyUri -> adGuardFamily
 +                    mullvadExtendedUri -> mullvadExtended
 +                    mullvadAllUri -> mullvadAll
++                    cloudflareMalwareUri -> cloudflareMalware
++                    cloudflareMozillaUri -> cloudflareMozilla
++                    cloudflareFamilyUri -> cloudflareFamily
                      "" -> getDefaultProviders().first()
                      else -> custom
                  }
-@@ -84,42 +163,75 @@ internal class DefaultDohSettingsProvider(
+@@ -84,42 +184,84 @@ internal class DefaultDohSettingsProvider(
          }
      }
  
@@ -366,10 +387,19 @@ index cd46b47680..d172493fd5 100644
 +
 +        @VisibleForTesting
 +        val mullvadExtendedUri = "https://extended.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val mullvadAllUri = "https://all.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val cloudflareMalwareUri = "https://security.cloudflare-dns.com/dns-query"
++
++        @VisibleForTesting
++        val cloudflareMozillaUri = "https://mozilla.cloudflare-dns.com/dns-query"
  
          @VisibleForTesting
 -        val nextDnsUri = "firefox.dns.nextdns.io"
-+        val mullvadAllUri = "https://all.dns.mullvad.net/dns-query"
++        val cloudflareFamilyUri = "https://family.cloudflare-dns.com/dns-query"
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsReducer.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsReducer.kt
