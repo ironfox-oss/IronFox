@@ -932,7 +932,6 @@
     "beacon": {
         "content": "filters",
         "group": "default",
-        "parent": "Phoenix",
         "title": "Beacon API Stub",
         "contentURL": "https://gitlab.com/celenityy/Phoenix/-/raw/dev/uBlock/beacon.txt",
         "supportURL": "https://phoenix.celenity.dev"
