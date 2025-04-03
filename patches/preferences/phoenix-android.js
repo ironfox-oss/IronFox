@@ -16,7 +16,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.03.25.1", locked);
+pref("browser.phoenix.version", "2025.04.02.1", locked);
 
 /* INDEX 
 
@@ -197,6 +197,14 @@ pref("toolkit.shopping.ohttpRelayURL", "");
 /// Disable Firefox Relay
 pref("signon.firefoxRelay.feature", "disabled"); // [HIDDEN - Thunderbird]
 
+/// Disable mozAddonManager
+// mozAddonManager prevents extensions from working on `addons.mozilla.org`/the specified domains
+// This API also exposes a list of the user's installed add-ons to `addons.mozilla.org`/the specified domains...
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1952390#c4
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1384330
+pref("extensions.webapi.testing", false); // [DEFAULT] Disables mozAddonManager on Mozilla testing domains
+pref("extensions.webapi.testing.http", false); // [DEFAULT] Disables mozAddonManager on Mozilla testing domains using insecure protocols
+
 /// Disable "Privacy-Preserving Attribution"
 // https://support.mozilla.org/kb/privacy-preserving-attribution
 pref("dom.origin-trials.private-attribution.state", 2, locked); // [DEFAULT]
@@ -224,7 +232,6 @@ pref("extensions.webcompat-reporter.newIssueEndpoint", "");
 pref("browser.tabs.remote.separatePrivilegedMozillaWebContentProcess", false, locked); // [DEFAULT on Firefox Desktop]
 pref("browser.tabs.remote.separatedMozillaDomains", "", locked);
 pref("dom.ipc.processCount.privilegedmozilla", 0, locked);
-pref("extensions.webapi.testing", false, locked); // [DEFAULT] https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#5445
 pref("extensions.webextensions.restrictedDomains", "");
 pref("svg.context-properties.content.allowed-domains", "", locked); // [DEFAULT - Android/Thunderbird]
 
@@ -251,14 +258,14 @@ pref("browser.contentblocking.category", "strict", locked); // [HIDDEN]
 // We're also configuring the 'CookieBehavior' & 'EnableTrackingProtection' policies on desktop.
 
 //// Block known cryptominers
-pref("privacy.trackingprotection.cryptomining.enabled", true);
+pref("privacy.trackingprotection.cryptomining.enabled", true); // [DEFAULT - non-Thunderbird]
 
 //// Block known email trackers
 pref("privacy.trackingprotection.emailtracking.enabled", true);
-pref("privacy.trackingprotection.emailtracking.pbmode.enabled", true);
+pref("privacy.trackingprotection.emailtracking.pbmode.enabled", true); // [DEFAULT]
 
 //// Block known fingerprinters
-pref("privacy.trackingprotection.fingerprinting.enabled", true);
+pref("privacy.trackingprotection.fingerprinting.enabled", true); // [DEFAULT - non-Thunderbird]
 
 //// Block known social trackers
 pref("privacy.trackingprotection.socialtracking.enabled", true);
@@ -274,59 +281,61 @@ pref("browser.safebrowsing.features.socialtracking.update", true); // [DEFAULT, 
 pref("browser.safebrowsing.features.trackingAnnotation.update", true); // [DEFAULT, HIDDEN - non-Android] https://searchfox.org/mozilla-central/source/toolkit/components/url-classifier/SafeBrowsing.sys.mjs
 pref("browser.safebrowsing.features.trackingProtection.update", true); // [DEFAULT, HIDDEN - non-Android] https://searchfox.org/mozilla-central/source/toolkit/components/url-classifier/SafeBrowsing.sys.mjs
 pref("browser.safebrowsing.provider.mozilla.updateURL", "moz-sbrs:://antitracking"); // [DEFAULT - non-Thunderbird]
-pref("privacy.trackingprotection.annotate_channels", true);
+pref("privacy.trackingprotection.annotate_channels", true); // [DEFAULT]
 pref("privacy.trackingprotection.enabled", true);
-pref("privacy.trackingprotection.pbmode.enabled", true);
+pref("privacy.trackingprotection.pbmode.enabled", true); // [DEFAULT - non-Android]
 
 //// Block known trackers using the `strict` (Level 2) list
 /// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#15192
 /// https://searchfox.org/mozilla-central/source/toolkit/components/nimbus/FeatureManifest.yaml#2804
-pref("privacy.annotate_channels.strict_list.enabled", true);
-pref("privacy.annotate_channels.strict_list.pbmode.enabled", true);
+pref("privacy.annotate_channels.strict_list.enabled", true); // [DEFAULT - Android]
+pref("privacy.annotate_channels.strict_list.pbmode.enabled", true); // [DEFAULT]
 
 //// Block known tracking cookies
-pref("network.cookie.cookieBehavior.trackerCookieBlocking", true);
-pref("privacy.socialtracking.block_cookies.enabled", true);
+pref("network.cookie.cookieBehavior.trackerCookieBlocking", true); // [DEFAULT - Desktop] [HIDDEN - Android/Thunderbird]
+pref("privacy.socialtracking.block_cookies.enabled", true); // [DEFAULT]
 
 //// Enable Bounce Tracking Protection
 /// https://support.mozilla.org/kb/enhanced-tracking-protection-firefox-desktop#w_bounce-tracking-protection
 /// https://searchfox.org/mozilla-central/source/toolkit/components/antitracking/bouncetrackingprotection/nsIBounceTrackingProtection.idl#11
-pref("privacy.bounceTrackingProtection.enabled", true); // [HIDDEN - non-Thunderbird]
-pref("privacy.bounceTrackingProtection.mode", 1); // [HIDDEN - Thunderbird]
+pref("privacy.bounceTrackingProtection.enabled", true); // [DEFAULT] [HIDDEN - Desktop]
+pref("privacy.bounceTrackingProtection.enableDryRunMode", false); // [HIDDEN - Desktop]
+pref("privacy.bounceTrackingProtection.mode", 1); // [HIDDEN - Android/Thunderbird]
 
 //// Enable Query Parameter Stripping
 /// https://firefox-source-docs.mozilla.org/toolkit/components/antitracking/anti-tracking/query-stripping/index.html
 pref("privacy.query_stripping.enabled", true);
 pref("privacy.query_stripping.enabled.pbmode", true);
-pref("privacy.query_stripping.redirect", true);
+pref("privacy.query_stripping.redirect", true); // [DEFAULT]
 
 //// Enable SmartBlock & UA overrides/injections
-pref("extensions.webcompat.enable_shims", true); // [HIDDEN]
-pref("extensions.webcompat.perform_injections", true); // [HIDDEN]
-pref("extensions.webcompat.perform_ua_overrides", true); // [HIDDEN]
+pref("extensions.webcompat.enable_shims", true); // [DEFAULT - non-Thunderbird] [HIDDEN]
+pref("extensions.webcompat.perform_injections", true); // [DEFAULT - non-Thunderbird] [HIDDEN]
+pref("extensions.webcompat.perform_ua_overrides", true); // [DEFAULT - non-Thunderbird] [HIDDEN]
+pref("extensions.webcompat.smartblockEmbeds.enabled", true); // [DEFAULT - Desktop, HIDDEN - Android/Thunderbird] - Enables Embeds/Placeholders to make certain resources click to load
 
 //// Enable State Partitioning
-pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
-pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
-pref("privacy.partition.bloburl_per_partition_key", true);
-pref("privacy.partition.network_state", true);
-pref("privacy.partition.network_state.ocsp_cache", true);
-pref("privacy.partition.network_state.ocsp_cache.pbmode", true);
-pref("privacy.partition.serviceWorkers", true);
+pref("privacy.partition.always_partition_third_party_non_cookie_storage", true); // [DEFAULT]
+pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false); // [DEFAULT]
+pref("privacy.partition.bloburl_per_partition_key", true); // [DEFAULT]
+pref("privacy.partition.network_state", true); // [DEFAULT]
+pref("privacy.partition.network_state.ocsp_cache", true); // [DEFAULT]
+pref("privacy.partition.network_state.ocsp_cache.pbmode", true); // [DEFAULT]
+pref("privacy.partition.serviceWorkers", true); // [DEFAULT]
 
 //// Enable Suspected Fingerprinters Protection (FPP)
 /// https://support.mozilla.org/kb/firefox-protection-against-fingerprinting#w_suspected-fingerprinters
 pref("privacy.fingerprintingProtection", true);
-pref("privacy.fingerprintingProtection.pbmode", true);
+pref("privacy.fingerprintingProtection.pbmode", true); // [DEFAULT - non-Thunderbird]
 pref("privacy.reduceTimerPrecision", true); // [DEFAULT]
 
 //// Enable TCP/dFPI
 /// https://support.mozilla.org/kb/introducing-total-cookie-protection-standard-mode
 /// https://searchfox.org/mozilla-central/source/toolkit/components/nimbus/FeatureManifest.yaml#2828
-pref("network.cookie.cookieBehavior", 5);
+pref("network.cookie.cookieBehavior", 5); // [DEFAULT - non-Thunderbird]
 pref("network.cookie.cookieBehavior.optInPartitioning", true);
 pref("network.cookie.cookieBehavior.optInPartitioning.pbmode", true);
-pref("network.cookie.cookieBehavior.pbmode", 5);
+pref("network.cookie.cookieBehavior.pbmode", 5); // [DEFAULT - non-Thunderbird]
 
 //// Ignore less restricted referer policies (than the default)
 /// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#12979
@@ -353,7 +362,7 @@ pref("javascript.options.use_fdlibm_for_sin_cos_tan", true); // [DEFAULT - non-A
 pref("layout.css.prefers-color-scheme.content-override", 1);
 
 /// Round window sizes
-pref("privacy.window.maxInnerHeight", 900); // [DEFAULT - non-Thunderbird]
+pref("privacy.window.maxInnerHeight", 900); // [DEFAULT - non-Android/Thunderbird]
 pref("privacy.window.maxInnerWidth", 1600);
 
 /// Prevent using system accent colors
@@ -458,10 +467,6 @@ pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
 /// Always warn when submitting a form from HTTP to HTTPS, even on local IP addresses
 pref("security.insecure_field_warning.ignore_local_ip_address", false);
 pref("security.warn_submit_secure_to_insecure", true); // [DEFAULT]
-
-/// Block access to AddonManager over insecure protocols
-// https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#5452
-pref("extensions.webapi.testing.http", false); // [DEFAULT]
 
 /// Disable downgrades to insecure TLS 1.0/1.1
 pref("security.tls.insecure_fallback_hosts", ""); // [DEFAULT]
@@ -1085,6 +1090,13 @@ pref("devtools.debugger.prompt-connection", true, locked); // [DEFAULT - non-Nig
 /// Enforce local debugging only
 pref("devtools.debugger.force-local", true, locked); // [DEFAULT]
 
+/// Prevent adding global `dump` function to log strings to `stdout`
+// https://searchfox.org/mozilla-central/source/devtools/docs/contributor/getting-started/development-profiles.md
+pref("browser.dom.window.dump.enabled", false); // [DEFAULT - non-Android, desktop `MOZILLA_OFFICIAL` builds]
+
+/// Prevent console API from writing to `stdout` when used by chrome content
+pref("devtools.console.stdout.chrome", false); // [DEFAULT - non-Android, `MOZILLA_OFFICIAL` builds]
+
 /// Prevent logging URLs in Reader errors
 pref("reader.errors.includeURLs", false); // [DEFAULT - Android/Thunderbird]
 
@@ -1188,6 +1200,14 @@ pref("browser.send_pings.require_same_host", true); // [DEFENSE IN DEPTH]
 // https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#12829
 pref("network.http.network_error_logging.enabled", false); // [DEFAULT, HIDDEN - Thunderbird]
 
+/// Disable storage access heuristics
+// https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
+pref("privacy.restrict3rdpartystorage.heuristic.navigation", false); // [DEFAULT - non-desktop Nightly] [HIDDEN - Android]
+pref("privacy.restrict3rdpartystorage.heuristic.opened_window_after_interaction", false);
+pref("privacy.restrict3rdpartystorage.heuristic.recently_visited", false);
+pref("privacy.restrict3rdpartystorage.heuristic.redirect", false); // [DEFAULT - Android]
+pref("privacy.restrict3rdpartystorage.heuristic.window_open", false); // [DEFAULT - Android]
+
 /// Enable Cookie Banner Reduction
 // https://support.mozilla.org/kb/cookie-banner-reduction
 pref("cookiebanners.bannerClicking.enabled", true); // [DEFAULT]
@@ -1213,11 +1233,7 @@ pref("privacy.globalprivacycontrol.enabled", true);
 pref("privacy.globalprivacycontrol.functionality.enabled", true); // [DEFAULT - non-Thunderbird]
 pref("privacy.globalprivacycontrol.pbmode.enabled", true); // [DEFAULT - non-Thunderbird]
 
-/// Enable Smartblock Embeds/Placeholders
-// Makes certain resources click to load
-pref("extensions.webcompat.smartblockEmbeds.enabled", true); // [DEFAULT - Nightly, HIDDEN - Android/Thunderbird]
-
-/// Exclude third party trackers from TCP/dFPI storage access heuristics
+/// Exclude third party trackers from storage access heuristics (if enabled)
 // https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
 pref("privacy.restrict3rdpartystorage.heuristic.exclude_third_party_trackers", true); // [DEFAULT - Nightly]
 
@@ -1268,9 +1284,15 @@ pref("security.browser_xhtml_csp.enabled", true); // [DEFAULT, HIDDEN - Thunderb
 pref("media.devices.insecure.enabled", false); // [DEFAULT]
 pref("media.getusermedia.insecure.enabled", false); // [DEFAULT]
 
-/// Enable the 'credentialless' COEP (Cross-Origin-Embedder-Policy) Header
-pref("browser.tabs.remote.coep.credentialless", true); // [DEFAULT - non-Android stable]
-pref("dom.origin-trials.coep-credentialless.state", 1);
+/// Enable the Cross-Origin-Embedder Policy Header
+// https://developer.mozilla.org/docs/Web/HTTP/Reference/Headers/Cross-Origin-Embedder-Policy
+pref("browser.tabs.remote.coep.credentialless", true); // [DEFAULT - non-Android stable] 'credentialless' 
+pref("browser.tabs.remote.useCrossOriginEmbedderPolicy", true); // [DEFAULT]
+pref("dom.origin-trials.coep-credentialless.state", 1); // 'credentialless' 
+
+/// Enable the Cross-Origin-Opener Policy Header
+// https://developer.mozilla.org/docs/Web/HTTP/Reference/Headers/Cross-Origin-Opener-Policy
+pref("browser.tabs.remote.useCrossOriginOpenerPolicy", true); // [DEFAULT]
 
 /// Enable Element.setHTML
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1805632
@@ -1446,6 +1468,10 @@ pref("browser.phoenix.status.core", "027");
 /// Things that are  nice to have™
 // Not directly privacy & security related
 
+/// Enable zoom on all websites, even if they try to block it...
+// This is the `Zoom on all websites` setting on Android
+pref("browser.ui.zoom.force-user-scalable", true);
+
 pref("browser.translations.automaticallyPopup", true); // [DEFAULT]
 pref("browser.translations.enable", true); // [DEFAULT - non-Thunderbird]
 pref("browser.translations.select.enable", true); // [DEFAULT - non-Android/Thunderbird]
@@ -1538,7 +1564,7 @@ pref("privacy.resistFingerprinting.letterboxing", true); // [HIDDEN]
 // This also improves security - Attack Surface Reduction, reduced timer precision
 // List of targets: https://searchfox.org/mozilla-central/source/toolkit/components/resistfingerprinting/RFPTargets.inc
 // Easily build your own (global) override list: https://raw.githack.com/rindeal/Firefox-FPP-Override-List-Editor/master/FirefoxFPPOverrideListEditor.html
-pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-CSSPrefersColorScheme,-FrameRate,-JSDateTimeUTC");
+pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-CSSPrefersColorScheme,-FrameRate,-JSDateTimeUTC,-JSLocale");
 
 /// Unbreak websites with FPP (if the related target is enabled...)
 // Currently covers:
@@ -1619,6 +1645,15 @@ pref("signon.formlessCapture.enabled", true); // [DEFAULT]
 pref("browser.phoenix.status.android", "005");
 
 /*** 006 EXTENSIONS ***/
+
+/// Enable mozAddonManager
+// mozAddonManager prevents extensions from working on `addons.mozilla.org`/the specified domains
+// This API also exposes a list of the user's installed add-ons to `addons.mozilla.org`/the specified domains...
+// But it's required for the installation of extensions from `addons.mozilla.org`, so let's ensure it's enabled by default to prevent issues
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1952390#c4
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1384330
+pref("extensions.webapi.enabled", true);
+pref("privacy.resistFingerprinting.block_mozAddonManager", false); // [DEFAULT]
 
 /// Only allow installation of signed extensions by default
 pref("extensions.langpacks.signatures.required", true); // [DEFAULT - non-Thunderbird]
