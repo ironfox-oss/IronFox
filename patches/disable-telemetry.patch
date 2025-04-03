@@ -1046,9 +1046,20 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/con
  
      private fun updateOptInState(branch: Branch) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..1f218c68fe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -334,48 +334,24 @@
+@@ -139,8 +139,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     }
+ 
+     @VisibleForTesting
+-    internal val isCrashReportEnabledInBuild: Boolean =
+-        BuildConfig.CRASH_REPORTING && Config.channel.isReleased
++    internal val isCrashReportEnabledInBuild: Boolean = false
+ 
+     override val preferences: SharedPreferences =
+         appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
+@@ -334,48 +333,24 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = true,
      )
  
@@ -1104,7 +1115,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var isOverrideTPPopupsForPerformanceTest = false
  
-@@ -2274,10 +2250,7 @@
+@@ -2274,10 +2249,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * A user preference indicating that crash reports should always be automatically sent. This can be updated
       * through the unsubmitted crash dialog or through data choice preferences.
       */
