@@ -934,7 +934,7 @@
         "group": "default",
         "title": "Beacon API Stub",
         "contentURL": "https://gitlab.com/celenityy/Phoenix/-/raw/dev/uBlock/beacon.txt",
-        "supportURL": "https://phoenix.celenity.dev"
+        "supportURL": "https://phoenix.celenity.dev/issues"
     },
     "bpc-filters": {
         "content": "filters",
