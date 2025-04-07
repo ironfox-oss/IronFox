@@ -119,6 +119,9 @@ PATCH_FILES=(
     # Disable Firefox Sync by default
     "disable-sync-by-default.patch"
 
+    # Disallow using the Domestic China server for Firefox Sync...
+    "disallow-china-fxa-server.patch"
+
     # Block autoplay by default...
     "block-autoplay-by-default.patch"
 
