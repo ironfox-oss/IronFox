@@ -296,6 +296,7 @@
         "content": "filters",
         "group": "annoyances",
         "parent": "AdGuard – Annoyances",
+        "off": true,
         "title": "AdGuard – Mobile App Banners",
         "tags": "annoyances mobile",
         "contentURL": "https://filters.adtidy.org/extension/ublock/filters/20.txt",
