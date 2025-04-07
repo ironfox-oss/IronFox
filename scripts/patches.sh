@@ -89,8 +89,8 @@ PATCH_FILES=(
     # Switch the built-in extension recommendations page to use our collection instead of Mozilla's...
     "extension-recommendations.patch"
 
-    # Disable menu item to report issues with websites to Mozilla...
-    "disable-reporting-site-issues.patch"
+    # Remove the Web Compatibility Reporter/menu item to report issues with websites to Mozilla...
+    "remove-webcompat-reporter.patch"
 
     # Configure DNS over HTTPS
     "configure-doh.patch"

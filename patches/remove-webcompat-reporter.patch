@@ -1,0 +1,125 @@
+diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
+index 391430e6f7..a2d266df77 100644
+--- a/mobile/android/android-components/.buildconfig.yml
++++ b/mobile/android/android-components/.buildconfig.yml
+@@ -1445,28 +1445,6 @@ projects:
+     - support-webextensions
+     - tooling-lint
+     - ui-icons
+-  feature-webcompat-reporter:
+-    description: Feature that enables users to report site issues to Mozilla's Web
+-      Compatibility team.
+-    path: components/feature/webcompat-reporter
+-    publish: true
+-    upstream_dependencies:
+-    - browser-errorpages
+-    - browser-state
+-    - concept-awesomebar
+-    - concept-base
+-    - concept-engine
+-    - concept-fetch
+-    - concept-storage
+-    - lib-publicsuffixlist
+-    - lib-state
+-    - support-base
+-    - support-ktx
+-    - support-test
+-    - support-utils
+-    - support-webextensions
+-    - tooling-lint
+-    - ui-icons
+   feature-webnotifications:
+     description: Feature component for Web Notifications.
+     path: components/feature/webnotifications
+@@ -1656,7 +1634,6 @@ projects:
+     - feature-tabs
+     - feature-toolbar
+     - feature-webcompat
+-    - feature-webcompat-reporter
+     - feature-webnotifications
+     - lib-crash
+     - lib-dataprotect
+diff --git a/mobile/android/android-components/samples/browser/build.gradle b/mobile/android/android-components/samples/browser/build.gradle
+index 4e51f76bbb..c56260c40d 100644
+--- a/mobile/android/android-components/samples/browser/build.gradle
++++ b/mobile/android/android-components/samples/browser/build.gradle
+@@ -118,7 +118,6 @@ dependencies {
+     implementation project(':feature-findinpage')
+     implementation project(':feature-sitepermissions')
+     implementation project(':feature-webcompat')
+-    implementation project(':feature-webcompat-reporter')
+     implementation project(':feature-webnotifications')
+     implementation project(':feature-addons')
+ 
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index 7a0541681b..05c8388f0d 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -58,7 +58,6 @@ projects:
+     - feature-top-sites
+     - feature-webauthn
+     - feature-webcompat
+-    - feature-webcompat-reporter
+     - feature-webnotifications
+     - lib-crash
+     - lib-crash-sentry
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index b16b9b845d..d3243f45fa 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -627,7 +627,6 @@ dependencies {
+     implementation project(':feature-webauthn')
+     implementation project(':feature-webcompat')
+     implementation project(':feature-webnotifications')
+-    implementation project(':feature-webcompat-reporter')
+ 
+     implementation project(':service-pocket')
+     implementation project(':service-mars')
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
+index 136ddf0fda..40534be709 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
+@@ -396,7 +396,7 @@ private fun MenuDialogPreview() {
+                 isDesktopMode = false,
+                 isPdf = false,
+                 isTranslationSupported = true,
+-                isWebCompatReporterSupported = true,
++                isWebCompatReporterSupported = false,
+                 showQuitMenu = true,
+                 isExtensionsProcessDisabled = true,
+                 extensionsMenuItemDescription = "No extensions enabled",
+@@ -439,7 +439,7 @@ private fun MenuDialogPrivatePreview() {
+                 isDesktopMode = false,
+                 isPdf = false,
+                 isTranslationSupported = true,
+-                isWebCompatReporterSupported = true,
++                isWebCompatReporterSupported = false,
+                 showQuitMenu = true,
+                 isExtensionsProcessDisabled = false,
+                 extensionsMenuItemDescription = "No extensions enabled",
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+index 760259e9fd..6b56038867 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+@@ -311,8 +311,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                     val translateLanguageCode = selectedTab?.translationsState?.translationEngineState
+                         ?.requestedTranslationPair?.toLanguage
+                     val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
+-                    val isWebCompatReporterSupported =
+-                        FxNimbus.features.menuRedesign.value().reportSiteIssue
++                    val isWebCompatReporterSupported = false
+ 
+                     val isDesktopMode by store.observeAsState(initialValue = false) { state ->
+                         state.isDesktopMode
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+@@ -91,7 +91,7 @@
+     /**
+      * Enables native WebCompat Reporter.
+      */
+-    const val webCompatReporter = true
++    const val webCompatReporter = false
+ 
+     /**
+      * Enables the tab swipe to dismiss rewrite.
