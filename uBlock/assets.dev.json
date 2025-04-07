@@ -313,15 +313,6 @@
         ],
         "supportURL": "https://easylist.to/"
     },
-    "fanboy-thirdparty_social": {
-        "content": "filters",
-        "group": "annoyances",
-        "group2": "social",
-        "title": "Fanboy – Anti-Facebook",
-        "tags": "privacy",
-        "contentURL": "https://secure.fanboy.co.nz/fanboy-antifacebook.txt",
-        "supportURL": "https://github.com/ryanbr/fanboy-adblock/issues"
-    },
     "adguard-popup-overlays": {
         "content": "filters",
         "group": "annoyances",
