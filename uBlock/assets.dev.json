@@ -223,6 +223,7 @@
         "content": "filters",
         "group": "annoyances",
         "group2": "cookies",
+        "off": true,
         "title": "AdGuard – Cookie Notices",
         "tags": "annoyances cookies",
         "contentURL": "https://filters.adtidy.org/extension/ublock/filters/18.txt",
