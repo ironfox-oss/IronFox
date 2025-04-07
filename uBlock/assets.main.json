@@ -252,6 +252,7 @@
         "group": "annoyances",
         "group2": "social",
         "parent": null,
+        "off": true,
         "title": "AdGuard – Social Widgets",
         "tags": "annoyances social",
         "contentURL": "https://filters.adtidy.org/extension/ublock/filters/4.txt",
