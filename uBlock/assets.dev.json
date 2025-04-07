@@ -1006,8 +1006,8 @@
     "fmhyplus": {
         "content": "filters",
         "group": "malware",
-        "title": "FMHY Unsafe sites filterlist - Plus",
-        "contentURL": "https://raw.githubusercontent.com/fmhy/FMHYFilterlist/main/filterlist.txt",
+        "title": "FMHY Unsafe sites filterlist",
+        "contentURL": "https://raw.githubusercontent.com/fmhy/FMHYFilterlist/main/filterlist-basic.txt",
         "supportURL": "https://github.com/fmhy/FMHYFilterlist/issues"
     },
     "huge-ai": {
