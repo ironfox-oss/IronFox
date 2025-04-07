@@ -151,7 +151,7 @@
     "adguard-spyware-url": {
         "content": "filters",
         "group": "privacy",
-        "title": "AdGuard URL Tracking Protection",
+        "title": "AdGuard - URL Tracking Protection",
         "tags": "privacy",
         "contentURL": "https://filters.adtidy.org/extension/ublock/filters/17.txt",
         "supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters"
@@ -160,7 +160,7 @@
         "content": "filters",
         "group": "privacy",
         "off": true,
-        "title": "AdGuard Tracking Protection",
+        "title": "AdGuard - Tracking Protection",
         "contentURL": "https://filters.adtidy.org/extension/ublock/filters/3.txt",
         "supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters"
     },
