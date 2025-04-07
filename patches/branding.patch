@@ -26,18 +26,9 @@ index dad9a16c7a..386de41582 100644
  
 
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
-index e5e517635d..d5398ccbf1 100644
+index e5e517635d..95e0ccd85c 100644
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -90,7 +90,7 @@ set_config("MOZ_INCLUDE_SOURCE_INFO", True, when="MOZ_INCLUDE_SOURCE_INFO")
- option(
-     "--with-distribution-id",
-     nargs=1,
--    default="org.mozilla",
-+    default="org.ironfoxoss",
-     help="Set distribution-specific id",
- )
- set_config("MOZ_DISTRIBUTION_ID", depends("--with-distribution-id")(lambda v: v[0]))
 @@ -3262,7 +3262,7 @@ def android_package_name(value, moz_app_name):
          return value[0]
      if moz_app_name == "fennec":
