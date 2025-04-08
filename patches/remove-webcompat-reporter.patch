@@ -111,6 +111,22 @@ index 760259e9fd..6b56038867 100644
  
                      val isDesktopMode by store.observeAsState(initialValue = false) { state ->
                          state.isDesktopMode
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
+index 92c7c8b36c..7223a6de8e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
+@@ -216,10 +216,7 @@ open class DefaultToolbarMenu(
+      * Return whether Report Broken Site menu item is visible
+      */
+     private fun shouldShowWebCompatReporter(): Boolean {
+-        val url = store.state.selectedTab?.content?.url
+-        val isAboutUrl = url?.isAboutUrl() ?: false
+-        val isContentUrl = url?.isContentUrl() ?: false
+-        return !isAboutUrl && !isContentUrl
++        return false
+     }
+     // End of predicates //
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
