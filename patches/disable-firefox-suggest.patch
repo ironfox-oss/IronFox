@@ -161,37 +161,3 @@ index da8132091b..107ccbc235 100644
      </PreferenceCategory>
  
      <PreferenceCategory
-diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index 334ee5ac0b..884faa12a8 100644
---- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-@@ -44,7 +44,8 @@
-         android:defaultValue="false"
-         android:key="@string/pref_key_pocket_content_recommendations"
-         android:title="@string/preferences_debug_settings_merino_content_recommendations"
--        app:iconSpaceReserved="false" />
-+        app:iconSpaceReserved="false"
-+        app:isPreferenceVisible="false" />
-     <SwitchPreference
-         android:defaultValue="false"
-         android:key="@string/pref_key_enable_menu_redesign"
-@@ -59,7 +60,8 @@
-         android:defaultValue="false"
-         android:key="@string/pref_key_enable_fxsuggest"
-         android:title="@string/preferences_debug_settings_fxsuggest"
--        app:iconSpaceReserved="false" />
-+        app:iconSpaceReserved="false"
-+        app:isPreferenceVisible="false" />
-     <SwitchPreference
-         android:key="@string/pref_key_should_enable_felt_privacy"
-         android:title="@string/preferences_debug_felt_privacy"
-@@ -71,7 +73,8 @@
-     <SwitchPreference
-         android:key="@string/pref_key_enable_trending_searches"
-         android:title="@string/preferences_debug_settings_trending_searches"
--        app:iconSpaceReserved="false" />
-+        app:iconSpaceReserved="false"
-+        app:isPreferenceVisible="false" />
-     <SwitchPreference
-         android:defaultValue="false"
-         android:key="@string/pref_key_enable_debug_drawer"
