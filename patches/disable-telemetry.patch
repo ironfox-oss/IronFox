@@ -709,30 +709,19 @@ diff --git a/mobile/android/android-components/components/lib/crash/src/main/jav
              .buildUpon()
              .appendQueryParameter("id", appId)
              .appendQueryParameter("version", versionName)
-diff --git a/mobile/android/fenix/app/.experimenter.yaml b/mobile/android/fenix/app/.experimenter.yaml
---- a/mobile/android/fenix/app/.experimenter.yaml
-+++ b/mobile/android/fenix/app/.experimenter.yaml
-@@ -36,7 +36,7 @@
-       description: "A map of metric base-identifiers to booleans representing the state of the 'enabled' flag for that metric."
- growth-data:
-   description: A feature measuring campaign growth data
--  hasExposure: true
-+  hasExposure: false
-   exposureDescription: ""
-   variables:
-     enabled:
-diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
---- a/mobile/android/fenix/app/nimbus.fml.yaml
-+++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -209,7 +209,7 @@
-     defaults:
-       - channel: release
-         value:
--          enabled: true
-+          enabled: false
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index b16b9b845d..f9b3767458 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -323,7 +323,7 @@ android.applicationVariants.configureEach { variant ->
+     project.logger.debug("Application ID:    " + [variant.applicationId, variant.buildType.applicationIdSuffix].findAll().join())
+     project.logger.debug("Build type:        " + variant.buildType.name)
+     project.logger.debug("Flavor:            " + variant.flavorName)
+-    project.logger.debug("Telemetry enabled: " + !isDebug)
++    project.logger.debug("Telemetry enabled: " + false)
  
-   re-engagement-notification:
-     description: A feature that shows the re-engagement notification if the user is inactive.
+     if (useReleaseVersioning) {
+         // The Google Play Store does not allow multiple APKs for the same app that all have the
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
@@ -915,9 +904,40 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 3ab8ea1acd..b78948b079 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -330,7 +330,6 @@
+@@ -59,13 +59,9 @@ import mozilla.components.feature.readerview.ReaderViewMiddleware
+ import mozilla.components.feature.recentlyclosed.RecentlyClosedMiddleware
+ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
+ import mozilla.components.feature.search.ext.createApplicationSearchEngine
+-import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware
+ import mozilla.components.feature.search.middleware.SearchExtraParams
+ import mozilla.components.feature.search.middleware.SearchMiddleware
+ import mozilla.components.feature.search.region.RegionMiddleware
+-import mozilla.components.feature.search.telemetry.SerpTelemetryRepository
+-import mozilla.components.feature.search.telemetry.ads.AdsTelemetry
+-import mozilla.components.feature.search.telemetry.incontent.InContentTelemetry
+ import mozilla.components.feature.session.HistoryDelegate
+ import mozilla.components.feature.session.middleware.LastAccessMiddleware
+ import mozilla.components.feature.session.middleware.undo.UndoMiddleware
+@@ -123,7 +119,6 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
+ import org.mozilla.fenix.share.DefaultSentFromFirefoxManager
+ import org.mozilla.fenix.share.DefaultSentFromStorage
+ import org.mozilla.fenix.share.SaveToPDFMiddleware
+-import org.mozilla.fenix.telemetry.TelemetryMiddleware
+ import org.mozilla.fenix.utils.getUndoDelay
+ import org.mozilla.geckoview.GeckoRuntime
+ import java.util.UUID
+@@ -318,7 +313,6 @@ class Core(
+                 RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX),
+                 DownloadMiddleware(context, DownloadService::class.java),
+                 ReaderViewMiddleware(),
+-                TelemetryMiddleware(context, context.settings(), metrics, crashReporter),
+                 ThumbnailsMiddleware(thumbnailStorage),
+                 UndoMiddleware(context.getUndoDelay()),
+                 RegionMiddleware(context, locationService),
+@@ -330,7 +324,6 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -925,7 +945,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -365,26 +364,6 @@
+@@ -365,26 +358,6 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -952,10 +972,14 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
              WebNotificationFeature(
                  context,
                  engine,
-@@ -429,14 +408,6 @@
-         context.components.analytics.metrics
+@@ -425,18 +398,6 @@ class Core(
+         BrowserIcons(context, client)
      }
  
+-    val metrics by lazyMonitored {
+-        context.components.analytics.metrics
+-    }
+-
 -    val adsTelemetry by lazyMonitored {
 -        AdsTelemetry()
 -    }
@@ -967,7 +991,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      /**
       * Shortcut component for managing shortcuts on the device home screen.
       */
-@@ -734,7 +705,7 @@
+@@ -734,7 +695,7 @@ class Core(
          const val METADATA_SHORTCUT_SUGGESTION_LIMIT = 20
  
          // collection name to fetch from server for SERP telemetry
@@ -977,9 +1001,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
          internal const val REMOTE_STAGE_ENDPOINT_URL = "https://firefox.settings.services.allizom.org"
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
+index a708898f06..736e6dfcf8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-@@ -29,15 +29,8 @@
+@@ -29,20 +29,13 @@ import org.mozilla.fenix.nimbus.FxNimbus
  fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUploadEnabled: Boolean, client: Client) {
      logger.debug("Initializing Glean (uploadEnabled=$isTelemetryUploadEnabled})")
  
@@ -996,7 +1021,13 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
          channel = BuildConfig.BUILD_TYPE,
          httpClient = ConceptFetchHttpUploader(
              lazy(LazyThreadSafetyMode.NONE) { client },
-@@ -58,8 +51,8 @@
+         ),
+-        enableEventTimestamps = FxNimbus.features.glean.value().enableEventTimestamps,
++        enableEventTimestamps = false,
+         delayPingLifetimeIo = FxNimbus.features.glean.value().delayPingLifetimeIo,
+         pingLifetimeThreshold = FxNimbus.features.glean.value().pingLifetimeThreshold,
+         pingLifetimeMaxTime = FxNimbus.features.glean.value().pingLifetimeMaxTime,
+@@ -58,8 +51,8 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
  
      Glean.initialize(
          applicationContext = applicationContext,
@@ -1007,6 +1038,69 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
          buildInfo = GleanBuildInfo.buildInfo,
      )
  }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt
+index ea4ff1e0dd..51077cc739 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt
+@@ -70,9 +70,9 @@ class GleanMetricsService(
+     private val activationPing = ActivationPing(context)
+ 
+     override fun start() {
+-        logger.debug("Enabling Glean.")
++        logger.debug("Not Enabling Glean.")
+         // Initialization of Glean already happened in FenixApplication.
+-        Glean.setCollectionEnabled(true)
++        Glean.setCollectionEnabled(false)
+ 
+         if (initialized) return
+         initialized = true
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
+index a5457b56e7..e7532771eb 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
+@@ -273,9 +273,9 @@ internal class DefaultMetricsStorage(
+          * - user has installed as a result of a campaign
+          * - tracking is still enabled through Nimbus
+          */
++        @Suppress("UNUSED_PARAMETER")
+         fun shouldSendGenerally(context: Context): Boolean {
+-            return context.settings().adjustCampaignId.isNotEmpty() &&
+-                FxNimbus.features.growthData.value().enabled
++            return false
+         }
+ 
+         fun getInstalledTime(context: Context): Long = context.packageManager
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
+index 36d4b4c349..af2ba6479e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
+@@ -102,10 +102,7 @@ private fun Context.reportError(message: String, e: Throwable) {
+  * This fix should be upstreamed as part of: https://github.com/mozilla/application-services/issues/4333
+  */
+ fun NimbusException.isReportableError(): Boolean {
+-    return when (this) {
+-        is NimbusException.ClientException -> false
+-        else -> true
+-    }
++    return false
+ }
+ 
+ /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 6a013a8488..2dc930b5b0 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -490,10 +490,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+     }
+ 
+     private fun setupCrashReporting() {
+-        components
+-            .analytics
+-            .crashReporter
+-            .install(this)
+     }
+ 
+     protected open fun initializeNimbus() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
@@ -1045,6 +1139,20 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/con
      }
  
      private fun updateOptInState(branch: Branch) {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+index 1c975c33f4..3a8e1519bc 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+@@ -350,8 +350,7 @@ class OnboardingFragment : Fragment() {
+             requireComponents.core.client,
+         )
+         if (!settings.isTelemetryEnabled) {
+-            Pings.onboardingOptOut.setEnabled(true)
+-            Pings.onboardingOptOut.submit()
++            Pings.onboardingOptOut.setEnabled(false)
+         }
+ 
+         startMetricsIfEnabled(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index b800c22431..1f218c68fe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
@@ -1194,18 +1302,21 @@ diff --git a/python/mach/mach/telemetry.py b/python/mach/mach/telemetry.py
  
  def arcrc_path():
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
+index 42c16ebb87..95a3af6071 100644
 --- a/toolkit/components/glean/src/init/mod.rs
 +++ b/toolkit/components/glean/src/init/mod.rs
-@@ -72,7 +72,7 @@
+@@ -71,8 +71,8 @@ pub extern "C" fn fog_init(
+     app_id_override: &nsACString,
      disable_internal_pings: bool,
  ) -> nsresult {
-     // On Android always enable Glean upload.
+-    // On Android always enable Glean upload.
 -    let upload_enabled = true;
++    // On Android always disable Glean upload.
 +    let upload_enabled = false;
      // Don't set up an uploader.
      let uploader = None;
  
-@@ -150,12 +150,12 @@
+@@ -150,12 +150,12 @@ fn build_configuration(
  
      let localhost_port = static_prefs::pref!("telemetry.fog.test.localhost_port");
      let server = if localhost_port > 0 {
@@ -1221,20 +1332,25 @@ diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean
          }
      };
  
-@@ -192,7 +192,7 @@
+@@ -190,9 +190,9 @@ fn build_configuration(
+         trim_data_to_registered_pings: true,
+         log_level: None,
          rate_limit,
-         enable_event_timestamps: true,
+-        enable_event_timestamps: true,
++        enable_event_timestamps: false,
          experimentation_id: None,
 -        enable_internal_pings: true,
 +        enable_internal_pings: false,
          ping_schedule: pings::ping_schedule(),
          ping_lifetime_threshold: 0,
          ping_lifetime_max_time: Duration::ZERO,
-@@ -374,7 +374,7 @@
+@@ -373,8 +373,8 @@ fn fog_test_reset_internal(
+ ) -> Result<(), nsresult> {
      let (mut conf, client_info) = build_configuration(data_path_override, app_id_override)?;
  
-     // On Android always enable Glean upload.
+-    // On Android always enable Glean upload.
 -    conf.upload_enabled = true;
++    // On Android always disable Glean upload.
 +    conf.upload_enabled = false;
  
      // Don't accidentally send "main" pings during tests.
@@ -1260,30 +1376,6 @@ diff --git a/toolkit/components/glean/src/init/viaduct_uploader.rs b/toolkit/com
      log::trace!("Getting OHTTP config from {}", OHTTP_CONFIG_URL);
      let parsed_config_url = Url::parse(OHTTP_CONFIG_URL)?;
      Ok(Request::get(parsed_config_url).send()?.body)
-diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
---- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-+++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-@@ -31,7 +31,7 @@
-   Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
- 
- const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
--const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
-+const COLLECTION_ID_FALLBACK = "";
- XPCOMUtils.defineLazyPreferenceGetter(
-   lazy,
-   "COLLECTION_ID",
-diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
---- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-+++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-@@ -36,7 +36,7 @@
- );
- 
- const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
--const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
-+const COLLECTION_ID_FALLBACK = "";
- const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
-   "nimbus.telemetry.targetingContextEnabled";
- 
 diff --git a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
 --- a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
 +++ b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
