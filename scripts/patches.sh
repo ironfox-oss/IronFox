@@ -35,6 +35,9 @@ PATCH_FILES=(
     # Disable Telemetry
     "disable-telemetry.patch"
 
+    # Prevent configuring settings from Nimbus
+    "disable-nimbus.patch"
+
     # Disable Pocket/Contile
     "disable-pocket.patch"
 
