@@ -1284,21 +1284,6 @@ diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mj
  const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
    "nimbus.telemetry.targetingContextEnabled";
  
-diff --git a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
---- a/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
-+++ b/toolkit/components/telemetry/app/TelemetryArchive.sys.mjs
-@@ -58,10 +58,7 @@
-  * @return {Boolean} True if pings should be archived, false otherwise.
-  */
- function shouldArchivePings() {
--  return Services.prefs.getBoolPref(
--    TelemetryUtils.Preferences.ArchiveEnabled,
--    false
--  );
-+  return false;
- }
- 
- var TelemetryArchiveImpl = {
 diff --git a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
 --- a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
 +++ b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
@@ -1543,21 +1528,6 @@ diff --git a/toolkit/components/telemetry/core/TelemetryCommon.cpp b/toolkit/com
    }
  
    // We're not recording extended telemetry or this is not the base
-diff --git a/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs b/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
---- a/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
-+++ b/toolkit/components/telemetry/pings/TelemetrySession.sys.mjs
-@@ -46,10 +46,7 @@
- 
- // Whether the FHR/Telemetry unification features are enabled.
- // Changing this pref requires a restart.
--const IS_UNIFIED_TELEMETRY = Services.prefs.getBoolPref(
--  TelemetryUtils.Preferences.Unified,
--  false
--);
-+const IS_UNIFIED_TELEMETRY = false;
- 
- var gWasDebuggerAttached = false;
- 
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
