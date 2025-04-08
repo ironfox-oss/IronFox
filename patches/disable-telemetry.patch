@@ -1570,3 +1570,17 @@ diff --git a/toolkit/moz.configure b/toolkit/moz.configure
      nargs=1,
      help="Set an alternative crashreporter url",
  )
+diff --git a/toolkit/library/rust/gkrust-features.mozbuild b/toolkit/library/rust/gkrust-features.mozbuild
+index ef5cd9de55..3af776fb5b 100644
+--- a/toolkit/library/rust/gkrust-features.mozbuild
++++ b/toolkit/library/rust/gkrust-features.mozbuild
+@@ -60,8 +60,7 @@ if CONFIG["MOZ_WEBRTC"]:
+ # We need to tell Glean it is being built with Gecko.
+ gkrust_features += ["glean_with_gecko"]
+ 
+-if not CONFIG["MOZILLA_OFFICIAL"]:
+-    gkrust_features += ["glean_disable_upload"]
++gkrust_features += ["glean_disable_upload"]
+ 
+ if CONFIG["MOZ_ENABLE_DBUS"]:
+     gkrust_features += ["with_dbus"]
