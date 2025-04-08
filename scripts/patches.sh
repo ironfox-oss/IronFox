@@ -110,6 +110,9 @@ PATCH_FILES=(
     # Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
     "enable-felt-privacy.patch"
 
+    # Enable Firefox's newer `Unified Trust Panel` (when pressing the lock next to the URL bar) by default
+    "enable-unified-trust-panel.patch"
+
     # Set uBlock Origin to use our custom/enhanced config by default
     "ublock-assets.patch"
 

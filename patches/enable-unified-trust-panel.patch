@@ -1,0 +1,26 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 3d7ff49e55..83a1e1fb12 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -116,7 +116,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_enable_unified_trust_panel).apply {
+-            isVisible = Config.channel.isNightlyOrDebug
++            isVisible = true
+             isChecked = context.settings().enableUnifiedTrustPanel
+             onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..aa3e6c549b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1942,7 +1942,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var enableUnifiedTrustPanel by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_unified_trust_panel),
+-        default = FeatureFlags.UNIFIED_TRUST_PANEL,
++        default = true,
+     )
+ 
+     /**
