@@ -35,6 +35,9 @@ PATCH_FILES=(
     # Disable Telemetry
     "disable-telemetry.patch"
 
+    # Prevent configuring settings from Nimbus
+    "disable-nimbus.patch"
+
     # Disable Pocket/Contile
     "disable-pocket.patch"
 
@@ -89,8 +92,8 @@ PATCH_FILES=(
     # Switch the built-in extension recommendations page to use our collection instead of Mozilla's...
     "extension-recommendations.patch"
 
-    # Disable menu item to report issues with websites to Mozilla...
-    "disable-reporting-site-issues.patch"
+    # Remove the Web Compatibility Reporter/menu item to report issues with websites to Mozilla...
+    "remove-webcompat-reporter.patch"
 
     # Configure DNS over HTTPS
     "configure-doh.patch"
@@ -110,6 +113,9 @@ PATCH_FILES=(
     # Enable Firefox's newer 'Felt privacy' design for Private Browsing by default
     "enable-felt-privacy.patch"
 
+    # Enable Firefox's newer `Unified Trust Panel` (when pressing the lock next to the URL bar) by default
+    "enable-unified-trust-panel.patch"
+
     # Set uBlock Origin to use our custom/enhanced config by default
     "ublock-assets.patch"
 
@@ -118,6 +124,9 @@ PATCH_FILES=(
 
     # Disable Firefox Sync by default
     "disable-sync-by-default.patch"
+
+    # Disallow using the Domestic China server for Firefox Sync...
+    "disallow-china-fxa-server.patch"
 
     # Block autoplay by default...
     "block-autoplay-by-default.patch"

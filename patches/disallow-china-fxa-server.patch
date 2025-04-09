@@ -1,0 +1,30 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..e57e97d563 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1385,10 +1385,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         },
+     )
+ 
+-    var allowDomesticChinaFxaServer by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_allow_domestic_china_fxa_server),
+-        default = true,
+-    )
++    var allowDomesticChinaFxaServer = false
+ 
+     var overrideFxAServer by stringPreference(
+         appContext.getPreferenceKey(R.string.pref_key_override_fxa_server),
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 3b85a2a548..bdc745a90b 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -16,7 +16,8 @@
+     <androidx.preference.SwitchPreference
+         android:key="@string/pref_key_allow_domestic_china_fxa_server"
+         android:title="@string/preferences_allow_domestic_china_fxa_server"
+-        android:defaultValue="true"/>
++        android:defaultValue="false"
++        app:isPreferenceVisible="false"/>
+ 
+     <androidx.preference.PreferenceCategory
+         android:key="@string/pref_key_account_category"
