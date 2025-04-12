@@ -56,6 +56,9 @@ PATCH_FILES=(
     # Hide the UI setting for Global Privacy Control
     "global-privacy-control.patch"
 
+    # Hide the UI setting for Remote Debugging - this can still be enabled from the `about:config` with `devtools.debugger.remote-enabled`, but hiding the UI setting 1: forces it to reset per-session (ensuring it's only on as long as needed, and that users don't accidentally leave it on...), and 2: prevents users from accidentally/unnecessarily enabling it in the first place
+    "remote-debugging.patch"
+
     # Disable search suggestions by default
     "disable-search-suggestions.patch"
 
