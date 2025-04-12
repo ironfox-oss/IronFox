@@ -1,0 +1,12 @@
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 3b85a2a548..f25d45e2af 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -199,6 +199,7 @@
+             android:key="@string/pref_key_remote_debugging"
+             android:title="@string/preferences_remote_debugging"
+             app:iconSpaceReserved="false"
++            app:isPreferenceVisible="false"
+             android:defaultValue="false" />
+ 
+         <androidx.preference.SwitchPreference
