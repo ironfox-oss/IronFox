@@ -130,7 +130,7 @@ def main(params):
         # print("  Version code:", vercode)
         # print("  Version name:", vername)
 
-        if not latest_vercode or latest_vercode < vercode:
+        if not latest_vercode or latest_vercode < vercode: # type: ignore
             latest_vercode = vercode
             latest_vername = vername
 
