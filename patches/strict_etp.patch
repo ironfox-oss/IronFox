@@ -1,22 +1,43 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..c3222dcee1 100644
+index b800c22431..442ee37df4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -784,12 +784,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -672,10 +672,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
  
-     val useStandardTrackingProtection by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
+-    var shouldUseTrackingProtection by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_tracking_protection),
+-        default = true,
+-    )
++    var shouldUseTrackingProtection = true
+ 
+     var shouldEnableGlobalPrivacyControl by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_privacy_enable_global_privacy_control),
+@@ -782,20 +779,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
+ 
+-    val useStandardTrackingProtection by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
 -        true,
-+        false,
-     )
+-    )
++    val useStandardTrackingProtection = false
  
-     val useStrictTrackingProtection by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
+-    val useStrictTrackingProtection by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
 -        false,
-+        true,
-     )
+-    )
++    val useStrictTrackingProtection = true
  
-     val useCustomTrackingProtection by booleanPreference(
+-    val useCustomTrackingProtection by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_option),
+-        false,
+-    )
++    val useCustomTrackingProtection = false
+ 
+     @VisibleForTesting(otherwise = PRIVATE)
+     fun setStrictETP() {
 diff --git a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
 index 712c890683..2dd248c5c8 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
