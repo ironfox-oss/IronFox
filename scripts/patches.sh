@@ -86,6 +86,9 @@ PATCH_FILES=(
     # Disable Mozilla Feedback Surveys (Microsurveys)
     "disable-microsurveys.patch"
 
+    # Stop harassing users to set us as the default browser/engage with us
+    "disable-default-browser-engagement-prompts.patch"
+
     # Enable light mode by default
     "enable-light-mode-by-default.patch"
 

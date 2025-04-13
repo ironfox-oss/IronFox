@@ -1,0 +1,101 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..d1b0ce874b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -725,12 +725,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * This will lead to a performance regression since that function can be expensive to call.
+      */
+     fun checkIfFenixIsDefaultBrowserOnAppResume(): Boolean {
+-        val prefKey = appContext.getPreferenceKey(R.string.pref_key_default_browser)
+-        val isDefaultBrowserNow = isDefaultBrowserBlocking()
+-        val wasDefaultBrowserOnLastResume =
+-            this.preferences.getBoolean(prefKey, isDefaultBrowserNow)
+-        this.preferences.edit().putBoolean(prefKey, isDefaultBrowserNow).apply()
+-        return isDefaultBrowserNow && !wasDefaultBrowserOnLastResume
++        return false
+     }
+ 
+     /**
+@@ -742,40 +737,31 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         return browsers.isDefaultBrowser
+     }
+ 
+-    var reEngagementNotificationShown by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
+-        default = false,
+-    )
++    var reEngagementNotificationShown = true
+ 
+     /**
+      * Check if we should set the re-engagement notification.
+      */
+     fun shouldSetReEngagementNotification(): Boolean {
+-        return numberOfAppLaunches <= 1 && !reEngagementNotificationShown
++        return false
+     }
+ 
+     /**
+      * Check if we should show the re-engagement notification.
+      */
+     fun shouldShowReEngagementNotification(): Boolean {
+-        return !reEngagementNotificationShown && !isDefaultBrowserBlocking()
++        return false
+     }
+ 
+     /**
+      * Indicates if the re-engagement notification feature is enabled
+      */
+-    var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
+-        default = { FxNimbus.features.reEngagementNotification.value().enabled },
+-        featureFlag = true,
+-    )
++    var reEngagementNotificationEnabled = false
+ 
+     /**
+      * Indicates if the re-engagement notification feature is enabled
+      */
+-    val reEngagementNotificationType: Int
+-        get() =
+-            FxNimbus.features.reEngagementNotification.value().type
++    val reEngagementNotificationType: Int = 0
+ 
+     val shouldUseAutoBatteryTheme by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
+@@ -2172,11 +2158,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the Set as default browser prompt for existing users feature is enabled.
+      */
+-    var setAsDefaultBrowserPromptForExistingUsersEnabled by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_set_as_default_browser_prompt_enabled),
+-        default = { FxNimbus.features.setAsDefaultPrompt.value().enabled },
+-        featureFlag = true,
+-    )
++    var setAsDefaultBrowserPromptForExistingUsersEnabled = false
+ 
+     /**
+      * Last time the Set as default Browser prompt has been displayed to the user.
+@@ -2219,8 +2201,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Maximum number of times the Set as default Browser prompt can be displayed to the user.
+      */
+-    private val maxNumberOfDefaultBrowserPrompts: Int
+-        get() = FxNimbus.features.setAsDefaultPrompt.value().maxNumberOfTimesToDisplay
++    private val maxNumberOfDefaultBrowserPrompts: Int = 0
+ 
+     /**
+      * Number of app cold starts before displaying the Set as default Browser prompt.
+@@ -2231,12 +2212,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the Set as default Browser prompt should be displayed to the user.
+      */
+-    val shouldShowSetAsDefaultPrompt: Boolean
+-        get() = setAsDefaultBrowserPromptForExistingUsersEnabled &&
+-            (System.currentTimeMillis() - lastSetAsDefaultPromptShownTimeInMillis) >
+-            daysBetweenDefaultBrowserPrompts * ONE_DAY_MS &&
+-            numberOfSetAsDefaultPromptShownTimes < maxNumberOfDefaultBrowserPrompts &&
+-            coldStartsBetweenSetAsDefaultPrompts >= appColdStartsToShowDefaultPrompt
++    val shouldShowSetAsDefaultPrompt: Boolean = false
+ 
+     /**
+      * Updates the relevant settings when the "Set as Default Browser" prompt is shown.
