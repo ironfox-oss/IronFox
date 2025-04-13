@@ -78,6 +78,7 @@ update-site-repo:
     <<: *build_variables
   before_script:
     - sudo dnf install -y bash curl git make python3 python3-pip yq
+    - pip install pyyaml
     - git config --global user.email "ci@ironfoxoss.org"
     - git config --global user.name "IronFox CI"
   script:
