@@ -265,13 +265,6 @@ patches:
     category: "Privacy"
 
   # Security
-  - file: "configure-pdfjs.patch"
-    name: "Configure PDF.js"
-    description: "Disables JavaScript & XFA in PDF.js and enables sidebar by default."
-    reason: "To improve security of PDF viewing while enhancing usability."
-    effect: "More secure PDF handling with better default user experience."
-    category: "Security"
-
   - file: "configure-safe-browsing.patch"
     name: "Configure Safe Browsing"
     description: |
