@@ -546,7 +546,7 @@ index b800c22431..3fdd8f2d4a 100644
 +        private const val DOH_SETTINGS_OFF = 5
 +
 +        /**
-+         * Bug 1946867 - Currently "hardcoded" to the DoH TRR URI of Cloudflare
++         * Bug 1946867 - Currently "hardcoded" to the DoH TRR URI of Quad9
 +         */
 +        private const val QUAD9_URI = "https://dns.quad9.net/dns-query"
      }
