@@ -525,4 +525,8 @@ sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.co
     fi
 } >>mobile/android/app/geckoview-prefs.js
 
+{
+    cat "$patches/preferences/pdf.js"
+} >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
+
 popd
