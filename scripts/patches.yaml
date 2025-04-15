@@ -274,6 +274,13 @@ patches:
     effect: "Maintains protection against malicious sites while reducing data shared with Google."
     category: "Security"
 
+  - file: "disable-accessibility-services-by-default.patch"
+    name: "Disable Accessibility Services"
+    description: "Disables Accessibility Services by default."
+    reason: "To prevent apps from monitoring users without consent."
+    effect: "Prevents apps from monitoring users without permission, and improves performance as a bonus."
+    category: "Security"
+
   - file: "disable-shipped-domains.patch"
     name: "Disable Shipped Domains"
     description: "Disables pre-shipped domain list."
