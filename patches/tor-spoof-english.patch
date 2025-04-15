@@ -184,16 +184,6 @@ diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/
      <!-- Glean usage profile id -->
      <string name="pref_key_glean_usage_profile_id" translatable="false">pref_key_glean_usage_profile_id</string>
  </resources>
-diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
---- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
-@@ -220,4 +220,6 @@
-     <string name="glean_debug_tools_send_ping_button_text">Send Ping</string>
-     <!-- The send pings toast message. The first parameter is the type of ping -->
-     <string name="glean_debug_tools_send_ping_toast_message">Sent %1$s ping</string>
-+    <!-- Spoof locale to English -->
-+    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
- </resources>
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
