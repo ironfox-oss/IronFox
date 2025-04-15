@@ -1,3 +1,4 @@
+
 //
 
 //
@@ -68,6 +69,7 @@ pref("media.autoplay.blocking_policy", 2);
 pref("browser.phoenix.status.extended", "004");
 
 pref("browser.phoenix.status.extended", "successfully applied :D", locked);
+
 
 //
 
