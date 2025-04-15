@@ -1,0 +1,240 @@
+diff --git a/toolkit/components/extensions/parent/ext-browserSettings.js b/toolkit/components/extensions/parent/ext-browserSettings.js
+index 7b292f76b8..fcd040e44f 100644
+--- a/toolkit/components/extensions/parent/ext-browserSettings.js
++++ b/toolkit/components/extensions/parent/ext-browserSettings.js
+@@ -25,6 +25,7 @@ const PERM_DENY_ACTION = Services.perms.DENY_ACTION;
+ ExtensionPreferencesManager.addSetting("allowPopupsForUserEvents", {
+   permission: "browserSettings",
+   prefNames: ["dom.popup_allowed_events"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     let returnObj = {};
+@@ -41,6 +42,7 @@ ExtensionPreferencesManager.addSetting("allowPopupsForUserEvents", {
+ ExtensionPreferencesManager.addSetting("cacheEnabled", {
+   permission: "browserSettings",
+   prefNames: ["browser.cache.disk.enable", "browser.cache.memory.enable"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     let returnObj = {};
+@@ -61,6 +63,7 @@ ExtensionPreferencesManager.addSetting("cacheEnabled", {
+ ExtensionPreferencesManager.addSetting("closeTabsByDoubleClick", {
+   permission: "browserSettings",
+   prefNames: ["browser.tabs.closeTabByDblclick"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -82,6 +85,7 @@ ExtensionPreferencesManager.addSetting("closeTabsByDoubleClick", {
+ ExtensionPreferencesManager.addSetting("colorManagement.mode", {
+   permission: "browserSettings",
+   prefNames: ["gfx.color_management.mode"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     switch (value) {
+@@ -109,6 +113,7 @@ ExtensionPreferencesManager.addSetting("colorManagement.mode", {
+ ExtensionPreferencesManager.addSetting("colorManagement.useNativeSRGB", {
+   permission: "browserSettings",
+   prefNames: ["gfx.color_management.native_srgb"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -124,6 +129,7 @@ ExtensionPreferencesManager.addSetting(
+   {
+     permission: "browserSettings",
+     prefNames: ["gfx.webrender.compositor"],
++    readOnly: true,
+ 
+     setCallback(value) {
+       return { [this.prefNames[0]]: value };
+@@ -138,6 +144,7 @@ ExtensionPreferencesManager.addSetting(
+ ExtensionPreferencesManager.addSetting("contextMenuShowEvent", {
+   permission: "browserSettings",
+   prefNames: ["ui.context_menus.after_mouseup"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value === "mouseup" };
+@@ -158,6 +165,7 @@ ExtensionPreferencesManager.addSetting("contextMenuShowEvent", {
+ ExtensionPreferencesManager.addSetting("imageAnimationBehavior", {
+   permission: "browserSettings",
+   prefNames: ["image.animation_mode"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -174,6 +182,7 @@ ExtensionPreferencesManager.addSetting("newTabPosition", {
+     "browser.tabs.insertRelatedAfterCurrent",
+     "browser.tabs.insertAfterCurrent",
+   ],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return {
+@@ -196,6 +205,7 @@ ExtensionPreferencesManager.addSetting("newTabPosition", {
+ ExtensionPreferencesManager.addSetting("openBookmarksInNewTabs", {
+   permission: "browserSettings",
+   prefNames: ["browser.tabs.loadBookmarksInTabs"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -209,6 +219,7 @@ ExtensionPreferencesManager.addSetting("openBookmarksInNewTabs", {
+ ExtensionPreferencesManager.addSetting("openSearchResultsInNewTabs", {
+   permission: "browserSettings",
+   prefNames: ["browser.search.openintab"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -222,6 +233,7 @@ ExtensionPreferencesManager.addSetting("openSearchResultsInNewTabs", {
+ ExtensionPreferencesManager.addSetting("openUrlbarResultsInNewTabs", {
+   permission: "browserSettings",
+   prefNames: ["browser.urlbar.openintab"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -235,6 +247,7 @@ ExtensionPreferencesManager.addSetting("openUrlbarResultsInNewTabs", {
+ ExtensionPreferencesManager.addSetting("webNotificationsDisabled", {
+   permission: "browserSettings",
+   prefNames: ["permissions.default.desktop-notification"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value ? PERM_DENY_ACTION : undefined };
+@@ -252,6 +265,7 @@ ExtensionPreferencesManager.addSetting("webNotificationsDisabled", {
+ ExtensionPreferencesManager.addSetting("overrideDocumentColors", {
+   permission: "browserSettings",
+   prefNames: ["browser.display.document_color_use"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -273,6 +287,7 @@ ExtensionPreferencesManager.addSetting("overrideDocumentColors", {
+ ExtensionPreferencesManager.addSetting("overrideContentColorScheme", {
+   permission: "browserSettings",
+   prefNames: ["layout.css.prefers-color-scheme.content-override"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -296,6 +311,7 @@ ExtensionPreferencesManager.addSetting("overrideContentColorScheme", {
+ ExtensionPreferencesManager.addSetting("useDocumentFonts", {
+   permission: "browserSettings",
+   prefNames: ["browser.display.use_document_fonts"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -311,6 +327,7 @@ ExtensionPreferencesManager.addSetting("useDocumentFonts", {
+ ExtensionPreferencesManager.addSetting("zoomFullPage", {
+   permission: "browserSettings",
+   prefNames: ["browser.zoom.full"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -324,6 +341,7 @@ ExtensionPreferencesManager.addSetting("zoomFullPage", {
+ ExtensionPreferencesManager.addSetting("zoomSiteSpecific", {
+   permission: "browserSettings",
+   prefNames: ["browser.zoom.siteSpecific"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+diff --git a/toolkit/components/extensions/parent/ext-privacy.js b/toolkit/components/extensions/parent/ext-privacy.js
+index 1c4bf05ff1..6ba0a16913 100644
+--- a/toolkit/components/extensions/parent/ext-privacy.js
++++ b/toolkit/components/extensions/parent/ext-privacy.js
+@@ -55,6 +55,7 @@ ExtensionPreferencesManager.addSetting("network.networkPredictionEnabled", {
+     "network.http.speculative-parallel-limit",
+     "network.dns.disablePrefetch",
+   ],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return {
+@@ -135,6 +136,7 @@ ExtensionPreferencesManager.addSetting("network.httpsOnlyMode", {
+ ExtensionPreferencesManager.addSetting("network.peerConnectionEnabled", {
+   permission: "privacy",
+   prefNames: ["media.peerconnection.enabled"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -153,6 +155,7 @@ ExtensionPreferencesManager.addSetting("network.webRTCIPHandlingPolicy", {
+     "media.peerconnection.ice.proxy_only_if_behind_proxy",
+     "media.peerconnection.ice.proxy_only",
+   ],
++  readOnly: true,
+ 
+   setCallback(value) {
+     let prefs = {};
+@@ -211,6 +214,7 @@ ExtensionPreferencesManager.addSetting("network.webRTCIPHandlingPolicy", {
+ ExtensionPreferencesManager.addSetting("services.passwordSavingEnabled", {
+   permission: "privacy",
+   prefNames: ["signon.rememberSignons"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -224,6 +228,7 @@ ExtensionPreferencesManager.addSetting("services.passwordSavingEnabled", {
+ ExtensionPreferencesManager.addSetting("websites.cookieConfig", {
+   permission: "privacy",
+   prefNames: ["network.cookie.cookieBehavior"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     const cookieBehavior = cookieBehaviorValues.get(value.behavior);
+@@ -268,6 +273,7 @@ ExtensionPreferencesManager.addSetting("websites.cookieConfig", {
+ ExtensionPreferencesManager.addSetting("websites.firstPartyIsolate", {
+   permission: "privacy",
+   prefNames: ["privacy.firstparty.isolate"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     // Intentionally use Preferences.get("network.cookie.cookieBehavior") here
+@@ -299,6 +305,7 @@ ExtensionPreferencesManager.addSetting("websites.firstPartyIsolate", {
+ ExtensionPreferencesManager.addSetting("websites.hyperlinkAuditingEnabled", {
+   permission: "privacy",
+   prefNames: ["browser.send_pings"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -312,6 +319,7 @@ ExtensionPreferencesManager.addSetting("websites.hyperlinkAuditingEnabled", {
+ ExtensionPreferencesManager.addSetting("websites.referrersEnabled", {
+   permission: "privacy",
+   prefNames: ["network.http.sendRefererHeader"],
++  readOnly: true,
+ 
+   // Values for network.http.sendRefererHeader:
+   // 0=don't send any, 1=send only on clicks, 2=send on image requests as well
+@@ -328,6 +336,7 @@ ExtensionPreferencesManager.addSetting("websites.referrersEnabled", {
+ ExtensionPreferencesManager.addSetting("websites.resistFingerprinting", {
+   permission: "privacy",
+   prefNames: ["privacy.resistFingerprinting"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -344,6 +353,7 @@ ExtensionPreferencesManager.addSetting("websites.trackingProtectionMode", {
+     "privacy.trackingprotection.enabled",
+     "privacy.trackingprotection.pbmode.enabled",
+   ],
++  readOnly: true,
+ 
+   setCallback(value) {
+     // Default to private browsing.
+@@ -381,6 +391,7 @@ ExtensionPreferencesManager.addSetting("websites.trackingProtectionMode", {
+ ExtensionPreferencesManager.addSetting("network.tlsVersionRestriction", {
+   permission: "privacy",
+   prefNames: [TLS_MIN_PREF, TLS_MAX_PREF],
++  readOnly: true,
+ 
+   setCallback(value) {
+     function tlsStringToVersion(string) {

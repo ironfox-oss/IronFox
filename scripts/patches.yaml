@@ -288,6 +288,13 @@ patches:
     effect: "Improves security by preventing unencrypted HTTP connections."
     category: "Security"
 
+  - file: "prevent-extensions-from-changing-browser-settings.patch"
+    name: "Prevent Extensions From Changing Browser Settings"
+    description: "Prevents extensions from changing various browser settings."
+    reason: "To prevent extensions from making unauthorized changes to browser settings."
+    effect: "Ensures browser settings aren't changed without explicit user consent."
+    category: "Security"
+
   - file: "remote-debugging.patch"
     name: "Hide Remote Debugging UI"
     description: "Hides the UI setting for Remote Debugging."
