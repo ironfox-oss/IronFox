@@ -1,0 +1,314 @@
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+index 8e88c92..4b5e39d 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
++++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+@@ -1474,6 +1474,22 @@ class GeckoEngine(
+                 }
+             }
+ 
++        override var accessibilityEnabled: Boolean
++            get() = runtime.settings.accessibilityEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.accessibilityEnabled = it
++                }
++            }
++        
++        override var accessibilityDevToolsEnabled: Boolean
++            get() = runtime.settings.accessibilityDevToolsEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.accessibilityDevToolsEnabled = it
++                }
++            }
++
+         override var certificateTransparencyMode: Int
+             get() = runtime.settings.certificateTransparencyMode
+             set(value) { runtime.settings.setCertificateTransparencyMode(value) }
+@@ -1522,6 +1538,8 @@ class GeckoEngine(
+             this.cookieBehaviorOptInPartitioning = it.cookieBehaviorOptInPartitioning
+             this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
+             this.spoofEnglish = it.spoofEnglish
++            this.accessibilityEnabled = it.accessibilityEnabled
++            this.accessibilityDevToolsEnabled = it.accessibilityDevToolsEnabled
+             this.certificateTransparencyMode = it.certificateTransparencyMode
+             this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
+         }
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+index cb8ad3c..77d323b 100644
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+@@ -332,6 +332,16 @@ abstract class Settings {
+ 
+     open var spoofEnglish: Boolean by UnsupportedSetting()
+ 
++    /**
++     * Setting to control Accessibility Services.
++     */
++    open var accessibilityEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control Accessibility Developer Tools.
++     */
++    open val accessibilityDevToolsEnabled: Boolean by UnsupportedSetting()
++
+     /**
+      * Setting to control how Certificate Transparency information is processed.
+      */
+@@ -409,11 +419,14 @@ data class DefaultSettings(
+     override var cookieBehaviorOptInPartitioning: Boolean = false,
+     override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
+     override var spoofEnglish: Boolean = false,
++    override var accessibilityEnabled: Boolean = false,
+     override var certificateTransparencyMode: Int = 0,
+     override var postQuantumKeyExchangeEnabled: Boolean = false,
+ ) : Settings() {
+     override val desktopModeEnabled: Boolean
+         get() = getDesktopMode()
++    override val accessibilityDevToolsEnabled: Boolean
++        get() = accessibilityEnabled
+ }
+ 
+ class UnsupportedSetting<T> {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 2318d16..f98c493 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -178,6 +178,7 @@ class Core(
+             fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
+             parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
+             spoofEnglish = context.settings().spoofEnglish,
++            accessibilityEnabled = context.settings().accessibilityEnabled,
+             certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
+             postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
+         )
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
+index 1122dc0b0f..fa3ed491b0 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
+@@ -23,6 +23,20 @@ class AccessibilityFragment : PreferenceFragmentCompat() {
+         super.onResume()
+         showToolbar(getString(R.string.preferences_accessibility))
+ 
++        val accessibilityEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_accessibility_enabled,
++        )
++
++        accessibilityEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, shouldEnable ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.accessibilityEnabled = shouldEnable
++            components.core.engine.settings.accessibilityEnabled = shouldEnable
++
++            true
++        }
++
+         val forceZoomPreference = requirePreference<SwitchPreference>(
+             R.string.pref_key_accessibility_force_enable_zoom,
+         )
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index b800c22431..117d7ca291 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1002,12 +1002,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+             ToolbarPosition.TOP
+         }
+ 
++    var accessibilityEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
++        default = false
++    )
++
+     /**
+      * Check each active accessibility service to see if it can perform gestures, if any can,
+      * then it is *likely* a switch service is enabled. We are assuming this to be the case based on #7486
+      */
+     val switchServiceIsEnabled: Boolean
+         get() {
++            if (!accessibilityEnabled) {
++            return false
++        }
+             val accessibilityManager =
+                 appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+ 
+@@ -1024,6 +1032,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     val touchExplorationIsEnabled: Boolean
+         get() {
++            if (!accessibilityEnabled) {
++            return false
++        }
+             val accessibilityManager =
+                 appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+             return accessibilityManager?.isTouchExplorationEnabled ?: false
+@@ -1031,7 +1042,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     val accessibilityServicesEnabled: Boolean
+         get() {
+-            return touchExplorationIsEnabled || switchServiceIsEnabled
++            return accessibilityEnabled && (touchExplorationIsEnabled || switchServiceIsEnabled)
+         }
+ 
+     fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
+diff --git a/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
+index a810f76208..f9381cbc86 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
+@@ -4,6 +4,11 @@
+    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+ <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto">
++    <SwitchPreference
++        android:defaultValue="false"
++        android:key="@string/pref_key_accessibility_enabled"
++        android:summary="@string/preference_accessibility_enabled_summary"
++        android:title="@string/preference_accessibility_enabled" />
+     <SwitchPreference
+         android:defaultValue="true"
+         android:key="@string/pref_key_accessibility_auto_size"
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+index e1bb0c2..ff31b7e 100644
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -451,6 +451,9 @@
+ 
+     <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+ 
++    <!-- Accessibility Services -->
++    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
++
+     <!-- Glean usage profile id -->
+     <string name="pref_key_glean_usage_profile_id" translatable="false">pref_key_glean_usage_profile_id</string>
+ </resources>
+diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+index 8135961..e29ed95 100644
+--- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
++++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+@@ -222,4 +222,7 @@
+     <string name="glean_debug_tools_send_ping_toast_message">Sent %1$s ping</string>
+     <!-- Spoof locale to English -->
+     <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
++    <!-- Accessibility Services -->
++    <string name="preference_accessibility_enabled">Enable Accessibility Services</string>
++    <string name="preference_accessibility_enabled_summary">Enable to allow communication with Accessibility Services on your device.</string>
+ </resources>
+diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
+index 783f0af..25b0284 100644
+--- a/mobile/android/geckoview/api.txt
++++ b/mobile/android/geckoview/api.txt
+@@ -906,6 +906,8 @@ package org.mozilla.geckoview {
+     method @Nullable public GeckoRuntime getRuntime();
+     method @Nullable public Rect getScreenSizeOverride();
+     method public boolean getSpoofEnglish();
++    method public boolean getAccessibilityEnabled();
++    method public boolean getAccessibilityDevToolsEnabled();
+     method public boolean getTranslationsOfferPopup();
+     method @NonNull public List<String> getTrustedRecursiveResolverExcludedDomains();
+     method @NonNull public String getTrustedRecursiveResolverUri();
+@@ -950,6 +952,8 @@ package org.mozilla.geckoview {
+     method @NonNull public GeckoRuntimeSettings setPreferredColorScheme(int);
+     method @NonNull public GeckoRuntimeSettings setRemoteDebuggingEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings setAccessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setAccessibilityDevToolsEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings setTranslationsOfferPopup(boolean);
+     method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverExcludedDomains(@NonNull List<String>);
+     method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverMode(int);
+@@ -1013,6 +1017,8 @@ package org.mozilla.geckoview {
+     method @NonNull public GeckoRuntimeSettings.Builder remoteDebuggingEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder screenSizeOverride(int, int);
+     method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder accessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder accessibilityDevToolsEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder translationsOfferPopup(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverMode(int);
+     method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverUri(@NonNull String);
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+index 848c594..8ebc323 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+@@ -612,6 +612,28 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+       getSettings().mSpoofEnglish.set(flag ? 2 : 1);
+       return this;
+     }
++
++    /**
++     * Sets whether we should enable Accessibility Services.
++     *
++     * @param flag True if we should enable Accessibility Services, false otherwise.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder accessibilityEnabled(final boolean flag) {
++      getSettings().mAccessibilityEnabled.set(flag ? 0 : 1);
++      return this;
++    }
++
++    /**
++     * Sets whether we should enable Accessibility Developer Tools.
++     *
++     * @param flag True if we should enable Accessibility Developer Tools, false otherwise.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder accessibilityDevToolsEnabled(final boolean flag) {
++      getSettings().mAccessibilityDevToolsEnabled.set(flag);
++      return this;
++    }
+   }
+ 
+   private GeckoRuntime mRuntime;
+@@ -712,6 +734,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+   /* package */ final Pref<Integer> mCertificateTransparencyMode =
+       new Pref<Integer>("z99.ignore.security.pki.certificate_transparency.mode", 0);
+   /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 0);
++  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<>("accessibility.force_disabled", 1);
++  /* package */ final Pref<Boolean> mAccessibilityDevToolsEnabled = new Pref<>("devtools.accessibility.enabled", false);
+   /* package */ final Pref<Boolean> mPostQuantumKeyExchangeTLSEnabled =
+       new Pref<Boolean>("z99.ignore.security.tls.enable_kyber", false);
+   /* package */ final Pref<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
+@@ -2080,6 +2104,45 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+     return this;
+   }
+ 
++  /**
++   * Get whether we should enable Accessibility Services.
++   *
++   * @return Whether we should enable Accessibility Services.
++   */
++  public boolean getAccessibilityEnabled() {
++    return mAccessibilityEnabled.get() == 0;
++  }
++
++  /**
++   * Set whether we should enable Accessibility Services.
++   *
++   * @param flag A flag determining whether we should enable Accessibility Services.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setAccessibilityEnabled(final boolean flag) {
++    mAccessibilityEnabled.commit(flag ? 0 : 1);
++    return this;
++  }
++
++  /**
++   * Get whether we should enable Accessibility Developer Tools.
++   *
++   * @return Whether we should enable Accessibility Developer Tools.
++   */
++  public boolean getAccessibilityDevToolsEnabled() {
++    return mAccessibilityDevToolsEnabled.get();
++  }
++
++  /**
++   * Set whether we should enable Accessibility Developer Tools.
++   *
++   * @param flag A flag determining whether we should enable Accessibility Developer Tools.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setAccessibilityDevToolsEnabled(final boolean flag) {
++    mAccessibilityDevToolsEnabled.commit(flag);
++    return this;
++  }
+ 
+   @Override // Parcelable
+   public void writeToParcel(final Parcel out, final int flags) {
