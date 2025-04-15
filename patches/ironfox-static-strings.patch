@@ -1,0 +1,14 @@
+diff --git a/mobile/android/fenix/app/src/main/res/values/static_strings.xml b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+index a211dab268..33782b679f 100644
+--- a/mobile/android/fenix/app/src/main/res/values/static_strings.xml
++++ b/mobile/android/fenix/app/src/main/res/values/static_strings.xml
+@@ -220,4 +220,9 @@
+     <string name="glean_debug_tools_send_ping_button_text">Send Ping</string>
+     <!-- The send pings toast message. The first parameter is the type of ping -->
+     <string name="glean_debug_tools_send_ping_toast_message">Sent %1$s ping</string>
++    <!-- Spoof locale to English -->
++    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
++    <!-- Accessibility Services -->
++    <string name="preference_accessibility_enabled">Enable Accessibility Services</string>
++    <string name="preference_accessibility_enabled_summary">Enable to allow communication with Accessibility Services on your device.</string>
+ </resources>
