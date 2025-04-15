@@ -16,7 +16,7 @@
 // Welcome to the heart of the Phoenix.
 // This file contains preferences shared across all Phoenix configs, platforms (Desktop & Android), and Dove.
 
-pref("browser.phoenix.version", "2025.04.11.1", locked);
+pref("browser.phoenix.version", "2025.04.15.1", locked);
 
 /* INDEX 
 
@@ -74,7 +74,7 @@ pref("browser.phoenix.status.core", "000");
 // Ex. We use DuckDuckGo as our default search engine, so we'll nclude their analytics domains
 // On IronFox, we link to our GitLab releases via the `What's New` alert, so we'll also cover their analytics domains, etc...
 // But generally we'll want to keep this limited in favor of ex. uBlock Origin & other mechanisms.
-pref("network.dns.localDomains", "250analytics.com,a.omappapi.com,ads.allizom.org,ads.mozilla.org,ads.nonprod.webservices.mozgcp.net,ads.prod.webservices.mozgcp.net,analytics.getpocket.com,analytics.google.com,analytics.withgoogle.com,anf1.fuzzing.mozilla.org,anonymco.com,asan-nightly-frontend-elb-1348905149.us-east-2.elb.amazonaws.com,braze.com,contile.services.mozilla.com,contile-images.services.mozilla.com,crash-reports.allizom.org,crash-reports.mozilla.com,crash-reports-xpsp2.mozilla.com,crash-stacks.mozilla.com,crash-stats.allizom.org,crash-stats.mozilla.com,crash-stats.mozilla.org,dap.services.mozilla.com,dap.nonprod.webservices.mozgcp.net,dap.prod.webservices.mozgcp.net,dap-09-3.api.divviup.org,discovery.addons.allizom.org,discovery.addons.mozilla.org,discovery.addons-dev.allizom.org,divviup.org,download-stats.mozilla.org,download-stats.r53-2.services.mozilla.com,experimenter.services.mozilla.com,experimenter.nonprod.webservices.mozgcp.net,experimenter.prod.webservices.mozgcp.net,fhr.data.mozilla.com,fhr.r53-2.services.mozilla.com,firefox-android-home-recommendations.getpocket.com,fuzzing.mozilla.org,google-analytics.com,google-analytics-cn.com,googleanalytics.com,googlesyndication.com,googlesyndication-cn.com,googletagmanager.com,googletagmanager-cn.com,googletagservices.com,googletagservices-cn.com,improving.duckduckgo.com,incoming.telemetry.mozilla.org,incoming.thunderbird.net,incoming-telemetry.thunderbird.net,merino.nonprod.cloudops.mozgcp.net,merino.prod.cloudops.mozgcp.net,merino.services.mozilla.com,metrics-content.duckduckgo.com,mozilla-ohttp.fastly-edge.com,new-sentry.gitlab.net,normandy.cdn.mozilla.net,normandy.nonprod.cloudops.mozgcp.net,normandy.prod.cloudops.mozgcp.net,normandy-cdn.services.mozilla.com,ohttp-gateway.prod.webservices.mozgcp.net,omappapi.com,pagead2.googlesyndication.com,pipeline-incoming-prod-elb-149169523.us-west-2.elb.amazonaws.com,prod.experimenter.prod.webservices.mozgcp.net,prod.ohttp-gateway.prod.webservices.mozgcp.net,sdk.iad-05.braze.com,sentry.gitlab.net,sentry.io,sentry.nonprod.cloudops.mozgcp.net,sentry.prod.cloudops.mozgcp.net,sitereview.zscaler.com,snippets.allizom.org,snippets.cdn.mozilla.net,snippets.mozilla.com,snippets-prod.frankfurt.moz.works,snippets-prod.moz.works,snippets-prod.oregon-b.moz.works,snippets-stage.moz.works,snippets-stage.oregon-b.moz.works,snowplow.trx.gitlab.net,snowplowalb-1011729428.us-east-1.elb.amazonaws.com,snowplowprd.trx.gitlab.net,snowplowprdnlb-1490493263.us-east-2.elb.amazonaws.com,socorro.nonprod.webservices.mozgcp.net,socorro.prod.webservices.mozgcp.net,socorro-collector.services.mozilla.com,socorro-webapp-allizom.stage.mozaws.net,socorro-webapp.services.mozilla.com,spocs.getpocket.com,spocs.getpocket.dev,spocs.mozilla.net,ssl.google-analytics.com,ssl-google-analytics.l.google.com,start.fedoraproject.org,start.thunderbird.net,start.ubuntu.com,start-stage.thunderbird.net,symbolication.services.mozilla.com,symbols.mozilla.org,tagmanager.google.com,talkback.mozilla.org,talkback-public.mozilla.org,talkback-reports.mozilla.org,telemetry-coverage.mozilla.org,telemetry-coverage.r53-2.services.mozilla.com,telemetry-incoming.r53-2.services.mozilla.com,telemetry-prod-1054754349.us-east-1.elb.amazonaws.com,updates.thunderbird.net,updates-stage.thunderbird.net,use-application-dns.net,vf.startpage.com,www.250analytics.com,www.google-analytics.com,www.google-analytics-cn.com,www.googleanalytics.com,www.googlesyndication.com,www.googlesyndication-cn.com,www.googletagmanager.com,www.googletagmanager-cn.com,www.googletagservices.com,www.googletagservices-cn.com,www.sentry.io,www-google-analytics.l.google.com,www-googletagmanager.l.google.com");
+pref("network.dns.localDomains", "250analytics.com,a.omappapi.com,ads.allizom.org,ads.mozilla.org,ads.nonprod.webservices.mozgcp.net,ads.prod.webservices.mozgcp.net,analytics.getpocket.com,analytics.google.com,analytics.withgoogle.com,anf1.fuzzing.mozilla.org,anonymco.com,asan-nightly-frontend-elb-1348905149.us-east-2.elb.amazonaws.com,braze.com,contile.services.mozilla.com,contile-images.services.mozilla.com,crash-reports.allizom.org,crash-reports.mozilla.com,crash-reports-xpsp2.mozilla.com,crash-stacks.mozilla.com,crash-stats.allizom.org,crash-stats.mozilla.com,crash-stats.mozilla.org,dap.services.mozilla.com,dap.nonprod.webservices.mozgcp.net,dap.prod.webservices.mozgcp.net,dap-09-3.api.divviup.org,discovery.addons.allizom.org,discovery.addons.mozilla.org,discovery.addons-dev.allizom.org,divviup.org,download-stats.mozilla.org,download-stats.r53-2.services.mozilla.com,experimenter.services.mozilla.com,experimenter.nonprod.webservices.mozgcp.net,experimenter.prod.webservices.mozgcp.net,fhr.data.mozilla.com,fhr.r53-2.services.mozilla.com,firefox-android-home-recommendations.getpocket.com,fuzzing.mozilla.org,google-analytics.com,google-analytics-cn.com,googleanalytics.com,googlesyndication.com,googlesyndication-cn.com,googletagmanager.com,googletagmanager-cn.com,googletagservices.com,googletagservices-cn.com,improving.duckduckgo.com,incoming.telemetry.mozilla.org,incoming.thunderbird.net,incoming-telemetry.thunderbird.net,merino.nonprod.cloudops.mozgcp.net,merino.prod.cloudops.mozgcp.net,merino.services.mozilla.com,metrics-content.duckduckgo.com,mozilla-ohttp.fastly-edge.com,new-sentry.gitlab.net,normandy.cdn.mozilla.net,normandy.nonprod.cloudops.mozgcp.net,normandy.prod.cloudops.mozgcp.net,normandy-cdn.services.mozilla.com,ohttp-gateway.prod.webservices.mozgcp.net,omappapi.com,pagead2.googlesyndication.com,pipeline-incoming-prod-elb-149169523.us-west-2.elb.amazonaws.com,prod.experimenter.prod.webservices.mozgcp.net,prod.ohttp-gateway.prod.webservices.mozgcp.net,sdk.iad-05.braze.com,sentry.gitlab.net,sentry.io,sentry.nonprod.cloudops.mozgcp.net,sentry.prod.cloudops.mozgcp.net,sitereview.zscaler.com,snippets.allizom.org,snippets.cdn.mozilla.net,snippets.mozilla.com,snippets-prod.frankfurt.moz.works,snippets-prod.moz.works,snippets-prod.oregon-b.moz.works,snippets-stage.moz.works,snippets-stage.oregon-b.moz.works,snowplow.trx.gitlab.net,snowplowalb-1011729428.us-east-1.elb.amazonaws.com,snowplowprd.trx.gitlab.net,snowplowprdnlb-1490493263.us-east-2.elb.amazonaws.com,socorro.nonprod.webservices.mozgcp.net,socorro.prod.webservices.mozgcp.net,socorro-collector.services.mozilla.com,socorro-webapp-allizom.stage.mozaws.net,socorro-webapp.services.mozilla.com,spocs.getpocket.com,spocs.getpocket.dev,spocs.mozilla.net,ssl.google-analytics.com,ssl-google-analytics.l.google.com,start.fedoraproject.org,start.thunderbird.net,start.ubuntu.com,start-stage.thunderbird.net,symbolication.services.mozilla.com,symbols.mozilla.org,tagmanager.google.com,talkback.mozilla.org,talkback-public.mozilla.org,talkback-reports.mozilla.org,telemetry-coverage.mozilla.org,telemetry-coverage.r53-2.services.mozilla.com,telemetry-incoming.r53-2.services.mozilla.com,telemetry-prod-1054754349.us-east-1.elb.amazonaws.com,updates.thunderbird.net,updates-stage.thunderbird.net,use-application-dns.net,vf.startpage.com,www.250analytics.com,www.anonymco.com,www.google-analytics.com,www.google-analytics-cn.com,www.googleanalytics.com,www.googlesyndication.com,www.googlesyndication-cn.com,www.googletagmanager.com,www.googletagmanager-cn.com,www.googletagservices.com,www.googletagservices-cn.com,www.sentry.io,www-google-analytics.l.google.com,www-googletagmanager.l.google.com");
 
 /// Disable Coverage
 // https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/
@@ -120,6 +120,7 @@ pref("datareporting.policy.dataSubmissionPolicyBypassNotification", true, locked
 pref("datareporting.policy.firstRunURL", "", locked);
 pref("datareporting.usage.uploadEnabled", false, locked); // [HIDDEN - ANDROID] [DEFAULT - Android] Disables "daily usage pings" https://support.mozilla.org/kb/usage-ping-settings
 pref("dom.security.unexpected_system_load_telemetry_enabled", false, locked); // [DEFAULT - non-Nightly]
+pref("extensions.dataCollectionPermissions.enabled", false, locked); // [NIGHTLY] [DEFAULT] https://searchfox.org/mozilla-central/source/toolkit/locales-preview/dataCollectionPermissions.ftl
 pref("network.jar.record_failure_reason", false, locked); // [DEFAULT - non-Nightly] https://searchfox.org/mozilla-release/source/modules/libpref/init/StaticPrefList.yaml#14397
 pref("network.traffic_analyzer.enabled", false, locked); // https://searchfox.org/mozilla-release/source/modules/libpref/init/StaticPrefList.yaml#13191
 pref("network.trr.confirmation_telemetry_enabled", false, locked);
@@ -408,7 +409,15 @@ pref("browser.phoenix.status.core", "004");
 /// Allow permission manager to write to disk
 // This is already Firefox's default - but it's hidden, so this exposes it to the `about:config`
 // https://searchfox.org/mozilla-central/source/extensions/permissions/PermissionManager.cpp#758
-pref("permissions.memory_only", false); // [HIDDEN - DEFAULT]
+pref("permissions.memory_only", false); // [HIDDEN] [DEFAULT]
+
+/// Disable collection/generation of background thumbnails
+// https://searchfox.org/mozilla-central/source/toolkit/components/thumbnails/PageThumbs.sys.mjs#629
+pref("browser.pagethumbnails.capturing_disabled", true); // [HIDDEN]
+
+/// Disable collection/generation of wireframes
+// https://searchfox.org/mozilla-central/source/browser/components/sessionstore/PageWireframes.sys.mjs
+pref("browser.history.collectWireframes", false); // [DEFAULT]
 
 /// Disable coloring visited links
 pref("layout.css.visited_links_enabled", false);
@@ -498,6 +507,13 @@ pref("security.warn_submit_secure_to_insecure", true); // [DEFAULT]
 /// Disable downgrades to insecure TLS 1.0/1.1
 pref("security.tls.insecure_fallback_hosts", ""); // [DEFAULT]
 pref("security.tls.version.enable-deprecated", false, locked); // [DEFAULT]
+
+/// Disable insecure ciphers
+// Like Chromium & Tor Browser
+// https://gitlab.torproject.org/tpo/applications/mullvad-browser/-/issues/361#note_3089049
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1600437
+pref("security.ssl3.ecdhe_ecdsa_aes_128_sha", false); // [DEFAULT - Nightly] TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA
+pref("security.ssl3.ecdhe_ecdsa_aes_256_sha", false); // [DEFAULT - Nightly] TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA
 
 /// Disable Parental Controls
 // https://searchfox.org/mozilla-central/source/toolkit/components/parentalcontrols/nsIParentalControlsService.idl
@@ -712,6 +728,15 @@ pref("browser.phoenix.status.core", "010");
 
 /*** 011 PROXIES ***/
 
+/// Prevent Firefox from automatically using the system's proxy configuration by default
+// This is commonly abused by content filtering/monitoring/MITM software & malware (just like third-party/OS-level root certificates...)
+// There are of course legitimate use cases for proxies, but those require manual set-up anyways... let's ensure the user is always in control and making the conscious decision to use a proxy (if at all)
+// Also helps with performance as a bonus
+// https://bugzilla.mozilla.org/show_bug.cgi?id=500983
+// https://bugzilla.mozilla.org/show_bug.cgi?id=500983#c7
+// https://superuser.com/questions/169303/why-are-my-browsers-suddenly-configured-to-use-a-proxy
+pref("network.proxy.type", 0);
+
 // Prevent bypasses/leakage
 
 /// Disable automatic failover from the proxy (if configured) to direct connections when certain system requests fail
@@ -821,9 +846,10 @@ pref("gfx.font_rendering.opentype_svg.enabled", false);
 // https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/
 // https://firefox-source-docs.mozilla.org/js/index.html#javascript-jits
 // https://codeberg.org/rusty-snake/firefox-config/src/branch/main/assets/user-overrides.js#L60
+// https://codeberg.org/celenity/Phoenix/issues/93
 pref("javascript.options.baselinejit", false); // Baseline Compiler
-pref("javascript.options.blinterp", false); // Baseline Interpreter 
 pref("javascript.options.ion", false); // WarpMonkey
+pref("javascript.options.jithints", false); // Eager baseline hints https://bugzilla.mozilla.org/show_bug.cgi?id=1831572
 pref("javascript.options.main_process_disable_jit", true); // [DEFAULT - iOS?] Main process https://searchfox.org/mozilla-central/source/modules/libpref/init/StaticPrefList.yaml#8761
 pref("javascript.options.native_regexp", false); // irregexp https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/21865
 pref("javascript.options.wasm_baselinejit", false); // WASM Baseline Compiler
@@ -972,6 +998,12 @@ pref("extensions.installDistroAddons", false); // [HIDDEN - non-Android, DEFAULT
 // https://searchfox.org/mozilla-central/source/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs#403
 pref("extensions.install_origins.enabled", true);
 
+/// Enable AMRemoteSettings by default to expose via the `about:config`
+// Used for ex. updating the list of quarantined domains
+// https://searchfox.org/mozilla-central/source/toolkit/mozapps/extensions/docs/AMRemoteSettings-overview.rst
+// https://searchfox.org/mozilla-central/source/toolkit/mozapps/extensions/AddonManager.sys.mjs
+pref("extensions.remoteSettings.disabled", false); // [DEFAULT] [HIDDEN]
+
 /// Enable Mozilla's Extension Blocklist
 pref("extensions.blocklist.enabled", true); // [DEFAULT]
 
@@ -1068,8 +1100,15 @@ pref("pdfjs.enableScripting", false);
 // Not even a standard...
 pref("pdfjs.enableXfa", false);
 
+/// Enable the ability to add signatures
+pref("pdfjs.enableSignatureEditor", true);
+
 /// Never allow documents to prevent copying text
 pref("pdfjs.enablePermissions", false); // [DEFAULT]
+
+/// Open external links in new tabs/windows
+// https://github.com/mozilla/pdf.js/blob/master/extensions/chromium/preferences_schema.json
+pref("pdfjs.externalLinkTarget", 2);
 
 /// Open PDFs inline where possible
 pref("browser.download.open_pdf_attachments_inline", true); // [DEFAULT - Android]
@@ -1227,6 +1266,8 @@ pref("browser.contentanalysis.show_blocked_result", true, locked); // [DEFAULT] 
 // https://w3c.github.io/reporting/
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1492036
 pref("dom.reporting.crash.enabled", false); // [DEFAULT]
+pref("dom.reporting.delivering.maxFailures", 0); // [DEFENSE IN DEPTH]
+pref("dom.reporting.delivering.maxReports", 0); // [DEFENSE IN DEPTH]
 pref("dom.reporting.enabled", false); // [DEFAULT]
 pref("dom.reporting.featurePolicy.enabled", false); // [DEFAULT]
 pref("dom.reporting.header.enabled", false); // [DEFAULT]
@@ -1268,6 +1309,8 @@ pref("network.http.network_error_logging.enabled", false); // [DEFAULT, HIDDEN -
 
 /// Disable storage access heuristics
 // https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
+pref("dom.storage_access.auto_grants", false); // Automatic storage access grants
+pref("dom.storage_access.max_concurrent_auto_grants", 1); // Automatic storage access grants
 pref("privacy.restrict3rdpartystorage.heuristic.navigation", false); // [DEFAULT - non-desktop Nightly] [HIDDEN - Android]
 pref("privacy.restrict3rdpartystorage.heuristic.opened_window_after_interaction", false);
 pref("privacy.restrict3rdpartystorage.heuristic.recently_visited", false);
@@ -1299,9 +1342,9 @@ pref("privacy.globalprivacycontrol.enabled", true);
 pref("privacy.globalprivacycontrol.functionality.enabled", true); // [DEFAULT - non-Thunderbird]
 pref("privacy.globalprivacycontrol.pbmode.enabled", true); // [DEFAULT - non-Thunderbird]
 
-/// Exclude third party trackers from storage access heuristics/auto grants (if enabled)
+/// Exclude third party trackers from storage access heuristics (if enabled)
 // https://developer.mozilla.org/docs/Web/Privacy/State_Partitioning#storage_access_heuristics
-pref("dom.storage_access.auto_grants.exclude_third_party_trackers", true); // [DEFAULT - Nightly]
+pref("dom.storage_access.auto_grants.exclude_third_party_trackers", true); // [DEFAULT - Nightly] Automatic storage access grants
 pref("privacy.restrict3rdpartystorage.heuristic.exclude_third_party_trackers", true); // [DEFAULT - Nightly]
 
 /// Improve built-in query stripping to be on par with LibreWolf & Brave
@@ -1381,10 +1424,11 @@ pref("javascript.options.spectre.disable_for_isolated_content", false);
 /// Enforce Site Isolation + isolate all websites
 // https://wiki.mozilla.org/Project_Fission
 pref("browser.sessionstore.disable_platform_collection", false); // [DEFAULT - non-Thunderbird]
-pref("dom.ipc.processCount.webIsolated", 1); // [DEFAULT - Android]
+pref("dom.ipc.processCount.webIsolated", 1); // [DEFAULT - Android] Use one isolated content process per origin https://searchfox.org/mozilla-central/source/dom/docs/ipc/process_model.rst
 pref("fission.autostart", true); // [DEFAULT - non-Android]
 pref("fission.autostart.session", true); // [DEFAULT - non-Android]
 pref("fission.disableSessionHistoryInParent", false); // [DEFAULT - non-Android] SHIP, required for Fission
+pref("fission.webContentIsolationStrategy", 1); // [DEFAULT - non-Android] Isolate everything https://searchfox.org/mozilla-central/source/dom/ipc/ProcessIsolation.cpp
 pref("gfx.webrender.all", true);
 
 /// Enforce strict file:// Origin Policy
@@ -1575,6 +1619,7 @@ pref("browser.phoenix.status.core", "029");
 
 pref("browser.phoenix.status.core", "successfully applied :D", locked);
 
+
 //
 
 //
@@ -1596,11 +1641,10 @@ pref("browser.phoenix.status.core", "successfully applied :D", locked);
 001: MOZILLA CRAP™
 002: FINGERPRINTING PROTECTION
 003: MEDIA
-004: ATTACK SURFACE REDUCTION
-005: PASSWORDS & AUTHENTICATION
-006: EXTENSIONS
-007: MISC. SECURITY
-008: PERFORMANCE
+004: PASSWORDS & AUTHENTICATION
+005: EXTENSIONS
+006: MISC. SECURITY
+007: PERFORMANCE
 
 */
 
@@ -1680,15 +1724,7 @@ pref("media.mediadrm-widevinecdm.visible", false);
 
 pref("browser.phoenix.status.android", "003");
 
-/*** 004 ATTACK SURFACE REDUCTION ***/
-
-/// Re-enable the JIT Baseline Interpreter, due to severe performance issues some users have been experiencing...
-// ex. https://gitlab.com/ironfox-oss/IronFox/-/issues/18
-pref("javascript.options.blinterp", true); // [DEFAULT]
-
-pref("browser.phoenix.status.android", "004");
-
-/*** 005 PASSWORDS & AUTHENTICATION ***/
+/*** 004 PASSWORDS & AUTHENTICATION ***/
 
 /// Re-enable formless capture in standard windows
 // See `015` at `Phoenix-Core` for details
@@ -1696,9 +1732,9 @@ pref("browser.phoenix.status.android", "004");
 // https://gitlab.com/ironfox-oss/IronFox/-/issues/11
 pref("signon.formlessCapture.enabled", true); // [DEFAULT]
 
-pref("browser.phoenix.status.android", "005");
+pref("browser.phoenix.status.android", "004");
 
-/*** 006 EXTENSIONS ***/
+/*** 005 EXTENSIONS ***/
 
 /// Block extensions signed with weak signature algorithms
 pref("xpinstall.signatures.weakSignaturesTemporarilyAllowed", false); // [DEFAULT, HIDDEN]
@@ -1722,9 +1758,9 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", false); // [DEFAULT]
 pref("extensions.langpacks.signatures.required", true); // [DEFAULT - non-Thunderbird]
 pref("xpinstall.signatures.required", true); // [DEFAULT - non-Thunderbird]
 
-pref("browser.phoenix.status.android", "006");
+pref("browser.phoenix.status.android", "005");
 
-/*** 007 MISC. SECURITY ***/
+/*** 006 MISC. SECURITY ***/
 
 /// Always warn users before launching other apps
 pref("network.protocol-handler.warn-external.file", true);
@@ -1732,14 +1768,14 @@ pref("network.protocol-handler.warn-external.sms", true);
 pref("network.protocol-handler.warn-external.tel", true);
 pref("network.protocol-handler.warn-external.vnd.youtube", true);
 
-pref("browser.phoenix.status.android", "007");
+pref("browser.phoenix.status.android", "006");
 
-/*** 008 PERFORMANCE ***/
+/*** 007 PERFORMANCE ***/
 
 pref("browser.sessionstore.max_tabs_undo", 7);
 pref("network.http.max-connections", 256); // [Default = 128]
 
-pref("browser.phoenix.status.android", "008");
+pref("browser.phoenix.status.android", "007");
 
 pref("browser.phoenix.status.android", "successfully applied :D", locked);
 
