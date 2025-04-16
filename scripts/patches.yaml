@@ -1,0 +1,406 @@
+categories:
+  - name: "Accessibility"
+    excerpt: "Patches that improve accessibility features for all users."
+    description: >
+      These patches aim to make the browser more accessible, such as enabling zoom features
+      universally so that users with visual impairments can navigate websites more easily.
+
+  - name: "Build System"
+    excerpt: "Modifications to improve and stabilize the build process."
+    description: >
+      Patches in this category focus on altering the build system by removing unnecessary dependencies,
+      fixing build issues, or optimizing the build flow to ensure successful compilation and better reproducibility.
+
+  - name: "Dependency"
+    excerpt: "Changes that remove or replace proprietary or external dependencies."
+    description: >
+      These patches remove dependencies on closed-source or third-party services, replacing them with open-source
+      alternatives to enhance transparency, privacy, and control over the software stack.
+
+  - name: "Privacy"
+    excerpt: "Enhancements that minimize data collection and tracking."
+    description: >
+      This category includes patches that disable telemetry, remove proprietary services,
+      strip tracking features, and integrate privacy-focused alternatives to improve user privacy and data protection.
+
+  - name: "Security"
+    excerpt: "Patches that improve default security settings and reduce attack surfaces."
+    description: >
+      These patches tweak or enhance security-related settings and features, such as enabling HTTPS-only mode,
+      securing PDF handling, and reducing exposure to potentially dangerous web content.
+
+  - name: "User Control"
+    excerpt: "Unlocking advanced settings and configuration options for power users."
+    description: >
+      Focused on user empowerment, these patches provide access to advanced or hidden configuration options
+      such as about:config or secret developer settings to allow deeper browser customization.
+
+  - name: "User Experience"
+    excerpt: "Improvements to usability and everyday browsing comfort."
+    description: >
+      These patches improve the overall browsing experience by blocking annoyances like autoplaying media
+      and cookie banners, creating a smoother and less disruptive user journey.
+
+  - name: "User Interface"
+    excerpt: "Visual and interface customizations for branding and clarity."
+    description: >
+      UI-focused patches customize the appearance of the browser, introduce branding changes,
+      and simplify or declutter interface elements to enhance user clarity and recognition.
+
+patches:
+  # Accessibility
+  - file: "force-enable-zoom.patch"
+    name: "Enable Universal Zoom"
+    description: "Enables 'Zoom on all websites' by default"
+    reason: "To improve accessibility by overriding website zoom restrictions."
+    effect: "Users can zoom on all websites, even those trying to block zooming."
+    category: "Accessibility"
+
+  # Build System
+  - file: "gecko-fix-125-compile.patch"
+    name: "Fix v125 Compile Error"
+    description: "Fixes compilation issue in Firefox v125."
+    reason: "Addresses technical bug in the build process."
+    effect: "Ensures successful compilation of the browser."
+    category: "Build System"
+
+  - file: "gecko-localize_maven.patch"
+    name: "Remove Mozilla Maven Repositories"
+    description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
+    reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
+    effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
+    category: "Build System"
+
+  # Dependency
+  - file: "gecko-liberate.patch"
+    name: "Replace GMS with microG"
+    description: "Replaces Google Mobile Services with microG client libraries."
+    reason: "To eliminate dependency on proprietary Google services."
+    effect: "Provides similar functionality without Google tracking and proprietary code."
+    category: "Dependency"
+
+  # Privacy
+  - file: "disable-telemetry.patch"
+    name: "Disable Telemetry"
+    description: "Disables all telemetry collection and submission mechanisms within the browser."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla or third parties."
+    effect: "Enhances user privacy by ensuring no telemetry data is collected or transmitted."
+    category: "Privacy"
+
+  - file: "configure-doh.patch"
+    name: "Configure DNS over HTTPS"
+    description: |
+      Adds custom configuration for DNS over HTTPS, including more DNS providers and max DoH protection level.
+
+      Currently, the following DNS providers have been added :
+
+        - Quad9
+        - AdGuard Standard
+        - AdGuard Unfiltered
+        - AdGuard Family
+        - DNS0 Zero
+        - DNS0 Standard
+        - DNS0 Kids
+        - Mullvad Base
+        - Mullvad Unfiltered
+        - Mullvad Family
+        - Mullvad Extended
+        - Mullvad All
+        - Wikimedia
+
+      Quad9 is used by default.
+    reason: "To add support for multiple secure DNS providers in the UI settings."
+    effect: "Improves DNS privacy with carefully selected DoH providers."
+    category: "Privacy"
+
+  - file: "disable-autocomplete.patch"
+    name: "Disable Autocomplete"
+    description: "Disables form autocomplete by default."
+    reason: "To prevent automatic form filling with previously entered data."
+    effect: "Reduces risk of exposing sensitive information on shared devices."
+    category: "Privacy"
+
+  - file: "disable-autofill.patch"
+    name: "Disable Password Manager"
+    description: |
+      Disables password manager and autofill by default. Using the built-in
+      password manager in a browser is discouraged. Prefer using external, more secure
+      password managers like Bitwarden.
+    reason: "To prevent automatic storage of sensitive credentials in the browser."
+    effect: |
+      Reduces risk of credential exposure.
+    category: "Privacy"
+
+  - file: "disable-doh-canary.patch"
+    name: "Disable DoH Canary Requests"
+    description: "Disables DNS over HTTPS canary requests."
+    reason: "To prevent unnecessary network connections to check DoH compatibility."
+    effect: "Reduces network fingerprinting opportunities and connections to Mozilla servers."
+    category: "Privacy"
+
+  - file: "disable-firefox-suggest.patch"
+    name: "Disable Firefox Suggest"
+    description: "Disables Firefox Suggest feature."
+    reason: "To remove sponsored suggestions and prevent sending address bar data to Mozilla."
+    effect: "Cleaner, more private address bar experience without suggestions."
+    category: "Privacy"
+
+  - file: "disable-link-sharing.patch"
+    name: "Disable 'Sent from Firefox' Link Sharing"
+    description: "Disables the 'Sent from Firefox' footer/link sharing feature."
+    reason: "To prevent automatic inclusion of Firefox branding in shared links."
+    effect: "Improves privacy by not disclosing browser information when sharing links."
+    category: "Privacy"
+
+  - file: "disable-nimbus.patch"
+    name: "Prevent Nimbus Configuration"
+    description: "Prevents remote configuration of settings via Nimbus."
+    reason: "To remove Mozilla's ability to remotely change browser settings."
+    effect: "Ensures user configurations remain consistent and controlled locally."
+    category: "Privacy"
+
+  - file: "disable-pocket.patch"
+    name: "Disable Pocket and Contile"
+    description: "Disables Pocket integration and Contile sponsored tiles."
+    reason: "To remove unnecessary third-party services and sponsored content."
+    effect: "Cleaner interface without promotional content or third-party integrations."
+    category: "Privacy"
+
+  - file: "disable-search-suggestions.patch"
+    name: "Disable Search Suggestions"
+    description: "Disables search suggestions by default."
+    reason: "To prevent sending partial search terms to search providers."
+    effect: "Improves privacy by reducing data shared with search engines."
+    category: "Privacy"
+
+  - file: "disable-sync-by-default.patch"
+    name: "Disable Firefox Sync"
+    description: "Disables Firefox Sync by default."
+    reason: "To prevent automatic sync to Mozilla servers."
+    effect: "No data is synchronized with Mozilla unless explicitly enabled by user."
+    category: "Privacy"
+
+  - file: "disallow-china-fxa-server.patch"
+    name: "Disallow China Sync Server"
+    description: "Disallows using the Domestic China server for Firefox Sync."
+    reason: "Privacy and security concerns related to data storage in China."
+    effect: "Ensures user data isn't synchronized to servers in China."
+    category: "Privacy"
+
+  - file: "extension-recommendations.patch"
+    name: "Custom Extension Recommendations"
+    description: "Switches built-in extension recommendations to use IronFox collection."
+    reason: "To provide privacy-focused extension recommendations."
+    effect: "Users see IronFox-approved extensions instead of Mozilla's recommendations."
+    category: "Privacy"
+
+  - file: "fenix-liberate.patch"
+    name: "Remove Proprietary Libraries"
+    description: "Patches out proprietary and tracking libraries from Fenix."
+    reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
+    effect: "Reduces data collection and improves privacy protection."
+    category: "Privacy"
+
+  - file: "install-ublock.patch"
+    name: "Auto-install uBlock Origin"
+    description: "Installs uBlock Origin on first browser install and allows it to run in private tabs by default."
+    reason: "To ensure content blocking is available from first launch."
+    effect: "Users get content blocking protection without manual installation."
+    category: "Privacy"
+
+  - file: "remove-default-sites.patch"
+    name: "Remove Default Sites"
+    description: "Removes default top sites and shortcuts."
+    reason: "To prevent displaying sponsored content and preset sites."
+    effect: "Clean new tab page without predetermined site suggestions."
+    category: "Privacy"
+
+  - file: "sanitize-on-exit.patch"
+    name: "Sanitize on Exit"
+    description: "Clears browsing data on exit by default"
+    reason: "Ensures privacy between browser sessions"
+    effect: "Automatically clears tabs, history, cache, and download list when browser closes"
+    category: "Privacy"
+
+  - file: "search-engines.patch"
+    name: "Custom Search Engines"
+    description: "Adds custom privacy-focused search engines."
+    reason: "To provide alternatives to tracking-heavy default search engines."
+    effect: "Users can easily use privacy-respecting search engines."
+    category: "Privacy"
+
+  - file: "strict_etp.patch"
+    name: "Enable Strict ETP"
+    description: "Sets Enhanced Tracking Protection to Strict mode by default."
+    reason: "To provide stronger protection against trackers without user configuration."
+    effect: "Blocks more trackers and fingerprinting scripts out of the box."
+    category: "Privacy"
+
+  - file: "tor-spoof-english.patch"
+    name: "Support Locale Spoofing"
+    description: "Enables option to spoof locale to 'en-US'."
+    reason: "To reduce fingerprinting via browser language settings."
+    effect: "Improves anonymity by presenting a common locale regardless of system settings."
+    category: "Privacy"
+
+  - file: "ublock-assets.patch"
+    name: "Enhanced uBlock Configuration"
+    description: "Sets uBlock Origin to use custom/enhanced config by default."
+    reason: "To provide stronger out-of-box content blocking."
+    effect: "Better ad and tracker blocking with optimized filter lists."
+    category: "Privacy"
+
+  - file: "remove-webcompat-reporter.patch"
+    name: "Remove Web Compatibility Reporter"
+    description: "Removes the Web Compatibility Reporter and associated menu items for reporting site issues to Mozilla."
+    reason: "To eliminate external reporting dependencies and declutter the user interface."
+    effect: "Simplifies the browser UI and prevents telemetry or issue reports from being sent to Mozilla."
+    category: "Privacy"
+
+  - file: "enable-light-mode-by-default.patch"
+    name: "Enable Light Mode"
+    description: "Enables light mode by default to prevent fingerprinting."
+    reason: "To prevent fingerprinting based on user's theme preferences."
+    effect: "Browser uses light theme out of the box."
+    category: "Privacy"
+
+  # Security
+  - file: "configure-safe-browsing.patch"
+    name: "Configure Safe Browsing"
+    description: |
+      Enables proxied Google Safe Browsing, for an overall safe browsing experience
+      by blocking malware and phising sites, while also respecting user privacy.
+    reason: "To balance security benefits with privacy concerns."
+    effect: "Maintains protection against malicious sites while reducing data shared with Google."
+    category: "Security"
+
+  - file: "disable-accessibility-services-by-default.patch"
+    name: "Disable Accessibility Services"
+    description: "Disables Accessibility Services by default."
+    reason: "To prevent apps from monitoring users without consent."
+    effect: "Prevents apps from monitoring users without permission, and improves performance as a bonus."
+    category: "Security"
+
+  - file: "disable-shipped-domains.patch"
+    name: "Disable Shipped Domains"
+    description: "Disables pre-shipped domain list."
+    reason: "To address security concerns from outdated domain lists."
+    effect: "Prevents potential security issues and removes annoying domain suggestions."
+    category: "Security"
+
+  - file: "https_only.patch"
+    name: "Enable HTTPS-Only Mode"
+    description: "Enables HTTPS-only mode by default."
+    reason: "To ensure encrypted connections whenever possible."
+    effect: "Improves security by preventing unencrypted HTTP connections."
+    category: "Security"
+
+  - file: "prevent-extensions-from-changing-browser-settings.patch"
+    name: "Prevent Extensions From Changing Browser Settings"
+    description: "Prevents extensions from changing various browser settings."
+    reason: "To prevent extensions from making unauthorized changes to browser settings."
+    effect: "Ensures browser settings aren't changed without explicit user consent."
+    category: "Security"
+
+  - file: "remote-debugging.patch"
+    name: "Hide Remote Debugging UI"
+    description: "Hides the UI setting for Remote Debugging."
+    reason: "To force remote debugging to reset per-session for security reasons."
+    effect: "Prevents users from accidentally leaving remote debugging enabled."
+    category: "Security"
+
+  # User Control
+  - file: "enable-aboutconfig.patch"
+    name: "Enable about:config"
+    description: "Enables access to `about:config` configuration page."
+    reason: "To provide users with advanced configuration options."
+    effect: "Users can customize Firefox settings not available in the regular settings menu."
+    category: "User Control"
+
+  - file: "enable-secret-settings.patch"
+    name: "Enable Secret Settings"
+    description: "Ensures users can toggle certain 'secret' settings if desired."
+    reason: "To provide access to hidden configuration options."
+    effect: "Advanced users can access experimental or hidden features."
+    category: "User Control"
+
+  # User Experience
+  - file: "block-autoplay-by-default.patch"
+    name: "Block Media Autoplay"
+    description: "Blocks autoplay of media by default."
+    reason: "To prevent unwanted audio/video playback on websites."
+    effect: "Improves user experience and reduces bandwidth usage."
+    category: "User Experience"
+
+  - file: "block-cookie-banners.patch"
+    name: "Block Cookie Banners"
+    description: "Blocks cookie consent banners by default."
+    reason: "To improve browsing experience by removing annoying consent popups."
+    effect: "Cleaner websites without cookie banners while maintaining privacy protection."
+    category: "User Experience"
+
+  - file: "disable-default-browser-engagement-prompts.patch"
+    name: "Disable Default Browser Prompts"
+    description: "Disables prompts encouraging users to set the browser as the system default or engage with promotional features."
+    reason: "To eliminate unnecessary engagement messages that may interrupt user workflows."
+    effect: "Reduces distractions by suppressing default browser prompts and promotional nudges."
+    category: "User Experience"
+
+  # User Interface
+  - file: "branding.patch"
+    name: "IronFox Branding"
+    description: "Modifies the branding to IronFox."
+    reason: "Creates distinct brand identity for the fork."
+    effect: "Users can identify the fork as IronFox instead of Firefox."
+    category: "User Interface"
+
+  - file: "disable-cfrs.patch"
+    name: "Disable Contextual Feature Recommendations"
+    description: "Disables Contextual Feature Recommendations."
+    reason: "To removes promotional suggestions for Firefox features."
+    effect: "Cleaner interface without contextual prompts and recommendations."
+    category: "User Interface"
+
+  - file: "disable-microsurveys.patch"
+    name: "Disable Mozilla Surveys"
+    description: "Disables Mozilla Feedback Surveys (Microsurveys)."
+    reason: "To prevent interruptions from survey prompts."
+    effect: "Improves user experience by removing survey notifications."
+    category: "User Interface"
+
+  - file: "enable-felt-privacy.patch"
+    name: "Enable Felt Privacy Design"
+    description: "Enables Firefox's newer 'Felt privacy' design for Private Browsing."
+    reason: "To improve visual distinction of private browsing mode."
+    effect: "Better user awareness of private browsing state with modern design."
+    category: "User Interface"
+
+  - file: "enable-tab-strip.patch"
+    name: "Enable Tab Strip Toggle"
+    description: "Enables preference to toggle tab strip."
+    reason: "To provide more UI customization options."
+    effect: "Users can choose between tab strip layouts according to preference."
+    category: "User Interface"
+
+  - file: "enable-unified-trust-panel.patch"
+    name: "Enable Unified Trust Panel"
+    description: "Enables Firefox's newer Unified Trust Panel by default."
+    reason: "To provide better security information interface."
+    effect: "Improved presentation of site security information when clicking the lock icon in address bar."
+    category: "User Interface"
+
+  - file: "global-privacy-control.patch"
+    name: "Hide Global Privacy Control (GPC) UI"
+    description: "Hides the UI setting for Global Privacy Control."
+    reason: |
+      To prevent users from easily/unnecessarily disabling GPC, as its status can aid fingerprinting, thus harming privacy.
+    effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
+    category: "User Interface"
+  
+  - file: "ironfox-static-strings.patch"
+    name: "IronFox Static Strings"
+    description: "Provides static strings for UI settings specific to IronFox."
+    reason: |
+      To allow us to provide custom UI settings, while avoiding conflicts with other patches.
+    effect: "Users can take advantage of our custom UI settings to improve their privacy, security, and browsing experience."
+    category: "User Interface"

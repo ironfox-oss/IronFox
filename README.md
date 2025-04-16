@@ -158,6 +158,7 @@ sudo apt install -y make \
         unzip \
         wget \
         xz-utils \
+        yq \
         zlib1g-dev
 ```
 
@@ -189,6 +190,7 @@ sudo dnf install -y \
     shasum \
     wget \
     xz \
+    yq \
     zlib-devel
 ```
 

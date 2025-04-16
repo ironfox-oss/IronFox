@@ -18,6 +18,7 @@ RUN dnf install -y \
     shasum \
     wget \
     xz \
+    yq \
     zlib-devel
 
 ENV ENVDOCKER=/opt/env_docker.sh
