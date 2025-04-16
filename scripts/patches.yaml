@@ -214,6 +214,13 @@ patches:
     reason: "To prevent displaying sponsored content and preset sites."
     effect: "Clean new tab page without predetermined site suggestions."
     category: "Privacy"
+  
+  - file: "restrict-mozaddonmanager.patch"
+    name: "Restrict mozAddonManager"
+    description: "Prevents addons.mozilla.org from being able to query a list of the user's installed add-ons, and removes its ability to enable and uninstall add-ons."
+    reason: "To prevent fingerprinting and reduce attack surface."
+    effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API), while reducing the amount of information shared with Mozilla and limiting the API's capabilities."
+    category: "Privacy"
 
   - file: "sanitize-on-exit.patch"
     name: "Sanitize on Exit"
