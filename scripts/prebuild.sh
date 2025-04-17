@@ -360,9 +360,22 @@ fi
 # GeckoView
 pushd "$mozilla_release"
 
+# Let it be IronFox (part 2...)
 find "$patches/gecko-overlay/branding" -type f | while read -r src; do
     dst=mobile/android/branding/${src#"$patches/gecko-overlay/branding/"}
     mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+done
+
+# Add our custom/hardened FPP targets
+find "$patches/gecko-overlay/rfptargets" -type f | while read -r src; do
+    dst=toolkit/components/resistfingerprinting/${src#"$patches/gecko-overlay/rfptargets/"}
+    cp "$src" "$dst"
+done
+
+# Add our custom Remote Settings dumps
+find "$patches/gecko-overlay/rs-dumps" -type f | while read -r src; do
+    dst=services/settings/dumps/${src#"$patches/gecko-overlay/rs-dumps/"}
     cp "$src" "$dst"
 done
 
