@@ -11,10 +11,6 @@ pref("privacy.fingerprintingProtection.overrides", "+ProtectionIWantToEnableGlob
 // We're including these internally with a custom Remote Settings dump instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
 pref("privacy.fingerprintingProtection.granularOverrides", '[{"firstPartyDomain":"example1.invalid","overrides":"+ProtectionIWantToEnableOnThisWebsite,-ProtectionIWantToDisableOnThisWebsite"},{"thirdPartyDomain":"example2.invalid","overrides":"+ThirdPartyDomainsAreSupportedTheSameWayToo"}]');
 
-/// Disable zoom for all websites by default
-// We still enable this by default, just via a patch for Fenix's UI settings instead
-pref("browser.ui.zoom.force-user-scalable", false); // [DEFAULT]
-
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
 // https://gitlab.com/ironfox-oss/IronFox/-/issues/11
