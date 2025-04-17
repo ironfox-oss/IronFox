@@ -3,6 +3,14 @@
 
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
+/// Clear FPP global overrides
+// We're hardening FPP internally with our own `RFPTargetsDefault.inc` file instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
+pref("privacy.fingerprintingProtection.overrides", "+ProtectionIWantToEnableGlobally,-ProtectionIWantToDisableGlobally");
+
+/// Clear FPP granular overrides
+// We're including these internally with a custom Remote Settings dump instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
+pref("privacy.fingerprintingProtection.granularOverrides", '[{"firstPartyDomain":"example1.invalid","overrides":"+ProtectionIWantToEnableOnThisWebsite,-ProtectionIWantToDisableOnThisWebsite"},{"thirdPartyDomain":"example2.invalid","overrides":"+ThirdPartyDomainsAreSupportedTheSameWayToo"}]');
+
 /// Disable zoom for all websites by default
 // We still enable this by default, just via a patch for Fenix's UI settings instead
 pref("browser.ui.zoom.force-user-scalable", false); // [DEFAULT]
@@ -21,9 +29,5 @@ pref("webgl.disabled", false); // [DEFAULT]
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
-
-/// Spoof locale reported by the Internationalization API to `en-US`
-// We'll have to figure out how to better handle this/combine with our current UI preference to spoof English
-pref("privacy.fingerprintingProtection.overrides", "+AllTargets,-CanvasImageExtractionPrompt,-CanvasExtractionBeforeUserInputIsBlocked,-CSSPrefersColorScheme,-FrameRate");
 
 pref("browser.ironfox.applied", true, locked);

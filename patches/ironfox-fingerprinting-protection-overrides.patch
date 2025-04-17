@@ -1,0 +1,20 @@
+diff --git a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
+index 676f06ea68..a8f08aa0ba 100644
+--- a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
++++ b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
+@@ -47,6 +47,7 @@ const SCHEMA = `{
+ }`;
+ 
+ const COLLECTION_NAME = "fingerprinting-protection-overrides";
++const IF_COLLECTION_NAME = "ironfox-fingerprinting-protection-overrides";
+ const PREF_GRANULAR_OVERRIDES =
+   "privacy.fingerprintingProtection.granularOverrides";
+ const PREF_REMOTE_OVERRIDES_ENABLED =
+@@ -104,6 +105,7 @@ export class FingerprintingWebCompatService {
+     this.#granularOverrides = new Set();
+ 
+     this.#rs = lazy.RemoteSettings(COLLECTION_NAME);
++    this.#rs = lazy.RemoteSettings(IF_COLLECTION_NAME);
+     this.#validator = new lazy.JsonSchema.Validator(SCHEMA);
+   }
+ 

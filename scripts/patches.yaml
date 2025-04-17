@@ -353,6 +353,20 @@ patches:
     effect: "Reduces distractions by suppressing default browser prompts and promotional nudges."
     category: "User Experience"
 
+  - file: "rs-dumps.patch"
+    name: "Remote Settings Dumps"
+    description: "Includes more Remote Settings Dumps locally (like desktop Firefox) and allows us to add our own custom dumps."
+    reason: "Including more Remote Settings Dumps locally ensures that the content is always available for users on the first launch after installing IronFox, and it saves bandwidth by avoiding the need to initially download the entire dumps remotely. This patch also allows us to add our own custom Remote Settings dumps, so that we can further improve the user experience (ex. with our fingerprinting protection overrides)."
+    effect: "Ensures users are ready to browse and explore out of the box, and can take advantage of our added lists/features."
+    category: "User Experience"
+
+  - file: "ironfox-fingerprinting-protection-overrides.patch"
+    name: "IronFox Fingerprinting Protection (FPP) Overrides"
+    description: "Adds support for an internal list that disables specific fingerprinting protections as needed on a per-site basis."
+    reason: "To reduce website breakage for end-users. Setting the overrides this way specifically also avoids us needing to use the 'privacy.fingerprintingProtection.granularOverrides' preference like we have in the past, allowing users to easily set their own overrides (via that preference) if needed."
+    effect: "Provides users with a seamless browsing experience and allows them to benefit from our strong fingerprinting protection, minus the breakage and headaches."
+    category: "User Experience"
+
   # User Interface
   - file: "branding.patch"
     name: "IronFox Branding"
