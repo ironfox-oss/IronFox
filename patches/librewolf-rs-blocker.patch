@@ -1,0 +1,170 @@
+diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
+index 32dcdd45d8..fc1e8b0de1 100644
+--- a/services/settings/RemoteSettingsClient.sys.mjs
++++ b/services/settings/RemoteSettingsClient.sys.mjs
+@@ -228,6 +228,11 @@
+    * @see Downloader.download
+    */
+   async download(record, options) {
++    if (!lazy.Utils.isCollectionAllowed(this.bucketName, this.collectionName)) {
++      throw Error(
++        `Download attempt to RS collection "${this.identifier}" was blocked.`
++      );
++    }
+     try {
+       // Explicitly await here to ensure we catch a network error.
+       return await super.download(record, options);
+@@ -620,6 +625,10 @@
+       return;
+     }
+ 
++    if (!lazy.Utils.isCollectionAllowed(this.bucketName, this.collectionName)) {
++      return;
++    }
++
+     // We want to know which timestamp we are expected to obtain in order to leverage
+     // cache busting. We don't provide ETag because we don't want a 304.
+     const { changes } = await lazy.Utils.fetchLatestChanges(
+@@ -981,6 +990,14 @@
+    * Import the JSON files from services/settings/dump into the local DB.
+    */
+   async _importJSONDump() {
++    if (
++      !lazy.Utils.isCollectionAllowedFromDump(
++        this.bucketName,
++        this.collectionName
++      )
++    ) {
++      return 0;
++    }
+     lazy.console.info(`${this.identifier} try to restore dump`);
+     const result = await lazy.RemoteSettingsWorker.importJSONDump(
+       this.bucketName,
+diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
+index d3643aedf2..d3d7127dbf 100644
+--- a/services/settings/Utils.sys.mjs
++++ b/services/settings/Utils.sys.mjs
+@@ -75,6 +75,18 @@
+   return false;
+ });
+ 
++ChromeUtils.defineLazyGetter(lazy, "allowedCollections", () =>
++  Services.prefs
++    .getStringPref("browser.ironfox.services.settings.allowedCollections", "")
++    .split(",")
++);
++
++ChromeUtils.defineLazyGetter(lazy, "allowedCollectionsFromDump", () =>
++  Services.prefs
++    .getStringPref("browser.ironfox.services.settings.allowedCollectionsFromDump", "")
++    .split(",")
++);
++
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+   "gServerURL",
+@@ -206,11 +218,79 @@
+   },
+ 
+   /**
++   * Internal code to determine whether the bucket and collection are allowed to
++   * be loaded by the remote settings client for a given list of allowed
++   * bucket/collection combinations.
++   * @param {string} bucket
++   * @param {string} collection
++   * @param {Array<string>} allowedCollections
++   * @returns {boolean} whether the bucket and collection are allowed to load
++   */
++  _isCollectionAllowedInternal(bucket, collection, allowedCollections) {
++    bucket = this.actualBucketName(bucket);
++    return (
++      allowedCollections.includes(`${bucket}/${collection}`) ||
++      allowedCollections.includes(`${bucket}/*`) ||
++      allowedCollections.includes("*")
++    );
++  },
++
++  /**
++   * Determines whether the bucket and collection are allowed to be loaded by the
++   * remote settings client.
++   * @param {string} bucket
++   * @param {string} collection
++   * @returns {boolean} whether the bucket and collection are allowed to load
++   */
++  isCollectionAllowed(bucket, collection) {
++    if (
++      this._isCollectionAllowedInternal(
++        bucket,
++        collection,
++        lazy.allowedCollections
++      )
++    ) {
++      return true;
++    }
++    console.warn(
++      `Connection attempt to RS collection "${bucket}/${collection}" was blocked/filtered.`
++    );
++    return false;
++  },
++
++  /**
++   * Determines whether the bucket and collection are allowed to be loaded from
++   * an in-tree remote settings dump.
++   * @param {string} bucket
++   * @param {string} collection
++   * @returns {boolean} whether the bucket and collection are allowed to load
++   */
++  isCollectionAllowedFromDump(bucket, collection) {
++    if (
++      this._isCollectionAllowedInternal(
++        bucket,
++        collection,
++        lazy.allowedCollectionsFromDump
++      ) ||
++      this._isCollectionAllowedInternal(
++        bucket,
++        collection,
++        lazy.allowedCollections
++      )
++    ) {
++      return true;
++    }
++    console.warn(
++      `Access attempt to RS collection "${bucket}/${collection}" from local dump was blocked/filtered.`
++    );
++    return false;
++  },
++
++  /**
+    * A wrapper around `ServiceRequest` that behaves like `fetch()`.
+    *
+    * Use this in order to leverage the `beConservative` flag, for
+    * example to avoid using HTTP3 to fetch critical data.
+-   *
+    * @param input a resource
+    * @param init request options
+    * @returns a Response object
+@@ -483,7 +563,9 @@
+     }
+ 
+     return {
+-      changes,
++      changes: changes.filter(change =>
++        this.isCollectionAllowed(change.bucket, change.collection)
++      ),
+       currentEtag: `"${timestamp}"`,
+       serverTimeMillis,
+       backoffSeconds,
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index 044e2960be..8837020d49 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -4585,8 +4585,6 @@ AMRemoteSettings = {
+    */
+   RS_ENTRIES_MAP: {
+     installTriggerDeprecation: [
+-      "extensions.InstallTriggerImpl.enabled",
+-      "extensions.InstallTrigger.enabled",
+     ],
+     quarantinedDomains: ["extensions.quarantinedDomains.list"],
+   },

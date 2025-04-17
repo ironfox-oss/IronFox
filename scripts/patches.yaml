@@ -207,6 +207,13 @@ patches:
     reason: "To ensure content blocking is available from first launch."
     effect: "Users get content blocking protection without manual installation."
     category: "Privacy"
+  
+  - file: "librewolf-rs-blocker.patch"
+    name: "Block Remote Settings"
+    description: "Restricts Remote Settings to only download specific collections specified in preferences."
+    reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
+    effect: "Network activity is further limited, less data is shared with Mozilla, and the user is put in control of what specifically they want to download from Remote Settings."
+    category: "Privacy"
 
   - file: "remove-default-sites.patch"
     name: "Remove Default Sites"
