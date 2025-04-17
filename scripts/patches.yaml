@@ -324,13 +324,6 @@ patches:
     category: "Security"
 
   # User Control
-  - file: "enable-aboutconfig.patch"
-    name: "Enable about:config"
-    description: "Enables access to `about:config` configuration page."
-    reason: "To provide users with advanced configuration options."
-    effect: "Users can customize Firefox settings not available in the regular settings menu."
-    category: "User Control"
-
   - file: "enable-secret-settings.patch"
     name: "Enable Secret Settings"
     description: "Ensures users can toggle certain 'secret' settings if desired."
@@ -415,6 +408,13 @@ patches:
     description: "Enables Firefox's newer Unified Trust Panel by default."
     reason: "To provide better security information interface."
     effect: "Improved presentation of site security information when clicking the lock icon in address bar."
+    category: "User Interface"
+  
+  - file: "expose-aboutconfig.patch"
+    name: "Expose the 'about:config'"
+    description: "Exposes the 'about:config' in 'about:about' alongside other internal 'about' pages."
+    reason: "To provide users with easier access to advanced configuration options."
+    effect: "Users can access the 'about:config' easier to customize advanced Firefox settings not available in the regular settings menu."
     category: "User Interface"
 
   - file: "global-privacy-control.patch"
