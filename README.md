@@ -328,7 +328,9 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
 
-`tor-spoof-english.patch` is taken from the [Tor Project](https://support.torproject.org/about/distribute-tor/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
+`librewolf-rs-blocker.patch` is adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
+
+`tor-spoof-english.patch` is adapted from the [Tor Project](hhttps://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
 ## Notices
 
