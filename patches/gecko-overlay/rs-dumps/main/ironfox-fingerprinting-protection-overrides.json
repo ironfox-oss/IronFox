@@ -89,6 +89,10 @@
       "firstPartyDomain": "kosmikdog.eu"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "megacloud.store"
+    },
+    {
       "overrides": "-WebGLRenderInfo",
       "firstPartyDomain": "moviezapiya.fun"
     },
@@ -123,6 +127,10 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "photopea.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "pogospike.com"
     },
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
