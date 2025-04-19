@@ -98,6 +98,10 @@
     },
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "megacloud.blog"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "megacloud.store"
     },
     {
