@@ -77,6 +77,14 @@
       "firstPartyDomain": "gnulinux.club"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "gsi.go.jp"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "harkins.com"
+    },
+    {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "hot-chilli.im"
     },
@@ -111,6 +119,10 @@
     {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "nope.chat"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "nperf.com"
     },
     {
       "overrides": "-JSDateTimeUTC",
