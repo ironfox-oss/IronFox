@@ -8,6 +8,7 @@ RUN dnf install -y adoptium-temurin-java-repository && \
 RUN dnf install -y \
     cmake \
     clang \
+    gawk \
     git \
     gyp \
     temurin-8-jdk \
