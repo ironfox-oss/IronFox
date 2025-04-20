@@ -197,7 +197,7 @@ To add The Adoptium Working Group's repository, you'll want to install Fedora's 
 
 ```sh
 sudo dnf install -y adoptium-temurin-java-repository
-sudo sed -i 's/^enabled=0/enabled=1/' /etc/yum.repos.d/adoptium-temurin-java-repository.repo
+sudo dnf config-manager setopt adoptium-temurin-java-repository.enabled=1
 sudo dnf makecache
 ```
 
