@@ -175,6 +175,7 @@ You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the defau
 sudo dnf install -y \
     cmake \
     clang \
+    gawk \
     git \
     gyp \
     m4 \
