@@ -323,6 +323,13 @@ patches:
     effect: "Prevents users from accidentally leaving remote debugging enabled."
     category: "Security"
 
+  - file: "domain-highlighting-and-alignment.patch"
+    name: "Add domain highlighting and alignment"
+    description: "Adds domain highlighting and alignment in the toolbar."
+    reason: "Helps users more easily identify the actual domain in the URL bar, which improves phishing detection."
+    effect: "The registrable domain (eTLD+1) is highlighted, and the URL bar scrolls to the end of the domain name."
+    category: "Security"
+
   # User Control
   - file: "enable-secret-settings.patch"
     name: "Enable Secret Settings"
