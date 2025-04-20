@@ -1,4 +1,8 @@
-FROM fedora:41
+FROM fedora:42
+
+# Add & enable Adoptium Repository
+RUN dnf install -y adoptium-temurin-java-repository && \
+    dnf config-manager setopt adoptium-temurin-java-repository.enabled=1
 
 # Install required packages
 RUN dnf install -y \
@@ -6,8 +10,8 @@ RUN dnf install -y \
     clang \
     git \
     gyp \
-    java-1.8.0-openjdk-devel \
-    java-17-openjdk-devel \
+    temurin-8-jdk \
+    temurin-17-jdk \
     m4 \
     make \
     nasm \
@@ -23,7 +27,7 @@ RUN dnf install -y \
 
 ENV ENVDOCKER=/opt/env_docker.sh
 ENV ANDROID_HOME=/root/android-sdk
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
 
 RUN echo "#!/bin/bash" >> $ENVDOCKER && \
     echo 'source /root/env/bin/activate' >> $ENVDOCKER
