@@ -11,7 +11,6 @@ RUN dnf install -y \
     gawk \
     git \
     gyp \
-    temurin-8-jdk \
     temurin-17-jdk \
     m4 \
     make \
