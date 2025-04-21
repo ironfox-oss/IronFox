@@ -494,7 +494,24 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/d
 index c53fbcbc29..eb52fd245c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-@@ -587,8 +587,8 @@ private fun ExceptionsRow(onExceptionsClicked: () -> Unit) {
+@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.verticalScroll
+ import androidx.compose.material.AlertDialog
+ import androidx.compose.material.Icon
+ import androidx.compose.material.IconButton
+@@ -89,6 +91,7 @@ internal fun DohSettingsScreen(
+         Column(
+             modifier = Modifier
+                 .fillMaxSize()
++                .verticalScroll(rememberScrollState())
+                 .padding(paddingValues),
+         ) {
+             DohSummary(
+@@ -587,8 +590,8 @@ private fun ExceptionsRow(onExceptionsClicked: () -> Unit) {
  private fun DohScreenDefaultProviderPreview() {
      FirefoxTheme {
          val provider = Provider.BuiltIn(
