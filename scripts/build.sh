@@ -112,6 +112,7 @@ popd
 # shellcheck disable=SC2154
 pushd "$mozilla_release"
 
+# shellcheck disable=SC2086
 ./mach build && \
 ./mach package && \
 ./mach package-multi-locale --locales ${IRONFOX_LOCALES}
