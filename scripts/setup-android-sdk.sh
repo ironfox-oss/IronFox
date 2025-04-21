@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SDK_REVISION=9123335
+SDK_REVISION=13114758
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
@@ -41,18 +41,10 @@ export PATH
 # Accept licenses
 { yes || true; } | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
 
-# Set up Android SDK
-if grep -q "Fedora" /etc/os-release; then
-    JAVA_HOME="/usr/lib/jvm/temurin-8-jdk" $SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
-    JAVA_HOME="/usr/lib/jvm/temurin-8-jdk" $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
-    JAVA_HOME="/usr/lib/jvm/temurin-8-jdk" $SDK_MANAGER 'ndk;27.2.12479018'  # for mozbuild
-    JAVA_HOME="/usr/lib/jvm/temurin-8-jdk" $SDK_MANAGER 'ndk;28.0.13004108'  # for application-services
-else
-    $SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
-    $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
-    $SDK_MANAGER 'ndk;27.2.12479018'  # for mozbuild
-    $SDK_MANAGER 'ndk;28.0.13004108'  # for application-services
-fi
+$SDK_MANAGER 'build-tools;35.0.0' # for GeckoView
+$SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
+$SDK_MANAGER 'ndk;27.2.12479018'  # for mozbuild
+$SDK_MANAGER 'ndk;28.0.13004108'  # for application-services
 
 export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
 [ -d "$ANDROID_NDK" ] || {
