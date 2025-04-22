@@ -75,6 +75,7 @@ update-site-repo:
     - if: $CI_COMMIT_BRANCH == "dev"
       changes:
       - scripts/patches.yaml
+      - scripts/ci-update-site.sh
   variables:
     TARGET_REPO_PATH: ironfox-oss/ironfoxoss.org
     TARGET_REPO_BRANCH: dev
