@@ -1,4 +1,4 @@
-FROM fedora:42
+FROM fedora:41
 
 # Add & enable Adoptium Repository
 RUN dnf install -y adoptium-temurin-java-repository && \
