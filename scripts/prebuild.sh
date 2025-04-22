@@ -396,10 +396,6 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
-# Set the Safe Browsing API URL to our proxy
-sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
-    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
-
 # Remove glean telemetry URL
 remove_glean_telemetry "${glean}"
 remove_glean_telemetry "${application_services}"
@@ -415,6 +411,7 @@ remove_glean_telemetry "${mozilla_release}/netwerk"
 sed -i \
     -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
     -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
+    -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
     -e 's|"cookiebanners.service.enableGlobalRules"|"z99.cookiebanners.service.enableGlobalRules"|' \
     -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
     -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
