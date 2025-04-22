@@ -35,7 +35,7 @@ index 84ad70e3a4..380c7dbf93 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index db66cbe503..cc79792cd2 100644
+index db66cbe503..cfbc137e68 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 @@ -340,6 +340,16 @@ abstract class Settings {
@@ -51,40 +51,37 @@ index db66cbe503..cc79792cd2 100644
 +    /**
 +     * Setting to control Accessibility Developer Tools.
 +     */
-+    open val accessibilityDevToolsEnabled: Boolean by UnsupportedSetting()
++    open var accessibilityDevToolsEnabled: Boolean by UnsupportedSetting()
  }
  
  /**
-@@ -408,9 +418,12 @@ data class DefaultSettings(
+@@ -408,6 +418,8 @@ data class DefaultSettings(
      override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
      override var certificateTransparencyMode: Int = 0,
      override var postQuantumKeyExchangeEnabled: Boolean = false,
 +    override var accessibilityEnabled: Boolean = false,
++    override var accessibilityDevToolsEnabled: Boolean = false,
  ) : Settings() {
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
-+    override val accessibilityDevToolsEnabled: Boolean
-+        get() = accessibilityEnabled
- }
- 
- class UnsupportedSetting<T> {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 3ab8ea1acd..a46111ae99 100644
+index 3ab8ea1acd..ed0f3f7ff5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -180,6 +180,7 @@ class Core(
+@@ -180,6 +180,8 @@ class Core(
              parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
              certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
 +            accessibilityEnabled = context.settings().accessibilityEnabled,
++            accessibilityDevToolsEnabled = context.settings().accessibilityDevToolsEnabled,
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
-index 1122dc0b0f..fa3ed491b0 100644
+index 1122dc0b0f..4bc43bd4ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
-@@ -23,6 +23,20 @@ class AccessibilityFragment : PreferenceFragmentCompat() {
+@@ -23,6 +23,23 @@ class AccessibilityFragment : PreferenceFragmentCompat() {
          super.onResume()
          showToolbar(getString(R.string.preferences_accessibility))
  
@@ -99,6 +96,9 @@ index 1122dc0b0f..fa3ed491b0 100644
 +            settings.accessibilityEnabled = shouldEnable
 +            components.core.engine.settings.accessibilityEnabled = shouldEnable
 +
++            settings.accessibilityDevToolsEnabled = shouldEnable
++            components.core.engine.settings.accessibilityDevToolsEnabled = shouldEnable
++
 +            true
 +        }
 +
@@ -106,10 +106,10 @@ index 1122dc0b0f..fa3ed491b0 100644
              R.string.pref_key_accessibility_force_enable_zoom,
          )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..2473c2f09b 100644
+index b800c22431..853d8d8d89 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1001,6 +1001,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1001,6 +1001,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          } else {
              ToolbarPosition.TOP
          }
@@ -118,10 +118,12 @@ index b800c22431..2473c2f09b 100644
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
 +        default = false
 +    )
++
++    var accessibilityDevToolsEnabled = accessibilityEnabled
  
      /**
       * Check each active accessibility service to see if it can perform gestures, if any can,
-@@ -1008,6 +1013,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1008,6 +1016,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val switchServiceIsEnabled: Boolean
          get() {
@@ -131,7 +133,7 @@ index b800c22431..2473c2f09b 100644
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
  
-@@ -1024,6 +1032,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1024,6 +1035,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val touchExplorationIsEnabled: Boolean
          get() {
@@ -141,7 +143,7 @@ index b800c22431..2473c2f09b 100644
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
              return accessibilityManager?.isTouchExplorationEnabled ?: false
-@@ -1031,7 +1042,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1031,7 +1045,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val accessibilityServicesEnabled: Boolean
          get() {
