@@ -108,17 +108,7 @@ else
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
 fi
 
-if grep -q "Fedora" /etc/os-release; then
-    export libclang=/usr/lib64
-else
-    # shellcheck disable=SC2154
-    export libclang="${builddir}/libclang"
-    mkdir -p "$libclang"
-
-    # TODO: Maybe find a way to not hardcode this?
-    ln -sf "/usr/lib/x86_64-linux-gnu/libclang-18.so.1" "$libclang/libclang.so"
-fi
-
+libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/musl/lib"
 echo "...libclang dir set to ${libclang}"
 
 # shellcheck disable=SC1090,SC1091
