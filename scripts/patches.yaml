@@ -301,6 +301,13 @@ patches:
     effect: "Prevents potential security issues and removes annoying domain suggestions."
     category: "Security"
 
+  - file: "harden-pdfjs.patch"
+    name: "Harden PDF.js"
+    description: "Hardens Firefox's built-in PDF Viewer (PDF.js)."
+    reason: "To reduce attack surface and protect users from various attacks, with changes inspired by GrapheneOS's PDF Viewer: https://github.com/GrapheneOS/PdfViewer."
+    effect: "Users are provided with a more secure PDF viewing experience, while still enjoying it from the comfort of their browser."
+    category: "Security"
+
   - file: "https_only.patch"
     name: "Enable HTTPS-Only Mode"
     description: "Enables HTTPS-only mode by default."
