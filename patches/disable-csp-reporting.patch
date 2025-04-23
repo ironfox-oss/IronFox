@@ -1,0 +1,13 @@
+diff --git a/dom/security/nsCSPContext.cpp b/dom/security/nsCSPContext.cpp
+index 69c77a4e54..cae78daacb 100644
+--- a/dom/security/nsCSPContext.cpp
++++ b/dom/security/nsCSPContext.cpp
+@@ -1208,7 +1208,6 @@ nsresult nsCSPContext::SendReports(
+ 
+   //[Deprecated] CSP Level 2 Reporting
+   if (!reportURIs.IsEmpty()) {
+-    return SendReportsToURIs(reportURIs, aViolationEventInit);
+   }
+ 
+   return NS_OK;
+
