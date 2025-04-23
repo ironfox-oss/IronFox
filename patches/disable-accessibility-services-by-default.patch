@@ -115,7 +115,7 @@ index b800c22431..9514e0b1bc 100644
  
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
-+        default = false
++        default = false,
 +    )
 +
 +    var accessibilityDevToolsEnabled = accessibilityEnabled
