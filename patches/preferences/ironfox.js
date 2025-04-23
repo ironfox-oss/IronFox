@@ -27,7 +27,7 @@ pref("browser.ironfox.services.settings.allowedCollections", "blocklists/addons,
 pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironfox-fingerprinting-protection-overrides,blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,main/anti-tracking-url-decoration,main/cookie-banner-rules-list,main/moz-essential-domain-fallbacks,main/password-recipes,main/remote-permissions,main/translations-models,main/translations-wasm,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,security-state/intermediates,security-state/onecrl");
 
 /// So people stop freaking out and filing invalid reports...
-pref("privacy.resistFingerprinting.note", "RFP is disabled on purpose. We use a hardened configuration of FPP instead.");
+pref("privacy.resistFingerprinting.0.note", "RFP is disabled on purpose. We use a hardened configuration of FPP instead.");
 
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
