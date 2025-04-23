@@ -127,7 +127,7 @@ index b800c22431..d22e761709 100644
 +    
 +    var safeBrowsingEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
-+        default = true
++        default = true,
 +    )
 +
 +    var safeBrowsingPhishingEnabled = safeBrowsingEnabled
