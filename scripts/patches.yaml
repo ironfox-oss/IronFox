@@ -422,13 +422,6 @@ patches:
     reason: "To provide more UI customization options."
     effect: "Users can choose between tab strip layouts according to preference."
     category: "User Interface"
-
-  - file: "enable-unified-trust-panel.patch"
-    name: "Enable Unified Trust Panel"
-    description: "Enables Firefox's newer Unified Trust Panel by default."
-    reason: "To provide better security information interface."
-    effect: "Improved presentation of site security information when clicking the lock icon in address bar."
-    category: "User Interface"
   
   - file: "expose-aboutconfig.patch"
     name: "Expose the 'about:config'"
