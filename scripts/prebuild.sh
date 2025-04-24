@@ -418,7 +418,6 @@ sed -i \
     -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
     -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
-    -e 's|"javascript.enabled"|"z99.ignore.javascript.enabled"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \

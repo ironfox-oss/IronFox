@@ -1,0 +1,122 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
+index 115535816e..7ae782d30f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
+@@ -44,6 +44,70 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+     override fun onResume() {
+         super.onResume()
+         showToolbar(getString(R.string.preferences_site_settings))
++
++        val javascriptEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_javascript_enabled,
++        )
++
++        javascriptEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, shouldEnable ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptEnabled = shouldEnable
++            components.core.engine.settings.javascriptEnabled = shouldEnable
++
++            true
++        }
++
++        val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_jit_enabled,
++        )
++
++        javascriptJitEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, shouldEnable ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptJitBaselineEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitBaselineEnabled = shouldEnable
++
++            settings.javascriptJitBaselineEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitBaselineEnabled = shouldEnable
++
++            settings.javascriptJitBaselineWasmEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitBaselineWasmEnabled = shouldEnable
++
++            settings.javascriptJitHintsEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitHintsEnabled = shouldEnable
++
++            settings.javascriptJitIonEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitIonEnabled = shouldEnable
++
++            settings.javascriptJitMainProcessEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitMainProcessEnabled = shouldEnable
++
++            settings.javascriptJitNativeRegexpEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitNativeRegexpEnabled = shouldEnable
++
++            settings.javascriptJitTrustedPrincipalsEnabled = shouldEnable
++            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = shouldEnable
++
++            true
++        }
++
++        val wasmEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_wasm_enabled,
++        )
++
++        wasmEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, shouldEnable ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.wasmEnabled = shouldEnable
++            components.core.engine.settings.wasmEnabled = shouldEnable
++
++            true
++        }
++        
+         setupPreferences()
+     }
+ 
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+index a1993c808f..493e85c9fd 100644
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -430,6 +430,10 @@
+     <string name="pref_key_app_cold_start_count" translatable="false">pref_key_app_cold_start_count</string>
+     <string name="pref_key_app_is_onboarding_set_as_default_displayed" translatable="false">pref_key_app_is_onboarding_set_as_default_displayed</string>
+ 
++    <!-- Content Settings -->
++    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
++    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
++    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+     <string name="pref_key_desktop_browsing" translatable="false">pref_key_desktop_browsing</string>
+ 
+     <!-- Crash reporting -->
+diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+index ef1dcb4e6e..46c63052f7 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+@@ -25,6 +25,27 @@
+             android:title="@string/preference_feature_desktop_mode_default"
+             app:iconSpaceReserved="false" />
+ 
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:key="@string/pref_key_javascript_enabled"
++            android:title="@string/preference_javascript_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="false"
++            android:key="@string/pref_key_jit_enabled"
++            android:title="@string/preference_jit_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="false"
++            android:key="@string/pref_key_wasm_enabled"
++            android:title="@string/preference_wasm_enabled"
++            app:iconSpaceReserved="false" />
++
+     </androidx.preference.PreferenceCategory>
+ 
+     <androidx.preference.PreferenceCategory
