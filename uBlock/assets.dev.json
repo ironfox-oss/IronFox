@@ -36,6 +36,10 @@
             "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/filters.min.txt",
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/filters.min.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "ublock0-badware": {
@@ -55,6 +59,10 @@
             "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/badware.min.txt",
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/badware.min.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://github.com/uBlockOrigin/uAssets",
         "instructionURL": "https://github.com/gorhill/uBlock/wiki/Badware-risks"
     },
@@ -75,6 +83,10 @@
             "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/privacy.min.txt",
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/privacy.min.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "ublock0-unbreak": {
@@ -93,6 +105,10 @@
             "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/unbreak.min.txt",
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/unbreak.min.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "ublock0-quick-fixes": {
@@ -111,6 +127,10 @@
             "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/quick-fixes.min.txt",
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/quick-fixes.min.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "adguard-generic": {
@@ -146,6 +166,10 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/thirdparties/easylist.txt",
             "https://ublockorigin.pages.dev/thirdparties/easylist.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://easylist.to/"
     },
     "adguard-spyware-url": {
@@ -193,6 +217,10 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/thirdparties/easyprivacy.txt",
             "https://ublockorigin.pages.dev/thirdparties/easyprivacy.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://easylist.to/"
     },
     "urlhaus-1": {
@@ -403,6 +431,10 @@
             "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/annoyances.min.txt",
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/annoyances.min.txt"
         ],
+        "patchURLs": [
+			"https://ublockorigin.github.io/uAssetsCDN/filters/",
+			"https://ublockorigin.pages.dev/filters/"
+		],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "dpollock-0": {
@@ -707,22 +739,21 @@
         "off": true,
         "title": "🇵🇱pl: Oficjalne Polskie Filtry do uBlocka Origin",
         "tags": "ads polish polski",
-        "lang": "szl pl",
+        "lang": "szl pl _",
         "contentURL": "https://raw.githubusercontent.com/MajkiIT/polish-ads-filter/master/polish-adblock-filters/adblock.txt",
-        "supportURL": "https://github.com/MajkiIT/polish-ads-filter/issues",
-        "instructionURL": "https://github.com/MajkiIT/polish-ads-filter#polish-filters-for-adblock-ublock-origin--adguard"
+        "supportURL": "https://github.com/MajkiIT/polish-ads-filter"
     },
-    "POL-2": {
-        "content": "filters",
-        "group": "regions",
+    "POL-3": {
+		"content": "filters",
+		"group": "regions",
         "parent": "🇵🇱pl: Oficjalne Polskie Filtry",
-        "off": true,
-        "title": "🇵🇱pl: Oficjalne polskie filtry przeciwko alertom o Adblocku",
-        "tags": "ads polish polski",
-        "lang": "szl pl",
-        "contentURL": "https://raw.githubusercontent.com/olegwukr/polish-privacy-filters/master/anti-adblock.txt",
-        "supportURL": "https://github.com/olegwukr/polish-privacy-filters/issues"
-    },
+		"off": true,
+		"title": "🇵🇱pl: CERT.PL's Warning List",
+		"tags": "malware polish polski",
+		"lang": "szl pl",
+		"contentURL": "https://hole.cert.pl/domains/v2/domains_adblock.txt",
+		"supportURL": "https://cert.pl/lista-ostrzezen/"
+	},
     "ROU-1": {
         "content": "filters",
         "group": "regions",
@@ -741,7 +772,7 @@
         "parent": "🇷🇺ru 🇺🇦ua 🇺🇿uz 🇰🇿kz: RU AdList",
         "off": true,
         "title": "🇷🇺ru 🇺🇦ua 🇺🇿uz 🇰🇿kz: RU AdList",
-        "tags": "ads belarusian беларуская kazakh tatar russian русский ukrainian українська uzbek",
+        "tags": "ads belarusian беларуская kazakh tatar russian русский ukrainian українська uzbek uk",
         "lang": "be kk tt ru uz",
         "contentURL": "https://raw.githubusercontent.com/easylist/ruadlist/master/RuAdList-uBO.txt",
         "cdnURLs": [
@@ -924,7 +955,7 @@
         "group": "annoyances",
         "off": true,
         "title": "⭐ celenity's personal filters",
-        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/personal-filters.txt",
+        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/abp/personal.txt",
         "supportURL": "https://badblock.celenity.dev/issues"
     },
     "click2load": {
