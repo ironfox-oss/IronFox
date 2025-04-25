@@ -15,6 +15,6 @@ index a211dab268..a487474b24 100644
 +    <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
 +    <!-- Content Settings -->
 +    <string name="preference_javascript_enabled">Enable JavaScript</string>
-+    <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
++    <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT) - Requires Restart</string>
 +    <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
  </resources>
