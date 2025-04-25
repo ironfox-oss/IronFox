@@ -149,7 +149,7 @@ sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
 
 # Let it be IronFox
 sed -i \
-    -e 's/Firefox Daylight/IronFox/; s/Firefox/IronFox/g' \
+    -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
     -e '/about_content/s/Mozilla/IronFox OSS/' \
     app/src/*/res/values*/*strings.xml
 
