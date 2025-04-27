@@ -142,7 +142,7 @@ patches:
     name: "Disable DoH Canary Requests"
     description: "Disables DNS over HTTPS canary requests."
     reason: "To prevent unnecessary network connections to check DoH compatibility."
-    effect: "Reduces network fingerprinting opportunities and connections to Mozilla servers."
+    effect: "Reduces unwanted network activity."
     category: "Privacy"
 
   - file: "disable-firefox-suggest.patch"
@@ -150,6 +150,13 @@ patches:
     description: "Disables Firefox Suggest feature."
     reason: "To remove sponsored suggestions and prevent sending address bar data to Mozilla."
     effect: "Cleaner, more private address bar experience without suggestions."
+    category: "Privacy"
+  
+  - file: "disable-geoip.patch"
+    name: "Disable Mozilla's GeoIP/Region Service"
+    description: "Disables Mozilla's GeoIP/Region Service."
+    reason: "To prevent Firefox from monitoring the user's region/general location."
+    effect: "Reduces unwanted network activity and improves the privacy of users."
     category: "Privacy"
 
   - file: "disable-link-sharing.patch"

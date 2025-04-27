@@ -1,0 +1,26 @@
+diff --git a/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt b/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
+index 663ec7c5fe..64be617fab 100644
+--- a/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
++++ b/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
+@@ -24,10 +24,10 @@ import org.json.JSONObject
+ import java.io.IOException
+ import java.util.concurrent.TimeUnit
+ 
+-private const val GEOIP_SERVICE_URL = "https://location.services.mozilla.com/v1/"
++private const val GEOIP_SERVICE_URL = ""
+ private const val CONNECT_TIMEOUT_SECONDS = 10L
+ private const val READ_TIMEOUT_SECONDS = 10L
+-private const val USER_AGENT = "MozAC/" + Build.version
++private const val USER_AGENT = ""
+ private const val EMPTY_REQUEST_BODY = "{}"
+ private const val CACHE_FILE = "mozac.service.location.region"
+ private const val KEY_COUNTRY_CODE = "country_code"
+@@ -93,7 +93,7 @@ class MozillaLocationService(
+      * Check to see if the cache is still valid.
+      */
+     private fun isCacheValid(): Boolean {
+-        return currentTime() < context.cachedAt() + CACHE_LIFETIME_IN_MS
++        return true
+     }
+ 
+     private fun Context.cacheRegion(region: LocationService.Region) {
