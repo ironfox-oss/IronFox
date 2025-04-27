@@ -447,10 +447,13 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
         --src_path "$llvm"
 fi
 {
+    echo 'ac_add_options --disable-callgrind'
     echo 'ac_add_options --disable-crashreporter'
     echo 'ac_add_options --disable-debug'
     echo 'ac_add_options --disable-debug-js-modules'
     echo 'ac_add_options --disable-debug-symbols'
+    echo 'ac_add_options --disable-gecko-profiler'
+    echo 'ac_add_options --disable-geckodriver'
     echo 'ac_add_options --disable-nodejs'
     echo 'ac_add_options --disable-parental-controls'
     echo 'ac_add_options --disable-profiling'
@@ -459,6 +462,9 @@ fi
     echo 'ac_add_options --disable-system-policies'
     echo 'ac_add_options --disable-tests'
     echo 'ac_add_options --disable-updater'
+    echo 'ac_add_options --disable-wasm-codegen-debug'
+    echo 'ac_add_options --disable-webdriver'
+    echo 'ac_add_options --disable-webrender-debugger'
     echo 'ac_add_options --enable-application=mobile/android'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-minify=properties'
