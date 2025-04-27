@@ -455,6 +455,8 @@ fi
     echo 'ac_add_options --disable-parental-controls'
     echo 'ac_add_options --disable-profiling'
     echo 'ac_add_options --disable-rust-debug'
+    echo 'ac_add_options --disable-system-extension-dirs'
+    echo 'ac_add_options --disable-system-policies'
     echo 'ac_add_options --disable-tests'
     echo 'ac_add_options --disable-updater'
     echo 'ac_add_options --enable-application=mobile/android'
