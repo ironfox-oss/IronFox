@@ -456,6 +456,7 @@ fi
     echo 'ac_add_options --disable-geckodriver'
     echo 'ac_add_options --disable-nodejs'
     echo 'ac_add_options --disable-parental-controls'
+    echo 'ac_add_options --disable-pref-extensions'
     echo 'ac_add_options --disable-profiling'
     echo 'ac_add_options --disable-rust-debug'
     echo 'ac_add_options --disable-spidermonkey-telemetry'
