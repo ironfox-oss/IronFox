@@ -472,6 +472,7 @@ fi
     echo 'ac_add_options --enable-minify=properties'
     echo 'ac_add_options --enable-mobile-optimize'
     echo 'ac_add_options --enable-optimize'
+    echo 'ac_add_options --enable-proxy-bypass-protection'
     echo 'ac_add_options --enable-release'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
