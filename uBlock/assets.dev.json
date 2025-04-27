@@ -1112,6 +1112,13 @@
         "contentURL": "https://big.oisd.nl/",
         "supportURL": "https://oisd.nl/report"
     },
+    "quick-fixes": {
+        "content": "filters",
+        "group": "default",
+        "title": "Phoenix - Quick fixes",
+        "contentURL": "https://gitlab.com/celenityy/Phoenix/-/raw/pages/uBlock/quick-fixes.txt",
+        "supportURL": "https://phoenix.celenity.dev/issues"
+    },
     "sproutannoyances": {
         "content": "filters",
         "group": "annoyances",
