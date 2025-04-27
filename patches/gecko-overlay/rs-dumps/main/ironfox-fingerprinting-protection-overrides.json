@@ -97,6 +97,10 @@
       "firstPartyDomain": "kosmikdog.eu"
     },
     {
+      "overrides": "-ScreenRect",
+      "firstPartyDomain": "letterboxd.com"
+    },
+    {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "megacloud.blog"
     },
