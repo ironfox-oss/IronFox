@@ -10,6 +10,19 @@ diff -r 0a6479ef0332 mobile/android/geckoview/build.gradle
      implementation "org.yaml:snakeyaml:2.2"
      implementation 'androidx.core:core:1.12.0'
  
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java
+index cb54b18f99..a7194d1c0b 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java
+@@ -44,7 +44,7 @@ public final class MediaDrmProxy {
+         Log.d(LOGTAG, "System Not supported !!, current SDK version is " + Build.VERSION.SDK_INT);
+       return false;
+     }
+-    return true;
++    return false;
+   }
+ 
+   @SuppressLint("NewApi")
 diff -r 0a6479ef0332 mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Mon Nov 18 12:58:35 2024 +0000
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java	Tue Nov 19 09:11:18 2024 +0000
@@ -93,3 +106,17 @@ diff -r 0a6479ef0332 mobile/android/geckoview/src/main/java/org/mozilla/geckovie
  
      final GeckoResult<Boolean> res = new GeckoResult<>();
      task.addOnSuccessListener(
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+index 0df59178c3..e7786cec22 100644
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -152,9 +152,6 @@ toolkit.jar:
+ #ifdef XP_MACOSX
+    content/global/macWindowMenu.js
+ #endif
+-   content/global/gmp-sources/openh264.json    (gmp-sources/openh264.json)
+-   content/global/gmp-sources/widevinecdm.json (gmp-sources/widevinecdm.json)
+-   content/global/gmp-sources/widevinecdm_l1.json (gmp-sources/widevinecdm_l1.json)
+ 
+ # Third party files
+    content/global/third_party/d3/d3.js                (/third_party/js/d3/d3.js)

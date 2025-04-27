@@ -73,10 +73,10 @@ patches:
 
   # Dependency
   - file: "gecko-liberate.patch"
-    name: "Replace GMS with microG"
-    description: "Replaces Google Mobile Services with microG client libraries."
-    reason: "To eliminate dependency on proprietary Google services."
-    effect: "Provides similar functionality without Google tracking and proprietary code."
+    name: "Remove Proprietary Libraries (Gecko)"
+    description: "Patches out proprietary and tracking libraries from Gecko (and replaces them with suitable alternatives, such as microG, if available)."
+    reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
+    effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
   # Privacy
@@ -202,10 +202,10 @@ patches:
     category: "Privacy"
 
   - file: "fenix-liberate.patch"
-    name: "Remove Proprietary Libraries"
-    description: "Patches out proprietary and tracking libraries from Fenix."
+    name: "Remove Proprietary Libraries (Fenix)"
+    description: "Patches out proprietary and tracking libraries from Fenix (and replaces them with suitable alternatives, such as microG, if available)."
     reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
-    effect: "Reduces data collection and improves privacy protection."
+    effect: "Improves privacy and protects the freedom of users."
     category: "Privacy"
 
   - file: "install-ublock.patch"
