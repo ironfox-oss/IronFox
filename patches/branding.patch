@@ -1,3 +1,18 @@
+diff --git a/build/moz.configure/init.configure b/build/moz.configure/init.configure
+index 9bf4bb29a4..958bed6d9b 100644
+--- a/build/moz.configure/init.configure
++++ b/build/moz.configure/init.configure
+@@ -1277,8 +1277,8 @@ def moz_app_basename(value, target_is_android):
+     if value:
+         return value[0]
+     if target_is_android:
+-        return "Fennec"
+-    return "Firefox"
++        return "IronFox"
++    return "IronFox"
+ 
+ 
+ set_config(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 index 53750cda56..6a4c16c8f0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
