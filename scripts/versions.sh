@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Sources
 FIREFOX_TAG="138.0"
 #FIREFOX_TAG_NAME="FIREFOX_${FIREFOX_TAG//./_}_RELEASE"
 #FIREFOX_RELEASE_PATH="releases/${FIREFOX_TAG}"
@@ -10,7 +11,11 @@ WASI_TAG="wasi-sdk-20"
 GLEAN_TAG="v63.1.0"
 GMSCORE_TAG="v0.3.7.250932"
 APPSERVICES_TAG="release-v138"
+
+# Tools
 BUNDLETOOL_TAG="1.18.0"
+RUST_VERSION="1.83.0"
+CBINDGEN_VERSION="0.28.0"
 
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

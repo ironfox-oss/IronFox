@@ -113,12 +113,12 @@ echo "...libclang dir set to ${libclang}"
 
 # shellcheck disable=SC1090,SC1091
 source "$CARGO_HOME/env"
-rustup default 1.83.0
+rustup default "$RUST_VERSION"
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
 rustup target add x86_64-linux-android
-cargo install --vers 0.26.0 cbindgen
+cargo install --vers "$CBINDGEN_VERSION" cbindgen
 
 # Fenix
 # shellcheck disable=SC2154
