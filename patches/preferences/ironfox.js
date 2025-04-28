@@ -5,11 +5,11 @@
 
 /// Clear FPP global overrides
 // We're hardening FPP internally with our own `RFPTargetsDefault.inc` file instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
-pref("privacy.fingerprintingProtection.overrides", "+ProtectionIWantToEnableGlobally,-ProtectionIWantToDisableGlobally");
+pref("privacy.fingerprintingProtection.overrides", "");
 
 /// Clear FPP granular overrides
 // We're including these internally with a custom Remote Settings dump instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
-pref("privacy.fingerprintingProtection.granularOverrides", '[{"firstPartyDomain":"example1.invalid","overrides":"+ProtectionIWantToEnableOnThisWebsite,-ProtectionIWantToDisableOnThisWebsite"},{"thirdPartyDomain":"example2.invalid","overrides":"+ThirdPartyDomainsAreSupportedTheSameWayToo"}]');
+pref("privacy.fingerprintingProtection.granularOverrides", '');
 
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
@@ -29,8 +29,5 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
-
-/// So people don't freak out when they see RFP isn't enabled...
-pref("privacy.resistFingerprinting.0.note", "RFP is disabled on purpose. We use a hardened configuration of FPP instead.");
 
 pref("browser.ironfox.applied", true, locked);
