@@ -1,23 +1,332 @@
-From 16781d4fbc40929313a863500f3630e0513ef7f2 Mon Sep 17 00:00:00 2001
-From: Mozilla Releng Treescript <release+treescript@mozilla.org>
-Date: Mon, 21 Apr 2025 19:43:02 +0000
-Subject: [PATCH] No bug - Tagging c3bba5162c988aa7e1791df8827c1a1575eddcc1
- with FIREFOX-ANDROID_138_0_BUILD1 a=release CLOSED TREE DONTBUILD
+From ea029e4d5de07b2ba24e9a462c331a7aa0f8277a Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 12:04:39 +0530
+Subject: [PATCH] fix(patches): update 'configure-doh.patch' for
+ 'FIREFOX_138_0_RELEASE'
 
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
- .hgtags | 1 +
- 1 file changed, 1 insertion(+)
+ .../fenix/settings/doh/DohSettingsProvider.kt | 169 +++++++++++++++++-
+ .../settings/doh/root/DohSettingsScreen.kt    |   7 +-
+ .../java/org/mozilla/fenix/utils/Settings.kt  |  11 +-
+ .../app/src/main/res/xml/preferences.xml      |   2 +-
+ 4 files changed, 172 insertions(+), 17 deletions(-)
 
-diff --git a/.hgtags b/.hgtags
-index 1e8034fb87..8c47fd304b 100644
---- a/.hgtags
-+++ b/.hgtags
-@@ -5841,3 +5841,4 @@ f16f5243929bbe24243335d1d222b6a70df67dfc FIREFOX_138_0b9_RELEASE
- 3f855852fb812157d70c7ce1435adefea5849cfd FIREFOX_RELEASE_138_BASE
- fea8eb584ece029cb22f10173a4bd4b4f5d62e33 FIREFOX_RELEASE_137_END
- c3bba5162c988aa7e1791df8827c1a1575eddcc1 FIREFOX_138_0_BUILD1
-+c3bba5162c988aa7e1791df8827c1a1575eddcc1 FIREFOX-ANDROID_138_0_BUILD1
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
+index 028be832d6..e3defb2052 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
+@@ -35,19 +35,94 @@ internal class DefaultDohSettingsProvider(
+     // Bug 1946867 - Load DoH Provider List from Gecko instead of hardcoding
+     private val dohDefaultProviderUrl = settings.dohDefaultProviderUrl
+ 
+-    private val cloudflare = Provider.BuiltIn(
+-        url = cloudflareUri,
+-        name = "Cloudflare",
+-        default = dohDefaultProviderUrl.isBlank() || dohDefaultProviderUrl == cloudflareUri,
++    private val quad9 = Provider.BuiltIn(
++        url = quad9Uri,
++        name = "Quad9",
++        default = dohDefaultProviderUrl.isNullOrBlank() || dohDefaultProviderUrl == quad9Uri,
++    )
++    private val dns0Zero = Provider.BuiltIn(
++        url = dns0ZeroUri,
++        name = "DNS0 (ZERO)",
++        default = dohDefaultProviderUrl == dns0ZeroUri,
++    )
++    private val dns0Standard = Provider.BuiltIn(
++        url = dns0StandardUri,
++        name = "DNS0",
++        default = dohDefaultProviderUrl == dns0StandardUri,
++    )
++    private val mullvadBase = Provider.BuiltIn(
++        url = mullvadBaseUri,
++        name = "Mullvad - Base",
++        default = dohDefaultProviderUrl == mullvadBaseUri,
++    )
++    private val adGuardStandard = Provider.BuiltIn(
++        url = adGuardStandardUri,
++        name = "AdGuard (Public)",
++        default = dohDefaultProviderUrl == adGuardStandardUri,
++    )
++    private val mullvadUnfiltered = Provider.BuiltIn(
++        url = mullvadUnfilteredUri,
++        name = "Mullvad - Unfiltered",
++        default = dohDefaultProviderUrl == mullvadUnfilteredUri,
++    )
++    private val wikimedia = Provider.BuiltIn(
++        url = wikimediaUri,
++        name = "Wikimedia - Unfiltered",
++        default = dohDefaultProviderUrl == wikimediaUri,
+     )
+     private val nextDns = Provider.BuiltIn(
+         url = nextDnsUri,
+-        name = "NextDNS",
++        name = "NextDNS (Public) - Unfiltered",
+         default = dohDefaultProviderUrl == nextDnsUri,
+     )
++    private val adGuardUnfiltered = Provider.BuiltIn(
++        url = adGuardUnfilteredUri,
++        name = "AdGuard (Public) - Unfiltered",
++        default = dohDefaultProviderUrl == adGuardUnfilteredUri,
++    )
++    private val dns0Kids = Provider.BuiltIn(
++        url = dns0KidsUri,
++        name = "DNS0 - Kids",
++        default = dohDefaultProviderUrl == dns0KidsUri,
++    )
++    private val mullvadFamily = Provider.BuiltIn(
++        url = mullvadFamilyUri,
++        name = "Mullvad - Family",
++        default = dohDefaultProviderUrl == mullvadFamilyUri,
++    )
++    private val adGuardFamily = Provider.BuiltIn(
++        url = adGuardFamilyUri,
++        name = "AdGuard (Public) - Family",
++        default = dohDefaultProviderUrl == adGuardFamilyUri,
++    )
++    private val mullvadExtended = Provider.BuiltIn(
++        url = mullvadExtendedUri,
++        name = "Mullvad - Extended",
++        default = dohDefaultProviderUrl == mullvadExtendedUri,
++    )
++    private val mullvadAll = Provider.BuiltIn(
++        url = mullvadAllUri,
++        name = "Mullvad - All",
++        default = dohDefaultProviderUrl == mullvadAllUri,
++    )
++    private val cloudflareMalware = Provider.BuiltIn(
++        url = cloudflareMalwareUri,
++        name = "Cloudflare - Malware Protection",
++        default = dohDefaultProviderUrl == cloudflareMalwareUri,
++    )
++    private val cloudflareMozilla = Provider.BuiltIn(
++        url = cloudflareMozillaUri,
++        name = "Cloudflare - Unfiltered",
++        default = dohDefaultProviderUrl == cloudflareMozillaUri,
++    )
++    private val cloudflareFamily = Provider.BuiltIn(
++        url = cloudflareFamilyUri,
++        name = "Cloudflare - Family",
++        default = dohDefaultProviderUrl == cloudflareFamilyUri,
++    )
+     private val providerUrl = settings.dohProviderUrl
+     private val custom = Provider.Custom(
+-        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri) {
++        url = if (providerUrl != quad9Uri && providerUrl != dns0ZeroUri && providerUrl != dns0StandardUri && providerUrl != mullvadBaseUri && providerUrl != adGuardStandardUri && providerUrl != mullvadUnfilteredUri && providerUrl != wikimediaUri && providerUrl != nextDnsUri && providerUrl != adGuardUnfilteredUri && providerUrl != dns0KidsUri && providerUrl != mullvadFamilyUri && providerUrl != adGuardFamilyUri && providerUrl != mullvadExtendedUri && providerUrl != mullvadAllUri && providerUrl != cloudflareMalwareUri && providerUrl != cloudflareMozillaUri && providerUrl != cloudflareFamilyUri) {
+             providerUrl
+         } else {
+             ""
+@@ -55,8 +130,23 @@ internal class DefaultDohSettingsProvider(
+     )
+ 
+     override fun getDefaultProviders(): List<Provider> = listOf(
+-        cloudflare,
++        quad9,
++        dns0Zero,
++        dns0Standard,
++        mullvadBase,
++        adGuardStandard,
++        mullvadUnfiltered,
++        wikimedia,
+         nextDns,
++        adGuardUnfiltered,
++        dns0Kids,
++        mullvadFamily,
++        adGuardFamily,
++        mullvadExtended,
++        mullvadAll,
++        cloudflareMalware,
++        cloudflareMozilla,
++        cloudflareFamily,
+         custom,
+     )
+ 
+@@ -77,8 +167,23 @@ internal class DefaultDohSettingsProvider(
+ 
+             else -> {
+                 when (settings.dohProviderUrl) {
+-                    cloudflareUri -> cloudflare
++                    quad9Uri -> quad9
++                    dns0ZeroUri -> dns0Zero
++                    dns0StandardUri -> dns0Standard
++                    mullvadBaseUri -> mullvadBase
++                    adGuardStandardUri -> adGuardStandard
++                    mullvadUnfilteredUri -> mullvadUnfiltered
++                    wikimediaUri -> wikimedia
+                     nextDnsUri -> nextDns
++                    adGuardUnfilteredUri -> adGuardUnfiltered
++                    dns0KidsUri -> dns0Kids
++                    mullvadFamilyUri -> mullvadFamily
++                    adGuardFamilyUri -> adGuardFamily
++                    mullvadExtendedUri -> mullvadExtended
++                    mullvadAllUri -> mullvadAll
++                    cloudflareMalwareUri -> cloudflareMalware
++                    cloudflareMozillaUri -> cloudflareMozilla
++                    cloudflareFamilyUri -> cloudflareFamily
+                     "" -> getDefaultProviders().first()
+                     else -> custom
+                 }
+@@ -86,6 +191,7 @@ internal class DefaultDohSettingsProvider(
+         }
+     }
+ 
++
+     override fun getExceptions(): List<String> {
+         return settings.dohExceptionsList.toList()
+     }
+@@ -118,9 +224,54 @@ internal class DefaultDohSettingsProvider(
+ 
+     companion object {
+         @VisibleForTesting
+-        val cloudflareUri = "https://mozilla.cloudflare-dns.com/dns-query"
++        val quad9Uri = "https://dns.quad9.net/dns-query"
++
++        @VisibleForTesting
++        val dns0ZeroUri = "https://zero.dns0.eu"
++
++        @VisibleForTesting
++        val dns0StandardUri = "https://dns0.eu"
++
++        @VisibleForTesting
++        val mullvadBaseUri = "https://base.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val adGuardStandardUri = "https://dns.adguard-dns.com/dns-query"
++
++        @VisibleForTesting
++        val mullvadUnfilteredUri = "https://dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val wikimediaUri = "https://wikimedia-dns.org/dns-query"
+ 
+         @VisibleForTesting
+         val nextDnsUri = "https://firefox.dns.nextdns.io/"
++
++        @VisibleForTesting
++        val adGuardUnfilteredUri = "https://unfiltered.adguard-dns.com/dns-query"
++
++        @VisibleForTesting
++        val dns0KidsUri = "https://kids.dns0.eu"
++
++        @VisibleForTesting
++        val mullvadFamilyUri = "https://family.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val adGuardFamilyUri = "https://family.adguard-dns.com/dns-query"
++
++        @VisibleForTesting
++        val mullvadExtendedUri = "https://extended.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val mullvadAllUri = "https://all.dns.mullvad.net/dns-query"
++
++        @VisibleForTesting
++        val cloudflareMalwareUri = "https://security.cloudflare-dns.com/dns-query"
++
++        @VisibleForTesting
++        val cloudflareMozillaUri = "https://mozilla.cloudflare-dns.com/dns-query"
++
++        @VisibleForTesting
++        val cloudflareFamilyUri = "https://family.cloudflare-dns.com/dns-query"
+     }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
+index f759547f82..d4c287303e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
+@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
+ import androidx.compose.foundation.layout.height
+ import androidx.compose.foundation.layout.padding
+ import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.verticalScroll
+ import androidx.compose.material.AlertDialog
+ import androidx.compose.material.Icon
+ import androidx.compose.material.IconButton
+@@ -89,6 +91,7 @@ internal fun DohSettingsScreen(
+         Column(
+             modifier = Modifier
+                 .fillMaxSize()
++                .verticalScroll(rememberScrollState())
+                 .padding(paddingValues),
+         ) {
+             DohSummary(
+@@ -587,8 +590,8 @@ private fun ExceptionsRow(onExceptionsClicked: () -> Unit) {
+ private fun DohScreenDefaultProviderPreview() {
+     FirefoxTheme {
+         val provider = Provider.BuiltIn(
+-            url = "https://mozilla.cloudflare-dns.com/dns-query",
+-            name = "Cloudflare",
++            url = "https://dns.quad9.net/dns-query",
++            name = "Quad9",
+             default = true,
+         )
+         DohSettingsScreen(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8e271198b0..a45b3a91a6 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -15,6 +15,7 @@ import androidx.annotation.VisibleForTesting
+ import androidx.annotation.VisibleForTesting.Companion.PRIVATE
+ import androidx.core.content.edit
+ import androidx.lifecycle.LifecycleOwner
++import mozilla.components.browser.state.search.SearchEngine
+ import mozilla.components.concept.engine.Engine
+ import mozilla.components.concept.engine.Engine.HttpsOnlyMode
+ import mozilla.components.concept.engine.EngineSession.CookieBannerHandlingMode
+@@ -174,9 +175,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         private const val DOH_SETTINGS_OFF = 5
+ 
+         /**
+-         * Bug 1946867 - Currently "hardcoded" to the DoH TRR URI of Cloudflare
++         * Bug 1946867 - Currently "hardcoded" to the DoH TRR URI of Quad9
+          */
+-        private const val CLOUDFLARE_URI = "https://mozilla.cloudflare-dns.com/dns-query"
++        private const val QUAD9_URI = "https://dns.quad9.net/dns-query"
+     }
+ 
+     @VisibleForTesting
+@@ -2398,7 +2399,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     val showDohEntryPoint by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_enabled),
+-        default = false,
++        default = true,
+     )
+ 
+     /**
+@@ -2410,7 +2411,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     private var trrMode by intPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
+-        default = DOH_SETTINGS_DEFAULT,
++        default = DOH_SETTINGS_MAX,
+     )
+ 
+     /**
+@@ -2428,7 +2429,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     val dohDefaultProviderUrl by stringPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_doh_default_provider_uri),
+-        default = CLOUDFLARE_URI,
++        default = QUAD9_URI,
+     )
+ 
+     /**
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 3b85a2a548..2b9666aebe 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -112,7 +112,7 @@
+         <androidx.preference.Preference
+             android:key="@string/pref_key_doh_settings"
+             app:iconSpaceReserved="false"
+-            app:isPreferenceVisible="false"
++            app:isPreferenceVisible="true"
+             android:title="@string/preference_doh_title" />
+ 
+         <org.mozilla.fenix.settings.cookiebannerhandling.CustomCBHSwitchPreference
 -- 
 2.49.0
 
