@@ -316,7 +316,7 @@ find "$patches/a-c-overlay" -type f | while read -r src; do
 done
 
 # Hack to prevent too long string from breaking build
-sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
+sed -i '/val status =/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
 sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
 popd
 
