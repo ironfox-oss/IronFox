@@ -1,8 +1,20 @@
+From a6a695e3304ba64f76b399f3cf712310a21c8f1a Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:34:17 +0530
+Subject: [PATCH] fix(patches): update 'disable-autocomplete.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt | 2 +-
+ .../fenix/app/src/main/res/xml/search_settings_preferences.xml  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..6a3049e569 100644
+index 8e271198b0..f76366f307 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1077,7 +1077,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1152,7 +1152,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val shouldAutocompleteInAwesomebar by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_enable_autocomplete_urls),
@@ -12,10 +24,10 @@ index b800c22431..6a3049e569 100644
  
      var defaultTopSitesAdded by booleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
-index da8132091b..829702f2c9 100644
+index f7ca109331..f53d81e846 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
-@@ -99,7 +99,7 @@
+@@ -109,7 +109,7 @@
              android:title="@string/preferences_show_voice_search" />
          <SwitchPreference
              app:iconSpaceReserved="false"
@@ -24,3 +36,6 @@ index da8132091b..829702f2c9 100644
              android:key="@string/pref_key_enable_autocomplete_urls"
              android:title="@string/preferences_enable_autocomplete_urls" />
      </PreferenceCategory>
+-- 
+2.49.0
+

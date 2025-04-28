@@ -1,7 +1,19 @@
-diff -r 2df6d3fa14ca -r f0a2d70cf468 mfbt/SmallPointerArray.h
---- a/mfbt/SmallPointerArray.h	Mon Oct 28 08:39:49 2024 -0400
-+++ b/mfbt/SmallPointerArray.h	Mon Oct 28 08:40:23 2024 -0400
-@@ -201,9 +201,9 @@
+From 40d09fef62184a8ccdcb8e8cf41c7b35d001fadf Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:19:14 +0530
+Subject: [PATCH] fix(patches): update 'gecko-fix-125-compile.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ mfbt/SmallPointerArray.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/mfbt/SmallPointerArray.h b/mfbt/SmallPointerArray.h
+index c63e3980f9..061bb1fc8b 100644
+--- a/mfbt/SmallPointerArray.h
++++ b/mfbt/SmallPointerArray.h
+@@ -201,9 +201,9 @@ class SmallPointerArray {
   private:
    T** beginInternal() const {
      if (first()) {
@@ -13,7 +25,7 @@ diff -r 2df6d3fa14ca -r f0a2d70cf468 mfbt/SmallPointerArray.h
        return &first();
      }
  
-@@ -259,7 +259,7 @@
+@@ -259,7 +259,7 @@ class SmallPointerArray {
    // When !mArray[0].mValue && mArray[1].mVector, mArray[1].mVector contains
    // the contents of an array of arbitrary size (even less than two if it ever
    // contained three elements and elements were removed).
@@ -22,3 +34,6 @@ diff -r 2df6d3fa14ca -r f0a2d70cf468 mfbt/SmallPointerArray.h
      T* mValue;
      std::vector<T*>* mVector;
    } mArray[2];
+-- 
+2.49.0
+

@@ -1,3 +1,16 @@
+From 27f94eb4dedf4ace0ab7d26da722a059b2c31bb1 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:34:21 +0530
+Subject: [PATCH] fix(patches): update 'ironfox-content-settings.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../sitepermissions/SiteSettingsFragment.kt   | 61 +++++++++++++++++++
+ .../src/main/res/values/preference_keys.xml   |  4 ++
+ .../res/xml/site_permissions_preferences.xml  | 21 +++++++
+ 3 files changed, 86 insertions(+)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 index 115535816e..d06ee00721 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
@@ -71,10 +84,10 @@ index 115535816e..d06ee00721 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a1993c808f..493e85c9fd 100644
+index dbb7ece65c..e5b56bda69 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -430,6 +430,10 @@
+@@ -441,6 +441,10 @@
      <string name="pref_key_app_cold_start_count" translatable="false">pref_key_app_cold_start_count</string>
      <string name="pref_key_app_is_onboarding_set_as_default_displayed" translatable="false">pref_key_app_is_onboarding_set_as_default_displayed</string>
  
@@ -117,3 +130,6 @@ index ef1dcb4e6e..46c63052f7 100644
      </androidx.preference.PreferenceCategory>
  
      <androidx.preference.PreferenceCategory
+-- 
+2.49.0
+

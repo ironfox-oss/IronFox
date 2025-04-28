@@ -1,5 +1,16 @@
+From 7ac68cc4b7b0e4d1142a3f5168ffd963da7055ba Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:11:18 +0530
+Subject: [PATCH] fix(patches): update 'enable-tab-strip.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
-index 495024dad1..cb6b7b9b52 100644
+index d60328df75..5ee0a0c4da 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
 @@ -21,7 +21,7 @@ fun Context.isTabStripEnabled(): Boolean =
@@ -11,3 +22,6 @@ index 495024dad1..cb6b7b9b52 100644
  
  /**
   * Returns true if the the device has the prerequisites to enable the tab strip.
+-- 
+2.49.0
+

@@ -1,7 +1,20 @@
+From 887f540ee85f9dca096eb85d4ab865d0b1c4bfb9 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:12:45 +0530
+Subject: [PATCH] fix(patches): update 'extension-recommendations.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt | 2 +-
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index 7f435ae784..1e4013c699 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -18,7 +18,7 @@
+@@ -18,7 +18,7 @@ object FeatureFlags {
       * This feature does not only depend on this flag. It requires the AMO collection override to
       * be enabled which is behind the Secret Settings.
       * */
@@ -11,10 +24,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFla
      /**
       * Pull-to-refresh allows you to pull the web content down far enough to have the page to
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 807c5c2..450fa37 100644
+index 8e271198b0..d257385afa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1376,12 +1376,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1492,12 +1492,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var overrideAmoUser by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_override_amo_user),
@@ -29,3 +42,6 @@ index 807c5c2..450fa37 100644
      )
  
      var enableGeckoLogs by booleanPreference(
+-- 
+2.49.0
+

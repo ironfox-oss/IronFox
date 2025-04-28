@@ -1,8 +1,20 @@
+From 9816515be3ac9ef7eb0e24880a1be1123257f9f5 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:36:51 +0530
+Subject: [PATCH] fix(patches): update 'remote-debugging.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt   | 5 +----
+ mobile/android/fenix/app/src/main/res/xml/preferences.xml   | 6 ------
+ 2 files changed, 1 insertion(+), 10 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..269b8747d8 100644
+index 8e271198b0..90f4bbdeab 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -341,10 +341,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -382,10 +382,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
                  true,
              )
  
@@ -31,3 +43,6 @@ index 3b85a2a548..fe80e3b595 100644
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
+-- 
+2.49.0
+

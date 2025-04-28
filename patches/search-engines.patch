@@ -1,8 +1,19 @@
+From a6d7f0cdcbee01391dd2bd99e751dd4f30bc2d8c Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:39:26 +0530
+Subject: [PATCH] fix(patches): update 'search-engines.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../feature/search/storage/SearchEngineReader.kt | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index d80ec8592f..05996612c1 100644
+index 263ab0ca4b..deae499592 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-@@ -29,16 +29,14 @@ internal const val GOOGLE_ID = "google"
+@@ -38,16 +38,14 @@ private const val MAX_SIZE = 256
  // List of general search engine ids, taken from
  // https://searchfox.org/mozilla-central/rev/ef0aa879e94534ffd067a3748d034540a9fc10b0/toolkit/components/search/SearchUtils.sys.mjs#200
  internal val GENERAL_SEARCH_ENGINE_IDS = setOf(
@@ -26,3 +37,6 @@ index d80ec8592f..05996612c1 100644
  )
  
  /**
+-- 
+2.49.0
+

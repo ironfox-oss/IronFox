@@ -1,8 +1,20 @@
+From 2104418e24adaee38eaa2ebcd403c4bcfb37693f Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:01:21 +0530
+Subject: [PATCH] fix(patches): update 'disable-search-suggestions.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt  | 7 ++-----
+ .../app/src/main/res/xml/search_settings_preferences.xml   | 2 +-
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..9638c9e04a 100644
+index 8e271198b0..5e864e37d5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1072,7 +1072,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1147,7 +1147,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val shouldShowSearchSuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions),
@@ -11,9 +23,9 @@ index b800c22431..9638c9e04a 100644
      )
  
      val shouldAutocompleteInAwesomebar by booleanPreference(
-@@ -1106,10 +1106,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         trendingSearchSuggestionsEnabled && isTrendingSearchesVisible &&
-             searchEngine?.trendingUrl != null && (!isPrivate || shouldShowSearchSuggestionsInPrivate)
+@@ -1189,10 +1189,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     val shouldShowRecentSearchSuggestions: Boolean
+         get() = recentSearchSuggestionsEnabled && isRecentSearchesVisible
  
 -    var showSearchSuggestionsInPrivateOnboardingFinished by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions_in_private_onboarding),
@@ -24,7 +36,7 @@ index b800c22431..9638c9e04a 100644
      fun incrementVisitedInstallableCount() = pwaInstallableVisitCount.increment()
  
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
-index a4de5c1..e15e096 100644
+index f7ca109331..f9820e2f98 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 @@ -27,7 +27,7 @@
@@ -36,3 +48,6 @@ index a4de5c1..e15e096 100644
              android:key="@string/pref_key_show_search_suggestions"
              android:title="@string/preferences_show_search_suggestions" />
          <CheckBoxPreference
+-- 
+2.49.0
+

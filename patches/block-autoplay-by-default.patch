@@ -1,8 +1,19 @@
+From 2a83ed4b1fca3ecee0ffcd66754b2b17d91b768c Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 09:46:51 +0530
+Subject: [PATCH] fix(patches): update 'block-autoplay-by-default.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt     | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..09b5d24039 100644
+index 8e271198b0..3ee3fc7598 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1216,7 +1216,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1299,7 +1299,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * either [AUTOPLAY_ALLOW_ALL] or [AUTOPLAY_BLOCK_ALL]. Because of this, we are forced to save
       * the user selected setting as well.
       */
@@ -11,7 +22,7 @@ index b800c22431..09b5d24039 100644
  
      private fun getSitePermissionsPhoneFeatureAutoplayAction(
          feature: PhoneFeature,
-@@ -1245,7 +1245,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1328,7 +1328,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              ),
              autoplayInaudible = getSitePermissionsPhoneFeatureAutoplayAction(
                  feature = PhoneFeature.AUTOPLAY_INAUDIBLE,
@@ -20,3 +31,6 @@ index b800c22431..09b5d24039 100644
              ),
              persistentStorage = getSitePermissionsPhoneFeatureAction(PhoneFeature.PERSISTENT_STORAGE),
              crossOriginStorageAccess = getSitePermissionsPhoneFeatureAction(PhoneFeature.CROSS_ORIGIN_STORAGE_ACCESS),
+-- 
+2.49.0
+

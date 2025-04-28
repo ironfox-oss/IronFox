@@ -1,8 +1,19 @@
+From 1a7abcf332dbdd234dada4574129ed92cd8aaf2b Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:10:01 +0530
+Subject: [PATCH] fix(patches): update 'enable-felt-privacy.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt  | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..ea5b12a62a 100644
+index 8e271198b0..d222c09283 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1786,12 +1786,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1876,12 +1876,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = true,
      )
  
@@ -17,3 +28,6 @@ index b800c22431..ea5b12a62a 100644
      )
  
      /**
+-- 
+2.49.0
+

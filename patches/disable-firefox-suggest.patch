@@ -1,8 +1,21 @@
+From c131c0bd4599773059da50d601690d5cd8040083 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:48:56 +0530
+Subject: [PATCH] fix(patches): update 'disable-firefox-suggest.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../fenix/settings/SecretSettingsFragment.kt  | 11 +++---
+ .../java/org/mozilla/fenix/utils/Settings.kt  | 37 ++++---------------
+ .../res/xml/search_settings_preferences.xml   | 14 ++++---
+ 3 files changed, 22 insertions(+), 40 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 3d7ff49e55..43fb1e7181 100644
+index aafe4dbe47..828ad9a5dd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -106,7 +106,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -118,7 +118,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_pocket_content_recommendations).apply {
@@ -12,15 +25,18 @@ index 3d7ff49e55..43fb1e7181 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
                      activity?.recreate()
-@@ -122,14 +123,14 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -134,8 +135,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_trending_searches).apply {
--            isVisible = Config.channel.isNightlyOrDebug
+-            isVisible = true
 -            isChecked = context.settings().isTrendingSearchesVisible
 +            isVisible = false
 +            isChecked = false
              onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
+ 
+@@ -152,8 +153,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_fxsuggest).apply {
@@ -32,10 +48,10 @@ index 3d7ff49e55..43fb1e7181 100644
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
                      val newBooleanValue = newValue as? Boolean ?: return false
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..4e7e477336 100644
+index 8e271198b0..102ad70fe7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1094,10 +1094,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1169,10 +1169,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user have enabled trending search in search suggestions.
       */
      @VisibleForTesting
@@ -46,8 +62,8 @@ index b800c22431..4e7e477336 100644
 +    internal var trendingSearchSuggestionsEnabled = false
  
      /**
-      * Returns true if trending searches should be shown to the user.
-@@ -1694,11 +1691,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * Indicates if the user have enabled recent search in the search suggestions setting preference.
+@@ -1774,11 +1771,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Merino content recommendations should be shown.
       */
@@ -60,20 +76,19 @@ index b800c22431..4e7e477336 100644
  
      /**
       *  Whether or not to display the Pocket sponsored stories parameter secret settings.
-@@ -1948,11 +1941,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2047,10 +2040,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
-      * Indicates if Trending Searches is enabled.
+      * Indicates if Trending Search Suggestions are enabled.
       */
--    var isTrendingSearchesVisible by lazyFeatureFlagPreference(
+-    var isTrendingSearchesVisible by booleanPreference(
 -        key = appContext.getPreferenceKey(R.string.pref_key_enable_trending_searches),
--        default = { FxNimbus.features.trendingSearches.value().enabled },
--        featureFlag = true,
+-        default = FxNimbus.features.trendingSearches.value().enabled,
 -    )
 +    var isTrendingSearchesVisible = false
  
      /**
-      * Adjust Activated User sent
-@@ -2009,17 +1998,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * Indicates if Recent Search Suggestions are enabled.
+@@ -2115,17 +2105,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Firefox Suggest is enabled.
       */
@@ -93,7 +108,7 @@ index b800c22431..4e7e477336 100644
  
      /**
       * Indicates first time engaging with signup
-@@ -2033,22 +2017,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2139,22 +2124,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
       * The default value is computed lazily, and based on whether Firefox Suggest is enabled.
       */
@@ -119,7 +134,7 @@ index b800c22431..4e7e477336 100644
      /**
       * Indicates that the user does not want warned of a translations
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
-index da8132091b..107ccbc235 100644
+index f7ca109331..0c88b25fb5 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 @@ -38,12 +38,13 @@
@@ -135,10 +150,10 @@ index da8132091b..107ccbc235 100644
 -            app:iconSpaceReserved="false" />
 +            app:iconSpaceReserved="false"
 +            app:isPreferenceVisible="false" />
-     </PreferenceCategory>
- 
-     <PreferenceCategory
-@@ -70,16 +71,19 @@
+         <SwitchPreference
+             app:iconSpaceReserved="false"
+             android:defaultValue="true"
+@@ -80,16 +81,19 @@
              app:iconSpaceReserved="false"
              android:key="@string/pref_key_show_nonsponsored_suggestions"
              android:title="@string/preferences_show_nonsponsored_suggestions"
@@ -161,3 +176,6 @@ index da8132091b..107ccbc235 100644
      </PreferenceCategory>
  
      <PreferenceCategory
+-- 
+2.49.0
+

@@ -1,7 +1,19 @@
-diff -r a29897d2381c -r 2df6d3fa14ca mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Oct 28 08:39:05 2024 -0400
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt	Mon Oct 28 08:39:49 2024 -0400
-@@ -615,7 +615,7 @@
+From 83308277130ab2b7feccc3e8ae2a1ee0b0b72bf8 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:33:38 +0530
+Subject: [PATCH] fix(patches): update 'https_only.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8e271198b0..7b79691db5 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -728,7 +728,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldUseHttpsOnly by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_https_only),
@@ -10,3 +22,6 @@ diff -r a29897d2381c -r 2df6d3fa14ca mobile/android/fenix/app/src/main/java/org/
      )
  
      var shouldUseHttpsOnlyInAllTabs by booleanPreference(
+-- 
+2.49.0
+

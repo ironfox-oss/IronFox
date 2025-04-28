@@ -1,7 +1,22 @@
+From 51f108b2abb8808bc7196d6b7e7b4d46aaeb9013 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:33:58 +0530
+Subject: [PATCH] fix(patches): update 'install-ublock.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../extension/WebExtensionPromptFeature.kt    | 21 ++++++++++++
+ .../fenix/onboarding/OnboardingFragment.kt    |  7 ++++
+ .../org/mozilla/fenix/utils/AddonUtils.kt     | 34 +++++++++++++++++++
+ 3 files changed, 62 insertions(+)
+ create mode 100644 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
+index 82e44d1abc..fe2c0dd3e3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-@@ -121,6 +121,9 @@
+@@ -121,6 +121,9 @@ class WebExtensionPromptFeature(
      private fun handlePostInstallationRequest(
          addon: Addon,
      ) {
@@ -11,7 +26,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/
          showPostInstallationDialog(addon)
      }
  
-@@ -128,6 +131,15 @@
+@@ -128,6 +131,15 @@ class WebExtensionPromptFeature(
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
      ) {
@@ -27,7 +42,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/
          showPermissionDialog(
              addon = addon,
              promptRequest = promptRequest,
-@@ -141,6 +153,15 @@
+@@ -141,6 +153,15 @@ class WebExtensionPromptFeature(
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
      ) {
@@ -44,9 +59,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/
              promptRequest.permissions,
              context,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+index 1c975c33f4..c8e8c637f3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -19,8 +19,10 @@
+@@ -19,8 +19,10 @@ import androidx.annotation.RequiresApi
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.ComposeView
  import androidx.fragment.app.Fragment
@@ -57,7 +73,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding
  import mozilla.components.concept.engine.webextension.InstallationMethod
  import mozilla.components.service.nimbus.evalJexlSafe
  import mozilla.components.service.nimbus.messaging.use
-@@ -116,6 +118,11 @@
+@@ -116,6 +118,11 @@ class OnboardingFragment : Fragment() {
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
          val context = requireContext()
@@ -71,6 +87,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding
              onFinish(null)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 new file mode 100644
+index 0000000000..da5f74b77f
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 @@ -0,0 +1,34 @@
@@ -108,3 +125,6 @@ new file mode 100644
 +        }
 +    }
 +}
+-- 
+2.49.0
+

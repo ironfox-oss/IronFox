@@ -1,3 +1,22 @@
+From cebeca153ce6d606b73f7171907ed7724763ae36 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:57:35 +0530
+Subject: [PATCH] fix(patches): update 'disable-pocket.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../service/mars/MarsTopSitesProvider.kt      |  4 +--
+ .../mars/contile/ContileTopSitesProvider.kt   |  4 +--
+ .../pocket/spocs/api/SpocsEndpointRaw.kt      |  4 +--
+ mobile/android/fenix/app/nimbus.fml.yaml      |  6 ++--
+ .../java/org/mozilla/fenix/FeatureFlags.kt    |  8 +++---
+ .../fenix/settings/SecretSettingsFragment.kt  |  5 ++--
+ .../mozilla/fenix/settings/SupportUtils.kt    |  2 +-
+ .../java/org/mozilla/fenix/utils/Settings.kt  | 28 ++++---------------
+ .../app/src/main/res/xml/home_preferences.xml |  9 ++++--
+ 9 files changed, 28 insertions(+), 42 deletions(-)
+
 diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
 index b8430171ec..63f92e4dde 100644
 --- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
@@ -19,7 +38,6 @@ index b8430171ec..63f92e4dde 100644
  
  /**
   * Provides access to the MARS API for fetching top sites tile.
-
 diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
 index 6f1de67d54..5037c18b66 100644
 --- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
@@ -35,30 +53,6 @@ index 6f1de67d54..5037c18b66 100644
  internal const val CACHE_VALID_FOR_KEY = "valid_for"
  internal const val CACHE_TOP_SITES_KEY = "tiles"
  
-
-diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
---- a/mobile/android/fenix/app/nimbus.fml.yaml
-+++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -48,8 +48,8 @@
-             "jump-back-in": true,
-             "bookmarks": true,
-             "recent-explorations": true,
--            "pocket": true,
--            "pocket-sponsored-stories": true,
-+            "pocket": false,
-+            "pocket-sponsored-stories": false,
-           }
-     defaults:
-       - channel: nightly
-@@ -59,7 +59,7 @@
-             "jump-back-in": true,
-             "bookmarks": true,
-             "recent-explorations": true,
--            "pocket": true,
-+            "pocket": false,
-           }
-         }
-   nimbus-validation:
 diff --git a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt b/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
 index 81bf2dd7e2..7a43fac926 100644
 --- a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
@@ -74,11 +68,37 @@ index 81bf2dd7e2..7a43fac926 100644
  private const val SPOCS_ENDPOINT_DOWNLOAD_SPOCS_PATH = "spocs"
  private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
  private const val SPOCS_PROXY_VERSION_KEY = "version"
-
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 0f3e80dad2..53b102b8f4 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -48,9 +48,9 @@ features:
+             "jump-back-in": true,
+             "bookmarks": true,
+             "recent-explorations": true,
+-            "pocket": true,
+-            "pocket-sponsored-stories": true,
+             "synced-tabs": true,
++            "pocket": false,
++            "pocket-sponsored-stories": false,
+           }
+     defaults:
+       - channel: nightly
+@@ -60,8 +60,8 @@ features:
+             "jump-back-in": true,
+             "bookmarks": true,
+             "recent-explorations": true,
+-            "pocket": true,
+             "synced-tabs": true,
++            "pocket": false,
+           }
+         }
+   nimbus-validation:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index 7f435ae784..e7e801db8d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -34,17 +34,17 @@
+@@ -34,17 +34,17 @@ object FeatureFlags {
      /**
       * Show Pocket recommended stories on home.
       */
@@ -101,10 +121,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFla
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 3d7ff49e55..2256998544 100644
+index aafe4dbe47..2dd7f76bc8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -96,7 +96,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -108,7 +108,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_mars_api_enabled).apply {
@@ -114,7 +134,7 @@ index 3d7ff49e55..2256998544 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
                      activity?.recreate()
-@@ -179,7 +180,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -203,7 +204,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<Preference>(R.string.pref_key_custom_sponsored_stories_parameters).apply {
@@ -124,7 +144,7 @@ index 3d7ff49e55..2256998544 100644
  
          requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index fc4f8d9b4b..ee0fd74e23 100644
+index 598a24ce36..f401c7b820 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -22,7 +22,7 @@ import java.util.Locale
@@ -136,12 +156,11 @@ index fc4f8d9b4b..ee0fd74e23 100644
      const val WIKIPEDIA_URL = "https://www.wikipedia.org/"
      const val FENIX_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
      const val GOOGLE_URL = "https://www.google.com/"
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..f84a9a30b8 100644
+index 8e271198b0..c8de5b7e96 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -329,10 +329,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -370,10 +370,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -153,7 +172,7 @@ index b800c22431..f84a9a30b8 100644
  
      val isCrashReportingEnabled: Boolean
          get() = isCrashReportEnabledInBuild &&
-@@ -1658,20 +1655,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1738,20 +1735,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Pocket recommended stories homescreen section should be shown.
       */
@@ -176,7 +195,7 @@ index b800c22431..f84a9a30b8 100644
  
      /**
       * Get the profile id to use in the sponsored stories communications with the Pocket endpoint.
-@@ -1735,19 +1724,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1815,19 +1804,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the MARS API integration is used for sponsored content.
       */
@@ -199,6 +218,7 @@ index b800c22431..f84a9a30b8 100644
      /**
       * Indicates if the Unified Search feature should be visible.
 diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+index 5ca4cff86d..3507b6d24e 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 @@ -13,7 +13,8 @@
@@ -229,3 +249,6 @@ diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mo
  
      <androidx.preference.Preference
          android:key="@string/pref_key_wallpapers"
+-- 
+2.49.0
+

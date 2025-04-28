@@ -1,22 +1,17 @@
-diff --git a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/BrowserToolbar.kt b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/BrowserToolbar.kt
-index f9b74a4323..f9ba24698f 100644
---- a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/BrowserToolbar.kt
-+++ b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/BrowserToolbar.kt
-@@ -112,12 +112,12 @@ class BrowserToolbar @JvmOverloads constructor(
-         set(value) { display.title = value }
- 
-     override var url: CharSequence
--        get() = display.url.toString()
-+        get() = display.url
-         set(value) {
-             // We update the display toolbar immediately. We do not do that for the edit toolbar to not
-             // mess with what the user is entering. Instead we will remember the value and update the
-             // edit toolbar whenever we switch to it.
--            display.url = (value as String).trimmed()
-+            display.url = value.trimmed()
-         }
- 
-     override var siteSecure: Toolbar.SiteSecurity
+From 64b85f12b666aef7fd7aec5da94fde07f6121200 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:08:17 +0530
+Subject: [PATCH] fix(patches): update
+ 'domain-highlighting-and-alignment.patch' for 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../browser/toolbar/display/OriginView.kt     | 28 ++++++++++++++++++-
+ .../components/concept/toolbar/Toolbar.kt     |  9 ++++++
+ .../feature/toolbar/internal/URLRenderer.kt   | 11 +++++---
+ .../components/toolbar/ToolbarIntegration.kt  |  3 +-
+ 4 files changed, 45 insertions(+), 6 deletions(-)
+
 diff --git a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
 index 506f8b3c6b..b53b31ad63 100644
 --- a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
@@ -71,7 +66,7 @@ index 506f8b3c6b..b53b31ad63 100644
      /**
       * Sets the colour of the text to be displayed when the URL of the toolbar is empty.
 diff --git a/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt b/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
-index 506921d194..f1eda4d28f 100644
+index 77ffea44d7..8bdfaea7a5 100644
 --- a/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
 +++ b/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
 @@ -5,11 +5,13 @@
@@ -88,7 +83,7 @@ index 506921d194..f1eda4d28f 100644
  import androidx.annotation.ColorRes
  import androidx.annotation.Dimension
  import androidx.annotation.Dimension.Companion.DP
-@@ -544,6 +546,13 @@ interface Toolbar : ScrollableToolbar {
+@@ -548,6 +550,13 @@ interface Toolbar : ScrollableToolbar {
           */
          END,
      }
@@ -103,7 +98,7 @@ index 506921d194..f1eda4d28f 100644
  
  private fun AppCompatImageButton.setTintResource(@ColorRes tintColorResource: Int) {
 diff --git a/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt b/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
-index 52adb9e999..6b90c21e4b 100644
+index 53dcdf7bb9..83762aac98 100644
 --- a/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
 +++ b/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
 @@ -98,16 +98,19 @@ private suspend fun SpannableStringBuilder.colorRegistrableDomain(
@@ -130,81 +125,19 @@ index 52adb9e999..6b90c21e4b 100644
          index,
          index + registrableDomain.length,
          SPAN_INCLUSIVE_INCLUSIVE,
-diff --git a/mobile/android/android-components/components/support/ktx/src/main/java/mozilla/components/support/ktx/kotlin/CharSequence.kt b/mobile/android/android-components/components/support/ktx/src/main/java/mozilla/components/support/ktx/kotlin/CharSequence.kt
-new file mode 100644
-index 0000000000..f8cf24fc52
---- /dev/null
-+++ b/mobile/android/android-components/components/support/ktx/src/main/java/mozilla/components/support/ktx/kotlin/CharSequence.kt
-@@ -0,0 +1,13 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package mozilla.components.support.ktx.kotlin
-+
-+/**
-+ * Returns a trimmed CharSequence. This is used to prevent extreme cases
-+ * from slowing down UI rendering with large strings.
-+ */
-+fun CharSequence.trimmed(): CharSequence {
-+    return this.take(MAX_URI_LENGTH)
-+}
-diff --git a/mobile/android/android-components/components/support/utils/src/main/java/mozilla/components/support/ktx/util/URLStringUtils.kt b/mobile/android/android-components/components/support/utils/src/main/java/mozilla/components/support/ktx/util/URLStringUtils.kt
-index e199f825e0..8ecf667786 100644
---- a/mobile/android/android-components/components/support/utils/src/main/java/mozilla/components/support/ktx/util/URLStringUtils.kt
-+++ b/mobile/android/android-components/components/support/utils/src/main/java/mozilla/components/support/ktx/util/URLStringUtils.kt
-@@ -123,22 +123,15 @@ object URLStringUtils {
-     }
- 
-     private fun maybeStripUrlProtocol(url: CharSequence): CharSequence {
--        var noPrefixUrl = url
--        if (url.toString().startsWith(HTTPS)) {
--            noPrefixUrl = maybeStripUrlSubDomain(url.toString().replaceFirst(HTTPS, ""))
--        } else if (url.toString().startsWith(HTTP)) {
--            noPrefixUrl = maybeStripUrlSubDomain(url.toString().replaceFirst(HTTP, ""))
-+        if (url.startsWith(HTTPS)) {
-+            return maybeStripUrlSubDomain(url.removePrefix(HTTPS))
-+        } else if (url.startsWith(HTTP)) {
-+            return maybeStripUrlSubDomain(url.removePrefix(HTTP))
-         }
--        return noPrefixUrl
-+        return url
-     }
- 
--    private fun maybeStripUrlSubDomain(url: CharSequence): CharSequence {
--        return if (url.toString().startsWith(WWW)) {
--            url.toString().replaceFirst(WWW, "")
--        } else {
--            url
--        }
--    }
-+    private fun maybeStripUrlSubDomain(url: CharSequence): CharSequence = url.removePrefix(WWW)
- 
-     private fun maybeStripTrailingSlash(url: CharSequence): CharSequence {
-         return url.trimEnd('/')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
-index 36b6017b7d..16332ef912 100644
+index 86b6454dac..16332ef912 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
-@@ -20,6 +20,7 @@ import mozilla.components.feature.toolbar.ToolbarBehaviorController
- import mozilla.components.feature.toolbar.ToolbarFeature
- import mozilla.components.feature.toolbar.ToolbarPresenter
- import mozilla.components.support.base.feature.LifecycleAwareFeature
-+import mozilla.components.support.ktx.android.content.getColorFromAttr
- import mozilla.components.support.ktx.android.view.hideKeyboard
- import mozilla.components.ui.tabcounter.TabCounterMenu
- import mozilla.telemetry.glean.private.NoExtras
-@@ -58,7 +59,8 @@ abstract class ToolbarIntegration(
-         shouldDisplaySearchTerms = true,
+@@ -60,6 +60,7 @@ abstract class ToolbarIntegration(
          urlRenderConfiguration = ToolbarFeature.UrlRenderConfiguration(
              context.components.publicSuffixList,
--            ThemeManager.resolveAttribute(R.attr.textPrimary, context),
-+            context.getColorFromAttr(R.attr.textPrimary),
+             context.getColorFromAttr(R.attr.textPrimary),
 +            context.getColorFromAttr(R.attr.textSecondary),
              renderStyle = renderStyle,
          ),
      )
-@@ -141,7 +143,7 @@ class DefaultToolbarIntegration(
+@@ -142,7 +143,7 @@ class DefaultToolbarIntegration(
      interactor = interactor,
      customTabId = customTabId,
      isPrivate = isPrivate,
@@ -213,4 +146,6 @@ index 36b6017b7d..16332ef912 100644
  ) {
  
      @VisibleForTesting
+-- 
+2.49.0
 
