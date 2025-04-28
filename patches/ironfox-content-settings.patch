@@ -109,7 +109,7 @@ index ef1dcb4e6e..46c63052f7 100644
 +
 +        <SwitchPreference
 +            android:icon="@drawable/mozac_ic_lock_24"
-+            android:defaultValue="false"
++            android:defaultValue="true"
 +            android:key="@string/pref_key_wasm_enabled"
 +            android:title="@string/preference_wasm_enabled"
 +            app:iconSpaceReserved="false" />
