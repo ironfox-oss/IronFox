@@ -45,7 +45,7 @@ $SDK_MANAGER 'build-tools;35.0.1' # for GeckoView
 $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
 $SDK_MANAGER 'ndk;28.0.13004108'  # for mozbuild; application-services
 
-export ANDROID_NDK=$ANDROID_HOME/ndk/28.0.13004108
+export ANDROID_NDK="$ANDROID_HOME/ndk/28.0.13004108"
 [ -d "$ANDROID_NDK" ] || {
     echo "$ANDROID_NDK does not exist."
     return

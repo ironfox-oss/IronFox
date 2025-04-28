@@ -4,6 +4,7 @@
 ## DO NOT execute this manually!
 
 set -eu
+set -o pipefail
 set -o xtrace
 
 case $(echo "$VERSION_CODE" | cut -c 7) in
@@ -40,9 +41,8 @@ fi
 # Setup environment variables. See Dockerfile.
 source "/opt/env_docker.sh"
 
-# Set ANDROID_NDK
-export ANDROID_NDK=$ANDROID_HOME/ndk/27.2.12479018
-[ -d "$ANDROID_NDK" ] || { echo "ANDROID_NDK($ANDROID_NDK) does not exist!"; exit 1; };
+# Setup Android SDK
+source "./scripts/setup-android-sdk.sh"
 
 # Get sources
 bash -x ./scripts/get_sources.sh
