@@ -507,7 +507,6 @@ fi
     echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
     echo 'mk_add_options MOZ_SERVICES_HEALTHREPORT=0'
-    echo 'export ANDROID_PACKAGE_NAME=org.ironfoxoss.ironfox'
     echo 'export MOZ_APP_BASENAME=IronFox'
     echo 'export MOZ_APP_DISPLAYNAME=IronFox'
     echo 'export MOZ_APP_NAME=ironfox'
