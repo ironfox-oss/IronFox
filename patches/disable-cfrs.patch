@@ -1,7 +1,20 @@
+From 9829f6f67d26042ae009b33fcbdc7f62a5384595 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:43:30 +0530
+Subject: [PATCH] fix(patches): update 'disable-cfrs.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ mobile/android/fenix/app/nimbus.fml.yaml      | 10 +--
+ .../java/org/mozilla/fenix/utils/Settings.kt  | 72 ++++---------------
+ 2 files changed, 17 insertions(+), 65 deletions(-)
+
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 0f3e80dad2..893f23302e 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -101,10 +101,10 @@
+@@ -103,10 +103,10 @@ features:
          default:
            {
              "home-onboarding-dialog-existing-users": true,
@@ -15,7 +28,7 @@ diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app
              "tcp-feature": true,
            }
      defaults:
-@@ -112,9 +112,9 @@
+@@ -114,9 +114,9 @@ features:
          value: {
            "sections-enabled": {
              "home-onboarding-dialog-existing-users": true,
@@ -28,9 +41,10 @@ diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app
          }
    query-parameter-stripping:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8e271198b0..f97994d4ba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -169,8 +169,7 @@
+@@ -210,8 +210,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = 0L,
      )
  
@@ -40,7 +54,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -831,30 +830,16 @@
+@@ -904,30 +903,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the total cookie protection CRF should be shown.
       */
@@ -75,7 +89,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_cookies_select),
-@@ -1122,23 +1107,7 @@
+@@ -1205,23 +1190,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      private val userNeedsToVisitInstallableSites: Boolean
          get() = pwaInstallableVisitCount.underMaxCount()
  
@@ -100,7 +114,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
-@@ -1150,8 +1119,7 @@
+@@ -1233,8 +1202,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = true,
      )
  
@@ -110,7 +124,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
-@@ -1595,11 +1563,7 @@
+@@ -1675,11 +1643,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if sync onboarding CFR should be shown.
       */
@@ -123,7 +137,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      /**
       * Indicates if home onboarding dialog should be shown.
-@@ -1797,34 +1761,22 @@
+@@ -1887,34 +1851,22 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the navigation bar CFR should be displayed to the user.
       */
@@ -162,3 +176,6 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
  
      /**
       * Get the current mode for how https-only is enabled.
+-- 
+2.49.0
+

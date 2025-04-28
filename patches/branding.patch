@@ -1,3 +1,17 @@
+From e591eb42dc91a51379db99289652d35f6b6b45c7 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:30:02 +0530
+Subject: [PATCH] fix(patches): update 'branding.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ build/moz.configure/init.configure              |  4 ++--
+ .../org/mozilla/fenix/settings/SupportUtils.kt  |  2 +-
+ mobile/android/moz.configure                    |  2 +-
+ toolkit/moz.configure                           | 17 +++++++++++++++++
+ 4 files changed, 21 insertions(+), 4 deletions(-)
+
 diff --git a/build/moz.configure/init.configure b/build/moz.configure/init.configure
 index 9bf4bb29a4..958bed6d9b 100644
 --- a/build/moz.configure/init.configure
@@ -14,7 +28,7 @@ index 9bf4bb29a4..958bed6d9b 100644
  
  set_config(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 53750cda56..6a4c16c8f0 100644
+index 598a24ce36..8e072075a5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 @@ -37,7 +37,7 @@ object SupportUtils {
@@ -27,10 +41,10 @@ index 53750cda56..6a4c16c8f0 100644
  
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
-index dad9a16c7a..386de41582 100644
+index c900501ee6..8b3e4a434c 100644
 --- a/mobile/android/moz.configure
 +++ b/mobile/android/moz.configure
-@@ -82,7 +82,7 @@ imply_option("MOZ_SERVICES_HEALTHREPORT", True)
+@@ -108,7 +108,7 @@ imply_option("MOZ_SERVICES_HEALTHREPORT", True)
  imply_option("MOZ_GECKOVIEW_HISTORY", True)
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
@@ -39,17 +53,34 @@ index dad9a16c7a..386de41582 100644
  imply_option("MOZ_APP_ID", "{aa3c5121-dab2-40e2-81ca-7ea25febc110}")
  imply_option("BROWSER_CHROME_URL", "chrome://geckoview/content/geckoview.xhtml")
  
-
 diff --git a/toolkit/moz.configure b/toolkit/moz.configure
-index e5e517635d..95e0ccd85c 100644
+index 09b3065c21..a799d0ca86 100644
 --- a/toolkit/moz.configure
 +++ b/toolkit/moz.configure
-@@ -3262,7 +3262,7 @@ def android_package_name(value, moz_app_name):
-         return value[0]
-     if moz_app_name == "fennec":
-         return "org.mozilla.fennec_aurora"
--    return "org.mozilla.%s" % moz_app_name
+@@ -3326,6 +3326,23 @@ def moz_app_remotingname(value, moz_app_name, update_channel):
+ 
+ set_config("MOZ_APP_REMOTINGNAME", moz_app_remotingname)
+ 
++option(
++    env="ANDROID_PACKAGE_NAME",
++    nargs=1,
++    help="Name of the Android package (default org.mozilla.$MOZ_APP_NAME)",
++)
++
++
++@depends("ANDROID_PACKAGE_NAME", moz_app_name)
++def android_package_name(value, moz_app_name):
++    if value:
++        return value[0]
++    if moz_app_name == "fennec":
++        return "org.mozilla.fennec_aurora"
 +    return "org.ironfoxoss.%s" % moz_app_name
++
++
++set_config("ANDROID_PACKAGE_NAME", android_package_name)
  
- 
- set_config("ANDROID_PACKAGE_NAME", android_package_name)
+ # Miscellaneous options
+ # ==============================================================
+-- 
+2.49.0
+

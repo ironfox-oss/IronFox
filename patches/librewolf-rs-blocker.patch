@@ -1,8 +1,21 @@
+From 41407e87dbe226d690371e4cd2f8bf43b5d0e663 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:35:55 +0530
+Subject: [PATCH] fix(patches): update 'librewolf-rs-blocker.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../settings/RemoteSettingsClient.sys.mjs     | 17 ++++
+ services/settings/Utils.sys.mjs               | 86 ++++++++++++++++++-
+ .../mozapps/extensions/AddonManager.sys.mjs   |  2 -
+ 3 files changed, 101 insertions(+), 4 deletions(-)
+
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
 index 32dcdd45d8..fc1e8b0de1 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
-@@ -228,6 +228,11 @@
+@@ -228,6 +228,11 @@ class AttachmentDownloader extends Downloader {
     * @see Downloader.download
     */
    async download(record, options) {
@@ -14,7 +27,7 @@ index 32dcdd45d8..fc1e8b0de1 100644
      try {
        // Explicitly await here to ensure we catch a network error.
        return await super.download(record, options);
-@@ -620,6 +625,10 @@
+@@ -620,6 +625,10 @@ export class RemoteSettingsClient extends EventEmitter {
        return;
      }
  
@@ -25,7 +38,7 @@ index 32dcdd45d8..fc1e8b0de1 100644
      // We want to know which timestamp we are expected to obtain in order to leverage
      // cache busting. We don't provide ETag because we don't want a 304.
      const { changes } = await lazy.Utils.fetchLatestChanges(
-@@ -981,6 +990,14 @@
+@@ -981,6 +990,14 @@ export class RemoteSettingsClient extends EventEmitter {
     * Import the JSON files from services/settings/dump into the local DB.
     */
    async _importJSONDump() {
@@ -41,10 +54,10 @@ index 32dcdd45d8..fc1e8b0de1 100644
      const result = await lazy.RemoteSettingsWorker.importJSONDump(
        this.bucketName,
 diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
-index d3643aedf2..d3d7127dbf 100644
+index d3643aedf2..f8e67ca365 100644
 --- a/services/settings/Utils.sys.mjs
 +++ b/services/settings/Utils.sys.mjs
-@@ -75,6 +75,18 @@
+@@ -75,6 +75,18 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURLOverride", () => {
    return false;
  });
  
@@ -63,10 +76,11 @@ index d3643aedf2..d3d7127dbf 100644
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "gServerURL",
-@@ -206,11 +218,79 @@
+@@ -205,12 +217,80 @@ export var Utils = {
+     return false;
    },
  
-   /**
++  /**
 +   * Internal code to determine whether the bucket and collection are allowed to
 +   * be loaded by the remote settings client for a given list of allowed
 +   * bucket/collection combinations.
@@ -135,7 +149,7 @@ index d3643aedf2..d3d7127dbf 100644
 +    return false;
 +  },
 +
-+  /**
+   /**
     * A wrapper around `ServiceRequest` that behaves like `fetch()`.
     *
     * Use this in order to leverage the `beConservative` flag, for
@@ -144,7 +158,7 @@ index d3643aedf2..d3d7127dbf 100644
     * @param input a resource
     * @param init request options
     * @returns a Response object
-@@ -483,7 +563,9 @@
+@@ -483,7 +563,9 @@ export var Utils = {
      }
  
      return {
@@ -156,10 +170,10 @@ index d3643aedf2..d3d7127dbf 100644
        serverTimeMillis,
        backoffSeconds,
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index 044e2960be..8837020d49 100644
+index 883e8389ee..ef86a2d1fa 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -4585,8 +4585,6 @@ AMRemoteSettings = {
+@@ -4588,8 +4588,6 @@ AMRemoteSettings = {
     */
    RS_ENTRIES_MAP: {
      installTriggerDeprecation: [
@@ -168,3 +182,6 @@ index 044e2960be..8837020d49 100644
      ],
      quarantinedDomains: ["extensions.quarantinedDomains.list"],
    },
+-- 
+2.49.0
+

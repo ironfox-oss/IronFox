@@ -1,8 +1,20 @@
+From cc0c2df36ef5ee81b38211dc7c35136fbdb83074 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:53:39 +0530
+Subject: [PATCH] fix(patches): update 'disable-microsurveys.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../mozilla/fenix/settings/SecretSettingsFragment.kt  |  4 ++--
+ .../src/main/java/org/mozilla/fenix/utils/Settings.kt | 11 ++---------
+ 2 files changed, 4 insertions(+), 11 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 3d7ff49e55..edac0c56ae 100644
+index aafe4dbe47..7a09af1f7c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -189,8 +189,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -213,8 +213,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_microsurvey_feature_enabled).apply {
@@ -14,10 +26,10 @@ index 3d7ff49e55..edac0c56ae 100644
          }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..020c7d59cc 100644
+index 8e271198b0..e7005812ba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2155,19 +2155,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2261,19 +2261,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the microsurvey feature is enabled.
       */
@@ -38,4 +50,7 @@ index b800c22431..020c7d59cc 100644
 +    var shouldShowMicrosurveyPrompt = false
  
      /**
-      * Indicates if the Set as default browser prompt for existing users feature is enabled.
+      * Last time the Set as default Browser prompt has been displayed to the user.
+-- 
+2.49.0
+

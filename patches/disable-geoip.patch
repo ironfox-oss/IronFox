@@ -1,8 +1,19 @@
+From db8fdfd3d14382b18de9700703251feb409ea9b6 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:52:54 +0530
+Subject: [PATCH] fix(patches): update 'disable-geoip.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../components/service/location/MozillaLocationService.kt   | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt b/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
-index 663ec7c5fe..64be617fab 100644
+index 8bea197568..1677b822ed 100644
 --- a/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
 +++ b/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
-@@ -24,10 +24,10 @@ import org.json.JSONObject
+@@ -25,10 +25,10 @@ import org.json.JSONObject
  import java.io.IOException
  import java.util.concurrent.TimeUnit
  
@@ -15,7 +26,7 @@ index 663ec7c5fe..64be617fab 100644
  private const val EMPTY_REQUEST_BODY = "{}"
  private const val CACHE_FILE = "mozac.service.location.region"
  private const val KEY_COUNTRY_CODE = "country_code"
-@@ -93,7 +93,7 @@ class MozillaLocationService(
+@@ -94,7 +94,7 @@ class MozillaLocationService(
       * Check to see if the cache is still valid.
       */
      private fun isCacheValid(): Boolean {
@@ -24,3 +35,6 @@ index 663ec7c5fe..64be617fab 100644
      }
  
      private fun Context.cacheRegion(region: LocationService.Region) {
+-- 
+2.49.0
+

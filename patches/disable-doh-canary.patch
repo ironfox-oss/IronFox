@@ -1,3 +1,14 @@
+From 64f15e1040a8ee4b6420d273a45642ae9c89d9c1 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:48:20 +0530
+Subject: [PATCH] fix(patches): update 'disable-doh-canary.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ browser/components/doh/DoHHeuristics.sys.mjs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/browser/components/doh/DoHHeuristics.sys.mjs b/browser/components/doh/DoHHeuristics.sys.mjs
 index ecbc0f5b77..59237cff92 100644
 --- a/browser/components/doh/DoHHeuristics.sys.mjs
@@ -20,3 +31,6 @@ index ecbc0f5b77..59237cff92 100644
  
    let { addresses } = await dnsLookup(ZSCALER_CANARY);
    for (let address of addresses) {
+-- 
+2.49.0
+

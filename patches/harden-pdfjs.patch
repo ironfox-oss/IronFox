@@ -1,8 +1,22 @@
+From 0f6a79a0761163f8d2b5c3421d95c42ea4b5dfa7 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:30:51 +0530
+Subject: [PATCH] fix(patches): update 'harden-pdfjs.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../components/pdfjs/content/build/pdf.mjs    | 23 ++++++++-----------
+ .../pdfjs/content/build/pdf.worker.mjs        | 23 ++++++++-----------
+ .../pdfjs/content/web/viewer-geckoview.html   |  1 +
+ .../pdfjs/content/web/viewer-geckoview.mjs    |  2 +-
+ 4 files changed, 20 insertions(+), 29 deletions(-)
+
 diff --git a/toolkit/components/pdfjs/content/build/pdf.mjs b/toolkit/components/pdfjs/content/build/pdf.mjs
-index 007703f4b3..0f893551b1 100644
+index a75478c3f6..16fd316ed3 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.mjs
-@@ -532,19 +532,14 @@ function isLittleEndian() {
+@@ -540,19 +540,14 @@ function isLittleEndian() {
    return view32[0] === 1;
  }
  function isEvalSupported() {
@@ -24,7 +38,7 @@ index 007703f4b3..0f893551b1 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -10144,7 +10139,7 @@ function getDocument(src = {}) {
+@@ -10142,7 +10137,7 @@ function getDocument(src = {}) {
    const {
      docId
    } = task;
@@ -33,7 +47,7 @@ index 007703f4b3..0f893551b1 100644
    const data = src.data ? getDataProp(src.data) : null;
    const httpHeaders = src.httpHeaders || null;
    const withCredentials = src.withCredentials === true;
-@@ -10154,16 +10149,16 @@ function getDocument(src = {}) {
+@@ -10152,17 +10147,17 @@ function getDocument(src = {}) {
    let worker = src.worker instanceof PDFWorker ? src.worker : null;
    const verbosity = src.verbosity;
    const docBaseUrl = typeof src.docBaseUrl === "string" && !isDataScheme(src.docBaseUrl) ? src.docBaseUrl : null;
@@ -42,6 +56,7 @@ index 007703f4b3..0f893551b1 100644
 +  const cMapUrl = "resource://pdf.js/web/cmaps/";
 +  const cMapPacked = true;
    const CMapReaderFactory = src.CMapReaderFactory || DOMCMapReaderFactory;
+   const iccUrl = getFactoryUrlProp(src.iccUrl);
 -  const standardFontDataUrl = getFactoryUrlProp(src.standardFontDataUrl);
 +  const standardFontDataUrl = "resource://pdf.js/web/standard_fonts/";
    const StandardFontDataFactory = src.StandardFontDataFactory || DOMStandardFontDataFactory;
@@ -55,7 +70,7 @@ index 007703f4b3..0f893551b1 100644
    const isOffscreenCanvasSupported = typeof src.isOffscreenCanvasSupported === "boolean" ? src.isOffscreenCanvasSupported : !isNodeJS;
    const isImageDecoderSupported = typeof src.isImageDecoderSupported === "boolean" ? src.isImageDecoderSupported : true;
    const canvasMaxAreaInBytes = Number.isInteger(src.canvasMaxAreaInBytes) ? src.canvasMaxAreaInBytes : -1;
-@@ -10180,7 +10175,7 @@ function getDocument(src = {}) {
+@@ -10179,7 +10174,7 @@ function getDocument(src = {}) {
    const enableHWA = src.enableHWA === true;
    const useWasm = src.useWasm !== false;
    const length = rangeTransport ? rangeTransport.length : src.length ?? NaN;
@@ -65,10 +80,10 @@ index 007703f4b3..0f893551b1 100644
    const styleElement = null;
    setVerbosityLevel(verbosity);
 diff --git a/toolkit/components/pdfjs/content/build/pdf.worker.mjs b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-index f4159eaef3..a864c38f67 100644
+index 3cdb5401df..81662df2fb 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.worker.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-@@ -485,19 +485,14 @@ function isLittleEndian() {
+@@ -491,19 +491,14 @@ function isLittleEndian() {
    return view32[0] === 1;
  }
  function isEvalSupported() {
@@ -90,7 +105,7 @@ index f4159eaef3..a864c38f67 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -27415,10 +27410,10 @@ class GlobalImageCache {
+@@ -27831,10 +27826,10 @@ class GlobalImageCache {
  class PDFFunctionFactory {
    constructor({
      xref,
@@ -101,9 +116,9 @@ index f4159eaef3..a864c38f67 100644
 -    this.isEvalSupported = isEvalSupported !== false;
 +    this.isEvalSupported = false;
    }
-   create(fn) {
-     const cachedFunction = this.getCached(fn);
-@@ -30373,17 +30368,17 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
+   create(fn, parseArray = false) {
+     let fnRef, parsedFn;
+@@ -30718,18 +30713,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
    maxImageSize: -1,
    disableFontFace: false,
    ignoreErrors: false,
@@ -118,6 +133,7 @@ index f4159eaef3..a864c38f67 100644
    useWasm: true,
    useWorkerFetch: true,
 -  cMapUrl: null,
+   iccUrl: null,
 -  standardFontDataUrl: null,
 -  wasmUrl: null
 +  cMapUrl: "resource://pdf.js/web/cmaps/",
@@ -127,7 +143,7 @@ index f4159eaef3..a864c38f67 100644
  const PatternType = {
    TILING: 1,
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.html b/toolkit/components/pdfjs/content/web/viewer-geckoview.html
-index 35a986f097..05e7bb96f1 100644
+index 5e0a113820..e89114242e 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.html
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.html
 @@ -23,6 +23,7 @@ See https://github.com/adobe-type-tools/cmap-resources
@@ -139,10 +155,10 @@ index 35a986f097..05e7bb96f1 100644
      <title>PDF.js viewer</title>
  
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-index 0a7b58b3bd..2de6aa0d8d 100644
+index 3042947fb0..fedaeb9438 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-@@ -790,7 +790,7 @@ const defaultOptions = {
+@@ -854,7 +854,7 @@ const defaultOptions = {
      kind: OptionKind.API
    },
    isEvalSupported: {
@@ -151,3 +167,6 @@ index 0a7b58b3bd..2de6aa0d8d 100644
      kind: OptionKind.API
    },
    isOffscreenCanvasSupported: {
+-- 
+2.49.0
+

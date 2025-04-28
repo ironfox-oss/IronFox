@@ -1,7 +1,51 @@
+From 26252f9ab4a23d81e73a5f96d24bc0c66dc81b7c Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:13:09 +0530
+Subject: [PATCH] fix(patches): update 'fenix-liberate.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../android-components/.buildconfig.yml       | 11 ---
+ mobile/android/fenix/.buildconfig.yml         |  1 -
+ mobile/android/fenix/app/build.gradle         | 11 ---
+ mobile/android/fenix/app/proguard-rules.pro   | 77 ++-------------
+ .../src/main/java/com/adjust/sdk/Adjust.java  | 47 +++++++++
+ .../com/adjust/sdk/AdjustAttribution.java     | 49 ++++++++++
+ .../java/com/adjust/sdk/AdjustConfig.java     | 49 ++++++++++
+ .../main/java/com/adjust/sdk/AdjustEvent.java | 31 ++++++
+ .../main/java/com/adjust/sdk/Constants.java   | 18 ++++
+ .../main/java/com/adjust/sdk/LogLevel.java    | 43 +++++++++
+ .../sdk/OnAttributionChangedListener.java     | 29 ++++++
+ .../messaging/FirebaseMessagingService.java   | 42 ++++++++
+ .../firebase/messaging/RemoteMessage.java     | 33 +++++++
+ .../firebase/AbstractFirebasePushService.kt   | 32 +++++++
+ .../mozilla/fenix/components/Components.kt    |  3 -
+ .../components/ReviewPromptController.kt      | 19 +---
+ .../metrics/InstallReferrerMetricsService.kt  | 95 +------------------
+ .../metrics/MarketingAttributionService.kt    | 64 +------------
+ .../fenix/components/metrics/MetricsUtils.kt  | 25 +----
+ .../java/org/mozilla/fenix/utils/Settings.kt  |  5 +-
+ ...issions_details_exceptions_preferences.xml |  6 +-
+ .../res/xml/site_permissions_preferences.xml  |  1 +
+ mobile/android/focus-android/app/build.gradle |  4 -
+ 23 files changed, 393 insertions(+), 302 deletions(-)
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
+ create mode 100644 mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
+
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
+index 26e76a18d2..57f282c175 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1586,16 +1586,6 @@
+@@ -1669,17 +1669,6 @@ projects:
      - support-base
      - support-test
      - tooling-lint
@@ -11,6 +55,7 @@ diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android
 -    publish: true
 -    upstream_dependencies:
 -    - concept-base
+-    - concept-fetch
 -    - concept-push
 -    - support-base
 -    - support-test
@@ -18,42 +63,11 @@ diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android
    lib-state:
      description: A library for maintaining application state.
      path: components/lib/state
-diff --git a/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt b/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt
---- a/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt
-+++ b/mobile/android/android-components/plugins/dependencies/src/main/java/DependenciesPlugin.kt
-@@ -89,13 +89,8 @@
-     const val protobuf_plugin = "0.9.4"
-     object Google {
-         const val accompanist = "0.37.0"
--        const val firebase_messaging = "24.1.0"
-         const val material = "1.12.0"
-         const val osslicenses_plugin = "0.10.6"
--        const val play_review = "2.0.2"
--        const val play_services_ads_id = "18.1.0"
--        const val play_services_base = "18.5.0"
--        const val play_services_fido = "21.1.0"
-         const val protobuf = "4.29.0" // Keep Protobuf in sync with the version used by AppServices.
-     }
- 
-@@ -272,14 +267,8 @@
-     const val thirdparty_disklrucache = "com.jakewharton:disklrucache:${Versions.disklrucache}"
-     const val thirdparty_androidsvg = "com.caverock:androidsvg-aar:${Versions.androidsvg}"
- 
--    const val firebase_messaging = "com.google.firebase:firebase-messaging:${Versions.Google.firebase_messaging}"
- 
-     const val osslicenses_plugin = "com.google.android.gms:oss-licenses-plugin:${Versions.Google.osslicenses_plugin}"
--    const val play_review = "com.google.android.play:review:${Versions.Google.play_review}"
--    const val play_review_ktx = "com.google.android.play:review-ktx:${Versions.Google.play_review}"
--    const val play_services_ads_id = "com.google.android.gms:play-services-ads-identifier:${Versions.Google.play_services_ads_id}"
--    const val play_services_base = "com.google.android.gms:play-services-base:${Versions.Google.play_services_base}"
--    const val play_services_fido = "com.google.android.gms:play-services-fido:${Versions.Google.play_services_fido}"
-     const val protobuf_compiler = "com.google.protobuf:protoc:${Versions.Google.protobuf}"
-     const val protobuf_javalite = "com.google.protobuf:protobuf-javalite:${Versions.Google.protobuf}"
- }
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index b5aa2ce3a4..45a339cd9f 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
-@@ -64,7 +64,6 @@
+@@ -65,7 +65,6 @@ projects:
      - lib-crash-sentry
      - lib-dataprotect
      - lib-publicsuffixlist
@@ -62,9 +76,10 @@ diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.build
      - service-digitalassetlinks
      - service-firefox-accounts
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index 7535453460..091d7ad06f 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -657,7 +657,6 @@
+@@ -665,7 +665,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -72,30 +87,31 @@ diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/bu
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
      testImplementation project(':support-test-fakes')
-@@ -708,16 +707,6 @@
-     implementation ComponentsDependencies.protobuf_javalite
-     implementation ComponentsDependencies.google_material
+@@ -716,16 +715,6 @@ dependencies {
+     implementation libs.protobuf.javalite
+     implementation libs.google.material
  
 -    implementation(libs.adjust)
 -    implementation(libs.installreferrer)
 -
 -    // Required for the Google Advertising ID
--    implementation ComponentsDependencies.play_services_ads_id
+-    implementation libs.play.services.ads.id
 -
 -    // Required for in-app reviews
--    implementation ComponentsDependencies.play_review
--    implementation ComponentsDependencies.play_review_ktx
+-    implementation libs.play.review
+-    implementation libs.play.review.ktx
 -
-     androidTestImplementation ComponentsDependencies.testing_fastlane
-     androidTestImplementation ComponentsDependencies.testing_falcon
+     implementation ComponentsDependencies.mozilla_appservices_init_rust_components
  
+     androidTestImplementation(libs.androidx.espresso.contrib) {
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
+index 982ef996de..e592dbfdca 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
 +++ b/mobile/android/fenix/app/proguard-rules.pro
-@@ -1,23 +1,6 @@
+@@ -1,22 +1,5 @@
  -dontobfuscate
  
- ####################################################################################################
+-####################################################################################################
 -# Sentry
 -####################################################################################################
 -
@@ -112,10 +128,9 @@ diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/
 -# If Sentry ever mysteriously stops working after we upgrade it, this could be why.
 --keep class io.sentry.event.Event { *; }
 -
--####################################################################################################
+ ####################################################################################################
  # Android and GeckoView built-ins
  ####################################################################################################
- 
 @@ -69,58 +52,6 @@
  
  -keep class org.mozilla.fenix.**ViewModel { *; }
@@ -189,6 +204,7 @@ diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 new file mode 100644
+index 0000000000..ec7ad9bc42
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 @@ -0,0 +1,47 @@
@@ -241,6 +257,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
 new file mode 100644
+index 0000000000..ab6b3badbd
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
 @@ -0,0 +1,49 @@
@@ -295,6 +312,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 new file mode 100644
+index 0000000000..4ba8a2711f
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
 @@ -0,0 +1,49 @@
@@ -349,6 +367,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
 new file mode 100644
+index 0000000000..0b4d80ed4b
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
 @@ -0,0 +1,31 @@
@@ -385,6 +404,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
 new file mode 100644
+index 0000000000..bfaeee26e8
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
 @@ -0,0 +1,18 @@
@@ -408,6 +428,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
 new file mode 100644
+index 0000000000..27ac3de544
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
 @@ -0,0 +1,43 @@
@@ -456,6 +477,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
 new file mode 100644
+index 0000000000..7efa1c6804
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
 @@ -0,0 +1,29 @@
@@ -490,6 +512,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
+index 0000000000..4d5fd8153d
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 @@ -0,0 +1,42 @@
@@ -537,6 +560,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
 new file mode 100644
+index 0000000000..9ad59a31e4
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
 @@ -0,0 +1,33 @@
@@ -575,6 +599,7 @@ new file mode 100644
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 new file mode 100644
+index 0000000000..b50a6f03a2
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 @@ -0,0 +1,32 @@
@@ -611,17 +636,19 @@ new file mode 100644
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index af5cb6d286..384cfa39e0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -10,7 +10,6 @@
+@@ -10,8 +10,6 @@ import android.content.Context
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.LocalContext
  import androidx.core.app.NotificationManagerCompat
 -import com.google.android.play.core.review.ReviewManagerFactory
+-import mozilla.appservices.remotesettings.RemoteSettingsServer
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -180,7 +179,6 @@
+@@ -183,7 +181,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -630,9 +657,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
+index 33e8704adc..ffa85e3e46 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-@@ -6,8 +6,6 @@
+@@ -6,8 +6,6 @@ package org.mozilla.fenix.components
  
  import android.app.Activity
  import androidx.annotation.VisibleForTesting
@@ -641,7 +669,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import kotlinx.coroutines.Dispatchers.Main
  import kotlinx.coroutines.withContext
  import org.mozilla.fenix.GleanMetrics.ReviewPrompt
-@@ -45,24 +43,9 @@
+@@ -45,24 +43,9 @@ class FenixReviewSettings(
   * Controls the Review Prompt behavior.
   */
  class ReviewPromptController(
@@ -668,24 +696,29 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+index 233855f4c2..aee0db7f60 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-@@ -6,14 +6,10 @@
+@@ -6,18 +6,10 @@ package org.mozilla.fenix.components.metrics
  
  import android.content.Context
  import android.os.RemoteException
 -import com.android.installreferrer.api.InstallReferrerClient
 -import com.android.installreferrer.api.InstallReferrerStateListener
+-import kotlinx.coroutines.CoroutineScope
+-import kotlinx.coroutines.Dispatchers
+-import kotlinx.coroutines.launch
  import mozilla.components.support.base.log.logger.Logger
  import org.json.JSONException
  import org.json.JSONObject
  import org.mozilla.fenix.FeatureFlags
 -import org.mozilla.fenix.GleanMetrics.MetaAttribution
+-import org.mozilla.fenix.GleanMetrics.Pings
 -import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
  import java.io.UnsupportedEncodingException
-@@ -29,83 +25,10 @@
+@@ -33,86 +25,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
@@ -705,6 +738,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -                override fun onInstallReferrerSetupFinished(responseCode: Int) {
 -                    PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
 -                    val firstSession = FirstSessionPing(context)
+-                    PlayStoreAttribution.responseCode.set(responseCode.toString())
 -                    when (responseCode) {
 -                        InstallReferrerClient.InstallReferrerResponse.OK -> {
 -                            // Connection established.
@@ -735,6 +769,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -                            context.settings().utmParamsKnown = true
 -
 -                            firstSession.checkAndSend()
+-                            triggerPing()
 -                        }
 -
 -                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
@@ -744,6 +779,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
 -                            // unrecoverable errors, but we still want to send the first-session ping.
 -                            context.settings().utmParamsKnown = true
 -                            firstSession.checkAndSend()
+-                            triggerPing()
 -                        }
 -
 -                        InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {
@@ -769,7 +805,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  
      override fun track(event: Event) = Unit
-@@ -224,12 +147,6 @@
+@@ -237,12 +153,6 @@ data class UTMParams(
              return
          }
          intoSettings(settings)
@@ -782,7 +818,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  }
  
-@@ -324,9 +241,6 @@
+@@ -337,9 +247,6 @@ data class MetaParams(
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -794,6 +830,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
+index 638eb2e626..6d9c476d4e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 @@ -5,12 +5,7 @@
@@ -809,7 +846,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  
  const val GCLID_PREFIX = "gclid="
  const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
-@@ -22,67 +17,17 @@
+@@ -22,67 +17,17 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
   * This should be only used when user has not gone through the onboarding flow.
   */
  class MarketingAttributionService(private val context: Context) {
@@ -877,7 +914,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  
      /**
-@@ -90,15 +35,10 @@
+@@ -90,15 +35,10 @@ class MarketingAttributionService(private val context: Context) {
       * showing the marketing onboarding flow.
       */
      companion object {
@@ -896,9 +933,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsUtils.kt
+index e13ebe821f..05b8d2c5ff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsUtils.kt
-@@ -7,9 +7,6 @@
+@@ -7,9 +7,6 @@ package org.mozilla.fenix.components.metrics
  import android.content.Context
  import android.util.Base64
  import androidx.annotation.VisibleForTesting
@@ -908,7 +946,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.withContext
  import mozilla.components.browser.state.search.SearchEngine
-@@ -107,26 +104,8 @@
+@@ -107,26 +104,8 @@ object MetricsUtils {
       */
      @Suppress("TooGenericExceptionCaught")
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -938,9 +976,10 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8e271198b0..23cb71356f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1781,10 +1781,7 @@
+@@ -1871,10 +1871,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the marketing onboarding card should be shown to the user.
       */
@@ -953,6 +992,7 @@ diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Sett
      val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_should_enable_felt_privacy),
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
+index 6bb8cfbbe6..1c15b5897c 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 @@ -3,7 +3,8 @@
@@ -976,6 +1016,7 @@ diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_
      <androidx.preference.Preference
          android:icon="@drawable/ic_autoplay"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+index ef1dcb4e6e..0eb2d275c3 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 @@ -81,6 +81,7 @@
@@ -987,16 +1028,20 @@ diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferen
  
          <androidx.preference.Preference
 diff --git a/mobile/android/focus-android/app/build.gradle b/mobile/android/focus-android/app/build.gradle
+index 08cf83d213..b78e1fa1f3 100644
 --- a/mobile/android/focus-android/app/build.gradle
 +++ b/mobile/android/focus-android/app/build.gradle
-@@ -266,10 +266,6 @@
-     implementation ComponentsDependencies.androidx_transition
-     implementation ComponentsDependencies.androidx_work_runtime
+@@ -259,10 +259,6 @@ dependencies {
+     implementation libs.androidx.transition
+     implementation libs.androidx.work.runtime
  
 -    // Required for in-app reviews
--    implementation ComponentsDependencies.play_review
--    implementation ComponentsDependencies.play_review_ktx
+-    implementation libs.play.review
+-    implementation libs.play.review.ktx
 -
-     implementation ComponentsDependencies.google_material
+     implementation libs.google.material
  
-     implementation ComponentsDependencies.thirdparty_sentry
+     implementation libs.thirdparty.sentry
+-- 
+2.49.0
+

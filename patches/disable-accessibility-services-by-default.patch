@@ -1,8 +1,28 @@
+From 4728d0def635131c5267b6dc099ab267ce29aa6b Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:32:16 +0530
+Subject: [PATCH] fix(patches): update
+ 'disable-accessibility-services-by-default.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../browser/engine/gecko/GeckoEngine.kt       |  9 ++++++
+ .../components/concept/engine/Settings.kt     |  6 ++++
+ .../java/org/mozilla/fenix/components/Core.kt |  1 +
+ .../fenix/settings/AccessibilityFragment.kt   | 14 ++++++++
+ .../java/org/mozilla/fenix/utils/Settings.kt  | 13 +++++++-
+ .../src/main/res/values/preference_keys.xml   |  2 ++
+ .../res/xml/accessibility_preferences.xml     |  5 +++
+ mobile/android/geckoview/api.txt              |  3 ++
+ .../geckoview/GeckoRuntimeSettings.java       | 32 +++++++++++++++++++
+ 9 files changed, 84 insertions(+), 1 deletion(-)
+
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 84ad70e3a4..f64199490c 100644
+index d3bfbfa762..6f09eee718 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1472,6 +1472,14 @@ class GeckoEngine(
+@@ -1473,6 +1473,14 @@ class GeckoEngine(
          override var postQuantumKeyExchangeEnabled: Boolean
              get() = runtime.settings.postQuantumKeyExchangeEnabled
              set(value) { runtime.settings.setPostQuantumKeyExchangeEnabled(value) }
@@ -17,7 +37,7 @@ index 84ad70e3a4..f64199490c 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1510,6 +1518,7 @@ class GeckoEngine(
+@@ -1515,6 +1523,7 @@ class GeckoEngine(
              this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
              this.certificateTransparencyMode = it.certificateTransparencyMode
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
@@ -50,10 +70,10 @@ index db66cbe503..76dde3a5bb 100644
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 3ab8ea1acd..a46111ae99 100644
+index 9a9487a930..7358b9ccd7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -180,6 +180,7 @@ class Core(
+@@ -182,6 +182,7 @@ class Core(
              parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
              certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
@@ -87,10 +107,10 @@ index 1122dc0b0f..fa3ed491b0 100644
              R.string.pref_key_accessibility_force_enable_zoom,
          )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..8bbfe71cb7 100644
+index 8e271198b0..46baf40a56 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1001,6 +1001,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1074,6 +1074,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          } else {
              ToolbarPosition.TOP
          }
@@ -102,7 +122,7 @@ index b800c22431..8bbfe71cb7 100644
  
      /**
       * Check each active accessibility service to see if it can perform gestures, if any can,
-@@ -1008,6 +1013,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1081,6 +1086,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val switchServiceIsEnabled: Boolean
          get() {
@@ -112,7 +132,7 @@ index b800c22431..8bbfe71cb7 100644
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
  
-@@ -1024,6 +1032,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1097,6 +1105,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val touchExplorationIsEnabled: Boolean
          get() {
@@ -122,7 +142,7 @@ index b800c22431..8bbfe71cb7 100644
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
              return accessibilityManager?.isTouchExplorationEnabled ?: false
-@@ -1031,7 +1042,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1104,7 +1115,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val accessibilityServicesEnabled: Boolean
          get() {
@@ -132,14 +152,13 @@ index b800c22431..8bbfe71cb7 100644
  
      fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a1993c808f..f0651f2a5c 100644
+index dbb7ece65c..12674ea37e 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -447,4 +447,7 @@
- 
-     <!-- Glean usage profile id -->
-     <string name="pref_key_glean_usage_profile_id" translatable="false">pref_key_glean_usage_profile_id</string>
-+
+@@ -464,4 +464,6 @@
+     <string name="pref_key_setup_step_toolbar" translatable="false">pref_key_setup_step_toolbar</string>
+     <string name="pref_key_setup_step_theme" translatable="false">pref_key_setup_step_theme</string>
+     <string name="pref_key_setup_step_extensions" translatable="false">pref_key_setup_step_extensions</string>
 +    <!-- Accessibility Services -->
 +    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
  </resources>
@@ -160,7 +179,7 @@ index a810f76208..f9381cbc86 100644
          android:defaultValue="true"
          android:key="@string/pref_key_accessibility_auto_size"
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index e4874b2bad..cd884a5569 100644
+index d1af0917aa..e49a901bf6 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
 @@ -914,6 +914,7 @@ package org.mozilla.geckoview {
@@ -244,3 +263,6 @@ index 30a300d9eb..36c025bfdc 100644
    // For internal use only
    /* protected */ @NonNull
    GeckoRuntimeSettings setProcessCount(final int processCount) {
+-- 
+2.49.0
+

@@ -1,8 +1,23 @@
+From 8ac85516860f9100f109819109b9fd296f247266 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:43:02 +0530
+Subject: [PATCH] fix(patches): update 'disable-autofill.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt | 8 ++++----
+ .../fenix/app/src/main/res/xml/autofill_preferences.xml   | 4 ++--
+ .../app/src/main/res/xml/credit_cards_preferences.xml     | 2 +-
+ .../fenix/app/src/main/res/xml/logins_preferences.xml     | 2 +-
+ .../app/src/main/res/xml/save_logins_preferences.xml      | 4 ++--
+ 5 files changed, 10 insertions(+), 10 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..87d9e7d3e6 100644
+index 8e271198b0..776da4f139 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1296,12 +1296,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1379,12 +1379,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldPromptToSaveLogins by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_save_logins),
@@ -17,7 +32,7 @@ index b800c22431..87d9e7d3e6 100644
      )
  
      /**
-@@ -1641,7 +1641,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1721,7 +1721,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillCreditCardDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_credit_cards_save_and_autofill_cards),
@@ -26,7 +41,7 @@ index b800c22431..87d9e7d3e6 100644
      )
  
      /**
-@@ -1652,7 +1652,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1732,7 +1732,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillAddressDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_addresses_save_and_autofill_addresses),
@@ -36,7 +51,7 @@ index b800c22431..87d9e7d3e6 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/res/xml/autofill_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/autofill_preferences.xml
-index aa1efa9..1ccfc1f 100644
+index aa1efa9665..1ccfc1fefa 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/autofill_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/autofill_preferences.xml
 @@ -10,7 +10,7 @@
@@ -58,7 +73,7 @@ index aa1efa9..1ccfc1f 100644
              android:summary="@string/preferences_credit_cards_save_and_autofill_cards_summary_2"
              android:title="@string/preferences_credit_cards_save_and_autofill_cards_2" />
 diff --git a/mobile/android/fenix/app/src/main/res/xml/credit_cards_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/credit_cards_preferences.xml
-index 00caf8e..b4efbb8 100644
+index 00caf8e1bb..b4efbb89a5 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/credit_cards_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/credit_cards_preferences.xml
 @@ -5,7 +5,7 @@
@@ -71,7 +86,7 @@ index 00caf8e..b4efbb8 100644
          android:summary="@string/preferences_credit_cards_save_and_autofill_cards_summary_2"
          android:title="@string/preferences_credit_cards_save_and_autofill_cards_2" />
 diff --git a/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml
-index 1a8810e..1f3ad71 100644
+index 1a8810eca7..1f3ad71295 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/logins_preferences.xml
 @@ -9,7 +9,7 @@
@@ -84,7 +99,7 @@ index 1a8810e..1f3ad71 100644
          android:title="@string/preferences_passwords_autofill2"
          android:summary="@string/preferences_passwords_autofill_description" />
 diff --git a/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml
-index 3fc38f2..1c88040 100644
+index 3fc38f2070..1c88040284 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/save_logins_preferences.xml
 @@ -4,11 +4,11 @@
@@ -100,4 +115,7 @@ index 3fc38f2..1c88040 100644
 +        android:defaultValue="true"
          android:key="@string/pref_key_never_save_logins"
          android:title="@string/preferences_passwords_save_logins_never_save" />
- </PreferenceScreen>         
+ </PreferenceScreen>
+-- 
+2.49.0
+

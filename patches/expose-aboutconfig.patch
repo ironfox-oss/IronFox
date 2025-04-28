@@ -1,3 +1,14 @@
+From 86f552f16db1ac0aab830fe6b6ce4c360242a3ac Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:12:12 +0530
+Subject: [PATCH] fix(patches): update 'expose-aboutconfig.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ docshell/base/nsAboutRedirector.cpp | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
 index e95ff966b3..d8b92dc9e1 100644
 --- a/docshell/base/nsAboutRedirector.cpp
@@ -12,3 +23,6 @@ index e95ff966b3..d8b92dc9e1 100644
  #endif
  #ifdef MOZ_CRASHREPORTER
      {"crashes", "chrome://global/content/crashes.html",
+-- 
+2.49.0
+

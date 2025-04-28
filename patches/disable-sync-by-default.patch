@@ -1,3 +1,14 @@
+From 548f0cc690192c3bd1b715e0d249d9eb41093523 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:02:07 +0530
+Subject: [PATCH] fix(patches): update 'disable-sync-by-default.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../main/res/xml/account_settings_preferences.xml    | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
 index 300331efb5..f1cbf8ea99 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
@@ -47,3 +58,6 @@ index 300331efb5..f1cbf8ea99 100644
              android:visible="false"
              android:key="@string/pref_key_sync_address"
              android:layout="@layout/checkbox_left_preference"
+-- 
+2.49.0
+

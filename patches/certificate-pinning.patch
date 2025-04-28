@@ -1,5 +1,17 @@
+From 32f090fc7af83357424a4d3f6c0554c337cda0af Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 10:24:36 +0530
+Subject: [PATCH] fix(patches): update 'certificate-pinning.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ security/manager/ssl/StaticHPKPins.h         | 1872 +++++++++++++++++-
+ security/manager/tools/PreloadedHPKPins.json |   16 +-
+ 2 files changed, 1863 insertions(+), 25 deletions(-)
+
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 1bc478c2b3..081973f812 100644
+index 644f20e9d3..dc10e0bf94 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
 @@ -7,6 +7,10 @@
@@ -2209,3 +2221,6 @@ index 94989ed214..4c972daa1d 100644
      // Test Pilot
      // superseded by catchall for firefox.com, but leaving for tracking
      { "name": "testpilot.firefox.com", "include_subdomains": false,
+-- 
+2.49.0
+
