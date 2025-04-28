@@ -113,8 +113,8 @@ popd
 pushd "$mozilla_release"
 
 # shellcheck disable=SC2086
-./mach build && \
-./mach package && \
+./mach build
+./mach package
 ./mach package-multi-locale --locales ${IRONFOX_LOCALES}
 
 MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
