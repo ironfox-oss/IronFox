@@ -5,6 +5,8 @@ if [[ "$env_source" != "true" ]]; then
     return 1
 fi
 
+source "$rootdir/scripts/versions.sh"
+
 RED="\033[0;31m"
 GREEN="\033[0;32m"
 NC="\033[0m"
@@ -64,4 +66,45 @@ list_patches() {
     for patch in "${PATCH_FILES[@]}"; do
         echo "$patch"
     done
+}
+
+slugify() {
+    local input="$1"
+    echo "$input" | \
+        tr '[:upper:]' '[:lower:]' | \
+        sed -E 's/[^a-z0-9]+/-/g' | \
+        sed -E 's/^-+|-+$//g'
+}
+
+rebase_patch() {
+    name="$1"
+    name_slug=$(slugify "$name")
+
+    repo_dir="$2"
+
+    if ! [[ -d "$repo_dir" ]]; then
+        echo "'$repo_dir' is not a directory."
+        return 1
+    fi
+
+    pushd "$repo_dir" || {
+        echo "Unable to pushd into '$repo_dir'"
+        return 1
+    };
+
+    { git checkout release || git reset --hard && git checkout release; } &&
+        { git checkout -b "$name_slug" || git checkout "$name_slug" && git reset --hard; } &&
+        git reset --hard "$FIREFOX_TAG_NAME" &&
+        git apply --3way "$rootdir/patches/$name" &&
+        git add . &&
+        git commit --signoff -m "fix(patches): update '$name' for '$FIREFOX_TAG_NAME'" &&
+        git rebase release &&
+        git format-patch HEAD^1 --output="$rootdir/patches/$name" &&
+        git checkout release &&
+        git branch -D "$name_slug"
+
+    popd || {
+        echo "Unable to popd from '$repo_dir'"
+        return 1
+    };
 }
