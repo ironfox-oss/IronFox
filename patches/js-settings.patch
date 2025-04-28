@@ -156,7 +156,7 @@ index db66cbe503..fc0414915f 100644
 +    override var javascriptJitMainProcessEnabled: Boolean = false,
 +    override var javascriptJitNativeRegexpEnabled: Boolean = false,
 +    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
-+    override var wasmEnabled: Boolean = false,
++    override var wasmEnabled: Boolean = true,
      override var domStorageEnabled: Boolean = true,
      override var webFontsEnabled: Boolean = true,
      override var automaticFontSizeAdjustment: Boolean = true,
@@ -214,7 +214,7 @@ index b800c22431..9adbf352ba 100644
 +
 +    var wasmEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
-+        default = false,
++        default = true,
 +    )
 +
      var shouldShowVoiceSearch by booleanPreference(
@@ -379,7 +379,7 @@ index 30a300d9eb..86dc6287b9 100644
 +  /* package */ final Pref<Boolean> mJavaScriptJitMainProcessEnabled = new Pref<Boolean>("javascript.options.main_process_disable_jit", true);
 +  /* package */ final Pref<Boolean> mJavaScriptJitNativeRegexpEnabled = new Pref<Boolean>("javascript.options.native_regexp", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
-+  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", false);
++  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", true);
    /* package */ final Pref<Boolean> mRemoteDebugging =
        new Pref<Boolean>("devtools.debugger.remote-enabled", false);
    /* package */ final Pref<Integer> mWebFonts =
