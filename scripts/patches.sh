@@ -76,6 +76,9 @@ slugify() {
         sed -E 's/^-+|-+$//g'
 }
 
+# ==== WARNING! ====
+# Heavily unstable and untested code
+# Use with care
 rebase_patch() {
     name="$1"
     name_slug=$(slugify "$name")
