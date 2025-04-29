@@ -1,17 +1,5 @@
-From 99a15e6440da440c2ae1a1a462b742b066b218cd Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:43:13 +0530
-Subject: [PATCH] fix(patches): update
- 'disable-default-browser-engagement-prompts.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../java/org/mozilla/fenix/utils/Settings.kt  | 60 +++++++++++--------
- 1 file changed, 34 insertions(+), 26 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..45c96e165c 100644
+index 8e271198b0..628f145d63 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -794,12 +794,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -74,19 +62,7 @@ index 8e271198b0..45c96e165c 100644
  
      val shouldUseAutoBatteryTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
-@@ -2275,6 +2261,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
-     )
- 
-+    /**
-+     * Indicates if the Set as default browser prompt for existing users feature is enabled.
-+     */
-+    var setAsDefaultBrowserPromptForExistingUsersEnabled = false
-+
-     /**
-      * Last time the Set as default Browser prompt has been displayed to the user.
-      */
-@@ -2310,12 +2301,29 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2310,12 +2296,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Set as default Browser prompt should be displayed to the user.
       */
@@ -97,31 +73,6 @@ index 8e271198b0..45c96e165c 100644
 -                numberOfSetAsDefaultPromptShownTimes < MAX_NUMBER_OF_DEFAULT_BROWSER_PROMPTS &&
 -                coldStartsBetweenSetAsDefaultPrompts >= APP_COLD_STARTS_TO_SHOW_DEFAULT_PROMPT
 +    val shouldShowSetAsDefaultPrompt: Boolean = false
-+
-+    /**
-+     * Number of days between Set as default Browser prompts.
-+     */
-+    private val daysBetweenDefaultBrowserPrompts: Int
-+        get() = FxNimbus.features.setAsDefaultPrompt.value().daysBetweenPrompts
-+
-+    /**
-+     * Maximum number of times the Set as default Browser prompt can be displayed to the user.
-+     */
-+    private val maxNumberOfDefaultBrowserPrompts: Int = 0
-+
-+    /**
-+     * Number of app cold starts before displaying the Set as default Browser prompt.
-+     */
-+    private val appColdStartsToShowDefaultPrompt: Int
-+        get() = FxNimbus.features.setAsDefaultPrompt.value().appColdStartsBetweenPrompts
-+
-+    /**
-+     * Indicates if the Set as default Browser prompt should be displayed to the user.
-+     */
-+    val shouldShowSetAsDefaultPrompt: Boolean = false
  
      /**
       * Updates the relevant settings when the "Set as Default Browser" prompt is shown.
--- 
-2.49.0
-
