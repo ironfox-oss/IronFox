@@ -422,13 +422,6 @@ patches:
     reason: "To improve visual distinction of private browsing mode."
     effect: "Better user awareness of private browsing state with modern design."
     category: "User Interface"
-
-  - file: "enable-tab-strip.patch"
-    name: "Enable Tab Strip Toggle"
-    description: "Enables preference to toggle tab strip."
-    reason: "To provide more UI customization options."
-    effect: "Users can choose between tab strip layouts according to preference."
-    category: "User Interface"
   
   - file: "expose-aboutconfig.patch"
     name: "Expose the 'about:config'"
