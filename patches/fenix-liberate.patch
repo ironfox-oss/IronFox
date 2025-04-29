@@ -636,19 +636,18 @@ index 0000000000..b50a6f03a2
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index af5cb6d286..384cfa39e0 100644
+index af5cb6d286..0b3d7f0cc5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -10,8 +10,6 @@ import android.content.Context
+@@ -10,7 +10,6 @@ import android.content.Context
  import androidx.compose.runtime.Composable
  import androidx.compose.ui.platform.LocalContext
  import androidx.core.app.NotificationManagerCompat
 -import com.google.android.play.core.review.ReviewManagerFactory
--import mozilla.appservices.remotesettings.RemoteSettingsServer
+ import mozilla.appservices.remotesettings.RemoteSettingsServer
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
- import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -183,7 +181,6 @@ class Components(private val context: Context) {
+@@ -183,7 +182,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -695,8 +694,35 @@ index 33e8704adc..ffa85e3e46 100644
      },
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+index 6312b65949..784bd37320 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+@@ -58,7 +58,6 @@ class AdjustMetricsService(
+             AdjustConfig.ENVIRONMENT_PRODUCTION,
+             true,
+         )
+-        config.enablePreinstallTracking()
+ 
+         val timerId = AdjustAttribution.adjustAttributionTime.start()
+         config.setOnAttributionChangedListener {
+@@ -83,14 +82,9 @@ class AdjustMetricsService(
+ 
+             triggerPing()
+         }
+-
+-        config.setLogLevel(LogLevel.SUPPRESS)
+-        Adjust.initSdk(config)
+-        Adjust.enable()
+     }
+ 
+     override fun stop() {
+-        Adjust.disable()
+         Adjust.gdprForgetMe(application.applicationContext)
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-index 233855f4c2..aee0db7f60 100644
+index 233855f4c2..07c6145368 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 @@ -6,18 +6,10 @@ package org.mozilla.fenix.components.metrics
@@ -805,7 +831,17 @@ index 233855f4c2..aee0db7f60 100644
      }
  
      override fun track(event: Event) = Unit
-@@ -237,12 +153,6 @@ data class UTMParams(
+@@ -120,9 +36,6 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+     override fun shouldTrack(event: Event): Boolean = false
+ 
+     private fun triggerPing() {
+-        CoroutineScope(Dispatchers.IO).launch {
+-            Pings.playStoreAttribution.submit()
+-        }
+     }
+ }
+ 
+@@ -237,12 +150,6 @@ data class UTMParams(
              return
          }
          intoSettings(settings)
@@ -818,7 +854,7 @@ index 233855f4c2..aee0db7f60 100644
      }
  }
  
-@@ -337,9 +247,6 @@ data class MetaParams(
+@@ -337,9 +244,6 @@ data class MetaParams(
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
