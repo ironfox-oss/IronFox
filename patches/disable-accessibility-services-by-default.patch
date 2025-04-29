@@ -57,7 +57,7 @@ index db66cbe503..76dde3a5bb 100644
 +    /**
 +     * Setting to control Accessibility Services.
 +     */
-+    open var accessibilityEnabled: Boolean by UnsupportedSetting
++    open var accessibilityEnabled: Boolean by UnsupportedSetting()
  }
  
  /**
