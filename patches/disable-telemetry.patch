@@ -706,7 +706,7 @@ index 46326f505b..df308f1dd3 100644
      }
  }
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-index 900fc5ebb6..5dc9073921 100644
+index 900fc5ebb6..ea5c0b2ad7 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
 @@ -103,7 +103,7 @@ class MozillaSocorroService(
@@ -723,7 +723,7 @@ index 900fc5ebb6..5dc9073921 100644
  
      internal fun buildServerUrl(versionName: String): String =
 -        "https://crash-reports.mozilla.com/submit".toUri()
-+        Uri.parse("")
++        "".toUri()
              .buildUpon()
              .appendQueryParameter("id", appId)
              .appendQueryParameter("version", versionName)
