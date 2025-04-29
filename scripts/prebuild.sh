@@ -153,7 +153,7 @@ sed -i \
     -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
     -e 's/Agree and continue/Continue/' \
     -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
-    -e 's/Fast and secure web browsing./The private and secure Firefox-based web browser for Android./' \
+    -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
     -e '/about_content/s/Mozilla/IronFox OSS/' \
     app/src/*/res/values*/*strings.xml
 
