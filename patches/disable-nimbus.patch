@@ -245,7 +245,7 @@ index e8fd12e0cc..fce9fc3bdf 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..9f6a0c9b7b 100644
+index 8e271198b0..848b54cbdd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -189,10 +189,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -273,7 +273,20 @@ index 8e271198b0..9f6a0c9b7b 100644
  
      var utmParamsKnown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_utm_params_known),
-@@ -540,10 +536,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -329,10 +325,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the wallpaper onboarding dialog should be shown.
+      */
+-    var showWallpaperOnboarding by lazyFeatureFlagPreference(
++    var showWallpaperOnboarding by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_wallpapers_onboarding),
+-        featureFlag = true,
+-        default = { mr2022Sections[Mr2022Section.WALLPAPERS_SELECTION_TOOL] == true },
++        default = true,
+     )
+ 
+     var openLinksInAPrivateTab by booleanPreference(
+@@ -540,10 +535,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -285,7 +298,7 @@ index 8e271198b0..9f6a0c9b7b 100644
  
      var isFirstNimbusRun: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-@@ -1666,10 +1659,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1666,10 +1658,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          get() =
              FxNimbus.features.homescreen.value().sectionsEnabled
  
@@ -298,7 +311,42 @@ index 8e271198b0..9f6a0c9b7b 100644
      )
  
      /**
-@@ -1856,7 +1848,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1684,28 +1675,25 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if home onboarding dialog should be shown.
+      */
+-    var showHomeOnboardingDialog by lazyFeatureFlagPreference(
++    var showHomeOnboardingDialog by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_home_onboarding_dialog),
+-        featureFlag = true,
+-        default = { mr2022Sections[Mr2022Section.HOME_ONBOARDING_DIALOG_EXISTING_USERS] == true },
++        default = true,
+     )
+ 
+     /**
+      * Indicates if the recent tabs functionality should be visible.
+      */
+-    var showRecentTabsFeature by lazyFeatureFlagPreference(
++    var showRecentTabsFeature by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_recent_tabs),
+-        featureFlag = true,
+-        default = { homescreenSections[HomeScreenSection.JUMP_BACK_IN] == true },
++        default = true,
+     )
+ 
+     /**
+      * Indicates if the recent saved bookmarks functionality should be visible.
+      */
+-    var showBookmarksHomeFeature by lazyFeatureFlagPreference(
++    var showBookmarksHomeFeature by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_customization_bookmarks),
+-        default = { homescreenSections[HomeScreenSection.BOOKMARKS] == true },
+-        featureFlag = true,
++        default = true,
+     )
+ 
+     var signedInFxaAccount by booleanPreference(
+@@ -1856,7 +1844,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          isLauncherIntent: Boolean,
      ): Boolean {
          return if (featureEnabled && !hasUserBeenOnboarded && isLauncherIntent) {
@@ -306,31 +354,7 @@ index 8e271198b0..9f6a0c9b7b 100644
              true
          } else {
              false
-@@ -2004,19 +1995,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the Compose Homepage is enabled.
-      */
--    var enableComposeHomepage by lazyFeatureFlagPreference(
-+    var enableComposeHomepage by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_compose_homepage),
--        default = { FxNimbus.features.composeHomepage.value().enabled },
--        featureFlag = true,
-+        default = false,
-     )
- 
-     /**
-      * Indicates if the menu redesign is enabled.
-      */
--    var enableMenuRedesign by lazyFeatureFlagPreference(
-+    var enableMenuRedesign by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_menu_redesign),
--        default = { FxNimbus.features.menuRedesign.value().enabled },
--        featureFlag = true,
-+        default = false,
-     )
- 
-     /**
-@@ -2168,8 +2157,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2168,8 +2155,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the feature to close synced tabs is enabled.
       */
@@ -340,20 +364,7 @@ index 8e271198b0..9f6a0c9b7b 100644
  
      /**
       * Returns the height of the bottom toolbar.
-@@ -2252,10 +2240,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the user is shown the new navigation toolbar.
-      */
--    var navigationToolbarEnabled by lazyFeatureFlagPreference(
-+    var navigationToolbarEnabled by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_toolbar_show_navigation_toolbar),
--        default = { FxNimbus.features.navigationToolbar.value().enabled },
--        featureFlag = true,
-+        default = false,
-     )
- 
-     /**
-@@ -2369,9 +2356,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2369,10 +2355,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not we should use the new bookmarks UI.
       */
@@ -361,10 +372,11 @@ index 8e271198b0..9f6a0c9b7b 100644
 +    var useNewBookmarks by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_use_new_bookmarks_ui),
 -        default = { true },
-+        default = { false },
-         featureFlag = true,
+-        featureFlag = true,
++        default = true,
      )
  
+     var bookmarkListSortOrder by stringPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 3b85a2a548..43b833bca8 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
