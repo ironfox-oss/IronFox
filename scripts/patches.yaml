@@ -201,13 +201,6 @@ patches:
     effect: "Ensures user data isn't synchronized to servers in China."
     category: "Privacy"
 
-  - file: "extension-recommendations.patch"
-    name: "Custom Extension Recommendations"
-    description: "Switches built-in extension recommendations to use IronFox collection."
-    reason: "To provide privacy-focused extension recommendations."
-    effect: "Users see IronFox-approved extensions instead of Mozilla's recommendations."
-    category: "Privacy"
-
   - file: "fenix-liberate.patch"
     name: "Remove Proprietary Libraries (Fenix)"
     description: "Patches out proprietary and tracking libraries from Fenix (and replaces them with suitable alternatives, such as microG, if available)."
