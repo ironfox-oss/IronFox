@@ -939,7 +939,7 @@
         "content": "filters",
         "group": "default",
         "title": "Beacon API Stub",
-        "contentURL": "https://gitlab.com/celenityy/Phoenix/-/raw/pages/uBlock/beacon.txt",
+        "contentURL": "https://gitlab.com/celenityy/Phoenix/-/raw/02cbe890a7a50b5d03526d0b53fd29a39d872404/uBlock/beacon.txt",
         "supportURL": "https://phoenix.celenity.dev/issues"
     },
     "bpc-filters": {
@@ -1187,7 +1187,7 @@
         "group": "default",
         "parent": "🛡️ Block WebGL",
         "title": "🛡️ Block WebGL",
-        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/hardened/block-webgl.txt",
+        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/89d8ba7fb39763836d9ee7858b5185ba2acf4a19/hardened/block-webgl.txt",
         "supportURL": "https://badblock.celenity.dev/issues",
         "instructionURL": "https://codeberg.org/celenity/BadBlock/src/branch/pages/hardened"
     },
@@ -1206,7 +1206,7 @@
         "parent": "🛡️ Block WebRTC",
         "off": true,
         "title": "🛡️ Block WebRTC",
-        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/hardened/block-webrtc.txt",
+        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/89d8ba7fb39763836d9ee7858b5185ba2acf4a19/hardened/block-webrtc.txt",
         "supportURL": "https://badblock.celenity.dev/issues",
         "instructionURL": "https://codeberg.org/celenity/BadBlock/src/branch/pages/hardened"
     },
