@@ -73,10 +73,10 @@ patches:
 
   # Dependency
   - file: "gecko-liberate.patch"
-    name: "Replace GMS with microG"
-    description: "Replaces Google Mobile Services with microG client libraries."
-    reason: "To eliminate dependency on proprietary Google services."
-    effect: "Provides similar functionality without Google tracking and proprietary code."
+    name: "Remove Proprietary Libraries (Gecko)"
+    description: "Patches out proprietary and tracking libraries from Gecko (and replaces them with suitable alternatives, such as microG, if available)."
+    reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
+    effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
   # Privacy
@@ -130,12 +130,19 @@ patches:
     effect: |
       Reduces risk of credential exposure.
     category: "Privacy"
+  
+  - file: "disable-csp-reporting.patch"
+    name: "Disable CSP Reporting"
+    description: "Disables the submission of CSP reports."
+    reason: "To protect against fingerprinting, and to prevent the submission of this type of analytics to website operators. Also reduces unsolicited network activity and bandwidth consumption."
+    effect: "Limits the information made available to website operators, while ensuring users are always in control of their browsing experience and network activity."
+    category: "Privacy"
 
   - file: "disable-doh-canary.patch"
     name: "Disable DoH Canary Requests"
     description: "Disables DNS over HTTPS canary requests."
     reason: "To prevent unnecessary network connections to check DoH compatibility."
-    effect: "Reduces network fingerprinting opportunities and connections to Mozilla servers."
+    effect: "Reduces unwanted network activity."
     category: "Privacy"
 
   - file: "disable-firefox-suggest.patch"
@@ -143,6 +150,13 @@ patches:
     description: "Disables Firefox Suggest feature."
     reason: "To remove sponsored suggestions and prevent sending address bar data to Mozilla."
     effect: "Cleaner, more private address bar experience without suggestions."
+    category: "Privacy"
+  
+  - file: "disable-geoip.patch"
+    name: "Disable Mozilla's GeoIP/Region Service"
+    description: "Disables Mozilla's GeoIP/Region Service."
+    reason: "To prevent Firefox from monitoring the user's region/general location."
+    effect: "Reduces unwanted network activity and improves the privacy of users."
     category: "Privacy"
 
   - file: "disable-link-sharing.patch"
@@ -187,18 +201,11 @@ patches:
     effect: "Ensures user data isn't synchronized to servers in China."
     category: "Privacy"
 
-  - file: "extension-recommendations.patch"
-    name: "Custom Extension Recommendations"
-    description: "Switches built-in extension recommendations to use IronFox collection."
-    reason: "To provide privacy-focused extension recommendations."
-    effect: "Users see IronFox-approved extensions instead of Mozilla's recommendations."
-    category: "Privacy"
-
   - file: "fenix-liberate.patch"
-    name: "Remove Proprietary Libraries"
-    description: "Patches out proprietary and tracking libraries from Fenix."
+    name: "Remove Proprietary Libraries (Fenix)"
+    description: "Patches out proprietary and tracking libraries from Fenix (and replaces them with suitable alternatives, such as microG, if available)."
     reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
-    effect: "Reduces data collection and improves privacy protection."
+    effect: "Improves privacy and protects the freedom of users."
     category: "Privacy"
 
   - file: "install-ublock.patch"
@@ -207,12 +214,26 @@ patches:
     reason: "To ensure content blocking is available from first launch."
     effect: "Users get content blocking protection without manual installation."
     category: "Privacy"
+  
+  - file: "librewolf-rs-blocker.patch"
+    name: "Block Remote Settings"
+    description: "Restricts Remote Settings to only download specific collections specified in preferences."
+    reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
+    effect: "Network activity is further limited, less data is shared with Mozilla, and the user is put in control of what specifically they want to download from Remote Settings."
+    category: "Privacy"
 
   - file: "remove-default-sites.patch"
     name: "Remove Default Sites"
     description: "Removes default top sites and shortcuts."
     reason: "To prevent displaying sponsored content and preset sites."
     effect: "Clean new tab page without predetermined site suggestions."
+    category: "Privacy"
+  
+  - file: "restrict-mozaddonmanager.patch"
+    name: "Restrict mozAddonManager"
+    description: "Prevents addons.mozilla.org from being able to query a list of the user's installed add-ons, and removes its ability to enable and uninstall add-ons."
+    reason: "To prevent fingerprinting and reduce attack surface."
+    effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API), while reducing the amount of information shared with Mozilla and limiting the API's capabilities."
     category: "Privacy"
 
   - file: "sanitize-on-exit.patch"
@@ -265,13 +286,12 @@ patches:
     category: "Privacy"
 
   # Security
-  - file: "configure-safe-browsing.patch"
-    name: "Configure Safe Browsing"
+  - file: "certificate-pinning.patch"
+    name: "Certificate Pinning"
     description: |
-      Enables proxied Google Safe Browsing, for an overall safe browsing experience
-      by blocking malware and phising sites, while also respecting user privacy.
-    reason: "To balance security benefits with privacy concerns."
-    effect: "Maintains protection against malicious sites while reducing data shared with Google."
+      Updates and heavily expands/improves upon Mozilla's built-in certificate pinning.
+    reason: "To protect against MITM attacks by restricting which certificate authorities can issue valid certificates for included websites. Example of a real-world attack that this protects against: https://blog.mozilla.org/security/2011/08/29/fraudulent-google-com-certificate/"
+    effect: "Users are provided with a significantly more secure browsing experience and a better peace of mind."
     category: "Security"
 
   - file: "disable-accessibility-services-by-default.patch"
@@ -286,6 +306,13 @@ patches:
     description: "Disables pre-shipped domain list."
     reason: "To address security concerns from outdated domain lists."
     effect: "Prevents potential security issues and removes annoying domain suggestions."
+    category: "Security"
+
+  - file: "harden-pdfjs.patch"
+    name: "Harden PDF.js"
+    description: "Hardens Firefox's built-in PDF Viewer (PDF.js)."
+    reason: "To reduce attack surface and protect users from various attacks, with changes inspired by GrapheneOS's PDF Viewer: https://github.com/GrapheneOS/PdfViewer."
+    effect: "Users are provided with a more secure PDF viewing experience, while still enjoying it from the comfort of their browser."
     category: "Security"
 
   - file: "https_only.patch"
@@ -309,14 +336,21 @@ patches:
     effect: "Prevents users from accidentally leaving remote debugging enabled."
     category: "Security"
 
-  # User Control
-  - file: "enable-aboutconfig.patch"
-    name: "Enable about:config"
-    description: "Enables access to `about:config` configuration page."
-    reason: "To provide users with advanced configuration options."
-    effect: "Users can customize Firefox settings not available in the regular settings menu."
-    category: "User Control"
+  - file: "remove-autoconfig-dependency.patch"
+    name: "Remove the Mozilla AutoConfig build dependency"
+    description: "Removes Mozilla's AutoConfig functionality in Firefox (also known as Mission Control Desktop, debuted in Netscape Communicator 4.5... https://www.internetnews.com/enterprise/netscape-unveils-enterprise-management-tools/)."
+    reason: "To unbreak builds with the '--disable-pref-extensions' argument (which removes this functionality)."
+    effect: "Reduces attack surface and legacy code."
+    category: "Security"
 
+  - file: "domain-highlighting-and-alignment.patch"
+    name: "Add domain highlighting and alignment"
+    description: "Adds domain highlighting and alignment in the toolbar."
+    reason: "Helps users more easily identify the actual domain in the URL bar, which improves phishing detection."
+    effect: "The registrable domain (eTLD+1) is highlighted, and the URL bar scrolls to the end of the domain name."
+    category: "Security"
+
+  # User Control
   - file: "enable-secret-settings.patch"
     name: "Enable Secret Settings"
     description: "Ensures users can toggle certain 'secret' settings if desired."
@@ -344,6 +378,20 @@ patches:
     description: "Disables prompts encouraging users to set the browser as the system default or engage with promotional features."
     reason: "To eliminate unnecessary engagement messages that may interrupt user workflows."
     effect: "Reduces distractions by suppressing default browser prompts and promotional nudges."
+    category: "User Experience"
+
+  - file: "rs-dumps.patch"
+    name: "Remote Settings Dumps"
+    description: "Includes more Remote Settings Dumps locally (like desktop Firefox) and allows us to add our own custom dumps."
+    reason: "Including more Remote Settings Dumps locally ensures that the content is always available for users on the first launch after installing IronFox, and it saves bandwidth by avoiding the need to initially download the entire dumps remotely. This patch also allows us to add our own custom Remote Settings dumps, so that we can further improve the user experience (ex. with our fingerprinting protection overrides)."
+    effect: "Ensures users are ready to browse and explore out of the box, and can take advantage of our added lists/features."
+    category: "User Experience"
+
+  - file: "ironfox-fingerprinting-protection-overrides.patch"
+    name: "IronFox Fingerprinting Protection (FPP) Overrides"
+    description: "Adds support for an internal list that disables specific fingerprinting protections as needed on a per-site basis."
+    reason: "To reduce website breakage for end-users. Setting the overrides this way specifically also avoids us needing to use the 'privacy.fingerprintingProtection.granularOverrides' preference like we have in the past, allowing users to easily set their own overrides (via that preference) if needed."
+    effect: "Provides users with a seamless browsing experience and allows them to benefit from our strong fingerprinting protection, minus the breakage and headaches."
     category: "User Experience"
 
   # User Interface
@@ -374,19 +422,12 @@ patches:
     reason: "To improve visual distinction of private browsing mode."
     effect: "Better user awareness of private browsing state with modern design."
     category: "User Interface"
-
-  - file: "enable-tab-strip.patch"
-    name: "Enable Tab Strip Toggle"
-    description: "Enables preference to toggle tab strip."
-    reason: "To provide more UI customization options."
-    effect: "Users can choose between tab strip layouts according to preference."
-    category: "User Interface"
-
-  - file: "enable-unified-trust-panel.patch"
-    name: "Enable Unified Trust Panel"
-    description: "Enables Firefox's newer Unified Trust Panel by default."
-    reason: "To provide better security information interface."
-    effect: "Improved presentation of site security information when clicking the lock icon in address bar."
+  
+  - file: "expose-aboutconfig.patch"
+    name: "Expose the 'about:config'"
+    description: "Exposes the 'about:config' in 'about:about' alongside other internal 'about' pages."
+    reason: "To provide users with easier access to advanced configuration options."
+    effect: "Users can access the 'about:config' easier to customize advanced Firefox settings not available in the regular settings menu."
     category: "User Interface"
 
   - file: "global-privacy-control.patch"
@@ -397,10 +438,34 @@ patches:
     effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
     category: "User Interface"
   
+  - file: "safe-browsing.patch"
+    name: "Safe Browsing UI"
+    description: "Adds a UI setting to toggle Safe Browsing."
+    reason: |
+      To improve transparency and usability, so that users can enable or disable Safe Browsing as needed to suit their personal preference.
+    effect: "Users can now seamlessly enable or disable Safe Browsing without needing to dive into advanced configuration options."
+    category: "User Interface"
+  
+  - file: "ironfox-content-settings.patch"
+    name: "IronFox Content Settings"
+    description: "Adds IronFox-specific UI content settings, which can be found under `Site settings`."
+    reason: |
+      To allow users to easily control settings related to the content/hardening of websites.
+    effect: "Users can choose what compromises they're comfortable with and tailor the browsing experience to meet their needs, directly from the UI."
+    category: "User Interface"
+
   - file: "ironfox-static-strings.patch"
     name: "IronFox Static Strings"
     description: "Provides static strings for UI settings specific to IronFox."
     reason: |
       To allow us to provide custom UI settings, while avoiding conflicts with other patches.
     effect: "Users can take advantage of our custom UI settings to improve their privacy, security, and browsing experience."
+    category: "User Interface"
+
+  - file: "js-settings.patch"
+    name: "JavaScript Settings"
+    description: "Adds IronFox-specific UI settings for controlling JavaScript, JavaScript Just-in-time Compilation (JIT), and WebAssembly (WASM)."
+    reason: |
+      To allow users to easily enable/disable these features globally.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings/the about:config."
     category: "User Interface"

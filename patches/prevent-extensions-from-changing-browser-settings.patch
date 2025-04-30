@@ -1,3 +1,16 @@
+From accaf1ff8b1b530308f56ec568407bbbb6af557c Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:36:27 +0530
+Subject: [PATCH] fix(patches): update
+ 'prevent-extensions-from-changing-browser-settings.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../extensions/parent/ext-browserSettings.js   | 18 ++++++++++++++++++
+ .../extensions/parent/ext-privacy.js           | 11 +++++++++++
+ 2 files changed, 29 insertions(+)
+
 diff --git a/toolkit/components/extensions/parent/ext-browserSettings.js b/toolkit/components/extensions/parent/ext-browserSettings.js
 index 7b292f76b8..fcd040e44f 100644
 --- a/toolkit/components/extensions/parent/ext-browserSettings.js
@@ -238,3 +251,6 @@ index 1c4bf05ff1..6ba0a16913 100644
  
    setCallback(value) {
      function tlsStringToVersion(string) {
+-- 
+2.49.0
+

@@ -1,8 +1,20 @@
+From 9d19aa847add0b2906f6eb8a0dc8563f8a8bacf1 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:18:45 +0530
+Subject: [PATCH] fix(patches): update 'force-enable-zoom.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt | 2 +-
+ .../fenix/app/src/main/res/xml/accessibility_preferences.xml    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 807c5c2..96517fb 100644
+index 8e271198b0..e4a1f9d7ee 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -171,7 +171,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -215,7 +215,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
@@ -12,7 +24,7 @@ index 807c5c2..96517fb 100644
  
      var adjustCampaignId by stringPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
-index a810f76..adba536 100644
+index a810f76208..adba5368b6 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
 @@ -24,7 +24,7 @@
@@ -24,3 +36,6 @@ index a810f76..adba536 100644
          android:key="@string/pref_key_accessibility_force_enable_zoom"
          android:summary="@string/preference_accessibility_force_enable_zoom_summary"
          android:title="@string/preference_accessibility_force_enable_zoom"
+-- 
+2.49.0
+

@@ -17,5 +17,5 @@ sed -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${VERSION_NAME}\";/g" \
 
 # Commit changes
 git add src
-git commit -m "feat: update for release ${CI_COMMIT_TAG}"
+git commit -m "feat: update patch docs to reflect ironfox-oss/IronFox@$CI_COMMIT_SHA"
 git push origin "HEAD:$TARGET_REPO_BRANCH"

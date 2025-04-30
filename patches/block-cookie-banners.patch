@@ -1,8 +1,20 @@
+From bff3d5176d9cddfc84f97b7d060f6688ce0ee317 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 09:47:29 +0530
+Subject: [PATCH] fix(patches): update 'block-cookie-banners.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../src/main/java/org/mozilla/fenix/utils/Settings.kt | 11 ++++-------
+ .../fenix/app/src/main/res/xml/preferences.xml        |  2 +-
+ 2 files changed, 5 insertions(+), 8 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..ee55f25475 100644
+index 8e271198b0..13c10e3251 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -682,20 +682,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -751,20 +751,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          false,
      )
  
@@ -40,3 +52,6 @@ index 3b85a2a548..cad50ee74a 100644
              android:title="@string/preferences_cookie_banner_reduction_private_mode" />
  
          <androidx.preference.Preference
+-- 
+2.49.0
+

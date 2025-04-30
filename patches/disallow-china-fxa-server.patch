@@ -1,8 +1,20 @@
+From 1f8edfb3826af43f82eeaa3b67b20099b71641cf Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:07:49 +0530
+Subject: [PATCH] fix(patches): update 'disallow-china-fxa-server.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt    | 5 +----
+ mobile/android/fenix/app/src/main/res/xml/preferences.xml    | 3 ++-
+ 2 files changed, 3 insertions(+), 5 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..e57e97d563 100644
+index 8e271198b0..8fced30ff5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1385,10 +1385,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1465,10 +1465,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          },
      )
  
@@ -28,3 +40,6 @@ index 3b85a2a548..bdc745a90b 100644
  
      <androidx.preference.PreferenceCategory
          android:key="@string/pref_key_account_category"
+-- 
+2.49.0
+

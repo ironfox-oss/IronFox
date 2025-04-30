@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index b800c22431..d1b0ce874b 100644
+index 8e271198b0..628f145d63 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -725,12 +725,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -794,12 +794,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * This will lead to a performance regression since that function can be expensive to call.
       */
      fun checkIfFenixIsDefaultBrowserOnAppResume(): Boolean {
@@ -10,13 +10,13 @@ index b800c22431..d1b0ce874b 100644
 -        val isDefaultBrowserNow = isDefaultBrowserBlocking()
 -        val wasDefaultBrowserOnLastResume =
 -            this.preferences.getBoolean(prefKey, isDefaultBrowserNow)
--        this.preferences.edit().putBoolean(prefKey, isDefaultBrowserNow).apply()
+-        this.preferences.edit { putBoolean(prefKey, isDefaultBrowserNow) }
 -        return isDefaultBrowserNow && !wasDefaultBrowserOnLastResume
 +        return false
      }
  
      /**
-@@ -742,40 +737,31 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -811,40 +806,31 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          return browsers.isDefaultBrowser
      }
  
@@ -62,39 +62,16 @@ index b800c22431..d1b0ce874b 100644
  
      val shouldUseAutoBatteryTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
-@@ -2172,11 +2158,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the Set as default browser prompt for existing users feature is enabled.
-      */
--    var setAsDefaultBrowserPromptForExistingUsersEnabled by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_set_as_default_browser_prompt_enabled),
--        default = { FxNimbus.features.setAsDefaultPrompt.value().enabled },
--        featureFlag = true,
--    )
-+    var setAsDefaultBrowserPromptForExistingUsersEnabled = false
- 
-     /**
-      * Last time the Set as default Browser prompt has been displayed to the user.
-@@ -2219,8 +2201,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Maximum number of times the Set as default Browser prompt can be displayed to the user.
-      */
--    private val maxNumberOfDefaultBrowserPrompts: Int
--        get() = FxNimbus.features.setAsDefaultPrompt.value().maxNumberOfTimesToDisplay
-+    private val maxNumberOfDefaultBrowserPrompts: Int = 0
- 
-     /**
-      * Number of app cold starts before displaying the Set as default Browser prompt.
-@@ -2231,12 +2212,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2310,12 +2296,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Set as default Browser prompt should be displayed to the user.
       */
 -    val shouldShowSetAsDefaultPrompt: Boolean
--        get() = setAsDefaultBrowserPromptForExistingUsersEnabled &&
+-        get() =
 -            (System.currentTimeMillis() - lastSetAsDefaultPromptShownTimeInMillis) >
--            daysBetweenDefaultBrowserPrompts * ONE_DAY_MS &&
--            numberOfSetAsDefaultPromptShownTimes < maxNumberOfDefaultBrowserPrompts &&
--            coldStartsBetweenSetAsDefaultPrompts >= appColdStartsToShowDefaultPrompt
+-                DAYS_BETWEEN_DEFAULT_BROWSER_PROMPTS * ONE_DAY_MS &&
+-                numberOfSetAsDefaultPromptShownTimes < MAX_NUMBER_OF_DEFAULT_BROWSER_PROMPTS &&
+-                coldStartsBetweenSetAsDefaultPrompts >= APP_COLD_STARTS_TO_SHOW_DEFAULT_PROMPT
 +    val shouldShowSetAsDefaultPrompt: Boolean = false
  
      /**

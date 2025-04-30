@@ -1,0 +1,135 @@
+From 27f94eb4dedf4ace0ab7d26da722a059b2c31bb1 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:34:21 +0530
+Subject: [PATCH] fix(patches): update 'ironfox-content-settings.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../sitepermissions/SiteSettingsFragment.kt   | 61 +++++++++++++++++++
+ .../src/main/res/values/preference_keys.xml   |  4 ++
+ .../res/xml/site_permissions_preferences.xml  | 21 +++++++
+ 3 files changed, 86 insertions(+)
+
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
+index 115535816e..d06ee00721 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
+@@ -44,6 +44,67 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+     override fun onResume() {
+         super.onResume()
+         showToolbar(getString(R.string.preferences_site_settings))
++
++        val javascriptEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_javascript_enabled,
++        )
++
++        javascriptEnabledPreference.setOnPreferenceChangeListener { preference, newValue ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptEnabled = newValue as Boolean
++            components.core.engine.settings.javascriptEnabled = newValue
++
++            true
++        }
++
++        val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_jit_enabled,
++        )
++
++        javascriptJitEnabledPreference.setOnPreferenceChangeListener { preference, newValue ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptJitBaselineEnabled = newValue as Boolean
++            components.core.engine.settings.javascriptJitBaselineEnabled = newValue
++
++            settings.javascriptJitBaselineWasmEnabled = newValue
++            components.core.engine.settings.javascriptJitBaselineWasmEnabled = newValue
++
++            settings.javascriptJitHintsEnabled = newValue
++            components.core.engine.settings.javascriptJitHintsEnabled = newValue
++
++            settings.javascriptJitIonEnabled = newValue
++            components.core.engine.settings.javascriptJitIonEnabled = newValue
++
++            settings.javascriptJitMainProcessEnabled = newValue
++            components.core.engine.settings.javascriptJitMainProcessEnabled = newValue
++
++            settings.javascriptJitNativeRegexpEnabled = newValue
++            components.core.engine.settings.javascriptJitNativeRegexpEnabled = newValue
++
++            settings.javascriptJitTrustedPrincipalsEnabled = newValue
++            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = newValue
++
++            true
++        }
++
++        val wasmEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_wasm_enabled,
++        )
++
++        wasmEnabledPreference.setOnPreferenceChangeListener { preference, newValue ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.wasmEnabled = newValue as Boolean
++            components.core.engine.settings.wasmEnabled = newValue
++
++            true
++        }
++        
+         setupPreferences()
+     }
+ 
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+index dbb7ece65c..e5b56bda69 100644
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -441,6 +441,10 @@
+     <string name="pref_key_app_cold_start_count" translatable="false">pref_key_app_cold_start_count</string>
+     <string name="pref_key_app_is_onboarding_set_as_default_displayed" translatable="false">pref_key_app_is_onboarding_set_as_default_displayed</string>
+ 
++    <!-- Content Settings -->
++    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
++    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
++    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+     <string name="pref_key_desktop_browsing" translatable="false">pref_key_desktop_browsing</string>
+ 
+     <!-- Crash reporting -->
+diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+index ef1dcb4e6e..46c63052f7 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
+@@ -25,6 +25,27 @@
+             android:title="@string/preference_feature_desktop_mode_default"
+             app:iconSpaceReserved="false" />
+ 
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:key="@string/pref_key_javascript_enabled"
++            android:title="@string/preference_javascript_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="false"
++            android:key="@string/pref_key_jit_enabled"
++            android:title="@string/preference_jit_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:key="@string/pref_key_wasm_enabled"
++            android:title="@string/preference_wasm_enabled"
++            app:iconSpaceReserved="false" />
++
+     </androidx.preference.PreferenceCategory>
+ 
+     <androidx.preference.PreferenceCategory
+-- 
+2.49.0
+

@@ -1,0 +1,151 @@
+From 64b85f12b666aef7fd7aec5da94fde07f6121200 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:08:17 +0530
+Subject: [PATCH] fix(patches): update
+ 'domain-highlighting-and-alignment.patch' for 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../browser/toolbar/display/OriginView.kt     | 28 ++++++++++++++++++-
+ .../components/concept/toolbar/Toolbar.kt     |  9 ++++++
+ .../feature/toolbar/internal/URLRenderer.kt   | 11 +++++---
+ .../components/toolbar/ToolbarIntegration.kt  |  3 +-
+ 4 files changed, 45 insertions(+), 6 deletions(-)
+
+diff --git a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
+index 506f8b3c6b..b53b31ad63 100644
+--- a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
++++ b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
+@@ -7,6 +7,7 @@ package mozilla.components.browser.toolbar.display
+ import android.animation.LayoutTransition
+ import android.content.Context
+ import android.graphics.Typeface
++import android.text.Spanned
+ import android.util.AttributeSet
+ import android.util.TypedValue
+ import android.view.Gravity
+@@ -17,6 +18,7 @@ import androidx.annotation.VisibleForTesting
+ import androidx.core.view.isVisible
+ import mozilla.components.browser.toolbar.BrowserToolbar
+ import mozilla.components.browser.toolbar.R
++import mozilla.components.concept.toolbar.Toolbar
+ 
+ /**
+  * View displaying the URL and optionally the title of a website.
+@@ -136,7 +138,31 @@ internal class OriginView @JvmOverloads constructor(
+ 
+     internal var url: CharSequence
+         get() = urlView.text
+-        set(value) { urlView.text = value }
++        set(value) {
++            urlView.text = value
++            urlView.scrollTo(0, 0)
++
++            if (value is Spanned) {
++                val spans = value.getSpans<Toolbar.RegistrableDomainColorSpan>(
++                    0,
++                    value.length,
++                    Toolbar.RegistrableDomainColorSpan::class.java,
++                )
++
++                if (spans.size != 1) {
++                    return
++                }
++
++                val valueUntilRegistrableDomainEnd = value.subSequence(0, value.getSpanEnd(spans[0]))
++
++                val urlViewWidth = urlView.getWidth()
++                val valueWidth = urlView.getPaint().measureText(valueUntilRegistrableDomainEnd.toString())
++
++                if (valueWidth > urlViewWidth) {
++                    urlView.scrollTo((valueWidth - urlViewWidth).toInt(), 0)
++                }
++            }
++        }
+ 
+     /**
+      * Sets the colour of the text to be displayed when the URL of the toolbar is empty.
+diff --git a/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt b/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
+index 77ffea44d7..8bdfaea7a5 100644
+--- a/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
++++ b/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
+@@ -5,11 +5,13 @@
+ package mozilla.components.concept.toolbar
+ 
+ import android.graphics.drawable.Drawable
++import android.text.style.ForegroundColorSpan
+ import android.view.View
+ import android.view.View.NO_ID
+ import android.view.ViewGroup
+ import android.widget.ImageButton
+ import android.widget.ImageView
++import androidx.annotation.ColorInt
+ import androidx.annotation.ColorRes
+ import androidx.annotation.Dimension
+ import androidx.annotation.Dimension.Companion.DP
+@@ -548,6 +550,13 @@ interface Toolbar : ScrollableToolbar {
+          */
+         END,
+     }
++
++    /**
++     * Registrable domain foreground color span.
++     *
++     * This simple class extension is used so that we can filter for it elsewhere.
++     */
++    class RegistrableDomainColorSpan(@ColorInt color: Int) : ForegroundColorSpan(color)
+ }
+ 
+ private fun AppCompatImageButton.setTintResource(@ColorRes tintColorResource: Int) {
+diff --git a/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt b/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
+index 53dcdf7bb9..83762aac98 100644
+--- a/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
++++ b/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
+@@ -98,16 +98,19 @@ private suspend fun SpannableStringBuilder.colorRegistrableDomain(
+ 
+     val registrableDomain = configuration
+         .publicSuffixList
+-        .getPublicSuffixPlusOne(host)
++        .getPublicSuffixPlusOne(host.removeSuffix("."))
+         .await() ?: return
+ 
+-    val index = url.indexOf(registrableDomain)
+-    if (index == -1) {
++    val indexOfHost = url.indexOf(host)
++    val indexOfRegistrableDomain = host.lastIndexOf(registrableDomain)
++    if (indexOfHost == -1 || indexOfRegistrableDomain == -1) {
+         return
+     }
+ 
++    val index = indexOfHost + indexOfRegistrableDomain
++
+     setSpan(
+-        ForegroundColorSpan(configuration.registrableDomainColor),
++        Toolbar.RegistrableDomainColorSpan(configuration.registrableDomainColor),
+         index,
+         index + registrableDomain.length,
+         SPAN_INCLUSIVE_INCLUSIVE,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
+index 86b6454dac..16332ef912 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
+@@ -60,6 +60,7 @@ abstract class ToolbarIntegration(
+         urlRenderConfiguration = ToolbarFeature.UrlRenderConfiguration(
+             context.components.publicSuffixList,
+             context.getColorFromAttr(R.attr.textPrimary),
++            context.getColorFromAttr(R.attr.textSecondary),
+             renderStyle = renderStyle,
+         ),
+     )
+@@ -142,7 +143,7 @@ class DefaultToolbarIntegration(
+     interactor = interactor,
+     customTabId = customTabId,
+     isPrivate = isPrivate,
+-    renderStyle = ToolbarFeature.RenderStyle.UncoloredUrl,
++    renderStyle = ToolbarFeature.RenderStyle.ColoredUrl,
+ ) {
+ 
+     @VisibleForTesting
+-- 
+2.49.0
+

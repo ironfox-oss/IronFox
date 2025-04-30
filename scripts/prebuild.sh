@@ -108,27 +108,17 @@ else
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
 fi
 
-if grep -q "Fedora" /etc/os-release; then
-    export libclang=/usr/lib64
-else
-    # shellcheck disable=SC2154
-    export libclang="${builddir}/libclang"
-    mkdir -p "$libclang"
-
-    # TODO: Maybe find a way to not hardcode this?
-    ln -sf "/usr/lib/x86_64-linux-gnu/libclang-18.so.1" "$libclang/libclang.so"
-fi
-
+libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/musl/lib"
 echo "...libclang dir set to ${libclang}"
 
 # shellcheck disable=SC1090,SC1091
 source "$CARGO_HOME/env"
-rustup default 1.83.0
+rustup default "$RUST_VERSION"
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
 rustup target add x86_64-linux-android
-cargo install --vers 0.26.0 cbindgen
+cargo install --vers "$CBINDGEN_VERSION" cbindgen
 
 # Fenix
 # shellcheck disable=SC2154
@@ -159,7 +149,11 @@ sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
 
 # Let it be IronFox
 sed -i \
-    -e 's/Firefox Daylight/IronFox/; s/Firefox/IronFox/g' \
+    -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
+    -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
+    -e 's/Agree and continue/Continue/' \
+    -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
+    -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
     -e '/about_content/s/Mozilla/IronFox OSS/' \
     app/src/*/res/values*/*strings.xml
 
@@ -326,7 +320,7 @@ find "$patches/a-c-overlay" -type f | while read -r src; do
 done
 
 # Hack to prevent too long string from breaking build
-sed -i '/val statusCmd/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
+sed -i '/val status =/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
 sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
 popd
 
@@ -360,9 +354,22 @@ fi
 # GeckoView
 pushd "$mozilla_release"
 
+# Let it be IronFox (part 2...)
 find "$patches/gecko-overlay/branding" -type f | while read -r src; do
     dst=mobile/android/branding/${src#"$patches/gecko-overlay/branding/"}
     mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+done
+
+# Add our custom/hardened FPP targets
+find "$patches/gecko-overlay/rfptargets" -type f | while read -r src; do
+    dst=toolkit/components/resistfingerprinting/${src#"$patches/gecko-overlay/rfptargets/"}
+    cp "$src" "$dst"
+done
+
+# Add our custom Remote Settings dumps
+find "$patches/gecko-overlay/rs-dumps" -type f | while read -r src; do
+    dst=services/settings/dumps/${src#"$patches/gecko-overlay/rs-dumps/"}
     cp "$src" "$dst"
 done
 
@@ -383,10 +390,6 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
-# Set the Safe Browsing API URL to our proxy
-sed -i "s|safebrowsing.googleapis.com/v4/|safebrowsing.ironfoxoss.org/v4/|g" \
-    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
-
 # Remove glean telemetry URL
 remove_glean_telemetry "${glean}"
 remove_glean_telemetry "${application_services}"
@@ -402,6 +405,7 @@ remove_glean_telemetry "${mozilla_release}/netwerk"
 sed -i \
     -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
     -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
+    -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
     -e 's|"cookiebanners.service.enableGlobalRules"|"z99.cookiebanners.service.enableGlobalRules"|' \
     -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
     -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
@@ -418,7 +422,6 @@ sed -i \
     -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
     -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
-    -e 's|"javascript.enabled"|"z99.ignore.javascript.enabled"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
@@ -448,24 +451,36 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
         --src_path "$llvm"
 fi
 {
+    echo 'ac_add_options --disable-callgrind'
     echo 'ac_add_options --disable-crashreporter'
     echo 'ac_add_options --disable-debug'
     echo 'ac_add_options --disable-debug-js-modules'
     echo 'ac_add_options --disable-debug-symbols'
+    echo 'ac_add_options --disable-gecko-profiler'
+    echo 'ac_add_options --disable-geckodriver'
     echo 'ac_add_options --disable-nodejs'
     echo 'ac_add_options --disable-parental-controls'
+    echo 'ac_add_options --disable-pref-extensions'
     echo 'ac_add_options --disable-profiling'
     echo 'ac_add_options --disable-rust-debug'
+    echo 'ac_add_options --disable-spidermonkey-telemetry'
+    echo 'ac_add_options --disable-system-extension-dirs'
+    echo 'ac_add_options --disable-system-policies'
     echo 'ac_add_options --disable-tests'
     echo 'ac_add_options --disable-updater'
+    echo 'ac_add_options --disable-wasm-codegen-debug'
+    echo 'ac_add_options --disable-webdriver'
+    echo 'ac_add_options --disable-webrender-debugger'
     echo 'ac_add_options --enable-application=mobile/android'
     echo 'ac_add_options --enable-hardening'
-    echo 'ac_add_options --enable-optimize'
-    echo 'ac_add_options --enable-release'
     echo 'ac_add_options --enable-minify=properties'
-    echo 'ac_add_options --enable-update-channel=release'
+    echo 'ac_add_options --enable-mobile-optimize'
+    echo 'ac_add_options --enable-optimize'
+    echo 'ac_add_options --enable-proxy-bypass-protection'
+    echo 'ac_add_options --enable-release'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
+    echo 'ac_add_options --enable-update-channel=release'
     echo 'ac_add_options --with-app-basename=IronFox'
     echo 'ac_add_options --with-app-name=ironfox'
     echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
@@ -503,7 +518,6 @@ fi
     echo 'export MOZ_APP_UA_NAME="Firefox"'
     echo 'export MOZ_CRASHREPORTER='
     echo 'export MOZ_DATA_REPORTING='
-    echo 'export MOZ_DISABLE_PARENTAL_CONTROLS=1'
     echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
     echo 'export MOZ_REQUIRE_SIGNING='

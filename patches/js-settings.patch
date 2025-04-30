@@ -1,0 +1,571 @@
+From 449860fa5b24aa212bfa6200e3e8786242959fc1 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:35:32 +0530
+Subject: [PATCH] fix(patches): update 'js-settings.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../browser/engine/gecko/GeckoEngine.kt       |  78 +++++-
+ .../components/concept/engine/Settings.kt     |  48 ++++
+ .../java/org/mozilla/fenix/components/Core.kt |   9 +
+ .../java/org/mozilla/fenix/utils/Settings.kt  |  29 ++
+ mobile/android/geckoview/api.txt              |  24 ++
+ .../geckoview/GeckoRuntimeSettings.java       | 256 ++++++++++++++++++
+ 6 files changed, 443 insertions(+), 1 deletion(-)
+
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+index d3bfbfa762..9b5b2eb065 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
++++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+@@ -1090,7 +1090,75 @@ class GeckoEngine(
+     override val settings: Settings = object : Settings() {
+         override var javascriptEnabled: Boolean
+             get() = runtime.settings.javaScriptEnabled
+-            set(value) { runtime.settings.javaScriptEnabled = value }
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptEnabled = it
++                }
++            }
++        
++        override var javascriptJitBaselineEnabled: Boolean
++            get() = runtime.settings.javaScriptJitBaselineEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptJitBaselineEnabled = it
++                }
++            }
++
++        override var javascriptJitBaselineWasmEnabled: Boolean
++            get() = runtime.settings.javaScriptJitBaselineWasmEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptJitBaselineWasmEnabled = it
++                }
++            }
++
++        override var javascriptJitHintsEnabled: Boolean
++            get() = runtime.settings.javaScriptJitHintsEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptJitHintsEnabled = it
++                }
++            }
++        
++        override var javascriptJitIonEnabled: Boolean
++            get() = runtime.settings.javaScriptJitIonEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptJitIonEnabled = it
++                }
++            }
++
++        override var javascriptJitMainProcessEnabled: Boolean
++            get() = runtime.settings.javaScriptJitMainProcessEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptJitMainProcessEnabled = it
++                }
++            }
++
++        override var javascriptJitNativeRegexpEnabled: Boolean
++            get() = runtime.settings.javaScriptJitNativeRegexpEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptJitNativeRegexpEnabled = it
++                }
++            }
++        
++        override var javascriptJitTrustedPrincipalsEnabled: Boolean
++            get() = runtime.settings.javaScriptJitTrustedPrincipalsEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.javaScriptJitTrustedPrincipalsEnabled = it
++                }
++            }
++        
++        override var wasmEnabled: Boolean
++            get() = runtime.settings.wasmEnabled
++            set(value) {
++                value.let {
++                    runtime.settings.wasmEnabled = it
++                }
++            }
+ 
+         override var webFontsEnabled: Boolean
+             get() = runtime.settings.webFontsEnabled
+@@ -1476,6 +1544,14 @@ class GeckoEngine(
+     }.apply {
+         defaultSettings?.let {
+             this.javascriptEnabled = it.javascriptEnabled
++            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
++            this.javascriptJitBaselineWasmEnabled = it.javascriptJitBaselineWasmEnabled
++            this.javascriptJitHintsEnabled = it.javascriptJitHintsEnabled
++            this.javascriptJitIonEnabled = it.javascriptJitIonEnabled
++            this.javascriptJitMainProcessEnabled = it.javascriptJitMainProcessEnabled
++            this.javascriptJitNativeRegexpEnabled = it.javascriptJitNativeRegexpEnabled
++            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
++            this.wasmEnabled = it.wasmEnabled
+             this.webFontsEnabled = it.webFontsEnabled
+             this.automaticFontSizeAdjustment = it.automaticFontSizeAdjustment
+             this.automaticLanguageAdjustment = it.automaticLanguageAdjustment
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+index db66cbe503..fc0414915f 100644
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+@@ -25,6 +25,46 @@ abstract class Settings {
+      */
+     open var javascriptEnabled: Boolean by UnsupportedSetting()
+ 
++    /**
++     * Setting to control whether or not JavaScript JIT (Baseline) is enabled.
++     */
++    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control whether or not JavaScript JIT (Baseline) for WebAssembly (WASM) is enabled.
++     */
++    open var javascriptJitBaselineWasmEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control whether or not JavaScript JIT (Eager baseline hints) is enabled.
++     */
++    open var javascriptJitHintsEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control whether or not JavaScript JIT (Ion) is enabled.
++     */
++    open var javascriptJitIonEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control whether or not JavaScript JIT (in the main process) is enabled.
++     */
++    open var javascriptJitMainProcessEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control whether or not JavaScript JIT (irregexp) is enabled.
++     */
++    open var javascriptJitNativeRegexpEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control whether or not JavaScript JIT (for extensions) is enabled.
++     */
++    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
++
++    /**
++     * Setting to control whether or not WebAssembly (WASM) is enabled.
++     */
++    open var wasmEnabled: Boolean by UnsupportedSetting()
++
+     /**
+      * Setting to control whether or not DOM Storage is enabled.
+      */
+@@ -347,6 +387,14 @@ abstract class Settings {
+  */
+ data class DefaultSettings(
+     override var javascriptEnabled: Boolean = true,
++    override var javascriptJitBaselineEnabled: Boolean = false,
++    override var javascriptJitBaselineWasmEnabled: Boolean = false,
++    override var javascriptJitHintsEnabled: Boolean = false,
++    override var javascriptJitIonEnabled: Boolean = false,
++    override var javascriptJitMainProcessEnabled: Boolean = false,
++    override var javascriptJitNativeRegexpEnabled: Boolean = false,
++    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
++    override var wasmEnabled: Boolean = true,
+     override var domStorageEnabled: Boolean = true,
+     override var webFontsEnabled: Boolean = true,
+     override var automaticFontSizeAdjustment: Boolean = true,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 9a9487a930..b03d803fef 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -143,6 +143,15 @@ class Core(
+      */
+     val engine: Engine by lazyMonitored {
+         val defaultSettings = DefaultSettings(
++            javascriptEnabled = context.settings().javascriptEnabled,
++            javascriptJitBaselineEnabled = context.settings().javascriptJitBaselineEnabled,
++            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitBaselineWasmEnabled,
++            javascriptJitHintsEnabled = context.settings().javascriptJitHintsEnabled,
++            javascriptJitIonEnabled = context.settings().javascriptJitIonEnabled,
++            javascriptJitMainProcessEnabled = context.settings().javascriptJitMainProcessEnabled,
++            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitNativeRegexpEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled,
++            wasmEnabled = context.settings().wasmEnabled,
+             requestInterceptor = requestInterceptor,
+             remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled &&
+                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.M,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8e271198b0..511b113886 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1354,6 +1354,35 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         }
+     }
+ 
++    var javascriptEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_javascript_enabled),
++        default = true,
++    )
++
++    var javascriptJitEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
++        default = false,
++    )
++
++    var javascriptJitBaselineEnabled = javascriptJitEnabled
++
++    var javascriptJitBaselineWasmEnabled = javascriptJitEnabled
++
++    var javascriptJitHintsEnabled = javascriptJitEnabled
++
++    var javascriptJitIonEnabled = javascriptJitEnabled
++
++    var javascriptJitMainProcessEnabled = javascriptJitEnabled
++
++    var javascriptJitNativeRegexpEnabled = javascriptJitEnabled
++
++    var javascriptJitTrustedPrincipalsEnabled = javascriptJitEnabled
++
++    var wasmEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
++        default = true,
++    )
++
+     var shouldShowVoiceSearch by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_show_voice_search),
+         default = true,
+diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
+index d1af0917aa..a93eedbb6b 100644
+--- a/mobile/android/geckoview/api.txt
++++ b/mobile/android/geckoview/api.txt
+@@ -895,6 +895,14 @@ package org.mozilla.geckoview {
+     method public boolean getGlobalPrivacyControlPrivateMode();
+     method public boolean getInputAutoZoomEnabled();
+     method public boolean getJavaScriptEnabled();
++    method public boolean getJavaScriptJitBaselineEnabled();
++    method public boolean getJavaScriptJitBaselineWasmEnabled();
++    method public boolean getJavaScriptJitHintsEnabled();
++    method public boolean getJavaScriptJitIonEnabled();
++    method public boolean getJavaScriptJitMainProcessEnabled();
++    method public boolean getJavaScriptJitNativeRegexpEnabled();
++    method public boolean getJavaScriptJitTrustedPrincipalsEnabled();
++    method public boolean getWasmEnabled();
+     method @NonNull public int getLargeKeepaliveFactor();
+     method @Nullable public String[] getLocales();
+     method public boolean getLoginAutofillEnabled();
+@@ -941,6 +949,14 @@ package org.mozilla.geckoview {
+     method @NonNull public GeckoRuntimeSettings setGlobalPrivacyControl(boolean);
+     method @NonNull public GeckoRuntimeSettings setInputAutoZoomEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings setJavaScriptEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineWasmEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitHintsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitIonEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitMainProcessEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitNativeRegexpEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setWasmEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings setLargeKeepaliveFactor(int);
+     method public void setLocales(@Nullable String[]);
+     method @NonNull public GeckoRuntimeSettings setLoginAutofillEnabled(boolean);
+@@ -1003,6 +1019,14 @@ package org.mozilla.geckoview {
+     method @NonNull public GeckoRuntimeSettings.Builder globalPrivacyControlEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder inputAutoZoomEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder javaScriptEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineWasmEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitHintsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitIonEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitMainProcessEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitNativeRegexpEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder wasmEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder largeKeepaliveFactor(int);
+     method @NonNull public GeckoRuntimeSettings.Builder locales(@Nullable String[]);
+     method @NonNull public GeckoRuntimeSettings.Builder loginAutofillEnabled(boolean);
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+index 30a300d9eb..a58cec6097 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+@@ -137,6 +137,94 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+       return this;
+     }
+ 
++    /**
++     * Set whether JavaScript JIT (Baseline) support should be enabled.
++     *
++     * @param flag A flag determining whether JavaScript JIT (Baseline) should be enabled. Default is true.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder javaScriptJitBaselineEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitBaselineEnabled.set(flag);
++      return this;
++    }
++
++    /**
++     * Set whether JavaScript JIT (Baseline) for WebAssembly (WASM) support should be enabled.
++     *
++     * @param flag A flag determining whether JavaScript JIT (Baseline) for WebAssembly (WASM) should be enabled. Default is false.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder javaScriptJitBaselineWasmEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitBaselineWasmEnabled.set(flag);
++      return this;
++    }
++
++    /**
++     * Set whether JavaScript JIT (Eager baseline hints) support should be enabled.
++     *
++     * @param flag A flag determining whether JavaScript JIT (Eager baseline hints) should be enabled. Default is false.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder javaScriptJitHintsEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitHintsEnabled.set(flag);
++      return this;
++    }
++
++    /**
++     * Set whether JavaScript JIT (Ion) support should be enabled.
++     *
++     * @param flag A flag determining whether JavaScript JIT (Baseline) should be enabled. Default is false.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder javaScriptJitIonEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitIonEnabled.set(flag);
++      return this;
++    }
++
++    /**
++     * Set whether JavaScript JIT (in the main process) support should be enabled.
++     *
++     * @param flag A flag determining whether JavaScript JIT (in the main process) should be enabled. Default is false.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder javaScriptJitMainProcessEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitMainProcessEnabled.set(!flag);
++      return this;
++    }
++
++    /**
++     * Set whether JavaScript JIT (irregexp) support should be enabled.
++     *
++     * @param flag A flag determining whether JavaScript JIT (irregexp) should be enabled. Default is false.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder javaScriptJitNativeRegexpEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitNativeRegexpEnabled.set(flag);
++      return this;
++    }
++
++    /**
++     * Set whether JavaScript JIT (for extensions) support should be enabled.
++     *
++     * @param flag A flag determining whether JavaScript JIT (for extensions) should be enabled. Default is false.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder javaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitTrustedPrincipalsEnabled.set(flag);
++      return this;
++    }
++
++    /**
++     * Set whether WebAssembly (WASM) support should be enabled.
++     *
++     * @param flag A flag determining whether WebAssembly (WASM) should be enabled. Default is false.
++     * @return This Builder instance.
++     */
++    public @NonNull Builder wasmEnabled(final boolean flag) {
++      getSettings().mWasmEnabled.set(flag);
++      return this;
++    }
++
+     /**
+      * Set whether Global Privacy Control should be enabled. GPC is a mechanism for people to tell
+      * websites to respect their privacy rights. Once turned on, it sends a signal to the websites
+@@ -617,6 +705,14 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+ 
+   /* package */ final Pref<Boolean> mWebManifest = new Pref<Boolean>("dom.manifest.enabled", true);
+   /* package */ final Pref<Boolean> mJavaScript = new Pref<Boolean>("javascript.enabled", true);
++  /* package */ final Pref<Boolean> mJavaScriptJitBaselineEnabled = new Pref<Boolean>("javascript.options.baselinejit", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitBaselineWasmEnabled = new Pref<Boolean>("javascript.options.wasm_baselinejit", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitHintsEnabled = new Pref<Boolean>("javascript.options.jithints", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitIonEnabled = new Pref<Boolean>("javascript.options.ion", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitMainProcessEnabled = new Pref<Boolean>("javascript.options.main_process_disable_jit", true);
++  /* package */ final Pref<Boolean> mJavaScriptJitNativeRegexpEnabled = new Pref<Boolean>("javascript.options.native_regexp", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
++  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", true);
+   /* package */ final Pref<Boolean> mRemoteDebugging =
+       new Pref<Boolean>("devtools.debugger.remote-enabled", false);
+   /* package */ final Pref<Integer> mWebFonts =
+@@ -827,6 +923,166 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+     return this;
+   }
+ 
++  /**
++   * Get whether JavaScript JIT (Baseline) support is enabled.
++   *
++   * @return Whether JavaScript JIT (Baseline) is enabled.
++   */
++  public boolean getJavaScriptJitBaselineEnabled() {
++    return mJavaScriptJitBaselineEnabled.get();
++  }
++
++  /**
++   * Set whether JavaScript JIT (Baseline) support should be enabled.
++   *
++   * @param flag A flag determining whether JavaScript JIT (Baseline) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(final boolean flag) {
++    mJavaScriptJitBaselineEnabled.commit(flag);
++    return this;
++  }
++
++  /**
++   * Get whether JavaScript JIT (Baseline) for WebAssembly (WASM) support is enabled.
++   *
++   * @return Whether JavaScript JIT (Baseline) for WebAssembly (WASM) is enabled.
++   */
++  public boolean getJavaScriptJitBaselineWasmEnabled() {
++    return mJavaScriptJitBaselineWasmEnabled.get();
++  }
++
++  /**
++   * Set whether JavaScript JIT (Baseline) for WebAssembly (WASM) support should be enabled.
++   *
++   * @param flag A flag determining whether JavaScript JIT (Baseline) for WebAssembly (WASM) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitBaselineWasmEnabled(final boolean flag) {
++    mJavaScriptJitBaselineWasmEnabled.commit(flag);
++    return this;
++  }
++
++  /**
++   * Get whether JavaScript JIT (Eager baseline hints) support is enabled.
++   *
++   * @return Whether JavaScript JIT (Eager baseline hints) support is enabled.
++   */
++  public boolean getJavaScriptJitHintsEnabled() {
++    return mJavaScriptJitHintsEnabled.get();
++  }
++
++  /**
++   * Set whether JavaScript JIT (Eager baseline hints) support should be enabled.
++   *
++   * @param flag A flag determining whether JavaScript JIT (Eager baseline hints) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitHintsEnabled(final boolean flag) {
++    mJavaScriptJitHintsEnabled.commit(flag);
++    return this;
++  }
++
++  /**
++   * Get whether JavaScript JIT (Ion) support is enabled.
++   *
++   * @return Whether JavaScript JIT (Ion) support is enabled.
++   */
++  public boolean getJavaScriptJitIonEnabled() {
++    return mJavaScriptJitIonEnabled.get();
++  }
++
++  /**
++   * Set whether JavaScript JIT (Ion) support should be enabled.
++   *
++   * @param flag A flag determining whether JavaScript JIT (Ion) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitIonEnabled(final boolean flag) {
++    mJavaScriptJitIonEnabled.commit(flag);
++    return this;
++  }
++
++  /**
++   * Get whether JavaScript JIT (in the main process) support is enabled.
++   *
++   * @return Whether JavaScript JIT (in the main process) support is enabled.
++   */
++  public boolean getJavaScriptJitMainProcessEnabled() {
++    return !mJavaScriptJitMainProcessEnabled.get();
++  }
++
++  /**
++   * Set whether JavaScript JIT (in the main process) support should be enabled.
++   *
++   * @param flag A flag determining whether JavaScript JIT (in the main process) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitMainProcessEnabled(final boolean flag) {
++    mJavaScriptJitMainProcessEnabled.commit(!flag);
++    return this;
++  }
++
++  /**
++   * Get whether JavaScript JIT (irregexp) support is enabled.
++   *
++   * @return Whether JavaScript JIT (irregexp) support is enabled.
++   */
++  public boolean getJavaScriptJitNativeRegexpEnabled() {
++    return mJavaScriptJitNativeRegexpEnabled.get();
++  }
++
++  /**
++   * Set whether JavaScript JIT (irregexp) support should be enabled.
++   *
++   * @param flag A flag determining whether JavaScript JIT (irregexp) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitNativeRegexpEnabled(final boolean flag) {
++    mJavaScriptJitNativeRegexpEnabled.commit(flag);
++    return this;
++  }
++
++  /**
++   * Get whether JavaScript JIT (for extensions) support is enabled.
++   *
++   * @return Whether JavaScript JIT (for extensions) support is enabled.
++   */
++  public boolean getJavaScriptJitTrustedPrincipalsEnabled() {
++    return mJavaScriptJitTrustedPrincipalsEnabled.get();
++  }
++
++  /**
++   * Set whether JavaScript JIT (for extensions) support should be enabled.
++   *
++   * @param flag A flag determining whether JavaScript JIT (for extensions) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
++    mJavaScriptJitTrustedPrincipalsEnabled.commit(flag);
++    return this;
++  }
++
++  /**
++   * Get whether WebAssembly (WASM) support is enabled.
++   *
++   * @return Whether WebAssembly (WASM) support is enabled.
++   */
++  public boolean getWasmEnabled() {
++    return mWasmEnabled.get();
++  }
++
++  /**
++   * Set whether WebAssembly (WASM) support should be enabled.
++   *
++   * @param flag A flag determining whether WebAssembly (WASM) should be enabled.
++   * @return This GeckoRuntimeSettings instance.
++   */
++  public @NonNull GeckoRuntimeSettings setWasmEnabled(final boolean flag) {
++    mWasmEnabled.commit(flag);
++    return this;
++  }
++
+   /**
+    * Enable the Global Privacy Control Feature.
+    *
+-- 
+2.49.0
+

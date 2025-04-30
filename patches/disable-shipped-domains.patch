@@ -1,8 +1,19 @@
+From 6205f20250cfd65e8ca61dd3df1d3dde49c5bf52 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:01:47 +0530
+Subject: [PATCH] fix(patches): update 'disable-shipped-domains.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../app/src/main/java/org/mozilla/fenix/components/Core.kt | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 3ab8ea1acd..992865d78f 100644
+index 9a9487a930..cf0bdf1d20 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -497,12 +497,7 @@ class Core(
+@@ -477,12 +477,7 @@ class Core(
      val bookmarksStorage: PlacesBookmarksStorage get() = lazyBookmarksStorage.value
      val passwordsStorage: SyncableLoginsStorage get() = lazyPasswordsStorage.value
      val autofillStorage: AutofillCreditCardsAddressesStorage get() = lazyAutofillStorage.value
@@ -16,3 +27,6 @@ index 3ab8ea1acd..992865d78f 100644
      val sessionAutocompleteProvider: SessionAutocompleteProvider get() = lazySessionAutocompleteProvider.value
  
      val tabCollectionStorage by lazyMonitored {
+-- 
+2.49.0
+

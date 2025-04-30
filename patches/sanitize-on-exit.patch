@@ -1,8 +1,20 @@
+From 9ded1b8aa9b8138762d1aaa72623cad419c57d3b Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Mon, 28 Apr 2025 11:39:05 +0530
+Subject: [PATCH] fix(patches): update 'sanitize-on-exit.patch' for
+ 'FIREFOX_138_0_BUILD1'
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../src/main/java/org/mozilla/fenix/utils/Settings.kt | 11 ++++++++++-
+ .../res/xml/delete_browsing_data_quit_preferences.xml |  8 +++++++-
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 45049272b7..0ad31c9b0b 100644
+index 8e271198b0..f776524d8f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -946,7 +946,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1027,7 +1027,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldDeleteBrowsingDataOnQuit by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_browsing_data_on_quit),
@@ -11,35 +23,24 @@ index 45049272b7..0ad31c9b0b 100644
      )
  
      var deleteOpenTabs by booleanPreference(
-@@ -961,7 +961,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1114,6 +1114,15 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         preferences.edit { putBoolean(type.getPreferenceKey(appContext), value) }
+     }
  
-     var deleteCookies by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_delete_cookies_now),
--        default = true,
-+        default = false,
-     )
++    init {
++        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.CACHE, true)
++        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.COOKIES, false)
++        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.DOWNLOADS, true)
++        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.HISTORY, true)
++        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.PERMISSIONS, false)
++        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.TABS, true)
++    }
++
+     fun shouldDeleteAnyDataOnQuit() =
+         DeleteBrowsingDataOnQuitType.entries.any { getDeleteDataOnQuit(it) }
  
-     var deleteCache by booleanPreference(
-@@ -971,7 +971,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
- 
-     var deleteSitePermissions by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_delete_permissions_now),
--        default = true,
-+        default = false,
-     )
- 
-     var deleteDownloads by booleanPreference(
-@@ -1027,7 +1027,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         }
- 
-     fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
--        preferences.getBoolean(type.getPreferenceKey(appContext), false)
-+        preferences.getBoolean(type.getPreferenceKey(appContext), true)
- 
-     fun setDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType, value: Boolean) {
-         preferences.edit().putBoolean(type.getPreferenceKey(appContext), value).apply()
 diff --git a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-index a5cc8cabb6..f38c9f61c4 100644
+index a5cc8cabb6..f61d1e1b71 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 @@ -5,7 +5,7 @@
@@ -51,7 +52,7 @@ index a5cc8cabb6..f38c9f61c4 100644
          android:key="@string/pref_key_delete_browsing_data_on_quit"
          android:summary="@string/preference_summary_delete_browsing_data_on_quit_2"
          android:title="@string/preferences_delete_browsing_data_on_quit" />
-@@ -16,10 +16,12 @@
+@@ -16,29 +16,35 @@
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_empty">
          <CheckBoxPreference
@@ -64,7 +65,10 @@ index a5cc8cabb6..f38c9f61c4 100644
              android:key="@string/pref_key_delete_browsing_history_on_quit"
              android:layout="@layout/checkbox_left_preference"
              android:title="@string/preferences_delete_browsing_data_browsing_history_title" />
-@@ -29,6 +31,7 @@
+         <CheckBoxPreference
++            android:defaultValue="false"
+             android:key="@string/pref_key_delete_cookies_and_site_data_on_quit"
+             android:layout="@layout/checkbox_left_preference"
              android:summary="@string/preferences_delete_browsing_data_cookies_subtitle"
              android:title="@string/preferences_delete_browsing_data_cookies_and_site_data" />
          <CheckBoxPreference
@@ -72,7 +76,11 @@ index a5cc8cabb6..f38c9f61c4 100644
              android:key="@string/pref_key_delete_caches_on_quit"
              android:layout="@layout/checkbox_left_preference"
              android:summary="@string/preferences_delete_browsing_data_cached_files_subtitle"
-@@ -39,6 +42,7 @@
+             android:title="@string/preferences_delete_browsing_data_cached_files" />
+         <CheckBoxPreference
++        android:defaultValue="false"
+         android:key="@string/pref_key_delete_permissions_on_quit"
+         android:layout="@layout/checkbox_left_preference"
          android:title="@string/preferences_delete_browsing_data_site_permissions" />
  
          <CheckBoxPreference
@@ -80,4 +88,6 @@ index a5cc8cabb6..f38c9f61c4 100644
              android:key="@string/pref_key_delete_downloads_on_quit"
              android:layout="@layout/checkbox_left_preference"
              android:title="@string/preferences_delete_browsing_data_downloads" />
- 
+-- 
+2.49.0
+

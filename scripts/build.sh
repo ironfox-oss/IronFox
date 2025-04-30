@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-set -e
+set -euo pipefail
 
 if [ -z "$1" ]; then
     echo "Usage: $0 apk|bundle" >&1
@@ -112,8 +112,9 @@ popd
 # shellcheck disable=SC2154
 pushd "$mozilla_release"
 
-./mach build && \
-./mach package && \
+# shellcheck disable=SC2086
+./mach build
+./mach package
 ./mach package-multi-locale --locales ${IRONFOX_LOCALES}
 
 MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"

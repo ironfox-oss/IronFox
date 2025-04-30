@@ -164,22 +164,20 @@ sudo apt install -y make \
 
 Apart from the above packages, you need to install Python 3.9. You can use [PPA from the `deadsnakes` team](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa).
 
-You also need to install JDK 8 AND JDK 17. JDK 17 should be set as the
-default JDK.
+You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the default JDK.
 
 </details>
 
 <details>
-<summary>When building on Fedora 41</summary>
+<summary>When building on Fedora 42</summary>
 
 ```sh
 sudo dnf install -y \
     cmake \
     clang \
+    gawk \
     git \
     gyp \
-    java-1.8.0-openjdk-devel \
-    java-17-openjdk-devel \
     m4 \
     make \
     nasm \
@@ -194,8 +192,21 @@ sudo dnf install -y \
     zlib-devel
 ```
 
-The above command installs all packages (including `python3.9`) that are required
-to build IronFox.
+You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the default JDK. These can be installed from [The Adoptium Working Group's repository](https://adoptium.net/installation/linux/#_centosrhelfedora_instructions).
+
+To add The Adoptium Working Group's repository, you'll want to install Fedora's `adoptium-temurin-java-repository` package and enable the repository:
+
+```sh
+sudo dnf install -y adoptium-temurin-java-repository
+sudo dnf config-manager setopt adoptium-temurin-java-repository.enabled=1
+sudo dnf makecache
+```
+
+Now, to install JDK 8 & 17:
+
+```sh
+sudo dnf install -y temurin-8-jdk temurin-17-jdk
+```
 
 </details>
 
@@ -235,10 +246,10 @@ Once the packages have been installed successfully, follow the instructions to s
     export PATH=$JAVA_HOME/bin:$PATH
     ```
 
-    For instance, on **Fedora 41**, the default location of JDK 17 is `/usr/lib/jvm/java-17-openjdk`:
+    For instance, on **Fedora 42**, the default location of JDK 17 is `/usr/lib/jvm/temurin-17-jdk`:
 
     ```sh
-    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+    export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
     export PATH=$JAVA_HOME/bin:$PATH
     ```
 
@@ -328,7 +339,9 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
 
-`tor-spoof-english.patch` is taken from the [Tor Project](https://support.torproject.org/about/distribute-tor/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
+`librewolf-rs-blocker.patch` is adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
+
+`tor-spoof-english.patch` is adapted from the [Tor Project](hhttps://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
 ## Notices
 

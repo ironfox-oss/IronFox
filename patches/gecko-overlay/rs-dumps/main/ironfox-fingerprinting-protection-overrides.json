@@ -1,0 +1,217 @@
+{
+  "data": [
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "arcticfoxes.net"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "aria.im"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "bitcoinist.org"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "brave.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "bsky.app"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "chatwave.org"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "chipotle.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "cinny.in"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "citybbq.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "discord.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "doordash.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "duesen.chat"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "element.io"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "favicon.io"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "flieger.chat"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "g24.at"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "gemeinsam.jetzt"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "gitlab.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "gnulinux.club"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "gsi.go.jp"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "harkins.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "hot-chilli.im"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "jerseymikes.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "kosmikdog.eu"
+    },
+    {
+      "overrides": "-ScreenRect",
+      "firstPartyDomain": "letterboxd.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "megacloud.blog"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "megacloud.store"
+    },
+    {
+      "overrides": "-WebGLRenderInfo",
+      "firstPartyDomain": "moviezapiya.fun"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "mtrx.nz"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "neat.chat"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "nitro.chat"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "nope.chat"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "nperf.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "oblak.be"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "pcriot.org"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "pendora.io"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "photopea.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "pogospike.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "pornhub.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "proton.me"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "rollenspiel.chat"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "socialnetwork24.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "studichat.de"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "synod.im"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "the-apothecary.club"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "transfem.dev"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "unredacted.org"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "utwente.io"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "viliusle.github.io"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "watchduty.org"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "we2.ee"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "x.com"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "yatrix.org"
+    }
+  ],
+  "timestamp": 2147483647
+}
