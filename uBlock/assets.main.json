@@ -1177,6 +1177,7 @@
     "unsafe": {
         "content": "filters",
         "group": "malware",
+        "off": true,
         "title": "⚠️ BadBlock - Unsafe",
         "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/abp/unsafe.txt",
         "supportURL": "https://badblock.celenity.dev/issues"
