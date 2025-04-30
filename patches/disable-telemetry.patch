@@ -54,6 +54,21 @@ index 7941343807..e56e90a005 100644
  
  dependencies {
      implementation project(':concept-engine')
+diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
+index d897b9af6f..2fb1be3150 100644
+--- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
++++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
+@@ -12,9 +12,5 @@ import java.io.IOException
+  * Indicates if an exception should be reported to the crash reporter.
+  */
+ internal fun Exception.shouldReport(): Boolean {
+-    val isRecoverable = (this as? WebExtensionException)?.isRecoverable ?: true
+-    return cause !is IOException &&
+-        cause !is CancellationException &&
+-        this !is CancellationException &&
+-        isRecoverable
++    return false
+ }
 diff --git a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
 index bc9ae7fe5b..e89859e038 100644
 --- a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
