@@ -130,7 +130,7 @@ sed -i \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(arch, aab)/$2/" \
+    -e "s/Config.generateFennecVersionCode(arch, isAppBundle )/$2/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
@@ -238,6 +238,11 @@ echo "$llvmtarget" >"$builddir/targets_to_build"
 # Enable the auto-publication workflow
 # shellcheck disable=SC2154
 echo "autoPublish.application-services.dir=$application_services" >>local.properties
+
+# Disable FUS Service or we'll get errors like:
+# Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
+echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
+
 popd
 
 #
@@ -319,9 +324,6 @@ find "$patches/a-c-overlay" -type f | while read -r src; do
     cp "$src" "${src#"$patches/a-c-overlay/"}"
 done
 
-# Hack to prevent too long string from breaking build
-sed -i '/val status =/,+3d' plugins/config/src/main/java/ConfigPlugin.kt
-sed -i '/\/\/ Append "+"/a \        val statusSuffix = "+"' plugins/config/src/main/java/ConfigPlugin.kt
 popd
 
 # Application Services
