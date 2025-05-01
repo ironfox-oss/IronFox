@@ -169,6 +169,81 @@ index d3643aedf2..f8e67ca365 100644
        currentEtag: `"${timestamp}"`,
        serverTimeMillis,
        backoffSeconds,
+diff --git a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+index d634f9def5..05e8007f24 100644
+--- a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
++++ b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+@@ -12,7 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "resource://services-settings/RemoteSettingsClient.sys.mjs",
+ });
+ 
+-const REMOTE_SETTINGS_CRASH_COLLECTION = "crash-reports-ondemand";
++const REMOTE_SETTINGS_CRASH_COLLECTION = "";
+ 
+ // Remote Settings collections might want a different limit
+ const PENDING_REMOTE_CRASH_REPORT_DAYS = 90;
+diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+index eeb90eaf0c..f6a10ec3db 100644
+--- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
++++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+@@ -32,7 +32,7 @@ const IS_MAIN_PROCESS =
+   Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
+ 
+ const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
+-const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
++const COLLECTION_ID_FALLBACK = "";
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+   "COLLECTION_ID",
+diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+index 06c0045df6..acd3660cb4 100644
+--- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
++++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+@@ -37,7 +37,7 @@ XPCOMUtils.defineLazyServiceGetter(
+ );
+ 
+ const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
+-const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
++const COLLECTION_ID_FALLBACK = "";
+ const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
+   "nimbus.telemetry.targetingContextEnabled";
+ 
+@@ -51,10 +51,10 @@ const NIMBUS_APPID_PREF = "nimbus.appId";
+ 
+ const STUDIES_ENABLED_CHANGED = "nimbus:studies-enabled-changed";
+ 
+-const SECURE_EXPERIMENTS_COLLECTION_ID = "nimbus-secure-experiments";
++const SECURE_EXPERIMENTS_COLLECTION_ID = "";
+ 
+-const EXPERIMENTS_COLLECTION = "experiments";
+-const SECURE_EXPERIMENTS_COLLECTION = "secureExperiments";
++const EXPERIMENTS_COLLECTION = "";
++const SECURE_EXPERIMENTS_COLLECTION = "";
+ 
+ const RS_COLLECTION_OPTIONS = {
+   [EXPERIMENTS_COLLECTION]: {
+@@ -82,7 +82,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+   "APP_ID",
+   NIMBUS_APPID_PREF,
+-  "firefox-desktop"
++  ""
+ );
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+diff --git a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+index 087e4ed51e..256972093f 100644
+--- a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
++++ b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+@@ -36,7 +36,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+ 
+ const log = LogManager.getLogger("recipe-runner");
+ const TIMER_NAME = "recipe-client-addon-run";
+-const REMOTE_SETTINGS_COLLECTION = "normandy-recipes-capabilities";
++const REMOTE_SETTINGS_COLLECTION = "";
+ const PREF_CHANGED_TOPIC = "nsPref:changed";
+ 
+ const RUN_INTERVAL_PREF = "app.normandy.run_interval_seconds";
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
 index 883e8389ee..ef86a2d1fa 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
