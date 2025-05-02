@@ -130,7 +130,6 @@ sed -i \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
-    -e "s/Config.generateFennecVersionCode(arch, isAppBundle )/$2/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
