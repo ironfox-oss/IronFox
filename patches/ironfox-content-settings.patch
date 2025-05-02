@@ -117,10 +117,10 @@ index dbb7ece65c..e5b56bda69 100644
  
      <!-- Crash reporting -->
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-index ef1dcb4e6e..46c63052f7 100644
+index ef1dcb4e6e..25e429567d 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-@@ -25,6 +25,27 @@
+@@ -25,6 +25,28 @@
              android:title="@string/preference_feature_desktop_mode_default"
              app:iconSpaceReserved="false" />
  
@@ -135,6 +135,7 @@ index ef1dcb4e6e..46c63052f7 100644
 +            android:icon="@drawable/mozac_ic_lock_24"
 +            android:defaultValue="false"
 +            android:key="@string/pref_key_jit_enabled"
++            android:summary="@string/restart_required_summary"
 +            android:title="@string/preference_jit_enabled"
 +            app:iconSpaceReserved="false" />
 +
@@ -148,6 +149,3 @@ index ef1dcb4e6e..46c63052f7 100644
      </androidx.preference.PreferenceCategory>
  
      <androidx.preference.PreferenceCategory
--- 
-2.49.0
-

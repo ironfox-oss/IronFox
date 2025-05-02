@@ -80,6 +80,15 @@ index a5cc8cabb6..ea74ef7ee4 100644
              android:key="@string/pref_key_delete_downloads_on_quit"
              android:layout="@layout/checkbox_left_preference"
              android:title="@string/preferences_delete_browsing_data_downloads" />
--- 
-2.49.0
-
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 3b85a2a548..1aad8d7744 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -204,6 +204,7 @@
+         <androidx.preference.SwitchPreference
+             android:defaultValue="false"
+             android:key="@string/pref_key_enable_gecko_logs"
++            android:summary="@string/restart_required_summary"
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_enable_gecko_logs" />
+     </PreferenceCategory>
