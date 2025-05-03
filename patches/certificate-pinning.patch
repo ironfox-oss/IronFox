@@ -1,5 +1,5 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 644f20e9d3..6259c3ae7b 100644
+index 644f20e9d3..efe706535c 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
 @@ -7,6 +7,10 @@
@@ -133,7 +133,7 @@ index 644f20e9d3..6259c3ae7b 100644
  };
  static const StaticFingerprints kPinset_mozilla_services = {
    sizeof(kPinset_mozilla_services_Data) / sizeof(const char*),
-@@ -316,6 +349,856 @@ static const StaticFingerprints kPinset_facebook = {
+@@ -316,6 +349,826 @@ static const StaticFingerprints kPinset_facebook = {
    kPinset_facebook_Data
  };
  
@@ -359,16 +359,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +static const StaticFingerprints kPinset_divested = {
 +  sizeof(kPinset_divested_Data) / sizeof(const char*),
 +  kPinset_divested_Data
-+};
-+
-+static const char* const kPinset_dns0_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+  kUSERTrust_ECC_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_dns0 = {
-+  sizeof(kPinset_dns0_Data) / sizeof(const char*),
-+  kPinset_dns0_Data
 +};
 +
 +static const char* const kPinset_duckduckgo_Data[] = {
@@ -623,16 +613,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +  kPinset_mullvad_Data
 +};
 +
-+static const char* const kPinset_nextdns_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+  kUSERTrust_ECC_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_nextdns = {
-+  sizeof(kPinset_nextdns_Data) / sizeof(const char*),
-+  kPinset_nextdns_Data
-+};
-+
 +static const char* const kPinset_okta_Data[] = {
 +  kAmazon_Root_CA_1Fingerprint,
 +  kAmazon_Root_CA_2Fingerprint,
@@ -725,16 +705,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +static const StaticFingerprints kPinset_proton = {
 +  sizeof(kPinset_proton_Data) / sizeof(const char*),
 +  kPinset_proton_Data
-+};
-+
-+static const char* const kPinset_quad9_Data[] = {
-+  kDigiCert_Global_Root_G3Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_quad9 = {
-+  sizeof(kPinset_quad9_Data) / sizeof(const char*),
-+  kPinset_quad9_Data
 +};
 +
 +static const char* const kPinset_radar_Data[] = {
@@ -990,7 +960,7 @@ index 644f20e9d3..6259c3ae7b 100644
  /* Domainlist */
  struct TransportSecurityPreload {
    // See bug 1338873 about making these fields const.
-@@ -329,76 +1212,446 @@ struct TransportSecurityPreload {
+@@ -329,76 +1182,441 @@ struct TransportSecurityPreload {
  
  /* Sort hostnames for binary search. */
  static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
@@ -1019,7 +989,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "adguard.io", true, false, false, -1, &kPinset_adguard },
 +  { "adguard.org", true, false, false, -1, &kPinset_adguard },
 +  { "adguard.ru", true, false, false, -1, &kPinset_adguard },
-+  { "adguard-dns.io", true, false, false, -1, &kPinset_adguard },
 +  { "adguard-vpn.com", true, false, false, -1, &kPinset_adguard },
    { "admin.google.com", true, false, false, -1, &kPinset_google_root_pems },
 +  { "admob-cn.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -1224,6 +1193,7 @@ index 644f20e9d3..6259c3ae7b 100644
    { "cdn.ampproject.org", true, false, false, -1, &kPinset_google_root_pems },
    { "cdn.mozilla.net", true, false, true, 16, &kPinset_mozilla_services },
    { "cdn.mozilla.org", true, false, true, 17, &kPinset_mozilla_services },
++  { "cdn.mullvad.net", true, false, false, -1, &kPinset_mullvad },
 +  { "cdn-apple.com", true, false, false, -1, &kPinset_apple },
 +  { "cdninstagram.com", true, false, false, -1, &kPinset_facebook },
 +  { "cel.dev", true, false, false, -1, &kPinset_google_root_pems },
@@ -1256,7 +1226,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "cloud.gov", true, false, false, -1, &kPinset_usgov },
 +  { "cloud.microsoft", true, false, false, -1, &kPinset_microsoft },
 +  { "cloudflare.com", true, false, false, -1, &kPinset_cloudflare },
-+  { "cloudflare-dns.com", true, false, false, -1, &kPinset_cloudflare },
 +  { "cloudflareinsights.com", true, false, false, -1, &kPinset_cloudflare },
 +  { "cloudflarestream.com", true, false, false, -1, &kPinset_cloudflare },
 +  { "cloudfront.net", true, false, false, -1, &kPinset_amazon },
@@ -1316,10 +1285,7 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "discordapp.net", true, false, false, -1, &kPinset_discord },
 +  { "divested.dev", true, false, false, -1, &kPinset_divested },
    { "dl.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dns.google", true, false, false, -1, &kPinset_google_root_pems },
-   { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dns0.eu", true, false, false, -1, &kPinset_dns0 },
-+  { "dns64.google", true, false, false, -1, &kPinset_google_root_pems },
+-  { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "docs.google.com", true, false, false, -1, &kPinset_google_root_pems },
 +  { "doi.gov", true, false, false, -1, &kPinset_usgov },
 +  { "domains.google", true, false, false, -1, &kPinset_google_root_pems },
@@ -1440,7 +1406,7 @@ index 644f20e9d3..6259c3ae7b 100644
    { "google.ac", true, false, false, -1, &kPinset_google_root_pems },
    { "google.ad", true, false, false, -1, &kPinset_google_root_pems },
    { "google.ae", true, false, false, -1, &kPinset_google_root_pems },
-@@ -529,6 +1782,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -529,6 +1747,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "google.cv", true, false, false, -1, &kPinset_google_root_pems },
    { "google.cz", true, false, false, -1, &kPinset_google_root_pems },
    { "google.de", true, false, false, -1, &kPinset_google_root_pems },
@@ -1448,7 +1414,7 @@ index 644f20e9d3..6259c3ae7b 100644
    { "google.dj", true, false, false, -1, &kPinset_google_root_pems },
    { "google.dk", true, false, false, -1, &kPinset_google_root_pems },
    { "google.dm", true, false, false, -1, &kPinset_google_root_pems },
-@@ -623,90 +1877,636 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -623,90 +1842,638 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "google.vg", true, false, false, -1, &kPinset_google_root_pems },
    { "google.vu", true, false, false, -1, &kPinset_google_root_pems },
    { "google.ws", true, false, false, -1, &kPinset_google_root_pems },
@@ -1715,7 +1681,7 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "msn.com", true, false, false, -1, &kPinset_microsoft },
    { "mtouch.facebook.com", true, false, false, -1, &kPinset_facebook },
 +  { "mullvad.careers", true, false, false, -1, &kPinset_mullvad },
-+  { "mullvad.net", true, false, false, -1, &kPinset_mullvad },
++  { "mullvad.net", false, false, false, -1, &kPinset_mullvad },
 +  { "mullvadvpn.net", true, false, false, -1, &kPinset_mullvad },
    { "myaccount.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "myactivity.google.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -1729,7 +1695,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "nel.goog", true, false, false, -1, &kPinset_google_root_pems },
 +  { "nelreports.net", true, false, false, -1, &kPinset_microsoft },
 +  { "nest.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "nextdns.io", true, false, false, -1, &kPinset_nextdns },
 +  { "nomulus.foo", true, false, false, -1, &kPinset_google_root_pems },
 +  { "nongnu.org", true, false, false, -1, &kPinset_fsf },
 +  { "notebooklm.google", true, false, false, -1, &kPinset_google_root_pems },
@@ -1894,7 +1859,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "protonvpn.com", true, false, false, -1, &kPinset_proton },
 +  { "protonweb.com", true, false, false, -1, &kPinset_proton },
 +  { "py.pl", true, false, false, -1, &kPinset_paypal },
-+  { "quad9.net", true, false, false, -1, &kPinset_quad9 },
 +  { "quantumai.google", true, false, false, -1, &kPinset_google_root_pems },
 +  { "qwapi.com", true, false, false, -1, &kPinset_apple },
 +  { "radar.com", true, false, false, -1, &kPinset_radar },
@@ -1918,7 +1882,9 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "registry-qa.google", true, false, false, -1, &kPinset_google_root_pems },
 +  { "registry-sandbox.google", true, false, false, -1, &kPinset_google_root_pems },
 +  { "regulations.gov", true, false, false, -1, &kPinset_usgov },
++  { "releases.mullvad.net", true, false, false, -1, &kPinset_mullvad },
    { "remotedesktop.corp.google.com", true, false, false, -1, &kPinset_google_root_pems },
++  { "repository.mullvad.net", true, false, false, -1, &kPinset_mullvad },
    { "research.facebook.com", true, false, false, -1, &kPinset_facebook },
 +  { "research.youtube", true, false, false, -1, &kPinset_google_root_pems },
 +  { "revolut.com", true, false, false, -1, &kPinset_revolut },
@@ -1942,6 +1908,8 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "services.apple", true, false, false, -1, &kPinset_apple },
    { "services.mozilla.com", true, false, true, 6, &kPinset_mozilla_services },
 +  { "serving-sys.com", true, false, false, -1, &kPinset_amazon },
++  { "sg-sin-cdn-101.mullvad.net", true, false, false, -1, &kPinset_mullvad },
++  { "stpackage.mullvad.net", true, false, false, -1, &kPinset_mullvad },
 +  { "share.google", true, false, false, -1, &kPinset_google_root_pems },
 +  { "sharepoint.com", true, false, false, -1, &kPinset_microsoft },
 +  { "sharepointonline.com", true, false, false, -1, &kPinset_microsoft },
@@ -2086,7 +2054,7 @@ index 644f20e9d3..6259c3ae7b 100644
    { "wf-bigsky-master.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-demo-eu.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-demo-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -716,23 +2516,75 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -716,23 +2483,73 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "wf-training-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-training-master.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-trial-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -2102,7 +2070,6 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "wikifunctions.org", true, false, false, -1, &kPinset_wikimedia },
 +  { "wikileaks.org", true, false, false, -1, &kPinset_wikileaks },
 +  { "wikimedia.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikimedia-dns.org", true, false, false, -1, &kPinset_wikimedia },
 +  { "wikimediafoundation.org", true, false, false, -1, &kPinset_wikimedia },
 +  { "wikinews.org", true, false, false, -1, &kPinset_wikimedia },
 +  { "wikipedia.org", true, false, false, -1, &kPinset_wikimedia },
@@ -2153,13 +2120,12 @@ index 644f20e9d3..6259c3ae7b 100644
 +  { "youtubekids.com", true, false, false, -1, &kPinset_google_root_pems },
 +  { "yt.be", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "zdns.google", true, false, false, -1, &kPinset_google_root_pems },
 +  { "zynamics.com", true, false, false, -1, &kPinset_google_root_pems },
 +  { "zettle.com", true, false, false, -1, &kPinset_paypal },
  };
  
 -// Pinning Preload List Length = 401;
-+// Pinning Preload List Length = 1370;
++// Pinning Preload List Length = 1365;
  
  static const int32_t kUnknownId = -1;
  
