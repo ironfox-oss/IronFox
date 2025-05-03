@@ -1,17 +1,5 @@
-From 9ded1b8aa9b8138762d1aaa72623cad419c57d3b Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:39:05 +0530
-Subject: [PATCH] fix(patches): update 'sanitize-on-exit.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../src/main/java/org/mozilla/fenix/utils/Settings.kt | 11 ++++++++++-
- .../res/xml/delete_browsing_data_quit_preferences.xml |  8 +++++++-
- 2 files changed, 17 insertions(+), 2 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..f776524d8f 100644
+index 8e271198b0..36aafa5e13 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -1027,7 +1027,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -23,24 +11,28 @@ index 8e271198b0..f776524d8f 100644
      )
  
      var deleteOpenTabs by booleanPreference(
-@@ -1114,6 +1114,15 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         preferences.edit { putBoolean(type.getPreferenceKey(appContext), value) }
-     }
+@@ -1107,8 +1107,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+             return touchExplorationIsEnabled || switchServiceIsEnabled
+         }
  
-+    init {
-+        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.CACHE, true)
-+        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.COOKIES, false)
-+        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.DOWNLOADS, true)
-+        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.HISTORY, true)
-+        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.PERMISSIONS, false)
-+        setDeleteDataOnQuit(DeleteBrowsingDataOnQuitType.TABS, true)
-+    }
+-    fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
+-        preferences.getBoolean(type.getPreferenceKey(appContext), false)
++    fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean {
++        val defaultValue = when(type) {
++            DeleteBrowsingDataOnQuitType.CACHE -> true
++            DeleteBrowsingDataOnQuitType.DOWNLOADS -> true
++            DeleteBrowsingDataOnQuitType.HISTORY -> true
++            DeleteBrowsingDataOnQuitType.TABS -> true
++            else -> false
++        }
 +
-     fun shouldDeleteAnyDataOnQuit() =
-         DeleteBrowsingDataOnQuitType.entries.any { getDeleteDataOnQuit(it) }
++        return preferences.getBoolean(type.getPreferenceKey(appContext), defaultValue)
++    }
  
+     fun setDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType, value: Boolean) {
+         preferences.edit { putBoolean(type.getPreferenceKey(appContext), value) }
 diff --git a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-index a5cc8cabb6..f61d1e1b71 100644
+index a5cc8cabb6..ea74ef7ee4 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 @@ -5,7 +5,7 @@
@@ -88,6 +80,15 @@ index a5cc8cabb6..f61d1e1b71 100644
              android:key="@string/pref_key_delete_downloads_on_quit"
              android:layout="@layout/checkbox_left_preference"
              android:title="@string/preferences_delete_browsing_data_downloads" />
--- 
-2.49.0
-
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 3b85a2a548..1aad8d7744 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -204,6 +204,7 @@
+         <androidx.preference.SwitchPreference
+             android:defaultValue="false"
+             android:key="@string/pref_key_enable_gecko_logs"
++            android:summary="@string/restart_required_summary"
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_enable_gecko_logs" />
+     </PreferenceCategory>

@@ -97,7 +97,7 @@ index 9a9487a930..f901801a96 100644
              cookieBannerHandlingGlobalRules = context.settings().shouldEnableCookieBannerGlobalRules,
              cookieBannerHandlingGlobalRulesSubFrames = context.settings().shouldEnableCookieBannerGlobalRulesSubFrame,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index ad6678f234..6e25b8b6df 100644
+index ad6678f234..743185b9ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -563,6 +563,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
@@ -108,7 +108,7 @@ index ad6678f234..6e25b8b6df 100644
          setupInstallAddonFromFilePreference(requireContext().settings())
          setLinkSharingPreference()
          setupAmoCollectionOverridePreference(requireContext().settings())
-@@ -789,6 +790,26 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -789,6 +790,37 @@ class SettingsFragment : PreferenceFragmentCompat() {
          }
      }
  
@@ -128,10 +128,21 @@ index ad6678f234..6e25b8b6df 100644
 +            settings.safeBrowsingPhishingEnabled = shouldEnable
 +            components.core.engine.settings.safeBrowsingPhishingEnabled = shouldEnable
 +
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                FXA_SYNC_OVERRIDE_EXIT_DELAY,
++            )
 +            true
 +        }
 +    }
-+
++    
      @VisibleForTesting
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
@@ -168,10 +179,10 @@ index dbb7ece65c..e334b7586c 100644
      <string name="pref_key_save_logins_settings" translatable="false">pref_key_save_logins_settings</string>
      <string name="pref_key_save_logins" translatable="false">pref_key_save_logins</string>
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 3b85a2a548..76cbc502d6 100644
+index 3b85a2a548..04fff133df 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -120,6 +120,12 @@
+@@ -120,6 +120,13 @@
              app:iconSpaceReserved="false"
              app:isPreferenceVisible="false"
              android:title="@string/preferences_cookie_banner_reduction_private_mode" />
@@ -179,6 +190,7 @@ index 3b85a2a548..76cbc502d6 100644
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="true"
 +            android:key="@string/pref_key_safe_browsing_enabled"
++            android:summary="@string/restart_required_summary"
 +            app:iconSpaceReserved="false"
 +            android:title="@string/preference_safe_browsing_enabled" />
  
