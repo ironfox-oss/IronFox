@@ -177,7 +177,7 @@ index db66cbe503..fc0414915f 100644
      override var webFontsEnabled: Boolean = true,
      override var automaticFontSizeAdjustment: Boolean = true,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 9a9487a930..b03d803fef 100644
+index 9a9487a930..1740c44da1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -143,6 +143,15 @@ class Core(
@@ -185,22 +185,22 @@ index 9a9487a930..b03d803fef 100644
      val engine: Engine by lazyMonitored {
          val defaultSettings = DefaultSettings(
 +            javascriptEnabled = context.settings().javascriptEnabled,
-+            javascriptJitBaselineEnabled = context.settings().javascriptJitBaselineEnabled,
-+            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitBaselineWasmEnabled,
-+            javascriptJitHintsEnabled = context.settings().javascriptJitHintsEnabled,
-+            javascriptJitIonEnabled = context.settings().javascriptJitIonEnabled,
-+            javascriptJitMainProcessEnabled = context.settings().javascriptJitMainProcessEnabled,
-+            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitNativeRegexpEnabled,
-+            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled,
++            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
 +            wasmEnabled = context.settings().wasmEnabled,
              requestInterceptor = requestInterceptor,
              remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled &&
                  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..511b113886 100644
+index 8e271198b0..ba1cb2b8f5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1354,6 +1354,35 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1354,6 +1354,21 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          }
      }
  
@@ -214,25 +214,11 @@ index 8e271198b0..511b113886 100644
 +        default = false,
 +    )
 +
-+    var javascriptJitBaselineEnabled = javascriptJitEnabled
-+
-+    var javascriptJitBaselineWasmEnabled = javascriptJitEnabled
-+
-+    var javascriptJitHintsEnabled = javascriptJitEnabled
-+
-+    var javascriptJitIonEnabled = javascriptJitEnabled
-+
-+    var javascriptJitMainProcessEnabled = javascriptJitEnabled
-+
-+    var javascriptJitNativeRegexpEnabled = javascriptJitEnabled
-+
-+    var javascriptJitTrustedPrincipalsEnabled = javascriptJitEnabled
-+
 +    var wasmEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
 +        default = true,
 +    )
-+
++    
      var shouldShowVoiceSearch by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_voice_search),
          default = true,
