@@ -1,5 +1,5 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 644f20e9d3..5876582bb8 100644
+index 644f20e9d3..1a5b2d399a 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
 @@ -7,6 +7,10 @@
@@ -133,7 +133,7 @@ index 644f20e9d3..5876582bb8 100644
  };
  static const StaticFingerprints kPinset_mozilla_services = {
    sizeof(kPinset_mozilla_services_Data) / sizeof(const char*),
-@@ -316,6 +349,836 @@ static const StaticFingerprints kPinset_facebook = {
+@@ -316,6 +349,838 @@ static const StaticFingerprints kPinset_facebook = {
    kPinset_facebook_Data
  };
  
@@ -825,6 +825,8 @@ index 644f20e9d3..5876582bb8 100644
 +static const char* const kPinset_tiktok_Data[] = {
 +  kDigiCert_Global_Root_G2Fingerprint,
 +  kDigiCert_Global_Root_G3Fingerprint,
++  kGlobalSign_Root_CA___R3Fingerprint,
++  kGlobalSign_Root_CA___R6Fingerprint,
 +};
 +static const StaticFingerprints kPinset_tiktok = {
 +  sizeof(kPinset_tiktok_Data) / sizeof(const char*),
@@ -970,7 +972,7 @@ index 644f20e9d3..5876582bb8 100644
  /* Domainlist */
  struct TransportSecurityPreload {
    // See bug 1338873 about making these fields const.
-@@ -329,76 +1192,441 @@ struct TransportSecurityPreload {
+@@ -329,76 +1194,441 @@ struct TransportSecurityPreload {
  
  /* Sort hostnames for binary search. */
  static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
@@ -1416,7 +1418,7 @@ index 644f20e9d3..5876582bb8 100644
    { "google.ac", true, false, false, -1, &kPinset_google_root_pems },
    { "google.ad", true, false, false, -1, &kPinset_google_root_pems },
    { "google.ae", true, false, false, -1, &kPinset_google_root_pems },
-@@ -529,6 +1757,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -529,6 +1759,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "google.cv", true, false, false, -1, &kPinset_google_root_pems },
    { "google.cz", true, false, false, -1, &kPinset_google_root_pems },
    { "google.de", true, false, false, -1, &kPinset_google_root_pems },
@@ -1424,7 +1426,7 @@ index 644f20e9d3..5876582bb8 100644
    { "google.dj", true, false, false, -1, &kPinset_google_root_pems },
    { "google.dk", true, false, false, -1, &kPinset_google_root_pems },
    { "google.dm", true, false, false, -1, &kPinset_google_root_pems },
-@@ -623,90 +1852,638 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -623,90 +1854,638 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "google.vg", true, false, false, -1, &kPinset_google_root_pems },
    { "google.vu", true, false, false, -1, &kPinset_google_root_pems },
    { "google.ws", true, false, false, -1, &kPinset_google_root_pems },
@@ -2064,7 +2066,7 @@ index 644f20e9d3..5876582bb8 100644
    { "wf-bigsky-master.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-demo-eu.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-demo-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -716,23 +2493,73 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -716,23 +2495,73 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "wf-training-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-training-master.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "wf-trial-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
