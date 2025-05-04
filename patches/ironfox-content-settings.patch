@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 115535816e..3cf53db9cc 100644
+index 115535816e..8581d589dc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 @@ -24,6 +24,10 @@ import org.mozilla.fenix.ext.settings
@@ -13,7 +13,7 @@ index 115535816e..3cf53db9cc 100644
  
  /**
   * Screen for managing settings related to site permissions and content defaults.
-@@ -44,6 +48,78 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -44,6 +48,67 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
      override fun onResume() {
          super.onResume()
          showToolbar(getString(R.string.preferences_site_settings))
@@ -22,12 +22,12 @@ index 115535816e..3cf53db9cc 100644
 +            R.string.pref_key_javascript_enabled,
 +        )
 +
-+        javascriptEnabledPreference.setOnPreferenceChangeListener { preference, newValue ->
++        javascriptEnabledPreference.setOnPreferenceChangeListener { preference, javascriptEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
 +
-+            settings.javascriptEnabled = newValue as Boolean
-+            components.core.engine.settings.javascriptEnabled = newValue
++            settings.javascriptEnabled = javascriptEnabled as Boolean
++            components.core.engine.settings.javascriptEnabled = javascriptEnabled
 +
 +            true
 +        }
@@ -36,30 +36,19 @@ index 115535816e..3cf53db9cc 100644
 +            R.string.pref_key_jit_enabled,
 +        )
 +
-+        javascriptJitEnabledPreference.setOnPreferenceChangeListener { preference, newValue ->
++        javascriptJitEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
 +
-+            settings.javascriptJitBaselineEnabled = newValue as Boolean
-+            components.core.engine.settings.javascriptJitBaselineEnabled = newValue
++            settings.javascriptJitEnabled = javascriptJitEnabled as Boolean
 +
-+            settings.javascriptJitBaselineWasmEnabled = newValue
-+            components.core.engine.settings.javascriptJitBaselineWasmEnabled = newValue
-+
-+            settings.javascriptJitHintsEnabled = newValue
-+            components.core.engine.settings.javascriptJitHintsEnabled = newValue
-+
-+            settings.javascriptJitIonEnabled = newValue
-+            components.core.engine.settings.javascriptJitIonEnabled = newValue
-+
-+            settings.javascriptJitMainProcessEnabled = newValue
-+            components.core.engine.settings.javascriptJitMainProcessEnabled = newValue
-+
-+            settings.javascriptJitNativeRegexpEnabled = newValue
-+            components.core.engine.settings.javascriptJitNativeRegexpEnabled = newValue
-+
-+            settings.javascriptJitTrustedPrincipalsEnabled = newValue
-+            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = newValue
++            components.core.engine.settings.javascriptJitBaselineEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitBaselineWasmEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitHintsEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitIonEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitMainProcessEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitNativeRegexpEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitEnabled
 +
 +            Toast.makeText(
 +                context,
@@ -79,12 +68,12 @@ index 115535816e..3cf53db9cc 100644
 +            R.string.pref_key_wasm_enabled,
 +        )
 +
-+        wasmEnabledPreference.setOnPreferenceChangeListener { preference, newValue ->
++        wasmEnabledPreference.setOnPreferenceChangeListener { preference, wasmEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
 +
-+            settings.wasmEnabled = newValue as Boolean
-+            components.core.engine.settings.wasmEnabled = newValue
++            settings.wasmEnabled = wasmEnabled as Boolean
++            components.core.engine.settings.wasmEnabled = wasmEnabled
 +
 +            true
 +        }
@@ -92,7 +81,7 @@ index 115535816e..3cf53db9cc 100644
          setupPreferences()
      }
  
-@@ -113,4 +189,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -113,4 +178,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              )
          }
      }
