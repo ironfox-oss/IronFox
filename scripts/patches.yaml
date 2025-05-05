@@ -289,7 +289,7 @@ patches:
   - file: "certificate-pinning.patch"
     name: "Certificate Pinning"
     description: |
-      Updates and heavily expands/improves upon Mozilla's built-in certificate pinning.
+      Updates and expands/improves upon Mozilla's built-in certificate pinning.
     reason: "To protect against MITM attacks by restricting which certificate authorities can issue valid certificates for included websites. Example of a real-world attack that this protects against: https://blog.mozilla.org/security/2011/08/29/fraudulent-google-com-certificate/"
     effect: "Users are provided with a significantly more secure browsing experience and a better peace of mind."
     category: "Security"
