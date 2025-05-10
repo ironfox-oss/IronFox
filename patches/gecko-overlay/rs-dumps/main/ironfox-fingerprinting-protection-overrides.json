@@ -133,7 +133,7 @@
       "firstPartyDomain": "citybbq.com"
     },
     {
-      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,+JSDateTimeUTC",
       "firstPartyDomain": "cloudflare.com"
     },
     {
@@ -157,7 +157,7 @@
       "firstPartyDomain": "epicgames.com"
     },
     {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,+JSDateTimeUTC",
       "firstPartyDomain": "favicon.io"
     },
     {
@@ -213,7 +213,7 @@
       "firstPartyDomain": "megacloud.store"
     },
     {
-      "overrides": "-WebGLRenderInfo",
+      "overrides": "-WebGLRenderInfo,+JSDateTimeUTC",
       "firstPartyDomain": "moviezapiya.fun"
     },
     {
@@ -297,7 +297,7 @@
       "firstPartyDomain": "tiktok.com"
     },
     {
-      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,+JSDateTimeUTC",
       "firstPartyDomain": "tileman.io"
     },
     {
@@ -339,6 +339,22 @@
     {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "yatrix.org"
+    },
+    {
+      "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "thirdPartyDomain": "cloudflare.com"
+    },
+    {
+      "overrides": "+JSDateTimeUTC",
+      "thirdPartyDomain": "favicon.io"
+    },
+    {
+      "overrides": "+JSDateTimeUTC",
+      "thirdPartyDomain": "moviezapiya.fun"
+    },
+    {
+      "overrides": "+JSDateTimeUTC",
+      "thirdPartyDomain": "tileman.io"
     }
   ],
   "timestamp": 2147483647
