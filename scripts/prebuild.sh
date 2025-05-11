@@ -484,6 +484,7 @@ fi
     echo 'ac_add_options --disable-negotiateauth'
     echo 'ac_add_options --disable-nodejs'
     echo 'ac_add_options --disable-parental-controls'
+    echo 'ac_add_options --disable-phc'
     echo 'ac_add_options --disable-pref-extensions'
     echo 'ac_add_options --disable-profiling'
     echo 'ac_add_options --disable-real-time-tracing'
