@@ -417,11 +417,18 @@ sed -i \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
 sed -i \
+    -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
+    -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
+    -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
     -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
     -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
+    -e 's|"extensions.webextensions.crash.threshold"|"z99.ignore.extensions.webextensions.crash.threshold"|' \
+    -e 's|"extensions.webextensions.crash.timeframe"|"z99.ignore.extensions.webextensions.crash.timeframe"|' \
+    -e 's|"extensions.webextensions.remote"|"z99.ignore.extensions.webextensions.remote"|' \
     -e 's|"fission.autostart"|"z99.ignore.fission.autostart"|' \
     -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
+    -e 's|"formhelper.autozoom"|"z99.ignore.formhelper.autozoom"|' \
     -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
@@ -439,6 +446,7 @@ sed -i \
     -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.security.pki.certificate_transparency.mode"|' \
     -e 's|"security.tls.enable_kyber"|"z99.ignore.security.tls.enable_kyber"|' \
     -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.toolkit.telemetry.user_characteristics_ping.current_version"|' \
+    -e 's|"webgl.msaa-samples"|"z99.ignore.webgl.msaa-samples"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
 # shellcheck disable=SC2154
@@ -453,6 +461,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 fi
 {
     echo 'ac_add_options --disable-address-sanitizer-reporter'
+    echo 'ac_add_options --disable-android-debuggable'
     echo 'ac_add_options --disable-artifact-builds'
     echo 'ac_add_options --disable-backgroundtasks'
     echo 'ac_add_options --disable-callgrind'
