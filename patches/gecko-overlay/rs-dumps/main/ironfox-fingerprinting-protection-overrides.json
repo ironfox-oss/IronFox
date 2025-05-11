@@ -1209,6 +1209,16 @@
       "thirdPartyDomain": "loginwithamazon.com"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "*",
+      "thirdPartyDomain": "megacloud.blog"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "*",
+      "thirdPartyDomain": "megacloud.store"
+    },
+    {
       "overrides": "+JSDateTimeUTC",
       "firstPartyDomain": "*",
       "thirdPartyDomain": "moviezapiya.fun"
