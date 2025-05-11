@@ -5,11 +5,16 @@
 
 /// Clear FPP global overrides
 // We're hardening FPP internally with our own `RFPTargetsDefault.inc` file instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
-pref("privacy.fingerprintingProtection.overrides", "");
+pref("privacy.fingerprintingProtection.overrides", ""); // [DEFAULT]
 
 /// Clear FPP granular overrides
 // We're including these internally with a custom Remote Settings dump instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
-pref("privacy.fingerprintingProtection.granularOverrides", '');
+pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
+
+/// Re-enable our/Mozilla's fingerprinting protection overrides
+// We disable this functionality in Phoenix to re-enable Canvas randomization for Google domains by default - that isn't a problem for us here though, since we just use our custom Remote Settings dump to re-enable Canvas randomization for Google domains instead
+// This pref is also required for our custom Remote Settings dump/overrides to work anyways...
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true); // [DEFAULT]
 
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
