@@ -1021,6 +1021,11 @@
       "firstPartyDomain": "photopea.com"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "pogo.com",
+      "thirdPartyDomain": "pogospike.com"
+    },
+    {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "pogospike.com"
     },
