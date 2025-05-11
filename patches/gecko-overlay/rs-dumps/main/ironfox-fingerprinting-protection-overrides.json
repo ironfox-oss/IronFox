@@ -1130,146 +1130,182 @@
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "apple.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "apple.news"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "bsky.app"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "cdn-apple.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "cdninstagram.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "cloudflare.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC,+JSLocale",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "discord.gg"
     },
     {
       "overrides": "+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "favicon.io"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC,+JSLocale",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "goo.gl"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC,+JSLocale",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "googlevideo.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC,+JSLocale",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "gravatar.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "instagram.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "licdn.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "linkedin.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "loginwithamazon.com"
     },
     {
       "overrides": "+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "moviezapiya.fun"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "pinimg.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "pinterest.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "recaptcha.net"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "recaptcha.net.cn"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "recaptcha-cn.net"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "redd.it"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "reddit.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "redditmedia.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "redditstatic.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC,+JSLocale",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "t.co"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "tiktok.com"
     },
     {
       "overrides": "+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "tileman.io"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "twitter.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC,+JSLocale",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "twimg.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "vimeo.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "vimeocdn.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "x.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC,+JSLocale",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "youtu.be"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "youtube.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+JSDateTimeUTC",
+      "firstPartyDomain": "*",
       "thirdPartyDomain": "youtube-nocookie.com"
     }
   ],
