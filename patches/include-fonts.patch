@@ -1,0 +1,13 @@
+diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
+index c900501ee6..99a3b38bdd 100644
+--- a/mobile/android/moz.configure
++++ b/mobile/android/moz.configure
+@@ -7,7 +7,7 @@
+ project_flag(
+     "MOZ_ANDROID_EXCLUDE_FONTS",
+     help="Whether to exclude font files from the build",
+-    default=True,
++    default=False,
+ )
+ 
+ project_flag(
