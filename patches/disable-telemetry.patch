@@ -1,46 +1,3 @@
-From aa11dfabd95fd328c46b905bcf575bec2725f567 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:02:26 +0530
-Subject: [PATCH] fix(patches): update 'disable-telemetry.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../browser/engine-gecko/build.gradle         |   2 +-
- .../lib/crash/sentry/SentryService.kt         |   2 +-
- .../lib/crash/prompt/CrashReporterActivity.kt |   2 +-
- .../service/GleanCrashReporterService.kt      | 595 ------------------
- .../crash/service/MozillaSocorroService.kt    |   4 +-
- mobile/android/fenix/app/build.gradle         |   2 +-
- .../java/org/mozilla/fenix/FeatureFlags.kt    |   2 +-
- .../org/mozilla/fenix/FenixApplication.kt     |   4 -
- .../org/mozilla/fenix/components/Analytics.kt | 105 +---
- .../mozilla/fenix/components/Components.kt    |   2 +-
- .../java/org/mozilla/fenix/components/Core.kt |  42 +-
- .../mozilla/fenix/components/GleanHelper.kt   |  15 +-
- .../components/metrics/GleanMetricsService.kt |   6 +-
- .../components/metrics/MetricsStorage.kt      |   4 +-
- .../mozilla/fenix/experiments/NimbusSetup.kt  |   5 +-
- .../controller/NimbusBranchesController.kt    |  27 -
- .../fenix/onboarding/OnboardingFragment.kt    |   3 +-
- .../java/org/mozilla/fenix/utils/Settings.kt  |  52 +-
- .../app/src/main/res/xml/preferences.xml      |  10 -
- .../org/mozilla/geckoview/CrashHandler.java   |   2 +-
- mobile/android/moz.configure                  |   2 +-
- python/mach/mach/telemetry.py                 |   5 +-
- toolkit/components/glean/src/init/mod.rs      |  18 +-
- .../glean/src/init/viaduct_uploader.rs        |   4 +-
- .../app/TelemetryControllerBase.sys.mjs       |  31 +-
- .../app/TelemetryReportingPolicy.sys.mjs      |  63 +-
- .../telemetry/app/UsageReporting.sys.mjs      |  21 +-
- .../components/telemetry/core/Telemetry.cpp   |   7 +-
- .../telemetry/core/TelemetryCommon.cpp        |   7 +-
- toolkit/library/rust/gkrust-features.mozbuild |   3 +-
- toolkit/modules/AppConstants.sys.mjs          |  15 +-
- toolkit/moz.configure                         |   2 +-
- .../substitutions/AppConstants.sys.d.mts      |  10 +-
- 33 files changed, 81 insertions(+), 993 deletions(-)
-
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 index 7941343807..e56e90a005 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
@@ -742,6 +699,17 @@ index 900fc5ebb6..ea5c0b2ad7 100644
              .buildUpon()
              .appendQueryParameter("id", appId)
              .appendQueryParameter("version", versionName)
+diff --git a/mobile/android/confvars.sh b/mobile/android/confvars.sh
+index c0e5ed66e5..6363a23b63 100644
+--- a/mobile/android/confvars.sh
++++ b/mobile/android/confvars.sh
+@@ -5,3 +5,6 @@
+ MOZ_BRANDING_DIRECTORY=mobile/android/branding/unofficial
+ MOZ_OFFICIAL_BRANDING_DIRECTORY=mobile/android/branding/official
+ # MOZ_APP_DISPLAYNAME is set by branding/configure.sh
++
++unset MOZ_TELEMETRY_REPORTING
++unset MOZ_DATA_REPORTING
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index 7535453460..22013e852c 100644
 --- a/mobile/android/fenix/app/build.gradle
@@ -1819,6 +1787,3 @@ index 04273576bd..8dc11902b0 100644
  
    TSAN: boolean;
  
--- 
-2.49.0
-
