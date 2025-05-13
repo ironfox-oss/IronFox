@@ -285,7 +285,7 @@ patches:
     effect: "Browser uses light theme out of the box."
     category: "Privacy"
   
-  - file: include-fonts.patch"
+  - file: "include-fonts.patch"
     name: "Include Fonts"
     description: "Includes fonts at build-time."
     reason: "To improve compatibility and ensure users have a common set of fonts."
