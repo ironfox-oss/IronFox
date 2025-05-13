@@ -699,17 +699,6 @@ index 900fc5ebb6..ea5c0b2ad7 100644
              .buildUpon()
              .appendQueryParameter("id", appId)
              .appendQueryParameter("version", versionName)
-diff --git a/mobile/android/confvars.sh b/mobile/android/confvars.sh
-index c0e5ed66e5..6363a23b63 100644
---- a/mobile/android/confvars.sh
-+++ b/mobile/android/confvars.sh
-@@ -5,3 +5,6 @@
- MOZ_BRANDING_DIRECTORY=mobile/android/branding/unofficial
- MOZ_OFFICIAL_BRANDING_DIRECTORY=mobile/android/branding/official
- # MOZ_APP_DISPLAYNAME is set by branding/configure.sh
-+
-+unset MOZ_TELEMETRY_REPORTING
-+unset MOZ_DATA_REPORTING
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index 7535453460..22013e852c 100644
 --- a/mobile/android/fenix/app/build.gradle
