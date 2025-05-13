@@ -417,11 +417,18 @@ sed -i \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
 sed -i \
+    -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
+    -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
+    -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
     -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
     -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
+    -e 's|"extensions.webextensions.crash.threshold"|"z99.ignore.extensions.webextensions.crash.threshold"|' \
+    -e 's|"extensions.webextensions.crash.timeframe"|"z99.ignore.extensions.webextensions.crash.timeframe"|' \
+    -e 's|"extensions.webextensions.remote"|"z99.ignore.extensions.webextensions.remote"|' \
     -e 's|"fission.autostart"|"z99.ignore.fission.autostart"|' \
     -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
+    -e 's|"formhelper.autozoom"|"z99.ignore.formhelper.autozoom"|' \
     -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
@@ -439,6 +446,7 @@ sed -i \
     -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.security.pki.certificate_transparency.mode"|' \
     -e 's|"security.tls.enable_kyber"|"z99.ignore.security.tls.enable_kyber"|' \
     -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.toolkit.telemetry.user_characteristics_ping.current_version"|' \
+    -e 's|"webgl.msaa-samples"|"z99.ignore.webgl.msaa-samples"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
 # shellcheck disable=SC2154
@@ -452,33 +460,59 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
         --src_path "$llvm"
 fi
 {
+    echo 'ac_add_options --disable-address-sanitizer-reporter'
+    echo 'ac_add_options --disable-android-debuggable'
+    echo 'ac_add_options --disable-artifact-builds'
+    echo 'ac_add_options --disable-backgroundtasks'
     echo 'ac_add_options --disable-callgrind'
     echo 'ac_add_options --disable-crashreporter'
     echo 'ac_add_options --disable-debug'
     echo 'ac_add_options --disable-debug-js-modules'
     echo 'ac_add_options --disable-debug-symbols'
+    echo 'ac_add_options --disable-default-browser-agent'
+    echo 'ac_add_options --disable-dmd'
+    echo 'ac_add_options --disable-dtrace'
+    echo 'ac_add_options --disable-dump-painting'
+    echo 'ac_add_options --disable-execution-tracing'
+    echo 'ac_add_options --disable-ffmpeg'
     echo 'ac_add_options --disable-gecko-profiler'
     echo 'ac_add_options --disable-geckodriver'
+    echo 'ac_add_options --disable-instruments'
+    echo 'ac_add_options --disable-js-shell'
+    echo 'ac_add_options --disable-layout-debugger'
+    echo 'ac_add_options --disable-logrefcnt'
+    echo 'ac_add_options --disable-negotiateauth'
     echo 'ac_add_options --disable-nodejs'
     echo 'ac_add_options --disable-parental-controls'
+    echo 'ac_add_options --disable-phc'
     echo 'ac_add_options --disable-pref-extensions'
     echo 'ac_add_options --disable-profiling'
+    echo 'ac_add_options --disable-real-time-tracing'
+    echo 'ac_add_options --disable-reflow-perf'
     echo 'ac_add_options --disable-rust-debug'
+    echo 'ac_add_options --disable-simulator'
     echo 'ac_add_options --disable-spidermonkey-telemetry'
     echo 'ac_add_options --disable-system-extension-dirs'
     echo 'ac_add_options --disable-system-policies'
     echo 'ac_add_options --disable-tests'
+    echo 'ac_add_options --disable-uniffi-fixtures'
+    echo 'ac_add_options --disable-unverified-updates'
     echo 'ac_add_options --disable-updater'
+    echo 'ac_add_options --disable-vtune'
     echo 'ac_add_options --disable-wasm-codegen-debug'
     echo 'ac_add_options --disable-webdriver'
     echo 'ac_add_options --disable-webrender-debugger'
+    echo 'ac_add_options --disable-webspeechtestbackend'
+    echo 'ac_add_options --disable-wmf'
     echo 'ac_add_options --enable-application=mobile/android'
     echo 'ac_add_options --enable-hardening'
+    echo 'ac_add_options --enable-install-strip'
     echo 'ac_add_options --enable-minify=properties'
     echo 'ac_add_options --enable-mobile-optimize'
     echo 'ac_add_options --enable-optimize'
     echo 'ac_add_options --enable-proxy-bypass-protection'
     echo 'ac_add_options --enable-release'
+    echo 'ac_add_options --enable-replace-malloc'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo 'ac_add_options --enable-update-channel=release'
@@ -521,9 +555,12 @@ fi
     echo 'export MOZ_DATA_REPORTING='
     echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
+    echo 'export MOZ_LTO=1'
+    echo 'export MOZ_PGO=1'
     echo 'export MOZ_REQUIRE_SIGNING='
     echo 'export MOZ_TELEMETRY_REPORTING='
     echo 'export MOZILLA_OFFICIAL=1'
+    echo 'export RUSTC_OPT_LEVEL=2'
 } >>mozconfig
 
 # Configure

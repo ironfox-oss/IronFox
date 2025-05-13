@@ -284,12 +284,19 @@ patches:
     reason: "To prevent fingerprinting based on user's theme preferences."
     effect: "Browser uses light theme out of the box."
     category: "Privacy"
+  
+  - file: "include-fonts.patch"
+    name: "Include Fonts"
+    description: "Includes fonts at build-time."
+    reason: "To improve compatibility and ensure users have a common set of fonts."
+    effect: "Provides stronger fingerprinting protection."
+    category: "Privacy"
 
   # Security
   - file: "certificate-pinning.patch"
     name: "Certificate Pinning"
     description: |
-      Updates and heavily expands/improves upon Mozilla's built-in certificate pinning.
+      Updates and expands/improves upon Mozilla's built-in certificate pinning.
     reason: "To protect against MITM attacks by restricting which certificate authorities can issue valid certificates for included websites. Example of a real-world attack that this protects against: https://blog.mozilla.org/security/2011/08/29/fraudulent-google-com-certificate/"
     effect: "Users are provided with a significantly more secure browsing experience and a better peace of mind."
     category: "Security"
@@ -299,6 +306,13 @@ patches:
     description: "Disables Accessibility Services by default."
     reason: "To prevent apps from monitoring users without consent."
     effect: "Prevents apps from monitoring users without permission, and improves performance as a bonus."
+    category: "Security"
+
+  - file: "disable-hls.patch"
+    name: "Disable HLS"
+    description: "Disables HLS (HTTP Live Streaming)"
+    reason: "To address privacy and security concerns due to the use of an external ExoPlayer library. See here for more details: https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/29859"
+    effect: "Improves privacy and security for users and decreases the browser's reliance on external libraries."
     category: "Security"
 
   - file: "disable-shipped-domains.patch"

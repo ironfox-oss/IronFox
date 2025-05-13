@@ -25,19 +25,6 @@ index 4afaf2493b..458ef0d0b1 100644
      implementation "org.yaml:snakeyaml:2.2"
  
      implementation libs.androidx.lifecycle.common
-diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java
-index cb54b18f99..a7194d1c0b 100644
---- a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/media/MediaDrmProxy.java
-@@ -44,7 +44,7 @@ public final class MediaDrmProxy {
-         Log.d(LOGTAG, "System Not supported !!, current SDK version is " + Build.VERSION.SDK_INT);
-       return false;
-     }
--    return true;
-+    return false;
-   }
- 
-   @SuppressLint("NewApi")
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
 index d688ff87f2..80b049ccac 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java

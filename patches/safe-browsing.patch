@@ -84,7 +84,7 @@ index db66cbe503..8eb6fdec9d 100644
      override var cookieBannerHandlingGlobalRules: Boolean = false,
      override var cookieBannerHandlingGlobalRulesSubFrames: Boolean = false,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 9a9487a930..f901801a96 100644
+index 9a9487a930..ba7b61e96b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -169,6 +169,8 @@ class Core(
@@ -92,12 +92,12 @@ index 9a9487a930..f901801a96 100644
              cookieBannerHandlingMode = context.settings().getCookieBannerHandling(),
              cookieBannerHandlingModePrivateBrowsing = context.settings().getCookieBannerHandlingPrivateMode(),
 +            safeBrowsingEnabled = context.settings().safeBrowsingEnabled,
-+            safeBrowsingPhishingEnabled = context.settings().safeBrowsingPhishingEnabled,
++            safeBrowsingPhishingEnabled = context.settings().safeBrowsingEnabled,
              cookieBannerHandlingDetectOnlyMode = context.settings().shouldEnableCookieBannerDetectOnly,
              cookieBannerHandlingGlobalRules = context.settings().shouldEnableCookieBannerGlobalRules,
              cookieBannerHandlingGlobalRulesSubFrames = context.settings().shouldEnableCookieBannerGlobalRulesSubFrame,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index ad6678f234..743185b9ef 100644
+index ad6678f234..425ec85218 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -563,6 +563,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
@@ -108,7 +108,7 @@ index ad6678f234..743185b9ef 100644
          setupInstallAddonFromFilePreference(requireContext().settings())
          setLinkSharingPreference()
          setupAmoCollectionOverridePreference(requireContext().settings())
-@@ -789,6 +790,37 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -789,6 +790,36 @@ class SettingsFragment : PreferenceFragmentCompat() {
          }
      }
  
@@ -118,15 +118,14 @@ index ad6678f234..743185b9ef 100644
 +            R.string.pref_key_safe_browsing_enabled,
 +        )
 +
-+        safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, shouldEnable ->
++        safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
 +
-+            settings.safeBrowsingEnabled = shouldEnable
-+            components.core.engine.settings.safeBrowsingEnabled = shouldEnable
-+
-+            settings.safeBrowsingPhishingEnabled = shouldEnable
-+            components.core.engine.settings.safeBrowsingPhishingEnabled = shouldEnable
++            settings.safeBrowsingEnabled = safeBrowsingEnabled
++            
++            components.core.engine.settings.safeBrowsingEnabled = safeBrowsingEnabled
++            components.core.engine.settings.safeBrowsingPhishingEnabled = safeBrowsingEnabled
 +
 +            Toast.makeText(
 +                context,
@@ -142,15 +141,15 @@ index ad6678f234..743185b9ef 100644
 +            true
 +        }
 +    }
-+    
++
      @VisibleForTesting
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..b6d118ef12 100644
+index 8e271198b0..86fc40d5fd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -786,6 +786,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -786,6 +786,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val queryParameterStrippingStripList: String
          get() = queryParameterStrippingSection[QUERY_PARAMETER_STRIPPING_STRIP_LIST].orEmpty()
@@ -159,8 +158,6 @@ index 8e271198b0..b6d118ef12 100644
 +        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
 +        default = true,
 +    )
-+
-+    var safeBrowsingPhishingEnabled = safeBrowsingEnabled
  
      /**
       * Declared as a function for performance purposes. This could be declared as a variable using

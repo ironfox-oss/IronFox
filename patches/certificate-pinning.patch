@@ -1,31 +1,8 @@
-From 32f090fc7af83357424a4d3f6c0554c337cda0af Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 10:24:36 +0530
-Subject: [PATCH] fix(patches): update 'certificate-pinning.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- security/manager/ssl/StaticHPKPins.h         | 1872 +++++++++++++++++-
- security/manager/tools/PreloadedHPKPins.json |   16 +-
- 2 files changed, 1863 insertions(+), 25 deletions(-)
-
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 644f20e9d3..dc10e0bf94 100644
+index 644f20e9d3..f78cfe5c3f 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
-@@ -7,6 +7,10 @@
- /* PublicKeyPinningService.cpp, you shouldn't be #including it.              */
- /*****************************************************************************/
- #include <stdint.h>
-+/* Actalis Authentication Root CA */
-+static const char kActalis_Authentication_Root_CAFingerprint[] =
-+  "JdSRPPWHCXQU0p0m9sGxlCzW1k6vRdD8+BUmrbqW0yQ=";
-+
- /* AffirmTrust Commercial */
- static const char kAffirmTrust_CommercialFingerprint[] =
-   "bEZLmlsjOl6HTadlwm8EUBDS3c/0V5TwtMfkqvpQFJU=";
-@@ -23,6 +27,22 @@ static const char kAffirmTrust_PremiumFingerprint[] =
+@@ -23,6 +23,22 @@ static const char kAffirmTrust_PremiumFingerprint[] =
  static const char kAffirmTrust_Premium_ECCFingerprint[] =
    "MhmwkRT/SVo+tusAwu/qs0ACrl8KVsdnnqCHo/oDfk8=";
  
@@ -48,7 +25,7 @@ index 644f20e9d3..dc10e0bf94 100644
  /* Baltimore CyberTrust Root */
  static const char kBaltimore_CyberTrust_RootFingerprint[] =
    "Y9mvm0exBk1JoQ57f9Vm28jKo5lFm/woKcVxrYxu80o=";
-@@ -151,6 +171,10 @@ static const char kGlobalSign_Root_CA___R3Fingerprint[] =
+@@ -151,6 +167,10 @@ static const char kGlobalSign_Root_CA___R3Fingerprint[] =
  static const char kGlobalSign_Root_CA___R6Fingerprint[] =
    "aCdH+LpiG4fN07wpXtXKvOciocDANj0daLOJKNJ4fx4=";
  
@@ -59,29 +36,7 @@ index 644f20e9d3..dc10e0bf94 100644
  /* GlobalSign Root R46 */
  static const char kGlobalSign_Root_R46Fingerprint[] =
    "rn+WLLnmp9v3uDP7GPqbcaiRdd+UnCMrap73yz3yu/w=";
-@@ -167,6 +191,10 @@ static const char kGo_Daddy_Root_Certificate_Authority___G2Fingerprint[] =
- static const char kGoogleBackup2048Fingerprint[] =
-   "IPMbDAjLVSGntGO3WP53X/zilCVndez5YJ2+vJvhJsA=";
- 
-+/* IdenTrust Commercial Root CA 1 */
-+static const char kIdenTrust_Commercial_Root_CA_1Fingerprint[] =
-+  "B+hU8mp8vTiZJ6oEG/7xts0h3RQ4GK2UfcZVqeWH/og=";
-+
- /* ISRG Root X1 */
- static const char kISRG_Root_X1Fingerprint[] =
-   "C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=";
-@@ -175,6 +203,10 @@ static const char kISRG_Root_X1Fingerprint[] =
- static const char kISRG_Root_X2Fingerprint[] =
-   "diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=";
- 
-+/* SSL.com TLS RSA Root CA 2022 */
-+static const char kSSLcom_TLS_RSA_Root_CA_2022Fingerprint[] =
-+  "K89VOmb1cJAN3TK6bf4ezAbJGC1mLcG2Dh97dnwr3VQ=";
-+
- /* Starfield Class 2 CA */
- static const char kStarfield_Class_2_CAFingerprint[] =
-   "FfFKxFycfaIz00eRZOgTf+Ne4POK6FgYPwhBDqgqxLQ=";
-@@ -204,19 +236,16 @@ struct StaticFingerprints {
+@@ -204,19 +224,16 @@ struct StaticFingerprints {
  
  /* PreloadedHPKPins.json pinsets */
  static const char* const kPinset_google_root_pems_Data[] = {
@@ -101,7 +56,7 @@ index 644f20e9d3..dc10e0bf94 100644
    kGTS_Root_R3Fingerprint,
    kGTS_Root_R2Fingerprint,
    kGo_Daddy_Class_2_CAFingerprint,
-@@ -224,21 +253,16 @@ static const char* const kPinset_google_root_pems_Data[] = {
+@@ -224,21 +241,16 @@ static const char* const kPinset_google_root_pems_Data[] = {
    kDigiCert_High_Assurance_EV_Root_CAFingerprint,
    kBaltimore_CyberTrust_RootFingerprint,
    kGlobalSign_Root_CA___R6Fingerprint,
@@ -123,139 +78,21 @@ index 644f20e9d3..dc10e0bf94 100644
    kUSERTrust_RSA_Certification_AuthorityFingerprint,
  };
  static const StaticFingerprints kPinset_google_root_pems = {
-@@ -247,12 +271,21 @@ static const StaticFingerprints kPinset_google_root_pems = {
- };
- 
- static const char* const kPinset_mozilla_services_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-   kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-   kDigiCert_High_Assurance_EV_Root_CAFingerprint,
-   kDigiCert_TLS_RSA4096_Root_G5Fingerprint,
-   kDigiCert_Global_Root_G2Fingerprint,
-   kDigiCert_TLS_ECC_P384_Root_G5Fingerprint,
-   kDigiCert_Global_Root_CAFingerprint,
-+  kGTS_Root_R1Fingerprint,
-+  kGTS_Root_R2Fingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
- };
- static const StaticFingerprints kPinset_mozilla_services = {
-   sizeof(kPinset_mozilla_services_Data) / sizeof(const char*),
-@@ -316,6 +349,850 @@ static const StaticFingerprints kPinset_facebook = {
+@@ -316,6 +328,45 @@ static const StaticFingerprints kPinset_facebook = {
    kPinset_facebook_Data
  };
  
 +static const char* const kPinset_ironfox_Data[] = {
-+  kGTS_Root_R3Fingerprint,
++  kGlobalSign_Root_CAFingerprint,
 +  kGTS_Root_R4Fingerprint,
 +  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
 +};
 +static const StaticFingerprints kPinset_ironfox = {
 +  sizeof(kPinset_ironfox_Data) / sizeof(const char*),
 +  kPinset_ironfox_Data
 +};
 +
-+static const char* const kPinset_1password_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_1password = {
-+  sizeof(kPinset_1password_Data) / sizeof(const char*),
-+  kPinset_1password_Data
-+};
-+
-+static const char* const kPinset_accrescent_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_accrescent = {
-+  sizeof(kPinset_accrescent_Data) / sizeof(const char*),
-+  kPinset_accrescent_Data
-+};
-+
-+static const char* const kPinset_adguard_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_adguard = {
-+  sizeof(kPinset_adguard_Data) / sizeof(const char*),
-+  kPinset_adguard_Data
-+};
-+
-+static const char* const kPinset_amazon_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kGlobalSign_Root_CA___R3Fingerprint,
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+  kStarfield_Root_Certificate_Authority___G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_amazon = {
-+  sizeof(kPinset_amazon_Data) / sizeof(const char*),
-+  kPinset_amazon_Data
-+};
-+
-+static const char* const kPinset_apple_Data[] = {
-+  kCOMODO_ECC_Certification_AuthorityFingerprint,
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kDigiCert_Global_Root_G3Fingerprint,
-+  kDigiCert_High_Assurance_EV_Root_CAFingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_apple = {
-+  sizeof(kPinset_apple_Data) / sizeof(const char*),
-+  kPinset_apple_Data
-+};
-+
-+static const char* const kPinset_beacondb_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_beacondb = {
-+  sizeof(kPinset_beacondb_Data) / sizeof(const char*),
-+  kPinset_beacondb_Data
-+};
-+
-+static const char* const kPinset_bitwarden_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_bitwarden = {
-+  sizeof(kPinset_bitwarden_Data) / sizeof(const char*),
-+  kPinset_bitwarden_Data
-+};
-+
-+static const char* const kPinset_bluesky_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_bluesky = {
-+  sizeof(kPinset_bluesky_Data) / sizeof(const char*),
-+  kPinset_bluesky_Data
-+};
-+
++/* Taken from https://github.com/brave/brave-core/blob/master/chromium_src/net/tools/transport_security_state_generator/input_file_parsers.cc */
 +static const char* const kPinset_brave_Data[] = {
 +  kAmazon_Root_CA_1Fingerprint,
 +  kAmazon_Root_CA_2Fingerprint,
@@ -276,1896 +113,272 @@ index 644f20e9d3..dc10e0bf94 100644
 +  kPinset_brave_Data
 +};
 +
-+static const char* const kPinset_bunny_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_bunny = {
-+  sizeof(kPinset_bunny_Data) / sizeof(const char*),
-+  kPinset_bunny_Data
-+};
-+
-+static const char* const kPinset_calyx_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_calyx = {
-+  sizeof(kPinset_calyx_Data) / sizeof(const char*),
-+  kPinset_calyx_Data
-+};
-+
 +static const char* const kPinset_celenity_Data[] = {
 +  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
 +};
 +static const StaticFingerprints kPinset_celenity = {
 +  sizeof(kPinset_celenity_Data) / sizeof(const char*),
 +  kPinset_celenity_Data
 +};
 +
-+static const char* const kPinset_chase_Data[] = {
-+  kDigiCert_Global_Root_G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_chase = {
-+  sizeof(kPinset_chase_Data) / sizeof(const char*),
-+  kPinset_chase_Data
-+};
-+
-+static const char* const kPinset_cibc_Data[] = {
-+  kDigiCert_Global_Root_CAFingerprint,
-+};
-+static const StaticFingerprints kPinset_cibc = {
-+  sizeof(kPinset_cibc_Data) / sizeof(const char*),
-+  kPinset_cibc_Data
-+};
-+
-+static const char* const kPinset_cloudflare_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_cloudflare = {
-+  sizeof(kPinset_cloudflare_Data) / sizeof(const char*),
-+  kPinset_cloudflare_Data
-+};
-+
-+static const char* const kPinset_codeberg_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_codeberg = {
-+  sizeof(kPinset_codeberg_Data) / sizeof(const char*),
-+  kPinset_codeberg_Data
-+};
-+
-+static const char* const kPinset_cromite_Data[] = {
-+  kActalis_Authentication_Root_CAFingerprint,
-+};
-+static const StaticFingerprints kPinset_cromite = {
-+  sizeof(kPinset_cromite_Data) / sizeof(const char*),
-+  kPinset_cromite_Data
-+};
-+
-+static const char* const kPinset_dashlane_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_dashlane = {
-+  sizeof(kPinset_dashlane_Data) / sizeof(const char*),
-+  kPinset_dashlane_Data
-+};
-+
-+static const char* const kPinset_discord_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_discord = {
-+  sizeof(kPinset_discord_Data) / sizeof(const char*),
-+  kPinset_discord_Data
-+};
-+
-+static const char* const kPinset_divested_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_divested = {
-+  sizeof(kPinset_divested_Data) / sizeof(const char*),
-+  kPinset_divested_Data
-+};
-+
-+static const char* const kPinset_dns0_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+  kUSERTrust_ECC_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_dns0 = {
-+  sizeof(kPinset_dns0_Data) / sizeof(const char*),
-+  kPinset_dns0_Data
-+};
-+
-+static const char* const kPinset_duckduckgo_Data[] = {
-+  kDigiCert_Global_Root_G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_duckduckgo = {
-+  sizeof(kPinset_duckduckgo_Data) / sizeof(const char*),
-+  kPinset_duckduckgo_Data
-+};
-+
-+static const char* const kPinset_eff_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_eff = {
-+  sizeof(kPinset_eff_Data) / sizeof(const char*),
-+  kPinset_eff_Data
-+};
-+
-+static const char* const kPinset_element_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_element = {
-+  sizeof(kPinset_element_Data) / sizeof(const char*),
-+  kPinset_element_Data
-+};
-+
-+static const char* const kPinset_fastly_Data[] = {
-+  kGlobalSign_Root_CA___R3Fingerprint,
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+  kStarfield_Root_Certificate_Authority___G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_fastly = {
-+  sizeof(kPinset_fastly_Data) / sizeof(const char*),
-+  kPinset_fastly_Data
-+};
-+
-+static const char* const kPinset_fdroid_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_fdroid = {
-+  sizeof(kPinset_fdroid_Data) / sizeof(const char*),
-+  kPinset_fdroid_Data
-+};
-+
-+static const char* const kPinset_fsf_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_fsf = {
-+  sizeof(kPinset_fsf_Data) / sizeof(const char*),
-+  kPinset_fsf_Data
-+};
-+
-+static const char* const kPinset_gitflic_Data[] = {
-+  kGlobalSign_Root_CA___R3Fingerprint,
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+};
-+static const StaticFingerprints kPinset_gitflic = {
-+  sizeof(kPinset_gitflic_Data) / sizeof(const char*),
-+  kPinset_gitflic_Data
-+};
-+
-+static const char* const kPinset_gitlab_Data[] = {
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_gitlab = {
-+  sizeof(kPinset_gitlab_Data) / sizeof(const char*),
-+  kPinset_gitlab_Data
-+};
-+
-+static const char* const kPinset_grapheneos_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_grapheneos = {
-+  sizeof(kPinset_grapheneos_Data) / sizeof(const char*),
-+  kPinset_grapheneos_Data
-+};
-+
-+static const char* const kPinset_hrblock_Data[] = {
-+  kEntrust_Root_Certification_Authority___G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_hrblock = {
-+  sizeof(kPinset_hrblock_Data) / sizeof(const char*),
-+  kPinset_hrblock_Data
-+};
-+
-+static const char* const kPinset_infosecexchange_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_infosecexchange = {
-+  sizeof(kPinset_infosecexchange_Data) / sizeof(const char*),
-+  kPinset_infosecexchange_Data
-+};
-+
-+static const char* const kPinset_itsaky_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_itsaky = {
-+  sizeof(kPinset_itsaky_Data) / sizeof(const char*),
-+  kPinset_itsaky_Data
-+};
-+
-+static const char* const kPinset_izzysoft_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_izzysoft = {
-+  sizeof(kPinset_izzysoft_Data) / sizeof(const char*),
-+  kPinset_izzysoft_Data
-+};
-+
-+static const char* const kPinset_jsdelivr_Data[] = {
-+  kGlobalSign_Root_CA___R3Fingerprint,
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_jsdelivr = {
-+  sizeof(kPinset_jsdelivr_Data) / sizeof(const char*),
-+  kPinset_jsdelivr_Data
-+};
-+
-+static const char* const kPinset_kernel_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_kernel = {
-+  sizeof(kPinset_kernel_Data) / sizeof(const char*),
-+  kPinset_kernel_Data
-+};
-+
-+static const char* const kPinset_lastpass_Data[] = {
-+  kGlobalSign_ECC_Root_CA___R5Fingerprint,
-+  kGlobalSign_Root_CA___R3Fingerprint,
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+};
-+static const StaticFingerprints kPinset_lastpass = {
-+  sizeof(kPinset_lastpass_Data) / sizeof(const char*),
-+  kPinset_lastpass_Data
-+};
-+
-+static const char* const kPinset_letsencrypt_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_letsencrypt = {
-+  sizeof(kPinset_letsencrypt_Data) / sizeof(const char*),
-+  kPinset_letsencrypt_Data
-+};
-+
-+static const char* const kPinset_librewolf_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_librewolf = {
-+  sizeof(kPinset_librewolf_Data) / sizeof(const char*),
-+  kPinset_librewolf_Data
-+};
-+
-+static const char* const kPinset_lineageos_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_lineageos = {
-+  sizeof(kPinset_lineageos_Data) / sizeof(const char*),
-+  kPinset_lineageos_Data
-+};
-+
-+static const char* const kPinset_mailbox_Data[] = {
-+  kDigiCert_Global_Root_G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_mailbox = {
-+  sizeof(kPinset_mailbox_Data) / sizeof(const char*),
-+  kPinset_mailbox_Data
-+};
-+
-+static const char* const kPinset_mastercard_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kEntrust_Root_Certification_Authority___G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_mastercard = {
-+  sizeof(kPinset_mastercard_Data) / sizeof(const char*),
-+  kPinset_mastercard_Data
-+};
-+
-+static const char* const kPinset_matrix_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_matrix = {
-+  sizeof(kPinset_matrix_Data) / sizeof(const char*),
-+  kPinset_matrix_Data
-+};
-+
-+static const char* const kPinset_microsoft_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_CAFingerprint,
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kDigiCert_Global_Root_G3Fingerprint,
-+  kEntrust_Root_Certification_Authority___G2Fingerprint,
-+  kGlobalSign_Root_CA___R3Fingerprint,
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+  kUSERTrust_ECC_Certification_AuthorityFingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_microsoft = {
-+  sizeof(kPinset_microsoft_Data) / sizeof(const char*),
-+  kPinset_microsoft_Data
-+};
-+
-+static const char* const kPinset_molly_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_molly = {
-+  sizeof(kPinset_molly_Data) / sizeof(const char*),
-+  kPinset_molly_Data
-+};
-+
-+static const char* const kPinset_mullvad_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_mullvad = {
-+  sizeof(kPinset_mullvad_Data) / sizeof(const char*),
-+  kPinset_mullvad_Data
-+};
-+
-+static const char* const kPinset_nextdns_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+  kUSERTrust_ECC_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_nextdns = {
-+  sizeof(kPinset_nextdns_Data) / sizeof(const char*),
-+  kPinset_nextdns_Data
-+};
-+
-+static const char* const kPinset_okta_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_okta = {
-+  sizeof(kPinset_okta_Data) / sizeof(const char*),
-+  kPinset_okta_Data
-+};
-+
-+static const char* const kPinset_omniese_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_omniese = {
-+  sizeof(kPinset_omniese_Data) / sizeof(const char*),
-+  kPinset_omniese_Data
-+};
-+
-+static const char* const kPinset_openstreetmap_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_openstreetmap = {
-+  sizeof(kPinset_openstreetmap_Data) / sizeof(const char*),
-+  kPinset_openstreetmap_Data
-+};
-+
-+static const char* const kPinset_paypal_Data[] = {
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kDigiCert_High_Assurance_EV_Root_CAFingerprint,
-+};
-+static const StaticFingerprints kPinset_paypal = {
-+  sizeof(kPinset_paypal_Data) / sizeof(const char*),
-+  kPinset_paypal_Data
-+};
-+
-+static const char* const kPinset_pnc_Data[] = {
-+  kCOMODO_RSA_Certification_AuthorityFingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_pnc = {
-+  sizeof(kPinset_pnc_Data) / sizeof(const char*),
-+  kPinset_pnc_Data
-+};
-+
-+static const char* const kPinset_privacy_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_privacy = {
-+  sizeof(kPinset_privacy_Data) / sizeof(const char*),
-+  kPinset_privacy_Data
-+};
-+
-+static const char* const kPinset_privacyguides_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_privacyguides = {
-+  sizeof(kPinset_privacyguides_Data) / sizeof(const char*),
-+  kPinset_privacyguides_Data
-+};
-+
-+static const char* const kPinset_privsec_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_privsec = {
-+  sizeof(kPinset_privsec_Data) / sizeof(const char*),
-+  kPinset_privsec_Data
-+};
-+
-+static const char* const kPinset_proton_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_proton = {
-+  sizeof(kPinset_proton_Data) / sizeof(const char*),
-+  kPinset_proton_Data
-+};
-+
-+static const char* const kPinset_quad9_Data[] = {
-+  kDigiCert_Global_Root_G3Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_quad9 = {
-+  sizeof(kPinset_quad9_Data) / sizeof(const char*),
-+  kPinset_quad9_Data
-+};
-+
-+static const char* const kPinset_radar_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_radar = {
-+  sizeof(kPinset_radar_Data) / sizeof(const char*),
-+  kPinset_radar_Data
-+};
-+
-+static const char* const kPinset_reddit_Data[] = {
-+  kDigiCert_Global_Root_G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_reddit = {
-+  sizeof(kPinset_reddit_Data) / sizeof(const char*),
-+  kPinset_reddit_Data
-+};
-+
-+static const char* const kPinset_revolut_Data[] = {
-+  kDigiCert_Global_Root_G2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_revolut = {
-+  sizeof(kPinset_revolut_Data) / sizeof(const char*),
-+  kPinset_revolut_Data
-+};
-+
-+static const char* const kPinset_roblox_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_CAFingerprint,
-+  kDigiCert_Global_Root_G3Fingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_roblox = {
-+  sizeof(kPinset_roblox_Data) / sizeof(const char*),
-+  kPinset_roblox_Data
-+};
-+
-+static const char* const kPinset_sectigo_Data[] = {
-+  kComodo_AAA_Services_rootFingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_sectigo = {
-+  sizeof(kPinset_sectigo_Data) / sizeof(const char*),
-+  kPinset_sectigo_Data
-+};
-+
-+static const char* const kPinset_signal_Data[] = {
-+  kGlobalSign_Root_CAFingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_signal = {
-+  sizeof(kPinset_signal_Data) / sizeof(const char*),
-+  kPinset_signal_Data
-+};
-+
-+static const char* const kPinset_simplii_Data[] = {
-+  kDigiCert_Global_Root_CAFingerprint,
-+};
-+static const StaticFingerprints kPinset_simplii = {
-+  sizeof(kPinset_simplii_Data) / sizeof(const char*),
-+  kPinset_simplii_Data
-+};
-+
-+static const char* const kPinset_square_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_square = {
-+  sizeof(kPinset_square_Data) / sizeof(const char*),
-+  kPinset_square_Data
-+};
-+
-+static const char* const kPinset_statically_Data[] = {
-+  kGlobalSign_Root_CA___R3Fingerprint,
-+  kGlobalSign_Root_CA___R6Fingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_statically = {
-+  sizeof(kPinset_statically_Data) / sizeof(const char*),
-+  kPinset_statically_Data
-+};
-+
-+static const char* const kPinset_stripe_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_CAFingerprint,
-+  kDigiCert_High_Assurance_EV_Root_CAFingerprint,
-+};
-+static const StaticFingerprints kPinset_stripe = {
-+  sizeof(kPinset_stripe_Data) / sizeof(const char*),
-+  kPinset_stripe_Data
-+};
-+
-+static const char* const kPinset_tiktok_Data[] = {
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kDigiCert_Global_Root_G3Fingerprint,
-+};
-+static const StaticFingerprints kPinset_tiktok = {
-+  sizeof(kPinset_tiktok_Data) / sizeof(const char*),
-+  kPinset_tiktok_Data
-+};
-+
-+static const char* const kPinset_tor_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_tor = {
-+  sizeof(kPinset_tor_Data) / sizeof(const char*),
-+  kPinset_tor_Data
-+};
-+
-+static const char* const kPinset_tuta_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_tuta = {
-+  sizeof(kPinset_tuta_Data) / sizeof(const char*),
-+  kPinset_tuta_Data
-+};
-+
-+static const char* const kPinset_twitter_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_twitter = {
-+  sizeof(kPinset_twitter_Data) / sizeof(const char*),
-+  kPinset_twitter_Data
-+};
-+
-+static const char* const kPinset_ublockorigin_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_ublockorigin = {
-+  sizeof(kPinset_ublockorigin_Data) / sizeof(const char*),
-+  kPinset_ublockorigin_Data
-+};
-+
-+static const char* const kPinset_usgov_Data[] = {
-+  kAmazon_Root_CA_1Fingerprint,
-+  kAmazon_Root_CA_2Fingerprint,
-+  kAmazon_Root_CA_3Fingerprint,
-+  kAmazon_Root_CA_4Fingerprint,
-+  kDigiCert_Global_Root_CAFingerprint,
-+  kDigiCert_Global_Root_G2Fingerprint,
-+  kDigiCert_Global_Root_G3Fingerprint,
-+  kEntrust_Root_Certification_Authority___EC1Fingerprint,
-+  kEntrust_Root_Certification_Authority___G2Fingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kIdenTrust_Commercial_Root_CA_1Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+  kSSLcom_TLS_RSA_Root_CA_2022Fingerprint,
-+  kUSERTrust_RSA_Certification_AuthorityFingerprint,
-+};
-+static const StaticFingerprints kPinset_usgov = {
-+  sizeof(kPinset_usgov_Data) / sizeof(const char*),
-+  kPinset_usgov_Data
-+};
-+
-+static const char* const kPinset_unredacted_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_unredacted = {
-+  sizeof(kPinset_unredacted_Data) / sizeof(const char*),
-+  kPinset_unredacted_Data
-+};
-+
-+static const char* const kPinset_valve_Data[] = {
-+  kDigiCert_High_Assurance_EV_Root_CAFingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_valve = {
-+  sizeof(kPinset_valve_Data) / sizeof(const char*),
-+  kPinset_valve_Data
-+};
-+
-+static const char* const kPinset_visa_Data[] = {
-+  kComodo_AAA_Services_rootFingerprint,
-+};
-+static const StaticFingerprints kPinset_visa = {
-+  sizeof(kPinset_visa_Data) / sizeof(const char*),
-+  kPinset_visa_Data
-+};
-+
-+static const char* const kPinset_wikileaks_Data[] = {
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_wikileaks = {
-+  sizeof(kPinset_wikileaks_Data) / sizeof(const char*),
-+  kPinset_wikileaks_Data
-+};
-+
-+static const char* const kPinset_wikimedia_Data[] = {
-+  kDigiCert_Global_Root_CAFingerprint,
-+  kDigiCert_High_Assurance_EV_Root_CAFingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_wikimedia = {
-+  sizeof(kPinset_wikimedia_Data) / sizeof(const char*),
-+  kPinset_wikimedia_Data
-+};
-+
-+static const char* const kPinset_windscribe_Data[] = {
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+  kISRG_Root_X1Fingerprint,
-+  kISRG_Root_X2Fingerprint,
-+};
-+static const StaticFingerprints kPinset_windscribe = {
-+  sizeof(kPinset_windscribe_Data) / sizeof(const char*),
-+  kPinset_windscribe_Data
-+};
-+
-+static const char* const kPinset_wise_Data[] = {
-+  kDigiCert_Global_Root_CAFingerprint,
-+  kGTS_Root_R3Fingerprint,
-+  kGTS_Root_R4Fingerprint,
-+};
-+static const StaticFingerprints kPinset_wise = {
-+  sizeof(kPinset_wise_Data) / sizeof(const char*),
-+  kPinset_wise_Data
-+};
-+
  /* Domainlist */
  struct TransportSecurityPreload {
    // See bug 1338873 about making these fields const.
-@@ -329,76 +1206,446 @@ struct TransportSecurityPreload {
- 
+@@ -330,21 +381,38 @@ struct TransportSecurityPreload {
  /* Sort hostnames for binary search. */
  static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-+  { "1password.ca", true, false, false, -1, &kPinset_1password },
-+  { "1password.com", true, false, false, -1, &kPinset_1password },
-+  { "1password.eu", true, false, false, -1, &kPinset_1password },
-+  { "1passwordservices.com", true, false, false, -1, &kPinset_1password },
    { "2mdn.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "2mdn-cn.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "8888.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "8alias.com", true, false, false, -1, &kPinset_proton },
-+  { "8shield.net", true, false, false, -1, &kPinset_proton },
-+  { "a-msedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "a2z.com", true, false, false, -1, &kPinset_amazon },
-+  { "aaplimg.com", true, false, false, -1, &kPinset_apple },
-+  { "abc.xyz", true, false, false, -1, &kPinset_google_root_pems },
-+  { "account.apple", true, false, false, -1, &kPinset_apple },
++  { "account.brave.com", true, false, false, -1, &kPinset_brave },
++  { "account.brave.software", true, false, false, -1, &kPinset_brave },
++  { "account.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "accounts.firefox.com", true, false, true, 4, &kPinset_mozilla_services },
    { "accounts.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "accrescent.app", true, false, false, -1, &kPinset_accrescent },
-+  { "acompli.net", true, false, false, -1, &kPinset_microsoft },
-+  { "actifio.com", true, false, false, -1, &kPinset_google_root_pems },
++  { "adblock-data.s3.brave.com", true, false, false, -1, &kPinset_brave },
    { "addons.mozilla.net", true, false, true, 2, &kPinset_mozilla_services },
    { "addons.mozilla.org", true, false, true, 1, &kPinset_mozilla_services },
-+  { "adguard.com", true, false, false, -1, &kPinset_adguard },
-+  { "adguard.io", true, false, false, -1, &kPinset_adguard },
-+  { "adguard.org", true, false, false, -1, &kPinset_adguard },
-+  { "adguard.ru", true, false, false, -1, &kPinset_adguard },
-+  { "adguard-dns.io", true, false, false, -1, &kPinset_adguard },
-+  { "adguard-vpn.com", true, false, false, -1, &kPinset_adguard },
    { "admin.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "admob-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "adnexus.com", true, false, false, -1, &kPinset_microsoft },
-+  { "adnexus.net", true, false, false, -1, &kPinset_microsoft },
-+  { "adnxs.com", true, false, false, -1, &kPinset_microsoft },
-+  { "adnxs.net", true, false, false, -1, &kPinset_microsoft },
-+  { "adnxs-simple.com", true, false, false, -1, &kPinset_microsoft },
-+  { "ads-twitter.com", true, false, false, -1, &kPinset_twitter },
-+  { "adsense.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "adsensecustomsearchads.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "adsenseformobileapps.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "adtidy.net", true, false, false, -1, &kPinset_adguard },
-+  { "adtidy.org", true, false, false, -1, &kPinset_adguard },
-+  { "advertisercommunity.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "af.mil", true, false, false, -1, &kPinset_usgov },
-+  { "aging.gov", true, false, false, -1, &kPinset_usgov },
-+  { "agrd.eu", true, false, false, -1, &kPinset_adguard },
-+  { "agrd.io", true, false, false, -1, &kPinset_adguard },
-+  { "ai.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ai.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "aiv-cdn.net", true, false, false, -1, &kPinset_amazon },
-+  { "aiv-delivery.net", true, false, false, -1, &kPinset_amazon },
-+  { "aleeas.com", true, false, false, -1, &kPinset_proton },
-+  { "alexa.com", true, false, false, -1, &kPinset_amazon },
-+  { "alexametrics.com", true, false, false, -1, &kPinset_amazon },
-+  { "allizom.org", true, false, true, 46, &kPinset_mozilla_services },
-+  { "alphanucleo.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "alssa.mil", true, false, false, -1, &kPinset_usgov },
-+  { "amazon.ae", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.ca", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.cn", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.co.jp", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.co.uk", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.co.za", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.com.au", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.com.be", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.com.br", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.com.mx", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.com.tr", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.de", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.dev", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.eg", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.es", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.fr", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.ie", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.in", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.it", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.nl", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.pl", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.sa", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.se", true, false, false, -1, &kPinset_amazon },
-+  { "amazon.sg", true, false, false, -1, &kPinset_amazon },
-+  { "amazon-adsystem.com", true, false, false, -1, &kPinset_amazon },
-+  { "amazonadvertising.com", true, false, false, -1, &kPinset_amazon },
-+  { "amazonaffiliates.com", true, false, false, -1, &kPinset_amazon },
-+  { "amazonalexa.com", true, false, false, -1, &kPinset_amazon },
-+  { "amazonaws.com", true, false, false, -1, &kPinset_amazon },
-+  { "amazonaws.com.cn", true, false, false, -1, &kPinset_amazon },
-+  { "amazontrust.com", true, false, false, -1, &kPinset_amazon },
-+  { "amazonwebservices.com.cn", true, false, false, -1, &kPinset_amazon },
-+  { "amie.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ampcache.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ampproject.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ampproject.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ampproject.net.cn", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ampproject.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ampproject.org.cn", true, false, false, -1, &kPinset_google_root_pems },
-+  { "amzn.com", true, false, false, -1, &kPinset_amazon },
-+  { "amzn.to", true, false, false, -1, &kPinset_amazon },
++  { "ai-chat.bsg.brave.com", true, false, false, -1, &kPinset_brave },
++  { "altstore.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "android.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "androidify.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "anonymco.com", true, false, true, 18, &kPinset_mozilla_services },
++  { "anonymous.ads.brave.com", true, false, false, -1, &kPinset_brave },
++  { "anonymous.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "api.accounts.firefox.com", true, false, true, 5, &kPinset_mozilla_services },
-+  { "api.aws", true, false, false, -1, &kPinset_amazon },
++  { "api.rewards.brave.com", true, false, false, -1, &kPinset_brave },
++  { "api.rewards.brave.software", true, false, false, -1, &kPinset_brave },
++  { "api.rewards.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "apis.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "apigee.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "app-ads-services.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "app-measurement.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "app-measurement-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "appcenter.ms", true, false, false, -1, &kPinset_microsoft },
-+  { "appdefensealliance.dev", true, false, false, -1, &kPinset_google_root_pems },
    { "appengine.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "apple.com", true, false, false, -1, &kPinset_apple },
-+  { "apple.com.cn", true, false, false, -1, &kPinset_apple },
-+  { "apple.news", true, false, false, -1, &kPinset_apple },
-+  { "applearcade.apple", true, false, false, -1, &kPinset_apple },
-+  { "applebooks.apple", true, false, false, -1, &kPinset_apple },
-+  { "applecard.apple", true, false, false, -1, &kPinset_apple },
-+  { "applecash.apple", true, false, false, -1, &kPinset_apple },
-+  { "applefitnessplus.apple", true, false, false, -1, &kPinset_apple },
-+  { "applegiftcard.apple", true, false, false, -1, &kPinset_apple },
-+  { "applemediaservices.com", true, false, false, -1, &kPinset_apple },
-+  { "applemusic.apple", true, false, false, -1, &kPinset_apple },
-+  { "applenews.apple", true, false, false, -1, &kPinset_apple },
-+  { "appleone.apple", true, false, false, -1, &kPinset_apple },
-+  { "applepay.apple", true, false, false, -1, &kPinset_apple },
-+  { "applepodcasts.apple", true, false, false, -1, &kPinset_apple },
-+  { "appleservices.apple", true, false, false, -1, &kPinset_apple },
-+  { "appletvapp.apple", true, false, false, -1, &kPinset_apple },
-+  { "apple-cloudkit.com", true, false, false, -1, &kPinset_apple },
-+  { "apple-dns.cn", true, false, false, -1, &kPinset_apple },
-+  { "apple-dns.net", true, false, false, -1, &kPinset_apple },
-+  { "apple-mapkit.com", true, false, false, -1, &kPinset_apple },
-+  { "applicationinsights.io", true, false, false, -1, &kPinset_microsoft },
-+  { "appnexus.com", true, false, false, -1, &kPinset_microsoft },
-+  { "appnexus.net", true, false, false, -1, &kPinset_microsoft },
++  { "apple.celenity.dev", true, false, false, -1, &kPinset_celenity },
++  { "apple-hardening.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "apps.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "apps.mil", true, false, false, -1, &kPinset_microsoft },
    { "appspot.com", true, false, false, -1, &kPinset_google_root_pems },
 -  { "aus4.mozilla.org", true, true, true, 3, &kPinset_mozilla_services },
 -  { "aus5.mozilla.org", true, true, true, 7, &kPinset_mozilla_services },
-+  { "appstore.apple", true, false, false, -1, &kPinset_apple },
-+  { "aproductiveyear.com", true, false, true, 19, &kPinset_mozilla_services },
-+  { "apxns.com", true, false, false, -1, &kPinset_microsoft },
-+  { "archives.gov", true, false, false, -1, &kPinset_usgov },
-+  { "arcusfi.com", true, false, false, -1, &kPinset_mastercard },
-+  { "army.mil", true, false, false, -1, &kPinset_usgov },
-+  { "aspnetcdn.com", true, false, false, -1, &kPinset_microsoft },
-+  { "assoc-amazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "athenascope.com", true, false, false, -1, &kPinset_roblox },
-+  { "atlassolutions.com", true, false, false, -1, &kPinset_facebook },
-+  { "atproto.com", true, false, false, -1, &kPinset_bluesky },
-+  { "attestation.app", true, false, false, -1, &kPinset_grapheneos },
-+  { "audible.com", true, false, false, -1, &kPinset_amazon },
-+  { "audible.de", true, false, false, -1, &kPinset_amazon },
-+  { "auth0.com", true, false, false, -1, &kPinset_okta },
 +  { "aus4.mozilla.org", true, false, true, 3, &kPinset_mozilla_services },
 +  { "aus5.mozilla.org", true, false, true, 7, &kPinset_mozilla_services },
-+  { "aws.dev", true, false, false, -1, &kPinset_amazon },
-+  { "awsstatic.com", true, false, false, -1, &kPinset_amazon },
-+  { "awstrust.com", true, false, false, -1, &kPinset_amazon },
-+  { "azure.cn", true, false, false, -1, &kPinset_microsoft },
-+  { "azure.com", true, false, false, -1, &kPinset_microsoft },
-+  { "azure.us", true, false, false, -1, &kPinset_microsoft },
-+  { "azure-dns.com", true, false, false, -1, &kPinset_microsoft },
-+  { "azure-dns.info", true, false, false, -1, &kPinset_microsoft },
-+  { "azure-dns.net", true, false, false, -1, &kPinset_microsoft },
-+  { "azure-dns.org", true, false, false, -1, &kPinset_microsoft },
-+  { "azureedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "azurefd.net", true, false, false, -1, &kPinset_microsoft },
-+  { "azurewebsites.net", true, false, false, -1, &kPinset_microsoft },
-+  { "b-msedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "bash.video", true, false, false, -1, &kPinset_roblox },
-+  { "basicattentiontoken.org", true, false, false, -1, &kPinset_brave },
-+  { "battle.net", true, false, false, -1, &kPinset_microsoft },
-+  { "bazel.build", true, false, false, -1, &kPinset_google_root_pems },
-+  { "bdn.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "beacondb.net", true, false, false, -1, &kPinset_beacondb },
-+  { "becomeindex.com", true, false, false, -1, &kPinset_mastercard },
-+  { "betalingshjaelpen.dk", true, false, false, -1, &kPinset_mastercard },
-+  { "betalningshjalpen.se", true, false, false, -1, &kPinset_mastercard },
-+  { "betobaccofree.gov", true, false, false, -1, &kPinset_usgov },
-+  { "bia.gov", true, false, false, -1, &kPinset_usgov },
-+  { "bie.edu", true, false, false, -1, &kPinset_usgov },
-+  { "bing.com", true, false, false, -1, &kPinset_microsoft },
-+  { "bing.net", true, false, false, -1, &kPinset_microsoft },
-+  { "bingapistatistics.com", true, false, false, -1, &kPinset_microsoft },
-+  { "binguxlivesite.net", true, false, false, -1, &kPinset_microsoft },
-+  { "bitwarden.com", true, false, true, 7, &kPinset_bitwarden },
-+  { "bitwarden.eu", true, false, true, 7, &kPinset_bitwarden },
-+  { "bizographics.com", true, false, true, 7, &kPinset_microsoft },
-+  { "blizzard.com", true, false, false, -1, &kPinset_microsoft },
-+  { "blm.gov", true, false, false, -1, &kPinset_usgov },
++  { "badblock.celenity.dev", true, false, false, -1, &kPinset_celenity },
++  { "bb.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "blogger.com", true, false, false, -1, &kPinset_google_root_pems },
    { "blogspot.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "blueroof.gov", true, false, false, -1, &kPinset_usgov },
-+  { "blz-contentstack.com", true, false, false, -1, &kPinset_microsoft },
-+  { "bmoattachments.org", true, false, true, 20, &kPinset_mozilla_services },
-+  { "boem.gov", true, false, false, -1, &kPinset_usgov },
-+  { "boycottsony.org", true, false, false, -1, &kPinset_fsf },
-+  { "braintreecharge.com", true, false, false, -1, &kPinset_paypal },
-+  { "braintreefinancial.com", true, false, false, -1, &kPinset_paypal },
-+  { "braintreegateway.com", true, false, false, -1, &kPinset_paypal },
-+  { "braintreepayments.com", true, false, false, -1, &kPinset_paypal },
-+  { "braintreepaymentsolutions.com", true, false, false, -1, &kPinset_paypal },
-+  { "brave.com", true, false, false, -1, &kPinset_brave },
-+  { "brave.software", true, false, false, -1, &kPinset_brave },
-+  { "bravesoftware.com", true, false, false, -1, &kPinset_brave },
-+  { "brocaproject.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "bsee.gov", true, false, false, -1, &kPinset_usgov },
-+  { "bsky.app", true, false, false, -1, &kPinset_bluesky },
-+  { "bsky.network", true, false, false, -1, &kPinset_bluesky },
-+  { "bsky.social", true, false, false, -1, &kPinset_bluesky },
++  { "brave-core-ext.s3.brave.com", true, false, false, -1, &kPinset_brave },
++  { "brave-today-cdn.brave.com", true, false, false, -1, &kPinset_brave },
    { "bugs.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
    { "build.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "b-cdn.net", true, false, false, -1, &kPinset_bunny },
-+  { "bunny.net", true, false, false, -1, &kPinset_bunny },
    { "business.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "buyindiaonline.com", true, false, false, -1, &kPinset_paypal },
-+  { "byfron.com", true, false, false, -1, &kPinset_roblox },
-+  { "bytedance.com", true, false, false, -1, &kPinset_tiktok },
-+  { "byteoversea.com", true, false, false, -1, &kPinset_tiktok },
-   { "calendar.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "calyxinstitute.org", true, false, false, -1, &kPinset_calyx },
-+  { "calyxos.org", true, false, false, -1, &kPinset_calyx },
-+  { "cash.app", true, false, false, -1, &kPinset_square },
-+  { "cash2india.com", true, false, false, -1, &kPinset_paypal },
-+  { "cbca.gov", true, false, false, -1, &kPinset_usgov },
-+  { "cbp.gov", true, false, false, -1, &kPinset_usgov },
+@@ -352,6 +420,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "cdn.ampproject.org", true, false, false, -1, &kPinset_google_root_pems },
    { "cdn.mozilla.net", true, false, true, 16, &kPinset_mozilla_services },
    { "cdn.mozilla.org", true, false, true, 17, &kPinset_mozilla_services },
-+  { "cdn-apple.com", true, false, false, -1, &kPinset_apple },
-+  { "cdninstagram.com", true, false, false, -1, &kPinset_facebook },
-+  { "cel.dev", true, false, false, -1, &kPinset_google_root_pems },
++  { "cdn.search.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "celenity.dev", true, false, false, -1, &kPinset_celenity },
-+  { "channel-app.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "chase.com", true, false, false, -1, &kPinset_chase },
-+  { "chasecdn.com", true, false, false, -1, &kPinset_chase },
    { "checkout.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "chrome-devtools-frontend.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "chrome.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "chrome.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "chromereporting-pa.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "chromium.org", true, false, false, -1, &kPinset_google_root_pems },
+@@ -360,42 +430,61 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "chromiumbugs.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "chromiumcodereview.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "chronicle.security", true, false, false, -1, &kPinset_google_root_pems },
-+  { "chronicleforgood.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "chroniclesec.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "cia.gov", true, false, false, -1, &kPinset_usgov },
-+  { "cibc.ca", true, false, false, -1, &kPinset_cibc },
-+  { "cibc.com", true, false, false, -1, &kPinset_cibc },
-+  { "cibc.us", true, false, false, -1, &kPinset_cibc },
-+  { "cio.gov", true, false, false, -1, &kPinset_usgov },
-+  { "cisa.gov", true, false, false, -1, &kPinset_usgov },
-+  { "clarity.ms", true, false, false, -1, &kPinset_microsoft },
-+  { "classpath.org", true, false, false, -1, &kPinset_fsf },
    { "classroom.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "cloud.google", true, false, false, -1, &kPinset_google_root_pems },
++  { "clients4.brave.com", true, false, false, -1, &kPinset_brave },
    { "cloud.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "cloud.gov", true, false, false, -1, &kPinset_usgov },
-+  { "cloud.microsoft", true, false, false, -1, &kPinset_microsoft },
-+  { "cloudflare.com", true, false, false, -1, &kPinset_cloudflare },
-+  { "cloudflare-dns.com", true, false, false, -1, &kPinset_cloudflare },
-+  { "cloudflareinsights.com", true, false, false, -1, &kPinset_cloudflare },
-+  { "cloudflarestream.com", true, false, false, -1, &kPinset_cloudflare },
-+  { "cloudfront.net", true, false, false, -1, &kPinset_amazon },
-+  { "cloudyoryx.dev", true, false, false, -1, &kPinset_google_root_pems },
    { "code.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "code.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "codeberg.org", true, false, false, -1, &kPinset_codeberg },
-+  { "codeberg.page", true, false, false, -1, &kPinset_codeberg },
-+  { "codeberg-test.org", true, false, false, -1, &kPinset_codeberg },
    { "codereview.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "codereview.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "computersforlearning.gov", true, false, false, -1, &kPinset_usgov },
-+  { "congress.gov", true, false, false, -1, &kPinset_usgov },
++  { "collector.bsg.brave.com", true, false, false, -1, &kPinset_brave },
++  { "collector.wdp.brave.com", true, false, false, -1, &kPinset_brave },
++  { "componentupdater.brave.com", true, false, false, -1, &kPinset_brave },
++  { "configs.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "contributor.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "controld.com", true, false, false, -1, &kPinset_windscribe },
-+  { "controld.io", true, false, false, -1, &kPinset_windscribe },
-+  { "conversionsapigateway.com", true, false, false, -1, &kPinset_facebook },
-+  { "core.microsoft", true, false, false, -1, &kPinset_microsoft },
    { "corp.goog", true, false, false, -1, &kPinset_google_root_pems },
-+  { "cortana.ai", true, false, false, -1, &kPinset_microsoft },
    { "crash-reports-xpsp2.mozilla.com", false, false, true, 11, &kPinset_mozilla_services },
    { "crash-reports.mozilla.com", false, false, true, 10, &kPinset_mozilla_services },
    { "crash-stats.mozilla.org", false, false, true, 12, &kPinset_mozilla_services },
    { "crbug.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "cromite.org", true, false, false, -1, &kPinset_cromite },
++  { "creators.basicattentiontoken.org", true, false, false, -1, &kPinset_brave },
++  { "creators.brave.com", true, false, false, -1, &kPinset_brave },
    { "crosbug.com", true, false, false, -1, &kPinset_google_root_pems },
    { "crossmediapanel.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "crowdcalling.google", true, false, false, -1, &kPinset_google_root_pems },
    { "crrev.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dantes.mil", true, false, false, -1, &kPinset_usgov },
-+  { "dartsearch-cn.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dashlane.com", true, false, false, -1, &kPinset_dashlane },
-+  { "data.gov", true, false, false, -1, &kPinset_usgov },
-+  { "dataliberation.org", true, false, false, -1, &kPinset_google_root_pems },
++  { "crxdownload.brave.com", true, false, false, -1, &kPinset_brave },
    { "datastudio.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dayagainstdrm.org", true, false, false, -1, &kPinset_fsf },
-+  { "dc3.mil", true, false, false, -1, &kPinset_usgov },
-+  { "defectivebydesign.com", true, false, false, -1, &kPinset_fsf },
-+  { "defectivebydesign.net", true, false, false, -1, &kPinset_fsf },
-+  { "defectivebydesign.org", true, false, false, -1, &kPinset_fsf },
-+  { "defense.gov", true, false, false, -1, &kPinset_usgov },
-+  { "deomi.mil", true, false, false, -1, &kPinset_usgov },
    { "developer.android.com", true, false, false, -1, &kPinset_google_root_pems },
    { "developers.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "devsite.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "devsitetest.how", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dhs.gov", true, false, false, -1, &kPinset_usgov },
-+  { "digital.gov", true, false, false, -1, &kPinset_usgov },
-+  { "digitalassetlinks.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "digitalgov.gov", true, false, false, -1, &kPinset_usgov },
-+  { "digitalspeech.org", true, false, false, -1, &kPinset_fsf },
-+  { "discord.com", true, false, false, -1, &kPinset_discord },
-+  { "discord.gg", true, false, false, -1, &kPinset_discord },
-+  { "discord.gift", true, false, false, -1, &kPinset_discord },
-+  { "discord.tools", true, false, false, -1, &kPinset_discord },
-+  { "discordapp.com", true, false, false, -1, &kPinset_discord },
-+  { "discordapp.net", true, false, false, -1, &kPinset_discord },
-+  { "divested.dev", true, false, false, -1, &kPinset_divested },
++  { "devtools.brave.com", true, false, false, -1, &kPinset_brave },
++  { "dict.brave.com", true, false, false, -1, &kPinset_brave },
    { "dl.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dns.google", true, false, false, -1, &kPinset_google_root_pems },
-   { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dns0.eu", true, false, false, -1, &kPinset_dns0 },
-+  { "dns64.google", true, false, false, -1, &kPinset_google_root_pems },
+-  { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "docs.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "doi.gov", true, false, false, -1, &kPinset_usgov },
-+  { "domains.google", true, false, false, -1, &kPinset_google_root_pems },
    { "domains.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dotgnu.org", true, false, false, -1, &kPinset_fsf },
-+  { "doubleclick.cn", true, false, false, -1, &kPinset_google_root_pems },
    { "doubleclick.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "doubleclick-cn.net", true, false, false, -1, &kPinset_google_root_pems },
++  { "dove.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "download.mozilla.org", false, false, true, 14, &kPinset_mozilla_services },
-+  { "dralias.com", true, false, false, -1, &kPinset_proton },
    { "drive.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "dsca.mil", true, false, false, -1, &kPinset_usgov },
-+  { "dual-s-msedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "duck.ai", true, false, false, -1, &kPinset_duckduckgo },
-+  { "duck.com", true, false, false, -1, &kPinset_duckduckgo },
-+  { "duckduckgo.com", true, false, false, -1, &kPinset_duckduckgo },
-+  { "duetai.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "e-msedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "eageroryx.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "earlydays.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ed.gov", true, false, false, -1, &kPinset_usgov },
-+  { "edge.apple", true, false, false, -1, &kPinset_apple },
-+  { "eff.org", true, false, false, -1, &kPinset_eff },
-+  { "element.io", true, false, false, -1, &kPinset_element },
-+  { "emacs.org", true, false, false, -1, &kPinset_fsf },
    { "encrypted.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "engineering.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "evaluation.gov", true, false, false, -1, &kPinset_usgov },
-+  { "everytrycounts.gov", true, false, false, -1, &kPinset_usgov },
    { "example.test", true, true, false, -1, &kPinset_test },
    { "exclude-subdomains.pinning.example.com", false, false, false, -1, &kPinset_mozilla_test },
-+  { "experimenter.info", true, false, true, 21, &kPinset_mozilla_services },
-+  { "ext-twitch.tv", true, false, false, -1, &kPinset_amazon },
-+  { "extensionworkshop.com", true, false, true, 22, &kPinset_mozilla_services },
-+  { "f-droid.com", true, false, false, -1, &kPinset_fdroid },
-+  { "f-droid.org", true, false, false, -1, &kPinset_fdroid },
++  { "extensionupdater.brave.com", true, false, false, -1, &kPinset_brave },
    { "facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "facebook.net", true, false, false, -1, &kPinset_facebook },
-+  { "facebookblueprint.com", true, false, false, -1, &kPinset_facebook },
-+  { "fafsa.gov", true, false, false, -1, &kPinset_usgov },
-+  { "fakespot.com", true, false, true, 23, &kPinset_mozilla_services },
-+  { "fakespot.io", true, false, true, 24, &kPinset_mozilla_services },
-+  { "fastlane.ci", true, false, false, -1, &kPinset_google_root_pems },
-+  { "fastly.com", true, false, false, -1, &kPinset_fastly },
-+  { "fastly.net", true, false, false, -1, &kPinset_fastly },
-+  { "fbcdn.net", true, false, false, -1, &kPinset_facebook },
-+  { "fbi.gov", true, false, false, -1, &kPinset_usgov },
-+  { "fbpigeon.com", true, false, false, -1, &kPinset_facebook },
-+  { "fbsbx.com", true, false, false, -1, &kPinset_facebook },
-+  { "fda.gov", true, false, false, -1, &kPinset_usgov },
-+  { "fdroid.com", true, false, false, -1, &kPinset_fdroid },
-+  { "fdroid.link", true, false, false, -1, &kPinset_fdroid },
-+  { "fdroid.org", true, false, false, -1, &kPinset_fdroid },
-+  { "fedramp.gov", true, false, false, -1, &kPinset_usgov },
-+  { "fema.gov", true, false, false, -1, &kPinset_usgov },
++  { "fdroid.ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
++  { "feedback.brave.com", true, false, false, -1, &kPinset_brave },
++  { "fg.search.brave.com", true, false, false, -1, &kPinset_brave },
    { "fi.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "finseclab.co.il", true, false, false, -1, &kPinset_mastercard },
-+  { "finseclab.com", true, false, false, -1, &kPinset_mastercard },
    { "firebaseio.com", true, false, false, -1, &kPinset_google_root_pems },
 -  { "firefox.com", true, true, true, 15, &kPinset_mozilla_services },
 +  { "firefox.com", true, false, true, 15, &kPinset_mozilla_services },
-+  { "firefoxusercontent.com", true, false, true, 25, &kPinset_mozilla_services },
-+  { "fireoscaptiveportal.com", true, false, false, -1, &kPinset_amazon },
-+  { "firetvcaptiveportal.com", true, false, false, -1, &kPinset_amazon },
-+  { "fitness.gov", true, false, false, -1, &kPinset_usgov },
-+  { "floonet.goog", true, false, false, -1, &kPinset_google_root_pems },
-+  { "foodsafety.gov", true, false, false, -1, &kPinset_usgov },
-+  { "footprint.net", true, false, false, -1, &kPinset_microsoft },
-+  { "footprintdns.com", true, false, false, -1, &kPinset_microsoft },
-+  { "footprintpredict.com", true, false, false, -1, &kPinset_microsoft },
-+  { "freshempire.gov", true, false, false, -1, &kPinset_usgov },
-+  { "fsf.org", true, false, false, -1, &kPinset_fsf },
-+  { "fuchsia.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "fws.gov", true, false, false, -1, &kPinset_usgov },
-+  { "g.cn", false, false, false, -1, &kPinset_google_root_pems },
    { "g.co", false, false, false, -1, &kPinset_google_root_pems },
-+  { "g.dev", false, false, false, -1, &kPinset_google_root_pems },
-+  { "g.page", false, false, false, -1, &kPinset_google_root_pems },
    { "g4w.co", true, false, false, -1, &kPinset_google_root_pems },
-+  { "gateway.dev", false, false, false, -1, &kPinset_google_root_pems },
-+  { "gearsofwar.com", true, false, false, -1, &kPinset_microsoft },
-+  { "generativeai.google", false, false, false, -1, &kPinset_google_root_pems },
-+  { "getpocket.com", true, false, true, 26, &kPinset_mozilla_services },
-+  { "getpocket.dev", true, false, true, 27, &kPinset_mozilla_services },
-+  { "gfx.ms", true, false, false, -1, &kPinset_microsoft },
-+  { "ggpht.cn", true, false, false, -1, &kPinset_google_root_pems },
++  { "gaia.brave.com", true, false, false, -1, &kPinset_brave },
++  { "geo.ads.brave.com", true, false, false, -1, &kPinset_brave },
++  { "geo.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "ggpht.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "getproton.me", true, false, false, -1, &kPinset_proton },
-+  { "getsway.app", true, false, false, -1, &kPinset_roblox },
-+  { "gitflic.ru", true, false, false, -1, &kPinset_gitflic },
-+  { "github.com", true, false, false, -1, &kPinset_microsoft },
-+  { "github.io", true, false, false, -1, &kPinset_microsoft },
-+  { "githubapp.com", true, false, false, -1, &kPinset_microsoft },
-+  { "githubassets.com", true, false, false, -1, &kPinset_microsoft },
-+  { "githubusercontent.com", true, false, false, -1, &kPinset_microsoft },
-+  { "gitlab.com", true, false, false, -1, &kPinset_gitlab },
-+  { "gitlab.io", true, false, false, -1, &kPinset_gitlab },
-+  { "gitlab.net", true, false, false, -1, &kPinset_gitlab },
-+  { "gkecnapps.cn", true, false, false, -1, &kPinset_google_root_pems },
    { "glass.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "globalhealth.gov", true, false, false, -1, &kPinset_usgov },
    { "gmail.com", false, false, false, -1, &kPinset_google_root_pems },
-+  { "gmbads.gle", false, false, false, -1, &kPinset_google_root_pems },
-+  { "gnewsense.org", true, false, false, -1, &kPinset_fsf },
-+  { "gnu.org", true, false, false, -1, &kPinset_fsf },
-+  { "gnukids.org", true, false, false, -1, &kPinset_fsf },
-+  { "go.microsoft", true, false, false, -1, &kPinset_microsoft },
-+  { "go-lang.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "go-lang.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "go-lang.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "golang.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "golang.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "golang.org", true, false, false, -1, &kPinset_google_root_pems },
++  { "go-updater.brave.com", true, false, false, -1, &kPinset_brave },
++  { "goerli-infura.brave.com", true, false, false, -1, &kPinset_brave },
    { "goo.gl", true, false, false, -1, &kPinset_google_root_pems },
    { "google", true, false, false, -1, &kPinset_google_root_pems },
    { "google-analytics.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "google-analytics-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.ac", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.ad", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.ae", true, false, false, -1, &kPinset_google_root_pems },
-@@ -529,6 +1776,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "google.cv", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.cz", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.de", true, false, false, -1, &kPinset_google_root_pems },
-+  { "google.dev", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.dj", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.dk", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.dm", true, false, false, -1, &kPinset_google_root_pems },
-@@ -623,90 +1871,636 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "google.vg", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.vu", true, false, false, -1, &kPinset_google_root_pems },
-   { "google.ws", true, false, false, -1, &kPinset_google_root_pems },
-+  { "google-syndication.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googleadservices.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googleadservices-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googleapis.cn", true, false, false, -1, &kPinset_google_root_pems },
-   { "googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googleapis-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googleapps-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googleacquisitionmigration.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googleblog.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googlecert.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googlecnapps.cn", true, false, false, -1, &kPinset_google_root_pems },
-   { "googlecode.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googlecommerce.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googledomains.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googledownloads.cn", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googleflights-cn.net", true, false, false, -1, &kPinset_google_root_pems },
-   { "googlegroups.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googlemail.com", false, false, false, -1, &kPinset_google_root_pems },
-+  { "googleoptimize.com", false, false, false, -1, &kPinset_google_root_pems },
-+  { "googleoptimize-cn.com", false, false, false, -1, &kPinset_google_root_pems },
-   { "googleplex.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googlesandbox.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googlesandbox-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googlesource.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googlestore.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googlesyndication.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googlesyndication-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googletagmanager.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googletagmanager-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googletagservices.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googletagservices-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googletraveladservices-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "googleusercontent.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "googlevads-cn.com", true, false, false, -1, &kPinset_google_root_pems },
+@@ -638,6 +727,9 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "googlevideo.com", true, false, false, -1, &kPinset_google_root_pems },
    { "googleweblight.com", true, false, false, -1, &kPinset_google_root_pems },
    { "goto.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "govdelivery.com", true, false, false, -1, &kPinset_usgov },
-+  { "gplfaq.org", true, false, false, -1, &kPinset_fsf },
-+  { "grapheneos.app", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.ca", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.com", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.dev", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.foundation", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.info", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.net", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.network", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.online", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.org", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.ovh", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.page", true, false, false, -1, &kPinset_grapheneos },
-+  { "grapheneos.social", true, false, false, -1, &kPinset_grapheneos },
++  { "grant.rewards.brave.com", true, false, false, -1, &kPinset_brave },
++  { "grant.rewards.brave.software", true, false, false, -1, &kPinset_brave },
++  { "grant.rewards.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "groups.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "grow.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "gsa.gov", true, false, false, -1, &kPinset_usgov },
-+  { "gsaadvantage.gov", true, false, false, -1, &kPinset_usgov },
-+  { "gsaauctions.gov", true, false, false, -1, &kPinset_usgov },
    { "gstatic.cn", true, false, false, -1, &kPinset_google_root_pems },
    { "gstatic.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "gstatic-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "gvt1.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "gvt1-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "gvt2.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "gvt2-cn.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "gvt3.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "gvt5.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "halo2.com", true, false, false, -1, &kPinset_microsoft },
-+  { "halo3.com", true, false, false, -1, &kPinset_microsoft },
-+  { "halo4.com", true, false, false, -1, &kPinset_microsoft },
-+  { "halo5.com", true, false, false, -1, &kPinset_microsoft },
-+  { "hamul.gg", true, false, false, -1, &kPinset_roblox },
-   { "hangout", true, false, false, -1, &kPinset_google_root_pems },
+@@ -648,26 +740,47 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "hangouts.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "hats.goog", true, false, false, -1, &kPinset_google_root_pems },
-+  { "headshotz.ai", true, false, false, -1, &kPinset_roblox },
-+  { "health.gov", true, false, false, -1, &kPinset_usgov },
-+  { "hey.gle", true, false, false, -1, &kPinset_google_root_pems },
-+  { "hhs.gov", true, false, false, -1, &kPinset_usgov },
    { "history.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "hrsa.gov", true, false, false, -1, &kPinset_usgov },
-+  { "hsi.gov", true, false, false, -1, &kPinset_usgov },
-+  { "hololens.com", true, false, false, -1, &kPinset_microsoft },
-+  { "homelandsecurity.gov", true, false, false, -1, &kPinset_usgov },
    { "hostedtalkgadget.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "hotmail.com", true, false, false, -1, &kPinset_microsoft },
-+  { "hrblock.com", true, false, false, -1, &kPinset_hrblock },
-+  { "hyperwallet.com", true, false, false, -1, &kPinset_paypal },
-+  { "iamremarkable.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ibytedtos.com", true, false, false, -1, &kPinset_tiktok },
-+  { "ice.gov", true, false, false, -1, &kPinset_usgov },
-+  { "icloud.apple", true, false, false, -1, &kPinset_apple },
-+  { "icloud.com", true, false, false, -1, &kPinset_apple },
-+  { "icloud.com.cn", true, false, false, -1, &kPinset_apple },
-+  { "identityplatform.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "idservice.com", true, false, false, -1, &kPinset_mastercard },
-+  { "idservice.inc", true, false, false, -1, &kPinset_mastercard },
-+  { "igsonar.com", true, false, false, -1, &kPinset_facebook },
-+  { "images-amazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "imdb.com", true, false, false, -1, &kPinset_amazon },
-+  { "imdb.to", true, false, false, -1, &kPinset_amazon },
-+  { "inclusivegrowthscore.com", true, false, false, -1, &kPinset_mastercard },
++  { "imgs.search.brave.com", true, false, false, -1, &kPinset_brave },
    { "inbox.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "intrinsic.ai", true, false, false, -1, &kPinset_google_root_pems },
    { "include-subdomains.pinning.example.com", true, false, false, -1, &kPinset_mozilla_test },
-+  { "infosec.exchange", true, false, false, -1, &kPinset_infosecexchange },
-+  { "instagram.com", true, false, false, -1, &kPinset_facebook },
 +  { "ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
-+  { "irs.gov", true, false, false, -1, &kPinset_usgov },
-+  { "ise.gov", true, false, false, -1, &kPinset_usgov },
-+  { "itsaky.com", true, false, false, -1, &kPinset_itsaky },
-+  { "itunes.com", true, false, false, -1, &kPinset_apple },
-+  { "izzysoft.de", true, false, false, -1, &kPinset_izzysoft },
-+  { "jibemobile.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "jidomaps.com", true, false, false, -1, &kPinset_roblox },
-+  { "jpm.com", true, false, false, -1, &kPinset_chase },
-+  { "jpmorgan.com", true, false, false, -1, &kPinset_chase },
-+  { "jpmorganchase.com", true, false, false, -1, &kPinset_chase },
-+  { "jsdelivr.com", true, false, false, -1, &kPinset_jsdelivr },
-+  { "jsdelivr.net", true, false, false, -1, &kPinset_jsdelivr },
-+  { "jtvnw.net", true, false, false, -1, &kPinset_amazon },
-+  { "joinhoney.app", true, false, false, -1, &kPinset_paypal },
-+  { "joinhoney.co.uk", true, false, false, -1, &kPinset_paypal },
-+  { "joinhoney.com", true, false, false, -1, &kPinset_paypal },
-+  { "joinhoney.com.au", true, false, false, -1, &kPinset_paypal },
-+  { "justice.gov", true, false, false, -1, &kPinset_usgov },
-+  { "kernel.org", true, false, false, -1, &kPinset_kernel },
-+  { "kindleswindle.org", true, false, false, -1, &kPinset_fsf },
-+  { "l-msedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "lanternal.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "lastpass.com", true, false, false, -1, &kPinset_lastpass },
-+  { "lencr.org", true, false, false, -1, &kPinset_letsencrypt },
    { "lens.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "lep.gov", true, false, false, -1, &kPinset_usgov },
-+  { "lers.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "letsencrypt.com", true, false, false, -1, &kPinset_letsencrypt },
-+  { "letsencrypt.org", true, false, false, -1, &kPinset_letsencrypt },
-+  { "libreplanet.org", true, false, false, -1, &kPinset_fsf },
-+  { "librewolf.net", true, false, false, -1, &kPinset_librewolf },
-+  { "licdn.com", true, false, false, -1, &kPinset_microsoft },
-+  { "liftware.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "liftware.jp", true, false, false, -1, &kPinset_google_root_pems },
-+  { "lineageos.org", true, false, false, -1, &kPinset_lineageos },
-+  { "link.co", true, false, false, -1, &kPinset_stripe },
-+  { "link.com", true, false, false, -1, &kPinset_stripe },
-+  { "linkedin.com", true, false, false, -1, &kPinset_microsoft },
-+  { "live.com", true, false, false, -1, &kPinset_microsoft },
-+  { "live.net", true, false, false, -1, &kPinset_microsoft },
-+  { "live-video.net", true, false, false, -1, &kPinset_amazon },
    { "login.corp.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "login.gov", true, false, false, -1, &kPinset_usgov },
-+  { "loginwithamazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "lputil.com", true, false, false, -1, &kPinset_lastpass },
    { "m.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "m365copilot.com", true, false, false, -1, &kPinset_microsoft },
-+  { "macservice.goog", true, false, false, -1, &kPinset_google_root_pems },
    { "mail-settings.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "mail.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "mailbox.org", true, false, false, -1, &kPinset_mailbox },
-+  { "makersuite.google", true, false, false, -1, &kPinset_google_root_pems },
++  { "mainnet-beta-solana.brave.com", true, false, false, -1, &kPinset_brave },
++  { "mainnet-infura.brave.com", true, false, false, -1, &kPinset_brave },
++  { "mainnet-polygon.brave.com", true, false, false, -1, &kPinset_brave },
    { "market.android.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "mastercard.ae", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.am", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.asia", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.at", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.az", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ba", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.be", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.bg", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.by", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ca", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ch", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.cl", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.cn", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.com", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.cy", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.cz", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.de", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.dk", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.es", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.eu", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.fi", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.fr", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.gr", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.hr", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.hu", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ie", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.it", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.jo", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.jp", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ke", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.kz", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.lu", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.md", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.me", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.mt", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.my", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.nl", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.no", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.om", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.pl", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.pt", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.qa", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ro", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.rs", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ru", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.se", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.si", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.sk", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.ua", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercard.us", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercardacademy.com", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercardadvisors.com", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercardbiz.com", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercardcenter.org", true, false, false, -1, &kPinset_mastercard },
-+  { "mastercardsmartlink.com", true, false, false, -1, &kPinset_mastercard },
-+  { "matrix.org", true, false, false, -1, &kPinset_matrix },
-+  { "matrix.to", true, false, false, -1, &kPinset_matrix },
    { "mbasic.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "me.com", true, false, false, -1, &kPinset_apple },
-+  { "media-amazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "media-imdb.com", true, false, false, -1, &kPinset_amazon },
-+  { "mediapipe.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "mediawiki.org", true, false, false, -1, &kPinset_wikimedia },
    { "meet.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "messenger.com", true, false, false, -1, &kPinset_facebook },
-+  { "meta.com", true, false, false, -1, &kPinset_facebook },
    { "mfg-inspector.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "microsoft.com", true, false, false, -1, &kPinset_microsoft },
-+  { "microsoft.us", true, false, false, -1, &kPinset_microsoft },
-+  { "microsoft-falcon.net", true, false, false, -1, &kPinset_microsoft },
-+  { "microsoft-hohm.com", true, false, false, -1, &kPinset_microsoft },
-+  { "microsoft365.com", true, false, false, -1, &kPinset_microsoft },
-+  { "microsoftonline.com", true, false, false, -1, &kPinset_microsoft },
-+  { "microsoftonline.us", true, false, false, -1, &kPinset_microsoft },
-+  { "microsoftonline-p.com", true, false, false, -1, &kPinset_microsoft },
-+  { "minecraft.com", true, false, false, -1, &kPinset_microsoft },
-+  { "minecraft.net", true, false, false, -1, &kPinset_microsoft },
-+  { "mojang.com", true, false, false, -1, &kPinset_microsoft },
-+  { "molly.im", true, false, false, -1, &kPinset_molly },
-+  { "moz.works", true, false, true, 28, &kPinset_mozilla_services },
-+  { "mozaws.net", true, false, true, 29, &kPinset_mozilla_services },
-+  { "mozdev.org", true, false, true, 30, &kPinset_mozilla_services },
-+  { "mozgcp.net", true, false, true, 31, &kPinset_mozilla_services },
-+  { "mozilla.com", true, false, true, 32, &kPinset_mozilla_services },
-+  { "mozilla.net", true, false, true, 33, &kPinset_mozilla_services },
-+  { "mozilla.org", true, false, true, 34, &kPinset_mozilla_services },
-+  { "mozilla.social", true, false, true, 35, &kPinset_mozilla_services },
-+  { "mozit.cloud", true, false, true, 36, &kPinset_mozilla_services },
-+  { "msads.net", true, false, false, -1, &kPinset_microsoft },
-+  { "msauth.net", true, false, false, -1, &kPinset_microsoft },
-+  { "msauthimages.net", true, false, false, -1, &kPinset_microsoft },
-+  { "msauthimages.us", true, false, false, -1, &kPinset_microsoft },
-+  { "msecnd.net", true, false, false, -1, &kPinset_microsoft },
-+  { "msedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "msftauth.net", true, false, false, -1, &kPinset_microsoft },
-+  { "msftauthimages.net", true, false, false, -1, &kPinset_microsoft },
-+  { "msftauthimages.us", true, false, false, -1, &kPinset_microsoft },
-+  { "msgamesresearch.com", true, false, false, -1, &kPinset_microsoft },
-+  { "msn.cn", true, false, false, -1, &kPinset_microsoft },
-+  { "msn.co.uk", true, false, false, -1, &kPinset_microsoft },
-+  { "msn.com", true, false, false, -1, &kPinset_microsoft },
++  { "mta-sts.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "mtouch.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "mullvad.careers", true, false, false, -1, &kPinset_mullvad },
-+  { "mullvad.net", true, false, false, -1, &kPinset_mullvad },
-+  { "mullvadvpn.net", true, false, false, -1, &kPinset_mullvad },
    { "myaccount.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "myactivity.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "mzl.la", true, false, true, 37, &kPinset_mozilla_services },
-+  { "mzstatic.com", true, false, false, -1, &kPinset_apple },
-+  { "nakama.us", true, false, false, -1, &kPinset_roblox },
-+  { "nakamalabs.com", true, false, false, -1, &kPinset_roblox },
-+  { "nara.gov", true, false, false, -1, &kPinset_usgov },
-+  { "nasa.gov", true, false, false, -1, &kPinset_usgov },
-+  { "navy.mil", true, false, false, -1, &kPinset_usgov },
-+  { "nel.goog", true, false, false, -1, &kPinset_google_root_pems },
-+  { "nelreports.net", true, false, false, -1, &kPinset_microsoft },
-+  { "nest.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "nextdns.io", true, false, false, -1, &kPinset_nextdns },
-+  { "nomulus.foo", true, false, false, -1, &kPinset_google_root_pems },
-+  { "nongnu.org", true, false, false, -1, &kPinset_fsf },
-+  { "notebooklm.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "nps.gov", true, false, false, -1, &kPinset_usgov },
-+  { "nsa.gov", true, false, false, -1, &kPinset_usgov },
-+  { "nsatc.net", true, false, false, -1, &kPinset_microsoft },
++  { "mywallet.ads.brave.com", true, false, false, -1, &kPinset_brave },
++  { "mywallet.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "oauthaccountmanager.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "oculus.com", true, false, false, -1, &kPinset_facebook },
-+  { "oculuscdn.com", true, false, false, -1, &kPinset_facebook },
-+  { "oculusrift.com", true, false, false, -1, &kPinset_facebook },
-+  { "oculusvr.com", true, false, false, -1, &kPinset_facebook },
-+  { "off.goog", true, false, false, -1, &kPinset_google_root_pems },
-+  { "office.com", true, false, false, -1, &kPinset_microsoft },
-+  { "office.net", true, false, false, -1, &kPinset_microsoft },
-+  { "office365.com", true, false, false, -1, &kPinset_microsoft },
-+  { "office365.us", true, false, false, -1, &kPinset_microsoft },
-+  { "office365-net.us", true, false, false, -1, &kPinset_microsoft },
-+  { "officeppe.net", true, false, false, -1, &kPinset_microsoft },
-+  { "ok.gle", true, false, false, -1, &kPinset_google_root_pems },
-+  { "okta.ae", true, false, false, -1, &kPinset_okta },
-+  { "okta.at", true, false, false, -1, &kPinset_okta },
-+  { "okta.be", true, false, false, -1, &kPinset_okta },
-+  { "okta.cc", true, false, false, -1, &kPinset_okta },
-+  { "okta.ch", true, false, false, -1, &kPinset_okta },
-+  { "okta.cm", true, false, false, -1, &kPinset_okta },
-+  { "okta.co.il", true, false, false, -1, &kPinset_okta },
-+  { "okta.co.uk", true, false, false, -1, &kPinset_okta },
-+  { "okta.co.za", true, false, false, -1, &kPinset_okta },
-+  { "okta.com", true, false, false, -1, &kPinset_okta },
-+  { "okta.com.ar", true, false, false, -1, &kPinset_okta },
-+  { "okta.com.ec", true, false, false, -1, &kPinset_okta },
-+  { "okta.com.hk", true, false, false, -1, &kPinset_okta },
-+  { "okta.com.mx", true, false, false, -1, &kPinset_okta },
-+  { "okta.com.pe", true, false, false, -1, &kPinset_okta },
-+  { "okta.com.ph", true, false, false, -1, &kPinset_okta },
-+  { "okta.cz", true, false, false, -1, &kPinset_okta },
-+  { "okta.de", true, false, false, -1, &kPinset_okta },
-+  { "okta.ec", true, false, false, -1, &kPinset_okta },
-+  { "okta.es", true, false, false, -1, &kPinset_okta },
-+  { "okta.fi", true, false, false, -1, &kPinset_okta },
-+  { "okta.hk", true, false, false, -1, &kPinset_okta },
-+  { "okta.id", true, false, false, -1, &kPinset_okta },
-+  { "okta.im", true, false, false, -1, &kPinset_okta },
-+  { "okta.in", true, false, false, -1, &kPinset_okta },
-+  { "okta.is", true, false, false, -1, &kPinset_okta },
-+  { "okta.it", true, false, false, -1, &kPinset_okta },
-+  { "okta.kr", true, false, false, -1, &kPinset_okta },
-+  { "okta.li", true, false, false, -1, &kPinset_okta },
-+  { "okta.lt", true, false, false, -1, &kPinset_okta },
-+  { "okta.lu", true, false, false, -1, &kPinset_okta },
-+  { "okta.mx", true, false, false, -1, &kPinset_okta },
-+  { "okta.my", true, false, false, -1, &kPinset_okta },
-+  { "okta.nl", true, false, false, -1, &kPinset_okta },
-+  { "okta.no", true, false, false, -1, &kPinset_okta },
-+  { "okta.nz", true, false, false, -1, &kPinset_okta },
-+  { "okta.pe", true, false, false, -1, &kPinset_okta },
-+  { "okta.ph", true, false, false, -1, &kPinset_okta },
-+  { "okta.pk", true, false, false, -1, &kPinset_okta },
-+  { "okta.pl", true, false, false, -1, &kPinset_okta },
-+  { "okta.pt", true, false, false, -1, &kPinset_okta },
-+  { "okta.pw", true, false, false, -1, &kPinset_okta },
-+  { "okta.ro", true, false, false, -1, &kPinset_okta },
-+  { "okta.se", true, false, false, -1, &kPinset_okta },
-+  { "okta.sg", true, false, false, -1, &kPinset_okta },
-+  { "okta.tw", true, false, false, -1, &kPinset_okta },
-+  { "okta.ws", true, false, false, -1, &kPinset_okta },
-+  { "oktacdn.com", true, false, false, -1, &kPinset_okta },
-+  { "okta-emea.com", true, false, false, -1, &kPinset_okta },
-+  { "omniese.com", true, false, false, -1, &kPinset_omniese },
-+  { "one.one.one", true, false, false, -1, &kPinset_cloudflare },
-+  { "onedrive.com", true, false, false, -1, &kPinset_microsoft },
-+  { "onestore.ms", true, false, false, -1, &kPinset_microsoft },
-+  { "onmicrosoft.com", true, false, false, -1, &kPinset_microsoft },
-+  { "onmicrosoft.us", true, false, false, -1, &kPinset_microsoft },
-+  { "openstreetmap.org", true, false, false, -1, &kPinset_openstreetmap },
-+  { "openstreetmaps.org", true, false, false, -1, &kPinset_openstreetmap },
-+  { "openthread.io", true, false, false, -1, &kPinset_google_root_pems },
-+  { "openweave.io", true, false, false, -1, &kPinset_google_root_pems },
-+  { "openxla.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "opioids.gov", true, false, false, -1, &kPinset_usgov },
-+  { "ordering.page", true, false, false, -1, &kPinset_google_root_pems },
-+  { "organdonor.gov", true, false, false, -1, &kPinset_usgov },
-+  { "osd.mil", true, false, false, -1, &kPinset_usgov },
-+  { "osmre.gov", true, false, false, -1, &kPinset_usgov },
-+  { "ourdocuments.gov", true, false, false, -1, &kPinset_usgov },
-+  { "outlook.com", true, false, false, -1, &kPinset_microsoft },
-+  { "pages.dev", true, false, false, -1, &kPinset_cloudflare },
-+  { "pandemicflu.gov", true, false, false, -1, &kPinset_usgov },
++  { "p2a.brave.com", true, false, false, -1, &kPinset_brave },
++  { "p2a-json.brave.com", true, false, false, -1, &kPinset_brave },
++  { "p3a.brave.com", true, false, false, -1, &kPinset_brave },
++  { "p3a.bravesoftware.com", true, false, false, -1, &kPinset_brave },
++  { "p3a-creative.brave.com", true, false, false, -1, &kPinset_brave },
++  { "p3a-dev.bravesoftware.com", true, false, false, -1, &kPinset_brave },
++  { "p3a-json.brave.com", true, false, false, -1, &kPinset_brave },
    { "partner.android.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "pass2mail.com", true, false, false, -1, &kPinset_proton },
-+  { "passfwd.com", true, false, false, -1, &kPinset_proton },
-+  { "passinbox.com", true, false, false, -1, &kPinset_proton },
-+  { "passmail.com", true, false, false, -1, &kPinset_proton },
-+  { "passmail.net", true, false, false, -1, &kPinset_proton },
-+  { "passport.net", true, false, false, -1, &kPinset_microsoft },
    { "passwords.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "passwordsleakcheck-pa.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "payment.goog", true, false, false, -1, &kPinset_google_root_pems },
++  { "patterns.wdp.brave.com", true, false, false, -1, &kPinset_brave },
++  { "payment.rewards.brave.com", true, false, false, -1, &kPinset_brave },
++  { "payment.rewards.brave.software", true, false, false, -1, &kPinset_brave },
++  { "payment.rewards.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "payments.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "payments-amazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "paypal.biz", true, false, false, -1, &kPinset_paypal },
-+  { "paypal.co.uk", true, false, false, -1, &kPinset_paypal },
-+  { "paypal.com", true, false, false, -1, &kPinset_paypal },
-+  { "paypal.com.au", true, false, false, -1, &kPinset_paypal },
-+  { "paypal.es", true, false, false, -1, &kPinset_paypal },
-+  { "paypal.fr", true, false, false, -1, &kPinset_paypal },
-+  { "paypal.it", true, false, false, -1, &kPinset_paypal },
-+  { "paypal.me", true, false, false, -1, &kPinset_paypal },
-+  { "paypal-mktg.com", true, false, false, -1, &kPinset_paypal },
-+  { "paypal-qrc.com", true, false, false, -1, &kPinset_paypal },
-+  { "paypal-qrc-seller-supplies.com", true, false, false, -1, &kPinset_paypal },
-+  { "paypalcorp.com", true, false, false, -1, &kPinset_paypal },
-+  { "paypalinc.com", true, false, false, -1, &kPinset_paypal },
-+  { "paypalobjects.com", true, false, false, -1, &kPinset_paypal },
-+  { "pclob.gov", true, false, false, -1, &kPinset_usgov },
-+  { "performance.gov", true, false, false, -1, &kPinset_usgov },
-+  { "picasaweb.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "picasaweb.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "picasaweb.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "picnik.com", true, false, false, -1, &kPinset_google_root_pems },
++  { "pcdn.brave.com", true, false, false, -1, &kPinset_brave },
++  { "phoenix.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "pinning-test.badssl.com", true, false, false, -1, &kPinset_test },
    { "pinningtest.appspot.com", true, false, false, -1, &kPinset_test },
-+  { "pixate.com", true, false, false, -1, &kPinset_google_root_pems },
    { "pixel.facebook.com", true, false, false, -1, &kPinset_facebook },
-   { "pixel.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "pki.goog", true, false, false, -1, &kPinset_google_root_pems },
-   { "play.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "play.space", true, false, false, -1, &kPinset_google_root_pems },
-+  { "playfreedom.org", true, false, false, -1, &kPinset_fsf },
-+  { "playogg.com", true, false, false, -1, &kPinset_fsf },
-+  { "playogg.org", true, false, false, -1, &kPinset_fsf },
+@@ -676,31 +789,61 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "plus.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "plus.sandbox.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "pm.me", true, false, false, -1, &kPinset_proton },
-+  { "pnc.com", true, false, false, -1, &kPinset_pnc },
-+  { "pnc.jobs", true, false, false, -1, &kPinset_pnc },
-+  { "pncbenefitplus.com", true, false, false, -1, &kPinset_pnc },
-+  { "pncmc.com", true, false, false, -1, &kPinset_pnc },
-+  { "pocket.co", true, false, true, 38, &kPinset_mozilla_services },
-+  { "pocket-image-cache.com", true, false, true, 39, &kPinset_mozilla_services },
-+  { "podcasts.goog", true, false, false, -1, &kPinset_google_root_pems },
-+  { "powerappsportals.com", true, false, false, -1, &kPinset_microsoft },
-+  { "powersunitedvr.com", true, false, false, -1, &kPinset_facebook },
-+  { "ppms.gov", true, false, false, -1, &kPinset_usgov },
-+  { "pr.tn", true, false, false, -1, &kPinset_proton },
-+  { "priceless.com", true, false, false, -1, &kPinset_mastercard },
-+  { "primevideo.com", true, false, false, -1, &kPinset_amazon },
-+  { "privacy.com", true, false, false, -1, &kPinset_privacy },
-+  { "privacyguides.net", true, false, false, -1, &kPinset_privacyguides },
-+  { "privacyguides.org", true, false, false, -1, &kPinset_privacyguides },
-+  { "privacyguidesusercontent.com", true, false, false, -1, &kPinset_privacyguides },
-+  { "privacysandbox.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "privsec.dev", true, false, false, -1, &kPinset_privsec },
    { "profiles.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "projectgomie.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "protonapps.com", true, false, false, -1, &kPinset_proton },
-+  { "proton.me", true, false, false, -1, &kPinset_proton },
-+  { "protonmail.ch", true, false, false, -1, &kPinset_proton },
-+  { "protonmail.com", true, false, false, -1, &kPinset_proton },
-+  { "protonstatus.com", true, false, false, -1, &kPinset_proton },
-+  { "protontech.ch", true, false, false, -1, &kPinset_proton },
-+  { "protonvpn.com", true, false, false, -1, &kPinset_proton },
-+  { "protonweb.com", true, false, false, -1, &kPinset_proton },
-+  { "py.pl", true, false, false, -1, &kPinset_paypal },
-+  { "quad9.net", true, false, false, -1, &kPinset_quad9 },
-+  { "quantumai.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "qwapi.com", true, false, false, -1, &kPinset_apple },
-+  { "radar.com", true, false, false, -1, &kPinset_radar },
-+  { "radar.io", true, false, false, -1, &kPinset_radar },
-+  { "rbm.goog", true, false, false, -1, &kPinset_google_root_pems },
-+  { "rbx.com", true, false, false, -1, &kPinset_roblox },
-+  { "rbxcdn.com", true, false, false, -1, &kPinset_roblox },
-+  { "rbxinfra.com", true, false, false, -1, &kPinset_roblox },
-+  { "rbxinfra.net", true, false, false, -1, &kPinset_roblox },
-+  { "readitlater.com", true, false, true, 40, &kPinset_mozilla_services },
-+  { "readitlaterlist.com", true, false, true, 41, &kPinset_mozilla_services },
-+  { "recaptcha.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "recaptcha.net.cn", true, false, false, -1, &kPinset_google_root_pems },
-+  { "recaptcha-cn.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "redd.it", true, false, false, -1, &kPinset_reddit },
-+  { "reddit.com", true, false, false, -1, &kPinset_reddit },
-+  { "redditmedia.com", true, false, false, -1, &kPinset_reddit },
-+  { "redditspace.com", true, false, false, -1, &kPinset_reddit },
-+  { "redditstatic.com", true, false, false, -1, &kPinset_reddit },
-+  { "registry.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "registry-qa.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "registry-sandbox.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "regulations.gov", true, false, false, -1, &kPinset_usgov },
++  { "publishers.basicattentiontoken.org", true, false, false, -1, &kPinset_brave },
++  { "publishers.brave.com", true, false, false, -1, &kPinset_brave },
++  { "quorum.wdp.brave.com", true, false, false, -1, &kPinset_brave },
++  { "redirector.brave.com", true, false, false, -1, &kPinset_brave },
    { "remotedesktop.corp.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "research.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "research.youtube", true, false, false, -1, &kPinset_google_root_pems },
-+  { "revolut.com", true, false, false, -1, &kPinset_revolut },
-+  { "roblox.com", true, false, false, -1, &kPinset_roblox },
-+  { "robloxlabs.com", true, false, false, -1, &kPinset_roblox },
-+  { "rotten-apple.org", true, false, false, -1, &kPinset_fsf },
-+  { "ring.com", true, false, false, -1, &kPinset_amazon },
-+  { "riot.im", true, false, false, -1, &kPinset_element },
-+  { "s-microsoft.com", true, false, false, -1, &kPinset_microsoft },
-+  { "s-msedge.net", true, false, false, -1, &kPinset_microsoft },
-+  { "savethedate.foo", true, false, false, -1, &kPinset_google_root_pems },
++  { "rewards.brave.com", true, false, false, -1, &kPinset_brave },
++  { "safebrowsing.brave.com", true, false, false, -1, &kPinset_brave },
++  { "safebrowsing2.brave.com", true, false, false, -1, &kPinset_brave },
++  { "safebrowsing.ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
++  { "sb-ssl.brave.com", true, false, false, -1, &kPinset_brave },
    { "script.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "seamlessupdate.app", true, false, false, -1, &kPinset_grapheneos },
-+  { "seaofthieves.com", true, false, false, -1, &kPinset_microsoft },
-+  { "search.gov", true, false, false, -1, &kPinset_usgov },
-+  { "searchfox.org", true, false, true, 42, &kPinset_mozilla_services },
-+  { "searchingforsyria.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "sectigo.com", true, false, false, -1, &kPinset_sectigo },
++  { "search.anonymous.brave.com", true, false, false, -1, &kPinset_brave },
++  { "search.anonymous.bravesoftware.com", true, false, false, -1, &kPinset_brave },
++  { "search.brave.com", true, false, false, -1, &kPinset_brave },
    { "secure.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "security.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "services.apple", true, false, false, -1, &kPinset_apple },
++  { "sepolia-infura.brave.com", true, false, false, -1, &kPinset_brave },
    { "services.mozilla.com", true, false, true, 6, &kPinset_mozilla_services },
-+  { "serving-sys.com", true, false, false, -1, &kPinset_amazon },
-+  { "share.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "sharepoint.com", true, false, false, -1, &kPinset_microsoft },
-+  { "sharepointonline.com", true, false, false, -1, &kPinset_microsoft },
-+  { "shazam.com", true, false, false, -1, &kPinset_apple },
-+  { "siege-amazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "silomails.com", true, false, false, -1, &kPinset_proton },
-+  { "signal.org", true, false, false, -1, &kPinset_signal },
-+  { "signalfoundation.org", true, false, false, -1, &kPinset_signal },
-+  { "signalusers.org", true, false, false, -1, &kPinset_signal },
-+  { "simplelogin.co", true, false, false, -1, &kPinset_proton },
-+  { "simplelogin.com", true, false, false, -1, &kPinset_proton },
-+  { "simplelogin.fr", true, false, false, -1, &kPinset_proton },
-+  { "simplelogin.io", true, false, false, -1, &kPinset_proton },
-+  { "simplify.com", true, false, false, -1, &kPinset_mastercard },
-+  { "simplii.com", true, false, false, -1, &kPinset_simplii },
    { "sites.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "sizmdx.com", true, false, false, -1, &kPinset_amazon },
-+  { "sizmek.com", true, false, false, -1, &kPinset_amazon },
-+  { "skydrive.com", true, false, false, -1, &kPinset_microsoft },
-+  { "skype.com", true, false, false, -1, &kPinset_microsoft },
-+  { "slmail.me", true, false, false, -1, &kPinset_proton },
-+  { "slmails.com", true, false, false, -1, &kPinset_proton },
-+  { "songwriters.youtube", true, false, false, -1, &kPinset_google_root_pems },
-+  { "spaceforce.mil", true, false, false, -1, &kPinset_usgov },
-+  { "spreadprivacy.com", true, false, false, -1, &kPinset_duckduckgo },
++  { "slingshot.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "spreadsheets.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "squarecdn.com", true, false, false, -1, &kPinset_square },
-+  { "squareup.com", true, false, false, -1, &kPinset_square },
-+  { "ssl-images-amazon.com", true, false, false, -1, &kPinset_amazon },
-+  { "smartcommunitiescoalition.com", true, false, false, -1, &kPinset_mastercard },
-+  { "smartcommunitiescoalition.org", true, false, false, -1, &kPinset_mastercard },
-+  { "sprayscape.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "startpath.com", true, false, false, -1, &kPinset_mastercard },
++  { "ssl-pinning.someblog.org", true, false, false, -1, &kPinset_brave },
++  { "star.wdp.brave.com", true, false, false, -1, &kPinset_brave },
++  { "star-randsrv.bsg.brave.com", true, false, false, -1, &kPinset_brave },
++  { "static.ads.brave.com", true, false, false, -1, &kPinset_brave },
++  { "static.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
++  { "static.brave.com", true, false, false, -1, &kPinset_brave },
    { "static.googleadsserving.cn", true, false, false, -1, &kPinset_google_root_pems },
-+  { "static.microsoft", true, false, false, -1, &kPinset_microsoft },
-+  { "statically.io", true, false, false, -1, &kPinset_statically },
++  { "static1.brave.com", true, false, false, -1, &kPinset_brave },
    { "stats.g.doubleclick.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "steamcommunity.com", true, false, false, -1, &kPinset_valve },
-+  { "steamgames.com", true, false, false, -1, &kPinset_valve },
-+  { "steampowered.com", true, false, false, -1, &kPinset_valve },
-+  { "steamstatic.com", true, false, false, -1, &kPinset_valve },
-+  { "stopbullying.gov", true, false, false, -1, &kPinset_usgov },
-+  { "stripe.com", true, false, false, -1, &kPinset_stripe },
-+  { "stripe.network", true, false, false, -1, &kPinset_stripe },
-+  { "stripeassets.com", true, false, false, -1, &kPinset_stripe },
-+  { "stripecdn.com", true, false, false, -1, &kPinset_stripe },
-+  { "studentaid.gov", true, false, false, -1, &kPinset_usgov },
    { "sync.services.mozilla.com", true, false, true, 13, &kPinset_mozilla_services },
-+  { "t.co", true, false, false, -1, &kPinset_twitter },
++  { "sync-v2.brave.com", true, false, false, -1, &kPinset_brave },
++  { "sync-v2.brave.software", true, false, false, -1, &kPinset_brave },
++  { "sync-v2.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "t.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "t-microsoft.com", true, false, false, -1, &kPinset_microsoft },
-+  { "t-msedge.net", true, false, false, -1, &kPinset_microsoft },
    { "tablet.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "tagdelivery.com", true, false, false, -1, &kPinset_microsoft },
    { "talk.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "talkgadget.google.com", true, false, false, -1, &kPinset_google_root_pems },
 -  { "telemetry.mozilla.org", true, true, true, 8, &kPinset_mozilla_services },
 +  { "telemetry.mozilla.org", true, false, true, 8, &kPinset_mozilla_services },
-+  { "tensorflow.org", true, false, false, -1, &kPinset_google_root_pems },
    { "test-mode.pinning.example.com", true, true, false, -1, &kPinset_mozilla_test },
    { "testpilot.firefox.com", false, false, true, 9, &kPinset_mozilla_services },
-+  { "tfhub.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "thegooglestore.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "therealcost.gov", true, false, false, -1, &kPinset_usgov },
-+  { "thisfreelife.gov", true, false, false, -1, &kPinset_usgov },
-+  { "threads.net", true, false, false, -1, &kPinset_facebook },
-+  { "thunderbird.net", true, false, true, 43, &kPinset_mozilla_services },
-+  { "tiktok.com", true, false, false, -1, &kPinset_tiktok },
-+  { "tiktokcdn.com", true, false, false, -1, &kPinset_tiktok },
-+  { "tiktokcdn-us.com", true, false, false, -1, &kPinset_tiktok },
-+  { "tiktokv.com", true, false, false, -1, &kPinset_tiktok },
-+  { "tiktokv.us", true, false, false, -1, &kPinset_tiktok },
-+  { "tiktokw.eu", true, false, false, -1, &kPinset_tiktok },
-+  { "tiktokw.us", true, false, false, -1, &kPinset_tiktok },
-+  { "tiltbrush.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "travel.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "tripleplay.ai", true, false, false, -1, &kPinset_roblox },
-+  { "tobacco.gov", true, false, false, -1, &kPinset_usgov },
-+  { "torproject.org", true, false, false, -1, &kPinset_tor },
++  { "tiles.search.brave.com", true, false, false, -1, &kPinset_brave },
++  { "titanium.celenity.dev", true, false, false, -1, &kPinset_celenity },
++  { "tor.bravesoftware.com", true, false, false, -1, &kPinset_brave },
    { "touch.facebook.com", true, false, false, -1, &kPinset_facebook },
-+  { "trafficmanager.net", true, false, false, -1, &kPinset_microsoft },
-+  { "transferwise.com", true, false, false, -1, &kPinset_wise },
++  { "translate.brave.com", true, false, false, -1, &kPinset_brave },
    { "translate.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "treasury.gov", true, false, false, -1, &kPinset_usgov },
-+  { "ttdns2.com", true, false, false, -1, &kPinset_tiktok },
-+  { "ttdns3.com", true, false, false, -1, &kPinset_tiktok },
-+  { "ttvnw.net", true, false, false, -1, &kPinset_amazon },
-+  { "ttwstatic.com", true, false, false, -1, &kPinset_tiktok },
++  { "translate-static.brave.com", true, false, false, -1, &kPinset_brave },
    { "tunnel-staging.googlezip.net", true, false, false, -1, &kPinset_google_root_pems },
    { "tunnel.googlezip.net", true, false, false, -1, &kPinset_google_root_pems },
-+  { "tuta.com", true, false, false, -1, &kPinset_tuta },
-+  { "tutanota.com", true, false, false, -1, &kPinset_tuta },
-+  { "twimg.com", true, false, false, -1, &kPinset_twitter },
-+  { "twitch.tv", true, false, false, -1, &kPinset_amazon },
-+  { "twitchadvertising.tv", true, false, false, -1, &kPinset_amazon },
-+  { "twitchcdn.net", true, false, false, -1, &kPinset_amazon },
-+  { "twitter.com", true, false, false, -1, &kPinset_twitter },
-+  { "tym.so", true, false, false, -1, &kPinset_roblox },
    { "ua5v.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "ublockorigin.com", true, false, false, -1, &kPinset_ublockorigin },
-+  { "ukraineoversight.gov", true, false, false, -1, &kPinset_usgov },
-+  { "unredacted.org", true, false, false, -1, &kPinset_unredacted },
-+  { "upgradefromwindows.com", true, false, false, -1, &kPinset_fsf },
-+  { "upgradefromwindows8.org", true, false, false, -1, &kPinset_fsf },
    { "upload.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "urchin.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "us.gov", true, false, false, -1, &kPinset_usgov },
-+  { "usa.gov", true, false, false, -1, &kPinset_usgov },
-+  { "usaspending.gov", true, false, false, -1, &kPinset_usgov },
-+  { "usbr.gov", true, false, false, -1, &kPinset_usgov },
-+  { "use-application-dns.net", true, false, true, 44, &kPinset_mozilla_services },
-+  { "usgovtrafficmanager.net", true, false, false, -1, &kPinset_microsoft },
-+  { "usgs.gov", true, false, false, -1, &kPinset_usgov },
-+  { "v0cdn.net", true, false, false, -1, &kPinset_microsoft },
-+  { "va.gov", true, false, false, -1, &kPinset_usgov },
-+  { "valvesoftware.com", true, false, false, -1, &kPinset_valve },
-+  { "vanadium.app", true, false, false, -1, &kPinset_grapheneos },
-+  { "vcdimager.org", true, false, false, -1, &kPinset_fsf },
-+  { "vcf.gov", true, false, false, -1, &kPinset_usgov },
-+  { "venmo.com", true, false, false, -1, &kPinset_paypal },
-+  { "virtualearth.net", true, false, false, -1, &kPinset_microsoft },
-+  { "visa.com", true, false, false, -1, &kPinset_visa },
-+  { "visualstudio.com", true, false, false, -1, &kPinset_microsoft },
-+  { "vote.gov", true, false, false, -1, &kPinset_usgov },
-+  { "w.wiki", true, false, false, -1, &kPinset_wikimedia },
++  { "variations.brave.com", true, false, false, -1, &kPinset_brave },
    { "w-spotlight.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "wa.me", true, false, false, -1, &kPinset_facebook },
-+  { "wallet.apple", true, false, false, -1, &kPinset_apple },
    { "wallet.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "waze.co.il", true, false, false, -1, &kPinset_google_root_pems },
-+  { "waze.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "web.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "webcompat.com", true, false, true, 45, &kPinset_mozilla_services },
    { "webfilings-eu-mirror.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "webfilings-eu.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "webfilings-mirror-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "webfilings.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "webkit.org", true, false, false, -1, &kPinset_apple },
-+  { "webmproject.org", true, false, false, -1, &kPinset_google_root_pems },
-+  { "webpkgcache.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "webrtc.org", true, false, false, -1, &kPinset_google_root_pems },
-   { "wf-bigsky-master.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "wf-demo-eu.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "wf-demo-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -716,23 +2510,75 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "wf-training-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "wf-training-master.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
+@@ -718,11 +861,13 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "wf-trial-hrd.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "whatsapp.com", true, false, false, -1, &kPinset_facebook },
-+  { "whatsapp.net", true, false, false, -1, &kPinset_facebook },
-+  { "whispersystems.org", true, false, false, -1, &kPinset_signal },
-+  { "whitehouse.gov", true, false, false, -1, &kPinset_usgov },
-+  { "whs.mil", true, false, false, -1, &kPinset_usgov },
-+  { "widevine.cn", true, false, false, -1, &kPinset_google_root_pems },
-+  { "widevine.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "wikibooks.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikidata.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikifunctions.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikileaks.org", true, false, false, -1, &kPinset_wikileaks },
-+  { "wikimedia.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikimedia-dns.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikimediafoundation.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikinews.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikipedia.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikiquote.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikisource.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikiversity.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wikivoyage.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "wiktionary.org", true, false, false, -1, &kPinset_wikimedia },
-+  { "windows.com", true, false, false, -1, &kPinset_microsoft },
-+  { "windows.net", true, false, false, -1, &kPinset_microsoft },
-+  { "windows.us", true, false, false, -1, &kPinset_microsoft },
-+  { "windows7.com", true, false, false, -1, &kPinset_microsoft },
-+  { "windows8.com", true, false, false, -1, &kPinset_microsoft },
-+  { "windowsupdate.com", true, false, false, -1, &kPinset_microsoft },
-+  { "windscribe.com", true, false, false, -1, &kPinset_windscribe },
-+  { "wing.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "wing.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "wise.com", true, false, false, -1, &kPinset_wise },
    { "withgoogle.com", true, false, false, -1, &kPinset_google_root_pems },
    { "withyoutube.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "womenshealth.gov", true, false, false, -1, &kPinset_usgov },
-+  { "workinxr.dev", true, false, false, -1, &kPinset_google_root_pems },
-+  { "wmfusercontent.org", true, false, false, -1, &kPinset_wikimedia },
++  { "www.celenity.dev", true, false, false, -1, &kPinset_celenity },
    { "www.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "www.g.co", false, false, false, -1, &kPinset_google_root_pems },
    { "www.gmail.com", false, false, false, -1, &kPinset_google_root_pems },
    { "www.googlegroups.com", true, false, false, -1, &kPinset_google_root_pems },
    { "www.googlemail.com", false, false, false, -1, &kPinset_google_root_pems },
++  { "www.ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
    { "www.messenger.com", true, false, false, -1, &kPinset_facebook },
-+  { "x.ai", true, false, false, -1, &kPinset_twitter },
-+  { "x.com", true, false, false, -1, &kPinset_twitter },
-+  { "xadsacademy.com", true, false, false, -1, &kPinset_twitter },
-+  { "xandr.com", true, false, false, -1, &kPinset_microsoft },
-+  { "xbox.com", true, false, false, -1, &kPinset_microsoft },
-+  { "xboxlive.com", true, false, false, -1, &kPinset_microsoft },
-+  { "xboxservices.com", true, false, false, -1, &kPinset_microsoft },
    { "xbrlsuccess.appspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "xn--7xa.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "xn--betalingshjlpen-7lb.dk", true, false, false, -1, &kPinset_mastercard },
-+  { "xn--betalningshjlpen-6nb.se", true, false, false, -1, &kPinset_mastercard },
-+  { "xn--ngstr-lra8j.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "xoom.com", true, false, false, -1, &kPinset_paypal },
-+  { "xplr.co", true, false, false, -1, &kPinset_google_root_pems },
-   { "youtu.be", true, false, false, -1, &kPinset_google_root_pems },
-   { "youtube-nocookie.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "youtubeeducation.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "youtubekids.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "yt.be", true, false, false, -1, &kPinset_google_root_pems },
+@@ -732,7 +877,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "zdns.google", true, false, false, -1, &kPinset_google_root_pems },
-+  { "zynamics.com", true, false, false, -1, &kPinset_google_root_pems },
-+  { "zettle.com", true, false, false, -1, &kPinset_paypal },
  };
  
 -// Pinning Preload List Length = 401;
-+// Pinning Preload List Length = 1370;
++// Pinning Preload List Length = 495;
  
  static const int32_t kUnknownId = -1;
  
@@ -2221,6 +434,3 @@ index 94989ed214..4c972daa1d 100644
      // Test Pilot
      // superseded by catchall for firefox.com, but leaving for tracking
      { "name": "testpilot.firefox.com", "include_subdomains": false,
--- 
-2.49.0
-

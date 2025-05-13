@@ -179,6 +179,7 @@ clone_repo "https://github.com/mozilla/application-services" "$APPSERVICESDIR" "
 
 # Download Firefox Source
 download_and_extract "gecko" "https://archive.mozilla.org/pub/firefox/${FIREFOX_RELEASE_PATH}/source/firefox-${FIREFOX_TAG}.source.tar.xz"
+#download_and_extract "gecko" "https://github.com/mozilla-firefox/firefox/archive/refs/tags/${FIREFOX_TAG_NAME}.tar.gz"
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."

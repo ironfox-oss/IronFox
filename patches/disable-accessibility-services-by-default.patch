@@ -82,7 +82,7 @@ index 9a9487a930..7358b9ccd7 100644
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
-index 1122dc0b0f..fa3ed491b0 100644
+index 1122dc0b0f..456f387812 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
 @@ -23,6 +23,20 @@ class AccessibilityFragment : PreferenceFragmentCompat() {
@@ -93,12 +93,12 @@ index 1122dc0b0f..fa3ed491b0 100644
 +            R.string.pref_key_accessibility_enabled,
 +        )
 +
-+        accessibilityEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, shouldEnable ->
++        accessibilityEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, accessibilityEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
 +
-+            settings.accessibilityEnabled = shouldEnable
-+            components.core.engine.settings.accessibilityEnabled = shouldEnable
++            settings.accessibilityEnabled = accessibilityEnabled
++            components.core.engine.settings.accessibilityEnabled = accessibilityEnabled
 +
 +            true
 +        }
