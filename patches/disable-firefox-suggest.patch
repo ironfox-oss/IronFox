@@ -1,16 +1,3 @@
-From c131c0bd4599773059da50d601690d5cd8040083 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 10:48:56 +0530
-Subject: [PATCH] fix(patches): update 'disable-firefox-suggest.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../fenix/settings/SecretSettingsFragment.kt  | 11 +++---
- .../java/org/mozilla/fenix/utils/Settings.kt  | 37 ++++---------------
- .../res/xml/search_settings_preferences.xml   | 14 ++++---
- 3 files changed, 22 insertions(+), 40 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 index aafe4dbe47..828ad9a5dd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
@@ -48,10 +35,10 @@ index aafe4dbe47..828ad9a5dd 100644
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
                      val newBooleanValue = newValue as? Boolean ?: return false
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..102ad70fe7 100644
+index 86d2ecf1dc..4b56e9d33f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1169,10 +1169,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1170,10 +1170,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user have enabled trending search in search suggestions.
       */
      @VisibleForTesting
@@ -63,7 +50,7 @@ index 8e271198b0..102ad70fe7 100644
  
      /**
       * Indicates if the user have enabled recent search in the search suggestions setting preference.
-@@ -1774,11 +1771,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1775,11 +1772,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Merino content recommendations should be shown.
       */
@@ -76,19 +63,20 @@ index 8e271198b0..102ad70fe7 100644
  
      /**
       *  Whether or not to display the Pocket sponsored stories parameter secret settings.
-@@ -2047,10 +2040,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2048,11 +2041,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Trending Search Suggestions are enabled.
       */
--    var isTrendingSearchesVisible by booleanPreference(
+-    var isTrendingSearchesVisible by lazyFeatureFlagPreference(
 -        key = appContext.getPreferenceKey(R.string.pref_key_enable_trending_searches),
--        default = FxNimbus.features.trendingSearches.value().enabled,
+-        default = { FxNimbus.features.trendingSearches.value().enabled },
+-        featureFlag = true,
 -    )
 +    var isTrendingSearchesVisible = false
  
      /**
       * Indicates if Recent Search Suggestions are enabled.
-@@ -2115,17 +2105,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2118,17 +2107,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Firefox Suggest is enabled.
       */
@@ -108,7 +96,7 @@ index 8e271198b0..102ad70fe7 100644
  
      /**
       * Indicates first time engaging with signup
-@@ -2139,22 +2124,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2142,22 +2126,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
       * The default value is computed lazily, and based on whether Firefox Suggest is enabled.
       */
@@ -176,6 +164,3 @@ index f7ca109331..0c88b25fb5 100644
      </PreferenceCategory>
  
      <PreferenceCategory
--- 
-2.49.0
-

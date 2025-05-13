@@ -1,25 +1,3 @@
-From 295e7206cc4877886f2afdfc9b9f1f01062ce64c Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 10:54:00 +0530
-Subject: [PATCH] fix(patches): update 'disable-nimbus.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../mozilla/fenix/browser/BrowserFragment.kt  |  8 ----
- .../components/menu/MenuDialogFragment.kt     |  4 +-
- .../components/toolbar/DefaultToolbarMenu.kt  | 10 +----
- .../fenix/onboarding/FenixOnboarding.kt       |  1 -
- .../fenix/settings/SecretSettingsFragment.kt  |  4 +-
- .../fenix/settings/SettingsFragment.kt        | 12 ++----
- .../TranslationSettingsFragment.kt            |  7 ++-
- .../TranslationsDialogFragment.kt             |  5 +--
- .../java/org/mozilla/fenix/utils/Settings.kt  | 43 +++++++------------
- .../app/src/main/res/xml/preferences.xml      |  5 ---
- .../components/nimbus/ExperimentAPI.sys.mjs   |  2 +-
- .../RemoteSettingsExperimentLoader.sys.mjs    | 10 ++---
- 12 files changed, 34 insertions(+), 77 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 index 71624f614a..793f0a76e0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
@@ -245,7 +223,7 @@ index e8fd12e0cc..fce9fc3bdf 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..0c4878ff9c 100644
+index 86d2ecf1dc..c6572f40e0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -189,10 +189,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -286,7 +264,7 @@ index 8e271198b0..0c4878ff9c 100644
      )
  
      var openLinksInAPrivateTab by booleanPreference(
-@@ -540,10 +535,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -541,10 +536,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -298,7 +276,7 @@ index 8e271198b0..0c4878ff9c 100644
  
      var isFirstNimbusRun: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-@@ -1180,7 +1172,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1181,7 +1173,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      @VisibleForTesting
      internal var recentSearchSuggestionsEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_recent_search_suggestions),
@@ -307,7 +285,7 @@ index 8e271198b0..0c4878ff9c 100644
      )
  
      /**
-@@ -1666,10 +1658,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1667,10 +1659,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          get() =
              FxNimbus.features.homescreen.value().sectionsEnabled
  
@@ -320,7 +298,7 @@ index 8e271198b0..0c4878ff9c 100644
      )
  
      /**
-@@ -1684,28 +1675,25 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1685,28 +1676,25 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if home onboarding dialog should be shown.
       */
@@ -355,7 +333,7 @@ index 8e271198b0..0c4878ff9c 100644
      )
  
      var signedInFxaAccount by booleanPreference(
-@@ -1856,7 +1844,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1857,7 +1845,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          isLauncherIntent: Boolean,
      ): Boolean {
          return if (featureEnabled && !hasUserBeenOnboarded && isLauncherIntent) {
@@ -363,16 +341,20 @@ index 8e271198b0..0c4878ff9c 100644
              true
          } else {
              false
-@@ -2057,7 +2044,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2057,10 +2044,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if Recent Search Suggestions are enabled.
       */
-     var isRecentSearchesVisible by booleanPreference(
+-    var isRecentSearchesVisible by lazyFeatureFlagPreference(
++    var isRecentSearchesVisible by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_recent_searches),
--        default = FxNimbus.features.recentSearches.value().enabled,
+-        default = { FxNimbus.features.recentSearches.value().enabled },
+-        featureFlag = true,
 +        default = true,
      )
  
      /**
-@@ -2168,8 +2155,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2171,8 +2157,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the feature to close synced tabs is enabled.
       */
@@ -382,7 +364,7 @@ index 8e271198b0..0c4878ff9c 100644
  
      /**
       * Returns the height of the bottom toolbar.
-@@ -2369,10 +2355,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2372,10 +2357,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not we should use the new bookmarks UI.
       */
