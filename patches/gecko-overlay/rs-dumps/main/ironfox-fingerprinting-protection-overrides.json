@@ -1047,6 +1047,10 @@
     },
     {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "rezka-ua.in"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
       "firstPartyDomain": "riverside.fm"
     },
     {
