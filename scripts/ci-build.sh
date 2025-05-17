@@ -65,7 +65,7 @@ fi
 
 # Set the build date to the date of commmit to ensure that the
 # MOZ_BUILDID is consistent across CI build jobs
-export MOZ_BUILD_DATE="$(date -d "$CI_COMMIT_TIMESTAMP" "+%Y%m%d%H%M%S")"
+export MOZ_BUILD_DATE="$(date -d "$CI_PIPELINE_CREATED_AT" "+%Y%m%d%H%M%S")"
 
 # Build
 bash -x scripts/build.sh "$BUILD_TYPE"
