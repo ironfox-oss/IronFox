@@ -197,28 +197,28 @@ rm app/src/main/assets/searchplugins/youtube.xml
 
 # Set up target parameters
 case "$1" in
-"arm")
+arm)
     # APK for armeabi-v7a
     abi='"armeabi-v7a"'
     target=arm-linux-androideabi
     llvmtarget="ARM"
     rusttarget=arm
     ;;
-"x86_64")
+x86_64)
     # APK for x86_64
     abi='"x86_64"'
     target=x86_64-linux-android
     llvmtarget="X86_64"
     rusttarget=x86_64
     ;;
-"arm64")
+arm64)
     # APK for arm64-v8a
     abi='"arm64-v8a"'
     target=aarch64-linux-android
     llvmtarget="AArch64"
     rusttarget=arm64
     ;;
-"bundle")
+bundle)
     # AAB for both armeabi-v7a and arm64-v8a
     abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
     target=''
