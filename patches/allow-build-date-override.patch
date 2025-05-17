@@ -1,18 +1,18 @@
-From 90fe3e5042cfd667d057ee32b7ca1906302c85cd Mon Sep 17 00:00:00 2001
+From 7a7b1a0060d89ddf1f705b0e179de6bc30b9197f Mon Sep 17 00:00:00 2001
 From: Akash Yadav <itsaky01@gmail.com>
-Date: Sun, 18 May 2025 01:18:25 +0530
+Date: Sun, 18 May 2025 02:17:20 +0530
 Subject: [PATCH] fix: allow overriding build date using system env
 
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
- .../plugins/config/src/main/java/ConfigPlugin.kt           | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../plugins/config/src/main/java/ConfigPlugin.kt          | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
-index 4e86c3c8e3..aab8a4c801 100644
+index 4e86c3c8e3..252c605887 100644
 --- a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
 +++ b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
-@@ -71,7 +71,12 @@ object Config {
+@@ -71,7 +71,13 @@ object Config {
      private val fennecBaseVersionCode by lazy {
          val format = SimpleDateFormat("yyyyMMddHHmmss", Locale.US)
          val cutoff = format.parse("20141228000000")
@@ -21,6 +21,7 @@ index 4e86c3c8e3..aab8a4c801 100644
 +
 +        val buildDate = System.getenv("IF_BUILD_DATE")
 +        if (!buildDate.isNullOrBlank()) {
++            println("[IronFox] Overriding build date to: '$buildDate'")
 +            build = Date.from(java.time.Instant.parse(buildDate))
 +        }
  
