@@ -9,20 +9,20 @@ set -o xtrace
 
 source "$(realpath $(dirname "$0"))/versions.sh"
 
-case "${BUILD_VARIANT+x}" in
-"arm")
+case "${BUILD_VARIANT}" in
+arm)
     BUILD_TYPE='apk'
     BUILD_ABI='armeabi-v7a'
     ;;
-"x86_64")
+x86_64)
     BUILD_TYPE='apk'
     BUILD_ABI='x86_64'
     ;;
-"arm64")
+arm64)
     BUILD_TYPE='apk'
     BUILD_ABI='arm64-v8a'
     ;;
-"bundle")
+bundle)
     BUILD_TYPE='bundle'
     ;;
 *)
