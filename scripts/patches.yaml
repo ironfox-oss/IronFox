@@ -71,6 +71,13 @@ patches:
     effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
     category: "Build System"
 
+  - file: "allow-build-date-override.patch"
+    name: "Allow overriding the build date"
+    description: "Allows devs to override the build date."
+    reason: "To ensure consistent build dates for all variants of IronFox."
+    effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
+    category: "Build System"
+
   # Dependency
   - file: "gecko-liberate.patch"
     name: "Remove Proprietary Libraries (Gecko)"
