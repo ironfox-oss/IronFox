@@ -97,10 +97,10 @@ rebase_patch() {
 
     { git checkout release || git reset --hard && git checkout release; } &&
         { git checkout -b "$name_slug" || git checkout "$name_slug" && git reset --hard; } &&
-        git reset --hard "$FIREFOX_TAG_NAME" &&
+        git reset --hard "$FIREFOX_RELEASE_TAG" &&
         git apply --3way "$rootdir/patches/$name" &&
         git add . &&
-        git commit --signoff -m "fix(patches): update '$name' for '$FIREFOX_TAG_NAME'" &&
+        git commit --signoff -m "fix(patches): update '$name' for '$FIREFOX_RELEASE_TAG'" &&
         git rebase release &&
         git format-patch HEAD^1 --output="$rootdir/patches/$name" &&
         git checkout release &&

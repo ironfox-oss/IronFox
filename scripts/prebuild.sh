@@ -72,8 +72,8 @@ JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '
     exit 1
 }
 
-if [[ -z "$FIREFOX_TAG" ]]; then
-    echo "\$FIREFOX_TAG is not set! Aborting..."]
+if [[ -z "$FIREFOX_VERSION" ]]; then
+    echo "\$FIREFOX_VERSION is not set! Aborting..."]
     exit 1
 fi
 
@@ -129,7 +129,7 @@ sed -i \
     -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
-    -e "s/Config.releaseVersionName(project)/'${FIREFOX_TAG}'/" \
+    -e "s/Config.releaseVersionName(project)/'${FIREFOX_VERSION}'/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
@@ -329,7 +329,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e "/android-components = /s/135\.0\.1/${FIREFOX_TAG}/" gradle/libs.versions.toml
+sed -i -e "/android-components = /s/135\.0\.1/${FIREFOX_VERSION}/" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
