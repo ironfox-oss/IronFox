@@ -283,11 +283,22 @@ Next, you need to patch the files with:
 *This must be run once after getting your sources.*
 
 ```sh
-./scripts/prebuild.sh <version-name> <version-code>
+./scripts/prebuild.sh <build-variant>
 ```
 
-Here `<version-name>` is the display name of the version (e.g. `v133.0.3`) and
-`<version-code>` is the numeric identifier of the version you want to build. We follow version code convention similar to Mull. See [version code convention](#version-code-convention).
+Where `<build-variant>` specifies the variant to build, and is **one** of the following:
+
+- `arm` - 32-bit ARM (`armeabi-v7a`)
+- `arm64` - 64-bit ARM (`arm64-v8a`)
+- `x86_64` - 64-bit x86
+- `bundle` - Android App Bundle (AAB) with all supported ABIs.
+  
+> [!IMPORTANT]
+>  If you want to build the `bundle` variant locally, you need to build the ABI-specific
+>  variants first, get the generated AAR file for GeckoView and then configure
+>  `MOZ_ANDROID_FAT_AAR*` environment variables with the path to the generate AAR files.
+>
+>  See [task kinds](https://firefox-source-docs.mozilla.org/taskcluster/kindshtml#build-fat-aar) and [ci-build.sh](./scripts/ci-build.sh) for more details.
 
 ### Build
 
@@ -296,40 +307,6 @@ Finally, you can start the build process with:
 ```sh
 ./scripts/build.sh apk
 ```
-
-### Version code convention
-
-Version codes are prepended with `3`, followed by the actual version code, the CPU ABI
-identifier and the revision number:
-
-```sh
-3<actual-version><abi-identifier><revision>
-```
-
-CPU ABI identifier is one of the following:
-
-| Identifier | CPU ABI                     |
-| ---------- | --------------------------- |
-| 0          | `armeabi-v7a`               |
-| 1          | `x86_64`                    |
-| 2          | `arm64-v8a`                 |
-| 3          | AAB with all supported ABIs |
-
-Revision numbers start from 0 after each release and are incremented by 1 thereafter.
-
-<details>
-<summary>Example</summary>
-
-```sh
-Version code : 31330320
-
-3       - version code prefix
-13303   - version code for v133.0.3
-2       - arm64-v8a
-0       - initial build
-```
-
-</details>
 
 ## Licenses
 
