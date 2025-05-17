@@ -40,8 +40,8 @@ function remove_glean_telemetry() {
     grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -r -e "s|${telemetry_url}|localhost:70000|g"
 }
 
-if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Usage: $0 versionName versionCode" >&1
+if [ -z "$1" ]; then
+    echo "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
 
@@ -129,7 +129,7 @@ sed -i \
     -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
-    -e "s/Config.releaseVersionName(project)/'$1'/" \
+    -e "s/Config.releaseVersionName(project)/'${FIREFOX_TAG}'/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
@@ -196,29 +196,29 @@ rm app/src/main/assets/searchplugins/reddit.xml
 rm app/src/main/assets/searchplugins/youtube.xml
 
 # Set up target parameters
-case $(echo "$2" | cut -c 7) in
-0)
+case "$1" in
+"arm")
     # APK for armeabi-v7a
     abi='"armeabi-v7a"'
     target=arm-linux-androideabi
     llvmtarget="ARM"
     rusttarget=arm
     ;;
-1)
+"x86_64")
     # APK for x86_64
     abi='"x86_64"'
     target=x86_64-linux-android
     llvmtarget="X86_64"
     rusttarget=x86_64
     ;;
-2)
+"arm64")
     # APK for arm64-v8a
     abi='"arm64-v8a"'
     target=aarch64-linux-android
     llvmtarget="AArch64"
     rusttarget=arm64
     ;;
-3)
+"bundle")
     # AAB for both armeabi-v7a and arm64-v8a
     abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
     target=''
@@ -226,7 +226,7 @@ case $(echo "$2" | cut -c 7) in
     rusttarget='arm64,arm,x86_64'
     ;;
 *)
-    echo "Unknown target code in $2." >&2
+    echo "Unknown build variant: '$1'" >&2
     exit 1
     ;;
 esac
