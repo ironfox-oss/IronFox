@@ -7,24 +7,26 @@ set -eu
 set -o pipefail
 set -o xtrace
 
-case $(echo "$VERSION_CODE" | cut -c 7) in
-0)
+source "$(realpath $(dirname "$0"))/versions.sh"
+
+case "${BUILD_VARIANT}" in
+arm)
     BUILD_TYPE='apk'
     BUILD_ABI='armeabi-v7a'
     ;;
-1)
+x86_64)
     BUILD_TYPE='apk'
     BUILD_ABI='x86_64'
     ;;
-2)
+arm64)
     BUILD_TYPE='apk'
     BUILD_ABI='arm64-v8a'
     ;;
-3)
+bundle)
     BUILD_TYPE='bundle'
     ;;
 *)
-    echo "Unknown target code in $VERSION_CODE." >&2
+    echo "Unknown build variant: '$BUILD_VARIANT'." >&2
     exit 1
     ;;
 esac
@@ -51,7 +53,7 @@ bash -x ./scripts/get_sources.sh
 source "scripts/env_local.sh"
 
 # Prepare sources
-bash -x ./scripts/prebuild.sh "$VERSION_NAME" "$VERSION_CODE"
+bash -x ./scripts/prebuild.sh "$BUILD_VARIANT"
 
 # If we're building an APK set, the following environment variables are required
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
@@ -63,7 +65,8 @@ fi
 
 # Set the build date to the date of commmit to ensure that the
 # MOZ_BUILDID is consistent across CI build jobs
-export MOZ_BUILD_DATE="$(date -d "$CI_COMMIT_TIMESTAMP" "+%Y%m%d%H%M%S")"
+export MOZ_BUILD_DATE="$(date -d "$CI_PIPELINE_CREATED_AT" "+%Y%m%d%H%M%S")"
+export IF_BUILD_DATE="$CI_PIPELINE_CREATED_AT"
 
 # Build
 bash -x scripts/build.sh "$BUILD_TYPE"
@@ -75,7 +78,7 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
 
     # Sign APK
     APK_IN="$(ls "$fenix"/app/build/outputs/apk/fenix/release/*.apk)"
-    APK_OUT="$APK_ARTIFACTS/IronFox-v${VERSION_NAME}-${BUILD_ABI}.apk"
+    APK_OUT="$APK_ARTIFACTS/IronFox-v${FIREFOX_VERSION}-${BUILD_ABI}.apk"
     "$ANDROID_HOME/build-tools/35.0.0/apksigner" sign \
       --ks="$KEYSTORE" \
       --ks-pass="pass:$KEYSTORE_PASS" \
@@ -88,7 +91,7 @@ fi
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
     # Build signed APK set
     AAB_IN="$(ls "$fenix"/app/build/outputs/bundle/fenixRelease/*.aab)"
-    APKS_OUT="$APKS_ARTIFACTS/IronFox-v${VERSION_NAME}.apks"
+    APKS_OUT="$APKS_ARTIFACTS/IronFox-v${FIREFOX_VERSION}.apks"
     "$builddir"/bundletool build-apks \
         --bundle="$AAB_IN" \
         --output="$APKS_OUT" \

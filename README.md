@@ -20,7 +20,7 @@
 
 </div>
 
-------------
+---
 
 IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull Browser](https://divestos.org/pages/our_apps#mull), based on [Mozilla Firefox](https://www.mozilla.org/firefox/). **Our goal is to continue the legacy of Mull by providing a free and open source, privacy and security-oriented web browser for daily use.**
 
@@ -28,24 +28,24 @@ IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull B
 
 ### Want to join the IronFox Community?
 
-We'd love to see you over on [Matrix](https://matrix.to/#/#ironfox:unredacted.org) *(Recommended)* and [Discord](https://discord.gg/zbdzfRVyVh)!
+We'd love to see you over on [Matrix](https://matrix.to/#/#ironfox:unredacted.org) _(Recommended)_ and [Discord](https://discord.gg/zbdzfRVyVh)!
 
 ## App Installation
 
 Currently, you can install IronFox from [Accrescent](https://accrescent.app/app/org.ironfoxoss.ironfox), from your preferred F-Droid client via our [F-Droid repository](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904), with [Obtainium](obtainium://app/%7B%22id%22%3A%22org.ironfoxoss.ironfox%22%2C%22url%22%3A%22https%3A%2F%2Fgitlab.com%2Fironfox-oss%2Fironfox%22%2C%22author%22%3A%22ironfox-oss%22%2C%22name%22%3A%22ironfox%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22IronFox%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22A%20privacy%20and%20security-oriented%20Firefox-based%20browser%20for%20Android.%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%7D%22%2C%22overrideSource%22%3A%22GitLab%22%7D), or directly from our [GitLab releases](https://gitlab.com/ironfox-oss/IronFox/-/releases).
 
-**The most secure way to install IronFox is from [Accrescent](https://accrescent.app/) - and this is the installation method we recommend most users use.** Accrescent is a new and upcoming, free and open source Android app store - with a focus on privacy & security *(See [here](https://accrescent.app/features) for a list of some of Accrescent's key features)*. It's currently used by other privacy and security-focused projects, such as [Molly](https://molly.im/), and recommended for use by [GrapheneOS](https://grapheneos.org/), among other privacy and security-focused projects and researchers.
+**The most secure way to install IronFox is from [Accrescent](https://accrescent.app/) - and this is the installation method we recommend most users use.** Accrescent is a new and upcoming, free and open source Android app store - with a focus on privacy & security _(See [here](https://accrescent.app/features) for a list of some of Accrescent's key features)_. It's currently used by other privacy and security-focused projects, such as [Molly](https://molly.im/), and recommended for use by [GrapheneOS](https://grapheneos.org/), among other privacy and security-focused projects and researchers.
 
 Regardless of your installation method, we recommend verifying Ironfox's package ID and the checksum of its signing certificate. You can simplify this process using [AppVerifier](https://github.com/soupslurpr/AppVerifier), which also has easy integration with Obtainium. **See [App Verification](#app-verification) below for IronFox's Package ID & SHA-256 of the signing certificate.**
 
 If you are using F-Droid, we recommend [F-Droid Basic](https://f-droid.org/packages/org.fdroid.basic/) as your client of choice. Due to its reduced feature set, F-Droid Basic has less attack surface; meaning it is generally more secure than the standard client.
 
-It should be noted that our F-Droid repo is hosted using Cloudflare's R2 Storage *(under the EU jurisdiction)*. While not perfect, Cloudflare does have a [strong privacy track record](https://discuss.privacyguides.net/t/quad9-or-cloudflare/15744/9), and due to their high reliabity and performance, we feel this is the best option for most users.
+It should be noted that our F-Droid repo is hosted using Cloudflare's R2 Storage _(under the EU jurisdiction)_. While not perfect, Cloudflare does have a [strong privacy track record](https://discuss.privacyguides.net/t/quad9-or-cloudflare/15744/9), and due to their high reliabity and performance, we feel this is the best option for most users.
 
 That being said, if you'd rather avoid Cloudflare, we also host a mirror of the F-Droid repo on [Codeberg](https://codeberg.org/ironfox-oss/fdroid), though it comes at the cost of lower reliability & performance. You can add the following link to your F-Droid client:
 
 ```sh
-https://codeberg.org/ironfox-oss/fdroid/raw/branch/main/fdroid/repo 
+https://codeberg.org/ironfox-oss/fdroid/raw/branch/main/fdroid/repo
 ```
 
 Once added, within the repository's settings on F-Droid, you can disable the other mirrors & leave Codeberg as the only selected option.
@@ -73,35 +73,35 @@ Please see the list of known issues and workarounds before opening an issue!
 <details>
 <summary>Issues inherited from Mull that still apply to IronFox - (contents adapted from <a href="https://divestos.org/index.php?page=broken#mull)">the DivestOS website</a>) </summary>
 
-* **GrapheneOS** users may encounter a crash with the error `IronFox tried to perform DCL via memory`. Unfortunately, Firefox is incompatible with this hardening feature, so it's not just limited to IronFox. You can fix this issue by navigating to IronFox's app info, scrolling down to the `Exploit protection` section, and setting `Dynamic code loading via memory` to `Allowed`. You can then navigate to `Dynamic code loading via storage`, and set that to `Restricted` - as this hardening feature **is** compatible with Firefox.
-* uBlock Origin is the only recommended and supported content blocker (included by default).
-* ~~Some fonts, particularly ones used for displaying Korean text, [may not display correctly](https://bugzilla.mozilla.org/show_bug.cgi?id=1881993) due the font restrictions by resist fingerprinting. Please do not disable RFP. This should be hopefully fixed in future versions such as v126.~~
-* Dark Reader is known to be incompatible with IronFox's changes and will cause significant breakage/slowdowns.
-* Dark mode for websites is disabled due to resist fingerprinting. Please do not disable RFP.
-* ~~Refresh rate is capped to 60hz due to resist fingerprinting. Please do not disable RFP.~~
-* Multitouch gestures will not work due to resist fingerprinting. Please do not disable RFP.
-* If audio/video content fails to play in private tabs navigate to `about:config` and change `browser.privatebrowsing.forceMediaMemoryCache` to false, this is however a privacy risk.
-* IronFox disables the JavaScript JIT to increase security at the cost of slowing down webapps, complex websites, and the PDF viewer. Navigate to `about:config` and change `javascript.options.ion` and `javascript.options.baselinejit` to `true` to restore their performance, though this is not recommended.
-* IronFox has strict certificate revocation checks. The CA revocation servers are occasionally down/blocked/inaccessible, so you may see a "Secure Connection Failed" error from time to time. Navigate to `about:config` and change `security.OCSP.require` to `false`, this is however a security and privacy risk.
-* IronFox requires safe renegotiation for connections. Certain websites do not support this and will result in a "Secure Connection Failed" error. **Please report these errors to the impacted websites.** You can navigate to `about:config` and set `security.ssl.require_safe_negotiation` to `false` to disable the requirement for safe renegotiations, this is however a security and privacy risk.
-* IronFox has strict certificate pinning. If you are using a proxy or VPN that does HTTPS manipulation, you may encounter a "Secure Connection Failed" error. Navigate to `about:config` and change `security.cert_pinning.enforcement_level` from `2` to `1` to disable strict certificate pinning; this is however a security and privacy risk.
-* IronFox does not trust user-added CA certificates, you can optionally enable them at your own extreme risk: Settings > About IronFox > Tap IronFox logo until debug settings are enabled > back a menu > Secret Settings > Use third party CA certificates > Enabled, this is however a security and privacy risk.
-* IronFox has stripped referrers. This often breaks loading of images on websites with hotlink protection. Navigate to `about:config` and change `network.http.referer.XOriginPolicy` from `2` to `1` *(or `0` if you're still having issues)*, this is however a privacy risk.
-* IronFox has visited link highlighting disabled by default. Navigate to `about:config` and change `layout.css.visited_links_enabled` to `true` if needed, this is however a privacy risk.
-* IronFox has WebAssembly disabled by default. This is often used for web apps. Navigate to `about:config` and change `javascript.options.wasm` to `true` if needed, this is however a security risk.
-* IronFox has WebGL disabled by default. This is often used for games and maps. Navigate to `about:config` and change `webgl.disabled` to `false` if needed, this is however a privacy risk.
-* IronFox forcibly excludes private IP addresses from being leaked over WebRTC. This may cause issues with audio/video calls. Navigate to `about:config` and change `media.peerconnection.ice.no_host` to `false` if needed, this is however a privacy risk. If you still have issues, you should also set `media.peerconnection.ice.default_address_only` to `false`.
-* If you want to access Onions using IronFox and Orbot: navigate to `about:config` and change `network.dns.blockDotOnion` to `false`. Tor Browser for Android however should be preferred.
-* If you have issues playing some videos: navigate to `about:config` and change `media.android-media-codec.preferred` from `true` to `false`. This may reduce battery life.
-* When adding a custom search engine that contains a \`:\` you must replace it with \`%3A\` to workaround an upstream substitution bug.
-* Upstream issues: [background timers](https://github.com/mozilla-mobile/fenix/issues/26220), [bookmark import/export](https://bugzilla.mozilla.org/show_bug.cgi?id=1806482), [disable images](https://bugzilla.mozilla.org/show_bug.cgi?id=1807116), [download location](https://bugzilla.mozilla.org/show_bug.cgi?id=1812815), [duplicate tab](https://bugzilla.mozilla.org/show_bug.cgi?id=1812931), [FIDO](https://gitlab.com/relan/fennecbuild/-/issues/34), [Fission](https://bugzilla.mozilla.org/show_bug.cgi?id=1610822), [isolatedProcess](https://bugzilla.mozilla.org/show_bug.cgi?id=1565196), [language issues](https://bugzilla.mozilla.org/show_bug.cgi?id=1765375), [open .html file](https://bugzilla.mozilla.org/show_bug.cgi?id=1809954), [RFP canvas exception](https://bugzilla.mozilla.org/show_bug.cgi?id=1801733), [Sync broken by RFP](https://bugzilla.mozilla.org/show_bug.cgi?id=1810741), [touch gestures](https://bugzilla.mozilla.org/show_bug.cgi?id=1800567)
+- **GrapheneOS** users may encounter a crash with the error `IronFox tried to perform DCL via memory`. Unfortunately, Firefox is incompatible with this hardening feature, so it's not just limited to IronFox. You can fix this issue by navigating to IronFox's app info, scrolling down to the `Exploit protection` section, and setting `Dynamic code loading via memory` to `Allowed`. You can then navigate to `Dynamic code loading via storage`, and set that to `Restricted` - as this hardening feature **is** compatible with Firefox.
+- uBlock Origin is the only recommended and supported content blocker (included by default).
+- ~~Some fonts, particularly ones used for displaying Korean text, [may not display correctly](https://bugzilla.mozilla.org/show_bug.cgi?id=1881993) due the font restrictions by resist fingerprinting. Please do not disable RFP. This should be hopefully fixed in future versions such as v126.~~
+- Dark Reader is known to be incompatible with IronFox's changes and will cause significant breakage/slowdowns.
+- Dark mode for websites is disabled due to resist fingerprinting. Please do not disable RFP.
+- ~~Refresh rate is capped to 60hz due to resist fingerprinting. Please do not disable RFP.~~
+- Multitouch gestures will not work due to resist fingerprinting. Please do not disable RFP.
+- If audio/video content fails to play in private tabs navigate to `about:config` and change `browser.privatebrowsing.forceMediaMemoryCache` to false, this is however a privacy risk.
+- IronFox disables the JavaScript JIT to increase security at the cost of slowing down webapps, complex websites, and the PDF viewer. Navigate to `about:config` and change `javascript.options.ion` and `javascript.options.baselinejit` to `true` to restore their performance, though this is not recommended.
+- IronFox has strict certificate revocation checks. The CA revocation servers are occasionally down/blocked/inaccessible, so you may see a "Secure Connection Failed" error from time to time. Navigate to `about:config` and change `security.OCSP.require` to `false`, this is however a security and privacy risk.
+- IronFox requires safe renegotiation for connections. Certain websites do not support this and will result in a "Secure Connection Failed" error. **Please report these errors to the impacted websites.** You can navigate to `about:config` and set `security.ssl.require_safe_negotiation` to `false` to disable the requirement for safe renegotiations, this is however a security and privacy risk.
+- IronFox has strict certificate pinning. If you are using a proxy or VPN that does HTTPS manipulation, you may encounter a "Secure Connection Failed" error. Navigate to `about:config` and change `security.cert_pinning.enforcement_level` from `2` to `1` to disable strict certificate pinning; this is however a security and privacy risk.
+- IronFox does not trust user-added CA certificates, you can optionally enable them at your own extreme risk: Settings > About IronFox > Tap IronFox logo until debug settings are enabled > back a menu > Secret Settings > Use third party CA certificates > Enabled, this is however a security and privacy risk.
+- IronFox has stripped referrers. This often breaks loading of images on websites with hotlink protection. Navigate to `about:config` and change `network.http.referer.XOriginPolicy` from `2` to `1` _(or `0` if you're still having issues)_, this is however a privacy risk.
+- IronFox has visited link highlighting disabled by default. Navigate to `about:config` and change `layout.css.visited_links_enabled` to `true` if needed, this is however a privacy risk.
+- IronFox has WebAssembly disabled by default. This is often used for web apps. Navigate to `about:config` and change `javascript.options.wasm` to `true` if needed, this is however a security risk.
+- IronFox has WebGL disabled by default. This is often used for games and maps. Navigate to `about:config` and change `webgl.disabled` to `false` if needed, this is however a privacy risk.
+- IronFox forcibly excludes private IP addresses from being leaked over WebRTC. This may cause issues with audio/video calls. Navigate to `about:config` and change `media.peerconnection.ice.no_host` to `false` if needed, this is however a privacy risk. If you still have issues, you should also set `media.peerconnection.ice.default_address_only` to `false`.
+- If you want to access Onions using IronFox and Orbot: navigate to `about:config` and change `network.dns.blockDotOnion` to `false`. Tor Browser for Android however should be preferred.
+- If you have issues playing some videos: navigate to `about:config` and change `media.android-media-codec.preferred` from `true` to `false`. This may reduce battery life.
+- When adding a custom search engine that contains a \`:\` you must replace it with \`%3A\` to workaround an upstream substitution bug.
+- Upstream issues: [background timers](https://github.com/mozilla-mobile/fenix/issues/26220), [bookmark import/export](https://bugzilla.mozilla.org/show_bug.cgi?id=1806482), [disable images](https://bugzilla.mozilla.org/show_bug.cgi?id=1807116), [download location](https://bugzilla.mozilla.org/show_bug.cgi?id=1812815), [duplicate tab](https://bugzilla.mozilla.org/show_bug.cgi?id=1812931), [FIDO](https://gitlab.com/relan/fennecbuild/-/issues/34), [Fission](https://bugzilla.mozilla.org/show_bug.cgi?id=1610822), [isolatedProcess](https://bugzilla.mozilla.org/show_bug.cgi?id=1565196), [language issues](https://bugzilla.mozilla.org/show_bug.cgi?id=1765375), [open .html file](https://bugzilla.mozilla.org/show_bug.cgi?id=1809954), [RFP canvas exception](https://bugzilla.mozilla.org/show_bug.cgi?id=1801733), [Sync broken by RFP](https://bugzilla.mozilla.org/show_bug.cgi?id=1810741), [touch gestures](https://bugzilla.mozilla.org/show_bug.cgi?id=1800567)
 
 </details>
 
 <details>
 <summary>Issues originating in IronFox</summary>
 
-*None yet.* :)
+_None yet._ :)
 
 </details>
 
@@ -212,58 +212,58 @@ sudo dnf install -y temurin-8-jdk temurin-17-jdk
 
 Once the packages have been installed successfully, follow the instructions to set up the build environment:
 
-* Setup F-Droid's `gradle` script to be available in your `PATH`:
+- Setup F-Droid's `gradle` script to be available in your `PATH`:
 
-    ```sh
-    mkdir -p $HOME/bin
-    wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "$HOME/bin/gradle"
-    chmod +x "$HOME/bin/gradle"
+  ```sh
+  mkdir -p $HOME/bin
+  wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "$HOME/bin/gradle"
+  chmod +x "$HOME/bin/gradle"
 
-    export PATH=$HOME/bin:$PATH
-    ```
+  export PATH=$HOME/bin:$PATH
+  ```
 
-* Disable Gradle Daemons and configuration cache:
+- Disable Gradle Daemons and configuration cache:
 
-    ```sh
-    mkdir -p ~/.gradle
-    echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-    echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
-    ```
+  ```sh
+  mkdir -p ~/.gradle
+  echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
+  echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
+  ```
 
-* Create a new Python 3.9 virtual environment, then activate it:
+- Create a new Python 3.9 virtual environment, then activate it:
 
-    ```sh
-    python3.9 -m venv env
-    source env/bin/activate
-    ```
+  ```sh
+  python3.9 -m venv env
+  source env/bin/activate
+  ```
 
-* Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running:
+- Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running:
 
-    **Don't forget to replace `/path/to/jdk-17` below with the actual path of your JDK 17 installation!**
+  **Don't forget to replace `/path/to/jdk-17` below with the actual path of your JDK 17 installation!**
 
-    ```sh
-    export JAVA_HOME=/path/to/jdk-17
-    export PATH=$JAVA_HOME/bin:$PATH
-    ```
+  ```sh
+  export JAVA_HOME=/path/to/jdk-17
+  export PATH=$JAVA_HOME/bin:$PATH
+  ```
 
-    For instance, on **Fedora 42**, the default location of JDK 17 is `/usr/lib/jvm/temurin-17-jdk`:
+  For instance, on **Fedora 42**, the default location of JDK 17 is `/usr/lib/jvm/temurin-17-jdk`:
 
-    ```sh
-    export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
-    export PATH=$JAVA_HOME/bin:$PATH
-    ```
+  ```sh
+  export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
+  export PATH=$JAVA_HOME/bin:$PATH
+  ```
 
-* Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation (default location is `$HOME/android-sdk`). Otherwise, you can execute the following to install and set up the SDK:
+- Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation (default location is `$HOME/android-sdk`). Otherwise, you can execute the following to install and set up the SDK:
 
-    ```sh
-    source ./scripts/setup-android-sdk.sh
-    ```
+  ```sh
+  source ./scripts/setup-android-sdk.sh
+  ```
 
 ### Get & patch sources
 
 Next, you need to download the source files to build. The `scripts/get_sources.sh` file can be used to download/clone the source files.
 
-*This may take some time depending on your network speed...*
+_This may take some time depending on your network speed..._
 
 ```sh
 ./scripts/get_sources.sh
@@ -272,7 +272,7 @@ Next, you need to download the source files to build. The `scripts/get_sources.s
 If you need to fetch sources for a different version of Firefox than the one IronFox is currently based on, you'll have to modify the script directly.
 
 Once the source files are downloaded and extracted, you need to source the
-`scripts/env_local.sh` script *(generated by `get_sources.sh`)* to set up the required environment variables:
+`scripts/env_local.sh` script _(generated by `get_sources.sh`)_ to set up the required environment variables:
 
 ```sh
 source scripts/env_local.sh
@@ -280,14 +280,25 @@ source scripts/env_local.sh
 
 Next, you need to patch the files with:
 
-*This must be run once after getting your sources.*
+_This must be run once after getting your sources._
 
 ```sh
-./scripts/prebuild.sh <version-name> <version-code>
+./scripts/prebuild.sh <build-variant>
 ```
 
-Here `<version-name>` is the display name of the version (e.g. `v133.0.3`) and
-`<version-code>` is the numeric identifier of the version you want to build. We follow version code convention similar to Mull. See [version code convention](#version-code-convention).
+Where `<build-variant>` specifies the variant to build, and is **one** of the following:
+
+- `arm` - 32-bit ARM (`armeabi-v7a`)
+- `arm64` - 64-bit ARM (`arm64-v8a`)
+- `x86_64` - 64-bit x86
+- `bundle` - Android App Bundle (AAB) with all supported ABIs.
+
+> [!IMPORTANT]
+> If you want to build the `bundle` variant locally, you need to build the ABI-specific
+> variants first, get the generated AAR file for GeckoView and then configure
+> `MOZ_ANDROID_FAT_AAR*` environment variables with the path to the generate AAR files.
+>
+> See [task kinds](https://firefox-source-docs.mozilla.org/taskcluster/kindshtml#build-fat-aar) and [ci-build.sh](./scripts/ci-build.sh) for more details.
 
 ### Build
 
@@ -297,40 +308,6 @@ Finally, you can start the build process with:
 ./scripts/build.sh apk
 ```
 
-### Version code convention
-
-Version codes are prepended with `3`, followed by the actual version code, the CPU ABI
-identifier and the revision number:
-
-```sh
-3<actual-version><abi-identifier><revision>
-```
-
-CPU ABI identifier is one of the following:
-
-| Identifier | CPU ABI                     |
-| ---------- | --------------------------- |
-| 0          | `armeabi-v7a`               |
-| 1          | `x86_64`                    |
-| 2          | `arm64-v8a`                 |
-| 3          | AAB with all supported ABIs |
-
-Revision numbers start from 0 after each release and are incremented by 1 thereafter.
-
-<details>
-<summary>Example</summary>
-
-```sh
-Version code : 31330320
-
-3       - version code prefix
-13303   - version code for v133.0.3
-2       - arm64-v8a
-0       - initial build
-```
-
-</details>
-
 ## Licenses
 
 The scripts are licensed under the [GNU Affero General Public License, version 3 or later](COPYING).
@@ -339,7 +316,7 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
 
-`librewolf-rs-blocker.patch` is adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
+Parts of `branding.patch`, `librewolf-rs-blocker.patch`, and `ublock-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
 `tor-spoof-english.patch` is adapted from the [Tor Project](hhttps://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 

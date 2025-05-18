@@ -5,6 +5,8 @@
 
 set -eu
 
+source "$(realpath $(dirname "$0"))/versions.sh"
+
 git clone "https://oauth2:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$TARGET_REPO_PATH.git" target-repo
 cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 
@@ -12,7 +14,7 @@ cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 ./scripts/gen_patch_pages.py ../scripts/patches.yaml
 
 # Update version name
-sed -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${VERSION_NAME}\";/g" \
+sed -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${FIREFOX_VERSION}\";/g" \
     ./src/version.ts
 
 # Commit changes

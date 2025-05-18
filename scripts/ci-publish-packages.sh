@@ -5,6 +5,8 @@
 
 set -eu
 
+source "$(realpath $(dirname "$0"))/versions.sh"
+
 export GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
 
 upload_to_package_registry() {
@@ -14,7 +16,7 @@ upload_to_package_registry() {
     local file_name="$(basename "$file")"
     curl --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" \
         --upload-file "$file" \
-        "$GENERIC_PACKAGES_URL/${package_name}/${VERSION_NAME}/${file_name}"
+        "$GENERIC_PACKAGES_URL/${package_name}/${FIREFOX_VERSION}/${file_name}"
 }
 
 export ARTIFACTS=$CI_PROJECT_DIR/artifacts
@@ -39,7 +41,7 @@ upload_asset() {
 
     echo "$(sha256sum -b "$file" | cut -d ' ' -f 1)  ${file_name}" >> "$CHECKSUMS_FILE"
     upload_to_package_registry "$file" "$package_name"
-    assets+=("{\"name\": \"$file_name\",\"url\": \"$GENERIC_PACKAGES_URL/${package_name}/${VERSION_NAME}/${file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${file_name}\"}")
+    assets+=("{\"name\": \"$file_name\",\"url\": \"$GENERIC_PACKAGES_URL/${package_name}/${FIREFOX_VERSION}/${file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${file_name}\"}")
 }
 
 # Upload packages to package registry
@@ -54,7 +56,7 @@ for apks in "$APKS_ARTIFACTS"/*.apks; do
 done
 
 {
-    changelog_file="$CI_PROJECT_DIR/changelogs/${VERSION_NAME}.md"
+    changelog_file="$CI_PROJECT_DIR/changelogs/${FIREFOX_VERSION}.md"
     if [[ -f "$changelog_file" ]]; then
         cat "$changelog_file"
     fi
@@ -73,8 +75,8 @@ done
 
 {
     echo "---"
-    echo "name: IronFox v${VERSION_NAME}"
-    echo "tag-name: v${VERSION_NAME}"
+    echo "name: IronFox v${FIREFOX_VERSION}"
+    echo "tag-name: v${FIREFOX_VERSION}"
     echo "description: |"
     awk '{print "  " $0}' < "$RELEASE_NOTES_FILE"
     echo "assets-link:"

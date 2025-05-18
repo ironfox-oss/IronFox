@@ -1,17 +1,3 @@
-From e591eb42dc91a51379db99289652d35f6b6b45c7 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 10:30:02 +0530
-Subject: [PATCH] fix(patches): update 'branding.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- build/moz.configure/init.configure              |  4 ++--
- .../org/mozilla/fenix/settings/SupportUtils.kt  |  2 +-
- mobile/android/moz.configure                    |  2 +-
- toolkit/moz.configure                           | 17 +++++++++++++++++
- 4 files changed, 21 insertions(+), 4 deletions(-)
-
 diff --git a/build/moz.configure/init.configure b/build/moz.configure/init.configure
 index 9bf4bb29a4..958bed6d9b 100644
 --- a/build/moz.configure/init.configure
@@ -382,3 +368,16 @@ index 8e369db27c..b1e6090f14 100644
 +        android:fillColor="#ffffff"/>
 +  </group>
  </vector>
+diff --git a/toolkit/moz.configure b/toolkit/moz.configure
+index 09b3065c21..ca0c1b9087 100644
+--- a/toolkit/moz.configure
++++ b/toolkit/moz.configure
+@@ -28,7 +28,7 @@ project_flag(
+ 
+ project_flag(
+     env="MOZ_APP_UA_NAME",
+-    default="",
++    default="Firefox",
+     nargs=1,
+     help="Application name in the User Agent string",
+ )
