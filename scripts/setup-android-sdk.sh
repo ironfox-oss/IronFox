@@ -1,12 +1,7 @@
 #!/bin/bash
 
 SDK_REVISION=13114758
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    ANDROID_SDK_FILE=commandlinetools-mac-${SDK_REVISION}_latest.zip
-else
-    ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
-fi
+ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
@@ -48,16 +43,7 @@ export PATH
 
 $SDK_MANAGER 'build-tools;35.0.1' # for GeckoView
 $SDK_MANAGER 'ndk;26.2.11394342'  # for GleanAS
-
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "Downloading Android NDK..."
-    wget https://dl.google.com/android/repository/android-ndk-r28-darwin.zip
-    unzip -q android-ndk-r28-darwin.zip -d "$ANDROID_HOME/ndk"
-    mv "$ANDROID_HOME/ndk/android-ndk-r28" "$ANDROID_HOME/ndk/28.0.13004108"
-    rm -vf android-ndk-r28-darwin.zip
-else
-    $SDK_MANAGER 'ndk;28.0.13004108'  # for mozbuild; application-services
-fi
+$SDK_MANAGER 'ndk;28.0.13004108'  # for mozbuild; application-services
 
 export ANDROID_NDK="$ANDROID_HOME/ndk/28.0.13004108"
 [ -d "$ANDROID_NDK" ] || {
