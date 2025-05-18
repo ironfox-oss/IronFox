@@ -889,6 +889,10 @@
       "firstPartyDomain": "cloudflare.com"
     },
     {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "cvs.com"
+    },
+    {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "discord.com"
     },
