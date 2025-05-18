@@ -36,8 +36,14 @@ function remove_glean_telemetry() {
     local dir="$1"
     local telemetry_url="incoming.telemetry.mozilla.org"
 
-    # Set telemetry URL to an invalid localhost address
-    grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -r -e "s|${telemetry_url}|localhost:70000|g"
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # Set telemetry URL to an invalid localhost address
+        grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i '' -r -e "s|${telemetry_url}|localhost:70000|g"
+    else
+        # Set telemetry URL to an invalid localhost address
+        grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -r -e "s|${telemetry_url}|localhost:70000|g"
+    fi
 }
 
 if [ -z "$1" ]; then
@@ -154,15 +160,27 @@ else
 fi
 
 # Disable crash reporting
-sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
+else
+    sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
+fi
 
 # Disable MetricController
-sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/TELEMETRY/s/true/false/' app/build.gradle
+else
+    sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
+fi
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
-sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+else
+    sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+fi
 
 # Let it be IronFox
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -206,8 +224,13 @@ rm app/src/release/res/drawable/ic_launcher_foreground.xml
 rm app/src/release/res/mipmap-*/ic_launcher.webp
 rm app/src/release/res/values/colors.xml
 rm app/src/main/res/values-v24/styles.xml
-sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
-sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
+    sed -i '' -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
+else
+    sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
+    sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
+fi
 # shellcheck disable=SC2154
 find "$patches/fenix-overlay/branding" -type f | while read -r src; do
     dst=app/src/release/${src#"$patches/fenix-overlay/branding/"}
@@ -275,7 +298,11 @@ bundle)
     ;;
 esac
 
-sed -i -e "s/include \".*\"/include $abi/" app/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e "s/include \".*\"/include $abi/" app/build.gradle
+else
+    sed -i -e "s/include \".*\"/include $abi/" app/build.gradle
+fi
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
 # Enable the auto-publication workflow
@@ -373,10 +400,19 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e "/android-components = /s/135\.0\.1/${FIREFOX_VERSION}/" gradle/libs.versions.toml
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e "/android-components = /s/135\.0\.1/${FIREFOX_VERSION}/" gradle/libs.versions.toml
+else
+    sed -i -e "/android-components = /s/135\.0\.1/${FIREFOX_VERSION}/" gradle/libs.versions.toml
+fi
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
-sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
-sed -i -e '/content {/,/}/d' build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
+    sed -i '' -e '/content {/,/}/d' build.gradle
+else
+    sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
+    sed -i -e '/content {/,/}/d' build.gradle
+fi
 localize_maven
 # Fix stray
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -679,7 +715,11 @@ fi
 } >>mozconfig
 
 # Configure
-sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+else
+    sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+fi
 
 {
     cat "$patches/preferences/phoenix-android.js"
