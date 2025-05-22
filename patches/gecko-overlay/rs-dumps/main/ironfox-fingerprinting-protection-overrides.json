@@ -849,6 +849,14 @@
       "firstPartyDomain": "amazon.sg"
     },
     {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "apple.com"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "apple.com.cn"
+    },
+    {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
       "firstPartyDomain": "apple.news"
     },
