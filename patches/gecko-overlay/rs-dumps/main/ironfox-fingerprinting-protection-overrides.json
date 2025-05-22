@@ -985,6 +985,10 @@
       "firstPartyDomain": "kosmikdog.eu"
     },
     {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "kroger.com"
+    },
+    {
       "overrides": "-ScreenRect",
       "firstPartyDomain": "letterboxd.com"
     },
