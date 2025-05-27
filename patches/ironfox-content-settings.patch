@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 115535816e..8581d589dc 100644
+index 3885a06691..0adf0acee1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-@@ -24,6 +24,10 @@ import org.mozilla.fenix.ext.settings
+@@ -23,6 +23,10 @@ import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.ext.showToolbar
  import org.mozilla.fenix.settings.PhoneFeature
  import org.mozilla.fenix.settings.requirePreference
@@ -13,7 +13,7 @@ index 115535816e..8581d589dc 100644
  
  /**
   * Screen for managing settings related to site permissions and content defaults.
-@@ -44,6 +48,67 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -40,6 +44,67 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
      override fun onResume() {
          super.onResume()
          showToolbar(getString(R.string.preferences_site_settings))
@@ -81,7 +81,7 @@ index 115535816e..8581d589dc 100644
          setupPreferences()
      }
  
-@@ -113,4 +178,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -109,4 +174,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              )
          }
      }
@@ -91,10 +91,10 @@ index 115535816e..8581d589dc 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index dbb7ece65c..e5b56bda69 100644
+index 4faefc7999..fa13b4420a 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -441,6 +441,10 @@
+@@ -444,6 +444,10 @@
      <string name="pref_key_app_cold_start_count" translatable="false">pref_key_app_cold_start_count</string>
      <string name="pref_key_app_is_onboarding_set_as_default_displayed" translatable="false">pref_key_app_is_onboarding_set_as_default_displayed</string>
  

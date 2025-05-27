@@ -1,8 +1,8 @@
 diff --git a/mobile/android/installer/package-manifest.in b/mobile/android/installer/package-manifest.in
-index 0f4327c41a..0fcbed2855 100644
+index 2c91d92d60..2ff8c96b5e 100644
 --- a/mobile/android/installer/package-manifest.in
 +++ b/mobile/android/installer/package-manifest.in
-@@ -123,7 +123,6 @@
+@@ -124,7 +124,6 @@
  @BINPATH@/*/greprefs.js
  @BINPATH@/@PREF_DIR@/*/geckoview-prefs.js
  #endif # !MOZ_ANDROID_FAT_AAR_ARCHITECTURES

@@ -1,23 +1,8 @@
-diff --git a/build/moz.configure/init.configure b/build/moz.configure/init.configure
-index 9bf4bb29a4..958bed6d9b 100644
---- a/build/moz.configure/init.configure
-+++ b/build/moz.configure/init.configure
-@@ -1277,8 +1277,8 @@ def moz_app_basename(value, target_is_android):
-     if value:
-         return value[0]
-     if target_is_android:
--        return "Fennec"
--    return "Firefox"
-+        return "IronFox"
-+    return "IronFox"
- 
- 
- set_config(
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 7535453460..51260d1abe 100644
+index bdbc2336e3..abb8d71f2a 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -68,20 +68,11 @@ android {
+@@ -68,8 +68,8 @@ android {
          buildConfigField "String", "VCS_HASH", "\"\"" // see override in release builds for why it's blank.
          // This should be the "public" base URL of AMO.
          buildConfigField "String", "AMO_BASE_URL", "\"https://addons.mozilla.org\""
@@ -25,27 +10,15 @@ index 7535453460..51260d1abe 100644
 -        buildConfigField "String", "AMO_COLLECTION_USER", "\"mozilla\""
 +        buildConfigField "String", "AMO_COLLECTION_NAME", "\"IronFox\""
 +        buildConfigField "String", "AMO_COLLECTION_USER", "\"18588170\""
-         // These add-ons should be excluded for Mozilla Online builds.
-         buildConfigField "String[]", "MOZILLA_ONLINE_ADDON_EXCLUSIONS",
-                 "{" +
--                        "\"uBlock0@raymondhill.net\"," +
--                        "\"firefox@ghostery.com\"," +
--                        "\"jid1-MnnxcxisBPnSXQ@jetpack\"," +
--                        "\"adguardadblocker@adguard.com\"," +
--                        "\"foxyproxy@eric.h.jung\"," +
--                        "\"{73a6fe31-595d-460b-a920-fcc0f8843232}\"," +
--                        "\"jid1-BoFifL9Vbdl2zQ@jetpack\"," +
--                        "\"woop-NoopscooPsnSXQ@jetpack\"," +
--                        "\"adnauseam@rednoise.org\"" +
-                 "}"
          // This should be the base URL used to call the AMO API.
          buildConfigField "String", "AMO_SERVER_URL", "\"https://services.addons.mozilla.org\""
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index 598a24ce36..8e072075a5 100644
+index c13ecb6c86..9863cd1625 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -37,7 +37,7 @@ object SupportUtils {
-     const val MEITUAN_URL = "https://tb.j5k6.com/6ZSOp"
+@@ -28,7 +28,7 @@ object SupportUtils {
+     const val GOOGLE_URL = "https://www.google.com/"
      const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
      const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
 -    const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
@@ -53,24 +26,11 @@ index 598a24ce36..8e072075a5 100644
      const val FXACCOUNT_SUMO_URL = "https://support.mozilla.org/kb/access-mozilla-services-firefox-account"
  
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
-diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
-index c900501ee6..8b3e4a434c 100644
---- a/mobile/android/moz.configure
-+++ b/mobile/android/moz.configure
-@@ -108,7 +108,7 @@ imply_option("MOZ_SERVICES_HEALTHREPORT", True)
- imply_option("MOZ_GECKOVIEW_HISTORY", True)
- 
- imply_option("MOZ_APP_UA_NAME", "Firefox")
--imply_option("MOZ_APP_VENDOR", "Mozilla")
-+imply_option("MOZ_APP_VENDOR", "IronFox OSS")
- imply_option("MOZ_APP_ID", "{aa3c5121-dab2-40e2-81ca-7ea25febc110}")
- imply_option("BROWSER_CHROME_URL", "chrome://geckoview/content/geckoview.xhtml")
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 1c975c33f4..69e289f968 100644
+index 64d09acb1a..1e40219878 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -80,7 +80,7 @@ class OnboardingFragment : Fragment() {
+@@ -82,7 +82,7 @@ class OnboardingFragment : Fragment() {
              pagesToDisplay(
                  showDefaultBrowserPage = isNotDefaultBrowser(this) && !isDefaultBrowserPromptSupported(),
                  showNotificationPage = canShowNotificationPage(),
@@ -101,7 +61,7 @@ index 1c717bf900..f33154cc20 100644
  )
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
-index d6f204609e..82a8130761 100644
+index d093b9a370..5c454a258c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
 @@ -134,22 +134,22 @@ private fun BodyText(
@@ -178,10 +138,10 @@ index d6f204609e..82a8130761 100644
                  imageRes = R.drawable.ic_firefox,
                  primaryButton = Action(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..f0aba2a6dc 100644
+index 72493a2c21..e0b0abb133 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2492,8 +2492,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2500,10 +2500,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the user has completed the setup step for exploring extensions
       */
@@ -190,7 +150,9 @@ index 8e271198b0..f0aba2a6dc 100644
 -        default = false,
 -    )
 +    var hasCompletedSetupStepExtensions = true
- }
+ 
+     /**
+      * Indicates if this is the default browser.
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/ic_firefox.xml b/mobile/android/fenix/app/src/main/res/drawable/ic_firefox.xml
 index 8e369db27c..b1e6090f14 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/ic_firefox.xml
@@ -368,16 +330,16 @@ index 8e369db27c..b1e6090f14 100644
 +        android:fillColor="#ffffff"/>
 +  </group>
  </vector>
-diff --git a/toolkit/moz.configure b/toolkit/moz.configure
-index 09b3065c21..ca0c1b9087 100644
---- a/toolkit/moz.configure
-+++ b/toolkit/moz.configure
-@@ -28,7 +28,7 @@ project_flag(
+diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
+index 0e2a6efdc9..083c9cac2d 100644
+--- a/mobile/android/moz.configure
++++ b/mobile/android/moz.configure
+@@ -116,7 +116,7 @@ imply_option("MOZ_SERVICES_HEALTHREPORT", True)
+ imply_option("MOZ_GECKOVIEW_HISTORY", True)
  
- project_flag(
-     env="MOZ_APP_UA_NAME",
--    default="",
-+    default="Firefox",
-     nargs=1,
-     help="Application name in the User Agent string",
- )
+ imply_option("MOZ_APP_UA_NAME", "Firefox")
+-imply_option("MOZ_APP_VENDOR", "Mozilla")
++imply_option("MOZ_APP_VENDOR", "IronFox OSS")
+ imply_option("MOZ_APP_ID", "{aa3c5121-dab2-40e2-81ca-7ea25febc110}")
+ imply_option("BROWSER_CHROME_URL", "chrome://geckoview/content/geckoview.xhtml")
+ 

@@ -1,23 +1,8 @@
-From 8ac85516860f9100f109819109b9fd296f247266 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 10:43:02 +0530
-Subject: [PATCH] fix(patches): update 'disable-autofill.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt | 8 ++++----
- .../fenix/app/src/main/res/xml/autofill_preferences.xml   | 4 ++--
- .../app/src/main/res/xml/credit_cards_preferences.xml     | 2 +-
- .../fenix/app/src/main/res/xml/logins_preferences.xml     | 2 +-
- .../app/src/main/res/xml/save_logins_preferences.xml      | 4 ++--
- 5 files changed, 10 insertions(+), 10 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..776da4f139 100644
+index 72493a2c21..c0116767c7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1379,12 +1379,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1385,12 +1385,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldPromptToSaveLogins by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_save_logins),
@@ -32,7 +17,7 @@ index 8e271198b0..776da4f139 100644
      )
  
      /**
-@@ -1721,7 +1721,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1722,7 +1722,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillCreditCardDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_credit_cards_save_and_autofill_cards),
@@ -41,7 +26,7 @@ index 8e271198b0..776da4f139 100644
      )
  
      /**
-@@ -1732,7 +1732,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1733,7 +1733,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillAddressDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_addresses_save_and_autofill_addresses),
@@ -116,6 +101,3 @@ index 3fc38f2070..1c88040284 100644
          android:key="@string/pref_key_never_save_logins"
          android:title="@string/preferences_passwords_save_logins_never_save" />
  </PreferenceScreen>
--- 
-2.49.0
-

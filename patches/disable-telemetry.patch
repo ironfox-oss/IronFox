@@ -1,16 +1,3 @@
-diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-index 7941343807..e56e90a005 100644
---- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-+++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-@@ -58,7 +58,7 @@ android {
- // Set configuration for the Glean parser to extract metrics.yaml
- // file from AAR dependencies of this project rather than look
- // for it into the project directory.
--ext.allowMetricsFromAAR = true
-+ext.allowMetricsFromAAR = false
- 
- dependencies {
-     implementation project(':concept-engine')
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
 index d897b9af6f..2fb1be3150 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
@@ -26,34 +13,8 @@ index d897b9af6f..2fb1be3150 100644
 -        isRecoverable
 +    return false
  }
-diff --git a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-index bc9ae7fe5b..e89859e038 100644
---- a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-+++ b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-@@ -44,7 +44,7 @@ class SentryService(
-     private val environment: String? = null,
-     private val sendEventForNativeCrashes: Boolean = false,
-     private val sentryProjectUrl: String? = null,
--    private val sendCaughtExceptions: Boolean = true,
-+    private val sendCaughtExceptions: Boolean = false,
- ) : CrashReporterService {
- 
-     override val id: String = "new-sentry-instance"
-diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt
-index 98d9ba5d5f..cd9e431d82 100644
---- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt
-+++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/prompt/CrashReporterActivity.kt
-@@ -86,7 +86,7 @@ class CrashReporterActivity : AppCompatActivity() {
-         }
- 
-         binding.sendCheckbox.text = getString(R.string.mozac_lib_crash_dialog_checkbox, organizationName)
--        binding.sendCheckbox.isChecked = sharedPreferences.getBoolean(PREFERENCE_KEY_SEND_REPORT, true)
-+        binding.sendCheckbox.isChecked = false;
- 
-         binding.restartButton.apply {
-             text = getString(R.string.mozac_lib_crash_dialog_button_restart, appName)
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
-index 46326f505b..df308f1dd3 100644
+index 505963e058..391a052d15 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 @@ -5,52 +5,10 @@
@@ -109,11 +70,10 @@ index 46326f505b..df308f1dd3 100644
  
  /**
   * A [CrashReporterService] implementation for recording metrics with Glean.  The purpose of this
-@@ -78,567 +36,14 @@ class GleanCrashReporterService(
-         const val MAIN_PROCESS_NATIVE_CODE_CRASH_KEY = "main_proc_native_code_crash"
+@@ -79,575 +37,12 @@ class GleanCrashReporterService(
          const val FOREGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY = "fg_proc_native_code_crash"
          const val BACKGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY = "bg_proc_native_code_crash"
--
+ 
 -        private const val MINIDUMP_READ_BUFFER_SIZE: Int = 8192
 -    }
 -
@@ -525,8 +485,8 @@ index 46326f505b..df308f1dd3 100644
 -                logger.error("Failed to write to crash file", e)
 -            }
 -        }
-     }
- 
+-    }
+-
      override fun record(crash: Crash.UncaughtExceptionCrash) {
 -        recordCrashAction(GleanCrashAction.Count(UNCAUGHT_EXCEPTION_KEY))
 -        recordCrashAction(
@@ -585,24 +545,33 @@ index 46326f505b..df308f1dd3 100644
 -    }
 -
 -    private fun Throwable.toJson(): JsonElement {
--        val messages =
--            generateSequence(this) { it.cause }.mapNotNull { it.message }.map { JsonPrimitive(it) }
--                .toList()
--
--        val stack = this.stackTrace.map { element ->
--            mapOf(
--                "file" to element.fileName.let(::JsonPrimitive),
--                "line" to element.lineNumber.takeIf { it >= 0 }.let(::JsonPrimitive),
--                "className" to element.className.let(::JsonPrimitive),
--                "methodName" to element.methodName.let(::JsonPrimitive),
--                "isNative" to JsonPrimitive(element.isNativeMethod),
--            ).filterValues { it !is JsonNull }.let(::JsonObject)
--        }
+-        val throwables = generateSequence(this) { it.cause }
+-            .mapIndexed { index, throwable ->
+-                JsonObject(
+-                    mapOf(
+-                        "typeName" to throwable.javaClass.kotlin.qualifiedName.let(::JsonPrimitive),
+-                        "message" to throwable.message.let(::JsonPrimitive),
+-                        "stack" to if (index != 0) { JsonNull } else {
+-                            JsonArray(
+-                                throwable.stackTrace.map { element ->
+-                                    mapOf(
+-                                        "file" to element.fileName.let(::JsonPrimitive),
+-                                        "line" to element.lineNumber.takeIf { it >= 0 }.let(::JsonPrimitive),
+-                                        "className" to element.className.let(::JsonPrimitive),
+-                                        "methodName" to element.methodName.let(::JsonPrimitive),
+-                                        "isNative" to JsonPrimitive(element.isNativeMethod),
+-                                    ).filterValues { it !is JsonNull }.let(::JsonObject)
+-                                },
+-                            )
+-                        },
+-                    ).filterValues { it !is JsonNull },
+-                )
+-            }
+-            .toList()
 -
 -        return JsonObject(
 -            mapOf(
--                "messages" to JsonArray(messages),
--                "stack" to JsonArray(stack),
+-                "throwables" to JsonArray(throwables),
 -            ),
 -        )
      }
@@ -677,59 +646,11 @@ index 46326f505b..df308f1dd3 100644
 -        recordCrashAction(GleanCrashAction.Count(CAUGHT_EXCEPTION_KEY))
      }
  }
-diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-index 900fc5ebb6..ea5c0b2ad7 100644
---- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-+++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-@@ -103,7 +103,7 @@ class MozillaSocorroService(
-     override val name: String = "Socorro"
- 
-     override fun createCrashReportUrl(identifier: String): String? {
--        return "https://crash-stats.mozilla.org/report/index/$identifier"
-+        return ""
-     }
- 
-     init {
-@@ -556,7 +556,7 @@ class MozillaSocorroService(
-     }
- 
-     internal fun buildServerUrl(versionName: String): String =
--        "https://crash-reports.mozilla.com/submit".toUri()
-+        "".toUri()
-             .buildUpon()
-             .appendQueryParameter("id", appId)
-             .appendQueryParameter("version", versionName)
-diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 7535453460..22013e852c 100644
---- a/mobile/android/fenix/app/build.gradle
-+++ b/mobile/android/fenix/app/build.gradle
-@@ -326,7 +326,7 @@ android.applicationVariants.configureEach { variant ->
-     project.logger.debug("Application ID:    " + [variant.applicationId, variant.buildType.applicationIdSuffix].findAll().join())
-     project.logger.debug("Build type:        " + variant.buildType.name)
-     project.logger.debug("Flavor:            " + variant.flavorName)
--    project.logger.debug("Telemetry enabled: " + !isDebug)
-+    project.logger.debug("Telemetry enabled: " + false)
- 
-     if (useReleaseVersioning) {
-         // The Google Play Store does not allow multiple APKs for the same app that all have the
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 7f435ae784..57798f6f4c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -66,7 +66,7 @@ object FeatureFlags {
-     /**
-      * Enable Meta attribution.
-      */
--    const val META_ATTRIBUTION_ENABLED = true
-+    const val META_ATTRIBUTION_ENABLED = false
- 
-     /**
-      * Enables Homepage as a New Tab.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 34a3e1b522..0283fd4b68 100644
+index 9e7842dfd5..fa80f938ec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -492,10 +492,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -496,10 +496,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
  
      private fun setupCrashReporting() {
@@ -741,10 +662,10 @@ index 34a3e1b522..0283fd4b68 100644
  
      protected open fun initializeNimbus() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index bec617c4cc..aa21f3af61 100644
+index 1ad6a264c7..7a9b8a34f2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -4,100 +4,33 @@
+@@ -4,96 +4,33 @@
  
  package org.mozilla.fenix.components
  
@@ -794,10 +715,7 @@ index bec617c4cc..aa21f3af61 100644
  ) {
      val crashReporter: CrashReporter by lazyMonitored {
          val services = mutableListOf<CrashReporterService>()
--        val distributionId = when (Config.channel.isMozillaOnline) {
--            true -> "MozillaOnline"
--            false -> "Mozilla"
--        }
+-        val distributionId = "Mozilla"
 -
 -        if (isSentryEnabled()) {
 -            // We treat caught exceptions similar to debug logging.
@@ -842,11 +760,10 @@ index bec617c4cc..aa21f3af61 100644
 -            distributionId = distributionId,
 -        )
 -        services.add(socorroService)
--
+ 
          val intent = Intent(context, HomeActivity::class.java).apply {
              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-         }
-@@ -122,10 +55,9 @@ class Analytics(
+@@ -119,10 +56,9 @@ class Analytics(
                  appName = context.getString(R.string.app_name),
                  organizationName = "Mozilla",
              ),
@@ -859,11 +776,10 @@ index bec617c4cc..aa21f3af61 100644
              runtimeTagProviders = listOf(ReleaseRuntimeTagProvider()),
          )
      }
-@@ -144,34 +76,11 @@ class Analytics(
- 
+@@ -142,33 +78,10 @@ class Analytics(
      val metrics: MetricController by lazyMonitored {
          MetricController.create(
--            listOf(
+             listOf(
 -                GleanMetricsService(context),
 -                AdjustMetricsService(
 -                    application = context as Application,
@@ -878,7 +794,6 @@ index bec617c4cc..aa21f3af61 100644
 -                context.settings().isMarketingTelemetryEnabled && context.settings().hasMadeMarketingTelemetrySelection
 -            },
 -            isUsageTelemetryEnabled = { context.settings().isDailyUsagePingEnabled },
-+            listOf(),
 +            isDataTelemetryEnabled = { false },
 +            isMarketingDataTelemetryEnabled = { false },
 +            isUsageTelemetryEnabled = { false },
@@ -899,10 +814,10 @@ index bec617c4cc..aa21f3af61 100644
 -    }
 -}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index af5cb6d286..d9b26aa703 100644
+index 72acbf329a..ccc0bf6e42 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -169,7 +169,7 @@ class Components(private val context: Context) {
+@@ -184,7 +184,7 @@ class Components(private val context: Context) {
          AddonManager(core.store, core.engine, addonsProvider, addonUpdater)
      }
  
@@ -912,10 +827,10 @@ index af5cb6d286..d9b26aa703 100644
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 9a9487a930..0880f9485d 100644
+index e57302c306..fb6ac9c9c9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -56,13 +56,10 @@ import mozilla.components.feature.pwa.WebAppShortcutManager
+@@ -60,14 +60,11 @@ import mozilla.components.feature.pwa.WebAppShortcutManager
  import mozilla.components.feature.readerview.ReaderViewMiddleware
  import mozilla.components.feature.recentlyclosed.RecentlyClosedMiddleware
  import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
@@ -924,13 +839,14 @@ index 9a9487a930..0880f9485d 100644
  import mozilla.components.feature.search.middleware.SearchExtraParams
  import mozilla.components.feature.search.middleware.SearchMiddleware
  import mozilla.components.feature.search.region.RegionMiddleware
+ import mozilla.components.feature.search.storage.SearchEngineSelectorConfig
 -import mozilla.components.feature.search.telemetry.SerpTelemetryRepository
 -import mozilla.components.feature.search.telemetry.ads.AdsTelemetry
 -import mozilla.components.feature.search.telemetry.incontent.InContentTelemetry
  import mozilla.components.feature.session.HistoryDelegate
  import mozilla.components.feature.session.middleware.LastAccessMiddleware
  import mozilla.components.feature.session.middleware.undo.UndoMiddleware
-@@ -121,7 +118,6 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
+@@ -129,7 +126,6 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
  import org.mozilla.fenix.share.DefaultSentFromFirefoxManager
  import org.mozilla.fenix.share.DefaultSentFromStorage
  import org.mozilla.fenix.share.SaveToPDFMiddleware
@@ -938,7 +854,7 @@ index 9a9487a930..0880f9485d 100644
  import org.mozilla.fenix.utils.getUndoDelay
  import org.mozilla.geckoview.GeckoRuntime
  import java.util.UUID
-@@ -297,7 +293,6 @@ class Core(
+@@ -306,7 +302,6 @@ class Core(
                  RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX),
                  DownloadMiddleware(context, DownloadService::class.java),
                  ReaderViewMiddleware(),
@@ -946,7 +862,7 @@ index 9a9487a930..0880f9485d 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -309,7 +304,6 @@ class Core(
+@@ -319,7 +314,6 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -954,7 +870,7 @@ index 9a9487a930..0880f9485d 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -340,26 +334,6 @@ class Core(
+@@ -354,26 +348,6 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -981,7 +897,7 @@ index 9a9487a930..0880f9485d 100644
              WebNotificationFeature(
                  context,
                  engine,
-@@ -405,18 +379,6 @@ class Core(
+@@ -419,18 +393,6 @@ class Core(
          BrowserIcons(context, client)
      }
  
@@ -1000,7 +916,7 @@ index 9a9487a930..0880f9485d 100644
      /**
       * Shortcut component for managing shortcuts on the device home screen.
       */
-@@ -711,7 +673,7 @@ class Core(
+@@ -720,7 +682,7 @@ class Core(
          const val METADATA_SHORTCUT_SUGGESTION_LIMIT = 20
  
          // collection name to fetch from server for SERP telemetry
@@ -1144,10 +1060,10 @@ index c1b54d7f27..01fd0d7427 100644
  
      private fun updateOptInState(branch: Branch) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 1c975c33f4..3a8e1519bc 100644
+index 64d09acb1a..f67ade3fbb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -350,8 +350,7 @@ class OnboardingFragment : Fragment() {
+@@ -367,8 +367,7 @@ class OnboardingFragment : Fragment() {
              requireComponents.core.client,
          )
          if (!settings.isTelemetryEnabled) {
@@ -1158,7 +1074,7 @@ index 1c975c33f4..3a8e1519bc 100644
  
          startMetricsIfEnabled(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..d65fc56a10 100644
+index 72493a2c21..a202120a9d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -180,8 +180,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -1171,7 +1087,7 @@ index 8e271198b0..d65fc56a10 100644
  
      override val preferences: SharedPreferences =
          appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
-@@ -375,54 +374,24 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -380,37 +379,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = true,
      )
  
@@ -1212,12 +1128,12 @@ index 8e271198b0..d65fc56a10 100644
 -    )
 +    var hasAcceptedTermsOfService = true
  
--    /**
--     * The daily usage ping is not normally tied to normal telemetry.  We set the default value to
--     * [isTelemetryEnabled] because this setting was added in early 2025 and we want to make
--     * sure that users who upgrade and had telemetry disabled don't start sending the
--     * daily usage ping telemetry.
--     */
+     /**
+      * The daily usage ping is not normally tied to normal telemetry.  We set the default value to
+@@ -418,16 +400,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * sure that users who upgrade and had telemetry disabled don't start sending the
+      * daily usage ping telemetry.
+      */
 -    var isDailyUsagePingEnabled by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_daily_usage_ping),
 -        default = isTelemetryEnabled,
@@ -1233,7 +1149,7 @@ index 8e271198b0..d65fc56a10 100644
  
      var isOverrideTPPopupsForPerformanceTest = false
  
-@@ -2353,10 +2322,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2370,10 +2345,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * A user preference indicating that crash reports should always be automatically sent. This can be updated
       * through the unsubmitted crash dialog or through data choice preferences.
       */
@@ -1246,10 +1162,10 @@ index 8e271198b0..d65fc56a10 100644
      /**
       * Indicates whether or not we should use the new crash reporter dialog.
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 3b85a2a548..67f1cc5976 100644
+index 4c6b14bf87..e6399548b9 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -146,11 +146,6 @@
+@@ -141,11 +141,6 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_notifications" />
  
@@ -1261,7 +1177,7 @@ index 3b85a2a548..67f1cc5976 100644
      </androidx.preference.PreferenceCategory>
  
      <PreferenceCategory
-@@ -212,11 +207,6 @@
+@@ -207,10 +202,6 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
@@ -1269,10 +1185,9 @@ index 3b85a2a548..67f1cc5976 100644
 -            android:key="@string/pref_key_rate"
 -            app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />
--
+ 
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
-             app:iconSpaceReserved="false"
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
 index eb00f87b41..ce8e2b7a03 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
@@ -1287,10 +1202,10 @@ index eb00f87b41..ce8e2b7a03 100644
    // Context for getting device information
    private @Nullable final Context mAppContext;
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
-index c900501ee6..af9090f357 100644
+index 0e2a6efdc9..c931fb3c74 100644
 --- a/mobile/android/moz.configure
 +++ b/mobile/android/moz.configure
-@@ -104,7 +104,7 @@ set_config("MOZ_ANDROID_DEBUGGABLE", android_debuggable)
+@@ -112,7 +112,7 @@ set_config("MOZ_ANDROID_DEBUGGABLE", android_debuggable)
  
  
  imply_option("MOZ_NORMANDY", False)
@@ -1300,10 +1215,10 @@ index c900501ee6..af9090f357 100644
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
 diff --git a/python/mach/mach/telemetry.py b/python/mach/mach/telemetry.py
-index 35d6cc4d17..704d1550bc 100644
+index a3fda9a59b..b541a040df 100644
 --- a/python/mach/mach/telemetry.py
 +++ b/python/mach/mach/telemetry.py
-@@ -95,10 +95,7 @@ def is_applicable_telemetry_environment():
+@@ -92,10 +92,7 @@ def is_applicable_telemetry_environment():
  
  
  def is_telemetry_enabled(settings):
@@ -1316,7 +1231,7 @@ index 35d6cc4d17..704d1550bc 100644
  
  def arcrc_path():
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
-index 42c16ebb87..95a3af6071 100644
+index 42c16ebb87..ca40d36618 100644
 --- a/toolkit/components/glean/src/init/mod.rs
 +++ b/toolkit/components/glean/src/init/mod.rs
 @@ -71,8 +71,8 @@ pub extern "C" fn fog_init(
@@ -1330,16 +1245,9 @@ index 42c16ebb87..95a3af6071 100644
      // Don't set up an uploader.
      let uploader = None;
  
-@@ -150,12 +150,12 @@ fn build_configuration(
- 
-     let localhost_port = static_prefs::pref!("telemetry.fog.test.localhost_port");
-     let server = if localhost_port > 0 {
--        format!("http://localhost:{}", localhost_port)
-+        String::from("")
-     } else {
+@@ -155,7 +155,7 @@ fn build_configuration(
          if app_id_override == "thunderbird.desktop" {
--            String::from("https://incoming.thunderbird.net")
-+            String::from("")
+             String::from("https://incoming.thunderbird.net")
          } else {
 -            String::from("https://incoming.telemetry.mozilla.org")
 +            String::from("")
@@ -1370,10 +1278,10 @@ index 42c16ebb87..95a3af6071 100644
      // Don't accidentally send "main" pings during tests.
      conf.use_core_mps = false;
 diff --git a/toolkit/components/glean/src/init/viaduct_uploader.rs b/toolkit/components/glean/src/init/viaduct_uploader.rs
-index ea5260e5c6..5f5df88dba 100644
+index b61d7e2036..cc8e1feb48 100644
 --- a/toolkit/components/glean/src/init/viaduct_uploader.rs
 +++ b/toolkit/components/glean/src/init/viaduct_uploader.rs
-@@ -109,7 +109,7 @@ fn ohttp_upload(upload_request: PingUploadRequest) -> Result<UploadResult, Viadu
+@@ -117,7 +117,7 @@ fn ohttp_upload(upload_request: PingUploadRequest) -> Result<UploadResult, Viadu
      let ohttp_request = ohttp::ClientRequest::from_encoded_config(config)?;
      let (capsule, ohttp_response) = ohttp_request.encapsulate(&binary_request)?;
  
@@ -1382,7 +1290,7 @@ index ea5260e5c6..5f5df88dba 100644
      let parsed_relay_url = Url::parse(OHTTP_RELAY_URL)?;
  
      log::trace!("FOG ohttp uploader uploading to {}", parsed_relay_url);
-@@ -140,7 +140,7 @@ fn ohttp_upload(upload_request: PingUploadRequest) -> Result<UploadResult, Viadu
+@@ -148,7 +148,7 @@ fn ohttp_upload(upload_request: PingUploadRequest) -> Result<UploadResult, Viadu
  
  fn get_config() -> Result<Vec<u8>, ViaductUploaderError> {
      const OHTTP_CONFIG_URL: &str =
@@ -1392,27 +1300,9 @@ index ea5260e5c6..5f5df88dba 100644
      let parsed_config_url = Url::parse(OHTTP_CONFIG_URL)?;
      Ok(Request::get(parsed_config_url).send()?.body)
 diff --git a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
-index cf0a7bd372..a8b2b03990 100644
+index cf0a7bd372..62215f9a6b 100644
 --- a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
 +++ b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
-@@ -31,7 +31,7 @@ var gLogAppenderDump = null;
- export var TelemetryControllerBase = Object.freeze({
-   // Whether the FHR/Telemetry unification features are enabled.
-   // Changing this pref requires a restart.
--  IS_UNIFIED_TELEMETRY: Services.prefs.getBoolPref(Preferences.Unified, false),
-+  IS_UNIFIED_TELEMETRY: false,
- 
-   Preferences,
- 
-@@ -40,7 +40,7 @@ export var TelemetryControllerBase = Object.freeze({
-    * it correctly evaluates to a boolean type.
-    */
-   get isTelemetryEnabled() {
--    return Services.prefs.getBoolPref(PREF_TELEMETRY_ENABLED, false) === true;
-+    return false;
-   },
- 
-   get log() {
 @@ -87,28 +87,8 @@ export var TelemetryControllerBase = Object.freeze({
    setTelemetryRecordingFlags() {
      // Enable extended Telemetry on pre-release channels and disable it
@@ -1444,21 +1334,11 @@ index cf0a7bd372..a8b2b03990 100644
    },
  
    /**
-@@ -125,8 +105,7 @@ export var TelemetryControllerBase = Object.freeze({
-     } else {
-       // We're not on unified Telemetry, stick to the old behaviour for
-       // supporting Fennec.
--      Services.telemetry.canRecordBase = Services.telemetry.canRecordExtended =
--        this.isTelemetryEnabled;
-+      Services.telemetry.canRecordBase = Services.telemetry.canRecordExtended = false;
-     }
- 
-     this.log.config(
 diff --git a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
-index a2633986f2..c0678f2d2f 100644
+index 349d7097f0..993f038a14 100644
 --- a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
 +++ b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
-@@ -280,11 +280,7 @@ var TelemetryReportingPolicyImpl = {
+@@ -279,11 +279,7 @@ var TelemetryReportingPolicyImpl = {
     * false, we never request upload or deletion.
     */
    get dataSubmissionEnabled() {
@@ -1471,83 +1351,7 @@ index a2633986f2..c0678f2d2f 100644
    },
  
    get currentPolicyVersion() {
-@@ -340,20 +336,6 @@ var TelemetryReportingPolicyImpl = {
-    *         false otherwise.
-    */
-   get isUserNotifiedOfCurrentPolicy() {
--    // If we don't have a sane notification date, the user was not notified yet.
--    if (
--      !this.dataSubmissionPolicyNotifiedDate ||
--      this.dataSubmissionPolicyNotifiedDate.getTime() <= 0
--    ) {
--      return false;
--    }
--
--    // The accepted policy version should not be less than the minimum policy version.
--    if (this.dataSubmissionPolicyAcceptedVersion < this.minimumPolicyVersion) {
--      return false;
--    }
--
--    // Otherwise the user was already notified.
-     return true;
-   },
- 
-@@ -407,19 +389,7 @@ var TelemetryReportingPolicyImpl = {
-    * @return {Boolean} True if we are allowed to upload data, false otherwise.
-    */
-   canUpload() {
--    // If data submission is disabled, there's no point in showing the infobar. Just
--    // forbid to upload.
--    if (!this.dataSubmissionEnabled) {
--      return false;
--    }
--
--    // Submission is enabled. We enable upload if user is notified or we need to bypass
--    // the policy.
--    const bypassNotification = Services.prefs.getBoolPref(
--      TelemetryUtils.Preferences.BypassNotification,
--      false
--    );
--    return this.isUserNotifiedOfCurrentPolicy || bypassNotification;
-+    return false;
-   },
- 
-   isFirstRun() {
-@@ -446,32 +416,7 @@ var TelemetryReportingPolicyImpl = {
-    * Determine whether the user should be notified.
-    */
-   _shouldNotify() {
--    if (!this.dataSubmissionEnabled) {
--      this._log.trace(
--        "_shouldNotify - Data submission disabled by the policy."
--      );
--      return false;
--    }
--
--    const bypassNotification = Services.prefs.getBoolPref(
--      TelemetryUtils.Preferences.BypassNotification,
--      false
--    );
--    if (this.isUserNotifiedOfCurrentPolicy || bypassNotification) {
--      this._log.trace(
--        "_shouldNotify - User already notified or bypassing the policy."
--      );
--      return false;
--    }
--
--    if (this._notificationInProgress) {
--      this._log.trace(
--        "_shouldNotify - User not notified, notification already in progress."
--      );
--      return false;
--    }
--
--    return true;
-+    return false;
-   },
- 
-   /**
-@@ -717,7 +662,7 @@ var TelemetryReportingPolicyImpl = {
+@@ -716,7 +712,7 @@ var TelemetryReportingPolicyImpl = {
      return this._ensureUserIsNotifiedPromise.then(() => {
        // The user has been notified and interacted with the modal.
        // Glean can now init on shutdown if necessary.
@@ -1557,21 +1361,10 @@ index a2633986f2..c0678f2d2f 100644
    },
  
 diff --git a/toolkit/components/telemetry/app/UsageReporting.sys.mjs b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
-index 6134754282..c0da15a006 100644
+index 4a3e1de32d..baeff11b29 100644
 --- a/toolkit/components/telemetry/app/UsageReporting.sys.mjs
 +++ b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
-@@ -34,21 +34,18 @@ export var UsageReporting = {
- 
-     this._initPromise = (async () => {
-       let profileID = await lazy.ClientID.getUsageProfileID();
--      const uploadEnabled = Services.prefs.getBoolPref(
--        "datareporting.usage.uploadEnabled",
--        false
--      );
-+      const uploadEnabled = false;
-       this._log.trace(
-         `${SLUG}: uploadEnabled=${uploadEnabled}, profileID='${profileID}'`
-       );
+@@ -45,7 +45,7 @@ export var UsageReporting = {
  
        // Usage deletion requests can always be sent.  They are
        // always sent in response to user action.
@@ -1580,61 +1373,20 @@ index 6134754282..c0da15a006 100644
  
        // Usage pings should only be sent when upload is enabled.
        // Eventually, Glean will persist this setting.
--      GleanPings.usageReporting.setEnabled(uploadEnabled);
-+      GleanPings.usageReporting.setEnabled(false);
- 
-       if (
-         uploadEnabled &&
-@@ -103,10 +100,7 @@ export var UsageReporting = {
-       return;
-     }
- 
--    const uploadEnabled = Services.prefs.getBoolPref(
--      "datareporting.usage.uploadEnabled",
--      false
--    );
-+    const uploadEnabled = false;
- 
-     if (uploadEnabled) {
-       // Rising edge: enable "usage-reporting" ping.
-@@ -137,17 +131,14 @@ export var UsageReporting = {
-    * preference.
-    */
-   adoptDataReportingPreference() {
--    const generalEnabled = Services.prefs.getBoolPref(
--      "datareporting.healthreport.uploadEnabled",
--      false
--    );
-+    const generalEnabled = false;
-     this._log.info(
-       `adoptDataReportingPreference: setting usage reporting preference to ${generalEnabled}`
-     );
- 
-     Services.prefs.setBoolPref(
-       "datareporting.usage.uploadEnabled",
--      generalEnabled
-+      false
-     );
-   },
- 
 diff --git a/toolkit/components/telemetry/core/Telemetry.cpp b/toolkit/components/telemetry/core/Telemetry.cpp
-index 8473b3a191..0556e35e1f 100644
+index 8b7ac7a40f..9edac397ea 100644
 --- a/toolkit/components/telemetry/core/Telemetry.cpp
 +++ b/toolkit/components/telemetry/core/Telemetry.cpp
-@@ -1117,12 +1117,7 @@ TelemetryImpl::GetCanRecordPrereleaseData(bool* ret) {
- 
- NS_IMETHODIMP
+@@ -1119,7 +1119,7 @@ NS_IMETHODIMP
  TelemetryImpl::GetIsOfficialTelemetry(bool* ret) {
--#if defined(MOZILLA_OFFICIAL) && defined(MOZ_TELEMETRY_REPORTING) && \
--    !defined(DEBUG)
+ #if defined(MOZILLA_OFFICIAL) && defined(MOZ_TELEMETRY_REPORTING) && \
+     !defined(DEBUG)
 -  *ret = true;
--#else
++  *ret = false;
+ #else
    *ret = false;
--#endif
-   return NS_OK;
- }
- 
-@@ -1138,7 +1133,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
+ #endif
+@@ -1138,7 +1138,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
  #ifndef FUZZING
    if (XRE_IsParentProcess() || XRE_IsContentProcess() || XRE_IsGPUProcess() ||
        XRE_IsRDDProcess() || XRE_IsSocketProcess() || XRE_IsUtilityProcess()) {
@@ -1666,7 +1418,7 @@ index a52d8e0a64..9bec7accff 100644
  
    // We're not recording extended telemetry or this is not the base
 diff --git a/toolkit/library/rust/gkrust-features.mozbuild b/toolkit/library/rust/gkrust-features.mozbuild
-index ef5cd9de55..3af776fb5b 100644
+index a19af5bd9d..66d8947acd 100644
 --- a/toolkit/library/rust/gkrust-features.mozbuild
 +++ b/toolkit/library/rust/gkrust-features.mozbuild
 @@ -60,8 +60,7 @@ if CONFIG["MOZ_WEBRTC"]:
@@ -1680,10 +1432,10 @@ index ef5cd9de55..3af776fb5b 100644
  if CONFIG["MOZ_ENABLE_DBUS"]:
      gkrust_features += ["with_dbus"]
 diff --git a/toolkit/modules/AppConstants.sys.mjs b/toolkit/modules/AppConstants.sys.mjs
-index bf7a0ec957..291cb3a0ac 100644
+index a794e82288..46b698a1ec 100644
 --- a/toolkit/modules/AppConstants.sys.mjs
 +++ b/toolkit/modules/AppConstants.sys.mjs
-@@ -35,16 +35,11 @@ export var AppConstants = Object.freeze({
+@@ -35,13 +35,13 @@ export var AppConstants = Object.freeze({
  
    MOZ_SERVICES_SYNC: @MOZ_SERVICES_SYNC_BOOL@,
  
@@ -1692,17 +1444,14 @@ index bf7a0ec957..291cb3a0ac 100644
  
    MOZ_SANDBOX: @MOZ_SANDBOX_BOOL@,
  
--  MOZ_TELEMETRY_REPORTING:
--#ifdef MOZ_TELEMETRY_REPORTING
+   MOZ_TELEMETRY_REPORTING:
+ #ifdef MOZ_TELEMETRY_REPORTING
 -  true,
--#else
--  false,
--#endif
-+  MOZ_TELEMETRY_REPORTING: false,
- 
-   MOZ_UPDATER: @MOZ_UPDATER_BOOL@,
- 
-@@ -114,9 +109,9 @@ export var AppConstants = Object.freeze({
++  false,
+ #else
+   false,
+ #endif
+@@ -114,9 +114,9 @@ export var AppConstants = Object.freeze({
             Services.vc.compare(platformVersion, version) <= 0;
    },
  
@@ -1714,7 +1463,7 @@ index bf7a0ec957..291cb3a0ac 100644
  
    MOZ_MAINTENANCE_SERVICE: @MOZ_MAINTENANCE_SERVICE_BOOL@,
  
-@@ -130,7 +125,7 @@ export var AppConstants = Object.freeze({
+@@ -130,7 +130,7 @@ export var AppConstants = Object.freeze({
  
    ASAN: @MOZ_ASAN_BOOL@,
  
@@ -1723,23 +1472,10 @@ index bf7a0ec957..291cb3a0ac 100644
  
    TSAN: @MOZ_TSAN_BOOL@,
  
-diff --git a/toolkit/moz.configure b/toolkit/moz.configure
-index 09b3065c21..9139596a55 100644
---- a/toolkit/moz.configure
-+++ b/toolkit/moz.configure
-@@ -3337,7 +3337,7 @@ set_define("MOZ_WINCONSOLE", True, when=depends("MOZ_WINCONSOLE")(lambda x: x))
- option(
-     "--with-crashreporter-url",
-     env="MOZ_CRASHREPORTER_URL",
--    default="https://crash-reports.mozilla.com/",
-+    default="",
-     nargs=1,
-     help="Set an alternative crashreporter url",
- )
-diff --git a/tools/@types/substitutions/AppConstants.sys.d.mts b/tools/@types/substitutions/AppConstants.sys.d.mts
+diff --git a/tools/@types/subs/AppConstants.sys.d.mts b/tools/@types/subs/AppConstants.sys.d.mts
 index 04273576bd..8dc11902b0 100644
---- a/tools/@types/substitutions/AppConstants.sys.d.mts
-+++ b/tools/@types/substitutions/AppConstants.sys.d.mts
+--- a/tools/@types/subs/AppConstants.sys.d.mts
++++ b/tools/@types/subs/AppConstants.sys.d.mts
 @@ -32,12 +32,12 @@ export const AppConstants: Readonly<{
  
    MOZ_SERVICES_SYNC: boolean;

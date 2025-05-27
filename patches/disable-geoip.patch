@@ -1,14 +1,3 @@
-From db8fdfd3d14382b18de9700703251feb409ea9b6 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 10:52:54 +0530
-Subject: [PATCH] fix(patches): update 'disable-geoip.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../components/service/location/MozillaLocationService.kt   | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
 diff --git a/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt b/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
 index 8bea197568..1677b822ed 100644
 --- a/mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
@@ -35,6 +24,3 @@ index 8bea197568..1677b822ed 100644
      }
  
      private fun Context.cacheRegion(region: LocationService.Region) {
--- 
-2.49.0
-

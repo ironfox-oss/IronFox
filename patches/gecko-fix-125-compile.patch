@@ -1,14 +1,3 @@
-From 40d09fef62184a8ccdcb8e8cf41c7b35d001fadf Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:19:14 +0530
-Subject: [PATCH] fix(patches): update 'gecko-fix-125-compile.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- mfbt/SmallPointerArray.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
 diff --git a/mfbt/SmallPointerArray.h b/mfbt/SmallPointerArray.h
 index c63e3980f9..061bb1fc8b 100644
 --- a/mfbt/SmallPointerArray.h
@@ -34,6 +23,3 @@ index c63e3980f9..061bb1fc8b 100644
      T* mValue;
      std::vector<T*>* mVector;
    } mArray[2];
--- 
-2.49.0
-
