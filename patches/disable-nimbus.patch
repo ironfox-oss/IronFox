@@ -104,7 +104,7 @@ index a6f3b77a47..b2ce30c78f 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b74145eb21..b22bf9f2d0 100644
+index b74145eb21..d01bd13d3d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 @@ -57,8 +57,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
@@ -118,6 +118,17 @@ index b74145eb21..b22bf9f2d0 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
  
+@@ -236,8 +236,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
+-            isVisible = true
+-            isChecked = context.settings().useRemoteSearchConfiguration
++            isVisible = false
++            isChecked = false
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+                     if (newValue as? Boolean == true) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 index 64492271c3..0d070de84d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
