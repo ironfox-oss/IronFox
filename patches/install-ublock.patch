@@ -59,7 +59,7 @@ index 82e44d1abc..fe2c0dd3e3 100644
              promptRequest.permissions,
              context,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 1c975c33f4..c8e8c637f3 100644
+index 64d09acb1a..61599172ec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -19,8 +19,10 @@ import androidx.annotation.RequiresApi
@@ -73,7 +73,7 @@ index 1c975c33f4..c8e8c637f3 100644
  import mozilla.components.concept.engine.webextension.InstallationMethod
  import mozilla.components.service.nimbus.evalJexlSafe
  import mozilla.components.service.nimbus.messaging.use
-@@ -116,6 +118,11 @@ class OnboardingFragment : Fragment() {
+@@ -118,6 +120,11 @@ class OnboardingFragment : Fragment() {
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
          val context = requireContext()

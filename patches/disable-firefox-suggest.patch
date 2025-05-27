@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index aafe4dbe47..828ad9a5dd 100644
+index b74145eb21..58bf1ce33a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -118,7 +118,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -125,7 +125,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_pocket_content_recommendations).apply {
@@ -12,7 +12,7 @@ index aafe4dbe47..828ad9a5dd 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
                      activity?.recreate()
-@@ -134,8 +135,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -141,8 +142,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_trending_searches).apply {
@@ -23,7 +23,7 @@ index aafe4dbe47..828ad9a5dd 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
  
-@@ -152,8 +153,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -159,8 +160,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_fxsuggest).apply {
@@ -35,10 +35,10 @@ index aafe4dbe47..828ad9a5dd 100644
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
                      val newBooleanValue = newValue as? Boolean ?: return false
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 86d2ecf1dc..4b56e9d33f 100644
+index 72493a2c21..3766ffb1fb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1170,10 +1170,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1175,10 +1175,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user have enabled trending search in search suggestions.
       */
      @VisibleForTesting
@@ -63,7 +63,7 @@ index 86d2ecf1dc..4b56e9d33f 100644
  
      /**
       *  Whether or not to display the Pocket sponsored stories parameter secret settings.
-@@ -2048,11 +2041,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2062,11 +2055,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Trending Search Suggestions are enabled.
       */
@@ -76,7 +76,7 @@ index 86d2ecf1dc..4b56e9d33f 100644
  
      /**
       * Indicates if Recent Search Suggestions are enabled.
-@@ -2118,17 +2107,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2132,17 +2121,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Firefox Suggest is enabled.
       */
@@ -96,7 +96,7 @@ index 86d2ecf1dc..4b56e9d33f 100644
  
      /**
       * Indicates first time engaging with signup
-@@ -2142,22 +2126,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2156,22 +2140,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
       * The default value is computed lazily, and based on whether Firefox Suggest is enabled.
       */

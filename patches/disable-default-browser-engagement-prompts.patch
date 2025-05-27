@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..628f145d63 100644
+index 72493a2c21..024440d98a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -794,12 +794,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -800,12 +800,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * This will lead to a performance regression since that function can be expensive to call.
       */
      fun checkIfFenixIsDefaultBrowserOnAppResume(): Boolean {
@@ -16,7 +16,7 @@ index 8e271198b0..628f145d63 100644
      }
  
      /**
-@@ -811,40 +806,31 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -817,40 +812,31 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          return browsers.isDefaultBrowser
      }
  
@@ -62,7 +62,7 @@ index 8e271198b0..628f145d63 100644
  
      val shouldUseAutoBatteryTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
-@@ -2310,12 +2296,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2327,12 +2313,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Set as default Browser prompt should be displayed to the user.
       */

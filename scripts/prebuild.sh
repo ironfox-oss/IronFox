@@ -135,16 +135,29 @@ sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
     app/src/release/res/xml/shortcuts.xml
 
-# Disable crash reporting
+# Disable Crash Reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
 # Disable MetricController
-sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
+sed -i \
+    -e '/TELEMETRY/s/true/false/' \
+    -e 's|project.logger.debug("Telemetry enabled: " + .*|project.logger.debug("Telemetry enabled: " + false)|' \
+    app/build.gradle
+
+# Disable 'Meta Attribution'
+sed -i -e 's|const val META_ATTRIBUTION_ENABLED = .*|const val META_ATTRIBUTION_ENABLED = false)|' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Disable Search Telemetry
+sed -i -e 's|const val COLLECTION_NAME = "search-telemetry-v2"|const val COLLECTION_NAME = ""|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
 sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+
+# Ensure we enable the about:config
+# Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
+sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Let it be IronFox
 sed -i \
@@ -155,6 +168,63 @@ sed -i \
     -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
     -e '/about_content/s/Mozilla/IronFox OSS/' \
     app/src/*/res/values*/*strings.xml
+
+sed -i \
+    -e 's|const val FENIX_PLAY_STORE_URL = .*|const val FENIX_PLAY_STORE_URL = ""|' \
+    -e 's|const val RATE_APP_URL = .*|const val RATE_APP_URL = ""|' \
+    -e 's|const val WHATS_NEW_URL = .*|const val WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|' \
+    app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+
+# Clear top sites/attribution links
+sed -i \
+    -e 's|const val GOOGLE_URL = .*|const val GOOGLE_URL = ""|' \
+    -e 's|const val GOOGLE_US_URL = .*|const val GOOGLE_US_URL = ""|' \
+    -e 's|const val GOOGLE_XX_URL = .*|const val GOOGLE_XX_URL = ""|' \
+    -e 's|const val POCKET_TRENDING_URL = .*|const val POCKET_TRENDING_URL = ""|' \
+    -e 's|const val WIKIPEDIA_URL = .*|const val WIKIPEDIA_URL = ""|' \
+    app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+
+# Remove links/articles that don't apply to us...
+sed -i \
+    -e 's|CRASH_REPORTS(".*")|CRASH_REPORTS("")|' \
+    -e 's|FX_SUGGEST(".*")|FX_SUGGEST("")|' \
+    -e 's|MARKETING_DATA(".*")|MARKETING_DATA("")|' \
+    -e 's|OPT_OUT_STUDIES(".*")|OPT_OUT_STUDIES("")|' \
+    -e 's|PRIVATE_NOTICE(".*")|PRIVATE_NOTICE("")|' \
+    -e 's|REVIEW_QUALITY_CHECK(".*")|REVIEW_QUALITY_CHECK("")|' \
+    -e 's|SPONSOR_PRIVACY(".*")|SPONSOR_PRIVACY("")|' \
+    -e 's|TECHNICAL_AND_INTERACTION_DATA(".*")|TECHNICAL_AND_INTERACTION_DATA("")|' \
+    -e 's|TERMS_OF_SERVICE(".*")|TERMS_OF_SERVICE("")|' \
+    -e 's|USAGE_PING_SETTINGS(".*")|USAGE_PING_SETTINGS("")|' \
+    -e 's|YOUR_RIGHTS(".*")|YOUR_RIGHTS("")|' \
+    app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+
+# Remove tracking parameters from Mozilla URLs + prevent exposing locale & unnecessary information
+sed -i \
+    -e 's|CUSTOM_SEARCH_ENGINES("custom-search-engines")|CUSTOM_SEARCH_ENGINES("kb/custom-search-engines")|' \
+    -e 's|DNS_OVER_HTTPS("https-only-mode-firefox-android")|DNS_OVER_HTTPS("kb/https-only-mode-firefox-android")|' \
+    -e 's|DNS_OVER_HTTPS_LOCAL_PROVIDER("https-only-mode-firefox-android")|DNS_OVER_HTTPS_LOCAL_PROVIDER("kb/https-only-mode-firefox-android")|' \
+    -e 's|EXTENSION_PERMISSIONS("extension-permissions")|EXTENSION_PERMISSIONS("kb/extension-permissions")|' \
+    -e 's|FIND_INSTALL_ADDONS("add-ons-firefox-android")|FIND_INSTALL_ADDONS("kb/add-ons-firefox-android")|' \
+    -e 's|HELP("faq-android")|HELP("mobile")|' \
+    -e 's|UNSIGNED_ADDONS("unsigned-addons")|UNSIGNED_ADDONS("kb/unsigned-addons")|' \
+    -e 's|HTTPS_ONLY_MODE("https-only-mode-firefox-android")|HTTPS_ONLY_MODE("kb/https-only-mode-firefox-android")|' \
+    -e 's|MANAGE_OPTIONAL_EXTENSION_PERMISSIONS("manage-optional-permissions-android-extensions")|MANAGE_OPTIONAL_EXTENSION_PERMISSIONS("kb/manage-optional-permissions-android-extensions")|' \
+    -e 's|PRIVATE_BROWSING_MYTHS("common-myths-about-private-browsing")|PRIVATE_BROWSING_MYTHS("kb/common-myths-about-private-browsing")|' \
+    -e 's|QR_CAMERA_ACCESS("qr-camera-access")|QR_CAMERA_ACCESS("kb/qr-camera-access")|' \
+    -e 's|SEARCH_SUGGESTION("how-search-firefox-preview")|SEARCH_SUGGESTION("kb/how-search-firefox-preview")|' \
+    -e 's|SEND_TABS("send-tab-preview")|SEND_TABS("kb/send-tab-preview")|' \
+    -e 's|SET_AS_DEFAULT_BROWSER("make-firefox-default-browser-android")|SET_AS_DEFAULT_BROWSER("kb/make-firefox-default-browser-android")|' \
+    -e 's|SMARTBLOCK("smartblock-enhanced-tracking-protection")|SMARTBLOCK("kb/smartblock-enhanced-tracking-protection")|' \
+    -e 's|SYNC_SETUP("how-set-firefox-sync-firefox-android")|SYNC_SETUP("kb/how-set-firefox-sync-firefox-android")|' \
+    -e 's|TOTAL_COOKIE_PROTECTION("enhanced-tracking-protection-android")|TOTAL_COOKIE_PROTECTION("kb/enhanced-tracking-protection-android")|' \
+    -e 's|TRACKING_PROTECTION("tracking-protection-firefox-android")|TRACKING_PROTECTION("kb/tracking-protection-firefox-android")|' \
+    -e 's|TRANSLATIONS("android-translation")|TRANSLATIONS("kb/android-translation")|' \
+    -e 's|UNSIGNED_ADDONS("unsigned-addons")|UNSIGNED_ADDONS("kb/unsigned-addons")|' \
+    -e 's|return "https://support.mozilla.org/\$langTag/kb/\$escapedTopic"|return "https://support.mozilla.org/kb/\$escapedTopic"|' \
+    -e 's|return "https://support.mozilla.org/1/mobile/\$appVersion/\$osTarget/\$langTag/\$escapedTopic"|return "https://support.mozilla.org/\$escapedTopic"|' \
+    -e 's|return "https://www.mozilla.org/\$langTag/\$path"|return "https://www.mozilla.org/\$path"|' \
+    app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
@@ -261,6 +331,17 @@ popd
 # shellcheck disable=SC2154
 pushd "$android_components"
 
+# Disable metrics from AAR dependencies
+sed -i -e 's|ext.allowMetricsFromAAR = .*|ext.allowMetricsFromAAR = false|' components/browser/engine-gecko/build.gradle
+
+# Disable Sentry/Crash Reporting
+sed -i -e 's|private val sendCaughtExceptions: Boolean = .*|private val sendCaughtExceptions: Boolean = false|' components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+
+sed -i \
+    -e 's|return "https://crash-stats.mozilla.org/report/index/$identifier"|return ""|' \
+    -e 's|"https://crash-reports.mozilla.com/submit".toUri()|return "".toUri()|' \
+    components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+
 # Remove questionable built-in search engines (due to poor privacy practices)
 rm components/feature/search/src/main/assets/searchplugins/amazon-jp.xml
 rm components/feature/search/src/main/assets/searchplugins/baidu.xml
@@ -361,6 +442,8 @@ find "$patches/gecko-overlay/branding" -type f | while read -r src; do
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
 done
+
+sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
 
 # Add our custom/hardened FPP targets
 find "$patches/gecko-overlay/rfptargets" -type f | while read -r src; do
@@ -505,6 +588,7 @@ fi
     echo 'ac_add_options --disable-webspeechtestbackend'
     echo 'ac_add_options --disable-wmf'
     echo 'ac_add_options --enable-application=mobile/android'
+    echo 'ac_add_options --enable-disk-remnant-avoidance'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-install-strip'
     echo 'ac_add_options --enable-minify=properties'
@@ -519,8 +603,10 @@ fi
     echo 'ac_add_options --with-app-basename=IronFox'
     echo 'ac_add_options --with-app-name=ironfox'
     echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
+    echo 'ac_add_options --with-crashreporter-url=data;'
     echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
+    echo 'ac_add_options --with-unsigned-addon-scopes='
 
     if [[ -n "${target}" ]]; then
         echo "ac_add_options --target=$target"
@@ -541,7 +627,7 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
-    echo 'mk_add_options MOZ_APP_DISPLAYNAME="IronFox"'
+    echo 'mk_add_options MOZ_APP_DISPLAYNAME=IronFox'
     echo 'mk_add_options MOZ_APP_VENDOR="IronFox OSS"'
     echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
@@ -550,8 +636,9 @@ fi
     echo 'export MOZ_APP_DISPLAYNAME=IronFox'
     echo 'export MOZ_APP_NAME=ironfox'
     echo 'export MOZ_APP_REMOTINGNAME=ironfox'
-    echo 'export MOZ_APP_UA_NAME="Firefox"'
+    echo 'export MOZ_APP_UA_NAME=Firefox'
     echo 'export MOZ_CRASHREPORTER='
+    echo 'export MOZ_CRASHREPORTER_URL=data;'
     echo 'export MOZ_DATA_REPORTING='
     echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'

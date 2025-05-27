@@ -1,17 +1,3 @@
-From 64b85f12b666aef7fd7aec5da94fde07f6121200 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:08:17 +0530
-Subject: [PATCH] fix(patches): update
- 'domain-highlighting-and-alignment.patch' for 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../browser/toolbar/display/OriginView.kt     | 28 ++++++++++++++++++-
- .../components/concept/toolbar/Toolbar.kt     |  9 ++++++
- .../feature/toolbar/internal/URLRenderer.kt   | 11 +++++---
- .../components/toolbar/ToolbarIntegration.kt  |  3 +-
- 4 files changed, 45 insertions(+), 6 deletions(-)
-
 diff --git a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
 index 506f8b3c6b..b53b31ad63 100644
 --- a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
@@ -146,6 +132,3 @@ index 86b6454dac..16332ef912 100644
  ) {
  
      @VisibleForTesting
--- 
-2.49.0
-

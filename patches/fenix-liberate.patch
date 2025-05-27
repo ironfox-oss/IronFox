@@ -1,46 +1,3 @@
-From 26252f9ab4a23d81e73a5f96d24bc0c66dc81b7c Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:13:09 +0530
-Subject: [PATCH] fix(patches): update 'fenix-liberate.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../android-components/.buildconfig.yml       | 11 ---
- mobile/android/fenix/.buildconfig.yml         |  1 -
- mobile/android/fenix/app/build.gradle         | 11 ---
- mobile/android/fenix/app/proguard-rules.pro   | 77 ++-------------
- .../src/main/java/com/adjust/sdk/Adjust.java  | 47 +++++++++
- .../com/adjust/sdk/AdjustAttribution.java     | 49 ++++++++++
- .../java/com/adjust/sdk/AdjustConfig.java     | 49 ++++++++++
- .../main/java/com/adjust/sdk/AdjustEvent.java | 31 ++++++
- .../main/java/com/adjust/sdk/Constants.java   | 18 ++++
- .../main/java/com/adjust/sdk/LogLevel.java    | 43 +++++++++
- .../sdk/OnAttributionChangedListener.java     | 29 ++++++
- .../messaging/FirebaseMessagingService.java   | 42 ++++++++
- .../firebase/messaging/RemoteMessage.java     | 33 +++++++
- .../firebase/AbstractFirebasePushService.kt   | 32 +++++++
- .../mozilla/fenix/components/Components.kt    |  3 -
- .../components/ReviewPromptController.kt      | 19 +---
- .../metrics/InstallReferrerMetricsService.kt  | 95 +------------------
- .../metrics/MarketingAttributionService.kt    | 64 +------------
- .../fenix/components/metrics/MetricsUtils.kt  | 25 +----
- .../java/org/mozilla/fenix/utils/Settings.kt  |  5 +-
- ...issions_details_exceptions_preferences.xml |  6 +-
- .../res/xml/site_permissions_preferences.xml  |  1 +
- mobile/android/focus-android/app/build.gradle |  4 -
- 23 files changed, 393 insertions(+), 302 deletions(-)
- create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
- create mode 100644 mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/RemoteMessage.java
- create mode 100644 mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
-
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
 index 26e76a18d2..57f282c175 100644
 --- a/mobile/android/android-components/.buildconfig.yml
@@ -76,10 +33,10 @@ index b5aa2ce3a4..45a339cd9f 100644
      - service-digitalassetlinks
      - service-firefox-accounts
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 7535453460..091d7ad06f 100644
+index bdbc2336e3..14807839ad 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -665,7 +665,6 @@ dependencies {
+@@ -637,7 +637,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -87,7 +44,7 @@ index 7535453460..091d7ad06f 100644
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
      testImplementation project(':support-test-fakes')
-@@ -716,16 +715,6 @@ dependencies {
+@@ -688,16 +687,6 @@ dependencies {
      implementation libs.protobuf.javalite
      implementation libs.google.material
  
@@ -102,8 +59,8 @@ index 7535453460..091d7ad06f 100644
 -    implementation libs.play.review.ktx
 -
      implementation ComponentsDependencies.mozilla_appservices_init_rust_components
+     implementation ComponentsDependencies.mozilla_appservices_search
  
-     androidTestImplementation(libs.androidx.espresso.contrib) {
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
 index 982ef996de..e592dbfdca 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
@@ -721,20 +678,19 @@ index 6312b65949..784bd37320 100644
          Adjust.gdprForgetMe(application.applicationContext)
      }
  
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-index 233855f4c2..07c6145368 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-@@ -6,18 +6,10 @@ package org.mozilla.fenix.components.metrics
+diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Mon Apr 21 16:33:21 2025 +0000
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Fri Apr 25 11:07:18 2025 +0000
+@@ -6,8 +6,6 @@
  
  import android.content.Context
  import android.os.RemoteException
 -import com.android.installreferrer.api.InstallReferrerClient
 -import com.android.installreferrer.api.InstallReferrerStateListener
--import kotlinx.coroutines.CoroutineScope
--import kotlinx.coroutines.Dispatchers
--import kotlinx.coroutines.launch
- import mozilla.components.support.base.log.logger.Logger
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.launch
+@@ -15,9 +13,6 @@
  import org.json.JSONException
  import org.json.JSONObject
  import org.mozilla.fenix.FeatureFlags
@@ -744,7 +700,7 @@ index 233855f4c2..07c6145368 100644
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
  import java.io.UnsupportedEncodingException
-@@ -33,86 +25,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -33,86 +28,10 @@
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
@@ -831,7 +787,7 @@ index 233855f4c2..07c6145368 100644
      }
  
      override fun track(event: Event) = Unit
-@@ -120,9 +36,6 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -120,9 +39,6 @@
      override fun shouldTrack(event: Event): Boolean = false
  
      private fun triggerPing() {
@@ -841,7 +797,7 @@ index 233855f4c2..07c6145368 100644
      }
  }
  
-@@ -237,12 +150,6 @@ data class UTMParams(
+@@ -237,12 +153,6 @@
              return
          }
          intoSettings(settings)
@@ -854,7 +810,7 @@ index 233855f4c2..07c6145368 100644
      }
  }
  
-@@ -337,9 +244,6 @@ data class MetaParams(
+@@ -337,9 +247,6 @@
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -1012,10 +968,10 @@ index e13ebe821f..05b8d2c5ff 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..23cb71356f 100644
+index 72493a2c21..6411691265 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1871,10 +1871,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1872,10 +1872,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the marketing onboarding card should be shown to the user.
       */
@@ -1064,10 +1020,10 @@ index ef1dcb4e6e..0eb2d275c3 100644
  
          <androidx.preference.Preference
 diff --git a/mobile/android/focus-android/app/build.gradle b/mobile/android/focus-android/app/build.gradle
-index 08cf83d213..b78e1fa1f3 100644
+index 25f831276d..a00d34525a 100644
 --- a/mobile/android/focus-android/app/build.gradle
 +++ b/mobile/android/focus-android/app/build.gradle
-@@ -259,10 +259,6 @@ dependencies {
+@@ -268,10 +268,6 @@ dependencies {
      implementation libs.androidx.transition
      implementation libs.androidx.work.runtime
  
@@ -1078,6 +1034,3 @@ index 08cf83d213..b78e1fa1f3 100644
      implementation libs.google.material
  
      implementation libs.thirdparty.sentry
--- 
-2.49.0
-

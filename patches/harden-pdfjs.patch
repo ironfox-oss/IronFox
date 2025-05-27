@@ -1,22 +1,8 @@
-From 0f6a79a0761163f8d2b5c3421d95c42ea4b5dfa7 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:30:51 +0530
-Subject: [PATCH] fix(patches): update 'harden-pdfjs.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../components/pdfjs/content/build/pdf.mjs    | 23 ++++++++-----------
- .../pdfjs/content/build/pdf.worker.mjs        | 23 ++++++++-----------
- .../pdfjs/content/web/viewer-geckoview.html   |  1 +
- .../pdfjs/content/web/viewer-geckoview.mjs    |  2 +-
- 4 files changed, 20 insertions(+), 29 deletions(-)
-
 diff --git a/toolkit/components/pdfjs/content/build/pdf.mjs b/toolkit/components/pdfjs/content/build/pdf.mjs
-index a75478c3f6..16fd316ed3 100644
+index d2af6ba929..335f8cfd5c 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.mjs
-@@ -540,19 +540,14 @@ function isLittleEndian() {
+@@ -456,19 +456,14 @@ function isLittleEndian() {
    return view32[0] === 1;
  }
  function isEvalSupported() {
@@ -38,7 +24,7 @@ index a75478c3f6..16fd316ed3 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -10142,7 +10137,7 @@ function getDocument(src = {}) {
+@@ -10010,7 +10005,7 @@ function getDocument(src = {}) {
    const {
      docId
    } = task;
@@ -47,7 +33,7 @@ index a75478c3f6..16fd316ed3 100644
    const data = src.data ? getDataProp(src.data) : null;
    const httpHeaders = src.httpHeaders || null;
    const withCredentials = src.withCredentials === true;
-@@ -10152,17 +10147,17 @@ function getDocument(src = {}) {
+@@ -10020,17 +10015,17 @@ function getDocument(src = {}) {
    let worker = src.worker instanceof PDFWorker ? src.worker : null;
    const verbosity = src.verbosity;
    const docBaseUrl = typeof src.docBaseUrl === "string" && !isDataScheme(src.docBaseUrl) ? src.docBaseUrl : null;
@@ -70,7 +56,7 @@ index a75478c3f6..16fd316ed3 100644
    const isOffscreenCanvasSupported = typeof src.isOffscreenCanvasSupported === "boolean" ? src.isOffscreenCanvasSupported : !isNodeJS;
    const isImageDecoderSupported = typeof src.isImageDecoderSupported === "boolean" ? src.isImageDecoderSupported : true;
    const canvasMaxAreaInBytes = Number.isInteger(src.canvasMaxAreaInBytes) ? src.canvasMaxAreaInBytes : -1;
-@@ -10179,7 +10174,7 @@ function getDocument(src = {}) {
+@@ -10047,7 +10042,7 @@ function getDocument(src = {}) {
    const enableHWA = src.enableHWA === true;
    const useWasm = src.useWasm !== false;
    const length = rangeTransport ? rangeTransport.length : src.length ?? NaN;
@@ -80,10 +66,10 @@ index a75478c3f6..16fd316ed3 100644
    const styleElement = null;
    setVerbosityLevel(verbosity);
 diff --git a/toolkit/components/pdfjs/content/build/pdf.worker.mjs b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-index 3cdb5401df..81662df2fb 100644
+index 28157acd51..bee8773aec 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.worker.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-@@ -491,19 +491,14 @@ function isLittleEndian() {
+@@ -456,19 +456,14 @@ function isLittleEndian() {
    return view32[0] === 1;
  }
  function isEvalSupported() {
@@ -105,7 +91,7 @@ index 3cdb5401df..81662df2fb 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -27831,10 +27826,10 @@ class GlobalImageCache {
+@@ -28637,10 +28632,10 @@ class GlobalImageCache {
  class PDFFunctionFactory {
    constructor({
      xref,
@@ -118,7 +104,7 @@ index 3cdb5401df..81662df2fb 100644
    }
    create(fn, parseArray = false) {
      let fnRef, parsedFn;
-@@ -30718,18 +30713,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
+@@ -30973,18 +30968,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
    maxImageSize: -1,
    disableFontFace: false,
    ignoreErrors: false,
@@ -133,11 +119,11 @@ index 3cdb5401df..81662df2fb 100644
    useWasm: true,
    useWorkerFetch: true,
 -  cMapUrl: null,
++  cMapUrl: "resource://pdf.js/web/cmaps/",
    iccUrl: null,
 -  standardFontDataUrl: null,
 -  wasmUrl: null
-+  cMapUrl: "resource://pdf.js/web/cmaps/",
-+  standardFontDataUrl: "resource://pdf.js/web/standard_fonts/",
++  standardFontDataUrl: "resource://pdf.js/web/cmaps/",
 +  wasmUrl: "resource://pdf.js/web/wasm/"
  });
  const PatternType = {
@@ -155,10 +141,10 @@ index 5e0a113820..e89114242e 100644
      <title>PDF.js viewer</title>
  
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-index 3042947fb0..fedaeb9438 100644
+index 167c6472f4..553ab04b37 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-@@ -854,7 +854,7 @@ const defaultOptions = {
+@@ -824,7 +824,7 @@ const defaultOptions = {
      kind: OptionKind.API
    },
    isEvalSupported: {
@@ -167,6 +153,3 @@ index 3042947fb0..fedaeb9438 100644
      kind: OptionKind.API
    },
    isOffscreenCanvasSupported: {
--- 
-2.49.0
-

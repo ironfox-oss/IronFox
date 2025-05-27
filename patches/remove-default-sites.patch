@@ -1,19 +1,8 @@
-From 8336ef8e84e837873b5b4161814b53f5360ac11c Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:37:14 +0530
-Subject: [PATCH] fix(patches): update 'remove-default-sites.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt    | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..94ce73b3b5 100644
+index 72493a2c21..deaf775539 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1155,10 +1155,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1161,10 +1161,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = true,
      )
  
@@ -25,6 +14,3 @@ index 8e271198b0..94ce73b3b5 100644
  
      var shouldShowSearchSuggestionsInPrivate by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions_in_private),
--- 
-2.49.0
-

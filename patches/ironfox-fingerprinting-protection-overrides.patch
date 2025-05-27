@@ -1,15 +1,3 @@
-From e808598187b4c1185bd4f845b453ce0670aa748e Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:34:48 +0530
-Subject: [PATCH] fix(patches): update
- 'ironfox-fingerprinting-protection-overrides.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../resistfingerprinting/FingerprintingWebCompatService.sys.mjs | 2 ++
- 1 file changed, 2 insertions(+)
-
 diff --git a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
 index 676f06ea68..0cd6d64388 100644
 --- a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
@@ -30,6 +18,3 @@ index 676f06ea68..0cd6d64388 100644
      this.#validator = new lazy.JsonSchema.Validator(SCHEMA);
    }
  
--- 
-2.49.0
-
