@@ -252,13 +252,11 @@ rebase_patch() {
 rebase_patches() {
     local compatible_tag="$1"
     local target_tag="$2"
-    shift 2
-    local patch_files=("$@")
 
     # Validate inputs
-    if [[ -z "$compatible_tag" || -z "$target_tag" || ${#patch_files[@]} -eq 0 ]]; then
+    if [[ -z "$compatible_tag" || -z "$target_tag" ]]; then
         echo "Error: Missing required parameters" >&2
-        echo "Usage: rebase_patches <compatible_tag> <target_tag> <patch_file1> [patch_file2] [...]" >&2
+        echo "Usage: rebase_patches <compatible_tag> <target_tag>" >&2
         return 1
     fi
 
@@ -266,12 +264,12 @@ rebase_patches() {
     local failure_count=0
     local failed_patches=()
 
-    echo "Starting batch rebase of ${#patch_files[@]} patch files..."
+    echo "Starting batch rebase of ${#PATCH_FILES[@]} patch files..."
     echo "Compatible tag: $compatible_tag"
     echo "Target tag: $target_tag"
     echo "----------------------------------------"
 
-    for patch_file in "${patch_files[@]}"; do
+    for patch_file in "${PATCH_FILES[@]}"; do
         echo "Processing: $patch_file"
 
         if rebase_patch "$compatible_tag" "$target_tag" "$patch_file"; then
