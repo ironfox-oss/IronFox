@@ -523,7 +523,7 @@ fi
     echo 'ac_add_options --with-crashreporter-url=data;'
     echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
-    echo 'ac_add_options --with-unsigned-addon-scopes='
+    echo 'ac_add_options --with-unsigned-addon-scopes=app,system'
 
     if [[ -n "${target}" ]]; then
         echo "ac_add_options --target=$target"
