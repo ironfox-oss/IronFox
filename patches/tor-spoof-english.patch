@@ -1,32 +1,12 @@
-From 499f652c7965b6dd3cee72075c9435862c714666 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:40:41 +0530
-Subject: [PATCH] fix(patches): update 'tor-spoof-english.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../browser/engine/gecko/GeckoEngine.kt       | 10 ++++++
- .../components/concept/engine/Settings.kt     |  3 ++
- .../java/org/mozilla/fenix/components/Core.kt |  1 +
- .../DefaultLocaleSettingsController.kt        |  5 +++
- .../advanced/LocaleSettingsFragment.kt        | 15 ++++++++-
- .../java/org/mozilla/fenix/utils/Settings.kt  |  5 +++
- .../res/layout/fragment_locale_settings.xml   | 24 ++++++++++++--
- .../src/main/res/values/preference_keys.xml   |  2 ++
- mobile/android/geckoview/api.txt              |  3 ++
- .../geckoview/GeckoRuntimeSettings.java       | 33 +++++++++++++++++++
- .../geckoview/GeckoViewStartup.sys.mjs        |  5 +++
- 11 files changed, 102 insertions(+), 4 deletions(-)
-
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index d3bfbfa762..876cbc2672 100644
+index 53eb28c845..ff92c2474e 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1466,6 +1466,15 @@ class GeckoEngine(
+@@ -1470,6 +1470,15 @@ class GeckoEngine(
+         override var cookieBehaviorOptInPartitioningPBM: Boolean
              get() = runtime.settings.cookieBehaviorOptInPartitioningPBM
              set(value) { runtime.settings.setCookieBehaviorOptInPartitioningPBM(value) }
- 
++        
 +        override var spoofEnglish: Boolean
 +            get() = runtime.settings.spoofEnglish
 +            set(value) {
@@ -35,11 +15,10 @@ index d3bfbfa762..876cbc2672 100644
 +                    localeUpdater.updateValue()
 +                }
 +            }
-+
+ 
          override var certificateTransparencyMode: Int
              get() = runtime.settings.certificateTransparencyMode
-             set(value) { runtime.settings.setCertificateTransparencyMode(value) }
-@@ -1513,6 +1522,7 @@ class GeckoEngine(
+@@ -1518,6 +1527,7 @@ class GeckoEngine(
              this.parallelMarkingEnabled = it.parallelMarkingEnabled
              this.cookieBehaviorOptInPartitioning = it.cookieBehaviorOptInPartitioning
              this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
@@ -69,10 +48,10 @@ index db66cbe503..cb8ad3ca35 100644
      override var postQuantumKeyExchangeEnabled: Boolean = false,
  ) : Settings() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 9a9487a930..5323e9af2e 100644
+index e57302c306..ebb3f8c567 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -180,6 +180,7 @@ class Core(
+@@ -188,6 +188,7 @@ class Core(
              webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_HIGH_VALUE,
              fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
              parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
@@ -146,10 +125,10 @@ index 91929aab38..a45b807f84 100644
          inflater.inflate(R.menu.languages_list, menu)
          val searchItem = menu.findItem(R.id.search)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..2d63d0bfc9 100644
+index 72493a2c21..682a11ab78 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -355,6 +355,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -360,6 +360,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          false,
      )
  
@@ -201,10 +180,10 @@ index d235e7043f..d0b3a29e9d 100644
  
  </androidx.constraintlayout.widget.ConstraintLayout>
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index dbb7ece65c..2b71de93f2 100644
+index 4faefc7999..d6db4c5cc9 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -457,6 +457,8 @@
+@@ -460,6 +460,8 @@
      <!-- DNS over HTTPS Secret settings -->
      <string name="pref_key_doh_settings_enabled" translatable="false">pref_key_doh_settings_enabled</string>
  
@@ -214,10 +193,10 @@ index dbb7ece65c..2b71de93f2 100644
      <string name="pref_key_glean_usage_profile_id" translatable="false">pref_key_glean_usage_profile_id</string>
  
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index d1af0917aa..b64dfd5cca 100644
+index 0b143db38a..18b7552b1f 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -905,6 +905,7 @@ package org.mozilla.geckoview {
+@@ -918,6 +918,7 @@ package org.mozilla.geckoview {
      method public boolean getRemoteDebuggingEnabled();
      method @Nullable public GeckoRuntime getRuntime();
      method @Nullable public Rect getScreenSizeOverride();
@@ -225,7 +204,7 @@ index d1af0917aa..b64dfd5cca 100644
      method public boolean getTranslationsOfferPopup();
      method @NonNull public List<String> getTrustedRecursiveResolverExcludedDomains();
      method @NonNull public String getTrustedRecursiveResolverUri();
-@@ -948,6 +949,7 @@ package org.mozilla.geckoview {
+@@ -961,6 +962,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setPostQuantumKeyExchangeEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setPreferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings setRemoteDebuggingEnabled(boolean);
@@ -233,7 +212,7 @@ index d1af0917aa..b64dfd5cca 100644
      method @NonNull public GeckoRuntimeSettings setTranslationsOfferPopup(boolean);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverExcludedDomains(@NonNull List<String>);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverMode(int);
-@@ -1010,6 +1012,7 @@ package org.mozilla.geckoview {
+@@ -1024,6 +1026,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder preferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings.Builder remoteDebuggingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder screenSizeOverride(int, int);
@@ -242,14 +221,13 @@ index d1af0917aa..b64dfd5cca 100644
      method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverMode(int);
      method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverUri(@NonNull String);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 30a300d9eb..a41a0976ba 100644
+index 571549c44a..5a9c3f76de 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -601,6 +601,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       getSettings().setLargeKeepaliveFactor(factor);
+@@ -602,6 +602,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        return this;
      }
-+
+ 
 +    /**
 +     * Sets whether we should spoof locale to English for webpages.
 +     *
@@ -260,10 +238,11 @@ index 30a300d9eb..a41a0976ba 100644
 +      getSettings().mSpoofEnglish.set(flag ? 2 : 1);
 +      return this;
 +    }
-   }
- 
-   private GeckoRuntime mRuntime;
-@@ -700,6 +711,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
++
+     /**
+      * Set this flag to disable low-memory detection. Set this when running tests to avoid
+      * unpredictable behavior at runtime.
+@@ -712,6 +723,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning.pbmode", false);
    /* package */ final Pref<Integer> mCertificateTransparencyMode =
        new Pref<Integer>("security.pki.certificate_transparency.mode", 0);
@@ -271,7 +250,7 @@ index 30a300d9eb..a41a0976ba 100644
    /* package */ final Pref<Boolean> mPostQuantumKeyExchangeTLSEnabled =
        new Pref<Boolean>("security.tls.enable_kyber", false);
    /* package */ final Pref<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
-@@ -2048,6 +2060,27 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2071,6 +2083,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return this;
    }
  
@@ -295,23 +274,22 @@ index 30a300d9eb..a41a0976ba 100644
 +    return this;
 +  }
 +
-+
    @Override // Parcelable
    public void writeToParcel(final Parcel out, final int flags) {
      super.writeToParcel(out, flags);
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 4483941f8e..1ca52f75bc 100644
+index d3fb71c91b..98b3b70f45 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-@@ -11,6 +11,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
-   ActorManagerParent: "resource://gre/modules/ActorManagerParent.sys.mjs",
+@@ -12,6 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   DoHController: "resource://gre/modules/DoHController.sys.mjs",
    EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
    PdfJs: "resource://pdf.js/PdfJs.sys.mjs",
 +  RFPHelper: "resource://gre/modules/RFPHelper.sys.mjs",
  });
  
  const { debug, warn } = GeckoViewUtils.initLogging("Startup");
-@@ -339,6 +340,10 @@ export class GeckoViewStartup {
+@@ -342,6 +343,10 @@ export class GeckoViewStartup {
          if (aData.requestedLocales) {
            Services.locale.requestedLocales = aData.requestedLocales;
          }
@@ -322,6 +300,3 @@ index 4483941f8e..1ca52f75bc 100644
          const pls = Cc["@mozilla.org/pref-localizedstring;1"].createInstance(
            Ci.nsIPrefLocalizedString
          );
--- 
-2.49.0
-
