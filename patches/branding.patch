@@ -240,10 +240,28 @@ index d093b9a370..5c454a258c 100644
                  imageRes = R.drawable.ic_firefox,
                  primaryButton = Action(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..e0b0abb133 100644
+index 72493a2c21..e612ecf9b3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2500,10 +2500,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2484,26 +2484,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the user has completed the setup step for choosing the toolbar location
+      */
+-    var hasCompletedSetupStepToolbar by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
+-        default = false,
+-    )
++    var hasCompletedSetupStepToolbar = true
+ 
+     /**
+      * Indicates if the user has completed the setup step for choosing the theme
+      */
+-    var hasCompletedSetupStepTheme by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
+-        default = false,
+-    )
++    var hasCompletedSetupStepTheme = true
+ 
      /**
       * Indicates if the user has completed the setup step for exploring extensions
       */
@@ -255,6 +273,17 @@ index 72493a2c21..e0b0abb133 100644
  
      /**
       * Indicates if this is the default browser.
+@@ -2516,9 +2507,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates whether or not to show the checklist feature.
+      */
+-    var showSetupChecklist by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
+-        default = { FxNimbus.features.setupChecklist.value().enabled },
+-        featureFlag = true,
+-    )
++    var showSetupChecklist = false
+ }
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/ic_firefox.xml b/mobile/android/fenix/app/src/main/res/drawable/ic_firefox.xml
 index 8e369db27c..b1e6090f14 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/ic_firefox.xml
