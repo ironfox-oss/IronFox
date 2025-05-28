@@ -17,12 +17,12 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-set -euo pipefail
-
 if [ -z "$1" ]; then
     echo "Usage: $0 apk|bundle" >&1
     exit 1
 fi
+
+set -euo pipefail
 
 build_type="$1"
 
