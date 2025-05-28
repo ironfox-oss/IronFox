@@ -42,7 +42,8 @@ export PATH
 { yes || true; } | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
 
 $SDK_MANAGER 'build-tools;36.0.0' # for GeckoView
-$SDK_MANAGER 'ndk;28.1.13356709'  # for GleanAS; mozbuild; application-services
+$SDK_MANAGER 'ndk;28.0.13004108'  # for GleanAS
+$SDK_MANAGER 'ndk;28.1.13356709'  # for mozbuild; application-services
 
 export ANDROID_NDK="$ANDROID_HOME/ndk/28.1.13356709"
 [ -d "$ANDROID_NDK" ] || {
