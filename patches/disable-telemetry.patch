@@ -1,3 +1,16 @@
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+index 7941343807..e56e90a005 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
++++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+@@ -58,7 +58,7 @@ android {
+ // Set configuration for the Glean parser to extract metrics.yaml
+ // file from AAR dependencies of this project rather than look
+ // for it into the project directory.
+-ext.allowMetricsFromAAR = true
++ext.allowMetricsFromAAR = false
+ 
+ dependencies {
+     implementation project(':concept-engine')
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
 index d897b9af6f..2fb1be3150 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
@@ -646,6 +659,85 @@ index 505963e058..391a052d15 100644
 -        recordCrashAction(GleanCrashAction.Count(CAUGHT_EXCEPTION_KEY))
      }
  }
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+index 900fc5ebb6..ea5c0b2ad7 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+@@ -103,7 +103,7 @@ class MozillaSocorroService(
+     override val name: String = "Socorro"
+ 
+     override fun createCrashReportUrl(identifier: String): String? {
+-        return "https://crash-stats.mozilla.org/report/index/$identifier"
++        return ""
+     }
+ 
+     init {
+@@ -556,7 +556,7 @@ class MozillaSocorroService(
+     }
+ 
+     internal fun buildServerUrl(versionName: String): String =
+-        "https://crash-reports.mozilla.com/submit".toUri()
++        "".toUri()
+             .buildUpon()
+             .appendQueryParameter("id", appId)
+             .appendQueryParameter("version", versionName)
+diff --git a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+index bc9ae7fe5b..e89859e038 100644
+--- a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
++++ b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+@@ -44,7 +44,7 @@ class SentryService(
+     private val environment: String? = null,
+     private val sendEventForNativeCrashes: Boolean = false,
+     private val sentryProjectUrl: String? = null,
+-    private val sendCaughtExceptions: Boolean = true,
++    private val sendCaughtExceptions: Boolean = false,
+ ) : CrashReporterService {
+ 
+     override val id: String = "new-sentry-instance"
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index bdbc2336e3..8fe75f4fd1 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -301,7 +301,7 @@ android.applicationVariants.configureEach { variant ->
+     project.logger.debug("Application ID:    " + [variant.applicationId, variant.buildType.applicationIdSuffix].findAll().join())
+     project.logger.debug("Build type:        " + variant.buildType.name)
+     project.logger.debug("Flavor:            " + variant.flavorName)
+-    project.logger.debug("Telemetry enabled: " + !isDebug)
++    project.logger.debug("Telemetry enabled: " + false)
+ 
+     if (useReleaseVersioning) {
+         // The Google Play Store does not allow multiple APKs for the same app that all have the
+@@ -343,7 +343,7 @@ android.applicationVariants.configureEach { variant ->
+ 
+     buildConfigField 'String', 'SENTRY_TOKEN', 'null'
+     if (!isDebug) {
+-        buildConfigField 'boolean', 'CRASH_REPORTING', 'true'
++        buildConfigField 'boolean', 'CRASH_REPORTING', 'false'
+         // Reading sentry token from local file (if it exists). In a release task on taskcluster it will be available.
+         try {
+             def token = new File("${rootDir}/.sentry_token").text.trim()
+@@ -354,7 +354,7 @@ android.applicationVariants.configureEach { variant ->
+     }
+ 
+     if (!isDebug) {
+-        buildConfigField 'boolean', 'TELEMETRY', 'true'
++        buildConfigField 'boolean', 'TELEMETRY', 'false'
+     } else {
+         buildConfigField 'boolean', 'TELEMETRY', 'false'
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+index 8b96400722..c8a88c0629 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+@@ -66,7 +66,7 @@ object FeatureFlags {
+     /**
+      * Enable Meta attribution.
+      */
+-    const val META_ATTRIBUTION_ENABLED = true
++    const val META_ATTRIBUTION_ENABLED = false
+ 
+     /**
+      * Enables Homepage as a New Tab.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 9e7842dfd5..fa80f938ec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt

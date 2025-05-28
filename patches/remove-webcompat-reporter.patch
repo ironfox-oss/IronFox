@@ -1,21 +1,3 @@
-From 4279898097c771367f86897c4d48a0e0d1e575b1 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:37:38 +0530
-Subject: [PATCH] fix(patches): update 'remove-webcompat-reporter.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../android-components/.buildconfig.yml       | 23 -------------------
- .../samples/browser/build.gradle              |  1 -
- mobile/android/fenix/.buildconfig.yml         |  1 -
- mobile/android/fenix/app/build.gradle         |  1 -
- .../java/org/mozilla/fenix/FeatureFlags.kt    |  2 +-
- .../components/menu/MenuDialogFragment.kt     |  3 +--
- .../fenix/components/menu/compose/MainMenu.kt |  4 ++--
- .../components/toolbar/DefaultToolbarMenu.kt  |  5 +---
- 8 files changed, 5 insertions(+), 35 deletions(-)
-
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
 index 26e76a18d2..8ee7e10a15 100644
 --- a/mobile/android/android-components/.buildconfig.yml
@@ -82,10 +64,10 @@ index b5aa2ce3a4..4aefd0fc43 100644
      - lib-crash
      - lib-crash-sentry
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 7535453460..160ac8422e 100644
+index bdbc2336e3..5dadfbbce4 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -634,7 +634,6 @@ dependencies {
+@@ -606,7 +606,6 @@ dependencies {
      implementation project(':feature-webauthn')
      implementation project(':feature-webcompat')
      implementation project(':feature-webnotifications')
@@ -93,24 +75,11 @@ index 7535453460..160ac8422e 100644
  
      implementation project(':service-pocket')
      implementation project(':service-mars')
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 7f435ae784..ba6576a5db 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -81,7 +81,7 @@ object FeatureFlags {
-     /**
-      * Enables native WebCompat Reporter.
-      */
--    const val webCompatReporter = true
-+    const val webCompatReporter = false
- 
-     /**
-      * Enables the tab swipe to dismiss rewrite.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 514f270d17..25ec170e81 100644
+index 965c09e29b..cc1a47ed6a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -312,8 +312,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -316,8 +316,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                      val translateLanguageCode = selectedTab?.translationsState?.translationEngineState
                          ?.requestedTranslationPair?.toLanguage
                      val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
@@ -143,10 +112,10 @@ index 136ddf0fda..40534be709 100644
                  isExtensionsProcessDisabled = false,
                  extensionsMenuItemDescription = "No extensions enabled",
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index 92c7c8b36c..7223a6de8e 100644
+index 6fb2b9ef98..9bdfedd87a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -216,10 +216,7 @@ open class DefaultToolbarMenu(
+@@ -213,10 +213,7 @@ open class DefaultToolbarMenu(
       * Return whether Report Broken Site menu item is visible
       */
      private fun shouldShowWebCompatReporter(): Boolean {
@@ -159,10 +128,10 @@ index 92c7c8b36c..7223a6de8e 100644
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 34a3e1b522..c869b47637 100644
+index 9e7842dfd5..061409cf5e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -49,7 +49,6 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
+@@ -50,7 +50,6 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
  import mozilla.components.feature.syncedtabs.commands.GlobalSyncedTabsCommandsProvider
  import mozilla.components.feature.top.sites.TopSitesFrecencyConfig
  import mozilla.components.feature.top.sites.TopSitesProviderConfig
@@ -170,7 +139,7 @@ index 34a3e1b522..c869b47637 100644
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -678,15 +677,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -687,15 +686,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                  onExtensionsLoaded = { extensions ->
                      components.addonUpdater.registerForFutureUpdates(extensions)
                      subscribeForNewAddonsIfNeeded(components.supportedAddonsChecker, extensions)

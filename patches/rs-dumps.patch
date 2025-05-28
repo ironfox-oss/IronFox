@@ -1,21 +1,8 @@
-From bf36c34afb88f493557bd85784c729caa9159d58 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:38:19 +0530
-Subject: [PATCH] fix(patches): update 'rs-dumps.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- services/settings/dumps/blocklists/moz.build  | 20 +++++++++----------
- services/settings/dumps/main/moz.build        |  9 +++++++++
- .../settings/dumps/security-state/moz.build   |  7 +++----
- 3 files changed, 22 insertions(+), 14 deletions(-)
-
 diff --git a/services/settings/dumps/blocklists/moz.build b/services/settings/dumps/blocklists/moz.build
-index 485e888f6a..17d75af900 100644
+index 485e888f6a..27ca6589d6 100644
 --- a/services/settings/dumps/blocklists/moz.build
 +++ b/services/settings/dumps/blocklists/moz.build
-@@ -16,14 +16,14 @@ FINAL_TARGET_FILES.defaults.settings.blocklists += [
+@@ -16,14 +16,13 @@ FINAL_TARGET_FILES.defaults.settings.blocklists += [
  # after install.
  # See https://bugzilla.mozilla.org/show_bug.cgi?id=1639050#c5
  
@@ -23,6 +10,9 @@ index 485e888f6a..17d75af900 100644
 -    FINAL_TARGET_FILES.defaults.settings.blocklists += [
 -        "addons-bloomfilters.json",
 -    ]
++FINAL_TARGET_FILES.defaults.settings.blocklists += [
++    "addons-bloomfilters.json",
++]
  
 -    FINAL_TARGET_FILES.defaults.settings.blocklists["addons-bloomfilters"] += [
 -        "addons-bloomfilters/addons-mlbf.bin",
@@ -30,10 +20,6 @@ index 485e888f6a..17d75af900 100644
 -        "addons-bloomfilters/softblocks-addons-mlbf.bin",
 -        "addons-bloomfilters/softblocks-addons-mlbf.bin.meta.json",
 -    ]
-+FINAL_TARGET_FILES.defaults.settings.blocklists += [
-+    "addons-bloomfilters.json",
-+]
-+
 +FINAL_TARGET_FILES.defaults.settings.blocklists["addons-bloomfilters"] += [
 +    "addons-bloomfilters/addons-mlbf.bin",
 +    "addons-bloomfilters/addons-mlbf.bin.meta.json",
@@ -41,7 +27,7 @@ index 485e888f6a..17d75af900 100644
 +    "addons-bloomfilters/softblocks-addons-mlbf.bin.meta.json",
 +]
 diff --git a/services/settings/dumps/main/moz.build b/services/settings/dumps/main/moz.build
-index f07d3a35f3..66c505699f 100644
+index 7f89890eb3..e94d348edf 100644
 --- a/services/settings/dumps/main/moz.build
 +++ b/services/settings/dumps/main/moz.build
 @@ -37,7 +37,16 @@ if not CONFIG["MOZ_BUILD_APP"].startswith("mobile/"):
@@ -76,6 +62,3 @@ index 6e92217dcb..d6c81e5643 100644
 +FINAL_TARGET_FILES.defaults.settings["security-state"] += [
 +    "intermediates.json",
 +]
--- 
-2.49.0
-
