@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..36aafa5e13 100644
+index 72493a2c21..df9ba5d1f4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1027,7 +1027,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1033,7 +1033,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldDeleteBrowsingDataOnQuit by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_browsing_data_on_quit),
@@ -11,7 +11,7 @@ index 8e271198b0..36aafa5e13 100644
      )
  
      var deleteOpenTabs by booleanPreference(
-@@ -1107,8 +1107,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1113,8 +1113,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              return touchExplorationIsEnabled || switchServiceIsEnabled
          }
  
@@ -81,10 +81,10 @@ index a5cc8cabb6..ea74ef7ee4 100644
              android:layout="@layout/checkbox_left_preference"
              android:title="@string/preferences_delete_browsing_data_downloads" />
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 3b85a2a548..1aad8d7744 100644
+index 4c6b14bf87..4f08a5612c 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -204,6 +204,7 @@
+@@ -199,6 +199,7 @@
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
