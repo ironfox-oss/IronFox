@@ -1,20 +1,8 @@
-From 5b8748101ca747d2b302db3b64e7aadcc5e299f1 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:10:35 +0530
-Subject: [PATCH] fix(patches): update 'enable-light-mode-by-default.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt     | 2 +-
- .../fenix/app/src/main/res/xml/customization_preferences.xml  | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..a4c4a7a819 100644
+index 72493a2c21..1a0c14ddbb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -450,7 +450,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -455,7 +455,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldUseLightTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_light_theme),
@@ -45,6 +33,3 @@ index a24d1b7b2b..ea441ea576 100644
              android:key="@string/pref_key_follow_device_theme"
              android:title="@string/preference_follow_device_theme"
              app:isPreferenceVisible="@bool/API28" />
--- 
-2.49.0
-

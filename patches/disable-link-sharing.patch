@@ -1,20 +1,8 @@
-From 8379442459cc03f0fb7032878c82adeba48a9fd3 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 10:53:16 +0530
-Subject: [PATCH] fix(patches): update 'disable-link-sharing.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- .../org/mozilla/fenix/settings/SettingsFragment.kt    |  2 +-
- .../src/main/java/org/mozilla/fenix/utils/Settings.kt | 11 ++---------
- 2 files changed, 3 insertions(+), 10 deletions(-)
-
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index ad6678f234..6eeff39da6 100644
+index 64492271c3..48d4acfaed 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -799,7 +799,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -751,7 +751,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
      @VisibleForTesting
      internal fun setLinkSharingPreference() {
          with(requirePreference<Preference>(R.string.pref_key_link_sharing)) {
@@ -24,10 +12,10 @@ index ad6678f234..6eeff39da6 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e271198b0..804d8de712 100644
+index 72493a2c21..7ee4d6c8ac 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -685,16 +685,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -691,16 +691,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          }
      }
  
@@ -46,6 +34,3 @@ index 8e271198b0..804d8de712 100644
  
      /**
       * Get the display string for the current open links in apps setting
--- 
-2.49.0
-

@@ -1,38 +1,3 @@
-From 305076ea955dd97d74d63f2ed647c52526efd882 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:27:36 +0530
-Subject: [PATCH] fix(patches): update 'gecko-localize_maven.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- build.gradle                                  | 22 +++++--------------
- .../android/android-components/build.gradle   | 22 +++++--------------
- .../browser/engine-gecko/build.gradle         | 11 +++-------
- .../components/lib/crash/build.gradle         | 11 +++-------
- .../components/service/nimbus/build.gradle    | 11 +++-------
- .../support/remotesettings/build.gradle       | 11 +++-------
- .../plugins/config/build.gradle               | 11 +++-------
- .../plugins/config/settings.gradle            | 11 +++-------
- .../plugins/dependencies/build.gradle         | 11 +++-------
- .../plugins/dependencies/settings.gradle      | 11 +++-------
- .../plugins/publicsuffixlist/build.gradle     | 11 +++-------
- .../plugins/publicsuffixlist/settings.gradle  | 11 +++-------
- .../samples/glean/build.gradle                | 11 +++-------
- .../glean/samples-glean-library/build.gradle  | 11 +++-------
- .../android-components/settings.gradle        | 11 +++-------
- mobile/android/fenix/app/build.gradle         | 11 +++-------
- mobile/android/fenix/build.gradle             | 22 +++++--------------
- .../fenix/mozilla-lint-rules/build.gradle     | 11 +++-------
- .../fenix/plugins/apksize/build.gradle        | 11 +++-------
- .../fenix/plugins/apksize/settings.gradle     | 11 +++-------
- mobile/android/fenix/settings.gradle          | 11 +++-------
- mobile/android/focus-android/build.gradle     | 22 +++++--------------
- mobile/android/focus-android/settings.gradle  | 11 +++-------
- mobile/android/shared-settings.gradle         | 11 +++-------
- settings.gradle                               | 11 +++-------
- 25 files changed, 87 insertions(+), 232 deletions(-)
-
 diff --git a/build.gradle b/build.gradle
 index 9646a2b7cb..e616444284 100644
 --- a/build.gradle
@@ -461,28 +426,6 @@ index ed1180a452..44bcdece34 100644
  
          maven {
              url = "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff --git a/mobile/android/fenix/mozilla-lint-rules/build.gradle b/mobile/android/fenix/mozilla-lint-rules/build.gradle
-index 138192fe8e..caee5f4c96 100644
---- a/mobile/android/fenix/mozilla-lint-rules/build.gradle
-+++ b/mobile/android/fenix/mozilla-lint-rules/build.gradle
-@@ -6,14 +6,9 @@ apply plugin: 'java-library'
- apply plugin: 'kotlin'
- 
- repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url = repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- }
- 
- dependencies {
 diff --git a/mobile/android/fenix/plugins/apksize/build.gradle b/mobile/android/fenix/plugins/apksize/build.gradle
 index ed6975809e..fb374e95b5 100644
 --- a/mobile/android/fenix/plugins/apksize/build.gradle

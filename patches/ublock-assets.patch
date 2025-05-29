@@ -1,17 +1,5 @@
-From 3847b868839f795d0e29a6f70682070ac2804df8 Mon Sep 17 00:00:00 2001
-From: Akash Yadav <itsaky01@gmail.com>
-Date: Mon, 28 Apr 2025 11:40:21 +0530
-Subject: [PATCH] fix(patches): update 'ublock-assets.patch' for
- 'FIREFOX_138_0_BUILD1'
-
-Signed-off-by: Akash Yadav <itsaky01@gmail.com>
----
- toolkit/components/extensions/NativeManifests.sys.mjs | 2 +-
- toolkit/components/extensions/parent/ext-storage.js   | 8 ++++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
-
 diff --git a/toolkit/components/extensions/NativeManifests.sys.mjs b/toolkit/components/extensions/NativeManifests.sys.mjs
-index ef3d1152ff..ca88c38529 100644
+index 3e1a0d6a56..204b0f8dff 100644
 --- a/toolkit/components/extensions/NativeManifests.sys.mjs
 +++ b/toolkit/components/extensions/NativeManifests.sys.mjs
 @@ -36,7 +36,7 @@ export var NativeManifests = {
@@ -42,6 +30,3 @@ index 61eb0fb48e..ecdd2bae9a 100644
                return Promise.reject({
                  message: "Managed storage manifest not found",
                });
--- 
-2.49.0
-

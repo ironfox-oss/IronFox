@@ -201,13 +201,6 @@ patches:
     effect: "No data is synchronized with Mozilla unless explicitly enabled by user."
     category: "Privacy"
 
-  - file: "disallow-china-fxa-server.patch"
-    name: "Disallow China Sync Server"
-    description: "Disallows using the Domestic China server for Firefox Sync."
-    reason: "Privacy and security concerns related to data storage in China."
-    effect: "Ensures user data isn't synchronized to servers in China."
-    category: "Privacy"
-
   - file: "fenix-liberate.patch"
     name: "Remove Proprietary Libraries (Fenix)"
     description: "Patches out proprietary and tracking libraries from Fenix (and replaces them with suitable alternatives, such as microG, if available)."
@@ -435,13 +428,6 @@ patches:
     description: "Disables Mozilla Feedback Surveys (Microsurveys)."
     reason: "To prevent interruptions from survey prompts."
     effect: "Improves user experience by removing survey notifications."
-    category: "User Interface"
-
-  - file: "enable-felt-privacy.patch"
-    name: "Enable Felt Privacy Design"
-    description: "Enables Firefox's newer 'Felt privacy' design for Private Browsing."
-    reason: "To improve visual distinction of private browsing mode."
-    effect: "Better user awareness of private browsing state with modern design."
     category: "User Interface"
   
   - file: "expose-aboutconfig.patch"

@@ -135,16 +135,14 @@ sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
     app/src/release/res/xml/shortcuts.xml
 
-# Disable crash reporting
-sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
-
-# Disable MetricController
-sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
-
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
 sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+
+# Ensure we enable the about:config
+# Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
+sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Let it be IronFox
 sed -i \
@@ -329,7 +327,7 @@ popd
 
 pushd "$application_services"
 # Break the dependency on older A-C
-sed -i -e "/android-components = /s/135\.0\.1/${FIREFOX_VERSION}/" gradle/libs.versions.toml
+sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -361,6 +359,8 @@ find "$patches/gecko-overlay/branding" -type f | while read -r src; do
     mkdir -p "$(dirname "$dst")"
     cp "$src" "$dst"
 done
+
+sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
 
 # Add our custom/hardened FPP targets
 find "$patches/gecko-overlay/rfptargets" -type f | while read -r src; do
@@ -505,6 +505,7 @@ fi
     echo 'ac_add_options --disable-webspeechtestbackend'
     echo 'ac_add_options --disable-wmf'
     echo 'ac_add_options --enable-application=mobile/android'
+    echo 'ac_add_options --enable-disk-remnant-avoidance'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-install-strip'
     echo 'ac_add_options --enable-minify=properties'
@@ -519,6 +520,7 @@ fi
     echo 'ac_add_options --with-app-basename=IronFox'
     echo 'ac_add_options --with-app-name=ironfox'
     echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
+    echo 'ac_add_options --with-crashreporter-url=data;'
     echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
@@ -541,7 +543,7 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
-    echo 'mk_add_options MOZ_APP_DISPLAYNAME="IronFox"'
+    echo 'mk_add_options MOZ_APP_DISPLAYNAME=IronFox'
     echo 'mk_add_options MOZ_APP_VENDOR="IronFox OSS"'
     echo 'mk_add_options MOZ_NORMANDY=0'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
@@ -550,8 +552,9 @@ fi
     echo 'export MOZ_APP_DISPLAYNAME=IronFox'
     echo 'export MOZ_APP_NAME=ironfox'
     echo 'export MOZ_APP_REMOTINGNAME=ironfox'
-    echo 'export MOZ_APP_UA_NAME="Firefox"'
+    echo 'export MOZ_APP_UA_NAME=Firefox'
     echo 'export MOZ_CRASHREPORTER='
+    echo 'export MOZ_CRASHREPORTER_URL=data;'
     echo 'export MOZ_DATA_REPORTING='
     echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'

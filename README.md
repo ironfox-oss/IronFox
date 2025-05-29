@@ -298,7 +298,7 @@ Where `<build-variant>` specifies the variant to build, and is **one** of the fo
 > variants first, get the generated AAR file for GeckoView and then configure
 > `MOZ_ANDROID_FAT_AAR*` environment variables with the path to the generate AAR files.
 >
-> See [task kinds](https://firefox-source-docs.mozilla.org/taskcluster/kindshtml#build-fat-aar) and [ci-build.sh](./scripts/ci-build.sh) for more details.
+> See [task kinds](https://firefox-source-docs.mozilla.org/taskcluster/kinds.html#build-fat-aar) and [ci-build.sh](./scripts/ci-build.sh) for more details.
 
 ### Build
 
