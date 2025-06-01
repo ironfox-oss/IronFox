@@ -1115,7 +1115,7 @@
     "quick-fixes": {
         "content": "filters",
         "group": "default",
-        "title": "Phoenix - Quick fixes",
+        "title": "Phoenix filters - Quick fixes",
         "contentURL": "https://gitlab.com/celenityy/Phoenix/-/raw/pages/uBlock/quick-fixes.txt",
         "supportURL": "https://phoenix.celenity.dev/issues"
     },
