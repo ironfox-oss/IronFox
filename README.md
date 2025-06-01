@@ -22,7 +22,7 @@
 
 </div>
 
-**F-Droid QR Code**:
+**<div align="center">F-Droid QR Code:</div>**
 
 <div align="center">
 
