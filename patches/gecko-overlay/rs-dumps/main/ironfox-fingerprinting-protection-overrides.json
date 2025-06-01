@@ -1082,6 +1082,10 @@
       "firstPartyDomain": "rollenspiel.chat"
     },
     {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "salespanel.io"
+    },
+    {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "socialnetwork24.com"
     },
@@ -1288,6 +1292,11 @@
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
       "firstPartyDomain": "*",
       "thirdPartyDomain": "pinterest.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "*",
+      "thirdPartyDomain": "pornhub.com"
     },
     {
       "overrides": "+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC",
