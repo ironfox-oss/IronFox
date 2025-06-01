@@ -22,9 +22,10 @@
 
 </div>
 
+**F-Droid QR Code**:
+
 <div align="center">
 
-**F-Droid QR Code**:
 [<img src="assets/f-droid_qr.png"
     alt="Get it on F-Droid"
     height="300">](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904)
