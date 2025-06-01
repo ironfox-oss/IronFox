@@ -1,10 +1,12 @@
 # IronFox
 
-<p align="center">
-    <img src="assets/ironfox.png"
+<div align="center">
+
+<img src="assets/ironfox.png"
         alt="IronFox"
         height="200">
-</p>
+
+</div>
 
 <div align="center">
 
@@ -17,6 +19,15 @@
 [<img src="assets/obtainium.png"
     alt="Get it on Obtainium"
     height="80">](obtainium://app/%7B%22id%22%3A%22org.ironfoxoss.ironfox%22%2C%22url%22%3A%22https%3A%2F%2Fgitlab.com%2Fironfox-oss%2Fironfox%22%2C%22author%22%3A%22IronFox%20OSS%22%2C%22name%22%3A%22IronFox%22%2C%22additionalSettings%22%3A%22%7B%5C%22appIdOrName%5C%22%3A%5C%22org.ironfoxoss.ironfox%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22IronFox%5C%22%2C%5C%22about%5C%22%3A%5C%22A%20privacy%20and%20security-oriented%20Firefox-based%20browser%20for%20Android.%5C%22%2C%5C%22appAuthor%5C%22%3A%5C%22IronFox%20OSS%5C%22%7D%22%2C%22overrideSource%22%3A%22GitLab%22%7D)
+
+</div>
+
+<div align="center">
+
+**F-Droid QR Code**:
+[<img src="assets/f-droid_qr.png"
+    alt="Get it on F-Droid"
+    height="300">](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904)
 
 </div>
 
