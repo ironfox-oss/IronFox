@@ -570,8 +570,8 @@ fi
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 
 {
-    cat "$patches/preferences/phoenix-android.js"
-    cat "$patches/preferences/phoenix-extended-android.js"
+    cat "$patches/preferences/phoenix.js"
+    cat "$patches/preferences/phoenix-extended.js"
     cat "$patches/preferences/ironfox.js"
 
     if [[ -n ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
