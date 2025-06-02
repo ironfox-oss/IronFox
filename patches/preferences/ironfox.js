@@ -14,7 +14,7 @@ pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
 /// Re-enable the use of Cookie Banner Reduction rules from Remote Settings
 // We disable this functionality in Phoenix and instead set the rules locally via the "cookiebanners.listService.testRules" pref
 // We include the Cookie Banner Reduction rules local dump though, so we can just leave this on, but block remotely fetching the rules with the "browser.ironfox.services.settings.allowedCollections" pref instead
-pref("cookiebanners.listService.testRules", ""); // [DEFAULT]
+pref("cookiebanners.listService.testRules", ''); // [DEFAULT]
 pref("cookiebanners.listService.testSkipRemoteSettings", false); // [DEFAULT]
 
 /// Re-enable our/Mozilla's fingerprinting protection overrides
