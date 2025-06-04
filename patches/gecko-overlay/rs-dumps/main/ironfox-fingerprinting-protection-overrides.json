@@ -850,6 +850,10 @@
     },
     {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "animepahe.ru"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
       "firstPartyDomain": "apple.com"
     },
     {
