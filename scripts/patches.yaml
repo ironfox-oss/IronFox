@@ -229,11 +229,11 @@ patches:
     effect: "Clean new tab page without predetermined site suggestions."
     category: "Privacy"
   
-  - file: "restrict-mozaddonmanager.patch"
-    name: "Restrict mozAddonManager"
-    description: "Prevents addons.mozilla.org from being able to query a list of the user's installed add-ons, and removes its ability to enable and uninstall add-ons."
+  - file: "install-addons-from-amo-without-mozaddonmanager.patch"
+    name: "Allow installation of add-ons from the AMO (addons.mozilla.org) without the mozAddonManager API"
+    description: "Allows users to install add-ons from addons.mozilla.org, without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the mozAddonManager API)."
     reason: "To prevent fingerprinting and reduce attack surface."
-    effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API), while reducing the amount of information shared with Mozilla and limiting the API's capabilities."
+    effect: "Users can safely install add-ons from addons.mozilla.org, without compromising privacy and security."
     category: "Privacy"
 
   - file: "sanitize-on-exit.patch"
