@@ -1,751 +1,751 @@
 {
   "data": [
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ad"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ae"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.af"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ag"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.al"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.am"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.ao"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ar"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.as"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.at"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.au"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.az"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ba"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.bd"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.be"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.bf"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.bg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.bh"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.bi"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.bj"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.bn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.bo"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.br"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.bs"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.bt"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.bw"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.by"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.bz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ca"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cd"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cf"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ch"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ci"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.ck"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cl"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.co"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.cr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.cu"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cv"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.cy"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.de"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.dj"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.dk"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.dm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.do"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.dz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ec"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ee"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.eg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.es"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.et"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.fi"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.fj"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.fm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.fr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ga"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ge"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.gg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.gh"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.gi"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.gl"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.gm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.gr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.gt"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.gy"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.hk"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.hn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.hr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ht"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.hu"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.id"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ie"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.il"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.im"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.in"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.iq"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.is"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.it"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.je"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.jm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.jo"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.jp"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.ke"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.kh"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ki"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.kg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.kr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.kw"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.kz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.la"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.lb"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.li"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.lk"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.ls"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.lt"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.lu"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.lv"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ly"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.ma"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.md"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.me"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.mg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.mk"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ml"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.mm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.mn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.mt"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.mu"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.mv"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.mw"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.mx"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.my"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.mz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.na"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ng"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ni"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ne"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.nl"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.no"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.np"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.nr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.nu"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.nz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.om"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.pa"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.pe"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.pg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ph"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.pk"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.pl"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.pn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.pr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ps"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.pt"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.py"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.qa"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ro"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ru"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.rw"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.sa"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.sb"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.sc"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.se"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.sg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.sh"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.si"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.sk"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.sl"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.sn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.so"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.sm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.sr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.st"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.sv"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.td"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.tg"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.th"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.tj"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.tl"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.tm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.tn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.to"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.tr"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.tt"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.tw"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.tz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.ua"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.ug"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.uk"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.uy"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.uz"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.vc"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.ve"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.vi"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.com.vn"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.vu"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.ws"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.rs"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.za"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.zm"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.co.zw"
     },
     {
-      "overrides": "+CanvasRandomization",
+      "overrides": "+CanvasRandomization,-JSDateTimeUTC",
       "firstPartyDomain": "google.cat"
     },
     {
