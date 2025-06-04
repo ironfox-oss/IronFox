@@ -159,6 +159,35 @@ index 982ef996de..e592dbfdca 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index f235d0f7a1..febbd1cf69 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -744,24 +744,6 @@
+         <service
+             android:name=".messaging.NotificationDismissedService"
+             android:exported="false" />
+-
+-        <service
+-            android:name=".push.FirebasePushService"
+-            android:exported="false">
+-            <intent-filter>
+-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+-            </intent-filter>
+-        </service>
+-
+-        <meta-data
+-            android:name="firebase_messaging_auto_init_enabled"
+-            android:value="true" />
+-        <meta-data
+-            android:name="firebase_analytics_collection_enabled"
+-            android:value="false" />
+-        <meta-data
+-            android:name="firebase_analytics_collection_deactivated"
+-            android:value="true" />
+         <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
+         <provider
+             android:name="androidx.startup.InitializationProvider"
 diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
 new file mode 100644
 index 0000000000..ec7ad9bc42
