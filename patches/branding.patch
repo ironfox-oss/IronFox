@@ -129,14 +129,14 @@ index c13ecb6c86..75b9f05e51 100644
  
      fun createCustomTabIntent(context: Context, url: String): Intent = CustomTabsIntent.Builder()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 64d09acb1a..1e40219878 100644
+index 827dd48501..02d13b7b83 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -82,7 +82,7 @@ class OnboardingFragment : Fragment() {
+@@ -83,7 +83,7 @@ class OnboardingFragment : Fragment() {
              pagesToDisplay(
                  showDefaultBrowserPage = isNotDefaultBrowser(this) && !isDefaultBrowserPromptSupported(),
                  showNotificationPage = canShowNotificationPage(),
--                showAddWidgetPage = canShowAddSearchWidgetPrompt(),
+-                showAddWidgetPage = canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(activity)),
 +                showAddWidgetPage = false,
              ).toMutableList()
          }
@@ -240,10 +240,10 @@ index d093b9a370..5c454a258c 100644
                  imageRes = R.drawable.ic_firefox,
                  primaryButton = Action(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..e612ecf9b3 100644
+index 60daeacc7e..698fadc834 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2484,26 +2484,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2485,26 +2485,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the user has completed the setup step for choosing the toolbar location
       */
@@ -273,13 +273,16 @@ index 72493a2c21..e612ecf9b3 100644
  
      /**
       * Indicates if this is the default browser.
-@@ -2516,9 +2507,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2517,12 +2508,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not to show the checklist feature.
       */
 -    var showSetupChecklist by lazyFeatureFlagPreference(
 -        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
--        default = { FxNimbus.features.setupChecklist.value().enabled },
+-        default = {
+-            FxNimbus.features.setupChecklist.value().enabled &&
+-                canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
+-        },
 -        featureFlag = true,
 -    )
 +    var showSetupChecklist = false
