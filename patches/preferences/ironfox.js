@@ -3,13 +3,6 @@
 
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
-/// Block ports currently known to be abused by Android apps for tracking/fingerprinting
-// This is set by default - but Phoenix overrides it (as the pref is typically hidden, so we wanted to expose it via the `about:config` for users to enable it)
-// This ensures it actually takes effect... (until next Phoenix release - where I'll have this fixed and won't be necessary)
-// https://localmess.github.io/
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1970141
-pref("network.security.ports.banned", "29009, 29010, 30102, 30103, 12387, 12388, 12580, 12581, 12582, 12583, 12584, 12585, 12586, 12587, 12588, 12589, 12590, 12591");
-
 /// Clear FPP global overrides
 // We're hardening FPP internally with our own `RFPTargetsDefault.inc` file instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
 pref("privacy.fingerprintingProtection.overrides", ""); // [DEFAULT]
@@ -31,11 +24,6 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 // We include the Cookie Banner Reduction rules local dump though, so we can just leave this on, but block remotely fetching the rules with the "browser.ironfox.services.settings.allowedCollections" pref instead
 pref("cookiebanners.listService.testRules", ''); // [DEFAULT]
 pref("cookiebanners.listService.testSkipRemoteSettings", false); // [DEFAULT]
-
-/// Re-enable our/Mozilla's fingerprinting protection overrides
-// We disable this functionality in Phoenix to re-enable Canvas randomization for Google domains by default - that isn't a problem for us here though, since we just use our custom Remote Settings dump to re-enable Canvas randomization for Google domains instead
-// This pref is also required for our custom Remote Settings dump/overrides to work anyways...
-pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true); // [DEFAULT]
 
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
