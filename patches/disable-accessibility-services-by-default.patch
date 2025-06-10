@@ -1,11 +1,11 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 53eb28c845..21cea64731 100644
+index 916e432778..598cf3aa48 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1478,6 +1478,14 @@ class GeckoEngine(
-         override var postQuantumKeyExchangeEnabled: Boolean
-             get() = runtime.settings.postQuantumKeyExchangeEnabled
-             set(value) { runtime.settings.setPostQuantumKeyExchangeEnabled(value) }
+@@ -1482,6 +1482,14 @@ class GeckoEngine(
+         override var bannedPorts: String
+             get() = runtime.settings.bannedPorts
+             set(value) { runtime.settings.setBannedPorts(value) }
 +        
 +        override var accessibilityEnabled: Boolean
 +            get() = runtime.settings.accessibilityEnabled
@@ -17,22 +17,22 @@ index 53eb28c845..21cea64731 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1520,6 +1528,7 @@ class GeckoEngine(
-             this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
+@@ -1525,6 +1533,7 @@ class GeckoEngine(
              this.certificateTransparencyMode = it.certificateTransparencyMode
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
+             this.bannedPorts = it.bannedPorts
 +            this.accessibilityEnabled = it.accessibilityEnabled
          }
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index db66cbe503..473732b2cf 100644
+index 8d90b168c7..d010c2dd56 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -340,6 +340,11 @@ abstract class Settings {
-      * in TLS and HTTP/3.
+@@ -345,6 +345,11 @@ abstract class Settings {
+      * Comma-separated list of destination ports that the application should block connections to.
       */
-     open var postQuantumKeyExchangeEnabled: Boolean by UnsupportedSetting()
+     open var bannedPorts: String by UnsupportedSetting()
 +
 +    /**
 +     * Setting to control Accessibility Services.
@@ -41,22 +41,22 @@ index db66cbe503..473732b2cf 100644
  }
  
  /**
-@@ -408,6 +413,7 @@ data class DefaultSettings(
-     override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
+@@ -414,6 +419,7 @@ data class DefaultSettings(
      override var certificateTransparencyMode: Int = 0,
      override var postQuantumKeyExchangeEnabled: Boolean = false,
+     override var bannedPorts: String = "",
 +    override var accessibilityEnabled: Boolean = false,
  ) : Settings() {
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index e57302c306..3f3342fb40 100644
+index daf079c89b..8fa77a21f0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -190,6 +190,7 @@ class Core(
-             parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
+@@ -191,6 +191,7 @@ class Core(
              certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
+             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
 +            accessibilityEnabled = context.settings().accessibilityEnabled,
          )
  
@@ -159,10 +159,10 @@ index a810f76208..f9381cbc86 100644
          android:defaultValue="true"
          android:key="@string/pref_key_accessibility_auto_size"
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index 0b143db38a..7218f7de9e 100644
+index c7147b320b..42f421ca50 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -927,6 +927,7 @@ package org.mozilla.geckoview {
+@@ -928,6 +928,7 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -170,7 +170,7 @@ index 0b143db38a..7218f7de9e 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -969,6 +970,7 @@ package org.mozilla.geckoview {
+@@ -971,6 +972,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -178,7 +178,7 @@ index 0b143db38a..7218f7de9e 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1030,6 +1032,7 @@ package org.mozilla.geckoview {
+@@ -1032,6 +1034,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -187,7 +187,7 @@ index 0b143db38a..7218f7de9e 100644
    }
  
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 571549c44a..13f3f53fbe 100644
+index fe1e217dcb..215a489dfc 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -602,6 +602,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -214,10 +214,10 @@ index 571549c44a..13f3f53fbe 100644
        new Pref<Boolean>("network.http.http3.enable_kyber", false);
 +  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<>("accessibility.force_disabled", 1);
  
-   /* package */ int mPreferredColorScheme = COLOR_SCHEME_SYSTEM;
- 
-@@ -2064,6 +2076,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-     return mPostQuantumKeyExchangeTLSEnabled.get() && mPostQuantumKeyExchangeHttp3Enabled.get();
+   /* package */ final Pref<String> mBannedPorts =
+       new Pref<String>("network.security.ports.banned", "");
+@@ -2086,6 +2098,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+     return mBannedPorts.get();
    }
  
 +  /**

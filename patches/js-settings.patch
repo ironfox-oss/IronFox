@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 53eb28c845..a40ed60872 100644
+index 916e432778..875dd0f48e 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 @@ -1091,7 +1091,75 @@ class GeckoEngine(
@@ -79,7 +79,7 @@ index 53eb28c845..a40ed60872 100644
  
          override var webFontsEnabled: Boolean
              get() = runtime.settings.webFontsEnabled
-@@ -1481,6 +1549,14 @@ class GeckoEngine(
+@@ -1485,6 +1553,14 @@ class GeckoEngine(
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
@@ -95,7 +95,7 @@ index 53eb28c845..a40ed60872 100644
              this.automaticFontSizeAdjustment = it.automaticFontSizeAdjustment
              this.automaticLanguageAdjustment = it.automaticLanguageAdjustment
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index db66cbe503..fc0414915f 100644
+index 8d90b168c7..b5b58b4104 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 @@ -25,6 +25,46 @@ abstract class Settings {
@@ -145,7 +145,7 @@ index db66cbe503..fc0414915f 100644
      /**
       * Setting to control whether or not DOM Storage is enabled.
       */
-@@ -347,6 +387,14 @@ abstract class Settings {
+@@ -352,6 +392,14 @@ abstract class Settings {
   */
  data class DefaultSettings(
      override var javascriptEnabled: Boolean = true,
@@ -161,13 +161,13 @@ index db66cbe503..fc0414915f 100644
      override var webFontsEnabled: Boolean = true,
      override var automaticFontSizeAdjustment: Boolean = true,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index e57302c306..8b6e2197e3 100644
+index daf079c89b..98e210e053 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -151,6 +151,15 @@ class Core(
-      */
+@@ -152,6 +152,15 @@ class Core(
      val engine: Engine by lazyMonitored {
          val defaultSettings = DefaultSettings(
+             requestInterceptor = requestInterceptor,
 +            javascriptEnabled = context.settings().javascriptEnabled,
 +            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitEnabled,
@@ -177,9 +177,9 @@ index e57302c306..8b6e2197e3 100644
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
 +            wasmEnabled = context.settings().wasmEnabled,
-             requestInterceptor = requestInterceptor,
              remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled &&
                  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M,
+             testingModeEnabled = false,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 72493a2c21..15268939b0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
@@ -207,10 +207,10 @@ index 72493a2c21..15268939b0 100644
          appContext.getPreferenceKey(R.string.pref_key_show_voice_search),
          default = true,
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index 0b143db38a..f55ea494df 100644
+index c7147b320b..17d829f12b 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -907,6 +907,14 @@ package org.mozilla.geckoview {
+@@ -908,6 +908,14 @@ package org.mozilla.geckoview {
      method public boolean getGlobalPrivacyControlPrivateMode();
      method public boolean getInputAutoZoomEnabled();
      method public boolean getJavaScriptEnabled();
@@ -225,7 +225,7 @@ index 0b143db38a..f55ea494df 100644
      method @NonNull public int getLargeKeepaliveFactor();
      method @Nullable public String[] getLocales();
      method public boolean getLoginAutofillEnabled();
-@@ -954,6 +962,14 @@ package org.mozilla.geckoview {
+@@ -956,6 +964,14 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setGlobalPrivacyControl(boolean);
      method @NonNull public GeckoRuntimeSettings setInputAutoZoomEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setJavaScriptEnabled(boolean);
@@ -240,7 +240,7 @@ index 0b143db38a..f55ea494df 100644
      method @NonNull public GeckoRuntimeSettings setLargeKeepaliveFactor(int);
      method public void setLocales(@Nullable String[]);
      method @NonNull public GeckoRuntimeSettings setLoginAutofillEnabled(boolean);
-@@ -1016,6 +1032,14 @@ package org.mozilla.geckoview {
+@@ -1018,6 +1034,14 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder globalPrivacyControlEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder inputAutoZoomEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder javaScriptEnabled(boolean);
@@ -256,7 +256,7 @@ index 0b143db38a..f55ea494df 100644
      method @NonNull public GeckoRuntimeSettings.Builder locales(@Nullable String[]);
      method @NonNull public GeckoRuntimeSettings.Builder loginAutofillEnabled(boolean);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 571549c44a..b3c535e4af 100644
+index fe1e217dcb..35cc6456a4 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -137,6 +137,94 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -369,7 +369,7 @@ index 571549c44a..b3c535e4af 100644
    /* package */ final Pref<Boolean> mRemoteDebugging =
        new Pref<Boolean>("devtools.debugger.remote-enabled", false);
    /* package */ final Pref<Integer> mWebFonts =
-@@ -841,6 +937,166 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -843,6 +939,166 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return this;
    }
  

@@ -437,6 +437,7 @@ sed -i \
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
+    -e 's|"network.security.ports.banned"|"z99.ignore.network.security.ports.banned"|' \
     -e 's|"privacy.fingerprintingProtection"|"z99.ignore.privacy.fingerprintingProtection"|' \
     -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.privacy.fingerprintingProtection.overrides"|' \
     -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.privacy.fingerprintingProtection.pbmode"|' \
