@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 53eb28c845..ff92c2474e 100644
+index 916e432778..95acfc32fc 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 @@ -1470,6 +1470,15 @@ class GeckoEngine(
@@ -18,16 +18,16 @@ index 53eb28c845..ff92c2474e 100644
  
          override var certificateTransparencyMode: Int
              get() = runtime.settings.certificateTransparencyMode
-@@ -1518,6 +1527,7 @@ class GeckoEngine(
+@@ -1522,6 +1531,7 @@ class GeckoEngine(
              this.parallelMarkingEnabled = it.parallelMarkingEnabled
              this.cookieBehaviorOptInPartitioning = it.cookieBehaviorOptInPartitioning
              this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
 +            this.spoofEnglish = it.spoofEnglish
              this.certificateTransparencyMode = it.certificateTransparencyMode
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
-         }
+             this.bannedPorts = it.bannedPorts
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index db66cbe503..cb8ad3ca35 100644
+index 8d90b168c7..dad7ce69d3 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 @@ -330,6 +330,8 @@ abstract class Settings {
@@ -39,16 +39,16 @@ index db66cbe503..cb8ad3ca35 100644
      /**
       * Setting to control how Certificate Transparency information is processed.
       */
-@@ -406,6 +408,7 @@ data class DefaultSettings(
+@@ -411,6 +413,7 @@ data class DefaultSettings(
      val getDesktopMode: () -> Boolean = { false },
      override var cookieBehaviorOptInPartitioning: Boolean = false,
      override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
 +    override var spoofEnglish: Boolean = false,
      override var certificateTransparencyMode: Int = 0,
      override var postQuantumKeyExchangeEnabled: Boolean = false,
- ) : Settings() {
+     override var bannedPorts: String = "",
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index e57302c306..ebb3f8c567 100644
+index daf079c89b..58bcf69ed6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -188,6 +188,7 @@ class Core(
@@ -58,7 +58,7 @@ index e57302c306..ebb3f8c567 100644
 +            spoofEnglish = context.settings().spoofEnglish,
              certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
-         )
+             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 index e387bc4ae0..404c55872a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
@@ -193,10 +193,10 @@ index 4faefc7999..d6db4c5cc9 100644
      <string name="pref_key_glean_usage_profile_id" translatable="false">pref_key_glean_usage_profile_id</string>
  
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index 0b143db38a..18b7552b1f 100644
+index c7147b320b..05c2f0afec 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -918,6 +918,7 @@ package org.mozilla.geckoview {
+@@ -919,6 +919,7 @@ package org.mozilla.geckoview {
      method public boolean getRemoteDebuggingEnabled();
      method @Nullable public GeckoRuntime getRuntime();
      method @Nullable public Rect getScreenSizeOverride();
@@ -204,7 +204,7 @@ index 0b143db38a..18b7552b1f 100644
      method public boolean getTranslationsOfferPopup();
      method @NonNull public List<String> getTrustedRecursiveResolverExcludedDomains();
      method @NonNull public String getTrustedRecursiveResolverUri();
-@@ -961,6 +962,7 @@ package org.mozilla.geckoview {
+@@ -963,6 +964,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setPostQuantumKeyExchangeEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setPreferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings setRemoteDebuggingEnabled(boolean);
@@ -212,7 +212,7 @@ index 0b143db38a..18b7552b1f 100644
      method @NonNull public GeckoRuntimeSettings setTranslationsOfferPopup(boolean);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverExcludedDomains(@NonNull List<String>);
      method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverMode(int);
-@@ -1024,6 +1026,7 @@ package org.mozilla.geckoview {
+@@ -1026,6 +1028,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder preferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings.Builder remoteDebuggingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder screenSizeOverride(int, int);
@@ -221,7 +221,7 @@ index 0b143db38a..18b7552b1f 100644
      method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverMode(int);
      method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverUri(@NonNull String);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 571549c44a..5a9c3f76de 100644
+index fe1e217dcb..fc49787b4f 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -602,6 +602,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -250,7 +250,7 @@ index 571549c44a..5a9c3f76de 100644
    /* package */ final Pref<Boolean> mPostQuantumKeyExchangeTLSEnabled =
        new Pref<Boolean>("security.tls.enable_kyber", false);
    /* package */ final Pref<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
-@@ -2071,6 +2083,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2093,6 +2105,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return this;
    }
  

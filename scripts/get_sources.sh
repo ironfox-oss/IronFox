@@ -174,7 +174,6 @@ fi
 
 # Clone application-services
 echo "Cloning appservices..."
-#clone_repo "https://github.com/mozilla/application-services" "$APPSERVICESDIR" "$APPSERVICES_TAG"
 git clone --branch "$APPSERVICES_BRANCH" --depth=1 https://github.com/mozilla/application-services "$APPSERVICESDIR"
 (cd "$APPSERVICESDIR" && git submodule update --init --depth=1)
 
