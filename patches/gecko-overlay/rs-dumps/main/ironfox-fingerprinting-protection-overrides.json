@@ -885,6 +885,10 @@
       "firstPartyDomain": "bsky.app"
     },
     {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,-WebGLRenderInfo",
+      "firstPartyDomain": "cakepay.com"
+    },
+    {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "chatwave.org"
     },
