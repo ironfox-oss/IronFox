@@ -14,7 +14,7 @@ cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 ./scripts/gen_patch_pages.py ../scripts/patches.yaml
 
 # Update version name
-sed -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${FIREFOX_VERSION}\";/g" \
+sed -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
     ./src/version.ts
 
 # Commit changes

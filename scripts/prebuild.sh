@@ -129,7 +129,7 @@ sed -i \
     -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
-    -e "s/Config.releaseVersionName(project)/'${FIREFOX_VERSION}'/" \
+    -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
     app/build.gradle
 sed -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
