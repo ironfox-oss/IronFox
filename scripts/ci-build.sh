@@ -78,7 +78,7 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
 
     # Sign APK
     APK_IN="$(ls "$mozilla_release"/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/*.apk)"
-    APK_OUT="$APK_ARTIFACTS/IronFox-v${FIREFOX_VERSION}-${BUILD_ABI}.apk"
+    APK_OUT="$APK_ARTIFACTS/IronFox-v${IRONFOX_VERSION}-${BUILD_ABI}.apk"
     "$ANDROID_HOME/build-tools/35.0.0/apksigner" sign \
       --ks="$KEYSTORE" \
       --ks-pass="pass:$KEYSTORE_PASS" \
@@ -91,7 +91,7 @@ fi
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
     # Build signed APK set
     AAB_IN="$(ls "$mozilla_release"/obj/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
-    APKS_OUT="$APKS_ARTIFACTS/IronFox-v${FIREFOX_VERSION}.apks"
+    APKS_OUT="$APKS_ARTIFACTS/IronFox-v${IRONFOX_VERSION}.apks"
     "$builddir"/bundletool build-apks \
         --bundle="$AAB_IN" \
         --output="$APKS_OUT" \
