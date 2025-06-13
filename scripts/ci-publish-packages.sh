@@ -56,7 +56,7 @@ for apks in "$APKS_ARTIFACTS"/*.apks; do
 done
 
 {
-    changelog_file="$CI_PROJECT_DIR/changelogs/${FIREFOX_VERSION}.md"
+    changelog_file="$CI_PROJECT_DIR/changelogs/${IRONFOX_VERSION}.md"
     if [[ -f "$changelog_file" ]]; then
         cat "$changelog_file"
     fi
