@@ -958,12 +958,12 @@
         "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/abp/personal.txt",
         "supportURL": "https://badblock.celenity.dev/issues"
     },
-    "click2load": {
+    "clearurlsubo": {
         "content": "filters",
         "group": "privacy",
-        "title": "⛔ yokoffing's click2load filters",
-        "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/click2load.txt",
-        "supportURL": "https://github.com/yokoffing/filterlists/issues"
+        "title": "ClearURLs for uBo (unofficial)",
+        "contentURL": "https://gitlab.com/DandelionSprout/adfilt/-/raw/master/ClearURLs%20for%20uBo/clear_urls_uboified.txt?ref_type=heads",
+        "supportURL": "https://github.com/DandelionSprout/adfilt/discussions/163"
     },
     "divested": {
         "content": "filters",
@@ -1119,6 +1119,13 @@
         "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/hardened/block-page-visibility.txt",
         "supportURL": "https://badblock.celenity.dev/issues"
     },
+    "privacyessentials": {
+        "content": "filters",
+        "group": "privacy",
+        "title": "🔒 Privacy Essentials",
+        "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/privacy_essentials.txt",
+        "supportURL": "https://github.com/yokoffing/filterlists/issues"
+    },
     "quick-fixes": {
         "content": "filters",
         "group": "default",
@@ -1226,6 +1233,14 @@
         "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/hardened/unbreak-webrtc.txt",
         "supportURL": "https://badblock.celenity.dev/issues",
         "instructionURL": "https://codeberg.org/celenity/BadBlock/src/branch/pages/hardened"
+    },
+    "yal": {
+        "content": "filters",
+        "group": "annoyances",
+	"off": true,
+        "title": "🛠️ yokoffing's Annoyance List",
+        "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/annoyance_list.txt",
+        "supportURL": "https://github.com/yokoffing/filterlists/issues"
     },
     "ytneuter": {
         "content": "filters",
