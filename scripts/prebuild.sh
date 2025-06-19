@@ -407,7 +407,7 @@ sed -i \
     -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
     -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
     -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
-    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.cookiebanners.service.enableGlobalRules"|' \
+    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.cookiebanners.service.enableGlobalRules"|' \
     -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
     -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
     -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.privacy.query_stripping.allow_list"|' \
@@ -569,6 +569,17 @@ fi
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+
+# Do not define `browser.safebrowsing.features.` prefs by default
+## These are unnecessary, add extra confusion and complexity, and don't appear to interact well with our other prefs/settings
+sed -i \
+    -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.browser.safebrowsing.features.cryptomining.update"|' \
+    -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.browser.safebrowsing.features.fingerprinting.update"|' \
+    -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.browser.safebrowsing.features.malware.update"|' \
+    -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.browser.safebrowsing.features.phishing.update"|' \
+    -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.browser.safebrowsing.features.trackingAnnotation.update"|' \
+    -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.browser.safebrowsing.features.trackingProtection.update"|' \
+    mobile/android/app/geckoview-prefs.js
 
 {
     cat "$patches/preferences/phoenix.js"
