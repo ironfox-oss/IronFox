@@ -897,6 +897,14 @@
         "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/block_third_party_fonts.txt",
         "supportURL": "https://github.com/yokoffing/filterlists/issues"
     },
+    "antitypo": {
+        "content": "filters",
+        "group": "annoyances malware",
+        "off": true,
+        "title": "iam-py-test's antitypo list",
+        "contentURL": "https://raw.githubusercontent.com/iam-py-test/my_filters_001/refs/heads/main/antitypo.txt",
+        "supportURL": "https://github.com/iam-py-test/my_filters_001/issues"
+    },
     "badblockclick": {
         "content": "filters",
         "group": "privacy",
@@ -958,12 +966,12 @@
         "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/abp/personal.txt",
         "supportURL": "https://badblock.celenity.dev/issues"
     },
-    "click2load": {
+    "clearurlsubo": {
         "content": "filters",
         "group": "privacy",
-        "title": "⛔ yokoffing's click2load filters",
-        "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/click2load.txt",
-        "supportURL": "https://github.com/yokoffing/filterlists/issues"
+        "title": "ClearURLs for uBo (unofficial)",
+        "contentURL": "https://gitlab.com/DandelionSprout/adfilt/-/raw/master/ClearURLs%20for%20uBo/clear_urls_uboified.txt?ref_type=heads",
+        "supportURL": "https://github.com/DandelionSprout/adfilt/discussions/163"
     },
     "divested": {
         "content": "filters",
@@ -1119,6 +1127,13 @@
         "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/hardened/block-page-visibility.txt",
         "supportURL": "https://badblock.celenity.dev/issues"
     },
+    "privacyessentials": {
+        "content": "filters",
+        "group": "privacy",
+        "title": "🔒 Privacy Essentials",
+        "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/privacy_essentials.txt",
+        "supportURL": "https://github.com/yokoffing/filterlists/issues"
+    },
     "quick-fixes": {
         "content": "filters",
         "group": "default",
@@ -1148,6 +1163,14 @@
         "title": "Steven Black (Unified)",
         "tags": "ads privacy security",
         "contentURL": "https://gitlab.com/StevenBlack/hosts/-/raw/master/hosts",
+        "supportURL": "https://github.com/StevenBlack/hosts/issues"
+    },
+    "stevenblack fn+g": {
+        "content": "filters",
+        "group": "annoyances social",
+        "off": true,
+        "title": "Steven Black (fakenews + gambling)",
+        "contentURL": "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-only/hosts",
         "supportURL": "https://github.com/StevenBlack/hosts/issues"
     },
     "threatintel": {
@@ -1180,6 +1203,14 @@
         "title": "🔮 HaGeZi - Most Abused TLDs",
         "contentURL": "https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/adblock/spam-tlds-ublock.txt",
         "supportURL": "https://github.com/hagezi/dns-blocklists/issues"
+    },
+    "malicious-websites": {
+        "content": "filters",
+        "group": "malware",
+        "off": true,
+        "title": "The malicious website blocklist"
+        "contentURL": "https://raw.githubusercontent.com/iam-py-test/my_filters_001/refs/heads/main/antimalware.txt",
+        "supportURL": "https://github.com/iam-py-test/my_filters_001/issues"
     },
     "unsafe": {
         "content": "filters",
@@ -1227,9 +1258,17 @@
         "supportURL": "https://badblock.celenity.dev/issues",
         "instructionURL": "https://codeberg.org/celenity/BadBlock/src/branch/pages/hardened"
     },
-    "ytneuter": {
+    "yal": {
         "content": "filters",
         "group": "annoyances",
+	"off": true,
+        "title": "🛠️ yokoffing's Annoyance List",
+        "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/annoyance_list.txt",
+        "supportURL": "https://github.com/yokoffing/filterlists/issues"
+    },
+    "ytneuter": {
+        "content": "filters",
+        "group": "social",
         "off": true,
         "title": "YouTube Neuter",
         "contentURL": "https://raw.githubusercontent.com/mchangrh/yt-neuter/main/yt-neuter.txt",
@@ -1237,7 +1276,7 @@
     },
     "ytneutersb": {
         "content": "filters",
-        "group": "annoyances",
+        "group": "social",
         "off": true,
         "title": "YouTube Neuter - SponsorBlock Supplement",
         "contentURL": "https://raw.githubusercontent.com/mchangrh/yt-neuter/main/filters/sponsorblock.txt",
