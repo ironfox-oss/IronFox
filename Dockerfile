@@ -29,8 +29,7 @@ ENV ENVDOCKER=/opt/env_docker.sh
 ENV ANDROID_HOME=/root/android-sdk
 ENV JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
 
-RUN echo "#!/bin/bash" >> $ENVDOCKER && \
-    echo 'source /root/env/bin/activate' >> $ENVDOCKER
+RUN echo "#!/bin/bash" >> $ENVDOCKER
 
 # Set up Android SDK
 COPY scripts/setup-android-sdk.sh /tmp/setup-android-sdk.sh
