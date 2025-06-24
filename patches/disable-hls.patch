@@ -1,5 +1,5 @@
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
-index c900501ee6..dba0c2ce55 100644
+index 0e2a6efdc9..8c8c30ba77 100644
 --- a/mobile/android/moz.configure
 +++ b/mobile/android/moz.configure
 @@ -13,7 +13,7 @@ project_flag(

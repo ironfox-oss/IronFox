@@ -137,13 +137,6 @@ patches:
     effect: |
       Reduces risk of credential exposure.
     category: "Privacy"
-  
-  - file: "disable-csp-reporting.patch"
-    name: "Disable CSP Reporting"
-    description: "Disables the submission of CSP reports."
-    reason: "To protect against fingerprinting, and to prevent the submission of this type of analytics to website operators. Also reduces unsolicited network activity and bandwidth consumption."
-    effect: "Limits the information made available to website operators, while ensuring users are always in control of their browsing experience and network activity."
-    category: "Privacy"
 
   - file: "disable-doh-canary.patch"
     name: "Disable DoH Canary Requests"

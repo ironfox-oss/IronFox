@@ -1,44 +1,38 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b74145eb21..58bf1ce33a 100644
+index 43bea16286..c2b99f2d63 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -125,7 +125,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -114,6 +114,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_pocket_content_recommendations).apply {
--            isChecked = context.settings().showContentRecommendations
 +            isVisible = false
-+            isChecked = false
+             isChecked = context.settings().showContentRecommendations
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-                     activity?.recreate()
-@@ -141,8 +142,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -130,7 +131,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_trending_searches).apply {
 -            isVisible = true
--            isChecked = context.settings().isTrendingSearchesVisible
 +            isVisible = false
-+            isChecked = false
+             isChecked = context.settings().isTrendingSearchesVisible
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
- 
-@@ -159,8 +160,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -148,7 +149,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_fxsuggest).apply {
 -            isVisible = FeatureFlags.FX_SUGGEST
--            isChecked = context.settings().enableFxSuggest
 +            isVisible = false
-+            isChecked = false
+             isChecked = context.settings().enableFxSuggest
              onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-                     val newBooleanValue = newValue as? Boolean ?: return false
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..3766ffb1fb 100644
+index 7f19ba4304..1cc301ca1b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1175,10 +1175,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1158,10 +1158,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user have enabled trending search in search suggestions.
       */
      @VisibleForTesting
@@ -50,20 +44,20 @@ index 72493a2c21..3766ffb1fb 100644
  
      /**
       * Indicates if the user have enabled recent search in the search suggestions setting preference.
-@@ -1775,11 +1772,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1764,11 +1761,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Merino content recommendations should be shown.
       */
 -    var showContentRecommendations by lazyFeatureFlagPreference(
 -        key = appContext.getPreferenceKey(R.string.pref_key_pocket_content_recommendations),
 -        default = { FxNimbus.features.merinoRecommendations.value().enabled },
--        featureFlag = true,
+-        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
 -    )
 +    var showContentRecommendations = false
  
      /**
       *  Whether or not to display the Pocket sponsored stories parameter secret settings.
-@@ -2062,11 +2055,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2029,11 +2022,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Trending Search Suggestions are enabled.
       */
@@ -76,7 +70,7 @@ index 72493a2c21..3766ffb1fb 100644
  
      /**
       * Indicates if Recent Search Suggestions are enabled.
-@@ -2132,17 +2121,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2099,17 +2088,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Firefox Suggest is enabled.
       */
@@ -96,7 +90,7 @@ index 72493a2c21..3766ffb1fb 100644
  
      /**
       * Indicates first time engaging with signup
-@@ -2156,22 +2140,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2123,22 +2107,14 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
       * The default value is computed lazily, and based on whether Firefox Suggest is enabled.
       */

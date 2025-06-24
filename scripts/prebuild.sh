@@ -419,6 +419,8 @@ sed -i \
 sed -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
+    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType"|' \
+    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|' \
     -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
     -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
     -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
@@ -434,6 +436,7 @@ sed -i \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning.pbmode"|' \
+    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.network.android_doh.autoselect_enabled"|' \
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
