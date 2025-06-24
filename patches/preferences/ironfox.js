@@ -11,14 +11,6 @@ pref("privacy.fingerprintingProtection.overrides", ""); // [DEFAULT]
 // We're including these internally with a custom Remote Settings dump instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
 pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
 
-/// Disable mozAddonManager
-// mozAddonManager prevents extensions from working on `addons.mozilla.org`, and this API also exposes a list of the user's installed add-ons to `addons.mozilla.org`
-// Disabling the following preferences typically breaks installation of extensions from `addons.mozilla.org` on Android, but we fix this with our `install-addons-from-amo-without-mozaddonmanager` patch.
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1952390#c4
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1384330
-pref("extensions.webapi.enabled", false);
-pref("privacy.resistFingerprinting.block_mozAddonManager", true);
-
 /// Re-enable the use of Cookie Banner Reduction rules from Remote Settings
 // We disable this functionality in Phoenix and instead set the rules locally via the "cookiebanners.listService.testRules" pref
 // We include the Cookie Banner Reduction rules local dump though, so we can just leave this on, but block remotely fetching the rules with the "browser.ironfox.services.settings.allowedCollections" pref instead
