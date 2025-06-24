@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 64492271c3..48d4acfaed 100644
+index 325e5d2141..90833e35cd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -751,7 +751,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
@@ -12,10 +12,10 @@ index 64492271c3..48d4acfaed 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..7ee4d6c8ac 100644
+index 7f19ba4304..212c604329 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -691,16 +691,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -674,16 +674,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          }
      }
  

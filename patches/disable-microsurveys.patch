@@ -1,23 +1,21 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b74145eb21..01386ed75d 100644
+index 43bea16286..7b4a264b5a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -251,8 +251,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -240,7 +240,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_microsurvey_feature_enabled).apply {
 -            isVisible = true
--            isChecked = context.settings().microsurveyFeatureEnabled
 +            isVisible = false
-+            isChecked = false
+             isChecked = context.settings().microsurveyFeatureEnabled
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..b352a22247 100644
+index 7f19ba4304..cef653b140 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2278,19 +2278,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2218,19 +2218,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the microsurvey feature is enabled.
       */
