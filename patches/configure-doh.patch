@@ -210,10 +210,10 @@ index 028be832d6..02c0c6caab 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-index f4ab2c83a6..3cca25d419 100644
+index f290b21561..506412b351 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-@@ -590,8 +590,8 @@ private fun ExceptionsRow(onExceptionsClicked: () -> Unit) {
+@@ -556,8 +556,8 @@ private fun ExceptionsRow(onExceptionsClicked: () -> Unit) {
  private fun DohScreenDefaultProviderPreview() {
      FirefoxTheme {
          val provider = Provider.BuiltIn(
@@ -225,10 +225,10 @@ index f4ab2c83a6..3cca25d419 100644
          )
          DohSettingsScreen(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..805472414f 100644
+index 7f19ba4304..2425d697ed 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -174,9 +174,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -161,9 +161,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          private const val DOH_SETTINGS_OFF = 5
  
          /**
@@ -240,16 +240,20 @@ index 72493a2c21..805472414f 100644
      }
  
      @VisibleForTesting
-@@ -2415,7 +2415,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2358,10 +2358,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates whether or not to show the entry point for the DNS over HTTPS settings
       */
-     val showDohEntryPoint by booleanPreference(
+-    val showDohEntryPoint by lazyFeatureFlagPreference(
++    val showDohEntryPoint by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_enabled),
--        default = false,
+-        default = { FxNimbus.features.doh.value().showUi },
+-        featureFlag = true,
 +        default = true,
      )
  
      /**
-@@ -2427,7 +2427,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2373,7 +2372,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      private var trrMode by intPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
@@ -258,7 +262,12 @@ index 72493a2c21..805472414f 100644
      )
  
      /**
-@@ -2445,7 +2445,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2387,11 +2386,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     /**
+      * Stores the URI of the default DoH provider.
+-     * Bug 1946867 - Currently "hardcoded" to "https://mozilla.cloudflare-dns.com/dns-query"
++     * Bug 1946867 - Currently "hardcoded" to "https://dns.quad9.net/dns-query"
       */
      val dohDefaultProviderUrl by stringPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_default_provider_uri),

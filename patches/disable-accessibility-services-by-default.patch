@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 916e432778..598cf3aa48 100644
+index 1612c570be..790c91a5ac 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1482,6 +1482,14 @@ class GeckoEngine(
+@@ -1483,6 +1483,14 @@ class GeckoEngine(
          override var bannedPorts: String
              get() = runtime.settings.bannedPorts
              set(value) { runtime.settings.setBannedPorts(value) }
@@ -17,19 +17,19 @@ index 916e432778..598cf3aa48 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1525,6 +1533,7 @@ class GeckoEngine(
-             this.certificateTransparencyMode = it.certificateTransparencyMode
+@@ -1527,6 +1535,7 @@ class GeckoEngine(
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
+             this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
 +            this.accessibilityEnabled = it.accessibilityEnabled
          }
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 8d90b168c7..d010c2dd56 100644
+index 24e8f76532..ecc60eb692 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -345,6 +345,11 @@ abstract class Settings {
+@@ -350,6 +350,11 @@ abstract class Settings {
       * Comma-separated list of destination ports that the application should block connections to.
       */
      open var bannedPorts: String by UnsupportedSetting()
@@ -41,21 +41,21 @@ index 8d90b168c7..d010c2dd56 100644
  }
  
  /**
-@@ -414,6 +419,7 @@ data class DefaultSettings(
-     override var certificateTransparencyMode: Int = 0,
-     override var postQuantumKeyExchangeEnabled: Boolean = false,
+@@ -420,6 +425,7 @@ data class DefaultSettings(
+     override var postQuantumKeyExchangeEnabled: Boolean? = null,
+     override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
 +    override var accessibilityEnabled: Boolean = false,
  ) : Settings() {
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index daf079c89b..8fa77a21f0 100644
+index cfbdaba62c..bb4eca1eff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -191,6 +191,7 @@ class Core(
-             certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
+@@ -196,6 +196,7 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
+             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
 +            accessibilityEnabled = context.settings().accessibilityEnabled,
          )
@@ -87,10 +87,10 @@ index 1122dc0b0f..456f387812 100644
              R.string.pref_key_accessibility_force_enable_zoom,
          )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..288ad2e7ab 100644
+index 7f19ba4304..a4290f239d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1080,6 +1080,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1063,6 +1063,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          } else {
              ToolbarPosition.TOP
          }
@@ -102,7 +102,7 @@ index 72493a2c21..288ad2e7ab 100644
  
      /**
       * Check each active accessibility service to see if it can perform gestures, if any can,
-@@ -1087,6 +1092,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1070,6 +1075,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val switchServiceIsEnabled: Boolean
          get() {
@@ -112,7 +112,7 @@ index 72493a2c21..288ad2e7ab 100644
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
  
-@@ -1103,6 +1111,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1086,6 +1094,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val touchExplorationIsEnabled: Boolean
          get() {
@@ -122,7 +122,7 @@ index 72493a2c21..288ad2e7ab 100644
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
              return accessibilityManager?.isTouchExplorationEnabled ?: false
-@@ -1110,7 +1121,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1093,7 +1104,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val accessibilityServicesEnabled: Boolean
          get() {
@@ -132,10 +132,10 @@ index 72493a2c21..288ad2e7ab 100644
  
      fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index 4faefc7999..b483616f56 100644
+index a55bf0589b..ca09abb30e 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -468,4 +468,6 @@
+@@ -469,4 +469,6 @@
      <string name="pref_key_setup_step_toolbar" translatable="false">pref_key_setup_step_toolbar</string>
      <string name="pref_key_setup_step_theme" translatable="false">pref_key_setup_step_theme</string>
      <string name="pref_key_setup_step_extensions" translatable="false">pref_key_setup_step_extensions</string>
@@ -159,10 +159,10 @@ index a810f76208..f9381cbc86 100644
          android:defaultValue="true"
          android:key="@string/pref_key_accessibility_auto_size"
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index c7147b320b..42f421ca50 100644
+index a410550e60..384f8839e4 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -928,6 +928,7 @@ package org.mozilla.geckoview {
+@@ -984,6 +984,7 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -170,7 +170,7 @@ index c7147b320b..42f421ca50 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -971,6 +972,7 @@ package org.mozilla.geckoview {
+@@ -1030,6 +1031,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -178,7 +178,7 @@ index c7147b320b..42f421ca50 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1032,6 +1034,7 @@ package org.mozilla.geckoview {
+@@ -1093,6 +1095,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -187,7 +187,7 @@ index c7147b320b..42f421ca50 100644
    }
  
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index fe1e217dcb..215a489dfc 100644
+index 25ea09c3f6..8ce33cc798 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -602,6 +602,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -208,15 +208,15 @@ index fe1e217dcb..215a489dfc 100644
      /**
       * Set this flag to disable low-memory detection. Set this when running tests to avoid
       * unpredictable behavior at runtime.
-@@ -716,6 +727,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       new Pref<Boolean>("security.tls.enable_kyber", false);
-   /* package */ final Pref<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
-       new Pref<Boolean>("network.http.http3.enable_kyber", false);
+@@ -743,6 +754,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+       new PrefWithoutDefault<Boolean>("security.tls.enable_kyber");
+   /* package */ final PrefWithoutDefault<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
+       new PrefWithoutDefault<Boolean>("network.http.http3.enable_kyber");
 +  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<>("accessibility.force_disabled", 1);
- 
-   /* package */ final Pref<String> mBannedPorts =
-       new Pref<String>("network.security.ports.banned", "");
-@@ -2086,6 +2098,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+   /* package */ final Pref<Boolean> mDohAutoselectEnabled =
+       new Pref<Boolean>("network.android_doh.autoselect_enabled", false);
+   /* package */ final Pref<Boolean> mSameDocumentNavigationOverridesLoadType =
+@@ -2150,6 +2162,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mBannedPorts.get();
    }
  

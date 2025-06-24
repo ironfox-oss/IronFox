@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/doh/DoHHeuristics.sys.mjs b/toolkit/components/doh/DoHHeuristics.sys.mjs
-index fd39a9be17..6bc9650775 100644
+index 112aef69a3..86811bc5a3 100644
 --- a/toolkit/components/doh/DoHHeuristics.sys.mjs
 +++ b/toolkit/components/doh/DoHHeuristics.sys.mjs
 @@ -29,7 +29,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -11,7 +11,7 @@ index fd39a9be17..6bc9650775 100644
  
  const NXDOMAIN_ERR = "NS_ERROR_UNKNOWN_HOST";
  
-@@ -358,7 +358,7 @@ async function safeSearch() {
+@@ -390,7 +390,7 @@ async function safeSearch() {
  }
  
  async function zscalerCanary() {

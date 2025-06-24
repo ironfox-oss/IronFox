@@ -9,10 +9,10 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
-index 4e86c3c8e3..252c605887 100644
+index da1acbe272..e8e8ffe1f3 100644
 --- a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
 +++ b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
-@@ -71,7 +71,13 @@ object Config {
+@@ -60,7 +60,13 @@ object Config {
      private val fennecBaseVersionCode by lazy {
          val format = SimpleDateFormat("yyyyMMddHHmmss", Locale.US)
          val cutoff = format.parse("20141228000000")
@@ -27,6 +27,7 @@ index 4e86c3c8e3..252c605887 100644
  
          Math.floor((build.time - cutoff.time) / (1000.0 * 60.0 * 60.0)).toInt()
      }
+
 -- 
 2.49.0
 

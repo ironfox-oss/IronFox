@@ -1,9 +1,9 @@
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index bdbc2336e3..abb8d71f2a 100644
+index d9a6045423..c226b7dff2 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -68,8 +68,8 @@ android {
-         buildConfigField "String", "VCS_HASH", "\"\"" // see override in release builds for why it's blank.
+@@ -80,8 +80,8 @@ android {
+         buildConfigField "String", "VCS_HASH", "\"\""
          // This should be the "public" base URL of AMO.
          buildConfigField "String", "AMO_BASE_URL", "\"https://addons.mozilla.org\""
 -        buildConfigField "String", "AMO_COLLECTION_NAME", "\"Extensions-for-Android\""
@@ -129,10 +129,10 @@ index c13ecb6c86..75b9f05e51 100644
  
      fun createCustomTabIntent(context: Context, url: String): Intent = CustomTabsIntent.Builder()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 827dd48501..02d13b7b83 100644
+index e5ab956ac3..8f88bf456e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -83,7 +83,7 @@ class OnboardingFragment : Fragment() {
+@@ -82,7 +82,7 @@ class OnboardingFragment : Fragment() {
              pagesToDisplay(
                  showDefaultBrowserPage = isNotDefaultBrowser(this) && !isDefaultBrowserPromptSupported(),
                  showNotificationPage = canShowNotificationPage(),
@@ -142,19 +142,19 @@ index 827dd48501..02d13b7b83 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index 1c717bf900..f33154cc20 100644
+index 795fcd7b7e..5c0cb8796e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-@@ -34,7 +34,7 @@ internal fun Collection<OnboardingCardData>.toPageUiData(
-         .mapIndexed {
-                 index, onboardingCardData ->
+@@ -32,7 +32,7 @@ internal fun Collection<OnboardingCardData>.toPageUiData(
+         .sortedBy { it.ordering }
+         .mapIndexed { index, onboardingCardData ->
              // only first onboarding card shows privacy caption
 -            onboardingCardData.toPageUiData(if (index == 0) privacyCaption else null)
 +            onboardingCardData.toPageUiData(null)
          }
  }
  
-@@ -114,7 +114,6 @@ private fun OnboardingCardData.toPageUiData(privacyCaption: Caption?) = Onboardi
+@@ -112,7 +112,6 @@ private fun OnboardingCardData.toPageUiData(privacyCaption: Caption?) = Onboardi
      themeOptions = extraData?.customizationThemeData
          ?.takeIf { it.isNotEmpty() }
          ?.toOnboardingThemeOptions(),
@@ -163,10 +163,10 @@ index 1c717bf900..f33154cc20 100644
  )
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
-index d093b9a370..5c454a258c 100644
+index 10488889d7..02572c03a1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
-@@ -134,22 +134,22 @@ private fun BodyText(
+@@ -135,22 +135,22 @@ private fun BodyText(
              modifier = Modifier.padding(horizontal = 10.dp),
          ) {
              val lineOneState = LinkTextState(
@@ -198,7 +198,7 @@ index d093b9a370..5c454a258c 100644
                  linkTextStates = listOf(
                      lineOneState,
                  ),
-@@ -161,7 +161,7 @@ private fun BodyText(
+@@ -162,7 +162,7 @@ private fun BodyText(
              )
  
              LinkText(
@@ -207,7 +207,7 @@ index d093b9a370..5c454a258c 100644
                  linkTextStates = listOf(
                      lineTwoState,
                  ),
-@@ -173,7 +173,7 @@ private fun BodyText(
+@@ -174,7 +174,7 @@ private fun BodyText(
              )
  
              LinkText(
@@ -216,7 +216,7 @@ index d093b9a370..5c454a258c 100644
                  linkTextStates = listOf(
                      lineThreeState,
                  ),
-@@ -200,14 +200,14 @@ private fun OnboardingPagePreview() {
+@@ -201,14 +201,14 @@ private fun OnboardingPagePreview() {
                  title = stringResource(id = R.string.onboarding_welcome_to_firefox),
                  description = stringResource(id = R.string.onboarding_terms_of_service_sub_header_2),
                  termsOfService = OnboardingTermsOfService(
@@ -240,10 +240,10 @@ index d093b9a370..5c454a258c 100644
                  imageRes = R.drawable.ic_firefox,
                  primaryButton = Action(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 60daeacc7e..698fadc834 100644
+index 7f19ba4304..659e5bac55 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2485,26 +2485,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2430,26 +2430,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the user has completed the setup step for choosing the toolbar location
       */
@@ -273,7 +273,7 @@ index 60daeacc7e..698fadc834 100644
  
      /**
       * Indicates if this is the default browser.
-@@ -2517,12 +2508,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2462,12 +2453,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not to show the checklist feature.
       */
@@ -281,7 +281,7 @@ index 60daeacc7e..698fadc834 100644
 -        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
 -        default = {
 -            FxNimbus.features.setupChecklist.value().enabled &&
--                canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
+-                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
 -        },
 -        featureFlag = true,
 -    )
