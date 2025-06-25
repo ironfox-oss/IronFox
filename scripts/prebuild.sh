@@ -350,11 +350,6 @@ else
     export wasi_install=$wasi
 fi
 
-# Bundletool
-pushd "$bundletool"
-localize_maven
-popd
-
 # GeckoView
 pushd "$mozilla_release"
 
@@ -460,6 +455,7 @@ sed -i \
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
+
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
     LLVM_SVN='522817'
@@ -467,6 +463,11 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
         --svn_version $LLVM_SVN \
         --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
         --src_path "$llvm"
+
+    # Bundletool
+    pushd "$bundletool"
+    localize_maven
+    popd
 fi
 {
     echo 'ac_add_options --disable-address-sanitizer-reporter'
