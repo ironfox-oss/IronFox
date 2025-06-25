@@ -48,10 +48,10 @@ index 7f89890eb3..e94d348edf 100644
  
  # These search config icons only apply to desktop.
 diff --git a/services/settings/dumps/security-state/moz.build b/services/settings/dumps/security-state/moz.build
-index 6e92217dcb..d6c81e5643 100644
+index 6e92217dcb..a6783ff1a2 100644
 --- a/services/settings/dumps/security-state/moz.build
 +++ b/services/settings/dumps/security-state/moz.build
-@@ -8,7 +8,6 @@ FINAL_TARGET_FILES.defaults.settings["security-state"] += [
+@@ -8,7 +8,7 @@ FINAL_TARGET_FILES.defaults.settings["security-state"] += [
  ]
  
  # Not packaged on android/ios currently - not crucial data for first load.
@@ -59,6 +59,7 @@ index 6e92217dcb..d6c81e5643 100644
 -    FINAL_TARGET_FILES.defaults.settings["security-state"] += [
 -        "intermediates.json",
 -    ]
++
 +FINAL_TARGET_FILES.defaults.settings["security-state"] += [
 +    "intermediates.json",
 +]

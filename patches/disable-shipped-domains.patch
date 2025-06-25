@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index e57302c306..2ccbfe02ae 100644
+index cfbdaba62c..d356001541 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -491,12 +491,7 @@ class Core(
+@@ -506,12 +506,7 @@ class Core(
      val bookmarksStorage: PlacesBookmarksStorage get() = lazyBookmarksStorage.value
      val passwordsStorage: SyncableLoginsStorage get() = lazyPasswordsStorage.value
      val autofillStorage: AutofillCreditCardsAddressesStorage get() = lazyAutofillStorage.value

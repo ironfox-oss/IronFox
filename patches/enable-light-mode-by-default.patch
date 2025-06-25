@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..1a0c14ddbb 100644
+index 7f19ba4304..f1b92b57eb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -455,7 +455,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -438,7 +438,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldUseLightTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_light_theme),

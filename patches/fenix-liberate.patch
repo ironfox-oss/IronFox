@@ -33,10 +33,10 @@ index b5aa2ce3a4..45a339cd9f 100644
      - service-digitalassetlinks
      - service-firefox-accounts
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index bdbc2336e3..14807839ad 100644
+index d9a6045423..f90068c0c6 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -637,7 +637,6 @@ dependencies {
+@@ -649,7 +649,6 @@ dependencies {
  
      implementation project(':lib-crash')
      implementation project(':lib-crash-sentry')
@@ -44,7 +44,7 @@ index bdbc2336e3..14807839ad 100644
      implementation project(':lib-state')
      implementation project(':lib-dataprotect')
      testImplementation project(':support-test-fakes')
-@@ -688,16 +687,6 @@ dependencies {
+@@ -701,16 +700,6 @@ dependencies {
      implementation libs.protobuf.javalite
      implementation libs.google.material
  
@@ -59,8 +59,8 @@ index bdbc2336e3..14807839ad 100644
 -    implementation libs.play.review.ktx
 -
      implementation ComponentsDependencies.mozilla_appservices_init_rust_components
-     implementation ComponentsDependencies.mozilla_appservices_search
  
+     androidTestImplementation(libs.androidx.espresso.contrib) {
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
 index 982ef996de..e592dbfdca 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
@@ -622,7 +622,7 @@ index 0000000000..b50a6f03a2
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index af5cb6d286..0b3d7f0cc5 100644
+index d3b21828c2..836423b4b9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,6 @@ import android.content.Context
@@ -630,10 +630,10 @@ index af5cb6d286..0b3d7f0cc5 100644
  import androidx.compose.ui.platform.LocalContext
  import androidx.core.app.NotificationManagerCompat
 -import com.google.android.play.core.review.ReviewManagerFactory
- import mozilla.appservices.remotesettings.RemoteSettingsServer
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
-@@ -183,7 +182,6 @@ class Components(private val context: Context) {
+ import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
+@@ -212,7 +211,6 @@ class Components(private val context: Context) {
  
      val reviewPromptController by lazyMonitored {
          ReviewPromptController(
@@ -707,10 +707,11 @@ index 6312b65949..784bd37320 100644
          Adjust.gdprForgetMe(application.applicationContext)
      }
  
-diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Mon Apr 21 16:33:21 2025 +0000
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt	Fri Apr 25 11:07:18 2025 +0000
-@@ -6,8 +6,6 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+index 233855f4c2..4433979be9 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+@@ -6,8 +6,6 @@ package org.mozilla.fenix.components.metrics
  
  import android.content.Context
  import android.os.RemoteException
@@ -719,7 +720,7 @@ diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
  import kotlinx.coroutines.CoroutineScope
  import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.launch
-@@ -15,9 +13,6 @@
+@@ -15,9 +13,6 @@ import mozilla.components.support.base.log.logger.Logger
  import org.json.JSONException
  import org.json.JSONObject
  import org.mozilla.fenix.FeatureFlags
@@ -729,7 +730,7 @@ diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
  import java.io.UnsupportedEncodingException
-@@ -33,86 +28,10 @@
+@@ -33,86 +28,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
@@ -816,7 +817,7 @@ diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
      }
  
      override fun track(event: Event) = Unit
-@@ -120,9 +39,6 @@
+@@ -120,9 +39,6 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      override fun shouldTrack(event: Event): Boolean = false
  
      private fun triggerPing() {
@@ -826,7 +827,7 @@ diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
      }
  }
  
-@@ -237,12 +153,6 @@
+@@ -237,12 +153,6 @@ data class UTMParams(
              return
          }
          intoSettings(settings)
@@ -839,7 +840,7 @@ diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
      }
  }
  
-@@ -337,9 +247,6 @@
+@@ -337,9 +247,6 @@ data class MetaParams(
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -851,7 +852,7 @@ diff -r c3bba5162c98 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/co
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-index 638eb2e626..6d9c476d4e 100644
+index 638eb2e626..7e33977c58 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 @@ -5,12 +5,7 @@
@@ -935,12 +936,12 @@ index 638eb2e626..6d9c476d4e 100644
      }
  
      /**
-@@ -90,15 +35,10 @@ class MarketingAttributionService(private val context: Context) {
+@@ -90,15 +35,11 @@ class MarketingAttributionService(private val context: Context) {
       * showing the marketing onboarding flow.
       */
      companion object {
 -        private val marketingPrefixes = listOf(GCLID_PREFIX, ADJUST_REFTAG_PREFIX)
--
+ 
          @VisibleForTesting
 +        @Suppress("UNUSED_PARAMETER")
          internal fun shouldShowMarketingOnboarding(installReferrerResponse: String?): Boolean {
@@ -997,10 +998,10 @@ index e13ebe821f..05b8d2c5ff 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..6411691265 100644
+index 7f19ba4304..0e7c2d118b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1872,10 +1872,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1861,10 +1861,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the marketing onboarding card should be shown to the user.
       */
@@ -1012,6 +1013,21 @@ index 72493a2c21..6411691265 100644
  
      val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_should_enable_felt_privacy),
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 4c6b14bf87..5974b31158 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -207,10 +207,6 @@
+         android:title="@string/preferences_category_about"
+         app:iconSpaceReserved="false"
+         android:layout="@layout/preference_category_no_icon_style">
+-        <androidx.preference.Preference
+-            android:key="@string/pref_key_rate"
+-            app:iconSpaceReserved="false"
+-            android:title="@string/preferences_rate" />
+ 
+         <androidx.preference.Preference
+             android:key="@string/pref_key_about"
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
 index 6bb8cfbbe6..1c15b5897c 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
@@ -1049,7 +1065,7 @@ index ef1dcb4e6e..0eb2d275c3 100644
  
          <androidx.preference.Preference
 diff --git a/mobile/android/focus-android/app/build.gradle b/mobile/android/focus-android/app/build.gradle
-index 25f831276d..a00d34525a 100644
+index fdd0ec8ad6..e474a02921 100644
 --- a/mobile/android/focus-android/app/build.gradle
 +++ b/mobile/android/focus-android/app/build.gradle
 @@ -268,10 +268,6 @@ dependencies {

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 916e432778..95acfc32fc 100644
+index 1612c570be..43b7e47509 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1470,6 +1470,15 @@ class GeckoEngine(
+@@ -1467,6 +1467,15 @@ class GeckoEngine(
          override var cookieBehaviorOptInPartitioningPBM: Boolean
              get() = runtime.settings.cookieBehaviorOptInPartitioningPBM
              set(value) { runtime.settings.setCookieBehaviorOptInPartitioningPBM(value) }
@@ -18,16 +18,16 @@ index 916e432778..95acfc32fc 100644
  
          override var certificateTransparencyMode: Int
              get() = runtime.settings.certificateTransparencyMode
-@@ -1522,6 +1531,7 @@ class GeckoEngine(
+@@ -1523,6 +1532,7 @@ class GeckoEngine(
              this.parallelMarkingEnabled = it.parallelMarkingEnabled
              this.cookieBehaviorOptInPartitioning = it.cookieBehaviorOptInPartitioning
              this.cookieBehaviorOptInPartitioningPBM = it.cookieBehaviorOptInPartitioningPBM
 +            this.spoofEnglish = it.spoofEnglish
              this.certificateTransparencyMode = it.certificateTransparencyMode
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
-             this.bannedPorts = it.bannedPorts
+             this.dohAutoselectEnabled = it.dohAutoselectEnabled
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 8d90b168c7..dad7ce69d3 100644
+index 24e8f76532..6e4c1e0708 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 @@ -330,6 +330,8 @@ abstract class Settings {
@@ -39,26 +39,26 @@ index 8d90b168c7..dad7ce69d3 100644
      /**
       * Setting to control how Certificate Transparency information is processed.
       */
-@@ -411,6 +413,7 @@ data class DefaultSettings(
+@@ -416,6 +418,7 @@ data class DefaultSettings(
      val getDesktopMode: () -> Boolean = { false },
      override var cookieBehaviorOptInPartitioning: Boolean = false,
      override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
 +    override var spoofEnglish: Boolean = false,
      override var certificateTransparencyMode: Int = 0,
-     override var postQuantumKeyExchangeEnabled: Boolean = false,
-     override var bannedPorts: String = "",
+     override var postQuantumKeyExchangeEnabled: Boolean? = null,
+     override var dohAutoselectEnabled: Boolean = false,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index daf079c89b..58bcf69ed6 100644
+index cfbdaba62c..e1c88f77c8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -188,6 +188,7 @@ class Core(
+@@ -192,6 +192,7 @@ class Core(
              webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_HIGH_VALUE,
              fetchPriorityEnabled = FxNimbus.features.networking.value().fetchPriorityEnabled,
              parallelMarkingEnabled = FxNimbus.features.javascript.value().parallelMarkingEnabled,
 +            spoofEnglish = context.settings().spoofEnglish,
              certificateTransparencyMode = FxNimbus.features.pki.value().certificateTransparencyMode,
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
-             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
+             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 index e387bc4ae0..404c55872a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
@@ -125,10 +125,10 @@ index 91929aab38..a45b807f84 100644
          inflater.inflate(R.menu.languages_list, menu)
          val searchItem = menu.findItem(R.id.search)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..682a11ab78 100644
+index 7f19ba4304..e02e9052ee 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -360,6 +360,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -343,6 +343,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          false,
      )
  
@@ -180,10 +180,10 @@ index d235e7043f..d0b3a29e9d 100644
  
  </androidx.constraintlayout.widget.ConstraintLayout>
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index 4faefc7999..d6db4c5cc9 100644
+index a55bf0589b..da35ea3ee9 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -460,6 +460,8 @@
+@@ -461,6 +461,8 @@
      <!-- DNS over HTTPS Secret settings -->
      <string name="pref_key_doh_settings_enabled" translatable="false">pref_key_doh_settings_enabled</string>
  
@@ -193,35 +193,35 @@ index 4faefc7999..d6db4c5cc9 100644
      <string name="pref_key_glean_usage_profile_id" translatable="false">pref_key_glean_usage_profile_id</string>
  
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index c7147b320b..05c2f0afec 100644
+index a410550e60..c775f7535f 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -919,6 +919,7 @@ package org.mozilla.geckoview {
-     method public boolean getRemoteDebuggingEnabled();
-     method @Nullable public GeckoRuntime getRuntime();
+@@ -975,6 +975,7 @@ package org.mozilla.geckoview {
+     method @NonNull public boolean getSameDocumentNavigationOverridesLoadType();
+     method @NonNull public String getSameDocumentNavigationOverridesLoadTypeForceDisable();
      method @Nullable public Rect getScreenSizeOverride();
 +    method public boolean getSpoofEnglish();
      method public boolean getTranslationsOfferPopup();
      method @NonNull public List<String> getTrustedRecursiveResolverExcludedDomains();
      method @NonNull public String getTrustedRecursiveResolverUri();
-@@ -963,6 +964,7 @@ package org.mozilla.geckoview {
+@@ -1020,6 +1021,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setPostQuantumKeyExchangeEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setPreferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings setRemoteDebuggingEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
+     method @NonNull public GeckoRuntimeSettings setSameDocumentNavigationOverridesLoadType(boolean);
+     method @NonNull public GeckoRuntimeSettings setSameDocumentNavigationOverridesLoadTypeForceDisable(@NonNull String);
      method @NonNull public GeckoRuntimeSettings setTranslationsOfferPopup(boolean);
-     method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverExcludedDomains(@NonNull List<String>);
-     method @NonNull public GeckoRuntimeSettings setTrustedRecursiveResolverMode(int);
-@@ -1026,6 +1028,7 @@ package org.mozilla.geckoview {
+@@ -1085,6 +1087,7 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder preferredColorScheme(int);
      method @NonNull public GeckoRuntimeSettings.Builder remoteDebuggingEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder screenSizeOverride(int, int);
 +    method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder setSameDocumentNavigationOverridesLoadType(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder setSameDocumentNavigationOverridesLoadTypeForceDisable(@NonNull String);
      method @NonNull public GeckoRuntimeSettings.Builder translationsOfferPopup(boolean);
-     method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverMode(int);
-     method @NonNull public GeckoRuntimeSettings.Builder trustedRecursiveResolverUri(@NonNull String);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index fe1e217dcb..fc49787b4f 100644
+index 25ea09c3f6..1c0ebb6f26 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -602,6 +602,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -242,16 +242,16 @@ index fe1e217dcb..fc49787b4f 100644
      /**
       * Set this flag to disable low-memory detection. Set this when running tests to avoid
       * unpredictable behavior at runtime.
-@@ -712,6 +723,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -739,6 +750,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning.pbmode", false);
    /* package */ final Pref<Integer> mCertificateTransparencyMode =
        new Pref<Integer>("security.pki.certificate_transparency.mode", 0);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 0);
-   /* package */ final Pref<Boolean> mPostQuantumKeyExchangeTLSEnabled =
-       new Pref<Boolean>("security.tls.enable_kyber", false);
-   /* package */ final Pref<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
-@@ -2093,6 +2105,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-     return this;
+   /* package */ final PrefWithoutDefault<Boolean> mPostQuantumKeyExchangeTLSEnabled =
+       new PrefWithoutDefault<Boolean>("security.tls.enable_kyber");
+   /* package */ final PrefWithoutDefault<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
+@@ -2206,6 +2218,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+     return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  
 +  /**
@@ -278,7 +278,7 @@ index fe1e217dcb..fc49787b4f 100644
    public void writeToParcel(final Parcel out, final int flags) {
      super.writeToParcel(out, flags);
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index d3fb71c91b..98b3b70f45 100644
+index c5999da57a..332f14fa8a 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 @@ -12,6 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -289,7 +289,7 @@ index d3fb71c91b..98b3b70f45 100644
  });
  
  const { debug, warn } = GeckoViewUtils.initLogging("Startup");
-@@ -342,6 +343,10 @@ export class GeckoViewStartup {
+@@ -369,6 +370,10 @@ export class GeckoViewStartup {
          if (aData.requestedLocales) {
            Services.locale.requestedLocales = aData.requestedLocales;
          }

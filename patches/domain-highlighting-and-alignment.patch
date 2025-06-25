@@ -84,10 +84,10 @@ index 77ffea44d7..8bdfaea7a5 100644
  
  private fun AppCompatImageButton.setTintResource(@ColorRes tintColorResource: Int) {
 diff --git a/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt b/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
-index 53dcdf7bb9..83762aac98 100644
+index 5b0dcb298d..ff774543d7 100644
 --- a/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
 +++ b/mobile/android/android-components/components/feature/toolbar/src/main/java/mozilla/components/feature/toolbar/internal/URLRenderer.kt
-@@ -98,16 +98,19 @@ private suspend fun SpannableStringBuilder.colorRegistrableDomain(
+@@ -98,7 +98,7 @@ private suspend fun SpannableStringBuilder.colorRegistrableDomain(
  
      val registrableDomain = configuration
          .publicSuffixList
@@ -95,16 +95,10 @@ index 53dcdf7bb9..83762aac98 100644
 +        .getPublicSuffixPlusOne(host.removeSuffix("."))
          .await() ?: return
  
--    val index = url.indexOf(registrableDomain)
--    if (index == -1) {
-+    val indexOfHost = url.indexOf(host)
-+    val indexOfRegistrableDomain = host.lastIndexOf(registrableDomain)
-+    if (indexOfHost == -1 || indexOfRegistrableDomain == -1) {
-         return
-     }
+     val indexOfHost = url.indexOf(host)
+@@ -110,7 +110,7 @@ private suspend fun SpannableStringBuilder.colorRegistrableDomain(
+     val index = indexOfHost + indexOfRegistrableDomain
  
-+    val index = indexOfHost + indexOfRegistrableDomain
-+
      setSpan(
 -        ForegroundColorSpan(configuration.registrableDomainColor),
 +        Toolbar.RegistrableDomainColorSpan(configuration.registrableDomainColor),
@@ -112,10 +106,10 @@ index 53dcdf7bb9..83762aac98 100644
          index + registrableDomain.length,
          SPAN_INCLUSIVE_INCLUSIVE,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
-index 86b6454dac..16332ef912 100644
+index 17e3bf78ba..c404af16f8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/ToolbarIntegration.kt
-@@ -60,6 +60,7 @@ abstract class ToolbarIntegration(
+@@ -58,6 +58,7 @@ abstract class ToolbarIntegration(
          urlRenderConfiguration = ToolbarFeature.UrlRenderConfiguration(
              context.components.publicSuffixList,
              context.getColorFromAttr(R.attr.textPrimary),
@@ -123,7 +117,7 @@ index 86b6454dac..16332ef912 100644
              renderStyle = renderStyle,
          ),
      )
-@@ -142,7 +143,7 @@ class DefaultToolbarIntegration(
+@@ -140,7 +141,7 @@ class DefaultToolbarIntegration(
      interactor = interactor,
      customTabId = customTabId,
      isPrivate = isPrivate,

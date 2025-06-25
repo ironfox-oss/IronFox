@@ -1,14 +1,8 @@
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index 22cb809c62..bca3c3198f 100644
+index 0328809399..b4ec1a0924 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-@@ -36,21 +36,19 @@ internal const val IMAGE_URI_PREFIX = "data:image/png;base64,"
- internal const val GOOGLE_ID = "google"
- private const val TARGET_SIZE = 16
- private const val MAX_SIZE = 32
--private const val URL_PREFIX = "https://firefox-settings-attachments.cdn.mozilla.net/"
-+private const val URL_PREFIX = ""
- 
+@@ -38,16 +38,14 @@ private const val MAX_SIZE = 32
  // List of general search engine ids, taken from
  // https://searchfox.org/mozilla-central/rev/ef0aa879e94534ffd067a3748d034540a9fc10b0/toolkit/components/search/SearchUtils.sys.mjs#200
  internal val GENERAL_SEARCH_ENGINE_IDS = setOf(

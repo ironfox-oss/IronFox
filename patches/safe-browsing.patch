@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 916e432778..7824b5a403 100644
+index 1612c570be..ee7992f43c 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1115,6 +1115,22 @@ class GeckoEngine(
+@@ -1112,6 +1112,22 @@ class GeckoEngine(
                  runtime.settings.contentBlocking.setSafeBrowsing(policy)
                  field = value
              }
@@ -25,7 +25,7 @@ index 916e432778..7824b5a403 100644
  
          override var trackingProtectionPolicy: TrackingProtectionPolicy? = null
              set(value) {
-@@ -1490,6 +1506,8 @@ class GeckoEngine(
+@@ -1491,6 +1507,8 @@ class GeckoEngine(
              this.automaticLanguageAdjustment = it.automaticLanguageAdjustment
              this.trackingProtectionPolicy = it.trackingProtectionPolicy
              this.safeBrowsingPolicy = arrayOf(SafeBrowsingPolicy.RECOMMENDED)
@@ -35,7 +35,7 @@ index 916e432778..7824b5a403 100644
              this.testingModeEnabled = it.testingModeEnabled
              this.userAgentString = it.userAgentString
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 8d90b168c7..ae6962e678 100644
+index 24e8f76532..1e5fe8f3d3 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 @@ -66,6 +66,16 @@ abstract class Settings {
@@ -55,7 +55,7 @@ index 8d90b168c7..ae6962e678 100644
      /**
       * Setting to control the cookie banner handling feature detect only mode.
       */
-@@ -395,6 +405,8 @@ data class DefaultSettings(
+@@ -400,6 +410,8 @@ data class DefaultSettings(
      override var cookieBannerHandlingMode: CookieBannerHandlingMode = CookieBannerHandlingMode.DISABLED,
      override var cookieBannerHandlingModePrivateBrowsing: CookieBannerHandlingMode =
          CookieBannerHandlingMode.DISABLED,
@@ -65,10 +65,10 @@ index 8d90b168c7..ae6962e678 100644
      override var cookieBannerHandlingGlobalRules: Boolean = false,
      override var cookieBannerHandlingGlobalRulesSubFrames: Boolean = false,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index daf079c89b..051be13c64 100644
+index cfbdaba62c..04c57c624e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -177,6 +177,8 @@ class Core(
+@@ -181,6 +181,8 @@ class Core(
              fdlibmMathEnabled = FxNimbus.features.fingerprintingProtection.value().fdlibmMath,
              cookieBannerHandlingMode = context.settings().getCookieBannerHandling(),
              cookieBannerHandlingModePrivateBrowsing = context.settings().getCookieBannerHandlingPrivateMode(),
@@ -78,7 +78,7 @@ index daf079c89b..051be13c64 100644
              cookieBannerHandlingGlobalRules = context.settings().shouldEnableCookieBannerGlobalRules,
              cookieBannerHandlingGlobalRulesSubFrames = context.settings().shouldEnableCookieBannerGlobalRulesSubFrame,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 64492271c3..1dee6fbd57 100644
+index 325e5d2141..832d740660 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -563,6 +563,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
@@ -127,26 +127,26 @@ index 64492271c3..1dee6fbd57 100644
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..243e7ea70e 100644
+index 7f19ba4304..cbfa894b4b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -792,6 +792,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
- 
+@@ -776,6 +776,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      val queryParameterStrippingStripList: String
          get() = queryParameterStrippingSection[QUERY_PARAMETER_STRIPPING_STRIP_LIST].orEmpty()
-+    
+ 
 +    var safeBrowsingEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
 +        default = true,
 +    )
- 
++
      /**
       * Declared as a function for performance purposes. This could be declared as a variable using
+      * booleanPreference like other members of this class. However, doing so will make it so it will
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index 4faefc7999..f46904c97c 100644
+index a55bf0589b..5f0a075ef6 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -225,6 +225,9 @@
+@@ -220,6 +220,9 @@
      <string name="pref_key_tracking_protection_suspected_fingerprinters" translatable="false">pref_key_tracking_protection_suspected_fingerprinters</string>
      <string name="pref_key_tracking_protection_suspected_fingerprinters_select" translatable="false">pref_key_tracking_protection_suspected_fingerprinters_select</string>
  
@@ -175,10 +175,10 @@ index 4c6b14bf87..47c904b384 100644
          <androidx.preference.Preference
              android:key="@string/pref_key_tracking_protection_settings"
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index c7147b320b..63329b97ec 100644
+index a410550e60..32c79bbe3c 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -878,6 +878,8 @@ package org.mozilla.geckoview {
+@@ -931,6 +931,8 @@ package org.mozilla.geckoview {
      method @Nullable public String getConfigFilePath();
      method public boolean getConsoleOutputEnabled();
      method @NonNull public ContentBlocking.Settings getContentBlocking();
@@ -187,7 +187,7 @@ index c7147b320b..63329b97ec 100644
      method public boolean getCookieBehaviorOptInPartitioning();
      method public boolean getCookieBehaviorOptInPartitioningPBM();
      method @Nullable public Class<? extends android.app.Service> getCrashHandler();
-@@ -934,6 +936,8 @@ package org.mozilla.geckoview {
+@@ -990,6 +992,8 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setBannedPorts(@NonNull String);
      method @NonNull public GeckoRuntimeSettings setCertificateTransparencyMode(int);
      method @NonNull public GeckoRuntimeSettings setConsoleOutputEnabled(boolean);
@@ -196,7 +196,7 @@ index c7147b320b..63329b97ec 100644
      method @NonNull public GeckoRuntimeSettings setCookieBehaviorOptInPartitioning(boolean);
      method @NonNull public GeckoRuntimeSettings setCookieBehaviorOptInPartitioningPBM(boolean);
      method @NonNull public GeckoRuntimeSettings setDefaultRecursiveResolverUri(@NonNull String);
-@@ -996,6 +1000,8 @@ package org.mozilla.geckoview {
+@@ -1055,6 +1059,8 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder configFilePath(@Nullable String);
      method @NonNull public GeckoRuntimeSettings.Builder consoleOutput(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder contentBlocking(@NonNull ContentBlocking.Settings);
@@ -206,10 +206,10 @@ index c7147b320b..63329b97ec 100644
      method @NonNull public GeckoRuntimeSettings.Builder debugLogging(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder defaultRecursiveResolverUri(@NonNull String);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index fe1e217dcb..fc3b544541 100644
+index 25ea09c3f6..a4c689a0d8 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -436,6 +436,28 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -448,6 +448,28 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        return this;
      }
  
@@ -236,9 +236,9 @@ index fe1e217dcb..fc3b544541 100644
 +    }
 +
      /**
-      * Sets the preferred color scheme override for web content.
+      * Set whether auto-zoom to editable fields should be enabled.
       *
-@@ -706,6 +728,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -733,6 +755,8 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        new Pref<Boolean>("network.fetchpriority.enabled", false);
    /* package */ final Pref<Boolean> mParallelMarkingEnabled =
        new Pref<Boolean>("javascript.options.mem.gc_parallel_marking", false);
@@ -247,7 +247,7 @@ index fe1e217dcb..fc3b544541 100644
    /* package */ final Pref<Boolean> mCookieBehaviorOptInPartitioning =
        new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning", false);
    /* package */ final Pref<Boolean> mCookieBehaviorOptInPartitioningPBM =
-@@ -943,6 +967,46 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -976,6 +1000,46 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mFdlibmMathEnabled.get();
    }
  

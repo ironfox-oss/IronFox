@@ -1,0 +1,45 @@
+diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
+index 89230fb4c1..4faeb9ee77 100644
+--- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
++++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
+@@ -29,8 +29,8 @@ import java.io.File
+ import java.io.IOException
+ import java.util.Date
+ 
+-internal const val CONTILE_ENDPOINT_URL = "https://contile.services.mozilla.com/v1/tiles"
+-internal const val CACHE_FILE_NAME = "mozilla_components_service_contile.json"
++internal const val CONTILE_ENDPOINT_URL = ""
++internal const val CACHE_FILE_NAME = ""
+ internal const val CACHE_VALID_FOR_KEY = "valid_for"
+ internal const val CACHE_TOP_SITES_KEY = "tiles"
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..28d1db5781 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1814,10 +1814,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the Contile functionality should be visible.
+      */
+-    var showContileFeature by booleanPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
+-        default = true,
+-    )
++    var showContileFeature = false
+ 
+     /**
+      * Indicates if the Unified Search feature should be visible.
+diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+index 4fd1f8945a..d8586426ab 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
+@@ -13,7 +13,8 @@
+         android:dependency="@string/pref_key_show_top_sites"
+         android:layout="@layout/checkbox_left_sub_preference"
+         android:key="@string/pref_key_enable_contile"
+-        android:title="@string/customize_toggle_contile" />
++        android:title="@string/customize_toggle_contile"
++        app:isPreferenceVisible="false" />
+ 
+     <androidx.preference.SwitchPreference
+         android:key="@string/pref_key_recent_tabs"

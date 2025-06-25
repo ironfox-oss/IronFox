@@ -1,5 +1,5 @@
 diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
-index 4afaf2493b..458ef0d0b1 100644
+index b6305f62be..8b5708dc1b 100644
 --- a/mobile/android/geckoview/build.gradle
 +++ b/mobile/android/geckoview/build.gradle
 @@ -218,7 +218,7 @@ dependencies {
@@ -11,95 +11,11 @@ index 4afaf2493b..458ef0d0b1 100644
      implementation "org.yaml:snakeyaml:2.2"
  
      implementation libs.androidx.lifecycle.common
-diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
-index d688ff87f2..80b049ccac 100644
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
-@@ -193,27 +193,14 @@ import org.mozilla.gecko.util.WebAuthnUtils;
- 
-       final Task<PendingIntent> intentTask;
- 
--      if (BuildConfig.MOZILLA_OFFICIAL) {
--        // Certain Fenix builds and signing keys are whitelisted for Web Authentication.
--        // See https://wiki.mozilla.org/Security/Web_Authentication
--        //
--        // Third party apps will need to get whitelisted themselves.
--        final Fido2PrivilegedApiClient fidoClient =
--            Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
--
--        intentTask = fidoClient.getRegisterPendingIntent(browserOptions);
--      } else {
--        // For non-official builds, websites have to opt-in to permit the
--        // particular version of Gecko to perform WebAuthn operations on
--        // them. See https://developers.google.com/digital-asset-links
--        // for the general form, and Step 1 of
--        // https://developers.google.com/identity/fido/android/native-apps
--        // for details about doing this correctly for the FIDO2 API.
--        final Fido2ApiClient fidoClient =
--            Fido.getFido2ApiClient(GeckoAppShell.getApplicationContext());
--
--        intentTask = fidoClient.getRegisterPendingIntent(requestOptions);
--      }
-+      // The privileged FIDO2 API normally is restricted to apps with package
-+      // names and signatures that Google knows to be a browser. microG does not
-+      // have such a list, instead it asks the user to confirm that the app doing
-+      // the request is indeed a browser app (only for the first request from
-+      // that app).
-+      final Fido2PrivilegedApiClient fidoClient =
-+          Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
-+      intentTask = fidoClient.getRegisterPendingIntent(browserOptions);
- 
-       intentTask.addOnSuccessListener(
-           pendingIntent -> {
-@@ -411,19 +398,12 @@ import org.mozilla.gecko.util.WebAuthnUtils;
-               .build();
- 
-       final Task<PendingIntent> intentTask;
--      // See the makeCredential method for documentation about this
--      // conditional.
--      if (BuildConfig.MOZILLA_OFFICIAL) {
--        final Fido2PrivilegedApiClient fidoClient =
--            Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
--
--        intentTask = fidoClient.getSignPendingIntent(browserOptions);
--      } else {
--        final Fido2ApiClient fidoClient =
--            Fido.getFido2ApiClient(GeckoAppShell.getApplicationContext());
-+      // See the makeCredential method for documentation about the FIDO2 API and
-+      // microG.
-+      final Fido2PrivilegedApiClient fidoClient =
-+          Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
- 
--        intentTask = fidoClient.getSignPendingIntent(requestOptions);
--      }
-+      intentTask = fidoClient.getSignPendingIntent(browserOptions);
- 
-       intentTask.addOnSuccessListener(
-           pendingIntent -> {
-@@ -557,15 +537,9 @@ import org.mozilla.gecko.util.WebAuthnUtils;
-   @WrapForJNI(calledFrom = "gecko")
-   private static GeckoResult<Boolean> webAuthnIsUserVerifyingPlatformAuthenticatorAvailable() {
-     final Task<Boolean> task;
--    if (BuildConfig.MOZILLA_OFFICIAL) {
--      final Fido2PrivilegedApiClient fidoClient =
--          Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
--      task = fidoClient.isUserVerifyingPlatformAuthenticatorAvailable();
--    } else {
--      final Fido2ApiClient fidoClient =
--          Fido.getFido2ApiClient(GeckoAppShell.getApplicationContext());
--      task = fidoClient.isUserVerifyingPlatformAuthenticatorAvailable();
--    }
-+    final Fido2PrivilegedApiClient fidoClient =
-+        Fido.getFido2PrivilegedApiClient(GeckoAppShell.getApplicationContext());
-+    task = fidoClient.isUserVerifyingPlatformAuthenticatorAvailable();
- 
-     final GeckoResult<Boolean> res = new GeckoResult<>();
-     task.addOnSuccessListener(
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index d3c34b7de2..7874643f0a 100644
+index f94b88f8d8..c06a5f1b45 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
-@@ -158,9 +158,6 @@ toolkit.jar:
+@@ -166,9 +166,6 @@ toolkit.jar:
  #ifdef XP_MACOSX
     content/global/macWindowMenu.js
  #endif
