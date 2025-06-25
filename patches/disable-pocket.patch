@@ -1,39 +1,3 @@
-diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
-index b8430171ec..63f92e4dde 100644
---- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
-+++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
-@@ -29,14 +29,14 @@ import java.io.File
- import java.io.IOException
- import java.util.Date
- 
--private const val MARS_ENDPOINT_URL = "https://ads.mozilla.org/v1/ads"
-+private const val MARS_ENDPOINT_URL = ""
- 
- private const val REQUEST_BODY_CONTEXT_ID_KEY = "context_id"
- private const val REQUEST_BODY_PLACEMENTS_KEY = "placements"
- private const val REQUEST_BODY_PLACEMENT_KEY = "placement"
- private const val REQUEST_BODY_COUNT_KEY = "count"
- 
--internal const val CACHE_FILE_NAME = "mozilla_components_service_mars_tiles.json"
-+internal const val CACHE_FILE_NAME = ""
- 
- /**
-  * Provides access to the MARS API for fetching top sites tile.
-diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
-index 6f1de67d54..5037c18b66 100644
---- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
-+++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
-@@ -29,8 +29,8 @@ import java.io.File
- import java.io.IOException
- import java.util.Date
- 
--internal const val CONTILE_ENDPOINT_URL = "https://contile.services.mozilla.com/v1/tiles"
--internal const val CACHE_FILE_NAME = "mozilla_components_service_contile.json"
-+internal const val CONTILE_ENDPOINT_URL = ""
-+internal const val CACHE_FILE_NAME = ""
- internal const val CACHE_VALID_FOR_KEY = "valid_for"
- internal const val CACHE_TOP_SITES_KEY = "tiles"
- 
 diff --git a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt b/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
 index 81bf2dd7e2..7a43fac926 100644
 --- a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
@@ -49,71 +13,19 @@ index 81bf2dd7e2..7a43fac926 100644
  private const val SPOCS_ENDPOINT_DOWNLOAD_SPOCS_PATH = "spocs"
  private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
  private const val SPOCS_PROXY_VERSION_KEY = "version"
-diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 1a47d3dcdf..1af778a12a 100644
---- a/mobile/android/fenix/app/nimbus.fml.yaml
-+++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -48,8 +48,8 @@ features:
-             "jump-back-in": true,
-             "bookmarks": true,
-             "recent-explorations": true,
--            "pocket": true,
--            "pocket-sponsored-stories": true,
-+            "pocket": false,
-+            "pocket-sponsored-stories": false,
-             "synced-tabs": true,
-           }
-     defaults:
-@@ -60,7 +60,7 @@ features:
-             "jump-back-in": true,
-             "bookmarks": true,
-             "recent-explorations": true,
--            "pocket": true,
-+            "pocket": false,
-             "synced-tabs": true,
-           }
-         }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 8b96400722..4d1b0a6f88 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -34,17 +34,17 @@ object FeatureFlags {
-     /**
-      * Show Pocket recommended stories on home.
-      */
-+    @Suppress("UNUSED_PARAMETER")
-     fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
--        val langTag = LocaleManager.getCurrentLocale(context)
--            ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
--        return listOf("en-US", "en-CA").contains(langTag)
-+        return false
-     }
- 
-     /**
-      * Show Pocket sponsored stories in between Pocket recommended stories on home.
-      */
-+    @Suppress("UNUSED_PARAMETER")
-     fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
--        return isPocketRecommendationsFeatureEnabled(context)
-+        return false
-     }
- 
-     /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b74145eb21..042fa13c21 100644
+index 43bea16286..84ac3c7d2b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -115,7 +115,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -114,6 +114,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
-         requirePreference<SwitchPreference>(R.string.pref_key_mars_api_enabled).apply {
--            isChecked = context.settings().marsAPIEnabled
+         requirePreference<SwitchPreference>(R.string.pref_key_pocket_content_recommendations).apply {
 +            isVisible = false
-+            isChecked = false
+             isChecked = context.settings().showContentRecommendations
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-                     activity?.recreate()
-@@ -210,7 +211,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -199,7 +200,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<Preference>(R.string.pref_key_custom_sponsored_stories_parameters).apply {
@@ -123,28 +35,16 @@ index b74145eb21..042fa13c21 100644
  
          requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..7ed1866ea5 100644
+index 7f19ba4304..5e483a4ea5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -375,10 +375,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
-     )
- 
--    var showCollectionsPlaceholderOnHome by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
--        default = true,
--    )
-+    var showCollectionsPlaceholderOnHome = false
- 
-     val isCrashReportingEnabled: Boolean
-         get() = isCrashReportEnabledInBuild &&
-@@ -1739,20 +1736,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1728,21 +1728,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Pocket recommended stories homescreen section should be shown.
       */
 -    var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
--        featureFlag = FeatureFlags.isPocketRecommendationsFeatureEnabled(appContext),
+-        featureFlag = ContentRecommendationsFeatureHelper.isPocketRecommendationsFeatureEnabled(appContext),
 -        default = { homescreenSections[HomeScreenSection.POCKET] == true },
 -    )
 +    var showPocketRecommendationsFeature = false
@@ -155,54 +55,36 @@ index 72493a2c21..7ed1866ea5 100644
 -    val showPocketSponsoredStories by lazyFeatureFlagPreference(
 -        key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
 -        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
--        featureFlag = FeatureFlags.isPocketSponsoredStoriesFeatureEnabled(appContext),
+-        featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
 -    )
+-
 +    val showPocketSponsoredStories = false
- 
      /**
       * Get the profile id to use in the sponsored stories communications with the Pocket endpoint.
-@@ -1816,19 +1805,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the MARS API integration is used for sponsored content.
       */
--    var marsAPIEnabled by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_mars_api_enabled),
--        default = { FxNimbus.features.mars.value().enabled },
--        featureFlag = true,
+@@ -1764,11 +1755,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if Merino content recommendations should be shown.
+      */
+-    var showContentRecommendations by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_pocket_content_recommendations),
+-        default = { FxNimbus.features.merinoRecommendations.value().enabled },
+-        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
 -    )
-+    var marsAPIEnabled = false
++    var showContentRecommendations = false
  
      /**
-      * Indicates if the Contile functionality should be visible.
-      */
--    var showContileFeature by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
--        default = true,
--    )
-+    var showContileFeature = false
- 
-     /**
-      * Indicates if the Unified Search feature should be visible.
+      *  Whether or not to display the Pocket sponsored stories parameter secret settings.
 diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-index 5ca4cff86d..3507b6d24e 100644
+index 4fd1f8945a..0044115440 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-@@ -13,7 +13,8 @@
-         android:dependency="@string/pref_key_show_top_sites"
-         android:layout="@layout/checkbox_left_sub_preference"
-         android:key="@string/pref_key_enable_contile"
--        android:title="@string/customize_toggle_contile" />
-+        android:title="@string/customize_toggle_contile"
-+        app:isPreferenceVisible="false" />
+@@ -29,13 +29,15 @@
  
      <androidx.preference.SwitchPreference
-         android:key="@string/pref_key_recent_tabs"
-@@ -30,13 +31,15 @@
-     <androidx.preference.SwitchPreference
          android:key="@string/pref_key_pocket_homescreen_recommendations"
-         android:title="@string/customize_toggle_pocket_2"
--        android:summary="@string/customize_toggle_pocket_summary" />
-+        android:summary="@string/customize_toggle_pocket_summary"
+-        android:title="@string/customize_toggle_pocket_3" />
++        android:title="@string/customize_toggle_pocket_3"
 +        app:isPreferenceVisible="false" />
  
      <androidx.preference.CheckBoxPreference

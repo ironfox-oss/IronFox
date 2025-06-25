@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/extensions/NativeManifests.sys.mjs b/toolkit/components/extensions/NativeManifests.sys.mjs
-index 3e1a0d6a56..204b0f8dff 100644
+index 59313e821f..f20a4d209d 100644
 --- a/toolkit/components/extensions/NativeManifests.sys.mjs
 +++ b/toolkit/components/extensions/NativeManifests.sys.mjs
 @@ -36,7 +36,7 @@ export var NativeManifests = {
