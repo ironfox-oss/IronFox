@@ -11,6 +11,21 @@ index 7941343807..e56e90a005 100644
  
  dependencies {
      implementation project(':concept-engine')
+diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
+index 20eab9e438..c596e9238a 100644
+--- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
++++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
+@@ -16,8 +16,8 @@ import org.json.JSONException
+ import org.json.JSONObject
+ import java.io.File
+ 
+-internal const val REMOTE_PROD_ENDPOINT_URL = "https://firefox.settings.services.mozilla.com"
+-internal const val REMOTE_ENDPOINT_BUCKET_NAME = "main"
++internal const val REMOTE_PROD_ENDPOINT_URL = ""
++internal const val REMOTE_ENDPOINT_BUCKET_NAME = ""
+ 
+ /**
+  * Parse SERP Telemetry json from remote config.
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index d9a6045423..84073eaeee 100644
 --- a/mobile/android/fenix/app/build.gradle
@@ -306,8 +321,23 @@ index e5ab956ac3..0356328074 100644
          }
  
          startMetricsIfEnabled(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
+index 6725aa64a0..cd0cbd0b51 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
+@@ -97,10 +97,6 @@ class SearchDialogController(
+                 navController.navigateSafe(R.id.searchDialogFragment, directions)
+                 store.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))
+             }
+-            "about:glean" -> {
+-                val directions = SearchDialogFragmentDirections.actionGleanDebugToolsFragment()
+-                navController.navigate(directions)
+-            }
+             "moz://a" -> openSearchOrUrl(
+                 SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
+             )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..28e2b0178d 100644
+index 7f19ba4304..d86b803bcf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -375,25 +375,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -353,6 +383,18 @@ index 7f19ba4304..28e2b0178d 100644
  
      var isExperimentationEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
+@@ -431,10 +415,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     val shouldShowSecurityPinWarning: Boolean
+         get() = secureWarningCount.underMaxCount()
+ 
+-    var shouldShowPrivacyPopWindow by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),
+-        default = true,
+-    )
++    var shouldShowPrivacyPopWindow = false
+ 
+     var shouldUseLightTheme by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_light_theme),
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 4c6b14bf87..0d4b59ca91 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml

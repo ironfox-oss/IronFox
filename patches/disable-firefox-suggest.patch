@@ -1,3 +1,16 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
+index e6c63d7834..6652461ef2 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
+@@ -35,7 +35,7 @@ class SearchEngineFragment : PreferenceFragmentCompat() {
+         )
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_show_sponsored_suggestions).apply {
+-            isVisible = context.settings().enableFxSuggest
++            isVisible = false
+         }
+         requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
+             isVisible = context.settings().enableFxSuggest
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 index 43bea16286..499ee28bce 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt

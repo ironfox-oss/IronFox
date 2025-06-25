@@ -302,6 +302,24 @@ index 1ad6a264c7..c9ea9932ca 100644
      return when (Config.channel) {
          ReleaseChannel.Nightly -> "$baseUrl/?project=6295546"
          ReleaseChannel.Release -> "$baseUrl/?project=6375561"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
+index 6725aa64a0..0fe5231617 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
+@@ -84,13 +84,6 @@ class SearchDialogController(
+         }
+ 
+         when (url) {
+-            "about:crashes" -> {
+-                // The list of past crashes can be accessed via "settings > about", but desktop and
+-                // fennec users may be used to navigating to "about:crashes". So we intercept this here
+-                // and open the crash list activity instead.
+-                activity.startActivity(Intent(activity, CrashListActivity::class.java))
+-                store.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))
+-            }
+             "about:addons" -> {
+                 val directions =
+                     SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 7f19ba4304..fde794e31b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
