@@ -1,8 +1,8 @@
 diff --git a/build.gradle b/build.gradle
-index 9646a2b7cb..e616444284 100644
+index 3c6eb9e4c4..9b7621a44e 100644
 --- a/build.gradle
 +++ b/build.gradle
-@@ -4,14 +4,9 @@ import org.tomlj.TomlTable
+@@ -5,14 +5,9 @@ import org.tomlj.TomlTable
  
  buildscript {
      repositories {
@@ -20,7 +20,7 @@ index 9646a2b7cb..e616444284 100644
      }
  
      dependencies {
-@@ -128,14 +123,9 @@ allprojects {
+@@ -129,14 +124,9 @@ allprojects {
      }
  
      repositories {
@@ -39,7 +39,7 @@ index 9646a2b7cb..e616444284 100644
  
      // Use the semanticdb-javac and semanticdb-kotlinc plugins to generate semanticdb files for Searchfox
 diff --git a/mobile/android/android-components/build.gradle b/mobile/android/android-components/build.gradle
-index 2cbb2e3312..6216170348 100644
+index 00c059ffd5..936dda52d7 100644
 --- a/mobile/android/android-components/build.gradle
 +++ b/mobile/android/android-components/build.gradle
 @@ -9,14 +9,9 @@ import static org.gradle.api.tasks.testing.TestResult.ResultType
@@ -123,7 +123,7 @@ index 3e2c155de0..ae4ed0d52c 100644
  
      dependencies {
 diff --git a/mobile/android/android-components/components/service/nimbus/build.gradle b/mobile/android/android-components/components/service/nimbus/build.gradle
-index ec4777457e..b998b42868 100644
+index 9aa45d5115..208a7a1076 100644
 --- a/mobile/android/android-components/components/service/nimbus/build.gradle
 +++ b/mobile/android/android-components/components/service/nimbus/build.gradle
 @@ -4,14 +4,9 @@
@@ -145,7 +145,7 @@ index ec4777457e..b998b42868 100644
  
      dependencies {
 diff --git a/mobile/android/android-components/components/support/remotesettings/build.gradle b/mobile/android/android-components/components/support/remotesettings/build.gradle
-index de57de08cb..3d7fc89f82 100644
+index 87e6954947..437580979a 100644
 --- a/mobile/android/android-components/components/support/remotesettings/build.gradle
 +++ b/mobile/android/android-components/components/support/remotesettings/build.gradle
 @@ -3,14 +3,9 @@
@@ -189,7 +189,7 @@ index 3728558208..8cb258a793 100644
  
  gradlePlugin {
 diff --git a/mobile/android/android-components/plugins/config/settings.gradle b/mobile/android/android-components/plugins/config/settings.gradle
-index b826d02d17..06bac06ffa 100644
+index b826d02d17..8580140364 100644
 --- a/mobile/android/android-components/plugins/config/settings.gradle
 +++ b/mobile/android/android-components/plugins/config/settings.gradle
 @@ -11,14 +11,9 @@ pluginManagement {
@@ -233,7 +233,7 @@ index 9a79d65de7..27df676741 100644
  
  gradlePlugin {
 diff --git a/mobile/android/android-components/plugins/dependencies/settings.gradle b/mobile/android/android-components/plugins/dependencies/settings.gradle
-index b826d02d17..06bac06ffa 100644
+index b826d02d17..8580140364 100644
 --- a/mobile/android/android-components/plugins/dependencies/settings.gradle
 +++ b/mobile/android/android-components/plugins/dependencies/settings.gradle
 @@ -11,14 +11,9 @@ pluginManagement {
@@ -299,7 +299,7 @@ index 84ca151cdc..a03568e09c 100644
  
      includeBuild("../dependencies")
 diff --git a/mobile/android/android-components/samples/glean/build.gradle b/mobile/android/android-components/samples/glean/build.gradle
-index fee42ed346..f61f7811e6 100644
+index 3287dacaaa..e13d0f3a6a 100644
 --- a/mobile/android/android-components/samples/glean/build.gradle
 +++ b/mobile/android/android-components/samples/glean/build.gradle
 @@ -4,14 +4,9 @@
@@ -319,9 +319,9 @@ index fee42ed346..f61f7811e6 100644
 +        google()
  
          dependencies {
-             classpath "org.mozilla.telemetry:glean-gradle-plugin:${libs.versions.mozilla.glean.get()}"
+             classpath libs.glean.gradle.plugin
 diff --git a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
-index 22871851d3..0aa57fbdaa 100644
+index 092aa2f460..62b6083e86 100644
 --- a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
 +++ b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
 @@ -4,14 +4,9 @@
@@ -341,7 +341,7 @@ index 22871851d3..0aa57fbdaa 100644
 +        google()
  
          dependencies {
-             classpath "org.mozilla.telemetry:glean-gradle-plugin:${libs.versions.mozilla.glean.get()}"
+             classpath libs.glean.gradle.plugin
 diff --git a/mobile/android/android-components/settings.gradle b/mobile/android/android-components/settings.gradle
 index 19dc9e9ccf..6adb734ad5 100644
 --- a/mobile/android/android-components/settings.gradle
@@ -365,10 +365,10 @@ index 19dc9e9ccf..6adb734ad5 100644
  
      includeBuild("plugins/dependencies")
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 7535453460..95d8c3149f 100644
+index d9a6045423..262a5e483c 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -3,14 +3,9 @@ import org.apache.tools.ant.util.StringUtils
+@@ -3,14 +3,9 @@ import java.time.format.DateTimeFormatter
  
  buildscript {
      repositories {
@@ -387,10 +387,10 @@ index 7535453460..95d8c3149f 100644
  
      dependencies {
 diff --git a/mobile/android/fenix/build.gradle b/mobile/android/fenix/build.gradle
-index ed1180a452..44bcdece34 100644
+index e34e870acc..f86a22a45c 100644
 --- a/mobile/android/fenix/build.gradle
 +++ b/mobile/android/fenix/build.gradle
-@@ -10,14 +10,9 @@ import java.nio.file.StandardCopyOption
+@@ -8,14 +8,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  buildscript {
      // This logic is duplicated in the allprojects block: I don't know how to fix that.
      repositories {
@@ -408,7 +408,7 @@ index ed1180a452..44bcdece34 100644
      }
  
      dependencies {
-@@ -45,14 +40,9 @@ plugins {
+@@ -43,14 +38,9 @@ plugins {
  allprojects {
      // This logic is duplicated in the buildscript block: I don't know how to fix that.
      repositories {
@@ -471,7 +471,7 @@ index 8704f1f4b3..8580140364 100644
  }
  
 diff --git a/mobile/android/fenix/settings.gradle b/mobile/android/fenix/settings.gradle
-index 372f828814..609ea043fe 100644
+index 7e461f97cc..65f0b42b0f 100644
 --- a/mobile/android/fenix/settings.gradle
 +++ b/mobile/android/fenix/settings.gradle
 @@ -10,14 +10,9 @@ pluginManagement {
@@ -493,7 +493,7 @@ index 372f828814..609ea043fe 100644
  
      includeBuild("../android-components/plugins/publicsuffixlist")
 diff --git a/mobile/android/focus-android/build.gradle b/mobile/android/focus-android/build.gradle
-index 9b0a399f10..0b9ff0c922 100644
+index 80f726f82f..9daac463f6 100644
 --- a/mobile/android/focus-android/build.gradle
 +++ b/mobile/android/focus-android/build.gradle
 @@ -7,14 +7,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -555,10 +555,10 @@ index 0f5dbd50a0..3143f62c77 100644
  
      includeBuild("../android-components/plugins/publicsuffixlist")
 diff --git a/mobile/android/shared-settings.gradle b/mobile/android/shared-settings.gradle
-index 74ac75285e..fbae2670bf 100644
+index eb9e1e36b3..92981dce83 100644
 --- a/mobile/android/shared-settings.gradle
 +++ b/mobile/android/shared-settings.gradle
-@@ -12,14 +12,9 @@ buildscript {
+@@ -13,14 +13,9 @@ buildscript {
      }
  
      repositories {
@@ -577,7 +577,7 @@ index 74ac75285e..fbae2670bf 100644
  
      dependencies {
 diff --git a/settings.gradle b/settings.gradle
-index 48240aaf4f..663cadb134 100644
+index 35b1d35323..705a80ed96 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -9,14 +9,9 @@ pluginManagement {
@@ -598,6 +598,3 @@ index 48240aaf4f..663cadb134 100644
      }
  
      includeBuild("${rootProject.projectDir.absolutePath}/mobile/android/android-components/plugins/config")
--- 
-2.49.0
-

@@ -1,0 +1,50 @@
+diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
+index facfce542c..5caf534fe3 100644
+--- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
++++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
+@@ -29,14 +29,14 @@ import java.io.File
+ import java.io.IOException
+ import java.util.Date
+ 
+-private const val MARS_ENDPOINT_URL = "https://ads.mozilla.org/v1/ads"
++private const val MARS_ENDPOINT_URL = ""
+ 
+ private const val REQUEST_BODY_CONTEXT_ID_KEY = "context_id"
+ private const val REQUEST_BODY_PLACEMENTS_KEY = "placements"
+ private const val REQUEST_BODY_PLACEMENT_KEY = "placement"
+ private const val REQUEST_BODY_COUNT_KEY = "count"
+ 
+-internal const val CACHE_FILE_NAME = "mozilla_components_service_mars_tiles.json"
++internal const val CACHE_FILE_NAME = ""
+ 
+ /**
+  * Provides access to the MARS API for fetching top sites tile.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 43bea16286..0245a82e17 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -104,6 +104,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_mars_api_enabled).apply {
++            isVisible = false
+             isChecked = context.settings().marsAPIEnabled
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..cf15320899 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1805,11 +1805,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the MARS API integration is used for sponsored content.
+      */
+-    var marsAPIEnabled by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_mars_api_enabled),
+-        default = { FxNimbus.features.mars.value().enabled },
+-        featureFlag = true,
+-    )
++    var marsAPIEnabled = false
+ 
+     /**
+      * Indicates if the Contile functionality should be visible.

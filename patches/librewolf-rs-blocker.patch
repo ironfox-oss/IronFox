@@ -1,5 +1,5 @@
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
-index 32dcdd45d8..fc1e8b0de1 100644
+index dfb23ec49a..45ea3c2412 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
 @@ -228,6 +228,11 @@ class AttachmentDownloader extends Downloader {
@@ -14,7 +14,7 @@ index 32dcdd45d8..fc1e8b0de1 100644
      try {
        // Explicitly await here to ensure we catch a network error.
        return await super.download(record, options);
-@@ -620,6 +625,10 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -625,6 +630,10 @@ export class RemoteSettingsClient extends EventEmitter {
        return;
      }
  
@@ -25,7 +25,7 @@ index 32dcdd45d8..fc1e8b0de1 100644
      // We want to know which timestamp we are expected to obtain in order to leverage
      // cache busting. We don't provide ETag because we don't want a 304.
      const { changes } = await lazy.Utils.fetchLatestChanges(
-@@ -981,6 +990,14 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -992,6 +1001,14 @@ export class RemoteSettingsClient extends EventEmitter {
     * Import the JSON files from services/settings/dump into the local DB.
     */
    async _importJSONDump() {
@@ -150,82 +150,3 @@ index cbdf07bcda..cc2b12afdf 100644
        currentEtag: `"${timestamp}"`,
        serverTimeMillis,
        backoffSeconds,
-diff --git a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
-index d634f9def5..05e8007f24 100644
---- a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
-+++ b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
-@@ -12,7 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
-     "resource://services-settings/RemoteSettingsClient.sys.mjs",
- });
- 
--const REMOTE_SETTINGS_CRASH_COLLECTION = "crash-reports-ondemand";
-+const REMOTE_SETTINGS_CRASH_COLLECTION = "";
- 
- // Remote Settings collections might want a different limit
- const PENDING_REMOTE_CRASH_REPORT_DAYS = 90;
-diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-index 6b16b629af..9b52f187f8 100644
---- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-+++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-@@ -34,7 +34,7 @@ const IS_MAIN_PROCESS =
-   Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
- 
- const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
--const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
-+const COLLECTION_ID_FALLBACK = "";
- XPCOMUtils.defineLazyPreferenceGetter(
-   lazy,
-   "COLLECTION_ID",
-diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-index 90f455de76..ffe28cc0f2 100644
---- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-+++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-@@ -37,7 +37,7 @@ XPCOMUtils.defineLazyServiceGetter(
- );
- 
- const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
--const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
-+const COLLECTION_ID_FALLBACK = "";
- const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
-   "nimbus.telemetry.targetingContextEnabled";
- 
-@@ -51,10 +51,10 @@ const NIMBUS_APPID_PREF = "nimbus.appId";
- 
- const STUDIES_ENABLED_CHANGED = "nimbus:studies-enabled-changed";
- 
--const SECURE_EXPERIMENTS_COLLECTION_ID = "nimbus-secure-experiments";
-+const SECURE_EXPERIMENTS_COLLECTION_ID = "";
- 
--const EXPERIMENTS_COLLECTION = "experiments";
--const SECURE_EXPERIMENTS_COLLECTION = "secureExperiments";
-+const EXPERIMENTS_COLLECTION = "";
-+const SECURE_EXPERIMENTS_COLLECTION = "";
- 
- const RS_COLLECTION_OPTIONS = {
-   [EXPERIMENTS_COLLECTION]: {
-diff --git a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
-index 087e4ed51e..256972093f 100644
---- a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
-+++ b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
-@@ -36,7 +36,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
- 
- const log = LogManager.getLogger("recipe-runner");
- const TIMER_NAME = "recipe-client-addon-run";
--const REMOTE_SETTINGS_COLLECTION = "normandy-recipes-capabilities";
-+const REMOTE_SETTINGS_COLLECTION = "";
- const PREF_CHANGED_TOPIC = "nsPref:changed";
- 
- const RUN_INTERVAL_PREF = "app.normandy.run_interval_seconds";
-diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index e09ea87de8..a5ed88d538 100644
---- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
-+++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -4591,8 +4591,6 @@ AMRemoteSettings = {
-    */
-   RS_ENTRIES_MAP: {
-     installTriggerDeprecation: [
--      "extensions.InstallTriggerImpl.enabled",
--      "extensions.InstallTrigger.enabled",
-     ],
-     quarantinedDomains: ["extensions.quarantinedDomains.list"],
-   },
