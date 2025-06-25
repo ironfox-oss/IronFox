@@ -578,7 +578,7 @@ fi
 
 # Point to our build of Bundletool
 sed -i \
-    -e "/bundletool_path = /s|toolchains_base_dir|\"$bundletool/build/libs\"|" \
+    -e "/bundletool_path = /s|toolchains_base_dir|\"$BUILDDIR\"|" \
     build/moz.configure/android-sdk.configure
 
 # Fail on use of prebuilt binary
