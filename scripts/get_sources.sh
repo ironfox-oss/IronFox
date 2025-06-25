@@ -188,6 +188,7 @@ export rootdir=${ROOTDIR}
 export builddir="${BUILDDIR}"
 export android_components=${ANDROID_COMPONENTS}
 export application_services=${APPSERVICESDIR}
+export bundletool=${BUNDLETOOLDIR}
 export glean=${GLEANDIR}
 export fenix=${FENIX}
 export mozilla_release=${GECKODIR}
