@@ -13,6 +13,43 @@ index 81bf2dd7e2..7a43fac926 100644
  private const val SPOCS_ENDPOINT_DOWNLOAD_SPOCS_PATH = "spocs"
  private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
  private const val SPOCS_PROXY_VERSION_KEY = "version"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
+index 9e4f378574..a559c2c5d8 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
+@@ -41,26 +41,25 @@ object ContentRecommendationsFeatureHelper {
+     /**
+      * Show Pocket recommended stories on home.
+      */
++    @Suppress("UNUSED_PARAMETER")
+     fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
+-        val langTag = LocaleManager.getCurrentLocale(context)
+-            ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+-        return POCKET_SUPPORTED_LOCALES.contains(langTag)
++        return false
+     }
+ 
+     /**
+      * Show Pocket sponsored stories in between Pocket recommended stories on home.
+      */
++    @Suppress("UNUSED_PARAMETER")
+     fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
+-        return isPocketRecommendationsFeatureEnabled(context)
++        return false
+     }
+ 
+     /**
+      * Returns true if the current locale is part of the supported locales for content
+      * recommendations, and false otherwise.
+      */
++    @Suppress("UNUSED_PARAMETER")
+     fun isContentRecommendationsFeatureEnabled(context: Context): Boolean {
+-        val langTag = LocaleManager.getCurrentLocale(context)
+-            ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+-        return CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE.contains(langTag)
++        return false
+     }
+ }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 index 43bea16286..84ac3c7d2b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
