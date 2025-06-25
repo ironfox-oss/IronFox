@@ -14,7 +14,7 @@ APPSERVICES_BRANCH="release-v140"
 # Tools
 BUNDLETOOL_TAG="1.18.0"
 RUST_VERSION="1.83.0"
-CBINDGEN_VERSION="0.28.0"
+CBINDGEN_VERSION="0.29.0"
 
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

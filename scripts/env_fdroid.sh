@@ -25,6 +25,7 @@ export FDROID_SRCLIB=$(realpath "$rootdir/../srclib")
 
 export android_components="$FDROID_SRCLIB/MozFennec/mobile/android/android-components"
 export application_services="$FDROID_SRCLIB/MozAppServices"
+export bundletool="$FDROID_SRCLIB/bundletool"
 export glean="$FDROID_SRCLIB/MozGlean"
 export fenix="$FDROID_SRCLIB/MozFennec/mobile/android/fenix"
 export mozilla_release="$FDROID_SRCLIB/MozFennec"
