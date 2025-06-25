@@ -1,21 +1,17 @@
 diff --git a/toolkit/components/pdfjs/content/build/pdf.mjs b/toolkit/components/pdfjs/content/build/pdf.mjs
-index d2af6ba929..335f8cfd5c 100644
+index bdf304a524..56667492ad 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.mjs
-@@ -456,19 +456,14 @@ function isLittleEndian() {
-   return view32[0] === 1;
- }
+@@ -469,7 +469,7 @@ function isLittleEndian() {
  function isEvalSupported() {
--  try {
--    new Function("");
+   try {
+     new Function("");
 -    return true;
--  } catch {
--    return false;
--  }
-+  return false;
- }
- class util_FeatureTest {
-   static get isLittleEndian() {
++    return false;
+   } catch {
+     return false;
+   }
+@@ -479,7 +479,7 @@ class util_FeatureTest {
      return shadow(this, "isLittleEndian", isLittleEndian());
    }
    static get isEvalSupported() {
@@ -24,7 +20,7 @@ index d2af6ba929..335f8cfd5c 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -10010,7 +10005,7 @@ function getDocument(src = {}) {
+@@ -10030,7 +10030,7 @@ function getDocument(src = {}) {
    const {
      docId
    } = task;
@@ -33,7 +29,7 @@ index d2af6ba929..335f8cfd5c 100644
    const data = src.data ? getDataProp(src.data) : null;
    const httpHeaders = src.httpHeaders || null;
    const withCredentials = src.withCredentials === true;
-@@ -10020,17 +10015,17 @@ function getDocument(src = {}) {
+@@ -10040,17 +10040,17 @@ function getDocument(src = {}) {
    let worker = src.worker instanceof PDFWorker ? src.worker : null;
    const verbosity = src.verbosity;
    const docBaseUrl = typeof src.docBaseUrl === "string" && !isDataScheme(src.docBaseUrl) ? src.docBaseUrl : null;
@@ -56,7 +52,7 @@ index d2af6ba929..335f8cfd5c 100644
    const isOffscreenCanvasSupported = typeof src.isOffscreenCanvasSupported === "boolean" ? src.isOffscreenCanvasSupported : !isNodeJS;
    const isImageDecoderSupported = typeof src.isImageDecoderSupported === "boolean" ? src.isImageDecoderSupported : true;
    const canvasMaxAreaInBytes = Number.isInteger(src.canvasMaxAreaInBytes) ? src.canvasMaxAreaInBytes : -1;
-@@ -10047,7 +10042,7 @@ function getDocument(src = {}) {
+@@ -10067,7 +10067,7 @@ function getDocument(src = {}) {
    const enableHWA = src.enableHWA === true;
    const useWasm = src.useWasm !== false;
    const length = rangeTransport ? rangeTransport.length : src.length ?? NaN;
@@ -66,23 +62,19 @@ index d2af6ba929..335f8cfd5c 100644
    const styleElement = null;
    setVerbosityLevel(verbosity);
 diff --git a/toolkit/components/pdfjs/content/build/pdf.worker.mjs b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-index 28157acd51..bee8773aec 100644
+index 7e2d0c53f5..cf9706d9ef 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.worker.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-@@ -456,19 +456,14 @@ function isLittleEndian() {
-   return view32[0] === 1;
- }
+@@ -469,7 +469,7 @@ function isLittleEndian() {
  function isEvalSupported() {
--  try {
--    new Function("");
+   try {
+     new Function("");
 -    return true;
--  } catch {
--    return false;
--  }
-+  return false;
- }
- class FeatureTest {
-   static get isLittleEndian() {
++    return false;
+   } catch {
+     return false;
+   }
+@@ -479,7 +479,7 @@ class FeatureTest {
      return shadow(this, "isLittleEndian", isLittleEndian());
    }
    static get isEvalSupported() {
@@ -91,7 +83,7 @@ index 28157acd51..bee8773aec 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -28637,10 +28632,10 @@ class GlobalImageCache {
+@@ -28711,10 +28711,10 @@ class GlobalImageCache {
  class PDFFunctionFactory {
    constructor({
      xref,
@@ -104,7 +96,7 @@ index 28157acd51..bee8773aec 100644
    }
    create(fn, parseArray = false) {
      let fnRef, parsedFn;
-@@ -30973,18 +30968,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
+@@ -31054,18 +31054,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
    maxImageSize: -1,
    disableFontFace: false,
    ignoreErrors: false,
@@ -141,10 +133,10 @@ index 5e0a113820..e89114242e 100644
      <title>PDF.js viewer</title>
  
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-index 167c6472f4..553ab04b37 100644
+index 0bf80af004..6d2da8f9ff 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-@@ -824,7 +824,7 @@ const defaultOptions = {
+@@ -837,7 +837,7 @@ const defaultOptions = {
      kind: OptionKind.API
    },
    isEvalSupported: {

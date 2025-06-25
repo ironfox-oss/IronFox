@@ -1,0 +1,375 @@
+diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
+index d897b9af6f..2fb1be3150 100644
+--- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
++++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/worker/Extensions.kt
+@@ -12,9 +12,5 @@ import java.io.IOException
+  * Indicates if an exception should be reported to the crash reporter.
+  */
+ internal fun Exception.shouldReport(): Boolean {
+-    val isRecoverable = (this as? WebExtensionException)?.isRecoverable ?: true
+-    return cause !is IOException &&
+-        cause !is CancellationException &&
+-        this !is CancellationException &&
+-        isRecoverable
++    return false
+ }
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
+index 8efdd24f23..9600f952ed 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
+@@ -100,7 +100,6 @@ class GleanCrashReporterService(
+         @SerialName("count")
+         data class Count(val label: String) : GleanCrashAction() {
+             override fun submit() {
+-                CrashMetrics.crashCount[label].add()
+             }
+         }
+ 
+@@ -151,11 +150,6 @@ class GleanCrashReporterService(
+                 val minidumpHash: String?,
+             ) : PingCause() {
+                 override fun setMetricsLater() {
+-                    GleanCrash.cause.setLater("os_fault")
+-                    remoteType?.let { GleanCrash.remoteType.setLater(it) }
+-                    minidumpHash?.let { GleanCrash.minidumpSha256Hash.setLater(it) }
+-
+-                    extras?.let(::setExtraMetrics)
+                 }
+ 
+                 private fun setExtraMetrics(extras: JsonObject) {
+@@ -336,10 +330,6 @@ class GleanCrashReporterService(
+                 val breadcrumbs: List<Breadcrumb>? = null,
+             ) : PingCause() {
+                 override fun setMetricsLater() {
+-                    GleanCrash.cause.setLater("java_exception")
+-                    GleanCrash.javaException.setLater(
+-                        Json.decodeFromJsonElement<GleanCrash.JavaExceptionObject>(throwableJson),
+-                    )
+                 }
+             }
+         }
+@@ -356,49 +346,6 @@ class GleanCrashReporterService(
+             val startup: Boolean = false,
+         ) : GleanCrashAction() {
+             override fun submit() {
+-                // Perform all processing up-front in case an unexpected exception occurs. We don't
+-                // want to partially set Glean metrics. The Glean metric functions do not throw
+-                // exceptions.
+-                val setMetrics = cause.prepareSetMetrics()
+-                var setBreadcrumbs = {}
+-                if (breadcrumbs.isNotEmpty()) {
+-                    val value = Json.decodeFromJsonElement<GleanCrash.BreadcrumbsObject>(
+-                        JsonArray(
+-                            breadcrumbs.map { breadcrumb ->
+-                                JsonObject(
+-                                    mapOf(
+-                                        "timestamp" to JsonPrimitive(breadcrumb.timestamp),
+-                                        "category" to JsonPrimitive(breadcrumb.category),
+-                                        "type" to JsonPrimitive(breadcrumb.type),
+-                                        "level" to JsonPrimitive(breadcrumb.level),
+-                                        "message" to JsonPrimitive(breadcrumb.message),
+-                                        "data" to JsonArray(
+-                                            breadcrumb.data.map {
+-                                                JsonObject(
+-                                                    mapOf(
+-                                                        "key" to JsonPrimitive(it.key),
+-                                                        "value" to JsonPrimitive(it.value),
+-                                                    ),
+-                                                )
+-                                            },
+-                                        ),
+-                                    ),
+-                                )
+-                            },
+-                        ),
+-                    )
+-                    setBreadcrumbs = { GleanCrash.breadcrumbs.set(value) }
+-                }
+-
+-                // Set all metrics and submit the ping. We are guaranteed to not throw any
+-                // exceptions here, so the metrics will never be partially set.
+-                GleanEnvironment.uptime.setRawNanos(uptimeNanos)
+-                GleanCrash.processType.set(processType)
+-                GleanCrash.time.set(Date(timeMillis))
+-                GleanCrash.startup.set(startup)
+-                setMetrics()
+-                setBreadcrumbs()
+-                Pings.crash.submit(reason)
+             }
+         }
+     }
+@@ -544,17 +491,6 @@ class GleanCrashReporterService(
+     }
+ 
+     override fun record(crash: Crash.UncaughtExceptionCrash) {
+-        recordCrashAction(GleanCrashAction.Count(UNCAUGHT_EXCEPTION_KEY))
+-        recordCrashAction(
+-            GleanCrashAction.Ping(
+-                uptimeNanos = uptime(),
+-                processType = "main",
+-                timeMillis = crash.timestamp,
+-                reason = Pings.crashReasonCodes.crash,
+-                cause = GleanCrashAction.PingCause.JavaException(crash.throwable.toJson()),
+-                breadcrumbs = crash.breadcrumbs.map { it.toBreadcrumb() },
+-            ),
+-        )
+     }
+ 
+     private fun getExtrasJson(path: String): JsonObject? {
+@@ -633,50 +569,8 @@ class GleanCrashReporterService(
+     }
+ 
+     override fun record(crash: Crash.NativeCodeCrash) {
+-        when (crash.processVisibility) {
+-            Crash.NativeCodeCrash.PROCESS_VISIBILITY_MAIN ->
+-                recordCrashAction(GleanCrashAction.Count(MAIN_PROCESS_NATIVE_CODE_CRASH_KEY))
+-            Crash.NativeCodeCrash.PROCESS_VISIBILITY_FOREGROUND_CHILD ->
+-                recordCrashAction(
+-                    GleanCrashAction.Count(
+-                        FOREGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY,
+-                    ),
+-                )
+-            Crash.NativeCodeCrash.PROCESS_VISIBILITY_BACKGROUND_CHILD ->
+-                recordCrashAction(
+-                    GleanCrashAction.Count(
+-                        BACKGROUND_CHILD_PROCESS_NATIVE_CODE_CRASH_KEY,
+-                    ),
+-                )
+-        }
+-
+-        val processType = crash.processType ?: "main"
+-
+-        if (crash.minidumpPath != null && crash.extrasPath != null) {
+-            MinidumpAnalyzer.load()?.run(crash.minidumpPath, crash.extrasPath, false)
+-        }
+-
+-        val extrasJson = crash.extrasPath?.let { getExtrasJson(it) }
+-
+-        val minidumpHash = crash.minidumpPath?.let { calculateMinidumpHash(it) }
+-
+-        recordCrashAction(
+-            GleanCrashAction.Ping(
+-                uptimeNanos = uptime(),
+-                processType = processType,
+-                timeMillis = crash.timestamp,
+-                reason = Pings.crashReasonCodes.crash,
+-                cause = GleanCrashAction.PingCause.OsFault(
+-                    remoteType = crash.remoteType,
+-                    extras = extrasJson,
+-                    minidumpHash = minidumpHash,
+-                ),
+-                breadcrumbs = crash.breadcrumbs.map { it.toBreadcrumb() },
+-            ),
+-        )
+     }
+ 
+     override fun record(throwable: Throwable) {
+-        recordCrashAction(GleanCrashAction.Count(CAUGHT_EXCEPTION_KEY))
+     }
+ }
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+index 37fa83d76a..c18428dc85 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+@@ -103,7 +103,7 @@ class MozillaSocorroService(
+     override val name: String = "Socorro"
+ 
+     override fun createCrashReportUrl(identifier: String): String? {
+-        return "https://crash-stats.mozilla.org/report/index/$identifier"
++        return ""
+     }
+ 
+     init {
+@@ -556,7 +556,7 @@ class MozillaSocorroService(
+     }
+ 
+     internal fun buildServerUrl(versionName: String): String =
+-        "https://crash-reports.mozilla.com/submit".toUri()
++        "".toUri()
+             .buildUpon()
+             .appendQueryParameter("id", appId)
+             .appendQueryParameter("version", versionName)
+diff --git a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+index 5b057f2579..7613b7ac06 100644
+--- a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
++++ b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+@@ -44,7 +44,7 @@ class SentryService(
+     private val environment: String? = null,
+     private val sendEventForNativeCrashes: Boolean = false,
+     private val sentryProjectUrl: String? = null,
+-    private val sendCaughtExceptions: Boolean = true,
++    private val sendCaughtExceptions: Boolean = false,
+ ) : CrashReporterService {
+ 
+     override val id: String = "new-sentry-instance"
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index d9a6045423..2f788179ee 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -355,7 +355,7 @@ android.applicationVariants.configureEach { variant ->
+ 
+     buildConfigField 'String', 'SENTRY_TOKEN', 'null'
+     if (!isDebug) {
+-        buildConfigField 'boolean', 'CRASH_REPORTING', 'true'
++        buildConfigField 'boolean', 'CRASH_REPORTING', 'false'
+         // Reading sentry token from local file (if it exists). In a release task on taskcluster it will be available.
+         try {
+             def token = new File("${rootDir}/.sentry_token").text.trim()
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 13db9f3c83..66ccccf955 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -504,10 +504,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+     }
+ 
+     private fun setupCrashReporting() {
+-        components
+-            .analytics
+-            .crashReporter
+-            .install(this)
+     }
+ 
+     protected open fun initializeNimbus() {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+index 1ad6a264c7..c9ea9932ca 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+@@ -16,7 +16,6 @@ import mozilla.components.lib.crash.service.GleanCrashReporterService
+ import mozilla.components.lib.crash.service.MozillaSocorroService
+ import mozilla.components.support.ktx.android.content.isMainProcess
+ import mozilla.components.support.utils.BrowsersCache
+-import mozilla.components.support.utils.RunWhenReadyQueue
+ import org.mozilla.fenix.BuildConfig
+ import org.mozilla.fenix.Config
+ import org.mozilla.fenix.HomeActivity
+@@ -45,7 +44,6 @@ import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
+  */
+ class Analytics(
+     private val context: Context,
+-    private val runWhenReadyQueue: RunWhenReadyQueue,
+ ) {
+     val crashReporter: CrashReporter by lazyMonitored {
+         val services = mutableListOf<CrashReporterService>()
+@@ -57,7 +55,7 @@ class Analytics(
+             // we get most value out of nightly/beta logging anyway.
+             val shouldSendCaughtExceptions = when (Config.channel) {
+                 ReleaseChannel.Release -> false
+-                else -> true
++                else -> false
+             }
+             val sentryService = SentryService(
+                 context,
+@@ -74,12 +72,7 @@ class Analytics(
+ 
+             // We only want to initialize Sentry on startup on the main process.
+             if (context.isMainProcess()) {
+-                runWhenReadyQueue.runIfReadyOrQueue {
+-                    sentryService.initIfNeeded()
+-                }
+             }
+-
+-            services.add(sentryService)
+         }
+ 
+         // The name "Fenix" here matches the product name on Socorro and is unrelated to the actual app name:
+@@ -93,7 +86,6 @@ class Analytics(
+             releaseChannel = MOZ_UPDATE_CHANNEL,
+             distributionId = distributionId,
+         )
+-        services.add(socorroService)
+ 
+         val intent = Intent(context, HomeActivity::class.java).apply {
+             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+@@ -119,7 +111,7 @@ class Analytics(
+                 appName = context.getString(R.string.app_name),
+                 organizationName = "Mozilla",
+             ),
+-            enabled = true,
++            enabled = false,
+             nonFatalCrashIntent = pendingIntent,
+             useLegacyReporting = !context.settings().crashReportAlwaysSend &&
+                 !context.settings().useNewCrashReporterDialog,
+@@ -161,10 +153,10 @@ class Analytics(
+     }
+ }
+ 
+-private fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()
++private fun isSentryEnabled() = false
+ 
+ private fun getSentryProjectUrl(): String? {
+-    val baseUrl = "https://sentry.io/organizations/mozilla/issues"
++    val baseUrl = ""
+     return when (Config.channel) {
+         ReleaseChannel.Nightly -> "$baseUrl/?project=6295546"
+         ReleaseChannel.Release -> "$baseUrl/?project=6375561"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
+index 6725aa64a0..0fe5231617 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
+@@ -84,13 +84,6 @@ class SearchDialogController(
+         }
+ 
+         when (url) {
+-            "about:crashes" -> {
+-                // The list of past crashes can be accessed via "settings > about", but desktop and
+-                // fennec users may be used to navigating to "about:crashes". So we intercept this here
+-                // and open the crash list activity instead.
+-                activity.startActivity(Intent(activity, CrashListActivity::class.java))
+-                store.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))
+-            }
+             "about:addons" -> {
+                 val directions =
+                     SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..fde794e31b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -167,8 +167,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     }
+ 
+     @VisibleForTesting
+-    internal val isCrashReportEnabledInBuild: Boolean =
+-        BuildConfig.CRASH_REPORTING && Config.channel.isReleased
++    internal val isCrashReportEnabledInBuild: Boolean = false
+ 
+     override val preferences: SharedPreferences =
+         appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
+@@ -363,12 +362,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = true,
+     )
+ 
+-    val isCrashReportingEnabled: Boolean
+-        get() = isCrashReportEnabledInBuild &&
+-            preferences.getBoolean(
+-                appContext.getPreferenceKey(R.string.pref_key_crash_reporter),
+-                true,
+-            )
++    val isCrashReportingEnabled: Boolean = false
+ 
+     val isRemoteDebuggingEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
+@@ -2310,10 +2304,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * A user preference indicating that crash reports should always be automatically sent. This can be updated
+      * through the unsubmitted crash dialog or through data choice preferences.
+      */
+-    var crashReportAlwaysSend by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_always_report),
+-        default = false,
+-    )
++    var crashReportAlwaysSend = false
+ 
+     /**
+      * Indicates whether or not we should use the new crash reporter dialog.
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
+index 8e4b210580..e838c11913 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
+@@ -38,7 +38,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
+   private static final String LOGTAG = "GeckoCrashHandler";
+   private static final Thread MAIN_THREAD = Thread.currentThread();
+   private static final String DEFAULT_SERVER_URL =
+-      "https://crash-reports.mozilla.com/submit?id=%1$s&version=%2$s&buildid=%3$s";
++      "";
+ 
+   // Context for getting device information
+   private @Nullable final Context mAppContext;

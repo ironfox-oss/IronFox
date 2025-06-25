@@ -407,7 +407,7 @@ sed -i \
     -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
     -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
     -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
-    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.cookiebanners.service.enableGlobalRules"|' \
+    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.cookiebanners.service.enableGlobalRules"|' \
     -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
     -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
     -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.privacy.query_stripping.allow_list"|' \
@@ -419,6 +419,8 @@ sed -i \
 sed -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
+    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType"|' \
+    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|' \
     -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
     -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
     -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
@@ -434,6 +436,7 @@ sed -i \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning.pbmode"|' \
+    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.network.android_doh.autoselect_enabled"|' \
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
@@ -452,6 +455,7 @@ sed -i \
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
+
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
     LLVM_SVN='522817'
@@ -459,6 +463,11 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
         --svn_version $LLVM_SVN \
         --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
         --src_path "$llvm"
+
+    # Bundletool
+    pushd "$bundletool"
+    localize_maven
+    popd
 fi
 {
     echo 'ac_add_options --disable-address-sanitizer-reporter'
@@ -567,8 +576,31 @@ fi
     echo 'export RUSTC_OPT_LEVEL=2'
 } >>mozconfig
 
-# Configure
+# Point to our build of Bundletool
+sed -i \
+    -e "/bundletool_path = /s|toolchains_base_dir|\"$BUILDDIR\"|" \
+    build/moz.configure/android-sdk.configure
+
+# Fail on use of prebuilt binary
+sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
+
+# Make the build system think we installed the emulator and an AVD
+mkdir -p "$ANDROID_HOME/emulator"
+mkdir -p "$HOME/.mozbuild/android-device/avd"
+
+# Do not check the "emulator" utility which is obviously absent in the empty directory we created above
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+
+# Do not define `browser.safebrowsing.features.` prefs by default
+## These are unnecessary, add extra confusion and complexity, and don't appear to interact well with our other prefs/settings
+sed -i \
+    -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.browser.safebrowsing.features.cryptomining.update"|' \
+    -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.browser.safebrowsing.features.fingerprinting.update"|' \
+    -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.browser.safebrowsing.features.malware.update"|' \
+    -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.browser.safebrowsing.features.phishing.update"|' \
+    -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.browser.safebrowsing.features.trackingAnnotation.update"|' \
+    -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.browser.safebrowsing.features.trackingProtection.update"|' \
+    mobile/android/app/geckoview-prefs.js
 
 {
     cat "$patches/preferences/phoenix.js"

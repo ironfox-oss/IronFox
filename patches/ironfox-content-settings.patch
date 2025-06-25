@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 3885a06691..0adf0acee1 100644
+index 3885a06691..ac2ec82df2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 @@ -23,6 +23,10 @@ import org.mozilla.fenix.ext.settings
@@ -17,7 +17,7 @@ index 3885a06691..0adf0acee1 100644
      override fun onResume() {
          super.onResume()
          showToolbar(getString(R.string.preferences_site_settings))
-+
++        
 +        val javascriptEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_javascript_enabled,
 +        )
@@ -91,10 +91,10 @@ index 3885a06691..0adf0acee1 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index 4faefc7999..fa13b4420a 100644
+index a55bf0589b..a8d902ae9f 100644
 --- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -444,6 +444,10 @@
+@@ -445,6 +445,10 @@
      <string name="pref_key_app_cold_start_count" translatable="false">pref_key_app_cold_start_count</string>
      <string name="pref_key_app_is_onboarding_set_as_default_displayed" translatable="false">pref_key_app_is_onboarding_set_as_default_displayed</string>
  

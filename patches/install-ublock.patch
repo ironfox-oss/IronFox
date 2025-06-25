@@ -13,7 +13,7 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  create mode 100644 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 82e44d1abc..fe2c0dd3e3 100644
+index 82e44d1abc..fd1dd84132 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 @@ -121,6 +121,9 @@ class WebExtensionPromptFeature(
@@ -26,7 +26,7 @@ index 82e44d1abc..fe2c0dd3e3 100644
          showPostInstallationDialog(addon)
      }
  
-@@ -128,6 +131,15 @@ class WebExtensionPromptFeature(
+@@ -128,6 +131,14 @@ class WebExtensionPromptFeature(
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
      ) {
@@ -38,11 +38,10 @@ index 82e44d1abc..fe2c0dd3e3 100644
 +            )
 +            return
 +        }
-+
          showPermissionDialog(
              addon = addon,
              promptRequest = promptRequest,
-@@ -141,6 +153,15 @@ class WebExtensionPromptFeature(
+@@ -141,6 +152,14 @@ class WebExtensionPromptFeature(
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
      ) {
@@ -54,26 +53,14 @@ index 82e44d1abc..fe2c0dd3e3 100644
 +            )
 +            return
 +        }
-+
          val shouldGrantWithoutPrompt = Addon.localizePermissions(
              promptRequest.permissions,
              context,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 64d09acb1a..61599172ec 100644
+index e5ab956ac3..5522b6c023 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -19,8 +19,10 @@ import androidx.annotation.RequiresApi
- import androidx.compose.runtime.Composable
- import androidx.compose.ui.platform.ComposeView
- import androidx.fragment.app.Fragment
-+import androidx.lifecycle.lifecycleScope
- import androidx.localbroadcastmanager.content.LocalBroadcastManager
- import androidx.navigation.fragment.findNavController
-+import kotlinx.coroutines.launch
- import mozilla.components.concept.engine.webextension.InstallationMethod
- import mozilla.components.service.nimbus.evalJexlSafe
- import mozilla.components.service.nimbus.messaging.use
-@@ -118,6 +120,11 @@ class OnboardingFragment : Fragment() {
+@@ -118,6 +118,11 @@ class OnboardingFragment : Fragment() {
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
          val context = requireContext()
@@ -83,7 +70,7 @@ index 64d09acb1a..61599172ec 100644
 +        }
 +
          if (pagesToDisplay.isEmpty()) {
-             /* do not continue if there's no onboarding pages to display */
+             // do not continue if there's no onboarding pages to display
              onFinish(null)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 new file mode 100644

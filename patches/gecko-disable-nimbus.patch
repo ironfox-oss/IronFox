@@ -1,0 +1,92 @@
+diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+index 1f4d51c643..9c154a8d16 100644
+--- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
++++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
+@@ -36,7 +36,7 @@ const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
+ const STUDIES_OPT_OUT_PREF = "app.shield.optoutstudies.enabled";
+ 
+ const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
+-const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
++const COLLECTION_ID_FALLBACK = "";
+ XPCOMUtils.defineLazyPreferenceGetter(
+   lazy,
+   "COLLECTION_ID",
+diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+index d3ab385732..810c8be7ce 100644
+--- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
++++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+@@ -37,7 +37,7 @@ XPCOMUtils.defineLazyServiceGetter(
+ );
+ 
+ const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
+-const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
++const COLLECTION_ID_FALLBACK = "";
+ const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
+   "nimbus.telemetry.targetingContextEnabled";
+ 
+@@ -49,10 +49,10 @@ const NIMBUS_DEBUG_PREF = "nimbus.debug";
+ const NIMBUS_VALIDATION_PREF = "nimbus.validation.enabled";
+ const NIMBUS_APPID_PREF = "nimbus.appId";
+ 
+-const SECURE_EXPERIMENTS_COLLECTION_ID = "nimbus-secure-experiments";
++const SECURE_EXPERIMENTS_COLLECTION_ID = "";
+ 
+-const EXPERIMENTS_COLLECTION = "experiments";
+-const SECURE_EXPERIMENTS_COLLECTION = "secureExperiments";
++const EXPERIMENTS_COLLECTION = "";
++const SECURE_EXPERIMENTS_COLLECTION = "";
+ 
+ const IS_MAIN_PROCESS =
+   Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
+diff --git a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+index 087e4ed51e..256972093f 100644
+--- a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
++++ b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+@@ -36,7 +36,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+ 
+ const log = LogManager.getLogger("recipe-runner");
+ const TIMER_NAME = "recipe-client-addon-run";
+-const REMOTE_SETTINGS_COLLECTION = "normandy-recipes-capabilities";
++const REMOTE_SETTINGS_COLLECTION = "";
+ const PREF_CHANGED_TOPIC = "nsPref:changed";
+ 
+ const RUN_INTERVAL_PREF = "app.normandy.run_interval_seconds";
+diff --git a/toolkit/modules/AppConstants.sys.mjs b/toolkit/modules/AppConstants.sys.mjs
+index a794e82288..b14fa739bb 100644
+--- a/toolkit/modules/AppConstants.sys.mjs
++++ b/toolkit/modules/AppConstants.sys.mjs
+@@ -116,7 +116,7 @@ export var AppConstants = Object.freeze({
+ 
+   MOZ_CRASHREPORTER: @MOZ_CRASHREPORTER_BOOL@,
+ 
+-  MOZ_NORMANDY: @MOZ_NORMANDY_BOOL@,
++  MOZ_NORMANDY: false,
+ 
+   MOZ_MAINTENANCE_SERVICE: @MOZ_MAINTENANCE_SERVICE_BOOL@,
+ 
+diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+index e09ea87de8..a5ed88d538 100644
+--- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
++++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
+@@ -4591,8 +4591,6 @@ AMRemoteSettings = {
+    */
+   RS_ENTRIES_MAP: {
+     installTriggerDeprecation: [
+-      "extensions.InstallTriggerImpl.enabled",
+-      "extensions.InstallTrigger.enabled",
+     ],
+     quarantinedDomains: ["extensions.quarantinedDomains.list"],
+   },
+diff --git a/tools/@types/subs/AppConstants.sys.d.mts b/tools/@types/subs/AppConstants.sys.d.mts
+index 04273576bd..0ad1edbda4 100644
+--- a/tools/@types/subs/AppConstants.sys.d.mts
++++ b/tools/@types/subs/AppConstants.sys.d.mts
+@@ -68,7 +68,7 @@ export const AppConstants: Readonly<{
+ 
+   MOZ_CRASHREPORTER: boolean;
+ 
+-  MOZ_NORMANDY: boolean;
++  MOZ_NORMANDY: false;
+ 
+   MOZ_MAINTENANCE_SERVICE: boolean;
+ 

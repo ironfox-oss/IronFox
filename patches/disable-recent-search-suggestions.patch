@@ -1,0 +1,57 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..02353f5537 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -453,7 +453,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     val shouldShowHistorySuggestions by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_search_browsing_history),
+-        default = true,
++        default = false,
+     )
+ 
+     val shouldShowBookmarkSuggestions by booleanPreference(
+@@ -1169,7 +1169,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     @VisibleForTesting
+     internal var recentSearchSuggestionsEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_show_recent_search_suggestions),
+-        default = true,
++        default = false,
+     )
+ 
+     /**
+@@ -2038,10 +2038,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if Recent Search Suggestions are enabled.
+      */
+-    var isRecentSearchesVisible by lazyFeatureFlagPreference(
++    var isRecentSearchesVisible by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_recent_searches),
+-        default = { FxNimbus.features.recentSearches.value().enabled },
+-        featureFlag = true,
++        default = true,
+     )
+ 
+     /**
+diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+index f7ca109331..e55f3b2beb 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
+@@ -46,7 +46,7 @@
+             app:iconSpaceReserved="false" />
+         <SwitchPreference
+             app:iconSpaceReserved="false"
+-            android:defaultValue="true"
++            android:defaultValue="false"
+             android:key="@string/pref_key_show_recent_search_suggestions"
+             android:title="@string/preferences_show_recent_search_suggestions" />
+     </PreferenceCategory>
+@@ -58,7 +58,7 @@
+         android:layout="@layout/preference_category_no_icon_style">
+          <SwitchPreference
+             app:iconSpaceReserved="false"
+-            android:defaultValue="true"
++            android:defaultValue="false"
+             android:key="@string/pref_key_search_browsing_history"
+             android:title='@string/preferences_search_browsing_history' />
+         <SwitchPreference

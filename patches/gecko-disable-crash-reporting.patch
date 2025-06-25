@@ -1,0 +1,78 @@
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
+index 8ce3e64c8a..c3c83e915c 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
+@@ -460,12 +460,10 @@ public class GeckoThread extends Thread {
+ 
+     // In Gecko, the native crash reporter is enabled by default in opt builds, and
+     // disabled by default in debug builds.
+-    if ((mInitInfo.flags & FLAG_ENABLE_NATIVE_CRASHREPORTER) == 0 && !BuildConfig.DEBUG_BUILD) {
+-      env.add(0, "MOZ_CRASHREPORTER_DISABLE=1");
+-    } else if ((mInitInfo.flags & FLAG_ENABLE_NATIVE_CRASHREPORTER) != 0
+-        && BuildConfig.DEBUG_BUILD) {
+-      env.add(0, "MOZ_CRASHREPORTER=1");
+-    }
++    env.add(0, "MOZ_CRASHREPORTER_DISABLE=1");
++    env.add(0, "MOZ_CRASHREPORTER=");
++    env.add(0, "MOZ_CRASHREPORTER_NO_REPORT=1");
++    env.add(0, "MOZ_CRASHREPORTER_URL=data;");
+ 
+     if (mInitInfo.userSerialNumber != null) {
+       env.add(0, "MOZ_ANDROID_USER_SERIAL_NUMBER=" + mInitInfo.userSerialNumber);
+diff --git a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+index d634f9def5..05e8007f24 100644
+--- a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
++++ b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+@@ -12,7 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "resource://services-settings/RemoteSettingsClient.sys.mjs",
+ });
+ 
+-const REMOTE_SETTINGS_CRASH_COLLECTION = "crash-reports-ondemand";
++const REMOTE_SETTINGS_CRASH_COLLECTION = "";
+ 
+ // Remote Settings collections might want a different limit
+ const PENDING_REMOTE_CRASH_REPORT_DAYS = 90;
+diff --git a/toolkit/modules/AppConstants.sys.mjs b/toolkit/modules/AppConstants.sys.mjs
+index a794e82288..9cd3955a10 100644
+--- a/toolkit/modules/AppConstants.sys.mjs
++++ b/toolkit/modules/AppConstants.sys.mjs
+@@ -114,7 +114,7 @@ export var AppConstants = Object.freeze({
+            Services.vc.compare(platformVersion, version) <= 0;
+   },
+ 
+-  MOZ_CRASHREPORTER: @MOZ_CRASHREPORTER_BOOL@,
++  MOZ_CRASHREPORTER: false,
+ 
+   MOZ_NORMANDY: @MOZ_NORMANDY_BOOL@,
+ 
+@@ -130,7 +130,7 @@ export var AppConstants = Object.freeze({
+ 
+   ASAN: @MOZ_ASAN_BOOL@,
+ 
+-  ASAN_REPORTER: @MOZ_ASAN_REPORTER_BOOL@,
++  ASAN_REPORTER: false,
+ 
+   TSAN: @MOZ_TSAN_BOOL@,
+ 
+diff --git a/tools/@types/subs/AppConstants.sys.d.mts b/tools/@types/subs/AppConstants.sys.d.mts
+index 04273576bd..3376c0a2d6 100644
+--- a/tools/@types/subs/AppConstants.sys.d.mts
++++ b/tools/@types/subs/AppConstants.sys.d.mts
+@@ -66,7 +66,7 @@ export const AppConstants: Readonly<{
+   isPlatformAndVersionAtLeast(platform: Platform, version: string): boolean;
+   isPlatformAndVersionAtMost(platform: Platform, version: string): boolean;
+ 
+-  MOZ_CRASHREPORTER: boolean;
++  MOZ_CRASHREPORTER: false;
+ 
+   MOZ_NORMANDY: boolean;
+ 
+@@ -82,7 +82,7 @@ export const AppConstants: Readonly<{
+ 
+   ASAN: boolean;
+ 
+-  ASAN_REPORTER: boolean;
++  ASAN_REPORTER: false;
+ 
+   TSAN: boolean;
+ 

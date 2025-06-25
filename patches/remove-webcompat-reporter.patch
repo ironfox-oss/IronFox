@@ -64,10 +64,10 @@ index b5aa2ce3a4..4aefd0fc43 100644
      - lib-crash
      - lib-crash-sentry
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index bdbc2336e3..5dadfbbce4 100644
+index d9a6045423..815ca73e77 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -606,7 +606,6 @@ dependencies {
+@@ -618,7 +618,6 @@ dependencies {
      implementation project(':feature-webauthn')
      implementation project(':feature-webcompat')
      implementation project(':feature-webnotifications')
@@ -76,10 +76,10 @@ index bdbc2336e3..5dadfbbce4 100644
      implementation project(':service-pocket')
      implementation project(':service-mars')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 965c09e29b..cc1a47ed6a 100644
+index 1443661bb8..ad53a8d609 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -316,8 +316,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -317,8 +317,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                      val translateLanguageCode = selectedTab?.translationsState?.translationEngineState
                          ?.requestedTranslationPair?.toLanguage
                      val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
@@ -90,10 +90,10 @@ index 965c09e29b..cc1a47ed6a 100644
                      val isDesktopMode by store.observeAsState(initialValue = false) { state ->
                          state.isDesktopMode
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index 136ddf0fda..40534be709 100644
+index 3221dddb98..f611287899 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-@@ -396,7 +396,7 @@ private fun MenuDialogPreview() {
+@@ -470,7 +470,7 @@ private fun MenuDialogPreview() {
                  isDesktopMode = false,
                  isPdf = false,
                  isTranslationSupported = true,
@@ -102,7 +102,7 @@ index 136ddf0fda..40534be709 100644
                  showQuitMenu = true,
                  isExtensionsProcessDisabled = true,
                  extensionsMenuItemDescription = "No extensions enabled",
-@@ -439,7 +439,7 @@ private fun MenuDialogPrivatePreview() {
+@@ -516,7 +516,7 @@ private fun MenuDialogPrivatePreview() {
                  isDesktopMode = false,
                  isPdf = false,
                  isTranslationSupported = true,
@@ -112,7 +112,7 @@ index 136ddf0fda..40534be709 100644
                  isExtensionsProcessDisabled = false,
                  extensionsMenuItemDescription = "No extensions enabled",
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index 6fb2b9ef98..9bdfedd87a 100644
+index e7e19273f9..abe5ef5191 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 @@ -213,10 +213,7 @@ open class DefaultToolbarMenu(
@@ -128,7 +128,7 @@ index 6fb2b9ef98..9bdfedd87a 100644
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 9e7842dfd5..061409cf5e 100644
+index 13db9f3c83..b6b2682e3f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -50,7 +50,6 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
@@ -139,7 +139,7 @@ index 9e7842dfd5..061409cf5e 100644
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -687,15 +686,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -692,15 +691,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                  onExtensionsLoaded = { extensions ->
                      components.addonUpdater.registerForFutureUpdates(extensions)
                      subscribeForNewAddonsIfNeeded(components.supportedAddonsChecker, extensions)

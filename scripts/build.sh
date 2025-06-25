@@ -49,9 +49,14 @@ source "$CARGO_HOME/env"
 # plugins (Glean).
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
+
     # Build LLVM
     # shellcheck disable=SC2154
     pushd "$llvm"
+
+    pushd "$bundletool"
+    gradle assemble
+    popd
 
     # shellcheck disable=SC2154
     llvmtarget=$(cat "$builddir/targets_to_build")

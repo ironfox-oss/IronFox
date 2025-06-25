@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 299d0c8ca1..2ade1e3835 100644
+index 1dfd8e2b51..205b0c3190 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -55,7 +55,6 @@ import org.mozilla.fenix.ext.requireComponents
+@@ -53,7 +53,6 @@ import org.mozilla.fenix.ext.requireComponents
  import org.mozilla.fenix.ext.runIfFragmentIsAttached
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.home.HomeFragment
@@ -10,7 +10,7 @@ index 299d0c8ca1..2ade1e3835 100644
  import org.mozilla.fenix.settings.quicksettings.protections.cookiebanners.getCookieBannerUIMode
  import org.mozilla.fenix.shortcut.PwaOnboardingObserver
  import org.mozilla.fenix.theme.ThemeManager
-@@ -175,11 +174,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+@@ -167,12 +166,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
      }
  
      private fun initTranslationsAction(context: Context, view: View) {
@@ -19,10 +19,11 @@ index 299d0c8ca1..2ade1e3835 100644
 -        ) {
 -            return
 -        }
- 
+-
          val translationsAction = Toolbar.ActionButton(
              AppCompatResources.getDrawable(
-@@ -679,7 +673,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+                 context,
+@@ -598,7 +591,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
  
      override fun navToQuickSettingsSheet(tab: SessionState, sitePermissions: SitePermissions?) {
          val useCase = requireComponents.useCases.trackingProtectionUseCases
@@ -31,7 +32,7 @@ index 299d0c8ca1..2ade1e3835 100644
              lifecycleScope.launch {
                  val cookieBannersStorage = requireComponents.core.cookieBannersStorage
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 965c09e29b..0313634f86 100644
+index 1443661bb8..046ab28a6b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 @@ -76,7 +76,6 @@ import org.mozilla.fenix.components.menu.store.MenuStore
@@ -42,7 +43,7 @@ index 965c09e29b..0313634f86 100644
  import org.mozilla.fenix.settings.SupportUtils
  import org.mozilla.fenix.settings.deletebrowsingdata.deleteAndQuit
  import org.mozilla.fenix.theme.FirefoxTheme
-@@ -305,8 +304,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -306,8 +305,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                      val isTranslationEngineSupported =
                          browserStore.state.translationEngine.isEngineSupported ?: false
                      val isTranslationSupported =
@@ -53,10 +54,10 @@ index 965c09e29b..0313634f86 100644
                      val isWebCompatEnabled by store.observeAsState(store.state.isWebCompatEnabled) {
                          it.isWebCompatEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index 6fb2b9ef98..ab22458d0e 100644
+index e7e19273f9..0de9fdf86d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -42,7 +42,6 @@ import org.mozilla.fenix.R
+@@ -43,7 +43,6 @@ import org.mozilla.fenix.automotive.isAndroidAutomotiveAvailable
  import org.mozilla.fenix.components.accounts.FenixAccountManager
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.settings
@@ -82,11 +83,17 @@ index 6fb2b9ef98..ab22458d0e 100644
          } ?: false
      }
  
-@@ -454,7 +451,7 @@ open class DefaultToolbarMenu(
+@@ -454,13 +451,7 @@ open class DefaultToolbarMenu(
                  addAppToHomeScreenItem.apply { visible = ::canAddAppToHomescreen },
                  if (shouldShowTopSites) addRemoveTopSitesItem else null,
                  saveToCollectionItem,
--                if (FxNimbus.features.print.value().browserPrintEnabled) printPageItem else null,
+-                if (FxNimbus.features.print.value().browserPrintEnabled &&
+-                    !context.isAndroidAutomotiveAvailable()
+-                ) {
+-                    printPageItem
+-                } else {
+-                    null
+-                },
 +                printPageItem,
                  BrowserMenuDivider(),
                  settingsItem,
@@ -104,33 +111,29 @@ index a6f3b77a47..b2ce30c78f 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b74145eb21..d01bd13d3d 100644
+index 43bea16286..5b239c74b3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -57,8 +57,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -58,7 +58,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_nimbus_use_preview).apply {
 -            isVisible = true
--            isChecked = context.settings().nimbusUsePreview
 +            isVisible = false
-+            isChecked = false
+             isChecked = context.settings().nimbusUsePreview
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
- 
-@@ -236,8 +236,8 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -225,7 +225,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
 -            isVisible = true
--            isChecked = context.settings().useRemoteSearchConfiguration
 +            isVisible = false
-+            isChecked = false
+             isChecked = context.settings().useRemoteSearchConfiguration
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-                     if (newValue as? Boolean == true) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 64492271c3..0d070de84d 100644
+index 325e5d2141..f9a3a663b4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -65,7 +65,6 @@ import org.mozilla.fenix.ext.openSetDefaultBrowserOption
@@ -151,11 +154,10 @@ index 64492271c3..0d070de84d 100644
      }
  
      override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-@@ -206,11 +204,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
-     override fun onResume() {
+@@ -207,10 +205,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
          super.onResume()
  
--        // Use nimbus to set the title, and a trivial addition
+         // Use nimbus to set the title, and a trivial addition
 -        val nimbusValidation = FxNimbus.features.nimbusValidation.value()
 -
 -        val title = nimbusValidation.settingsTitle
@@ -165,7 +167,7 @@ index 64492271c3..0d070de84d 100644
  
          showToolbar("$title$suffix")
  
-@@ -713,7 +708,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -713,7 +709,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
  
      @VisibleForTesting
      internal fun setupCookieBannerPreference() {
@@ -229,23 +231,10 @@ index 472e3bf5a8..9cf2df1b14 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 72493a2c21..e2778071b6 100644
+index 7f19ba4304..fa1bbae2c5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -189,10 +189,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates whether or not top sites should be shown on the home screen.
-      */
--    var showTopSitesFeature by lazyFeatureFlagPreference(
-+    var showTopSitesFeature by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_show_top_sites),
--        featureFlag = true,
--        default = { homescreenSections[HomeScreenSection.TOP_SITES] == true },
-+        default = true,
-     )
- 
-     var numberOfAppLaunches by intPreference(
-@@ -238,10 +237,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -225,10 +225,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = "",
      )
  
@@ -257,7 +246,7 @@ index 72493a2c21..e2778071b6 100644
  
      var utmParamsKnown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_utm_params_known),
-@@ -329,10 +325,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -316,10 +313,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the wallpaper onboarding dialog should be shown.
       */
@@ -270,7 +259,19 @@ index 72493a2c21..e2778071b6 100644
      )
  
      var openLinksInAPrivateTab by booleanPreference(
-@@ -546,10 +541,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -407,10 +403,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         persistDefaultIfNotExists = true,
+     )
+ 
+-    var isExperimentationEnabled by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
+-        default = isTelemetryEnabled,
+-    )
++    var isExperimentationEnabled = false
+ 
+     var isOverrideTPPopupsForPerformanceTest = false
+ 
+@@ -529,10 +522,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -282,29 +283,7 @@ index 72493a2c21..e2778071b6 100644
  
      var isFirstNimbusRun: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-@@ -1186,7 +1178,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     @VisibleForTesting
-     internal var recentSearchSuggestionsEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_show_recent_search_suggestions),
--        default = true,
-+        default = false,
-     )
- 
-     /**
-@@ -1667,10 +1659,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         get() =
-             FxNimbus.features.homescreen.value().sectionsEnabled
- 
--    var historyMetadataUIFeature by lazyFeatureFlagPreference(
-+    var historyMetadataUIFeature by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_history_metadata_feature),
--        default = { homescreenSections[HomeScreenSection.RECENT_EXPLORATIONS] == true },
--        featureFlag = true,
-+        default = true,
-     )
- 
-     /**
-@@ -1685,28 +1676,25 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1674,10 +1664,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if home onboarding dialog should be shown.
       */
@@ -317,29 +296,7 @@ index 72493a2c21..e2778071b6 100644
      )
  
      /**
-      * Indicates if the recent tabs functionality should be visible.
-      */
--    var showRecentTabsFeature by lazyFeatureFlagPreference(
-+    var showRecentTabsFeature by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_recent_tabs),
--        featureFlag = true,
--        default = { homescreenSections[HomeScreenSection.JUMP_BACK_IN] == true },
-+        default = true,
-     )
- 
-     /**
-      * Indicates if the recent saved bookmarks functionality should be visible.
-      */
--    var showBookmarksHomeFeature by lazyFeatureFlagPreference(
-+    var showBookmarksHomeFeature by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_customization_bookmarks),
--        default = { homescreenSections[HomeScreenSection.BOOKMARKS] == true },
--        featureFlag = true,
-+        default = true,
-     )
- 
-     var signedInFxaAccount by booleanPreference(
-@@ -1857,7 +1845,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1846,7 +1835,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          isLauncherIntent: Boolean,
      ): Boolean {
          return if (featureEnabled && !hasUserBeenOnboarded && isLauncherIntent) {
@@ -347,32 +304,20 @@ index 72493a2c21..e2778071b6 100644
              true
          } else {
              false
-@@ -1918,10 +1905,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1891,11 +1879,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not to use remote server search configuration.
       */
--    var useRemoteSearchConfiguration by booleanPreference(
+-    var useRemoteSearchConfiguration by lazyFeatureFlagPreference(
 -        key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
--        default = FxNimbus.features.remoteSearchConfiguration.value().enabled,
+-        default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
+-        featureFlag = true,
 -    )
 +    var useRemoteSearchConfiguration = false
  
      /**
       * Indicates if the menu CFR should be displayed to the user.
-@@ -2071,10 +2055,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if Recent Search Suggestions are enabled.
-      */
--    var isRecentSearchesVisible by lazyFeatureFlagPreference(
-+    var isRecentSearchesVisible by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_recent_searches),
--        default = { FxNimbus.features.recentSearches.value().enabled },
--        featureFlag = true,
-+        default = true,
-     )
- 
-     /**
-@@ -2185,8 +2168,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2152,8 +2136,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the feature to close synced tabs is enabled.
       */
@@ -382,19 +327,6 @@ index 72493a2c21..e2778071b6 100644
  
      /**
       * Returns the height of the bottom toolbar.
-@@ -2386,10 +2368,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates whether or not we should use the new bookmarks UI.
-      */
--    var useNewBookmarks by lazyFeatureFlagPreference(
-+    var useNewBookmarks by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_use_new_bookmarks_ui),
--        default = { true },
--        featureFlag = true,
-+        default = true,
-     )
- 
-     var bookmarkListSortOrder by stringPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 4c6b14bf87..08eda05d0c 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
