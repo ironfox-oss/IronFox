@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 1dfd8e2b51..0f11708e6d 100644
+index 1dfd8e2b51..04f5e9e693 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 @@ -53,7 +53,6 @@ import org.mozilla.fenix.ext.requireComponents
@@ -10,7 +10,7 @@ index 1dfd8e2b51..0f11708e6d 100644
  import org.mozilla.fenix.settings.quicksettings.protections.cookiebanners.getCookieBannerUIMode
  import org.mozilla.fenix.shortcut.PwaOnboardingObserver
  import org.mozilla.fenix.theme.ThemeManager
-@@ -167,10 +166,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+@@ -167,11 +166,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
      }
  
      private fun initTranslationsAction(context: Context, view: View) {
@@ -18,10 +18,11 @@ index 1dfd8e2b51..0f11708e6d 100644
 -            !FxNimbus.features.translations.value().mainFlowToolbarEnabled
 -        ) {
 -            return
-         }
+-        }
  
          val translationsAction = Toolbar.ActionButton(
-@@ -598,7 +593,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+             AppCompatResources.getDrawable(
+@@ -598,7 +592,6 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
  
      override fun navToQuickSettingsSheet(tab: SessionState, sitePermissions: SitePermissions?) {
          val useCase = requireComponents.useCases.trackingProtectionUseCases
