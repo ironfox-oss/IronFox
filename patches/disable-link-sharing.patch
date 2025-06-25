@@ -34,3 +34,16 @@ index 7f19ba4304..212c604329 100644
  
      /**
       * Get the display string for the current open links in apps setting
+diff --git a/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml
+index faafebc7f2..cf8650c1ee 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml
+@@ -5,7 +5,7 @@
+ <androidx.preference.PreferenceScreen
+     xmlns:android="http://schemas.android.com/apk/res/android">
+     <SwitchPreference
+-        android:defaultValue="true"
++        android:defaultValue="false"
+         android:key="@string/pref_key_link_sharing"
+         android:summary="@string/link_sharing_toggle_title"
+         android:title="@string/link_sharing_toggle_body" />
