@@ -189,6 +189,9 @@ find "$patches/fenix-overlay/initial_experiments" -type f | while read -r src; d
     cp "$src" "$dst"
 done
 
+# Copy our strings and translations
+cp -r "$patches/fenix-overlay/strings/res/" "app/src/main/"
+
 # Remove default built-in search engines
 rm -rf app/src/main/assets/searchplugins/*
 
