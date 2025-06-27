@@ -3,10 +3,10 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
-  <ShortName>No Search</ShortName>
-  <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" method="GET" template="https://nosearch.invalid/">
-    <Param name="q" value="{searchTerms}"/>
-  </Url>
-  <SearchForm>https://nosearch.invalid/</SearchForm>
+<ShortName>No Search</ShortName>
+<InputEncoding>UTF-8</InputEncoding>
+<Url type="text/html" method="GET" template="https://nosearch.invalid/">
+  <Param name="q" value="{searchTerms}"/>
+</Url>
+<SearchForm>https://nosearch.invalid/</SearchForm>
 </SearchPlugin>

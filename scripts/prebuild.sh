@@ -189,9 +189,8 @@ find "$patches/fenix-overlay/initial_experiments" -type f | while read -r src; d
     cp "$src" "$dst"
 done
 
-# Remove Reddit & YouTube as built-in search engines (due to poor privacy practices)
-rm app/src/main/assets/searchplugins/reddit.xml
-rm app/src/main/assets/searchplugins/youtube.xml
+# Remove default built-in search engines
+rm -rf app/src/main/assets/searchplugins/*
 
 # Set up target parameters
 case "$1" in
@@ -259,62 +258,15 @@ popd
 # shellcheck disable=SC2154
 pushd "$android_components"
 
-# Remove questionable built-in search engines (due to poor privacy practices)
-rm components/feature/search/src/main/assets/searchplugins/amazon-jp.xml
-rm components/feature/search/src/main/assets/searchplugins/baidu.xml
-rm components/feature/search/src/main/assets/searchplugins/bing.xml
-rm components/feature/search/src/main/assets/searchplugins/ceneje.xml
-rm components/feature/search/src/main/assets/searchplugins/coccoc.xml
-rm components/feature/search/src/main/assets/searchplugins/daum-kr.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-at.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-au.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-befr.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-ca.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-ch.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-co-uk.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-de.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-es.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-fr.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-ie.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-it.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-nl.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-pl.xml
-rm components/feature/search/src/main/assets/searchplugins/ecosia.xml
-rm components/feature/search/src/main/assets/searchplugins/google-b-1-m.xml
-rm components/feature/search/src/main/assets/searchplugins/google-b-m.xml
-rm components/feature/search/src/main/assets/searchplugins/google-b-vv.xml
-rm components/feature/search/src/main/assets/searchplugins/google-com-nocodes.xml
-rm components/feature/search/src/main/assets/searchplugins/gulesider-mobile-NO.xml
-rm components/feature/search/src/main/assets/searchplugins/leo_ende_de.xml
-rm components/feature/search/src/main/assets/searchplugins/mapy-cz.xml
-rm components/feature/search/src/main/assets/searchplugins/mercadolibre-ar.xml
-rm components/feature/search/src/main/assets/searchplugins/mercadolibre-cl.xml
-rm components/feature/search/src/main/assets/searchplugins/mercadolibre-mx.xml
-rm components/feature/search/src/main/assets/searchplugins/odpiralni.xml
-rm components/feature/search/src/main/assets/searchplugins/pazaruvaj.xml
-rm components/feature/search/src/main/assets/searchplugins/prisjakt-sv-SE.xml
-rm components/feature/search/src/main/assets/searchplugins/qwant.xml
-rm components/feature/search/src/main/assets/searchplugins/rakuten.xml
-rm components/feature/search/src/main/assets/searchplugins/reddit.xml
-rm components/feature/search/src/main/assets/searchplugins/salidzinilv.xml
-rm components/feature/search/src/main/assets/searchplugins/seznam-cz.xml
-rm components/feature/search/src/main/assets/searchplugins/vatera.xml
-rm components/feature/search/src/main/assets/searchplugins/yahoo-jp.xml
-rm components/feature/search/src/main/assets/searchplugins/yahoo-jp-auctions.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex.by.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex-en.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex-ru.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex-tr.xml
-rm components/feature/search/src/main/assets/searchplugins/youtube.xml
+# Remove default built-in search engines
+rm -rf components/feature/search/src/main/assets/searchplugins/*
 
 # Nuke the "Mozilla Android Components - Ads Telemetry" & "Mozilla Android Components - Search Telemetry" extensions
-# We don't install these with disable-telemetry.patch - so no need to keep the files around...
+# We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
 rm -rf components/feature/search/src/main/assets/extensions/ads
 rm -rf components/feature/search/src/main/assets/extensions/search
 
-# Remove 'search telemetry' config...
+# Remove the 'search telemetry' config...
 rm components/feature/search/src/main/assets/search/search_telemetry_v2.json
 
 find "$patches/a-c-overlay" -type f | while read -r src; do
