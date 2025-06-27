@@ -1,0 +1,589 @@
+diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
+index eb51cfe835..b5d8c4c3eb 100644
+--- a/mobile/android/fenix/app/onboarding.fml.yaml
++++ b/mobile/android/fenix/app/onboarding.fml.yaml
+@@ -120,6 +120,30 @@ features:
+                   body-line-one-text: onboarding_marketing_learn_more
+                   body-line-one-link-text: onboarding_marketing_learn_more
+                   body-line-two-text: onboarding_marketing_opt_in_checkbox
++
++            if-preferences:
++              card-type: if-preferences
++              enabled: true
++              title: onboarding_if_preferences_title
++              body: onboarding_if_preferences_description
++              image-res: ic_onboarding_customize_toolbar
++              ordering: 45
++              primary-button-label: onboarding_save_and_start_button
++              extra-data:
++                if-preferences-data:
++                  - switch-type: js-jit
++                    switch-label: preference_jit_enabled
++                    switch-description: preference_jit_enabled_description
++                  - switch-type: safe-browsing
++                    switch-label: preference_safe_browsing_enabled
++                    switch-description: preference_safe_browsing_enabled_description
++                  - switch-type: spoof-english
++                    switch-label: tor_spoof_english_title
++                    switch-description: tor_spoof_english
++                  - switch-type: install-ublock
++                    switch-label: onboarding_install_ublock_title
++                    switch-description: onboarding_install_ublock_description
++
+     defaults:
+       - channel: developer
+         value:
+@@ -318,6 +342,12 @@ objects:
+           An optional marketing data for the onboarding card.
+         default: null
+ 
++      if-preferences-data:
++        type: List<IfPreferencesData>
++        description: >
++          A list of preferences for the IronFox preferences onboarding card.
++        default: [ ]
++
+   CustomizationToolbarData:
+     description: An object to describe the placement of the toolbar.
+     fields:
+@@ -416,6 +446,23 @@ objects:
+         description: The text for line two of the body.
+         default: ""
+ 
++  IfPreferencesData:
++    description: An object to describe the IronFox preferences onboarding card.
++    fields:
++      switch-label:
++        type: Text
++        description: The text for the preference switch.
++        default: ""
++      switch-description:
++        type: Text
++        description: The text for the brief description of the switch.
++        default: ""
++      switch-type:
++        type: IfOnboardingPreferenceType
++        description: The type of preference.
++        # This should never be defaulted
++        default: default
++
+ enums:
+ 
+   OnboardingCardType:
+@@ -437,6 +484,9 @@ enums:
+         description: Page to display the terms of services.
+       marketing-data:
+         description: Allows user to opt out of marketing data collection.
++      if-preferences:
++        description: Allows user to configure IronFox-specific preferences.
++
+ 
+   ToolbarType:
+     description: An enum to describe a toolbar placement option.
+@@ -455,3 +505,17 @@ enums:
+         description: Sets the theme to light mode.
+       theme-dark:
+         description: Sets the theme to dark mode.
++
++  IfOnboardingPreferenceType:
++    description: An enum to describe an IronFox preference option.
++    variants:
++      default:
++        description: Default value for preference type. NEVER use this.
++      js-jit:
++        description: Whether to enable JavaScript JIT.
++      safe-browsing:
++        description: Whether to enable safe browsing.
++      spoof-english:
++        description: Whether to request English versions of web pages for enhanced privacy.
++      install-ublock:
++        description: Whether to install uBlock Origin.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
+index effc671c02..080ac9ac57 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
+@@ -132,6 +132,7 @@ class OnboardingTelemetryRecorder {
+                     ),
+                 )
+             }
++            OnboardingPageUiData.Type.IF_PREFERENCES -> {}
+         }
+     }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingPreferencesMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingPreferencesMiddleware.kt
+index b68e83d1c0..fc4ba04d5f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingPreferencesMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingPreferencesMiddleware.kt
+@@ -59,6 +59,8 @@ class OnboardingPreferencesMiddleware(
+                         .OnboardingPreferenceUpdate(action.selected.toOnboardingPreference()),
+                 )
+             }
++
++            is OnboardingAction.OnboardingIfPreferenceAction -> {}
+         }
+     }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingStore.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingStore.kt
+index 85d3702e04..195a91d50b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingStore.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/store/OnboardingStore.kt
+@@ -21,6 +21,10 @@ import org.mozilla.fenix.onboarding.view.ToolbarOptionType
+ data class OnboardingState(
+     val toolbarOptionSelected: ToolbarOptionType = ToolbarOptionType.TOOLBAR_TOP,
+     val themeOptionSelected: ThemeOptionType = ThemeOptionType.THEME_SYSTEM,
++    val jitEnabled: Boolean = false,
++    val safeBrowsingEnabled: Boolean = true,
++    val spoofEnglish: Boolean = true,
++    val installUBlock: Boolean = true,
+ ) : State
+ 
+ /**
+@@ -52,6 +56,13 @@ sealed interface OnboardingAction : Action {
+          */
+         data class UpdateSelected(val selected: ThemeOptionType) : OnboardingThemeAction
+     }
++
++    sealed interface OnboardingIfPreferenceAction : OnboardingAction {
++        data class JsJit(val selected: Boolean) : OnboardingIfPreferenceAction
++        data class SafeBrowsing(val selected: Boolean) : OnboardingIfPreferenceAction
++        data class SpoofEnglish(val selected: Boolean) : OnboardingIfPreferenceAction
++        data class InstallUBlock(val selected: Boolean) : OnboardingIfPreferenceAction
++    }
+ }
+ 
+ /**
+@@ -83,6 +94,11 @@ private fun reducer(
+         is OnboardingAction.OnboardingThemeAction.UpdateSelected -> {
+             state.copy(themeOptionSelected = action.selected)
+         }
++
++        is OnboardingAction.OnboardingIfPreferenceAction.JsJit -> state.copy(jitEnabled = action.selected)
++        is OnboardingAction.OnboardingIfPreferenceAction.SafeBrowsing -> state.copy(safeBrowsingEnabled = action.selected)
++        is OnboardingAction.OnboardingIfPreferenceAction.SpoofEnglish -> state.copy(spoofEnglish = action.selected)
++        is OnboardingAction.OnboardingIfPreferenceAction.InstallUBlock -> state.copy(installUBlock = action.selected)
+     }
+ 
+ /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
+new file mode 100644
+index 0000000000..d4bbfba4b1
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
+@@ -0,0 +1,214 @@
++package org.mozilla.fenix.onboarding.view
++
++import androidx.compose.foundation.Image
++import androidx.compose.foundation.background
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.BoxWithConstraints
++import androidx.compose.foundation.layout.BoxWithConstraintsScope
++import androidx.compose.foundation.layout.Column
++import androidx.compose.foundation.layout.Row
++import androidx.compose.foundation.layout.Spacer
++import androidx.compose.foundation.layout.fillMaxSize
++import androidx.compose.foundation.layout.fillMaxWidth
++import androidx.compose.foundation.layout.height
++import androidx.compose.foundation.layout.padding
++import androidx.compose.foundation.layout.width
++import androidx.compose.foundation.layout.wrapContentHeight
++import androidx.compose.foundation.rememberScrollState
++import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.Switch
++import androidx.compose.material.Text
++import androidx.compose.runtime.Composable
++import androidx.compose.runtime.getValue
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.res.painterResource
++import androidx.compose.ui.res.stringResource
++import androidx.compose.ui.semantics.semantics
++import androidx.compose.ui.semantics.testTag
++import androidx.compose.ui.text.style.TextAlign
++import androidx.compose.ui.unit.Dp
++import androidx.compose.ui.unit.dp
++import mozilla.components.compose.base.button.PrimaryButton
++import mozilla.components.lib.state.ext.observeAsState
++import org.mozilla.fenix.R
++import org.mozilla.fenix.onboarding.store.OnboardingAction
++import org.mozilla.fenix.onboarding.store.OnboardingState
++import org.mozilla.fenix.onboarding.store.OnboardingStore
++import org.mozilla.fenix.theme.FirefoxTheme
++
++/**
++ * The default ratio of the image height to the parent height.
++ */
++private const val IMAGE_HEIGHT_RATIO_DEFAULT = 0.2f
++
++/**
++ * The ratio of the image height to the parent height for medium sized devices.
++ */
++private const val IMAGE_HEIGHT_RATIO_MEDIUM = 0.15f
++
++/**
++ * The ratio of the image height to the parent height for small devices.
++ */
++private const val IMAGE_HEIGHT_RATIO_SMALL = 0.1f
++
++@Composable
++fun IronFoxPreferencesOnboardingPage(
++    onboardingStore: OnboardingStore,
++    pageState: OnboardingPageState,
++) {
++    BoxWithConstraints {
++        val boxWithConstraintsScope = this
++        Column(
++            modifier = Modifier
++                .background(FirefoxTheme.colors.layer1)
++                .padding(horizontal = 16.dp, vertical = 24.dp)
++                .fillMaxSize()
++                .verticalScroll(rememberScrollState()),
++
++            verticalArrangement = Arrangement.SpaceBetween,
++            horizontalAlignment = Alignment.CenterHorizontally,
++        ) {
++            with(pageState) {
++                Spacer(Modifier)
++
++                Image(
++                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
++                    contentDescription = stringResource(
++                        R.string.onboarding_customize_theme_main_image_content_description,
++                    ),
++                    modifier = Modifier.height(mainImageHeight(boxWithConstraintsScope)),
++                )
++
++                Spacer(Modifier.height(16.dp))
++
++                Text(
++                    text = title,
++                    color = FirefoxTheme.colors.textPrimary,
++                    textAlign = TextAlign.Center,
++                    style = FirefoxTheme.typography.headline5,
++                )
++
++                Spacer(Modifier.height(8.dp))
++
++                Text(
++                    text = description,
++                    color = FirefoxTheme.colors.textPrimary,
++                    textAlign = TextAlign.Center,
++                    style = FirefoxTheme.typography.body2,
++                )
++
++                Spacer(Modifier.height(32.dp))
++
++                val state by onboardingStore.observeAsState(initialValue = onboardingStore.state) { state -> state }
++
++                ifPreferenceOptions?.let { options ->
++                    IronFoxPreferenceSwitches(
++                        options = options,
++                        state = state,
++                        modifier = Modifier.fillMaxWidth()
++                            .wrapContentHeight()
++                    ) { type ->
++                        onboardingStore.dispatch(when (type) {
++                            IfPreferenceType.JS_JIT -> OnboardingAction.OnboardingIfPreferenceAction.JsJit(!state.jitEnabled)
++                            IfPreferenceType.INSTALL_UBLOCK -> OnboardingAction.OnboardingIfPreferenceAction.InstallUBlock(!state.installUBlock)
++                            IfPreferenceType.SAFE_BROWSING -> OnboardingAction.OnboardingIfPreferenceAction.SafeBrowsing(!state.safeBrowsingEnabled)
++                            IfPreferenceType.SPOOF_ENGLISH -> OnboardingAction.OnboardingIfPreferenceAction.SpoofEnglish(!state.spoofEnglish)
++                            IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
++                        })
++                    }
++                }
++
++                Spacer(modifier = Modifier.height(16.dp))
++
++                PrimaryButton(
++                    text = primaryButton.text,
++                    modifier = Modifier
++                        .width(width = FirefoxTheme.layout.size.maxWidth.small)
++                        .semantics { testTag = title + "onboarding_card.positive_button" },
++                    onClick = { primaryButton.onClick() },
++                )
++            }
++        }
++    }
++}
++
++@Composable
++fun IronFoxPreferenceSwitches(
++    options: List<IfPreferenceOption>,
++    state: OnboardingState,
++    modifier: Modifier = Modifier,
++    onPreferenceChange: (IfPreferenceType) -> Unit,
++) {
++    Column (
++        modifier = modifier
++    ) {
++        options.forEach { option ->
++            IronFoxPreferenceSwitchItem(
++                option = option,
++                isChecked = when (option.preferenceType) {
++                    IfPreferenceType.JS_JIT -> state.jitEnabled
++                    IfPreferenceType.INSTALL_UBLOCK -> state.installUBlock
++                    IfPreferenceType.SAFE_BROWSING -> state.safeBrowsingEnabled
++                    IfPreferenceType.SPOOF_ENGLISH -> state.spoofEnglish
++                    IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
++                },
++                modifier = Modifier.fillMaxWidth()
++                    .wrapContentHeight(),
++                onPreferenceChange = onPreferenceChange,
++            )
++        }
++    }
++}
++
++@Composable
++fun IronFoxPreferenceSwitchItem(
++    option: IfPreferenceOption,
++    isChecked: Boolean,
++    modifier: Modifier = Modifier,
++    onPreferenceChange: (IfPreferenceType) -> Unit
++) {
++    Row(
++        modifier = modifier
++            .fillMaxWidth()
++            .clickable(onClick = {
++                onPreferenceChange(option.preferenceType)
++            })
++            .padding(16.dp),
++        verticalAlignment = Alignment.CenterVertically
++    ) {
++        Column(
++            modifier = Modifier
++                .weight(1f)
++                .wrapContentHeight()
++        ) {
++            Text(
++                text = option.label,
++                style = FirefoxTheme.typography.body1,
++                color = FirefoxTheme.colors.textPrimary
++            )
++
++            Text(
++                text = option.description,
++                style = FirefoxTheme.typography.body2,
++                color = FirefoxTheme.colors.textSecondary
++            )
++        }
++
++        Switch(
++            checked = isChecked,
++            onCheckedChange = { onPreferenceChange(option.preferenceType) },
++            modifier = Modifier.align(Alignment.CenterVertically)
++        )
++    }
++}
++
++private fun mainImageHeight(boxWithConstraintsScope: BoxWithConstraintsScope): Dp {
++    val imageHeightRatio: Float = when {
++        boxWithConstraintsScope.maxHeight <= ONBOARDING_SMALL_DEVICE -> IMAGE_HEIGHT_RATIO_SMALL
++        boxWithConstraintsScope.maxHeight <= ONBOARDING_MEDIUM_DEVICE -> IMAGE_HEIGHT_RATIO_MEDIUM
++        else -> IMAGE_HEIGHT_RATIO_DEFAULT
++    }
++    return boxWithConstraintsScope.maxHeight.times(imageHeightRatio)
++}
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
+index 5c0cb8796e..bb5d1b5852 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
+@@ -6,12 +6,15 @@ package org.mozilla.fenix.onboarding.view
+ 
+ import org.mozilla.fenix.nimbus.CustomizationThemeData
+ import org.mozilla.fenix.nimbus.CustomizationToolbarData
++import org.mozilla.fenix.nimbus.IfOnboardingPreferenceType
++import org.mozilla.fenix.nimbus.IfPreferencesData
+ import org.mozilla.fenix.nimbus.MarketingData
+ import org.mozilla.fenix.nimbus.OnboardingCardData
+ import org.mozilla.fenix.nimbus.OnboardingCardType
+ import org.mozilla.fenix.nimbus.TermsOfServiceData
+ import org.mozilla.fenix.nimbus.ThemeType
+ import org.mozilla.fenix.nimbus.ToolbarType
++import java.lang.UnsupportedOperationException
+ 
+ /**
+  * Returns a list of all the required Nimbus 'cards' that have been converted to [OnboardingPageUiData].
+@@ -113,6 +116,7 @@ private fun OnboardingCardData.toPageUiData(privacyCaption: Caption?) = Onboardi
+         ?.takeIf { it.isNotEmpty() }
+         ?.toOnboardingThemeOptions(),
+     marketingData = extraData?.marketingData?.toOnboardingMarketingData(),
++    ifPreferencesData = extraData?.ifPreferencesData?.toOnboardingIfPreferenceOptions()
+ )
+ 
+ private fun OnboardingCardType.toPageUiDataType() = when (this) {
+@@ -124,6 +128,7 @@ private fun OnboardingCardType.toPageUiDataType() = when (this) {
+     OnboardingCardType.THEME_SELECTION -> OnboardingPageUiData.Type.THEME_SELECTION
+     OnboardingCardType.TERMS_OF_SERVICE -> OnboardingPageUiData.Type.TERMS_OF_SERVICE
+     OnboardingCardType.MARKETING_DATA -> OnboardingPageUiData.Type.MARKETING_DATA
++    OnboardingCardType.IF_PREFERENCES -> OnboardingPageUiData.Type.IF_PREFERENCES
+ }
+ 
+ private fun List<CustomizationToolbarData>.toOnboardingToolbarOptions() = map { it.toOnboardingCustomizeToolbar() }
+@@ -176,6 +181,24 @@ private fun ThemeType.toThemeOptionType() = when (this) {
+     ThemeType.THEME_SYSTEM -> ThemeOptionType.THEME_SYSTEM
+ }
+ 
++private fun List<IfPreferencesData>.toOnboardingIfPreferenceOptions() = map { it.toOnboardingThemeOption() }
++
++private fun IfPreferencesData.toOnboardingThemeOption() = with(this) {
++    IfPreferenceOption(
++        label = switchLabel,
++        description = switchDescription,
++        preferenceType = switchType.toIfPreferenceType(),
++    )
++}
++
++private fun IfOnboardingPreferenceType.toIfPreferenceType() = when (this) {
++    IfOnboardingPreferenceType.JS_JIT -> IfPreferenceType.JS_JIT
++    IfOnboardingPreferenceType.SAFE_BROWSING -> IfPreferenceType.SAFE_BROWSING
++    IfOnboardingPreferenceType.SPOOF_ENGLISH -> IfPreferenceType.SPOOF_ENGLISH
++    IfOnboardingPreferenceType.INSTALL_UBLOCK -> IfPreferenceType.INSTALL_UBLOCK
++    IfOnboardingPreferenceType.DEFAULT -> throw UnsupportedOperationException("Unsupported IfOnboardingPreferenceType: default")
++}
++
+ /**
+  * Mapper to convert [OnboardingPageUiData] to [OnboardingPageState] that is a param for
+  * [OnboardingPage] composable.
+@@ -195,6 +218,7 @@ internal fun mapToOnboardingPageState(
+     onCustomizeThemeClick: () -> Unit,
+     onTermsOfServiceButtonClick: () -> Unit,
+     onMarketingDataContinueClick: () -> Unit = {},
++    onIfPreferencesButtonClick: () -> Unit = {},
+ ): OnboardingPageState = when (onboardingPageUiData.type) {
+     OnboardingPageUiData.Type.DEFAULT_BROWSER -> createOnboardingPageState(
+         onboardingPageUiData = onboardingPageUiData,
+@@ -243,6 +267,12 @@ internal fun mapToOnboardingPageState(
+         onPositiveButtonClick = onMarketingDataContinueClick,
+         onNegativeButtonClick = {}, // No negative button option for marketing data.
+     )
++
++    OnboardingPageUiData.Type.IF_PREFERENCES -> createOnboardingPageState(
++        onboardingPageUiData = onboardingPageUiData,
++        onPositiveButtonClick = onIfPreferencesButtonClick,
++        onNegativeButtonClick = {}, // No negative button option for IronFox preferences.
++    )
+ }
+ 
+ private fun createOnboardingPageState(
+@@ -262,4 +292,5 @@ private fun createOnboardingPageState(
+     toolbarOptions = onboardingPageUiData.toolbarOptions,
+     termsOfService = onboardingPageUiData.termsOfService,
+     marketingData = onboardingPageUiData.marketingData,
++    ifPreferenceOptions = onboardingPageUiData.ifPreferencesData
+ )
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
+index bed8e9959a..28e50dd741 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
+@@ -6,6 +6,7 @@ package org.mozilla.fenix.onboarding.view
+ 
+ import androidx.annotation.DrawableRes
+ import org.mozilla.fenix.compose.LinkTextState
++import org.mozilla.fenix.nimbus.IfPreferencesData
+ 
+ /**
+  * Model containing data for [OnboardingPage].
+@@ -33,6 +34,7 @@ data class OnboardingPageState(
+     val termsOfService: OnboardingTermsOfService? = null,
+     val toolbarOptions: List<ToolbarOption>? = null,
+     val marketingData: OnboardingMarketingData? = null,
++    val ifPreferenceOptions: List<IfPreferenceOption>? = null,
+     val onRecordImpressionEvent: () -> Unit = {},
+ )
+ 
+@@ -107,6 +109,20 @@ enum class ThemeOptionType(val id: String) {
+     THEME_SYSTEM("theme_system"),
+ }
+ 
++data class IfPreferenceOption(
++    val label: String,
++    val description: String,
++    val preferenceType: IfPreferenceType,
++)
++
++enum class IfPreferenceType(val id: String) {
++    DEFAULT("default"),
++    JS_JIT("js_jit"),
++    SAFE_BROWSING("safe_browsing"),
++    SPOOF_ENGLISH("spoof_english"),
++    INSTALL_UBLOCK("install_ublock"),
++}
++
+ /**
+  * Model containing data for the terms of service page during onboarding.
+  */
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
+index 29ef99bc73..0f7fa4b429 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
+@@ -22,6 +22,7 @@ data class OnboardingPageUiData(
+     val themeOptions: List<ThemeOption>? = null,
+     val termsOfService: OnboardingTermsOfService? = null,
+     val marketingData: OnboardingMarketingData? = null,
++    val ifPreferencesData: List<IfPreferenceOption>? = null
+ ) {
+     /**
+      * Model for different types of Onboarding Pages.
+@@ -55,6 +56,9 @@ data class OnboardingPageUiData(
+         MARKETING_DATA(
+             telemetryId = "marketing_data",
+         ),
++        IF_PREFERENCES(
++            telemetryId = "if_preferences",
++        )
+     }
+ }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+index 732a80cb03..f1e180bcfc 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+@@ -246,6 +246,9 @@ fun OnboardingScreen(
+             onMarketingDataContinueClick(allowMarketingDataCollection)
+             scrollToNextPageOrDismiss()
+         },
++        onIfPreferencesButtonClick = {
++            scrollToNextPageOrDismiss()
++        },
+         onboardingStore = onboardingStore,
+     )
+ }
+@@ -293,6 +296,7 @@ private fun OnboardingContent(
+     onMarketingOptInToggle: (optIn: Boolean) -> Unit,
+     onMarketingDataLearnMoreClick: () -> Unit,
+     onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
++    onIfPreferencesButtonClick: () -> Unit,
+ ) {
+     val nestedScrollConnection = remember { DisableForwardSwipeNestedScrollConnection(pagerState) }
+ 
+@@ -322,6 +326,7 @@ private fun OnboardingContent(
+                 onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
+                 onCustomizeThemeClick = onCustomizeThemeButtonClick,
+                 onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
++                onIfPreferencesButtonClick = onIfPreferencesButtonClick,
+             )
+             OnboardingPageForType(
+                 type = pageUiState.type,
+@@ -412,6 +417,13 @@ private fun OnboardingPageForType(
+             state,
+             termsOfServiceEventHandler,
+         )
++
++        OnboardingPageUiData.Type.IF_PREFERENCES -> onboardingStore?.let { store ->
++            IronFoxPreferencesOnboardingPage(
++                onboardingStore = store,
++                pageState = state,
++            )
++        }
+     }
+ }
+ 
+@@ -461,6 +473,7 @@ private fun OnboardingScreenPreview() {
+             onMarketingDataLearnMoreClick = {},
+             onMarketingOptInToggle = {},
+             onMarketingDataContinueClick = {},
++            onIfPreferencesButtonClick = {}
+         )
+     }
+ }
