@@ -170,27 +170,11 @@ rm app/src/release/res/values/colors.xml
 rm app/src/main/res/values-v24/styles.xml
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
-# shellcheck disable=SC2154
-find "$patches/fenix-overlay/branding" -type f | while read -r src; do
-    dst=app/src/release/${src#"$patches/fenix-overlay/branding/"}
-    mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-done
 sed -i \
     -e 's/googleg_standard_color_18/ic_download/' \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
-
-# Remove Mozilla's `initial` experiments
-find "$patches/fenix-overlay/initial_experiments" -type f | while read -r src; do
-    dst=app/src/main/res/raw/${src#"$patches/fenix-overlay/initial_experiments/"}
-    mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-done
-
-# Copy our strings and translations
-cp -r "$patches/fenix-overlay/strings/res/" "app/src/main/"
 
 # Remove default built-in search engines
 rm -rf app/src/main/assets/searchplugins/*
@@ -241,6 +225,10 @@ echo "autoPublish.application-services.dir=$application_services" >>local.proper
 # Disable FUS Service or we'll get errors like:
 # Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
 echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
+
+find "$patches/fenix-overlay" -type f | while read -r src; do
+    cp "$src" "${src#"$patches/fenix-overlay/"}"
+done
 
 popd
 
@@ -309,25 +297,7 @@ fi
 pushd "$mozilla_release"
 
 # Let it be IronFox (part 2...)
-find "$patches/gecko-overlay/branding" -type f | while read -r src; do
-    dst=mobile/android/branding/${src#"$patches/gecko-overlay/branding/"}
-    mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-done
-
 sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
-
-# Add our custom/hardened FPP targets
-find "$patches/gecko-overlay/rfptargets" -type f | while read -r src; do
-    dst=toolkit/components/resistfingerprinting/${src#"$patches/gecko-overlay/rfptargets/"}
-    cp "$src" "$dst"
-done
-
-# Add our custom Remote Settings dumps
-find "$patches/gecko-overlay/rs-dumps" -type f | while read -r src; do
-    dst=services/settings/dumps/${src#"$patches/gecko-overlay/rs-dumps/"}
-    cp "$src" "$dst"
-done
 
 # Apply patches
 apply_patches
@@ -571,5 +541,9 @@ sed -i \
 {
     cat "$patches/preferences/pdf.js"
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
+
+find "$patches/gecko-overlay" -type f | while read -r src; do
+    cp "$src" "${src#"$patches/gecko-overlay/"}"
+done
 
 popd
