@@ -510,14 +510,6 @@ patches:
     effect: "Users can choose what compromises they're comfortable with and tailor the browsing experience to meet their needs, directly from the UI."
     category: "User Interface"
 
-  - file: "ironfox-static-strings.patch"
-    name: "IronFox Static Strings"
-    description: "Provides static strings for UI settings specific to IronFox."
-    reason: |
-      To allow us to provide custom UI settings, while avoiding conflicts with other patches.
-    effect: "Users can take advantage of our custom UI settings to improve their privacy, security, and browsing experience."
-    category: "User Interface"
-
   - file: "js-settings.patch"
     name: "JavaScript Settings"
     description: "Adds IronFox-specific UI settings for controlling JavaScript, JavaScript Just-in-time Compilation (JIT), and WebAssembly (WASM)."

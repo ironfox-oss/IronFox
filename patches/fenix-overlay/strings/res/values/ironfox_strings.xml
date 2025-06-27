@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<resources xmlns:tools="http://schemas.android.com/tools"  xmlns:moz="http://mozac.org/tools">
+    <!-- Spoof locale to English -->
+    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
+    <!-- Warn users that the browser will restart -->
+    <string name="restart_required_summary">Changing this setting will restart your browser</string>
+    <!-- Accessibility Services -->
+    <string name="preference_accessibility_enabled">Enable accessibility services</string>
+    <string name="preference_accessibility_enabled_summary">Enable to allow communication with accessibility services on your device.</string>
+    <!-- Safe Browsing -->
+    <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
+    <!-- Content Settings -->
+    <string name="preference_javascript_enabled">Enable JavaScript</string>
+    <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
+    <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
+</resources>
