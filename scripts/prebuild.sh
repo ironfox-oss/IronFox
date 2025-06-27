@@ -88,7 +88,7 @@ if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
 fi
 
 # Create build directory
-mkdir -p "$rootdir/build"
+mkdir -vp "$rootdir/build"
 
 # Check patch files
 source "$rootdir/scripts/patches.sh"
@@ -164,12 +164,13 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
 
 # Replace proprietary artwork
-rm app/src/release/res/drawable/ic_launcher_foreground.xml
-rm app/src/release/res/mipmap-*/ic_launcher.webp
-rm app/src/release/res/values/colors.xml
-rm app/src/main/res/values-v24/styles.xml
+rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml
+rm -vf app/src/release/res/mipmap-*/ic_launcher.webp
+rm -vf app/src/release/res/values/colors.xml
+rm -vf app/src/main/res/values-v24/styles.xml
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
+mkdir -vp app/src/release/res/mipmap-anydpi-v26
 sed -i \
     -e 's/googleg_standard_color_18/ic_download/' \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
@@ -177,7 +178,7 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
 # Remove default built-in search engines
-rm -rf app/src/main/assets/searchplugins/*
+rm -vrf app/src/main/assets/searchplugins/*
 
 # Set up target parameters
 case "$1" in
@@ -227,7 +228,7 @@ echo "autoPublish.application-services.dir=$application_services" >>local.proper
 echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
 
 find "$patches/fenix-overlay" -type f | while read -r src; do
-    cp "$src" "${src#"$patches/fenix-overlay/"}"
+    cp -vrf "$src" "${src#"$patches/fenix-overlay/"}"
 done
 
 popd
@@ -250,18 +251,18 @@ popd
 pushd "$android_components"
 
 # Remove default built-in search engines
-rm -rf components/feature/search/src/main/assets/searchplugins/*
+rm -vrf components/feature/search/src/main/assets/searchplugins/*
 
 # Nuke the "Mozilla Android Components - Ads Telemetry" & "Mozilla Android Components - Search Telemetry" extensions
 # We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
-rm -rf components/feature/search/src/main/assets/extensions/ads
-rm -rf components/feature/search/src/main/assets/extensions/search
+rm -vrf components/feature/search/src/main/assets/extensions/ads
+rm -vrf components/feature/search/src/main/assets/extensions/search
 
 # Remove the 'search telemetry' config...
-rm components/feature/search/src/main/assets/search/search_telemetry_v2.json
+rm -vf components/feature/search/src/main/assets/search/search_telemetry_v2.json
 
 find "$patches/a-c-overlay" -type f | while read -r src; do
-    cp "$src" "${src#"$patches/a-c-overlay/"}"
+    cp -vrf "$src" "${src#"$patches/a-c-overlay/"}"
 done
 
 popd
@@ -297,6 +298,8 @@ fi
 pushd "$mozilla_release"
 
 # Let it be IronFox (part 2...)
+mkdir -vp mobile/android/branding/ironfox/content
+mkdir -vp mobile/android/branding/ironfox/locales/en-US
 sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
 
 # Apply patches
@@ -510,8 +513,8 @@ sed -i \
 sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
 
 # Make the build system think we installed the emulator and an AVD
-mkdir -p "$ANDROID_HOME/emulator"
-mkdir -p "$HOME/.mozbuild/android-device/avd"
+mkdir -vp "$ANDROID_HOME/emulator"
+mkdir -vp "$HOME/.mozbuild/android-device/avd"
 
 # Do not check the "emulator" utility which is obviously absent in the empty directory we created above
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
@@ -543,7 +546,7 @@ sed -i \
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
 
 find "$patches/gecko-overlay" -type f | while read -r src; do
-    cp "$src" "${src#"$patches/gecko-overlay/"}"
+    cp -vrf "$src" "${src#"$patches/gecko-overlay/"}"
 done
 
 popd
