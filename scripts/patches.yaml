@@ -457,6 +457,13 @@ patches:
     effect: "Provides users with a seamless browsing experience and allows them to benefit from our strong fingerprinting protection, minus the breakage and headaches."
     category: "User Experience"
 
+  - file: "ironfox-onboarding.patch"
+    name: "IronFox Onboarding"
+    description: "Adds IronFox-specific onboarding screens."
+    reason: "To allow users to configure IronFox to their liking on first install."
+    effect: "Users can toggle features as per their liking before they take effect in the browser."
+    category: "User Experience"
+
   # User Interface
   - file: "branding.patch"
     name: "IronFox Branding"
