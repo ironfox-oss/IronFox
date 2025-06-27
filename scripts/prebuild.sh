@@ -189,6 +189,9 @@ find "$patches/fenix-overlay/initial_experiments" -type f | while read -r src; d
     cp "$src" "$dst"
 done
 
+# Copy our strings and translations
+cp -r "$patches/fenix-overlay/strings/res/" "app/src/main/"
+
 # Remove Reddit & YouTube as built-in search engines (due to poor privacy practices)
 rm app/src/main/assets/searchplugins/reddit.xml
 rm app/src/main/assets/searchplugins/youtube.xml
