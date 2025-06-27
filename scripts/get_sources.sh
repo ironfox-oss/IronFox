@@ -162,6 +162,11 @@ clone_repo "https://github.com/mozilla/glean" "$GLEANDIR" "$GLEAN_TAG"
 # Clone MicroG
 clone_repo "https://github.com/microg/GmsCore" "$GMSCOREDIR" "$GMSCORE_TAG"
 
+# Download Phoenix
+echo "Downloading Phoenix..."
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix.js" "$PATCHDIR/preferences/phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
+
 # Get WebAssembly SDK
 if [[ -z ${FDROID_BUILD+x} ]]; then
     echo "Downloading prebuilt wasi-sdk..."
