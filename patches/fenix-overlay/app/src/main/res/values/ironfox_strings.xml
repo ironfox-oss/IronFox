@@ -32,4 +32,13 @@
     <!-- Onboarding - uBlock Origin -->
     <string name="onboarding_install_ublock_title">Install uBlock Origin</string>
     <string name="onboarding_install_ublock_description">Block ads, trackers, and malware for a safer, and cleaner browsing experience.</string>
+
+    <!-- Onboarding - States -->
+    <string name="onboarding_state_installing_ublock">Installing uBlock Origin…</string>
+    <string name="onboarding_state_installing_ublock_error">An error occurred while installing uBlock Origin: %1$s</string>
+    <string name="onboarding_state_applying_preferences">Applying preferences…</string>
+    <string name="onboarding_state_applying_preferences_error">An error occurred while applying preferences: %1$s</string>
+
+    <!-- Onboarding - Actions -->
+    <string name="onboarding_action_retry">Retry</string>
 </resources>

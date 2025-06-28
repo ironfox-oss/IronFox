@@ -264,20 +264,13 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Privacy"
 
-  - file: "install-ublock.patch"
-    name: "Auto-install uBlock Origin"
-    description: "Installs uBlock Origin on first browser install and allows it to run in private tabs by default."
-    reason: "To ensure content blocking is available from first launch."
-    effect: "Users get content blocking protection without manual installation."
-    category: "Privacy"
-  
   - file: "librewolf-rs-blocker.patch"
     name: "Block Remote Settings"
     description: "Restricts Remote Settings to only download specific collections specified in preferences."
     reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
     effect: "Network activity is further limited, less data is shared with Mozilla, and the user is put in control of what specifically they want to download from Remote Settings."
     category: "Privacy"
-  
+
   - file: "restrict-mozaddonmanager.patch"
     name: "Restrict mozAddonManager"
     description: "Prevents addons.mozilla.org from being able to query a list of the user's installed add-ons, and removes its ability to enable and uninstall add-ons."
@@ -471,7 +464,7 @@ patches:
     reason: "Creates distinct brand identity for the fork."
     effect: "Users can identify the fork as IronFox instead of Firefox."
     category: "User Interface"
-  
+
   - file: "ironfox-home.patch"
     name: "IronFox Home"
     description: "Customizes the default homepage."
