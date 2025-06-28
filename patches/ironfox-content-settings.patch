@@ -1,23 +1,31 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 3885a06691..ac2ec82df2 100644
+index 3885a06691..1bf13a601b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-@@ -23,6 +23,10 @@ import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.ext.showToolbar
- import org.mozilla.fenix.settings.PhoneFeature
- import org.mozilla.fenix.settings.requirePreference
+@@ -5,6 +5,9 @@
+ package org.mozilla.fenix.settings.sitepermissions
+ 
+ import android.os.Bundle
 +import android.os.Handler
 +import android.os.Looper
 +import android.widget.Toast
+ import androidx.core.content.ContextCompat
+ import androidx.navigation.findNavController
+ import androidx.preference.Preference
+@@ -23,6 +26,8 @@ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.ext.showToolbar
+ import org.mozilla.fenix.settings.PhoneFeature
+ import org.mozilla.fenix.settings.requirePreference
++import org.mozilla.fenix.utils.IronFoxPreferences
 +import kotlin.system.exitProcess
  
  /**
   * Screen for managing settings related to site permissions and content defaults.
-@@ -40,6 +44,67 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -40,6 +45,69 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
      override fun onResume() {
          super.onResume()
          showToolbar(getString(R.string.preferences_site_settings))
-+        
++
 +        val javascriptEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_javascript_enabled,
 +        )
@@ -36,6 +44,7 @@ index 3885a06691..ac2ec82df2 100644
 +            R.string.pref_key_jit_enabled,
 +        )
 +
++        javascriptJitEnabledPreference.isChecked = IronFoxPreferences.isJavascriptJitEnabled(requireContext())
 +        javascriptJitEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
@@ -68,6 +77,7 @@ index 3885a06691..ac2ec82df2 100644
 +            R.string.pref_key_wasm_enabled,
 +        )
 +
++        wasmEnabledPreference.isChecked = IronFoxPreferences.isWebAssemblyEnabled(requireContext())
 +        wasmEnabledPreference.setOnPreferenceChangeListener { preference, wasmEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
@@ -81,7 +91,7 @@ index 3885a06691..ac2ec82df2 100644
          setupPreferences()
      }
  
-@@ -109,4 +174,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -109,4 +177,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              )
          }
      }
