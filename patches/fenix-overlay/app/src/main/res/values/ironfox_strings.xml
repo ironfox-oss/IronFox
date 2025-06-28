@@ -9,7 +9,7 @@
 
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english_title">Spoof language to en-US</string>
-    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
+    <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
 
     <!-- Accessibility Services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
@@ -17,21 +17,21 @@
 
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
-    <string name="preference_safe_browsing_enabled_description">Get real-time warnings about dangerous websites, malware, and phishing attempts to protect your personal data.</string>
+    <string name="preference_safe_browsing_enabled_description">Get real-time protection against dangerous websites, malware, and phishing attempts. Your browsing data is never shared directly with IronFox's developers, Google, or any other party.</string>
 
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
 
     <!-- JavaScript JIT -->
     <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
-    <string name="preference_jit_enabled_description">Improve browser performance by speeding up scripts on complex websites. Increases fingerprinting and security risks.</string>
+    <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for those with lower-end devices.</string>
 
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
     <!-- Onboarding - uBlock Origin -->
     <string name="onboarding_install_ublock_title">Install uBlock Origin</string>
-    <string name="onboarding_install_ublock_description">Block ads, trackers, and malware for a safer, and cleaner browsing experience.</string>
+    <string name="onboarding_install_ublock_description">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
 
     <!-- Onboarding - States -->
     <string name="onboarding_state_installing_ublock">Installing uBlock Origin…</string>
