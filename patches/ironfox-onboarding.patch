@@ -941,16 +941,13 @@ index 0000000000..b35658273e
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..d2fb9de99d
+index 0000000000..f85ece53b5
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
-@@ -0,0 +1,102 @@
+@@ -0,0 +1,123 @@
 +package org.mozilla.fenix.utils
 +
 +import android.content.Context
-+import android.util.Log
-+import androidx.core.content.edit
-+import org.mozilla.fenix.R
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.ext.settings
 +
@@ -994,6 +991,30 @@ index 0000000000..d2fb9de99d
 +        javascriptJitNativeRegexpEnabled &&
 +        javascriptJitTrustedPrincipalsEnabled
 +    }
++
++    /**
++     * Set whether to enable WebAssembly preferences.
++     *
++     * @param context The application context.
++     * @param isEnabled Whether to enable WebAssembly.
++     */
++    fun setWebAssemblyEnabled(
++        context: Context,
++        isEnabled: Boolean,
++    ) {
++        val settings = context.settings()
++        val components = context.components
++
++        settings.wasmEnabled = isEnabled
++        components.core.engine.settings.wasmEnabled = isEnabled
++    }
++
++    /**
++     * Check if WebAssembly is enabled.
++     */
++    fun isWebAssemblyEnabled(
++        context: Context
++    ): Boolean = context.components.core.engine.settings.wasmEnabled
 +
 +    /**
 +     * Set whether to enable Safe Browsing preferences.
