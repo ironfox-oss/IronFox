@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
-index eb51cfe835..b5d8c4c3eb 100644
+index eb51cfe835..f1f5b577d7 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
 +++ b/mobile/android/fenix/app/onboarding.fml.yaml
 @@ -120,6 +120,30 @@ features:
@@ -12,7 +12,7 @@ index eb51cfe835..b5d8c4c3eb 100644
 +              enabled: true
 +              title: onboarding_if_preferences_title
 +              body: onboarding_if_preferences_description
-+              image-res: ic_onboarding_customize_toolbar
++              image-res: ic_launcher_foreground
 +              ordering: 45
 +              primary-button-label: onboarding_save_and_start_button
 +              extra-data:
@@ -98,6 +98,58 @@ index eb51cfe835..b5d8c4c3eb 100644
 +        description: Whether to request English versions of web pages for enhanced privacy.
 +      install-ublock:
 +        description: Whether to install uBlock Origin.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
+index 82e44d1abc..eebb7d443b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
+@@ -36,6 +36,7 @@ import org.mozilla.fenix.R
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.settings.SupportUtils
+ import org.mozilla.fenix.theme.ThemeManager
++import org.mozilla.fenix.utils.IronFoxAddons
+ 
+ /**
+  * Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI.
+@@ -121,6 +122,9 @@ class WebExtensionPromptFeature(
+     private fun handlePostInstallationRequest(
+         addon: Addon,
+     ) {
++        if (IronFoxAddons.isUBlockOrigin(addon)) {
++            return
++        }
+         showPostInstallationDialog(addon)
+     }
+ 
+@@ -128,6 +132,14 @@ class WebExtensionPromptFeature(
+         addon: Addon,
+         promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
+     ) {
++        if (IronFoxAddons.isUBlockOrigin(addon)) {
++            handlePermissions(
++                promptRequest = promptRequest,
++                granted = true,
++                privateBrowsingAllowed = true
++            )
++            return
++        }
+         showPermissionDialog(
+             addon = addon,
+             promptRequest = promptRequest,
+@@ -141,6 +153,14 @@ class WebExtensionPromptFeature(
+         addon: Addon,
+         promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
+     ) {
++        if (IronFoxAddons.isUBlockOrigin(addon)) {
++            handlePermissions(
++                promptRequest = promptRequest,
++                granted = true,
++                privateBrowsingAllowed = true
++            )
++            return
++        }
+         val shouldGrantWithoutPrompt = Addon.localizePermissions(
+             promptRequest.permissions,
+             context,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
 index effc671c02..080ac9ac57 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
@@ -166,16 +218,19 @@ index 85d3702e04..195a91d50b 100644
  /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..d4bbfba4b1
+index 0000000000..dcccca8bfd
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
-@@ -0,0 +1,214 @@
+@@ -0,0 +1,446 @@
 +package org.mozilla.fenix.onboarding.view
 +
++import android.content.Context
++import androidx.compose.animation.AnimatedContent
 +import androidx.compose.foundation.Image
 +import androidx.compose.foundation.background
 +import androidx.compose.foundation.clickable
 +import androidx.compose.foundation.layout.Arrangement
++import androidx.compose.foundation.layout.Box
 +import androidx.compose.foundation.layout.BoxWithConstraints
 +import androidx.compose.foundation.layout.BoxWithConstraintsScope
 +import androidx.compose.foundation.layout.Column
@@ -189,12 +244,17 @@ index 0000000000..d4bbfba4b1
 +import androidx.compose.foundation.layout.wrapContentHeight
 +import androidx.compose.foundation.rememberScrollState
 +import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.LinearProgressIndicator
 +import androidx.compose.material.Switch
 +import androidx.compose.material.Text
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableStateOf
++import androidx.compose.runtime.remember
++import androidx.compose.runtime.setValue
 +import androidx.compose.ui.Alignment
 +import androidx.compose.ui.Modifier
++import androidx.compose.ui.platform.LocalContext
 +import androidx.compose.ui.res.painterResource
 +import androidx.compose.ui.res.stringResource
 +import androidx.compose.ui.semantics.semantics
@@ -202,13 +262,21 @@ index 0000000000..d4bbfba4b1
 +import androidx.compose.ui.text.style.TextAlign
 +import androidx.compose.ui.unit.Dp
 +import androidx.compose.ui.unit.dp
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withContext
 +import mozilla.components.compose.base.button.PrimaryButton
 +import mozilla.components.lib.state.ext.observeAsState
++import mozilla.components.support.base.log.logger.Logger
 +import org.mozilla.fenix.R
-+import org.mozilla.fenix.onboarding.store.OnboardingAction
++import org.mozilla.fenix.ext.components
++import org.mozilla.fenix.onboarding.store.OnboardingAction.OnboardingIfPreferenceAction
 +import org.mozilla.fenix.onboarding.store.OnboardingState
 +import org.mozilla.fenix.onboarding.store.OnboardingStore
 +import org.mozilla.fenix.theme.FirefoxTheme
++import org.mozilla.fenix.utils.IronFoxAddons
++import org.mozilla.fenix.utils.IronFoxPreferences
 +
 +/**
 + * The default ratio of the image height to the parent height.
@@ -224,6 +292,26 @@ index 0000000000..d4bbfba4b1
 + * The ratio of the image height to the parent height for small devices.
 + */
 +private const val IMAGE_HEIGHT_RATIO_SMALL = 0.1f
++
++sealed interface ContentState {
++
++    /**
++     * Show IronFox preference switches.
++     */
++    data object Configuration : ContentState
++
++    /**
++     * Show a progress bar with a message.
++     */
++    data class Progress(val message: String) : ContentState
++
++    /**
++     * Show an error message.
++     */
++    data class Error(val message: String) : ContentState
++}
++
++private val logger = Logger("IronFoxOnboardingPreferences")
 +
 +@Composable
 +fun IronFoxPreferencesOnboardingPage(
@@ -246,62 +334,200 @@ index 0000000000..d4bbfba4b1
 +                Spacer(Modifier)
 +
 +                Image(
-+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-+                    contentDescription = stringResource(
-+                        R.string.onboarding_customize_theme_main_image_content_description,
-+                    ),
++                    painter = painterResource(id = imageRes),
++                    contentDescription = "",
 +                    modifier = Modifier.height(mainImageHeight(boxWithConstraintsScope)),
 +                )
 +
 +                Spacer(Modifier.height(16.dp))
 +
-+                Text(
-+                    text = title,
-+                    color = FirefoxTheme.colors.textPrimary,
-+                    textAlign = TextAlign.Center,
-+                    style = FirefoxTheme.typography.headline5,
-+                )
++                var contentState by remember {
++                    mutableStateOf<ContentState>(ContentState.Configuration)
++                }
 +
-+                Spacer(Modifier.height(8.dp))
++                if (contentState == ContentState.Configuration) {
++                    Text(
++                        text = title,
++                        color = FirefoxTheme.colors.textPrimary,
++                        textAlign = TextAlign.Center,
++                        style = FirefoxTheme.typography.headline5,
++                    )
 +
-+                Text(
-+                    text = description,
-+                    color = FirefoxTheme.colors.textPrimary,
-+                    textAlign = TextAlign.Center,
-+                    style = FirefoxTheme.typography.body2,
-+                )
++                    Spacer(Modifier.height(8.dp))
++
++                    Text(
++                        text = description,
++                        color = FirefoxTheme.colors.textPrimary,
++                        textAlign = TextAlign.Center,
++                        style = FirefoxTheme.typography.body2,
++                    )
++                }
 +
 +                Spacer(Modifier.height(32.dp))
 +
++                val context = LocalContext.current
 +                val state by onboardingStore.observeAsState(initialValue = onboardingStore.state) { state -> state }
++                val onContentStateChange = remember {{ newState: ContentState ->
++                    contentState = newState
++                }}
++
++                val applyAction = remember(context, state, primaryButton, onContentStateChange) {{
++                    applyState(
++                        context = context,
++                        state = state,
++                        onDone = primaryButton.onClick,
++                        onContentStateChange = onContentStateChange,
++                    )
++                }}
 +
 +                ifPreferenceOptions?.let { options ->
-+                    IronFoxPreferenceSwitches(
-+                        options = options,
-+                        state = state,
-+                        modifier = Modifier.fillMaxWidth()
-+                            .wrapContentHeight()
-+                    ) { type ->
-+                        onboardingStore.dispatch(when (type) {
-+                            IfPreferenceType.JS_JIT -> OnboardingAction.OnboardingIfPreferenceAction.JsJit(!state.jitEnabled)
-+                            IfPreferenceType.INSTALL_UBLOCK -> OnboardingAction.OnboardingIfPreferenceAction.InstallUBlock(!state.installUBlock)
-+                            IfPreferenceType.SAFE_BROWSING -> OnboardingAction.OnboardingIfPreferenceAction.SafeBrowsing(!state.safeBrowsingEnabled)
-+                            IfPreferenceType.SPOOF_ENGLISH -> OnboardingAction.OnboardingIfPreferenceAction.SpoofEnglish(!state.spoofEnglish)
-+                            IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
-+                        })
++                    AnimatedContent(
++                        targetState = contentState,
++                        modifier = Modifier
++                            .weight(1f)
++                            .fillMaxWidth(),
++                    ) { currentState ->
++                        when (currentState) {
++                            ContentState.Configuration -> IronFoxPreferenceConfigurations(
++                                options = options,
++                                onboardingStore = onboardingStore,
++                                state = state,
++                                pageState = pageState,
++                                modifier = Modifier.fillMaxSize(),
++                                onApply = applyAction,
++                            )
++
++                            is ContentState.Progress -> IronFoxPreferencesProgress(state = currentState)
++                            is ContentState.Error -> IronFoxPreferencesError(
++                                state = currentState,
++                                onRetry = applyAction
++                            )
++                        }
 +                    }
 +                }
++            }
++        }
++    }
++}
 +
-+                Spacer(modifier = Modifier.height(16.dp))
++@Composable
++private fun IronFoxPreferenceConfigurations(
++    options: List<IfPreferenceOption>,
++    onboardingStore: OnboardingStore,
++    state: OnboardingState,
++    pageState: OnboardingPageState,
++    modifier: Modifier = Modifier,
++    onApply: () -> Unit,
++) {
++    Column(modifier = modifier) {
++        with(pageState) {
++            IronFoxPreferenceSwitches(
++                options = options,
++                state = state,
++                modifier = Modifier
++                    .fillMaxWidth()
++                    .wrapContentHeight(),
++            ) { type ->
++                onboardingStore.dispatch(
++                    when (type) {
++                        IfPreferenceType.JS_JIT -> OnboardingIfPreferenceAction.JsJit(
++                            !state.jitEnabled,
++                        )
 +
-+                PrimaryButton(
-+                    text = primaryButton.text,
-+                    modifier = Modifier
-+                        .width(width = FirefoxTheme.layout.size.maxWidth.small)
-+                        .semantics { testTag = title + "onboarding_card.positive_button" },
-+                    onClick = { primaryButton.onClick() },
++                        IfPreferenceType.INSTALL_UBLOCK -> OnboardingIfPreferenceAction.InstallUBlock(
++                            !state.installUBlock,
++                        )
++
++                        IfPreferenceType.SAFE_BROWSING -> OnboardingIfPreferenceAction.SafeBrowsing(
++                            !state.safeBrowsingEnabled,
++                        )
++
++                        IfPreferenceType.SPOOF_ENGLISH -> OnboardingIfPreferenceAction.SpoofEnglish(
++                            !state.spoofEnglish,
++                        )
++
++                        IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
++                    },
 +                )
 +            }
++
++            Spacer(modifier = Modifier.height(16.dp))
++            var isPrimaryButtonEnabled by remember { mutableStateOf(true) }
++
++            PrimaryButton(
++                text = primaryButton.text,
++                enabled = isPrimaryButtonEnabled,
++                modifier = Modifier
++                    .width(width = FirefoxTheme.layout.size.maxWidth.small)
++                    .semantics {
++                        testTag = title + "onboarding_card.positive_button"
++                    },
++                onClick = {
++                    isPrimaryButtonEnabled = false
++                    onApply()
++                },
++            )
++        }
++    }
++}
++
++private fun applyState(
++    context: Context,
++    state: OnboardingState,
++    onDone: () -> Unit,
++    onContentStateChange: (ContentState) -> Unit,
++) {
++    CoroutineScope(Dispatchers.Default).launch {
++
++        onContentStateChange(
++            ContentState.Progress(
++                context.getString(R.string.onboarding_state_applying_preferences),
++            ),
++        )
++
++        try {
++            IronFoxPreferences.setJavascriptJitEnabled(context, state.jitEnabled)
++            IronFoxPreferences.setSafeBrowsingEnabled(context, state.safeBrowsingEnabled)
++            IronFoxPreferences.setLocaleSpoofingEnabled(context, state.spoofEnglish)
++        } catch (err: Throwable) {
++            onContentStateChange(
++                ContentState.Error(
++                    context.getString(
++                        R.string.onboarding_state_applying_preferences_error,
++                        err.message ?: "Unknown error",
++                    ),
++                ),
++            )
++
++            return@launch
++        }
++
++        if (state.installUBlock) {
++            onContentStateChange(
++                ContentState.Progress(
++                    context.getString(R.string.onboarding_state_installing_ublock),
++                ),
++            )
++
++            val components = context.components
++            val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN)
++            if (result.isFailure) {
++                logger.error("Failed to install uBlock Origin", result.exceptionOrNull())
++                onContentStateChange(
++                    ContentState.Error(
++                        context.getString(
++                            R.string.onboarding_state_installing_ublock_error,
++                            result.exceptionOrNull()?.message ?: "Unknown error",
++                        ),
++                    ),
++                )
++
++                return@launch
++            }
++        }
++
++        withContext(Dispatchers.Main) {
++            onDone()
 +        }
 +    }
 +}
@@ -313,8 +539,8 @@ index 0000000000..d4bbfba4b1
 +    modifier: Modifier = Modifier,
 +    onPreferenceChange: (IfPreferenceType) -> Unit,
 +) {
-+    Column (
-+        modifier = modifier
++    Column(
++        modifier = modifier,
 +    ) {
 +        options.forEach { option ->
 +            IronFoxPreferenceSwitchItem(
@@ -326,7 +552,8 @@ index 0000000000..d4bbfba4b1
 +                    IfPreferenceType.SPOOF_ENGLISH -> state.spoofEnglish
 +                    IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
 +                },
-+                modifier = Modifier.fillMaxWidth()
++                modifier = Modifier
++                    .fillMaxWidth()
 +                    .wrapContentHeight(),
 +                onPreferenceChange = onPreferenceChange,
 +            )
@@ -339,39 +566,96 @@ index 0000000000..d4bbfba4b1
 +    option: IfPreferenceOption,
 +    isChecked: Boolean,
 +    modifier: Modifier = Modifier,
-+    onPreferenceChange: (IfPreferenceType) -> Unit
++    onPreferenceChange: (IfPreferenceType) -> Unit,
 +) {
 +    Row(
 +        modifier = modifier
 +            .fillMaxWidth()
-+            .clickable(onClick = {
-+                onPreferenceChange(option.preferenceType)
-+            })
++            .clickable(
++                onClick = {
++                    onPreferenceChange(option.preferenceType)
++                },
++            )
 +            .padding(16.dp),
-+        verticalAlignment = Alignment.CenterVertically
++        verticalAlignment = Alignment.CenterVertically,
 +    ) {
 +        Column(
 +            modifier = Modifier
 +                .weight(1f)
-+                .wrapContentHeight()
++                .wrapContentHeight(),
 +        ) {
 +            Text(
 +                text = option.label,
 +                style = FirefoxTheme.typography.body1,
-+                color = FirefoxTheme.colors.textPrimary
++                color = FirefoxTheme.colors.textPrimary,
 +            )
 +
 +            Text(
 +                text = option.description,
 +                style = FirefoxTheme.typography.body2,
-+                color = FirefoxTheme.colors.textSecondary
++                color = FirefoxTheme.colors.textSecondary,
 +            )
 +        }
 +
 +        Switch(
 +            checked = isChecked,
 +            onCheckedChange = { onPreferenceChange(option.preferenceType) },
-+            modifier = Modifier.align(Alignment.CenterVertically)
++            modifier = Modifier.align(Alignment.CenterVertically),
++        )
++    }
++}
++
++@Composable
++private fun IronFoxPreferencesProgress(
++    state: ContentState.Progress,
++    modifier: Modifier = Modifier,
++) {
++    Box(
++        modifier = modifier,
++        contentAlignment = Alignment.Center,
++    ) {
++        Column(
++            horizontalAlignment = Alignment.CenterHorizontally,
++            verticalArrangement = Arrangement.spacedBy(24.dp)
++        ) {
++            Text(
++                text = state.message,
++                style = FirefoxTheme.typography.body1,
++                color = FirefoxTheme.colors.textPrimary,
++            )
++
++            LinearProgressIndicator(
++                modifier = Modifier
++                    .padding(horizontal = 32.dp)
++                    .fillMaxWidth(),
++            )
++        }
++    }
++}
++
++@Composable
++fun IronFoxPreferencesError(
++    state: ContentState.Error,
++    modifier: Modifier = Modifier,
++    onRetry: () -> Unit,
++) {
++    Column(
++        modifier = modifier,
++        verticalArrangement = Arrangement.spacedBy(16.dp)
++    ) {
++        Text(
++            text = state.message,
++            textAlign = TextAlign.Center,
++            modifier = Modifier
++                .weight(1f)
++                .fillMaxWidth()
++        )
++
++        PrimaryButton(
++            text = stringResource(R.string.onboarding_action_retry),
++            modifier = Modifier
++                .width(width = FirefoxTheme.layout.size.maxWidth.small),
++            onClick = onRetry
 +        )
 +    }
 +}
@@ -536,10 +820,18 @@ index 29ef99bc73..0f7fa4b429 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-index 732a80cb03..f1e180bcfc 100644
+index 732a80cb03..f8be41f384 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-@@ -246,6 +246,9 @@ fun OnboardingScreen(
+@@ -49,6 +49,7 @@ import org.mozilla.fenix.compose.PagerIndicator
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.onboarding.WidgetPinnedReceiver.WidgetPinnedState
++import org.mozilla.fenix.onboarding.store.OnboardingAction
+ import org.mozilla.fenix.onboarding.store.OnboardingAction.OnboardingThemeAction
+ import org.mozilla.fenix.onboarding.store.OnboardingAction.OnboardingToolbarAction
+ import org.mozilla.fenix.onboarding.store.OnboardingStore
+@@ -246,6 +247,9 @@ fun OnboardingScreen(
              onMarketingDataContinueClick(allowMarketingDataCollection)
              scrollToNextPageOrDismiss()
          },
@@ -549,7 +841,7 @@ index 732a80cb03..f1e180bcfc 100644
          onboardingStore = onboardingStore,
      )
  }
-@@ -293,6 +296,7 @@ private fun OnboardingContent(
+@@ -293,6 +297,7 @@ private fun OnboardingContent(
      onMarketingOptInToggle: (optIn: Boolean) -> Unit,
      onMarketingDataLearnMoreClick: () -> Unit,
      onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
@@ -557,7 +849,7 @@ index 732a80cb03..f1e180bcfc 100644
  ) {
      val nestedScrollConnection = remember { DisableForwardSwipeNestedScrollConnection(pagerState) }
  
-@@ -322,6 +326,7 @@ private fun OnboardingContent(
+@@ -322,6 +327,7 @@ private fun OnboardingContent(
                  onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
                  onCustomizeThemeClick = onCustomizeThemeButtonClick,
                  onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
@@ -565,7 +857,7 @@ index 732a80cb03..f1e180bcfc 100644
              )
              OnboardingPageForType(
                  type = pageUiState.type,
-@@ -412,6 +417,13 @@ private fun OnboardingPageForType(
+@@ -412,6 +418,13 @@ private fun OnboardingPageForType(
              state,
              termsOfServiceEventHandler,
          )
@@ -579,11 +871,179 @@ index 732a80cb03..f1e180bcfc 100644
      }
  }
  
-@@ -461,6 +473,7 @@ private fun OnboardingScreenPreview() {
+@@ -461,6 +474,7 @@ private fun OnboardingScreenPreview() {
              onMarketingDataLearnMoreClick = {},
              onMarketingOptInToggle = {},
              onMarketingDataContinueClick = {},
-+            onIfPreferencesButtonClick = {}
++            onIfPreferencesButtonClick = {},
          )
      }
  }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt
+new file mode 100644
+index 0000000000..b35658273e
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt
+@@ -0,0 +1,54 @@
++package org.mozilla.fenix.utils
++
++import kotlinx.coroutines.CompletableDeferred
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.withContext
++import mozilla.components.concept.engine.webextension.InstallationMethod
++import mozilla.components.feature.addons.Addon
++import mozilla.components.support.base.log.logger.Logger
++import org.mozilla.fenix.components.Components
++
++object IronFoxAddons {
++    private val logger = Logger("IronFoxAddons")
++
++    val UBLOCK_ORIGIN = Addon(
++        id = "uBlock0@raymondhill.net",
++        downloadUrl = "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi"
++    )
++
++    fun isUBlockOrigin(addon: Addon) = addon.id == UBLOCK_ORIGIN.id
++
++    suspend fun installAddon(
++        components: Components,
++        addon: Addon,
++    ): Result<Addon> = withContext(Dispatchers.IO) {
++        runCatching {
++            val addonManager = components.addonManager
++            val addons = addonManager.getAddons(waitForPendingActions = false)
++            if (addons.none { it.id == addon.id && it.isInstalled() }) {
++                logger.warn("Installing addon: '${addon.id}'")
++                val deferred = withContext(Dispatchers.Main) {
++                    val deferred = CompletableDeferred<Addon>()
++                    addonManager.installAddon(
++                        url = addon.downloadUrl,
++                        installationMethod = InstallationMethod.MANAGER,
++                        onSuccess = { result ->
++                            logger.info("Addon '${addon.id}' installed.")
++                            deferred.complete(result)
++                        },
++                        onError = { err ->
++                            logger.error("Failed to install addon with id '${addon.id}'", err)
++                            deferred.completeExceptionally(err)
++                        }
++                    )
++
++                    deferred
++                }
++
++                deferred.await()
++            }
++
++            addon
++        }
++    }
++}
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
+new file mode 100644
+index 0000000000..d2fb9de99d
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
+@@ -0,0 +1,102 @@
++package org.mozilla.fenix.utils
++
++import android.content.Context
++import android.util.Log
++import androidx.core.content.edit
++import org.mozilla.fenix.R
++import org.mozilla.fenix.ext.components
++import org.mozilla.fenix.ext.settings
++
++object IronFoxPreferences {
++
++    /**
++     * Set whether to enable JavaScript Just-in-time compilation preferences.
++     *
++     * @param context The application context.
++     * @param isEnabled Whether to enable JavaScript Just-in-time compilation.
++     */
++    fun setJavascriptJitEnabled(
++        context: Context,
++        isEnabled: Boolean,
++    ) {
++        val settings = context.settings()
++        val components = context.components
++
++        settings.javascriptJitEnabled = isEnabled
++
++        components.core.engine.settings.javascriptJitBaselineEnabled = isEnabled
++        components.core.engine.settings.javascriptJitBaselineWasmEnabled = isEnabled
++        components.core.engine.settings.javascriptJitHintsEnabled = isEnabled
++        components.core.engine.settings.javascriptJitIonEnabled = isEnabled
++        components.core.engine.settings.javascriptJitMainProcessEnabled = isEnabled
++        components.core.engine.settings.javascriptJitNativeRegexpEnabled = isEnabled
++        components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = isEnabled
++    }
++
++    /**
++     * Check if JavaScript Just-in-time compilation is enabled.
++     */
++    fun isJavascriptJitEnabled(
++        context: Context
++    ): Boolean = context.components.core.engine.settings.run {
++        javascriptJitBaselineEnabled &&
++        javascriptJitBaselineWasmEnabled &&
++        javascriptJitHintsEnabled &&
++        javascriptJitIonEnabled &&
++        javascriptJitMainProcessEnabled &&
++        javascriptJitNativeRegexpEnabled &&
++        javascriptJitTrustedPrincipalsEnabled
++    }
++
++    /**
++     * Set whether to enable Safe Browsing preferences.
++     *
++     * @param context The application context.
++     * @param isEnabled Whether to enable Safe Browsing.
++     */
++    fun setSafeBrowsingEnabled(
++        context: Context,
++        isEnabled: Boolean,
++    ) {
++        val settings = context.settings()
++        val components = context.components
++
++        settings.safeBrowsingEnabled = isEnabled
++
++        components.core.engine.settings.safeBrowsingEnabled = isEnabled
++        components.core.engine.settings.safeBrowsingPhishingEnabled = isEnabled
++    }
++
++    /**
++     * Check if Safe Browsing is enabled.
++     */
++    fun isSafeBrowsingEnabled(
++        context: Context
++    ): Boolean = context.components.core.engine.settings.run {
++        safeBrowsingEnabled &&
++        safeBrowsingPhishingEnabled
++    }
++
++    /**
++     * Set whether to enable the locale spoofing preference.
++     *
++     * @param context The application context.
++     * @param isEnabled Whether to enable locale spoofing.
++     */
++    fun setLocaleSpoofingEnabled(
++        context: Context,
++        isEnabled: Boolean,
++    ) {
++        val settings = context.settings()
++        val components = context.components
++        settings.spoofEnglish = isEnabled
++        components.core.engine.settings.spoofEnglish = isEnabled
++    }
++
++    /**
++     * Check if locale spoofing is enabled.
++     */
++    fun isLocaleSpoofingEnabled(
++        context: Context,
++    ): Boolean = context.components.core.engine.settings.spoofEnglish
++}
