@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
-index eb51cfe835..e24c9ff4e5 100644
+index eb51cfe835..b233fd9291 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
 +++ b/mobile/android/fenix/app/onboarding.fml.yaml
-@@ -120,6 +120,39 @@ features:
+@@ -120,6 +120,43 @@ features:
                    body-line-one-text: onboarding_marketing_learn_more
                    body-line-one-link-text: onboarding_marketing_learn_more
                    body-line-two-text: onboarding_marketing_opt_in_checkbox
@@ -11,9 +11,9 @@ index eb51cfe835..e24c9ff4e5 100644
 +              card-type: if-preference-doh
 +              enabled: true
 +              title: onboarding_if_preferences_title
-+              body: onboarding_if_preference_doh_description
++              body: onboarding_if_preference_doh_caption
 +              image-res: ic_launcher_foreground
-+              ordering: 45
++              ordering: 10000
 +              primary-button-label: onboarding_save_and_continue_button
 +
 +            if-preferences:
@@ -22,27 +22,31 @@ index eb51cfe835..e24c9ff4e5 100644
 +              title: onboarding_if_preferences_title
 +              body: onboarding_if_preferences_description
 +              image-res: ic_launcher_foreground
-+              ordering: 45
++              ordering: 10005
 +              primary-button-label: onboarding_save_and_start_button
 +              extra-data:
 +                if-preferences-data:
 +                  - switch-type: js-jit
 +                    switch-label: preference_jit_enabled
++                    switch-caption: preference_jit_enabled_caption
 +                    switch-description: preference_jit_enabled_description
 +                  - switch-type: safe-browsing
 +                    switch-label: preference_safe_browsing_enabled
++                    switch-caption: preference_safe_browsing_enabled_caption
 +                    switch-description: preference_safe_browsing_enabled_description
 +                  - switch-type: spoof-english
 +                    switch-label: tor_spoof_english_title
-+                    switch-description: tor_spoof_english
++                    switch-caption: tor_spoof_english_caption
++                    switch-description: tor_spoof_english_description
 +                  - switch-type: install-ublock
 +                    switch-label: onboarding_install_ublock_title
++                    switch-caption: onboarding_install_ublock_caption
 +                    switch-description: onboarding_install_ublock_description
 +
      defaults:
        - channel: developer
          value:
-@@ -318,6 +351,12 @@ objects:
+@@ -318,6 +355,12 @@ objects:
            An optional marketing data for the onboarding card.
          default: null
  
@@ -55,7 +59,7 @@ index eb51cfe835..e24c9ff4e5 100644
    CustomizationToolbarData:
      description: An object to describe the placement of the toolbar.
      fields:
-@@ -416,6 +455,23 @@ objects:
+@@ -416,6 +459,27 @@ objects:
          description: The text for line two of the body.
          default: ""
  
@@ -66,9 +70,13 @@ index eb51cfe835..e24c9ff4e5 100644
 +        type: Text
 +        description: The text for the preference switch.
 +        default: ""
++      switch-caption:
++        type: Text
++        description: The text for the brief caption of the switch.
++        default: ""
 +      switch-description:
 +        type: Text
-+        description: The text for the brief description of the switch.
++        description: The text for the long description of the switch.
 +        default: ""
 +      switch-type:
 +        type: IfOnboardingPreferenceType
@@ -79,7 +87,7 @@ index eb51cfe835..e24c9ff4e5 100644
  enums:
  
    OnboardingCardType:
-@@ -437,6 +493,11 @@ enums:
+@@ -437,6 +501,11 @@ enums:
          description: Page to display the terms of services.
        marketing-data:
          description: Allows user to opt out of marketing data collection.
@@ -91,7 +99,7 @@ index eb51cfe835..e24c9ff4e5 100644
  
    ToolbarType:
      description: An enum to describe a toolbar placement option.
-@@ -455,3 +516,17 @@ enums:
+@@ -455,3 +524,17 @@ enums:
          description: Sets the theme to light mode.
        theme-dark:
          description: Sets the theme to dark mode.
@@ -176,13 +184,19 @@ index effc671c02..ac7cbafb7d 100644
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..60e2452e97
+index 0000000000..a47fdcd570
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
-@@ -0,0 +1,474 @@
+@@ -0,0 +1,489 @@
 +package org.mozilla.fenix.onboarding.view
 +
++import androidx.activity.compose.BackHandler
 +import androidx.compose.animation.AnimatedContent
++import androidx.compose.animation.fadeIn
++import androidx.compose.animation.fadeOut
++import androidx.compose.animation.slideInHorizontally
++import androidx.compose.animation.slideOutHorizontally
++import androidx.compose.animation.togetherWith
 +import androidx.compose.foundation.Image
 +import androidx.compose.foundation.background
 +import androidx.compose.foundation.layout.Arrangement
@@ -319,6 +333,15 @@ index 0000000000..60e2452e97
 +                val updateContentState = remember {
 +                    { newState: IfPreferenceDohContentState ->
 +                        contentState = newState
++                    }
++                }
++
++                BackHandler(contentState != IfPreferenceDohContentState.ModeSelection) {
++                    when (contentState) {
++                        IfPreferenceDohContentState.ModeSelection -> {}
++                        IfPreferenceDohContentState.ProviderSelection -> {
++                            contentState = IfPreferenceDohContentState.ModeSelection
++                        }
 +                    }
 +                }
 +
@@ -656,13 +679,14 @@ index 0000000000..60e2452e97
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..6e247d83db
+index 0000000000..88de5a8984
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 @@ -0,0 +1,444 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import android.content.Context
++import androidx.activity.compose.BackHandler
 +import androidx.compose.animation.AnimatedContent
 +import androidx.compose.foundation.Image
 +import androidx.compose.foundation.background
@@ -687,6 +711,7 @@ index 0000000000..6e247d83db
 +import androidx.compose.material.Text
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
++import androidx.compose.runtime.mutableIntStateOf
 +import androidx.compose.runtime.mutableStateOf
 +import androidx.compose.runtime.remember
 +import androidx.compose.runtime.setValue
@@ -708,6 +733,9 @@ index 0000000000..6e247d83db
 +import mozilla.components.support.base.log.logger.Logger
 +import org.mozilla.fenix.R
 +import org.mozilla.fenix.ext.components
++import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Configuration
++import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Error
++import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Progress
 +import org.mozilla.fenix.theme.FirefoxTheme
 +import org.mozilla.fenix.utils.IronFoxAddons
 +import org.mozilla.fenix.utils.IronFoxPreferences
@@ -732,7 +760,9 @@ index 0000000000..6e247d83db
 +    /**
 +     * Show IronFox preference switches.
 +     */
-+    data object Configuration : IfPreferencesContentState
++    data class Configuration(
++        val optionIndex: Int,
++    ) : IfPreferencesContentState
 +
 +    /**
 +     * Show a progress bar with a message.
@@ -781,33 +811,22 @@ index 0000000000..6e247d83db
 +
 +                Spacer(Modifier.height(16.dp))
 +
++                val preferenceOptions = remember { ifPreferenceOptions!! }
++                var currentPreferenceIndex by remember { mutableIntStateOf(0) }
++
++                BackHandler(currentPreferenceIndex > 0) {
++                    --currentPreferenceIndex
++                }
++
 +                var contentState by remember {
-+                    mutableStateOf<IfPreferencesContentState>(IfPreferencesContentState.Configuration)
++                    mutableStateOf<IfPreferencesContentState>(
++                        Configuration(currentPreferenceIndex),
++                    )
 +                }
 +
 +                var switchStates by remember {
 +                    mutableStateOf(IfPreferencesSwitchStates())
 +                }
-+
-+                if (contentState == IfPreferencesContentState.Configuration) {
-+                    Text(
-+                        text = title,
-+                        color = FirefoxTheme.colors.textPrimary,
-+                        textAlign = TextAlign.Center,
-+                        style = FirefoxTheme.typography.headline5,
-+                    )
-+
-+                    Spacer(Modifier.height(8.dp))
-+
-+                    Text(
-+                        text = description,
-+                        color = FirefoxTheme.colors.textPrimary,
-+                        textAlign = TextAlign.Center,
-+                        style = FirefoxTheme.typography.body2,
-+                    )
-+                }
-+
-+                Spacer(Modifier.height(32.dp))
 +
 +                val context = LocalContext.current
 +                val onContentStateChange = remember {
@@ -828,35 +847,76 @@ index 0000000000..6e247d83db
 +                        }
 +                    }
 +
-+                ifPreferenceOptions?.let { options ->
-+                    AnimatedContent(
-+                        targetState = contentState,
-+                        modifier = Modifier
-+                            .weight(1f)
-+                            .fillMaxWidth(),
-+                    ) { currentState ->
-+                        when (currentState) {
-+                            IfPreferencesContentState.Configuration -> IronFoxPreferenceConfigurations(
-+                                options = options,
-+                                pageState = pageState,
-+                                modifier = Modifier.fillMaxSize(),
-+                                onApply = applyAction,
-+                                switchStates = switchStates,
-+                                onUpdateSwitchStates = { newSwitchStates ->
-+                                    switchStates = newSwitchStates
-+                                },
-+                            )
++                (contentState as? Configuration?)?.also { configuration ->
++                    Text(
++                        text = title,
++                        color = FirefoxTheme.colors.textPrimary,
++                        textAlign = TextAlign.Center,
++                        style = FirefoxTheme.typography.headline5,
++                    )
 +
-+                            is IfPreferencesContentState.Progress -> IronFoxPreferencesProgress(
-+                                state = currentState,
-+                            )
++                    Spacer(Modifier.height(8.dp))
 +
-+                            is IfPreferencesContentState.Error -> IronFoxPreferencesError(
-+                                state = currentState,
-+                                onRetry = applyAction,
-+                            )
-+                        }
++                    Text(
++                        text = preferenceOptions[configuration.optionIndex].caption,
++                        color = FirefoxTheme.colors.textPrimary,
++                        textAlign = TextAlign.Center,
++                        style = FirefoxTheme.typography.body2,
++                    )
++                }
++
++                Spacer(Modifier.height(32.dp))
++
++                AnimatedContent(
++                    targetState = contentState,
++                    modifier = Modifier
++                        .weight(1f)
++                        .fillMaxWidth(),
++                ) { currentState ->
++                    when (currentState) {
++                        is Configuration -> IronFoxPreferenceConfiguration(
++                            option = preferenceOptions[currentState.optionIndex],
++                            modifier = Modifier.fillMaxSize(),
++                            state = switchStates,
++                            onUpdateSwitchStates = { newSwitchStates ->
++                                switchStates = newSwitchStates
++                            },
++                        )
++
++                        is Progress -> IronFoxPreferencesProgress(
++                            state = currentState,
++                        )
++
++                        is Error -> IronFoxPreferencesError(
++                            state = currentState,
++                            onRetry = applyAction,
++                        )
 +                    }
++                }
++
++                if (contentState is Configuration) {
++                    Spacer(modifier = Modifier.weight(1f))
++
++                    PrimaryButton(
++                        text = if (preferenceOptions.lastIndex == currentPreferenceIndex) {
++                            primaryButton.text
++                        } else {
++                            stringResource(R.string.onboarding_save_and_continue_button)
++                        },
++                        modifier = Modifier
++                            .width(width = FirefoxTheme.layout.size.maxWidth.small)
++                            .semantics {
++                                testTag = title + "onboarding_card.positive_button"
++                            },
++                        onClick = {
++                            if (currentPreferenceIndex < preferenceOptions.lastIndex) {
++                                onContentStateChange(Configuration(++currentPreferenceIndex))
++                                return@PrimaryButton
++                            }
++
++                            applyAction()
++                        },
++                    )
 +                }
 +            }
 +        }
@@ -864,46 +924,48 @@ index 0000000000..6e247d83db
 +}
 +
 +@Composable
-+private fun IronFoxPreferenceConfigurations(
-+    options: List<IfPreferenceOption>,
-+    pageState: OnboardingPageState,
-+    switchStates: IfPreferencesSwitchStates,
++private fun IronFoxPreferenceConfiguration(
++    option: IfPreferenceOption,
++    state: IfPreferencesSwitchStates,
++    onUpdateSwitchStates: (IfPreferencesSwitchStates) -> Unit,
 +    modifier: Modifier = Modifier,
-+    onApply: () -> Unit,
-+    onUpdateSwitchStates: (IfPreferencesSwitchStates) -> Unit = {},
 +) {
 +    Column(modifier = modifier) {
-+        with(pageState) {
-+            IronFoxPreferenceSwitches(
-+                options = options,
-+                state = switchStates,
-+                modifier = Modifier
-+                    .fillMaxWidth()
-+                    .wrapContentHeight(),
-+            ) { type ->
++        IronFoxPreferenceSwitchItem(
++            option = option,
++            isChecked = when (option.preferenceType) {
++                IfPreferenceType.JS_JIT -> state.jitEnabled
++                IfPreferenceType.INSTALL_UBLOCK -> state.installUBlock
++                IfPreferenceType.SAFE_BROWSING -> state.safeBrowsingEnabled
++                IfPreferenceType.SPOOF_ENGLISH -> state.spoofEnglish
++                IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
++            },
++            modifier = Modifier
++                .fillMaxWidth()
++                .wrapContentHeight(),
++            onPreferenceChange = { type ->
 +                onUpdateSwitchStates(
 +                    when (type) {
-+                        IfPreferenceType.JS_JIT -> switchStates.copy(jitEnabled = !switchStates.jitEnabled)
-+                        IfPreferenceType.INSTALL_UBLOCK -> switchStates.copy(installUBlock = !switchStates.installUBlock)
-+                        IfPreferenceType.SAFE_BROWSING -> switchStates.copy(safeBrowsingEnabled = !switchStates.safeBrowsingEnabled)
-+                        IfPreferenceType.SPOOF_ENGLISH -> switchStates.copy(spoofEnglish = !switchStates.spoofEnglish)
++                        IfPreferenceType.JS_JIT -> state.copy(jitEnabled = !state.jitEnabled)
++                        IfPreferenceType.INSTALL_UBLOCK -> state.copy(installUBlock = !state.installUBlock)
++                        IfPreferenceType.SAFE_BROWSING -> state.copy(safeBrowsingEnabled = !state.safeBrowsingEnabled)
++                        IfPreferenceType.SPOOF_ENGLISH -> state.copy(spoofEnglish = !state.spoofEnglish)
 +                        IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
 +                    },
 +                )
-+            }
++            },
++        )
 +
-+            Spacer(modifier = Modifier.height(16.dp))
++        Spacer(modifier = Modifier.height(32.dp))
 +
-+            PrimaryButton(
-+                text = primaryButton.text,
-+                modifier = Modifier
-+                    .width(width = FirefoxTheme.layout.size.maxWidth.small)
-+                    .semantics {
-+                        testTag = title + "onboarding_card.positive_button"
-+                    },
-+                onClick = onApply,
-+            )
-+        }
++        Text(
++            modifier = Modifier
++                .padding(16.dp)
++                .fillMaxWidth(),
++            text = option.description,
++            style = FirefoxTheme.typography.body2,
++            color = FirefoxTheme.colors.textSecondary,
++        )
 +    }
 +}
 +
@@ -916,7 +978,7 @@ index 0000000000..6e247d83db
 +    CoroutineScope(Dispatchers.Default).launch {
 +
 +        onContentStateChange(
-+            IfPreferencesContentState.Progress(
++            Progress(
 +                context.getString(R.string.onboarding_state_applying_preferences),
 +            ),
 +        )
@@ -927,7 +989,7 @@ index 0000000000..6e247d83db
 +            IronFoxPreferences.setLocaleSpoofingEnabled(context, state.spoofEnglish)
 +        } catch (err: Throwable) {
 +            onContentStateChange(
-+                IfPreferencesContentState.Error(
++                Error(
 +                    context.getString(
 +                        R.string.onboarding_state_applying_preferences_error,
 +                        err.message ?: "Unknown error",
@@ -940,7 +1002,7 @@ index 0000000000..6e247d83db
 +
 +        if (state.installUBlock) {
 +            onContentStateChange(
-+                IfPreferencesContentState.Progress(
++                Progress(
 +                    context.getString(R.string.onboarding_state_installing_ublock),
 +                ),
 +            )
@@ -950,7 +1012,7 @@ index 0000000000..6e247d83db
 +            if (result.isFailure) {
 +                logger.error("Failed to install uBlock Origin", result.exceptionOrNull())
 +                onContentStateChange(
-+                    IfPreferencesContentState.Error(
++                    Error(
 +                        context.getString(
 +                            R.string.onboarding_state_installing_ublock_error,
 +                            result.exceptionOrNull()?.message ?: "Unknown error",
@@ -964,35 +1026,6 @@ index 0000000000..6e247d83db
 +
 +        withContext(Dispatchers.Main) {
 +            onDone()
-+        }
-+    }
-+}
-+
-+@Composable
-+private fun IronFoxPreferenceSwitches(
-+    options: List<IfPreferenceOption>,
-+    state: IfPreferencesSwitchStates,
-+    modifier: Modifier = Modifier,
-+    onPreferenceChange: (IfPreferenceType) -> Unit,
-+) {
-+    Column(
-+        modifier = modifier,
-+    ) {
-+        options.forEach { option ->
-+            IronFoxPreferenceSwitchItem(
-+                option = option,
-+                isChecked = when (option.preferenceType) {
-+                    IfPreferenceType.JS_JIT -> state.jitEnabled
-+                    IfPreferenceType.INSTALL_UBLOCK -> state.installUBlock
-+                    IfPreferenceType.SAFE_BROWSING -> state.safeBrowsingEnabled
-+                    IfPreferenceType.SPOOF_ENGLISH -> state.spoofEnglish
-+                    IfPreferenceType.DEFAULT -> throw UnsupportedOperationException()
-+                },
-+                modifier = Modifier
-+                    .fillMaxWidth()
-+                    .wrapContentHeight(),
-+                onPreferenceChange = onPreferenceChange,
-+            )
 +        }
 +    }
 +}
@@ -1014,24 +1047,14 @@ index 0000000000..6e247d83db
 +            )
 +            .padding(16.dp),
 +        verticalAlignment = Alignment.CenterVertically,
++        horizontalArrangement = Arrangement.spacedBy(16.dp),
 +    ) {
-+        Column(
-+            modifier = Modifier
-+                .weight(1f)
-+                .wrapContentHeight(),
-+        ) {
-+            Text(
-+                text = option.label,
-+                style = FirefoxTheme.typography.body1,
-+                color = FirefoxTheme.colors.textPrimary,
-+            )
-+
-+            Text(
-+                text = option.description,
-+                style = FirefoxTheme.typography.caption,
-+                color = FirefoxTheme.colors.textSecondary,
-+            )
-+        }
++        Text(
++            modifier = Modifier.weight(1f),
++            text = option.label,
++            style = FirefoxTheme.typography.body1,
++            color = FirefoxTheme.colors.textPrimary,
++        )
 +
 +        Switch(
 +            checked = isChecked,
@@ -1043,7 +1066,7 @@ index 0000000000..6e247d83db
 +
 +@Composable
 +private fun IronFoxPreferencesProgress(
-+    state: IfPreferencesContentState.Progress,
++    state: Progress,
 +    modifier: Modifier = Modifier,
 +) {
 +    Box(
@@ -1071,7 +1094,7 @@ index 0000000000..6e247d83db
 +
 +@Composable
 +private fun IronFoxPreferencesError(
-+    state: IfPreferencesContentState.Error,
++    state: Error,
 +    modifier: Modifier = Modifier,
 +    onRetry: () -> Unit,
 +) {
@@ -1105,7 +1128,7 @@ index 0000000000..6e247d83db
 +    return boxWithConstraintsScope.maxHeight.times(imageHeightRatio)
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index 5c0cb8796e..7fe7578e4a 100644
+index 5c0cb8796e..1f2239597e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 @@ -6,12 +6,15 @@ package org.mozilla.fenix.onboarding.view
@@ -1141,7 +1164,7 @@ index 5c0cb8796e..7fe7578e4a 100644
  }
  
  private fun List<CustomizationToolbarData>.toOnboardingToolbarOptions() = map { it.toOnboardingCustomizeToolbar() }
-@@ -176,6 +182,24 @@ private fun ThemeType.toThemeOptionType() = when (this) {
+@@ -176,6 +182,25 @@ private fun ThemeType.toThemeOptionType() = when (this) {
      ThemeType.THEME_SYSTEM -> ThemeOptionType.THEME_SYSTEM
  }
  
@@ -1150,6 +1173,7 @@ index 5c0cb8796e..7fe7578e4a 100644
 +private fun IfPreferencesData.toOnboardingThemeOption() = with(this) {
 +    IfPreferenceOption(
 +        label = switchLabel,
++        caption = switchCaption,
 +        description = switchDescription,
 +        preferenceType = switchType.toIfPreferenceType(),
 +    )
@@ -1166,7 +1190,7 @@ index 5c0cb8796e..7fe7578e4a 100644
  /**
   * Mapper to convert [OnboardingPageUiData] to [OnboardingPageState] that is a param for
   * [OnboardingPage] composable.
-@@ -194,6 +218,8 @@ internal fun mapToOnboardingPageState(
+@@ -194,6 +219,8 @@ internal fun mapToOnboardingPageState(
      onCustomizeToolbarButtonClick: () -> Unit,
      onCustomizeThemeClick: () -> Unit,
      onTermsOfServiceButtonClick: () -> Unit,
@@ -1175,7 +1199,7 @@ index 5c0cb8796e..7fe7578e4a 100644
      onMarketingDataContinueClick: () -> Unit = {},
  ): OnboardingPageState = when (onboardingPageUiData.type) {
      OnboardingPageUiData.Type.DEFAULT_BROWSER -> createOnboardingPageState(
-@@ -243,6 +269,18 @@ internal fun mapToOnboardingPageState(
+@@ -243,6 +270,18 @@ internal fun mapToOnboardingPageState(
          onPositiveButtonClick = onMarketingDataContinueClick,
          onNegativeButtonClick = {}, // No negative button option for marketing data.
      )
@@ -1194,14 +1218,14 @@ index 5c0cb8796e..7fe7578e4a 100644
  }
  
  private fun createOnboardingPageState(
-@@ -262,4 +300,5 @@ private fun createOnboardingPageState(
+@@ -262,4 +301,5 @@ private fun createOnboardingPageState(
      toolbarOptions = onboardingPageUiData.toolbarOptions,
      termsOfService = onboardingPageUiData.termsOfService,
      marketingData = onboardingPageUiData.marketingData,
 +    ifPreferenceOptions = onboardingPageUiData.ifPreferencesData
  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
-index bed8e9959a..28e50dd741 100644
+index bed8e9959a..d3e50c8636 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 @@ -6,6 +6,7 @@ package org.mozilla.fenix.onboarding.view
@@ -1220,12 +1244,13 @@ index bed8e9959a..28e50dd741 100644
      val onRecordImpressionEvent: () -> Unit = {},
  )
  
-@@ -107,6 +109,20 @@ enum class ThemeOptionType(val id: String) {
+@@ -107,6 +109,21 @@ enum class ThemeOptionType(val id: String) {
      THEME_SYSTEM("theme_system"),
  }
  
 +data class IfPreferenceOption(
 +    val label: String,
++    val caption: String,
 +    val description: String,
 +    val preferenceType: IfPreferenceType,
 +)
