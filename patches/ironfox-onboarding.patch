@@ -1142,7 +1142,7 @@ index 0000000000..977b45f5c0
 +    return boxWithConstraintsScope.maxHeight.times(imageHeightRatio)
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index 5c0cb8796e..1f2239597e 100644
+index 795fcd7b7e..b6fd72c0dd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 @@ -6,12 +6,15 @@ package org.mozilla.fenix.onboarding.view
@@ -1161,15 +1161,15 @@ index 5c0cb8796e..1f2239597e 100644
  
  /**
   * Returns a list of all the required Nimbus 'cards' that have been converted to [OnboardingPageUiData].
-@@ -113,6 +116,7 @@ private fun OnboardingCardData.toPageUiData(privacyCaption: Caption?) = Onboardi
-         ?.takeIf { it.isNotEmpty() }
+@@ -114,6 +117,7 @@ private fun OnboardingCardData.toPageUiData(privacyCaption: Caption?) = Onboardi
          ?.toOnboardingThemeOptions(),
+     termsOfService = extraData?.termOfServiceData?.toOnboardingTermsOfService(),
      marketingData = extraData?.marketingData?.toOnboardingMarketingData(),
 +    ifPreferencesData = extraData?.ifPreferencesData?.toOnboardingIfPreferenceOptions()
  )
  
  private fun OnboardingCardType.toPageUiDataType() = when (this) {
-@@ -124,6 +128,8 @@ private fun OnboardingCardType.toPageUiDataType() = when (this) {
+@@ -125,6 +129,8 @@ private fun OnboardingCardType.toPageUiDataType() = when (this) {
      OnboardingCardType.THEME_SELECTION -> OnboardingPageUiData.Type.THEME_SELECTION
      OnboardingCardType.TERMS_OF_SERVICE -> OnboardingPageUiData.Type.TERMS_OF_SERVICE
      OnboardingCardType.MARKETING_DATA -> OnboardingPageUiData.Type.MARKETING_DATA
@@ -1178,7 +1178,7 @@ index 5c0cb8796e..1f2239597e 100644
  }
  
  private fun List<CustomizationToolbarData>.toOnboardingToolbarOptions() = map { it.toOnboardingCustomizeToolbar() }
-@@ -176,6 +182,25 @@ private fun ThemeType.toThemeOptionType() = when (this) {
+@@ -177,6 +183,25 @@ private fun ThemeType.toThemeOptionType() = when (this) {
      ThemeType.THEME_SYSTEM -> ThemeOptionType.THEME_SYSTEM
  }
  
@@ -1204,7 +1204,7 @@ index 5c0cb8796e..1f2239597e 100644
  /**
   * Mapper to convert [OnboardingPageUiData] to [OnboardingPageState] that is a param for
   * [OnboardingPage] composable.
-@@ -194,6 +219,8 @@ internal fun mapToOnboardingPageState(
+@@ -195,6 +220,8 @@ internal fun mapToOnboardingPageState(
      onCustomizeToolbarButtonClick: () -> Unit,
      onCustomizeThemeClick: () -> Unit,
      onTermsOfServiceButtonClick: () -> Unit,
@@ -1213,7 +1213,7 @@ index 5c0cb8796e..1f2239597e 100644
      onMarketingDataContinueClick: () -> Unit = {},
  ): OnboardingPageState = when (onboardingPageUiData.type) {
      OnboardingPageUiData.Type.DEFAULT_BROWSER -> createOnboardingPageState(
-@@ -243,6 +270,18 @@ internal fun mapToOnboardingPageState(
+@@ -244,6 +271,18 @@ internal fun mapToOnboardingPageState(
          onPositiveButtonClick = onMarketingDataContinueClick,
          onNegativeButtonClick = {}, // No negative button option for marketing data.
      )
@@ -1232,7 +1232,7 @@ index 5c0cb8796e..1f2239597e 100644
  }
  
  private fun createOnboardingPageState(
-@@ -262,4 +301,5 @@ private fun createOnboardingPageState(
+@@ -263,4 +302,5 @@ private fun createOnboardingPageState(
      toolbarOptions = onboardingPageUiData.toolbarOptions,
      termsOfService = onboardingPageUiData.termsOfService,
      marketingData = onboardingPageUiData.marketingData,
@@ -1364,28 +1364,8 @@ index 732a80cb03..baea33e988 100644
          )
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index ad83442ef9..751ffeaf75 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -69,6 +69,7 @@ import org.mozilla.fenix.perf.ProfilerViewModel
- import org.mozilla.fenix.settings.account.AccountUiView
- import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
- import org.mozilla.fenix.snackbar.SnackbarBinding
-+import org.mozilla.fenix.utils.IronFoxPreferences
- import org.mozilla.fenix.utils.Settings
- import kotlin.system.exitProcess
- import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
-@@ -743,6 +744,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
-             R.string.pref_key_safe_browsing_enabled,
-         )
- 
-+        safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
-         safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
-             val settings = preference.context.settings()
-             val components = preference.context.components
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-index 506412b351..6e91a00624 100644
+index f290b21561..bbe9d9d8f7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
 @@ -441,7 +441,7 @@ private fun buildProviderMenuItems(
@@ -1398,7 +1378,7 @@ index 506412b351..6e91a00624 100644
      onCustomCancelClicked: () -> Unit,
      onCustomAddClicked: (String) -> Unit,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index ac2ec82df2..8716e0c28f 100644
+index 3885a06691..e63a891c05 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 @@ -5,6 +5,9 @@
@@ -1411,33 +1391,15 @@ index ac2ec82df2..8716e0c28f 100644
  import androidx.core.content.ContextCompat
  import androidx.navigation.findNavController
  import androidx.preference.Preference
-@@ -23,9 +26,7 @@ import org.mozilla.fenix.ext.settings
+@@ -23,6 +26,8 @@ import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.ext.showToolbar
  import org.mozilla.fenix.settings.PhoneFeature
  import org.mozilla.fenix.settings.requirePreference
--import android.os.Handler
--import android.os.Looper
--import android.widget.Toast
 +import org.mozilla.fenix.utils.IronFoxPreferences
- import kotlin.system.exitProcess
++import kotlin.system.exitProcess
  
  /**
-@@ -63,6 +64,7 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
-             R.string.pref_key_jit_enabled,
-         )
- 
-+        javascriptJitEnabledPreference.isChecked = IronFoxPreferences.isJavascriptJitEnabled(requireContext())
-         javascriptJitEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitEnabled ->
-             val settings = preference.context.settings()
-             val components = preference.context.components
-@@ -95,6 +97,7 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
-             R.string.pref_key_wasm_enabled,
-         )
- 
-+        wasmEnabledPreference.isChecked = IronFoxPreferences.isWebAssemblyEnabled(requireContext())
-         wasmEnabledPreference.setOnPreferenceChangeListener { preference, wasmEnabled ->
-             val settings = preference.context.settings()
-             val components = preference.context.components
+  * Screen for managing settings related to site permissions and content defaults.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt
 new file mode 100644
 index 0000000000..b35658273e
