@@ -3,10 +3,6 @@
     <!-- Warn users that the browser will restart -->
     <string name="restart_required_summary">Changing this setting will restart your browser</string>
 
-    <!-- IronFox preferences screen shown during onboarding -->
-    <string name="onboarding_if_preferences_title">Customize IronFox</string>
-    <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
-
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english_title">Spoof language to en-US</string>
     <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
@@ -28,6 +24,11 @@
 
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
+
+    <!-- Onboarding - Title and description -->
+    <string name="onboarding_if_preferences_title">Customize IronFox</string>
+    <string name="onboarding_if_preference_doh_description">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
+    <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
 
     <!-- Onboarding - uBlock Origin -->
     <string name="onboarding_install_ublock_title">Install uBlock Origin</string>
