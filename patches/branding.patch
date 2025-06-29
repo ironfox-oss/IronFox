@@ -225,10 +225,10 @@ index 10488889d7..02572c03a1 100644
                  imageRes = R.drawable.ic_firefox,
                  primaryButton = Action(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..659e5bac55 100644
+index 7f19ba4304..c1e02a68ab 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2430,26 +2430,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2430,26 +2430,26 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the user has completed the setup step for choosing the toolbar location
       */
@@ -237,6 +237,9 @@ index 7f19ba4304..659e5bac55 100644
 -        default = false,
 -    )
 +    var hasCompletedSetupStepToolbar = true
++//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
++//        default = false,
++//    )
  
      /**
       * Indicates if the user has completed the setup step for choosing the theme
@@ -246,6 +249,9 @@ index 7f19ba4304..659e5bac55 100644
 -        default = false,
 -    )
 +    var hasCompletedSetupStepTheme = true
++//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
++//        default = false,
++//    )
  
      /**
       * Indicates if the user has completed the setup step for exploring extensions
@@ -255,10 +261,13 @@ index 7f19ba4304..659e5bac55 100644
 -        default = false,
 -    )
 +    var hasCompletedSetupStepExtensions = true
++//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_extensions),
++//        default = false,
++//    )
  
      /**
       * Indicates if this is the default browser.
-@@ -2462,12 +2453,5 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2462,12 +2462,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not to show the checklist feature.
       */
@@ -269,8 +278,14 @@ index 7f19ba4304..659e5bac55 100644
 -                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
 -        },
 -        featureFlag = true,
--    )
 +    var showSetupChecklist = false
++//        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
++//        default = {
++//            FxNimbus.features.setupChecklist.value().enabled &&
++//                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
++//        },
++//        featureFlag = true,
+     )
  }
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 0e2a6efdc9..3d7ff4a88f 100644
