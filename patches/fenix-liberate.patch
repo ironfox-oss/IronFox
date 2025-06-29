@@ -160,31 +160,33 @@ index 982ef996de..e592dbfdca 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index f235d0f7a1..febbd1cf69 100644
+index f235d0f7a1..e07a7511dc 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -744,24 +744,6 @@
-         <service
+@@ -52,7 +52,7 @@
+ 
+     <!-- Needed to get distribution information from partners.
+     This is NOT required for the adjust plugin. -->
+-    <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
++    <!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->
+ 
+     <application
+         android:name=".FenixApplication"
+@@ -745,7 +745,7 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
--
+ 
 -        <service
--            android:name=".push.FirebasePushService"
--            android:exported="false">
--            <intent-filter>
--                <action android:name="com.google.firebase.MESSAGING_EVENT" />
--            </intent-filter>
--        </service>
--
--        <meta-data
--            android:name="firebase_messaging_auto_init_enabled"
++        <!-- <service
+             android:name=".push.FirebasePushService"
+             android:exported="false">
+             <intent-filter>
+@@ -761,7 +761,7 @@
+             android:value="false" />
+         <meta-data
+             android:name="firebase_analytics_collection_deactivated"
 -            android:value="true" />
--        <meta-data
--            android:name="firebase_analytics_collection_enabled"
--            android:value="false" />
--        <meta-data
--            android:name="firebase_analytics_collection_deactivated"
--            android:value="true" />
++            android:value="true" /> -->
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
