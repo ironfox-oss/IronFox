@@ -1,0 +1,26 @@
+diff --git a/security/moz.build b/security/moz.build
+index e692bc32f5..f664e29ca5 100644
+--- a/security/moz.build
++++ b/security/moz.build
+@@ -93,7 +93,7 @@ gyp_vars["nss_dist_obj_dir"] = "$PRODUCT_DIR/dist/bin"
+ gyp_vars["disable_tests"] = 1
+ gyp_vars["disable_dbm"] = 1
+ gyp_vars["disable_libpkix"] = 1
+-gyp_vars["enable_sslkeylogfile"] = 1
++gyp_vars["enable_sslkeylogfile"] = 0
+ # Whether we're using system NSS or Rust nssckbi, we don't need
+ # to build C nssckbi
+ gyp_vars["disable_ckbi"] = 1
+diff --git a/security/nss/lib/ssl/Makefile b/security/nss/lib/ssl/Makefile
+index 61abff3721..c8bac4c89d 100644
+--- a/security/nss/lib/ssl/Makefile
++++ b/security/nss/lib/ssl/Makefile
+@@ -37,7 +37,7 @@ endif
+ 
+ # Enable key logging by default in debug builds, but not opt builds.
+ # Logging still needs to be enabled at runtime through env vars.
+-NSS_ALLOW_SSLKEYLOGFILE ?= $(if $(BUILD_OPT),0,1)
++NSS_ALLOW_SSLKEYLOGFILE ?= 0
+ ifeq (1,$(NSS_ALLOW_SSLKEYLOGFILE))
+ DEFINES += -DNSS_ALLOW_SSLKEYLOGFILE=1
+ endif
