@@ -13,7 +13,7 @@
 
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
-    <string name="preference_safe_browsing_enabled_description">Get real-time protection against dangerous websites, malware, and phishing attempts. Your browsing data is never shared directly with IronFox's developers, Google, or any other party.</string>
+    <string name="preference_safe_browsing_enabled_description">Get real-time protection against dangerous websites, malware, and phishing attempts. Your browsing data is never shared directly with IronFox’s developers, Google, or any other party.</string>
 
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
