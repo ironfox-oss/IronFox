@@ -273,7 +273,7 @@ index 7f19ba4304..659e5bac55 100644
 +    var showSetupChecklist = false
  }
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
-index 0e2a6efdc9..083c9cac2d 100644
+index 0e2a6efdc9..3d7ff4a88f 100644
 --- a/mobile/android/moz.configure
 +++ b/mobile/android/moz.configure
 @@ -116,7 +116,7 @@ imply_option("MOZ_SERVICES_HEALTHREPORT", True)
@@ -285,3 +285,9 @@ index 0e2a6efdc9..083c9cac2d 100644
  imply_option("MOZ_APP_ID", "{aa3c5121-dab2-40e2-81ca-7ea25febc110}")
  imply_option("BROWSER_CHROME_URL", "chrome://geckoview/content/geckoview.xhtml")
  
+@@ -153,3 +153,5 @@ set_config(
+     "MOZ_ANDROID_FAT_AAR_ARCHITECTURES",
+     depends("MOZ_ANDROID_FAT_AAR_ARCHITECTURES")(lambda x: x),
+ )
++
++include("ironfox.configure")
