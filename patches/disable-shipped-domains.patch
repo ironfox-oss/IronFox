@@ -1,18 +1,20 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..d356001541 100644
+index cfbdaba62c..4ad3b84c6f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -506,12 +506,7 @@ class Core(
-     val bookmarksStorage: PlacesBookmarksStorage get() = lazyBookmarksStorage.value
+@@ -507,11 +507,11 @@ class Core(
      val passwordsStorage: SyncableLoginsStorage get() = lazyPasswordsStorage.value
      val autofillStorage: AutofillCreditCardsAddressesStorage get() = lazyAutofillStorage.value
--    val domainsAutocompleteProvider: BaseDomainAutocompleteProvider? get() =
+     val domainsAutocompleteProvider: BaseDomainAutocompleteProvider? get() =
 -        if (FxNimbus.features.suggestShippedDomains.value().enabled) {
 -            lazyDomainsAutocompleteProvider.value
 -        } else {
--            null
++//        if (FxNimbus.features.suggestShippedDomains.value().enabled) {
++//            lazyDomainsAutocompleteProvider.value
++//        } else {
+             null
 -        }
-+    val domainsAutocompleteProvider: BaseDomainAutocompleteProvider? get() = null
++//        }
      val sessionAutocompleteProvider: SessionAutocompleteProvider get() = lazySessionAutocompleteProvider.value
  
      val tabCollectionStorage by lazyMonitored {

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..02353f5537 100644
+index 7f19ba4304..c2cff4ee23 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -453,7 +453,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -20,7 +20,7 @@ index 7f19ba4304..02353f5537 100644
      )
  
      /**
-@@ -2038,10 +2038,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2038,10 +2038,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Recent Search Suggestions are enabled.
       */
@@ -30,6 +30,7 @@ index 7f19ba4304..02353f5537 100644
 -        default = { FxNimbus.features.recentSearches.value().enabled },
 -        featureFlag = true,
 +        default = true,
++//        featureFlag = true,
      )
  
      /**
