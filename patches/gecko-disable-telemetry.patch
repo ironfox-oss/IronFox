@@ -13,6 +13,19 @@ index df5658c723..659a2a589d 100644
      {"translations", "chrome://global/content/translations/translations.html",
       nsIAboutModule::ALLOW_SCRIPT |
           nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 34e06ce332..906db3732c 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -29,7 +29,7 @@ about_pages = [
+     'serviceworkers',
+     'srcdoc',
+     'support',
+-    'telemetry',
++#    'telemetry',
+     'translations',
+     'url-classifier',
+     'webrtc',
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 0e2a6efdc9..c931fb3c74 100644
 --- a/mobile/android/moz.configure
