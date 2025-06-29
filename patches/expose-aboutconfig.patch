@@ -1,14 +1,15 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index df5658c723..984c99c8cf 100644
+index df5658c723..65073f6215 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -101,8 +101,7 @@ static const RedirEntry kRedirMap[] = {
+@@ -101,8 +101,8 @@ static const RedirEntry kRedirMap[] = {
       nsIAboutModule::IS_SECURE_CHROME_UI},
  #else
      {"config", "chrome://geckoview/content/config.xhtml",
 -     nsIAboutModule::IS_SECURE_CHROME_UI |
 -         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
 +     nsIAboutModule::IS_SECURE_CHROME_UI},
++//         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
  #endif
  #ifdef MOZ_CRASHREPORTER
      {"crashes", "chrome://global/content/crashes.html",
