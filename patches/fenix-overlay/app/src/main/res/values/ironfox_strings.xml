@@ -5,6 +5,8 @@
 
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english_title">Spoof language to en-US</string>
+    <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
+    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps to make your browser appear more common, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
     <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
 
     <!-- Accessibility Services -->
@@ -13,26 +15,29 @@
 
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
-    <string name="preference_safe_browsing_enabled_description">Get real-time protection against dangerous websites, malware, and phishing attempts. Your browsing data is never shared directly with IronFox’s developers, Google, or any other party.</string>
+    <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
+    <string name="preference_safe_browsing_enabled_description">Your browsing data is never shared directly with IronFox’s developers, Google, or any other party. We utilize a proxy we developed for accessing Google Safe Browsing APIs, which further removes any information that can be associated back to the user.</string>
 
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
 
     <!-- JavaScript JIT -->
     <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
-    <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for those with lower-end devices.</string>
+    <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
+    <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
 
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
     <!-- Onboarding - Title and description -->
     <string name="onboarding_if_preferences_title">Customize IronFox</string>
-    <string name="onboarding_if_preference_doh_description">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
     <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
+    <string name="onboarding_if_preference_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
 
     <!-- Onboarding - uBlock Origin -->
     <string name="onboarding_install_ublock_title">Install uBlock Origin</string>
-    <string name="onboarding_install_ublock_description">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
+    <string name="onboarding_install_ublock_caption">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
+    <string name="onboarding_install_ublock_description">uBlock Origin enhances your privacy and security by blocking unwanted content. IronFox uses a custom uBlock Origin configuration with curated filter lists for optimal protection and performance.</string>
 
     <!-- Onboarding - States -->
     <string name="onboarding_state_installing_ublock">Installing uBlock Origin…</string>
