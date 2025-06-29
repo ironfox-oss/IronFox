@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..8b3ee34198 100644
+index 7f19ba4304..c317bf132c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -740,20 +740,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -17,14 +17,14 @@ index 7f19ba4304..8b3ee34198 100644
  
      val shouldUseCookieBannerPrivateModeDefaultValue: Boolean
 -        get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_VALUE_PBM] == 1
-+        get() = return true
++        get() = true
  
      val shouldUseCookieBanner: Boolean
          get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_VALUE] == 1
  
      val shouldShowCookieBannerUI: Boolean
 -        get() = cookieBannersSection[CookieBannersSection.FEATURE_UI] == 1
-+        get() = return true
++        get() = true
  
      val shouldEnableCookieBannerDetectOnly: Boolean
          get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_DETECT_ONLY] == 1
