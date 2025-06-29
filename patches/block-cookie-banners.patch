@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..c473cdfe08 100644
+index 7f19ba4304..8b3ee34198 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -740,20 +740,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -740,20 +740,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          false,
      )
  
@@ -11,19 +11,20 @@ index 7f19ba4304..c473cdfe08 100644
          appContext.getPreferenceKey(R.string.pref_key_cookie_banner_private_mode),
 -        featureFlag = true,
 -        default = { shouldUseCookieBannerPrivateModeDefaultValue },
++//        featureFlag = true,
 +        default = true,
      )
  
--    val shouldUseCookieBannerPrivateModeDefaultValue: Boolean
+     val shouldUseCookieBannerPrivateModeDefaultValue: Boolean
 -        get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_VALUE_PBM] == 1
-+    val shouldUseCookieBannerPrivateModeDefaultValue: Boolean = true
++        get() = return true
  
      val shouldUseCookieBanner: Boolean
          get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_VALUE] == 1
  
--    val shouldShowCookieBannerUI: Boolean
+     val shouldShowCookieBannerUI: Boolean
 -        get() = cookieBannersSection[CookieBannersSection.FEATURE_UI] == 1
-+    val shouldShowCookieBannerUI: Boolean = true
++        get() = return true
  
      val shouldEnableCookieBannerDetectOnly: Boolean
          get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_DETECT_ONLY] == 1
