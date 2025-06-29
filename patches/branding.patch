@@ -225,7 +225,7 @@ index 10488889d7..02572c03a1 100644
                  imageRes = R.drawable.ic_firefox,
                  primaryButton = Action(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..c1e02a68ab 100644
+index 7f19ba4304..6232f0fd79 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -2430,26 +2430,26 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -278,6 +278,7 @@ index 7f19ba4304..c1e02a68ab 100644
 -                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
 -        },
 -        featureFlag = true,
+-    )
 +    var showSetupChecklist = false
 +//        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
 +//        default = {
@@ -285,7 +286,7 @@ index 7f19ba4304..c1e02a68ab 100644
 +//                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
 +//        },
 +//        featureFlag = true,
-     )
++//    )
  }
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 0e2a6efdc9..3d7ff4a88f 100644
