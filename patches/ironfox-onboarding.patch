@@ -679,10 +679,10 @@ index 0000000000..a47fdcd570
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..88de5a8984
+index 0000000000..977b45f5c0
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
-@@ -0,0 +1,444 @@
+@@ -0,0 +1,458 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import android.content.Context
@@ -727,6 +727,7 @@ index 0000000000..88de5a8984
 +import androidx.compose.ui.unit.dp
 +import kotlinx.coroutines.CoroutineScope
 +import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.Job
 +import kotlinx.coroutines.launch
 +import kotlinx.coroutines.withContext
 +import mozilla.components.compose.base.button.PrimaryButton
@@ -814,10 +815,6 @@ index 0000000000..88de5a8984
 +                val preferenceOptions = remember { ifPreferenceOptions!! }
 +                var currentPreferenceIndex by remember { mutableIntStateOf(0) }
 +
-+                BackHandler(currentPreferenceIndex > 0) {
-+                    --currentPreferenceIndex
-+                }
-+
 +                var contentState by remember {
 +                    mutableStateOf<IfPreferencesContentState>(
 +                        Configuration(currentPreferenceIndex),
@@ -835,17 +832,42 @@ index 0000000000..88de5a8984
 +                    }
 +                }
 +
-+                val applyAction =
++                val applyPreference: suspend (IfPreferenceOption) -> Unit =
 +                    remember(context, switchStates, primaryButton, onContentStateChange) {
-+                        {
-+                            applyState(
-+                                context = context,
-+                                state = switchStates,
-+                                onDone = primaryButton.onClick,
-+                                onContentStateChange = onContentStateChange,
++                        { option ->
++                            applyPreference(
++                                context,
++                                option,
++                                switchStates,
++                                onContentStateChange,
 +                            )
 +                        }
 +                    }
++
++                val applyAction: () -> Unit = remember(
++                    applyPreference,
++                    preferenceOptions,
++                    currentPreferenceIndex,
++                    onContentStateChange,
++                    primaryButton,
++                ) {
++                    {
++                        CoroutineScope(Dispatchers.Default).launch {
++                            applyPreference(preferenceOptions[currentPreferenceIndex])
++                            if (currentPreferenceIndex < preferenceOptions.lastIndex) {
++                                onContentStateChange(Configuration(++currentPreferenceIndex))
++                            } else {
++                                withContext(Dispatchers.Main) {
++                                    primaryButton.onClick()
++                                }
++                            }
++                        }
++                    }
++                }
++
++                BackHandler(currentPreferenceIndex > 0) {
++                    onContentStateChange(Configuration(--currentPreferenceIndex))
++                }
 +
 +                (contentState as? Configuration?)?.also { configuration ->
 +                    Text(
@@ -908,14 +930,7 @@ index 0000000000..88de5a8984
 +                            .semantics {
 +                                testTag = title + "onboarding_card.positive_button"
 +                            },
-+                        onClick = {
-+                            if (currentPreferenceIndex < preferenceOptions.lastIndex) {
-+                                onContentStateChange(Configuration(++currentPreferenceIndex))
-+                                return@PrimaryButton
-+                            }
-+
-+                            applyAction()
-+                        },
++                        onClick = applyAction,
 +                    )
 +                }
 +            }
@@ -969,64 +984,63 @@ index 0000000000..88de5a8984
 +    }
 +}
 +
-+private fun applyState(
++private suspend fun applyPreference(
 +    context: Context,
++    option: IfPreferenceOption,
 +    state: IfPreferencesSwitchStates,
-+    onDone: () -> Unit,
 +    onContentStateChange: (IfPreferencesContentState) -> Unit,
 +) {
-+    CoroutineScope(Dispatchers.Default).launch {
++    when (option.preferenceType) {
++        IfPreferenceType.DEFAULT -> {}
++        IfPreferenceType.JS_JIT -> {
++            IronFoxPreferences.setJavascriptJitEnabled(
++                context,
++                state.jitEnabled,
++            )
++        }
 +
++        IfPreferenceType.SAFE_BROWSING -> {
++            IronFoxPreferences.setSafeBrowsingEnabled(
++                context,
++                state.safeBrowsingEnabled,
++            )
++        }
++
++        IfPreferenceType.SPOOF_ENGLISH -> {
++            IronFoxPreferences.setLocaleSpoofingEnabled(
++                context,
++                state.spoofEnglish,
++            )
++        }
++
++        IfPreferenceType.INSTALL_UBLOCK -> {
++            installUBlockOrigin(context, onContentStateChange)
++        }
++    }
++}
++
++private suspend fun installUBlockOrigin(
++    context: Context,
++    onContentStateChange: (IfPreferencesContentState) -> Unit,
++) {
++    onContentStateChange(
++        Progress(
++            context.getString(R.string.onboarding_state_installing_ublock),
++        ),
++    )
++
++    val components = context.components
++    val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN)
++    if (result.isFailure) {
++        logger.error("Failed to install uBlock Origin", result.exceptionOrNull())
 +        onContentStateChange(
-+            Progress(
-+                context.getString(R.string.onboarding_state_applying_preferences),
++            Error(
++                context.getString(
++                    R.string.onboarding_state_installing_ublock_error,
++                    result.exceptionOrNull()?.message ?: "Unknown error",
++                ),
 +            ),
 +        )
-+
-+        try {
-+            IronFoxPreferences.setJavascriptJitEnabled(context, state.jitEnabled)
-+            IronFoxPreferences.setSafeBrowsingEnabled(context, state.safeBrowsingEnabled)
-+            IronFoxPreferences.setLocaleSpoofingEnabled(context, state.spoofEnglish)
-+        } catch (err: Throwable) {
-+            onContentStateChange(
-+                Error(
-+                    context.getString(
-+                        R.string.onboarding_state_applying_preferences_error,
-+                        err.message ?: "Unknown error",
-+                    ),
-+                ),
-+            )
-+
-+            return@launch
-+        }
-+
-+        if (state.installUBlock) {
-+            onContentStateChange(
-+                Progress(
-+                    context.getString(R.string.onboarding_state_installing_ublock),
-+                ),
-+            )
-+
-+            val components = context.components
-+            val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN)
-+            if (result.isFailure) {
-+                logger.error("Failed to install uBlock Origin", result.exceptionOrNull())
-+                onContentStateChange(
-+                    Error(
-+                        context.getString(
-+                            R.string.onboarding_state_installing_ublock_error,
-+                            result.exceptionOrNull()?.message ?: "Unknown error",
-+                        ),
-+                    ),
-+                )
-+
-+                return@launch
-+            }
-+        }
-+
-+        withContext(Dispatchers.Main) {
-+            onDone()
-+        }
 +    }
 +}
 +
