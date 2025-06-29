@@ -1,7 +1,12 @@
 #!/bin/bash
 
 SDK_REVISION=13114758
-ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    ANDROID_SDK_FILE=commandlinetools-mac-${SDK_REVISION}_latest.zip
+else
+    ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
+fi
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
