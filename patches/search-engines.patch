@@ -1,12 +1,13 @@
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index 0328809399..b4ec1a0924 100644
+index 0328809399..a9c24b1cfc 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-@@ -38,16 +38,14 @@ private const val MAX_SIZE = 32
+@@ -38,16 +38,16 @@ private const val MAX_SIZE = 32
  // List of general search engine ids, taken from
  // https://searchfox.org/mozilla-central/rev/ef0aa879e94534ffd067a3748d034540a9fc10b0/toolkit/components/search/SearchUtils.sys.mjs#200
  internal val GENERAL_SEARCH_ENGINE_IDS = setOf(
 -    GOOGLE_ID,
++//    GOOGLE_ID,
      "ddg",
 -    "bing",
 -    "baidu",
@@ -16,13 +17,27 @@ index 0328809399..b4ec1a0924 100644
 -    "seznam-cz",
 -    "coccoc",
 -    "baidu",
++//    "bing",
++//    "baidu",
 +    "ddghtml",
 +    "ddglite",
 +    "mojeek",
 +    "leta-brave",
 +    "leta-google",
-+    "no-search",
 +    "startpage",
  )
  
  /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index cfbdaba62c..88b8c58352 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -318,7 +318,7 @@ class Core(
+                 RegionMiddleware(context, locationService),
+                 SearchMiddleware(
+                     context = context,
+-                    additionalBundledSearchEngineIds = listOf("reddit", "youtube"),
++                    additionalBundledSearchEngineIds = listOf("no-search"),
+                     migration = SearchMigration(context),
+                     searchExtraParams = searchExtraParams,
+                     searchEngineSelectorConfig = getSearchEngineSelectorConfig(),
