@@ -139,6 +139,7 @@ sed -i \
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
 sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+echo "official=true" >>local.properties
 
 # Ensure we enable the about:config
 # Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
