@@ -471,6 +471,7 @@ fi
     echo "ac_add_options --with-gradle=$(command -v gradle)"
     echo "ac_add_options --with-libclang-path=\"$libclang\""
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
+    echo "ac_add_options --without-google-location-service-api-keyfile"
 
     if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
