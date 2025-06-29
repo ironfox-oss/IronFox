@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..47c8b933db 100644
+index 7f19ba4304..e3b088c465 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -1160,7 +1160,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -11,7 +11,7 @@ index 7f19ba4304..47c8b933db 100644
      )
  
      /**
-@@ -2029,10 +2029,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2029,10 +2029,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Trending Search Suggestions are enabled.
       */
@@ -21,6 +21,7 @@ index 7f19ba4304..47c8b933db 100644
 -        default = { FxNimbus.features.trendingSearches.value().enabled },
 -        featureFlag = true,
 +        default = true,
++//        featureFlag = true,
      )
  
      /**
