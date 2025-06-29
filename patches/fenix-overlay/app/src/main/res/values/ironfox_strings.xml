@@ -42,8 +42,6 @@
     <!-- Onboarding - States -->
     <string name="onboarding_state_installing_ublock">Installing uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">An error occurred while installing uBlock Origin: %1$s</string>
-    <string name="onboarding_state_applying_preferences">Applying preferences…</string>
-    <string name="onboarding_state_applying_preferences_error">An error occurred while applying preferences: %1$s</string>
 
     <!-- Onboarding - Actions -->
     <string name="onboarding_action_retry">Retry</string>
