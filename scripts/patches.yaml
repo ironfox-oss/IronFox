@@ -334,6 +334,13 @@ patches:
     effect: "Browser uses light theme out of the box."
     category: "Privacy"
 
+  - file: "disable-network-connectivity-monitoring.patch"
+    name: "Disable Network Connectivity Status Monitoring"
+    description: "Prevents the browser from monitoring the status of the user's internet connection. It also allows us to remove the `ACCESS_NETWORK_STATE` permission, and prevents Firefox from generating an internal network ID that could potentially be used to track users (https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/4c548fa04b668a310c90c0e783ec404420f06257)."
+    reason: "To prevent the browser from accessing network information (with the `ACCESS_NETWORK_STATE` permission), and from generating an ID that could be used for tracking."
+    effect: "Improves the privacy for users."
+    category: "Privacy"
+
   # Security
   - file: "certificate-pinning.patch"
     name: "Certificate Pinning"
