@@ -24,22 +24,6 @@ index 0e2a6efdc9..c931fb3c74 100644
  imply_option("MOZ_GECKOVIEW_HISTORY", True)
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
-diff --git a/python/mach/mach/telemetry.py b/python/mach/mach/telemetry.py
-index a3fda9a59b..b541a040df 100644
---- a/python/mach/mach/telemetry.py
-+++ b/python/mach/mach/telemetry.py
-@@ -92,10 +92,7 @@ def is_applicable_telemetry_environment():
- 
- 
- def is_telemetry_enabled(settings):
--    if os.environ.get("DISABLE_TELEMETRY") == "1":
--        return False
--
--    return settings.mach_telemetry.is_enabled
-+    return False
- 
- 
- def arcrc_path():
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
 index 42c16ebb87..ca40d36618 100644
 --- a/toolkit/components/glean/src/init/mod.rs

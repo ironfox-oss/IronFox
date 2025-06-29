@@ -100,6 +100,13 @@ patches:
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla or third parties."
     effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
     category: "Privacy"
+
+  - file: "mach-disable-telemetry.patch"
+    name: "Disable Telemetry (Mach)"
+    description: "Disables data collection and submission mechanisms within Mozilla's Mach build system."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla during the build process."
+    effect: "Improves privacy for developers by preventing the collection and transmission of telemetry data."
+    category: "Privacy"
   
   - file: "fenix-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Fenix)"
