@@ -399,6 +399,13 @@ patches:
     effect: "The registrable domain (eTLD+1) is highlighted, and the URL bar scrolls to the end of the domain name."
     category: "Security"
 
+  - file: "disable-sslkeylogging.patch"
+    name: "Disable SSLKEYLOGGING"
+    description: "Disables the SSLKEYLOGGING feature in NSS (Mozilla's Network Security Services: https://firefox-source-docs.mozilla.org/security/nss/index.html)."
+    reason: "To prevent the unauthorized decryption and exposure of secrets used in SSL/TLS traffic. For more details, see: https://bugzilla.mozilla.org/show_bug.cgi?id=1183318 and https://bugzilla.mozilla.org/show_bug.cgi?id=1915224."
+    effect: "Protects users against total compromise of any and all cryptographic security."
+    category: "Security"
+
   # User Control
   - file: "enable-secret-settings.patch"
     name: "Enable Secret Settings"
