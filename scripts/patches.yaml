@@ -214,6 +214,13 @@ patches:
     reason: "To prevent automatic inclusion of Firefox branding in shared links."
     effect: "Improves privacy by not disclosing browser information when sharing links."
     category: "Privacy"
+  
+  - file: "disable-amo-collections.patch"
+    name: "Disable AMO Featured Collections and Recommendations"
+    description: "Disables fetching featured collections, recommendations, and icons from AMO (addons.mozilla.org)."
+    reason: "To prevent Firefox from connecting to `services.mozilla.org` on every launch and periodically after."
+    effect: "Reduces unwanted network activity and integration with third party services."
+    category: "Privacy"
 
   - file: "disable-contile.patch"
     name: "Disable Contile"
