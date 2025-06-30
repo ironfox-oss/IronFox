@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index 0328809399..a9c24b1cfc 100644
+index 0328809399..88ff41c434 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 @@ -38,16 +38,16 @@ private const val MAX_SIZE = 32
@@ -18,7 +18,7 @@ index 0328809399..a9c24b1cfc 100644
 -    "coccoc",
 -    "baidu",
 +//    "bing",
-+//    "baidu",
++    "ddgnoai",
 +    "ddghtml",
 +    "ddglite",
 +    "mojeek",
