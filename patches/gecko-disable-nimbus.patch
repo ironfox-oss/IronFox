@@ -65,15 +65,17 @@ index a794e82288..b14fa739bb 100644
    MOZ_MAINTENANCE_SERVICE: @MOZ_MAINTENANCE_SERVICE_BOOL@,
  
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index e09ea87de8..a5ed88d538 100644
+index e09ea87de8..aedc380a5c 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -4591,8 +4591,6 @@ AMRemoteSettings = {
+@@ -4591,8 +4591,8 @@ AMRemoteSettings = {
     */
    RS_ENTRIES_MAP: {
      installTriggerDeprecation: [
 -      "extensions.InstallTriggerImpl.enabled",
 -      "extensions.InstallTrigger.enabled",
++//      "extensions.InstallTriggerImpl.enabled",
++//      "extensions.InstallTrigger.enabled",
      ],
      quarantinedDomains: ["extensions.quarantinedDomains.list"],
    },

@@ -1,66 +1,3 @@
-diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 1612c570be..790c91a5ac 100644
---- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-+++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1483,6 +1483,14 @@ class GeckoEngine(
-         override var bannedPorts: String
-             get() = runtime.settings.bannedPorts
-             set(value) { runtime.settings.setBannedPorts(value) }
-+        
-+        override var accessibilityEnabled: Boolean
-+            get() = runtime.settings.accessibilityEnabled
-+            set(value) {
-+                value.let {
-+                    runtime.settings.accessibilityEnabled = it
-+                }
-+            }
-     }.apply {
-         defaultSettings?.let {
-             this.javascriptEnabled = it.javascriptEnabled
-@@ -1527,6 +1535,7 @@ class GeckoEngine(
-             this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
-             this.dohAutoselectEnabled = it.dohAutoselectEnabled
-             this.bannedPorts = it.bannedPorts
-+            this.accessibilityEnabled = it.accessibilityEnabled
-         }
-     }
- 
-diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 24e8f76532..ecc60eb692 100644
---- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-+++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -350,6 +350,11 @@ abstract class Settings {
-      * Comma-separated list of destination ports that the application should block connections to.
-      */
-     open var bannedPorts: String by UnsupportedSetting()
-+
-+    /**
-+     * Setting to control Accessibility Services.
-+     */
-+    open var accessibilityEnabled: Boolean by UnsupportedSetting()
- }
- 
- /**
-@@ -420,6 +425,7 @@ data class DefaultSettings(
-     override var postQuantumKeyExchangeEnabled: Boolean? = null,
-     override var dohAutoselectEnabled: Boolean = false,
-     override var bannedPorts: String = "",
-+    override var accessibilityEnabled: Boolean = false,
- ) : Settings() {
-     override val desktopModeEnabled: Boolean
-         get() = getDesktopMode()
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..bb4eca1eff 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,7 @@ class Core(
-             postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
-             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
-             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
-+            accessibilityEnabled = context.settings().accessibilityEnabled,
-         )
- 
-         // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
 index 1122dc0b0f..456f387812 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/AccessibilityFragment.kt
@@ -87,61 +24,27 @@ index 1122dc0b0f..456f387812 100644
              R.string.pref_key_accessibility_force_enable_zoom,
          )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..a4290f239d 100644
+index 7f19ba4304..e321174ae1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1063,6 +1063,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         } else {
-             ToolbarPosition.TOP
+@@ -1076,7 +1076,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+             accessibilityManager?.getEnabledAccessibilityServiceList(0)?.let { activeServices ->
+                 for (service in activeServices) {
+                     if (service.capabilities.and(CAPABILITY_CAN_PERFORM_GESTURES) == 1) {
+-                        return true
++                        return accessibilityEnabled
+                     }
+                 }
+             }
+@@ -1088,7 +1088,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         get() {
+             val accessibilityManager =
+                 appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+-            return accessibilityManager?.isTouchExplorationEnabled ?: false
++            return accessibilityEnabled && (accessibilityManager?.isTouchExplorationEnabled ?: false)
          }
-+    
-+    var accessibilityEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
-+        default = false,
-+    )
- 
-     /**
-      * Check each active accessibility service to see if it can perform gestures, if any can,
-@@ -1070,6 +1075,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     val switchServiceIsEnabled: Boolean
-         get() {
-+            if (!accessibilityEnabled) {
-+            return false
-+        }
-             val accessibilityManager =
-                 appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
- 
-@@ -1086,6 +1094,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
- 
-     val touchExplorationIsEnabled: Boolean
-         get() {
-+            if (!accessibilityEnabled) {
-+            return false
-+        }
-             val accessibilityManager =
-                 appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
-             return accessibilityManager?.isTouchExplorationEnabled ?: false
-@@ -1093,7 +1104,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val accessibilityServicesEnabled: Boolean
-         get() {
--            return touchExplorationIsEnabled || switchServiceIsEnabled
-+            return accessibilityEnabled && (touchExplorationIsEnabled || switchServiceIsEnabled)
-         }
- 
-     fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
-diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a55bf0589b..ca09abb30e 100644
---- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -469,4 +469,6 @@
-     <string name="pref_key_setup_step_toolbar" translatable="false">pref_key_setup_step_toolbar</string>
-     <string name="pref_key_setup_step_theme" translatable="false">pref_key_setup_step_theme</string>
-     <string name="pref_key_setup_step_extensions" translatable="false">pref_key_setup_step_extensions</string>
-+    <!-- Accessibility Services -->
-+    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
- </resources>
 diff --git a/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
 index a810f76208..f9381cbc86 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/accessibility_preferences.xml
@@ -158,88 +61,3 @@ index a810f76208..f9381cbc86 100644
      <SwitchPreference
          android:defaultValue="true"
          android:key="@string/pref_key_accessibility_auto_size"
-diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index a410550e60..384f8839e4 100644
---- a/mobile/android/geckoview/api.txt
-+++ b/mobile/android/geckoview/api.txt
-@@ -984,6 +984,7 @@ package org.mozilla.geckoview {
-     method @Nullable public Integer getWebContentIsolationStrategy();
-     method public boolean getWebFontsEnabled();
-     method public boolean getWebManifestEnabled();
-+    method public boolean getAccessibilityEnabled();
-     method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
-     method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
-     method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1030,6 +1031,7 @@ package org.mozilla.geckoview {
-     method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
-     method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
-     method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
-+    method @NonNull public GeckoRuntimeSettings setAccessibilityEnabled(boolean);
-     field public static final int ALLOW_ALL = 0;
-     field public static final int COLOR_SCHEME_DARK = 1;
-     field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1093,6 +1095,7 @@ package org.mozilla.geckoview {
-     method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
-     method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
-     method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
-+    method @NonNull public GeckoRuntimeSettings.Builder accessibilityEnabled(boolean);
-     method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
-   }
- 
-diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 25ea09c3f6..8ce33cc798 100644
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -602,6 +602,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       return this;
-     }
- 
-+    /**
-+     * Sets whether we should enable Accessibility Services.
-+     *
-+     * @param flag True if we should enable Accessibility Services, false otherwise.
-+     * @return This Builder instance.
-+     */
-+    public @NonNull Builder accessibilityEnabled(final boolean flag) {
-+      getSettings().mAccessibilityEnabled.set(flag ? 0 : 1);
-+      return this;
-+    }
-+
-     /**
-      * Set this flag to disable low-memory detection. Set this when running tests to avoid
-      * unpredictable behavior at runtime.
-@@ -743,6 +754,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       new PrefWithoutDefault<Boolean>("security.tls.enable_kyber");
-   /* package */ final PrefWithoutDefault<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
-       new PrefWithoutDefault<Boolean>("network.http.http3.enable_kyber");
-+  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<>("accessibility.force_disabled", 1);
-   /* package */ final Pref<Boolean> mDohAutoselectEnabled =
-       new Pref<Boolean>("network.android_doh.autoselect_enabled", false);
-   /* package */ final Pref<Boolean> mSameDocumentNavigationOverridesLoadType =
-@@ -2150,6 +2162,26 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-     return mBannedPorts.get();
-   }
- 
-+  /**
-+   * Get whether we should enable Accessibility Services.
-+   *
-+   * @return Whether we should enable Accessibility Services.
-+   */
-+  public boolean getAccessibilityEnabled() {
-+    return mAccessibilityEnabled.get() == 0;
-+  }
-+  
-+  /**
-+   * Set whether we should enable Accessibility Services.
-+   *
-+   * @param flag A flag determining whether we should enable Accessibility Services.
-+   * @return This GeckoRuntimeSettings instance.
-+   */
-+  public @NonNull GeckoRuntimeSettings setAccessibilityEnabled(final boolean flag) {
-+    mAccessibilityEnabled.commit(flag ? 0 : 1);
-+    return this;
-+  }
-+
-   // For internal use only
-   /* protected */ @NonNull
-   GeckoRuntimeSettings setProcessCount(final int processCount) {

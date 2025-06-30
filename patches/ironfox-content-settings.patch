@@ -90,21 +90,6 @@ index 3885a06691..ac2ec82df2 100644
 +        private const val JIT_OVERRIDE_EXIT_DELAY = 2000L
 +    }
  }
-diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a55bf0589b..a8d902ae9f 100644
---- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -445,6 +445,10 @@
-     <string name="pref_key_app_cold_start_count" translatable="false">pref_key_app_cold_start_count</string>
-     <string name="pref_key_app_is_onboarding_set_as_default_displayed" translatable="false">pref_key_app_is_onboarding_set_as_default_displayed</string>
- 
-+    <!-- Content Settings -->
-+    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
-+    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
-+    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
-     <string name="pref_key_desktop_browsing" translatable="false">pref_key_desktop_browsing</string>
- 
-     <!-- Crash reporting -->
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 index ef1dcb4e6e..25e429567d 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml

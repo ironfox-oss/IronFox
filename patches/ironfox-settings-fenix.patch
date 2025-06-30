@@ -1,0 +1,81 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index cfbdaba62c..2e47089dc2 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -196,6 +196,19 @@ class Core(
+             postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
+             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
+             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
++            accessibilityEnabled = context.settings().accessibilityEnabled,
++            javascriptEnabled = context.settings().javascriptEnabled,
++            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
++            safeBrowsingEnabled = context.settings().safeBrowsingEnabled,
++            safeBrowsingPhishingEnabled = context.settings().safeBrowsingEnabled,
++            spoofEnglish = context.settings().spoofEnglish,
++            wasmEnabled = context.settings().wasmEnabled,
+         )
+ 
+         // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..8d07d9725e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2459,6 +2459,36 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
+ 
++    var accessibilityEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
++        default = false,
++    )
++
++    var javascriptEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_javascript_enabled),
++        default = true,
++    )
++
++    var javascriptJitEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
++        default = false,
++    )
++
++    var safeBrowsingEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
++        default = true,
++    )
++
++    var spoofEnglish by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
++        default = false
++    )
++
++    var wasmEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
++        default = true,
++    )
++
+     /**
+      * Indicates whether or not to show the checklist feature.
+      */
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+index a55bf0589b..86839f2b40 100644
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -469,4 +469,11 @@
+     <string name="pref_key_setup_step_toolbar" translatable="false">pref_key_setup_step_toolbar</string>
+     <string name="pref_key_setup_step_theme" translatable="false">pref_key_setup_step_theme</string>
+     <string name="pref_key_setup_step_extensions" translatable="false">pref_key_setup_step_extensions</string>
++
++    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
++    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
++    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
++    <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
++    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
++    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+ </resources>
