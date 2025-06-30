@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index 0328809399..88ff41c434 100644
+index 0328809399..b27edd933f 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 @@ -38,16 +38,16 @@ private const val MAX_SIZE = 32
@@ -17,7 +17,6 @@ index 0328809399..88ff41c434 100644
 -    "seznam-cz",
 -    "coccoc",
 -    "baidu",
-+//    "bing",
 +    "ddgnoai",
 +    "ddghtml",
 +    "ddglite",
@@ -25,19 +24,7 @@ index 0328809399..88ff41c434 100644
 +    "leta-brave",
 +    "leta-google",
 +    "startpage",
++    "no-search",
  )
  
  /**
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..88b8c58352 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -318,7 +318,7 @@ class Core(
-                 RegionMiddleware(context, locationService),
-                 SearchMiddleware(
-                     context = context,
--                    additionalBundledSearchEngineIds = listOf("reddit", "youtube"),
-+                    additionalBundledSearchEngineIds = listOf("no-search"),
-                     migration = SearchMigration(context),
-                     searchExtraParams = searchExtraParams,
-                     searchEngineSelectorConfig = getSearchEngineSelectorConfig(),
