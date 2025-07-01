@@ -18,7 +18,6 @@ pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1384330
 pref("extensions.webapi.enabled", false);
 pref("privacy.resistFingerprinting.block_mozAddonManager", true);
-pref("xpinstall.whitelist.add", "https://addons.mozilla.org,https://agrd.io,https://mullvad.net,https://static.adguard.com,https://static.adtidy.org");
 
 /// Re-enable the use of Cookie Banner Reduction rules from Remote Settings
 // We disable this functionality in Phoenix and instead set the rules locally via the "cookiebanners.listService.testRules" pref
@@ -44,6 +43,17 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 /// Set default process count
 // This is the same as the default value - but we need to set here since Mozilla only defines it in GeckoRuntimeSettings, which we override to allow users to change the value if desired
 pref("dom.ipc.processCount", 2); // [DEFAULT]
+
+/// Set default list of sites allowed to install extensions
+// This list should be kept to a minimum; users should really stick to AMO if possible for installing extensions
+// But I think it's reasonable to allow users to install certain trustworthy add-ons directly from the developer if preferred - it might even be the only way for users to install add-ons in some cases (ex. censorship)
+// These are set as separate preferences to make it easier for users to customize the list of allowed sources - ex. maybe I want to only allow installing add-ons from AMO (`addons.mozilla.org`), I could just clear the values of the prefs EXCEPT for `xpinstall.whitelist.add.AMO`.
+// Users can add their own sites here by creating their own preferences with a similar format and values like below, and can of course always just download and install the `.xpi` file anyways
+pref("xpinstall.whitelist.add.AdGuard", "https://agrd.io,https://static.adguard.com,https://static.adtidy.org"); // AdGuard
+pref("xpinstall.whitelist.add.AMO", "https://addons.mozilla.org"); // AMO
+pref("xpinstall.whitelist.add.EFF", "https://eff.org,https://privacybadger.org"); // Privacy Badger
+pref("xpinstall.whitelist.add.Mullvad", "https://mullvad.net"); // Mullvad
+pref("xpinstall.whitelist.add.NoScript", "https://noscript.net,https://secure.informaction.com"); // NoScript
 
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
