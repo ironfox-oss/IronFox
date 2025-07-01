@@ -273,8 +273,8 @@ patches:
   
   - file: "install-addons-without-mozaddonmanager.patch"
     name: "Allow installation of add-ons without the mozAddonManager API"
-    description: "Adds support for installing add-ons from `addons.mozilla.org` without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the privileged mozAddonManager API), in addition to websites specified at the `xpinstall.whitelist.add` pref (In addition to `addons.mozilla.org`, by default, we also allow: `agrd.io`, `static.adguard.com`, and `static.adtidy.org` for AdGuard, as well as `mullvad.net` for Mullvad's extension)."
-    reason: "To prevent fingerprinting, reduce attack surface, and to improve freedom by allowing users to install add-ons from their preferred sites if desired (though allowing additional sites is of course STRONGLY recommended against)."
+    description: "Adds support for installing add-ons from `addons.mozilla.org` without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the privileged mozAddonManager API), in addition to websites specified with the `xpinstall.whitelist.add` series of prefs."
+    reason: "To prevent fingerprinting, reduce attack surface, and to improve freedom by allowing users to install add-ons from sites other than AMO if desired (though installing add-ons outside of AMO is of course STRONGLY recommended against)."
     effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API) without compromising their privacy and security, and allows installation from other sites if desired by the user."
     category: "Privacy"
 
