@@ -532,10 +532,6 @@ sed -i \
     -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.browser.safebrowsing.features.trackingProtection.update"|' \
     mobile/android/app/geckoview-prefs.js
 
-# In the current Phoenix release, I lock `xpinstall.whitelist.add`
-# We need this unlocked though for our `install-addons-without-mozaddonmanager.patch`, so this is just a temporary workaround until I fix it next release
-sed -i -e 's/xpinstall.whitelist.add/z99.ignore.xpinstall.whitelist.add/g' "$patches/preferences/phoenix.js"
-
 {
     cat "$patches/preferences/phoenix.js"
     cat "$patches/preferences/phoenix-extended.js"
