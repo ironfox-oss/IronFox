@@ -1,0 +1,2749 @@
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+index f012e43dc0..fc3b947485 100644
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -107,6 +107,8 @@ sentry = "8.9.0"
+ commons-exec = "1.3"
+ tomlj = "1.1.0"
+ 
++unifiedpush = "3.0.7"
++
+ [libraries]
+ 
+ kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+@@ -230,6 +232,7 @@ thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref
+ thirdparty-zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+ thirdparty-disklrucache = { group = "com.jakewharton", name = "disklrucache", version.ref = "disklrucache" }
+ thirdparty-androidsvg = { group = "com.caverock", name = "androidsvg-aar", version.ref = "androidsvg" }
++thirdparty-unifiedpush = { group = "org.unifiedpush.android", name = "connector", version.ref = "unifiedpush" }
+ 
+ desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
+ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebase-messaging" }
+diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
+index 26e76a18d2..1dcd401764 100644
+--- a/mobile/android/android-components/.buildconfig.yml
++++ b/mobile/android/android-components/.buildconfig.yml
+@@ -594,6 +594,7 @@ projects:
+     - support-utils
+     - tooling-lint
+     - ui-icons
++    - feature-unifiedpush
+   feature-addons:
+     description: A feature that provides for managing add-ons.
+     path: components/feature/addons
+@@ -2409,3 +2410,13 @@ projects:
+     - tooling-lint
+     - ui-colors
+     - ui-icons
++  feature-unifiedpush:
++    description: Feature that implements push notifications with UnifiedPush.
++    path: components/feature/unifiedpush
++    publish: true
++    upstream_dependencies:
++      - concept-base
++      - concept-push
++      - support-base
++      - support-test
++      - tooling-lint
+diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt
+new file mode 100644
+index 000000000000..85e18ea0d9f0
+--- /dev/null
++++ b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt
+@@ -0,0 +1,21 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.concept.push
++
++/**
++ * Observers that want to receive updates for new subscriptions and messages.
++ */
++interface PushObserver {
++
++    /**
++     * A subscription for the scope is available.
++     */
++    fun onSubscriptionChanged(scope: PushScope) = Unit
++
++    /**
++     * A messaged has been received for the [scope].
++     */
++    fun onMessageReceived(scope: PushScope, message: ByteArray?) = Unit
++}
+diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushProcessor.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushProcessor.kt
+index 909ee23737..6c5d38b8f1 100644
+--- a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushProcessor.kt
++++ b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushProcessor.kt
+@@ -15,12 +15,12 @@ interface PushProcessor {
+     /**
+      * Start the push processor and any service associated.
+      */
+-    fun initialize()
++//    fun initialize()
+ 
+     /**
+      * Removes all push subscriptions from the device.
+      */
+-    fun shutdown()
++//    fun shutdown()
+ 
+     /**
+      * A new registration token has been received.
+@@ -43,7 +43,7 @@ interface PushProcessor {
+     /**
+      * Requests the [PushService] to renew it's registration with it's provider.
+      */
+-    fun renewRegistration()
++//    fun renewRegistration()
+ 
+     companion object {
+         /**
+diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushSubscription.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushSubscription.kt
+new file mode 100644
+index 000000000000..470a1145a298
+--- /dev/null
++++ b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushSubscription.kt
+@@ -0,0 +1,19 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.concept.push
++
++typealias AppServerKey = String
++typealias PushScope = String
++
++/**
++ * The subscription information from the WebPush server that can be used to send push messages.
++ */
++data class PushSubscription(
++    val scope: PushScope,
++    val endpoint: String,
++    val publicKey: String,
++    val authKey: String,
++    val appServerKey: AppServerKey?,
++)
+diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushSubscriptionProcessor.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushSubscriptionProcessor.kt
+new file mode 100644
+index 000000000000..95392ec543b7
+--- /dev/null
++++ b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushSubscriptionProcessor.kt
+@@ -0,0 +1,73 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.concept.push
++
++/**
++ * A push subscriptions processor that handles (un)subscriptions for a given scope.
++ */
++interface PushSubscriptionProcessor {
++
++    /**
++     * Start the push processor and any service associated.
++     */
++    fun initialize()
++
++    /**
++     * Removes all push subscriptions from the device.
++     */
++    fun shutdown()
++
++    /**
++     * Requests the PushSubscriptionProcessor to renew its registration with its provider.
++     */
++    fun renewRegistration()
++
++    /**
++     * Run [block] with all registered [PushScope] and appServerKey
++     */
++    fun forEachScopes(block: (PushScope, String?) -> Unit)
++
++    /**
++     * Subscribes for push notifications and invokes the [onSubscribe] callback with the subscription information.
++     *
++     * @param scope The subscription identifier which usually represents the website's URI.
++     * @param appServerKey An optional key provided by the application server.
++     * @param onSubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
++     * @param onSubscribe The callback invoked when a subscription for the [scope] is created.
++     */
++    fun subscribe(
++        scope: PushScope,
++        appServerKey: String? = null,
++        onSubscribeError: (Exception) -> Unit = {},
++        onSubscribe: ((PushSubscription) -> Unit) = {},
++    )
++
++    /**
++     * Un-subscribes from a valid subscription and invokes the [onUnsubscribe] callback with the result.
++     *
++     * @param scope The subscription identifier which usually represents the website's URI.
++     * @param onUnsubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
++     * @param onUnsubscribe The callback invoked when a subscription for the [scope] is removed.
++     */
++    fun unsubscribe(
++        scope: PushScope,
++        onUnsubscribeError: (Exception) -> Unit = {},
++        onUnsubscribe: (Boolean) -> Unit = {},
++    )
++
++    /**
++     * Checks if a subscription for the [scope] already exists.
++     *
++     * @param scope The subscription identifier which usually represents the website's URI.
++     * @param appServerKey An optional key provided by the application server.
++     * @param block The callback invoked when a subscription for the [scope] is found, otherwise null. Note: this will
++     * not execute on the calls thread.
++     */
++    fun getSubscription(
++        scope: PushScope,
++        appServerKey: String? = null,
++        block: (PushSubscription?) -> Unit,
++    )
++}
+diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/Pusher.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/Pusher.kt
+new file mode 100644
+index 000000000000..802364f0a9ab
+--- /dev/null
++++ b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/Pusher.kt
+@@ -0,0 +1,19 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.concept.push
++
++import mozilla.components.support.base.observer.Observable
++import mozilla.components.support.base.observer.ObserverRegistry
++
++/**
++ * Push features implementing a [Pusher] handle registrations and messages from a Service,
++ * They handle subscriptions for scopes, and are observers for update to these subscriptions.
++ */
++abstract class Pusher : PushSubscriptionProcessor, Observable<PushObserver> by ObserverRegistry() {
++    /**
++     * A flag to disable our rate-limit logic. This is useful when debugging.
++     */
++    abstract val disableRateLimit: Boolean
++}
+diff --git a/mobile/android/android-components/components/feature/accounts-push/build.gradle b/mobile/android/android-components/components/feature/accounts-push/build.gradle
+index 613e5aa1fdd4..4322461f50a2 100644
+--- a/mobile/android/android-components/components/feature/accounts-push/build.gradle
++++ b/mobile/android/android-components/components/feature/accounts-push/build.gradle
+@@ -33,6 +33,7 @@ dependencies {
+     implementation project(':support-base')
+     implementation project(':concept-push')
+     implementation project(':feature-push')
++    implementation project(':feature-unifiedpush')
+ 
+     implementation libs.androidx.work.runtime
+     implementation libs.androidx.lifecycle.process
+diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
+index 92634857c5..92d0a0962a 100644
+--- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
++++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
+@@ -25,15 +25,17 @@ import mozilla.components.concept.sync.DeviceConstellationObserver
+ import mozilla.components.concept.sync.DevicePushSubscription
+ import mozilla.components.concept.sync.OAuthAccount
+ import mozilla.components.feature.accounts.push.cache.PushScopeProperty
+-import mozilla.components.feature.push.AutoPushFeature
+-import mozilla.components.feature.push.AutoPushSubscription
+-import mozilla.components.feature.push.PushScope
+ import mozilla.components.service.fxa.manager.FxaAccountManager
+ import mozilla.components.service.fxa.manager.ext.withConstellation
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.base.utils.SharedPreferencesCache
+ import org.json.JSONObject
+ import mozilla.components.concept.sync.AccountObserver as SyncAccountObserver
++import mozilla.components.concept.push.PushObserver
++import mozilla.components.concept.push.PushScope
++import mozilla.components.concept.push.PushSubscription
++import mozilla.components.concept.push.PushSubscriptionProcessor
++import mozilla.components.concept.push.Pusher
+ 
+ internal const val PREFERENCE_NAME = "mozac_feature_accounts_push"
+ internal const val PREF_LAST_VERIFIED = "last_verified_push_subscription"
+@@ -56,7 +58,7 @@ internal const val PREF_FXA_SCOPE = "fxa_push_scope"
+ class FxaPushSupportFeature(
+     private val context: Context,
+     private val accountManager: FxaAccountManager,
+-    private val pushFeature: AutoPushFeature,
++    private val pushFeature: Pusher,
+     private val crashReporter: CrashReporting? = null,
+     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
+     private val owner: LifecycleOwner = ProcessLifecycleOwner.get(),
+@@ -77,7 +79,7 @@ class FxaPushSupportFeature(
+     fun initialize() = coroutineScope.launch {
+         val scopeValue = pushScope.value()
+ 
+-        val autoPushObserver = AutoPushObserver(accountManager, pushFeature, scopeValue)
++        val fxaPushObserver = FxaPushObserver(accountManager, pushFeature, scopeValue)
+ 
+         val accountObserver = AccountObserver(
+             context,
+@@ -91,7 +93,7 @@ class FxaPushSupportFeature(
+         coroutineScope.launch(Main) {
+             accountManager.register(accountObserver)
+ 
+-            pushFeature.register(autoPushObserver, owner, autoPause)
++            pushFeature.register(fxaPushObserver, owner, autoPause)
+         }
+     }
+ 
+@@ -106,7 +108,7 @@ class FxaPushSupportFeature(
+  */
+ internal class AccountObserver(
+     private val context: Context,
+-    private val push: AutoPushFeature,
++    private val push: Pusher,
+     private val fxaPushScope: String,
+     private val crashReporter: CrashReporting?,
+     private val lifecycleOwner: LifecycleOwner,
+@@ -114,7 +116,7 @@ internal class AccountObserver(
+ ) : SyncAccountObserver {
+ 
+     private val logger = Logger(AccountObserver::class.java.simpleName)
+-    private val verificationDelegate = VerificationDelegate(context, push.config.disableRateLimit)
++    private val verificationDelegate = VerificationDelegate(context, push.disableRateLimit)
+ 
+     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+     override fun onAuthenticated(account: OAuthAccount, authType: AuthType) {
+@@ -153,7 +155,7 @@ internal class AccountObserver(
+  * it's OK to call this somewhat frequently.
+  */
+ internal fun pushSubscribe(
+-    push: AutoPushFeature,
++    push: PushSubscriptionProcessor,
+     account: OAuthAccount,
+     scope: String,
+     crashReporter: CrashReporting?,
+@@ -196,7 +198,7 @@ internal fun pushSubscribe(
+  */
+ internal class ConstellationObserver(
+     context: Context,
+-    private val push: AutoPushFeature,
++    private val push: PushSubscriptionProcessor,
+     private val scope: String,
+     private val account: OAuthAccount,
+     private val verifier: VerificationDelegate = VerificationDelegate(context),
+@@ -240,12 +242,12 @@ internal class ConstellationObserver(
+ /**
+  * An [AutoPushFeature] observer to handle [FxaAccountManager] subscriptions and push events.
+  */
+-internal class AutoPushObserver(
++internal class FxaPushObserver(
+     private val accountManager: FxaAccountManager,
+-    private val pushFeature: AutoPushFeature,
++    private val pushFeature: PushSubscriptionProcessor,
+     private val fxaPushScope: String,
+-) : AutoPushFeature.Observer {
+-    private val logger = Logger(AutoPushObserver::class.java.simpleName)
++) : PushObserver {
++    private val logger = Logger(FxaPushObserver::class.java.simpleName)
+ 
+     override fun onMessageReceived(scope: String, message: ByteArray?) {
+         if (scope != fxaPushScope) {
+@@ -384,7 +386,7 @@ internal data class VerificationState(val timestamp: Long, val totalCount: Int)
+ 
+ internal fun preference(context: Context) = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
+ 
+-internal fun AutoPushSubscription.into() = DevicePushSubscription(
++internal fun PushSubscription.into() = DevicePushSubscription(
+     endpoint = this.endpoint,
+     publicKey = this.publicKey,
+     authKey = this.authKey,
+diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt
+index cd58a69246..dc35a50c10 100644
+--- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt
++++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt
+@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
+ import mozilla.components.feature.accounts.push.FxaPushSupportFeature
+ import mozilla.components.feature.accounts.push.PREF_FXA_SCOPE
+ import mozilla.components.feature.accounts.push.preference
+-import mozilla.components.feature.push.PushScope
++import mozilla.components.concept.push.PushScope
+ import java.util.UUID
+ 
+ /**
+diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
+index 30e403088831..532382a2fbbb 100644
+--- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
++++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
+@@ -4,7 +4,7 @@
+ 
+ package mozilla.components.feature.accounts.push.cache
+ 
+-import mozilla.components.feature.push.PushScope
++import mozilla.components.concept.push.PushScope
+ 
+ /**
+  * A [ScopeProperty] implementation generates and holds the [PushScope].
+diff --git a/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt b/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
+index e4bf8170af..f22cd6f168 100644
+--- a/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
++++ b/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
+@@ -27,15 +27,17 @@ import mozilla.components.concept.push.PushError
+ import mozilla.components.concept.push.PushProcessor
+ import mozilla.components.concept.push.PushService
+ import mozilla.components.support.base.log.logger.Logger
+-import mozilla.components.support.base.observer.Observable
+-import mozilla.components.support.base.observer.ObserverRegistry
+ import mozilla.components.support.base.utils.NamedThreadFactory
+ import java.io.File
+ import java.util.concurrent.Executors
+ import kotlin.coroutines.CoroutineContext
++import mozilla.components.concept.push.AppServerKey
++import mozilla.components.concept.push.PushScope
++import mozilla.components.concept.push.PushSubscription
++import mozilla.components.concept.push.Pusher
+ 
+-typealias PushScope = String
+-typealias AppServerKey = String
++// typealias PushScope = String
++// typealias AppServerKey = String
+ 
+ /**
+  * A implementation of a [PushProcessor] that should live as a singleton by being installed
+@@ -80,12 +82,12 @@ typealias AppServerKey = String
+ class AutoPushFeature(
+     private val context: Context,
+     private val service: PushService,
+-    val config: PushConfig,
++    val config: AutoPushConfig,
+     coroutineContext: CoroutineContext = Executors.newSingleThreadExecutor(
+         NamedThreadFactory("AutoPushFeature"),
+     ).asCoroutineDispatcher(),
+     private val crashReporter: CrashReporting? = null,
+-) : PushProcessor, Observable<AutoPushFeature.Observer> by ObserverRegistry() {
++) : PushProcessor, Pusher() {
+ 
+     private val logger = Logger("AutoPushFeature")
+ 
+@@ -98,6 +100,13 @@ class AutoPushFeature(
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal var connection: PushManagerInterface? = null
+ 
++    override val disableRateLimit: Boolean
++        get() = config.disableRateLimit
++
++    init {
++        PushProcessor.install(this)
++    }
++
+     /**
+      * Starts the push feature and initialization work needed. Also starts the [PushService] to ensure new messages
+      * come through.
+@@ -139,10 +148,27 @@ class AutoPushFeature(
+      */
+     override fun shutdown() {
+         withConnection {
+-            it.unsubscribeAll()
++            try {
++                it.unsubscribeAll()
++            } catch (e: PushApiException) {
++            }
+         }
+     }
+ 
++    override fun forEachScopes(block: (PushScope, String?) -> Unit) {
++        // TODO: uncomment once https://github.com/mozilla/application-services/pull/6671 is merged
++        /*
++        val currentConnection = connection
++        currentConnection ?: run {
++            logger.warn("No current connection")
++         }
++        coroutineScope.launch {
++            currentConnection?.listSubscriptionReq()?.forEach {
++                block(it.scope, it.appServerKey)
++            }
++        }*/
++    }
++
+     /**
+      * New registration tokens are received and sent to the AutoPush server which also performs subscriptions for
+      * each push type and notifies the subscribers.
+@@ -187,11 +213,11 @@ class AutoPushFeature(
+      * @param onSubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
+      * @param onSubscribe The callback invoked when a subscription for the [scope] is created.
+      */
+-    fun subscribe(
+-        scope: String,
+-        appServerKey: String? = null,
+-        onSubscribeError: (Exception) -> Unit = {},
+-        onSubscribe: ((AutoPushSubscription) -> Unit) = {},
++    override fun subscribe(
++        scope: PushScope,
++        appServerKey: String?,
++        onSubscribeError: (Exception) -> Unit,
++        onSubscribe: ((PushSubscription) -> Unit),
+     ) {
+         withConnection(errorBlock = { exception -> onSubscribeError(exception) }) {
+             val sub = it.subscribe(scope, appServerKey ?: "")
+@@ -206,10 +232,10 @@ class AutoPushFeature(
+      * @param onUnsubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
+      * @param onUnsubscribe The callback invoked when a subscription for the [scope] is removed.
+      */
+-    fun unsubscribe(
+-        scope: String,
+-        onUnsubscribeError: (Exception) -> Unit = {},
+-        onUnsubscribe: (Boolean) -> Unit = {},
++    override fun unsubscribe(
++        scope: PushScope,
++        onUnsubscribeError: (Exception) -> Unit,
++        onUnsubscribe: (Boolean) -> Unit,
+     ) {
+         withConnection(errorBlock = { exception -> onUnsubscribeError(exception) }) {
+             onUnsubscribe(it.unsubscribe(scope))
+@@ -224,10 +250,10 @@ class AutoPushFeature(
+      * @param block The callback invoked when a subscription for the [scope] is found, otherwise null. Note: this will
+      * not execute on the calls thread.
+      */
+-    fun getSubscription(
+-        scope: String,
+-        appServerKey: String? = null,
+-        block: (AutoPushSubscription?) -> Unit,
++    override fun getSubscription(
++        scope: PushScope,
++        appServerKey: String?,
++        block: (PushSubscription?) -> Unit,
+     ) {
+         withConnection {
+             block(it.getSubscription(scope)?.toPushSubscription(scope, appServerKey))
+@@ -289,18 +315,18 @@ class AutoPushFeature(
+     /**
+      * Observers that want to receive updates for new subscriptions and messages.
+      */
+-    interface Observer {
++//    interface Observer {
+ 
+         /**
+          * A subscription for the scope is available.
+          */
+-        fun onSubscriptionChanged(scope: PushScope) = Unit
++//        fun onSubscriptionChanged(scope: PushScope) = Unit
+ 
+         /**
+          * A messaged has been received for the [scope].
+          */
+-        fun onMessageReceived(scope: PushScope, message: ByteArray?) = Unit
+-    }
++//        fun onMessageReceived(scope: PushScope, message: ByteArray?) = Unit
++//    }
+ 
+     private fun exceptionHandler(onError: (PushError) -> Unit) = CoroutineExceptionHandler { _, e ->
+         when (e) {
+@@ -352,13 +378,13 @@ enum class Protocol {
+ /**
+  * The subscription information from AutoPush that can be used to send push messages to other devices.
+  */
+-data class AutoPushSubscription(
+-    val scope: PushScope,
+-    val endpoint: String,
+-    val publicKey: String,
+-    val authKey: String,
+-    val appServerKey: String?,
+-)
++//data class AutoPushSubscription(
++//    val scope: PushScope,
++//    val endpoint: String,
++//    val publicKey: String,
++//    val authKey: String,
++//    val appServerKey: String?,
++//)
+ 
+ /**
+  * Configuration object for initializing the Push Manager with an AutoPush server.
+@@ -369,7 +395,7 @@ data class AutoPushSubscription(
+  * @param serviceType The push services that the AutoPush server supports.
+  * @param disableRateLimit A flag to disable our rate-limit logic. This is useful when debugging.
+  */
+-data class PushConfig(
++data class AutoPushConfig(
+     val senderId: String,
+     val serverHost: String = "updates.push.services.mozilla.com",
+     val protocol: Protocol = Protocol.HTTPS,
+@@ -402,8 +428,8 @@ private fun Protocol.toRustHttpProtocol(): PushHttpProtocol {
+ fun SubscriptionResponse.toPushSubscription(
+     scope: String,
+     appServerKey: AppServerKey? = null,
+-): AutoPushSubscription {
+-    return AutoPushSubscription(
++): PushSubscription {
++    return PushSubscription(
+         scope = scope,
+         endpoint = subscriptionInfo.endpoint,
+         authKey = subscriptionInfo.keys.auth,
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/README.md b/mobile/android/android-components/components/feature/unifiedpush/README.md
+new file mode 100644
+index 000000000000..c492a3879873
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/README.md
+@@ -0,0 +1,64 @@
++# [Android Components](../../../README.md) > Feature > UnifiedPush
++
++A component that implements push notifications with UnifiedPush.
++
++## Usage
++
++We can start the AutoPushFeature to get the subscription info and decrypted push message:
++
++```kotlin
++val feature = UnifiedPushFeature(
++  context = context,
++  disableRateLimit = true,
++  crashReporter = crashReporter
++)
++
++// To start the feature and the service.
++feature.initialize()
++
++// To stop the feature and the service.
++feature.shutdown()
++
++// To select the user default UnifiedPush distributor
++feature.useDefaultDistributor(activity) { success ->
++  if (success) {
++    // register known instances
++  }
++}
++
++// To receive the subscription info for all the subscription changes.
++feature.register(object : PushObserver {
++  override fun onSubscriptionChanged(scope: PushScope) {
++    // Handle subscription info here.
++  }
++})
++
++// Subscribe for a unique scope (identifier).
++feature.subscribe("push_subscription_scope_id")
++
++// To receive messages:
++feature.register(object : PushObserver {
++  override fun onMessageReceived(scope: String, message: ByteArray?) {
++    // Handle decrypted message here.
++  }
++})
++```
++
++In order to receive push messages, a [UnifiedPush distributor](https://unifiedpush.org/users/distributors/) needs to be installed on the system. The app register subscriptions to the distributor, which sends back endpoint for the scope.
++
++For more information, visit <https://unifiedpush.org>.
++
++### Setting up the dependency
++
++Use Gradle to download the library from [maven.mozilla.org](https://maven.mozilla.org/) ([Setup repository](../../../README.md#maven-repository)):
++
++```Groovy
++implementation "org.mozilla.components:feature-unifiedpush:{latest-version}"
++```
++
++## License
++
++    This Source Code Form is subject to the terms of the Mozilla Public
++    License, v. 2.0. If a copy of the MPL was not distributed with this
++    file, You can obtain one at http://mozilla.org/MPL/2.0/
++
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
+new file mode 100644
+index 000000000000..7358ed93a2a0
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
+@@ -0,0 +1,52 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++apply plugin: 'com.android.library'
++apply plugin: 'kotlin-android'
++
++android {
++    defaultConfig {
++        minSdkVersion config.minSdkVersion
++        compileSdk config.compileSdkVersion
++        targetSdkVersion config.targetSdkVersion
++    }
++
++    buildTypes {
++        release {
++            minifyEnabled false
++            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
++        }
++    }
++
++    namespace 'mozilla.components.feature.unifiedpush'
++}
++
++
++dependencies {
++    implementation project(':concept-push')
++
++    implementation ComponentsDependencies.mozilla_appservices_push
++
++    // Remove when the MessageBus is implemented somewhere else.
++    implementation project(':support-base')
++    implementation project(':ui-icons')
++
++    implementation libs.kotlin.coroutines
++    implementation libs.androidx.work.runtime
++    implementation libs.androidx.lifecycle.runtime
++    implementation (libs.thirdparty.unifiedpush) {
++        exclude group: "com.google.protobuf", module: "protobuf-java"
++    }
++
++    testImplementation project(':support-test')
++
++    testImplementation libs.androidx.test.core
++    testImplementation libs.androidx.test.junit
++    testImplementation libs.testing.robolectric
++    testImplementation libs.testing.coroutines
++}
++
++apply from: '../../../android-lint.gradle'
++apply from: '../../../publish.gradle'
++ext.configurePublish(config.componentsGroupId, project.name, project.ext.description)
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro b/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro
+new file mode 100644
+index 000000000000..f1b424510da5
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro
+@@ -0,0 +1,21 @@
++# Add project specific ProGuard rules here.
++# You can control the set of applied configuration files using the
++# proguardFiles setting in build.gradle.
++#
++# For more details, see
++#   http://developer.android.com/guide/developing/tools/proguard.html
++
++# If your project uses WebView with JS, uncomment the following
++# and specify the fully qualified class name to the JavaScript interface
++# class:
++#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
++#   public *;
++#}
++
++# Uncomment this to preserve the line number information for
++# debugging stack traces.
++#-keepattributes SourceFile,LineNumberTable
++
++# If you keep the line number information, uncomment this to
++# hide the original source file name.
++#-renamesourcefileattribute SourceFile
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/AndroidManifest.xml b/mobile/android/android-components/components/feature/unifiedpush/src/main/AndroidManifest.xml
+new file mode 100644
+index 000000000000..e4fd46229073
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/AndroidManifest.xml
+@@ -0,0 +1,17 @@
++<!-- This Source Code Form is subject to the terms of the Mozilla Public
++   - License, v. 2.0. If a copy of the MPL was not distributed with this
++   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
++<manifest xmlns:tools="http://schemas.android.com/tools"
++    xmlns:android="http://schemas.android.com/apk/res/android">
++    <application>
++        <receiver android:exported="true"  android:enabled="true"  android:name=".PushReceiver"
++            tools:ignore="ExportedReceiver">
++            <intent-filter>
++                <action android:name="org.unifiedpush.android.connector.MESSAGE"/>
++                <action android:name="org.unifiedpush.android.connector.UNREGISTERED"/>
++                <action android:name="org.unifiedpush.android.connector.NEW_ENDPOINT"/>
++                <action android:name="org.unifiedpush.android.connector.REGISTRATION_FAILED"/>
++            </intent-filter>
++        </receiver>
++    </application>
++</manifest>
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/DefaultDistributorManager.kt b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/DefaultDistributorManager.kt
+new file mode 100644
+index 000000000000..46609dfd5a2c
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/DefaultDistributorManager.kt
+@@ -0,0 +1,76 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.feature.unifiedpush
++
++import android.app.Activity
++import android.content.Context
++import mozilla.components.concept.push.PushScope
++import org.unifiedpush.android.connector.UnifiedPush
++
++/**
++ * Default implementation of [DistributorManager]
++ */
++class DefaultDistributorManager : DistributorManager {
++
++    /**
++     * Check if the distributor is still installed
++     *
++     * If the distributor has been uninstalled, [UnifiedPushProcessor.onUnregistered] is called for
++     * all known chanel
++     */
++    override fun isAvailable(context: Context): Boolean {
++        return UnifiedPush.getAckDistributor(context) != null
++    }
++
++    /**
++     * Register [scope] with [appServerKey]
++     */
++    override fun registerScope(context: Context, scope: PushScope, appServerKey: String?) {
++        UnifiedPush.register(
++            context,
++            instance = scope,
++            vapid = appServerKey,
++            messageForDistributor = scope
++        )
++    }
++
++    /**
++     * Unregister [scope]
++     */
++    override fun unregisterScope(context: Context, scope: PushScope) {
++        UnifiedPush.unregister(context, instance = scope)
++    }
++
++    /**
++     * Register a default instance, may be useful when we are linked to a distributor
++     * but we don't have any active subscription yet
++     */
++    override fun registerDefaultRegistration(context: Context) {
++        UnifiedPush.register(
++            context,
++            messageForDistributor = "Default registration",
++        )
++    }
++
++    /**
++     * Use user default UnifiedPush distributor, then call [callback].
++     *
++     * The callback is called with `true` if we have successfully
++     * selected a distributor.
++     *
++     * If [UnifiedPushProcessor] is already initialized, the user have toggling off/on
++     * UnifiedPush, we register all known instances to the new distributor
++     */
++    override fun useDefaultDistributor(activity: Activity, callback: (Boolean) -> Unit) {
++        UnifiedPush.tryUseDefaultDistributor(activity, callback)
++    }
++
++    /**
++     * Remove current distributor
++     */
++    override fun removeCurrentDistributor(context: Context) {
++        UnifiedPush.removeDistributor(context)
++    }
++}
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/DistributorManager.kt b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/DistributorManager.kt
+new file mode 100644
+index 000000000000..a0302866d83b
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/DistributorManager.kt
+@@ -0,0 +1,52 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.feature.unifiedpush
++
++import android.app.Activity
++import android.content.Context
++import mozilla.components.concept.push.PushScope
++
++/**
++ * Interface with functions to interact with an UnifiedPush distributor
++ */
++interface DistributorManager {
++
++    /**
++     * Check if the distributor is still installed
++     */
++    fun isAvailable(context: Context): Boolean
++
++    /**
++     * Register [scope] with [appServerKey]
++     */
++    fun registerScope(context: Context, scope: PushScope, appServerKey: String?)
++
++    /**
++     * Unregister [scope]
++     */
++    fun unregisterScope(context: Context, scope: PushScope)
++
++    /**
++     * Register a default instance, may be useful when we are linked to a distributor
++     * but we don't have any active subscription yet
++     */
++    fun registerDefaultRegistration(context: Context)
++
++    /**
++     * Use user default UnifiedPush distributor, then call [callback].
++     *
++     * The callback is called with `true` if we have successfully
++     * selected a distributor.
++     *
++     * If [UnifiedPushProcessor] is already initialized, the user have toggling off/on
++     * UnifiedPush, we register all known instances to the new distributor
++     */
++    fun useDefaultDistributor(activity: Activity, callback: (Boolean) -> Unit)
++
++    /**
++     * Remove current distributor
++     */
++    fun removeCurrentDistributor(context: Context)
++}
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/PushReceiver.kt b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/PushReceiver.kt
+new file mode 100644
+index 000000000000..10fb13d77213
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/PushReceiver.kt
+@@ -0,0 +1,54 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.feature.unifiedpush
++
++import android.content.Context
++import android.content.Intent
++import org.unifiedpush.android.connector.FailedReason
++import org.unifiedpush.android.connector.MessagingReceiver
++import org.unifiedpush.android.connector.data.PushEndpoint
++import org.unifiedpush.android.connector.data.PushMessage
++
++/**
++ * Implementation of UnifiedPush [MessagingReceiver]
++ */
++class PushReceiver : MessagingReceiver() {
++    override fun onMessage(context: Context, message: PushMessage, instance: String) {
++        UnifiedPushProcessor.requireInstance.onMessage(
++            scope = instance,
++            message = message,
++        )
++    }
++
++    override fun onNewEndpoint(context: Context, endpoint: PushEndpoint, instance: String) {
++        UnifiedPushProcessor.requireInstance.onNewEndpoint(
++            scope = instance,
++            newEndpoint = endpoint,
++        )
++    }
++
++    override fun onRegistrationFailed(context: Context, reason: FailedReason, instance: String) {
++        UnifiedPushProcessor.requireInstance.onError(reason.toPushError())
++    }
++
++    override fun onUnregistered(context: Context, instance: String) {
++        UnifiedPushProcessor.requireInstance.onUnregistered(scope = instance)
++    }
++
++    override fun onReceive(context: Context, intent: Intent) {
++        UnifiedPushProcessor.requireInstance.withCoroutine {
++            super.onReceive(context, intent)
++        }
++    }
++
++    private fun FailedReason.toPushError(): PushError {
++        return when (this) {
++            FailedReason.NETWORK -> PushError.Network("Push Service needs network to register")
++            FailedReason.INTERNAL_ERROR -> PushError.ServiceUnavailable("Unknown error")
++            FailedReason.ACTION_REQUIRED -> PushError.ServiceUnavailable("Push Service waits for a user action")
++            FailedReason.VAPID_REQUIRED -> PushError.Registration("Push Service requires VAPID")
++        }
++    }
++}
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/SubscriptionsDB.kt b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/SubscriptionsDB.kt
+new file mode 100644
+index 000000000000..0dfdc35d52b7
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/SubscriptionsDB.kt
+@@ -0,0 +1,220 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.feature.unifiedpush
++
++import android.content.ContentValues
++import android.content.Context
++import android.database.Cursor
++import android.database.sqlite.SQLiteDatabase
++import android.database.sqlite.SQLiteOpenHelper
++
++/**
++ * Database to track known [Subscription]
++ */
++class SubscriptionsDB(context: Context) :
++    SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
++
++    /**
++     * Contains information about a subscription
++     */
++    data class Subscription(
++        val scope: String,
++        val endpoint: String? = null,
++        val publicKey: String? = null,
++        val authKey: String? = null,
++        val appServerKey: String? = null,
++    )
++
++    override fun onCreate(db: SQLiteDatabase) {
++        db.execSQL(CREATE_TABLE_APPS)
++    }
++
++    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
++        throw IllegalStateException("Upgrade not supported")
++    }
++
++    /**
++     * Add a [Subscription]
++     */
++    fun add(subscription: Subscription) {
++        val db = writableDatabase
++        val values = ContentValues().apply {
++            put(FIELD_SCOPE, subscription.scope)
++            put(FIELD_ENDPOINT, subscription.endpoint)
++            put(FIELD_PUBKEY, subscription.publicKey)
++            put(FIELD_AUTH, subscription.authKey)
++            put(FIELD_VAPID, subscription.appServerKey)
++        }
++        db.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE)
++    }
++
++    /**
++     * Update the endpoint or the webpush keys of a registration
++     *
++     * @return `true` if a row has been updated
++     */
++    fun updateEndpoint(scope: String, endpoint: String, publicKey: String, authKey: String): Boolean {
++        val db = writableDatabase
++        val selection = "$FIELD_SCOPE = ? and (" +
++            "$FIELD_ENDPOINT IS NULL or $FIELD_ENDPOINT != ? " +
++            "or $FIELD_PUBKEY IS NULL or $FIELD_PUBKEY != ? " +
++            "or $FIELD_PUBKEY IS NULL or $FIELD_PUBKEY != ? " +
++            "or $FIELD_AUTH IS NULL or $FIELD_AUTH != ?)"
++        val selectionArgs = arrayOf(scope)
++        val values = ContentValues().apply {
++            put(FIELD_ENDPOINT, endpoint)
++            put(FIELD_PUBKEY, publicKey)
++            put(FIELD_AUTH, authKey)
++        }
++        return db.update(
++            TABLE,
++            values,
++            selection,
++            selectionArgs,
++        ) != 0
++    }
++
++    /**
++     * Remove the endpoint of a registration
++     */
++    fun removeEndpoint(scope: String): Boolean {
++        val db = writableDatabase
++        val selection = "$FIELD_SCOPE = ?"
++        val selectionArgs = arrayOf(scope)
++        val values = ContentValues().apply {
++            putNull(FIELD_ENDPOINT)
++            putNull(FIELD_PUBKEY)
++            putNull(FIELD_AUTH)
++        }
++        return db.update(
++            TABLE,
++            values,
++            selection,
++            selectionArgs,
++        ) != 0
++    }
++
++    /**
++     * Remove a subscription
++     */
++    fun remove(scope: String) {
++        val db = writableDatabase
++        val selection = "$FIELD_SCOPE = ?"
++        val selectionArgs = arrayOf(scope)
++        db.delete(TABLE, selection, selectionArgs)
++    }
++
++    /**
++     * Remove all known subscriptions
++     */
++    fun removeAll() {
++        val db = writableDatabase
++        val selection = null
++        val selectionArgs = null
++        db.delete(TABLE, selection, selectionArgs)
++    }
++
++    /**
++     * List all known subscriptions
++     */
++    fun listSubscriptions(): List<Subscription> {
++        val db = readableDatabase
++        val projection = null
++        return db.query(
++            TABLE,
++            projection,
++            null,
++            null,
++            null,
++            null,
++            null,
++        ).use { cursor ->
++            generateSequence { if (cursor.moveToNext()) cursor else null }
++                .mapNotNull { cursor.subscription() }
++                .toList()
++        }
++    }
++
++    /**
++     * Get a subscription based on its scope and its vapid key
++     */
++    fun getSubscription(scope: String, vapid: String?): Subscription? {
++        val db = readableDatabase
++        val projection = null
++        var selection = "$FIELD_SCOPE = ?"
++        val selectionArgs = mutableListOf(scope)
++        vapid?.let {
++            selection += " and $FIELD_VAPID = ?"
++            selectionArgs.add(vapid)
++        }
++        /*
++            vapid is always null at this moment,
++            [onGetSubscription][org.mozilla.fenix.push.WebPushEngineDelegate.onGetSubscription]
++            doesn't pass appServerKey.
++
++            Once it it supported, we can add:
++            ?: run {
++            selection += "and $FIELD_VAPID IS NULL"
++        }
++        */
++        return db.query(
++            TABLE,
++            projection,
++            selection,
++            selectionArgs.toTypedArray(),
++            null,
++            null,
++            null,
++        ).use { cursor ->
++            if (cursor.moveToNext()) {
++                cursor.subscription()
++            } else {
++                null
++            }
++        }
++    }
++
++    private fun Cursor.subscription(): Subscription? {
++        val scopeColumn = this.getColumnIndex(FIELD_SCOPE)
++        val endpointColumn = this.getColumnIndex(FIELD_ENDPOINT)
++        val pubKeyColumn = this.getColumnIndex(FIELD_PUBKEY)
++        val authColumn = this.getColumnIndex(FIELD_AUTH)
++        val vapidColumn = this.getColumnIndex(FIELD_VAPID)
++
++        val scope = (
++            if (scopeColumn >= 0) this.getString(scopeColumn) else null
++            ) ?: return null
++        val endpoint = if (endpointColumn >= 0) this.getString(endpointColumn) else null
++        val pubKey = if (pubKeyColumn >= 0) this.getString(pubKeyColumn) else null
++        val auth = if (authColumn >= 0) this.getString(authColumn) else null
++        val vapidKey = if (vapidColumn >= 0) this.getString(vapidColumn) else null
++        return Subscription(
++            scope,
++            endpoint,
++            pubKey,
++            auth,
++            vapidKey,
++        )
++    }
++
++    companion object {
++        private const val DB_NAME = "feature_unifiedpush_subscriptions"
++        private const val DB_VERSION = 1
++
++        private const val TABLE = "subscriptions"
++        private const val FIELD_SCOPE = "scope"
++        private const val FIELD_ENDPOINT = "endpoint"
++        private const val FIELD_PUBKEY = "pubkey"
++        private const val FIELD_AUTH = "auth"
++        private const val FIELD_VAPID = "vapid"
++        private const val CREATE_TABLE_APPS = "CREATE TABLE $TABLE (" +
++            "$FIELD_SCOPE TEXT," +
++            "$FIELD_ENDPOINT TEXT," +
++            "$FIELD_PUBKEY TEXT," +
++            "$FIELD_AUTH TEXT," +
++            "$FIELD_VAPID TEXT," +
++            "PRIMARY KEY ($FIELD_SCOPE));"
++    }
++}
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushFeature.kt b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushFeature.kt
+new file mode 100644
+index 000000000000..ee7703307210
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushFeature.kt
+@@ -0,0 +1,372 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.feature.unifiedpush
++
++import android.app.Activity
++import android.content.Context
++import android.database.SQLException
++import kotlinx.coroutines.CoroutineExceptionHandler
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.SupervisorJob
++import kotlinx.coroutines.asCoroutineDispatcher
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.flow.MutableSharedFlow
++import kotlinx.coroutines.flow.filter
++import kotlinx.coroutines.flow.firstOrNull
++import kotlinx.coroutines.flow.takeWhile
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.plus
++import kotlinx.coroutines.withTimeoutOrNull
++import mozilla.components.concept.base.crash.CrashReporting
++import mozilla.components.concept.push.PushScope
++import mozilla.components.concept.push.PushSubscription
++import mozilla.components.concept.push.Pusher
++import mozilla.components.support.base.log.logger.Logger
++import mozilla.components.support.base.utils.NamedThreadFactory
++import org.unifiedpush.android.connector.data.PushEndpoint
++import org.unifiedpush.android.connector.data.PushMessage
++import java.util.UUID
++import java.util.concurrent.Executors
++import java.util.concurrent.TimeoutException
++import kotlin.coroutines.CoroutineContext
++import kotlin.time.Duration
++import kotlin.time.Duration.Companion.seconds
++
++/**
++ * Implementation of a [UnifiedPushProcessor] that should live as a singleton by being installed
++ * in the Application's onCreate. It receives messages from UnifiedPush service and forwards them
++ * to the web engine.
++ *
++ * Implementation of a [Pusher], that receives request from web engine and allow push event to be
++ * Observable
++ *
++ * ```kotlin
++ * class Application {
++ *      override fun onCreate() {
++ *          val feature = UnifiedPushFeature(context)
++ *      }
++ * }
++ * ```
++ *
++ * Observe for subscription information changes for each registered scope, and for push messages:
++ *
++ * ```kotlin
++ * feature.register(object: PushObserver {
++ *     override fun onSubscriptionChanged(scope: PushScope) { }
++ *     override fun onMessageReceived(scope: PushScope, message: ByteArray?) { }
++ * })
++ *
++ * feature.subscribe("push_subscription_scope_id")
++ * ```
++ *
++ * @param context the application [Context].
++ * @param disableRateLimit to disable rate-limit logic.
++ * @param coroutineContext An instance of [CoroutineContext] used for executing async push tasks.
++ * @param crashReporter An optional instance of a [CrashReporting].
++ * @param timeoutSubscriptionCallback Duration until [subscribe] fail if it doesn't receive an endpoint
++ * @param db [SubscriptionsDB] to track known subscription
++ * @param up [DistributorManager] to interact with UnifiedPush distributor, default to [DefaultDistributorManager]
++ */
++
++@Suppress("LargeClass")
++class UnifiedPushFeature(
++    private val context: Context,
++    override val disableRateLimit: Boolean = true,
++    coroutineContext: CoroutineContext = Executors.newSingleThreadExecutor(
++        NamedThreadFactory("UnifiedPushFeature"),
++    ).asCoroutineDispatcher(),
++    private val crashReporter: CrashReporting? = null,
++    private val timeoutSubscriptionCallback: Duration = 5.seconds,
++    private val db: SubscriptionsDB = SubscriptionsDB(context),
++    private val up: DistributorManager = DefaultDistributorManager(),
++) : UnifiedPushProcessor, Pusher() {
++
++    private val logger = Logger("UnifiedPushFeature")
++
++    private val coroutineScope = CoroutineScope(coroutineContext) + SupervisorJob() + exceptionHandler { onError(it) }
++
++    private val subscriptionFlow = MutableSharedFlow<Pair<UUID, PushSubscription>>()
++    private val ackFlow = MutableSharedFlow<UUID>()
++
++    init {
++        UnifiedPushProcessor.install(this)
++    }
++
++    fun isAvailable(context: Context): Boolean {
++        return up.isAvailable(context)
++    }
++
++    /**
++     * Starts the push feature and initialization work needed. Register all known instances
++     */
++    override fun initialize() {
++        coroutineScope.launch {
++            registerKnownInstances(context)
++        }
++    }
++
++    /**
++     * Un-subscribes from all push message channels and reset [UnifiedPushProcessor].
++     *
++     * This should only be done on an account logout or app data deletion.
++     */
++    override fun shutdown() {
++        coroutineScope.launch {
++            db.removeAll()
++            // Removes all instances and the distributor
++            up.removeCurrentDistributor(context)
++            // We can reset UnifiedPushProcessor, because we can't receive any push event anymore
++            UnifiedPushProcessor.reset()
++        }
++    }
++
++    /**
++     * Run [block] with all registered [PushScope] and appServerKey
++     */
++    override fun forEachScopes(block: (PushScope, String?) -> Unit) {
++        coroutineScope.launch {
++            db.listSubscriptions().forEach { block(it.scope, it.appServerKey) }
++        }
++    }
++
++    /**
++     * New endpoint is received for [scope], notify the scope if any subscription parameter is updated
++     */
++    override fun onNewEndpoint(scope: PushScope, newEndpoint: PushEndpoint) {
++        logger.info("Got new endpoint for $scope")
++        val pubKeySet = newEndpoint.pubKeySet ?: run {
++            logger.warn("Received push endpoint without public keys")
++            return
++        }
++        val subscription = PushSubscription(
++            scope = scope,
++            endpoint = newEndpoint.url,
++            publicKey = pubKeySet.pubKey,
++            authKey = pubKeySet.auth,
++            appServerKey = null, // The VAPID key is retrieved by the subscriber if needed
++        )
++        val id = UUID.randomUUID()
++        var waitAck = true
++        // If a registration is updated, we notify observer, if a callback isn't already
++        // registered for this scope
++        if (db.updateEndpoint(
++                scope,
++                subscription.endpoint,
++                subscription.publicKey,
++                subscription.authKey,
++            )
++        ) {
++            coroutineScope.launch {
++                ackFlow
++                    .takeWhile { waitAck }
++                    .filter { it == id }
++                    .firstOrNull()
++                    ?: run {
++                        logger.info("Notifying about subscription change")
++                        notifyObservers { onSubscriptionChanged(scope) }
++                    }
++            }
++        }
++        coroutineScope.launch {
++            subscriptionFlow.emit(id to subscription)
++            delay(100)
++            waitAck = false
++            ackFlow.emit(id)
++        }
++    }
++
++    /**
++     * A new push message has been received.
++     * The message contains the decrypted payload as sent by the
++     * application server.
++     */
++    override fun onMessage(scope: PushScope, message: PushMessage) {
++        coroutineScope.launch {
++            if (message.decrypted) {
++                logger.info("New push message decrypted.")
++                notifyObservers { onMessageReceived(scope, message.content) }
++            } else {
++                logger.warn("Couldn't decrypt push message.")
++            }
++        }
++    }
++
++    /**
++     * An error has occurred during the registration.
++     */
++    override fun onError(error: PushError) {
++        logger.error("${error.javaClass.simpleName} error: $error")
++        crashReporter?.submitCaughtException(error)
++    }
++
++    /**
++     * The subscription has been removed from the distributor
++     */
++    override fun onUnregistered(scope: PushScope) {
++        logger.info("Registration for $scope removed")
++        coroutineScope.launch {
++            db.removeEndpoint(scope)
++        }
++    }
++
++    /**
++     * Run [block] within the Processor coroutine scope
++     */
++    override fun withCoroutine(block: () -> Unit) {
++        coroutineScope.launch {
++            block()
++        }
++    }
++
++    /**
++     * Subscribes for push notifications and invokes the [onSubscribe] callback with the subscription information.
++     *
++     * @param scope The subscription identifier which usually represents the website's URI.
++     * @param appServerKey An optional key provided by the application server.
++     * @param onSubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
++     * @param onSubscribe The callback invoked when a subscription for the [scope] is created.
++     */
++    override fun subscribe(
++        scope: PushScope,
++        appServerKey: String?,
++        onSubscribeError: (Exception) -> Unit,
++        onSubscribe: ((PushSubscription) -> Unit),
++    ) {
++        coroutineScope.launch {
++            try {
++                db.add(
++                    SubscriptionsDB.Subscription(
++                        scope = scope,
++                        appServerKey = appServerKey,
++                    ),
++                )
++            } catch (e: SQLException) {
++                onSubscribeError(e)
++                return@launch
++            }
++            withTimeoutOrNull(timeoutSubscriptionCallback) {
++                subscriptionFlow.filter { sub ->
++                    sub.second.scope == scope
++                }.firstOrNull()
++            }?.let { sub ->
++                ackFlow.emit(sub.first)
++                logger.info("Got a registration for the subscription")
++                onSubscribe(sub.second.copy(appServerKey = appServerKey))
++            } ?: run {
++                logger.info("No registration received for the subscription")
++                onSubscribeError(TimeoutException())
++            }
++        }
++        coroutineScope.launch {
++            up.registerScope(context, scope, appServerKey)
++        }
++    }
++
++    /**
++     * Un-subscribes from a valid subscription and invokes the [onUnsubscribe] callback with the result.
++     *
++     * @param scope The subscription identifier which usually represents the website's URI.
++     * @param onUnsubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
++     * @param onUnsubscribe The callback invoked when a subscription for the [scope] is removed.
++     */
++    override fun unsubscribe(
++        scope: PushScope,
++        onUnsubscribeError: (Exception) -> Unit,
++        onUnsubscribe: (Boolean) -> Unit,
++    ) {
++        coroutineScope.launch {
++            try {
++                db.remove(scope)
++                onUnsubscribe(true)
++                up.unregisterScope(context, scope)
++            } catch (e: SQLException) {
++                onUnsubscribeError(e)
++            }
++        }
++    }
++
++    /**
++     * Checks if a subscription for the [scope] already exists.
++     *
++     * @param scope The subscription identifier which usually represents the website's URI.
++     * @param appServerKey An optional key provided by the application server.
++     * @param block The callback invoked when a subscription for the [scope] is found, otherwise null. Note: this will
++     * not execute on the calls thread.
++     */
++    override fun getSubscription(
++        scope: PushScope,
++        appServerKey: String?,
++        block: (PushSubscription?) -> Unit,
++    ) {
++        coroutineScope.launch {
++            block(db.getSubscription(scope, appServerKey)?.toPushSubscription())
++        }
++    }
++
++    /**
++     * Re-subscribe all known registrations
++     */
++    override fun renewRegistration() {
++        logger.warn("Forcing registration renewal.")
++        coroutineScope.launch {
++            registerKnownInstances(context)
++        }
++    }
++
++    private fun exceptionHandler(onError: (PushError) -> Unit) = CoroutineExceptionHandler { _, e ->
++        when (e) {
++            is SQLException,
++            -> onError(PushError.DB(e, e.message.orEmpty()))
++            else -> logger.warn("Internal error occurred in UnifiedPushFeature.", e)
++        }
++    }
++
++    private fun registerKnownInstances(context: Context) {
++        up.registerDefaultRegistration(context)
++        db.listSubscriptions().forEach {
++            up.registerScope(context, it.scope, it.appServerKey)
++        }
++    }
++
++    /**
++     * Use user default UnifiedPush distributor, then call [callback].
++     *
++     * The callback is called with `true` if we have successfully
++     * selected a distributor.
++     *
++     * If [UnifiedPushProcessor] is already initialized, the user have toggling off/on
++     * UnifiedPush, we register all known instances to the new distributor
++     */
++    fun useDefaultDistributor(activity: Activity, callback: (Boolean) -> Unit) {
++        up.useDefaultDistributor(activity) { success ->
++            if (success && UnifiedPushProcessor.isInit) {
++                coroutineScope.launch {
++                    registerKnownInstances(context)
++                }
++            }
++            callback(success)
++        }
++    }
++
++    /**
++     * Remove current UnifiedPush distributor
++     */
++    fun removeCurrentDistributor(context: Context) {
++        up.removeCurrentDistributor(context)
++    }
++}
++
++fun SubscriptionsDB.Subscription.toPushSubscription(): PushSubscription? {
++    if (endpoint == null || publicKey == null || authKey == null) {
++        return null
++    }
++    return PushSubscription(
++        scope,
++        endpoint,
++        publicKey,
++        authKey,
++        appServerKey,
++    )
++}
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushNotification.kt b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushNotification.kt
+new file mode 100644
+index 000000000000..0db1d27f6aa2
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushNotification.kt
+@@ -0,0 +1,65 @@
++package mozilla.components.feature.unifiedpush
++
++import android.app.Notification
++import android.app.NotificationChannel
++import android.app.NotificationManager
++import android.content.Context
++import android.os.Build
++import android.os.Build.VERSION.SDK_INT
++import androidx.core.app.NotificationCompat
++import androidx.core.content.getSystemService
++import mozilla.components.support.base.ids.SharedIdsHelper
++import mozilla.components.ui.icons.R as iconsR
++
++@Suppress("LargeClass")
++object UnifiedPushNotification {
++    private const val NOTIFICATION_CHANNEL_ID = "mozac.feature.unifiedpush.generic"
++
++    fun getNotificationId(context: Context): Int {
++        return SharedIdsHelper.getIdForTag(context, NOTIFICATION_CHANNEL_ID)
++    }
++
++    /**
++     * Build the notification to be displayed when the push services have been uninstalled.
++     */
++    fun createMissingServiceNotification(
++        context: Context,
++    ): Notification {
++        val channelId = ensureChannelExists(context)
++        val title = context.getString(R.string.mozac_feature_unifiedpush_notification_title)
++        val content = context.getString(R.string.mozac_feature_unifiedpush_notification_text)
++
++        return NotificationCompat.Builder(context, channelId)
++            .setStyle(
++                NotificationCompat.BigTextStyle()
++                    .bigText(content)
++            )
++            .setSmallIcon(iconsR.drawable.mozac_ic_warning_24)
++            .setContentTitle(title)
++            .setContentText(content)
++            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
++            .build()
++    }
++
++
++    /**
++     * Make sure a notification channel for download notification exists.
++     *
++     * Returns the channel id to be used for download notifications.
++     */
++    private fun ensureChannelExists(context: Context): String {
++        if (SDK_INT >= Build.VERSION_CODES.O) {
++            val notificationManager: NotificationManager = context.getSystemService()!!
++
++            val channel = NotificationChannel(
++                NOTIFICATION_CHANNEL_ID,
++                context.applicationContext.getString(R.string.mozac_feature_unifiedpush_notification_channel),
++                NotificationManager.IMPORTANCE_DEFAULT,
++            )
++
++            notificationManager.createNotificationChannel(channel)
++        }
++
++        return NOTIFICATION_CHANNEL_ID
++    }
++}
+\ No newline at end of file
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushProcessor.kt b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushProcessor.kt
+new file mode 100644
+index 000000000000..bf7074acb27f
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/java/mozilla/components/feature/unifiedpush/UnifiedPushProcessor.kt
+@@ -0,0 +1,84 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.feature.unifiedpush
++
++import mozilla.components.concept.push.PushScope
++import org.unifiedpush.android.connector.data.PushEndpoint
++import org.unifiedpush.android.connector.data.PushMessage
++
++/**
++ * A push notification processor that handles subscription and new messages from the UnifiedPush Service.
++ * Starting Push in the Application's onCreate is recommended.
++ */
++interface UnifiedPushProcessor {
++
++    /**
++     * New endpoint is received for [scope], notify the scope if any subscription parameter is updated
++     */
++    fun onNewEndpoint(scope: PushScope, newEndpoint: PushEndpoint)
++
++    /**
++     * A new push message has been received.
++     * The message contains the decrypted payload as sent by the
++     * application server.
++     */
++    fun onMessage(scope: PushScope, message: PushMessage)
++
++    /**
++     * An error has occurred during the registration.
++     */
++    fun onError(error: PushError)
++
++    /**
++     * The subscription has been removed from the distributor
++     */
++    fun onUnregistered(scope: PushScope)
++
++    /**
++     * Run [block] within the Processor coroutine scope
++     */
++    fun withCoroutine(block: ()->Unit)
++
++    companion object {
++        /**
++         * Initialize and installs the UnifiedPushProcessor into the application.
++         * This needs to be called in the application's onCreate before a push service has started.
++         */
++        fun install(processor: UnifiedPushProcessor) {
++            instance = processor
++        }
++
++        val isInit: Boolean
++            get() = instance != null
++
++        @Volatile
++        private var instance: UnifiedPushProcessor? = null
++
++        internal fun reset() {
++            instance = null
++        }
++        val requireInstance: UnifiedPushProcessor
++            get() = instance ?: throw IllegalStateException(
++                "You need to call UnifiedPushProcessor.install() on your Push instance from Application.onCreate().",
++            )
++    }
++}
++
++/**
++ *  Various error types.
++ */
++sealed class PushError(override val message: String) : Exception() {
++    data class Registration(override val message: String) : PushError(message)
++    data class Network(override val message: String) : PushError(message)
++
++    /**
++     * @property cause Original exception from DB code.
++     */
++    data class DB(
++        override val cause: Throwable?,
++        override val message: String = cause?.message.orEmpty(),
++    ) : PushError(message)
++    data class ServiceUnavailable(override val message: String) : PushError(message)
++}
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/main/res/values/strings.xml b/mobile/android/android-components/components/feature/unifiedpush/src/main/res/values/strings.xml
+new file mode 100644
+index 0000000000..b92a246afe
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/main/res/values/strings.xml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8" standalone="yes"?>
++<!-- This Source Code Form is subject to the terms of the Mozilla Public
++   - License, v. 2.0. If a copy of the MPL was not distributed with this
++   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
++<resources>
++    <!-- Name of the "notification channel" used for displaying a warning when the user has uninstalled the UnifiedPush service that was in used. This UnifiedPush service is used to get push notification, and has been selected when the user has enabled the feature. See https://developer.android.com/training/notify-user/channels -->
++    <string name="mozac_feature_unifiedpush_notification_channel">UnifiedPush</string>
++    <!-- Title of the notification channel used for displaying a warning when the user has uninstalled the UnifiedPush service that was in used. This UnifiedPush service is used to get push notification, and has been selected when the user has enabled the feature. -->
++    <string name="mozac_feature_unifiedpush_notification_title">UnifiedPush</string>
++    <!-- Text shown on the second row of the notification channel used for displaying a warning when the user has uninstalled the UnifiedPush service that was in used. This UnifiedPush service is used to get push notification, and has been selected when the user has enabled the feature. -->
++    <string name="mozac_feature_unifiedpush_notification_text">The push service application is no longer available. It may have been uninstalled. Please re-enable UnifiedPush to select a new service.</string>
++</resources>
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/test/java/mozilla/components/feature/unifiedpush/UnifiedPushFeatureTest.kt b/mobile/android/android-components/components/feature/unifiedpush/src/test/java/mozilla/components/feature/unifiedpush/UnifiedPushFeatureTest.kt
+new file mode 100644
+index 000000000000..67904440715e
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/test/java/mozilla/components/feature/unifiedpush/UnifiedPushFeatureTest.kt
+@@ -0,0 +1,435 @@
++/* This Source Code Form is subject to the terms of the Mozilla Public
++ * License, v. 2.0. If a copy of the MPL was not distributed with this
++ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
++
++package mozilla.components.feature.unifiedpush
++
++import android.database.SQLException
++import androidx.lifecycle.Lifecycle
++import androidx.lifecycle.LifecycleOwner
++import androidx.test.ext.junit.runners.AndroidJUnit4
++import kotlinx.coroutines.ExperimentalCoroutinesApi
++import kotlinx.coroutines.delay
++import mozilla.components.concept.base.crash.CrashReporting
++import mozilla.components.concept.push.PushObserver
++import mozilla.components.support.test.any
++import mozilla.components.support.test.mock
++import mozilla.components.support.test.robolectric.testContext
++import mozilla.components.support.test.rule.MainCoroutineRule
++import mozilla.components.support.test.rule.runTestOnMain
++import mozilla.components.support.test.whenever
++import org.junit.Assert.assertEquals
++import org.junit.Assert.assertFalse
++import org.junit.Assert.assertNull
++import org.junit.Assert.assertTrue
++import org.junit.Rule
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.mockito.ArgumentMatchers.anyString
++import org.mockito.Mockito.never
++import org.mockito.Mockito.verify
++import org.unifiedpush.android.connector.data.PublicKeySet
++import org.unifiedpush.android.connector.data.PushEndpoint
++import org.unifiedpush.android.connector.data.PushMessage
++import kotlin.time.Duration.Companion.milliseconds
++
++@ExperimentalCoroutinesApi
++@RunWith(AndroidJUnit4::class)
++class UnifiedPushFeatureTest {
++
++    @get:Rule
++    val coroutinesTestRule = MainCoroutineRule()
++
++    private val db: SubscriptionsDB = mock()
++    private val up: DistributorManager = mock()
++
++    @Test
++    fun `initialize registers known scopes`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++            up = up,
++        )
++        val scope = "testScope"
++        whenever(db.listSubscriptions()).thenReturn(
++            listOf(
++                SubscriptionsDB.Subscription(
++                    scope = scope,
++                    endpoint = "endpoint",
++                    publicKey = "pub",
++                    authKey = "auth",
++                    appServerKey = null,
++                ),
++            ),
++        )
++
++        feature.initialize()
++        verify(up).registerScope(testContext, scope, null)
++    }
++
++    @Test
++    fun `shutdown removes and unsubscribes all, reset UnifiedPushProcessor`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++            up = up,
++        )
++        feature.shutdown()
++        verify(db).removeAll()
++        verify(up).removeCurrentDistributor(testContext)
++        assertFalse(UnifiedPushProcessor.isInit)
++    }
++
++    @Test
++    fun `onNewEndpoint updates db`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++        feature.onNewEndpoint("scope", PushEndpoint("url", PublicKeySet("pub", "auth")))
++        verify(db).updateEndpoint("scope", "url", "pub", "auth")
++    }
++
++    @Test
++    fun `onMessage notifies observers`() = runTestOnMain {
++        val message: PushMessage = mock()
++        val owner: LifecycleOwner = mock()
++        val lifecycle: Lifecycle = mock()
++        val observer: PushObserver = mock()
++        whenever(owner.lifecycle).thenReturn(lifecycle)
++        whenever(lifecycle.currentState).thenReturn(Lifecycle.State.STARTED)
++        whenever(message.decrypted)
++            .thenReturn(false) // If we can't decrypt, we shouldn't notify observers.
++            .thenReturn(true)
++        val mockContent = "test".toByteArray()
++        val scope = "testScope"
++        whenever(message.content).thenReturn(mockContent)
++
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++
++        feature.register(observer)
++
++        // First we receive a message that can't be decrypted
++        feature.onMessage(scope, message)
++        verify(observer, never()).onMessageReceived("testScope", mockContent)
++
++        // Then we receive a message that is decrypted
++        feature.onMessage(scope, message)
++        verify(observer).onMessageReceived("testScope", mockContent)
++    }
++
++    @Test
++    fun `subscribe calls UnifiedPush register`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++            up = up,
++        )
++
++        val scope1 = "testScope1"
++        val scope2 = "testScope2"
++        val vapid = "vapid"
++        feature.subscribe(scope = scope1, appServerKey = vapid)
++        verify(db).add(any())
++        verify(up).registerScope(testContext, scope1, vapid)
++        feature.subscribe(scope = scope2)
++        verify(up).registerScope(testContext, scope2, null)
++    }
++
++    @Test
++    fun `subscribe with new endpoint invokes error callback when it timeouts`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++            timeoutSubscriptionCallback = 100.milliseconds,
++        )
++        var invoked = false
++        var errorInvoked = false
++
++        feature.subscribe(
++            scope = "testScope",
++            onSubscribeError = {
++                errorInvoked = true
++            },
++            onSubscribe = {
++                invoked = true
++            },
++        )
++
++        delay(200)
++        verify(db).add(any())
++        assertFalse(invoked)
++        assertTrue(errorInvoked)
++    }
++
++    @Test
++    fun `subscribe invokes error callback on database exception`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++        var invoked = false
++        var errorInvoked = false
++
++        whenever(db.add(any())).thenAnswer { throw SQLException("") }
++
++        feature.subscribe(
++            scope = "testScope",
++            appServerKey = null,
++            onSubscribeError = {
++                errorInvoked = true
++            },
++            onSubscribe = {
++                invoked = true
++            },
++        )
++
++        assertFalse(invoked)
++        assertTrue(errorInvoked)
++    }
++
++    @Test
++    fun `unsubscribe removes scope, unregister, and call onUnsubscribe`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++            up = up,
++        )
++        var invoked = false
++        var errorInvoked = false
++        val scope = "testScope"
++
++        feature.unsubscribe(
++            scope = scope,
++            onUnsubscribeError = {
++                errorInvoked = true
++            },
++            onUnsubscribe = {
++                invoked = true
++            },
++        )
++
++        verify(db).remove(anyString())
++        verify(up).unregisterScope(testContext, scope)
++        assertTrue(invoked)
++        assertFalse(errorInvoked)
++    }
++
++    @Test
++    fun `unsubscribe invokes error callback on database exception`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++        var invoked = false
++        var errorInvoked = false
++
++        whenever(db.remove(anyString())).thenAnswer { throw SQLException("") }
++
++        feature.unsubscribe(
++            scope = "testScope",
++            onUnsubscribeError = {
++                errorInvoked = true
++            },
++            onUnsubscribe = {
++                invoked = true
++            },
++        )
++
++        assertFalse(invoked)
++        assertTrue(errorInvoked)
++    }
++
++    @Test
++    fun `getSubscription invokes block with null when there is no subscription`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++        var invoked = false
++
++        val scope = "testScope"
++        whenever(db.getSubscription(scope, null)).thenReturn(null)
++
++        feature.getSubscription(
++            scope = scope,
++            appServerKey = null,
++        ) {
++            invoked = it == null
++        }
++
++        assertTrue(invoked)
++    }
++
++    @Test
++    fun `getSubscription invokes block when there is a subscription`() = runTestOnMain {
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++        var invoked = false
++
++        val scope = "testScope"
++        whenever(db.getSubscription(scope, null)).thenReturn(
++            SubscriptionsDB.Subscription(
++                scope = scope,
++                endpoint = "endpoint",
++                publicKey = "pub",
++                authKey = "auth",
++                appServerKey = null,
++            ),
++        )
++
++        feature.getSubscription(
++            scope = scope,
++            appServerKey = null,
++        ) {
++            invoked = it != null
++        }
++
++        assertTrue(invoked)
++    }
++
++    @Test
++    fun `new endpoint without pending subscribe notifies observers when it updates a subscription`() = runTestOnMain {
++        val owner: LifecycleOwner = mock()
++        val lifecycle: Lifecycle = mock()
++        val observers: PushObserver = mock()
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++        whenever(owner.lifecycle).thenReturn(lifecycle)
++        whenever(lifecycle.currentState).thenReturn(Lifecycle.State.STARTED)
++        // The registration is updated
++        whenever(db.updateEndpoint(any(), any(), any(), any()))
++            .thenReturn(false)
++            .thenReturn(true)
++
++        feature.register(observers)
++
++        // When the new endpoint doesn't update the registration, observers should not be notified
++        feature.onNewEndpoint("scope2", PushEndpoint("url", PublicKeySet("pub", "auth")))
++        delay(400)
++        verify(observers, never()).onSubscriptionChanged(any())
++
++        // When the new endpoint updates the registration, observers should be notified
++        feature.onNewEndpoint("scope2", PushEndpoint("url", PublicKeySet("pub", "auth")))
++        delay(400)
++        verify(observers).onSubscriptionChanged(any())
++    }
++
++    @Test
++    fun `new endpoint with pending subscribe doesn't notify observers`() = runTestOnMain {
++        val owner: LifecycleOwner = mock()
++        val lifecycle: Lifecycle = mock()
++        val observers: PushObserver = mock()
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            db = db,
++        )
++        whenever(owner.lifecycle).thenReturn(lifecycle)
++        whenever(lifecycle.currentState).thenReturn(Lifecycle.State.STARTED)
++        // The registration is updated
++        whenever(db.updateEndpoint(any(), any(), any(), any()))
++            .thenReturn(true)
++
++        feature.register(observers)
++
++        // If there is no pending subscribe, observer is called
++        feature.onNewEndpoint("scope1", PushEndpoint("url", PublicKeySet("pub", "auth")))
++        delay(400)
++        verify(observers).onSubscriptionChanged("scope1")
++
++        // When we receive a new endpoint, with a pending subscribe, observers should not be notified
++        feature.subscribe(
++            scope = "scope2",
++            appServerKey = null,
++        )
++        feature.onNewEndpoint("scope2", PushEndpoint("url", PublicKeySet("pub", "auth")))
++        delay(400)
++        verify(observers, never()).onSubscriptionChanged("scope2")
++    }
++
++    @Test
++    fun `crash reporter is notified of errors`() = runTestOnMain {
++        val crashReporter: CrashReporting = mock()
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            crashReporter = crashReporter,
++        )
++
++        feature.onError(PushError.Network("Bad things happened!"))
++
++        verify(crashReporter).submitCaughtException(any<PushError.Network>())
++    }
++
++    @Test
++    fun `DB errors are submitted to crash reporter`() = runTestOnMain {
++        val crashReporter: CrashReporting = mock()
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            crashReporter = crashReporter,
++            up = up,
++        )
++
++        whenever(up.registerScope(any(), any(), any())).thenAnswer { throw SQLException("test") }
++        feature.subscribe("123") {}
++        verify(crashReporter).submitCaughtException(any<PushError.DB>())
++    }
++
++    @Test
++    fun `Other errors are not reported`() = runTestOnMain {
++        val crashReporter: CrashReporting = mock()
++        val feature = UnifiedPushFeature(
++            context = testContext,
++            coroutineContext = coroutineContext,
++            crashReporter = crashReporter,
++            up = up,
++        )
++
++        whenever(up.registerScope(any(), any(), any())).thenAnswer { throw PushError.Network("test") }
++        feature.subscribe("123") {}
++        verify(crashReporter, never()).submitCaughtException(any<PushError.Network>())
++    }
++
++    @Test
++    fun `transform db subscription to PushSubscription`() {
++        val response = SubscriptionsDB.Subscription(
++            "992a0f0542383f1ea5ef51b7cf4ae6c4",
++            "https://mozilla.com",
++            "123",
++            "456",
++            null,
++        )
++        val sub = response.toPushSubscription()
++
++        assertEquals(response.endpoint, sub?.endpoint)
++        assertEquals(response.authKey, sub?.authKey)
++        assertEquals(response.publicKey, sub?.publicKey)
++        assertEquals(response.scope, sub?.scope)
++        assertNull(sub?.appServerKey)
++
++        val sub2 = response.copy(appServerKey = "key").toPushSubscription()
++
++        assertEquals("key", sub2?.appServerKey)
++    }
++}
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker b/mobile/android/android-components/components/feature/unifiedpush/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker
+new file mode 100644
+index 000000000000..cf1c399ea81e
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker
+@@ -0,0 +1,2 @@
++mock-maker-inline
++// This allows mocking final classes (classes are final by default in Kotlin)
+diff --git a/mobile/android/android-components/components/feature/unifiedpush/src/test/resources/robolectric.properties b/mobile/android/android-components/components/feature/unifiedpush/src/test/resources/robolectric.properties
+new file mode 100644
+index 000000000000..3f67ea5ac1bf
+--- /dev/null
++++ b/mobile/android/android-components/components/feature/unifiedpush/src/test/resources/robolectric.properties
+@@ -0,0 +1 @@
++sdk=35
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index b5aa2ce3a4..d863ee1bbf 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -95,6 +95,7 @@ projects:
+     - ui-icons
+     - ui-tabcounter
+     - ui-widgets
++    - feature-unifiedpush
+ variants:
+ - apks:
+   - abi: arm64-v8a
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index d9a6045423..c8351a14bd 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -654,6 +654,8 @@ dependencies {
+     implementation project(':lib-dataprotect')
+     testImplementation project(':support-test-fakes')
+ 
++    implementation project(':feature-unifiedpush')
++
+     debugImplementation libs.leakcanary
+     debugImplementation libs.androidx.compose.ui.tooling
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 13db9f3c83..526e8f1bf4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -39,7 +39,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
+ import mozilla.components.concept.base.crash.Breadcrumb
+ import mozilla.components.concept.engine.webextension.WebExtension
+ import mozilla.components.concept.engine.webextension.isUnsupported
+-import mozilla.components.concept.push.PushProcessor
++//import mozilla.components.concept.push.PushProcessor
+ import mozilla.components.concept.storage.FrecencyThresholdOption
+ import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
+ import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
+@@ -491,7 +491,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             logger.info("AutoPushFeature is configured, initializing it...")
+ 
+             // Install the AutoPush singleton to receive messages.
+-            PushProcessor.install(it)
++//            PushProcessor.install(it)
+ 
+             WebPushEngineIntegration(components.core.engine, it).start()
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+index 1e64545a1220..689a28c1888e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+@@ -219,8 +219,8 @@ class BackgroundServices(
+         accountManager.register(AccountManagerReadyObserver(accountManagerAvailableQueue))
+ 
+         // Enable push if it's configured.
+-        push.feature?.let { autoPushFeature ->
+-            FxaPushSupportFeature(context, accountManager, autoPushFeature, crashReporter)
++        push.feature?.let { pushFeature ->
++            FxaPushSupportFeature(context, accountManager, pushFeature, crashReporter)
+                 .initialize()
+         }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
+index f99ef999cf..7c59fe8d6d 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
+@@ -8,31 +8,92 @@ import android.content.Context
+ import androidx.core.net.toUri
+ import mozilla.components.feature.push.AutoPushFeature
+ import mozilla.components.feature.push.Protocol
+-import mozilla.components.feature.push.PushConfig
+ import mozilla.components.lib.crash.CrashReporter
+ import mozilla.components.support.base.log.logger.Logger
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.perf.lazyMonitored
+ import org.mozilla.fenix.push.FirebasePushService
++import android.app.Activity
++import android.os.StrictMode
++import mozilla.components.concept.push.Pusher
++import mozilla.components.feature.push.AutoPushConfig
++import mozilla.components.feature.unifiedpush.UnifiedPushFeature
++import mozilla.components.feature.unifiedpush.UnifiedPushNotification
++import mozilla.components.support.base.android.NotificationsDelegate
++import org.mozilla.fenix.ext.components
++import org.mozilla.fenix.perf.StrictModeManager
++import org.mozilla.fenix.utils.Settings
+ 
+ /**
+  * Component group for push services. These components use services that strongly depend on
+  * push messaging (e.g. WebPush, SendTab).
+  */
+-class Push(val context: Context, crashReporter: CrashReporter) {
+-    val feature by lazyMonitored {
+-        pushConfig?.let { config ->
++class Push(val context: Context, crashReporter: CrashReporter, val settings: Settings = context.settings(), val strictMode: StrictModeManager = context.components.strictMode, val notificationsDelegate: NotificationsDelegate = context.components.notificationsDelegate, val iAutoPushFeature: AutoPushFeature? = null, val iUnifiedPushFeature: UnifiedPushFeature? = null) {
++    private val logger = Logger("Push")
++
++    val feature: Pusher?
++        get() = strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {
++            if (settings.useUnifiedPush) {
++                unifiedPushFeature.also { feature ->
++                    if (feature.isAvailable(context)) {
++                        logger.info("Using UnifiedPush")
++                        autoPushFeature?.let {
++                            it.initialize()
++                            feature.migrateFrom(it)
++                        }
++                    } else {
++                        logger.warn(
++                            "UnifiedPush distributor has been uninstalled, " +
++                                    "the feature is disabled for the moment."
++                        )
++                        val notificationId = UnifiedPushNotification.getNotificationId(context)
++                        val notification =
++                            UnifiedPushNotification.createMissingServiceNotification(context)
++                        notificationsDelegate.notify(
++                            notificationId = notificationId,
++                            notification = notification
++                        )
++                        settings.useUnifiedPush = false
++                    }
++                }
++            } else {
++                logger.info("Using AutoPush")
++                autoPushFeature?.also { feature ->
++                    feature.migrateFrom(unifiedPushFeature)
++                }
++            }
++        }
++
++    private val autoPushFeature by lazyMonitored {
++        iAutoPushFeature
++            ?: autoPushConfig?.let { config ->
+             AutoPushFeature(
+                 context = context,
+-                service = pushService,
++                service = firebasePushService,
+                 config = config,
+                 crashReporter = crashReporter,
+             )
+         }
+     }
+ 
+-    private val pushConfig: PushConfig? by lazyMonitored {
++    private val unifiedPushFeature by lazyMonitored {
++        iUnifiedPushFeature
++            ?: UnifiedPushFeature(
++            context = context,
++            disableRateLimit = true,
++            crashReporter = crashReporter,
++        )
++    }
++
++    private fun Pusher.migrateFrom(old: Pusher) {
++        old.forEachScopes { scope, vapid ->
++            this.subscribe(scope, vapid)
++        }
++        old.shutdown()
++    }
++
++    private val autoPushConfig: AutoPushConfig? by lazyMonitored {
+         val logger = Logger("PushConfig")
+         val projectIdKey = context.getString(R.string.pref_key_push_project_id)
+         val resId = context.resources.getIdentifier(projectIdKey, "string", context.packageName)
+@@ -43,12 +104,12 @@ class Push(val context: Context, crashReporter: CrashReporter) {
+ 
+         logger.debug("Creating push configuration for autopush.")
+         val projectId = context.resources.getString(resId)
+-        val serverOverride = context.settings().overridePushServer
++        val serverOverride = settings.overridePushServer
+         if (serverOverride.isEmpty()) {
+-            PushConfig(projectId)
++            AutoPushConfig(projectId)
+         } else {
+             val uri = serverOverride.toUri()
+-            PushConfig(
++            AutoPushConfig(
+                 projectId,
+                 serverHost = uri.getHost() ?: "",
+                 protocol = if (uri.getScheme() == "http") {
+@@ -61,5 +122,13 @@ class Push(val context: Context, crashReporter: CrashReporter) {
+         }
+     }
+ 
+-    private val pushService by lazyMonitored { FirebasePushService() }
++    private val firebasePushService by lazyMonitored { FirebasePushService() }
++
++    fun switchToUnifiedPush(activity: Activity, callback: (Boolean) -> Unit) {
++        unifiedPushFeature.useDefaultDistributor(activity, callback)
++    }
++
++    fun switchToAutoPush(context: Context) {
++        unifiedPushFeature.removeCurrentDistributor(context)
++    }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
+index 3df203e6e7..27221ce39b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
+@@ -13,12 +13,13 @@ import mozilla.components.concept.sync.AuthType
+ import mozilla.components.concept.sync.OAuthAccount
+ import mozilla.components.feature.accounts.push.FxaPushSupportFeature
+ import mozilla.components.feature.accounts.push.SendTabFeature
+-import mozilla.components.feature.push.AutoPushFeature
+-import mozilla.components.feature.push.PushScope
+ import mozilla.components.service.fxa.manager.FxaAccountManager
+ import mozilla.components.service.fxa.manager.ext.withConstellation
+ import org.mozilla.fenix.components.BackgroundServices
+ import org.mozilla.fenix.components.Push
++import mozilla.components.concept.push.PushObserver
++import mozilla.components.concept.push.PushScope
++import mozilla.components.concept.push.Pusher
+ 
+ /**
+  * A lazy initializer for FxaAccountManager if it isn't already initialized.
+@@ -54,7 +55,7 @@ import org.mozilla.fenix.components.Push
+  * assurances, and most importantly, maintainable.
+  */
+ class PushFxaIntegration(
+-    private val pushFeature: AutoPushFeature,
++    private val pushFeature: Pusher,
+     lazyAccountManager: Lazy<FxaAccountManager>,
+ ) {
+     private val observer =
+@@ -79,8 +80,8 @@ class PushFxaIntegration(
+  */
+ internal class OneTimePushMessageObserver(
+     private val lazyAccountManager: Lazy<FxaAccountManager>,
+-    private val pushFeature: AutoPushFeature,
+-) : AutoPushFeature.Observer {
++    private val pushFeature: Pusher,
++) : PushObserver {
+     override fun onMessageReceived(scope: PushScope, message: ByteArray?) {
+         // Ignore empty push messages.
+         val rawBytes = message ?: return
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
+index 6681840f10..35aa2dab6c 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
+@@ -12,19 +12,21 @@ import mozilla.components.concept.engine.Engine
+ import mozilla.components.concept.engine.webpush.WebPushDelegate
+ import mozilla.components.concept.engine.webpush.WebPushHandler
+ import mozilla.components.concept.engine.webpush.WebPushSubscription
+-import mozilla.components.feature.push.AutoPushFeature
+-import mozilla.components.feature.push.AutoPushSubscription
+-import mozilla.components.feature.push.PushScope
+ import mozilla.components.support.base.log.logger.Logger
++import mozilla.components.concept.push.PushObserver
++import mozilla.components.concept.push.PushScope
++import mozilla.components.concept.push.PushSubscription
++import mozilla.components.concept.push.PushSubscriptionProcessor
++import mozilla.components.concept.push.Pusher
+ 
+ /**
+  * Engine integration with the push feature to enable WebPush support.
+  */
+ class WebPushEngineIntegration(
+     private val engine: Engine,
+-    private val pushFeature: AutoPushFeature,
++    private val pushFeature: Pusher,
+     private val coroutineScope: CoroutineScope = MainScope(),
+-) : AutoPushFeature.Observer {
++) : PushObserver {
+ 
+     private var handler: WebPushHandler? = null
+     private val delegate = WebPushEngineDelegate(pushFeature)
+@@ -53,7 +55,7 @@ class WebPushEngineIntegration(
+ }
+ 
+ internal class WebPushEngineDelegate(
+-    private val pushFeature: AutoPushFeature,
++    private val pushFeature: PushSubscriptionProcessor,
+ ) : WebPushDelegate {
+     private val logger = Logger("WebPushEngineDelegate")
+ 
+@@ -95,7 +97,7 @@ internal class WebPushEngineDelegate(
+     }
+ }
+ 
+-internal fun AutoPushSubscription.toEnginePushSubscription() = WebPushSubscription(
++internal fun PushSubscription.toEnginePushSubscription() = WebPushSubscription(
+     scope = this.scope,
+     publicKey = this.publicKey.toDecodedByteArray(),
+     endpoint = this.endpoint,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 43bea16286..1bbc5054b5 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -256,6 +256,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+             )
+             onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
++
++        requirePreference<SwitchPreference>(R.string.pref_key_enable_unifiedpush).apply {
++            isVisible = true
++            isChecked = context.settings().enableUnifiedPush
++            onPreferenceChangeListener = SharedPreferenceUpdater()
++        }
+     }
+ 
+     override fun onPreferenceTreeClick(preference: Preference): Boolean {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 325e5d2141..44a6263c5b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -73,6 +73,7 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
+ import org.mozilla.fenix.utils.Settings
+ import kotlin.system.exitProcess
+ import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
++import org.mozilla.fenix.components.Push
+ 
+ @Suppress("LargeClass", "TooManyFunctions")
+ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -409,6 +410,47 @@ class SettingsFragment : PreferenceFragmentCompat() {
+                 null
+             }
+ 
++            resources.getString(R.string.pref_key_use_unifiedpush) -> {
++                val context = requireActivity()
++                context.settings().apply { useUnifiedPush = !useUnifiedPush }
++                val alert = AlertDialog.Builder(context).apply {
++                    setTitle(context.getString(R.string.preferences_unifiedpush))
++                    setMessage(context.getString(R.string.quit_application))
++                    setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _ ->
++                        dialog.cancel()
++                    }
++
++                    setPositiveButton(android.R.string.ok) { _, _ ->
++                        Toast.makeText(
++                            context,
++                            getString(R.string.toast_change_unifiedpush_done),
++                            Toast.LENGTH_LONG,
++                        ).show()
++
++                        Handler(Looper.getMainLooper()).postDelayed(
++                            {
++                                exitProcess(0)
++                            },
++                            DEFAULT_EXIT_DELAY,
++                        )
++                    }
++                    create().withCenterAlignedButtons()
++                }
++                if (context.settings().useUnifiedPush) {
++                    requireComponents.push.switchToUnifiedPush(context) { success ->
++                        if (!success) {
++                            context.settings().useUnifiedPush = false
++                        } else {
++                            alert.show()
++                        }
++                    }
++                } else {
++                    requireComponents.push.switchToAutoPush(context)
++                    alert.show()
++                }
++                null
++            }
++
+             // Only displayed when secret settings are enabled
+             resources.getString(R.string.pref_key_override_amo_collection) -> {
+                 val context = requireContext()
+@@ -547,6 +589,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
+             findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))
+ 
+         with(requireContext().settings()) {
++            findPreference<SwitchPreference>(
++                getPreferenceKey(R.string.pref_key_use_unifiedpush),
++            )?.apply {
++                isVisible = enableUnifiedPush
++                isChecked = useUnifiedPush
++            }
+             findPreference<Preference>(
+                 getPreferenceKey(R.string.pref_key_nimbus_experiments),
+             )?.isVisible = showSecretDebugMenuThisSession
+@@ -787,5 +835,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         private const val SCROLL_INDICATOR_DELAY = 10L
+         private const val FXA_SYNC_OVERRIDE_EXIT_DELAY = 2000L
+         private const val AMO_COLLECTION_OVERRIDE_EXIT_DELAY = 3000L
++        private const val DEFAULT_EXIT_DELAY = 2000L
+     }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..1e8f963174 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1982,6 +1982,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = 0,
+     )
+ 
++    var enableUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++        default = true,
++    )
++
++    var useUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
++        default = false,
++    )
++
+     /**
+      * Indicates if the Compose Homepage is enabled.
+      */
+diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+index a55bf0589b17..0e3add9a420e 100644
+--- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
++++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
+@@ -414,6 +414,8 @@
+     <string name="pref_key_enable_recent_searches" translatable="false">pref_key_enable_recent_searches</string>
+     <string name="pref_key_enable_shortcuts_suggestions" translatable="false">pref_key_enable_shortcuts_suggestions</string>
+     <string name="pref_key_enable_composable_toolbar" translatable="false">pref_key_enable_composable_toolbar</string>"
++    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
++    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
+ 
+     <!-- Logins -->
+     <string name="pref_key_enable_compose_logins" translatable="false">pref_key_enable_compose_logins</string>
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 4c6b14bf87..204c648354 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -184,6 +184,13 @@
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_external_download_manager" />
+ 
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_use_unifiedpush"
++            app:iconSpaceReserved="false"
++            android:title="@string/preferences_unifiedpush"
++            android:summary="@string/restart_required_summary"/>
++
+         <androidx.preference.SwitchPreference
+             android:key="@string/pref_key_leakcanary"
+             android:title="@string/preference_leakcanary"
+diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+index 094406c52e..a83eadb063 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
+@@ -10,6 +10,11 @@
+         android:title="@string/preferences_debug_settings_allow_third_party_root_certs"
+         android:summary="@string/preferences_debug_settings_allow_third_party_root_certs_summary"
+         app:iconSpaceReserved="false" />
++    <SwitchPreference
++        android:defaultValue="true"
++        android:key="@string/pref_key_enable_unifiedpush"
++        android:title="@string/preferences_debug_settings_unifiedpush"
++        app:iconSpaceReserved="false" />
+     <SwitchPreference
+         android:defaultValue="false"
+         android:key="@string/pref_key_nimbus_use_preview"
+diff --git a/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/components/PushTest.kt b/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/components/PushTest.kt
+new file mode 100644
+index 000000000000..35838390c423
+--- /dev/null
++++ b/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/components/PushTest.kt
+@@ -0,0 +1,97 @@
++package org.mozilla.fenix.components
++
++import androidx.test.ext.junit.runners.AndroidJUnit4
++import kotlinx.coroutines.test.runTest
++import mozilla.components.concept.push.PushScope
++import mozilla.components.feature.push.AutoPushFeature
++import mozilla.components.feature.unifiedpush.UnifiedPushFeature
++import mozilla.components.support.base.android.NotificationsDelegate
++import mozilla.components.support.test.any
++import mozilla.components.support.test.eq
++import mozilla.components.support.test.mock
++import mozilla.components.support.test.robolectric.testContext
++import mozilla.components.support.test.whenever
++import org.junit.Assert.assertFalse
++import org.junit.Assert.assertTrue
++import org.junit.Test
++import org.junit.runner.RunWith
++import org.mockito.Mockito.verify
++import org.mockito.ArgumentMatchers.anyInt
++import org.mozilla.fenix.helpers.perf.TestStrictModeManager
++import org.mozilla.fenix.utils.Settings
++
++@RunWith(AndroidJUnit4::class)
++class PushTest {
++
++    @Test
++    fun `UnifiedPush feature is disabled when the distributor is uninstalled, and a notification is shown`() = runTest {
++        val notificationsDelegate = mock<NotificationsDelegate>()
++        val unifiedPushFeature = mock<UnifiedPushFeature>()
++        // The distributor isn't available anymore
++        whenever(unifiedPushFeature.isAvailable(any())).thenReturn(false)
++        val settings = Settings(testContext)
++        settings.useUnifiedPush = true
++        assertTrue(settings.useUnifiedPush)
++        Push(
++            testContext,
++            crashReporter = mock(),
++            settings = settings,
++            strictMode = TestStrictModeManager(),
++            notificationsDelegate = notificationsDelegate,
++            iUnifiedPushFeature = unifiedPushFeature
++        ).feature
++        assertFalse(settings.useUnifiedPush)
++        verify(notificationsDelegate).notify(any(), anyInt(), any(), any(), any(), eq(false))
++    }
++
++    @Test
++    fun `AutoPush subscriptions are migrated to UnifiedPush when UnifiedPush is enabled`() = runTest {
++        val unifiedPushFeature = mock<UnifiedPushFeature>()
++        val autoPushFeature = mock<AutoPushFeature>()
++        whenever(unifiedPushFeature.isAvailable(any())).thenReturn(true)
++        whenever(autoPushFeature.forEachScopes(any())).then { i ->
++            i.getArgument<(PushScope, String?) -> Unit>(0)("test", "test")
++        }
++        val settings = Settings(testContext)
++        // UnifiedPush is enabled
++        settings.useUnifiedPush = true
++        assertTrue(settings.useUnifiedPush)
++        Push(
++            testContext,
++            crashReporter = mock(),
++            settings = settings,
++            strictMode = TestStrictModeManager(),
++            notificationsDelegate = mock(),
++            iUnifiedPushFeature = unifiedPushFeature,
++            iAutoPushFeature = autoPushFeature
++        ).feature
++        verify(autoPushFeature).forEachScopes(any())
++        verify(autoPushFeature).shutdown()
++        verify(unifiedPushFeature).subscribe(eq("test"), eq("test"), any(), any())
++    }
++
++    @Test
++    fun `UnifiedPush subscriptions are migrated to AutoPush when UnifiedPush is disabled`() = runTest {
++        val unifiedPushFeature = mock<UnifiedPushFeature>()
++        val autoPushFeature = mock<AutoPushFeature>()
++        whenever(unifiedPushFeature.forEachScopes(any())).then { i ->
++            i.getArgument<(PushScope, String?) -> Unit>(0)("test", "test")
++        }
++        val settings = Settings(testContext)
++        // UnifiedPush is disabled
++        settings.useUnifiedPush = false
++        assertFalse(settings.useUnifiedPush)
++        Push(
++            testContext,
++            crashReporter = mock(),
++            settings = settings,
++            strictMode = TestStrictModeManager(),
++            notificationsDelegate = mock(),
++            iUnifiedPushFeature = unifiedPushFeature,
++            iAutoPushFeature = autoPushFeature
++        ).feature
++        verify(unifiedPushFeature).forEachScopes(any())
++        verify(unifiedPushFeature).shutdown()
++        verify(autoPushFeature).subscribe(eq("test"), eq("test"), any(), any())
++    }
++}
