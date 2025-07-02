@@ -145,6 +145,10 @@ echo "official=true" >>local.properties
 # Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
 sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
+# No-op Glean
+# https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
+echo 'glean.custom.server.url="data;"' >>local.properties
+
 # Let it be IronFox
 sed -i \
     -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
