@@ -43,7 +43,7 @@ index 24e8f76532..6e4c1e0708 100644
      val getDesktopMode: () -> Boolean = { false },
      override var cookieBehaviorOptInPartitioning: Boolean = false,
      override var cookieBehaviorOptInPartitioningPBM: Boolean = false,
-+    override var spoofEnglish: Boolean = false,
++    override var spoofEnglish: Boolean = true,
      override var certificateTransparencyMode: Int = 0,
      override var postQuantumKeyExchangeEnabled: Boolean? = null,
      override var dohAutoselectEnabled: Boolean = false,
@@ -134,7 +134,7 @@ index 7f19ba4304..e02e9052ee 100644
  
 +    var spoofEnglish by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
-+        default = false
++        default = true
 +    )
 +
      var defaultSearchEngineName by stringPreference(
@@ -246,7 +246,7 @@ index 25ea09c3f6..1c0ebb6f26 100644
        new Pref<Boolean>("network.cookie.cookieBehavior.optInPartitioning.pbmode", false);
    /* package */ final Pref<Integer> mCertificateTransparencyMode =
        new Pref<Integer>("security.pki.certificate_transparency.mode", 0);
-+  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 0);
++  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 2);
    /* package */ final PrefWithoutDefault<Boolean> mPostQuantumKeyExchangeTLSEnabled =
        new PrefWithoutDefault<Boolean>("security.tls.enable_kyber");
    /* package */ final PrefWithoutDefault<Boolean> mPostQuantumKeyExchangeHttp3Enabled =
