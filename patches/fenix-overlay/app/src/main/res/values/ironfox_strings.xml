@@ -6,7 +6,7 @@
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english_title">Spoof language to en-US</string>
     <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
-    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps to make your browser appear more common, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
+    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
     <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
 
     <!-- Accessibility Services -->
@@ -16,7 +16,7 @@
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
     <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
-    <string name="preference_safe_browsing_enabled_description">Your browsing data is never shared directly with IronFox’s developers, Google, or any other party. We utilize a proxy we developed for accessing Google Safe Browsing APIs, which further removes any information that can be associated back to the user.</string>
+    <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. IronFox proxies all connections to Google’s Safe Browsing API, to prevent your public IP address from being associated with these requests.</string>
 
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
@@ -32,7 +32,12 @@
     <!-- Onboarding - Title and description -->
     <string name="onboarding_if_preferences_title">Customize IronFox</string>
     <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
+
+    <!-- Onboarding - DoH -->
     <string name="onboarding_if_preference_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
+    <string name="onboarding_if_preference_doh_default_protection_summary">IronFox will use your system’s DNS resolver.</string>
+    <string name="onboarding_if_preference_doh_increased_protection_summary">IronFox will use secure DNS by default, but fallback to your system’s DNS resolver if secure DNS is unavailable.</string>
+    <string name="onboarding_if_preference_doh_off_summary"></string>
 
     <!-- Onboarding - uBlock Origin -->
     <string name="onboarding_install_ublock_title">Install uBlock Origin</string>

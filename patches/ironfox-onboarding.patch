@@ -184,10 +184,10 @@ index effc671c02..ac7cbafb7d 100644
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..a47fdcd570
+index 0000000000..5d75386d0d
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
-@@ -0,0 +1,489 @@
+@@ -0,0 +1,488 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import androidx.activity.compose.BackHandler
@@ -360,7 +360,6 @@ index 0000000000..a47fdcd570
 +                                ProtectionLevel.Default,
 +                                ProtectionLevel.Increased,
 +                                ProtectionLevel.Max,
-+                                ProtectionLevel.Off,
 +                            ),
 +                            selectedProtectionLevel = dohSettingsProvider.getSelectedProtectionLevel(),
 +                            providers = dohSettingsProvider.getDefaultProviders(),
@@ -378,10 +377,10 @@ index 0000000000..a47fdcd570
 +                val captionText = when (contentState) {
 +                    IfPreferenceDohContentState.ModeSelection -> stringResource(
 +                        when (dohSettingsState.selectedProtectionLevel) {
-+                            ProtectionLevel.Default -> R.string.preference_doh_default_protection_summary
-+                            ProtectionLevel.Increased -> R.string.preference_doh_increased_protection_summary
++                            ProtectionLevel.Default -> R.string.onboarding_if_preference_doh_default_protection_summary
++                            ProtectionLevel.Increased -> R.string.onboarding_if_preference_doh_increased_protection_summary
 +                            ProtectionLevel.Max -> R.string.preference_doh_max_protection_summary
-+                            ProtectionLevel.Off -> R.string.preference_doh_off_summary
++                            ProtectionLevel.Off -> R.string.onboarding_if_preference_doh_off_summary
 +                        },
 +                        stringResource(R.string.app_name),
 +                    )
@@ -546,7 +545,7 @@ index 0000000000..a47fdcd570
 +                    ProtectionLevel.Default -> R.string.preference_doh_default_protection
 +                    ProtectionLevel.Increased -> R.string.preference_doh_increased_protection
 +                    ProtectionLevel.Max -> R.string.preference_doh_max_protection
-+                    ProtectionLevel.Off -> R.string.preference_doh_off
++                    ProtectionLevel.Off -> R.string.onboarding_if_preference_doh_off_summary
 +                },
 +            ),
 +            style = FirefoxTheme.typography.body1,
