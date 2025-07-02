@@ -173,69 +173,125 @@ index cfbdaba62c..e8c4289841 100644
          internal const val REMOTE_STAGE_ENDPOINT_URL = "https://firefox.settings.services.allizom.org"
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-index d218b89663..fc9bdc4561 100644
+index d218b89663..18ebd18239 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-@@ -29,21 +29,14 @@ import org.mozilla.fenix.nimbus.FxNimbus
- fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUploadEnabled: Boolean, client: Client) {
-     logger.debug("Initializing Glean (uploadEnabled=$isTelemetryUploadEnabled})")
+@@ -13,10 +13,10 @@ import mozilla.telemetry.glean.config.Configuration
+ import org.mozilla.fenix.BuildConfig
+ import org.mozilla.fenix.Config
+ import org.mozilla.fenix.GleanMetrics.GleanBuildInfo
+-import org.mozilla.fenix.GleanMetrics.Pings
++//import org.mozilla.fenix.GleanMetrics.Pings
+ import org.mozilla.fenix.ext.getCustomGleanServerUrlIfAvailable
+ import org.mozilla.fenix.ext.setCustomEndpointIfAvailable
+-import org.mozilla.fenix.nimbus.FxNimbus
++//import org.mozilla.fenix.nimbus.FxNimbus
  
--    // for performance reasons, this is only available in Nightly or Debug builds
--    val customEndpoint = if (Config.channel.isNightlyOrDebug) {
--        // for testing, if custom glean server url is set in the secret menu, use it to initialize Glean
--        getCustomGleanServerUrlIfAvailable(applicationContext)
--    } else {
+ /**
+  * Helper function to initialize Glean.
+@@ -34,33 +34,34 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
+         // for testing, if custom glean server url is set in the secret menu, use it to initialize Glean
+         getCustomGleanServerUrlIfAvailable(applicationContext)
+     } else {
 -        null
--    }
--
++        getCustomGleanServerUrlIfAvailable(applicationContext)
+     }
+ 
      val configuration = Configuration(
-+        serverEndpoint = "",
-         channel = BuildConfig.BUILD_TYPE,
-         httpClient = ConceptFetchHttpUploader(
-             lazy(LazyThreadSafetyMode.NONE) { client },
-             supportsOhttp = true,
-         ),
+-        channel = BuildConfig.BUILD_TYPE,
+-        httpClient = ConceptFetchHttpUploader(
+-            lazy(LazyThreadSafetyMode.NONE) { client },
+-            supportsOhttp = true,
+-        ),
 -        enableEventTimestamps = FxNimbus.features.glean.value().enableEventTimestamps,
-+        enableEventTimestamps = false,
-         delayPingLifetimeIo = FxNimbus.features.glean.value().delayPingLifetimeIo,
-         pingLifetimeThreshold = FxNimbus.features.glean.value().pingLifetimeThreshold,
-         pingLifetimeMaxTime = FxNimbus.features.glean.value().pingLifetimeMaxTime,
-@@ -59,8 +52,8 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
+-        delayPingLifetimeIo = FxNimbus.features.glean.value().delayPingLifetimeIo,
+-        pingLifetimeThreshold = FxNimbus.features.glean.value().pingLifetimeThreshold,
+-        pingLifetimeMaxTime = FxNimbus.features.glean.value().pingLifetimeMaxTime,
++//        channel = BuildConfig.BUILD_TYPE,
++//        httpClient = ConceptFetchHttpUploader(
++//            lazy(LazyThreadSafetyMode.NONE) { client },
++//            supportsOhttp = true,
++//        ),
++//        enableEventTimestamps = FxNimbus.features.glean.value().enableEventTimestamps,
++//        delayPingLifetimeIo = FxNimbus.features.glean.value().delayPingLifetimeIo,
++//        pingLifetimeThreshold = FxNimbus.features.glean.value().pingLifetimeThreshold,
++        enableInternalPings = false,
++        serverEndpoint = "data;",
+     )
+ 
+     // Since Glean v63.0.0, custom pings need to be registered prior to Glean init
+     // in order to ensure they are enabled and able to collect data.
+     // See https://bugzilla.mozilla.org/1934931 for more information.
+-    Glean.registerPings(Pings)
++//    Glean.registerPings(Pings)
+ 
+     // Set the metric configuration from Nimbus.
+-    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().metricsEnabled.toString())
++//    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().metricsEnabled.toString())
  
      Glean.initialize(
          applicationContext = applicationContext,
--        configuration = configuration.setCustomEndpointIfAvailable(customEndpoint),
+         configuration = configuration.setCustomEndpointIfAvailable(customEndpoint),
 -        uploadEnabled = isTelemetryUploadEnabled,
-+        configuration = configuration,
 +        uploadEnabled = false,
          buildInfo = GleanBuildInfo.buildInfo,
      )
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt
-index ea4ff1e0dd..84f04bd06d 100644
+index ea4ff1e0dd..1a63eba455 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt
-@@ -70,9 +70,9 @@ class GleanMetricsService(
-     private val activationPing = ActivationPing(context)
+@@ -8,7 +8,7 @@ import android.content.Context
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.utils.RunWhenReadyQueue
+ import mozilla.telemetry.glean.Glean
+-import org.mozilla.fenix.GleanMetrics.Pings
++//import org.mozilla.fenix.GleanMetrics.Pings
+ import org.mozilla.fenix.ext.components
+ 
+ private class EventWrapper<T : Enum<T>>(
+@@ -67,12 +67,12 @@ class GleanMetricsService(
+     private val logger = Logger("GleanMetricsService")
+     private var initialized = false
+ 
+-    private val activationPing = ActivationPing(context)
++//    private val activationPing = ActivationPing(context)
  
      override fun start() {
--        logger.debug("Enabling Glean.")
-+        logger.debug("Not Enabling Glean.")
+         logger.debug("Enabling Glean.")
          // Initialization of Glean already happened in FenixApplication.
 -        Glean.setCollectionEnabled(true)
-+        Glean.setCollectionEnabled(false)
++//        Glean.setCollectionEnabled(true)
  
          if (initialized) return
          initialized = true
-@@ -86,8 +86,6 @@ class GleanMetricsService(
+@@ -85,21 +85,21 @@ class GleanMetricsService(
+             // because it calls Google ad APIs that must be called *off* of the main thread.
              // These two things actually happen in parallel, but that should be ok because Glean
              // can handle events being recorded before it's initialized.
-             Glean.registerPings(Pings)
--
+-            Glean.registerPings(Pings)
++//            Glean.registerPings(Pings)
+ 
 -            activationPing.checkAndSend()
++//            activationPing.checkAndSend()
          }
      }
  
+     override fun stop() {
+-        Glean.setCollectionEnabled(false)
++//        Glean.setCollectionEnabled(false)
+     }
+ 
+     override fun track(event: Event) {
+-        event.wrapper?.track(event)
++//        event.wrapper?.track(event)
+     }
+ 
+     override fun shouldTrack(event: Event): Boolean {
+-        return event.wrapper != null
++        return false
+     }
+ }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
 index 9d54f66a65..9b239216b2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
@@ -268,6 +324,37 @@ index 36d4b4c349..af2ba6479e 100644
  }
  
  /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 13db9f3c83..b0d4f44010 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -87,7 +87,7 @@ import org.mozilla.fenix.GleanMetrics.TopSites
+ import org.mozilla.fenix.components.Components
+ import org.mozilla.fenix.components.Core
+ import org.mozilla.fenix.components.appstate.AppAction
+-import org.mozilla.fenix.components.initializeGlean
++//import org.mozilla.fenix.components.initializeGlean
+ import org.mozilla.fenix.components.metrics.MozillaProductDetector
+ import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.experiments.maybeFetchExperiments
+@@ -188,7 +188,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         // We delay the Glean initialization until, we have user consent (After onboarding).
+         // If onboarding is disabled (when in local builds), continue to initialize Glean.
+         if (components.fenixOnboarding.userHasBeenOnboarded() || !FeatureFlags.onboardingFeatureEnabled) {
+-            initializeGlean(this, logger, settings.isTelemetryEnabled, components.core.client)
++//            initializeGlean(this, logger, settings.isTelemetryEnabled, components.core.client)
+         }
+ 
+         // We avoid blocking the main thread on startup by setting startup metrics on the background thread.
+@@ -224,7 +224,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+                 components.core.engine.warmUp()
+             }
+ 
+-            initializeGlean()
++//            initializeGlean()
+ 
+             // Attention: Do not invoke any code from a-s in this scope.
+             val megazordSetup = finishSetupMegazord()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
 index c1b54d7f27..7dd953d504 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
@@ -308,16 +395,50 @@ index c1b54d7f27..7dd953d504 100644
  
      private fun updateOptInState(branch: Branch) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index e5ab956ac3..0356328074 100644
+index e5ab956ac3..4db7ffc14c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -330,8 +330,7 @@ class OnboardingFragment : Fragment() {
-         }
+@@ -29,12 +29,12 @@ import mozilla.components.service.nimbus.messaging.use
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.utils.BrowsersCache
+ import org.mozilla.fenix.FenixApplication
+-import org.mozilla.fenix.GleanMetrics.Pings
++//import org.mozilla.fenix.GleanMetrics.Pings
+ import org.mozilla.fenix.HomeActivity
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.browser.tabstrip.isTabStripEnabled
+ import org.mozilla.fenix.components.accounts.FenixFxAEntryPoint
+-import org.mozilla.fenix.components.initializeGlean
++//import org.mozilla.fenix.components.initializeGlean
+ import org.mozilla.fenix.components.lazyStore
+ import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.compose.LinkTextState
+@@ -320,18 +320,18 @@ class OnboardingFragment : Fragment() {
+         requireComponents.fenixOnboarding.finish()
+ 
+         val settings = requireContext().settings()
+-        viewLifecycleOwner.lifecycleScope.launch {
+-            initializeGlean(
+-                requireContext().applicationContext,
+-                logger,
+-                settings.isTelemetryEnabled,
+-                requireComponents.core.client,
+-            )
+-        }
++//        viewLifecycleOwner.lifecycleScope.launch {
++//            initializeGlean(
++//                requireContext().applicationContext,
++//                logger,
++//                settings.isTelemetryEnabled,
++//                requireComponents.core.client,
++//            )
++//        }
  
          if (!settings.isTelemetryEnabled) {
 -            Pings.onboardingOptOut.setEnabled(true)
 -            Pings.onboardingOptOut.submit()
-+            Pings.onboardingOptOut.setEnabled(false)
++//            Pings.onboardingOptOut.setEnabled(true)
++//            Pings.onboardingOptOut.submit()
          }
  
          startMetricsIfEnabled(
@@ -336,6 +457,19 @@ index 6725aa64a0..cd0cbd0b51 100644
              "moz://a" -> openSearchOrUrl(
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 43bea16286..8f460115af 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -182,7 +182,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+ 
+         lifecycleScope.launch {
+             requirePreference<SwitchPreference>(R.string.pref_key_enable_debug_drawer).apply {
+-                isVisible = true
++                isVisible = false
+                 isChecked = debugSettingsRepository.debugDrawerEnabled.first()
+                 onPreferenceChangeListener =
+                     Preference.OnPreferenceChangeListener { _, newValue ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 7f19ba4304..d86b803bcf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
