@@ -85,6 +85,13 @@ patches:
     reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
+  
+  - file: "unifiedpush.patch"
+    name: "UnifiedPush"
+    description: "Adds support for UnifiedPush."
+    reason: "To allow users to receive notifications without the use of a proprietary Google service."
+    effect: "Improves usability for users, by allowing them to receive push notifications if desired, and improves freedom, by allowing users to decide which push server/implementation they would like to use."
+    category: "Dependency"
 
   # Privacy
   - file: "fenix-disable-telemetry.patch"
