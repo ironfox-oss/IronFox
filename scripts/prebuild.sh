@@ -87,6 +87,12 @@ if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
     fi
 fi
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=darwin
+else
+    PLATFORM=linux
+fi
+
 # Create build directory
 mkdir -vp "$rootdir/build"
 
@@ -108,7 +114,7 @@ else
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
 fi
 
-libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/musl/lib"
+libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/musl/lib"
 echo "...libclang dir set to ${libclang}"
 
 # shellcheck disable=SC1090,SC1091
@@ -480,9 +486,9 @@ fi
 
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
     echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
-    echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
-    echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
-    echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
+    echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang\""
+    echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang++\""
+    echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/llvm-strip\""
     echo 'mk_add_options MOZ_APP_DISPLAYNAME=IronFox'
     echo 'mk_add_options MOZ_APP_VENDOR="IronFox OSS"'
     echo 'mk_add_options MOZ_NORMANDY=0'

@@ -3,10 +3,12 @@
 SDK_REVISION=13114758
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    ANDROID_SDK_FILE=commandlinetools-mac-${SDK_REVISION}_latest.zip
+    PLATFORM=mac
 else
-    ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
+    PLATFORM=linux
 fi
+
+ANDROID_SDK_FILE=commandlinetools-${PLATFORM}-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
