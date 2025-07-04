@@ -6,7 +6,12 @@
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 
-export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    export NSS_DIR="$application_services/libs/desktop/darwin-aarch64/nss"
+else
+    export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
+fi
+
 export NSS_STATIC=1
 
 export ARTIFACTS="$rootdir/artifacts"

@@ -89,8 +89,10 @@ fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     PLATFORM=darwin
+    RUST_TARGET_PLATFORM=darwin-aarch64
 else
     PLATFORM=linux
+    RUST_TARGET_PLATFORM=linux-x86_64
 fi
 
 # Create build directory
@@ -131,44 +133,83 @@ cargo install --vers "$CBINDGEN_VERSION" cbindgen
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
-sed -i \
-    -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
-    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
-    -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
-    -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
-    app/build.gradle
-sed -i \
-    -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
-    app/src/release/res/xml/shortcuts.xml
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
+        -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
+        -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
+        -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
+        app/build.gradle
+    sed -i '' \
+        -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
+        app/src/release/res/xml/shortcuts.xml    
+else
+    sed -i \
+        -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
+        -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
+        -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
+        -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
+        app/build.gradle
+    sed -i \
+        -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
+        app/src/release/res/xml/shortcuts.xml
+fi
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
-sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+else
+    sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+fi
 echo "official=true" >>local.properties
 
 # Ensure we enable the about:config
 # Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
-sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+else
+    sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+fi
 
 # Let it be IronFox
-sed -i \
-    -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
-    -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
-    -e 's/Agree and continue/Continue/' \
-    -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
-    -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
-    -e '/about_content/s/Mozilla/IronFox OSS/' \
-    app/src/*/res/values*/*strings.xml
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
+        -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
+        -e 's/Agree and continue/Continue/' \
+        -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
+        -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
+        -e '/about_content/s/Mozilla/IronFox OSS/' \
+        app/src/*/res/values*/*strings.xml
+else
+    sed -i \
+        -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
+        -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
+        -e 's/Agree and continue/Continue/' \
+        -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
+        -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
+        -e '/about_content/s/Mozilla/IronFox OSS/' \
+        app/src/*/res/values*/*strings.xml
+fi
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
 # app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
-sed -i \
-    -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
-    -e 's/firefox_threads/ironfox_threads/' \
-    -e 's/firefox_features/ironfox_features/' \
-    app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
+        -e 's/firefox_threads/ironfox_threads/' \
+        -e 's/firefox_features/ironfox_features/' \
+        app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
+else
+    sed -i \
+        -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
+        -e 's/firefox_threads/ironfox_threads/' \
+        -e 's/firefox_features/ironfox_features/' \
+        app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
+fi
 
 # Replace proprietary artwork
 rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml
@@ -178,11 +219,20 @@ rm -vf app/src/main/res/values-v24/styles.xml
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
 mkdir -vp app/src/release/res/mipmap-anydpi-v26
-sed -i \
-    -e 's/googleg_standard_color_18/ic_download/' \
-    app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
-    app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
-    app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e 's/googleg_standard_color_18/ic_download/' \
+        app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
+        app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
+        app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
+else
+    sed -i \
+        -e 's/googleg_standard_color_18/ic_download/' \
+        app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
+        app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
+        app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
+fi
 
 # Remove default built-in search engines
 rm -vrf app/src/main/assets/searchplugins/*
@@ -223,7 +273,11 @@ bundle)
     ;;
 esac
 
-sed -i -e "s/include \".*\"/include $abi/" app/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e "s/include \".*\"/include $abi/" app/build.gradle
+else
+    sed -i -e "s/include \".*\"/include $abi/" app/build.gradle
+fi
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
 # Enable the auto-publication workflow
@@ -246,7 +300,7 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$glean"
-echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
+echo "rust.targets=$RUST_TARGET_PLATFORM,$rusttarget" >>local.properties
 localize_maven
 popd
 
@@ -277,16 +331,35 @@ popd
 # Application Services
 
 pushd "$application_services"
+
 # Break the dependency on older A-C
-sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
-echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
-sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
-sed -i -e '/content {/,/}/d' build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e "s|^android-components = \".*|android-components = \"${FIREFOX_VERSION}\"|" gradle/libs.versions.toml
+    sed -i '' -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
+    sed -i '' -e '/content {/,/}/d' build.gradle
+else
+    sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
+    sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
+    sed -i -e '/content {/,/}/d' build.gradle
+fi
+
+echo "rust.targets=$RUST_TARGET_PLATFORM,$rusttarget" >>local.properties
 localize_maven
+
 # Fix stray
-sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/^    mavenLocal/{n; d;}' tools/nimbus-gradle-plugin/build.gradle
+else
+    sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
+fi
+
 # Fail on use of prebuilt binary
-sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+else
+    sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+fi
+
 popd
 
 # WASI SDK
@@ -307,24 +380,44 @@ pushd "$mozilla_release"
 # Let it be IronFox (part 2...)
 mkdir -vp mobile/android/branding/ironfox/content
 mkdir -vp mobile/android/branding/ironfox/locales/en-US
-sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
+else
+    sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
+fi
 
 # Apply patches
 apply_patches
 
 # Fix v125 aar output not including native libraries
-sed -i \
-    -e 's/singleVariant("debug")/singleVariant("release")/' \
-    mobile/android/exoplayer2/build.gradle
-sed -i \
-    -e "s/singleVariant('debug')/singleVariant('release')/" \
-    mobile/android/geckoview/build.gradle
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e 's/singleVariant("debug")/singleVariant("release")/' \
+        mobile/android/exoplayer2/build.gradle
+    sed -i '' \
+        -e "s/singleVariant('debug')/singleVariant('release')/" \
+        mobile/android/geckoview/build.gradle
+else
+    sed -i \
+        -e 's/singleVariant("debug")/singleVariant("release")/' \
+        mobile/android/exoplayer2/build.gradle
+    sed -i \
+        -e "s/singleVariant('debug')/singleVariant('release')/" \
+        mobile/android/geckoview/build.gradle
+fi
 
 # Hack the timeout for
 # geckoview:generateJNIWrappersForGeneratedWithGeckoBinariesDebug
-sed -i \
-    -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
-    mobile/android/gradle.py
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
+        mobile/android/gradle.py
+else
+    sed -i \
+        -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
+        mobile/android/gradle.py
+fi
 
 # Remove glean telemetry URL
 remove_glean_telemetry "${glean}"
@@ -338,55 +431,106 @@ remove_glean_telemetry "${mozilla_release}/netwerk"
 ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
-sed -i \
-    -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
-    -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
-    -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
-    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.cookiebanners.service.enableGlobalRules"|' \
-    -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
-    -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
-    -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.privacy.query_stripping.allow_list"|' \
-    -e 's|"privacy.query_stripping.enabled"|"z99.ignore.privacy.query_stripping.enabled"|' \
-    -e 's|"privacy.query_stripping.enabled.pbmode"|"z99.ignore.privacy.query_stripping.enabled.pbmode"|' \
-    -e 's|"privacy.query_stripping.strip_list"|"z99.ignore.privacy.query_stripping.strip_list"|' \
-    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
-sed -i \
-    -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
-    -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
-    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType"|' \
-    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|' \
-    -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
-    -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
-    -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
-    -e 's|"extensions.webextensions.crash.threshold"|"z99.ignore.extensions.webextensions.crash.threshold"|' \
-    -e 's|"extensions.webextensions.crash.timeframe"|"z99.ignore.extensions.webextensions.crash.timeframe"|' \
-    -e 's|"extensions.webextensions.remote"|"z99.ignore.extensions.webextensions.remote"|' \
-    -e 's|"fission.autostart"|"z99.ignore.fission.autostart"|' \
-    -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
-    -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
-    -e 's|"formhelper.autozoom"|"z99.ignore.formhelper.autozoom"|' \
-    -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
-    -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
-    -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
-    -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
-    -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning.pbmode"|' \
-    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.network.android_doh.autoselect_enabled"|' \
-    -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
-    -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
-    -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
-    -e 's|"network.security.ports.banned"|"z99.ignore.network.security.ports.banned"|' \
-    -e 's|"privacy.fingerprintingProtection"|"z99.ignore.privacy.fingerprintingProtection"|' \
-    -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.privacy.fingerprintingProtection.overrides"|' \
-    -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.privacy.fingerprintingProtection.pbmode"|' \
-    -e 's|"privacy.globalprivacycontrol.enabled"|"z99.ignore.privacy.globalprivacycontrol.enabled"|' \
-    -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.privacy.globalprivacycontrol.functionality.enabled"|' \
-    -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.privacy.globalprivacycontrol.pbmode.enabled"|' \
-    -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.security.pki.certificate_transparency.mode"|' \
-    -e 's|"security.tls.enable_kyber"|"z99.ignore.security.tls.enable_kyber"|' \
-    -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.toolkit.telemetry.user_characteristics_ping.current_version"|' \
-    -e 's|"webgl.msaa-samples"|"z99.ignore.webgl.msaa-samples"|' \
-    mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
+        -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
+        -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
+        -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.cookiebanners.service.enableGlobalRules"|' \
+        -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
+        -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
+        -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.privacy.query_stripping.allow_list"|' \
+        -e 's|"privacy.query_stripping.enabled"|"z99.ignore.privacy.query_stripping.enabled"|' \
+        -e 's|"privacy.query_stripping.enabled.pbmode"|"z99.ignore.privacy.query_stripping.enabled.pbmode"|' \
+        -e 's|"privacy.query_stripping.strip_list"|"z99.ignore.privacy.query_stripping.strip_list"|' \
+        mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
+    sed -i '' \
+        -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
+        -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
+        -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType"|' \
+        -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|' \
+        -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
+        -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
+        -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
+        -e 's|"extensions.webextensions.crash.threshold"|"z99.ignore.extensions.webextensions.crash.threshold"|' \
+        -e 's|"extensions.webextensions.crash.timeframe"|"z99.ignore.extensions.webextensions.crash.timeframe"|' \
+        -e 's|"extensions.webextensions.remote"|"z99.ignore.extensions.webextensions.remote"|' \
+        -e 's|"fission.autostart"|"z99.ignore.fission.autostart"|' \
+        -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
+        -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
+        -e 's|"formhelper.autozoom"|"z99.ignore.formhelper.autozoom"|' \
+        -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
+        -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
+        -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
+        -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
+        -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning.pbmode"|' \
+        -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.network.android_doh.autoselect_enabled"|' \
+        -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
+        -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
+        -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
+        -e 's|"network.security.ports.banned"|"z99.ignore.network.security.ports.banned"|' \
+        -e 's|"privacy.fingerprintingProtection"|"z99.ignore.privacy.fingerprintingProtection"|' \
+        -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.privacy.fingerprintingProtection.overrides"|' \
+        -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.privacy.fingerprintingProtection.pbmode"|' \
+        -e 's|"privacy.globalprivacycontrol.enabled"|"z99.ignore.privacy.globalprivacycontrol.enabled"|' \
+        -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.privacy.globalprivacycontrol.functionality.enabled"|' \
+        -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.privacy.globalprivacycontrol.pbmode.enabled"|' \
+        -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.security.pki.certificate_transparency.mode"|' \
+        -e 's|"security.tls.enable_kyber"|"z99.ignore.security.tls.enable_kyber"|' \
+        -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.toolkit.telemetry.user_characteristics_ping.current_version"|' \
+        -e 's|"webgl.msaa-samples"|"z99.ignore.webgl.msaa-samples"|' \
+        mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+else
+    sed -i \
+        -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
+        -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
+        -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
+        -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.cookiebanners.service.enableGlobalRules"|' \
+        -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
+        -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
+        -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.privacy.query_stripping.allow_list"|' \
+        -e 's|"privacy.query_stripping.enabled"|"z99.ignore.privacy.query_stripping.enabled"|' \
+        -e 's|"privacy.query_stripping.enabled.pbmode"|"z99.ignore.privacy.query_stripping.enabled.pbmode"|' \
+        -e 's|"privacy.query_stripping.strip_list"|"z99.ignore.privacy.query_stripping.strip_list"|' \
+        mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
+    sed -i \
+        -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
+        -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
+        -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType"|' \
+        -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|' \
+        -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
+        -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
+        -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
+        -e 's|"extensions.webextensions.crash.threshold"|"z99.ignore.extensions.webextensions.crash.threshold"|' \
+        -e 's|"extensions.webextensions.crash.timeframe"|"z99.ignore.extensions.webextensions.crash.timeframe"|' \
+        -e 's|"extensions.webextensions.remote"|"z99.ignore.extensions.webextensions.remote"|' \
+        -e 's|"fission.autostart"|"z99.ignore.fission.autostart"|' \
+        -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
+        -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
+        -e 's|"formhelper.autozoom"|"z99.ignore.formhelper.autozoom"|' \
+        -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
+        -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
+        -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
+        -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
+        -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning.pbmode"|' \
+        -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.network.android_doh.autoselect_enabled"|' \
+        -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
+        -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
+        -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
+        -e 's|"network.security.ports.banned"|"z99.ignore.network.security.ports.banned"|' \
+        -e 's|"privacy.fingerprintingProtection"|"z99.ignore.privacy.fingerprintingProtection"|' \
+        -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.privacy.fingerprintingProtection.overrides"|' \
+        -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.privacy.fingerprintingProtection.pbmode"|' \
+        -e 's|"privacy.globalprivacycontrol.enabled"|"z99.ignore.privacy.globalprivacycontrol.enabled"|' \
+        -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.privacy.globalprivacycontrol.functionality.enabled"|' \
+        -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.privacy.globalprivacycontrol.pbmode.enabled"|' \
+        -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.security.pki.certificate_transparency.mode"|' \
+        -e 's|"security.tls.enable_kyber"|"z99.ignore.security.tls.enable_kyber"|' \
+        -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.toolkit.telemetry.user_characteristics_ping.current_version"|' \
+        -e 's|"webgl.msaa-samples"|"z99.ignore.webgl.msaa-samples"|' \
+        mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+fi
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
@@ -470,7 +614,11 @@ fi
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
     if [[ -n "${target}" ]]; then
-        echo "ac_add_options --target=$target"
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            return
+        else
+            echo "ac_add_options --target=$target"
+        fi
     fi
 
     echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\""
@@ -513,30 +661,55 @@ fi
 } >>mozconfig
 
 # Point to our build of Bundletool
-sed -i \
-    -e "/bundletool_path = /s|toolchains_base_dir|\"$BUILDDIR\"|" \
-    build/moz.configure/android-sdk.configure
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e "/bundletool_path = /s|toolchains_base_dir|\"$BUILDDIR\"|" \
+        build/moz.configure/android-sdk.configure
+else
+    sed -i \
+        -e "/bundletool_path = /s|toolchains_base_dir|\"$BUILDDIR\"|" \
+        build/moz.configure/android-sdk.configure
+fi
 
 # Fail on use of prebuilt binary
-sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
+else
+    sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
+fi
 
 # Make the build system think we installed the emulator and an AVD
 mkdir -vp "$ANDROID_HOME/emulator"
 mkdir -vp "$HOME/.mozbuild/android-device/avd"
 
 # Do not check the "emulator" utility which is obviously absent in the empty directory we created above
-sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+else
+    sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+fi
 
 # Do not define `browser.safebrowsing.features.` prefs by default
 ## These are unnecessary, add extra confusion and complexity, and don't appear to interact well with our other prefs/settings
-sed -i \
-    -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.browser.safebrowsing.features.cryptomining.update"|' \
-    -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.browser.safebrowsing.features.fingerprinting.update"|' \
-    -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.browser.safebrowsing.features.malware.update"|' \
-    -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.browser.safebrowsing.features.phishing.update"|' \
-    -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.browser.safebrowsing.features.trackingAnnotation.update"|' \
-    -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.browser.safebrowsing.features.trackingProtection.update"|' \
-    mobile/android/app/geckoview-prefs.js
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    sed -i '' \
+        -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.browser.safebrowsing.features.cryptomining.update"|' \
+        -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.browser.safebrowsing.features.fingerprinting.update"|' \
+        -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.browser.safebrowsing.features.malware.update"|' \
+        -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.browser.safebrowsing.features.phishing.update"|' \
+        -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.browser.safebrowsing.features.trackingAnnotation.update"|' \
+        -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.browser.safebrowsing.features.trackingProtection.update"|' \
+        mobile/android/app/geckoview-prefs.js
+else
+    sed -i \
+        -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.browser.safebrowsing.features.cryptomining.update"|' \
+        -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.browser.safebrowsing.features.fingerprinting.update"|' \
+        -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.browser.safebrowsing.features.malware.update"|' \
+        -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.browser.safebrowsing.features.phishing.update"|' \
+        -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.browser.safebrowsing.features.trackingAnnotation.update"|' \
+        -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.browser.safebrowsing.features.trackingProtection.update"|' \
+        mobile/android/app/geckoview-prefs.js
+fi
 
 {
     cat "$patches/preferences/phoenix.js"
