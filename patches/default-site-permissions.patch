@@ -1,0 +1,49 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
+index a24ff6e34e..e3c15525eb 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
+@@ -158,7 +158,9 @@ enum class PhoneFeature(val androidPermissionsList: Array<String>) : Parcelable
+     private fun getDefault(): SitePermissionsRules.Action {
+         return when (this) {
+             AUTOPLAY_AUDIBLE -> SitePermissionsRules.Action.BLOCKED
+-            AUTOPLAY_INAUDIBLE -> SitePermissionsRules.Action.ALLOWED
++            AUTOPLAY_INAUDIBLE -> SitePermissionsRules.Action.BLOCKED
++            LOCATION -> SitePermissionsRules.Action.BLOCKED
++            NOTIFICATION -> SitePermissionsRules.Action.BLOCKED
+             else -> SitePermissionsRules.Action.ASK_TO_ALLOW
+         }
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..aaa11d17e9 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1294,7 +1294,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * either [AUTOPLAY_ALLOW_ALL] or [AUTOPLAY_BLOCK_ALL]. Because of this, we are forced to save
+      * the user selected setting as well.
+      */
+-    fun getAutoplayUserSetting() = preferences.getInt(AUTOPLAY_USER_SETTING, AUTOPLAY_BLOCK_AUDIBLE)
++    fun getAutoplayUserSetting() = preferences.getInt(AUTOPLAY_USER_SETTING, AUTOPLAY_BLOCK_ALL)
+ 
+     private fun getSitePermissionsPhoneFeatureAutoplayAction(
+         feature: PhoneFeature,
+@@ -1313,9 +1313,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     fun getSitePermissionsCustomSettingsRules(): SitePermissionsRules {
+         return SitePermissionsRules(
+-            notification = getSitePermissionsPhoneFeatureAction(PhoneFeature.NOTIFICATION),
++            notification = getSitePermissionsPhoneFeatureAction(feature = PhoneFeature.NOTIFICATION, default = Action.BLOCKED),
+             microphone = getSitePermissionsPhoneFeatureAction(PhoneFeature.MICROPHONE),
+-            location = getSitePermissionsPhoneFeatureAction(PhoneFeature.LOCATION),
++            location = getSitePermissionsPhoneFeatureAction(feature = PhoneFeature.LOCATION, default = Action.BLOCKED),
+             camera = getSitePermissionsPhoneFeatureAction(PhoneFeature.CAMERA),
+             autoplayAudible = getSitePermissionsPhoneFeatureAutoplayAction(
+                 feature = PhoneFeature.AUTOPLAY_AUDIBLE,
+@@ -1323,7 +1323,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+             ),
+             autoplayInaudible = getSitePermissionsPhoneFeatureAutoplayAction(
+                 feature = PhoneFeature.AUTOPLAY_INAUDIBLE,
+-                default = AutoplayAction.ALLOWED,
++                default = AutoplayAction.BLOCKED,
+             ),
+             persistentStorage = getSitePermissionsPhoneFeatureAction(PhoneFeature.PERSISTENT_STORAGE),
+             crossOriginStorageAccess = getSitePermissionsPhoneFeatureAction(PhoneFeature.CROSS_ORIGIN_STORAGE_ACCESS),
