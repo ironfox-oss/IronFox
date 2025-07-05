@@ -60,23 +60,21 @@ index cfbdaba62c..e1c88f77c8 100644
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
-index e387bc4ae0..404c55872a 100644
+index e387bc4ae0..8cde937ec1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
-@@ -12,6 +12,7 @@ import mozilla.components.browser.state.store.BrowserStore
- import mozilla.components.support.locale.LocaleManager
+@@ -13,6 +13,7 @@ import mozilla.components.support.locale.LocaleManager
  import mozilla.components.support.locale.LocaleUseCases
  import org.mozilla.fenix.nimbus.FxNimbus
-+import org.mozilla.fenix.ext.components
  import java.util.Locale
++import org.mozilla.fenix.ext.components
  
  interface LocaleSettingsController {
-@@ -83,5 +84,9 @@ class DefaultLocaleSettingsController(
+     fun handleLocaleSelected(locale: Locale)
+@@ -83,5 +84,7 @@ class DefaultLocaleSettingsController(
          config.setLocale(locale)
          config.setLayoutDirection(locale)
          resources.updateConfiguration(config, resources.displayMetrics)
-+        // A slightly hacky way of triggering a `runtime.settings.locales` update,
-+        // so that the locales are updated in GeckoView.
 +        val spoofEnglish = context.components.core.engine.settings.spoofEnglish
 +        context.components.core.engine.settings.spoofEnglish = spoofEnglish
      }
