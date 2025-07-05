@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:moz="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+    <!-- Accessibility Services -->
+    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
+
+    <!-- Content Settings -->
+    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
+    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
+    <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
+    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+
+    <!-- Spoof English -->
+    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+</resources>

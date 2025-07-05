@@ -63,19 +63,3 @@ index 7f19ba4304..8d07d9725e 100644
      /**
       * Indicates whether or not to show the checklist feature.
       */
-diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a55bf0589b..86839f2b40 100644
---- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -469,4 +469,11 @@
-     <string name="pref_key_setup_step_toolbar" translatable="false">pref_key_setup_step_toolbar</string>
-     <string name="pref_key_setup_step_theme" translatable="false">pref_key_setup_step_theme</string>
-     <string name="pref_key_setup_step_extensions" translatable="false">pref_key_setup_step_extensions</string>
-+
-+    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
-+    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
-+    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
-+    <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
-+    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
-+    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
- </resources>
