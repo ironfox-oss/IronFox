@@ -285,6 +285,7 @@ localize_maven
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/ac-disable-nimbus.patch"
 popd
 
 # WASI SDK
