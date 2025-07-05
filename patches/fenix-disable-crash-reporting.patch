@@ -329,7 +329,7 @@ index 13db9f3c83..37fa89c98f 100644
  
      protected open fun initializeNimbus() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index 1ad6a264c7..6cb95a28c0 100644
+index 1ad6a264c7..0b80a2807e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 @@ -16,7 +16,7 @@ import mozilla.components.lib.crash.service.GleanCrashReporterService
@@ -356,9 +356,10 @@ index 1ad6a264c7..6cb95a28c0 100644
              if (context.isMainProcess()) {
 -                runWhenReadyQueue.runIfReadyOrQueue {
 -                    sentryService.initIfNeeded()
+-                }
 +//                runWhenReadyQueue.runIfReadyOrQueue {
 +//                    sentryService.initIfNeeded()
-                 }
++//                }
              }
  
 -            services.add(sentryService)
