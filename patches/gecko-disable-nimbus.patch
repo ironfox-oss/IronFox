@@ -1,8 +1,15 @@
 diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-index 1f4d51c643..9c154a8d16 100644
+index 1f4d51c643..a2507eb8d1 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 +++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-@@ -36,7 +36,7 @@ const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
+@@ -30,13 +30,13 @@ const CRASHREPORTER_ENABLED =
+   AppConstants.MOZ_CRASHREPORTER && AppConstants.MOZ_APP_NAME !== "thunderbird";
+ 
+ const IS_MAIN_PROCESS =
+-  Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
++  false;
+ 
+ const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
  const STUDIES_OPT_OUT_PREF = "app.shield.optoutstudies.enabled";
  
  const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
@@ -11,8 +18,21 @@ index 1f4d51c643..9c154a8d16 100644
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "COLLECTION_ID",
+diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
+index 165309d17b..c209ae61ab 100644
+--- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
++++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
+@@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
+ /** @typedef {import("./PrefFlipsFeature.sys.mjs").PrefBranch} PrefBranch */
+ 
+ const IS_MAIN_PROCESS =
+-  Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
++  false;
+ 
+ export const UnenrollmentCause = {
+   fromCheckRecipeResult(result) {
 diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-index d3ab385732..810c8be7ce 100644
+index d3ab385732..700465258c 100644
 --- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 +++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 @@ -37,7 +37,7 @@ XPCOMUtils.defineLazyServiceGetter(
@@ -24,7 +44,7 @@ index d3ab385732..810c8be7ce 100644
  const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
    "nimbus.telemetry.targetingContextEnabled";
  
-@@ -49,10 +49,10 @@ const NIMBUS_DEBUG_PREF = "nimbus.debug";
+@@ -49,13 +49,13 @@ const NIMBUS_DEBUG_PREF = "nimbus.debug";
  const NIMBUS_VALIDATION_PREF = "nimbus.validation.enabled";
  const NIMBUS_APPID_PREF = "nimbus.appId";
  
@@ -37,7 +57,11 @@ index d3ab385732..810c8be7ce 100644
 +const SECURE_EXPERIMENTS_COLLECTION = "";
  
  const IS_MAIN_PROCESS =
-   Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
+-  Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
++  false;
+ 
+ const RS_COLLECTION_OPTIONS = {
+   [EXPERIMENTS_COLLECTION]: {
 diff --git a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
 index 087e4ed51e..256972093f 100644
 --- a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs

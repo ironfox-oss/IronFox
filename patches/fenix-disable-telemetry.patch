@@ -204,10 +204,10 @@ index cfbdaba62c..05f9735c6b 100644
          internal const val REMOTE_STAGE_ENDPOINT_URL = "https://firefox.settings.services.allizom.org"
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-index d218b89663..18ebd18239 100644
+index d218b89663..21323dab77 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-@@ -13,10 +13,10 @@ import mozilla.telemetry.glean.config.Configuration
+@@ -13,7 +13,7 @@ import mozilla.telemetry.glean.config.Configuration
  import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.Config
  import org.mozilla.fenix.GleanMetrics.GleanBuildInfo
@@ -215,12 +215,8 @@ index d218b89663..18ebd18239 100644
 +//import org.mozilla.fenix.GleanMetrics.Pings
  import org.mozilla.fenix.ext.getCustomGleanServerUrlIfAvailable
  import org.mozilla.fenix.ext.setCustomEndpointIfAvailable
--import org.mozilla.fenix.nimbus.FxNimbus
-+//import org.mozilla.fenix.nimbus.FxNimbus
- 
- /**
-  * Helper function to initialize Glean.
-@@ -34,33 +34,34 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
+ import org.mozilla.fenix.nimbus.FxNimbus
+@@ -34,10 +34,12 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
          // for testing, if custom glean server url is set in the secret menu, use it to initialize Glean
          getCustomGleanServerUrlIfAvailable(applicationContext)
      } else {
@@ -229,27 +225,12 @@ index d218b89663..18ebd18239 100644
      }
  
      val configuration = Configuration(
--        channel = BuildConfig.BUILD_TYPE,
--        httpClient = ConceptFetchHttpUploader(
--            lazy(LazyThreadSafetyMode.NONE) { client },
--            supportsOhttp = true,
--        ),
--        enableEventTimestamps = FxNimbus.features.glean.value().enableEventTimestamps,
--        delayPingLifetimeIo = FxNimbus.features.glean.value().delayPingLifetimeIo,
--        pingLifetimeThreshold = FxNimbus.features.glean.value().pingLifetimeThreshold,
--        pingLifetimeMaxTime = FxNimbus.features.glean.value().pingLifetimeMaxTime,
-+//        channel = BuildConfig.BUILD_TYPE,
-+//        httpClient = ConceptFetchHttpUploader(
-+//            lazy(LazyThreadSafetyMode.NONE) { client },
-+//            supportsOhttp = true,
-+//        ),
-+//        enableEventTimestamps = FxNimbus.features.glean.value().enableEventTimestamps,
-+//        delayPingLifetimeIo = FxNimbus.features.glean.value().delayPingLifetimeIo,
-+//        pingLifetimeThreshold = FxNimbus.features.glean.value().pingLifetimeThreshold,
 +        enableInternalPings = false,
 +        serverEndpoint = "data;",
-     )
- 
+         channel = BuildConfig.BUILD_TYPE,
+         httpClient = ConceptFetchHttpUploader(
+             lazy(LazyThreadSafetyMode.NONE) { client },
+@@ -52,15 +54,15 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
      // Since Glean v63.0.0, custom pings need to be registered prior to Glean init
      // in order to ensure they are enabled and able to collect data.
      // See https://bugzilla.mozilla.org/1934931 for more information.
@@ -347,19 +328,6 @@ index 9d54f66a65..47c4244490 100644
          }
  
          fun getInstalledTime(context: Context): Long = context.packageManager
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-index 36d4b4c349..f9ff9db3bf 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-@@ -104,7 +104,7 @@ private fun Context.reportError(message: String, e: Throwable) {
- fun NimbusException.isReportableError(): Boolean {
-     return when (this) {
-         is NimbusException.ClientException -> false
--        else -> true
-+        else -> false
-     }
- }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 13db9f3c83..b0d4f44010 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -531,6 +499,19 @@ index 6725aa64a0..17dec89626 100644
              "moz://a" -> openSearchOrUrl(
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 43bea16286..8f460115af 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -182,7 +182,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+ 
+         lifecycleScope.launch {
+             requirePreference<SwitchPreference>(R.string.pref_key_enable_debug_drawer).apply {
+-                isVisible = true
++                isVisible = false
+                 isChecked = debugSettingsRepository.debugDrawerEnabled.first()
+                 onPreferenceChangeListener =
+                     Preference.OnPreferenceChangeListener { _, newValue ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 7f19ba4304..73dce8c20f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
