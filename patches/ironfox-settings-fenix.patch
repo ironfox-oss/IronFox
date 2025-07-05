@@ -52,7 +52,7 @@ index 7f19ba4304..8d07d9725e 100644
 +
 +    var spoofEnglish by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
-+        default = false
++        default = true
 +    )
 +
 +    var wasmEnabled by booleanPreference(
