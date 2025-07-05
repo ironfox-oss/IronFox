@@ -329,9 +329,43 @@ index 13db9f3c83..37fa89c98f 100644
  
      protected open fun initializeNimbus() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index 1ad6a264c7..ba0e55e734 100644
+index 1ad6a264c7..6cb95a28c0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
+@@ -16,7 +16,7 @@ import mozilla.components.lib.crash.service.GleanCrashReporterService
+ import mozilla.components.lib.crash.service.MozillaSocorroService
+ import mozilla.components.support.ktx.android.content.isMainProcess
+ import mozilla.components.support.utils.BrowsersCache
+-import mozilla.components.support.utils.RunWhenReadyQueue
++//import mozilla.components.support.utils.RunWhenReadyQueue
+ import org.mozilla.fenix.BuildConfig
+ import org.mozilla.fenix.Config
+ import org.mozilla.fenix.HomeActivity
+@@ -45,7 +45,7 @@ import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
+  */
+ class Analytics(
+     private val context: Context,
+-    private val runWhenReadyQueue: RunWhenReadyQueue,
++//    private val runWhenReadyQueue: RunWhenReadyQueue,
+ ) {
+     val crashReporter: CrashReporter by lazyMonitored {
+         val services = mutableListOf<CrashReporterService>()
+@@ -74,12 +74,12 @@ class Analytics(
+ 
+             // We only want to initialize Sentry on startup on the main process.
+             if (context.isMainProcess()) {
+-                runWhenReadyQueue.runIfReadyOrQueue {
+-                    sentryService.initIfNeeded()
++//                runWhenReadyQueue.runIfReadyOrQueue {
++//                    sentryService.initIfNeeded()
+                 }
+             }
+ 
+-            services.add(sentryService)
++//            services.add(sentryService)
+         }
+ 
+         // The name "Fenix" here matches the product name on Socorro and is unrelated to the actual app name:
 @@ -93,7 +93,7 @@ class Analytics(
              releaseChannel = MOZ_UPDATE_CHANNEL,
              distributionId = distributionId,
