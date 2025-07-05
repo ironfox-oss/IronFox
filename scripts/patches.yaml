@@ -271,13 +271,6 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Privacy"
 
-  - file: "install-ublock.patch"
-    name: "Auto-install uBlock Origin"
-    description: "Installs uBlock Origin on first browser install and allows it to run in private tabs by default."
-    reason: "To ensure content blocking is available from first launch."
-    effect: "Users get content blocking protection without manual installation."
-    category: "Privacy"
-  
   - file: "librewolf-rs-blocker.patch"
     name: "Block Remote Settings"
     description: "Restricts Remote Settings to only download specific collections specified in preferences."
@@ -464,6 +457,13 @@ patches:
     effect: "Provides users with a seamless browsing experience and allows them to benefit from our strong fingerprinting protection, minus the breakage and headaches."
     category: "User Experience"
 
+  - file: "ironfox-onboarding.patch"
+    name: "IronFox Onboarding"
+    description: "Adds IronFox-specific onboarding screens."
+    reason: "To allow users to configure IronFox to their liking on first install."
+    effect: "Users can toggle features as per their liking before they take effect in the browser."
+    category: "User Experience"
+
   # User Interface
   - file: "branding.patch"
     name: "IronFox Branding"
@@ -471,7 +471,7 @@ patches:
     reason: "Creates distinct brand identity for the fork."
     effect: "Users can identify the fork as IronFox instead of Firefox."
     category: "User Interface"
-  
+
   - file: "ironfox-home.patch"
     name: "IronFox Home"
     description: "Customizes the default homepage."
