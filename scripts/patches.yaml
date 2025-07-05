@@ -436,11 +436,11 @@ patches:
     effect: "Cleaner websites without cookie banners while maintaining privacy protection."
     category: "User Experience"
 
-  - file: "disable-default-browser-engagement-prompts.patch"
-    name: "Disable Default Browser Prompts"
-    description: "Disables prompts encouraging users to set the browser as the system default or engage with promotional features."
-    reason: "To eliminate unnecessary engagement messages that may interrupt user workflows."
-    effect: "Reduces distractions by suppressing default browser prompts and promotional nudges."
+  - file: "disable-nags.patch"
+    name: "Disable Nags"
+    description: "Disables Contextual Feature Recommendations, prompts encouraging users to set the browser as the system default, and other promotional messaging."
+    reason: "To remove promotional suggestions for Firefox features, and to eliminate unnecessary engagement messages that may interrupt user workflows."
+    effect: "Provides a cleaner interface without contextual prompts, recommendations, and unwanted nags."
     category: "User Experience"
 
   - file: "rs-dumps.patch"
@@ -470,13 +470,6 @@ patches:
     description: "Customizes the default homepage."
     reason: "Provides users with a cleaner browsing experience, and removes promotions of third party services."
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
-    category: "User Interface"
-
-  - file: "disable-cfrs.patch"
-    name: "Disable Contextual Feature Recommendations"
-    description: "Disables Contextual Feature Recommendations."
-    reason: "To removes promotional suggestions for Firefox features."
-    effect: "Cleaner interface without contextual prompts and recommendations."
     category: "User Interface"
   
   - file: "disable-recent-search-suggestions.patch"
