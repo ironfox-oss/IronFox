@@ -328,19 +328,6 @@ index 9d54f66a65..47c4244490 100644
          }
  
          fun getInstalledTime(context: Context): Long = context.packageManager
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-index 36d4b4c349..f9ff9db3bf 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-@@ -104,7 +104,7 @@ private fun Context.reportError(message: String, e: Throwable) {
- fun NimbusException.isReportableError(): Boolean {
-     return when (this) {
-         is NimbusException.ClientException -> false
--        else -> true
-+        else -> false
-     }
- }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 13db9f3c83..b0d4f44010 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt

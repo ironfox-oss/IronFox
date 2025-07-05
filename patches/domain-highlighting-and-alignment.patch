@@ -1,19 +1,12 @@
 diff --git a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
-index 506f8b3c6b..b53b31ad63 100644
+index 506f8b3c6b..925ac6ab80 100644
 --- a/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
 +++ b/mobile/android/android-components/components/browser/toolbar/src/main/java/mozilla/components/browser/toolbar/display/OriginView.kt
-@@ -7,6 +7,7 @@ package mozilla.components.browser.toolbar.display
- import android.animation.LayoutTransition
- import android.content.Context
- import android.graphics.Typeface
-+import android.text.Spanned
- import android.util.AttributeSet
- import android.util.TypedValue
- import android.view.Gravity
-@@ -17,6 +18,7 @@ import androidx.annotation.VisibleForTesting
+@@ -17,6 +17,8 @@ import androidx.annotation.VisibleForTesting
  import androidx.core.view.isVisible
  import mozilla.components.browser.toolbar.BrowserToolbar
  import mozilla.components.browser.toolbar.R
++import android.text.Spanned
 +import mozilla.components.concept.toolbar.Toolbar
  
  /**
@@ -52,31 +45,25 @@ index 506f8b3c6b..b53b31ad63 100644
      /**
       * Sets the colour of the text to be displayed when the URL of the toolbar is empty.
 diff --git a/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt b/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
-index 77ffea44d7..8bdfaea7a5 100644
+index 77ffea44d7..bedfcef794 100644
 --- a/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
 +++ b/mobile/android/android-components/components/concept/toolbar/src/main/java/mozilla/components/concept/toolbar/Toolbar.kt
-@@ -5,11 +5,13 @@
- package mozilla.components.concept.toolbar
- 
- import android.graphics.drawable.Drawable
+@@ -21,6 +21,8 @@ import mozilla.components.support.base.android.Padding
+ import mozilla.components.support.ktx.android.content.res.resolveAttribute
+ import mozilla.components.support.ktx.android.view.setPadding
+ import java.lang.ref.WeakReference
 +import android.text.style.ForegroundColorSpan
- import android.view.View
- import android.view.View.NO_ID
- import android.view.ViewGroup
- import android.widget.ImageButton
- import android.widget.ImageView
 +import androidx.annotation.ColorInt
- import androidx.annotation.ColorRes
- import androidx.annotation.Dimension
- import androidx.annotation.Dimension.Companion.DP
-@@ -548,6 +550,13 @@ interface Toolbar : ScrollableToolbar {
+ 
+ /**
+  * Interface to be implemented by components that provide browser toolbar functionality.
+@@ -548,6 +550,12 @@ interface Toolbar : ScrollableToolbar {
           */
          END,
      }
 +
 +    /**
 +     * Registrable domain foreground color span.
-+     *
 +     * This simple class extension is used so that we can filter for it elsewhere.
 +     */
 +    class RegistrableDomainColorSpan(@ColorInt color: Int) : ForegroundColorSpan(color)
