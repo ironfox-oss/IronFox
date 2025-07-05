@@ -224,70 +224,6 @@ index 10488889d7..02572c03a1 100644
                  ),
                  imageRes = R.drawable.ic_firefox,
                  primaryButton = Action(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..6232f0fd79 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2430,26 +2430,26 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the user has completed the setup step for choosing the toolbar location
-      */
--    var hasCompletedSetupStepToolbar by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
--        default = false,
--    )
-+    var hasCompletedSetupStepToolbar = true
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
-+//        default = false,
-+//    )
- 
-     /**
-      * Indicates if the user has completed the setup step for choosing the theme
-      */
--    var hasCompletedSetupStepTheme by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
--        default = false,
--    )
-+    var hasCompletedSetupStepTheme = true
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
-+//        default = false,
-+//    )
- 
-     /**
-      * Indicates if the user has completed the setup step for exploring extensions
-      */
--    var hasCompletedSetupStepExtensions by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_extensions),
--        default = false,
--    )
-+    var hasCompletedSetupStepExtensions = true
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_extensions),
-+//        default = false,
-+//    )
- 
-     /**
-      * Indicates if this is the default browser.
-@@ -2462,12 +2462,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates whether or not to show the checklist feature.
-      */
--    var showSetupChecklist by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
--        default = {
--            FxNimbus.features.setupChecklist.value().enabled &&
--                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
--        },
--        featureFlag = true,
--    )
-+    var showSetupChecklist = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
-+//        default = {
-+//            FxNimbus.features.setupChecklist.value().enabled &&
-+//                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
-+//        },
-+//        featureFlag = true,
-+//    )
- }
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 0e2a6efdc9..3d7ff4a88f 100644
 --- a/mobile/android/moz.configure
@@ -307,3 +243,37 @@ index 0e2a6efdc9..3d7ff4a88f 100644
  )
 +
 +include("ironfox.configure")
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 7f19ba4304..fbdf603c9b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -390,10 +390,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
+ 
+-    var hasAcceptedTermsOfService by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
+-        default = false,
+-    )
++    var hasAcceptedTermsOfService = true
++//        appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
++//        default = false,
++//    )
+ 
+     /**
+      * The daily usage ping is not normally tied to normal telemetry.  We set the default value to
+@@ -431,10 +431,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     val shouldShowSecurityPinWarning: Boolean
+         get() = secureWarningCount.underMaxCount()
+ 
+-    var shouldShowPrivacyPopWindow by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),
+-        default = true,
+-    )
++    var shouldShowPrivacyPopWindow = false
++//        appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),
++//        default = true,
++//    )
+ 
+     var shouldUseLightTheme by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_light_theme),
