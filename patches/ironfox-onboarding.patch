@@ -916,7 +916,7 @@ index 0000000000..977b45f5c0
 +                }
 +
 +                if (contentState is Configuration) {
-+                    Spacer(modifier = Modifier.weight(1f))
++                    Spacer(modifier = Modifier.height(16.dp))
 +
 +                    PrimaryButton(
 +                        text = if (preferenceOptions.lastIndex == currentPreferenceIndex) {
