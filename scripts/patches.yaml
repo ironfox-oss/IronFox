@@ -208,6 +208,13 @@ patches:
     effect: "Reduces unwanted network activity and improves the privacy of users."
     category: "Privacy"
 
+  - file: "disable-remote-search-configuration.patch"
+    name: "Disable Remote Search Configuration"
+    description: "Disables remotely configuring search from Mozilla."
+    reason: "To reduce unwanted network activity and ensure that users are in control of their search engines/configuration."
+    effect: "Reduces unwanted network activity and improves the privacy of users."
+    category: "Privacy"
+
   - file: "disable-link-sharing.patch"
     name: "Disable 'Sent from Firefox' Link Sharing"
     description: "Disables the 'Sent from Firefox' footer/link sharing feature."
@@ -422,11 +429,11 @@ patches:
     category: "User Control"
 
   # User Experience
-  - file: "block-autoplay-by-default.patch"
-    name: "Block Media Autoplay"
-    description: "Blocks autoplay of media by default."
-    reason: "To prevent unwanted audio/video playback on websites."
-    effect: "Improves user experience and reduces bandwidth usage."
+  - file: "default-site-permissions.patch"
+    name: "Default Site Permissions"
+    description: "Configures IronFox's default site permissions. Currently blocks Autoplay, Geolocation, and Notifications by default."
+    reason: "To prevent websites from prompting users to access Geolocation and send Notifications, and to prevent unwanted audio/video playback."
+    effect: "Improves user experience, and blocking Autoplay reduces bandwidth usage."
     category: "User Experience"
 
   - file: "block-cookie-banners.patch"

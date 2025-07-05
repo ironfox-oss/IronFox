@@ -1,16 +1,7 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 1dfd8e2b51..dbc50b777d 100644
+index 1dfd8e2b51..987e6b6afb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -53,7 +53,7 @@ import org.mozilla.fenix.ext.requireComponents
- import org.mozilla.fenix.ext.runIfFragmentIsAttached
- import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.home.HomeFragment
--import org.mozilla.fenix.nimbus.FxNimbus
-+//import org.mozilla.fenix.nimbus.FxNimbus
- import org.mozilla.fenix.settings.quicksettings.protections.cookiebanners.getCookieBannerUIMode
- import org.mozilla.fenix.shortcut.PwaOnboardingObserver
- import org.mozilla.fenix.theme.ThemeManager
 @@ -167,11 +167,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
      }
  
@@ -28,15 +19,6 @@ index 1dfd8e2b51..dbc50b777d 100644
  
          val translationsAction = Toolbar.ActionButton(
              AppCompatResources.getDrawable(
-@@ -598,7 +598,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
- 
-     override fun navToQuickSettingsSheet(tab: SessionState, sitePermissions: SitePermissions?) {
-         val useCase = requireComponents.useCases.trackingProtectionUseCases
--        FxNimbus.features.cookieBanners.recordExposure()
-+//        FxNimbus.features.cookieBanners.recordExposure()
-         useCase.containsException(tab.id) { hasTrackingProtectionException ->
-             lifecycleScope.launch {
-                 val cookieBannersStorage = requireComponents.core.cookieBannersStorage
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 index 1443661bb8..fbec347f11 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
@@ -60,27 +42,9 @@ index 1443661bb8..fbec347f11 100644
                      val isWebCompatEnabled by store.observeAsState(store.state.isWebCompatEnabled) {
                          it.isWebCompatEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index e7e19273f9..0c144bf82c 100644
+index e7e19273f9..ec21fc3a54 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -43,7 +43,7 @@ import org.mozilla.fenix.automotive.isAndroidAutomotiveAvailable
- import org.mozilla.fenix.components.accounts.FenixAccountManager
- import org.mozilla.fenix.ext.components
- import org.mozilla.fenix.ext.settings
--import org.mozilla.fenix.nimbus.FxNimbus
-+//import org.mozilla.fenix.nimbus.FxNimbus
- import org.mozilla.fenix.theme.ThemeManager
- 
- /**
-@@ -82,7 +82,7 @@ open class DefaultToolbarMenu(
-         get() = store.state.selectedTab
- 
-     override val menuBuilder by lazy {
--        FxNimbus.features.print.recordExposure()
-+//        FxNimbus.features.print.recordExposure()
-         WebExtensionBrowserMenuBuilder(
-             items = coreMenuItems,
-             endOfMenuAlwaysVisible = shouldUseBottomToolbar,
 @@ -205,7 +205,7 @@ open class DefaultToolbarMenu(
          val isEngineSupported = store.state.translationEngine.isEngineSupported
          return selectedSession?.let {
@@ -99,19 +63,37 @@ index e7e19273f9..0c144bf82c 100644
                      !context.isAndroidAutomotiveAvailable()
                  ) {
                      printPageItem
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/FenixOnboarding.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/FenixOnboarding.kt
-index a6f3b77a47..0f03319f6c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/FenixOnboarding.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/FenixOnboarding.kt
-@@ -33,7 +33,7 @@ class FenixOnboarding(context: Context) : PreferencesHolder {
-     // - We would like to evaluate the configuration only once (and thus it's kept in memory
-     // and not re-evaluated)
-     val config by lazy {
--        FxNimbus.features.onboarding.recordExposure()
-+//        FxNimbus.features.onboarding.recordExposure()
-         FxNimbus.features.onboarding.value()
-     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
+index e387bc4ae0..17a5b647e0 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
+@@ -11,7 +11,7 @@ import mozilla.components.browser.state.action.SearchAction
+ import mozilla.components.browser.state.store.BrowserStore
+ import mozilla.components.support.locale.LocaleManager
+ import mozilla.components.support.locale.LocaleUseCases
+-import org.mozilla.fenix.nimbus.FxNimbus
++//import org.mozilla.fenix.nimbus.FxNimbus
+ import java.util.Locale
  
+ interface LocaleSettingsController {
+@@ -39,7 +39,7 @@ class DefaultLocaleSettingsController(
+         LocaleManager.updateBaseConfiguration(activity, locale)
+ 
+         // Invalidate cached values to use the new locale
+-        FxNimbus.features.nimbusValidation.withCachedValue(null)
++//        FxNimbus.features.nimbusValidation.withCachedValue(null)
+         activity.recreate()
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+             activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
+@@ -59,7 +59,7 @@ class DefaultLocaleSettingsController(
+         LocaleManager.updateBaseConfiguration(activity, localeSettingsStore.state.localeList[0])
+ 
+         // Invalidate cached values to use the default locale
+-        FxNimbus.features.nimbusValidation.withCachedValue(null)
++//        FxNimbus.features.nimbusValidation.withCachedValue(null)
+         activity.recreate()
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+             activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 index 43bea16286..5b239c74b3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
@@ -135,18 +117,9 @@ index 43bea16286..5b239c74b3 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..992b174317 100644
+index 325e5d2141..fc8ce20d0a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -65,7 +65,7 @@ import org.mozilla.fenix.ext.openSetDefaultBrowserOption
- import org.mozilla.fenix.ext.requireComponents
- import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.ext.showToolbar
--import org.mozilla.fenix.nimbus.FxNimbus
-+//import org.mozilla.fenix.nimbus.FxNimbus
- import org.mozilla.fenix.perf.ProfilerViewModel
- import org.mozilla.fenix.settings.account.AccountUiView
- import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
 @@ -176,7 +176,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
  
          findPreference<Preference>(
@@ -170,15 +143,6 @@ index 325e5d2141..992b174317 100644
  
          showToolbar("$title$suffix")
  
-@@ -713,7 +713,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
- 
-     @VisibleForTesting
-     internal fun setupCookieBannerPreference() {
--        FxNimbus.features.cookieBanners.recordExposure()
-+//        FxNimbus.features.cookieBanners.recordExposure()
-         if (context?.settings()?.shouldShowCookieBannerUI == false) return
-         with(requirePreference<SwitchPreference>(R.string.pref_key_cookie_banner_private_mode)) {
-             isVisible = context.settings().shouldShowCookieBannerUI
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt
 index 1a02f82498..728024b7b3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt
@@ -237,7 +201,7 @@ index 472e3bf5a8..b2a4842c16 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..61999e5ac6 100644
+index 7f19ba4304..f35f7d2bab 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -225,10 +225,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -269,6 +233,20 @@ index 7f19ba4304..61999e5ac6 100644
      )
  
      var openLinksInAPrivateTab by booleanPreference(
+@@ -332,10 +332,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
+ 
+-    var privateBrowsingLockedEnabled by lazyFeatureFlagPreference(
++    var privateBrowsingLockedEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_private_browsing_locked_enabled),
+-        featureFlag = FxNimbus.features.privateBrowsingLock.value().enabled,
+-        default = { false },
++//        featureFlag = FxNimbus.features.privateBrowsingLock.value().enabled,
++        default = false ,
+     )
+ 
+     var shouldReturnToBrowser by booleanPreference(
 @@ -407,10 +407,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          persistDefaultIfNotExists = true,
      )
@@ -313,32 +291,6 @@ index 7f19ba4304..61999e5ac6 100644
      )
  
      /**
-@@ -1846,7 +1846,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         isLauncherIntent: Boolean,
-     ): Boolean {
-         return if (featureEnabled && !hasUserBeenOnboarded && isLauncherIntent) {
--            FxNimbus.features.junoOnboarding.recordExposure()
-+//            FxNimbus.features.junoOnboarding.recordExposure()
-             true
-         } else {
-             false
-@@ -1891,11 +1891,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates whether or not to use remote server search configuration.
-      */
--    var useRemoteSearchConfiguration by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
--        default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
--        featureFlag = true,
--    )
-+    var useRemoteSearchConfiguration = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
-+//        default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
-+//        featureFlag = true,
-+//    )
- 
-     /**
-      * Indicates if the menu CFR should be displayed to the user.
 @@ -2153,7 +2153,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the feature to close synced tabs is enabled.
       */
