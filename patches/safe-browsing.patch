@@ -1,16 +1,24 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..467f346750 100644
+index 325e5d2141..1c6922d026 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -573,6 +573,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
-         setupHomepagePreference()
-         setupTrackingProtectionPreference()
-         setupDnsOverHttpsPreference(requireContext().settings())
-+        setupSafeBrowsingPreference()
-     }
+@@ -73,6 +73,7 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
+ import org.mozilla.fenix.utils.Settings
+ import kotlin.system.exitProcess
+ import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
++import org.mozilla.fenix.utils.IronFoxPreferences
  
-     /**
-@@ -770,6 +771,36 @@ class SettingsFragment : PreferenceFragmentCompat() {
+ @Suppress("LargeClass", "TooManyFunctions")
+ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -563,6 +564,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+                 (requireContext().components.core.engine.profiler?.isProfilerActive() != null)
+         }
+         setupCookieBannerPreference()
++        setupSafeBrowsingPreference()
+         setupInstallAddonFromFilePreference(requireContext().settings())
+         setLinkSharingPreference()
+         setupAmoCollectionOverridePreference(requireContext().settings())
+@@ -741,6 +743,37 @@ class SettingsFragment : PreferenceFragmentCompat() {
          }
      }
  
@@ -20,6 +28,7 @@ index 325e5d2141..467f346750 100644
 +            R.string.pref_key_safe_browsing_enabled,
 +        )
 +
++        safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
 +        safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
@@ -44,9 +53,9 @@ index 325e5d2141..467f346750 100644
 +        }
 +    }
 +
-     private fun updateProfilerUI(profilerStatus: Boolean) {
-         if (profilerStatus) {
-             findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
+     @VisibleForTesting
+     internal fun setupInstallAddonFromFilePreference(settings: Settings) {
+         with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 4c6b14bf87..47c904b384 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml

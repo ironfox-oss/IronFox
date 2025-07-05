@@ -119,7 +119,7 @@ index 24e8f76532..7b7b0780a9 100644
 +    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
 +    override var safeBrowsingEnabled: Boolean = true,
 +    override var safeBrowsingPhishingEnabled: Boolean = true,
-+    override var spoofEnglish: Boolean = false,
++    override var spoofEnglish: Boolean = true,
 +    override var wasmEnabled: Boolean = true,
  ) : Settings() {
      override val desktopModeEnabled: Boolean
@@ -270,7 +270,7 @@ index 25ea09c3f6..6261d07d93 100644
 +  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
 +  /* package */ final Pref<Boolean> mSafeBrowsingEnabled = new Pref<>("browser.safebrowsing.malware.enabled", true);
 +  /* package */ final Pref<Boolean> mSafeBrowsingPhishingEnabled = new Pref<>("browser.safebrowsing.phishing.enabled", true);
-+  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 0);
++  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 2);
 +  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", true);
 +
    /**
