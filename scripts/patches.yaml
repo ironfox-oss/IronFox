@@ -208,6 +208,13 @@ patches:
     effect: "Reduces unwanted network activity and improves the privacy of users."
     category: "Privacy"
 
+  - file: "disable-remote-search-configuration.patch"
+    name: "Disable Remote Search Configuration"
+    description: "Disables remotely configuring search from Mozilla."
+    reason: "To reduce unwanted network activity and ensure that users are in control of their search engines/configuration."
+    effect: "Reduces unwanted network activity and improves the privacy of users."
+    category: "Privacy"
+
   - file: "disable-link-sharing.patch"
     name: "Disable 'Sent from Firefox' Link Sharing"
     description: "Disables the 'Sent from Firefox' footer/link sharing feature."
