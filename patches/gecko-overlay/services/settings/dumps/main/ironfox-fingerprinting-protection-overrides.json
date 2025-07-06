@@ -874,6 +874,10 @@
     },
     {
       "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "bahn.expert"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "bitcoinist.org"
     },
     {
