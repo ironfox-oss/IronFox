@@ -1,22 +1,61 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <resources xmlns:tools="http://schemas.android.com/tools"  xmlns:moz="http://mozac.org/tools">
-    <!-- Spoof locale to English -->
-    <string name="tor_spoof_english">Request English versions of web pages for enhanced privacy</string>
     <!-- Warn users that the browser will restart -->
     <string name="restart_required_summary">Changing this setting will restart your browser</string>
+
+    <!-- Spoof locale to English -->
+    <string name="tor_spoof_english_title">Spoof language to en-US</string>
+    <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
+    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
+    <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
+
     <!-- Accessibility Services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
     <string name="preference_accessibility_enabled_summary">Enable to allow communication with accessibility services on your device.</string>
+
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
-    <!-- Content Settings -->
+    <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
+    <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
+
+    <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
+
+    <!-- JavaScript JIT -->
     <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
+    <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
+    <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
+
+    <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
+
+    <!-- UnifiedPush -->
     <!-- Label for enabling UnifiedPush -->
     <string name="preferences_debug_settings_unifiedpush" translatable="false">Enable UnifiedPush</string>
     <!-- Label for using UnifiedPush. UnifiedPush is a decentralized push notification system, so users can benefit from mobile push notifications without relying on Google Services. Users choose the application (and server) they wish to use to manage webpush for other applications. If enabled, the browser (e.g. IronFox) will receive webpush messages via the chosen app. -->
     <string name="preferences_unifiedpush">Use UnifiedPush</string>
     <!-- Toast shown after confirming the UnifiedPush configuration -->
     <string name="toast_change_unifiedpush_done">UnifiedPush setting modified. Quitting the application to apply changes…</string>
+
+    <!-- Onboarding - Title and description -->
+    <string name="onboarding_if_preferences_title">Customize IronFox</string>
+    <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
+
+    <!-- Onboarding - DoH -->
+    <string name="onboarding_if_preference_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
+    <string name="onboarding_if_preference_doh_default_protection_summary">IronFox will use your system’s DNS resolver.</string>
+    <string name="onboarding_if_preference_doh_increased_protection_summary">IronFox will use secure DNS by default, but fallback to your system’s DNS resolver if secure DNS is unavailable.</string>
+    <string name="onboarding_if_preference_doh_off_summary"></string>
+
+    <!-- Onboarding - uBlock Origin -->
+    <string name="onboarding_install_ublock_title">Install uBlock Origin</string>
+    <string name="onboarding_install_ublock_caption">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
+    <string name="onboarding_install_ublock_description">uBlock Origin enhances your privacy and security by blocking unwanted content. IronFox uses a custom uBlock Origin configuration with curated filter lists for optimal protection and performance.</string>
+
+    <!-- Onboarding - States -->
+    <string name="onboarding_state_installing_ublock">Installing uBlock Origin…</string>
+    <string name="onboarding_state_installing_ublock_error">An error occurred while installing uBlock Origin: %1$s</string>
+
+    <!-- Onboarding - Actions -->
+    <string name="onboarding_action_retry">Retry</string>
 </resources>
