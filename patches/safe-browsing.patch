@@ -136,10 +136,10 @@ index 325e5d2141..df435300a3 100644
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..cbfa894b4b 100644
+index 9197b274db..11df72604c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -776,6 +776,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -781,6 +781,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      val queryParameterStrippingStripList: String
          get() = queryParameterStrippingSection[QUERY_PARAMETER_STRIPPING_STRIP_LIST].orEmpty()
  

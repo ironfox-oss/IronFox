@@ -513,10 +513,10 @@ index 43bea16286..8f460115af 100644
                  onPreferenceChangeListener =
                      Preference.OnPreferenceChangeListener { _, newValue ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..73dce8c20f 100644
+index 9197b274db..5cd8fcfa66 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -375,20 +375,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -380,20 +380,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -549,7 +549,7 @@ index 7f19ba4304..73dce8c20f 100644
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
-@@ -401,11 +401,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -406,11 +406,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
