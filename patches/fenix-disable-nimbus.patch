@@ -95,7 +95,7 @@ index e387bc4ae0..17a5b647e0 100644
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
              activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..5b239c74b3 100644
+index 43bea16286..07fc6947c5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 @@ -58,7 +58,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
@@ -107,15 +107,6 @@ index 43bea16286..5b239c74b3 100644
              isChecked = context.settings().nimbusUsePreview
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
-@@ -225,7 +225,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
--            isVisible = true
-+            isVisible = false
-             isChecked = context.settings().useRemoteSearchConfiguration
-             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
-                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 index 325e5d2141..fc8ce20d0a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
@@ -201,7 +192,7 @@ index 472e3bf5a8..b2a4842c16 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..f35f7d2bab 100644
+index 9197b274db..326d068e94 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -225,10 +225,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -237,17 +228,17 @@ index 7f19ba4304..f35f7d2bab 100644
          default = false,
      )
  
--    var privateBrowsingLockedEnabled by lazyFeatureFlagPreference(
-+    var privateBrowsingLockedEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_private_browsing_locked_enabled),
--        featureFlag = FxNimbus.features.privateBrowsingLock.value().enabled,
--        default = { false },
-+//        featureFlag = FxNimbus.features.privateBrowsingLock.value().enabled,
-+        default = false ,
+-    var privateBrowsingLockedFeatureEnabled by lazyFeatureFlagPreference(
++    var privateBrowsingLockedFeatureEnabled by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_private_browsing_locked_enabled),
+-        featureFlag = true,
+-        default = { FxNimbus.features.privateBrowsingLock.value().enabled },
++//        featureFlag = true,
++        default = false,
      )
  
-     var shouldReturnToBrowser by booleanPreference(
-@@ -407,10 +407,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var privateBrowsingModeLocked by booleanPreference(
+@@ -412,10 +412,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          persistDefaultIfNotExists = true,
      )
  
@@ -262,7 +253,7 @@ index 7f19ba4304..f35f7d2bab 100644
  
      var isOverrideTPPopupsForPerformanceTest = false
  
-@@ -529,10 +529,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -534,10 +534,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -277,7 +268,7 @@ index 7f19ba4304..f35f7d2bab 100644
  
      var isFirstNimbusRun: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-@@ -1674,10 +1674,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1678,10 +1678,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if home onboarding dialog should be shown.
       */
@@ -291,7 +282,7 @@ index 7f19ba4304..f35f7d2bab 100644
      )
  
      /**
-@@ -2153,7 +2153,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2157,7 +2157,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the feature to close synced tabs is enabled.
       */
      val enableCloseSyncedTabs: Boolean

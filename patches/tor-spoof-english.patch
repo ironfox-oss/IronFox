@@ -123,10 +123,10 @@ index 91929aab38..a45b807f84 100644
          inflater.inflate(R.menu.languages_list, menu)
          val searchItem = menu.findItem(R.id.search)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..e02e9052ee 100644
+index 9197b274db..1bff52be02 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -343,6 +343,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -348,6 +348,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          false,
      )
  
@@ -134,7 +134,7 @@ index 7f19ba4304..e02e9052ee 100644
 +        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
 +        default = true
 +    )
-+
++    
      var defaultSearchEngineName by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_search_engine),
          default = "",
