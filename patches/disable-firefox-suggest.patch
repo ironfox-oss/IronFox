@@ -25,10 +25,10 @@ index 43bea16286..499ee28bce 100644
              onPreferenceChangeListener = object : Preference.OnPreferenceChangeListener {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..12d254c8e3 100644
+index 9197b274db..c704357d27 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2099,17 +2099,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2103,17 +2103,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Firefox Suggest is enabled.
       */
@@ -50,7 +50,7 @@ index 7f19ba4304..12d254c8e3 100644
  
      /**
       * Indicates first time engaging with signup
-@@ -2123,21 +2123,21 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2127,21 +2127,21 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
       * The default value is computed lazily, and based on whether Firefox Suggest is enabled.
       */

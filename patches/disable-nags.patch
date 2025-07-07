@@ -12,7 +12,7 @@ index e5ab956ac3..4d1ef3de39 100644
  
      private fun isNotDefaultBrowser(context: Context) =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..0f29d724a6 100644
+index 9197b274db..2b38b6598d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -198,7 +198,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -24,7 +24,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -611,10 +611,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -616,10 +616,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the user has completed successfully first translation.
       */
@@ -39,7 +39,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      /**
       * Indicates if the user wants translations to automatically be offered as a popup of the dialog.
-@@ -783,12 +783,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -788,12 +788,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * This will lead to a performance regression since that function can be expensive to call.
       */
      fun checkIfFenixIsDefaultBrowserOnAppResume(): Boolean {
@@ -58,7 +58,7 @@ index 7f19ba4304..0f29d724a6 100644
      }
  
      /**
-@@ -800,40 +800,40 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -805,40 +805,40 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          return browsers.isDefaultBrowser
      }
  
@@ -111,7 +111,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      val shouldUseAutoBatteryTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
-@@ -893,30 +893,30 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -898,30 +898,30 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the total cookie protection CRF should be shown.
       */
@@ -160,7 +160,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_cookies_select),
-@@ -1192,11 +1192,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1197,11 +1197,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      )
  
      private val userNeedsToVisitInstallableSites: Boolean
@@ -174,7 +174,7 @@ index 7f19ba4304..0f29d724a6 100644
              // We only want to show this on the 3rd time a user visits a site
              if (userNeedsToVisitInstallableSites) return false
  
-@@ -1212,42 +1212,42 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1217,41 +1217,41 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              return !userKnowsAboutPwas
          }
  
@@ -209,15 +209,13 @@ index 7f19ba4304..0f29d724a6 100644
 +//        default = true,
 +//    )
  
--    var shouldShowLockPbmBanner by lazyFeatureFlagPreference(
+-    var shouldShowLockPbmBanner by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_should_show_lock_pbm_banner),
--        featureFlag = FxNimbus.features.privateBrowsingLock.value().enabled,
--        default = { true },
+-        true,
 -    )
 +    var shouldShowLockPbmBanner = false
 +//        appContext.getPreferenceKey(R.string.pref_key_should_show_lock_pbm_banner),
-+//        featureFlag = FxNimbus.features.privateBrowsingLock.value().enabled,
-+//        default = { true },
++//        true,
 +//    )
  
 -    var shouldShowInactiveTabsOnboardingPopup by booleanPreference(
@@ -243,7 +241,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      /**
       * Indicates if the auto-close dialog should be visible based on
-@@ -1256,7 +1256,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1260,7 +1260,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * and if the auto-close setting is already set to [closeTabsAfterOneMonth].
       */
      fun shouldShowInactiveTabsAutoCloseDialog(numbersOfTabs: Int): Boolean {
@@ -252,7 +250,7 @@ index 7f19ba4304..0f29d724a6 100644
              numbersOfTabs >= INACTIVE_TAB_MINIMUM_TO_SHOW_AUTO_CLOSE_DIALOG &&
              !closeTabsAfterOneMonth
      }
-@@ -1665,11 +1665,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1669,11 +1669,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if sync onboarding CFR should be shown.
       */
@@ -269,7 +267,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      /**
       * Indicates if home onboarding dialog should be shown.
-@@ -1883,10 +1883,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1887,10 +1887,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the search bar CFR should be displayed to the user.
       */
@@ -284,7 +282,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      /**
       * Indicates whether or not to use remote server search configuration.
-@@ -1900,10 +1900,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1904,10 +1904,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the menu CFR should be displayed to the user.
       */
@@ -299,7 +297,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      /**
       * Get the current mode for how https-only is enabled.
-@@ -2114,10 +2114,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2118,10 +2118,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates first time engaging with signup
       */
@@ -314,7 +312,7 @@ index 7f19ba4304..0f29d724a6 100644
  
      /**
       * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
-@@ -2269,7 +2269,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2273,7 +2273,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val shouldShowSetAsDefaultPrompt: Boolean
          get() =
@@ -323,7 +321,7 @@ index 7f19ba4304..0f29d724a6 100644
                  DAYS_BETWEEN_DEFAULT_BROWSER_PROMPTS * ONE_DAY_MS &&
                  numberOfSetAsDefaultPromptShownTimes < MAX_NUMBER_OF_DEFAULT_BROWSER_PROMPTS &&
                  coldStartsBetweenSetAsDefaultPrompts >= APP_COLD_STARTS_TO_SHOW_DEFAULT_PROMPT
-@@ -2430,44 +2430,44 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2434,44 +2434,44 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the user has completed the setup step for choosing the toolbar location
       */

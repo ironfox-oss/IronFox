@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..ad03528ff2 100644
+index 9197b274db..9c4d52f60b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -370,10 +370,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -375,10 +375,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
                  true,
              )
  

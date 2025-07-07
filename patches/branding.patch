@@ -244,10 +244,10 @@ index 0e2a6efdc9..3d7ff4a88f 100644
 +
 +include("ironfox.configure")
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..fbdf603c9b 100644
+index 9197b274db..2d791fa7b7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -390,10 +390,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -395,10 +395,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -262,7 +262,7 @@ index 7f19ba4304..fbdf603c9b 100644
  
      /**
       * The daily usage ping is not normally tied to normal telemetry.  We set the default value to
-@@ -431,10 +431,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -436,10 +436,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      val shouldShowSecurityPinWarning: Boolean
          get() = secureWarningCount.underMaxCount()
  

@@ -421,7 +421,7 @@ index 6725aa64a0..724b1674cf 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..5e64718c0f 100644
+index 9197b274db..8e72f5bbf0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -168,7 +168,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -433,7 +433,7 @@ index 7f19ba4304..5e64718c0f 100644
  
      override val preferences: SharedPreferences =
          appContext.getSharedPreferences(FENIX_PREFERENCES, MODE_PRIVATE)
-@@ -364,10 +364,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -369,10 +369,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      )
  
      val isCrashReportingEnabled: Boolean
@@ -446,7 +446,7 @@ index 7f19ba4304..5e64718c0f 100644
              )
  
      val isRemoteDebuggingEnabled by booleanPreference(
-@@ -2310,10 +2310,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2314,10 +2314,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * A user preference indicating that crash reports should always be automatically sent. This can be updated
       * through the unsubmitted crash dialog or through data choice preferences.
       */
