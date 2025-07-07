@@ -95,7 +95,7 @@ index e387bc4ae0..17a5b647e0 100644
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
              activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..5b239c74b3 100644
+index 43bea16286..07fc6947c5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 @@ -58,7 +58,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
@@ -107,15 +107,6 @@ index 43bea16286..5b239c74b3 100644
              isChecked = context.settings().nimbusUsePreview
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
-@@ -225,7 +225,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
--            isVisible = true
-+            isVisible = false
-             isChecked = context.settings().useRemoteSearchConfiguration
-             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
-                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 index 325e5d2141..fc8ce20d0a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
