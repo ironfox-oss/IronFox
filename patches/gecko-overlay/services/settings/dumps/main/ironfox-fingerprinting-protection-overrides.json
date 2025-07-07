@@ -889,10 +889,6 @@
       "firstPartyDomain": "bsky.app"
     },
     {
-      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,-WebGLRenderInfo",
-      "firstPartyDomain": "cakepay.com"
-    },
-    {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "chatwave.org"
     },
@@ -1015,10 +1011,6 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "megacloud.store"
-    },
-    {
-      "overrides": "-WebGLRenderInfo,+JSDateTimeUTC",
-      "firstPartyDomain": "moviezapiya.fun"
     },
     {
       "overrides": "-JSDateTimeUTC",
