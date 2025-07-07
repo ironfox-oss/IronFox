@@ -78,10 +78,18 @@ index cfbdaba62c..04c57c624e 100644
              cookieBannerHandlingGlobalRules = context.settings().shouldEnableCookieBannerGlobalRules,
              cookieBannerHandlingGlobalRulesSubFrames = context.settings().shouldEnableCookieBannerGlobalRulesSubFrame,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..832d740660 100644
+index 325e5d2141..df435300a3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -563,6 +563,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -70,6 +70,7 @@ import org.mozilla.fenix.perf.ProfilerViewModel
+ import org.mozilla.fenix.settings.account.AccountUiView
+ import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
+ import org.mozilla.fenix.snackbar.SnackbarBinding
++import org.mozilla.fenix.utils.IronFoxPreferences
+ import org.mozilla.fenix.utils.Settings
+ import kotlin.system.exitProcess
+ import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
+@@ -563,6 +564,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                  (requireContext().components.core.engine.profiler?.isProfilerActive() != null)
          }
          setupCookieBannerPreference()
@@ -89,7 +97,7 @@ index 325e5d2141..832d740660 100644
          setupInstallAddonFromFilePreference(requireContext().settings())
          setLinkSharingPreference()
          setupAmoCollectionOverridePreference(requireContext().settings())
-@@ -741,6 +742,36 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -741,6 +743,37 @@ class SettingsFragment : PreferenceFragmentCompat() {
          }
      }
  
@@ -99,6 +107,7 @@ index 325e5d2141..832d740660 100644
 +            R.string.pref_key_safe_browsing_enabled,
 +        )
 +
++        safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
 +        safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
 +            val settings = preference.context.settings()
 +            val components = preference.context.components

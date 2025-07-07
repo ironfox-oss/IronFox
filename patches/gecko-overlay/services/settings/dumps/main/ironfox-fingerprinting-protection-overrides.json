@@ -874,6 +874,10 @@
     },
     {
       "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "bahn.expert"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "bitcoinist.org"
     },
     {
@@ -883,10 +887,6 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "bsky.app"
-    },
-    {
-      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,-WebGLRenderInfo",
-      "firstPartyDomain": "cakepay.com"
     },
     {
       "overrides": "-JSDateTimeUTC",
@@ -1011,10 +1011,6 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "megacloud.store"
-    },
-    {
-      "overrides": "-WebGLRenderInfo,+JSDateTimeUTC",
-      "firstPartyDomain": "moviezapiya.fun"
     },
     {
       "overrides": "-JSDateTimeUTC",
