@@ -2577,10 +2577,10 @@ index 325e5d2141..44a6263c5b 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..1e8f963174 100644
+index 9197b274db..420da7a4ab 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1982,6 +1982,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1986,6 +1986,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = 0,
      )
  
