@@ -2576,40 +2576,6 @@ index 325e5d2141..44a6263c5b 100644
 +        private const val DEFAULT_EXIT_DELAY = 2000L
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..420da7a4ab 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1986,6 +1986,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = 0,
-     )
- 
-+    var enableUnifiedPush by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
-+        default = true,
-+    )
-+
-+    var useUnifiedPush by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
-+        default = false,
-+    )
-+
-     /**
-      * Indicates if the Compose Homepage is enabled.
-      */
-diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a55bf0589b17..0e3add9a420e 100644
---- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -414,6 +414,8 @@
-     <string name="pref_key_enable_recent_searches" translatable="false">pref_key_enable_recent_searches</string>
-     <string name="pref_key_enable_shortcuts_suggestions" translatable="false">pref_key_enable_shortcuts_suggestions</string>
-     <string name="pref_key_enable_composable_toolbar" translatable="false">pref_key_enable_composable_toolbar</string>"
-+    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
-+    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
- 
-     <!-- Logins -->
-     <string name="pref_key_enable_compose_logins" translatable="false">pref_key_enable_compose_logins</string>
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 4c6b14bf87..204c648354 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
