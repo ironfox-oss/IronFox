@@ -1,11 +1,11 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 1dfd8e2b51..987e6b6afb 100644
+index 6611dd53cd..1254a626ac 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -167,11 +167,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
-     }
+@@ -172,11 +172,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+             return
+         }
  
-     private fun initTranslationsAction(context: Context, view: View) {
 -        if (
 -            !FxNimbus.features.translations.value().mainFlowToolbarEnabled
 -        ) {
