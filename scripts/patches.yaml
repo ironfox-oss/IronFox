@@ -489,7 +489,7 @@ patches:
   - file: "tab-strip.patch"
     name: "Tab Strip"
     description: "Adds a UI setting to enable/disable the Tab Strip feature."
-    reason: To allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954).
+    reason: "To allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954)."
     effect: "Users can enable or disable the Tab Strip, depending on their personal preference."
     category: "User Interface"
 
