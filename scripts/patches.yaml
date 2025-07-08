@@ -485,7 +485,14 @@ patches:
     reason: "Provides users with a cleaner browsing experience, and removes promotions of third party services."
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
     category: "User Interface"
-  
+
+  - file: "tab-strip.patch"
+    name: "Tab Strip"
+    description: "Adds a UI setting to enable/disable the Tab Strip feature."
+    reason: To allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954).
+    effect: "Users can enable or disable the Tab Strip, depending on their personal preference."
+    category: "User Interface"
+
   - file: "disable-recent-search-suggestions.patch"
     name: "Disable Recent Search Suggestions"
     description: "Disables recent search suggestions by default."
@@ -499,7 +506,7 @@ patches:
     reason: "To prevent interruptions from survey prompts."
     effect: "Improves user experience by removing survey notifications."
     category: "User Interface"
-  
+
   - file: "expose-aboutconfig.patch"
     name: "Expose the 'about:config'"
     description: "Exposes the 'about:config' in 'about:about' alongside other internal 'about' pages."
@@ -514,7 +521,7 @@ patches:
       To prevent users from easily/unnecessarily disabling GPC, as its status can aid fingerprinting, thus harming privacy.
     effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
     category: "User Interface"
-  
+
   - file: "safe-browsing.patch"
     name: "Safe Browsing UI"
     description: "Adds a UI setting to toggle Safe Browsing."
@@ -522,7 +529,7 @@ patches:
       To improve transparency and usability, so that users can enable or disable Safe Browsing as needed to suit their personal preference.
     effect: "Users can now seamlessly enable or disable Safe Browsing without needing to dive into advanced configuration options."
     category: "User Interface"
-  
+
   - file: "ironfox-content-settings.patch"
     name: "IronFox Content Settings"
     description: "Adds IronFox-specific UI content settings, which can be found under `Site settings`."
