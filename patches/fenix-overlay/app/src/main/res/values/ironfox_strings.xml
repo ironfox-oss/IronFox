@@ -26,6 +26,11 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
 
+    <!-- Tab Strip -->
+    <string name="preference_tab_strip_show">Show tab bar</string>
+    <string name="preference_toolbar_pref_disabled_explanation">Address bar must be on top when tab bar is shown.</string>
+    <string name="preferences_tab_strip">Tab bar display</string>
+
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
