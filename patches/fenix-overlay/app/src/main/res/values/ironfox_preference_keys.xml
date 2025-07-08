@@ -11,4 +11,8 @@
 
     <!-- Spoof English -->
     <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+
+    <!-- UnifiedPush -->
+    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
+    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
 </resources>

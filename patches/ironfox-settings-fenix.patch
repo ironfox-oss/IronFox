@@ -23,16 +23,21 @@ index cfbdaba62c..2e47089dc2 100644
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..f8566ef973 100644
+index 9197b274db..87423d5472 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2463,6 +2463,36 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2463,6 +2463,46 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
 +        default = false,
++    )
++
++    var enableUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++        default = true,
 +    )
 +
 +    var javascriptEnabled by booleanPreference(
@@ -53,6 +58,11 @@ index 9197b274db..f8566ef973 100644
 +    var spoofEnglish by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
 +        default = true
++    )
++
++    var useUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
++        default = false,
 +    )
 +
 +    var wasmEnabled by booleanPreference(
