@@ -12,10 +12,10 @@ index 43bea16286..7b4a264b5a 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..cef653b140 100644
+index 9197b274db..0c167a77fc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2218,19 +2218,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2222,19 +2222,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the microsurvey feature is enabled.
       */
@@ -25,6 +25,10 @@ index 7f19ba4304..cef653b140 100644
 -        featureFlag = true,
 -    )
 +    var microsurveyFeatureEnabled = false
++//        key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
++//        default = { FxNimbus.features.microsurveys.value().enabled },
++//        featureFlag = true,
++//    )
  
      /**
       * Indicates if a microsurvey should be shown to the user.
@@ -34,6 +38,9 @@ index 7f19ba4304..cef653b140 100644
 -        default = false,
 -    )
 +    var shouldShowMicrosurveyPrompt = false
++//        appContext.getPreferenceKey(R.string.pref_key_should_show_microsurvey_prompt),
++//        default = false,
++//    )
  
      /**
       * Last time the Set as default Browser prompt has been displayed to the user.

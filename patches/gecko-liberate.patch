@@ -12,16 +12,19 @@ index b6305f62be..8b5708dc1b 100644
  
      implementation libs.androidx.lifecycle.common
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index f94b88f8d8..c06a5f1b45 100644
+index f94b88f8d8..d9db903a89 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
-@@ -166,9 +166,6 @@ toolkit.jar:
+@@ -166,9 +166,9 @@ toolkit.jar:
  #ifdef XP_MACOSX
     content/global/macWindowMenu.js
  #endif
 -   content/global/gmp-sources/openh264.json    (gmp-sources/openh264.json)
 -   content/global/gmp-sources/widevinecdm.json (gmp-sources/widevinecdm.json)
 -   content/global/gmp-sources/widevinecdm_l1.json (gmp-sources/widevinecdm_l1.json)
++#   content/global/gmp-sources/openh264.json    (gmp-sources/openh264.json)
++#   content/global/gmp-sources/widevinecdm.json (gmp-sources/widevinecdm.json)
++#   content/global/gmp-sources/widevinecdm_l1.json (gmp-sources/widevinecdm_l1.json)
  
  # Third party files
     content/global/third_party/d3/d3.js                (/third_party/js/d3/d3.js)

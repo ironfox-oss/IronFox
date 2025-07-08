@@ -3,10 +3,11 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 
 <SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
-  <ShortName>No Search</ShortName>
-  <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" method="GET" template="https://nosearch.invalid/">
-    <Param name="q" value="{searchTerms}"/>
-  </Url>
-  <SearchForm>https://nosearch.invalid/</SearchForm>
+<ShortName>No Search</ShortName>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16">data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAw0lEQVR4AY2RwQqCQBCG9yT0KuqzpgeFfiJv9QBWJ+sJ6ijZU9hhgzJcpllmxSWk2o9hf8cPHVc1LISYo8GTuXAKoQTZAmQwIA+DBWaDEKACTXBEIEJuLytqyXBVvpJZIUJvb2vaU8GlfaVHpJDY2NLONbecMZIoNDYYKlxrydkTGoXu6xM6J/AMrKy4NJ18QcsrmAPdyHCd6UHlKNRuSJ/SV1KFGP2UspHPjN1BfbKWPf/zqH/+LCFCiiteuKPmFA/9NwcHZ1DIAAtUAAAAAElFTkSuQmCC</Image>
+<Url type="text/html" method="GET" template="https://nosearch.invalid/">
+  <Param name="q" value="{searchTerms}"/>
+</Url>
+<SearchForm>https://nosearch.invalid/</SearchForm>
 </SearchPlugin>

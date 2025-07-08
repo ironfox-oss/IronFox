@@ -100,6 +100,13 @@ patches:
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla or third parties."
     effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
     category: "Privacy"
+
+  - file: "mach-disable-telemetry.patch"
+    name: "Disable Telemetry (Mach)"
+    description: "Disables data collection and submission mechanisms within Mozilla's Mach build system."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla during the build process."
+    effect: "Improves privacy for developers by preventing the collection and transmission of telemetry data."
+    category: "Privacy"
   
   - file: "fenix-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Fenix)"
@@ -201,11 +208,25 @@ patches:
     effect: "Reduces unwanted network activity and improves the privacy of users."
     category: "Privacy"
 
+  - file: "disable-remote-search-configuration.patch"
+    name: "Disable Remote Search Configuration"
+    description: "Disables remotely configuring search from Mozilla."
+    reason: "To reduce unwanted network activity and ensure that users are in control of their search engines/configuration."
+    effect: "Reduces unwanted network activity and improves the privacy of users."
+    category: "Privacy"
+
   - file: "disable-link-sharing.patch"
     name: "Disable 'Sent from Firefox' Link Sharing"
     description: "Disables the 'Sent from Firefox' footer/link sharing feature."
     reason: "To prevent automatic inclusion of Firefox branding in shared links."
     effect: "Improves privacy by not disclosing browser information when sharing links."
+    category: "Privacy"
+  
+  - file: "disable-amo-collections.patch"
+    name: "Disable AMO Featured Collections and Recommendations"
+    description: "Disables fetching featured collections, recommendations, and icons from AMO (addons.mozilla.org)."
+    reason: "To prevent Firefox from connecting to `services.mozilla.org` on every launch and periodically after."
+    effect: "Reduces unwanted network activity and integration with third party services."
     category: "Privacy"
 
   - file: "disable-contile.patch"
@@ -250,13 +271,6 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Privacy"
 
-  - file: "install-ublock.patch"
-    name: "Auto-install uBlock Origin"
-    description: "Installs uBlock Origin on first browser install and allows it to run in private tabs by default."
-    reason: "To ensure content blocking is available from first launch."
-    effect: "Users get content blocking protection without manual installation."
-    category: "Privacy"
-  
   - file: "librewolf-rs-blocker.patch"
     name: "Block Remote Settings"
     description: "Restricts Remote Settings to only download specific collections specified in preferences."
@@ -264,11 +278,11 @@ patches:
     effect: "Network activity is further limited, less data is shared with Mozilla, and the user is put in control of what specifically they want to download from Remote Settings."
     category: "Privacy"
   
-  - file: "restrict-mozaddonmanager.patch"
-    name: "Restrict mozAddonManager"
-    description: "Prevents addons.mozilla.org from being able to query a list of the user's installed add-ons, and removes its ability to enable and uninstall add-ons."
-    reason: "To prevent fingerprinting and reduce attack surface."
-    effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API), while reducing the amount of information shared with Mozilla and limiting the API's capabilities."
+  - file: "install-addons-without-mozaddonmanager.patch"
+    name: "Allow installation of add-ons without the mozAddonManager API"
+    description: "Adds support for installing add-ons from `addons.mozilla.org` without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the privileged mozAddonManager API), in addition to websites specified with the `xpinstall.whitelist.add` series of prefs."
+    reason: "To prevent fingerprinting, reduce attack surface, and to improve freedom by allowing users to install add-ons from sites other than AMO if desired (though installing add-ons outside of AMO is of course STRONGLY recommended against)."
+    effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API) without compromising their privacy and security, and allows installation from other sites if desired by the user."
     category: "Privacy"
 
   - file: "sanitize-on-exit.patch"
@@ -319,12 +333,12 @@ patches:
     reason: "To prevent fingerprinting based on user's theme preferences."
     effect: "Browser uses light theme out of the box."
     category: "Privacy"
-  
-  - file: "include-fonts.patch"
-    name: "Include Fonts"
-    description: "Includes fonts at build-time."
-    reason: "To improve compatibility and ensure users have a common set of fonts."
-    effect: "Provides stronger fingerprinting protection."
+
+  - file: "disable-network-connectivity-monitoring.patch"
+    name: "Disable Network Connectivity Status Monitoring"
+    description: "Prevents the browser from monitoring the status of the user's internet connection. It also allows us to remove the `ACCESS_NETWORK_STATE` permission, and prevents Firefox from generating an internal network ID that could potentially be used to track users (https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/4c548fa04b668a310c90c0e783ec404420f06257)."
+    reason: "To prevent the browser from accessing network information (with the `ACCESS_NETWORK_STATE` permission), and from generating an ID that could be used for tracking."
+    effect: "Improves the privacy for users."
     category: "Privacy"
 
   # Security
@@ -341,13 +355,6 @@ patches:
     description: "Disables Accessibility Services by default."
     reason: "To prevent apps from monitoring users without consent."
     effect: "Prevents apps from monitoring users without permission, and improves performance as a bonus."
-    category: "Security"
-
-  - file: "disable-hls.patch"
-    name: "Disable HLS"
-    description: "Disables HLS (HTTP Live Streaming)"
-    reason: "To address privacy and security concerns due to the use of an external ExoPlayer library. See here for more details: https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/29859"
-    effect: "Improves privacy and security for users and decreases the browser's reliance on external libraries."
     category: "Security"
 
   - file: "disable-shipped-domains.patch"
@@ -399,6 +406,13 @@ patches:
     effect: "The registrable domain (eTLD+1) is highlighted, and the URL bar scrolls to the end of the domain name."
     category: "Security"
 
+  - file: "disable-sslkeylogging.patch"
+    name: "Disable SSLKEYLOGGING"
+    description: "Disables the SSLKEYLOGGING feature in NSS (Mozilla's Network Security Services: https://firefox-source-docs.mozilla.org/security/nss/index.html)."
+    reason: "To prevent the unauthorized decryption and exposure of secrets used in SSL/TLS traffic. For more details, see: https://bugzilla.mozilla.org/show_bug.cgi?id=1183318 and https://bugzilla.mozilla.org/show_bug.cgi?id=1915224."
+    effect: "Protects users against total compromise of any and all cryptographic security."
+    category: "Security"
+
   # User Control
   - file: "enable-secret-settings.patch"
     name: "Enable Secret Settings"
@@ -408,11 +422,11 @@ patches:
     category: "User Control"
 
   # User Experience
-  - file: "block-autoplay-by-default.patch"
-    name: "Block Media Autoplay"
-    description: "Blocks autoplay of media by default."
-    reason: "To prevent unwanted audio/video playback on websites."
-    effect: "Improves user experience and reduces bandwidth usage."
+  - file: "default-site-permissions.patch"
+    name: "Default Site Permissions"
+    description: "Configures IronFox's default site permissions. Currently blocks Autoplay, Geolocation, and Notifications by default."
+    reason: "To prevent websites from prompting users to access Geolocation and send Notifications, and to prevent unwanted audio/video playback."
+    effect: "Improves user experience, and blocking Autoplay reduces bandwidth usage."
     category: "User Experience"
 
   - file: "block-cookie-banners.patch"
@@ -422,11 +436,11 @@ patches:
     effect: "Cleaner websites without cookie banners while maintaining privacy protection."
     category: "User Experience"
 
-  - file: "disable-default-browser-engagement-prompts.patch"
-    name: "Disable Default Browser Prompts"
-    description: "Disables prompts encouraging users to set the browser as the system default or engage with promotional features."
-    reason: "To eliminate unnecessary engagement messages that may interrupt user workflows."
-    effect: "Reduces distractions by suppressing default browser prompts and promotional nudges."
+  - file: "disable-nags.patch"
+    name: "Disable Nags"
+    description: "Disables Contextual Feature Recommendations, prompts encouraging users to set the browser as the system default, and other promotional messaging."
+    reason: "To remove promotional suggestions for Firefox features, and to eliminate unnecessary engagement messages that may interrupt user workflows."
+    effect: "Provides a cleaner interface without contextual prompts, recommendations, and unwanted nags."
     category: "User Experience"
 
   - file: "rs-dumps.patch"
@@ -443,6 +457,13 @@ patches:
     effect: "Provides users with a seamless browsing experience and allows them to benefit from our strong fingerprinting protection, minus the breakage and headaches."
     category: "User Experience"
 
+  - file: "ironfox-onboarding.patch"
+    name: "IronFox Onboarding"
+    description: "Adds IronFox-specific onboarding screens."
+    reason: "To allow users to configure IronFox to their liking on first install."
+    effect: "Users can toggle features as per their liking before they take effect in the browser."
+    category: "User Experience"
+
   # User Interface
   - file: "branding.patch"
     name: "IronFox Branding"
@@ -450,19 +471,12 @@ patches:
     reason: "Creates distinct brand identity for the fork."
     effect: "Users can identify the fork as IronFox instead of Firefox."
     category: "User Interface"
-  
+
   - file: "ironfox-home.patch"
     name: "IronFox Home"
     description: "Customizes the default homepage."
     reason: "Provides users with a cleaner browsing experience, and removes promotions of third party services."
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
-    category: "User Interface"
-
-  - file: "disable-cfrs.patch"
-    name: "Disable Contextual Feature Recommendations"
-    description: "Disables Contextual Feature Recommendations."
-    reason: "To removes promotional suggestions for Firefox features."
-    effect: "Cleaner interface without contextual prompts and recommendations."
     category: "User Interface"
   
   - file: "disable-recent-search-suggestions.patch"
@@ -508,14 +522,6 @@ patches:
     reason: |
       To allow users to easily control settings related to the content/hardening of websites.
     effect: "Users can choose what compromises they're comfortable with and tailor the browsing experience to meet their needs, directly from the UI."
-    category: "User Interface"
-
-  - file: "ironfox-static-strings.patch"
-    name: "IronFox Static Strings"
-    description: "Provides static strings for UI settings specific to IronFox."
-    reason: |
-      To allow us to provide custom UI settings, while avoiding conflicts with other patches.
-    effect: "Users can take advantage of our custom UI settings to improve their privacy, security, and browsing experience."
     category: "User Interface"
 
   - file: "js-settings.patch"

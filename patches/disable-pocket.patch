@@ -14,40 +14,32 @@ index 81bf2dd7e2..7a43fac926 100644
  private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
  private const val SPOCS_PROXY_VERSION_KEY = "version"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-index 9e4f378574..a559c2c5d8 100644
+index 9e4f378574..ccc52008f5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-@@ -41,26 +41,25 @@ object ContentRecommendationsFeatureHelper {
-     /**
-      * Show Pocket recommended stories on home.
-      */
-+    @Suppress("UNUSED_PARAMETER")
+@@ -44,14 +44,14 @@ object ContentRecommendationsFeatureHelper {
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
--        val langTag = LocaleManager.getCurrentLocale(context)
--            ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+         val langTag = LocaleManager.getCurrentLocale(context)
+             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
 -        return POCKET_SUPPORTED_LOCALES.contains(langTag)
-+        return false
++        return false && POCKET_SUPPORTED_LOCALES.contains(langTag)
      }
  
      /**
       * Show Pocket sponsored stories in between Pocket recommended stories on home.
       */
-+    @Suppress("UNUSED_PARAMETER")
      fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
 -        return isPocketRecommendationsFeatureEnabled(context)
-+        return false
++        return false && isPocketRecommendationsFeatureEnabled(context)
      }
  
      /**
-      * Returns true if the current locale is part of the supported locales for content
-      * recommendations, and false otherwise.
-      */
-+    @Suppress("UNUSED_PARAMETER")
+@@ -61,6 +61,6 @@ object ContentRecommendationsFeatureHelper {
      fun isContentRecommendationsFeatureEnabled(context: Context): Boolean {
--        val langTag = LocaleManager.getCurrentLocale(context)
--            ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
+         val langTag = LocaleManager.getCurrentLocale(context)
+             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
 -        return CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE.contains(langTag)
-+        return false
++        return false && CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE.contains(langTag)
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
@@ -72,10 +64,10 @@ index 43bea16286..84ac3c7d2b 100644
  
          requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..5e483a4ea5 100644
+index 9197b274db..88ab712f7d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1728,21 +1728,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1732,20 +1732,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Pocket recommended stories homescreen section should be shown.
       */
@@ -85,6 +77,10 @@ index 7f19ba4304..5e483a4ea5 100644
 -        default = { homescreenSections[HomeScreenSection.POCKET] == true },
 -    )
 +    var showPocketRecommendationsFeature = false
++//        appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
++//        featureFlag = ContentRecommendationsFeatureHelper.isPocketRecommendationsFeatureEnabled(appContext),
++//        default = { homescreenSections[HomeScreenSection.POCKET] == true },
++//    )
  
      /**
       * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.
@@ -94,12 +90,15 @@ index 7f19ba4304..5e483a4ea5 100644
 -        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
 -        featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
 -    )
--
 +    val showPocketSponsoredStories = false
++//        key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
++//        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
++//        featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
++//    )
+ 
      /**
       * Get the profile id to use in the sponsored stories communications with the Pocket endpoint.
-      */
-@@ -1764,11 +1755,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1768,11 +1768,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if Merino content recommendations should be shown.
       */
@@ -109,6 +108,10 @@ index 7f19ba4304..5e483a4ea5 100644
 -        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
 -    )
 +    var showContentRecommendations = false
++//        key = appContext.getPreferenceKey(R.string.pref_key_pocket_content_recommendations),
++//        default = { FxNimbus.features.merinoRecommendations.value().enabled },
++//        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
++//    )
  
      /**
       *  Whether or not to display the Pocket sponsored stories parameter secret settings.

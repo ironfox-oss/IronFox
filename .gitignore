@@ -9,3 +9,5 @@ __pycache__
 /wasi-sdk
 /scripts/env_local.sh
 .DS_Store
+/patches/preferences/phoenix.js
+/patches/preferences/phoenix-extended.js

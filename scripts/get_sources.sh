@@ -141,8 +141,7 @@ mkdir -p "$BUILDDIR"
 
 if ! [[ -f "$BUILDDIR/bundletool.jar" ]]; then
     echo "Downloading bundletool..."
-    wget https://github.com/google/bundletool/releases/download/${BUNDLETOOL_TAG}/bundletool-all-${BUNDLETOOL_TAG}.jar \
-        -O "$BUILDDIR/bundletool.jar"
+    download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_TAG}/bundletool-all-${BUNDLETOOL_TAG}.jar" "$BUILDDIR/bundletool.jar"
 fi
 
 if ! [[ -f "$BUILDDIR/bundletool" ]]; then
@@ -157,10 +156,17 @@ fi
 echo "'bundletool' is set up at $BUILDDIR/bundletool"
 
 # Clone Glean
+echo "Cloning Glean..."
 clone_repo "https://github.com/mozilla/glean" "$GLEANDIR" "$GLEAN_TAG"
 
 # Clone MicroG
+echo "Cloning microG..."
 clone_repo "https://github.com/microg/GmsCore" "$GMSCOREDIR" "$GMSCORE_TAG"
+
+# Download Phoenix
+echo "Downloading Phoenix..."
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix.js" "$PATCHDIR/preferences/phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
 
 # Get WebAssembly SDK
 if [[ -z ${FDROID_BUILD+x} ]]; then
@@ -173,12 +179,13 @@ else
 fi
 
 # Clone application-services
-echo "Cloning appservices..."
+echo "Cloning application-services..."
 git clone --branch "$APPSERVICES_BRANCH" --depth=1 https://github.com/mozilla/application-services "$APPSERVICESDIR"
 (cd "$APPSERVICESDIR" && git submodule update --init --depth=1)
 
-# Download Firefox Source
-download_and_extract "gecko" "https://github.com/mozilla-firefox/firefox/archive/refs/tags/${FIREFOX_RELEASE_TAG}.tar.gz"
+# Clone Firefox
+echo "Cloning Firefox..."
+clone_repo "https://github.com/mozilla-firefox/firefox" "$GECKODIR" "${FIREFOX_RELEASE_TAG}"
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."

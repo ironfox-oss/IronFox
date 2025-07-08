@@ -1,0 +1,108 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
+index a24ff6e34e..9e7bda60fa 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
+@@ -53,7 +53,7 @@ enum class PhoneFeature(val androidPermissionsList: Array<String>) : Parcelable
+                 AUTOPLAY_AUDIBLE ->
+                     when (settings?.getAutoplayUserSetting() ?: AUTOPLAY_BLOCK_ALL) {
+                         AUTOPLAY_ALLOW_ALL -> R.string.preference_option_autoplay_allowed2
+-                        AUTOPLAY_ALLOW_ON_WIFI -> R.string.preference_option_autoplay_allowed_wifi_only2
++//                        AUTOPLAY_ALLOW_ON_WIFI -> R.string.preference_option_autoplay_allowed_wifi_only2
+                         AUTOPLAY_BLOCK_AUDIBLE -> R.string.preference_option_autoplay_block_audio2
+                         AUTOPLAY_BLOCK_ALL -> R.string.preference_option_autoplay_blocked3
+                         else -> R.string.preference_option_autoplay_blocked3
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
+index 5f5ceb60c0..b11f2165b7 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
+@@ -119,6 +119,7 @@ class SitePermissionsManagePhoneFeatureFragment : Fragment() {
+                     saveActionInSettings(AUTOPLAY_ALLOW_ON_WIFI)
+                 }
+                 restoreState(AUTOPLAY_ALLOW_ON_WIFI)
++                visibility = View.GONE
+             } else {
+                 text = getString(R.string.preference_option_phone_feature_blocked)
+                 setOnClickListener {
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index f235d0f7a1..12d2abd595 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -7,7 +7,7 @@
+     xmlns:tools="http://schemas.android.com/tools">
+ 
+     <uses-permission android:name="android.permission.INTERNET" />
+-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
++    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
+ 
+     <!-- Allows for storing and retrieving screenshots -->
+     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+diff --git a/mobile/android/geckoview/src/main/AndroidManifest.xml b/mobile/android/geckoview/src/main/AndroidManifest.xml
+index ac6e718f3c..24199dbadd 100644
+--- a/mobile/android/geckoview/src/main/AndroidManifest.xml
++++ b/mobile/android/geckoview/src/main/AndroidManifest.xml
+@@ -6,7 +6,7 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools">
+ 
+-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
++    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> -->
+     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"
+             tools:ignore="HighSamplingRate" />
+     <uses-permission android:name="android.permission.INTERNET"/>
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
+index a582fa1732..0bf7131976 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
+@@ -214,7 +214,7 @@ public final class GeckoRuntime implements Parcelable {
+       GeckoAppShell.resumeLocation();
+       // Monitor network status and send change notifications to Gecko
+       // while active.
+-      GeckoNetworkManager.getInstance().start(GeckoAppShell.getApplicationContext());
++//      GeckoNetworkManager.getInstance().start(GeckoAppShell.getApplicationContext());
+ 
+       // Set settings that may have changed between last app opening
+       GeckoAppShell.setIs24HourFormat(
+@@ -236,7 +236,7 @@ public final class GeckoRuntime implements Parcelable {
+       // Pause listening for locations when in background
+       GeckoAppShell.pauseLocation();
+       // Stop monitoring network status while inactive.
+-      GeckoNetworkManager.getInstance().stop();
++//      GeckoNetworkManager.getInstance().stop();
+       GeckoThread.onPause();
+       Clipboard.onPause();
+     }
+diff --git a/netwerk/system/android/nsAndroidNetworkLinkService.cpp b/netwerk/system/android/nsAndroidNetworkLinkService.cpp
+index 309115e34d..c0b84cd109 100644
+--- a/netwerk/system/android/nsAndroidNetworkLinkService.cpp
++++ b/netwerk/system/android/nsAndroidNetworkLinkService.cpp
+@@ -126,11 +126,11 @@ nsAndroidNetworkLinkService::GetLinkType(uint32_t* aLinkType) {
+ 
+ NS_IMETHODIMP
+ nsAndroidNetworkLinkService::GetNetworkID(nsACString& aNetworkID) {
+-  if (!mNetlinkSvc) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
++//  if (!mNetlinkSvc) {
++//    return NS_ERROR_NOT_AVAILABLE;
++//  }
+ 
+-  mNetlinkSvc->GetNetworkID(aNetworkID);
++  aNetworkID.Truncate();
+   return NS_OK;
+ }
+ 
+diff --git a/netwerk/system/netlink/NetlinkService.cpp b/netwerk/system/netlink/NetlinkService.cpp
+index 52ecd01738..e383e61411 100644
+--- a/netwerk/system/netlink/NetlinkService.cpp
++++ b/netwerk/system/netlink/NetlinkService.cpp
+@@ -1885,8 +1885,8 @@ void NetlinkService::CalculateNetworkID() {
+ }
+ 
+ void NetlinkService::GetNetworkID(nsACString& aNetworkID) {
+-  MutexAutoLock lock(mMutex);
+-  aNetworkID = mNetworkId;
++//  MutexAutoLock lock(mMutex);
++  aNetworkID.Truncate();
+ }
+ 
+ nsresult NetlinkService::GetDnsSuffixList(nsTArray<nsCString>& aDnsSuffixList) {

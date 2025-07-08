@@ -1,16 +1,31 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index df5658c723..13374bb966 100644
+index df5658c723..659a2a589d 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -201,8 +201,6 @@ static const RedirEntry kRedirMap[] = {
+@@ -201,8 +201,8 @@ static const RedirEntry kRedirMap[] = {
  #  endif
           nsIAboutModule::ALLOW_SCRIPT},
  #endif
 -    {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
 -     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
++//    {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
++//     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
      {"translations", "chrome://global/content/translations/translations.html",
       nsIAboutModule::ALLOW_SCRIPT |
           nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 34e06ce332..906db3732c 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -29,7 +29,7 @@ about_pages = [
+     'serviceworkers',
+     'srcdoc',
+     'support',
+-    'telemetry',
++#    'telemetry',
+     'translations',
+     'url-classifier',
+     'webrtc',
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 0e2a6efdc9..c931fb3c74 100644
 --- a/mobile/android/moz.configure
@@ -24,33 +39,15 @@ index 0e2a6efdc9..c931fb3c74 100644
  imply_option("MOZ_GECKOVIEW_HISTORY", True)
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
-diff --git a/python/mach/mach/telemetry.py b/python/mach/mach/telemetry.py
-index a3fda9a59b..b541a040df 100644
---- a/python/mach/mach/telemetry.py
-+++ b/python/mach/mach/telemetry.py
-@@ -92,10 +92,7 @@ def is_applicable_telemetry_environment():
- 
- 
- def is_telemetry_enabled(settings):
--    if os.environ.get("DISABLE_TELEMETRY") == "1":
--        return False
--
--    return settings.mach_telemetry.is_enabled
-+    return False
- 
- 
- def arcrc_path():
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
-index 42c16ebb87..ca40d36618 100644
+index 42c16ebb87..6c796a950f 100644
 --- a/toolkit/components/glean/src/init/mod.rs
 +++ b/toolkit/components/glean/src/init/mod.rs
-@@ -71,8 +71,8 @@ pub extern "C" fn fog_init(
-     app_id_override: &nsACString,
+@@ -72,7 +72,7 @@ pub extern "C" fn fog_init(
      disable_internal_pings: bool,
  ) -> nsresult {
--    // On Android always enable Glean upload.
+     // On Android always enable Glean upload.
 -    let upload_enabled = true;
-+    // On Android always disable Glean upload.
 +    let upload_enabled = false;
      // Don't set up an uploader.
      let uploader = None;
@@ -76,13 +73,11 @@ index 42c16ebb87..ca40d36618 100644
          ping_schedule: pings::ping_schedule(),
          ping_lifetime_threshold: 0,
          ping_lifetime_max_time: Duration::ZERO,
-@@ -373,8 +373,8 @@ fn fog_test_reset_internal(
- ) -> Result<(), nsresult> {
+@@ -374,7 +374,7 @@ fn fog_test_reset_internal(
      let (mut conf, client_info) = build_configuration(data_path_override, app_id_override)?;
  
--    // On Android always enable Glean upload.
+     // On Android always enable Glean upload.
 -    conf.upload_enabled = true;
-+    // On Android always disable Glean upload.
 +    conf.upload_enabled = false;
  
      // Don't accidentally send "main" pings during tests.
@@ -110,82 +105,54 @@ index b61d7e2036..cc8e1feb48 100644
      let parsed_config_url = Url::parse(OHTTP_CONFIG_URL)?;
      Ok(Request::get(parsed_config_url).send()?.body)
 diff --git a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
-index cf0a7bd372..a4a9db33cf 100644
+index cf0a7bd372..4f19716815 100644
 --- a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
 +++ b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
-@@ -85,30 +85,8 @@ export var TelemetryControllerBase = Object.freeze({
-    * Set the Telemetry core recording flag for Unified Telemetry.
-    */
-   setTelemetryRecordingFlags() {
--    // Enable extended Telemetry on pre-release channels and disable it
--    // on Release/ESR.
--    let prereleaseChannels = [
--      "nightly",
--      "nightly-autoland",
--      "nightly-try",
--      "aurora",
--      "beta",
--    ];
--    if (!AppConstants.MOZILLA_OFFICIAL) {
--      // Turn extended telemetry for local developer builds.
--      prereleaseChannels.push("default");
--    }
--    const isPrereleaseChannel = prereleaseChannels.includes(
--      AppConstants.MOZ_UPDATE_CHANNEL
--    );
--    const isReleaseCandidateOnBeta =
--      AppConstants.MOZ_UPDATE_CHANNEL === "release" &&
--      Services.prefs.getCharPref("app.update.channel", null) === "beta";
+@@ -104,8 +104,8 @@ export var TelemetryControllerBase = Object.freeze({
+     const isReleaseCandidateOnBeta =
+       AppConstants.MOZ_UPDATE_CHANNEL === "release" &&
+       Services.prefs.getCharPref("app.update.channel", null) === "beta";
 -    Services.telemetry.canRecordBase = true;
 -    Services.telemetry.canRecordExtended =
--      isPrereleaseChannel ||
--      isReleaseCandidateOnBeta ||
--      Services.prefs.getBoolPref(this.Preferences.OverridePreRelease, false);
 +    Services.telemetry.canRecordBase = false;
-+    Services.telemetry.canRecordExtended = false;
-   },
- 
-   /**
++    Services.telemetry.canRecordExtended = false &&
+       isPrereleaseChannel ||
+       isReleaseCandidateOnBeta ||
+       Services.prefs.getBoolPref(this.Preferences.OverridePreRelease, false);
 diff --git a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
-index 1e45187924..116e93ca05 100644
+index 1e45187924..b45af61339 100644
 --- a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
 +++ b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
-@@ -279,11 +279,7 @@ var TelemetryReportingPolicyImpl = {
-    * false, we never request upload or deletion.
+@@ -280,9 +280,9 @@ var TelemetryReportingPolicyImpl = {
     */
    get dataSubmissionEnabled() {
--    // Default is true because we are opt-out.
+     // Default is true because we are opt-out.
 -    return Services.prefs.getBoolPref(
--      TelemetryUtils.Preferences.DataSubmissionEnabled,
++    return false && Services.prefs.getBoolPref(
+       TelemetryUtils.Preferences.DataSubmissionEnabled,
 -      true
--    );
-+    return false;
++      false
+     );
    },
  
-   get currentPolicyVersion() {
-@@ -715,8 +711,8 @@ var TelemetryReportingPolicyImpl = {
- 
+@@ -716,7 +716,7 @@ var TelemetryReportingPolicyImpl = {
      return this._ensureUserIsNotifiedPromise.then(() => {
        // The user has been notified and interacted with the modal.
--      // Glean can now init on shutdown if necessary.
+       // Glean can now init on shutdown if necessary.
 -      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", true);
-+      // Glean can not init on shutdown if necessary.
 +      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", false);
      });
    },
  
 diff --git a/toolkit/components/telemetry/app/UsageReporting.sys.mjs b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
-index 4a3e1de32d..90819b39da 100644
+index 4a3e1de32d..baeff11b29 100644
 --- a/toolkit/components/telemetry/app/UsageReporting.sys.mjs
 +++ b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
-@@ -43,9 +43,8 @@ export var UsageReporting = {
-         `${SLUG}: uploadEnabled=${uploadEnabled}, profileID='${profileID}', profileGroupID='${profileGroupID}'`
-       );
+@@ -45,7 +45,7 @@ export var UsageReporting = {
  
--      // Usage deletion requests can always be sent.  They are
--      // always sent in response to user action.
+       // Usage deletion requests can always be sent.  They are
+       // always sent in response to user action.
 -      GleanPings.usageDeletionRequest.setEnabled(true);
-+      // Usage deletion requests can never be sent.
 +      GleanPings.usageDeletionRequest.setEnabled(false);
  
        // Usage pings should only be sent when upload is enabled.
@@ -213,15 +180,11 @@ index 64c53be02c..b4940c3aac 100644
  #endif
  #ifdef MOZ_BACKGROUNDTASKS
 diff --git a/toolkit/components/telemetry/core/TelemetryCommon.cpp b/toolkit/components/telemetry/core/TelemetryCommon.cpp
-index a52d8e0a64..f759be66d4 100644
+index a52d8e0a64..2ecdbffc98 100644
 --- a/toolkit/components/telemetry/core/TelemetryCommon.cpp
 +++ b/toolkit/components/telemetry/core/TelemetryCommon.cpp
-@@ -47,17 +47,16 @@ bool IsInDataset(uint32_t aDataset, uint32_t aContainingDataset) {
- 
- bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
-                       bool aCanRecordExtended) {
--  // If we are extended telemetry is enabled, we are allowed to record
-+  // If we are extended telemetry is enabled, we are not allowed to record
+@@ -50,14 +50,14 @@ bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
+   // If we are extended telemetry is enabled, we are allowed to record
    // regardless of the dataset.
    if (aCanRecordExtended) {
 -    return true;
@@ -229,30 +192,44 @@ index a52d8e0a64..f759be66d4 100644
    }
  
    // If base telemetry data is enabled and we're trying to record base
--  // telemetry, allow it.
--  if (aCanRecordBase &&
--      IsInDataset(aDataset, nsITelemetry::DATASET_ALL_CHANNELS)) {
+   // telemetry, allow it.
+   if (aCanRecordBase &&
+       IsInDataset(aDataset, nsITelemetry::DATASET_ALL_CHANNELS)) {
 -    return true;
-+  // telemetry, do not allow it.
-+  if (aCanRecordBase) {
 +    return false;
    }
  
    // We're not recording extended telemetry or this is not the base
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+index f94b88f8d8..3401baff7e 100644
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -37,9 +37,9 @@ toolkit.jar:
+    content/global/aboutGlean.html
+    content/global/aboutGlean.css
+ #endif
+-   content/global/aboutTelemetry.js
+-   content/global/aboutTelemetry.xhtml
+-   content/global/aboutTelemetry.css
++#   content/global/aboutTelemetry.js
++#   content/global/aboutTelemetry.xhtml
++#   content/global/aboutTelemetry.css
+    content/global/aboutUrlClassifier.js
+    content/global/aboutUrlClassifier.xhtml
+    content/global/aboutUrlClassifier.css
 diff --git a/toolkit/library/rust/gkrust-features.mozbuild b/toolkit/library/rust/gkrust-features.mozbuild
-index a19af5bd9d..66d8947acd 100644
+index a19af5bd9d..ba8f57bb70 100644
 --- a/toolkit/library/rust/gkrust-features.mozbuild
 +++ b/toolkit/library/rust/gkrust-features.mozbuild
-@@ -60,8 +60,7 @@ if CONFIG["MOZ_WEBRTC"]:
+@@ -60,7 +60,7 @@ if CONFIG["MOZ_WEBRTC"]:
  # We need to tell Glean it is being built with Gecko.
  gkrust_features += ["glean_with_gecko"]
  
 -if not CONFIG["MOZILLA_OFFICIAL"]:
--    gkrust_features += ["glean_disable_upload"]
-+gkrust_features += ["glean_disable_upload"]
++if not CONFIG["0"]:
+     gkrust_features += ["glean_disable_upload"]
  
  if CONFIG["MOZ_ENABLE_DBUS"]:
-     gkrust_features += ["with_dbus"]
 diff --git a/toolkit/modules/AppConstants.sys.mjs b/toolkit/modules/AppConstants.sys.mjs
 index a794e82288..33949b2b02 100644
 --- a/toolkit/modules/AppConstants.sys.mjs

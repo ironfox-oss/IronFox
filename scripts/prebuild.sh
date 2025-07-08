@@ -88,7 +88,7 @@ if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
 fi
 
 # Create build directory
-mkdir -p "$rootdir/build"
+mkdir -vp "$rootdir/build"
 
 # Check patch files
 source "$rootdir/scripts/patches.sh"
@@ -139,10 +139,15 @@ sed -i \
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
 sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+echo "official=true" >>local.properties
 
 # Ensure we enable the about:config
 # Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
 sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+
+# No-op Glean
+# https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
+echo 'glean.custom.server.url="data;"' >>local.properties
 
 # Let it be IronFox
 sed -i \
@@ -164,34 +169,21 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
 
 # Replace proprietary artwork
-rm app/src/release/res/drawable/ic_launcher_foreground.xml
-rm app/src/release/res/mipmap-*/ic_launcher.webp
-rm app/src/release/res/values/colors.xml
-rm app/src/main/res/values-v24/styles.xml
+rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml
+rm -vf app/src/release/res/mipmap-*/ic_launcher.webp
+rm -vf app/src/release/res/values/colors.xml
+rm -vf app/src/main/res/values-v24/styles.xml
 sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
-# shellcheck disable=SC2154
-find "$patches/fenix-overlay/branding" -type f | while read -r src; do
-    dst=app/src/release/${src#"$patches/fenix-overlay/branding/"}
-    mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-done
+mkdir -vp app/src/release/res/mipmap-anydpi-v26
 sed -i \
     -e 's/googleg_standard_color_18/ic_download/' \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
-# Remove Mozilla's `initial` experiments
-find "$patches/fenix-overlay/initial_experiments" -type f | while read -r src; do
-    dst=app/src/main/res/raw/${src#"$patches/fenix-overlay/initial_experiments/"}
-    mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-done
-
-# Remove Reddit & YouTube as built-in search engines (due to poor privacy practices)
-rm app/src/main/assets/searchplugins/reddit.xml
-rm app/src/main/assets/searchplugins/youtube.xml
+# Remove default built-in search engines
+rm -vrf app/src/main/assets/searchplugins/*
 
 # Set up target parameters
 case "$1" in
@@ -240,6 +232,10 @@ echo "autoPublish.application-services.dir=$application_services" >>local.proper
 # Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
 echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
 
+find "$patches/fenix-overlay" -type f | while read -r src; do
+    cp -vrf "$src" "${src#"$patches/fenix-overlay/"}"
+done
+
 popd
 
 #
@@ -259,66 +255,19 @@ popd
 # shellcheck disable=SC2154
 pushd "$android_components"
 
-# Remove questionable built-in search engines (due to poor privacy practices)
-rm components/feature/search/src/main/assets/searchplugins/amazon-jp.xml
-rm components/feature/search/src/main/assets/searchplugins/baidu.xml
-rm components/feature/search/src/main/assets/searchplugins/bing.xml
-rm components/feature/search/src/main/assets/searchplugins/ceneje.xml
-rm components/feature/search/src/main/assets/searchplugins/coccoc.xml
-rm components/feature/search/src/main/assets/searchplugins/daum-kr.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-at.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-au.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-befr.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-ca.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-ch.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-co-uk.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-de.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-es.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-fr.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-ie.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-it.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-nl.xml
-rm components/feature/search/src/main/assets/searchplugins/ebay-pl.xml
-rm components/feature/search/src/main/assets/searchplugins/ecosia.xml
-rm components/feature/search/src/main/assets/searchplugins/google-b-1-m.xml
-rm components/feature/search/src/main/assets/searchplugins/google-b-m.xml
-rm components/feature/search/src/main/assets/searchplugins/google-b-vv.xml
-rm components/feature/search/src/main/assets/searchplugins/google-com-nocodes.xml
-rm components/feature/search/src/main/assets/searchplugins/gulesider-mobile-NO.xml
-rm components/feature/search/src/main/assets/searchplugins/leo_ende_de.xml
-rm components/feature/search/src/main/assets/searchplugins/mapy-cz.xml
-rm components/feature/search/src/main/assets/searchplugins/mercadolibre-ar.xml
-rm components/feature/search/src/main/assets/searchplugins/mercadolibre-cl.xml
-rm components/feature/search/src/main/assets/searchplugins/mercadolibre-mx.xml
-rm components/feature/search/src/main/assets/searchplugins/odpiralni.xml
-rm components/feature/search/src/main/assets/searchplugins/pazaruvaj.xml
-rm components/feature/search/src/main/assets/searchplugins/prisjakt-sv-SE.xml
-rm components/feature/search/src/main/assets/searchplugins/qwant.xml
-rm components/feature/search/src/main/assets/searchplugins/rakuten.xml
-rm components/feature/search/src/main/assets/searchplugins/reddit.xml
-rm components/feature/search/src/main/assets/searchplugins/salidzinilv.xml
-rm components/feature/search/src/main/assets/searchplugins/seznam-cz.xml
-rm components/feature/search/src/main/assets/searchplugins/vatera.xml
-rm components/feature/search/src/main/assets/searchplugins/yahoo-jp.xml
-rm components/feature/search/src/main/assets/searchplugins/yahoo-jp-auctions.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex.by.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex-en.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex-ru.xml
-rm components/feature/search/src/main/assets/searchplugins/yandex-tr.xml
-rm components/feature/search/src/main/assets/searchplugins/youtube.xml
+# Remove default built-in search engines
+rm -vrf components/feature/search/src/main/assets/searchplugins/*
 
 # Nuke the "Mozilla Android Components - Ads Telemetry" & "Mozilla Android Components - Search Telemetry" extensions
-# We don't install these with disable-telemetry.patch - so no need to keep the files around...
-rm -rf components/feature/search/src/main/assets/extensions/ads
-rm -rf components/feature/search/src/main/assets/extensions/search
+# We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
+rm -vrf components/feature/search/src/main/assets/extensions/ads
+rm -vrf components/feature/search/src/main/assets/extensions/search
 
-# Remove 'search telemetry' config...
-rm components/feature/search/src/main/assets/search/search_telemetry_v2.json
+# Remove the 'search telemetry' config...
+rm -vf components/feature/search/src/main/assets/search/search_telemetry_v2.json
 
 find "$patches/a-c-overlay" -type f | while read -r src; do
-    cp "$src" "${src#"$patches/a-c-overlay/"}"
+    cp -vrf "$src" "${src#"$patches/a-c-overlay/"}"
 done
 
 popd
@@ -336,6 +285,7 @@ localize_maven
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/ac-disable-nimbus.patch"
 popd
 
 # WASI SDK
@@ -354,25 +304,9 @@ fi
 pushd "$mozilla_release"
 
 # Let it be IronFox (part 2...)
-find "$patches/gecko-overlay/branding" -type f | while read -r src; do
-    dst=mobile/android/branding/${src#"$patches/gecko-overlay/branding/"}
-    mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-done
-
+mkdir -vp mobile/android/branding/ironfox/content
+mkdir -vp mobile/android/branding/ironfox/locales/en-US
 sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
-
-# Add our custom/hardened FPP targets
-find "$patches/gecko-overlay/rfptargets" -type f | while read -r src; do
-    dst=toolkit/components/resistfingerprinting/${src#"$patches/gecko-overlay/rfptargets/"}
-    cp "$src" "$dst"
-done
-
-# Add our custom Remote Settings dumps
-find "$patches/gecko-overlay/rs-dumps" -type f | while read -r src; do
-    dst=services/settings/dumps/${src#"$patches/gecko-overlay/rs-dumps/"}
-    cp "$src" "$dst"
-done
 
 # Apply patches
 apply_patches
@@ -543,6 +477,7 @@ fi
     echo "ac_add_options --with-gradle=$(command -v gradle)"
     echo "ac_add_options --with-libclang-path=\"$libclang\""
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
+    echo "ac_add_options --without-google-location-service-api-keyfile"
 
     if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
@@ -585,8 +520,8 @@ sed -i \
 sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
 
 # Make the build system think we installed the emulator and an AVD
-mkdir -p "$ANDROID_HOME/emulator"
-mkdir -p "$HOME/.mozbuild/android-device/avd"
+mkdir -vp "$ANDROID_HOME/emulator"
+mkdir -vp "$HOME/.mozbuild/android-device/avd"
 
 # Do not check the "emulator" utility which is obviously absent in the empty directory we created above
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
@@ -616,5 +551,9 @@ sed -i \
 {
     cat "$patches/preferences/pdf.js"
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
+
+find "$patches/gecko-overlay" -type f | while read -r src; do
+    cp -vrf "$src" "${src#"$patches/gecko-overlay/"}"
+done
 
 popd

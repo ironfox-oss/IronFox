@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..0c08ea6ab7 100644
+index 9197b274db..9ede7fe3f4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -730,10 +730,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -735,10 +735,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -11,10 +11,13 @@ index 7f19ba4304..0c08ea6ab7 100644
 -        default = true,
 -    )
 +    var shouldUseTrackingProtection = true
++//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection),
++//        default = true,
++//    )
  
      var shouldEnableGlobalPrivacyControl by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_enable_global_privacy_control),
-@@ -840,20 +837,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -845,20 +845,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -23,18 +26,27 @@ index 7f19ba4304..0c08ea6ab7 100644
 -        true,
 -    )
 +    val useStandardTrackingProtection = false
++//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
++//        true,
++//    )
  
 -    val useStrictTrackingProtection by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
 -        false,
 -    )
 +    val useStrictTrackingProtection = true
++//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
++//        false,
++//    )
  
 -    val useCustomTrackingProtection by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_option),
 -        false,
 -    )
 +    val useCustomTrackingProtection = false
++//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_option),
++//        false,
++//    )
  
      @VisibleForTesting(otherwise = PRIVATE)
      fun setStrictETP() {

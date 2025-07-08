@@ -1,0 +1,34 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 43bea16286..550de3f6ec 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -225,7 +225,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
+-            isVisible = true
++            isVisible = false
+             isChecked = context.settings().useRemoteSearchConfiguration
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 9197b274db..2c274d4ddf 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1895,11 +1895,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates whether or not to use remote server search configuration.
+      */
+-    var useRemoteSearchConfiguration by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
+-        default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
+-        featureFlag = true,
+-    )
++    var useRemoteSearchConfiguration = false
++//        key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
++//        default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
++//        featureFlag = true,
++//    )
+ 
+     /**
+      * Indicates if the menu CFR should be displayed to the user.

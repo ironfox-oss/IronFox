@@ -160,31 +160,33 @@ index 982ef996de..e592dbfdca 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index f235d0f7a1..febbd1cf69 100644
+index f235d0f7a1..e07a7511dc 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -744,24 +744,6 @@
-         <service
+@@ -52,7 +52,7 @@
+ 
+     <!-- Needed to get distribution information from partners.
+     This is NOT required for the adjust plugin. -->
+-    <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
++    <!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->
+ 
+     <application
+         android:name=".FenixApplication"
+@@ -745,7 +745,7 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
--
+ 
 -        <service
--            android:name=".push.FirebasePushService"
--            android:exported="false">
--            <intent-filter>
--                <action android:name="com.google.firebase.MESSAGING_EVENT" />
--            </intent-filter>
--        </service>
--
--        <meta-data
--            android:name="firebase_messaging_auto_init_enabled"
++        <!-- <service
+             android:name=".push.FirebasePushService"
+             android:exported="false">
+             <intent-filter>
+@@ -761,7 +761,7 @@
+             android:value="false" />
+         <meta-data
+             android:name="firebase_analytics_collection_deactivated"
 -            android:value="true" />
--        <meta-data
--            android:name="firebase_analytics_collection_enabled"
--            android:value="false" />
--        <meta-data
--            android:name="firebase_analytics_collection_deactivated"
--            android:value="true" />
++            android:value="true" /> -->
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
@@ -998,10 +1000,10 @@ index e13ebe821f..05b8d2c5ff 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 7f19ba4304..0e7c2d118b 100644
+index 9197b274db..c3728d2f69 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1861,10 +1861,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1865,10 +1865,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the marketing onboarding card should be shown to the user.
       */
@@ -1010,6 +1012,9 @@ index 7f19ba4304..0e7c2d118b 100644
 -        default = true,
 -    )
 +    var shouldShowMarketingOnboarding = false
++//        appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
++//        default = true,
++//    )
  
      val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_should_enable_felt_privacy),
