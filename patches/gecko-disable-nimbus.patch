@@ -19,7 +19,7 @@ index 1f4d51c643..a2507eb8d1 100644
    lazy,
    "COLLECTION_ID",
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-index 165309d17b..c209ae61ab 100644
+index 165309d17b..b196258d06 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 +++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 @@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
@@ -31,6 +31,115 @@ index 165309d17b..c209ae61ab 100644
  
  export const UnenrollmentCause = {
    fromCheckRecipeResult(result) {
+@@ -146,57 +146,57 @@ export class ExperimentManager {
+         return new Date();
+       },
+     };
+-    Object.defineProperty(context, "activeExperiments", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAllActiveExperiments().map(exp => exp.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "activeRollouts", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAllActiveRollouts().map(rollout => rollout.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "previousExperiments", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store
+-          .getAll()
+-          .filter(enrollment => !enrollment.active && !enrollment.isRollout)
+-          .map(exp => exp.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "previousRollouts", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store
+-          .getAll()
+-          .filter(enrollment => !enrollment.active && enrollment.isRollout)
+-          .map(rollout => rollout.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "enrollments", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAll().map(enrollment => enrollment.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "enrollmentsMap", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAll().reduce((acc, enrollment) => {
+-          acc[enrollment.slug] = enrollment.branch.slug;
+-          return acc;
+-        }, {});
+-      },
+-    });
++//    Object.defineProperty(context, "activeExperiments", {
++//      enumerable: true,
++//      get: async () => {
++//        await this.store.ready();
++//        return this.store.getAllActiveExperiments().map(exp => exp.slug);
++//      },
++//    });
++//    Object.defineProperty(context, "activeRollouts", {
++//      enumerable: true,
++//      get: async () => {
++//        await this.store.ready();
++//        return this.store.getAllActiveRollouts().map(rollout => rollout.slug);
++//      },
++//    });
++//    Object.defineProperty(context, "previousExperiments", {
++//      enumerable: true,
++//      get: async () => {
++//        await this.store.ready();
++//        return this.store
++//          .getAll()
++//          .filter(enrollment => !enrollment.active && !enrollment.isRollout)
++//          .map(exp => exp.slug);
++//      },
++//    });
++//    Object.defineProperty(context, "previousRollouts", {
++//      enumerable: true,
++//      get: async () => {
++//        await this.store.ready();
++//        return this.store
++//          .getAll()
++//          .filter(enrollment => !enrollment.active && enrollment.isRollout)
++//          .map(rollout => rollout.slug);
++//      },
++//    });
++//    Object.defineProperty(context, "enrollments", {
++//      enumerable: true,
++//      get: async () => {
++//        await this.store.ready();
++//        return this.store.getAll().map(enrollment => enrollment.slug);
++//      },
++//    });
++//    Object.defineProperty(context, "enrollmentsMap", {
++//      enumerable: true,
++//      get: async () => {
++//        await this.store.ready();
++//        return this.store.getAll().reduce((acc, enrollment) => {
++//          acc[enrollment.slug] = enrollment.branch.slug;
++//          return acc;
++//        }, {});
++//      },
++//    });
+     return context;
+   }
+ 
 diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 index d3ab385732..700465258c 100644
 --- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
