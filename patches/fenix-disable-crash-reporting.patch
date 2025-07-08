@@ -420,25 +420,6 @@ index 6725aa64a0..724b1674cf 100644
              "about:addons" -> {
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index e43dec84c6..be2139af7d 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-@@ -212,10 +212,10 @@ class AboutFragment(
-                 ),
-                 getString(R.string.about_support),
-             ),
--            AboutPageItem(
--                AboutItem.Crashes,
--                getString(R.string.about_crashes),
--            ),
-+//            AboutPageItem(
-+//                AboutItem.Crashes,
-+//                getString(R.string.about_crashes),
-+//            ),
-             AboutPageItem(
-                 AboutItem.ExternalLink(
-                     PRIVACY_NOTICE,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 9197b274db..8e72f5bbf0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
