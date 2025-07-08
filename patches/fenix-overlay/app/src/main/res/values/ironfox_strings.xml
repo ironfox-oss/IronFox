@@ -29,6 +29,14 @@
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
+    <!-- UnifiedPush -->
+    <!-- Label for enabling UnifiedPush -->
+    <string name="preferences_debug_settings_unifiedpush" translatable="false">Enable UnifiedPush</string>
+    <!-- Label for using UnifiedPush. UnifiedPush is a decentralized push notification system, so users can benefit from mobile push notifications without relying on Google Services. Users choose the application (and server) they wish to use to manage webpush for other applications. If enabled, the browser (e.g. IronFox) will receive webpush messages via the chosen app. -->
+    <string name="preferences_unifiedpush">Use UnifiedPush</string>
+    <!-- Toast shown after confirming the UnifiedPush configuration -->
+    <string name="toast_change_unifiedpush_done">UnifiedPush setting modified. Quitting the application to apply changes…</string>
+
     <!-- Onboarding - Title and description -->
     <string name="onboarding_if_preferences_title">Customize IronFox</string>
     <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
