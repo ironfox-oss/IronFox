@@ -3,9 +3,16 @@
     <!-- Warn users that the browser will restart -->
     <string name="restart_required_summary">Changing this setting will restart your browser</string>
 
+    <!-- Warn users that this setting is not recommended or supported -->
+    <string name="unsupported_summary">This setting is NOT recommended or supported. Proceed at your own caution.</string>
+
     <!-- Accessibility Services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
     <string name="preference_accessibility_enabled_summary">Enable to allow communication with accessibility services on your device.</string>
+
+    <!-- EME -->
+    <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
+    <string name="preferences_debug_settings_widevine_enabled">Enable Widevine CDM</string>
 
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>

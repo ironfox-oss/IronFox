@@ -542,6 +542,13 @@ patches:
     name: "IronFox Settings (Gecko)"
     description: "Adds support to Gecko (GeckoView) for IronFox-specific UI settings to control various functionality."
     reason: |
-      To allow users to easily control their browsing  experience.
+      To allow users to easily control their browsing experience.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
+    category: "User Interface"
+
+  - file: "ironfox-secret-settings.patch"
+    name: "IronFox Secret Settings"
+    description: "Adds support for IronFox-specific secret settings to control certain functionality."
+    reason: "To provide users with more control over their browsing experience."
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"

@@ -2479,40 +2479,6 @@ index 6681840f10..35aa2dab6c 100644
      scope = this.scope,
      publicKey = this.publicKey.toDecodedByteArray(),
      endpoint = this.endpoint,
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..1bbc5054b5 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -256,6 +256,12 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-             )
-             onPreferenceChangeListener = SharedPreferenceUpdater()
-         }
-+
-+        requirePreference<SwitchPreference>(R.string.pref_key_enable_unifiedpush).apply {
-+            isVisible = true
-+            isChecked = context.settings().enableUnifiedPush
-+            onPreferenceChangeListener = SharedPreferenceUpdater()
-+        }
-     }
- 
-     override fun onPreferenceTreeClick(preference: Preference): Boolean {
-
-diff --git a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-index 094406c52e..a83eadb063 100644
---- a/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/secret_settings_preferences.xml
-@@ -10,6 +10,11 @@
-         android:title="@string/preferences_debug_settings_allow_third_party_root_certs"
-         android:summary="@string/preferences_debug_settings_allow_third_party_root_certs_summary"
-         app:iconSpaceReserved="false" />
-+    <SwitchPreference
-+        android:defaultValue="true"
-+        android:key="@string/pref_key_enable_unifiedpush"
-+        android:title="@string/preferences_debug_settings_unifiedpush"
-+        app:iconSpaceReserved="false" />
-     <SwitchPreference
-         android:defaultValue="false"
-         android:key="@string/pref_key_nimbus_use_preview"
 diff --git a/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/components/PushTest.kt b/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/components/PushTest.kt
 new file mode 100644
 index 000000000000..35838390c423
