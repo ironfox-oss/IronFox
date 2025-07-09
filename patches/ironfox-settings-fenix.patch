@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..2e47089dc2 100644
+index cfbdaba62c..cee283fd5e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,19 @@ class Core(
+@@ -196,6 +196,17 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
@@ -15,15 +15,47 @@ index cfbdaba62c..2e47089dc2 100644
 +            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
-+            safeBrowsingEnabled = context.settings().safeBrowsingEnabled,
-+            safeBrowsingPhishingEnabled = context.settings().safeBrowsingEnabled,
 +            spoofEnglish = context.settings().spoofEnglish,
 +            wasmEnabled = context.settings().wasmEnabled,
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
+@@ -228,6 +239,7 @@ class Core(
+             defaultSettings,
+             geckoRuntime,
+         ).also {
++            GeckoProvider.setupSafeBrowsing(it, context.settings().safeBrowsingEnabled)
+             WebCompatFeature.install(it)
+         }
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+index a776e10849..71dedf06c4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+@@ -21,6 +21,8 @@ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.nimbus.FxNimbus
+ import org.mozilla.geckoview.GeckoRuntime
+ import org.mozilla.geckoview.GeckoRuntimeSettings
++import mozilla.components.concept.engine.Engine
++import mozilla.components.concept.engine.EngineSession
+ 
+ object GeckoProvider {
+     private var runtime: GeckoRuntime? = null
+@@ -117,4 +119,12 @@ object GeckoProvider {
+             )
+             .build()
+     }
++
++    fun setupSafeBrowsing(engine: Engine, safeBrowsingEnabled: Boolean) {
++        if (safeBrowsingEnabled) {
++            engine.settings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
++        } else {
++            engine.settings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
++        }
++    }
+ }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..a87769b080 100644
+index 325e5d2141..abfb65dc19 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -73,6 +73,9 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
@@ -105,7 +137,7 @@ index 325e5d2141..a87769b080 100644
          setupInstallAddonFromFilePreference(requireContext().settings())
          setLinkSharingPreference()
          setupAmoCollectionOverridePreference(requireContext().settings())
-@@ -741,6 +792,37 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -741,6 +792,42 @@ class SettingsFragment : PreferenceFragmentCompat() {
          }
      }
  
@@ -117,13 +149,18 @@ index 325e5d2141..a87769b080 100644
 +
 +        safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
 +        safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
++            val engineSettings = requireContext().components.core.engine.settings
 +            val settings = preference.context.settings()
 +            val components = preference.context.components
 +
 +            settings.safeBrowsingEnabled = safeBrowsingEnabled
-+            
-+            components.core.engine.settings.safeBrowsingEnabled = safeBrowsingEnabled
-+            components.core.engine.settings.safeBrowsingPhishingEnabled = safeBrowsingEnabled
++
++            if (settings.safeBrowsingEnabled) {
++                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
++            } else {
++                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
++            }
++            requireContext().components.useCases.sessionUseCases.reload()
 +
 +            Toast.makeText(
 +                context,

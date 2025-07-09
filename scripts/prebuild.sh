@@ -338,8 +338,6 @@ remove_glean_telemetry "${mozilla_release}/netwerk"
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
 sed -i \
-    -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.boolean"|' \
-    -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.provider."|"z99.ignore.string."|' \
     -e 's|"cookiebanners.service.detectOnly"|"z99.ignore.boolean"|' \
     -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.boolean"|' \

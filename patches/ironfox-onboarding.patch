@@ -1438,13 +1438,14 @@ index 0000000000..b35658273e
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..f85ece53b5
+index 0000000000..5eff50dba9
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
-@@ -0,0 +1,123 @@
+@@ -0,0 +1,126 @@
 +package org.mozilla.fenix.utils
 +
 +import android.content.Context
++import mozilla.components.concept.engine.EngineSession
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.ext.settings
 +
@@ -1523,13 +1524,18 @@ index 0000000000..f85ece53b5
 +        context: Context,
 +        isEnabled: Boolean,
 +    ) {
++        val engineSettings = context.components.core.engine.settings
 +        val settings = context.settings()
 +        val components = context.components
 +
 +        settings.safeBrowsingEnabled = isEnabled
 +
-+        components.core.engine.settings.safeBrowsingEnabled = isEnabled
-+        components.core.engine.settings.safeBrowsingPhishingEnabled = isEnabled
++        if (settings.safeBrowsingEnabled) {
++            engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
++        } else {
++            engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
++        }
++        context.components.useCases.sessionUseCases.reload()
 +    }
 +
 +    /**
@@ -1537,10 +1543,7 @@ index 0000000000..f85ece53b5
 +     */
 +    fun isSafeBrowsingEnabled(
 +        context: Context
-+    ): Boolean = context.components.core.engine.settings.run {
-+        safeBrowsingEnabled &&
-+        safeBrowsingPhishingEnabled
-+    }
++    ): Boolean = context.settings().safeBrowsingEnabled
 +
 +    /**
 +     * Set whether to enable the locale spoofing preference.
