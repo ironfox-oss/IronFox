@@ -1,21 +1,14 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 3885a06691..1bf13a601b 100644
+index 3885a06691..3a73cef122 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-@@ -5,6 +5,9 @@
- package org.mozilla.fenix.settings.sitepermissions
- 
- import android.os.Bundle
-+import android.os.Handler
-+import android.os.Looper
-+import android.widget.Toast
- import androidx.core.content.ContextCompat
- import androidx.navigation.findNavController
- import androidx.preference.Preference
-@@ -23,6 +26,8 @@ import org.mozilla.fenix.ext.settings
+@@ -23,6 +23,11 @@ import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.ext.showToolbar
  import org.mozilla.fenix.settings.PhoneFeature
  import org.mozilla.fenix.settings.requirePreference
++import android.os.Handler
++import android.os.Looper
++import android.widget.Toast
 +import org.mozilla.fenix.utils.IronFoxPreferences
 +import kotlin.system.exitProcess
  
@@ -91,7 +84,20 @@ index 3885a06691..1bf13a601b 100644
          setupPreferences()
      }
  
-@@ -109,4 +177,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -91,6 +159,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+             navigateToPhoneFeature(phoneFeature)
+             true
+         }
++
++        with(settings) {
++            findPreference<Preference>(
++                getPreferenceKey(R.string.pref_key_browser_feature_media_key_system_access),
++            )?.isVisible = emeEnabled
++        }
+     }
+ 
+     private fun navigateToPhoneFeature(phoneFeature: PhoneFeature) {
+@@ -109,4 +183,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              )
          }
      }

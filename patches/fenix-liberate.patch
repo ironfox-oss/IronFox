@@ -825,42 +825,6 @@ index 4c6b14bf87..9fc35fc6a8 100644
  
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
-diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
-index 6bb8cfbbe6..1c15b5897c 100644
---- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_details_exceptions_preferences.xml
-@@ -3,7 +3,8 @@
-    - License, v. 2.0. If a copy of the MPL was not distributed with this
-    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
- <androidx.preference.PreferenceScreen
--        xmlns:android="http://schemas.android.com/apk/res/android">
-+        xmlns:android="http://schemas.android.com/apk/res/android"
-+        xmlns:app="http://schemas.android.com/apk/res-auto">
-     <androidx.preference.Preference
-             android:icon="@drawable/ic_camera_enabled"
-             android:key="@string/pref_key_phone_feature_camera"
-@@ -44,7 +45,8 @@
-         android:icon="@drawable/ic_link"
-         android:key="@string/pref_key_browser_feature_media_key_system_access"
-         android:title="@string/preference_phone_feature_media_key_system_access"
--        android:summary="@string/preference_option_phone_feature_ask_to_allow"/>
-+        android:summary="@string/preference_option_phone_feature_ask_to_allow"
-+        app:isPreferenceVisible="false"/>
- 
-     <androidx.preference.Preference
-         android:icon="@drawable/ic_autoplay"
-diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-index ef1dcb4e6e..0eb2d275c3 100644
---- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-@@ -81,6 +81,7 @@
-             android:key="@string/pref_key_browser_feature_media_key_system_access"
-             android:title="@string/preference_phone_feature_media_key_system_access"
-             android:summary="@string/preference_option_phone_feature_ask_to_allow"
-+            app:isPreferenceVisible="false"
-             app:allowDividerBelow="true"/>
- 
-         <androidx.preference.Preference
 diff --git a/mobile/android/focus-android/app/build.gradle b/mobile/android/focus-android/app/build.gradle
 index fdd0ec8ad6..3ee0dc00ba 100644
 --- a/mobile/android/focus-android/app/build.gradle

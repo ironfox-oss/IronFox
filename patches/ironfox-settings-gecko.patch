@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 1612c570be..37b24c0c18 100644
+index 1612c570be..52a1509e00 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1483,6 +1483,51 @@ class GeckoEngine(
+@@ -1483,6 +1483,59 @@ class GeckoEngine(
          override var bannedPorts: String
              get() = runtime.settings.bannedPorts
              set(value) { runtime.settings.setBannedPorts(value) }
@@ -10,6 +10,10 @@ index 1612c570be..37b24c0c18 100644
 +        override var accessibilityEnabled: Boolean
 +            get() = runtime.settings.accessibilityEnabled
 +            set(value) { runtime.settings.accessibilityEnabled = value }
++
++        override var emeEnabled: Boolean
++            get() = runtime.settings.emeEnabled
++            set(value) { runtime.settings.emeEnabled = value }
 +
 +        override var javascriptJitBaselineEnabled: Boolean
 +            get() = runtime.settings.javaScriptJitBaselineEnabled
@@ -51,14 +55,19 @@ index 1612c570be..37b24c0c18 100644
 +        override var wasmEnabled: Boolean
 +            get() = runtime.settings.wasmEnabled
 +            set(value) { runtime.settings.wasmEnabled = value }
++
++        override var widevineEnabled: Boolean
++            get() = runtime.settings.widevineEnabled
++            set(value) { runtime.settings.widevineEnabled = value }
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1527,6 +1572,16 @@ class GeckoEngine(
+@@ -1527,6 +1580,18 @@ class GeckoEngine(
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
 +            this.accessibilityEnabled = it.accessibilityEnabled
++            this.emeEnabled = it.emeEnabled
 +            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
 +            this.javascriptJitBaselineWasmEnabled = it.javascriptJitBaselineWasmEnabled
 +            this.javascriptJitHintsEnabled = it.javascriptJitHintsEnabled
@@ -68,19 +77,21 @@ index 1612c570be..37b24c0c18 100644
 +            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
 +            this.spoofEnglish = it.spoofEnglish
 +            this.wasmEnabled = it.wasmEnabled
++            this.widevineEnabled = it.widevineEnabled
          }
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 24e8f76532..002bb5bef2 100644
+index 24e8f76532..90dd579da3 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -350,6 +350,17 @@ abstract class Settings {
+@@ -350,6 +350,19 @@ abstract class Settings {
       * Comma-separated list of destination ports that the application should block connections to.
       */
      open var bannedPorts: String by UnsupportedSetting()
 +
 +    open var accessibilityEnabled: Boolean by UnsupportedSetting()
++    open var emeEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitBaselineWasmEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitHintsEnabled: Boolean by UnsupportedSetting()
@@ -90,14 +101,16 @@ index 24e8f76532..002bb5bef2 100644
 +    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
 +    open var spoofEnglish: Boolean by UnsupportedSetting()
 +    open var wasmEnabled: Boolean by UnsupportedSetting()
++    open var widevineEnabled: Boolean by UnsupportedSetting()
  }
  
  /**
-@@ -420,6 +431,16 @@ data class DefaultSettings(
+@@ -420,6 +433,18 @@ data class DefaultSettings(
      override var postQuantumKeyExchangeEnabled: Boolean? = null,
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
 +    override var accessibilityEnabled: Boolean = false,
++    override var emeEnabled: Boolean = false,
 +    override var javascriptJitBaselineEnabled: Boolean = false,
 +    override var javascriptJitBaselineWasmEnabled: Boolean = false,
 +    override var javascriptJitHintsEnabled: Boolean = false,
@@ -107,18 +120,20 @@ index 24e8f76532..002bb5bef2 100644
 +    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
 +    override var spoofEnglish: Boolean = true,
 +    override var wasmEnabled: Boolean = true,
++    override var widevineEnabled: Boolean = false,
  ) : Settings() {
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index a410550e60..9b82af4e97 100644
+index a410550e60..a8d1649afe 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -984,6 +984,16 @@ package org.mozilla.geckoview {
+@@ -984,6 +984,18 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
 +    method public boolean getAccessibilityEnabled();
++    method public boolean getEmeEnabled();
 +    method public boolean getJavaScriptJitBaselineEnabled();
 +    method public boolean getJavaScriptJitBaselineWasmEnabled();
 +    method public boolean getJavaScriptJitHintsEnabled();
@@ -128,14 +143,16 @@ index a410550e60..9b82af4e97 100644
 +    method public boolean getJavaScriptJitTrustedPrincipalsEnabled();
 +    method public boolean getSpoofEnglish();
 +    method public boolean getWasmEnabled();
++    method public boolean getWidevineEnabled();
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1030,6 +1040,16 @@ package org.mozilla.geckoview {
+@@ -1030,6 +1042,18 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setAccessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setEmeEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineWasmEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitHintsEnabled(boolean);
@@ -145,14 +162,16 @@ index a410550e60..9b82af4e97 100644
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
 +    method @NonNull public GeckoRuntimeSettings setWasmEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setWidevineEnabled(boolean);
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1093,6 +1113,16 @@ package org.mozilla.geckoview {
+@@ -1093,6 +1117,18 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder accessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder emeEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineWasmEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitHintsEnabled(boolean);
@@ -162,20 +181,26 @@ index a410550e60..9b82af4e97 100644
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitTrustedPrincipalsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder wasmEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder widevineEnabled(boolean);
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 25ea09c3f6..17102208e9 100644
+index 25ea09c3f6..80e80dfb51 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -640,6 +640,56 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -640,6 +640,66 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
        return this;
      }
 +
 +    public @NonNull Builder accessibilityEnabled(final boolean flag) {
 +      getSettings().mAccessibilityEnabled.set(flag ? 0 : 1);
++      return this;
++    }
++
++    public @NonNull Builder emeEnabled(final boolean flag) {
++      getSettings().mEmeEnabled.set(flag);
 +      return this;
 +    }
 +
@@ -223,14 +248,20 @@ index 25ea09c3f6..17102208e9 100644
 +      getSettings().mWasmEnabled.set(flag);
 +      return this;
 +    }
++
++    public @NonNull Builder widevineEnabled(final boolean flag) {
++      getSettings().mWidevineEnabled.set(flag);
++      return this;
++    }
    }
  
    private GeckoRuntime mRuntime;
-@@ -766,6 +816,17 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -766,6 +826,19 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
 +  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<Integer>("accessibility.force_disabled", 1);
++  /* package */ final Pref<Boolean> mEmeEnabled = new Pref<Boolean>("media.eme.enabled", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitBaselineEnabled = new Pref<Boolean>("javascript.options.baselinejit", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitBaselineWasmEnabled = new Pref<Boolean>("javascript.options.wasm_baselinejit", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitHintsEnabled = new Pref<Boolean>("javascript.options.jithints", false);
@@ -240,11 +271,12 @@ index 25ea09c3f6..17102208e9 100644
 +  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<Integer>("privacy.spoof_english", 2);
 +  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", true);
++  /* package */ final Pref<Boolean> mWidevineEnabled = new Pref<Boolean>("media.mediadrm-widevinecdm.visible", false);
 +
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2206,6 +2267,96 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2206,6 +2279,114 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  
@@ -254,6 +286,15 @@ index 25ea09c3f6..17102208e9 100644
 +
 +  public @NonNull GeckoRuntimeSettings setAccessibilityEnabled(final boolean flag) {
 +    mAccessibilityEnabled.commit(flag ? 0 : 1);
++    return this;
++  }
++
++  public boolean getEmeEnabled() {
++    return mEmeEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setEmeEnabled(final boolean flag) {
++    mEmeEnabled.commit(flag);
 +    return this;
 +  }
 +
@@ -335,6 +376,15 @@ index 25ea09c3f6..17102208e9 100644
 +
 +  public @NonNull GeckoRuntimeSettings setWasmEnabled(final boolean flag) {
 +    mWasmEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getWidevineEnabled() {
++    return mWidevineEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setWidevineEnabled(final boolean flag) {
++    mWidevineEnabled.commit(flag);
 +    return this;
 +  }
 +
