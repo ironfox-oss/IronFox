@@ -1,3 +1,29 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 13db9f3c83..7964a7af07 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -340,7 +340,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+                         // we can prevent with this.
+                         components.core.topSitesStorage.getTopSites(
+                             totalSites = components.settings.topSitesMaxLimit,
+-                            frecencyConfig = if (FxNimbus.features.homepageHideFrecentTopSites.value().enabled) {
++                            frecencyConfig = if (true) {
+                                 null
+                             } else {
+                                 TopSitesFrecencyConfig(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
+index 48b312d257..92b3b71f71 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
+@@ -36,7 +36,7 @@ internal fun getTopSitesConfig(
+     return {
+         TopSitesConfig(
+             totalSites = settings.topSitesMaxLimit,
+-            frecencyConfig = if (FxNimbus.features.homepageHideFrecentTopSites.value().enabled) {
++            frecencyConfig = if (true) {
+                 null
+             } else {
+                 TopSitesFrecencyConfig(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 9197b274db..16ef08e767 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
