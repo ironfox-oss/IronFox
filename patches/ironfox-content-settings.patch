@@ -101,10 +101,10 @@ index 3885a06691..1bf13a601b 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-index ef1dcb4e6e..25e429567d 100644
+index ef1dcb4e6e..c727946701 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-@@ -25,6 +25,28 @@
+@@ -25,6 +25,30 @@
              android:title="@string/preference_feature_desktop_mode_default"
              app:iconSpaceReserved="false" />
  
@@ -118,6 +118,7 @@ index ef1dcb4e6e..25e429567d 100644
 +        <SwitchPreference
 +            android:icon="@drawable/mozac_ic_lock_24"
 +            android:defaultValue="false"
++            android:dependency="@string/pref_key_javascript_enabled"
 +            android:key="@string/pref_key_jit_enabled"
 +            android:summary="@string/restart_required_summary"
 +            android:title="@string/preference_jit_enabled"
@@ -126,6 +127,7 @@ index ef1dcb4e6e..25e429567d 100644
 +        <SwitchPreference
 +            android:icon="@drawable/mozac_ic_lock_24"
 +            android:defaultValue="true"
++            android:dependency="@string/pref_key_javascript_enabled"
 +            android:key="@string/pref_key_wasm_enabled"
 +            android:title="@string/preference_wasm_enabled"
 +            app:iconSpaceReserved="false" />
