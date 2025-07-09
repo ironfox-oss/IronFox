@@ -1,0 +1,393 @@
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+index 1612c570be..7cdbdfcc44 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
++++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+@@ -1483,6 +1483,59 @@ class GeckoEngine(
+         override var bannedPorts: String
+             get() = runtime.settings.bannedPorts
+             set(value) { runtime.settings.setBannedPorts(value) }
++
++        override var accessibilityEnabled: Boolean
++            get() = runtime.settings.accessibilityEnabled
++            set(value) { runtime.settings.accessibilityEnabled = value }
++
++        override var javascriptJitBaselineEnabled: Boolean
++            get() = runtime.settings.javaScriptJitBaselineEnabled
++            set(value) { runtime.settings.javaScriptJitBaselineEnabled = value }
++
++        override var javascriptJitBaselineWasmEnabled: Boolean
++            get() = runtime.settings.javaScriptJitBaselineWasmEnabled
++            set(value) { runtime.settings.javaScriptJitBaselineWasmEnabled = value }
++
++        override var javascriptJitHintsEnabled: Boolean
++            get() = runtime.settings.javaScriptJitHintsEnabled
++            set(value) { runtime.settings.javaScriptJitHintsEnabled = value }
++
++        override var javascriptJitIonEnabled: Boolean
++            get() = runtime.settings.javaScriptJitIonEnabled
++            set(value) { runtime.settings.javaScriptJitIonEnabled = value }
++
++        override var javascriptJitMainProcessEnabled: Boolean
++            get() = runtime.settings.javaScriptJitMainProcessEnabled
++            set(value) { runtime.settings.javaScriptJitMainProcessEnabled = value }
++
++        override var javascriptJitNativeRegexpEnabled: Boolean
++            get() = runtime.settings.javaScriptJitNativeRegexpEnabled
++            set(value) { runtime.settings.javaScriptJitNativeRegexpEnabled = value }
++
++        override var javascriptJitTrustedPrincipalsEnabled: Boolean
++            get() = runtime.settings.javaScriptJitTrustedPrincipalsEnabled
++            set(value) { runtime.settings.javaScriptJitTrustedPrincipalsEnabled = value }
++
++        override var safeBrowsingEnabled: Boolean
++            get() = runtime.settings.safeBrowsingEnabled
++            set(value) { runtime.settings.safeBrowsingEnabled = value }
++
++        override var safeBrowsingPhishingEnabled: Boolean
++            get() = runtime.settings.safeBrowsingPhishingEnabled
++            set(value) { runtime.settings.safeBrowsingPhishingEnabled = value }
++
++        override var spoofEnglish: Boolean
++            get() = runtime.settings.spoofEnglish
++            set(value) {
++                value.let {
++                    runtime.settings.spoofEnglish = it
++                    localeUpdater.updateValue()
++                }
++            }
++
++        override var wasmEnabled: Boolean
++            get() = runtime.settings.wasmEnabled
++            set(value) { runtime.settings.wasmEnabled = value }
+     }.apply {
+         defaultSettings?.let {
+             this.javascriptEnabled = it.javascriptEnabled
+@@ -1527,6 +1580,18 @@ class GeckoEngine(
+             this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
+             this.dohAutoselectEnabled = it.dohAutoselectEnabled
+             this.bannedPorts = it.bannedPorts
++            this.accessibilityEnabled = it.accessibilityEnabled
++            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
++            this.javascriptJitBaselineWasmEnabled = it.javascriptJitBaselineWasmEnabled
++            this.javascriptJitHintsEnabled = it.javascriptJitHintsEnabled
++            this.javascriptJitIonEnabled = it.javascriptJitIonEnabled
++            this.javascriptJitMainProcessEnabled = it.javascriptJitMainProcessEnabled
++            this.javascriptJitNativeRegexpEnabled = it.javascriptJitNativeRegexpEnabled
++            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
++            this.safeBrowsingEnabled = it.safeBrowsingEnabled
++            this.safeBrowsingPhishingEnabled = it.safeBrowsingPhishingEnabled
++            this.spoofEnglish = it.spoofEnglish
++            this.wasmEnabled = it.wasmEnabled
+         }
+     }
+ 
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+index 24e8f76532..7b7b0780a9 100644
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+@@ -350,6 +350,19 @@ abstract class Settings {
+      * Comma-separated list of destination ports that the application should block connections to.
+      */
+     open var bannedPorts: String by UnsupportedSetting()
++
++    open var accessibilityEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitBaselineWasmEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitHintsEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitIonEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitMainProcessEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitNativeRegexpEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
++    open var safeBrowsingEnabled: Boolean by UnsupportedSetting()
++    open var safeBrowsingPhishingEnabled: Boolean by UnsupportedSetting()
++    open var spoofEnglish: Boolean by UnsupportedSetting()
++    open var wasmEnabled: Boolean by UnsupportedSetting()
+ }
+ 
+ /**
+@@ -420,6 +433,18 @@ data class DefaultSettings(
+     override var postQuantumKeyExchangeEnabled: Boolean? = null,
+     override var dohAutoselectEnabled: Boolean = false,
+     override var bannedPorts: String = "",
++    override var accessibilityEnabled: Boolean = false,
++    override var javascriptJitBaselineEnabled: Boolean = false,
++    override var javascriptJitBaselineWasmEnabled: Boolean = false,
++    override var javascriptJitHintsEnabled: Boolean = false,
++    override var javascriptJitIonEnabled: Boolean = false,
++    override var javascriptJitMainProcessEnabled: Boolean = false,
++    override var javascriptJitNativeRegexpEnabled: Boolean = false,
++    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
++    override var safeBrowsingEnabled: Boolean = true,
++    override var safeBrowsingPhishingEnabled: Boolean = true,
++    override var spoofEnglish: Boolean = true,
++    override var wasmEnabled: Boolean = true,
+ ) : Settings() {
+     override val desktopModeEnabled: Boolean
+         get() = getDesktopMode()
+diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
+index a410550e60..4006d256f7 100644
+--- a/mobile/android/geckoview/api.txt
++++ b/mobile/android/geckoview/api.txt
+@@ -984,6 +984,18 @@ package org.mozilla.geckoview {
+     method @Nullable public Integer getWebContentIsolationStrategy();
+     method public boolean getWebFontsEnabled();
+     method public boolean getWebManifestEnabled();
++    method public boolean getAccessibilityEnabled();
++    method public boolean getJavaScriptJitBaselineEnabled();
++    method public boolean getJavaScriptJitBaselineWasmEnabled();
++    method public boolean getJavaScriptJitHintsEnabled();
++    method public boolean getJavaScriptJitIonEnabled();
++    method public boolean getJavaScriptJitMainProcessEnabled();
++    method public boolean getJavaScriptJitNativeRegexpEnabled();
++    method public boolean getJavaScriptJitTrustedPrincipalsEnabled();
++    method public boolean getSafeBrowsingEnabled();
++    method public boolean getSafeBrowsingPhishingEnabled();
++    method public boolean getSpoofEnglish();
++    method public boolean getWasmEnabled();
+     method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
+     method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
+@@ -1030,6 +1042,18 @@ package org.mozilla.geckoview {
+     method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
+     method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setAccessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineWasmEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitHintsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitIonEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitMainProcessEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitNativeRegexpEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setSafeBrowsingEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setSafeBrowsingPhishingEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings setWasmEnabled(boolean);
+     field public static final int ALLOW_ALL = 0;
+     field public static final int COLOR_SCHEME_DARK = 1;
+     field public static final int COLOR_SCHEME_LIGHT = 0;
+@@ -1093,6 +1117,18 @@ package org.mozilla.geckoview {
+     method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
+     method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder accessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineWasmEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitHintsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitIonEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitMainProcessEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitNativeRegexpEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder safeBrowsingEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder safeBrowsingPhishingEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder wasmEnabled(boolean);
+     method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
+   }
+ 
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+index 25ea09c3f6..6261d07d93 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+@@ -640,6 +640,66 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+       getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
+       return this;
+     }
++
++    public @NonNull Builder accessibilityEnabled(final boolean flag) {
++      getSettings().mAccessibilityEnabled.set(flag ? 0 : 1);
++      return this;
++    }
++
++    public @NonNull Builder javaScriptJitBaselineEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitBaselineEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder javaScriptJitBaselineWasmEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitBaselineWasmEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder javaScriptJitHintsEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitHintsEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder javaScriptJitIonEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitIonEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder javaScriptJitMainProcessEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitMainProcessEnabled.set(!flag);
++      return this;
++    }
++
++    public @NonNull Builder javaScriptJitNativeRegexpEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitNativeRegexpEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder javaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
++      getSettings().mJavaScriptJitTrustedPrincipalsEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder safeBrowsingEnabled(final boolean flag) {
++      getSettings().mSafeBrowsingEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder safeBrowsingPhishingEnabled(final boolean flag) {
++      getSettings().mSafeBrowsingPhishingEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder spoofEnglish(final boolean flag) {
++      getSettings().mSpoofEnglish.set(flag ? 2 : 1);
++      return this;
++    }
++
++    public @NonNull Builder wasmEnabled(final boolean flag) {
++      getSettings().mWasmEnabled.set(flag);
++      return this;
++    }
+   }
+ 
+   private GeckoRuntime mRuntime;
+@@ -766,6 +826,19 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+   /* package */ String[] mRequestedLocales;
+   /* package */ ExperimentDelegate mExperimentDelegate;
+ 
++  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<>("accessibility.force_disabled", 1);
++  /* package */ final Pref<Boolean> mJavaScriptJitBaselineEnabled = new Pref<Boolean>("javascript.options.baselinejit", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitBaselineWasmEnabled = new Pref<Boolean>("javascript.options.wasm_baselinejit", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitHintsEnabled = new Pref<Boolean>("javascript.options.jithints", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitIonEnabled = new Pref<Boolean>("javascript.options.ion", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitMainProcessEnabled = new Pref<Boolean>("javascript.options.main_process_disable_jit", true);
++  /* package */ final Pref<Boolean> mJavaScriptJitNativeRegexpEnabled = new Pref<Boolean>("javascript.options.native_regexp", false);
++  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
++  /* package */ final Pref<Boolean> mSafeBrowsingEnabled = new Pref<>("browser.safebrowsing.malware.enabled", true);
++  /* package */ final Pref<Boolean> mSafeBrowsingPhishingEnabled = new Pref<>("browser.safebrowsing.phishing.enabled", true);
++  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<>("privacy.spoof_english", 2);
++  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", true);
++
+   /**
+    * Attach and commit the settings to the given runtime.
+    *
+@@ -2206,6 +2279,114 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+     return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
+   }
+ 
++  public boolean getAccessibilityEnabled() {
++    return mAccessibilityEnabled.get() == 0;
++  }
++
++  public @NonNull GeckoRuntimeSettings setAccessibilityEnabled(final boolean flag) {
++    mAccessibilityEnabled.commit(flag ? 0 : 1);
++    return this;
++  }
++
++  public boolean getJavaScriptJitBaselineEnabled() {
++    return mJavaScriptJitBaselineEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(final boolean flag) {
++    mJavaScriptJitBaselineEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getJavaScriptJitBaselineWasmEnabled() {
++    return mJavaScriptJitBaselineWasmEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitBaselineWasmEnabled(final boolean flag) {
++    mJavaScriptJitBaselineWasmEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getJavaScriptJitHintsEnabled() {
++    return mJavaScriptJitHintsEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitHintsEnabled(final boolean flag) {
++    mJavaScriptJitHintsEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getJavaScriptJitIonEnabled() {
++    return mJavaScriptJitIonEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitIonEnabled(final boolean flag) {
++    mJavaScriptJitIonEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getJavaScriptJitMainProcessEnabled() {
++    return !mJavaScriptJitMainProcessEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitMainProcessEnabled(final boolean flag) {
++    mJavaScriptJitMainProcessEnabled.commit(!flag);
++    return this;
++  }
++
++  public boolean getJavaScriptJitNativeRegexpEnabled() {
++    return mJavaScriptJitNativeRegexpEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitNativeRegexpEnabled(final boolean flag) {
++    mJavaScriptJitNativeRegexpEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getJavaScriptJitTrustedPrincipalsEnabled() {
++    return mJavaScriptJitTrustedPrincipalsEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
++    mJavaScriptJitTrustedPrincipalsEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getSafeBrowsingEnabled() {
++    return mSafeBrowsingEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setSafeBrowsingEnabled(final boolean flag) {
++    mSafeBrowsingEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getSafeBrowsingPhishingEnabled() {
++    return mSafeBrowsingPhishingEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setSafeBrowsingPhishingEnabled(final boolean flag) {
++    mSafeBrowsingPhishingEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getSpoofEnglish() {
++    return mSpoofEnglish.get() == 2;
++  }
++
++  public @NonNull GeckoRuntimeSettings setSpoofEnglish(final boolean flag) {
++    mSpoofEnglish.commit(flag ? 2 : 1);
++    return this;
++  }
++
++  public boolean getWasmEnabled() {
++    return mWasmEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setWasmEnabled(final boolean flag) {
++    mWasmEnabled.commit(flag);
++    return this;
++  }
++
+   @Override // Parcelable
+   public void writeToParcel(final Parcel out, final int flags) {
+     super.writeToParcel(out, flags);

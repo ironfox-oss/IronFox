@@ -128,35 +128,6 @@ index c1428b2898..d61240d124 100644
      private fun setupGesturesCategory(isSwipeToolbarToSwitchTabsVisible: Boolean) {
          requirePreference<SwitchPreference>(R.string.pref_key_website_pull_to_refresh).apply {
              isVisible = FeatureFlags.PULL_TO_REFRESH_ENABLED
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..61ecaa4ff3 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -514,6 +514,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = true,
-     )
- 
-+    var isTabStripEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_tab_strip_show),
-+        default = false,
-+    )
-+
-     var closeTabsAfterOneDay by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_close_tabs_after_one_day),
-         default = false,
-diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index edc51a5d42..0162de73b8 100644
---- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -179,6 +179,8 @@
-     <!-- Customization Settings -->
-     <string name="pref_key_customization_preference_screen" translatable="false">pref_key_customization_preference_screen</string>
-     <string name="pref_key_website_pull_to_refresh" translatable="false">pref_key_website_pull_to_refresh</string>
-+    <string name="pref_key_tab_strip_show" translatable="false">pref_key_tab_strip_show</string>
-+    <string name="pref_key_tab_strip_message" translatable="false">pref_key_tab_strip_message</string>
-     <string name="pref_key_dynamic_toolbar" translatable="false">pref_key_dynamic_toolbar</string>
-     <string name="pref_key_swipe_toolbar_switch_tabs" translatable="false">pref_key_swipe_toolbar_switch_tabs</string>
-     <string name="pref_key_swipe_toolbar_show_tabs" translatable="false">pref_key_swipe_toolbar_show_tabs</string>
 diff --git a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
 index a24d1b7b2b..8949710ec1 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml

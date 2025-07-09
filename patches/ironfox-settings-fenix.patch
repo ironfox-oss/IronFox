@@ -1,0 +1,80 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index cfbdaba62c..2e47089dc2 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -196,6 +196,19 @@ class Core(
+             postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
+             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
+             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
++            accessibilityEnabled = context.settings().accessibilityEnabled,
++            javascriptEnabled = context.settings().javascriptEnabled,
++            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
++            safeBrowsingEnabled = context.settings().safeBrowsingEnabled,
++            safeBrowsingPhishingEnabled = context.settings().safeBrowsingEnabled,
++            spoofEnglish = context.settings().spoofEnglish,
++            wasmEnabled = context.settings().wasmEnabled,
+         )
+ 
+         // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 9197b274db..ac150a84b2 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2463,6 +2463,51 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
+ 
++    var accessibilityEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
++        default = false,
++    )
++
++    var enableUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++        default = true,
++    )
++
++    var isTabStripEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_tab_strip_show),
++        default = false,
++    )
++
++    var javascriptEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_javascript_enabled),
++        default = true,
++    )
++
++    var javascriptJitEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
++        default = false,
++    )
++
++    var safeBrowsingEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
++        default = true,
++    )
++
++    var spoofEnglish by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
++        default = true
++    )
++
++    var useUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
++        default = false,
++    )
++
++    var wasmEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
++        default = true,
++    )
++
+     /**
+      * Indicates whether or not to show the checklist feature.
+      */

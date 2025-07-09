@@ -3,20 +3,9 @@
     <!-- Warn users that the browser will restart -->
     <string name="restart_required_summary">Changing this setting will restart your browser</string>
 
-    <!-- Spoof locale to English -->
-    <string name="tor_spoof_english_title">Spoof language to en-US</string>
-    <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
-    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
-    <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
-
     <!-- Accessibility Services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
     <string name="preference_accessibility_enabled_summary">Enable to allow communication with accessibility services on your device.</string>
-
-    <!-- Safe Browsing -->
-    <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
-    <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
-    <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
 
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
@@ -26,13 +15,21 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
 
+    <!-- Safe Browsing -->
+    <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
+    <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
+    <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
+
+    <!-- Spoof locale to English -->
+    <string name="tor_spoof_english_title">Spoof language to en-US</string>
+    <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
+    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
+    <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
+
     <!-- Tab Strip -->
     <string name="preference_tab_strip_show">Show tab bar</string>
     <string name="preference_toolbar_pref_disabled_explanation">Address bar must be on top when tab bar is shown.</string>
     <string name="preferences_tab_strip">Tab bar display</string>
-
-    <!-- WebAssembly -->
-    <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
     <!-- UnifiedPush -->
     <!-- Label for enabling UnifiedPush -->
@@ -41,6 +38,9 @@
     <string name="preferences_unifiedpush">Use UnifiedPush</string>
     <!-- Toast shown after confirming the UnifiedPush configuration -->
     <string name="toast_change_unifiedpush_done">UnifiedPush setting modified. Quitting the application to apply changes…</string>
+
+    <!-- WebAssembly -->
+    <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
     <!-- Onboarding - Title and description -->
     <string name="onboarding_if_preferences_title">Customize IronFox</string>

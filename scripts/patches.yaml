@@ -538,10 +538,18 @@ patches:
     effect: "Users can choose what compromises they're comfortable with and tailor the browsing experience to meet their needs, directly from the UI."
     category: "User Interface"
 
-  - file: "js-settings.patch"
-    name: "JavaScript Settings"
-    description: "Adds IronFox-specific UI settings for controlling JavaScript, JavaScript Just-in-time Compilation (JIT), and WebAssembly (WASM)."
+  - file: "ironfox-settings-fenix.patch"
+    name: "IronFox Settings (Fenix)"
+    description: "Adds support to Fenix (Firefox for Android) for IronFox-specific UI settings to control various functionality."
     reason: |
-      To allow users to easily enable/disable these features globally.
-    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings/the about:config."
+      To allow users to easily control their browsing  experience.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
+    category: "User Interface"
+
+  - file: "ironfox-settings-gecko.patch"
+    name: "IronFox Settings (Gecko)"
+    description: "Adds support to Gecko (GeckoView) for IronFox-specific UI settings to control various functionality."
+    reason: |
+      To allow users to easily control their browsing  experience.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
