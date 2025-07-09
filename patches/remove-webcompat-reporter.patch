@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 26e76a18d2..8ee7e10a15 100644
+index 26e76a18d2..89d595d626 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1521,28 +1521,6 @@ projects:
+@@ -1521,28 +1521,28 @@ projects:
      - support-webextensions
      - tooling-lint
      - ui-icons
@@ -28,64 +28,89 @@ index 26e76a18d2..8ee7e10a15 100644
 -    - support-webextensions
 -    - tooling-lint
 -    - ui-icons
++#  feature-webcompat-reporter:
++#    description: Feature that enables users to report site issues to Mozilla's Web
++#      Compatibility team.
++#    path: components/feature/webcompat-reporter
++#    publish: true
++#    upstream_dependencies:
++#    - browser-errorpages
++#    - browser-state
++#    - concept-awesomebar
++#    - concept-base
++#    - concept-engine
++#    - concept-fetch
++#    - concept-storage
++#    - lib-publicsuffixlist
++#    - lib-state
++#    - support-base
++#    - support-ktx
++#    - support-test
++#    - support-utils
++#    - support-webextensions
++#    - tooling-lint
++#    - ui-icons
    feature-webnotifications:
      description: Feature component for Web Notifications.
      path: components/feature/webnotifications
-@@ -1744,7 +1722,6 @@ projects:
+@@ -1744,7 +1744,7 @@ projects:
      - feature-toolbar
      - feature-top-sites
      - feature-webcompat
 -    - feature-webcompat-reporter
++#    - feature-webcompat-reporter
      - feature-webnotifications
      - lib-crash
      - lib-dataprotect
 diff --git a/mobile/android/android-components/samples/browser/build.gradle b/mobile/android/android-components/samples/browser/build.gradle
-index bd70dd476b..bf43d5834e 100644
+index bd70dd476b..e95f76ffe4 100644
 --- a/mobile/android/android-components/samples/browser/build.gradle
 +++ b/mobile/android/android-components/samples/browser/build.gradle
-@@ -114,7 +114,6 @@ dependencies {
+@@ -114,7 +114,7 @@ dependencies {
      implementation project(':feature-findinpage')
      implementation project(':feature-sitepermissions')
      implementation project(':feature-webcompat')
 -    implementation project(':feature-webcompat-reporter')
++//    implementation project(':feature-webcompat-reporter')
      implementation project(':feature-webnotifications')
      implementation project(':feature-addons')
  
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index b5aa2ce3a4..4aefd0fc43 100644
+index b5aa2ce3a4..8837f09217 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
-@@ -59,7 +59,6 @@ projects:
+@@ -59,7 +59,7 @@ projects:
      - feature-top-sites
      - feature-webauthn
      - feature-webcompat
 -    - feature-webcompat-reporter
++#    - feature-webcompat-reporter
      - feature-webnotifications
      - lib-crash
      - lib-crash-sentry
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..815ca73e77 100644
+index d9a6045423..16ac38e60b 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -618,7 +618,6 @@ dependencies {
+@@ -618,7 +618,7 @@ dependencies {
      implementation project(':feature-webauthn')
      implementation project(':feature-webcompat')
      implementation project(':feature-webnotifications')
 -    implementation project(':feature-webcompat-reporter')
++//    implementation project(':feature-webcompat-reporter')
  
      implementation project(':service-pocket')
      implementation project(':service-mars')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 1443661bb8..ad53a8d609 100644
+index 1443661bb8..218f4f1518 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -317,8 +317,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                     val translateLanguageCode = selectedTab?.translationsState?.translationEngineState
+@@ -318,7 +318,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                          ?.requestedTranslationPair?.toLanguage
                      val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
--                    val isWebCompatReporterSupported =
+                     val isWebCompatReporterSupported =
 -                        FxNimbus.features.menuRedesign.value().reportSiteIssue
-+                    val isWebCompatReporterSupported = false
++                        false
  
                      val isDesktopMode by store.observeAsState(initialValue = false) { state ->
                          state.isDesktopMode
@@ -112,46 +137,37 @@ index 3221dddb98..f611287899 100644
                  isExtensionsProcessDisabled = false,
                  extensionsMenuItemDescription = "No extensions enabled",
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index e7e19273f9..abe5ef5191 100644
+index e7e19273f9..2e6139bd25 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -213,10 +213,7 @@ open class DefaultToolbarMenu(
-      * Return whether Report Broken Site menu item is visible
-      */
-     private fun shouldShowWebCompatReporter(): Boolean {
--        val url = store.state.selectedTab?.content?.url
--        val isAboutUrl = url?.isAboutUrl() ?: false
--        val isContentUrl = url?.isContentUrl() ?: false
+@@ -216,7 +216,7 @@ open class DefaultToolbarMenu(
+         val url = store.state.selectedTab?.content?.url
+         val isAboutUrl = url?.isAboutUrl() ?: false
+         val isContentUrl = url?.isContentUrl() ?: false
 -        return !isAboutUrl && !isContentUrl
 +        return false
      }
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 13db9f3c83..b6b2682e3f 100644
+index 13db9f3c83..094dd09a49 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -50,7 +50,6 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
+@@ -50,7 +50,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
  import mozilla.components.feature.syncedtabs.commands.GlobalSyncedTabsCommandsProvider
  import mozilla.components.feature.top.sites.TopSitesFrecencyConfig
  import mozilla.components.feature.top.sites.TopSitesProviderConfig
 -import mozilla.components.feature.webcompat.reporter.WebCompatReporterFeature
++//import mozilla.components.feature.webcompat.reporter.WebCompatReporterFeature
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -692,15 +691,6 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-                 onExtensionsLoaded = { extensions ->
-                     components.addonUpdater.registerForFutureUpdates(extensions)
-                     subscribeForNewAddonsIfNeeded(components.supportedAddonsChecker, extensions)
--
--                    // Bug 1948634 - Make sure the webcompat-reporter extension is fully uninstalled.
--                    // This is added here because we need gecko to load the extension first.
--                    //
--                    // TODO: Bug 1953359 - remove the code below in the next release.
--                    if (Config.channel.isNightlyOrDebug || Config.channel.isBeta) {
--                        logger.debug("Attempting to uninstall the WebCompat Reporter extension")
+@@ -699,7 +699,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+                     // TODO: Bug 1953359 - remove the code below in the next release.
+                     if (Config.channel.isNightlyOrDebug || Config.channel.isBeta) {
+                         logger.debug("Attempting to uninstall the WebCompat Reporter extension")
 -                        WebCompatReporterFeature.uninstall(components.core.engine)
--                    }
++//                        WebCompatReporterFeature.uninstall(components.core.engine)
+                     }
                  },
                  onUpdatePermissionRequest = components.addonUpdater::onUpdatePermissionRequest,
-             )
