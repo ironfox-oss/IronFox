@@ -3,6 +3,7 @@
 
 # NOTE: Unfortunately, we can't redefine options here that were implied to a different value at `mobile/android/moz.configure` here.
 ## (Ex. we can't set `MOZ_SERVICES_HEALTHREPORT` to `False` and `MOZ_APP_VENDOR` to `IronFox OSS` here) - We'll still need patches for changes like this.
+## BUT we can use this as a form of patch validation - ex. if we set `MOZ_SERVICES_HEALTHREPORT` to `False` here, and the build fails - we'll know the `gecko-disable-telemetry` patch failed to apply.
 
 # Disable HLS (HTTP Live Streaming)
 ## To address privacy and security concerns due to the use of an external ExoPlayer library
@@ -12,9 +13,17 @@ imply_option("MOZ_ANDROID_HLS_SUPPORT", False)
 # Disable Normandy (Experimentation)
 imply_option("MOZ_NORMANDY", False)
 
+# Disable Telemetry
+## See the note at the top, we also configure this with our `gecko-disable-telemetry` patch.
+imply_option("MOZ_SERVICES_HEALTHREPORT", False)
+
 # Ensure UA is set to Firefox
 imply_option("MOZ_APP_UA_NAME", "Firefox")
 
 # Include fonts at build-time
 ## Improves compatibility and helps ensure that users have a common set of fonts
 imply_option("MOZ_ANDROID_EXCLUDE_FONTS", False)
+
+# Make it IronFox...
+## See the note at the top, we also configure this with our `branding` patch.
+imply_option("MOZ_APP_VENDOR", "IronFox OSS")
