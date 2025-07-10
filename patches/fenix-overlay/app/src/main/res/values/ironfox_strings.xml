@@ -18,6 +18,9 @@
     <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
     <string name="preferences_debug_settings_widevine_enabled">Enable Widevine CDM</string>
 
+    <!-- IPv6 -->
+    <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
+
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
 
