@@ -8,6 +8,7 @@
     <string name="pref_key_cache_ssl_enabled" translatable="false">pref_key_cache_ssl_enabled</string>
     <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
     <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
+    <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
     <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
 
     <!-- Secret Settings -->
