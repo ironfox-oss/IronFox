@@ -348,6 +348,13 @@ patches:
     effect: "Improves the privacy for users."
     category: "Privacy"
 
+  - file: "disable-tippy-top-favicon-fetching.patch"
+    name: "Disable Tippy Top Favicon Fetching"
+    description: "To prevent the browser from fetching favicons for homepage shortcuts/pins on launch, without prior user interaction."
+    reason: "To prevent the browser from making unsolicited connections to the user's pinned websites."
+    effect: "Favicons will still display on the homepage after navigating to the shortcut/pin - so this just improves privacy for users by preventing unauthorized connections to third parties."
+    category: "Privacy"
+
   # Security
   - file: "certificate-pinning.patch"
     name: "Certificate Pinning"
