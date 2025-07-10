@@ -1,12 +1,14 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..ce4bcc7ca9 100644
+index cfbdaba62c..fdeabf4019 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,20 @@ class Core(
+@@ -196,6 +196,22 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
 +            accessibilityEnabled = context.settings().accessibilityEnabled,
++            cacheEnabled = context.settings().cacheEnabled,
++            cacheSslEnabled = context.settings().cacheSslEnabled,
 +            emeEnabled = context.settings().emeEnabled,
 +            javascriptEnabled = context.settings().javascriptEnabled,
 +            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
@@ -23,7 +25,7 @@ index cfbdaba62c..ce4bcc7ca9 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -228,6 +242,7 @@ class Core(
+@@ -228,6 +244,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -203,15 +205,25 @@ index 325e5d2141..e15f625136 100644
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..1b9bf0c9fc 100644
+index 9197b274db..182a90ec05 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2463,6 +2463,66 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2463,6 +2463,76 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
++        default = false,
++    )
++
++    var cacheEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_cache_enabled),
++        default = false,
++    )
++
++    var cacheSslEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_cache_ssl_enabled),
 +        default = false,
 +    )
 +

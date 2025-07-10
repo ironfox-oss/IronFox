@@ -4,6 +4,8 @@
     <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
 
     <!-- Content Settings -->
+    <string name="pref_key_cache_enabled" translatable="false">pref_key_cache_enabled</string>
+    <string name="pref_key_cache_ssl_enabled" translatable="false">pref_key_cache_ssl_enabled</string>
     <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
     <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
     <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>

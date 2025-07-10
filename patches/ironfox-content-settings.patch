@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 3885a06691..3a73cef122 100644
+index 3885a06691..63c041d16f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 @@ -23,6 +23,11 @@ import org.mozilla.fenix.ext.settings
@@ -14,10 +14,38 @@ index 3885a06691..3a73cef122 100644
  
  /**
   * Screen for managing settings related to site permissions and content defaults.
-@@ -40,6 +45,69 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -40,6 +45,97 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
      override fun onResume() {
          super.onResume()
          showToolbar(getString(R.string.preferences_site_settings))
++
++        val cacheEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_cache_enabled,
++        )
++
++        cacheEnabledPreference.setOnPreferenceChangeListener { preference, cacheEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.cacheEnabled = cacheEnabled as Boolean
++            components.core.engine.settings.cacheEnabled = cacheEnabled
++
++            true
++        }
++
++        val cacheSslEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_cache_ssl_enabled,
++        )
++
++        cacheSslEnabledPreference.setOnPreferenceChangeListener { preference, cacheSslEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.cacheSslEnabled = cacheSslEnabled as Boolean
++            components.core.engine.settings.cacheSslEnabled = cacheSslEnabled
++
++            true
++        }
 +
 +        val javascriptEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_javascript_enabled,
@@ -84,7 +112,7 @@ index 3885a06691..3a73cef122 100644
          setupPreferences()
      }
  
-@@ -91,6 +159,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -91,6 +187,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              navigateToPhoneFeature(phoneFeature)
              true
          }
@@ -97,7 +125,7 @@ index 3885a06691..3a73cef122 100644
      }
  
      private fun navigateToPhoneFeature(phoneFeature: PhoneFeature) {
-@@ -109,4 +183,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -109,4 +211,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              )
          }
      }
@@ -107,13 +135,28 @@ index 3885a06691..3a73cef122 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-index ef1dcb4e6e..c727946701 100644
+index ef1dcb4e6e..bc15c8d611 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-@@ -25,6 +25,30 @@
+@@ -25,6 +25,45 @@
              android:title="@string/preference_feature_desktop_mode_default"
              app:iconSpaceReserved="false" />
  
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="false"
++            android:key="@string/pref_key_cache_enabled"
++            android:title="@string/preference_cache_enabled"
++            app:iconSpaceReserved="false" />
++        
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="false"
++            android:dependency="@string/pref_key_cache_enabled"
++            android:key="@string/pref_key_cache_ssl_enabled"
++            android:title="@string/preference_cache_ssl_enabled"
++            app:iconSpaceReserved="false" />
++
 +        <SwitchPreference
 +            android:icon="@drawable/mozac_ic_lock_24"
 +            android:defaultValue="true"
