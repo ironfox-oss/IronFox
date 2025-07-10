@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 1612c570be..52a1509e00 100644
+index 1612c570be..491499153d 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1483,6 +1483,59 @@ class GeckoEngine(
+@@ -1483,6 +1483,63 @@ class GeckoEngine(
          override var bannedPorts: String
              get() = runtime.settings.bannedPorts
              set(value) { runtime.settings.setBannedPorts(value) }
@@ -59,10 +59,14 @@ index 1612c570be..52a1509e00 100644
 +        override var widevineEnabled: Boolean
 +            get() = runtime.settings.widevineEnabled
 +            set(value) { runtime.settings.widevineEnabled = value }
++
++        override var xpinstallEnabled: Boolean
++            get() = runtime.settings.xpinstallEnabled
++            set(value) { runtime.settings.xpinstallEnabled = value }
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1527,6 +1580,18 @@ class GeckoEngine(
+@@ -1527,6 +1584,19 @@ class GeckoEngine(
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
@@ -78,14 +82,15 @@ index 1612c570be..52a1509e00 100644
 +            this.spoofEnglish = it.spoofEnglish
 +            this.wasmEnabled = it.wasmEnabled
 +            this.widevineEnabled = it.widevineEnabled
++            this.xpinstallEnabled = it.xpinstallEnabled
          }
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 24e8f76532..90dd579da3 100644
+index 24e8f76532..82a4ed2366 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -350,6 +350,19 @@ abstract class Settings {
+@@ -350,6 +350,20 @@ abstract class Settings {
       * Comma-separated list of destination ports that the application should block connections to.
       */
      open var bannedPorts: String by UnsupportedSetting()
@@ -102,10 +107,11 @@ index 24e8f76532..90dd579da3 100644
 +    open var spoofEnglish: Boolean by UnsupportedSetting()
 +    open var wasmEnabled: Boolean by UnsupportedSetting()
 +    open var widevineEnabled: Boolean by UnsupportedSetting()
++    open var xpinstallEnabled: Boolean by UnsupportedSetting()
  }
  
  /**
-@@ -420,6 +433,18 @@ data class DefaultSettings(
+@@ -420,6 +434,19 @@ data class DefaultSettings(
      override var postQuantumKeyExchangeEnabled: Boolean? = null,
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
@@ -121,14 +127,15 @@ index 24e8f76532..90dd579da3 100644
 +    override var spoofEnglish: Boolean = true,
 +    override var wasmEnabled: Boolean = true,
 +    override var widevineEnabled: Boolean = false,
++    override var xpinstallEnabled: Boolean = false,
  ) : Settings() {
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index a410550e60..a8d1649afe 100644
+index a410550e60..5d43260bf0 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -984,6 +984,18 @@ package org.mozilla.geckoview {
+@@ -984,6 +984,19 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -144,10 +151,11 @@ index a410550e60..a8d1649afe 100644
 +    method public boolean getSpoofEnglish();
 +    method public boolean getWasmEnabled();
 +    method public boolean getWidevineEnabled();
++    method public boolean getXpinstallEnabled();
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1030,6 +1042,18 @@ package org.mozilla.geckoview {
+@@ -1030,6 +1043,19 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -163,10 +171,11 @@ index a410550e60..a8d1649afe 100644
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
 +    method @NonNull public GeckoRuntimeSettings setWasmEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setWidevineEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setXpinstallEnabled(boolean);
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1093,6 +1117,18 @@ package org.mozilla.geckoview {
+@@ -1093,6 +1119,19 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -182,14 +191,15 @@ index a410550e60..a8d1649afe 100644
 +    method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder wasmEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder widevineEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder xpinstallEnabled(boolean);
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 25ea09c3f6..80e80dfb51 100644
+index 25ea09c3f6..8a9c4f27d0 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -640,6 +640,66 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -640,6 +640,71 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
        return this;
      }
@@ -253,10 +263,15 @@ index 25ea09c3f6..80e80dfb51 100644
 +      getSettings().mWidevineEnabled.set(flag);
 +      return this;
 +    }
++
++    public @NonNull Builder xpinstallEnabled(final boolean flag) {
++      getSettings().mXpinstallEnabled.set(flag);
++      return this;
++    }
    }
  
    private GeckoRuntime mRuntime;
-@@ -766,6 +826,19 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -766,6 +831,20 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
@@ -272,11 +287,12 @@ index 25ea09c3f6..80e80dfb51 100644
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<Integer>("privacy.spoof_english", 2);
 +  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", true);
 +  /* package */ final Pref<Boolean> mWidevineEnabled = new Pref<Boolean>("media.mediadrm-widevinecdm.visible", false);
++  /* package */ final Pref<Boolean> mXpinstallEnabled = new Pref<Boolean>("xpinstall.enabled", false);
 +
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2206,6 +2279,114 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2206,6 +2285,123 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  
@@ -385,6 +401,15 @@ index 25ea09c3f6..80e80dfb51 100644
 +
 +  public @NonNull GeckoRuntimeSettings setWidevineEnabled(final boolean flag) {
 +    mWidevineEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getXpinstallEnabled() {
++    return mXpinstallEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setXpinstallEnabled(final boolean flag) {
++    mXpinstallEnabled.commit(flag);
 +    return this;
 +  }
 +

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..498676083b 100644
+index cfbdaba62c..ce4bcc7ca9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,19 @@ class Core(
+@@ -196,6 +196,20 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
@@ -19,10 +19,11 @@ index cfbdaba62c..498676083b 100644
 +            spoofEnglish = context.settings().spoofEnglish,
 +            wasmEnabled = context.settings().wasmEnabled,
 +            widevineEnabled = context.settings().widevineEnabled,
++            xpinstallEnabled = context.settings().xpinstallEnabled,
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -228,6 +241,7 @@ class Core(
+@@ -228,6 +242,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -57,7 +58,7 @@ index a776e10849..71dedf06c4 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..abfb65dc19 100644
+index 325e5d2141..e15f625136 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -73,6 +73,9 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
@@ -131,15 +132,16 @@ index 325e5d2141..abfb65dc19 100644
              findPreference<Preference>(
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
              )?.isVisible = showSecretDebugMenuThisSession
-@@ -563,6 +613,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -563,6 +613,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                  (requireContext().components.core.engine.profiler?.isProfilerActive() != null)
          }
          setupCookieBannerPreference()
 +        setupSafeBrowsingPreference()
++        setupXpinstallPreference()
          setupInstallAddonFromFilePreference(requireContext().settings())
          setLinkSharingPreference()
          setupAmoCollectionOverridePreference(requireContext().settings())
-@@ -741,6 +792,42 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -741,6 +793,60 @@ class SettingsFragment : PreferenceFragmentCompat() {
          }
      }
  
@@ -179,14 +181,32 @@ index 325e5d2141..abfb65dc19 100644
 +        }
 +    }
 +
++    @VisibleForTesting
++    internal fun setupXpinstallPreference() {
++        val xpinstallEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_xpinstall_enabled,
++        )
++
++        xpinstallEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, xpinstallEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.xpinstallEnabled = xpinstallEnabled
++            
++            components.core.engine.settings.xpinstallEnabled = xpinstallEnabled
++
++            true
++        }
++    }
++    
      @VisibleForTesting
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..c6e81358bf 100644
+index 9197b274db..1b9bf0c9fc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2463,6 +2463,61 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2463,6 +2463,66 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -245,11 +265,16 @@ index 9197b274db..c6e81358bf 100644
 +        default = false,
 +    )
 +
++    var xpinstallEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_xpinstall_enabled),
++        default = false,
++    )
++
      /**
       * Indicates whether or not to show the checklist feature.
       */
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..3580dd6819 100644
+index 4c6b14bf87..ef61708dcf 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 @@ -116,6 +116,13 @@
@@ -266,7 +291,20 @@ index 4c6b14bf87..3580dd6819 100644
          <androidx.preference.Preference
              android:key="@string/pref_key_tracking_protection_settings"
              app:iconSpaceReserved="false"
-@@ -184,6 +191,13 @@
+@@ -152,6 +159,12 @@
+         android:title="@string/preferences_category_advanced"
+         android:key="@string/pref_key_advanced"
+         android:layout="@layout/preference_category_no_icon_style">
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_xpinstall_enabled"
++            app:iconSpaceReserved="false"
++            android:title="@string/preference_xpinstall_enabled" />
++
+         <androidx.preference.Preference
+             android:key="@string/pref_key_addons"
+             app:iconSpaceReserved="false"
+@@ -184,6 +197,13 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_external_download_manager" />
  
@@ -280,7 +318,7 @@ index 4c6b14bf87..3580dd6819 100644
          <androidx.preference.SwitchPreference
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
-@@ -199,6 +213,7 @@
+@@ -199,6 +219,7 @@
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
