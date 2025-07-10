@@ -29,6 +29,9 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
 
+    <!-- OCSP -->
+    <string name="preference_ocsp_require">Hard-fail OCSP revocation checks</string>
+
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
     <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
