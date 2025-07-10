@@ -49,6 +49,9 @@
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
+    <!-- XPInstall -->
+    <string name="preference_xpinstall_enabled">Allow installation of add-ons</string>
+
     <!-- Onboarding - Title and description -->
     <string name="onboarding_if_preferences_title">Customize IronFox</string>
     <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
