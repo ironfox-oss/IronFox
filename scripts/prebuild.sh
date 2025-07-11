@@ -185,6 +185,13 @@ sed -i \
 # Remove default built-in search engines
 rm -vrf app/src/main/assets/searchplugins/*
 
+# Create wallpaper directories
+mkdir -vp app/src/main/assets/wallpapers/algae
+mkdir -vp app/src/main/assets/wallpapers/colorful-bubbles
+mkdir -vp app/src/main/assets/wallpapers/dark-dune
+mkdir -vp app/src/main/assets/wallpapers/dune
+mkdir -vp app/src/main/assets/wallpapers/firey-red
+
 # Set up target parameters
 case "$1" in
 arm)
