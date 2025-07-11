@@ -1,0 +1,264 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt
+index 5f0f76aa62..43b654a1e5 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt
+@@ -15,6 +15,10 @@ import org.mozilla.fenix.wallpapers.Wallpaper.Companion.CERULEAN
+ import org.mozilla.fenix.wallpapers.Wallpaper.Companion.SUNRISE
+ import java.io.File
+ import java.io.IOException
++import android.content.Context
++import android.content.res.AssetManager
++import java.io.FileOutputStream
++import java.io.InputStream
+ 
+ /**
+  * Manages the migration of legacy wallpapers to the new paths
+@@ -25,6 +29,7 @@ import java.io.IOException
+  */
+ class LegacyWallpaperMigration(
+     private val storageRootDirectory: File,
++    private val assetManager: AssetManager,
+     private val settings: Settings,
+     private val downloadWallpaper: suspend (Wallpaper) -> Wallpaper.ImageFileState,
+ ) {
+@@ -52,12 +57,24 @@ class LegacyWallpaperMigration(
+             }
+         }
+         val legacyPortraitFile =
+-            File(storageRootDirectory, "wallpapers/portrait/light/$wallpaperName.png")
++            "wallpapers/$wallpaperName/portrait.png"
+         val legacyLandscapeFile =
+-            File(storageRootDirectory, "wallpapers/landscape/light/$wallpaperName.png")
++            "wallpapers/$wallpaperName/landscape.png"
++        val assetThumbnailPath =
++            "wallpapers/$wallpaperName/thumbnail.png"
++
++        val assetFilesExist = try {
++            assetManager.open(assetThumbnailPath)
++            assetManager.open(legacyPortraitFile)
++            assetManager.open(legacyLandscapeFile)
++            true
++        } catch (e: IOException) {
++            false
++        }
++
+         // If any of portrait or landscape files of the wallpaper are missing, then we shouldn't
+         // migrate it
+-        if (!legacyLandscapeFile.exists() || !legacyPortraitFile.exists()) {
++        if (!assetFilesExist) {
+             return@withContext wallpaperName
+         }
+         // The V2 name for the "beach-vibe" wallpaper is "beach-vibes".
+@@ -69,28 +86,34 @@ class LegacyWallpaperMigration(
+         // Directory where the legacy wallpaper files should be migrated
+         val targetDirectory = "wallpapers/" + migratedWallpaperName.lowercase()
+ 
++        val targetDir = File(storageRootDirectory, targetDirectory)
++
++        if (!targetDir.exists()) {
++            targetDir.mkdirs()
++        }
++
+         try {
+             // Use the portrait file as thumbnail
+-            legacyPortraitFile.copyTo(
+-                File(
+-                    storageRootDirectory,
+-                    "$targetDirectory/thumbnail.png",
+-                ),
+-            )
++            copyAssetToFile(assetThumbnailPath, File(storageRootDirectory, "$targetDirectory/thumbnail.png"))
++//                File(
++//                    storageRootDirectory,
++//                    "$targetDirectory/thumbnail.png",
++//                ),
++//            )
+             // Copy the portrait file
+-            legacyPortraitFile.copyTo(
+-                File(
+-                    storageRootDirectory,
+-                    "$targetDirectory/portrait.png",
+-                ),
+-            )
++            copyAssetToFile(legacyPortraitFile, File(storageRootDirectory, "$targetDirectory/portrait.png"))
++//                File(
++//                    storageRootDirectory,
++//                    "$targetDirectory/portrait.png",
++//                ),
++//            )
+             // Copy the landscape file
+-            legacyLandscapeFile.copyTo(
+-                File(
+-                    storageRootDirectory,
+-                    "$targetDirectory/landscape.png",
+-                ),
+-            )
++            copyAssetToFile(legacyLandscapeFile, File(storageRootDirectory, "$targetDirectory/landscape.png"))
++//                File(
++//                    storageRootDirectory,
++//                    "$targetDirectory/landscape.png",
++//                ),
++//            )
+ 
+             // If an expired Turning Red wallpaper is successfully migrated
+             if (wallpaperName == TURNING_RED_MEI_WALLPAPER_NAME || wallpaperName == TURNING_RED_PANDA_WALLPAPER_NAME) {
+@@ -108,6 +131,14 @@ class LegacyWallpaperMigration(
+         return@withContext migratedWallpaperName
+     }
+ 
++    private fun copyAssetToFile(assetPath: String, outFile: File) {
++        assetManager.open(assetPath).use { inputStream: InputStream ->
++            FileOutputStream(outFile).use { outputStream ->
++                inputStream.copyTo(outputStream)
++            }
++        }
++    }
++
+     /**
+      * Helper function used to migrate a legacy wallpaper's card colors that previously did not exist.
+      */
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
+index ab7ba29ba3..de133fc771 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
+@@ -6,11 +6,11 @@ package org.mozilla.fenix.wallpapers
+ 
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.withContext
+-import mozilla.components.concept.fetch.Client
+-import mozilla.components.concept.fetch.Request
++//import mozilla.components.concept.fetch.Client
++//import mozilla.components.concept.fetch.Request
+ import org.json.JSONArray
+ import org.json.JSONObject
+-import org.mozilla.fenix.BuildConfig
++//import org.mozilla.fenix.BuildConfig
+ import org.mozilla.fenix.utils.toHexColor
+ import java.text.SimpleDateFormat
+ import java.util.Date
+@@ -21,24 +21,80 @@ import java.util.Locale
+  *
+  * @param client The client that will be used to fetch metadata.
+  */
+-class WallpaperMetadataFetcher(
+-    private val client: Client,
+-) {
+-    private val metadataUrl = BuildConfig.WALLPAPER_URL.substringBefore("android") +
+-        "metadata/v$CURRENT_JSON_VERSION/wallpapers.json"
++class WallpaperMetadataFetcher {
++//    private val client: Client,
++//) {
++//    private val metadataUrl = BuildConfig.WALLPAPER_URL.substringBefore("android") +
++//        "metadata/v$CURRENT_JSON_VERSION/wallpapers.json"
+ 
+     /**
+      * Downloads the list of wallpapers from the remote source. Failures will return an empty list.
+      */
+     suspend fun downloadWallpaperList(): List<Wallpaper> = withContext(Dispatchers.IO) {
+-        Result.runCatching {
+-            val request = Request(url = metadataUrl, method = Request.Method.GET, conservative = true)
+-            val response = client.fetch(request)
+-            response.body.useBufferedReader {
+-                val json = it.readText()
+-                JSONObject(json).parseAsWallpapers()
++//        Result.runCatching {
++//            val request = Request(url = metadataUrl, method = Request.Method.GET, conservative = true)
++//            val response = client.fetch(request)
++//            response.body.useBufferedReader {
++        val json = """
++            {
++                "last-updated-date": "2023-08-23",
++                "collections": [
++                    {
++                        "id": "classic-firefox",
++                        "heading": null,
++                        "description": null,
++                        "available-locales": null,
++                        "availability-range": null,
++                        "learn-more-url": null,
++                        "wallpapers": [
++                            {
++                                "id": "algae",
++                                "text-color": "FBFBFE",
++                                "card-color": "15141A",
++                                "card-color-light": "E3F8F9",
++                                "card-color-dark": "1D2D32",
++                                "logo-text-color": "FBFBFE"
++                            },
++                            {
++                                "id": "colorful-bubbles",
++                                "text-color": "FBFBFE",
++                                "card-color": "15141A",
++                                "card-color-light": "E3F8F9",
++                                "card-color-dark": "1D2D32",
++                                "logo-text-color": "FBFBFE"
++                            },
++                            {
++                                "id": "dark-dune",
++                                "text-color": "FBFBFE",
++                                "card-color": "15141A",
++                                "card-color-light": "E3F8F9",
++                                "card-color-dark": "1D2D32",
++                                "logo-text-color": "FBFBFE"
++                            },
++                            {
++                                "id": "dune",
++                                "text-color": "FBFBFE",
++                                "card-color": "15141A",
++                                "card-color-light": "E3F8F9",
++                                "card-color-dark": "1D2D32",
++                                "logo-text-color": "FBFBFE"
++                            },
++                            {
++                                "id": "firey-red",
++                                "text-color": "FBFBFE",
++                                "card-color": "15141A",
++                                "card-color-light": "E3F8F9",
++                                "card-color-dark": "1D2D32",
++                                "logo-text-color": "FBFBFE"
++                            }
++                        ]
++                    }
++                ]
+             }
+-        }.getOrElse { listOf() }
++        """.trimIndent()
++        return@withContext JSONObject(json).parseAsWallpapers()
++//            }
++//        }.getOrElse { listOf() }
+     }
+ 
+     private fun JSONObject.parseAsWallpapers(): List<Wallpaper> =
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
+index 2a696cacea..a4a9add6ab 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
+@@ -45,9 +45,10 @@ class WallpapersUseCases(
+     // Use case for initializing wallpaper feature. Should usually be called early
+     // in the app's lifetime to ensure that any potential long-running tasks can complete quickly.
+     val initialize: InitializeWallpapersUseCase by lazy {
+-        val metadataFetcher = WallpaperMetadataFetcher(client)
++        val metadataFetcher = WallpaperMetadataFetcher()
+         val migrationHelper = LegacyWallpaperMigration(
+             storageRootDirectory = storageRootDirectory,
++            assetManager = context.assets,
+             settings = context.settings(),
+             selectWallpaper::invoke,
+         )
+@@ -122,6 +123,16 @@ class WallpapersUseCases(
+         private val currentLocale: String,
+     ) : InitializeWallpapersUseCase {
+         override suspend fun invoke() {
++            val algaeWallpaperName = "algae"
++            val colorfulBubblesWallpaperName = "colorful-bubbles"
++            val darkDuneWallpaperName = "dark-dune"
++            val duneWallpaperName = "dune"
++            val fireyRedWallpaperName = "firey-red"
++            migrationHelper.migrateLegacyWallpaper(algaeWallpaperName)
++            migrationHelper.migrateLegacyWallpaper(colorfulBubblesWallpaperName)
++            migrationHelper.migrateLegacyWallpaper(darkDuneWallpaperName)
++            migrationHelper.migrateLegacyWallpaper(duneWallpaperName)
++            migrationHelper.migrateLegacyWallpaper(fireyRedWallpaperName)
+             val currentWallpaperName = if (settings.shouldMigrateLegacyWallpaper) {
+                 val migratedWallpaperName =
+                     migrationHelper.migrateLegacyWallpaper(settings.currentWallpaperName)

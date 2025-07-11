@@ -559,3 +559,10 @@ patches:
     reason: "To provide users with more control over their browsing experience."
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
+
+  - file: "local-wallpapers.patch"
+    name: "Local Wallpapers"
+    description: "Adds a built-in collection of wallpapers for the browser's homepage."
+    reason: "By default, Firefox fetches wallpapers from the network on every browser launch. We disable this, due to the associated privacy concerns, and to reduce unwanted network activity."
+    effect: "Users can personalize the browser and take advantage of wallpapers, without compromising their privacy."
+    category: "User Interface"
