@@ -263,7 +263,7 @@ index d3b21828c2..787a899648 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-index 33e8704adc..7a772f7a50 100644
+index 33e8704adc..4bb2a3f64b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 @@ -6,8 +6,8 @@ package org.mozilla.fenix.components
@@ -277,7 +277,7 @@ index 33e8704adc..7a772f7a50 100644
  import kotlinx.coroutines.Dispatchers.Main
  import kotlinx.coroutines.withContext
  import org.mozilla.fenix.GleanMetrics.ReviewPrompt
-@@ -45,24 +45,24 @@ class FenixReviewSettings(
+@@ -45,11 +45,11 @@ class FenixReviewSettings(
   * Controls the Review Prompt behavior.
   */
  class ReviewPromptController(
@@ -287,34 +287,17 @@ index 33e8704adc..7a772f7a50 100644
      private val timeNowInMillis: () -> Long = { System.currentTimeMillis() },
 -    private val tryPromptReview: suspend (Activity) -> Unit = { activity ->
 -        val flow = manager.requestReviewFlow()
--
--        withContext(Main) {
--            flow.addOnCompleteListener {
--                if (it.isSuccessful) {
--                    manager.launchReviewFlow(activity, it.result)
--                    recordReviewPromptEvent(
--                        it.result.toString(),
--                        reviewSettings.numberOfAppLaunches,
--                        Date(),
--                    )
--                }
--            }
--        }
 +    private val tryPromptReview: suspend (Activity) -> Unit = { _ ->
-+//        val flow = manager.requestReviewFlow()
-+
-+//        withContext(Main) {
-+//            flow.addOnCompleteListener {
-+//                if (it.isSuccessful) {
-+//                    manager.launchReviewFlow(activity, it.result)
-+//                    recordReviewPromptEvent(
-+//                        it.result.toString(),
-+//                        reviewSettings.numberOfAppLaunches,
-+//                        Date(),
-+//                    )
-+//                }
-+//            }
-+//        }
++/*        val flow = manager.requestReviewFlow()
+ 
+         withContext(Main) {
+             flow.addOnCompleteListener {
+@@ -62,7 +62,7 @@ class ReviewPromptController(
+                     )
+                 }
+             }
+-        }
++        }*/
      },
  ) {
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -350,7 +333,7 @@ index 6312b65949..ec8b759397 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-index 233855f4c2..9679f5192a 100644
+index 233855f4c2..db736fd18a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 @@ -6,8 +6,8 @@ package org.mozilla.fenix.components.metrics
@@ -377,7 +360,7 @@ index 233855f4c2..9679f5192a 100644
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
  import java.io.UnsupportedEncodingException
-@@ -33,86 +33,86 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -33,10 +33,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
@@ -386,37 +369,16 @@ index 233855f4c2..9679f5192a 100644
  
      override fun start() {
 -        if (context.settings().utmParamsKnown) {
--            return
--        }
--
--        val timerId = PlayStoreAttribution.attributionTime.start()
--        val client = InstallReferrerClient.newBuilder(context).build()
--        referrerClient = client
--
--        client.startConnection(
--            object : InstallReferrerStateListener {
--                override fun onInstallReferrerSetupFinished(responseCode: Int) {
--                    PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
--                    val firstSession = FirstSessionPing(context)
--                    PlayStoreAttribution.responseCode.set(responseCode.toString())
--                    when (responseCode) {
++/*        if (context.settings().utmParamsKnown) {
+             return
+         }
+ 
+@@ -51,13 +51,13 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+                     val firstSession = FirstSessionPing(context)
+                     PlayStoreAttribution.responseCode.set(responseCode.toString())
+                     when (responseCode) {
 -                        InstallReferrerClient.InstallReferrerResponse.OK -> {
-+//        if (context.settings().utmParamsKnown) {
-+//            return
-+//        }
-+
-+//        val timerId = PlayStoreAttribution.attributionTime.start()
-+//        val client = InstallReferrerClient.newBuilder(context).build()
-+//        referrerClient = client
-+
-+//        client.startConnection(
-+//            object : InstallReferrerStateListener {
-+//                override fun onInstallReferrerSetupFinished(responseCode: Int) {
-+//                    PlayStoreAttribution.attributionTime.stopAndAccumulate(timerId)
-+//                    val firstSession = FirstSessionPing(context)
-+//                    PlayStoreAttribution.responseCode.set(responseCode.toString())
-+//                    when (responseCode) {
-+//                        InstallReferrerClient.InstallReferrerResponse.OK -> {
++                        InstallReferrerClient.InstallReferrerResponse.OK -> {*/
                              // Connection established.
 -                            val installReferrerResponse = try {
 -                                client.installReferrer.installReferrer
@@ -426,65 +388,16 @@ index 233855f4c2..9679f5192a 100644
 +//                            } catch (e: RemoteException) {
                                  // We can't do anything about this.
 -                                logger.error("Failed to retrieve install referrer response", e)
--                                null
--                            } catch (e: SecurityException) {
--                                logger.error("Failed to retrieve install referrer response", e)
--                                null
--                            }
--
--                            if (installReferrerResponse.isNullOrBlank()) {
--                                return
--                            }
--
--                            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
--
--                            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
--                            if (FeatureFlags.META_ATTRIBUTION_ENABLED) {
--                                MetaParams.extractMetaAttribution(utmParams.content)
--                                    ?.recordMetaAttribution()
--                            }
--
--                            utmParams.recordInstallReferrer(context.settings())
--                            context.settings().utmParamsKnown = true
--
--                            firstSession.checkAndSend()
--                            triggerPing()
--                        }
--
--                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
--                        InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR,
--                        InstallReferrerClient.InstallReferrerResponse.PERMISSION_ERROR,
++/*                                logger.error("Failed to retrieve install referrer response", e)
+                                 null
+                             } catch (e: SecurityException) {
+                                 logger.error("Failed to retrieve install referrer response", e)
+@@ -86,33 +86,33 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+                         InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
+                         InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR,
+                         InstallReferrerClient.InstallReferrerResponse.PERMISSION_ERROR,
 -                        -> {
-+//                                logger.error("Failed to retrieve install referrer response", e)
-+//                                null
-+//                            } catch (e: SecurityException) {
-+//                                logger.error("Failed to retrieve install referrer response", e)
-+//                                null
-+//                            }
-+
-+//                            if (installReferrerResponse.isNullOrBlank()) {
-+//                                return
-+//                            }
-+
-+//                            PlayStoreAttribution.installReferrerResponse.set(installReferrerResponse)
-+
-+//                            val utmParams = UTMParams.parseUTMParameters(installReferrerResponse)
-+//                            if (FeatureFlags.META_ATTRIBUTION_ENABLED) {
-+//                                MetaParams.extractMetaAttribution(utmParams.content)
-+//                                    ?.recordMetaAttribution()
-+//                            }
-+
-+//                            utmParams.recordInstallReferrer(context.settings())
-+//                            context.settings().utmParamsKnown = true
-+
-+//                            firstSession.checkAndSend()
-+//                            triggerPing()
-+//                        }
-+
-+//                        InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
-+//                        InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR,
-+//                        InstallReferrerClient.InstallReferrerResponse.PERMISSION_ERROR,
-+//                        -> {
++                        -> {*/
                              // unrecoverable errors, but we still want to send the first-session ping.
 -                            context.settings().utmParamsKnown = true
 -                            firstSession.checkAndSend()
@@ -790,24 +703,18 @@ index e13ebe821f..4322aad38e 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..c3728d2f69 100644
+index 9197b274db..b600d45fd5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1865,10 +1865,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the marketing onboarding card should be shown to the user.
+@@ -1867,7 +1867,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var shouldShowMarketingOnboarding by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
+     var shouldShowMarketingOnboarding by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
 -        default = true,
--    )
-+    var shouldShowMarketingOnboarding = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
      val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_should_enable_felt_privacy),
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 4c6b14bf87..9fc35fc6a8 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml

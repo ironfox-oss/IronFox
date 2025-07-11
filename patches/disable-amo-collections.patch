@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
-index c21f63a00d..30eb3ad1bb 100644
+index c21f63a00d..a8ea5237b6 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 @@ -83,7 +83,7 @@ class AddonManager(
@@ -11,48 +11,24 @@ index c21f63a00d..30eb3ad1bb 100644
      suspend fun getAddons(
          waitForPendingActions: Boolean = true,
          allowCache: Boolean = true,
-@@ -113,6 +113,7 @@ class AddonManager(
+@@ -113,7 +113,7 @@ class AddonManager(
              // Get all the featured add-ons not installed from provider.
              // NB: We're keeping translations only for the default locale.
              var featuredAddons = emptyList<Addon>()
-+            /*
-             try {
+-            try {
++/*            try {
                  val userLanguage = Locale.getDefault().language
                  val locales = listOf(userLanguage)
-@@ -124,6 +125,7 @@ class AddonManager(
+                 featuredAddons =
+@@ -123,7 +123,7 @@ class AddonManager(
+             } catch (throwable: Throwable) {
                  // Do not throw when we fail to fetch the featured add-ons since there can be installed add-ons.
                  logger.warn("Failed to get the featured add-ons", throwable)
-             }
-+            */
+-            }
++            }*/
  
              // Build a list of installed extensions that are not built-in extensions.
              val installedAddons = installedExtensions
-@@ -134,7 +136,7 @@ class AddonManager(
-                     Addon.newFromWebExtension(extension, installedState)
-                 }
- 
--            return@withContext featuredAddons + installedAddons
-+            return@withContext installedAddons
-         } catch (throwable: Throwable) {
-             throw AddonManagerException(throwable)
-         }
-diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-index bd3ea6e569..1d29839792 100644
---- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-+++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-@@ -38,9 +38,9 @@ import java.util.concurrent.ConcurrentHashMap
- import java.util.concurrent.TimeUnit
- 
- internal const val API_VERSION = "api/v4"
--internal const val DEFAULT_SERVER_URL = "https://services.addons.mozilla.org"
--internal const val DEFAULT_COLLECTION_USER = "mozilla"
--internal const val DEFAULT_COLLECTION_NAME = "7e8d6dc651b54ab385fb8791bf9dac"
-+internal const val DEFAULT_SERVER_URL = ""
-+internal const val DEFAULT_COLLECTION_USER = ""
-+internal const val DEFAULT_COLLECTION_NAME = ""
- internal const val COLLECTION_FILE_NAME_PREFIX = "mozilla_components_addon_collection"
- internal const val COLLECTION_FILE_NAME = "${COLLECTION_FILE_NAME_PREFIX}_%s.json"
- internal const val COLLECTION_FILE_NAME_WITH_LANGUAGE = "${COLLECTION_FILE_NAME_PREFIX}_%s_%s.json"
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
 index d9a6045423..bf9c9237c6 100644
 --- a/mobile/android/fenix/app/build.gradle
@@ -71,16 +47,3 @@ index d9a6045423..bf9c9237c6 100644
  
          def deepLinkSchemeValue = "fenix-dev"
          buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 5ba4561291..cc93a7bf9c 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-@@ -14,7 +14,7 @@ object FeatureFlags {
-      * This feature does not only depend on this flag. It requires the AMO collection override to
-      * be enabled which is behind the Secret Settings.
-      * */
--    val customExtensionCollectionFeature = Config.channel.isNightlyOrDebug || Config.channel.isBeta
-+    val customExtensionCollectionFeature = false
- 
-     /**
-      * Pull-to-refresh allows you to pull the web content down far enough to have the page to

@@ -114,28 +114,6 @@ index 1443661bb8..218f4f1518 100644
  
                      val isDesktopMode by store.observeAsState(initialValue = false) { state ->
                          state.isDesktopMode
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index 3221dddb98..f611287899 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-@@ -470,7 +470,7 @@ private fun MenuDialogPreview() {
-                 isDesktopMode = false,
-                 isPdf = false,
-                 isTranslationSupported = true,
--                isWebCompatReporterSupported = true,
-+                isWebCompatReporterSupported = false,
-                 showQuitMenu = true,
-                 isExtensionsProcessDisabled = true,
-                 extensionsMenuItemDescription = "No extensions enabled",
-@@ -516,7 +516,7 @@ private fun MenuDialogPrivatePreview() {
-                 isDesktopMode = false,
-                 isPdf = false,
-                 isTranslationSupported = true,
--                isWebCompatReporterSupported = true,
-+                isWebCompatReporterSupported = false,
-                 showQuitMenu = true,
-                 isExtensionsProcessDisabled = false,
-                 extensionsMenuItemDescription = "No extensions enabled",
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 index e7e19273f9..2e6139bd25 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt

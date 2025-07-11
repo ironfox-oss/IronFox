@@ -12,35 +12,15 @@ index 43bea16286..7b4a264b5a 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..0c167a77fc 100644
+index 9197b274db..479bd47958 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2222,19 +2222,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the microsurvey feature is enabled.
-      */
--    var microsurveyFeatureEnabled by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
--        default = { FxNimbus.features.microsurveys.value().enabled },
+@@ -2225,7 +2225,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var microsurveyFeatureEnabled by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
+         default = { FxNimbus.features.microsurveys.value().enabled },
 -        featureFlag = true,
--    )
-+    var microsurveyFeatureEnabled = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
-+//        default = { FxNimbus.features.microsurveys.value().enabled },
-+//        featureFlag = true,
-+//    )
++        featureFlag = false,
+     )
  
      /**
-      * Indicates if a microsurvey should be shown to the user.
-      */
--    var shouldShowMicrosurveyPrompt by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_microsurvey_prompt),
--        default = false,
--    )
-+    var shouldShowMicrosurveyPrompt = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_microsurvey_prompt),
-+//        default = false,
-+//    )
- 
-     /**
-      * Last time the Set as default Browser prompt has been displayed to the user.

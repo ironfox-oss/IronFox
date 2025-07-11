@@ -1,24 +1,16 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 6611dd53cd..1254a626ac 100644
+index 6611dd53cd..856d86e071 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -172,11 +172,11 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
-             return
+@@ -173,7 +173,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
          }
  
--        if (
+         if (
 -            !FxNimbus.features.translations.value().mainFlowToolbarEnabled
--        ) {
--            return
--        }
-+//        if (
-+//            !FxNimbus.features.translations.value().mainFlowToolbarEnabled
-+//        ) {
-+//            return
-+//        }
- 
-         val translationsAction = Toolbar.ActionButton(
-             AppCompatResources.getDrawable(
++            false
+         ) {
+             return
+         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 index 1443661bb8..fbec347f11 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
@@ -192,7 +184,7 @@ index 472e3bf5a8..b2a4842c16 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..326d068e94 100644
+index 9197b274db..c4ca3cb242 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -225,10 +225,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -210,31 +202,21 @@ index 9197b274db..326d068e94 100644
  
      var utmParamsKnown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_utm_params_known),
-@@ -316,10 +316,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the wallpaper onboarding dialog should be shown.
-      */
--    var showWallpaperOnboarding by lazyFeatureFlagPreference(
-+    var showWallpaperOnboarding by booleanPreference(
+@@ -319,7 +319,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var showWallpaperOnboarding by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_wallpapers_onboarding),
--        featureFlag = true,
+         featureFlag = true,
 -        default = { mr2022Sections[Mr2022Section.WALLPAPERS_SELECTION_TOOL] == true },
-+//        featureFlag = true,
-+        default = true,
++        default = { true },
      )
  
      var openLinksInAPrivateTab by booleanPreference(
-@@ -332,10 +332,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
-     )
- 
--    var privateBrowsingLockedFeatureEnabled by lazyFeatureFlagPreference(
-+    var privateBrowsingLockedFeatureEnabled by booleanPreference(
+@@ -335,7 +335,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var privateBrowsingLockedFeatureEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_private_browsing_locked_enabled),
--        featureFlag = true,
+         featureFlag = true,
 -        default = { FxNimbus.features.privateBrowsingLock.value().enabled },
-+//        featureFlag = true,
-+        default = false,
++        default = { false },
      )
  
      var privateBrowsingModeLocked by booleanPreference(
@@ -268,17 +250,12 @@ index 9197b274db..326d068e94 100644
  
      var isFirstNimbusRun: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-@@ -1678,10 +1678,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if home onboarding dialog should be shown.
-      */
--    var showHomeOnboardingDialog by lazyFeatureFlagPreference(
-+    var showHomeOnboardingDialog by booleanPreference(
+@@ -1681,7 +1681,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var showHomeOnboardingDialog by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_home_onboarding_dialog),
--        featureFlag = true,
+         featureFlag = true,
 -        default = { mr2022Sections[Mr2022Section.HOME_ONBOARDING_DIALOG_EXISTING_USERS] == true },
-+//        featureFlag = true,
-+        default = true,
++        default = { true },
      )
  
      /**
@@ -291,21 +268,16 @@ index 9197b274db..326d068e94 100644
  
      /**
       * Returns the height of the bottom toolbar.
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..c74795e584 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -227,11 +227,11 @@
-             app:iconSpaceReserved="false"
-             android:title="@string/preferences_debug_info"
-             app:isPreferenceVisible="false" />
--        <androidx.preference.Preference
-+<!--        <androidx.preference.Preference
-             android:key="@string/pref_key_nimbus_experiments"
-             app:iconSpaceReserved="false"
-             android:title="@string/preferences_nimbus_experiments"
--            app:isPreferenceVisible="false" />
-+            app:isPreferenceVisible="false" /> -->
-         <androidx.preference.Preference
-             android:key="@string/pref_key_start_profiler"
-             app:iconSpaceReserved="false"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 325e5d2141..7d4277ef8e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -549,7 +549,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         with(requireContext().settings()) {
+             findPreference<Preference>(
+                 getPreferenceKey(R.string.pref_key_nimbus_experiments),
+-            )?.isVisible = showSecretDebugMenuThisSession
++            )?.isVisible = false
+             findPreference<Preference>(
+                 getPreferenceKey(R.string.pref_key_debug_settings),
+             )?.isVisible = showSecretDebugMenuThisSession
