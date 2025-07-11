@@ -1,3 +1,16 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 5a31c7b80f..bf94f0effb 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -232,7 +232,7 @@ features:
+       order:
+         description: Determines the order of the onboarding page panels
+         type: List<OnboardingPanel>
+-        default: ["themes", "toolbar-placement", "sync", "tcp", "privacy-notice"]
++        default: ["themes", "toolbar-placement"]
+ 
+   one-click-search:
+     description: Enable/disable the one click search feature.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 index e43dec84c6..e462b4c0fe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
