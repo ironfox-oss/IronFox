@@ -11,6 +11,19 @@ index 13db9f3c83..7964a7af07 100644
                                  null
                              } else {
                                  TopSitesFrecencyConfig(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
+index 26c7a0a2ed..0e694ee05d 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
+@@ -111,7 +111,7 @@ internal fun normalModeAdapterItems(
+     }
+ 
+     if (shouldShowCustomizeHome) {
+-        items.add(AdapterItem.CustomizeHomeButton)
++//        items.add(AdapterItem.CustomizeHomeButton)
+     }
+ 
+     items.add(AdapterItem.BottomSpacer)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
 index 48b312d257..92b3b71f71 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
