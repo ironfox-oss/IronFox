@@ -332,6 +332,8 @@ Parts of `branding.patch`, `librewolf-rs-blocker.patch`, and `ublock-assets.patc
 
 `disable-network-connectivity-monitoring.patch`, `disable-sslkeylogging.patch` and `tor-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
+Our current set of default wallpapers are taken from [Fennec F-Droid](https://gitlab.com/relan/fennecmedia), and are available under the [Unsplash license](https://gitlab.com/relan/fennecmedia#licenses).
+
 ## Notices
 
 Mozilla Firefox is a trademark of The Mozilla Foundation.
