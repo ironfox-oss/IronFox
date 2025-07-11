@@ -12,7 +12,7 @@ index e5ab956ac3..4d1ef3de39 100644
  
      private fun isNotDefaultBrowser(context: Context) =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..2b38b6598d 100644
+index 9197b274db..d6adb1bfb8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -198,7 +198,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -24,21 +24,15 @@ index 9197b274db..2b38b6598d 100644
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -616,10 +616,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the user has completed successfully first translation.
+@@ -618,7 +618,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var showFirstTimeTranslation: Boolean by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
+     var showFirstTimeTranslation: Boolean by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
 -        default = true,
--    )
-+    var showFirstTimeTranslation: Boolean = false
-+//        appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
      /**
-      * Indicates if the user wants translations to automatically be offered as a popup of the dialog.
 @@ -788,12 +788,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * This will lead to a performance regression since that function can be expensive to call.
       */
@@ -58,51 +52,31 @@ index 9197b274db..2b38b6598d 100644
      }
  
      /**
-@@ -805,40 +805,40 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         return browsers.isDefaultBrowser
+@@ -802,12 +802,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     fun isDefaultBrowserBlocking(): Boolean {
+         val browsers = BrowsersCache.all(appContext)
+-        return browsers.isDefaultBrowser
++        return false
      }
  
--    var reEngagementNotificationShown by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
+     var reEngagementNotificationShown by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
 -        default = false,
--    )
-+    var reEngagementNotificationShown = true
-+//        appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
-+//        default = false,
-+//    )
++        default = true,
+     )
  
      /**
-      * Check if we should set the re-engagement notification.
-      */
-     fun shouldSetReEngagementNotification(): Boolean {
--        return numberOfAppLaunches <= 1 && !reEngagementNotificationShown
-+        return false
-     }
- 
-     /**
-      * Check if we should show the re-engagement notification.
-      */
-     fun shouldShowReEngagementNotification(): Boolean {
--        return !reEngagementNotificationShown && !isDefaultBrowserBlocking()
-+        return false
-     }
- 
-     /**
-      * Indicates if the re-engagement notification feature is enabled
-      */
--    var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
--        default = { FxNimbus.features.reEngagementNotification.value().enabled },
+@@ -830,7 +830,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
+         default = { FxNimbus.features.reEngagementNotification.value().enabled },
 -        featureFlag = true,
--    )
-+    var reEngagementNotificationEnabled = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
-+//        default = { FxNimbus.features.reEngagementNotification.value().enabled },
-+//        featureFlag = true,
-+//    )
++        featureFlag = false,
+     )
  
      /**
-      * Indicates if the re-engagement notification feature is enabled
+@@ -838,7 +838,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val reEngagementNotificationType: Int
          get() =
@@ -111,207 +85,105 @@ index 9197b274db..2b38b6598d 100644
  
      val shouldUseAutoBatteryTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
-@@ -898,30 +898,30 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the total cookie protection CRF should be shown.
+@@ -900,7 +900,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var shouldShowEraseActionCFR by lazyFeatureFlagPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_erase_action_popup),
+     var shouldShowEraseActionCFR by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_erase_action_popup),
 -        featureFlag = true,
--        default = { feltPrivateBrowsingEnabled },
--    )
-+    var shouldShowEraseActionCFR = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_erase_action_popup),
-+//        featureFlag = true,
-+//        default = { feltPrivateBrowsingEnabled },
-+//    )
- 
-     /**
-      * Indicates if the cookie banners CRF should be shown.
-      */
--    var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
--        featureFlag = true,
--        default = { shouldShowCookieBannerUI },
--    )
-+    var shouldShowCookieBannersCFR = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
-+//        featureFlag = true,
-+//        default = { shouldShowCookieBannerUI },
-+//    )
- 
--    var shouldShowTabSwipeCFR by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_toolbar_tab_swipe_cfr),
--        default = false,
--    )
-+    var shouldShowTabSwipeCFR = false
-+//        appContext.getPreferenceKey(R.string.pref_key_toolbar_tab_swipe_cfr),
-+//        default = false,
-+//    )
- 
--    var hasShownTabSwipeCFR by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
--        default = false,
--    )
-+    var hasShownTabSwipeCFR = true
-+//        appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
-+//        default = false,
-+//    )
- 
-     val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_cookies_select),
-@@ -1197,11 +1197,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
++        featureFlag = false,
+         default = { feltPrivateBrowsingEnabled },
      )
  
-     private val userNeedsToVisitInstallableSites: Boolean
--        get() = pwaInstallableVisitCount.underMaxCount()
-+        get() = false
+@@ -909,7 +909,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
+-        featureFlag = true,
++        featureFlag = false,
+         default = { shouldShowCookieBannerUI },
+     )
  
-     val shouldShowPwaCfr: Boolean
-         get() {
--            if (!canShowCfr) return false
-+            return false
-             // We only want to show this on the 3rd time a user visits a site
-             if (userNeedsToVisitInstallableSites) return false
+@@ -920,7 +920,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
-@@ -1217,41 +1217,41 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-             return !userKnowsAboutPwas
-         }
- 
--    var userKnowsAboutPwas by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
+     var hasShownTabSwipeCFR by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
 -        default = false,
--    )
-+    var userKnowsAboutPwas = true
-+//        appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
-+//        default = false,
-+//    )
++        default = true,
+     )
  
--    var shouldShowOpenInAppBanner by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_open_in_app_banner),
+     val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
+@@ -1219,12 +1219,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     var userKnowsAboutPwas by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
+-        default = false,
++        default = true,
+     )
+ 
+     var shouldShowOpenInAppBanner by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_open_in_app_banner),
 -        default = true,
--    )
-+    var shouldShowOpenInAppBanner = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_open_in_app_banner),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
      val shouldShowOpenInAppCfr: Boolean
--        get() = canShowCfr && shouldShowOpenInAppBanner
-+        get() = false
+@@ -1232,17 +1232,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
--    var shouldShowAutoCloseTabsBanner by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
+     var shouldShowAutoCloseTabsBanner by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
 -        default = true,
--    )
-+    var shouldShowAutoCloseTabsBanner = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
--    var shouldShowLockPbmBanner by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_lock_pbm_banner),
+     var shouldShowLockPbmBanner by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_lock_pbm_banner),
 -        true,
--    )
-+    var shouldShowLockPbmBanner = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_lock_pbm_banner),
-+//        true,
-+//    )
++        false,
+     )
  
--    var shouldShowInactiveTabsOnboardingPopup by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_inactive_tabs_popup),
+     var shouldShowInactiveTabsOnboardingPopup by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_inactive_tabs_popup),
 -        default = true,
--    )
-+    var shouldShowInactiveTabsOnboardingPopup = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_inactive_tabs_popup),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
      /**
-      * Indicates if the auto-close dialog for inactive tabs has been dismissed before.
+@@ -1250,7 +1250,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
+     var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
 -        default = false,
--    )
-+    var hasInactiveTabsAutoCloseDialogBeenDismissed = true
-+//        appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
-+//        default = false,
-+//    )
++        default = true,
+     )
  
      /**
-      * Indicates if the auto-close dialog should be visible based on
-@@ -1260,7 +1260,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * and if the auto-close setting is already set to [closeTabsAfterOneMonth].
+@@ -1671,7 +1671,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
-     fun shouldShowInactiveTabsAutoCloseDialog(numbersOfTabs: Int): Boolean {
--        return !hasInactiveTabsAutoCloseDialogBeenDismissed &&
-+        return false &&
-             numbersOfTabs >= INACTIVE_TAB_MINIMUM_TO_SHOW_AUTO_CLOSE_DIALOG &&
-             !closeTabsAfterOneMonth
-     }
-@@ -1669,11 +1669,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if sync onboarding CFR should be shown.
-      */
--    var showSyncCFR by lazyFeatureFlagPreference(
--        appContext.getPreferenceKey(R.string.pref_key_should_show_sync_cfr),
+     var showSyncCFR by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_sync_cfr),
 -        featureFlag = true,
--        default = { mr2022Sections[Mr2022Section.SYNC_CFR] == true },
--    )
-+    var showSyncCFR = false
-+//        appContext.getPreferenceKey(R.string.pref_key_should_show_sync_cfr),
-+//        featureFlag = true,
-+//        default = { mr2022Sections[Mr2022Section.SYNC_CFR] == true },
-+//    )
++        featureFlag = false,
+         default = { mr2022Sections[Mr2022Section.SYNC_CFR] == true },
+     )
  
-     /**
-      * Indicates if home onboarding dialog should be shown.
-@@ -1887,10 +1887,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the search bar CFR should be displayed to the user.
+@@ -1906,7 +1906,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var shouldShowSearchBarCFR by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_should_searchbar_cfr),
--        default = false,
--    )
-+    var shouldShowSearchBarCFR = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_should_searchbar_cfr),
-+//        default = false,
-+//    )
- 
-     /**
-      * Indicates whether or not to use remote server search configuration.
-@@ -1904,10 +1904,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the menu CFR should be displayed to the user.
-      */
--    var shouldShowMenuCFR by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_menu_cfr),
+     var shouldShowMenuCFR by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_menu_cfr),
 -        default = true,
--    )
-+    var shouldShowMenuCFR = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_menu_cfr),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
      /**
-      * Get the current mode for how https-only is enabled.
-@@ -2118,10 +2118,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates first time engaging with signup
+@@ -2120,7 +2120,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var isFirstTimeEngagingWithSignup: Boolean by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
+     var isFirstTimeEngagingWithSignup: Boolean by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
 -        default = true,
--    )
-+    var isFirstTimeEngagingWithSignup: Boolean = false
-+//        appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
      /**
-      * Indicates if the user has chosen to show sponsored search suggestions in the awesomebar.
 @@ -2273,7 +2273,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val shouldShowSetAsDefaultPrompt: Boolean
@@ -321,42 +193,31 @@ index 9197b274db..2b38b6598d 100644
                  DAYS_BETWEEN_DEFAULT_BROWSER_PROMPTS * ONE_DAY_MS &&
                  numberOfSetAsDefaultPromptShownTimes < MAX_NUMBER_OF_DEFAULT_BROWSER_PROMPTS &&
                  coldStartsBetweenSetAsDefaultPrompts >= APP_COLD_STARTS_TO_SHOW_DEFAULT_PROMPT
-@@ -2434,44 +2434,44 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the user has completed the setup step for choosing the toolbar location
+@@ -2436,7 +2436,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var hasCompletedSetupStepToolbar by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
+     var hasCompletedSetupStepToolbar by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
 -        default = false,
--    )
-+    var hasCompletedSetupStepToolbar = true
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
-+//        default = false,
-+//    )
++        default = true,
+     )
  
      /**
-      * Indicates if the user has completed the setup step for choosing the theme
+@@ -2444,7 +2444,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var hasCompletedSetupStepTheme by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
+     var hasCompletedSetupStepTheme by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
 -        default = false,
--    )
-+    var hasCompletedSetupStepTheme = true
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
-+//        default = false,
-+//    )
++        default = true,
+     )
  
      /**
-      * Indicates if the user has completed the setup step for exploring extensions
+@@ -2452,16 +2452,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var hasCompletedSetupStepExtensions by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_extensions),
+     var hasCompletedSetupStepExtensions by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_setup_step_extensions),
 -        default = false,
--    )
-+    var hasCompletedSetupStepExtensions = true
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_step_extensions),
-+//        default = false,
-+//    )
++        default = true,
+     )
  
      /**
       * Indicates if this is the default browser.
@@ -372,21 +233,11 @@ index 9197b274db..2b38b6598d 100644
  
      /**
       * Indicates whether or not to show the checklist feature.
-      */
--    var showSetupChecklist by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
--        default = {
--            FxNimbus.features.setupChecklist.value().enabled &&
--                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
--        },
+@@ -2472,6 +2472,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+             FxNimbus.features.setupChecklist.value().enabled &&
+                     canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
+         },
 -        featureFlag = true,
--    )
-+    var showSetupChecklist = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
-+//        default = {
-+//            FxNimbus.features.setupChecklist.value().enabled &&
-+//                    canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
-+//        },
-+//        featureFlag = true,
-+//    )
++        featureFlag = false,
+     )
  }

@@ -197,39 +197,19 @@ index 028be832d6..50bf4971ff 100644
 +        val cloudflareFamilyUri = "https://family.cloudflare-dns.com/dns-query"
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-index f290b21561..506412b351 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-@@ -556,8 +556,8 @@ private fun ExceptionsRow(onExceptionsClicked: () -> Unit) {
- private fun DohScreenDefaultProviderPreview() {
-     FirefoxTheme {
-         val provider = Provider.BuiltIn(
--            url = "https://mozilla.cloudflare-dns.com/dns-query",
--            name = "Cloudflare",
-+            url = "https://dns.quad9.net/dns-query",
-+            name = "Quad9",
-             default = true,
-         )
-         DohSettingsScreen(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..68bba5f520 100644
+index 9197b274db..f89b2f7ea6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2362,10 +2362,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates whether or not to show the entry point for the DNS over HTTPS settings
+@@ -2364,7 +2364,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    val showDohEntryPoint by lazyFeatureFlagPreference(
-+    val showDohEntryPoint by booleanPreference(
+     val showDohEntryPoint by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_enabled),
 -        default = { FxNimbus.features.doh.value().showUi },
--        featureFlag = true,
-+        default = true,
-+//        featureFlag = true,
++        default = { true },
+         featureFlag = true,
      )
  
-     /**
 @@ -2377,7 +2377,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      private var trrMode by intPreference(
@@ -248,16 +228,3 @@ index 9197b274db..68bba5f520 100644
      )
  
      /**
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..98eacf1f23 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -107,7 +107,7 @@
-         <androidx.preference.Preference
-             android:key="@string/pref_key_doh_settings"
-             app:iconSpaceReserved="false"
--            app:isPreferenceVisible="false"
-+            app:isPreferenceVisible="true"
-             android:title="@string/preference_doh_title" />
- 
-         <org.mozilla.fenix.settings.cookiebannerhandling.CustomCBHSwitchPreference

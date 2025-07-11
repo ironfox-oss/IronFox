@@ -14,23 +14,15 @@ index 81bf2dd7e2..7a43fac926 100644
  private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
  private const val SPOCS_PROXY_VERSION_KEY = "version"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-index 9e4f378574..ccc52008f5 100644
+index 9e4f378574..f09791f066 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-@@ -44,14 +44,14 @@ object ContentRecommendationsFeatureHelper {
+@@ -44,7 +44,7 @@ object ContentRecommendationsFeatureHelper {
      fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
          val langTag = LocaleManager.getCurrentLocale(context)
              ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
 -        return POCKET_SUPPORTED_LOCALES.contains(langTag)
 +        return false && POCKET_SUPPORTED_LOCALES.contains(langTag)
-     }
- 
-     /**
-      * Show Pocket sponsored stories in between Pocket recommended stories on home.
-      */
-     fun isPocketSponsoredStoriesFeatureEnabled(context: Context): Boolean {
--        return isPocketRecommendationsFeatureEnabled(context)
-+        return false && isPocketRecommendationsFeatureEnabled(context)
      }
  
      /**
@@ -43,7 +35,7 @@ index 9e4f378574..ccc52008f5 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..84ac3c7d2b 100644
+index 43bea16286..78b04620cc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 @@ -114,6 +114,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
@@ -54,86 +46,3 @@ index 43bea16286..84ac3c7d2b 100644
              isChecked = context.settings().showContentRecommendations
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-@@ -199,7 +200,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<Preference>(R.string.pref_key_custom_sponsored_stories_parameters).apply {
--            isVisible = Config.channel.isNightlyOrDebug
-+            isVisible = false
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_remote_server_prod).apply {
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..88ab712f7d 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1732,20 +1732,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the Pocket recommended stories homescreen section should be shown.
-      */
--    var showPocketRecommendationsFeature by lazyFeatureFlagPreference(
--        appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
--        featureFlag = ContentRecommendationsFeatureHelper.isPocketRecommendationsFeatureEnabled(appContext),
--        default = { homescreenSections[HomeScreenSection.POCKET] == true },
--    )
-+    var showPocketRecommendationsFeature = false
-+//        appContext.getPreferenceKey(R.string.pref_key_pocket_homescreen_recommendations),
-+//        featureFlag = ContentRecommendationsFeatureHelper.isPocketRecommendationsFeatureEnabled(appContext),
-+//        default = { homescreenSections[HomeScreenSection.POCKET] == true },
-+//    )
- 
-     /**
-      * Indicates if the Pocket recommendations homescreen section should also show sponsored stories.
-      */
--    val showPocketSponsoredStories by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
--        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
--        featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
--    )
-+    val showPocketSponsoredStories = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_pocket_sponsored_stories),
-+//        default = { homescreenSections[HomeScreenSection.POCKET_SPONSORED_STORIES] == true },
-+//        featureFlag = ContentRecommendationsFeatureHelper.isPocketSponsoredStoriesFeatureEnabled(appContext),
-+//    )
- 
-     /**
-      * Get the profile id to use in the sponsored stories communications with the Pocket endpoint.
-@@ -1768,11 +1768,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if Merino content recommendations should be shown.
-      */
--    var showContentRecommendations by lazyFeatureFlagPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_pocket_content_recommendations),
--        default = { FxNimbus.features.merinoRecommendations.value().enabled },
--        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
--    )
-+    var showContentRecommendations = false
-+//        key = appContext.getPreferenceKey(R.string.pref_key_pocket_content_recommendations),
-+//        default = { FxNimbus.features.merinoRecommendations.value().enabled },
-+//        featureFlag = ContentRecommendationsFeatureHelper.isContentRecommendationsFeatureEnabled(appContext),
-+//    )
- 
-     /**
-      *  Whether or not to display the Pocket sponsored stories parameter secret settings.
-diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-index 4fd1f8945a..0044115440 100644
---- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-@@ -29,13 +29,15 @@
- 
-     <androidx.preference.SwitchPreference
-         android:key="@string/pref_key_pocket_homescreen_recommendations"
--        android:title="@string/customize_toggle_pocket_3" />
-+        android:title="@string/customize_toggle_pocket_3"
-+        app:isPreferenceVisible="false" />
- 
-     <androidx.preference.CheckBoxPreference
-         android:dependency="@string/pref_key_pocket_homescreen_recommendations"
-         android:layout="@layout/checkbox_left_sub_preference"
-         android:key="@string/pref_key_pocket_sponsored_stories"
--        android:title="@string/customize_toggle_pocket_sponsored" />
-+        android:title="@string/customize_toggle_pocket_sponsored"
-+        app:isPreferenceVisible="false" />
- 
-     <androidx.preference.Preference
-         android:key="@string/pref_key_wallpapers"
