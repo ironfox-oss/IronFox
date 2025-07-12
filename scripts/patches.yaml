@@ -373,9 +373,9 @@ patches:
 
   - file: "disable-shipped-domains.patch"
     name: "Disable Shipped Domains"
-    description: "Disables pre-shipped domain list."
-    reason: "To address security concerns from outdated domain lists."
-    effect: "Prevents potential security issues and removes annoying domain suggestions."
+    description: "Disables Firefox's built-in list of domains used to autocomplete URLs."
+    reason: "To quote a Mozilla employee (https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0): Android’s current list of 400+ domain names for address bar suggestions was created way back in December 2015… This list hasn’t been updated since 2015 and now includes expired and squatted domains that might serve ads or malware. Instead of updating the lists of top domains, we should remove it. This would avoid the risk from future bad domains. The default suggestions are out of date and not necessarily relevant for every locale."
+    effect: "Prevents suggesting squatted domains to users that serve ads and malware, and reduces annoyances/unwanted behavior."
     category: "Security"
 
   - file: "harden-pdfjs.patch"

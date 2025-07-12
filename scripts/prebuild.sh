@@ -154,9 +154,28 @@ sed -i \
     -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
     -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
     -e 's/Agree and continue/Continue/' \
+    -e 's/Address bar - Firefox Suggest/Address bar/' \
     -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
-    -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
     -e '/about_content/s/Mozilla/IronFox OSS/' \
+    -e 's/IronFox Suggest/Firefox Suggest/' \
+    -e 's/Learn more about Firefox Suggest/Learn more about search suggestions/' \
+    -e 's/Suggestions from %1$s/Suggestions from Mozilla/' \
+    -e 's/Notifications for tabs received from other IronFox devices/Notifications for tabs received from other devices/' \
+    -e 's/To send a tab, sign in to IronFox/To send a tab, sign in to a Firefox-based web browser/' \
+    -e 's/On your computer open IronFox and/On your computer, open a Firefox-based web browser, and/' \
+    -e 's/Fast and secure web browsing/The private, secure, user first web browser for Android./' \
+    -e 's/Sync is on/Firefox Sync is on/' \
+    -e 's/No account?/No Firefox account?/' \
+    -e 's/to sync IronFox/to sync your browsing data/' \
+    -e 's/%s will stop syncing with your account/%s will stop syncing with your Firefox account/' \
+    -e 's/%1$s decides when to use secure DNS to protect your privacy/IronFox will use your system’s DNS resolver/' \
+    -e 's/Use your default DNS resolver if there is a problem with the secure DNS provider/Use your default DNS resolver/' \
+    -e 's/You control when to use secure DNS and choose your provider/IronFox will use secure DNS with your chosen provider by default, but might fallback to your system’s DNS resolver if secure DNS is unavailable/' \
+    -e '/preference_doh_off_summary/s/Use your default DNS resolver/Never use secure DNS, even if supported by your system’s DNS resolver/' \
+    -e 's/Learn more about sync/Learn more about Firefox Sync/' \
+    -e 's/search?client=firefox&amp;q=%s/search?q=%s/' \
+    -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
+    -e 's/Google Search/%s search/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
