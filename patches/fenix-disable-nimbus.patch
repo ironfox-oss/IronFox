@@ -184,7 +184,7 @@ index 472e3bf5a8..b2a4842c16 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..c4ca3cb242 100644
+index 9197b274db..44112a59b6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -225,10 +225,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -202,24 +202,6 @@ index 9197b274db..c4ca3cb242 100644
  
      var utmParamsKnown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_utm_params_known),
-@@ -319,7 +319,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     var showWallpaperOnboarding by lazyFeatureFlagPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_wallpapers_onboarding),
-         featureFlag = true,
--        default = { mr2022Sections[Mr2022Section.WALLPAPERS_SELECTION_TOOL] == true },
-+        default = { true },
-     )
- 
-     var openLinksInAPrivateTab by booleanPreference(
-@@ -335,7 +335,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     var privateBrowsingLockedFeatureEnabled by lazyFeatureFlagPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_private_browsing_locked_enabled),
-         featureFlag = true,
--        default = { FxNimbus.features.privateBrowsingLock.value().enabled },
-+        default = { false },
-     )
- 
-     var privateBrowsingModeLocked by booleanPreference(
 @@ -412,10 +412,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          persistDefaultIfNotExists = true,
      )
@@ -250,15 +232,6 @@ index 9197b274db..c4ca3cb242 100644
  
      var isFirstNimbusRun: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-@@ -1681,7 +1681,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     var showHomeOnboardingDialog by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_should_show_home_onboarding_dialog),
-         featureFlag = true,
--        default = { mr2022Sections[Mr2022Section.HOME_ONBOARDING_DIALOG_EXISTING_USERS] == true },
-+        default = { true },
-     )
- 
-     /**
 @@ -2157,7 +2157,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the feature to close synced tabs is enabled.
       */
