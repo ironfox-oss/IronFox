@@ -12,7 +12,7 @@ index e5ab956ac3..4d1ef3de39 100644
  
      private fun isNotDefaultBrowser(context: Context) =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..d6adb1bfb8 100644
+index 9197b274db..44fc7b52f3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -198,7 +198,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -24,6 +24,15 @@ index 9197b274db..d6adb1bfb8 100644
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
+@@ -318,7 +318,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var showWallpaperOnboarding by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_wallpapers_onboarding),
+-        featureFlag = true,
++        featureFlag = false,
+         default = { mr2022Sections[Mr2022Section.WALLPAPERS_SELECTION_TOOL] == true },
+     )
+ 
 @@ -618,7 +618,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showFirstTimeTranslation: Boolean by booleanPreference(
@@ -164,6 +173,15 @@ index 9197b274db..d6adb1bfb8 100644
 -        featureFlag = true,
 +        featureFlag = false,
          default = { mr2022Sections[Mr2022Section.SYNC_CFR] == true },
+     )
+ 
+@@ -1680,7 +1680,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var showHomeOnboardingDialog by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_should_show_home_onboarding_dialog),
+-        featureFlag = true,
++        featureFlag = false,
+         default = { mr2022Sections[Mr2022Section.HOME_ONBOARDING_DIALOG_EXISTING_USERS] == true },
      )
  
 @@ -1906,7 +1906,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
