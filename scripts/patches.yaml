@@ -78,6 +78,13 @@ patches:
     effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
     category: "Build System"
 
+  - file: "unbreak-translations-without-gecko-profiler.patch"
+    name: "Unbreak Firefox Translations without Gecko Profiler"
+    description: "Unbreaks Firefox Translations when the Gecko Profiler debugging tools (https://firefox-source-docs.mozilla.org/tools/profiler/index.html) are disabled."
+    reason: "Works around an upstream bug (https://bugzilla.mozilla.org/show_bug.cgi?id=1977078) that we encounter, due to us disabling the Gecko Profiler at build-time."
+    effect: "Allows users to use the Firefox Translations feature, without us needing to build and include unnecessary/unwanted debugging tools."
+    category: "Build System"
+
   # Dependency
   - file: "gecko-liberate.patch"
     name: "Remove Proprietary Libraries (Gecko)"
