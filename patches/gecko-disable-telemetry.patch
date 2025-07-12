@@ -40,7 +40,7 @@ index 0e2a6efdc9..c931fb3c74 100644
  
  imply_option("MOZ_APP_UA_NAME", "Firefox")
 diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
-index 42c16ebb87..6c796a950f 100644
+index 42c16ebb87..4f27d1ed09 100644
 --- a/toolkit/components/glean/src/init/mod.rs
 +++ b/toolkit/components/glean/src/init/mod.rs
 @@ -72,7 +72,7 @@ pub extern "C" fn fog_init(
@@ -61,12 +61,16 @@ index 42c16ebb87..6c796a950f 100644
          }
      };
  
-@@ -190,9 +190,9 @@ fn build_configuration(
+@@ -186,13 +186,13 @@ fn build_configuration(
+         delay_ping_lifetime_io: true,
+         server_endpoint: Some(server),
+         uploader: None,
+-        use_core_mps: true,
++        use_core_mps: false,
          trim_data_to_registered_pings: true,
          log_level: None,
          rate_limit,
--        enable_event_timestamps: true,
-+        enable_event_timestamps: false,
+         enable_event_timestamps: true,
          experimentation_id: None,
 -        enable_internal_pings: true,
 +        enable_internal_pings: false,
@@ -119,31 +123,6 @@ index cf0a7bd372..4f19716815 100644
        isPrereleaseChannel ||
        isReleaseCandidateOnBeta ||
        Services.prefs.getBoolPref(this.Preferences.OverridePreRelease, false);
-diff --git a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
-index 1e45187924..b45af61339 100644
---- a/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
-+++ b/toolkit/components/telemetry/app/TelemetryReportingPolicy.sys.mjs
-@@ -280,9 +280,9 @@ var TelemetryReportingPolicyImpl = {
-    */
-   get dataSubmissionEnabled() {
-     // Default is true because we are opt-out.
--    return Services.prefs.getBoolPref(
-+    return false && Services.prefs.getBoolPref(
-       TelemetryUtils.Preferences.DataSubmissionEnabled,
--      true
-+      false
-     );
-   },
- 
-@@ -716,7 +716,7 @@ var TelemetryReportingPolicyImpl = {
-     return this._ensureUserIsNotifiedPromise.then(() => {
-       // The user has been notified and interacted with the modal.
-       // Glean can now init on shutdown if necessary.
--      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", true);
-+      Services.prefs.setBoolPref("telemetry.fog.init_on_shutdown", false);
-     });
-   },
- 
 diff --git a/toolkit/components/telemetry/app/UsageReporting.sys.mjs b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
 index 4a3e1de32d..baeff11b29 100644
 --- a/toolkit/components/telemetry/app/UsageReporting.sys.mjs

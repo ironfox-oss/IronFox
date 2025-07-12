@@ -377,8 +377,8 @@ index 0000000000..5d75386d0d
 +                val captionText = when (contentState) {
 +                    IfPreferenceDohContentState.ModeSelection -> stringResource(
 +                        when (dohSettingsState.selectedProtectionLevel) {
-+                            ProtectionLevel.Default -> R.string.onboarding_if_preference_doh_default_protection_summary
-+                            ProtectionLevel.Increased -> R.string.onboarding_if_preference_doh_increased_protection_summary
++                            ProtectionLevel.Default -> R.string.preference_doh_default_protection_summary
++                            ProtectionLevel.Increased -> R.string.preference_doh_increased_protection_summary
 +                            ProtectionLevel.Max -> R.string.preference_doh_max_protection_summary
 +                            ProtectionLevel.Off -> R.string.onboarding_if_preference_doh_off_summary
 +                        },

@@ -71,8 +71,6 @@
 
     <!-- Onboarding - DoH -->
     <string name="onboarding_if_preference_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
-    <string name="onboarding_if_preference_doh_default_protection_summary">IronFox will use your system’s DNS resolver.</string>
-    <string name="onboarding_if_preference_doh_increased_protection_summary">IronFox will use secure DNS by default, but fallback to your system’s DNS resolver if secure DNS is unavailable.</string>
     <string name="onboarding_if_preference_doh_off_summary"></string>
 
     <!-- Onboarding - uBlock Origin -->
