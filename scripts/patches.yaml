@@ -433,6 +433,13 @@ patches:
     effect: "Protects users against total compromise of any and all cryptographic security."
     category: "Security"
 
+  - file: "enable-secure-storage.patch"
+    name: "Enable Secure Storage"
+    description: "Enables the use of encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state and certain preferences."
+    reason: "To improve privacy and security for users, by leveraging Android's Keystore system for storing certain data."
+    effect: "Protects users against unauthorized use/compromise of their data."
+    category: "Security"
+
   # User Control
   - file: "enable-secret-settings.patch"
     name: "Enable Secret Settings"
