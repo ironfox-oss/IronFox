@@ -1,16 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-index e27a4e82d7..e71288649d 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-@@ -210,7 +210,7 @@ class HomeMenu(
-             bookmarksItem,
-             historyItem,
-             downloadsItem,
--            passwordsItem,
-+            if (settings.shouldPromptToSaveLogins) passwordsItem else null,
-             extensionsItem,
-             syncSignInMenuItem,
-             accountAuthItem,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 9197b274db..c3f610f0c6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
