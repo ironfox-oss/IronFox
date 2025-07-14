@@ -92,7 +92,7 @@ patches:
     reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
-  
+
   - file: "unifiedpush.patch"
     name: "UnifiedPush"
     description: "Adds support for UnifiedPush."
@@ -107,7 +107,7 @@ patches:
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla or third parties."
     effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
     category: "Privacy"
-  
+
   - file: "gecko-disable-telemetry.patch"
     name: "Disable Telemetry (Gecko)"
     description: "Disables data collection and submission mechanisms within Gecko."
@@ -121,28 +121,28 @@ patches:
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla during the build process."
     effect: "Improves privacy for developers by preventing the collection and transmission of telemetry data."
     category: "Privacy"
-  
+
   - file: "fenix-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Fenix)"
     description: "Disables the collection and submission of crash reports within Firefox for Android."
     reason: "To prevent submitting personal and/or sensitive data to Mozilla."
     effect: "Improves user privacy by preventing the collection and transmission of crash reports."
     category: "Privacy"
-  
+
   - file: "gecko-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Gecko)"
     description: "Disables the collection and submission of crash reports within Gecko."
     reason: "To prevent submitting personal and/or sensitive data to Mozilla."
     effect: "Improves user privacy by preventing the collection and transmission of crash reports."
     category: "Privacy"
-  
+
   - file: "fenix-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Fenix)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Firefox for Android."
     reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Privacy"
-  
+
   - file: "gecko-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Gecko)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Gecko."
@@ -234,7 +234,7 @@ patches:
     reason: "To prevent automatic inclusion of Firefox branding in shared links."
     effect: "Improves privacy by not disclosing browser information when sharing links."
     category: "Privacy"
-  
+
   - file: "disable-amo-collections.patch"
     name: "Disable AMO Featured Collections and Recommendations"
     description: "Disables fetching featured collections, recommendations, and icons from AMO (addons.mozilla.org)."
@@ -290,7 +290,7 @@ patches:
     reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
     effect: "Network activity is further limited, less data is shared with Mozilla, and the user is put in control of what specifically they want to download from Remote Settings."
     category: "Privacy"
-  
+
   - file: "install-addons-without-mozaddonmanager.patch"
     name: "Allow installation of add-ons without the mozAddonManager API"
     description: "Adds support for installing add-ons from `addons.mozilla.org` without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the privileged mozAddonManager API), in addition to websites specified with the `xpinstall.whitelist.add` series of prefs."
@@ -554,7 +554,7 @@ patches:
     name: "IronFox Settings (Fenix)"
     description: "Adds support to Fenix (Firefox for Android) for IronFox-specific UI settings to control various functionality."
     reason: |
-      To allow users to easily control their browsing  experience.
+      To allow users to easily control their browsing experience.
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
 
@@ -585,4 +585,11 @@ patches:
     description: "Adds minor tweaks to the browser's user interface."
     reason: "To reduce clutter and improve the user experience."
     effect: "Users are provided with a cleaner, focused browsing experience."
+    category: "User Interface"
+
+  - file: "cross-origin-referer-policy-settings.patch"
+    name: "Cross-Origin Referer Policy Settings"
+    description: "Adds support for UI settings to control the cross-origin referer policy for websites."
+    reason: "To allow users to easily control their browsing experience."
+    effect: "Users can conveniently harden or relax the cross-origin referer policy to what works best for them, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"

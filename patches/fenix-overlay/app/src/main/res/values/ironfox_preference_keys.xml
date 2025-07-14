@@ -11,6 +11,12 @@
     <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
     <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
 
+    <!-- Cross-origin referer policy -->
+    <string name="pref_key_referer_policy_always" translatable="false">pref_key_referer_policy_always</string>
+    <string name="pref_key_referer_policy_base_domains_match" translatable="false">pref_key_referer_policy_base_domains_match</string>
+    <string name="pref_key_referer_policy_hosts_match" translatable="false">pref_key_referer_policy_hosts_match</string>
+    <string name="pref_key_referer_policy_settings" translatable="false">pref_key_referer_policy_settings</string>
+
     <!-- Secret Settings -->
     <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
     <string name="pref_key_widevine_enabled" translatable="false">pref_key_widevine_enabled</string>
