@@ -579,3 +579,10 @@ patches:
     reason: "By default, Firefox fetches wallpapers from the network on every browser launch. We disable this, due to the associated privacy concerns, and to reduce unwanted network activity."
     effect: "Users can personalize the browser and take advantage of wallpapers, without compromising their privacy."
     category: "User Interface"
+
+  - file: "ironfox-ui.patch"
+    name: "IronFox UI"
+    description: "Adds minor tweaks to the browser's user interface."
+    reason: "To reduce clutter and improve the user experience."
+    effect: "Users are provided with a cleaner, focused browsing experience."
+    category: "User Interface"
