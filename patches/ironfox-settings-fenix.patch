@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..e3a4f09edb 100644
+index cfbdaba62c..d25a810e0b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,25 @@ class Core(
+@@ -196,6 +196,26 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
@@ -20,6 +20,7 @@ index cfbdaba62c..e3a4f09edb 100644
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
 +            ocspRequire = context.settings().ocspRequire,
++            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
 +            spoofEnglish = context.settings().spoofEnglish,
 +            svgEnabled = context.settings().svgEnabled,
 +            wasmEnabled = context.settings().wasmEnabled,
@@ -28,7 +29,7 @@ index cfbdaba62c..e3a4f09edb 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -228,6 +247,7 @@ class Core(
+@@ -228,6 +248,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -63,7 +64,7 @@ index a776e10849..71dedf06c4 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..2c4fc3adea 100644
+index 325e5d2141..6c414ebdc4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -73,6 +73,9 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
@@ -137,18 +138,19 @@ index 325e5d2141..2c4fc3adea 100644
              findPreference<Preference>(
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
              )?.isVisible = showSecretDebugMenuThisSession
-@@ -563,6 +613,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
-                 (requireContext().components.core.engine.profiler?.isProfilerActive() != null)
-         }
-         setupCookieBannerPreference()
+@@ -573,6 +623,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         setupHomepagePreference()
+         setupTrackingProtectionPreference()
+         setupDnsOverHttpsPreference(requireContext().settings())
 +        setupIpv6Preference()
 +        setupOcspRequirePreference()
++        setupRefererPolicyPreferences()
 +        setupSafeBrowsingPreference()
 +        setupXpinstallPreference()
-         setupInstallAddonFromFilePreference(requireContext().settings())
-         setLinkSharingPreference()
-         setupAmoCollectionOverridePreference(requireContext().settings())
-@@ -741,6 +795,96 @@ class SettingsFragment : PreferenceFragmentCompat() {
+     }
+ 
+     /**
+@@ -741,6 +796,109 @@ class SettingsFragment : PreferenceFragmentCompat() {
          }
      }
  
@@ -185,6 +187,19 @@ index 325e5d2141..2c4fc3adea 100644
 +            components.core.engine.settings.ocspRequire = ocspRequire
 +
 +            true
++        }
++    }
++
++    @VisibleForTesting
++    internal fun setupRefererPolicyPreferences() {
++        requirePreference<Preference>(R.string.pref_key_referer_policy_settings).apply {
++            setOnPreferenceClickListener {
++                val directions =
++                    SettingsFragmentDirections
++                        .actionSettingsFragmentToRefererSettingsFragment()
++                requireView().findNavController().navigate(directions)
++                true
++            }
 +        }
 +    }
 +
@@ -246,10 +261,18 @@ index 325e5d2141..2c4fc3adea 100644
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..2e16a84022 100644
+index 9197b274db..09641ececf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2463,6 +2463,91 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
+ import org.mozilla.fenix.wallpapers.Wallpaper
+ import java.security.InvalidParameterException
+ import java.util.UUID
++import mozilla.components.concept.engine.Engine.RefererXOriginPolicy
+ 
+ private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
+ 
+@@ -2463,6 +2464,118 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -303,6 +326,21 @@ index 9197b274db..2e16a84022 100644
 +        default = true,
 +    )
 +
++    var refererXOriginAlways by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_always),
++        default = true,
++    )
++
++    var refererXOriginBaseDomainsMatch by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_base_domains_match),
++        default = false,
++    )
++
++    var refererXOriginHostsMatch by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_hosts_match),
++        default = false,
++    )
++
 +    var safeBrowsingEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
 +        default = true,
@@ -338,14 +376,38 @@ index 9197b274db..2e16a84022 100644
 +        default = false,
 +    )
 +
++    fun getRefererXOriginPolicy(): RefererXOriginPolicy {
++        return if (refererXOriginAlways) {
++            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
++        } else if (refererXOriginBaseDomainsMatch) {
++            RefererXOriginPolicy.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH
++        } else if (refererXOriginHostsMatch) {
++            RefererXOriginPolicy.REFERER_XORIGIN_IF_HOSTS_MATCH
++        } else {
++            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
++        }
++    }
++
      /**
       * Indicates whether or not to show the checklist feature.
       */
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..97fc7963b7 100644
+index 4c6b14bf87..681d8249e8 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -116,6 +116,13 @@
+@@ -94,6 +94,11 @@
+         android:key="@string/pref_key_privacy_security_category"
+         android:layout="@layout/preference_category_no_icon_style">
+ 
++        <androidx.preference.Preference
++            android:key="@string/pref_key_referer_policy_settings"
++            android:title="@string/preference_referer_policy"
++            app:iconSpaceReserved="false" />
++
+         <androidx.preference.Preference
+             android:key="@string/pref_key_private_browsing"
+             app:iconSpaceReserved="false"
+@@ -116,6 +121,13 @@
              app:isPreferenceVisible="false"
              android:title="@string/preferences_cookie_banner_reduction_private_mode" />
  
@@ -353,59 +415,58 @@ index 4c6b14bf87..97fc7963b7 100644
 +            android:defaultValue="true"
 +            android:key="@string/pref_key_safe_browsing_enabled"
 +            android:summary="@string/restart_required_summary"
-+            app:iconSpaceReserved="false"
-+            android:title="@string/preference_safe_browsing_enabled" />
++            android:title="@string/preference_safe_browsing_enabled"
++            app:iconSpaceReserved="false" />
 +
          <androidx.preference.Preference
              android:key="@string/pref_key_tracking_protection_settings"
              app:iconSpaceReserved="false"
-@@ -136,6 +143,12 @@
+@@ -136,6 +148,12 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_delete_browsing_data_on_quit" />
  
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="true"
 +            android:key="@string/pref_key_ocsp_require"
-+            app:iconSpaceReserved="false"
-+            android:title="@string/preference_ocsp_require" />
++            android:title="@string/preference_ocsp_require"
++            app:iconSpaceReserved="false" />
 +
          <androidx.preference.Preference
              android:key="@string/pref_key_notifications"
              app:iconSpaceReserved="false"
-@@ -152,6 +165,12 @@
+@@ -152,6 +170,11 @@
          android:title="@string/preferences_category_advanced"
          android:key="@string/pref_key_advanced"
          android:layout="@layout/preference_category_no_icon_style">
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="false"
 +            android:key="@string/pref_key_xpinstall_enabled"
-+            app:iconSpaceReserved="false"
-+            android:title="@string/preference_xpinstall_enabled" />
-+
++            android:title="@string/preference_xpinstall_enabled"
++            app:iconSpaceReserved="false" />
          <androidx.preference.Preference
              android:key="@string/pref_key_addons"
              app:iconSpaceReserved="false"
-@@ -184,6 +203,19 @@
+@@ -184,6 +207,19 @@
              app:iconSpaceReserved="false"
              android:title="@string/preferences_external_download_manager" />
  
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="true"
 +            android:key="@string/pref_key_ipv6_enabled"
-+            app:iconSpaceReserved="false"
-+            android:title="@string/preference_ipv6_enabled" />
++            android:title="@string/preference_ipv6_enabled"
++            app:iconSpaceReserved="false" />
 +
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="false"
 +            android:key="@string/pref_key_use_unifiedpush"
-+            app:iconSpaceReserved="false"
++            android:summary="@string/restart_required_summary"
 +            android:title="@string/preferences_unifiedpush"
-+            android:summary="@string/restart_required_summary"/>
++            app:iconSpaceReserved="false" />
 +
          <androidx.preference.SwitchPreference
              android:key="@string/pref_key_leakcanary"
              android:title="@string/preference_leakcanary"
-@@ -199,6 +231,7 @@
+@@ -199,6 +235,7 @@
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"

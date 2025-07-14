@@ -10,6 +10,12 @@
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
     <string name="preference_accessibility_enabled_summary">Enable to allow communication with accessibility services on your device.</string>
 
+    <!-- Cross-origin referer policy -->
+    <string name="preference_referer_policy">Cross-origin referer policy</string>
+    <string name="preference_referer_policy_always">Always send cross-origin referers (Default)</string>
+    <string name="preference_referer_policy_base_domains_match">Send cross-origin referers when base domains match</string>
+    <string name="preference_referer_policy_hosts_match">Disable cross-origin referers</string>
+
     <!-- Disk cache -->
     <string name="preference_cache_enabled">Enable disk cache</string>
     <string name="preference_cache_ssl_enabled">Enable disk cache for secure webpages</string>
@@ -40,8 +46,8 @@
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english_title">Spoof language to en-US</string>
     <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
-    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
-    <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
+    <string name="tor_spoof_english_description">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
+    <string name="tor_spoof_english">Request English versions of webpages for stronger fingerprinting protection</string>
 
     <!-- SVG -->
     <string name="preference_svg_enabled">Enable Scalable Vector Graphics (SVG)</string>
