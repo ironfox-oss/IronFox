@@ -49,6 +49,6 @@ pref("extensions.webextensions.base-content-security-policy", "script-src 'self'
 /// Unbreak the OS Geolocation Provider
 // We only need this temporarily, until the next Phoenix release
 // https://gitlab.com/ironfox-oss/IronFox/-/issues/130
-pref("geo.provider.use_mls", false); // [DEFAULT] [HIDDEN]
+pref("geo.provider.use_mls", false); // [HIDDEN] [DEFAULT]
 
 pref("browser.ironfox.applied", true, locked);
