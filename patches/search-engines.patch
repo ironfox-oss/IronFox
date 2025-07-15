@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index 0328809399..b27edd933f 100644
+index 0328809399..e048b9f23e 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-@@ -38,16 +38,16 @@ private const val MAX_SIZE = 32
+@@ -38,16 +38,17 @@ private const val MAX_SIZE = 32
  // List of general search engine ids, taken from
  // https://searchfox.org/mozilla-central/rev/ef0aa879e94534ffd067a3748d034540a9fc10b0/toolkit/components/search/SearchUtils.sys.mjs#200
  internal val GENERAL_SEARCH_ENGINE_IDS = setOf(
@@ -24,6 +24,7 @@ index 0328809399..b27edd933f 100644
 +    "leta-brave",
 +    "leta-google",
 +    "startpage",
++    "startpage-eu",
 +    "no-search",
  )
  
