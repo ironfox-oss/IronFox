@@ -46,4 +46,9 @@ pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 // We only need this temporarily, until the next Phoenix release
 pref("extensions.webextensions.base-content-security-policy", "script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline'; upgrade-insecure-requests;");
 
+/// Unbreak the OS Geolocation Provider
+// We only need this temporarily, until the next Phoenix release
+// https://gitlab.com/ironfox-oss/IronFox/-/issues/130
+pref("geo.provider.use_mls", false); // [DEFAULT] [HIDDEN]
+
 pref("browser.ironfox.applied", true, locked);
