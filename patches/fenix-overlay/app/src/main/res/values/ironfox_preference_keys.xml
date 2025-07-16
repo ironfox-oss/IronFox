@@ -37,4 +37,10 @@
     <!-- UnifiedPush -->
     <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
     <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
+
+    <!-- Website Appearance -->
+    <string name="pref_key_prefers_browser_color_scheme" translatable="false">pref_key_prefers_browser_color_scheme</string>
+    <string name="pref_key_prefers_dark_color_scheme" translatable="false">pref_key_prefers_dark_color_scheme</string>
+    <string name="pref_key_prefers_light_color_scheme" translatable="false">pref_key_prefers_light_color_scheme</string>
+    <string name="pref_key_website_appearance_description" translatable="false">pref_key_website_appearance_description</string>
 </resources>
