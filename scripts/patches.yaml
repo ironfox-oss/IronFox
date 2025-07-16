@@ -340,13 +340,6 @@ patches:
     effect: "Simplifies the browser UI and prevents telemetry or issue reports from being sent to Mozilla."
     category: "Privacy"
 
-  - file: "enable-light-mode-by-default.patch"
-    name: "Enable Light Mode"
-    description: "Enables light mode by default to prevent fingerprinting."
-    reason: "To prevent fingerprinting based on user's theme preferences."
-    effect: "Browser uses light theme out of the box."
-    category: "Privacy"
-
   - file: "disable-network-connectivity-monitoring.patch"
     name: "Disable Network Connectivity Status Monitoring"
     description: "Prevents the browser from monitoring the status of the user's internet connection. It also allows us to remove the `ACCESS_NETWORK_STATE` permission, and prevents Firefox from generating an internal network ID that could potentially be used to track users (https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/4c548fa04b668a310c90c0e783ec404420f06257)."
@@ -506,13 +499,6 @@ patches:
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
     category: "User Interface"
 
-  - file: "tab-strip.patch"
-    name: "Tab Strip"
-    description: "Adds a UI setting to enable/disable the Tab Strip feature."
-    reason: "To allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954)."
-    effect: "Users can enable or disable the Tab Strip, depending on their personal preference."
-    category: "User Interface"
-
   - file: "disable-recent-search-suggestions.patch"
     name: "Disable Recent Search Suggestions"
     description: "Disables recent search suggestions by default."
@@ -592,4 +578,11 @@ patches:
     description: "Adds support for UI settings to control the cross-origin referer policy for websites."
     reason: "To allow users to easily control their browsing experience."
     effect: "Users can conveniently harden or relax the cross-origin referer policy to what works best for them, without needing to dig into advanced settings or the `about:config`."
+    category: "User Interface"
+
+  - file: "ironfox-customization-settings.patch"
+    name: "IronFox Customization Settings"
+    description: "Adds UI settings to control the preferred appearance for websites (like Firefox on Desktop), and to enable/disable the Tab Strip feature."
+    reason: "To prevent fingerprinting based on user's theme preferences (by using a different toggle to control the appearance for websites, set to Light mode by default, regardless of the browser theme), and to allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954)."
+    effect: "The browser sets the default appearance for websites to Light mode, regardless of the browser/device theme, and users can enable or disable the Tab Strip, depending on their personal preference."
     category: "User Interface"

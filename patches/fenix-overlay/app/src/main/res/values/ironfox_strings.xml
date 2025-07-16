@@ -68,6 +68,14 @@
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
+    <!-- Website Appearance -->
+    <!-- (The description here is taken from Firefox for Desktop: https://searchfox.org/mozilla-release/rev/34c2c305/browser/locales/en-US/browser/preferences/preferences.ftl#277) -->
+    <string name="preference_website_appearance_title">Website appearance</string>
+    <string name="preference_website_appearance_description">Some websites adapt their color scheme based on your preferences. Choose which color scheme you’d like to use for those sites.</string>
+    <string name="preference_prefers_light_color_scheme">Light</string>
+    <string name="preference_prefers_dark_color_scheme">Dark</string>
+    <string name="preference_prefers_browser_color_scheme">Follow browser theme</string>
+
     <!-- XPInstall -->
     <string name="preference_xpinstall_enabled">Allow installation of add-ons</string>
 
