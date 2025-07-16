@@ -1,16 +1,16 @@
-diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 5a31c7b80f..bf94f0effb 100644
---- a/mobile/android/fenix/app/nimbus.fml.yaml
-+++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -232,7 +232,7 @@ features:
-       order:
-         description: Determines the order of the onboarding page panels
-         type: List<OnboardingPanel>
--        default: ["themes", "toolbar-placement", "sync", "tcp", "privacy-notice"]
-+        default: ["themes", "toolbar-placement"]
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+index 732a80cb03..7a2fdae0c3 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+@@ -135,6 +135,8 @@ fun OnboardingScreen(
+         if (!settings.shouldShowMarketingOnboarding && isNotPartnershipDistribution) {
+             val marketingPage = pagesToDisplay.find { it.type == OnboardingPageUiData.Type.MARKETING_DATA }
+             marketingPage?.let { pagesToDisplay.remove(it) }
++            val syncPage = pagesToDisplay.find { it.type == OnboardingPageUiData.Type.SYNC_SIGN_IN }
++            syncPage?.let { pagesToDisplay.remove(it) }
+         }
  
-   one-click-search:
-     description: Enable/disable the one click search feature.
+         onDispose {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 index e43dec84c6..e462b4c0fe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
