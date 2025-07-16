@@ -83,8 +83,8 @@ This list is not exhaustive...
 - Exposes the secret setting to enable the menu redesign
 - Exposes the secret setting to enable the Unified Trust Panel
 - Exposes the secret setting to open the homepage as a new tab
-- Exposes the setting to enable shortcut suggestions, under `General` -> `Search` -> `Address bar`
-- Exposes the setting to lock private browsing tabs with biometrics, located at `Privacy and security` -> `Private browsing`
+- Exposes the setting to enable shortcut suggestions, located at `General` -> `Search` -> `Address bar` -> `Show shortcuts`
+- Exposes the setting to lock private browsing tabs with biometrics, located at `Privacy and security` -> `Private browsing` -> `Use screen lock to hide tabs in private browsing`
 - Hides the `Passwords` drop-down menu item if the browser's password manager is disabled
 - Hides the `Sync and save data` drop-down menu item if Firefox Sync isn't signed in
 - Prevents Firefox from adding random recently visited sites to shortcuts/pins on the homepage
