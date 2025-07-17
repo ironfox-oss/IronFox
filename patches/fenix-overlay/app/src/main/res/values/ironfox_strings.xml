@@ -68,6 +68,12 @@
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
+    <!-- WebGL -->
+    <string name="preference_webgl_enabled">Enable WebGL</string>
+
+    <!-- WebRTC -->
+    <string name="preference_webrtc_enabled">Enable WebRTC</string>
+
     <!-- Website Appearance -->
     <!-- (The description here is adapted from Firefox for Desktop: https://searchfox.org/mozilla-release/rev/34c2c305/browser/locales/en-US/browser/preferences/preferences.ftl#277) -->
     <string name="preference_website_appearance_title">Website appearance</string>

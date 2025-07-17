@@ -76,6 +76,8 @@ IronFox **additionally**:
 - Adds a toggle to enable/disable [Scalable Vector Graphics *(SVG)*](https://blog.mozilla.org/security/2016/11/30/fixing-an-svg-animation-vulnerability/), located at `Privacy and security` -> `Site settings` -> `Content` -> `Scalable Vector Graphics (SVG)` in settings
 - Adds a toggle to enable/disable the [tab bar](https://connect.mozilla.org/t5/discussions/tab-strip-for-firefox-android-now-available-in-firefox-nightly/m-p/60145), located at `General` -> `Customize` -> `Tab bar display` in settings
 - Adds a toggle to enable/disable [WebAssembly *(WASM)*](https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly), located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable WebAssembly (WASM)` in settings
+- Adds a toggle to enable/disable WebGL *([1](https://blog.browserscan.net/docs/webgl-fingerprinting), [2](https://security.stackexchange.com/questions/13799/is-webgl-a-security-concern))* globally, located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable WebGL` in settings
+- Adds a toggle to enable/disable WebRTC *([1](https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=webrtc), [2](https://x.com/GrapheneOS/status/1728921946396725618))* globally, located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable WebRTC` in settings
 - Allows zoom on all websites, even if they try to block it, by default
 - Blocks [media autoplay](https://support.mozilla.org/kb/block-autoplay) by default
 - Blocks web notifications by default

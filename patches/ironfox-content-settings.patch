@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 3885a06691..ca5719011f 100644
+index 3885a06691..9d9dc0235a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 @@ -23,6 +23,11 @@ import org.mozilla.fenix.ext.settings
@@ -14,7 +14,7 @@ index 3885a06691..ca5719011f 100644
  
  /**
   * Screen for managing settings related to site permissions and content defaults.
-@@ -40,6 +45,122 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -40,6 +45,150 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
      override fun onResume() {
          super.onResume()
          showToolbar(getString(R.string.preferences_site_settings))
@@ -134,10 +134,38 @@ index 3885a06691..ca5719011f 100644
 +            true
 +        }
 +
++        val webglEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_webgl_enabled,
++        )
++
++        webglEnabledPreference.setOnPreferenceChangeListener { preference, webglEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.webglEnabled = webglEnabled as Boolean
++            components.core.engine.settings.webglEnabled = webglEnabled
++
++            true
++        }
++
++        val webrtcEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_webrtc_enabled,
++        )
++
++        webrtcEnabledPreference.setOnPreferenceChangeListener { preference, webrtcEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.webrtcEnabled = webrtcEnabled as Boolean
++            components.core.engine.settings.webrtcEnabled = webrtcEnabled
++
++            true
++        }
++
          setupPreferences()
      }
  
-@@ -91,6 +212,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -91,6 +240,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              navigateToPhoneFeature(phoneFeature)
              true
          }
@@ -150,7 +178,7 @@ index 3885a06691..ca5719011f 100644
      }
  
      private fun navigateToPhoneFeature(phoneFeature: PhoneFeature) {
-@@ -109,4 +236,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -109,4 +264,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              )
          }
      }
@@ -160,10 +188,10 @@ index 3885a06691..ca5719011f 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-index ef1dcb4e6e..1e34a27d7b 100644
+index ef1dcb4e6e..d6d542af65 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-@@ -25,6 +25,53 @@
+@@ -25,6 +25,67 @@
              android:title="@string/preference_feature_desktop_mode_default"
              app:iconSpaceReserved="false" />
  
@@ -212,6 +240,20 @@ index ef1dcb4e6e..1e34a27d7b 100644
 +            android:dependency="@string/pref_key_javascript_enabled"
 +            android:key="@string/pref_key_wasm_enabled"
 +            android:title="@string/preference_wasm_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:key="@string/pref_key_webgl_enabled"
++            android:title="@string/preference_webgl_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:key="@string/pref_key_webrtc_enabled"
++            android:title="@string/preference_webrtc_enabled"
 +            app:iconSpaceReserved="false" />
 +
      </androidx.preference.PreferenceCategory>
