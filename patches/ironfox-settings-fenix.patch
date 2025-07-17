@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..d25a810e0b 100644
+index cfbdaba62c..7ed941acef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,26 @@ class Core(
+@@ -196,6 +196,28 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
@@ -24,12 +24,14 @@ index cfbdaba62c..d25a810e0b 100644
 +            spoofEnglish = context.settings().spoofEnglish,
 +            svgEnabled = context.settings().svgEnabled,
 +            wasmEnabled = context.settings().wasmEnabled,
++            webglEnabled = context.settings().webglEnabled,
++            webrtcEnabled = context.settings().webrtcEnabled,
 +            widevineEnabled = context.settings().widevineEnabled,
 +            xpinstallEnabled = context.settings().xpinstallEnabled,
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -228,6 +248,7 @@ class Core(
+@@ -228,6 +250,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -261,7 +263,7 @@ index 325e5d2141..6c414ebdc4 100644
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..ebc112f2ba 100644
+index 9197b274db..e42de396de 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
@@ -272,7 +274,7 @@ index 9197b274db..ebc112f2ba 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2463,6 +2464,133 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2463,6 +2464,143 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -378,6 +380,16 @@ index 9197b274db..ebc112f2ba 100644
 +
 +    var wasmEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
++        default = true,
++    )
++
++    var webglEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_webgl_enabled),
++        default = true,
++    )
++
++    var webrtcEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_webrtc_enabled),
 +        default = true,
 +    )
 +

@@ -10,6 +10,8 @@
     <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
     <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
     <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+    <string name="pref_key_webgl_enabled" translatable="false">pref_key_webgl_enabled</string>
+    <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>
 
     <!-- Cross-origin referer policy -->
     <string name="pref_key_referer_policy_always" translatable="false">pref_key_referer_policy_always</string>
