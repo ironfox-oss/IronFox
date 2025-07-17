@@ -4,7 +4,7 @@ This list is not exhaustive...
 
 **NOTE**: IronFox uses configs from [Phoenix](https://phoenix.celenity.dev) to harden and configure Gecko's preferences. This page is focused on **IronFox-specific** changes; some changes from Phoenix that are major or overlap with ours for IronFox may be covered, but it won't cover everything. For more information on Phoenix's features, please see [the documentation here](https://codeberg.org/celenity/Phoenix/wiki/Features).
 
-**⚠️ BEFORE PROCEEDING**: Please see our [`Limitations`](./-/blob/dev/docs/Limitations.md) page to better understand what IronFox can and can not protect against.
+**⚠️ BEFORE PROCEEDING**: Please see our [`Limitations`](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Limitations.md) page to better understand what IronFox can and can not protect against.
 
 ## Privacy
 
