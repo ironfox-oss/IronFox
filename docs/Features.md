@@ -2,7 +2,9 @@
 
 This list is not exhaustive...
 
-**NOTE**: IronFox uses configs from [Phoenix](https://phoenix.celenity.dev) to harden and configure Gecko's preferences. This page will **NOT** document changes from Phoenix; it is instead going to be focused on **IronFox-specific** changes. For information on Phoenix's features, please see [the documentation here](https://codeberg.org/celenity/Phoenix/wiki/Features).
+**NOTE**: IronFox uses configs from [Phoenix](https://phoenix.celenity.dev) to harden and configure Gecko's preferences. This page is focused on **IronFox-specific** changes; some changes from Phoenix that are major or overlap with ours for IronFox may be covered, but it won't cover everything. For more information on Phoenix's features, please see [the documentation here](https://codeberg.org/celenity/Phoenix/wiki/Features).
+
+**⚠️ BEFORE PROCEEDING**: Please see our [`Limitations`](./Limitations) page to better understand what IronFox can and can not protect against.
 
 ## Privacy
 
@@ -29,10 +31,17 @@ This list is not exhaustive...
 
 ## Fingerprinting
 
-- Enables Mozilla's [Suspected Fingerprinters Protection *(FPP)*](https://support.mozilla.org/kb/firefox-protection-against-fingerprinting#w_suspected-fingerprinters), with a [hardened configuration](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/toolkit/components/resistfingerprinting/RFPTargetsDefault.inc) that closely resembles [Resist Fingerprinting *(RFP)*](https://support.mozilla.org/kb/resist-fingerprinting)
+In order to combat fingerprinting, IronFox enables Mozilla's [Suspected Fingerprinters Protection (FPP)](https://support.mozilla.org/kb/firefox-protection-against-fingerprinting#w_suspected-fingerprinters). **However:** IronFox modifies the set of protections *([targets](https://searchfox.org/mozilla-central/source/toolkit/components/resistfingerprinting/RFPTargets.inc))* covered by FPP to match [Resist Fingerprinting (RFP)](https://support.mozilla.org/kb/resist-fingerprinting), but **with the following changes**:
+
+- We allow first-party canvas data extraction, due to prompts unfortunately not being supported on Android *(Third parties are still blocked from extracting canvas data, and canvas data is still randomized when extracted)*
+- We do not unconditionally spoof CSS [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme), to allow users to enable Dark mode if desired *(though we still enable light mode by default, see below)*
+- We allow display of content over 60FPS
+
+IronFox **additionally**:
+
 - Includes bundled fonts at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/2609477a278f7e4a3681e5979b354d6063249edd/patches/gecko-overlay/mobile/android/ironfox.configure#L18), to improve compatibility, and to help provide users with a baseline/common set of fonts
 - Sets the preferred appearance for websites *(CSS [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme))* to light mode by default, and adds an option to configure it independently of the browser's theme  *(Like Firefox on Desktop)*, located at `General` -> `Customize` -> `Website appearance` in settings
-- Spoofs the locale for websites to English *(`en-US`)* by default, and adds a toggle to enable/disable it, located at `General` -> `Language` in settings
+- Spoofs the preferred locale for websites to English *(`en-US`)* by default, and adds a toggle to enable/disable it, located at `General` -> `Language` -> `Request English versions of webpages for stronger fingerprinting protection` in settings
 
 ## Security
 
@@ -44,7 +53,7 @@ This list is not exhaustive...
 - Disables the [Gecko Profiler](https://firefox-source-docs.mozilla.org/tools/profiler/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L465)
 - Disables [HTTP Live Streaming *(HLS)*](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/29859) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/2609477a278f7e4a3681e5979b354d6063249edd/patches/gecko-overlay/mobile/android/ironfox.configure#L7)
 - Disables installation of add-ons by default, and adds a toggle to enable/disable it, located at `Advanced` -> `Allow installation of add-ons` in settings
-- Disables JavaScript [Just-in-time Compilation *(JIT)*](https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/) by default, and adds a toggle to enable/disable it, located at  `Privacy and security` -> `Site settings` -> `Content` -> `Enable JavaScript Just-in-time Compilation (JIT)` in settings
+- Disables [JavaScript Just-in-time Compilation *(JIT)*](https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/) by default, and adds a toggle to enable/disable it, located at  `Privacy and security` -> `Site settings` -> `Content` -> `Enable JavaScript Just-in-time Compilation (JIT)` in settings
 - Disables [Parental Controls](https://searchfox.org/mozilla-central/source/toolkit/components/parentalcontrols/nsIParentalControlsService.idl) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L473)
 - Disables `SSLKEYLOGGING` at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/a3c9025e044b780adf43e14bc5dbc213d6119ce9/patches/disable-sslkeylogging.patch) *([1](https://bugzilla.mozilla.org/show_bug.cgi?id=1183318), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1915224))*
 - Disables support for [GSS-API negotiate authentication](https://htmlpreview.github.io/?https://github.com/mdn/archived-content/blob/main/files/en-us/mozilla/integrated_authentication/raw.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L471)
