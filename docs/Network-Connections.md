@@ -165,7 +165,7 @@ Note that disabling this functionality is **NOT** recommended.
 
 **How often the connection occurs**: Every browser launch, and every 30 minutes after.
 
-**Control**: See [our `Safe Browsing` page](./docs/Safe-Browsing.md) for more details, including how to disable Safe Browsing or change providers if desired. Note that disabling Safe Browsing is **NOT** recommended.
+**Control**: See [our `Safe Browsing` page](./-/blob/dev/docs/Safe-Browsing.md) for more details, including how to disable Safe Browsing or change providers if desired. Note that disabling Safe Browsing is **NOT** recommended.
 
 ### [System Add-on Updates](https://firefox-source-docs.mozilla.org/toolkit/mozapps/extensions/addon-manager/SystemAddons.html#system-add-on-updates)
 
