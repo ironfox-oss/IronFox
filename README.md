@@ -36,6 +36,9 @@
 
 IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull Browser](https://divestos.org/pages/our_apps#mull), based on [Mozilla Firefox](https://www.mozilla.org/firefox/). **Our goal is to continue the legacy of Mull by providing a free and open source, privacy and security-oriented web browser for daily use.**
 
+> [!IMPORTANT]
+>**⚠️ All users are HIGHLY recommended to take a look at our [documentation](./docs/README.md), ESPECIALLY the [Limitations](./docs/Limitations.md) and [Frequently Asked Questions](./docs/FAQ.md) pages!**
+
 > While IronFox's home is [GitLab](https://gitlab.com/ironfox-oss/IronFox), this repo is also mirrored to both [Codeberg](https://codeberg.org/ironfox-oss/IronFox) & [GitHub](https://github.com/ironfox-oss/IronFox).
 
 ### Want to join the IronFox Community?
@@ -77,49 +80,6 @@ https://gitlab.com/ironfox-oss/fdroid/-/raw/main/fdroid/repo
 ```sh
 C5:E2:91:B5:A5:71:F9:C8:CD:9A:97:99:C2:C9:4E:02:EC:97:03:94:88:93:F2:CA:75:6D:67:B9:42:04:F9:04
 ```
-
-## Known Issues
-
-Please see the list of known issues and workarounds before opening an issue!
-
-<details>
-<summary>Issues inherited from Mull that still apply to IronFox - (contents adapted from <a href="https://divestos.org/index.php?page=broken#mull)">the DivestOS website</a>) </summary>
-
-- **GrapheneOS** users may encounter a crash with the error `IronFox tried to perform DCL via memory`. Unfortunately, Firefox is incompatible with this hardening feature, so it's not just limited to IronFox. You can fix this issue by navigating to IronFox's app info, scrolling down to the `Exploit protection` section, and setting `Dynamic code loading via memory` to `Allowed`. You can then navigate to `Dynamic code loading via storage`, and set that to `Restricted` - as this hardening feature **is** compatible with Firefox.
-- uBlock Origin is the only recommended and supported content blocker (included by default).
-- ~~Some fonts, particularly ones used for displaying Korean text, [may not display correctly](https://bugzilla.mozilla.org/show_bug.cgi?id=1881993) due the font restrictions by resist fingerprinting. Please do not disable RFP. This should be hopefully fixed in future versions such as v126.~~
-- Dark Reader is known to be incompatible with IronFox's changes and will cause significant breakage/slowdowns.
-- Dark mode for websites is disabled due to resist fingerprinting. Please do not disable RFP.
-- ~~Refresh rate is capped to 60hz due to resist fingerprinting. Please do not disable RFP.~~
-- Multitouch gestures will not work due to resist fingerprinting. Please do not disable RFP.
-- If audio/video content fails to play in private tabs navigate to `about:config` and change `browser.privatebrowsing.forceMediaMemoryCache` to false, this is however a privacy risk.
-- IronFox disables the JavaScript JIT to increase security at the cost of slowing down webapps, complex websites, and the PDF viewer. Navigate to `about:config` and change `javascript.options.ion` and `javascript.options.baselinejit` to `true` to restore their performance, though this is not recommended.
-- IronFox has strict certificate revocation checks. The CA revocation servers are occasionally down/blocked/inaccessible, so you may see a "Secure Connection Failed" error from time to time. Navigate to `about:config` and change `security.OCSP.require` to `false`, this is however a security and privacy risk.
-- IronFox requires safe renegotiation for connections. Certain websites do not support this and will result in a "Secure Connection Failed" error. **Please report these errors to the impacted websites.** You can navigate to `about:config` and set `security.ssl.require_safe_negotiation` to `false` to disable the requirement for safe renegotiations, this is however a security and privacy risk.
-- IronFox has strict certificate pinning. If you are using a proxy or VPN that does HTTPS manipulation, you may encounter a "Secure Connection Failed" error. Navigate to `about:config` and change `security.cert_pinning.enforcement_level` from `2` to `1` to disable strict certificate pinning; this is however a security and privacy risk.
-- IronFox does not trust user-added CA certificates, you can optionally enable them at your own extreme risk: Settings > About IronFox > Tap IronFox logo until debug settings are enabled > back a menu > Secret Settings > Use third party CA certificates > Enabled, this is however a security and privacy risk.
-- IronFox has stripped referrers. This often breaks loading of images on websites with hotlink protection. Navigate to `about:config` and change `network.http.referer.XOriginPolicy` from `2` to `1` _(or `0` if you're still having issues)_, this is however a privacy risk.
-- IronFox has visited link highlighting disabled by default. Navigate to `about:config` and change `layout.css.visited_links_enabled` to `true` if needed, this is however a privacy risk.
-- IronFox has WebAssembly disabled by default. This is often used for web apps. Navigate to `about:config` and change `javascript.options.wasm` to `true` if needed, this is however a security risk.
-- IronFox has WebGL disabled by default. This is often used for games and maps. Navigate to `about:config` and change `webgl.disabled` to `false` if needed, this is however a privacy risk.
-- IronFox forcibly excludes private IP addresses from being leaked over WebRTC. This may cause issues with audio/video calls. Navigate to `about:config` and change `media.peerconnection.ice.no_host` to `false` if needed, this is however a privacy risk. If you still have issues, you should also set `media.peerconnection.ice.default_address_only` to `false`.
-- If you want to access Onions using IronFox and Orbot: navigate to `about:config` and change `network.dns.blockDotOnion` to `false`. Tor Browser for Android however should be preferred.
-- If you have issues playing some videos: navigate to `about:config` and change `media.android-media-codec.preferred` from `true` to `false`. This may reduce battery life.
-- When adding a custom search engine that contains a \`:\` you must replace it with \`%3A\` to workaround an upstream substitution bug.
-- Upstream issues: [background timers](https://github.com/mozilla-mobile/fenix/issues/26220), [bookmark import/export](https://bugzilla.mozilla.org/show_bug.cgi?id=1806482), [disable images](https://bugzilla.mozilla.org/show_bug.cgi?id=1807116), [download location](https://bugzilla.mozilla.org/show_bug.cgi?id=1812815), [duplicate tab](https://bugzilla.mozilla.org/show_bug.cgi?id=1812931), [FIDO](https://gitlab.com/relan/fennecbuild/-/issues/34), [Fission](https://bugzilla.mozilla.org/show_bug.cgi?id=1610822), [isolatedProcess](https://bugzilla.mozilla.org/show_bug.cgi?id=1565196), [language issues](https://bugzilla.mozilla.org/show_bug.cgi?id=1765375), [open .html file](https://bugzilla.mozilla.org/show_bug.cgi?id=1809954), [RFP canvas exception](https://bugzilla.mozilla.org/show_bug.cgi?id=1801733), [Sync broken by RFP](https://bugzilla.mozilla.org/show_bug.cgi?id=1810741), [touch gestures](https://bugzilla.mozilla.org/show_bug.cgi?id=1800567)
-
-</details>
-
-<details>
-<summary>Issues originating in IronFox</summary>
-
-_None yet._ :)
-
-</details>
-
-<br>
-
-You should also see [here](https://phoenix.celenity.dev/compat) for a list of websites with known issues due to hardening, and what you may need to do to fix them. This list is maintained by [Phoenix](https://phoenix.celenity.dev/) - so while it isn't specific to IronFox or Mull, many of these problems do still apply.
 
 ## Building
 
