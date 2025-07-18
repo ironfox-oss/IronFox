@@ -184,10 +184,10 @@ index effc671c02..ac7cbafb7d 100644
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..95deea1289
+index 0000000000..3a509acade
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
-@@ -0,0 +1,497 @@
+@@ -0,0 +1,501 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import androidx.activity.compose.BackHandler
@@ -461,6 +461,10 @@ index 0000000000..95deea1289
 +            ) {
 +                onContentStateChange(IfPreferenceDohContentState.ProviderSelection)
 +            } else {
++                dohSettingsProvider.setProtectionLevel(
++                    state.selectedProtectionLevel,
++                    state.selectedProvider,
++                )
 +                primaryButton.onClick()
 +            }
 +        }
