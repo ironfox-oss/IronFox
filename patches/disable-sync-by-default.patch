@@ -1,3 +1,42 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
+index 5508b90d04..6d3fd66067 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
+@@ -309,28 +309,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
+         val syncEnginesStatus = SyncEnginesStorage(requireContext()).getStatus()
+         requirePreference<CheckBoxPreference>(R.string.pref_key_sync_bookmarks).apply {
+             isEnabled = syncEnginesStatus.containsKey(SyncEngine.Bookmarks)
+-            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Bookmarks) { true }
++            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Bookmarks) { false }
+         }
+         requirePreference<CheckBoxPreference>(R.string.pref_key_sync_credit_cards).apply {
+             isEnabled = syncEnginesStatus.containsKey(SyncEngine.CreditCards)
+-            isChecked = syncEnginesStatus.getOrElse(SyncEngine.CreditCards) { true }
++            isChecked = syncEnginesStatus.getOrElse(SyncEngine.CreditCards) { false }
+         }
+         requirePreference<CheckBoxPreference>(R.string.pref_key_sync_history).apply {
+             isEnabled = syncEnginesStatus.containsKey(SyncEngine.History)
+-            isChecked = syncEnginesStatus.getOrElse(SyncEngine.History) { true }
++            isChecked = syncEnginesStatus.getOrElse(SyncEngine.History) { false }
+         }
+         requirePreference<CheckBoxPreference>(R.string.pref_key_sync_logins).apply {
+             isEnabled = syncEnginesStatus.containsKey(SyncEngine.Passwords)
+-            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Passwords) { true }
++            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Passwords) { false }
+         }
+         requirePreference<CheckBoxPreference>(R.string.pref_key_sync_tabs).apply {
+             isEnabled = syncEnginesStatus.containsKey(SyncEngine.Tabs)
+-            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Tabs) { true }
++            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Tabs) { false }
+         }
+         requirePreference<CheckBoxPreference>(R.string.pref_key_sync_address).apply {
+             isVisible = FeatureFlags.SYNC_ADDRESSES_FEATURE
+             isEnabled = syncEnginesStatus.containsKey(SyncEngine.Addresses)
+-            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Addresses) { true }
++            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Addresses) { false }
+         }
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
 index 300331efb5..f1cbf8ea99 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
