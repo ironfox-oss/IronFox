@@ -41,6 +41,7 @@ In order to combat fingerprinting, IronFox enables Mozilla's [Suspected Fingerpr
 IronFox **additionally**:
 
 - Includes bundled fonts at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/2609477a278f7e4a3681e5979b354d6063249edd/patches/gecko-overlay/mobile/android/ironfox.configure#L18), to improve compatibility, and to help provide users with a baseline/common set of fonts
+- Prevents fingerprinting based on whether Firefox's internal PDF viewer *(`PDF.js`)* is enabled or disabled
 - Sets the preferred appearance for websites *(CSS [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme))* to light mode by default, and adds an option to configure it independently of the browser's theme  *(Like Firefox on Desktop)*, located at `General` -> `Customize` -> `Website appearance` in settings
 - Spoofs the preferred locale for websites to English *(`en-US`)* by default, and adds a toggle to enable/disable it, located at `General` -> `Language` -> `Request English versions of webpages for stronger fingerprinting protection` in settings
 
