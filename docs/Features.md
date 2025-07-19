@@ -28,6 +28,7 @@ This list is not exhaustive...
 - Includes a default, local set of homepage wallpapers, instead of downloading them from a server remotely
 - Installs [uBlock Origin](https://addons.mozilla.org/firefox/addon/ublock-origin) by default, and configures it to provide stronger protection out of the box
 - Prevents the browser from fetching favicons for homepage shortcuts/pins on launch, without prior user interaction
+- Stubs the [Beacon API *(`navigator.sendBeacon`)*](https://developer.mozilla.org/docs/Web/API/Beacon_API)
 
 ## Fingerprinting
 
