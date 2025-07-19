@@ -354,6 +354,13 @@ patches:
     effect: "Favicons will still display on the homepage after navigating to the shortcut/pin - so this just improves privacy for users by preventing unauthorized connections to third parties."
     category: "Privacy"
 
+  - file: "stub-beacon.patch"
+    name: "Stub the Beacon API (navigator.sendBeacon)"
+    description: "To prevent tracking and the submission of analytics, without aiding fingerprinting and causing undesired breakage."
+    reason: "The Beacon API (navigator.sendBeacon)'s explicit, stated purpose/use case is for analytics/tracking (https://developer.mozilla.org/docs/Web/API/Beacon_API). However, disabling it entirely (like standard Firefox allows) is undesired, as it causes breakage, aids fingerprinting, and can allow trackers to fallback to other mechanisms for submitting data (as they can tell it's disabled/unavailable). Stubbing the API instead fixes these issues."
+    effect: "Users are protected against tracking, and benefit from added attack surface reduction, without causing breakage and having to deal with the usual side effects that appear when the Beacon API is disabled."
+    category: "Privacy"
+
   # Security
   - file: "certificate-pinning.patch"
     name: "Certificate Pinning"
