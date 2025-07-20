@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..7ed941acef 100644
+index cfbdaba62c..7a63c86255 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,28 @@ class Core(
+@@ -196,6 +196,29 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
@@ -20,6 +20,7 @@ index cfbdaba62c..7ed941acef 100644
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
 +            ocspRequire = context.settings().ocspRequire,
++            pdfjsDisabled = context.settings().pdfjsDisabled,
 +            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
 +            spoofEnglish = context.settings().spoofEnglish,
 +            svgEnabled = context.settings().svgEnabled,
@@ -31,7 +32,7 @@ index cfbdaba62c..7ed941acef 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -228,6 +250,7 @@ class Core(
+@@ -228,6 +251,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -263,7 +264,7 @@ index 325e5d2141..6c414ebdc4 100644
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..e42de396de 100644
+index 9197b274db..175933c8ba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
@@ -274,9 +275,9 @@ index 9197b274db..e42de396de 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2463,6 +2464,143 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
-     )
+@@ -2431,6 +2432,148 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         }
+     }
  
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
@@ -326,6 +327,11 @@ index 9197b274db..e42de396de 100644
 +    var ocspRequire by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_ocsp_require),
 +        default = true,
++    )
++
++    var pdfjsDisabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_pdfjs_disabled),
++        default = false,
 +    )
 +
 +    var prefersBrowserColorScheme by booleanPreference(
@@ -416,7 +422,7 @@ index 9197b274db..e42de396de 100644
 +    }
 +
      /**
-      * Indicates whether or not to show the checklist feature.
+      * Indicates if the user has completed the setup step for choosing the toolbar location
       */
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 4c6b14bf87..681d8249e8 100644
