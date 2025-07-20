@@ -52,9 +52,9 @@ We're deeply disappointed by Mozilla's lack of focus in this area, and we hope t
 
 ## So IronFox is **insecure**? Why should I use it then, what's the point?
 
-I want to make an important distinction that I feel is often forgotten: something that is *less* secure is **NOT** necessarily *insecure*.
+It should be noted that there is a difference between something being *less* secure vs. something being *insecure*.
 
-**Don't get me wrong**: As noted above, Firefox-based web browsers are objectively less secure than their Chromium counterparts. We are **not** trying to discredit Firefox's legitimate issues in this area.
+**To be clear**: As noted above, Firefox-based web browsers are objectively less secure than their Chromium counterparts. We are **not** trying to discredit Firefox's legitimate issues in this area.
 
 **However**, *especially due to [the hardening that IronFox provides](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Features.md)*, assuming that users keep the browser up to date and follow other good privacy and security practices, we believe that IronFox is secure *enough* for most users and threat models.
 
@@ -66,9 +66,9 @@ It should also be noted that Firefox-based web browsers, such as IronFox, help t
 
 Even from a *security* perspective, IronFox has certain features that a majority of Chromium browsers still lack, such as [JavaScript Just-in-time Compilation *(JIT)*](https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/) being disabled by default.
 
-Ultimately, while Firefox-based web browsers *(including IronFox)* provide weaker security compared to their Chromium peers *(and this is indeed something important to consider and take into account)*, I wanted to highlight that IronFox brings lots of benefits to the table in *other* aspects, and that there are other important areas worth consideration.
+Ultimately, while Firefox-based web browsers *(including IronFox)* provide weaker security compared to their Chromium peers *(and this is indeed something important to take into account)*, we wanted to highlight that IronFox brings a lot to the table in *other* aspects.
 
-**At the end of the day, I'm not going to tell you that IronFox is the perfect browser, or even that you should use it at all**. Which browser you should use depends on your [threat model](https://www.privacyguides.org/en/basics/threat-modeling/), personal preference, and values. **Most importantly, the browser you should use is the one that works best for you**. If that browser turns out to be IronFox? Great, welcome aboard! If not? No problem. I hope you at least learned something.
+**At the end of the day, we're not going to tell you that IronFox is the perfect browser, or even that you should use it at all**. Which browser you should use depends on your [threat model](https://www.privacyguides.org/en/basics/threat-modeling/), personal preference, and values. **Most importantly, the browser you should use is the one that works best for you**. If that browser turns out to be IronFox? Great, welcome aboard! If not? No problem. Hopefully, you at least learned something.
 
 ## Why is Google Safe Browsing supported and enabled by default?
 
