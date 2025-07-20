@@ -61,7 +61,7 @@ IronFox **additionally**:
 - Disables support for [GSS-API negotiate authentication](https://htmlpreview.github.io/?https://github.com/mdn/archived-content/blob/main/files/en-us/mozilla/integrated_authentication/raw.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L471)
 - Disables support for [WebDriver remote protocols](https://firefox-source-docs.mozilla.org/remote/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L490)
 - Enables the use of encrypted storage *([via Android's Keystore system](https://developer.android.com/privacy-and-security/keystore))* for Firefox account state and certain preferences
-- Enables [Fission](https://wiki.mozilla.org/Project_Fission) *(Per-site process isolation)* by default
+- Enables [Fission](https://wiki.mozilla.org/Project_Fission) *(basic per-site process isolation)* by default
 - Enables [Google Safe Browsing](https://support.mozilla.org/kb/how-does-phishing-and-malware-protection-work) by default, with [a proxy](https://gitlab.com/ironfox-oss/safebrowsing-proxy) to protect the privacy of users, and adds a toggle to enable/disable it, located at `Privacy and security` -> `Enable Safe Browsing` in settings
 - Enables [HTTPS-Only Mode](https://support.mozilla.org/kb/https-only-prefs) by default
 - Expands the [list of domains](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning#Currently-pinned_Sites) supported by Firefox's [Strict Certificate Pinning](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning)
