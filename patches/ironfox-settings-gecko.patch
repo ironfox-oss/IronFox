@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 1612c570be..00ac47731a 100644
+index 1612c570be..aa7eb7ce4e 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1483,6 +1483,106 @@ class GeckoEngine(
+@@ -1483,6 +1483,110 @@ class GeckoEngine(
          override var bannedPorts: String
              get() = runtime.settings.bannedPorts
              set(value) { runtime.settings.setBannedPorts(value) }
@@ -59,6 +59,10 @@ index 1612c570be..00ac47731a 100644
 +            get() = runtime.settings.ocspRequire
 +            set(value) { runtime.settings.ocspRequire = value }
 +
++        override var pdfjsDisabled: Boolean
++            get() = runtime.settings.pdfjsDisabled
++            set(value) { runtime.settings.pdfjsDisabled = value }
++
 +        override var refererXOriginPolicy: Engine.RefererXOriginPolicy
 +            get() = when (runtime.settings.refererXOriginPolicy) {
 +                GeckoRuntimeSettings.REFERER_XORIGIN_ALWAYS -> Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
@@ -109,7 +113,7 @@ index 1612c570be..00ac47731a 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1527,6 +1627,27 @@ class GeckoEngine(
+@@ -1527,6 +1631,28 @@ class GeckoEngine(
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
@@ -126,6 +130,7 @@ index 1612c570be..00ac47731a 100644
 +            this.javascriptJitNativeRegexpEnabled = it.javascriptJitNativeRegexpEnabled
 +            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
 +            this.ocspRequire = it.ocspRequire
++            this.pdfjsDisabled = it.pdfjsDisabled
 +            this.refererXOriginPolicy = it.refererXOriginPolicy
 +            this.spoofEnglish = it.spoofEnglish
 +            this.svgEnabled = it.svgEnabled
@@ -138,10 +143,10 @@ index 1612c570be..00ac47731a 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 24e8f76532..7d997544c2 100644
+index 24e8f76532..864abb5756 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -350,6 +350,28 @@ abstract class Settings {
+@@ -350,6 +350,29 @@ abstract class Settings {
       * Comma-separated list of destination ports that the application should block connections to.
       */
      open var bannedPorts: String by UnsupportedSetting()
@@ -159,6 +164,7 @@ index 24e8f76532..7d997544c2 100644
 +    open var javascriptJitNativeRegexpEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
 +    open var ocspRequire: Boolean by UnsupportedSetting()
++    open var pdfjsDisabled: Boolean by UnsupportedSetting()
 +    open var refererXOriginPolicy: Engine.RefererXOriginPolicy by UnsupportedSetting()
 +    open var spoofEnglish: Boolean by UnsupportedSetting()
 +    open var svgEnabled: Boolean by UnsupportedSetting()
@@ -170,7 +176,7 @@ index 24e8f76532..7d997544c2 100644
  }
  
  /**
-@@ -420,6 +442,27 @@ data class DefaultSettings(
+@@ -420,6 +443,28 @@ data class DefaultSettings(
      override var postQuantumKeyExchangeEnabled: Boolean? = null,
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
@@ -187,6 +193,7 @@ index 24e8f76532..7d997544c2 100644
 +    override var javascriptJitNativeRegexpEnabled: Boolean = false,
 +    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
 +    override var ocspRequire: Boolean = true,
++    override var pdfjsDisabled: Boolean = false,
 +    override var refererXOriginPolicy: Engine.RefererXOriginPolicy = Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS,
 +    override var spoofEnglish: Boolean = true,
 +    override var svgEnabled: Boolean = true,
@@ -199,10 +206,10 @@ index 24e8f76532..7d997544c2 100644
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index a410550e60..679dd9c09c 100644
+index a410550e60..0510fb4d16 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -984,6 +984,27 @@ package org.mozilla.geckoview {
+@@ -984,6 +984,28 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -219,6 +226,7 @@ index a410550e60..679dd9c09c 100644
 +    method public boolean getJavaScriptJitNativeRegexpEnabled();
 +    method public boolean getJavaScriptJitTrustedPrincipalsEnabled();
 +    method public boolean getOcspRequire();
++    method public boolean getPdfjsDisabled();
 +    method public int getRefererXOriginPolicy();
 +    method public boolean getSpoofEnglish();
 +    method public boolean getSvgEnabled();
@@ -230,7 +238,7 @@ index a410550e60..679dd9c09c 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1030,6 +1051,27 @@ package org.mozilla.geckoview {
+@@ -1030,6 +1052,28 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -247,6 +255,7 @@ index a410550e60..679dd9c09c 100644
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitNativeRegexpEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setOcspRequire(boolean);
++    method @NonNull public GeckoRuntimeSettings setPdfjsDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setRefererXOriginPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSvgEnabled(boolean);
@@ -258,7 +267,7 @@ index a410550e60..679dd9c09c 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1044,6 +1086,9 @@ package org.mozilla.geckoview {
+@@ -1044,6 +1088,9 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -268,7 +277,7 @@ index a410550e60..679dd9c09c 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1093,6 +1138,27 @@ package org.mozilla.geckoview {
+@@ -1093,6 +1140,28 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -285,6 +294,7 @@ index a410550e60..679dd9c09c 100644
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitNativeRegexpEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitTrustedPrincipalsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder ocspRequire(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder pdfjsDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder refererXOriginPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder svgEnabled(boolean);
@@ -296,7 +306,7 @@ index a410550e60..679dd9c09c 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1108,6 +1174,9 @@ package org.mozilla.geckoview {
+@@ -1108,6 +1177,9 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -307,10 +317,10 @@ index a410550e60..679dd9c09c 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 25ea09c3f6..7b2d934104 100644
+index 25ea09c3f6..abed06765d 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -640,6 +640,111 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -640,6 +640,116 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
        return this;
      }
@@ -380,6 +390,11 @@ index 25ea09c3f6..7b2d934104 100644
 +      return this;
 +    }
 +
++    public @NonNull Builder pdfjsDisabled(final boolean flag) {
++      getSettings().mPdfjsDisabled.set(flag);
++      return this;
++    }
++
 +    public @NonNull Builder refererXOriginPolicy(final @RefererXOriginPolicy int level) {
 +      getSettings().setRefererXOriginPolicy(level);
 +      return this;
@@ -422,7 +437,7 @@ index 25ea09c3f6..7b2d934104 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -766,6 +871,28 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -766,6 +876,29 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
@@ -439,6 +454,7 @@ index 25ea09c3f6..7b2d934104 100644
 +  /* package */ final Pref<Boolean> mJavaScriptJitNativeRegexpEnabled = new Pref<Boolean>("javascript.options.native_regexp", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
 +  /* package */ final Pref<Boolean> mOcspRequire = new Pref<Boolean>("security.OCSP.require", true);
++  /* package */ final Pref<Boolean> mPdfjsDisabled = new Pref<Boolean>("pdfjs.disabled", false);
 +  /* package */ final Pref<Integer> mRefererXOriginPolicy = new Pref<Integer>("network.http.referer.XOriginPolicy", 0);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<Integer>("privacy.spoof_english", 2);
 +  /* package */ final Pref<Boolean> mSvgEnabled = new Pref<Boolean>("svg.disabled", false);
@@ -451,7 +467,7 @@ index 25ea09c3f6..7b2d934104 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2206,6 +2333,221 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2206,6 +2339,230 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  
@@ -569,6 +585,15 @@ index 25ea09c3f6..7b2d934104 100644
 +
 +  public @NonNull GeckoRuntimeSettings setOcspRequire(final boolean flag) {
 +    mOcspRequire.commit(flag);
++    return this;
++  }
++
++  public boolean getPdfjsDisabled() {
++    return mPdfjsDisabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setPdfjsDisabled(final boolean flag) {
++    mPdfjsDisabled.commit(flag);
 +    return this;
 +  }
 +

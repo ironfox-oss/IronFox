@@ -38,6 +38,9 @@
     <!-- OCSP -->
     <string name="preference_ocsp_require">Hard-fail OCSP revocation checks</string>
 
+    <!-- PDF.js -->
+    <string name="preference_pdfjs_disabled">Open PDF files externally</string>
+
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
     <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
