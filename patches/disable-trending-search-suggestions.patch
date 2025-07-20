@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..2d4bd39e68 100644
+index 9197b274db..940c1bed6e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -1165,7 +1165,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -11,20 +11,15 @@ index 9197b274db..2d4bd39e68 100644
      )
  
      /**
-@@ -2033,10 +2033,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if Trending Search Suggestions are enabled.
+@@ -2035,7 +2035,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var isTrendingSearchesVisible by lazyFeatureFlagPreference(
-+    var isTrendingSearchesVisible by booleanPreference(
+     var isTrendingSearchesVisible by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_trending_searches),
 -        default = { FxNimbus.features.trendingSearches.value().enabled },
--        featureFlag = true,
-+        default = true,
-+//        featureFlag = true,
++        default = { true },
+         featureFlag = true,
      )
  
-     /**
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 index f7ca109331..67d00840f8 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml

@@ -3,20 +3,29 @@
     <!-- Warn users that the browser will restart -->
     <string name="restart_required_summary">Changing this setting will restart your browser</string>
 
-    <!-- Spoof locale to English -->
-    <string name="tor_spoof_english_title">Spoof language to en-US</string>
-    <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
-    <string name="tor_spoof_english_description">Request English (en-US) versions of web pages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
-    <string name="tor_spoof_english">Request English versions of web pages for stronger fingerprinting protection.</string>
+    <!-- Warn users that this setting is not recommended or supported -->
+    <string name="unsupported_summary">This setting is NOT recommended or supported. Proceed with caution.</string>
 
     <!-- Accessibility Services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
     <string name="preference_accessibility_enabled_summary">Enable to allow communication with accessibility services on your device.</string>
 
-    <!-- Safe Browsing -->
-    <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
-    <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
-    <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
+    <!-- Cross-origin referer policy -->
+    <string name="preference_referer_policy">Cross-origin referer policy</string>
+    <string name="preference_referer_policy_always">Always send cross-origin referers</string>
+    <string name="preference_referer_policy_base_domains_match">Send cross-origin referers when base domains match</string>
+    <string name="preference_referer_policy_hosts_match">Disable cross-origin referers</string>
+
+    <!-- Disk cache -->
+    <string name="preference_cache_enabled">Enable disk cache</string>
+    <string name="preference_cache_ssl_enabled">Enable disk cache for secure webpages</string>
+
+    <!-- EME -->
+    <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
+    <string name="preferences_debug_settings_widevine_enabled">Enable Widevine CDM</string>
+
+    <!-- IPv6 -->
+    <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
 
     <!-- JavaScript -->
     <string name="preference_javascript_enabled">Enable JavaScript</string>
@@ -26,8 +35,27 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
 
-    <!-- WebAssembly -->
-    <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
+    <!-- OCSP -->
+    <string name="preference_ocsp_require">Hard-fail OCSP revocation checks</string>
+
+    <!-- Safe Browsing -->
+    <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
+    <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
+    <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
+
+    <!-- Spoof locale to English -->
+    <string name="tor_spoof_english_title">Spoof language to en-US</string>
+    <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
+    <string name="tor_spoof_english_description">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
+    <string name="tor_spoof_english">Request English versions of webpages for stronger fingerprinting protection</string>
+
+    <!-- SVG -->
+    <string name="preference_svg_enabled">Enable Scalable Vector Graphics (SVG)</string>
+
+    <!-- Tab Strip -->
+    <string name="preference_tab_strip_show">Show tab bar</string>
+    <string name="preference_toolbar_pref_disabled_explanation">Address bar must be on top when tab bar is shown.</string>
+    <string name="preferences_tab_strip">Tab bar display</string>
 
     <!-- UnifiedPush -->
     <!-- Label for enabling UnifiedPush -->
@@ -37,14 +65,32 @@
     <!-- Toast shown after confirming the UnifiedPush configuration -->
     <string name="toast_change_unifiedpush_done">UnifiedPush setting modified. Quitting the application to apply changes…</string>
 
+    <!-- WebAssembly -->
+    <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
+
+    <!-- WebGL -->
+    <string name="preference_webgl_enabled">Enable WebGL</string>
+
+    <!-- WebRTC -->
+    <string name="preference_webrtc_enabled">Enable WebRTC</string>
+
+    <!-- Website Appearance -->
+    <!-- (The description here is adapted from Firefox for Desktop: https://searchfox.org/mozilla-release/rev/34c2c305/browser/locales/en-US/browser/preferences/preferences.ftl#277) -->
+    <string name="preference_website_appearance_title">Website appearance</string>
+    <string name="preference_website_appearance_description">Some websites adapt their color scheme based on your preferences. Choose which color scheme you’d like to use for those sites. Note that options other than Light can aid fingerprinting by causing your browser to appear more unique.</string>
+    <string name="preference_prefers_light_color_scheme">Light</string>
+    <string name="preference_prefers_dark_color_scheme">Dark</string>
+    <string name="preference_prefers_browser_color_scheme">Follow browser theme</string>
+
+    <!-- XPInstall -->
+    <string name="preference_xpinstall_enabled">Allow installation of add-ons</string>
+
     <!-- Onboarding - Title and description -->
     <string name="onboarding_if_preferences_title">Customize IronFox</string>
     <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
 
     <!-- Onboarding - DoH -->
     <string name="onboarding_if_preference_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
-    <string name="onboarding_if_preference_doh_default_protection_summary">IronFox will use your system’s DNS resolver.</string>
-    <string name="onboarding_if_preference_doh_increased_protection_summary">IronFox will use secure DNS by default, but fallback to your system’s DNS resolver if secure DNS is unavailable.</string>
     <string name="onboarding_if_preference_doh_off_summary"></string>
 
     <!-- Onboarding - uBlock Origin -->

@@ -78,6 +78,13 @@ patches:
     effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
     category: "Build System"
 
+  - file: "unbreak-translations-without-gecko-profiler.patch"
+    name: "Unbreak Firefox Translations without Gecko Profiler"
+    description: "Unbreaks Firefox Translations when the Gecko Profiler debugging tools (https://firefox-source-docs.mozilla.org/tools/profiler/index.html) are disabled."
+    reason: "Works around an upstream bug (https://bugzilla.mozilla.org/show_bug.cgi?id=1977078) that we encounter, due to us disabling the Gecko Profiler at build-time."
+    effect: "Allows users to use the Firefox Translations feature, without us needing to build and include unnecessary/unwanted debugging tools."
+    category: "Build System"
+
   # Dependency
   - file: "gecko-liberate.patch"
     name: "Remove Proprietary Libraries (Gecko)"
@@ -85,7 +92,7 @@ patches:
     reason: "To remove unnecessary tracking libraries and dependencies on proprietary services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
-  
+
   - file: "unifiedpush.patch"
     name: "UnifiedPush"
     description: "Adds support for UnifiedPush."
@@ -100,7 +107,7 @@ patches:
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla or third parties."
     effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
     category: "Privacy"
-  
+
   - file: "gecko-disable-telemetry.patch"
     name: "Disable Telemetry (Gecko)"
     description: "Disables data collection and submission mechanisms within Gecko."
@@ -114,28 +121,28 @@ patches:
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla during the build process."
     effect: "Improves privacy for developers by preventing the collection and transmission of telemetry data."
     category: "Privacy"
-  
+
   - file: "fenix-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Fenix)"
     description: "Disables the collection and submission of crash reports within Firefox for Android."
     reason: "To prevent submitting personal and/or sensitive data to Mozilla."
     effect: "Improves user privacy by preventing the collection and transmission of crash reports."
     category: "Privacy"
-  
+
   - file: "gecko-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Gecko)"
     description: "Disables the collection and submission of crash reports within Gecko."
     reason: "To prevent submitting personal and/or sensitive data to Mozilla."
     effect: "Improves user privacy by preventing the collection and transmission of crash reports."
     category: "Privacy"
-  
+
   - file: "fenix-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Fenix)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Firefox for Android."
     reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Privacy"
-  
+
   - file: "gecko-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Gecko)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Gecko."
@@ -151,17 +158,16 @@ patches:
       Currently, the following DNS providers have been added :
 
         - Quad9
-        - AdGuard Standard
-        - AdGuard Unfiltered
-        - AdGuard Family
-        - DNS0 Zero
-        - DNS0 Standard
-        - DNS0 Kids
-        - Mullvad Base
-        - Mullvad Unfiltered
-        - Mullvad Family
-        - Mullvad Extended
-        - Mullvad All
+        - AdGuard
+        - AdGuard (Unfiltered)
+        - Cloudflare (Malware Protection)
+        - DNS0
+        - DNS0 (ZERO)
+        - DNS4EU (Ad Blocking)
+        - DNS4EU (Protective)
+        - DNS4EU (Unfiltered)
+        - Mullvad (Base)
+        - Mullvad (Unfiltered)
         - Wikimedia
 
       Quad9 is used by default.
@@ -228,11 +234,11 @@ patches:
     reason: "To prevent automatic inclusion of Firefox branding in shared links."
     effect: "Improves privacy by not disclosing browser information when sharing links."
     category: "Privacy"
-  
+
   - file: "disable-amo-collections.patch"
     name: "Disable AMO Featured Collections and Recommendations"
     description: "Disables fetching featured collections, recommendations, and icons from AMO (addons.mozilla.org)."
-    reason: "To prevent Firefox from connecting to `services.mozilla.org` on every launch and periodically after."
+    reason: "To prevent Firefox from connecting to `services.addons.mozilla.org` on every launch and periodically after."
     effect: "Reduces unwanted network activity and integration with third party services."
     category: "Privacy"
 
@@ -284,7 +290,7 @@ patches:
     reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
     effect: "Network activity is further limited, less data is shared with Mozilla, and the user is put in control of what specifically they want to download from Remote Settings."
     category: "Privacy"
-  
+
   - file: "install-addons-without-mozaddonmanager.patch"
     name: "Allow installation of add-ons without the mozAddonManager API"
     description: "Adds support for installing add-ons from `addons.mozilla.org` without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the privileged mozAddonManager API), in addition to websites specified with the `xpinstall.whitelist.add` series of prefs."
@@ -334,18 +340,18 @@ patches:
     effect: "Simplifies the browser UI and prevents telemetry or issue reports from being sent to Mozilla."
     category: "Privacy"
 
-  - file: "enable-light-mode-by-default.patch"
-    name: "Enable Light Mode"
-    description: "Enables light mode by default to prevent fingerprinting."
-    reason: "To prevent fingerprinting based on user's theme preferences."
-    effect: "Browser uses light theme out of the box."
-    category: "Privacy"
-
   - file: "disable-network-connectivity-monitoring.patch"
     name: "Disable Network Connectivity Status Monitoring"
     description: "Prevents the browser from monitoring the status of the user's internet connection. It also allows us to remove the `ACCESS_NETWORK_STATE` permission, and prevents Firefox from generating an internal network ID that could potentially be used to track users (https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/4c548fa04b668a310c90c0e783ec404420f06257)."
     reason: "To prevent the browser from accessing network information (with the `ACCESS_NETWORK_STATE` permission), and from generating an ID that could be used for tracking."
     effect: "Improves the privacy for users."
+    category: "Privacy"
+
+  - file: "disable-tippy-top-favicon-fetching.patch"
+    name: "Disable Tippy Top Favicon Fetching"
+    description: "To prevent the browser from fetching favicons for homepage shortcuts/pins on launch, without prior user interaction."
+    reason: "To prevent the browser from making unsolicited connections to the user's pinned websites."
+    effect: "Favicons will still display on the homepage after navigating to the shortcut/pin - so this just improves privacy for users by preventing unauthorized connections to third parties."
     category: "Privacy"
 
   # Security
@@ -366,9 +372,9 @@ patches:
 
   - file: "disable-shipped-domains.patch"
     name: "Disable Shipped Domains"
-    description: "Disables pre-shipped domain list."
-    reason: "To address security concerns from outdated domain lists."
-    effect: "Prevents potential security issues and removes annoying domain suggestions."
+    description: "Disables Firefox's built-in list of domains used to autocomplete URLs."
+    reason: "To quote a Mozilla employee (https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0): Android’s current list of 400+ domain names for address bar suggestions was created way back in December 2015… This list hasn’t been updated since 2015 and now includes expired and squatted domains that might serve ads or malware. Instead of updating the lists of top domains, we should remove it. This would avoid the risk from future bad domains. The default suggestions are out of date and not necessarily relevant for every locale."
+    effect: "Prevents suggesting squatted domains to users that serve ads and malware, and reduces annoyances/unwanted behavior."
     category: "Security"
 
   - file: "harden-pdfjs.patch"
@@ -418,6 +424,13 @@ patches:
     description: "Disables the SSLKEYLOGGING feature in NSS (Mozilla's Network Security Services: https://firefox-source-docs.mozilla.org/security/nss/index.html)."
     reason: "To prevent the unauthorized decryption and exposure of secrets used in SSL/TLS traffic. For more details, see: https://bugzilla.mozilla.org/show_bug.cgi?id=1183318 and https://bugzilla.mozilla.org/show_bug.cgi?id=1915224."
     effect: "Protects users against total compromise of any and all cryptographic security."
+    category: "Security"
+
+  - file: "enable-secure-storage.patch"
+    name: "Enable Secure Storage"
+    description: "Enables the use of encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state and certain preferences."
+    reason: "To improve privacy and security for users, by leveraging Android's Keystore system for storing certain data."
+    effect: "Protects users against unauthorized use/compromise of their data."
     category: "Security"
 
   # User Control
@@ -485,7 +498,7 @@ patches:
     reason: "Provides users with a cleaner browsing experience, and removes promotions of third party services."
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
     category: "User Interface"
-  
+
   - file: "disable-recent-search-suggestions.patch"
     name: "Disable Recent Search Suggestions"
     description: "Disables recent search suggestions by default."
@@ -499,7 +512,7 @@ patches:
     reason: "To prevent interruptions from survey prompts."
     effect: "Improves user experience by removing survey notifications."
     category: "User Interface"
-  
+
   - file: "expose-aboutconfig.patch"
     name: "Expose the 'about:config'"
     description: "Exposes the 'about:config' in 'about:about' alongside other internal 'about' pages."
@@ -514,15 +527,7 @@ patches:
       To prevent users from easily/unnecessarily disabling GPC, as its status can aid fingerprinting, thus harming privacy.
     effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
     category: "User Interface"
-  
-  - file: "safe-browsing.patch"
-    name: "Safe Browsing UI"
-    description: "Adds a UI setting to toggle Safe Browsing."
-    reason: |
-      To improve transparency and usability, so that users can enable or disable Safe Browsing as needed to suit their personal preference.
-    effect: "Users can now seamlessly enable or disable Safe Browsing without needing to dive into advanced configuration options."
-    category: "User Interface"
-  
+
   - file: "ironfox-content-settings.patch"
     name: "IronFox Content Settings"
     description: "Adds IronFox-specific UI content settings, which can be found under `Site settings`."
@@ -531,10 +536,53 @@ patches:
     effect: "Users can choose what compromises they're comfortable with and tailor the browsing experience to meet their needs, directly from the UI."
     category: "User Interface"
 
-  - file: "js-settings.patch"
-    name: "JavaScript Settings"
-    description: "Adds IronFox-specific UI settings for controlling JavaScript, JavaScript Just-in-time Compilation (JIT), and WebAssembly (WASM)."
+  - file: "ironfox-settings-fenix.patch"
+    name: "IronFox Settings (Fenix)"
+    description: "Adds support to Fenix (Firefox for Android) for IronFox-specific UI settings to control various functionality."
     reason: |
-      To allow users to easily enable/disable these features globally.
-    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings/the about:config."
+      To allow users to easily control their browsing experience.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
+    category: "User Interface"
+
+  - file: "ironfox-settings-gecko.patch"
+    name: "IronFox Settings (Gecko)"
+    description: "Adds support to Gecko (GeckoView) for IronFox-specific UI settings to control various functionality."
+    reason: |
+      To allow users to easily control their browsing experience.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
+    category: "User Interface"
+
+  - file: "ironfox-secret-settings.patch"
+    name: "IronFox Secret Settings"
+    description: "Adds support for IronFox-specific secret settings to control certain functionality."
+    reason: "To provide users with more control over their browsing experience."
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
+    category: "User Interface"
+
+  - file: "local-wallpapers.patch"
+    name: "Local Wallpapers"
+    description: "Adds a built-in collection of wallpapers for the browser's homepage."
+    reason: "By default, Firefox fetches wallpapers from the network on every browser launch. We disable this, due to the associated privacy concerns, and to reduce unwanted network activity."
+    effect: "Users can personalize the browser and take advantage of wallpapers, without compromising their privacy."
+    category: "User Interface"
+
+  - file: "ironfox-ui.patch"
+    name: "IronFox UI"
+    description: "Adds minor tweaks to the browser's user interface."
+    reason: "To reduce clutter and improve the user experience."
+    effect: "Users are provided with a cleaner, focused browsing experience."
+    category: "User Interface"
+
+  - file: "cross-origin-referer-policy-settings.patch"
+    name: "Cross-Origin Referer Policy Settings"
+    description: "Adds support for UI settings to control the cross-origin referer policy for websites."
+    reason: "To allow users to easily control their browsing experience."
+    effect: "Users can conveniently harden or relax the cross-origin referer policy to what works best for them, without needing to dig into advanced settings or the `about:config`."
+    category: "User Interface"
+
+  - file: "ironfox-customization-settings.patch"
+    name: "IronFox Customization Settings"
+    description: "Adds UI settings to control the preferred appearance for websites (like Firefox on Desktop), and to enable/disable the Tab Strip feature."
+    reason: "To prevent fingerprinting based on user's theme preferences (by using a different toggle to control the appearance for websites, set to Light mode by default, regardless of the browser theme), and to allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954)."
+    effect: "The browser sets the default appearance for websites to Light mode, regardless of the browser/device theme, and users can enable or disable the Tab Strip, depending on their personal preference."
     category: "User Interface"

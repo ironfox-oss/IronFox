@@ -1,0 +1,503 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index cfbdaba62c..7ed941acef 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -196,6 +196,28 @@ class Core(
+             postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
+             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
+             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
++            accessibilityEnabled = context.settings().accessibilityEnabled,
++            cacheEnabled = context.settings().cacheEnabled,
++            cacheSslEnabled = context.settings().cacheSslEnabled,
++            emeEnabled = context.settings().emeEnabled,
++            ipv6Enabled = context.settings().ipv6Enabled,
++            javascriptEnabled = context.settings().javascriptEnabled,
++            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
++            ocspRequire = context.settings().ocspRequire,
++            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
++            spoofEnglish = context.settings().spoofEnglish,
++            svgEnabled = context.settings().svgEnabled,
++            wasmEnabled = context.settings().wasmEnabled,
++            webglEnabled = context.settings().webglEnabled,
++            webrtcEnabled = context.settings().webrtcEnabled,
++            widevineEnabled = context.settings().widevineEnabled,
++            xpinstallEnabled = context.settings().xpinstallEnabled,
+         )
+ 
+         // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
+@@ -228,6 +250,7 @@ class Core(
+             defaultSettings,
+             geckoRuntime,
+         ).also {
++            GeckoProvider.setupSafeBrowsing(it, context.settings().safeBrowsingEnabled)
+             WebCompatFeature.install(it)
+         }
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+index a776e10849..71dedf06c4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+@@ -21,6 +21,8 @@ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.nimbus.FxNimbus
+ import org.mozilla.geckoview.GeckoRuntime
+ import org.mozilla.geckoview.GeckoRuntimeSettings
++import mozilla.components.concept.engine.Engine
++import mozilla.components.concept.engine.EngineSession
+ 
+ object GeckoProvider {
+     private var runtime: GeckoRuntime? = null
+@@ -117,4 +119,12 @@ object GeckoProvider {
+             )
+             .build()
+     }
++
++    fun setupSafeBrowsing(engine: Engine, safeBrowsingEnabled: Boolean) {
++        if (safeBrowsingEnabled) {
++            engine.settings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
++        } else {
++            engine.settings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
++        }
++    }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 325e5d2141..6c414ebdc4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -73,6 +73,9 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
+ import org.mozilla.fenix.utils.Settings
+ import kotlin.system.exitProcess
+ import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
++import mozilla.components.concept.engine.EngineSession
++import org.mozilla.fenix.utils.IronFoxPreferences
++import org.mozilla.fenix.components.Push
+ 
+ @Suppress("LargeClass", "TooManyFunctions")
+ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -409,6 +412,47 @@ class SettingsFragment : PreferenceFragmentCompat() {
+                 null
+             }
+ 
++            resources.getString(R.string.pref_key_use_unifiedpush) -> {
++                val context = requireActivity()
++                context.settings().apply { useUnifiedPush = !useUnifiedPush }
++                val alert = AlertDialog.Builder(context).apply {
++                    setTitle(context.getString(R.string.preferences_unifiedpush))
++                    setMessage(context.getString(R.string.quit_application))
++                    setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _ ->
++                        dialog.cancel()
++                    }
++
++                    setPositiveButton(android.R.string.ok) { _, _ ->
++                        Toast.makeText(
++                            context,
++                            getString(R.string.toast_change_unifiedpush_done),
++                            Toast.LENGTH_LONG,
++                        ).show()
++
++                        Handler(Looper.getMainLooper()).postDelayed(
++                            {
++                                exitProcess(0)
++                            },
++                            FXA_SYNC_OVERRIDE_EXIT_DELAY,
++                        )
++                    }
++                    create().withCenterAlignedButtons()
++                }
++                if (context.settings().useUnifiedPush) {
++                    requireComponents.push.switchToUnifiedPush(context) { success ->
++                        if (!success) {
++                            context.settings().useUnifiedPush = false
++                        } else {
++                            alert.show()
++                        }
++                    }
++                } else {
++                    requireComponents.push.switchToAutoPush(context)
++                    alert.show()
++                }
++                null
++            }
++
+             // Only displayed when secret settings are enabled
+             resources.getString(R.string.pref_key_override_amo_collection) -> {
+                 val context = requireContext()
+@@ -547,6 +591,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
+             findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))
+ 
+         with(requireContext().settings()) {
++            findPreference<SwitchPreference>(
++                getPreferenceKey(R.string.pref_key_use_unifiedpush),
++            )?.apply {
++                isVisible = enableUnifiedPush
++                isChecked = useUnifiedPush
++            }
+             findPreference<Preference>(
+                 getPreferenceKey(R.string.pref_key_nimbus_experiments),
+             )?.isVisible = showSecretDebugMenuThisSession
+@@ -573,6 +623,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         setupHomepagePreference()
+         setupTrackingProtectionPreference()
+         setupDnsOverHttpsPreference(requireContext().settings())
++        setupIpv6Preference()
++        setupOcspRequirePreference()
++        setupRefererPolicyPreferences()
++        setupSafeBrowsingPreference()
++        setupXpinstallPreference()
+     }
+ 
+     /**
+@@ -741,6 +796,109 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         }
+     }
+ 
++    @VisibleForTesting
++    internal fun setupIpv6Preference() {
++        val ipv6EnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_ipv6_enabled,
++        )
++
++        ipv6EnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, ipv6Enabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.ipv6Enabled = ipv6Enabled
++            
++            components.core.engine.settings.ipv6Enabled = ipv6Enabled
++
++            true
++        }
++    }
++
++    @VisibleForTesting
++    internal fun setupOcspRequirePreference() {
++        val ocspRequirePreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_ocsp_require,
++        )
++
++        ocspRequirePreference.setOnPreferenceChangeListener<Boolean> { preference, ocspRequire ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.ocspRequire = ocspRequire
++            
++            components.core.engine.settings.ocspRequire = ocspRequire
++
++            true
++        }
++    }
++
++    @VisibleForTesting
++    internal fun setupRefererPolicyPreferences() {
++        requirePreference<Preference>(R.string.pref_key_referer_policy_settings).apply {
++            setOnPreferenceClickListener {
++                val directions =
++                    SettingsFragmentDirections
++                        .actionSettingsFragmentToRefererSettingsFragment()
++                requireView().findNavController().navigate(directions)
++                true
++            }
++        }
++    }
++
++    @VisibleForTesting
++    internal fun setupSafeBrowsingPreference() {
++        val safeBrowsingEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_safe_browsing_enabled,
++        )
++
++        safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
++        safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
++            val engineSettings = requireContext().components.core.engine.settings
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.safeBrowsingEnabled = safeBrowsingEnabled
++
++            if (settings.safeBrowsingEnabled) {
++                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
++            } else {
++                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
++            }
++            requireContext().components.useCases.sessionUseCases.reload()
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                FXA_SYNC_OVERRIDE_EXIT_DELAY,
++            )
++            true
++        }
++    }
++
++    @VisibleForTesting
++    internal fun setupXpinstallPreference() {
++        val xpinstallEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_xpinstall_enabled,
++        )
++
++        xpinstallEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, xpinstallEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.xpinstallEnabled = xpinstallEnabled
++            
++            components.core.engine.settings.xpinstallEnabled = xpinstallEnabled
++
++            true
++        }
++    }
++    
+     @VisibleForTesting
+     internal fun setupInstallAddonFromFilePreference(settings: Settings) {
+         with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 9197b274db..e42de396de 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
+ import org.mozilla.fenix.wallpapers.Wallpaper
+ import java.security.InvalidParameterException
+ import java.util.UUID
++import mozilla.components.concept.engine.Engine.RefererXOriginPolicy
+ 
+ private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
+ 
+@@ -2463,6 +2464,143 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
+ 
++    var accessibilityEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
++        default = false,
++    )
++
++    var cacheEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_cache_enabled),
++        default = false,
++    )
++
++    var cacheSslEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_cache_ssl_enabled),
++        default = false,
++    )
++
++    var emeEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_eme_enabled),
++        default = false,
++    )
++
++    var enableUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++        default = true,
++    )
++
++    var ipv6Enabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_ipv6_enabled),
++        default = true,
++    )
++
++    var isTabStripEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_tab_strip_show),
++        default = false,
++    )
++
++    var javascriptEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_javascript_enabled),
++        default = true,
++    )
++
++    var javascriptJitEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
++        default = false,
++    )
++
++    var ocspRequire by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_ocsp_require),
++        default = true,
++    )
++
++    var prefersBrowserColorScheme by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_prefers_browser_color_scheme),
++        default = false,
++    )
++
++    var prefersDarkColorScheme by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_prefers_dark_color_scheme),
++        default = false,
++    )
++
++    var prefersLightColorScheme by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_prefers_light_color_scheme),
++        default = true,
++    )
++
++    var refererXOriginAlways by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_always),
++        default = true,
++    )
++
++    var refererXOriginBaseDomainsMatch by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_base_domains_match),
++        default = false,
++    )
++
++    var refererXOriginHostsMatch by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_hosts_match),
++        default = false,
++    )
++
++    var safeBrowsingEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
++        default = true,
++    )
++
++    var spoofEnglish by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
++        default = true
++    )
++
++    var svgEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_svg_enabled),
++        default = true,
++    )
++
++    var useUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
++        default = false,
++    )
++
++    var wasmEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
++        default = true,
++    )
++
++    var webglEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_webgl_enabled),
++        default = true,
++    )
++
++    var webrtcEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_webrtc_enabled),
++        default = true,
++    )
++
++    var widevineEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_widevine_enabled),
++        default = false,
++    )
++
++    var xpinstallEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_xpinstall_enabled),
++        default = false,
++    )
++
++    fun getRefererXOriginPolicy(): RefererXOriginPolicy {
++        return if (refererXOriginAlways) {
++            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
++        } else if (refererXOriginBaseDomainsMatch) {
++            RefererXOriginPolicy.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH
++        } else if (refererXOriginHostsMatch) {
++            RefererXOriginPolicy.REFERER_XORIGIN_IF_HOSTS_MATCH
++        } else {
++            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
++        }
++    }
++
+     /**
+      * Indicates whether or not to show the checklist feature.
+      */
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 4c6b14bf87..681d8249e8 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -94,6 +94,11 @@
+         android:key="@string/pref_key_privacy_security_category"
+         android:layout="@layout/preference_category_no_icon_style">
+ 
++        <androidx.preference.Preference
++            android:key="@string/pref_key_referer_policy_settings"
++            android:title="@string/preference_referer_policy"
++            app:iconSpaceReserved="false" />
++
+         <androidx.preference.Preference
+             android:key="@string/pref_key_private_browsing"
+             app:iconSpaceReserved="false"
+@@ -116,6 +121,13 @@
+             app:isPreferenceVisible="false"
+             android:title="@string/preferences_cookie_banner_reduction_private_mode" />
+ 
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_safe_browsing_enabled"
++            android:summary="@string/restart_required_summary"
++            android:title="@string/preference_safe_browsing_enabled"
++            app:iconSpaceReserved="false" />
++
+         <androidx.preference.Preference
+             android:key="@string/pref_key_tracking_protection_settings"
+             app:iconSpaceReserved="false"
+@@ -136,6 +148,12 @@
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_delete_browsing_data_on_quit" />
+ 
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_ocsp_require"
++            android:title="@string/preference_ocsp_require"
++            app:iconSpaceReserved="false" />
++
+         <androidx.preference.Preference
+             android:key="@string/pref_key_notifications"
+             app:iconSpaceReserved="false"
+@@ -152,6 +170,11 @@
+         android:title="@string/preferences_category_advanced"
+         android:key="@string/pref_key_advanced"
+         android:layout="@layout/preference_category_no_icon_style">
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_xpinstall_enabled"
++            android:title="@string/preference_xpinstall_enabled"
++            app:iconSpaceReserved="false" />
+         <androidx.preference.Preference
+             android:key="@string/pref_key_addons"
+             app:iconSpaceReserved="false"
+@@ -184,6 +207,19 @@
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_external_download_manager" />
+ 
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_ipv6_enabled"
++            android:title="@string/preference_ipv6_enabled"
++            app:iconSpaceReserved="false" />
++
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_use_unifiedpush"
++            android:summary="@string/restart_required_summary"
++            android:title="@string/preferences_unifiedpush"
++            app:iconSpaceReserved="false" />
++
+         <androidx.preference.SwitchPreference
+             android:key="@string/pref_key_leakcanary"
+             android:title="@string/preference_leakcanary"
+@@ -199,6 +235,7 @@
+         <androidx.preference.SwitchPreference
+             android:defaultValue="false"
+             android:key="@string/pref_key_enable_gecko_logs"
++            android:summary="@string/restart_required_summary"
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_enable_gecko_logs" />
+     </PreferenceCategory>

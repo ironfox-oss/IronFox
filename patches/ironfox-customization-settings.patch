@@ -1,0 +1,262 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
+index e53ac45f01..02dd96ad92 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
+@@ -6,22 +6,22 @@ package org.mozilla.fenix.browser.tabstrip
+ 
+ import android.content.Context
+ import mozilla.components.support.ktx.android.content.doesDeviceHaveHinge
+-import org.mozilla.fenix.nimbus.FxNimbus
++import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.utils.isLargeScreenSize
+ 
+ /**
+  * Returns true if the tab strip is enabled.
+  */
+ fun Context.isTabStripEnabled(): Boolean =
+-    isTabStripEligible() && tabStripExperimentEnabled()
++    settings().isTabStripEnabled
+ 
+-private fun tabStripExperimentEnabled(): Boolean =
+-    FxNimbus.features.tabStrip.value().enabled
++//private fun tabStripExperimentEnabled(): Boolean =
++//    FxNimbus.features.tabStrip.value().enabled
+ 
+ /**
+  * Returns true if the the device has the prerequisites to enable the tab strip.
+  */
+-private fun Context.isTabStripEligible(): Boolean =
++fun Context.isTabStripEligible(): Boolean =
+     // Tab Strip is currently disabled on foldable devices, while we work on improving the
+     // Homescreen / Toolbar / Browser screen to better support the feature. There is also
+     // an emulator bug that causes the doesDeviceHaveHinge check to return true on emulators,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index cfbdaba62c..8e24737e50 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -682,9 +682,11 @@ class Core(
+             (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
+                 Configuration.UI_MODE_NIGHT_YES
+         return when {
+-            context.settings().shouldUseDarkTheme -> PreferredColorScheme.Dark
+-            context.settings().shouldUseLightTheme -> PreferredColorScheme.Light
+-            inDark -> PreferredColorScheme.Dark
++            context.settings().prefersBrowserColorScheme && context.settings().shouldUseDarkTheme -> PreferredColorScheme.Dark
++            context.settings().prefersBrowserColorScheme && context.settings().shouldUseLightTheme -> PreferredColorScheme.Light
++            context.settings().prefersBrowserColorScheme && inDark -> PreferredColorScheme.Dark
++            context.settings().prefersDarkColorScheme -> PreferredColorScheme.Dark
++            context.settings().prefersLightColorScheme -> PreferredColorScheme.Light
+             else -> PreferredColorScheme.Light
+         }
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
+index c1428b2898..d7b3b9bec7 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
+@@ -9,9 +9,9 @@ import android.os.Build.VERSION.SDK_INT
+ import android.os.Bundle
+ import androidx.appcompat.app.AppCompatDelegate
+ import androidx.preference.Preference
+-import androidx.preference.PreferenceCategory
++//import androidx.preference.PreferenceCategory
+ import androidx.preference.PreferenceFragmentCompat
+-import androidx.preference.PreferenceScreen
++//import androidx.preference.PreferenceScreen
+ import androidx.preference.SwitchPreference
+ import org.mozilla.fenix.FeatureFlags
+ import org.mozilla.fenix.GleanMetrics.AppTheme
+@@ -36,6 +36,9 @@ class CustomizationFragment : PreferenceFragmentCompat() {
+     private lateinit var radioDarkTheme: RadioButtonPreference
+     private lateinit var radioAutoBatteryTheme: RadioButtonPreference
+     private lateinit var radioFollowDeviceTheme: RadioButtonPreference
++    private lateinit var radioPrefersLightColorScheme: RadioButtonPreference
++    private lateinit var radioPrefersDarkColorScheme: RadioButtonPreference
++    private lateinit var radioPrefersBrowserColorScheme: RadioButtonPreference
+ 
+     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+         setPreferencesFromResource(R.xml.customization_preferences, rootKey)
+@@ -53,23 +56,47 @@ class CustomizationFragment : PreferenceFragmentCompat() {
+         bindDarkTheme()
+         bindLightTheme()
+         bindAutoBatteryTheme()
++        bindPrefersBrowserColorScheme()
++        bindPrefersDarkColorScheme()
++        bindPrefersLightColorScheme()
+         setupRadioGroups()
+         val tabletAndTabStripEnabled = requireContext().isTabStripEnabled()
+-        if (tabletAndTabStripEnabled) {
+-            val preferenceScreen: PreferenceScreen =
+-                requirePreference(R.string.pref_key_customization_preference_screen)
+-            val toolbarPrefCategory: PreferenceCategory =
+-                requirePreference(R.string.pref_key_customization_category_toolbar)
+-            preferenceScreen.removePreference(toolbarPrefCategory)
+-        } else {
+-            setupToolbarCategory()
+-        }
++//        if (tabletAndTabStripEnabled) {
++//            val preferenceScreen: PreferenceScreen =
++//                requirePreference(R.string.pref_key_customization_preference_screen)
++//            val toolbarPrefCategory: PreferenceCategory =
++//                requirePreference(R.string.pref_key_customization_category_toolbar)
++//            preferenceScreen.removePreference(toolbarPrefCategory)
++//        } else {
++//            setupToolbarCategory()
++//        }
++        updateToolbarCategoryBasedOnTabStrip(tabletAndTabStripEnabled)
++        setupTabStripCategory()
+ 
+         // if tab strip is enabled, swipe toolbar to switch tabs should not be enabled so the
+         // preference is not shown
+         setupGesturesCategory(isSwipeToolbarToSwitchTabsVisible = !tabletAndTabStripEnabled)
+     }
+ 
++    private fun updateToolbarCategoryBasedOnTabStrip(
++        tabStripEnabled: Boolean,
++    ) {
++        val topPreference = requirePreference<RadioButtonPreference>(R.string.pref_key_toolbar_top)
++        val bottomPreference = requirePreference<RadioButtonPreference>(R.string.pref_key_toolbar_bottom)
++        val tabStripMessagePref = findPreference<Preference>(getString(R.string.pref_key_tab_strip_message))
++
++        topPreference.isEnabled = !tabStripEnabled
++        bottomPreference.isEnabled = !tabStripEnabled
++        tabStripMessagePref?.isVisible = tabStripEnabled
++
++        if (tabStripEnabled && !topPreference.isChecked) {
++            topPreference.setCheckedWithoutClickListener(true)
++            bottomPreference.setCheckedWithoutClickListener(false)
++        } else {
++            setupToolbarCategory()
++        }
++    }
++
+     private fun setupRadioGroups() {
+         addToRadioGroup(
+             radioLightTheme,
+@@ -80,6 +107,11 @@ class CustomizationFragment : PreferenceFragmentCompat() {
+                 radioAutoBatteryTheme
+             },
+         )
++        addToRadioGroup(
++            radioPrefersLightColorScheme,
++            radioPrefersDarkColorScheme,
++            radioPrefersBrowserColorScheme
++        )
+     }
+ 
+     private fun bindLightTheme() {
+@@ -117,6 +149,34 @@ class CustomizationFragment : PreferenceFragmentCompat() {
+         }
+     }
+ 
++    private fun bindPrefersLightColorScheme() {
++        radioPrefersLightColorScheme = requirePreference(R.string.pref_key_prefers_light_color_scheme)
++        radioPrefersLightColorScheme.onClickListener {
++            setNewColorScheme()
++        }
++    }
++
++    private fun bindPrefersDarkColorScheme() {
++        radioPrefersDarkColorScheme = requirePreference(R.string.pref_key_prefers_dark_color_scheme)
++        radioPrefersDarkColorScheme.onClickListener {
++            setNewColorScheme()
++        }
++    }
++
++    private fun bindPrefersBrowserColorScheme() {
++        radioPrefersBrowserColorScheme = requirePreference(R.string.pref_key_prefers_browser_color_scheme)
++        radioPrefersBrowserColorScheme.onClickListener {
++            setNewColorScheme()
++        }
++    }
++
++    private fun setNewColorScheme() {
++        with(requireComponents.core) {
++            engine.settings.preferredColorScheme = getPreferredColorScheme()
++        }
++        requireComponents.useCases.sessionUseCases.reload.invoke()
++    }
++
+     private fun setNewTheme(mode: Int) {
+         if (AppCompatDelegate.getDefaultNightMode() == mode) return
+         AppCompatDelegate.setDefaultNightMode(mode)
+@@ -153,6 +213,20 @@ class CustomizationFragment : PreferenceFragmentCompat() {
+         addToRadioGroup(topPreference, bottomPreference)
+     }
+ 
++    private fun setupTabStripCategory() {
++        val tabStripSwitch = requirePreference<SwitchPreference>(R.string.pref_key_tab_strip_show)
++        val context = requireContext()
++
++        tabStripSwitch.isChecked = context.settings().isTabStripEnabled
++
++        tabStripSwitch.setOnPreferenceChangeListener { _, newValue ->
++            val enabled = newValue as Boolean
++            context.settings().isTabStripEnabled = enabled
++            updateToolbarCategoryBasedOnTabStrip(enabled)
++            true
++        }
++    }
++
+     private fun setupGesturesCategory(isSwipeToolbarToSwitchTabsVisible: Boolean) {
+         requirePreference<SwitchPreference>(R.string.pref_key_website_pull_to_refresh).apply {
+             isVisible = FeatureFlags.PULL_TO_REFRESH_ENABLED
+diff --git a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
+index a24d1b7b2b..e4075628b9 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
+@@ -32,6 +32,33 @@
+             app:isPreferenceVisible="@bool/API28" />
+     </androidx.preference.PreferenceCategory>
+ 
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_cat_style"
++        android:title="@string/preference_website_appearance_title"
++        app:iconSpaceReserved="false">
++        <androidx.preference.Preference
++            android:key="@string/pref_key_website_appearance_description"
++            android:title=""
++            android:summary="@string/preference_website_appearance_description"
++            android:selectable="false"
++            app:iconSpaceReserved="false" />
++
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_prefers_light_color_scheme"
++            android:title="@string/preference_prefers_light_color_scheme" />
++
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_prefers_dark_color_scheme"
++            android:title="@string/preference_prefers_dark_color_scheme" />
++
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_prefers_browser_color_scheme"
++            android:title="@string/preference_prefers_browser_color_scheme" />
++    </androidx.preference.PreferenceCategory>
++
+     <androidx.preference.PreferenceCategory
+         android:layout="@layout/preference_cat_style"
+         android:title="@string/preferences_toolbar_2"
+@@ -43,6 +70,21 @@
+         <org.mozilla.fenix.settings.RadioButtonPreference
+             android:key="@string/pref_key_toolbar_bottom"
+             android:title="@string/preference_bottom_toolbar" />
++        <androidx.preference.Preference
++            android:key="@string/pref_key_tab_strip_message"
++            android:title=""
++            android:summary="@string/preference_toolbar_pref_disabled_explanation"
++            android:enabled="false"
++            android:selectable="false" />
++    </androidx.preference.PreferenceCategory>
++
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_cat_style"
++        android:title="@string/preferences_tab_strip"
++        app:iconSpaceReserved="false">
++        <androidx.preference.SwitchPreference
++            android:key="@string/pref_key_tab_strip_show"
++            android:title="@string/preference_tab_strip_show" />
+     </androidx.preference.PreferenceCategory>
+ 
+     <androidx.preference.PreferenceCategory

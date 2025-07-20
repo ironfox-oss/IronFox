@@ -154,9 +154,28 @@ sed -i \
     -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
     -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
     -e 's/Agree and continue/Continue/' \
+    -e 's/Address bar - Firefox Suggest/Address bar/' \
     -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
-    -e 's/Fast and secure web browsing/The private and secure Firefox-based web browser for Android/' \
     -e '/about_content/s/Mozilla/IronFox OSS/' \
+    -e 's/IronFox Suggest/Firefox Suggest/' \
+    -e 's/Learn more about Firefox Suggest/Learn more about search suggestions/' \
+    -e 's/Suggestions from %1$s/Suggestions from Mozilla/' \
+    -e 's/Notifications for tabs received from other IronFox devices/Notifications for tabs received from other devices/' \
+    -e 's/To send a tab, sign in to IronFox/To send a tab, sign in to a Firefox-based web browser/' \
+    -e 's/On your computer open IronFox and/On your computer, open a Firefox-based web browser, and/' \
+    -e 's/Fast and secure web browsing/The private, secure, user first web browser for Android./' \
+    -e 's/Sync is on/Firefox Sync is on/' \
+    -e 's/No account?/No Firefox account?/' \
+    -e 's/to sync IronFox/to sync your browsing data/' \
+    -e 's/%s will stop syncing with your account/%s will stop syncing with your Firefox account/' \
+    -e 's/%1$s decides when to use secure DNS to protect your privacy/IronFox will use your system’s DNS resolver/' \
+    -e 's/Use your default DNS resolver if there is a problem with the secure DNS provider/Use your default DNS resolver/' \
+    -e 's/You control when to use secure DNS and choose your provider/IronFox will use secure DNS with your chosen provider by default, but might fallback to your system’s DNS resolver if secure DNS is unavailable/' \
+    -e '/preference_doh_off_summary/s/Use your default DNS resolver/Never use secure DNS, even if supported by your system’s DNS resolver/' \
+    -e 's/Learn more about sync/Learn more about Firefox Sync/' \
+    -e 's/search?client=firefox&amp;q=%s/search?q=%s/' \
+    -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
+    -e 's/Google Search/%s search/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
@@ -184,6 +203,13 @@ sed -i \
 
 # Remove default built-in search engines
 rm -vrf app/src/main/assets/searchplugins/*
+
+# Create wallpaper directories
+mkdir -vp app/src/main/assets/wallpapers/algae
+mkdir -vp app/src/main/assets/wallpapers/colorful-bubbles
+mkdir -vp app/src/main/assets/wallpapers/dark-dune
+mkdir -vp app/src/main/assets/wallpapers/dune
+mkdir -vp app/src/main/assets/wallpapers/firey-red
 
 # Set up target parameters
 case "$1" in
@@ -338,53 +364,70 @@ remove_glean_telemetry "${mozilla_release}/netwerk"
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
 sed -i \
-    -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.browser.safebrowsing.malware.enabled"|' \
-    -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.browser.safebrowsing.phishing.enabled"|' \
-    -e 's|"browser.safebrowsing.provider."|"z99.ignore.browser.safebrowsing.provider."|' \
-    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.cookiebanners.service.enableGlobalRules"|' \
-    -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.cookiebanners.service.enableGlobalRules.subFrames"|' \
-    -e 's|"cookiebanners.service.mode"|"z99.ignore.cookiebanners.service.mode"|' \
-    -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.privacy.query_stripping.allow_list"|' \
-    -e 's|"privacy.query_stripping.enabled"|"z99.ignore.privacy.query_stripping.enabled"|' \
-    -e 's|"privacy.query_stripping.enabled.pbmode"|"z99.ignore.privacy.query_stripping.enabled.pbmode"|' \
-    -e 's|"privacy.query_stripping.strip_list"|"z99.ignore.privacy.query_stripping.strip_list"|' \
+    -e 's|"browser.safebrowsing.provider."|"z99.ignore.string."|' \
+    -e 's|"cookiebanners.service.detectOnly"|"z99.ignore.boolean"|' \
+    -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.boolean"|' \
+    -e 's|"cookiebanners.service.enableGlobalRules.subFrames"|"z99.ignore.boolean"|' \
+    -e 's|"cookiebanners.service.mode"|"z99.ignore.integer"|' \
+    -e 's|"network.cookie.cookieBehavior"|"z99.ignore.integer"|' \
+    -e 's|"network.cookie.cookieBehavior.pbmode"|"z99.ignore.integer"|' \
+    -e 's|"privacy.annotate_channels.strict_list.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.purge_trackers.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.string"|' \
+    -e 's|"privacy.query_stripping.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.query_stripping.enabled.pbmode"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.query_stripping.strip_list"|"z99.ignore.string"|' \
+    -e 's|"privacy.socialtracking.block_cookies.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.trackingprotection.annotate_channels"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.trackingprotection.cryptomining.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.trackingprotection.emailtracking.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.trackingprotection.emailtracking.pbmode.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.trackingprotection.fingerprinting.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.trackingprotection.socialtracking.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"urlclassifier.features.cryptomining.blacklistTables"|"z99.ignore.string"|' \
+    -e 's|"urlclassifier.features.emailtracking.blocklistTables"|"z99.ignore.string"|' \
+    -e 's|"urlclassifier.features.fingerprinting.blacklistTables"|"z99.ignore.string"|' \
+    -e 's|"urlclassifier.features.socialtracking.annotate.blacklistTables"|"z99.ignore.string"|' \
+    -e 's|"urlclassifier.malwareTable"|"z99.ignore.string"|' \
+    -e 's|"urlclassifier.phishTable"|"z99.ignore.string"|' \
+    -e 's|"urlclassifier.trackingTable"|"z99.ignore.string"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
 sed -i \
-    -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.apz.allow_double_tap_zooming"|' \
-    -e 's|"browser.display.use_document_fonts"|"z99.ignore.browser.display.use_document_fonts"|' \
-    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType"|' \
-    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|' \
-    -e 's|"dom.ipc.processCount"|"z99.ignore.dom.ipc.processCount"|' \
-    -e 's|"dom.manifest.enabled"|"z99.ignore.dom.manifest.enabled"|' \
-    -e 's|"extensions.webapi.enabled"|"z99.ignore.extensions.webapi.enabled"|' \
-    -e 's|"extensions.webextensions.crash.threshold"|"z99.ignore.extensions.webextensions.crash.threshold"|' \
-    -e 's|"extensions.webextensions.crash.timeframe"|"z99.ignore.extensions.webextensions.crash.timeframe"|' \
-    -e 's|"extensions.webextensions.remote"|"z99.ignore.extensions.webextensions.remote"|' \
-    -e 's|"fission.autostart"|"z99.ignore.fission.autostart"|' \
-    -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.fission.disableSessionHistoryInParent"|' \
-    -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.fission.webContentIsolationStrategy"|' \
-    -e 's|"formhelper.autozoom"|"z99.ignore.formhelper.autozoom"|' \
-    -e 's|"general.aboutConfig.enable"|"z99.ignore.general.aboutConfig.enable"|' \
-    -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.javascript.options.mem.gc_parallel_marking"|' \
-    -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.javascript.options.use_fdlibm_for_sin_cos_tan"|' \
-    -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning"|' \
-    -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.network.cookie.cookieBehavior.optInPartitioning.pbmode"|' \
-    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.network.android_doh.autoselect_enabled"|' \
-    -e 's|"network.fetchpriority.enabled"|"z99.ignore.network.fetchpriority.enabled"|' \
-    -e 's|"network.http.http3.enable_kyber"|"z99.ignore.network.http.http3.enable_kyber"|' \
-    -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.network.http.largeKeepaliveFactor"|' \
-    -e 's|"network.security.ports.banned"|"z99.ignore.network.security.ports.banned"|' \
-    -e 's|"privacy.fingerprintingProtection"|"z99.ignore.privacy.fingerprintingProtection"|' \
-    -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.privacy.fingerprintingProtection.overrides"|' \
-    -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.privacy.fingerprintingProtection.pbmode"|' \
-    -e 's|"privacy.globalprivacycontrol.enabled"|"z99.ignore.privacy.globalprivacycontrol.enabled"|' \
-    -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.privacy.globalprivacycontrol.functionality.enabled"|' \
-    -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.privacy.globalprivacycontrol.pbmode.enabled"|' \
-    -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.security.pki.certificate_transparency.mode"|' \
-    -e 's|"security.tls.enable_kyber"|"z99.ignore.security.tls.enable_kyber"|' \
-    -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.toolkit.telemetry.user_characteristics_ping.current_version"|' \
-    -e 's|"webgl.msaa-samples"|"z99.ignore.webgl.msaa-samples"|' \
+    -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
+    -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
+    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
+    -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \
+    -e 's|"dom.ipc.processCount"|"z99.ignore.integer"|' \
+    -e 's|"dom.manifest.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"extensions.webapi.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"extensions.webextensions.crash.threshold"|"z99.ignore.integer"|' \
+    -e 's|"extensions.webextensions.crash.timeframe"|"z99.ignore.long"|' \
+    -e 's|"extensions.webextensions.remote"|"z99.ignore.boolean"|' \
+    -e 's|"fission.autostart"|"z99.ignore.boolean"|' \
+    -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.boolean"|' \
+    -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.integer"|' \
+    -e 's|"formhelper.autozoom"|"z99.ignore.boolean"|' \
+    -e 's|"general.aboutConfig.enable"|"z99.ignore.boolean"|' \
+    -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.boolean"|' \
+    -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.boolean"|' \
+    -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.boolean"|' \
+    -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.boolean"|' \
+    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.boolean"|' \
+    -e 's|"network.fetchpriority.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"network.http.http3.enable_kyber"|"z99.ignore.boolean"|' \
+    -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.integer"|' \
+    -e 's|"network.security.ports.banned"|"z99.ignore.string"|' \
+    -e 's|"privacy.fingerprintingProtection"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.string"|' \
+    -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.globalprivacycontrol.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.integer"|' \
+    -e 's|"security.tls.enable_kyber"|"z99.ignore.boolean"|' \
+    -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
+    -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
 # shellcheck disable=SC2154
@@ -529,12 +572,12 @@ sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.co
 # Do not define `browser.safebrowsing.features.` prefs by default
 ## These are unnecessary, add extra confusion and complexity, and don't appear to interact well with our other prefs/settings
 sed -i \
-    -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.browser.safebrowsing.features.cryptomining.update"|' \
-    -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.browser.safebrowsing.features.fingerprinting.update"|' \
-    -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.browser.safebrowsing.features.malware.update"|' \
-    -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.browser.safebrowsing.features.phishing.update"|' \
-    -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.browser.safebrowsing.features.trackingAnnotation.update"|' \
-    -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.browser.safebrowsing.features.trackingProtection.update"|' \
+    -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.boolean"|' \
     mobile/android/app/geckoview-prefs.js
 
 {

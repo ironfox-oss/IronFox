@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:moz="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+    <!-- Accessibility Services -->
+    <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
+
+    <!-- Content Settings -->
+    <string name="pref_key_cache_enabled" translatable="false">pref_key_cache_enabled</string>
+    <string name="pref_key_cache_ssl_enabled" translatable="false">pref_key_cache_ssl_enabled</string>
+    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
+    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
+    <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
+    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+    <string name="pref_key_webgl_enabled" translatable="false">pref_key_webgl_enabled</string>
+    <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>
+
+    <!-- Cross-origin referer policy -->
+    <string name="pref_key_referer_policy_always" translatable="false">pref_key_referer_policy_always</string>
+    <string name="pref_key_referer_policy_base_domains_match" translatable="false">pref_key_referer_policy_base_domains_match</string>
+    <string name="pref_key_referer_policy_hosts_match" translatable="false">pref_key_referer_policy_hosts_match</string>
+    <string name="pref_key_referer_policy_settings" translatable="false">pref_key_referer_policy_settings</string>
+
+    <!-- Secret Settings -->
+    <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
+    <string name="pref_key_widevine_enabled" translatable="false">pref_key_widevine_enabled</string>
+
+    <!-- Settings -->
+    <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
+    <string name="pref_key_ocsp_require" translatable="false">pref_key_ocsp_require</string>
+    <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
+    <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
+
+    <!-- Spoof English -->
+    <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+
+    <!-- Tab Strip -->
+    <string name="pref_key_tab_strip_show" translatable="false">pref_key_tab_strip_show</string>
+    <string name="pref_key_tab_strip_message" translatable="false">pref_key_tab_strip_message</string>
+
+    <!-- UnifiedPush -->
+    <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
+    <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
+
+    <!-- Website Appearance -->
+    <string name="pref_key_prefers_browser_color_scheme" translatable="false">pref_key_prefers_browser_color_scheme</string>
+    <string name="pref_key_prefers_dark_color_scheme" translatable="false">pref_key_prefers_dark_color_scheme</string>
+    <string name="pref_key_prefers_light_color_scheme" translatable="false">pref_key_prefers_light_color_scheme</string>
+    <string name="pref_key_website_appearance_description" translatable="false">pref_key_website_appearance_description</string>
+</resources>

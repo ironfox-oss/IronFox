@@ -184,10 +184,10 @@ index effc671c02..ac7cbafb7d 100644
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..5d75386d0d
+index 0000000000..3a509acade
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
-@@ -0,0 +1,488 @@
+@@ -0,0 +1,501 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import androidx.activity.compose.BackHandler
@@ -220,10 +220,12 @@ index 0000000000..5d75386d0d
 +import androidx.compose.material.ExperimentalMaterialApi
 +import androidx.compose.material.ExposedDropdownMenuBox
 +import androidx.compose.material.ExposedDropdownMenuDefaults
++import androidx.compose.material.MaterialTheme
 +import androidx.compose.material.OutlinedTextField
 +import androidx.compose.material.RadioButton
 +import androidx.compose.material.RadioButtonDefaults
 +import androidx.compose.material.Text
++import androidx.compose.material.TextFieldDefaults
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
 +import androidx.compose.runtime.mutableStateOf
@@ -377,8 +379,8 @@ index 0000000000..5d75386d0d
 +                val captionText = when (contentState) {
 +                    IfPreferenceDohContentState.ModeSelection -> stringResource(
 +                        when (dohSettingsState.selectedProtectionLevel) {
-+                            ProtectionLevel.Default -> R.string.onboarding_if_preference_doh_default_protection_summary
-+                            ProtectionLevel.Increased -> R.string.onboarding_if_preference_doh_increased_protection_summary
++                            ProtectionLevel.Default -> R.string.preference_doh_default_protection_summary
++                            ProtectionLevel.Increased -> R.string.preference_doh_increased_protection_summary
 +                            ProtectionLevel.Max -> R.string.preference_doh_max_protection_summary
 +                            ProtectionLevel.Off -> R.string.onboarding_if_preference_doh_off_summary
 +                        },
@@ -459,6 +461,10 @@ index 0000000000..5d75386d0d
 +            ) {
 +                onContentStateChange(IfPreferenceDohContentState.ProviderSelection)
 +            } else {
++                dohSettingsProvider.setProtectionLevel(
++                    state.selectedProtectionLevel,
++                    state.selectedProvider,
++                )
 +                primaryButton.onClick()
 +            }
 +        }
@@ -596,14 +602,21 @@ index 0000000000..5d75386d0d
 +            onExpandedChange = { expanded = it },
 +        ) {
 +            OutlinedTextField(
-+                modifier = Modifier
-+                    .fillMaxWidth(),
++                modifier = Modifier.fillMaxWidth(),
 +                value = providerName(state.selectedProvider!!),
 +                onValueChange = {},
 +                readOnly = true,
-+                label = { Text(text = stringResource(R.string.preference_doh_choose_provider)) },
++                label = {
++                    Text(
++                        text = stringResource(R.string.preference_doh_choose_provider),
++                        modifier = Modifier.padding(top = 14.dp)
++                    )
++                },
 +                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
++                colors = TextFieldDefaults.outlinedTextFieldColors(
++                    backgroundColor = MaterialTheme.colors.surface,
++                    textColor = MaterialTheme.colors.onSurface,
++                ),
 +            )
 +
 +            ExposedDropdownMenu(
@@ -620,7 +633,7 @@ index 0000000000..5d75386d0d
 +                        Text(
 +                            text = providerName(provider),
 +                            style = FirefoxTheme.typography.body1,
-+                            color = FirefoxTheme.colors.textPrimary,
++                            color = MaterialTheme.colors.onSurface,
 +                        )
 +                    }
 +                }
@@ -1438,13 +1451,14 @@ index 0000000000..b35658273e
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..f85ece53b5
+index 0000000000..5eff50dba9
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
-@@ -0,0 +1,123 @@
+@@ -0,0 +1,126 @@
 +package org.mozilla.fenix.utils
 +
 +import android.content.Context
++import mozilla.components.concept.engine.EngineSession
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.ext.settings
 +
@@ -1523,13 +1537,18 @@ index 0000000000..f85ece53b5
 +        context: Context,
 +        isEnabled: Boolean,
 +    ) {
++        val engineSettings = context.components.core.engine.settings
 +        val settings = context.settings()
 +        val components = context.components
 +
 +        settings.safeBrowsingEnabled = isEnabled
 +
-+        components.core.engine.settings.safeBrowsingEnabled = isEnabled
-+        components.core.engine.settings.safeBrowsingPhishingEnabled = isEnabled
++        if (settings.safeBrowsingEnabled) {
++            engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
++        } else {
++            engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
++        }
++        context.components.useCases.sessionUseCases.reload()
 +    }
 +
 +    /**
@@ -1537,10 +1556,7 @@ index 0000000000..f85ece53b5
 +     */
 +    fun isSafeBrowsingEnabled(
 +        context: Context
-+    ): Boolean = context.components.core.engine.settings.run {
-+        safeBrowsingEnabled &&
-+        safeBrowsingPhishingEnabled
-+    }
++    ): Boolean = context.settings().safeBrowsingEnabled
 +
 +    /**
 +     * Set whether to enable the locale spoofing preference.

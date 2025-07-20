@@ -11,6 +11,19 @@ index 13db9f3c83..7964a7af07 100644
                                  null
                              } else {
                                  TopSitesFrecencyConfig(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
+index 26c7a0a2ed..0e694ee05d 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
+@@ -111,7 +111,7 @@ internal fun normalModeAdapterItems(
+     }
+ 
+     if (shouldShowCustomizeHome) {
+-        items.add(AdapterItem.CustomizeHomeButton)
++//        items.add(AdapterItem.CustomizeHomeButton)
+     }
+ 
+     items.add(AdapterItem.BottomSpacer)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
 index 48b312d257..92b3b71f71 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
@@ -25,90 +38,60 @@ index 48b312d257..92b3b71f71 100644
              } else {
                  TopSitesFrecencyConfig(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..16ef08e767 100644
+index 9197b274db..f101f8fd08 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -176,10 +176,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates whether or not top sites should be shown on the home screen.
-      */
--    var showTopSitesFeature by lazyFeatureFlagPreference(
-+    var showTopSitesFeature by booleanPreference(
+@@ -179,7 +179,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var showTopSitesFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_top_sites),
--        featureFlag = true,
+         featureFlag = true,
 -        default = { homescreenSections[HomeScreenSection.TOP_SITES] == true },
-+//        featureFlag = true,
-+        default = true,
++        default = { true },
      )
  
      var numberOfAppLaunches by intPreference(
-@@ -363,10 +363,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
-     )
+@@ -365,7 +365,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
--    var showCollectionsPlaceholderOnHome by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
+     var showCollectionsPlaceholderOnHome by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
 -        default = true,
--    )
-+    var showCollectionsPlaceholderOnHome = false
-+//        appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
-+//        default = true,
-+//    )
++        default = false,
+     )
  
      val isCrashReportingEnabled: Boolean
-         get() = isCrashReportEnabledInBuild &&
-@@ -1149,10 +1149,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = true,
-     )
+@@ -1151,7 +1151,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
--    var defaultTopSitesAdded by booleanPreference(
--        appContext.getPreferenceKey(R.string.default_top_sites_added),
+     var defaultTopSitesAdded by booleanPreference(
+         appContext.getPreferenceKey(R.string.default_top_sites_added),
 -        default = false,
--    )
-+    var defaultTopSitesAdded = true
-+//        appContext.getPreferenceKey(R.string.default_top_sites_added),
-+//        default = false,
-+//    )
++        default = true,
+     )
  
      var shouldShowSearchSuggestionsInPrivate by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions_in_private),
-@@ -1660,10 +1660,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         get() =
-             FxNimbus.features.homescreen.value().sectionsEnabled
+@@ -1662,7 +1662,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
--    var historyMetadataUIFeature by lazyFeatureFlagPreference(
-+    var historyMetadataUIFeature by booleanPreference(
+     var historyMetadataUIFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_history_metadata_feature),
 -        default = { homescreenSections[HomeScreenSection.RECENT_EXPLORATIONS] == true },
--        featureFlag = true,
-+        default = false,
-+//        featureFlag = true,
++        default = { false },
+         featureFlag = true,
      )
  
-     /**
-@@ -1687,19 +1687,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if the recent tabs functionality should be visible.
-      */
--    var showRecentTabsFeature by lazyFeatureFlagPreference(
-+    var showRecentTabsFeature by booleanPreference(
+@@ -1690,7 +1690,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var showRecentTabsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_recent_tabs),
--        featureFlag = true,
+         featureFlag = true,
 -        default = { homescreenSections[HomeScreenSection.JUMP_BACK_IN] == true },
-+//        featureFlag = true,
-+        default = false,
++        default = { false },
      )
  
      /**
-      * Indicates if the recent saved bookmarks functionality should be visible.
+@@ -1698,7 +1698,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
--    var showBookmarksHomeFeature by lazyFeatureFlagPreference(
-+    var showBookmarksHomeFeature by booleanPreference(
+     var showBookmarksHomeFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_customization_bookmarks),
 -        default = { homescreenSections[HomeScreenSection.BOOKMARKS] == true },
--        featureFlag = true,
-+        default = false,
-+//        featureFlag = true,
++        default = { false },
+         featureFlag = true,
      )
  
-     var signedInFxaAccount by booleanPreference(

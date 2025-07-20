@@ -1,0 +1,34 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
+index e7e19273f9..0e6e11ed9f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
+@@ -438,9 +438,9 @@ open class DefaultToolbarMenu(
+                 bookmarksItem,
+                 historyItem,
+                 downloadsItem,
+-                passwordsItem,
++                if (context.settings().shouldPromptToSaveLogins) passwordsItem else null,
+                 extensionsItem,
+-                syncMenuItem(),
++                if (context.settings().signedInFxaAccount) syncMenuItem() else null,
+                 BrowserMenuDivider(),
+                 findInPageItem,
+                 translationsItem.apply { visible = ::shouldShowTranslations },
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
+index e27a4e82d7..f03148725b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
+@@ -210,10 +210,10 @@ class HomeMenu(
+             bookmarksItem,
+             historyItem,
+             downloadsItem,
+-            passwordsItem,
++            if (settings.shouldPromptToSaveLogins) passwordsItem else null,
+             extensionsItem,
+-            syncSignInMenuItem,
+-            accountAuthItem,
++            if (settings.signedInFxaAccount) syncSignInMenuItem else null,
++            if (settings.signedInFxaAccount) accountAuthItem else null,
+             BrowserMenuDivider(),
+             BrowserMenuDivider(),
+             whatsNewItem,

@@ -1,84 +1,60 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+index 732a80cb03..7a2fdae0c3 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+@@ -135,6 +135,8 @@ fun OnboardingScreen(
+         if (!settings.shouldShowMarketingOnboarding && isNotPartnershipDistribution) {
+             val marketingPage = pagesToDisplay.find { it.type == OnboardingPageUiData.Type.MARKETING_DATA }
+             marketingPage?.let { pagesToDisplay.remove(it) }
++            val syncPage = pagesToDisplay.find { it.type == OnboardingPageUiData.Type.SYNC_SIGN_IN }
++            syncPage?.let { pagesToDisplay.remove(it) }
+         }
+ 
+         onDispose {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index e43dec84c6..4ddd7a6678 100644
+index e43dec84c6..e462b4c0fe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-@@ -208,28 +208,28 @@ class AboutFragment(
+@@ -208,11 +208,11 @@ class AboutFragment(
              AboutPageItem(
                  AboutItem.ExternalLink(
                      SUPPORT,
 -                    SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.HELP),
-+                    SupportUtils.IF_SUPPORT_URL,
++                    "https://gitlab.com/ironfox-oss/IronFox/-/issues",
                  ),
                  getString(R.string.about_support),
              ),
 -            AboutPageItem(
--                AboutItem.Crashes,
--                getString(R.string.about_crashes),
++/*            AboutPageItem(
+                 AboutItem.Crashes,
+                 getString(R.string.about_crashes),
+             ),
+@@ -229,7 +229,7 @@ class AboutFragment(
+                     SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
+                 ),
+                 getString(R.string.about_know_your_rights),
 -            ),
--            AboutPageItem(
--                AboutItem.ExternalLink(
--                    PRIVACY_NOTICE,
--                    SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.PRIVATE_NOTICE),
--                ),
--                getString(R.string.about_privacy_notice),
--            ),
--            AboutPageItem(
--                AboutItem.ExternalLink(
--                    RIGHTS,
--                    SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
--                ),
--                getString(R.string.about_know_your_rights),
--            ),
-+//            AboutPageItem(
-+//                AboutItem.Crashes,
-+//                getString(R.string.about_crashes),
-+//            ),
-+//            AboutPageItem(
-+//                AboutItem.ExternalLink(
-+//                    PRIVACY_NOTICE,
-+//                    SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.PRIVATE_NOTICE),
-+//                ),
-+//                getString(R.string.about_privacy_notice),
-+//            ),
-+//            AboutPageItem(
-+//                AboutItem.ExternalLink(
-+//                    RIGHTS,
-+//                    SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
-+//                ),
-+//                getString(R.string.about_know_your_rights),
-+//            ),
++            ),*/
              AboutPageItem(
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index c13ecb6c86..a9e364d69a 100644
+index c13ecb6c86..cbcdfcb59e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -21,15 +21,16 @@ import java.net.URLEncoder
- import java.util.Locale
- 
- object SupportUtils {
--    const val RATE_APP_URL = "market://details?id=" + BuildConfig.APPLICATION_ID
--    const val POCKET_TRENDING_URL = "https://getpocket.com/fenix-top-articles"
--    const val WIKIPEDIA_URL = "https://www.wikipedia.org/"
--    const val FENIX_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
--    const val GOOGLE_URL = "https://www.google.com/"
+@@ -26,9 +26,9 @@ object SupportUtils {
+     const val WIKIPEDIA_URL = "https://www.wikipedia.org/"
+     const val FENIX_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
+     const val GOOGLE_URL = "https://www.google.com/"
 -    const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
 -    const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
 -    const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
-+    const val RATE_APP_URL = ""
-+    const val POCKET_TRENDING_URL = ""
-+    const val WIKIPEDIA_URL = ""
-+    const val FENIX_PLAY_STORE_URL = ""
-+    const val GOOGLE_URL = ""
 +    const val GOOGLE_US_URL = ""
 +    const val GOOGLE_XX_URL = ""
 +    const val WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"
      const val FXACCOUNT_SUMO_URL = "https://support.mozilla.org/kb/access-mozilla-services-firefox-account"
-+    const val IF_SUPPORT_URL = "https://gitlab.com/ironfox-oss/IronFox/-/issues"
  
      // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
-     // user language might not be supported by AMO and/or the language might not be exactly what AMO is expecting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 index e5ab956ac3..8f88bf456e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
@@ -93,7 +69,7 @@ index e5ab956ac3..8f88bf456e 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index 795fcd7b7e..5c0cb8796e 100644
+index 795fcd7b7e..1b4d2eef78 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 @@ -32,7 +32,7 @@ internal fun Collection<OnboardingCardData>.toPageUiData(
@@ -105,16 +81,8 @@ index 795fcd7b7e..5c0cb8796e 100644
          }
  }
  
-@@ -112,7 +112,6 @@ private fun OnboardingCardData.toPageUiData(privacyCaption: Caption?) = Onboardi
-     themeOptions = extraData?.customizationThemeData
-         ?.takeIf { it.isNotEmpty() }
-         ?.toOnboardingThemeOptions(),
--    termsOfService = extraData?.termOfServiceData?.toOnboardingTermsOfService(),
-     marketingData = extraData?.marketingData?.toOnboardingMarketingData(),
- )
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
-index 10488889d7..02572c03a1 100644
+index 10488889d7..f916d94cc9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/TermsOfServiceOnboardingPage.kt
 @@ -135,22 +135,22 @@ private fun BodyText(
@@ -122,18 +90,16 @@ index 10488889d7..02572c03a1 100644
          ) {
              val lineOneState = LinkTextState(
 -                text = it.lineOneLinkText,
--                url = it.lineOneLinkUrl,
--                onClick = eventHandler::onTermsOfServiceLinkClicked,
 +                text = "",
-+                url = "",
+                 url = it.lineOneLinkUrl,
+-                onClick = eventHandler::onTermsOfServiceLinkClicked,
 +                onClick = {},
              )
              val lineTwoState = LinkTextState(
 -                text = it.lineTwoLinkText,
--                url = it.lineTwoLinkUrl,
--                onClick = eventHandler::onPrivacyNoticeLinkClicked,
 +                text = "",
-+                url = "",
+                 url = it.lineTwoLinkUrl,
+-                onClick = eventHandler::onPrivacyNoticeLinkClicked,
 +                onClick = {},
              )
              val lineThreeState = LinkTextState(
@@ -167,29 +133,6 @@ index 10488889d7..02572c03a1 100644
                  linkTextStates = listOf(
                      lineThreeState,
                  ),
-@@ -201,14 +201,14 @@ private fun OnboardingPagePreview() {
-                 title = stringResource(id = R.string.onboarding_welcome_to_firefox),
-                 description = stringResource(id = R.string.onboarding_terms_of_service_sub_header_2),
-                 termsOfService = OnboardingTermsOfService(
--                    lineOneText = stringResource(id = R.string.onboarding_term_of_service_line_one_2),
--                    lineOneLinkText = stringResource(id = R.string.onboarding_term_of_service_line_one_link_text_2),
--                    lineOneLinkUrl = "URL",
--                    lineTwoText = stringResource(id = R.string.onboarding_term_of_service_line_two_2),
--                    lineTwoLinkText = stringResource(id = R.string.onboarding_term_of_service_line_two_link_text),
--                    lineTwoLinkUrl = "URL",
--                    lineThreeText = stringResource(id = R.string.onboarding_term_of_service_line_three),
--                    lineThreeLinkText = stringResource(id = R.string.onboarding_term_of_service_line_three_link_text),
-+                    lineOneText = "",
-+                    lineOneLinkText = "",
-+                    lineOneLinkUrl = "",
-+                    lineTwoText = "",
-+                    lineTwoLinkText = "",
-+                    lineTwoLinkUrl = "",
-+                    lineThreeText = "",
-+                    lineThreeLinkText = "",
-                 ),
-                 imageRes = R.drawable.ic_firefox,
-                 primaryButton = Action(
 diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
 index 0e2a6efdc9..3d7ff4a88f 100644
 --- a/mobile/android/moz.configure
@@ -210,36 +153,15 @@ index 0e2a6efdc9..3d7ff4a88f 100644
 +
 +include("ironfox.configure")
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..2d791fa7b7 100644
+index 9197b274db..652a7a4486 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -395,10 +395,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
+@@ -438,7 +438,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+ 
+     var shouldShowPrivacyPopWindow by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),
+-        default = true,
++        default = false,
      )
  
--    var hasAcceptedTermsOfService by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
--        default = false,
--    )
-+    var hasAcceptedTermsOfService = true
-+//        appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
-+//        default = false,
-+//    )
- 
-     /**
-      * The daily usage ping is not normally tied to normal telemetry.  We set the default value to
-@@ -436,10 +436,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     val shouldShowSecurityPinWarning: Boolean
-         get() = secureWarningCount.underMaxCount()
- 
--    var shouldShowPrivacyPopWindow by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),
--        default = true,
--    )
-+    var shouldShowPrivacyPopWindow = false
-+//        appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),
-+//        default = true,
-+//    )
- 
      var shouldUseLightTheme by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_light_theme),

@@ -1127,10 +1127,6 @@
     },
     {
       "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "transfem.dev"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "unredacted.org"
     },
     {

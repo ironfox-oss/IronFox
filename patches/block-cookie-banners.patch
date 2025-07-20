@@ -1,18 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..f82430aae7 100644
+index 9197b274db..dd608587a0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -745,20 +745,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         false,
-     )
- 
--    var shouldUseCookieBannerPrivateMode by lazyFeatureFlagPreference(
-+    var shouldUseCookieBannerPrivateMode by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_cookie_banner_private_mode),
--        featureFlag = true,
--        default = { shouldUseCookieBannerPrivateModeDefaultValue },
-+//        featureFlag = true,
-+        default = true,
+@@ -752,13 +752,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      )
  
      val shouldUseCookieBannerPrivateModeDefaultValue: Boolean
@@ -28,16 +18,3 @@ index 9197b274db..f82430aae7 100644
  
      val shouldEnableCookieBannerDetectOnly: Boolean
          get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_DETECT_ONLY] == 1
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..2e4227a392 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -113,7 +113,7 @@
-         <org.mozilla.fenix.settings.cookiebannerhandling.CustomCBHSwitchPreference
-             android:key="@string/pref_key_cookie_banner_private_mode"
-             app:iconSpaceReserved="false"
--            app:isPreferenceVisible="false"
-+            app:isPreferenceVisible="true"
-             android:title="@string/preferences_cookie_banner_reduction_private_mode" />
- 
-         <androidx.preference.Preference

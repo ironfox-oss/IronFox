@@ -1,30 +1,51 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 3885a06691..1bf13a601b 100644
+index 3885a06691..9d9dc0235a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-@@ -5,6 +5,9 @@
- package org.mozilla.fenix.settings.sitepermissions
- 
- import android.os.Bundle
-+import android.os.Handler
-+import android.os.Looper
-+import android.widget.Toast
- import androidx.core.content.ContextCompat
- import androidx.navigation.findNavController
- import androidx.preference.Preference
-@@ -23,6 +26,8 @@ import org.mozilla.fenix.ext.settings
+@@ -23,6 +23,11 @@ import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.ext.showToolbar
  import org.mozilla.fenix.settings.PhoneFeature
  import org.mozilla.fenix.settings.requirePreference
++import android.os.Handler
++import android.os.Looper
++import android.widget.Toast
 +import org.mozilla.fenix.utils.IronFoxPreferences
 +import kotlin.system.exitProcess
  
  /**
   * Screen for managing settings related to site permissions and content defaults.
-@@ -40,6 +45,69 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -40,6 +45,150 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
      override fun onResume() {
          super.onResume()
          showToolbar(getString(R.string.preferences_site_settings))
++
++        val cacheEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_cache_enabled,
++        )
++
++        cacheEnabledPreference.setOnPreferenceChangeListener { preference, cacheEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.cacheEnabled = cacheEnabled as Boolean
++            components.core.engine.settings.cacheEnabled = cacheEnabled
++
++            true
++        }
++
++        val cacheSslEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_cache_ssl_enabled,
++        )
++
++        cacheSslEnabledPreference.setOnPreferenceChangeListener { preference, cacheSslEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.cacheSslEnabled = cacheSslEnabled as Boolean
++            components.core.engine.settings.cacheSslEnabled = cacheSslEnabled
++
++            true
++        }
 +
 +        val javascriptEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_javascript_enabled,
@@ -68,7 +89,32 @@ index 3885a06691..1bf13a601b 100644
 +                {
 +                    exitProcess(0)
 +                },
-+                JIT_OVERRIDE_EXIT_DELAY,
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        val svgEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_svg_enabled,
++        )
++
++        svgEnabledPreference.setOnPreferenceChangeListener { preference, svgEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.svgEnabled = svgEnabled as Boolean
++            components.core.engine.settings.svgEnabled = svgEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
 +            )
 +            true
 +        }
@@ -88,41 +134,82 @@ index 3885a06691..1bf13a601b 100644
 +            true
 +        }
 +
++        val webglEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_webgl_enabled,
++        )
++
++        webglEnabledPreference.setOnPreferenceChangeListener { preference, webglEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.webglEnabled = webglEnabled as Boolean
++            components.core.engine.settings.webglEnabled = webglEnabled
++
++            true
++        }
++
++        val webrtcEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_webrtc_enabled,
++        )
++
++        webrtcEnabledPreference.setOnPreferenceChangeListener { preference, webrtcEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.webrtcEnabled = webrtcEnabled as Boolean
++            components.core.engine.settings.webrtcEnabled = webrtcEnabled
++
++            true
++        }
++
          setupPreferences()
      }
  
-@@ -109,4 +177,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -91,6 +240,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+             navigateToPhoneFeature(phoneFeature)
+             true
+         }
++
++        with(settings) {
++            findPreference<Preference>(
++                getPreferenceKey(R.string.pref_key_browser_feature_media_key_system_access),
++            )?.isVisible = emeEnabled
++        }
+     }
+ 
+     private fun navigateToPhoneFeature(phoneFeature: PhoneFeature) {
+@@ -109,4 +264,8 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              )
          }
      }
 +
 +    companion object {
-+        private const val JIT_OVERRIDE_EXIT_DELAY = 2000L
++        private const val DEFAULT_EXIT_DELAY = 2000L
 +    }
  }
-diff --git a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-index a55bf0589b..a8d902ae9f 100644
---- a/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/preference_keys.xml
-@@ -445,6 +445,10 @@
-     <string name="pref_key_app_cold_start_count" translatable="false">pref_key_app_cold_start_count</string>
-     <string name="pref_key_app_is_onboarding_set_as_default_displayed" translatable="false">pref_key_app_is_onboarding_set_as_default_displayed</string>
- 
-+    <!-- Content Settings -->
-+    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
-+    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
-+    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
-     <string name="pref_key_desktop_browsing" translatable="false">pref_key_desktop_browsing</string>
- 
-     <!-- Crash reporting -->
 diff --git a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-index ef1dcb4e6e..25e429567d 100644
+index ef1dcb4e6e..d6d542af65 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/site_permissions_preferences.xml
-@@ -25,6 +25,28 @@
+@@ -25,6 +25,67 @@
              android:title="@string/preference_feature_desktop_mode_default"
              app:iconSpaceReserved="false" />
  
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="false"
++            android:key="@string/pref_key_cache_enabled"
++            android:title="@string/preference_cache_enabled"
++            app:iconSpaceReserved="false" />
++        
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="false"
++            android:dependency="@string/pref_key_cache_enabled"
++            android:key="@string/pref_key_cache_ssl_enabled"
++            android:title="@string/preference_cache_ssl_enabled"
++            app:iconSpaceReserved="false" />
++
 +        <SwitchPreference
 +            android:icon="@drawable/mozac_ic_lock_24"
 +            android:defaultValue="true"
@@ -133,6 +220,7 @@ index ef1dcb4e6e..25e429567d 100644
 +        <SwitchPreference
 +            android:icon="@drawable/mozac_ic_lock_24"
 +            android:defaultValue="false"
++            android:dependency="@string/pref_key_javascript_enabled"
 +            android:key="@string/pref_key_jit_enabled"
 +            android:summary="@string/restart_required_summary"
 +            android:title="@string/preference_jit_enabled"
@@ -141,8 +229,31 @@ index ef1dcb4e6e..25e429567d 100644
 +        <SwitchPreference
 +            android:icon="@drawable/mozac_ic_lock_24"
 +            android:defaultValue="true"
++            android:key="@string/pref_key_svg_enabled"
++            android:summary="@string/restart_required_summary"
++            android:title="@string/preference_svg_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:dependency="@string/pref_key_javascript_enabled"
 +            android:key="@string/pref_key_wasm_enabled"
 +            android:title="@string/preference_wasm_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:key="@string/pref_key_webgl_enabled"
++            android:title="@string/preference_webgl_enabled"
++            app:iconSpaceReserved="false" />
++
++        <SwitchPreference
++            android:icon="@drawable/mozac_ic_lock_24"
++            android:defaultValue="true"
++            android:key="@string/pref_key_webrtc_enabled"
++            android:title="@string/preference_webrtc_enabled"
 +            app:iconSpaceReserved="false" />
 +
      </androidx.preference.PreferenceCategory>
