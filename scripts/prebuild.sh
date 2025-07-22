@@ -508,7 +508,6 @@ fi
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo 'ac_add_options --enable-update-channel="release"'
-    echo 'ac_add_options --enable-wasm-relaxed-simd'
     echo 'ac_add_options --with-app-basename="IronFox"'
     echo 'ac_add_options --with-app-name="ironfox"'
     echo 'ac_add_options --with-branding="mobile/android/branding/ironfox"'
