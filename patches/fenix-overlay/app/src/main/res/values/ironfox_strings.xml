@@ -60,6 +60,9 @@
     <string name="preference_prefers_light_color_scheme">Light</string>
     <string name="preference_prefers_dark_color_scheme">Dark</string>
 
+    <!-- Printing capabilities -->
+    <string name="preference_print_enabled">Enable printing capabilities</string>
+
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
     <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
