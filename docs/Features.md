@@ -47,7 +47,6 @@ IronFox **additionally**:
 
 ## Security
 
-- Adds domain highlighting and alignment in the toolbar, to protect against phishing, by making it easier for users to identify the actual domain in the URL bar
 - Disables [accessibility services](https://developer.android.com/guide/topics/ui/accessibility/service) by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Privacy and security` -> `Enable accessibility services` in settings
 - Disables autofill of [form data](https://wiki.mozilla.org/Firefox/Features/Form_Autofill) and [log-in credentials](https://support.mozilla.org/kb/autofill-logins-firefox) by default
 - Disables the browser's [built-in password manager](https://support.mozilla.org/kb/manage-your-logins-firefox-password-manager) by default

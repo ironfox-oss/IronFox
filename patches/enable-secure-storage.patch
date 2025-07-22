@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 1e64545a12..d036ff0949 100644
+index 028742f2b3..7ae3b50470 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-@@ -107,7 +107,7 @@ class BackgroundServices(
+@@ -113,7 +113,7 @@ class BackgroundServices(
          // Enable encryption for account state on supported API levels (23+).
          // Just on Nightly and local builds for now.
          // Enabling this for all channels is tracked in https://github.com/mozilla-mobile/fenix/issues/6704
@@ -12,10 +12,10 @@ index 1e64545a12..d036ff0949 100644
  
      @VisibleForTesting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..527bc82177 100644
+index 6875486c72..5a79c0cb55 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -666,7 +666,7 @@ class Core(
+@@ -663,7 +663,7 @@ class Core(
          SecureAbove22Preferences(
              context = context,
              name = KEY_STORAGE_NAME,

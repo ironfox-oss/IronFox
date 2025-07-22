@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..7b4a264b5a 100644
+index ac0f3bc013..a4f50027d2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -240,7 +240,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -224,7 +224,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_microsurvey_feature_enabled).apply {
@@ -12,10 +12,10 @@ index 43bea16286..7b4a264b5a 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..479bd47958 100644
+index 8913d9f230..b5f645dd97 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2225,7 +2225,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2211,7 +2211,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var microsurveyFeatureEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
          default = { FxNimbus.features.microsurveys.value().enabled },

@@ -86,10 +86,10 @@ index 680aa57c07..47c8f5d5a5 100644
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',
 diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-index be695666e5..9938a716f6 100644
+index 042f9371de..27957784f6 100644
 --- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-@@ -2254,6 +2254,7 @@ export const XPIDatabase = {
+@@ -2256,6 +2256,7 @@ export const XPIDatabase = {
     * manager for the user to change later.
     */
    importPermissions() {

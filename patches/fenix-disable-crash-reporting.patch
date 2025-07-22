@@ -18,10 +18,10 @@ index d897b9af6f..086f87d87b 100644
 +//        isRecoverable
  }
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
-index 8efdd24f23..99107e9307 100644
+index 68dd4d13fa..a6f94dfadc 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
-@@ -100,7 +100,7 @@ class GleanCrashReporterService(
+@@ -103,7 +103,7 @@ class GleanCrashReporterService(
          @SerialName("count")
          data class Count(val label: String) : GleanCrashAction() {
              override fun submit() {
@@ -30,51 +30,56 @@ index 8efdd24f23..99107e9307 100644
              }
          }
  
-@@ -151,11 +151,11 @@ class GleanCrashReporterService(
+@@ -119,11 +119,11 @@ class GleanCrashReporterService(
                  val minidumpHash: String?,
              ) : PingCause() {
-                 override fun setMetricsLater() {
--                    GleanCrash.cause.setLater("os_fault")
-+/*                    GleanCrash.cause.setLater("os_fault")
-                     remoteType?.let { GleanCrash.remoteType.setLater(it) }
-                     minidumpHash?.let { GleanCrash.minidumpSha256Hash.setLater(it) }
+                 override fun setMetrics() {
+-                    GleanCrash.cause.set("os_fault")
++/*                    GleanCrash.cause.set("os_fault")
+                     remoteType?.let { GleanCrash.remoteType.set(it) }
+                     minidumpHash?.let { GleanCrash.minidumpSha256Hash.set(it) }
  
 -                    extras?.let(::setExtraMetrics)
 +                    extras?.let(::setExtraMetrics)*/
                  }
  
                  private fun setExtraMetrics(extras: JsonObject) {
-@@ -359,7 +359,7 @@ class GleanCrashReporterService(
-                 // Perform all processing up-front in case an unexpected exception occurs. We don't
-                 // want to partially set Glean metrics. The Glean metric functions do not throw
-                 // exceptions.
--                val setMetrics = cause.prepareSetMetrics()
-+/*                val setMetrics = cause.prepareSetMetrics()
-                 var setBreadcrumbs = {}
-                 if (breadcrumbs.isNotEmpty()) {
-                     val value = Json.decodeFromJsonElement<GleanCrash.BreadcrumbsObject>(
-@@ -388,17 +388,17 @@ class GleanCrashReporterService(
-                         ),
+@@ -306,14 +306,14 @@ class GleanCrashReporterService(
+                 val appBuildId: String? = null,
+             ) : PingCause() {
+                 override fun setMetrics() {
+-                    GleanCrash.cause.set("java_exception")
++/*                    GleanCrash.cause.set("java_exception")
+                     appChannel?.let { GleanCrash.appChannel.set(it) }
+                     appBuildId?.let { GleanCrash.appBuild.set(it) }
+                     appVersion?.let { GleanCrash.appDisplayVersion.set(it) }
+                     GleanCrash.javaException.set(
+                         Json.decodeFromJsonElement<GleanCrash.JavaExceptionObject>(throwableJson),
                      )
-                     setBreadcrumbs = { GleanCrash.breadcrumbs.set(value) }
 -                }
 +                }*/
+             }
+         }
  
-                 // Set all metrics and submit the ping. We are guaranteed to not throw any
-                 // exceptions here, so the metrics will never be partially set.
--                GleanEnvironment.uptime.setRawNanos(uptimeNanos)
-+/*                GleanEnvironment.uptime.setRawNanos(uptimeNanos)
-                 GleanCrash.processType.set(processType)
-                 GleanCrash.time.set(Date(timeMillis))
-                 GleanCrash.startup.set(startup)
-                 setMetrics()
-                 setBreadcrumbs()
+@@ -334,7 +334,7 @@ class GleanCrashReporterService(
+                 // case a previous crash submission attempt was aborted due to
+                 // an unexpected exception and the metrics were left
+                 // partially-populated. See bug 1961202.
+-                Pings.crash.setEnabled(false)
++/*                Pings.crash.setEnabled(false)
+                 Pings.crash.setEnabled(true)
+ 
+                 GleanEnvironment.uptime.setRawNanos(uptimeNanos)
+@@ -373,7 +373,7 @@ class GleanCrashReporterService(
+                     )
+                 }
+ 
 -                Pings.crash.submit(reason)
 +                Pings.crash.submit(reason)*/
              }
          }
      }
-@@ -455,7 +455,7 @@ class GleanCrashReporterService(
+@@ -430,7 +430,7 @@ class GleanCrashReporterService(
              logger.error("Expected file, but found directory")
              false
          } else {
@@ -83,17 +88,17 @@ index 8efdd24f23..99107e9307 100644
          }
      }
  
-@@ -544,7 +544,7 @@ class GleanCrashReporterService(
+@@ -519,7 +519,7 @@ class GleanCrashReporterService(
      }
  
      override fun record(crash: Crash.UncaughtExceptionCrash) {
 -        recordCrashAction(GleanCrashAction.Count(UNCAUGHT_EXCEPTION_KEY))
 +/*        recordCrashAction(GleanCrashAction.Count(UNCAUGHT_EXCEPTION_KEY))
+ 
          recordCrashAction(
              GleanCrashAction.Ping(
-                 uptimeNanos = uptime(),
-@@ -554,7 +554,7 @@ class GleanCrashReporterService(
-                 cause = GleanCrashAction.PingCause.JavaException(crash.throwable.toJson()),
+@@ -535,7 +535,7 @@ class GleanCrashReporterService(
+                 ),
                  breadcrumbs = crash.breadcrumbs.map { it.toBreadcrumb() },
              ),
 -        )
@@ -101,7 +106,7 @@ index 8efdd24f23..99107e9307 100644
      }
  
      private fun getExtrasJson(path: String): JsonObject? {
-@@ -633,7 +633,7 @@ class GleanCrashReporterService(
+@@ -614,7 +614,7 @@ class GleanCrashReporterService(
      }
  
      override fun record(crash: Crash.NativeCodeCrash) {
@@ -110,7 +115,7 @@ index 8efdd24f23..99107e9307 100644
              Crash.NativeCodeCrash.PROCESS_VISIBILITY_MAIN ->
                  recordCrashAction(GleanCrashAction.Count(MAIN_PROCESS_NATIVE_CODE_CRASH_KEY))
              Crash.NativeCodeCrash.PROCESS_VISIBILITY_FOREGROUND_CHILD ->
-@@ -673,10 +673,10 @@ class GleanCrashReporterService(
+@@ -654,10 +654,10 @@ class GleanCrashReporterService(
                  ),
                  breadcrumbs = crash.breadcrumbs.map { it.toBreadcrumb() },
              ),
@@ -159,7 +164,7 @@ index 5b057f2579..7613b7ac06 100644
  
      override val id: String = "new-sentry-instance"
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..2f788179ee 100644
+index 5bcd9c730b..3241341821 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -355,7 +355,7 @@ android.applicationVariants.configureEach { variant ->
@@ -172,10 +177,10 @@ index d9a6045423..2f788179ee 100644
          try {
              def token = new File("${rootDir}/.sentry_token").text.trim()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 13db9f3c83..6ac6401266 100644
+index a88ff8d3ac..a1ed1502ff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -504,10 +504,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -514,10 +514,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
  
      private fun setupCrashReporting() {
@@ -189,7 +194,7 @@ index 13db9f3c83..6ac6401266 100644
  
      protected open fun initializeNimbus() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index 1ad6a264c7..0b80a2807e 100644
+index f04adf8312..fb8c49c827 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 @@ -16,7 +16,7 @@ import mozilla.components.lib.crash.service.GleanCrashReporterService
@@ -236,7 +241,7 @@ index 1ad6a264c7..0b80a2807e 100644
  
          val intent = Intent(context, HomeActivity::class.java).apply {
              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-@@ -119,7 +119,7 @@ class Analytics(
+@@ -126,7 +126,7 @@ class Analytics(
                  appName = context.getString(R.string.app_name),
                  organizationName = "Mozilla",
              ),
@@ -259,10 +264,10 @@ index 36d4b4c349..f9ff9db3bf 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-index 6725aa64a0..d3e7f17a86 100644
+index 819b24954e..0f9bb0a905 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-@@ -84,13 +84,13 @@ class SearchDialogController(
+@@ -83,13 +83,13 @@ class SearchDialogController(
          }
  
          when (url) {
@@ -271,18 +276,18 @@ index 6725aa64a0..d3e7f17a86 100644
                  // The list of past crashes can be accessed via "settings > about", but desktop and
                  // fennec users may be used to navigating to "about:crashes". So we intercept this here
                  // and open the crash list activity instead.
-                 activity.startActivity(Intent(activity, CrashListActivity::class.java))
-                 store.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))
+                 val directions = SearchDialogFragmentDirections.actionCrashListFragment()
+                 navController.navigate(directions)
 -            }
 +            }*/
              "about:addons" -> {
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..77d6eee674 100644
+index 8913d9f230..317cc8ad23 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2314,10 +2314,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2300,10 +2300,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * A user preference indicating that crash reports should always be automatically sent. This can be updated
       * through the unsubmitted crash dialog or through data choice preferences.
       */

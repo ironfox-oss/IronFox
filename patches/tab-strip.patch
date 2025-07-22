@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
-index e53ac45f01..02dd96ad92 100644
+index ffa40b19a0..4aa70b57b2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
-@@ -6,22 +6,22 @@ package org.mozilla.fenix.browser.tabstrip
+@@ -6,24 +6,24 @@ package org.mozilla.fenix.browser.tabstrip
  
  import android.content.Context
  import mozilla.components.support.ktx.android.content.doesDeviceHaveHinge
@@ -14,13 +14,16 @@ index e53ac45f01..02dd96ad92 100644
   * Returns true if the tab strip is enabled.
   */
  fun Context.isTabStripEnabled(): Boolean =
--    isTabStripEligible() && tabStripExperimentEnabled()
+-    tabStripExperimentEnabled() && (isTabStripEligible() || tabStripExperimentForceEnabled())
 +    settings().isTabStripEnabled
  
--private fun tabStripExperimentEnabled(): Boolean =
--    FxNimbus.features.tabStrip.value().enabled
-+//private fun tabStripExperimentEnabled(): Boolean =
-+//    FxNimbus.features.tabStrip.value().enabled
+-private fun tabStripExperimentEnabled(): Boolean = FxNimbus.features.tabStrip.value().enabled
++//private fun tabStripExperimentEnabled(): Boolean = FxNimbus.features.tabStrip.value().enabled
+ 
+-private fun tabStripExperimentForceEnabled(): Boolean =
+-    FxNimbus.features.tabStrip.value().allowOnAllDevices
++//private fun tabStripExperimentForceEnabled(): Boolean =
++//    FxNimbus.features.tabStrip.value().allowOnAllDevices
  
  /**
   * Returns true if the the device has the prerequisites to enable the tab strip.

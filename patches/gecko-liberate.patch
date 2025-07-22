@@ -1,5 +1,5 @@
 diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
-index b6305f62be..8b5708dc1b 100644
+index 9f2993090f..7b93871e74 100644
 --- a/mobile/android/geckoview/build.gradle
 +++ b/mobile/android/geckoview/build.gradle
 @@ -218,7 +218,7 @@ dependencies {
@@ -12,10 +12,10 @@ index b6305f62be..8b5708dc1b 100644
  
      implementation libs.androidx.lifecycle.common
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index f94b88f8d8..d9db903a89 100644
+index 83fcfac2d4..8207c2bf18 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
-@@ -166,9 +166,9 @@ toolkit.jar:
+@@ -170,9 +170,9 @@ toolkit.jar:
  #ifdef XP_MACOSX
     content/global/macWindowMenu.js
  #endif

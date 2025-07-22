@@ -20,7 +20,7 @@ index b1a2513596..5c32785c99 100644
 +_is_unmodified_mach_core_result = False
 +_is_unmodified_mach_core_thread = False
 diff --git a/python/mach/mach/telemetry.py b/python/mach/mach/telemetry.py
-index a3fda9a59b..48a593ac36 100644
+index ab5c3d7ba4..76800926f0 100644
 --- a/python/mach/mach/telemetry.py
 +++ b/python/mach/mach/telemetry.py
 @@ -88,14 +88,14 @@ def is_applicable_telemetry_environment():

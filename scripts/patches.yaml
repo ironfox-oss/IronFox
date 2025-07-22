@@ -419,13 +419,6 @@ patches:
     effect: "Reduces attack surface and legacy code."
     category: "Security"
 
-  - file: "domain-highlighting-and-alignment.patch"
-    name: "Add domain highlighting and alignment"
-    description: "Adds domain highlighting and alignment in the toolbar."
-    reason: "Helps users more easily identify the actual domain in the URL bar, which improves phishing detection."
-    effect: "The registrable domain (eTLD+1) is highlighted, and the URL bar scrolls to the end of the domain name."
-    category: "Security"
-
   - file: "disable-sslkeylogging.patch"
     name: "Disable SSLKEYLOGGING"
     description: "Disables the SSLKEYLOGGING feature in NSS (Mozilla's Network Security Services: https://firefox-source-docs.mozilla.org/security/nss/index.html)."

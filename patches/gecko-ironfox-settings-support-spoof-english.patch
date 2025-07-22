@@ -1,16 +1,16 @@
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index c5999da57a..332f14fa8a 100644
+index a7a3554a5e..9f8e0c94b7 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 @@ -12,6 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
-   DoHController: "resource://gre/modules/DoHController.sys.mjs",
+   DoHController: "moz-src:///toolkit/components/doh/DoHController.sys.mjs",
    EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
    PdfJs: "resource://pdf.js/PdfJs.sys.mjs",
 +  RFPHelper: "resource://gre/modules/RFPHelper.sys.mjs",
  });
  
  const { debug, warn } = GeckoViewUtils.initLogging("Startup");
-@@ -369,6 +370,10 @@ export class GeckoViewStartup {
+@@ -361,6 +362,10 @@ export class GeckoViewStartup {
          if (aData.requestedLocales) {
            Services.locale.requestedLocales = aData.requestedLocales;
          }

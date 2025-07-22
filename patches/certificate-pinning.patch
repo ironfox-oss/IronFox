@@ -1,5 +1,5 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 058f88d3a1..1f7b2ae123 100644
+index 1ab408a7f1..a39d4e02b6 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
 @@ -195,6 +195,26 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
@@ -163,7 +163,7 @@ index 058f88d3a1..1f7b2ae123 100644
    { "test-mode.pinning.example.com", true, true, false, -1, &kPinset_mozilla_test },
    { "testpilot.firefox.com", false, false, true, 9, &kPinset_mozilla_services },
    { "touch.facebook.com", true, false, false, -1, &kPinset_facebook },
-@@ -730,9 +789,101 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -730,9 +789,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "youtube-nocookie.com", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -198,6 +198,8 @@ index 058f88d3a1..1f7b2ae123 100644
 +  { "dict.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "dove.celenity.dev", true, false, false, -1, &kPinset_celenity },
 +  { "extensionupdater.brave.com", true, false, false, -1, &kPinset_brave },
++  { "feedback.brave.com", true, false, false, -1, &kPinset_brave },
++  { "fg.search.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "gaia.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "geo.ads.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "geo.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
@@ -214,13 +216,6 @@ index 058f88d3a1..1f7b2ae123 100644
 +  { "mta-sts.celenity.dev", true, false, false, -1, &kPinset_celenity },
 +  { "mywallet.ads.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "mywallet.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
-+  { "p2a.brave.com", true, false, false, -1, &kPinset_brave },
-+  { "p2a-json.brave.com", true, false, false, -1, &kPinset_brave },
-+  { "p3a.brave.com", true, false, false, -1, &kPinset_brave },
-+  { "p3a.bravesoftware.com", true, false, false, -1, &kPinset_brave },
-+  { "p3a-creative.brave.com", true, false, false, -1, &kPinset_brave },
-+  { "p3a-dev.bravesoftware.com", true, false, false, -1, &kPinset_brave },
-+  { "p3a-json.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "patterns.wdp.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "payment.rewards.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "payment.rewards.brave.software", true, false, false, -1, &kPinset_brave },
@@ -262,7 +257,7 @@ index 058f88d3a1..1f7b2ae123 100644
  };
  
 -// Pinning Preload List Length = 401;
-+// Pinning Preload List Length = 495;
++// Pinning Preload List Length = 490;
  
  static const int32_t kUnknownId = -1;
  

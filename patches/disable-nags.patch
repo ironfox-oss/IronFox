@@ -12,7 +12,7 @@ index e5ab956ac3..4d1ef3de39 100644
  
      private fun isNotDefaultBrowser(context: Context) =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..44fc7b52f3 100644
+index 8913d9f230..7895607510 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -198,7 +198,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -33,7 +33,16 @@ index 9197b274db..44fc7b52f3 100644
          default = { mr2022Sections[Mr2022Section.WALLPAPERS_SELECTION_TOOL] == true },
      )
  
-@@ -618,7 +618,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -351,7 +351,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var shouldShowMenuBanner by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_show_menu_banner),
+         default = { FxNimbus.features.menuRedesign.value().menuBanner },
+-        featureFlag = true,
++        featureFlag = false,
+     )
+ 
+     var defaultSearchEngineName by stringPreference(
+@@ -624,7 +624,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showFirstTimeTranslation: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
@@ -42,7 +51,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -788,12 +788,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -794,12 +794,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * This will lead to a performance regression since that function can be expensive to call.
       */
      fun checkIfFenixIsDefaultBrowserOnAppResume(): Boolean {
@@ -61,7 +70,7 @@ index 9197b274db..44fc7b52f3 100644
      }
  
      /**
-@@ -802,12 +802,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -808,12 +808,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      fun isDefaultBrowserBlocking(): Boolean {
          val browsers = BrowsersCache.all(appContext)
@@ -76,7 +85,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -830,7 +830,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -836,7 +836,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
          default = { FxNimbus.features.reEngagementNotification.value().enabled },
@@ -85,7 +94,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -838,7 +838,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -844,7 +844,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val reEngagementNotificationType: Int
          get() =
@@ -94,16 +103,7 @@ index 9197b274db..44fc7b52f3 100644
  
      val shouldUseAutoBatteryTheme by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
-@@ -900,7 +900,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     var shouldShowEraseActionCFR by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_should_show_erase_action_popup),
--        featureFlag = true,
-+        featureFlag = false,
-         default = { feltPrivateBrowsingEnabled },
-     )
- 
-@@ -909,7 +909,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -906,7 +906,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
@@ -112,7 +112,7 @@ index 9197b274db..44fc7b52f3 100644
          default = { shouldShowCookieBannerUI },
      )
  
-@@ -920,7 +920,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -917,7 +917,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var hasShownTabSwipeCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
@@ -121,7 +121,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-@@ -1219,12 +1219,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1222,12 +1222,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
@@ -136,7 +136,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      val shouldShowOpenInAppCfr: Boolean
-@@ -1232,17 +1232,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1235,17 +1235,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
@@ -157,7 +157,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -1250,7 +1250,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1253,7 +1253,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
@@ -166,7 +166,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -1671,7 +1671,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1674,7 +1674,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showSyncCFR by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_sync_cfr),
@@ -175,25 +175,7 @@ index 9197b274db..44fc7b52f3 100644
          default = { mr2022Sections[Mr2022Section.SYNC_CFR] == true },
      )
  
-@@ -1680,7 +1680,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     var showHomeOnboardingDialog by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_should_show_home_onboarding_dialog),
--        featureFlag = true,
-+        featureFlag = false,
-         default = { mr2022Sections[Mr2022Section.HOME_ONBOARDING_DIALOG_EXISTING_USERS] == true },
-     )
- 
-@@ -1906,7 +1906,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     var shouldShowMenuCFR by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_menu_cfr),
--        default = true,
-+        default = false,
-     )
- 
-     /**
-@@ -2120,7 +2120,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2106,7 +2106,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var isFirstTimeEngagingWithSignup: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
@@ -202,7 +184,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -2273,7 +2273,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2259,7 +2259,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val shouldShowSetAsDefaultPrompt: Boolean
          get() =
@@ -211,7 +193,7 @@ index 9197b274db..44fc7b52f3 100644
                  DAYS_BETWEEN_DEFAULT_BROWSER_PROMPTS * ONE_DAY_MS &&
                  numberOfSetAsDefaultPromptShownTimes < MAX_NUMBER_OF_DEFAULT_BROWSER_PROMPTS &&
                  coldStartsBetweenSetAsDefaultPrompts >= APP_COLD_STARTS_TO_SHOW_DEFAULT_PROMPT
-@@ -2436,7 +2436,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2422,7 +2422,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var hasCompletedSetupStepToolbar by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_setup_step_toolbar),
@@ -220,7 +202,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -2444,7 +2444,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2430,7 +2430,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var hasCompletedSetupStepTheme by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_setup_step_theme),
@@ -229,7 +211,7 @@ index 9197b274db..44fc7b52f3 100644
      )
  
      /**
-@@ -2452,16 +2452,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2438,16 +2438,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var hasCompletedSetupStepExtensions by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_setup_step_extensions),
@@ -251,11 +233,12 @@ index 9197b274db..44fc7b52f3 100644
  
      /**
       * Indicates whether or not to show the checklist feature.
-@@ -2472,6 +2472,6 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2458,7 +2458,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              FxNimbus.features.setupChecklist.value().enabled &&
                      canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
          },
 -        featureFlag = true,
 +        featureFlag = false,
      )
- }
+ 
+     /**

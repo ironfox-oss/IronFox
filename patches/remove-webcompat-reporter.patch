@@ -1,111 +1,111 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 26e76a18d2..89d595d626 100644
+index 489c138b0d..ecc26e15f8 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1521,28 +1521,28 @@ projects:
-     - support-webextensions
-     - tooling-lint
-     - ui-icons
--  feature-webcompat-reporter:
+@@ -1543,28 +1543,28 @@ projects:
+     - components:support-webextensions
+     - components:tooling-lint
+     - components:ui-icons
+-  components:feature-webcompat-reporter:
 -    description: Feature that enables users to report site issues to Mozilla's Web
 -      Compatibility team.
 -    path: components/feature/webcompat-reporter
 -    publish: true
 -    upstream_dependencies:
--    - browser-errorpages
--    - browser-state
--    - concept-awesomebar
--    - concept-base
--    - concept-engine
--    - concept-fetch
--    - concept-storage
--    - lib-publicsuffixlist
--    - lib-state
--    - support-base
--    - support-ktx
--    - support-test
--    - support-utils
--    - support-webextensions
--    - tooling-lint
--    - ui-icons
-+#  feature-webcompat-reporter:
+-    - components:browser-errorpages
+-    - components:browser-state
+-    - components:concept-awesomebar
+-    - components:concept-base
+-    - components:concept-engine
+-    - components:concept-fetch
+-    - components:concept-storage
+-    - components:lib-publicsuffixlist
+-    - components:lib-state
+-    - components:support-base
+-    - components:support-ktx
+-    - components:support-test
+-    - components:support-utils
+-    - components:support-webextensions
+-    - components:tooling-lint
+-    - components:ui-icons
++#  components:feature-webcompat-reporter:
 +#    description: Feature that enables users to report site issues to Mozilla's Web
 +#      Compatibility team.
 +#    path: components/feature/webcompat-reporter
 +#    publish: true
 +#    upstream_dependencies:
-+#    - browser-errorpages
-+#    - browser-state
-+#    - concept-awesomebar
-+#    - concept-base
-+#    - concept-engine
-+#    - concept-fetch
-+#    - concept-storage
-+#    - lib-publicsuffixlist
-+#    - lib-state
-+#    - support-base
-+#    - support-ktx
-+#    - support-test
-+#    - support-utils
-+#    - support-webextensions
-+#    - tooling-lint
-+#    - ui-icons
-   feature-webnotifications:
++#    - components:browser-errorpages
++#    - components:browser-state
++#    - components:concept-awesomebar
++#    - components:concept-base
++#    - components:concept-engine
++#    - components:concept-fetch
++#    - components:concept-storage
++#    - components:lib-publicsuffixlist
++#    - components:lib-state
++#    - components:support-base
++#    - components:support-ktx
++#    - components:support-test
++#    - components:support-utils
++#    - components:support-webextensions
++#    - components:tooling-lint
++#    - components:ui-icons
+   components:feature-webnotifications:
      description: Feature component for Web Notifications.
      path: components/feature/webnotifications
-@@ -1744,7 +1744,7 @@ projects:
-     - feature-toolbar
-     - feature-top-sites
-     - feature-webcompat
--    - feature-webcompat-reporter
-+#    - feature-webcompat-reporter
-     - feature-webnotifications
-     - lib-crash
-     - lib-dataprotect
+@@ -1767,7 +1767,7 @@ projects:
+     - components:feature-toolbar
+     - components:feature-top-sites
+     - components:feature-webcompat
+-    - components:feature-webcompat-reporter
++#    - components:feature-webcompat-reporter
+     - components:feature-webnotifications
+     - components:lib-crash
+     - components:lib-dataprotect
 diff --git a/mobile/android/android-components/samples/browser/build.gradle b/mobile/android/android-components/samples/browser/build.gradle
-index bd70dd476b..e95f76ffe4 100644
+index 6ad158793d..3d4a033a0e 100644
 --- a/mobile/android/android-components/samples/browser/build.gradle
 +++ b/mobile/android/android-components/samples/browser/build.gradle
 @@ -114,7 +114,7 @@ dependencies {
-     implementation project(':feature-findinpage')
-     implementation project(':feature-sitepermissions')
-     implementation project(':feature-webcompat')
--    implementation project(':feature-webcompat-reporter')
-+//    implementation project(':feature-webcompat-reporter')
-     implementation project(':feature-webnotifications')
-     implementation project(':feature-addons')
+     implementation project(':components:feature-findinpage')
+     implementation project(':components:feature-sitepermissions')
+     implementation project(':components:feature-webcompat')
+-    implementation project(':components:feature-webcompat-reporter')
++//    implementation project(':components:feature-webcompat-reporter')
+     implementation project(':components:feature-webnotifications')
+     implementation project(':components:feature-addons')
  
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index b5aa2ce3a4..8837f09217 100644
+index 0620fba71e..2f6a78913f 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -59,7 +59,7 @@ projects:
-     - feature-top-sites
-     - feature-webauthn
-     - feature-webcompat
--    - feature-webcompat-reporter
-+#    - feature-webcompat-reporter
-     - feature-webnotifications
-     - lib-crash
-     - lib-crash-sentry
+     - components:feature-top-sites
+     - components:feature-webauthn
+     - components:feature-webcompat
+-    - components:feature-webcompat-reporter
++#    - components:feature-webcompat-reporter
+     - components:feature-webnotifications
+     - components:lib-crash
+     - components:lib-crash-sentry
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..16ac38e60b 100644
+index 5bcd9c730b..eb5e4b109a 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -618,7 +618,7 @@ dependencies {
-     implementation project(':feature-webauthn')
-     implementation project(':feature-webcompat')
-     implementation project(':feature-webnotifications')
--    implementation project(':feature-webcompat-reporter')
-+//    implementation project(':feature-webcompat-reporter')
+     implementation project(':components:feature-webauthn')
+     implementation project(':components:feature-webcompat')
+     implementation project(':components:feature-webnotifications')
+-    implementation project(':components:feature-webcompat-reporter')
++//    implementation project(':components:feature-webcompat-reporter')
  
-     implementation project(':service-pocket')
-     implementation project(':service-mars')
+     implementation project(':components:service-pocket')
+     implementation project(':components:service-mars')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 1443661bb8..218f4f1518 100644
+index a6bfa3a688..998d97b326 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -318,7 +318,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -345,7 +345,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                          ?.requestedTranslationPair?.toLanguage
                      val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
                      val isWebCompatReporterSupported =
@@ -128,10 +128,10 @@ index e7e19273f9..2e6139bd25 100644
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 13db9f3c83..094dd09a49 100644
+index a88ff8d3ac..ba902e3a42 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -50,7 +50,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
+@@ -49,7 +49,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
  import mozilla.components.feature.syncedtabs.commands.GlobalSyncedTabsCommandsProvider
  import mozilla.components.feature.top.sites.TopSitesFrecencyConfig
  import mozilla.components.feature.top.sites.TopSitesProviderConfig
@@ -140,7 +140,7 @@ index 13db9f3c83..094dd09a49 100644
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -699,7 +699,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -701,7 +701,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      // TODO: Bug 1953359 - remove the code below in the next release.
                      if (Config.channel.isNightlyOrDebug || Config.channel.isBeta) {
                          logger.debug("Attempting to uninstall the WebCompat Reporter extension")

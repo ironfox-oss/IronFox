@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt
-index d02f7f6e22..ebc0742659 100644
+index 606f2a214f..9f89d3cc5b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt
 @@ -160,7 +160,7 @@ private fun FallbackAvatarIcon() {

@@ -14,19 +14,10 @@ index 81bf2dd7e2..7a43fac926 100644
  private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
  private const val SPOCS_PROXY_VERSION_KEY = "version"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-index 9e4f378574..f09791f066 100644
+index d211d3625d..cbdc241b9b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
-@@ -44,7 +44,7 @@ object ContentRecommendationsFeatureHelper {
-     fun isPocketRecommendationsFeatureEnabled(context: Context): Boolean {
-         val langTag = LocaleManager.getCurrentLocale(context)
-             ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
--        return POCKET_SUPPORTED_LOCALES.contains(langTag)
-+        return false && POCKET_SUPPORTED_LOCALES.contains(langTag)
-     }
- 
-     /**
-@@ -61,6 +61,6 @@ object ContentRecommendationsFeatureHelper {
+@@ -47,6 +47,6 @@ object ContentRecommendationsFeatureHelper {
      fun isContentRecommendationsFeatureEnabled(context: Context): Boolean {
          val langTag = LocaleManager.getCurrentLocale(context)
              ?.toLanguageTag() ?: getSystemDefault().toLanguageTag()
@@ -34,15 +25,3 @@ index 9e4f378574..f09791f066 100644
 +        return false && CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE.contains(langTag)
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..78b04620cc 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -114,6 +114,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_pocket_content_recommendations).apply {
-+            isVisible = false
-             isChecked = context.settings().showContentRecommendations
-             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
-                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {

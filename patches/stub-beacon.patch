@@ -1,8 +1,8 @@
 diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
-index fac2759535..c186eb4c44 100644
+index 3f60404936..8b4909a691 100644
 --- a/dom/base/Navigator.cpp
 +++ b/dom/base/Navigator.cpp
-@@ -1263,7 +1263,7 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
+@@ -1257,7 +1257,7 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
    } else {
      securityFlags |= nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_INHERITS_SEC_CONTEXT;
    }

@@ -30,7 +30,7 @@ index c21f63a00d..a8ea5237b6 100644
              // Build a list of installed extensions that are not built-in extensions.
              val installedAddons = installedExtensions
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..bf9c9237c6 100644
+index 5bcd9c730b..043303febc 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -80,10 +80,10 @@ android {

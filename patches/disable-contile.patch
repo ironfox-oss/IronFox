@@ -14,10 +14,10 @@ index 89230fb4c1..4faeb9ee77 100644
  internal const val CACHE_TOP_SITES_KEY = "tiles"
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..880c97957d 100644
+index 8913d9f230..50bf05c440 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1818,10 +1818,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1803,10 +1803,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Contile functionality should be visible.
       */

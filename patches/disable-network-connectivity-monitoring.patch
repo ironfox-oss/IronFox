@@ -24,7 +24,7 @@ index 5f5ceb60c0..b11f2165b7 100644
                  text = getString(R.string.preference_option_phone_feature_blocked)
                  setOnClickListener {
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index f235d0f7a1..12d2abd595 100644
+index e47c31743f..7ec4cef9ae 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -7,7 +7,7 @@
@@ -50,7 +50,7 @@ index ac6e718f3c..24199dbadd 100644
              tools:ignore="HighSamplingRate" />
      <uses-permission android:name="android.permission.INTERNET"/>
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-index a582fa1732..0bf7131976 100644
+index cd93c8fca3..ccb6eebdd1 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 @@ -214,7 +214,7 @@ public final class GeckoRuntime implements Parcelable {
