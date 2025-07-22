@@ -34,7 +34,7 @@ index 1443661bb8..fbec347f11 100644
                      val isWebCompatEnabled by store.observeAsState(store.state.isWebCompatEnabled) {
                          it.isWebCompatEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index e7e19273f9..ec21fc3a54 100644
+index e7e19273f9..b98bdf7878 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 @@ -205,7 +205,7 @@ open class DefaultToolbarMenu(
@@ -46,15 +46,6 @@ index e7e19273f9..ec21fc3a54 100644
          } ?: false
      }
  
-@@ -454,7 +454,7 @@ open class DefaultToolbarMenu(
-                 addAppToHomeScreenItem.apply { visible = ::canAddAppToHomescreen },
-                 if (shouldShowTopSites) addRemoveTopSitesItem else null,
-                 saveToCollectionItem,
--                if (FxNimbus.features.print.value().browserPrintEnabled &&
-+                if (true &&
-                     !context.isAndroidAutomotiveAvailable()
-                 ) {
-                     printPageItem
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 index e387bc4ae0..17a5b647e0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt

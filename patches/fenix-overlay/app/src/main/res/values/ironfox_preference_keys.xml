@@ -37,6 +37,7 @@
     <!-- Settings -->
     <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
     <string name="pref_key_ocsp_require" translatable="false">pref_key_ocsp_require</string>
+    <string name="pref_key_print_enabled" translatable="false">pref_key_print_enabled</string>
     <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
     <string name="pref_key_safe_browsing_enabled_caption" translatable="false">pref_key_safe_browsing_enabled_caption</string>
     <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>

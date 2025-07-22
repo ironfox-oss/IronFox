@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..7a63c86255 100644
+index cfbdaba62c..0d6ddb5136 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,29 @@ class Core(
+@@ -196,6 +196,30 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
@@ -21,6 +21,7 @@ index cfbdaba62c..7a63c86255 100644
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
 +            ocspRequire = context.settings().ocspRequire,
 +            pdfjsDisabled = context.settings().pdfjsDisabled,
++            printEnabled = context.settings().printEnabled,
 +            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
 +            spoofEnglish = context.settings().spoofEnglish,
 +            svgEnabled = context.settings().svgEnabled,
@@ -32,7 +33,7 @@ index cfbdaba62c..7a63c86255 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -228,6 +251,7 @@ class Core(
+@@ -228,6 +252,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -42,10 +43,10 @@ index cfbdaba62c..7a63c86255 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..5bac87a303
+index 0000000000..c6e76ab35b
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,645 @@
+@@ -0,0 +1,664 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -261,6 +262,25 @@ index 0000000000..5bac87a303
 +                },
 +                DEFAULT_EXIT_DELAY,
 +            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable printing capabilities
++         * Default: true
++         * Gecko preference(s) impacted: print.enabled
++         */
++        val printEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_print_enabled,
++        )
++
++        printEnabledPreference.setOnPreferenceChangeListener { preference, printEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.printEnabled = printEnabled as Boolean
++            components.core.engine.settings.printEnabled = printEnabled
++
 +            true
 +        }
 +
@@ -724,7 +744,7 @@ index 325e5d2141..0a5ac75418 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..175933c8ba 100644
+index 9197b274db..3493b98e0f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
@@ -735,9 +755,9 @@ index 9197b274db..175933c8ba 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2431,6 +2432,148 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         }
-     }
+@@ -2463,6 +2464,153 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         default = false,
+     )
  
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
@@ -806,6 +826,11 @@ index 9197b274db..175933c8ba 100644
 +
 +    var prefersLightColorScheme by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_prefers_light_color_scheme),
++        default = true,
++    )
++
++    var printEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_print_enabled),
 +        default = true,
 +    )
 +
@@ -882,7 +907,7 @@ index 9197b274db..175933c8ba 100644
 +    }
 +
      /**
-      * Indicates if the user has completed the setup step for choosing the toolbar location
+      * Indicates whether or not to show the checklist feature.
       */
 diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 index 87f445940d..bfa7137ced 100644
@@ -915,10 +940,10 @@ index 87f445940d..bfa7137ced 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..c4ecd3cf3c
+index 0000000000..002e73a6a2
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,249 @@
+@@ -0,0 +1,256 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1063,6 +1088,13 @@ index 0000000000..c4ecd3cf3c
 +            android:key="@string/pref_key_jit_enabled"
 +            android:summary="@string/preference_jit_enabled_summary"
 +            android:title="@string/preference_jit_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable printing capabilities -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_print_enabled"
++            android:title="@string/preference_print_enabled"
 +            app:iconSpaceReserved="false" />
 +
 +        <!-- Whether we should enable Safe Browsing -->
