@@ -296,7 +296,7 @@ index 7e44cae358..ec26940f8a 100644
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
-index c65df5de4a..2b9e9e80e4 100644
+index c65df5de4a..df456620dc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
 @@ -6,8 +6,8 @@ package org.mozilla.fenix.components
@@ -326,15 +326,15 @@ index c65df5de4a..2b9e9e80e4 100644
  
          flow.addOnCompleteListener {
              if (it.isSuccessful) {
-@@ -35,7 +35,7 @@ class PlayStoreReviewPromptController(
+@@ -34,7 +34,7 @@ class PlayStoreReviewPromptController(
+                     Date(),
                  )
              }
-         }
--    }
-+    }*/
+-        }
++        }*/
+     }
  }
  
- /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 index 6312b65949..ec8b759397 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt

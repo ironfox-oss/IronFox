@@ -18,7 +18,7 @@ index d897b9af6f..086f87d87b 100644
 +//        isRecoverable
  }
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
-index 68dd4d13fa..a6f94dfadc 100644
+index 68dd4d13fa..7266ac2b6e 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 @@ -103,7 +103,7 @@ class GleanCrashReporterService(
@@ -44,7 +44,7 @@ index 68dd4d13fa..a6f94dfadc 100644
                  }
  
                  private fun setExtraMetrics(extras: JsonObject) {
-@@ -306,14 +306,14 @@ class GleanCrashReporterService(
+@@ -306,13 +306,13 @@ class GleanCrashReporterService(
                  val appBuildId: String? = null,
              ) : PingCause() {
                  override fun setMetrics() {
@@ -55,12 +55,11 @@ index 68dd4d13fa..a6f94dfadc 100644
                      appVersion?.let { GleanCrash.appDisplayVersion.set(it) }
                      GleanCrash.javaException.set(
                          Json.decodeFromJsonElement<GleanCrash.JavaExceptionObject>(throwableJson),
-                     )
--                }
-+                }*/
+-                    )
++                    )*/
+                 }
              }
          }
- 
 @@ -334,7 +334,7 @@ class GleanCrashReporterService(
                  // case a previous crash submission attempt was aborted due to
                  // an unexpected exception and the metrics were left
