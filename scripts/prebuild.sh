@@ -175,7 +175,7 @@ sed -i \
     -e 's/Learn more about sync/Learn more about Firefox Sync/' \
     -e 's/search?client=firefox&amp;q=%s/search?q=%s/' \
     -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
-    -e 's/Google Search/%s search/' \
+    -e 's/Google Search/Google search/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
