@@ -74,7 +74,7 @@
     <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
     <string name="tor_spoof_english_description">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
     <string name="tor_spoof_english">Request English versions of webpages</string>
-    <string name="tor_spoof_english_summary">Strengthens fingerprinting protection</string>
+    <string name="tor_spoof_english_summary">When enabled, strengthens fingerprinting protection</string>
 
     <!-- SVG -->
     <string name="preference_svg_enabled">Enable Scalable Vector Graphics (SVG)</string>
