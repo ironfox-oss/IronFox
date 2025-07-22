@@ -319,13 +319,6 @@ patches:
     effect: "Blocks more trackers and fingerprinting scripts out of the box."
     category: "Privacy"
 
-  - file: "tor-spoof-english.patch"
-    name: "Support Locale Spoofing"
-    description: "Enables option to spoof locale to 'en-US'."
-    reason: "To reduce fingerprinting via browser language settings."
-    effect: "Improves anonymity by presenting a common locale regardless of system settings."
-    category: "Privacy"
-
   - file: "ublock-assets.patch"
     name: "Enhanced uBlock Configuration"
     description: "Sets uBlock Origin to use custom/enhanced config by default."
@@ -375,13 +368,6 @@ patches:
       Updates and expands/improves upon Mozilla's built-in certificate pinning.
     reason: "To protect against MITM attacks by restricting which certificate authorities can issue valid certificates for included websites. Example of a real-world attack that this protects against: https://blog.mozilla.org/security/2011/08/29/fraudulent-google-com-certificate/"
     effect: "Users are provided with a significantly more secure browsing experience and a better peace of mind."
-    category: "Security"
-
-  - file: "disable-accessibility-services-by-default.patch"
-    name: "Disable Accessibility Services"
-    description: "Disables Accessibility Services by default."
-    reason: "To prevent apps from monitoring users without consent."
-    effect: "Prevents apps from monitoring users without permission, and improves performance as a bonus."
     category: "Security"
 
   - file: "disable-shipped-domains.patch"
@@ -542,15 +528,7 @@ patches:
     effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
     category: "User Interface"
 
-  - file: "ironfox-content-settings.patch"
-    name: "IronFox Content Settings"
-    description: "Adds IronFox-specific UI content settings, which can be found under `Site settings`."
-    reason: |
-      To allow users to easily control settings related to the content/hardening of websites.
-    effect: "Users can choose what compromises they're comfortable with and tailor the browsing experience to meet their needs, directly from the UI."
-    category: "User Interface"
-
-  - file: "ironfox-settings-fenix.patch"
+  - file: "fenix-ironfox-settings.patch"
     name: "IronFox Settings (Fenix)"
     description: "Adds support to Fenix (Firefox for Android) for IronFox-specific UI settings to control various functionality."
     reason: |
@@ -558,18 +536,11 @@ patches:
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
 
-  - file: "ironfox-settings-gecko.patch"
+  - file: "gecko-ironfox-settings.patch"
     name: "IronFox Settings (Gecko)"
     description: "Adds support to Gecko (GeckoView) for IronFox-specific UI settings to control various functionality."
     reason: |
       To allow users to easily control their browsing experience.
-    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
-    category: "User Interface"
-
-  - file: "ironfox-secret-settings.patch"
-    name: "IronFox Secret Settings"
-    description: "Adds support for IronFox-specific secret settings to control certain functionality."
-    reason: "To provide users with more control over their browsing experience."
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
 
@@ -587,16 +558,51 @@ patches:
     effect: "Users are provided with a cleaner, focused browsing experience."
     category: "User Interface"
 
-  - file: "cross-origin-referer-policy-settings.patch"
-    name: "Cross-Origin Referer Policy Settings"
-    description: "Adds support for UI settings to control the cross-origin referer policy for websites."
-    reason: "To allow users to easily control their browsing experience."
-    effect: "Users can conveniently harden or relax the cross-origin referer policy to what works best for them, without needing to dig into advanced settings or the `about:config`."
+  - file: "tab-strip.patch"
+    name: "Tab Strip"
+    description: "Adds a UI setting to enable/disable the Tab Strip feature."
+    reason: "To allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954)."
+    effect: "Users can enable or disable the Tab Strip, depending on their personal preference."
     category: "User Interface"
 
-  - file: "ironfox-customization-settings.patch"
-    name: "IronFox Customization Settings"
-    description: "Adds UI settings to control the preferred appearance for websites (like Firefox on Desktop), and to enable/disable the Tab Strip feature."
-    reason: "To prevent fingerprinting based on user's theme preferences (by using a different toggle to control the appearance for websites, set to Light mode by default, regardless of the browser theme), and to allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954)."
-    effect: "The browser sets the default appearance for websites to Light mode, regardless of the browser/device theme, and users can enable or disable the Tab Strip, depending on their personal preference."
+  - file: "fenix-ironfox-settings-support-accessibility-services.patch"
+    name: "IronFox Settings (Fenix) - Accessibility services"
+    description: "Provides support for a UI toggle to enable/disable accessibility services."
+    reason: "To disable accessibility services by default (due to privacy and security concerns), while still allowing users who need it to re-enable it if desired."
+    effect: "Integration with accessibility services are disabled by default, but users can re-enable it from the UI."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-cross-origin-referer-policy.patch"
+    name: "IronFox Settings Support (Fenix) - Cross-origin referer policy"
+    description: "Provides support for UI settings to configure the behavior of cross-origin referers."
+    reason: "To allow users to harden or relax the handling of cross-origin referers, directly from the UI."
+    effect: "Users can configure the cross-origin referer policy from the UI."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-eme.patch"
+    name: "IronFox Settings Support (Fenix) - EME"
+    description: "Provides support for a HIDDEN, NOT recommended, NOT supported UI toggle to enable/disable EME."
+    reason: "To hide the UI for DRM-controlled content (EME) by default, while still allowing users to enable it and control the site permission if desired."
+    effect: "The UI for DRM-controlled content (EME) is hidden by default, while users can re-enable EME with the UI/site permission at their own risk if desired."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-preferred-website-appearance.patch"
+    name: "IronFox Settings Support (Fenix) - Preferred website appearance"
+    description: "Provides support for UI settings to configure the preferred website appearance, independently of the browser theme."
+    reason: "To allow users to configure the preferred website appearance, independently of the browser theme."
+    effect: "Users can configure their preferred website appearance, independently of the browser theme."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-safe-browsing.patch"
+    name: "IronFox Settings Support (Fenix) - Safe Browsing"
+    description: "Provides support for a UI toggle to enable/disable Safe Browsing."
+    reason: "To allow users to enable/disable Safe Browsing, directly from the UI."
+    effect: "Users can enable or disable Safe Browsing from the UI."
+    category: "User Interface"
+
+  - file: "gecko-ironfox-settings-support-spoof-english.patch"
+    name: "IronFox Settings Support (Gecko) - Spoof English"
+    description: "Provides support to Gecko (GeckoView) for a UI toggle to spoof the locale to English (en-US)."
+    reason: "To allow users to benefit from extra fingerprinting protection by spoof their locale to English."
+    effect: "Users can spoof their preferred locale to English, and can benefit from stronger fingerprinting protection as a result."
     category: "User Interface"

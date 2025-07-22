@@ -14,8 +14,8 @@ This list is not exhaustive...
 - Clears download history on exit by default
 - Clears open tabs on exit by default
 - Disables autofill/autocompletion of URLs by default
-- Disables disk cache by default, and adds a toggle to control it, located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable disk cache` in settings
-- Disables disk cache for secure webpages by default, and adds a toggle to control it, located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable disk cache for secure webpages` in settings
+- Disables disk cache by default, and adds a toggle to control it, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Enable disk cache` in settings
+- Disables disk cache for secure webpages by default, and adds a toggle to control it, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Enable disk cache for secure webpages` in settings
 - Disables network connectivity monitoring, and removes the `ACCESS_NETWORK_STATE` permission
 - Disables search suggestions by default
 - Disables trending search suggestions by default
@@ -42,44 +42,44 @@ IronFox **additionally**:
 
 - Includes bundled fonts at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/2609477a278f7e4a3681e5979b354d6063249edd/patches/gecko-overlay/mobile/android/ironfox.configure#L18), to improve compatibility, and to help provide users with a baseline/common set of fonts
 - Prevents fingerprinting based on whether Firefox's internal PDF viewer *(`PDF.js`)* is enabled or disabled
-- Sets the preferred appearance for websites *(CSS [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme))* to light mode by default, and adds an option to configure it independently of the browser's theme  *(Like Firefox on Desktop)*, located at `General` -> `Customize` -> `Website appearance` in settings
-- Spoofs the preferred locale for websites to English *(`en-US`)* by default, and adds a toggle to enable/disable it, located at `General` -> `Language` -> `Request English versions of webpages for stronger fingerprinting protection` in settings
+- Sets the preferred website appearance *(CSS [`prefers-color-scheme`](https://developer.mozilla.org/docs/Web/CSS/@media/prefers-color-scheme))* to light mode by default, and adds an option to configure it independently of the browser's theme  *(Like Firefox on Desktop)*, located at `IronFox` -> `IronFox settings` -> `Preferred website appearance` in settings
+- Spoofs the preferred locale for websites to English *(`en-US`)* by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Request English versions of webpages` in settings
 
 ## Security
 
 - Adds domain highlighting and alignment in the toolbar, to protect against phishing, by making it easier for users to identify the actual domain in the URL bar
-- Disables [accessibility services](https://developer.android.com/guide/topics/ui/accessibility/service) by default, and adds a toggle to enable/disable it, located at `General` -> `Accessibility` -> `Enable accessibility services` in settings
+- Disables [accessibility services](https://developer.android.com/guide/topics/ui/accessibility/service) by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Privacy and security` -> `Enable accessibility services` in settings
 - Disables autofill of [form data](https://wiki.mozilla.org/Firefox/Features/Form_Autofill) and [log-in credentials](https://support.mozilla.org/kb/autofill-logins-firefox) by default
 - Disables the browser's [built-in password manager](https://support.mozilla.org/kb/manage-your-logins-firefox-password-manager) by default
 - Disables Firefox's built-in list of domains used to autocomplete URLs, to [prevent suggesting squatted domains that serve ads and malware](https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0) to users
 - Disables the [Gecko Profiler](https://firefox-source-docs.mozilla.org/tools/profiler/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L465)
 - Disables [HTTP Live Streaming *(HLS)*](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/29859) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/2609477a278f7e4a3681e5979b354d6063249edd/patches/gecko-overlay/mobile/android/ironfox.configure#L7)
-- Disables installation of add-ons by default, and adds a toggle to enable/disable it, located at `Advanced` -> `Allow installation of add-ons` in settings
-- Disables [JavaScript Just-in-time Compilation *(JIT)*](https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/) by default, and adds a toggle to enable/disable it, located at  `Privacy and security` -> `Site settings` -> `Content` -> `Enable JavaScript Just-in-time Compilation (JIT)` in settings
+- Disables installation of add-ons by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Allow installation of add-ons` in settings
+- Disables [JavaScript Just-in-time Compilation *(JIT)*](https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/) by default, and adds a toggle to enable/disable it, located at  `IronFox` -> `IronFox settings` -> `Security` -> `Enable JavaScript Just-in-time Compilation (JIT)` in settings
 - Disables [Parental Controls](https://searchfox.org/mozilla-central/source/toolkit/components/parentalcontrols/nsIParentalControlsService.idl) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L473)
 - Disables `SSLKEYLOGGING` at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/a3c9025e044b780adf43e14bc5dbc213d6119ce9/patches/disable-sslkeylogging.patch) *([1](https://bugzilla.mozilla.org/show_bug.cgi?id=1183318), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1915224))*
 - Disables support for [GSS-API negotiate authentication](https://htmlpreview.github.io/?https://github.com/mdn/archived-content/blob/main/files/en-us/mozilla/integrated_authentication/raw.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L471)
 - Disables support for [WebDriver remote protocols](https://firefox-source-docs.mozilla.org/remote/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L490)
 - Enables the use of encrypted storage *([via Android's Keystore system](https://developer.android.com/privacy-and-security/keystore))* for Firefox account state and certain preferences
 - Enables [Fission](https://wiki.mozilla.org/Project_Fission) *(basic per-site process isolation)* by default
-- Enables [Google Safe Browsing](https://support.mozilla.org/kb/how-does-phishing-and-malware-protection-work) by default, with [a proxy](https://gitlab.com/ironfox-oss/safebrowsing-proxy) to protect the privacy of users, and adds a toggle to enable/disable it, located at `Privacy and security` -> `Enable Safe Browsing` in settings
+- Enables [Google Safe Browsing](https://support.mozilla.org/kb/how-does-phishing-and-malware-protection-work) by default, with [a proxy](https://gitlab.com/ironfox-oss/safebrowsing-proxy) to protect the privacy of users, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable Safe Browsing` in settings
 - Enables [HTTPS-Only Mode](https://support.mozilla.org/kb/https-only-prefs) by default
 - Expands the [list of domains](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning#Currently-pinned_Sites) supported by Firefox's [Strict Certificate Pinning](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning)
-- [Hard-fails](https://github.com/arkenfox/user.js/issues/1576) OCSP certificate revocation checks by default, and adds a toggle to enable/disable it, located at `Privacy and security` -> `Hard-fail OCSP revocation checks` in settings
+- [Hard-fails](https://github.com/arkenfox/user.js/issues/1576) OCSP certificate revocation checks by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Hard-fail OCSP revocation checks` in settings
 - Hardens the browser's built-in PDF Viewer *(PDF.js)*, with changes inspired by [GrapheneOS's PDF Viewer](https://github.com/GrapheneOS/PdfViewer)
 - Hides the toggle to enable/disable [Remote Debugging](https://firefox-source-docs.mozilla.org/devtools/backend/protocol.html) from settings, and resets the preference per-session if configured via other means
 
 ## Enhancements
 
 - Adds an [internal list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides.json) to configure specific fingerprinting protections on a per-site basis, to reduce breakage and harden protection as needed *(This, as well as Mozilla's override list that serves a similar purpose, can be disabled if desired, by setting `privacy.fingerprintingProtection.remoteOverrides.enabled` to `false` in your `about:config`)*
-- Adds an option to configure [the behavior of cross-origin referers](https://wiki.mozilla.org/Security/Referrer), located at `Privacy and security` -> `Cross-origin referer policy` in settings
-- Adds a toggle to enable/disable IPv6 network connectivity, located at `Advanced` -> `Enable IPv6 network connectivity` in settings
-- Adds a toggle to enable/disable JavaScript, located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable JavaScript` in settings
-- Adds a toggle to enable/disable [Scalable Vector Graphics *(SVG)*](https://blog.mozilla.org/security/2016/11/30/fixing-an-svg-animation-vulnerability/), located at `Privacy and security` -> `Site settings` -> `Content` -> `Scalable Vector Graphics (SVG)` in settings
+- Adds an option to configure [the behavior of cross-origin referers](https://wiki.mozilla.org/Security/Referrer), located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Cross-origin referer policy` in settings
+- Adds a toggle to enable/disable IPv6 network connectivity, located at `IronFox` -> `IronFox settings` -> `Miscellaneous` -> `Enable IPv6 network connectivity` in settings
+- Adds a toggle to enable/disable JavaScript, located at `IronFox` -> `IronFox settings` -> `Privacy and security` -> `Enable JavaScript` in settings
+- Adds a toggle to enable/disable [Scalable Vector Graphics *(SVG)*](https://blog.mozilla.org/security/2016/11/30/fixing-an-svg-animation-vulnerability/), located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable Scalable Vector Graphics (SVG)` in settings
 - Adds a toggle to enable/disable the [tab bar](https://connect.mozilla.org/t5/discussions/tab-strip-for-firefox-android-now-available-in-firefox-nightly/m-p/60145), located at `General` -> `Customize` -> `Tab bar display` in settings
-- Adds a toggle to enable/disable [WebAssembly *(WASM)*](https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly), located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable WebAssembly (WASM)` in settings
-- Adds a toggle to enable/disable WebGL *([1](https://blog.browserscan.net/docs/webgl-fingerprinting), [2](https://security.stackexchange.com/questions/13799/is-webgl-a-security-concern))* globally, located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable WebGL` in settings
-- Adds a toggle to enable/disable WebRTC *([1](https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=webrtc), [2](https://x.com/GrapheneOS/status/1728921946396725618))* globally, located at `Privacy and security` -> `Site settings` -> `Content` -> `Enable WebRTC` in settings
+- Adds a toggle to enable/disable [WebAssembly *(WASM)*](https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly), located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable WebAssembly (WASM)` in settings
+- Adds a toggle to enable/disable WebGL *([1](https://blog.browserscan.net/docs/webgl-fingerprinting), [2](https://security.stackexchange.com/questions/13799/is-webgl-a-security-concern))* globally, located at `IronFox` -> `IronFox settings` -> `Privacy and security` -> `Enable WebGL` in settings
+- Adds a toggle to enable/disable WebRTC *([1](https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=webrtc), [2](https://x.com/GrapheneOS/status/1728921946396725618))* globally, located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable WebRTC` in settings
 - Allows zoom on all websites, even if they try to block it, by default
 - Blocks [media autoplay](https://support.mozilla.org/kb/block-autoplay) by default
 - Blocks web notifications by default

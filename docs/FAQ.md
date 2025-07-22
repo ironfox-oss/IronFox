@@ -94,7 +94,7 @@ Yes! While IronFox removes the proprietary [Google Play Firebase Messaging Libra
 
 To use UnifiedPush, you'll first need to install and set-up a [distributor app](https://unifiedpush.org/users/distributors/) - we recommend [`Sunup`](https://unifiedpush.org/users/distributors/sunup/) for this.
 
-After setting up your distributor, you can enable support for UnifiedPush by selecting the `Use UnifiedPush` option, located under `Advanced` in settings. You should then receive a prompt to restart IronFox; after restarting, you should be ready to go!
+After setting up your distributor, you can enable support for UnifiedPush by selecting the `Use UnifiedPush` option, located under `IronFox` -> `IronFox settings` -> `Miscellaneous` in settings. You should then receive a prompt to restart IronFox; after restarting, you should be ready to go!
 
 **NOTE**: By default, IronFox blocks prompts from websites to enable web notifications. If you'd like to receive notifications from websites, you can re-enable notifications prompts by navigating to `Privacy and security` -> `Site settings` -> `Permissions` -> `Notification` in settings, and selecting `Ask to allow`.
 
@@ -118,7 +118,7 @@ We also include [a list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patch
 
 By default, due to privacy and security concerns, IronFox disables the installation of add-ons. This has **no** impact on already installed extensions, and updates to those extensions.
 
-To allow the installation of add-ons, **at the cost of privacy and security**, you can navigate to `Settings` -> `Advanced`, and select the option to `Allow installation of add-ons`. **It is recommended to disable this option when you are done installing your desired extension(s)**.
+To allow the installation of add-ons, **at the cost of security**, you can navigate to `Settings` -> `IronFox` -> `IronFox settings` -> `Security`, and select the option to `Allow installation of add-ons`. **It is recommended to disable this option when you are done installing your desired extension(s)**.
 
 ## What add-ons/extensions should I install?
 
@@ -132,9 +132,9 @@ For more details, and information on why you don't actually need many of the ext
 
 By default, in order to improve security, IronFox disables [JavaScript Just-in-time Compilation *(JIT)*](https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/). While this doesn't cause a noticeable difference on most modern devices, depending on your device, this might be what's causing the slowness you're experiencing.
 
-**At the cost of security**, you can re-enable JIT by navigating to `Settings` -> `Privacy and security` -> `Site settings`, and selecting the option to `Enable JavaScript Just-in-time Compilation (JIT)`.
+**At the cost of security**, you can re-enable JIT by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security`, and selecting the option to `Enable JavaScript Just-in-time Compilation (JIT)`.
 
-If re-enabling JIT doesn't give you the desired outcome, **at the cost of privacy**, you can re-enable disk cache by navigating to `Settings` -> `Privacy and security` -> `Site settings`, and selecting the option to `Enable disk cache`. You can also optionally enable it for secure webpages by selecting the option to `Enable disk cache for secure webpages` from the same screen.
+If re-enabling JIT doesn't give you the desired outcome, **at the cost of privacy**, you can re-enable disk cache by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`, and selecting the option to `Enable disk cache`. You can also optionally enable it for secure webpages by selecting the option to `Enable disk cache for secure webpages` from the same screen.
 
 If this *still* doesn't give you the desired outcome, please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues) and let us know!
 
@@ -144,13 +144,13 @@ IronFox does not support [Encrypted Media Extensions *(EME)*](https://wikipedia.
 
 Unfortunately, certain streaming services *(such as the examples listed above)* arbitrarily prevent IronFox users *(as well as users of other privacy and security-focused projects)* from accessing content, by requiring EME for media playback. **When you encounter an issue due to this, please report this to the website's operator**! Please also [file an issue](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml), so that we can track/document impacted services.
 
-**At your own risk**, **at the cost of privacy and security**, you can re-enable support for EME with a **not supported**, **not recommended** hidden setting, by navigating to `Settings` -> `About` -> `About IronFox`, tapping the `IronFox` logo 7 times until you see a message stating `Debug menu enabled`, navigating back to `Settings` -> `About` -> `Secret Settings`, and selecting the `Enable Encrypted Media Extensions (EME)` option. To play content, you will likely also need to enable the `Enable Widevine CDM` option from the same screen, which enables Google's Widevine Content Decryption Module *(CDM)*, provided by Android's [`MediaDrm` API](https://developer.android.com/reference/android/media/MediaDrm).
+**At your own risk**, **at the cost of privacy and security**, you can re-enable support for EME with a **not supported**, **not recommended** hidden setting, by navigating to `Settings` -> `About` -> `About IronFox`, tapping the `IronFox` logo 7 times until you see a message stating `Debug menu enabled`, navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Secret settings`, and selecting the `Enable Encrypted Media Extensions (EME)` option. To play content, you will likely also need to enable the `Enable Widevine CDM` option from the same screen, which enables Google's Widevine Content Decryption Module *(CDM)*, provided by Android's [`MediaDrm` API](https://developer.android.com/reference/android/media/MediaDrm).
 
 ## Why can't I connect to certain websites?
 
 By default, to improve security, IronFox [hard-fails](https://github.com/arkenfox/user.js/issues/1576) [OCSP](https://wikipedia.org/wiki/Online_Certificate_Status_Protocol) certificate revocation checks. Unfortunately, from time to time, OCSP servers can be down or inaccessible, which is most likely what's causing the connection issue you're experiencing.
 
-**At the cost of security**, you can disable hard-failing OCSP certificate revocation checks, by navigating to `Settings` -> `Privacy and security`, and selecting the option to `Hard-fail OCSP revocation checks`. **It is highly recommended to re-enable this option as soon as possible after visiting the impacted website(s)**. **Please also report this issue to the website's operator**!
+**At the cost of security**, you can disable hard-failing OCSP certificate revocation checks, by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security`, and selecting the option to `Hard-fail OCSP revocation checks`. **It is highly recommended to re-enable this option as soon as possible after visiting the impacted website(s)**. **Please also report this issue to the website's operator**!
 
 If you're still having connection issues, but can access the site from other browsers on your device, please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues) and let us know!
 
@@ -158,9 +158,9 @@ If you're still having connection issues, but can access the site from other bro
 
 By default, to protect against fingerprinting, IronFox sets the preferred website appearance to Light mode.
 
-**At the cost of privacy**, you can change this by navigating to `Settings` -> `General` -> `Customization` -> `Website appearance`, and selecting `Dark` or `Follow browser theme`.
+**At the cost of privacy**, you can change this by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Preferred website appearance`, and selecting `Dark` or `Follow browser theme`.
 
-**NOTE**: The **[Dark Reader](https://addons.mozilla.org/addon/darkreader/)** add-on is known to cause severe performance issues on hardened Firefox-based browsers/configurations. Installing Dark Reader also poses privacy and security concerns, as detailed above. Dark Reader should be **AVOIDED** if possible, in favor of the `Website appearance` setting.
+**NOTE**: The **[Dark Reader](https://addons.mozilla.org/addon/darkreader/)** add-on is known to cause severe performance issues on hardened Firefox-based browsers/configurations. Installing Dark Reader also poses privacy and security concerns, as detailed above. Dark Reader should be **AVOIDED** if possible, in favor of the `Preferred website appearance` setting.
 
 ## Why do websites display the incorrect timezone?
 
@@ -174,7 +174,7 @@ By default, to protect against fingerprinting, IronFox spoofs the system's timez
 
 By default, to protect against fingerprinting, IronFox spoofs the preferred locale to English *(`en-US`)*.
 
-**At the cost of privacy**, you can change this by navigating to `Settings` -> `General` -> `Language`, and selecting `Request English versions of webpages for stronger fingerprinting protection`.
+**At the cost of privacy**, you can change this by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`, and selecting `Request English versions of webpages`.
 
 ## Why do some fonts display incorrectly?
 

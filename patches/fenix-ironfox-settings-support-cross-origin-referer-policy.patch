@@ -1,0 +1,17 @@
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
+index 6088ad065c..2c553a6c18 100644
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
+@@ -109,6 +109,12 @@ interface Engine : WebExtensionRuntime, TranslationsRuntime, DataCleanable {
+         OFF,
+     }
+ 
++    enum class RefererXOriginPolicy {
++        REFERER_XORIGIN_ALWAYS,
++        REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH,
++        REFERER_XORIGIN_IF_HOSTS_MATCH,
++    }
++
+     /**
+      * Makes sure all required engine initialization logic is executed. The
+      * details are specific to individual implementations, but the following must be true:
