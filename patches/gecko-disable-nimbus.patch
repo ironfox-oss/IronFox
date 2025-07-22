@@ -19,7 +19,7 @@ index 1f4d51c643..a2507eb8d1 100644
    lazy,
    "COLLECTION_ID",
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-index 165309d17b..689326135e 100644
+index 7861ceddf7..b51d523215 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 +++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 @@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
@@ -50,7 +50,7 @@ index 165309d17b..689326135e 100644
    }
  
 diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-index d3ab385732..700465258c 100644
+index ebb933e6fa..b1eea8bc5e 100644
 --- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 +++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 @@ -37,7 +37,7 @@ XPCOMUtils.defineLazyServiceGetter(

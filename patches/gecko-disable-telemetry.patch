@@ -124,10 +124,10 @@ index cf0a7bd372..4f19716815 100644
        isReleaseCandidateOnBeta ||
        Services.prefs.getBoolPref(this.Preferences.OverridePreRelease, false);
 diff --git a/toolkit/components/telemetry/app/UsageReporting.sys.mjs b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
-index 4a3e1de32d..baeff11b29 100644
+index bb7e05d43b..d0e8c3476b 100644
 --- a/toolkit/components/telemetry/app/UsageReporting.sys.mjs
 +++ b/toolkit/components/telemetry/app/UsageReporting.sys.mjs
-@@ -45,7 +45,7 @@ export var UsageReporting = {
+@@ -46,7 +46,7 @@ export var UsageReporting = {
  
        // Usage deletion requests can always be sent.  They are
        // always sent in response to user action.
@@ -137,10 +137,10 @@ index 4a3e1de32d..baeff11b29 100644
        // Usage pings should only be sent when upload is enabled.
        // Eventually, Glean will persist this setting.
 diff --git a/toolkit/components/telemetry/core/Telemetry.cpp b/toolkit/components/telemetry/core/Telemetry.cpp
-index 64c53be02c..b4940c3aac 100644
+index c07273a7b7..66a0191fec 100644
 --- a/toolkit/components/telemetry/core/Telemetry.cpp
 +++ b/toolkit/components/telemetry/core/Telemetry.cpp
-@@ -885,7 +885,7 @@ NS_IMETHODIMP
+@@ -895,7 +895,7 @@ NS_IMETHODIMP
  TelemetryImpl::GetIsOfficialTelemetry(bool* ret) {
  #if defined(MOZILLA_OFFICIAL) && defined(MOZ_TELEMETRY_REPORTING) && \
      !defined(DEBUG)
@@ -149,7 +149,7 @@ index 64c53be02c..b4940c3aac 100644
  #else
    *ret = false;
  #endif
-@@ -904,7 +904,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
+@@ -914,7 +914,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
  #ifndef FUZZING
    if (XRE_IsParentProcess() || XRE_IsContentProcess() || XRE_IsGPUProcess() ||
        XRE_IsRDDProcess() || XRE_IsSocketProcess() || XRE_IsUtilityProcess()) {
@@ -180,7 +180,7 @@ index a52d8e0a64..2ecdbffc98 100644
  
    // We're not recording extended telemetry or this is not the base
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index f94b88f8d8..3401baff7e 100644
+index 83fcfac2d4..82a852c15c 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
 @@ -37,9 +37,9 @@ toolkit.jar:

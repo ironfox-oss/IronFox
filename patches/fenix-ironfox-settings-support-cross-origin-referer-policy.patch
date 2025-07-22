@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
-index 6088ad065c..2c553a6c18 100644
+index 6d394e4c2b..42eacd04a0 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
-@@ -109,6 +109,12 @@ interface Engine : WebExtensionRuntime, TranslationsRuntime, DataCleanable {
+@@ -110,6 +110,12 @@ interface Engine : WebExtensionRuntime, TranslationsRuntime, BrowserPreferencesR
          OFF,
      }
  

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 13db9f3c83..7964a7af07 100644
+index a88ff8d3ac..5110c0706f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -340,7 +340,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -338,7 +338,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                          // we can prevent with this.
                          components.core.topSitesStorage.getTopSites(
                              totalSites = components.settings.topSitesMaxLimit,
@@ -11,19 +11,6 @@ index 13db9f3c83..7964a7af07 100644
                                  null
                              } else {
                                  TopSitesFrecencyConfig(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
-index 26c7a0a2ed..0e694ee05d 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/sessioncontrol/SessionControlView.kt
-@@ -111,7 +111,7 @@ internal fun normalModeAdapterItems(
-     }
- 
-     if (shouldShowCustomizeHome) {
--        items.add(AdapterItem.CustomizeHomeButton)
-+//        items.add(AdapterItem.CustomizeHomeButton)
-     }
- 
-     items.add(AdapterItem.BottomSpacer)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
 index 48b312d257..92b3b71f71 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
@@ -38,7 +25,7 @@ index 48b312d257..92b3b71f71 100644
              } else {
                  TopSitesFrecencyConfig(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..f101f8fd08 100644
+index 8913d9f230..0c2d28f6fb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -179,7 +179,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -50,7 +37,7 @@ index 9197b274db..f101f8fd08 100644
      )
  
      var numberOfAppLaunches by intPreference(
-@@ -365,7 +365,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -371,7 +371,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var showCollectionsPlaceholderOnHome by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
@@ -59,7 +46,7 @@ index 9197b274db..f101f8fd08 100644
      )
  
      val isCrashReportingEnabled: Boolean
-@@ -1151,7 +1151,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1154,7 +1154,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var defaultTopSitesAdded by booleanPreference(
          appContext.getPreferenceKey(R.string.default_top_sites_added),
@@ -68,7 +55,7 @@ index 9197b274db..f101f8fd08 100644
      )
  
      var shouldShowSearchSuggestionsInPrivate by booleanPreference(
-@@ -1662,7 +1662,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1665,7 +1665,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var historyMetadataUIFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_history_metadata_feature),
@@ -77,7 +64,7 @@ index 9197b274db..f101f8fd08 100644
          featureFlag = true,
      )
  
-@@ -1690,7 +1690,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1684,7 +1684,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showRecentTabsFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_recent_tabs),
          featureFlag = true,
@@ -86,7 +73,7 @@ index 9197b274db..f101f8fd08 100644
      )
  
      /**
-@@ -1698,7 +1698,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1692,7 +1692,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showBookmarksHomeFeature by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_customization_bookmarks),

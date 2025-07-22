@@ -1,8 +1,8 @@
 diff --git a/toolkit/components/pdfjs/content/build/pdf.mjs b/toolkit/components/pdfjs/content/build/pdf.mjs
-index bdf304a524..56667492ad 100644
+index 59ecfccf3c..b1b373ab14 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.mjs
-@@ -469,7 +469,7 @@ function isLittleEndian() {
+@@ -473,7 +473,7 @@ function isLittleEndian() {
  function isEvalSupported() {
    try {
      new Function("");
@@ -11,7 +11,7 @@ index bdf304a524..56667492ad 100644
    } catch {
      return false;
    }
-@@ -479,7 +479,7 @@ class util_FeatureTest {
+@@ -483,7 +483,7 @@ class util_FeatureTest {
      return shadow(this, "isLittleEndian", isLittleEndian());
    }
    static get isEvalSupported() {
@@ -20,7 +20,7 @@ index bdf304a524..56667492ad 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -10030,7 +10030,7 @@ function getDocument(src = {}) {
+@@ -10199,7 +10199,7 @@ function getDocument(src = {}) {
    const {
      docId
    } = task;
@@ -29,7 +29,7 @@ index bdf304a524..56667492ad 100644
    const data = src.data ? getDataProp(src.data) : null;
    const httpHeaders = src.httpHeaders || null;
    const withCredentials = src.withCredentials === true;
-@@ -10040,17 +10040,17 @@ function getDocument(src = {}) {
+@@ -10209,17 +10209,17 @@ function getDocument(src = {}) {
    let worker = src.worker instanceof PDFWorker ? src.worker : null;
    const verbosity = src.verbosity;
    const docBaseUrl = typeof src.docBaseUrl === "string" && !isDataScheme(src.docBaseUrl) ? src.docBaseUrl : null;
@@ -52,7 +52,7 @@ index bdf304a524..56667492ad 100644
    const isOffscreenCanvasSupported = typeof src.isOffscreenCanvasSupported === "boolean" ? src.isOffscreenCanvasSupported : !isNodeJS;
    const isImageDecoderSupported = typeof src.isImageDecoderSupported === "boolean" ? src.isImageDecoderSupported : true;
    const canvasMaxAreaInBytes = Number.isInteger(src.canvasMaxAreaInBytes) ? src.canvasMaxAreaInBytes : -1;
-@@ -10067,7 +10067,7 @@ function getDocument(src = {}) {
+@@ -10236,7 +10236,7 @@ function getDocument(src = {}) {
    const enableHWA = src.enableHWA === true;
    const useWasm = src.useWasm !== false;
    const length = rangeTransport ? rangeTransport.length : src.length ?? NaN;
@@ -62,10 +62,10 @@ index bdf304a524..56667492ad 100644
    const styleElement = null;
    setVerbosityLevel(verbosity);
 diff --git a/toolkit/components/pdfjs/content/build/pdf.worker.mjs b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-index 7e2d0c53f5..cf9706d9ef 100644
+index 814d28ab0d..447e5f3971 100644
 --- a/toolkit/components/pdfjs/content/build/pdf.worker.mjs
 +++ b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-@@ -469,7 +469,7 @@ function isLittleEndian() {
+@@ -473,7 +473,7 @@ function isLittleEndian() {
  function isEvalSupported() {
    try {
      new Function("");
@@ -74,7 +74,7 @@ index 7e2d0c53f5..cf9706d9ef 100644
    } catch {
      return false;
    }
-@@ -479,7 +479,7 @@ class FeatureTest {
+@@ -483,7 +483,7 @@ class FeatureTest {
      return shadow(this, "isLittleEndian", isLittleEndian());
    }
    static get isEvalSupported() {
@@ -83,7 +83,7 @@ index 7e2d0c53f5..cf9706d9ef 100644
    }
    static get isOffscreenCanvasSupported() {
      return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -28711,10 +28711,10 @@ class GlobalImageCache {
+@@ -28689,10 +28689,10 @@ class GlobalImageCache {
  class PDFFunctionFactory {
    constructor({
      xref,
@@ -96,7 +96,7 @@ index 7e2d0c53f5..cf9706d9ef 100644
    }
    create(fn, parseArray = false) {
      let fnRef, parsedFn;
-@@ -31054,18 +31054,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
+@@ -31032,18 +31032,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
    maxImageSize: -1,
    disableFontFace: false,
    ignoreErrors: false,
@@ -133,10 +133,10 @@ index 5e0a113820..e89114242e 100644
      <title>PDF.js viewer</title>
  
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-index 0bf80af004..6d2da8f9ff 100644
+index 114de09cb1..f9fe3b812f 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-@@ -837,7 +837,7 @@ const defaultOptions = {
+@@ -841,7 +841,7 @@ const defaultOptions = {
      kind: OptionKind.API
    },
    isEvalSupported: {

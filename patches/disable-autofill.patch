@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..c3f610f0c6 100644
+index 8913d9f230..1d074345b8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1378,12 +1378,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1381,12 +1381,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldPromptToSaveLogins by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_save_logins),
@@ -17,7 +17,7 @@ index 9197b274db..c3f610f0c6 100644
      )
  
      /**
-@@ -1715,7 +1715,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1709,7 +1709,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillCreditCardDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_credit_cards_save_and_autofill_cards),
@@ -26,7 +26,7 @@ index 9197b274db..c3f610f0c6 100644
      )
  
      /**
-@@ -1726,7 +1726,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1720,7 +1720,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldAutofillAddressDetails by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_addresses_save_and_autofill_addresses),

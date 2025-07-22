@@ -1,5 +1,5 @@
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
-index dfb23ec49a..45ea3c2412 100644
+index fc7f6705da..a3fdd04f03 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
 @@ -228,6 +228,11 @@ class AttachmentDownloader extends Downloader {
@@ -11,10 +11,10 @@ index dfb23ec49a..45ea3c2412 100644
 +        `Download attempt to RS collection "${this.identifier}" was blocked.`
 +      );
 +    }
-     try {
-       // Explicitly await here to ensure we catch a network error.
-       return await super.download(record, options);
-@@ -625,6 +630,10 @@ export class RemoteSettingsClient extends EventEmitter {
+     await lazy.UptakeTelemetry.report(
+       TELEMETRY_COMPONENT,
+       lazy.UptakeTelemetry.STATUS.DOWNLOAD_START,
+@@ -652,6 +657,10 @@ export class RemoteSettingsClient extends EventEmitter {
        return;
      }
  
@@ -25,7 +25,7 @@ index dfb23ec49a..45ea3c2412 100644
      // We want to know which timestamp we are expected to obtain in order to leverage
      // cache busting. We don't provide ETag because we don't want a 304.
      const { changes } = await lazy.Utils.fetchLatestChanges(
-@@ -992,6 +1001,14 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -1031,6 +1040,14 @@ export class RemoteSettingsClient extends EventEmitter {
     * Import the JSON files from services/settings/dump into the local DB.
     */
    async _importJSONDump() {

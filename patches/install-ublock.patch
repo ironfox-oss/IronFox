@@ -13,7 +13,7 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  create mode 100644 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 82e44d1abc..fd1dd84132 100644
+index 492c009ff9..d692aaa234 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 @@ -121,6 +121,9 @@ class WebExtensionPromptFeature(
@@ -41,7 +41,7 @@ index 82e44d1abc..fd1dd84132 100644
          showPermissionDialog(
              addon = addon,
              promptRequest = promptRequest,
-@@ -141,6 +152,14 @@ class WebExtensionPromptFeature(
+@@ -142,6 +153,14 @@ class WebExtensionPromptFeature(
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
      ) {

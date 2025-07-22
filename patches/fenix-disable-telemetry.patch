@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-index 7941343807..e56e90a005 100644
+index 6bbc5b3ed8..98e27d666c 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 +++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 @@ -58,7 +58,7 @@ android {
@@ -10,7 +10,7 @@ index 7941343807..e56e90a005 100644
 +ext.allowMetricsFromAAR = false
  
  dependencies {
-     implementation project(':concept-engine')
+     implementation project(':components:concept-engine')
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
 index 20eab9e438..c596e9238a 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
@@ -27,7 +27,7 @@ index 20eab9e438..c596e9238a 100644
  /**
   * Parse SERP Telemetry json from remote config.
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..84073eaeee 100644
+index 5bcd9c730b..5d97405e25 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -313,7 +313,7 @@ android.applicationVariants.configureEach { variant ->
@@ -49,7 +49,7 @@ index d9a6045423..84073eaeee 100644
          buildConfigField 'boolean', 'TELEMETRY', 'false'
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-index 5ba4561291..d1307b220c 100644
+index a77d48d282..a880b108f8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 @@ -41,7 +41,7 @@ object FeatureFlags {
@@ -62,10 +62,10 @@ index 5ba4561291..d1307b220c 100644
      /**
       * Enables the Unified Trust Panel.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index d3b21828c2..edea7b4d0d 100644
+index 2c8c8a5e8c..30da05ee86 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -188,7 +188,7 @@ class Components(private val context: Context) {
+@@ -191,7 +191,7 @@ class Components(private val context: Context) {
          AddonManager(core.store, core.engine, addonsProvider, addonUpdater)
      }
  
@@ -75,12 +75,12 @@ index d3b21828c2..edea7b4d0d 100644
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..8b07a2496c 100644
+index 6875486c72..a0db72b690 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -64,14 +64,14 @@ import mozilla.components.feature.search.SearchApplicationName
+@@ -64,14 +64,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
+ import mozilla.components.feature.search.SearchApplicationName
  import mozilla.components.feature.search.SearchDeviceType
- import mozilla.components.feature.search.SearchEngineSelector
  import mozilla.components.feature.search.SearchUpdateChannel
 -import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware
 +//import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware
@@ -106,7 +106,7 @@ index cfbdaba62c..8b07a2496c 100644
  import org.mozilla.fenix.utils.getUndoDelay
  import org.mozilla.geckoview.GeckoRuntime
  import java.util.UUID
-@@ -312,7 +312,7 @@ class Core(
+@@ -313,7 +313,7 @@ class Core(
                  RecentlyClosedMiddleware(recentlyClosedTabsStorage, RECENTLY_CLOSED_MAX),
                  DownloadMiddleware(context, DownloadService::class.java),
                  ReaderViewMiddleware(),
@@ -115,7 +115,7 @@ index cfbdaba62c..8b07a2496c 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -325,7 +325,7 @@ class Core(
+@@ -326,7 +326,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -124,7 +124,7 @@ index cfbdaba62c..8b07a2496c 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -364,7 +364,7 @@ class Core(
+@@ -365,7 +365,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -133,7 +133,7 @@ index cfbdaba62c..8b07a2496c 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -377,12 +377,12 @@ class Core(
+@@ -378,12 +378,12 @@ class Core(
                              REMOTE_STAGE_ENDPOINT_URL
                          },
                      ).updateProviderList()
@@ -150,7 +150,7 @@ index cfbdaba62c..8b07a2496c 100644
  
              WebNotificationFeature(
                  context,
-@@ -434,7 +434,7 @@ class Core(
+@@ -440,7 +440,7 @@ class Core(
          BrowserIcons(context, client)
      }
  
@@ -159,7 +159,7 @@ index cfbdaba62c..8b07a2496c 100644
          context.components.analytics.metrics
      }
  
-@@ -444,7 +444,7 @@ class Core(
+@@ -450,7 +450,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
@@ -168,7 +168,7 @@ index cfbdaba62c..8b07a2496c 100644
  
      /**
       * Shortcut component for managing shortcuts on the device home screen.
-@@ -735,7 +735,7 @@ class Core(
+@@ -731,7 +731,7 @@ class Core(
          const val METADATA_SHORTCUT_SUGGESTION_LIMIT = 20
  
          // collection name to fetch from server for SERP telemetry
@@ -301,10 +301,10 @@ index 9d54f66a65..ee9cc8e139 100644
  
          fun getInstalledTime(context: Context): Long = context.packageManager
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 13db9f3c83..b0d4f44010 100644
+index a88ff8d3ac..0578a2299a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -87,7 +87,7 @@ import org.mozilla.fenix.GleanMetrics.TopSites
+@@ -85,7 +85,7 @@ import org.mozilla.fenix.GleanMetrics.TopSites
  import org.mozilla.fenix.components.Components
  import org.mozilla.fenix.components.Core
  import org.mozilla.fenix.components.appstate.AppAction
@@ -313,7 +313,7 @@ index 13db9f3c83..b0d4f44010 100644
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
  import org.mozilla.fenix.experiments.maybeFetchExperiments
-@@ -188,7 +188,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -186,7 +186,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          // We delay the Glean initialization until, we have user consent (After onboarding).
          // If onboarding is disabled (when in local builds), continue to initialize Glean.
          if (components.fenixOnboarding.userHasBeenOnboarded() || !FeatureFlags.onboardingFeatureEnabled) {
@@ -322,7 +322,7 @@ index 13db9f3c83..b0d4f44010 100644
          }
  
          // We avoid blocking the main thread on startup by setting startup metrics on the background thread.
-@@ -224,7 +224,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -222,7 +222,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                  components.core.engine.warmUp()
              }
  
@@ -403,10 +403,10 @@ index e5ab956ac3..c4c45334dd 100644
  
          startMetricsIfEnabled(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-index 6725aa64a0..ae0d1eb0b7 100644
+index 819b24954e..273349e0ca 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-@@ -97,10 +97,10 @@ class SearchDialogController(
+@@ -96,10 +96,10 @@ class SearchDialogController(
                  navController.navigateSafe(R.id.searchDialogFragment, directions)
                  store.dispatch(AwesomeBarAction.EngagementFinished(abandoned = false))
              }
@@ -420,10 +420,10 @@ index 6725aa64a0..ae0d1eb0b7 100644
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..8f460115af 100644
+index ac0f3bc013..bfd696a88b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -182,7 +182,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -166,7 +166,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
  
          lifecycleScope.launch {
              requirePreference<SwitchPreference>(R.string.pref_key_enable_debug_drawer).apply {
@@ -433,10 +433,10 @@ index 43bea16286..8f460115af 100644
                  onPreferenceChangeListener =
                      Preference.OnPreferenceChangeListener { _, newValue ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..a9ba779426 100644
+index 8913d9f230..5d81426619 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -380,19 +380,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -386,19 +386,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -465,7 +465,7 @@ index 9197b274db..a9ba779426 100644
      )
  
      var hasAcceptedTermsOfService by booleanPreference(
-@@ -406,11 +406,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -412,11 +412,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */

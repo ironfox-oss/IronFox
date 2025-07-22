@@ -39,7 +39,7 @@ index 3c6eb9e4c4..9b7621a44e 100644
  
      // Use the semanticdb-javac and semanticdb-kotlinc plugins to generate semanticdb files for Searchfox
 diff --git a/mobile/android/android-components/build.gradle b/mobile/android/android-components/build.gradle
-index 00c059ffd5..936dda52d7 100644
+index 101bb5ba0f..8242623cd1 100644
 --- a/mobile/android/android-components/build.gradle
 +++ b/mobile/android/android-components/build.gradle
 @@ -9,14 +9,9 @@ import static org.gradle.api.tasks.testing.TestResult.ResultType
@@ -79,7 +79,7 @@ index 00c059ffd5..936dda52d7 100644
          maven {
              url = "${gradle.mozconfig.topobjdir}/gradle/maven"
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-index 7941343807..6e930c8da5 100644
+index 6bbc5b3ed8..e009561361 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 +++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 @@ -4,14 +4,9 @@
@@ -101,7 +101,7 @@ index 7941343807..6e930c8da5 100644
  
      dependencies {
 diff --git a/mobile/android/android-components/components/lib/crash/build.gradle b/mobile/android/android-components/components/lib/crash/build.gradle
-index 3e2c155de0..ae4ed0d52c 100644
+index fe86bfc252..68713e57d7 100644
 --- a/mobile/android/android-components/components/lib/crash/build.gradle
 +++ b/mobile/android/android-components/components/lib/crash/build.gradle
 @@ -4,14 +4,9 @@
@@ -123,7 +123,7 @@ index 3e2c155de0..ae4ed0d52c 100644
  
      dependencies {
 diff --git a/mobile/android/android-components/components/service/nimbus/build.gradle b/mobile/android/android-components/components/service/nimbus/build.gradle
-index 9aa45d5115..208a7a1076 100644
+index 7f79cbdbd6..0a4b0c3a72 100644
 --- a/mobile/android/android-components/components/service/nimbus/build.gradle
 +++ b/mobile/android/android-components/components/service/nimbus/build.gradle
 @@ -4,14 +4,9 @@
@@ -145,7 +145,7 @@ index 9aa45d5115..208a7a1076 100644
  
      dependencies {
 diff --git a/mobile/android/android-components/components/support/remotesettings/build.gradle b/mobile/android/android-components/components/support/remotesettings/build.gradle
-index 87e6954947..437580979a 100644
+index bdae594eb0..17a61a5dea 100644
 --- a/mobile/android/android-components/components/support/remotesettings/build.gradle
 +++ b/mobile/android/android-components/components/support/remotesettings/build.gradle
 @@ -3,14 +3,9 @@
@@ -365,7 +365,7 @@ index 19dc9e9ccf..6adb734ad5 100644
  
      includeBuild("plugins/dependencies")
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..262a5e483c 100644
+index 5bcd9c730b..9612ecd635 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -3,14 +3,9 @@ import java.time.format.DateTimeFormatter
@@ -387,7 +387,7 @@ index d9a6045423..262a5e483c 100644
  
      dependencies {
 diff --git a/mobile/android/fenix/build.gradle b/mobile/android/fenix/build.gradle
-index e34e870acc..f86a22a45c 100644
+index 94001b33fe..99aad74b2a 100644
 --- a/mobile/android/fenix/build.gradle
 +++ b/mobile/android/fenix/build.gradle
 @@ -8,14 +8,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -493,7 +493,7 @@ index 7e461f97cc..65f0b42b0f 100644
  
      includeBuild("../android-components/plugins/publicsuffixlist")
 diff --git a/mobile/android/focus-android/build.gradle b/mobile/android/focus-android/build.gradle
-index 80f726f82f..9daac463f6 100644
+index aa31f34889..76cf20d094 100644
 --- a/mobile/android/focus-android/build.gradle
 +++ b/mobile/android/focus-android/build.gradle
 @@ -7,14 +7,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -555,7 +555,7 @@ index 0f5dbd50a0..3143f62c77 100644
  
      includeBuild("../android-components/plugins/publicsuffixlist")
 diff --git a/mobile/android/shared-settings.gradle b/mobile/android/shared-settings.gradle
-index eb9e1e36b3..92981dce83 100644
+index a6efbedbd2..a4c647f5e1 100644
 --- a/mobile/android/shared-settings.gradle
 +++ b/mobile/android/shared-settings.gradle
 @@ -13,14 +13,9 @@ buildscript {
@@ -577,7 +577,7 @@ index eb9e1e36b3..92981dce83 100644
  
      dependencies {
 diff --git a/settings.gradle b/settings.gradle
-index 35b1d35323..705a80ed96 100644
+index c66db7a77b..7a3365bfa7 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -9,14 +9,9 @@ pluginManagement {

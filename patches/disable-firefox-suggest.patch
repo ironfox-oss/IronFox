@@ -66,10 +66,10 @@ index baadbd7873..87a4d45b15 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-index e6c63d7834..6652461ef2 100644
+index ce4b42ef4a..d5f03c9e2a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-@@ -35,7 +35,7 @@ class SearchEngineFragment : PreferenceFragmentCompat() {
+@@ -39,7 +39,7 @@ class SearchEngineFragment : PreferenceFragmentCompat() {
          )
  
          requirePreference<SwitchPreference>(R.string.pref_key_show_sponsored_suggestions).apply {
@@ -79,10 +79,10 @@ index e6c63d7834..6652461ef2 100644
          requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..e3b7082380 100644
+index 8913d9f230..8d7d553926 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2105,7 +2105,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2091,7 +2091,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var enableFxSuggest by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
@@ -91,7 +91,7 @@ index 9197b274db..e3b7082380 100644
          featureFlag = FeatureFlags.FX_SUGGEST,
      )
  
-@@ -2113,7 +2113,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2099,7 +2099,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if boosting AMP/wiki suggestions is enabled.
       */
      val boostAmpWikiSuggestions: Boolean
@@ -100,7 +100,7 @@ index 9197b274db..e3b7082380 100644
  
      /**
       * Indicates first time engaging with signup
-@@ -2130,7 +2130,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2116,7 +2116,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
          default = { enableFxSuggest },
@@ -109,7 +109,7 @@ index 9197b274db..e3b7082380 100644
      )
  
      /**
-@@ -2140,7 +2140,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2126,7 +2126,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showNonSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),

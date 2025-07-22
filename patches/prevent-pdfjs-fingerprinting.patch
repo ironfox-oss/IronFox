@@ -1,5 +1,5 @@
 diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
-index fac2759535..b2412a10a5 100644
+index 3f60404936..dcab978457 100644
 --- a/dom/base/Navigator.cpp
 +++ b/dom/base/Navigator.cpp
 @@ -510,7 +510,7 @@ nsPluginArray* Navigator::GetPlugins(ErrorResult& aRv) {

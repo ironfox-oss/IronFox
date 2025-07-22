@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 1612c570be..f53b53cf43 100644
+index abc5eb1d3c..a60ff512f9 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1483,6 +1483,114 @@ class GeckoEngine(
+@@ -1503,6 +1503,114 @@ class GeckoEngine(
          override var bannedPorts: String
              get() = runtime.settings.bannedPorts
              set(value) { runtime.settings.setBannedPorts(value) }
@@ -117,7 +117,7 @@ index 1612c570be..f53b53cf43 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1527,6 +1635,29 @@ class GeckoEngine(
+@@ -1549,6 +1657,29 @@ class GeckoEngine(
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
@@ -148,10 +148,10 @@ index 1612c570be..f53b53cf43 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 24e8f76532..c42b6b37ab 100644
+index 5dd0b2beae..55900c099d 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -350,6 +350,30 @@ abstract class Settings {
+@@ -362,6 +362,30 @@ abstract class Settings {
       * Comma-separated list of destination ports that the application should block connections to.
       */
      open var bannedPorts: String by UnsupportedSetting()
@@ -182,7 +182,7 @@ index 24e8f76532..c42b6b37ab 100644
  }
  
  /**
-@@ -420,6 +444,29 @@ data class DefaultSettings(
+@@ -434,6 +458,29 @@ data class DefaultSettings(
      override var postQuantumKeyExchangeEnabled: Boolean? = null,
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
@@ -213,10 +213,10 @@ index 24e8f76532..c42b6b37ab 100644
      override val desktopModeEnabled: Boolean
          get() = getDesktopMode()
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index a410550e60..032b5f2509 100644
+index 2a1a27a990..ac9313950e 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -984,6 +984,29 @@ package org.mozilla.geckoview {
+@@ -991,6 +991,29 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -246,7 +246,7 @@ index a410550e60..032b5f2509 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1030,6 +1053,29 @@ package org.mozilla.geckoview {
+@@ -1039,6 +1062,29 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -276,7 +276,7 @@ index a410550e60..032b5f2509 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1044,6 +1090,9 @@ package org.mozilla.geckoview {
+@@ -1053,6 +1099,9 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -286,7 +286,7 @@ index a410550e60..032b5f2509 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1093,6 +1142,29 @@ package org.mozilla.geckoview {
+@@ -1102,6 +1151,29 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -316,7 +316,7 @@ index a410550e60..032b5f2509 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1108,6 +1180,9 @@ package org.mozilla.geckoview {
+@@ -1117,6 +1189,9 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -327,7 +327,7 @@ index a410550e60..032b5f2509 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 25ea09c3f6..39182b1d9b 100644
+index 95f2454abf..3a77508983 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -640,6 +640,121 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -452,16 +452,7 @@ index 25ea09c3f6..39182b1d9b 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -706,7 +821,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-   /* package */ final Pref<Boolean> mExtensionsWebAPIEnabled =
-       new Pref<>("extensions.webapi.enabled", false);
-   /* package */ final PrefWithoutDefault<Boolean> mExtensionsProcess =
--      new PrefWithoutDefault<Boolean>("extensions.webextensions.remote");
-+      new PrefWithoutDefault<Boolean>("z99.ignore.boolean");
-   /* package */ final PrefWithoutDefault<Long> mExtensionsProcessCrashTimeframe =
-       new PrefWithoutDefault<Long>("extensions.webextensions.crash.timeframe");
-   /* package */ final PrefWithoutDefault<Integer> mExtensionsProcessCrashThreshold =
-@@ -766,6 +881,30 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -770,6 +885,30 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
@@ -492,7 +483,7 @@ index 25ea09c3f6..39182b1d9b 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2206,6 +2345,239 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2256,6 +2395,239 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  
