@@ -277,6 +277,13 @@ patches:
     effect: "No data is synchronized with Mozilla unless explicitly enabled by user."
     category: "Privacy"
 
+  - file: "disable-sync-avatar-fetching.patch"
+    name: "Disable Firefox Sync Avatar Fetching"
+    description: "If Firefox Sync is enabled, disables downloading the user's profile picture from Mozilla."
+    reason: "To prevent Firefox from connecting to `https://profile.accounts.firefox.com/v1/avatar/b` every time the user navigates to settings, if Firefox Sync is enabled."
+    effect: "Reduces unwanted network activity and integration with third party services."
+    category: "Privacy"
+
   - file: "fenix-liberate.patch"
     name: "Remove Proprietary Libraries (Fenix)"
     description: "Patches out proprietary and tracking libraries from Fenix (and replaces them with suitable alternatives, such as microG, if available)."
