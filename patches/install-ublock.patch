@@ -13,43 +13,53 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  create mode 100644 mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/AddonUtils.kt
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 492c009ff9..d692aaa234 100644
+index 492c009ff9..988155f8a2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-@@ -121,6 +121,9 @@ class WebExtensionPromptFeature(
+@@ -36,6 +36,7 @@ import org.mozilla.fenix.R
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.settings.SupportUtils
+ import org.mozilla.fenix.theme.ThemeManager
++import org.mozilla.fenix.utils.IronFoxAddons
+ 
+ /**
+  * Feature implementation for handling [WebExtensionPromptRequest] and showing the respective UI.
+@@ -121,6 +122,9 @@ class WebExtensionPromptFeature(
      private fun handlePostInstallationRequest(
          addon: Addon,
      ) {
-+        if (org.mozilla.fenix.utils.isUBlock(addon)) {
++        if (IronFoxAddons.isUBlockOrigin(addon)) {
 +            return
 +        }
          showPostInstallationDialog(addon)
      }
  
-@@ -128,6 +131,14 @@ class WebExtensionPromptFeature(
+@@ -128,6 +132,15 @@ class WebExtensionPromptFeature(
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Required,
      ) {
-+        if (org.mozilla.fenix.utils.isUBlock(addon)) {
++        if (IronFoxAddons.isUBlockOrigin(addon)) {
 +            handlePermissions(
 +                promptRequest = promptRequest,
 +                granted = true,
-+                privateBrowsingAllowed = true
++                privateBrowsingAllowed = true,
++                technicalAndInteractionDataGranted = false,
 +            )
 +            return
 +        }
          showPermissionDialog(
              addon = addon,
              promptRequest = promptRequest,
-@@ -142,6 +153,14 @@ class WebExtensionPromptFeature(
+@@ -142,6 +155,15 @@ class WebExtensionPromptFeature(
          addon: Addon,
          promptRequest: WebExtensionPromptRequest.AfterInstallation.Permissions.Optional,
      ) {
-+        if (org.mozilla.fenix.utils.isUBlock(addon)) {
++        if (IronFoxAddons.isUBlockOrigin(addon)) {
 +            handlePermissions(
 +                promptRequest = promptRequest,
 +                granted = true,
-+                privateBrowsingAllowed = true
++                privateBrowsingAllowed = true,
++                technicalAndInteractionDataGranted = false,
 +            )
 +            return
 +        }
