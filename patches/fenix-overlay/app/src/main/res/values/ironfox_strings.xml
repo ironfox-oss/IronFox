@@ -6,12 +6,21 @@
     <!-- Warn users that this setting is not recommended or supported -->
     <string name="unsupported_summary">This setting is NOT recommended or supported. Proceed with caution.</string>
 
+    <!-- IronFox Settings -->
+    <string name="if_title">IronFox</string>
+    <string name="if_preferences">IronFox settings</string>
+    <string name="if_preferences_misc">Miscellaneous</string>
+    <string name="if_preferences_privacy">Privacy</string>
+    <string name="if_preferences_privacy_security">Privacy and security</string>
+    <string name="if_preferences_secret">Secret settings</string>
+    <string name="if_preferences_security">Security</string>
+
     <!-- Accessibility Services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
-    <string name="preference_accessibility_enabled_summary">Enable to allow communication with accessibility services on your device.</string>
 
     <!-- Cross-origin referer policy -->
     <string name="preference_referer_policy">Cross-origin referer policy</string>
+    <string name="preference_referer_policy_summary">Configure the behavior of cross-origin referers</string>
     <string name="preference_referer_policy_always">Always send cross-origin referers</string>
     <string name="preference_referer_policy_base_domains_match">Send cross-origin referers when base domains match</string>
     <string name="preference_referer_policy_hosts_match">Disable cross-origin referers</string>
@@ -34,23 +43,35 @@
     <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
+    <string name="preference_jit_enabled_summary">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
 
     <!-- OCSP -->
     <string name="preference_ocsp_require">Hard-fail OCSP revocation checks</string>
+    <string name="preference_ocsp_require_summary">When enabled, you may encounter occasional connection errors</string>
 
     <!-- PDF.js -->
     <string name="preference_pdfjs_disabled">Open PDF files externally</string>
+
+    <!-- Preferred website appearance -->
+    <!-- (The description here is adapted from Firefox for Desktop: https://searchfox.org/mozilla-release/rev/34c2c305/browser/locales/en-US/browser/preferences/preferences.ftl#277) -->
+    <string name="preference_website_appearance_title">Preferred website appearance</string>
+    <string name="preference_website_appearance_description">Some websites adapt their color scheme based on your preferences. Choose which color scheme you’d like to use for those sites. Note that options other than Light can aid fingerprinting by causing your browser to appear more unique.</string>
+    <string name="preference_prefers_browser_color_scheme">Follow browser theme</string>
+    <string name="preference_prefers_light_color_scheme">Light</string>
+    <string name="preference_prefers_dark_color_scheme">Dark</string>
 
     <!-- Safe Browsing -->
     <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
     <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
     <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
+    <string name="preference_safe_browsing_enabled_summary">Provides real-time protection against dangerous websites, malware, and phishing attempts - Changing this setting will restart your browser</string>
 
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english_title">Spoof language to en-US</string>
     <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
     <string name="tor_spoof_english_description">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
-    <string name="tor_spoof_english">Request English versions of webpages for stronger fingerprinting protection</string>
+    <string name="tor_spoof_english">Request English versions of webpages</string>
+    <string name="tor_spoof_english_summary">Strengthens fingerprinting protection</string>
 
     <!-- SVG -->
     <string name="preference_svg_enabled">Enable Scalable Vector Graphics (SVG)</string>
@@ -76,14 +97,6 @@
 
     <!-- WebRTC -->
     <string name="preference_webrtc_enabled">Enable WebRTC</string>
-
-    <!-- Website Appearance -->
-    <!-- (The description here is adapted from Firefox for Desktop: https://searchfox.org/mozilla-release/rev/34c2c305/browser/locales/en-US/browser/preferences/preferences.ftl#277) -->
-    <string name="preference_website_appearance_title">Website appearance</string>
-    <string name="preference_website_appearance_description">Some websites adapt their color scheme based on your preferences. Choose which color scheme you’d like to use for those sites. Note that options other than Light can aid fingerprinting by causing your browser to appear more unique.</string>
-    <string name="preference_prefers_light_color_scheme">Light</string>
-    <string name="preference_prefers_dark_color_scheme">Dark</string>
-    <string name="preference_prefers_browser_color_scheme">Follow browser theme</string>
 
     <!-- XPInstall -->
     <string name="preference_xpinstall_enabled">Allow installation of add-ons</string>

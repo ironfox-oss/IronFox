@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:moz="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+    <!-- IronFox Settings -->
+    <string name="pref_key_if_preferences" translatable="false">pref_key_if_preferences</string>
+
     <!-- Accessibility Services -->
     <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
 
@@ -15,12 +18,19 @@
     <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>
 
     <!-- Cross-origin referer policy -->
+    <string name="pref_key_referer_policy" translatable="false">pref_key_referer_policy</string>
     <string name="pref_key_referer_policy_always" translatable="false">pref_key_referer_policy_always</string>
     <string name="pref_key_referer_policy_base_domains_match" translatable="false">pref_key_referer_policy_base_domains_match</string>
     <string name="pref_key_referer_policy_hosts_match" translatable="false">pref_key_referer_policy_hosts_match</string>
-    <string name="pref_key_referer_policy_settings" translatable="false">pref_key_referer_policy_settings</string>
+
+    <!-- Preferred website appearance -->
+    <string name="pref_key_prefers_browser_color_scheme" translatable="false">pref_key_prefers_browser_color_scheme</string>
+    <string name="pref_key_prefers_dark_color_scheme" translatable="false">pref_key_prefers_dark_color_scheme</string>
+    <string name="pref_key_prefers_light_color_scheme" translatable="false">pref_key_prefers_light_color_scheme</string>
+    <string name="pref_key_website_appearance_description" translatable="false">pref_key_website_appearance_description</string>
 
     <!-- Secret Settings -->
+    <string name="pref_key_if_secret" translatable="false">pref_key_if_secret</string>
     <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
     <string name="pref_key_widevine_enabled" translatable="false">pref_key_widevine_enabled</string>
 
@@ -28,6 +38,7 @@
     <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
     <string name="pref_key_ocsp_require" translatable="false">pref_key_ocsp_require</string>
     <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
+    <string name="pref_key_safe_browsing_enabled_caption" translatable="false">pref_key_safe_browsing_enabled_caption</string>
     <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
 
     <!-- Spoof English -->
@@ -40,10 +51,4 @@
     <!-- UnifiedPush -->
     <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
     <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
-
-    <!-- Website Appearance -->
-    <string name="pref_key_prefers_browser_color_scheme" translatable="false">pref_key_prefers_browser_color_scheme</string>
-    <string name="pref_key_prefers_dark_color_scheme" translatable="false">pref_key_prefers_dark_color_scheme</string>
-    <string name="pref_key_prefers_light_color_scheme" translatable="false">pref_key_prefers_light_color_scheme</string>
-    <string name="pref_key_website_appearance_description" translatable="false">pref_key_website_appearance_description</string>
 </resources>
