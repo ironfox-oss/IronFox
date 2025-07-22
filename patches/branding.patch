@@ -39,16 +39,18 @@ index e43dec84c6..e462b4c0fe 100644
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index c13ecb6c86..cbcdfcb59e 100644
+index c13ecb6c86..588396072d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -26,9 +26,9 @@ object SupportUtils {
+@@ -25,10 +25,10 @@ object SupportUtils {
+     const val POCKET_TRENDING_URL = "https://getpocket.com/fenix-top-articles"
      const val WIKIPEDIA_URL = "https://www.wikipedia.org/"
      const val FENIX_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-     const val GOOGLE_URL = "https://www.google.com/"
+-    const val GOOGLE_URL = "https://www.google.com/"
 -    const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
 -    const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
 -    const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
++    const val GOOGLE_URL = ""
 +    const val GOOGLE_US_URL = ""
 +    const val GOOGLE_XX_URL = ""
 +    const val WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"
