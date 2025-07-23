@@ -971,13 +971,6 @@
         "supportURL": "https://badblock.celenity.dev/issues",
         "instructionURL": "https://badblock.celenity.dev"
     },
-    "beacon": {
-        "content": "filters",
-        "group": "default",
-        "title": "Beacon API Stub",
-        "contentURL": "https://gitlab.com/celenityy/Phoenix/-/raw/02cbe890a7a50b5d03526d0b53fd29a39d872404/uBlock/beacon.txt",
-        "supportURL": "https://phoenix.celenity.dev/issues"
-    },
     "bpc-filters": {
         "content": "filters",
         "group": "annoyances",

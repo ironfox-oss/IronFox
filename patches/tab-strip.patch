@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
-index e53ac45f01..02dd96ad92 100644
+index ffa40b19a0..4aa70b57b2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/tabstrip/TabStripFeatureFlag.kt
-@@ -6,22 +6,22 @@ package org.mozilla.fenix.browser.tabstrip
+@@ -6,24 +6,24 @@ package org.mozilla.fenix.browser.tabstrip
  
  import android.content.Context
  import mozilla.components.support.ktx.android.content.doesDeviceHaveHinge
@@ -14,13 +14,16 @@ index e53ac45f01..02dd96ad92 100644
   * Returns true if the tab strip is enabled.
   */
  fun Context.isTabStripEnabled(): Boolean =
--    isTabStripEligible() && tabStripExperimentEnabled()
+-    tabStripExperimentEnabled() && (isTabStripEligible() || tabStripExperimentForceEnabled())
 +    settings().isTabStripEnabled
  
--private fun tabStripExperimentEnabled(): Boolean =
--    FxNimbus.features.tabStrip.value().enabled
-+//private fun tabStripExperimentEnabled(): Boolean =
-+//    FxNimbus.features.tabStrip.value().enabled
+-private fun tabStripExperimentEnabled(): Boolean = FxNimbus.features.tabStrip.value().enabled
++//private fun tabStripExperimentEnabled(): Boolean = FxNimbus.features.tabStrip.value().enabled
+ 
+-private fun tabStripExperimentForceEnabled(): Boolean =
+-    FxNimbus.features.tabStrip.value().allowOnAllDevices
++//private fun tabStripExperimentForceEnabled(): Boolean =
++//    FxNimbus.features.tabStrip.value().allowOnAllDevices
  
  /**
   * Returns true if the the device has the prerequisites to enable the tab strip.
@@ -30,27 +33,8 @@ index e53ac45f01..02dd96ad92 100644
      // Tab Strip is currently disabled on foldable devices, while we work on improving the
      // Homescreen / Toolbar / Browser screen to better support the feature. There is also
      // an emulator bug that causes the doesDeviceHaveHinge check to return true on emulators,
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cfbdaba62c..8e24737e50 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -682,9 +682,11 @@ class Core(
-             (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
-                 Configuration.UI_MODE_NIGHT_YES
-         return when {
--            context.settings().shouldUseDarkTheme -> PreferredColorScheme.Dark
--            context.settings().shouldUseLightTheme -> PreferredColorScheme.Light
--            inDark -> PreferredColorScheme.Dark
-+            context.settings().prefersBrowserColorScheme && context.settings().shouldUseDarkTheme -> PreferredColorScheme.Dark
-+            context.settings().prefersBrowserColorScheme && context.settings().shouldUseLightTheme -> PreferredColorScheme.Light
-+            context.settings().prefersBrowserColorScheme && inDark -> PreferredColorScheme.Dark
-+            context.settings().prefersDarkColorScheme -> PreferredColorScheme.Dark
-+            context.settings().prefersLightColorScheme -> PreferredColorScheme.Light
-             else -> PreferredColorScheme.Light
-         }
-     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
-index c1428b2898..d7b3b9bec7 100644
+index c1428b2898..2b2832d991 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
 @@ -9,9 +9,9 @@ import android.os.Build.VERSION.SDK_INT
@@ -65,23 +49,8 @@ index c1428b2898..d7b3b9bec7 100644
  import androidx.preference.SwitchPreference
  import org.mozilla.fenix.FeatureFlags
  import org.mozilla.fenix.GleanMetrics.AppTheme
-@@ -36,6 +36,9 @@ class CustomizationFragment : PreferenceFragmentCompat() {
-     private lateinit var radioDarkTheme: RadioButtonPreference
-     private lateinit var radioAutoBatteryTheme: RadioButtonPreference
-     private lateinit var radioFollowDeviceTheme: RadioButtonPreference
-+    private lateinit var radioPrefersLightColorScheme: RadioButtonPreference
-+    private lateinit var radioPrefersDarkColorScheme: RadioButtonPreference
-+    private lateinit var radioPrefersBrowserColorScheme: RadioButtonPreference
- 
-     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-         setPreferencesFromResource(R.xml.customization_preferences, rootKey)
-@@ -53,23 +56,47 @@ class CustomizationFragment : PreferenceFragmentCompat() {
-         bindDarkTheme()
-         bindLightTheme()
+@@ -55,21 +55,42 @@ class CustomizationFragment : PreferenceFragmentCompat() {
          bindAutoBatteryTheme()
-+        bindPrefersBrowserColorScheme()
-+        bindPrefersDarkColorScheme()
-+        bindPrefersLightColorScheme()
          setupRadioGroups()
          val tabletAndTabStripEnabled = requireContext().isTabStripEnabled()
 -        if (tabletAndTabStripEnabled) {
@@ -132,54 +101,7 @@ index c1428b2898..d7b3b9bec7 100644
      private fun setupRadioGroups() {
          addToRadioGroup(
              radioLightTheme,
-@@ -80,6 +107,11 @@ class CustomizationFragment : PreferenceFragmentCompat() {
-                 radioAutoBatteryTheme
-             },
-         )
-+        addToRadioGroup(
-+            radioPrefersLightColorScheme,
-+            radioPrefersDarkColorScheme,
-+            radioPrefersBrowserColorScheme
-+        )
-     }
- 
-     private fun bindLightTheme() {
-@@ -117,6 +149,34 @@ class CustomizationFragment : PreferenceFragmentCompat() {
-         }
-     }
- 
-+    private fun bindPrefersLightColorScheme() {
-+        radioPrefersLightColorScheme = requirePreference(R.string.pref_key_prefers_light_color_scheme)
-+        radioPrefersLightColorScheme.onClickListener {
-+            setNewColorScheme()
-+        }
-+    }
-+
-+    private fun bindPrefersDarkColorScheme() {
-+        radioPrefersDarkColorScheme = requirePreference(R.string.pref_key_prefers_dark_color_scheme)
-+        radioPrefersDarkColorScheme.onClickListener {
-+            setNewColorScheme()
-+        }
-+    }
-+
-+    private fun bindPrefersBrowserColorScheme() {
-+        radioPrefersBrowserColorScheme = requirePreference(R.string.pref_key_prefers_browser_color_scheme)
-+        radioPrefersBrowserColorScheme.onClickListener {
-+            setNewColorScheme()
-+        }
-+    }
-+
-+    private fun setNewColorScheme() {
-+        with(requireComponents.core) {
-+            engine.settings.preferredColorScheme = getPreferredColorScheme()
-+        }
-+        requireComponents.useCases.sessionUseCases.reload.invoke()
-+    }
-+
-     private fun setNewTheme(mode: Int) {
-         if (AppCompatDelegate.getDefaultNightMode() == mode) return
-         AppCompatDelegate.setDefaultNightMode(mode)
-@@ -153,6 +213,20 @@ class CustomizationFragment : PreferenceFragmentCompat() {
+@@ -153,6 +174,20 @@ class CustomizationFragment : PreferenceFragmentCompat() {
          addToRadioGroup(topPreference, bottomPreference)
      }
  
@@ -201,44 +123,10 @@ index c1428b2898..d7b3b9bec7 100644
          requirePreference<SwitchPreference>(R.string.pref_key_website_pull_to_refresh).apply {
              isVisible = FeatureFlags.PULL_TO_REFRESH_ENABLED
 diff --git a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
-index a24d1b7b2b..e4075628b9 100644
+index a24d1b7b2b..8949710ec1 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
-@@ -32,6 +32,33 @@
-             app:isPreferenceVisible="@bool/API28" />
-     </androidx.preference.PreferenceCategory>
- 
-+    <androidx.preference.PreferenceCategory
-+        android:layout="@layout/preference_cat_style"
-+        android:title="@string/preference_website_appearance_title"
-+        app:iconSpaceReserved="false">
-+        <androidx.preference.Preference
-+            android:key="@string/pref_key_website_appearance_description"
-+            android:title=""
-+            android:summary="@string/preference_website_appearance_description"
-+            android:selectable="false"
-+            app:iconSpaceReserved="false" />
-+
-+        <org.mozilla.fenix.settings.RadioButtonPreference
-+            android:defaultValue="true"
-+            android:key="@string/pref_key_prefers_light_color_scheme"
-+            android:title="@string/preference_prefers_light_color_scheme" />
-+
-+        <org.mozilla.fenix.settings.RadioButtonPreference
-+            android:defaultValue="false"
-+            android:key="@string/pref_key_prefers_dark_color_scheme"
-+            android:title="@string/preference_prefers_dark_color_scheme" />
-+
-+        <org.mozilla.fenix.settings.RadioButtonPreference
-+            android:defaultValue="false"
-+            android:key="@string/pref_key_prefers_browser_color_scheme"
-+            android:title="@string/preference_prefers_browser_color_scheme" />
-+    </androidx.preference.PreferenceCategory>
-+
-     <androidx.preference.PreferenceCategory
-         android:layout="@layout/preference_cat_style"
-         android:title="@string/preferences_toolbar_2"
-@@ -43,6 +70,21 @@
+@@ -43,6 +43,21 @@
          <org.mozilla.fenix.settings.RadioButtonPreference
              android:key="@string/pref_key_toolbar_bottom"
              android:title="@string/preference_bottom_toolbar" />

@@ -1,8 +1,8 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index f012e43dc0..fc3b947485 100644
+index 16b631eb0c..7ba978b9cb 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -107,6 +107,8 @@ sentry = "8.9.0"
+@@ -108,6 +108,8 @@ sentry = "8.14.0"
  commons-exec = "1.3"
  tomlj = "1.1.0"
  
@@ -11,7 +11,7 @@ index f012e43dc0..fc3b947485 100644
  [libraries]
  
  kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-@@ -230,6 +232,7 @@ thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref
+@@ -240,6 +242,7 @@ thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref
  thirdparty-zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
  thirdparty-disklrucache = { group = "com.jakewharton", name = "disklrucache", version.ref = "disklrucache" }
  thirdparty-androidsvg = { group = "com.caverock", name = "androidsvg-aar", version.ref = "androidsvg" }
@@ -20,31 +20,31 @@ index f012e43dc0..fc3b947485 100644
  desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
  firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebase-messaging" }
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 26e76a18d2..1dcd401764 100644
+index 489c138b0d..a25f7ca7bc 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -594,6 +594,7 @@ projects:
-     - support-utils
-     - tooling-lint
-     - ui-icons
-+    - feature-unifiedpush
-   feature-addons:
+@@ -602,6 +602,7 @@ projects:
+     - components:support-utils
+     - components:tooling-lint
+     - components:ui-icons
++    - components:feature-unifiedpush
+   components:feature-addons:
      description: A feature that provides for managing add-ons.
      path: components/feature/addons
-@@ -2409,3 +2410,13 @@ projects:
-     - tooling-lint
-     - ui-colors
-     - ui-icons
-+  feature-unifiedpush:
+@@ -2413,3 +2414,13 @@ projects:
+     - components:tooling-lint
+     - components:ui-colors
+     - components:ui-icons
++  components:feature-unifiedpush:
 +    description: Feature that implements push notifications with UnifiedPush.
 +    path: components/feature/unifiedpush
 +    publish: true
 +    upstream_dependencies:
-+      - concept-base
-+      - concept-push
-+      - support-base
-+      - support-test
-+      - tooling-lint
++      - components:concept-base
++      - components:concept-push
++      - components:support-base
++      - components:support-test
++      - components:tooling-lint
 diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt
 new file mode 100644
 index 000000000000..85e18ea0d9f0
@@ -230,14 +230,14 @@ index 000000000000..802364f0a9ab
 +    abstract val disableRateLimit: Boolean
 +}
 diff --git a/mobile/android/android-components/components/feature/accounts-push/build.gradle b/mobile/android/android-components/components/feature/accounts-push/build.gradle
-index 613e5aa1fdd4..4322461f50a2 100644
+index 12e4343bec..b939f32151 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/build.gradle
 +++ b/mobile/android/android-components/components/feature/accounts-push/build.gradle
 @@ -33,6 +33,7 @@ dependencies {
-     implementation project(':support-base')
-     implementation project(':concept-push')
-     implementation project(':feature-push')
-+    implementation project(':feature-unifiedpush')
+     implementation project(':components:support-base')
+     implementation project(':components:concept-push')
+     implementation project(':components:feature-push')
++    implementation project(':components:feature-unifiedpush')
  
      implementation libs.androidx.work.runtime
      implementation libs.androidx.lifecycle.process
@@ -369,7 +369,7 @@ index cd58a69246..dc35a50c10 100644
  
  /**
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
-index 30e403088831..532382a2fbbb 100644
+index 30e4030888..532382a2fb 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
 @@ -4,7 +4,7 @@
@@ -382,7 +382,7 @@ index 30e403088831..532382a2fbbb 100644
  /**
   * A [ScopeProperty] implementation generates and holds the [PushScope].
 diff --git a/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt b/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
-index e4bf8170af..f22cd6f168 100644
+index e4bf8170af..9d743d574a 100644
 --- a/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
 +++ b/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
 @@ -27,15 +27,17 @@ import mozilla.components.concept.push.PushError
@@ -402,8 +402,8 @@ index e4bf8170af..f22cd6f168 100644
  
 -typealias PushScope = String
 -typealias AppServerKey = String
-+// typealias PushScope = String
-+// typealias AppServerKey = String
++//typealias PushScope = String
++//typealias AppServerKey = String
  
  /**
   * A implementation of a [PushProcessor] that should live as a singleton by being installed
@@ -648,7 +648,7 @@ index 000000000000..c492a3879873
 +
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 new file mode 100644
-index 000000000000..7358ed93a2a0
+index 0000000000..d74042e4fb
 --- /dev/null
 +++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 @@ -0,0 +1,52 @@
@@ -678,13 +678,13 @@ index 000000000000..7358ed93a2a0
 +
 +
 +dependencies {
-+    implementation project(':concept-push')
++    implementation project(':components:concept-push')
 +
 +    implementation ComponentsDependencies.mozilla_appservices_push
 +
 +    // Remove when the MessageBus is implemented somewhere else.
-+    implementation project(':support-base')
-+    implementation project(':ui-icons')
++    implementation project(':components:support-base')
++    implementation project(':components:ui-icons')
 +
 +    implementation libs.kotlin.coroutines
 +    implementation libs.androidx.work.runtime
@@ -693,7 +693,7 @@ index 000000000000..7358ed93a2a0
 +        exclude group: "com.google.protobuf", module: "protobuf-java"
 +    }
 +
-+    testImplementation project(':support-test')
++    testImplementation project(':components:support-test')
 +
 +    testImplementation libs.androidx.test.core
 +    testImplementation libs.androidx.test.junit
@@ -2195,35 +2195,35 @@ index 000000000000..3f67ea5ac1bf
 @@ -0,0 +1 @@
 +sdk=35
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index b5aa2ce3a4..d863ee1bbf 100644
+index 0620fba71e..f6eae18675 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
-@@ -95,6 +95,7 @@ projects:
-     - ui-icons
-     - ui-tabcounter
-     - ui-widgets
-+    - feature-unifiedpush
+@@ -93,6 +93,7 @@ projects:
+     - components:ui-icons
+     - components:ui-tabcounter
+     - components:ui-widgets
++    - components:feature-unifiedpush
  variants:
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..c8351a14bd 100644
+index 5bcd9c730b..27bc3c0912 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -654,6 +654,8 @@ dependencies {
-     implementation project(':lib-dataprotect')
-     testImplementation project(':support-test-fakes')
+@@ -653,6 +653,8 @@ dependencies {
+     implementation project(':components:lib-dataprotect')
+     testImplementation project(':components:support-test-fakes')
  
-+    implementation project(':feature-unifiedpush')
++    implementation project(':components:feature-unifiedpush')
 +
      debugImplementation libs.leakcanary
      debugImplementation libs.androidx.compose.ui.tooling
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 13db9f3c83..526e8f1bf4 100644
+index a88ff8d3ac..f391c627d0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -39,7 +39,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
+@@ -38,7 +38,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
  import mozilla.components.concept.base.crash.Breadcrumb
  import mozilla.components.concept.engine.webextension.WebExtension
  import mozilla.components.concept.engine.webextension.isUnsupported
@@ -2232,7 +2232,7 @@ index 13db9f3c83..526e8f1bf4 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -491,7 +491,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -501,7 +501,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -2242,10 +2242,10 @@ index 13db9f3c83..526e8f1bf4 100644
              WebPushEngineIntegration(components.core.engine, it).start()
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 1e64545a1220..689a28c1888e 100644
+index 028742f2b3..952f655b6f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-@@ -219,8 +219,8 @@ class BackgroundServices(
+@@ -225,8 +225,8 @@ class BackgroundServices(
          accountManager.register(AccountManagerReadyObserver(accountManagerAvailableQueue))
  
          // Enable push if it's configured.

@@ -1,8 +1,21 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 325e5d2141..3d1596f181 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -530,7 +530,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+             }
+         }
+ 
+-        preferenceRemoteDebugging?.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
++        preferenceRemoteDebugging?.isVisible = false
+         preferenceRemoteDebugging?.setOnPreferenceChangeListener<Boolean> { preference, newValue ->
+             preference.context.settings().preferences.edit { putBoolean(preference.key, newValue) }
+             requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..9c4d52f60b 100644
+index 8913d9f230..c78bdf93da 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -375,10 +375,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -381,10 +381,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
                  true,
              )
  
@@ -17,21 +30,3 @@ index 9197b274db..9c4d52f60b 100644
  
      var isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..6781d33188 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -190,11 +190,11 @@
-             app:iconSpaceReserved="false"
-             app:isPreferenceVisible="@bool/IS_DEBUG" />
- 
--        <androidx.preference.SwitchPreference
-+        <!-- <androidx.preference.SwitchPreference
-             android:key="@string/pref_key_remote_debugging"
-             android:title="@string/preferences_remote_debugging"
-             app:iconSpaceReserved="false"
--            android:defaultValue="false" />
-+            android:defaultValue="false" /> -->
- 
-         <androidx.preference.SwitchPreference
-             android:defaultValue="false"

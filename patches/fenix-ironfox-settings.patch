@@ -1,0 +1,1227 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 6875486c72..d976d249d5 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -196,6 +196,30 @@ class Core(
+             postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
+             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
+             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
++            accessibilityEnabled = context.settings().accessibilityEnabled,
++            cacheEnabled = context.settings().cacheEnabled,
++            cacheSslEnabled = context.settings().cacheSslEnabled,
++            emeEnabled = context.settings().emeEnabled,
++            ipv6Enabled = context.settings().ipv6Enabled,
++            javascriptEnabled = context.settings().javascriptEnabled,
++            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
++            ocspRequire = context.settings().ocspRequire,
++            pdfjsDisabled = context.settings().pdfjsDisabled,
++            printEnabled = context.settings().printEnabled,
++            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
++            spoofEnglish = context.settings().spoofEnglish,
++            svgEnabled = context.settings().svgEnabled,
++            wasmEnabled = context.settings().wasmEnabled,
++            webglEnabled = context.settings().webglEnabled,
++            webrtcEnabled = context.settings().webrtcEnabled,
++            widevineEnabled = context.settings().widevineEnabled,
++            xpinstallEnabled = context.settings().xpinstallEnabled,
+         )
+ 
+         // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
+@@ -229,6 +253,7 @@ class Core(
+             defaultSettings,
+             geckoRuntime,
+         ).also {
++            GeckoProvider.setupSafeBrowsing(it, context.settings().safeBrowsingEnabled)
+             WebCompatFeature.install(it)
+         }
+     }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
+new file mode 100644
+index 0000000000..c6e76ab35b
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
+@@ -0,0 +1,664 @@
++package org.mozilla.fenix.settings
++
++import android.content.DialogInterface
++import android.os.Bundle
++import android.os.Handler
++import android.os.Looper
++import android.widget.Toast
++import androidx.appcompat.app.AlertDialog
++import androidx.navigation.NavDirections
++import androidx.navigation.findNavController
++import androidx.navigation.fragment.findNavController
++import androidx.preference.Preference
++import androidx.preference.PreferenceCategory
++import androidx.preference.PreferenceFragmentCompat
++import androidx.preference.SwitchPreference
++import kotlin.system.exitProcess
++import mozilla.components.concept.engine.EngineSession
++import mozilla.components.ui.widgets.withCenterAlignedButtons
++import org.mozilla.fenix.components.Push
++import org.mozilla.fenix.ext.components
++import org.mozilla.fenix.ext.getPreferenceKey
++import org.mozilla.fenix.ext.requireComponents
++import org.mozilla.fenix.ext.settings
++import org.mozilla.fenix.ext.showToolbar
++import org.mozilla.fenix.R
++import org.mozilla.fenix.utils.IronFoxPreferences
++import org.mozilla.fenix.utils.view.addToRadioGroup
++
++@Suppress("TooManyFunctions")
++class IronFoxSettingsFragment : PreferenceFragmentCompat() {
++    private lateinit var radioPrefersLightColorScheme: RadioButtonPreference
++    private lateinit var radioPrefersDarkColorScheme: RadioButtonPreference
++    private lateinit var radioPrefersBrowserColorScheme: RadioButtonPreference
++    private lateinit var radioRefererXOriginAlways: RadioButtonPreference
++    private lateinit var radioRefererXOriginBaseDomainsMatch: RadioButtonPreference
++    private lateinit var radioRefererXOriginHostsMatch: RadioButtonPreference
++
++    override fun onResume() {
++        super.onResume()
++        showToolbar(getString(R.string.if_preferences))
++
++        /*** Privacy and Security ***/
++
++        /**
++         * Indicates whether or not we should enable Accessibility Services
++         * Default: false
++         * Gecko preference(s) impacted: accessibility.force_disabled
++         */
++        val accessibilityEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_accessibility_enabled,
++        )
++
++        accessibilityEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, accessibilityEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.accessibilityEnabled = accessibilityEnabled
++            components.core.engine.settings.accessibilityEnabled = accessibilityEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable JavaScript
++         * Default: true
++         * Gecko preference(s) impacted: javascript.enabled
++         */
++        val javascriptEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_javascript_enabled,
++        )
++
++        javascriptEnabledPreference.setOnPreferenceChangeListener { preference, javascriptEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptEnabled = javascriptEnabled as Boolean
++            components.core.engine.settings.javascriptEnabled = javascriptEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable WebGL globally
++         * Default: true
++         * Gecko preference(s) impacted: webgl.disabled
++         */
++        val webglEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_webgl_enabled,
++        )
++
++        webglEnabledPreference.setOnPreferenceChangeListener { preference, webglEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.webglEnabled = webglEnabled as Boolean
++            components.core.engine.settings.webglEnabled = webglEnabled
++
++            true
++        }
++
++        /*** Privacy ***/
++        
++        /**
++         * Indicates whether or not we should enable disk cache
++         * Default: false
++         * Gecko preference(s) impacted: browser.cache.disk.enable
++         */
++        val cacheEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_cache_enabled,
++        )
++
++        cacheEnabledPreference.setOnPreferenceChangeListener { preference, cacheEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.cacheEnabled = cacheEnabled as Boolean
++            components.core.engine.settings.cacheEnabled = cacheEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable disk cache for secure webpages
++         * Default: false
++         * Gecko preference(s) impacted: browser.cache.disk_cache_ssl
++         */
++        val cacheSslEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_cache_ssl_enabled,
++        )
++
++        cacheSslEnabledPreference.setOnPreferenceChangeListener { preference, cacheSslEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.cacheSslEnabled = cacheSslEnabled as Boolean
++            components.core.engine.settings.cacheSslEnabled = cacheSslEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable spoof the user's locale to en-US
++         * Default: true
++         * Gecko preference(s) impacted: privacy.spoof_english
++         */
++        val spoofEnglishPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_spoof_english,
++        )
++
++        spoofEnglishPreference.setOnPreferenceChangeListener { preference, spoofEnglish ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.spoofEnglish = spoofEnglish as Boolean
++            components.core.engine.settings.spoofEnglish = spoofEnglish
++
++            true
++        }
++
++        /*** Security ***/
++
++        /**
++        * Indicates whether or not we should allow the installation of add-ons
++        * Default: false
++        * Gecko preference(s) impacted: xpinstall.enabled
++        */
++        val xpinstallEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_xpinstall_enabled,
++        )
++
++        xpinstallEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, xpinstallEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.xpinstallEnabled = xpinstallEnabled
++            
++            components.core.engine.settings.xpinstallEnabled = xpinstallEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable JavaScript Just-in-time Compilation (JIT)
++         * Default: false
++         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jit_trustedprincipals, javascript.options.jithints, javascript.options.main_process_disable_jit, javascript.options.native_regexp, and javascript.options.wasm_baselinejit
++         */
++        val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_jit_enabled,
++        )
++
++        javascriptJitEnabledPreference.isChecked = IronFoxPreferences.isJavascriptJitEnabled(requireContext())
++        javascriptJitEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptJitEnabled = javascriptJitEnabled as Boolean
++            components.core.engine.settings.javascriptJitBaselineEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitBaselineWasmEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitHintsEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitIonEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitMainProcessEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitNativeRegexpEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable printing capabilities
++         * Default: true
++         * Gecko preference(s) impacted: print.enabled
++         */
++        val printEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_print_enabled,
++        )
++
++        printEnabledPreference.setOnPreferenceChangeListener { preference, printEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.printEnabled = printEnabled as Boolean
++            components.core.engine.settings.printEnabled = printEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable Safe Browsing
++         * Default: true
++         * Gecko preference(s) impacted: browser.safebrowsing.malware.enabled, browser.safebrowsing.phishing.enabled
++         */
++        val safeBrowsingEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_safe_browsing_enabled,
++        )
++
++        safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
++        safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
++            val engineSettings = requireContext().components.core.engine.settings
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.safeBrowsingEnabled = safeBrowsingEnabled
++
++            if (settings.safeBrowsingEnabled) {
++                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
++            } else {
++                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
++            }
++            requireContext().components.useCases.sessionUseCases.reload()
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable Scalar Vector Graphics (SVG)
++         * Default: true
++         * Gecko preference(s) impacted: svg.disabled
++         */
++        val svgEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_svg_enabled,
++        )
++
++        svgEnabledPreference.setOnPreferenceChangeListener { preference, svgEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.svgEnabled = svgEnabled as Boolean
++            components.core.engine.settings.svgEnabled = svgEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable WebAssembly (WASM)
++         * Default: true
++         * Gecko preference(s) impacted: javascript.options.wasm
++         */
++        val wasmEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_wasm_enabled,
++        )
++
++        wasmEnabledPreference.isChecked = IronFoxPreferences.isWebAssemblyEnabled(requireContext())
++        wasmEnabledPreference.setOnPreferenceChangeListener { preference, wasmEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.wasmEnabled = wasmEnabled as Boolean
++            components.core.engine.settings.wasmEnabled = wasmEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable WebRTC globally
++         * Default: true
++         * Gecko preference(s) impacted: media.peerconnection.enabled
++         */
++        val webrtcEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_webrtc_enabled,
++        )
++
++        webrtcEnabledPreference.setOnPreferenceChangeListener { preference, webrtcEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.webrtcEnabled = webrtcEnabled as Boolean
++            components.core.engine.settings.webrtcEnabled = webrtcEnabled
++
++            true
++        }
++
++        /**
++        * Indicates whether or not we should hard-fail OCSP revocation checks
++        * Default: true
++        * Gecko preference(s) impacted: security.OCSP.require
++        */
++        val ocspRequirePreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_ocsp_require,
++        )
++
++        ocspRequirePreference.setOnPreferenceChangeListener<Boolean> { preference, ocspRequire ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.ocspRequire = ocspRequire
++            
++            components.core.engine.settings.ocspRequire = ocspRequire
++
++            true
++        }
++
++        /*** Miscellaneous ***/
++
++        /**
++        * Indicates whether or not we should enable IPv6 network connectivity
++        * Default: true
++        * Gecko preference(s) impacted: network.dns.disableIPv6
++        */
++        val ipv6EnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_ipv6_enabled,
++        )
++
++        ipv6EnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, ipv6Enabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.ipv6Enabled = ipv6Enabled
++            
++            components.core.engine.settings.ipv6Enabled = ipv6Enabled
++
++            true
++        }
++        
++        /**
++         * Indicates whether or not we should disable PDF.js
++         * Default: false
++         * Gecko preference(s) impacted: pdfjs.disabled
++         */
++        val pdfjsDisabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_pdfjs_disabled,
++        )
++
++        pdfjsDisabledPreference.setOnPreferenceChangeListener { preference, pdfjsDisabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.pdfjsDisabled = pdfjsDisabled as Boolean
++            components.core.engine.settings.pdfjsDisabled = pdfjsDisabled
++
++            true
++        }
++
++        /*** Secret settings ***/
++
++        /**
++         * Indicates whether or not we should enable support for UnifiedPush
++         * Default: true
++         * Gecko preference(s) impacted: N/A
++         */
++        val enableUnifiedPushPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_enable_unifiedpush,
++        )
++
++        enableUnifiedPushPreference.setOnPreferenceChangeListener { preference, enableUnifiedPush ->
++            val settings = preference.context.settings()
++            settings.enableUnifiedPush = enableUnifiedPush as Boolean
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable Encrypted Media Extensions (EME)
++         * Default: false
++         * Gecko preference(s) impacted: media.eme.enabled
++         */
++        val emeEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_eme_enabled,
++        )
++
++        emeEnabledPreference.setOnPreferenceChangeListener { preference, emeEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.emeEnabled = emeEnabled as Boolean
++            components.core.engine.settings.emeEnabled = emeEnabled
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable the Google Widevine CDM
++         * Default: false
++         * Gecko preference(s) impacted: media.mediadrm-widevinecdm.visible
++         */
++        val widevineEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_widevine_enabled,
++        )
++
++        widevineEnabledPreference.setOnPreferenceChangeListener { preference, widevineEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.widevineEnabled = widevineEnabled as Boolean
++            components.core.engine.settings.widevineEnabled = widevineEnabled
++
++            true
++        }
++    }
++
++    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
++        setPreferencesFromResource(R.xml.ironfox_preferences, rootKey)
++        with(requireContext().settings()) {
++            findPreference<SwitchPreference>(
++                getPreferenceKey(R.string.pref_key_eme_enabled),
++            )?.isVisible = showSecretDebugMenuThisSession
++            findPreference<SwitchPreference>(
++                getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++            )?.isVisible = showSecretDebugMenuThisSession
++            findPreference<PreferenceCategory>(
++                getPreferenceKey(R.string.pref_key_if_secret),
++            )?.isVisible = showSecretDebugMenuThisSession
++            findPreference<SwitchPreference>(
++                getPreferenceKey(R.string.pref_key_use_unifiedpush),
++            )?.apply {
++                isVisible = enableUnifiedPush
++                isChecked = useUnifiedPush
++            }
++            findPreference<SwitchPreference>(
++                getPreferenceKey(R.string.pref_key_widevine_enabled),
++            )?.isVisible = showSecretDebugMenuThisSession
++        }
++        setupCrossOriginRefererPolicy()
++        setupWebsiteAppearance()
++    }
++
++    /*** Cross-origin referer policy ***/
++
++    private fun setupCrossOriginRefererPolicy() {
++        bindRefererXOriginAlways()
++        bindRefererXOriginBaseDomainsMatch()
++        bindRefererXOriginHostsMatch()
++        addToRadioGroup(
++            radioRefererXOriginAlways,
++            radioRefererXOriginBaseDomainsMatch,
++            radioRefererXOriginHostsMatch
++        )
++    }
++
++    /*** Preferred website appearance ***/
++
++    private fun setupWebsiteAppearance() {
++        bindPrefersBrowserColorScheme()
++        bindPrefersDarkColorScheme()
++        bindPrefersLightColorScheme()
++        addToRadioGroup(
++            radioPrefersLightColorScheme,
++            radioPrefersDarkColorScheme,
++            radioPrefersBrowserColorScheme
++        )
++    }
++
++    /**
++    * Indicates whether or not we should always send cross-origin referers
++    * Default: true
++    * Gecko preference(s) impacted: network.http.referer.XOriginPolicy (0)
++    */
++    private fun bindRefererXOriginAlways() {
++        radioRefererXOriginAlways = requirePreference(R.string.pref_key_referer_policy_always)
++        radioRefererXOriginAlways.onClickListener {
++            updateEngineRefererXOriginPolicy()
++        }
++    }
++
++    /**
++    * Indicates whether or not we should only send cross-origin referers when base domains match
++    * Default: false
++    * Gecko preference(s) impacted: network.http.referer.XOriginPolicy (1)
++    */
++    private fun bindRefererXOriginBaseDomainsMatch() {
++        radioRefererXOriginBaseDomainsMatch = requirePreference(R.string.pref_key_referer_policy_base_domains_match)
++        radioRefererXOriginBaseDomainsMatch.onClickListener {
++            updateEngineRefererXOriginPolicy()
++        }
++    }
++
++    /**
++    * Indicates whether or not we should disable cross-origin referers
++    * Default: false
++    * Gecko preference(s) impacted: network.http.referer.XOriginPolicy (2)
++    */
++    private fun bindRefererXOriginHostsMatch() {
++        radioRefererXOriginHostsMatch = requirePreference(R.string.pref_key_referer_policy_hosts_match)
++        radioRefererXOriginHostsMatch.onClickListener {
++            updateEngineRefererXOriginPolicy()
++        }
++    }
++
++    /**
++    * Indicates whether or not we should set CSS prefers-color-scheme to follow the browser's theme
++    * Default: false
++    * Gecko preference(s) impacted: N/A
++    */
++    private fun bindPrefersBrowserColorScheme() {
++        radioPrefersBrowserColorScheme = requirePreference(R.string.pref_key_prefers_browser_color_scheme)
++        radioPrefersBrowserColorScheme.onClickListener {
++            setNewColorScheme()
++        }
++    }
++
++    /**
++    * Indicates whether or not we should set CSS prefers-color-scheme to dark
++    * Default: false
++    * Gecko preference(s) impacted: N/A
++    */
++    private fun bindPrefersDarkColorScheme() {
++        radioPrefersDarkColorScheme = requirePreference(R.string.pref_key_prefers_dark_color_scheme)
++        radioPrefersDarkColorScheme.onClickListener {
++            setNewColorScheme()
++        }
++    }
++
++    /**
++    * Indicates whether or not we should set CSS prefers-color-scheme to light
++    * Default: true
++    * Gecko preference(s) impacted: N/A
++    */
++    private fun bindPrefersLightColorScheme() {
++        radioPrefersLightColorScheme = requirePreference(R.string.pref_key_prefers_light_color_scheme)
++        radioPrefersLightColorScheme.onClickListener {
++            setNewColorScheme()
++        }
++    }
++
++    private fun setNewColorScheme() {
++        with(requireComponents.core) {
++            engine.settings.preferredColorScheme = getPreferredColorScheme()
++        }
++        requireComponents.useCases.sessionUseCases.reload.invoke()
++    }
++
++    private fun updateEngineRefererXOriginPolicy() {
++        requireContext().components.core.engine.settings.refererXOriginPolicy =
++            requireContext().settings().getRefererXOriginPolicy()
++    }
++
++    @Suppress("ComplexMethod", "LongMethod")
++    override fun onPreferenceTreeClick(preference: Preference): Boolean {
++        val directions: NavDirections? = when (preference.key) {
++            /**
++            * Indicates whether or not we should use UnifiedPush to deliver push notifications
++            * Default: false
++            * Gecko preference(s) impacted: N/A
++            */
++            resources.getString(R.string.pref_key_use_unifiedpush) -> {
++                val context = requireActivity()
++                context.settings().apply { useUnifiedPush = !useUnifiedPush }
++                val alert = AlertDialog.Builder(context).apply {
++                    setTitle(context.getString(R.string.preferences_unifiedpush))
++                    setMessage(context.getString(R.string.quit_application))
++                    setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _ ->
++                        dialog.cancel()
++                    }
++
++                    setPositiveButton(android.R.string.ok) { _, _ ->
++                        Toast.makeText(
++                            context,
++                            getString(R.string.toast_change_unifiedpush_done),
++                            Toast.LENGTH_LONG,
++                        ).show()
++
++                        Handler(Looper.getMainLooper()).postDelayed(
++                            {
++                                exitProcess(0)
++                            },
++                            DEFAULT_EXIT_DELAY,
++                        )
++                    }
++                    create().withCenterAlignedButtons()
++                }
++                if (context.settings().useUnifiedPush) {
++                    requireComponents.push.switchToUnifiedPush(context) { success ->
++                        if (!success) {
++                            context.settings().useUnifiedPush = false
++                        } else {
++                            alert.show()
++                        }
++                    }
++                } else {
++                    requireComponents.push.switchToAutoPush(context)
++                    alert.show()
++                }
++                null
++            }
++
++            else -> null
++        }
++        directions?.let { navigateFromIronFoxSettings(directions) }
++        return super.onPreferenceTreeClick(preference)
++    }
++
++    private fun navigateFromIronFoxSettings(directions: NavDirections) {
++        view?.findNavController()?.let { navController ->
++            if (navController.currentDestination?.id == R.id.ironFoxSettingsFragment) {
++                navController.navigate(directions)
++            }
++        }
++    }
++
++    companion object {
++        private const val DEFAULT_EXIT_DELAY = 2000L
++    }
++}
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 325e5d2141..0a5ac75418 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -573,6 +573,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         setupHomepagePreference()
+         setupTrackingProtectionPreference()
+         setupDnsOverHttpsPreference(requireContext().settings())
++        setupIronFoxPreferences()
+     }
+ 
+     /**
+@@ -770,6 +771,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         }
+     }
+ 
++    @VisibleForTesting
++    internal fun setupIronFoxPreferences() {
++        requirePreference<Preference>(R.string.pref_key_if_preferences).apply {
++            setOnPreferenceClickListener {
++                val directions =
++                    SettingsFragmentDirections
++                        .actionSettingsFragmentToIronFoxSettingsFragment()
++                requireView().findNavController().navigate(directions)
++                true
++            }
++        }
++    }
++
+     private fun updateProfilerUI(profilerStatus: Boolean) {
+         if (profilerStatus) {
+             findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8913d9f230..182ed03faa 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
+ import org.mozilla.fenix.wallpapers.Wallpaper
+ import java.security.InvalidParameterException
+ import java.util.UUID
++import mozilla.components.concept.engine.Engine.RefererXOriginPolicy
+ 
+ private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
+ 
+@@ -2468,4 +2469,151 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         key = appContext.getPreferenceKey(R.string.pref_key_distribution_id),
+         default = "",
+     )
++
++    var accessibilityEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
++        default = false,
++    )
++
++    var cacheEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_cache_enabled),
++        default = false,
++    )
++
++    var cacheSslEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_cache_ssl_enabled),
++        default = false,
++    )
++
++    var emeEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_eme_enabled),
++        default = false,
++    )
++
++    var enableUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++        default = true,
++    )
++
++    var ipv6Enabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_ipv6_enabled),
++        default = true,
++    )
++
++    var isTabStripEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_tab_strip_show),
++        default = false,
++    )
++
++    var javascriptEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_javascript_enabled),
++        default = true,
++    )
++
++    var javascriptJitEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
++        default = false,
++    )
++
++    var ocspRequire by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_ocsp_require),
++        default = true,
++    )
++
++    var pdfjsDisabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_pdfjs_disabled),
++        default = false,
++    )
++
++    var prefersBrowserColorScheme by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_prefers_browser_color_scheme),
++        default = false,
++    )
++
++    var prefersDarkColorScheme by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_prefers_dark_color_scheme),
++        default = false,
++    )
++
++    var prefersLightColorScheme by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_prefers_light_color_scheme),
++        default = true,
++    )
++
++    var printEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_print_enabled),
++        default = true,
++    )
++
++    var refererXOriginAlways by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_always),
++        default = true,
++    )
++
++    var refererXOriginBaseDomainsMatch by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_base_domains_match),
++        default = false,
++    )
++
++    var refererXOriginHostsMatch by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_hosts_match),
++        default = false,
++    )
++
++    var safeBrowsingEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
++        default = true,
++    )
++
++    var spoofEnglish by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
++        default = true
++    )
++
++    var svgEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_svg_enabled),
++        default = true,
++    )
++
++    var useUnifiedPush by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
++        default = false,
++    )
++
++    var wasmEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
++        default = true,
++    )
++
++    var webglEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_webgl_enabled),
++        default = true,
++    )
++
++    var webrtcEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_webrtc_enabled),
++        default = true,
++    )
++
++    var widevineEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_widevine_enabled),
++        default = false,
++    )
++
++    var xpinstallEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_xpinstall_enabled),
++        default = false,
++    )
++
++    fun getRefererXOriginPolicy(): RefererXOriginPolicy {
++        return if (refererXOriginAlways) {
++            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
++        } else if (refererXOriginBaseDomainsMatch) {
++            RefererXOriginPolicy.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH
++        } else if (refererXOriginHostsMatch) {
++            RefererXOriginPolicy.REFERER_XORIGIN_IF_HOSTS_MATCH
++        } else {
++            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
++        }
++    }
+ }
+diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
+index de8568b293..7dc7b7ab37 100644
+--- a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
++++ b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
+@@ -647,6 +647,13 @@
+             app:exitAnim="@anim/slide_out_left"
+             app:popEnterAnim="@anim/slide_in_left"
+             app:popExitAnim="@anim/slide_out_right" />
++        <action
++            android:id="@+id/action_settingsFragment_to_ironFoxSettingsFragment"
++            app:destination="@id/ironFoxSettingsFragment"
++            app:enterAnim="@anim/slide_in_right"
++            app:exitAnim="@anim/slide_out_left"
++            app:popEnterAnim="@anim/slide_in_left"
++            app:popExitAnim="@anim/slide_out_right" />
+         <action
+             android:id="@+id/action_settingsFragment_to_trackingProtectionFragment"
+             app:destination="@id/trackingProtectionFragment"
+@@ -911,6 +918,10 @@
+         android:id="@+id/sponsoredStoriesSettings"
+         android:name="org.mozilla.fenix.settings.SponsoredStoriesSettingsFragment"
+         android:label="@string/preferences_debug_settings_custom_sponsored_stories_parameters" />
++    <fragment
++        android:id="@+id/ironFoxSettingsFragment"
++        android:name="org.mozilla.fenix.settings.IronFoxSettingsFragment"
++        android:label="@string/if_preferences" />
+     <fragment
+         android:id="@+id/trackingProtectionFragment"
+         android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
+diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
+new file mode 100644
+index 0000000000..002e73a6a2
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
+@@ -0,0 +1,256 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto">
++
++    <!-- Preferred website appearance -->
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/preference_website_appearance_title"
++        app:iconSpaceReserved="false">
++        <androidx.preference.Preference
++            android:key="@string/pref_key_website_appearance_description"
++            android:title=""
++            android:summary="@string/preference_website_appearance_description"
++            android:selectable="false"
++            app:allowDividerAbove="false"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether should set CSS prefers-color-scheme to light -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_prefers_light_color_scheme"
++            android:title="@string/preference_prefers_light_color_scheme" />
++
++        <!-- Whether should set CSS prefers-color-scheme to dark -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_prefers_dark_color_scheme"
++            android:title="@string/preference_prefers_dark_color_scheme" />
++
++        <!-- Whether should set CSS prefers-color-scheme to follow the browser's theme -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_prefers_browser_color_scheme"
++            android:title="@string/preference_prefers_browser_color_scheme" />
++    </androidx.preference.PreferenceCategory>
++
++    <!-- Privacy and Security -->
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/if_preferences_privacy_security"
++        app:iconSpaceReserved="false">
++
++        <!-- Whether we should enable Accessibility Services -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_accessibility_enabled"
++            android:title="@string/preference_accessibility_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable JavaScript -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_javascript_enabled"
++            android:title="@string/preference_javascript_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable WebGL globally -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_webgl_enabled"
++            android:title="@string/preference_webgl_enabled"
++            app:iconSpaceReserved="false" />
++    </androidx.preference.PreferenceCategory>
++
++    <!-- Privacy -->
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/if_preferences_privacy"
++        app:iconSpaceReserved="false">
++
++        <!-- Cross-origin referer policy -->
++        <androidx.preference.Preference
++            android:key="@string/pref_key_referer_policy"
++            android:title="@string/preference_referer_policy"
++            android:summary="@string/preference_referer_policy_summary"
++            app:allowDividerAbove="false"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should always send cross-origin referers -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_referer_policy_always"
++            android:title="@string/preference_referer_policy_always" />
++
++        <!-- Whether we should only send cross-origin referers when base domains match -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_referer_policy_base_domains_match"
++            android:title="@string/preference_referer_policy_base_domains_match" />
++
++        <!-- Whether we should disable cross-origin referers -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_referer_policy_hosts_match"
++            android:title="@string/preference_referer_policy_hosts_match" />
++
++        <!-- Whether we should enable disk cache -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_cache_enabled"
++            android:title="@string/preference_cache_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable disk cache for secure webpages -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:dependency="@string/pref_key_cache_enabled"
++            android:key="@string/pref_key_cache_ssl_enabled"
++            android:title="@string/preference_cache_ssl_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should spoof the user's locale to en-US -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_spoof_english"
++            android:summary="@string/tor_spoof_english_summary"
++            android:title="@string/tor_spoof_english"
++            app:iconSpaceReserved="false" />
++    </androidx.preference.PreferenceCategory>
++
++    <!-- Security -->
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/if_preferences_security"
++        app:iconSpaceReserved="false">
++
++        <!-- Whether we should allow the installation of add-ons -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_xpinstall_enabled"
++            android:title="@string/preference_xpinstall_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable JavaScript Just-in-time Compilation (JIT) -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:dependency="@string/pref_key_javascript_enabled"
++            android:key="@string/pref_key_jit_enabled"
++            android:summary="@string/preference_jit_enabled_summary"
++            android:title="@string/preference_jit_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable printing capabilities -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_print_enabled"
++            android:title="@string/preference_print_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable Safe Browsing -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_safe_browsing_enabled"
++            android:summary="@string/preference_safe_browsing_enabled_summary"
++            app:iconSpaceReserved="false"
++            android:title="@string/preference_safe_browsing_enabled" />
++
++        <!-- Whether we should enable Scalar Vector Graphics (SVG) -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_svg_enabled"
++            android:summary="@string/restart_required_summary"
++            android:title="@string/preference_svg_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable WebAssembly (WASM) -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:dependency="@string/pref_key_javascript_enabled"
++            android:key="@string/pref_key_wasm_enabled"
++            android:title="@string/preference_wasm_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable WebRTC globally -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_webrtc_enabled"
++            android:title="@string/preference_webrtc_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should hard-fail OCSP revocation checks -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_ocsp_require"
++            android:summary="@string/preference_ocsp_require_summary"
++            android:title="@string/preference_ocsp_require"
++            app:iconSpaceReserved="false" />
++    </androidx.preference.PreferenceCategory>
++
++    <!-- Miscellaneous -->
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/if_preferences_misc"
++        app:iconSpaceReserved="false">
++
++        <!-- Whether we should enable IPv6 network connectivity -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_ipv6_enabled"
++            android:title="@string/preference_ipv6_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should disable PDF.js -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_pdfjs_disabled"
++            android:title="@string/preference_pdfjs_disabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should use UnifiedPush to deliver push notifications -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_use_unifiedpush"
++            android:summary="@string/restart_required_summary"
++            android:title="@string/preferences_unifiedpush"
++            app:iconSpaceReserved="false" />
++    </androidx.preference.PreferenceCategory>
++
++    <!-- Secret settings -->
++    <androidx.preference.PreferenceCategory
++        android:key="@string/pref_key_if_secret"
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/if_preferences_secret">
++
++    <!-- Whether we should enable UnifiedPush -->
++    <androidx.preference.SwitchPreference
++        android:defaultValue="true"
++        android:key="@string/pref_key_enable_unifiedpush"
++        android:title="@string/preferences_debug_settings_unifiedpush"
++        app:iconSpaceReserved="false" />
++
++    <!-- Whether we should enable Encrypted Media Extensions (EME) -->
++    <androidx.preference.SwitchPreference
++        android:defaultValue="false"
++        android:key="@string/pref_key_eme_enabled"
++        android:title="@string/preferences_debug_settings_eme_enabled"
++        android:summary="@string/unsupported_summary"
++        app:iconSpaceReserved="false" />
++
++    <!-- Whether we should enable the Google Widevine CDM -->
++    <androidx.preference.SwitchPreference
++        android:defaultValue="false"
++        android:dependency="@string/pref_key_eme_enabled"
++        android:key="@string/pref_key_widevine_enabled"
++        android:title="@string/preferences_debug_settings_widevine_enabled"
++        android:summary="@string/unsupported_summary"
++        app:iconSpaceReserved="false" />
++    </androidx.preference.PreferenceCategory>
++
++</androidx.preference.PreferenceScreen>
+diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+index 4c6b14bf87..2a59545ed6 100644
+--- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
++++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
+@@ -199,10 +199,22 @@
+         <androidx.preference.SwitchPreference
+             android:defaultValue="false"
+             android:key="@string/pref_key_enable_gecko_logs"
++            android:summary="@string/restart_required_summary"
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_enable_gecko_logs" />
+     </PreferenceCategory>
+ 
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/if_title"
++        app:iconSpaceReserved="false">
++        <androidx.preference.Preference
++            android:key="@string/pref_key_if_preferences"
++            android:title="@string/if_preferences"
++            app:iconSpaceReserved="false" />
++    </androidx.preference.PreferenceCategory>
++
+     <androidx.preference.PreferenceCategory
+         android:title="@string/preferences_category_about"
+         app:iconSpaceReserved="false"

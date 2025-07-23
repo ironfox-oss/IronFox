@@ -1,9 +1,9 @@
 diff --git a/toolkit/components/doh/DoHHeuristics.sys.mjs b/toolkit/components/doh/DoHHeuristics.sys.mjs
-index 112aef69a3..86811bc5a3 100644
+index 812af19f00..2bb4337c40 100644
 --- a/toolkit/components/doh/DoHHeuristics.sys.mjs
 +++ b/toolkit/components/doh/DoHHeuristics.sys.mjs
 @@ -29,7 +29,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
-   DoHConfigController: "resource://gre/modules/DoHConfig.sys.mjs",
+   DoHConfigController: "moz-src:///toolkit/components/doh/DoHConfig.sys.mjs",
  });
  
 -const GLOBAL_CANARY = "use-application-dns.net.";

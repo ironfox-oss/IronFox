@@ -8,7 +8,7 @@ On top of [Firefox's already privacy-respecting design and implementation of Saf
 
 **When Safe Browsing is enabled**, IronFox will periodically update its database *(through our proxy)* to provide protection against the latest threats. Additionally, if a potential match for a malicious website is found, IronFox might submit a partial hash of the suspected URL to Google *(through our proxy)*.
 
-**At the cost of security**, you can disable Safe Browsing if desired, by navigating to `Settings` -> `Privacy and security` -> `Enable Safe Browsing`.
+**At the cost of security**, you can disable Safe Browsing if desired, by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security` -> `Enable Safe Browsing`.
 
 **If you'd like to keep Safe Browsing enabled, but prefer to disable our proxy and connect to Google directly**, you can do this by navigating to your `about:config`, and following these steps:
 

@@ -1,8 +1,17 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 6611dd53cd..856d86e071 100644
+index d2357260a2..aca31ce35e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -173,7 +173,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+@@ -53,7 +53,7 @@ import org.mozilla.fenix.ext.requireComponents
+ import org.mozilla.fenix.ext.runIfFragmentIsAttached
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.home.HomeFragment
+-import org.mozilla.fenix.nimbus.FxNimbus
++//import org.mozilla.fenix.nimbus.FxNimbus
+ import org.mozilla.fenix.settings.quicksettings.protections.cookiebanners.getCookieBannerUIMode
+ import org.mozilla.fenix.shortcut.PwaOnboardingObserver
+ import org.mozilla.fenix.theme.ThemeManager
+@@ -179,7 +179,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
          }
  
          if (
@@ -11,12 +20,30 @@ index 6611dd53cd..856d86e071 100644
          ) {
              return
          }
+@@ -260,7 +260,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+             return
+         }
+ 
+-        if (!FxNimbus.features.translations.value().mainFlowToolbarEnabled) return
++//        if (!FxNimbus.features.translations.value().mainFlowToolbarEnabled) return
+ 
+         translationsBinding.set(
+             feature = TranslationsBinding(
+@@ -566,7 +566,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+ 
+     override fun navToQuickSettingsSheet(tab: SessionState, sitePermissions: SitePermissions?) {
+         val useCase = requireComponents.useCases.trackingProtectionUseCases
+-        FxNimbus.features.cookieBanners.recordExposure()
++//        FxNimbus.features.cookieBanners.recordExposure()
+         useCase.containsException(tab.id) { hasTrackingProtectionException ->
+             lifecycleScope.launch {
+                 val cookieBannersStorage = requireComponents.core.cookieBannersStorage
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 1443661bb8..fbec347f11 100644
+index a6bfa3a688..ce970ea329 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -76,7 +76,7 @@ import org.mozilla.fenix.components.menu.store.MenuStore
- import org.mozilla.fenix.components.menu.store.WebExtensionMenuItem
+@@ -85,7 +85,7 @@ import org.mozilla.fenix.components.menu.store.WebExtensionMenuItem
+ import org.mozilla.fenix.ext.openSetDefaultBrowserOption
  import org.mozilla.fenix.ext.runIfFragmentIsAttached
  import org.mozilla.fenix.ext.settings
 -import org.mozilla.fenix.nimbus.FxNimbus
@@ -24,7 +51,7 @@ index 1443661bb8..fbec347f11 100644
  import org.mozilla.fenix.settings.SupportUtils
  import org.mozilla.fenix.settings.deletebrowsingdata.deleteAndQuit
  import org.mozilla.fenix.theme.FirefoxTheme
-@@ -307,7 +307,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -335,7 +335,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                          browserStore.state.translationEngine.isEngineSupported ?: false
                      val isTranslationSupported =
                          isTranslationEngineSupported &&
@@ -34,9 +61,27 @@ index 1443661bb8..fbec347f11 100644
                      val isWebCompatEnabled by store.observeAsState(store.state.isWebCompatEnabled) {
                          it.isWebCompatEnabled
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index e7e19273f9..ec21fc3a54 100644
+index e7e19273f9..c37b5fbd6c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
+@@ -43,7 +43,7 @@ import org.mozilla.fenix.automotive.isAndroidAutomotiveAvailable
+ import org.mozilla.fenix.components.accounts.FenixAccountManager
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.settings
+-import org.mozilla.fenix.nimbus.FxNimbus
++//import org.mozilla.fenix.nimbus.FxNimbus
+ import org.mozilla.fenix.theme.ThemeManager
+ 
+ /**
+@@ -82,7 +82,7 @@ open class DefaultToolbarMenu(
+         get() = store.state.selectedTab
+ 
+     override val menuBuilder by lazy {
+-        FxNimbus.features.print.recordExposure()
++//        FxNimbus.features.print.recordExposure()
+         WebExtensionBrowserMenuBuilder(
+             items = coreMenuItems,
+             endOfMenuAlwaysVisible = shouldUseBottomToolbar,
 @@ -205,7 +205,7 @@ open class DefaultToolbarMenu(
          val isEngineSupported = store.state.translationEngine.isEngineSupported
          return selectedSession?.let {
@@ -46,15 +91,6 @@ index e7e19273f9..ec21fc3a54 100644
          } ?: false
      }
  
-@@ -454,7 +454,7 @@ open class DefaultToolbarMenu(
-                 addAppToHomeScreenItem.apply { visible = ::canAddAppToHomescreen },
-                 if (shouldShowTopSites) addRemoveTopSitesItem else null,
-                 saveToCollectionItem,
--                if (FxNimbus.features.print.value().browserPrintEnabled &&
-+                if (true &&
-                     !context.isAndroidAutomotiveAvailable()
-                 ) {
-                     printPageItem
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 index e387bc4ae0..17a5b647e0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
@@ -87,7 +123,7 @@ index e387bc4ae0..17a5b647e0 100644
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
              activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 43bea16286..07fc6947c5 100644
+index ac0f3bc013..a566bc9952 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 @@ -58,7 +58,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
@@ -100,9 +136,18 @@ index 43bea16286..07fc6947c5 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..fc8ce20d0a 100644
+index 325e5d2141..e776045b4f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -65,7 +65,7 @@ import org.mozilla.fenix.ext.openSetDefaultBrowserOption
+ import org.mozilla.fenix.ext.requireComponents
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.ext.showToolbar
+-import org.mozilla.fenix.nimbus.FxNimbus
++//import org.mozilla.fenix.nimbus.FxNimbus
+ import org.mozilla.fenix.perf.ProfilerViewModel
+ import org.mozilla.fenix.settings.account.AccountUiView
+ import org.mozilla.fenix.snackbar.FenixSnackbarDelegate
 @@ -176,7 +176,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
  
          findPreference<Preference>(
@@ -126,6 +171,24 @@ index 325e5d2141..fc8ce20d0a 100644
  
          showToolbar("$title$suffix")
  
+@@ -549,7 +549,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         with(requireContext().settings()) {
+             findPreference<Preference>(
+                 getPreferenceKey(R.string.pref_key_nimbus_experiments),
+-            )?.isVisible = showSecretDebugMenuThisSession
++            )?.isVisible = false
+             findPreference<Preference>(
+                 getPreferenceKey(R.string.pref_key_debug_settings),
+             )?.isVisible = showSecretDebugMenuThisSession
+@@ -713,7 +713,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+ 
+     @VisibleForTesting
+     internal fun setupCookieBannerPreference() {
+-        FxNimbus.features.cookieBanners.recordExposure()
++//        FxNimbus.features.cookieBanners.recordExposure()
+         if (context?.settings()?.shouldShowCookieBannerUI == false) return
+         with(requirePreference<SwitchPreference>(R.string.pref_key_cookie_banner_private_mode)) {
+             isVisible = context.settings().shouldShowCookieBannerUI
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt
 index 1a02f82498..728024b7b3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt
@@ -184,7 +247,7 @@ index 472e3bf5a8..b2a4842c16 100644
                                      initialFrom = translationsDialogState?.initialFrom,
                                      onBackClicked = { translationsVisibility = true },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..44112a59b6 100644
+index 8913d9f230..3b209bfd01 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -225,10 +225,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -202,7 +265,7 @@ index 9197b274db..44112a59b6 100644
  
      var utmParamsKnown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_utm_params_known),
-@@ -412,10 +412,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -418,10 +418,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          persistDefaultIfNotExists = true,
      )
  
@@ -217,7 +280,7 @@ index 9197b274db..44112a59b6 100644
  
      var isOverrideTPPopupsForPerformanceTest = false
  
-@@ -534,10 +534,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -540,10 +540,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -232,7 +295,7 @@ index 9197b274db..44112a59b6 100644
  
      var isFirstNimbusRun: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-@@ -2157,7 +2157,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2143,7 +2143,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the feature to close synced tabs is enabled.
       */
      val enableCloseSyncedTabs: Boolean
@@ -241,16 +304,3 @@ index 9197b274db..44112a59b6 100644
  
      /**
       * Returns the height of the bottom toolbar.
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..7d4277ef8e 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -549,7 +549,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
-         with(requireContext().settings()) {
-             findPreference<Preference>(
-                 getPreferenceKey(R.string.pref_key_nimbus_experiments),
--            )?.isVisible = showSecretDebugMenuThisSession
-+            )?.isVisible = false
-             findPreference<Preference>(
-                 getPreferenceKey(R.string.pref_key_debug_settings),
-             )?.isVisible = showSecretDebugMenuThisSession

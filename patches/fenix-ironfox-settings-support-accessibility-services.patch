@@ -1,0 +1,22 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8913d9f230..1143389a4a 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1084,7 +1084,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+             accessibilityManager?.getEnabledAccessibilityServiceList(0)?.let { activeServices ->
+                 for (service in activeServices) {
+                     if (service.capabilities.and(CAPABILITY_CAN_PERFORM_GESTURES) == 1) {
+-                        return true
++                        return accessibilityEnabled
+                     }
+                 }
+             }
+@@ -1096,7 +1096,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         get() {
+             val accessibilityManager =
+                 appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
+-            return accessibilityManager?.isTouchExplorationEnabled ?: false
++            return accessibilityEnabled && (accessibilityManager?.isTouchExplorationEnabled ?: false)
+         }
+ 
+     val accessibilityServicesEnabled: Boolean

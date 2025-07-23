@@ -1,0 +1,39 @@
+diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
+index 3f60404936..dcab978457 100644
+--- a/dom/base/Navigator.cpp
++++ b/dom/base/Navigator.cpp
+@@ -510,7 +510,7 @@ nsPluginArray* Navigator::GetPlugins(ErrorResult& aRv) {
+   return mPlugins;
+ }
+ 
+-bool Navigator::PdfViewerEnabled() { return !StaticPrefs::pdfjs_disabled(); }
++bool Navigator::PdfViewerEnabled() { return true; }
+ 
+ Permissions* Navigator::GetPermissions(ErrorResult& aRv) {
+   if (!mWindow) {
+diff --git a/dom/base/nsMimeTypeArray.cpp b/dom/base/nsMimeTypeArray.cpp
+index bf5f3f5ec2..26909e32c6 100644
+--- a/dom/base/nsMimeTypeArray.cpp
++++ b/dom/base/nsMimeTypeArray.cpp
+@@ -79,7 +79,7 @@ void nsMimeTypeArray::GetSupportedNames(nsTArray<nsString>& retval) {
+   }
+ }
+ 
+-bool nsMimeTypeArray::ForceNoPlugins() { return StaticPrefs::pdfjs_disabled(); }
++bool nsMimeTypeArray::ForceNoPlugins() { return false; }
+ 
+ NS_IMPL_CYCLE_COLLECTION_WRAPPERCACHE(nsMimeType, mPluginElement)
+ 
+diff --git a/dom/base/nsPluginArray.cpp b/dom/base/nsPluginArray.cpp
+index b5ce8b5c11..82fa2ffa76 100644
+--- a/dom/base/nsPluginArray.cpp
++++ b/dom/base/nsPluginArray.cpp
+@@ -97,7 +97,7 @@ void nsPluginArray::GetSupportedNames(nsTArray<nsString>& aRetval) {
+   }
+ }
+ 
+-bool nsPluginArray::ForceNoPlugins() { return StaticPrefs::pdfjs_disabled(); }
++bool nsPluginArray::ForceNoPlugins() { return false; }
+ 
+ NS_IMPL_CYCLE_COLLECTING_ADDREF(nsPluginArray)
+ NS_IMPL_CYCLE_COLLECTING_RELEASE(nsPluginArray)

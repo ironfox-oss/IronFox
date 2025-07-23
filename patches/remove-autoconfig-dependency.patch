@@ -1,5 +1,5 @@
 diff --git a/mobile/android/installer/package-manifest.in b/mobile/android/installer/package-manifest.in
-index 9535aae823..7ecd8a1f3f 100644
+index d8519ad46d..9f3f65285b 100644
 --- a/mobile/android/installer/package-manifest.in
 +++ b/mobile/android/installer/package-manifest.in
 @@ -125,7 +125,7 @@

@@ -12,10 +12,10 @@ index 325e5d2141..90833e35cd 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..58ff7665d8 100644
+index 8913d9f230..b34d6c4ba3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -681,13 +681,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -687,13 +687,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var whatsappLinkSharingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_link_sharing),
@@ -31,16 +31,3 @@ index 9197b274db..58ff7665d8 100644
      )
  
      /**
-diff --git a/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml
-index faafebc7f2..cf8650c1ee 100644
---- a/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/link_sharing_preferences.xml
-@@ -5,7 +5,7 @@
- <androidx.preference.PreferenceScreen
-     xmlns:android="http://schemas.android.com/apk/res/android">
-     <SwitchPreference
--        android:defaultValue="true"
-+        android:defaultValue="false"
-         android:key="@string/pref_key_link_sharing"
-         android:summary="@string/link_sharing_toggle_title"
-         android:title="@string/link_sharing_toggle_body" />

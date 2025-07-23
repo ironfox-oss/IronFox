@@ -11,11 +11,40 @@ index 732a80cb03..7a2fdae0c3 100644
          }
  
          onDispose {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
+index baadbd7873..32d4fdabb8 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
+@@ -206,17 +206,17 @@ class AwesomeBarView(
+         var searchEngine = searchState.selectedOrDefaultSearchEngine?.name
+ 
+         if (!searchEngine.isNullOrEmpty()) {
+-            searchEngine = when (searchEngine) {
+-                GOOGLE_SEARCH_ENGINE_NAME -> getString(
+-                    activity,
+-                    R.string.google_search_engine_suggestion_header,
+-                )
+-                else -> getString(
++            searchEngine =
++//                GOOGLE_SEARCH_ENGINE_NAME -> getString(
++//                    activity,
++//                    R.string.google_search_engine_suggestion_header,
++//                )
++                getString(
+                     activity,
+                     R.string.other_default_search_engine_suggestion_header,
+                     searchEngine,
+                 )
+-            }
++//            }
+         }
+ 
+         return searchEngine
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index e43dec84c6..e462b4c0fe 100644
+index b45fdee550..45dbba4891 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-@@ -208,11 +208,11 @@ class AboutFragment(
+@@ -206,11 +206,11 @@ class AboutFragment(
              AboutPageItem(
                  AboutItem.ExternalLink(
                      SUPPORT,
@@ -29,7 +58,7 @@ index e43dec84c6..e462b4c0fe 100644
                  AboutItem.Crashes,
                  getString(R.string.about_crashes),
              ),
-@@ -229,7 +229,7 @@ class AboutFragment(
+@@ -227,7 +227,7 @@ class AboutFragment(
                      SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
                  ),
                  getString(R.string.about_know_your_rights),
@@ -39,22 +68,24 @@ index e43dec84c6..e462b4c0fe 100644
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index c13ecb6c86..cbcdfcb59e 100644
+index dd0ae4ad87..f05742fcf6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -26,9 +26,9 @@ object SupportUtils {
+@@ -24,10 +24,10 @@ object SupportUtils {
+     const val RATE_APP_URL = "market://details?id=" + BuildConfig.APPLICATION_ID
      const val WIKIPEDIA_URL = "https://www.wikipedia.org/"
      const val FENIX_PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"
-     const val GOOGLE_URL = "https://www.google.com/"
+-    const val GOOGLE_URL = "https://www.google.com/"
 -    const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
 -    const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
 -    const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
++    const val GOOGLE_URL = ""
 +    const val GOOGLE_US_URL = ""
 +    const val GOOGLE_XX_URL = ""
 +    const val WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"
      const val FXACCOUNT_SUMO_URL = "https://support.mozilla.org/kb/access-mozilla-services-firefox-account"
+     const val ANDROID_SUPPORT_SUMO_URL = "mzl.la/AndroidSupport"
  
-     // This is locale-less on purpose so that the content negotiation happens on the AMO side because the current
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 index e5ab956ac3..8f88bf456e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
@@ -153,10 +184,10 @@ index 0e2a6efdc9..3d7ff4a88f 100644
 +
 +include("ironfox.configure")
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..652a7a4486 100644
+index 8913d9f230..0bad31b1a5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -438,7 +438,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -444,7 +444,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldShowPrivacyPopWindow by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),

@@ -1,63 +1,63 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 26e76a18d2..8e2967ca46 100644
+index 489c138b0d..9e4567bb3e 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1669,17 +1669,17 @@ projects:
-     - support-base
-     - support-test
-     - tooling-lint
--  lib-push-firebase:
+@@ -1692,17 +1692,17 @@ projects:
+     - components:support-base
+     - components:support-test
+     - components:tooling-lint
+-  components:lib-push-firebase:
 -    description: An implementation of concept-push for the Firebase Message Service.
 -    path: components/lib/push-firebase
 -    publish: true
 -    upstream_dependencies:
--    - concept-base
--    - concept-fetch
--    - concept-push
--    - support-base
--    - support-test
--    - tooling-lint
-+#  lib-push-firebase:
+-    - components:concept-base
+-    - components:concept-fetch
+-    - components:concept-push
+-    - components:support-base
+-    - components:support-test
+-    - components:tooling-lint
++#  components:lib-push-firebase:
 +#    description: An implementation of concept-push for the Firebase Message Service.
 +#    path: components/lib/push-firebase
 +#    publish: true
 +#    upstream_dependencies:
-+#    - concept-base
-+#    - concept-fetch
-+#    - concept-push
-+#    - support-base
-+#    - support-test
-+#    - tooling-lint
-   lib-state:
++#    - components:concept-base
++#    - components:concept-fetch
++#    - components:concept-push
++#    - components:support-base
++#    - components:support-test
++#    - components:tooling-lint
+   components:lib-state:
      description: A library for maintaining application state.
      path: components/lib/state
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index b5aa2ce3a4..3486db0750 100644
+index 0620fba71e..5fd81e66bf 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -65,7 +65,7 @@ projects:
-     - lib-crash-sentry
-     - lib-dataprotect
-     - lib-publicsuffixlist
--    - lib-push-firebase
-+#    - lib-push-firebase
-     - lib-state
-     - service-digitalassetlinks
-     - service-firefox-accounts
+     - components:lib-crash-sentry
+     - components:lib-dataprotect
+     - components:lib-publicsuffixlist
+-    - components:lib-push-firebase
++#    - components:lib-push-firebase
+     - components:lib-state
+     - components:service-digitalassetlinks
+     - components:service-firefox-accounts
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d9a6045423..31842f64a8 100644
+index 5bcd9c730b..5d1cdcaba8 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -649,7 +649,7 @@ dependencies {
+@@ -648,7 +648,7 @@ dependencies {
  
-     implementation project(':lib-crash')
-     implementation project(':lib-crash-sentry')
--    implementation project(':lib-push-firebase')
-+//    implementation project(':lib-push-firebase')
-     implementation project(':lib-state')
-     implementation project(':lib-dataprotect')
-     testImplementation project(':support-test-fakes')
-@@ -701,15 +701,15 @@ dependencies {
+     implementation project(':components:lib-crash')
+     implementation project(':components:lib-crash-sentry')
+-    implementation project(':components:lib-push-firebase')
++//    implementation project(':components:lib-push-firebase')
+     implementation project(':components:lib-state')
+     implementation project(':components:lib-dataprotect')
+     testImplementation project(':components:support-test-fakes')
+@@ -708,15 +708,15 @@ dependencies {
      implementation libs.protobuf.javalite
      implementation libs.google.material
  
@@ -76,8 +76,8 @@ index d9a6045423..31842f64a8 100644
 +//    implementation libs.play.review
 +//    implementation libs.play.review.ktx
  
-     implementation ComponentsDependencies.mozilla_appservices_init_rust_components
- 
+     androidTestImplementation(libs.androidx.espresso.contrib) {
+         exclude module: 'protobuf-lite'
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
 index 982ef996de..4002614795 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
@@ -210,7 +210,7 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index f235d0f7a1..e07a7511dc 100644
+index e47c31743f..c143dd89d2 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -222,7 +222,7 @@ index f235d0f7a1..e07a7511dc 100644
  
      <application
          android:name=".FenixApplication"
-@@ -745,7 +745,7 @@
+@@ -740,7 +740,7 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
@@ -231,7 +231,7 @@ index f235d0f7a1..e07a7511dc 100644
              android:name=".push.FirebasePushService"
              android:exported="false">
              <intent-filter>
-@@ -761,7 +761,7 @@
+@@ -756,7 +756,7 @@
              android:value="false" />
          <meta-data
              android:name="firebase_analytics_collection_deactivated"
@@ -241,7 +241,7 @@ index f235d0f7a1..e07a7511dc 100644
          <provider
              android:name="androidx.startup.InitializationProvider"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index d3b21828c2..787a899648 100644
+index 2c8c8a5e8c..e5e42629d7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,7 +10,7 @@ import android.content.Context
@@ -253,19 +253,52 @@ index d3b21828c2..787a899648 100644
  import mozilla.components.feature.addons.AddonManager
  import mozilla.components.feature.addons.amo.AMOAddonsProvider
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
-@@ -212,7 +212,7 @@ class Components(private val context: Context) {
+@@ -222,7 +222,7 @@ class Components(private val context: Context) {
  
-     val reviewPromptController by lazyMonitored {
-         ReviewPromptController(
+     val playStoreReviewPromptController by lazyMonitored {
+         PlayStoreReviewPromptController(
 -            manager = ReviewManagerFactory.create(context),
 +//            manager = ReviewManagerFactory.create(context),
-             reviewSettings = FenixReviewSettings(settings),
+             numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
-index 33e8704adc..4bb2a3f64b 100644
+index 7e44cae358..ec26940f8a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
+@@ -40,8 +40,8 @@ class ReviewPromptController(
+     private val playStoreReviewPromptController: PlayStoreReviewPromptController,
+     private val reviewSettings: ReviewSettings,
+     private val timeNowInMillis: () -> Long = { System.currentTimeMillis() },
+-    private val tryPromptReview: suspend (Activity) -> Unit = { activity ->
+-        playStoreReviewPromptController.tryPromptReview(activity)
++    private val tryPromptReview: suspend (Activity) -> Unit = { _ ->
++//        playStoreReviewPromptController.tryPromptReview(activity)
+     },
+ ) {
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+@@ -50,14 +50,14 @@ class ReviewPromptController(
+ 
+     suspend fun promptReview(activity: Activity) {
+         if (shouldShowPrompt()) {
+-            tryPromptReview(activity)
+-            reviewSettings.lastReviewPromptTimeInMillis = timeNowInMillis()
++//            tryPromptReview(activity)
++//            reviewSettings.lastReviewPromptTimeInMillis = timeNowInMillis()
+         }
+     }
+ 
+     fun trackApplicationLaunch() {
+         // We only want to show the the prompt after we've finished "launching" the application.
+-        reviewPromptIsReady = true
++//        reviewPromptIsReady = true
+     }
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
+index c65df5de4a..df456620dc 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/PlayStoreReviewPromptController.kt
 @@ -6,8 +6,8 @@ package org.mozilla.fenix.components
  
  import android.app.Activity
@@ -274,33 +307,34 @@ index 33e8704adc..4bb2a3f64b 100644
 -import com.google.android.play.core.review.ReviewManager
 +//import com.google.android.play.core.review.ReviewInfo
 +//import com.google.android.play.core.review.ReviewManager
- import kotlinx.coroutines.Dispatchers.Main
+ import kotlinx.coroutines.Dispatchers
  import kotlinx.coroutines.withContext
  import org.mozilla.fenix.GleanMetrics.ReviewPrompt
-@@ -45,11 +45,11 @@ class FenixReviewSettings(
-  * Controls the Review Prompt behavior.
-  */
- class ReviewPromptController(
+@@ -17,13 +17,13 @@ import java.util.Locale
+ 
+ /** Wraps the Play Store In-App Review API. */
+ class PlayStoreReviewPromptController(
 -    private val manager: ReviewManager,
 +//    private val manager: ReviewManager,
-     private val reviewSettings: ReviewSettings,
-     private val timeNowInMillis: () -> Long = { System.currentTimeMillis() },
--    private val tryPromptReview: suspend (Activity) -> Unit = { activity ->
--        val flow = manager.requestReviewFlow()
-+    private val tryPromptReview: suspend (Activity) -> Unit = { _ ->
-+/*        val flow = manager.requestReviewFlow()
+     private val numberOfAppLaunches: () -> Int,
+ ) {
  
-         withContext(Main) {
-             flow.addOnCompleteListener {
-@@ -62,7 +62,7 @@ class ReviewPromptController(
-                     )
-                 }
+     /** Launch the in-app review flow, unless we've hit the quota. */
+     suspend fun tryPromptReview(activity: Activity) {
+-        val flow = withContext(Dispatchers.IO) { manager.requestReviewFlow() }
++/*        val flow = withContext(Dispatchers.IO) { manager.requestReviewFlow() }
+ 
+         flow.addOnCompleteListener {
+             if (it.isSuccessful) {
+@@ -34,7 +34,7 @@ class PlayStoreReviewPromptController(
+                     Date(),
+                 )
              }
 -        }
 +        }*/
-     },
- ) {
-     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     }
+ }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 index 6312b65949..ec8b759397 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
@@ -333,7 +367,7 @@ index 6312b65949..ec8b759397 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-index 233855f4c2..db736fd18a 100644
+index e1c3ed4d04..a72032ae9f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 @@ -6,8 +6,8 @@ package org.mozilla.fenix.components.metrics
@@ -357,10 +391,10 @@ index 233855f4c2..db736fd18a 100644
 +//import org.mozilla.fenix.GleanMetrics.MetaAttribution
 +//import org.mozilla.fenix.GleanMetrics.Pings
 +//import org.mozilla.fenix.GleanMetrics.PlayStoreAttribution
+ import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
- import java.io.UnsupportedEncodingException
-@@ -33,10 +33,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -34,10 +34,10 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      private val logger = Logger("InstallReferrerMetricsService")
      override val type = MetricServiceType.Data
  
@@ -373,7 +407,7 @@ index 233855f4c2..db736fd18a 100644
              return
          }
  
-@@ -51,13 +51,13 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -52,13 +52,13 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
                      val firstSession = FirstSessionPing(context)
                      PlayStoreAttribution.responseCode.set(responseCode.toString())
                      when (responseCode) {
@@ -392,7 +426,7 @@ index 233855f4c2..db736fd18a 100644
                                  null
                              } catch (e: SecurityException) {
                                  logger.error("Failed to retrieve install referrer response", e)
-@@ -86,33 +86,33 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -90,33 +90,33 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
                          InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED,
                          InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR,
                          InstallReferrerClient.InstallReferrerResponse.PERMISSION_ERROR,
@@ -443,7 +477,7 @@ index 233855f4c2..db736fd18a 100644
      }
  
      override fun track(event: Event) = Unit
-@@ -120,9 +120,9 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
+@@ -124,9 +124,9 @@ class InstallReferrerMetricsService(private val context: Context) : MetricsServi
      override fun shouldTrack(event: Event): Boolean = false
  
      private fun triggerPing() {
@@ -456,7 +490,7 @@ index 233855f4c2..db736fd18a 100644
      }
  }
  
-@@ -238,11 +238,11 @@ data class UTMParams(
+@@ -242,11 +242,11 @@ data class UTMParams(
          }
          intoSettings(settings)
  
@@ -473,7 +507,7 @@ index 233855f4c2..db736fd18a 100644
      }
  }
  
-@@ -337,9 +337,9 @@ data class MetaParams(
+@@ -341,9 +341,9 @@ data class MetaParams(
       * record META attribution params to telemetry
       */
      fun recordMetaAttribution() {
@@ -703,10 +737,10 @@ index e13ebe821f..4322aad38e 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..b600d45fd5 100644
+index 8913d9f230..38b80e2549 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1867,7 +1867,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1852,7 +1852,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
@@ -714,7 +748,7 @@ index 9197b274db..b600d45fd5 100644
 +        default = false,
      )
  
-     val feltPrivateBrowsingEnabled by lazyFeatureFlagPreference(
+     var shouldUseComposableToolbar by lazyFeatureFlagPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 4c6b14bf87..9fc35fc6a8 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
@@ -733,10 +767,10 @@ index 4c6b14bf87..9fc35fc6a8 100644
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
 diff --git a/mobile/android/focus-android/app/build.gradle b/mobile/android/focus-android/app/build.gradle
-index fdd0ec8ad6..3ee0dc00ba 100644
+index 4f93ab98e0..22387ea159 100644
 --- a/mobile/android/focus-android/app/build.gradle
 +++ b/mobile/android/focus-android/app/build.gradle
-@@ -269,8 +269,8 @@ dependencies {
+@@ -272,8 +272,8 @@ dependencies {
      implementation libs.androidx.work.runtime
  
      // Required for in-app reviews

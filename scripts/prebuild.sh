@@ -175,7 +175,7 @@ sed -i \
     -e 's/Learn more about sync/Learn more about Firefox Sync/' \
     -e 's/search?client=firefox&amp;q=%s/search?q=%s/' \
     -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
-    -e 's/Google Search/%s search/' \
+    -e 's/Google Search/Google search/' \
     app/src/*/res/values*/*strings.xml
 
 # Fenix uses reflection to create a instance of profile based on the text of
@@ -197,7 +197,6 @@ sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
 mkdir -vp app/src/release/res/mipmap-anydpi-v26
 sed -i \
     -e 's/googleg_standard_color_18/ic_download/' \
-    app/src/main/java/org/mozilla/fenix/components/menu/compose/ExtensionsSubmenu.kt \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
@@ -457,14 +456,16 @@ fi
     echo 'ac_add_options --disable-debug-js-modules'
     echo 'ac_add_options --disable-debug-symbols'
     echo 'ac_add_options --disable-default-browser-agent'
-    echo 'ac_add_options --disable-dmd'
     echo 'ac_add_options --disable-dtrace'
     echo 'ac_add_options --disable-dump-painting'
     echo 'ac_add_options --disable-execution-tracing'
+    echo 'ac_add_options --disable-extensions-webidl-bindings'
     echo 'ac_add_options --disable-ffmpeg'
     echo 'ac_add_options --disable-gecko-profiler'
     echo 'ac_add_options --disable-geckodriver'
+    echo 'ac_add_options --disable-gtest-in-build'
     echo 'ac_add_options --disable-instruments'
+    echo 'ac_add_options --disable-jitdump'
     echo 'ac_add_options --disable-js-shell'
     echo 'ac_add_options --disable-layout-debugger'
     echo 'ac_add_options --disable-logrefcnt'
@@ -477,6 +478,7 @@ fi
     echo 'ac_add_options --disable-real-time-tracing'
     echo 'ac_add_options --disable-reflow-perf'
     echo 'ac_add_options --disable-rust-debug'
+    echo 'ac_add_options --disable-rust-tests'
     echo 'ac_add_options --disable-simulator'
     echo 'ac_add_options --disable-spidermonkey-telemetry'
     echo 'ac_add_options --disable-system-extension-dirs'
@@ -491,7 +493,8 @@ fi
     echo 'ac_add_options --disable-webrender-debugger'
     echo 'ac_add_options --disable-webspeechtestbackend'
     echo 'ac_add_options --disable-wmf'
-    echo 'ac_add_options --enable-application=mobile/android'
+    echo 'ac_add_options --enable-android-subproject="fenix"'
+    echo 'ac_add_options --enable-application="mobile/android"'
     echo 'ac_add_options --enable-disk-remnant-avoidance'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-install-strip'
@@ -503,12 +506,12 @@ fi
     echo 'ac_add_options --enable-replace-malloc'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
-    echo 'ac_add_options --enable-update-channel=release'
-    echo 'ac_add_options --with-app-basename=IronFox'
-    echo 'ac_add_options --with-app-name=ironfox'
-    echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
-    echo 'ac_add_options --with-crashreporter-url=data;'
-    echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
+    echo 'ac_add_options --enable-update-channel="release"'
+    echo 'ac_add_options --with-app-basename="IronFox"'
+    echo 'ac_add_options --with-app-name="ironfox"'
+    echo 'ac_add_options --with-branding="mobile/android/branding/ironfox"'
+    echo 'ac_add_options --with-crashreporter-url="data;"'
+    echo 'ac_add_options --with-distribution-id="org.ironfoxoss"'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
     if [[ -n "${target}" ]]; then
@@ -520,7 +523,13 @@ fi
     echo "ac_add_options --with-gradle=$(command -v gradle)"
     echo "ac_add_options --with-libclang-path=\"$libclang\""
     echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
-    echo "ac_add_options --without-google-location-service-api-keyfile"
+    echo 'ac_add_options --without-adjust-sdk-keyfile'
+    echo 'ac_add_options --without-android-googlevr-sdk'
+    echo 'ac_add_options --without-bing-api-keyfile'
+    echo 'ac_add_options --without-google-location-service-api-keyfile'
+    echo 'ac_add_options --without-mozilla-api-keyfile'
+    echo 'ac_add_options --without-leanplum-sdk-keyfile'
+    echo 'ac_add_options --without-pocket-api-keyfile'
 
     if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
@@ -531,25 +540,50 @@ fi
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
-    echo 'mk_add_options MOZ_APP_DISPLAYNAME=IronFox'
-    echo 'mk_add_options MOZ_APP_VENDOR="IronFox OSS"'
-    echo 'mk_add_options MOZ_NORMANDY=0'
+    echo 'ac_add_options MOZ_APP_BASENAME="IronFox"'
+    echo 'ac_add_options MOZ_APP_DISPLAYNAME="IronFox"'
+    echo 'ac_add_options MOZ_APP_NAME="ironfox"'
+    echo 'ac_add_options MOZ_APP_REMOTINGNAME="ironfox"'
+    echo 'ac_add_options MOZ_ARTIFACT_BUILDS='
+    echo 'ac_add_options MOZ_CALLGRIND='
+    echo 'ac_add_options MOZ_CRASHREPORTER_URL="data;"'
+    echo 'ac_add_options MOZ_DEBUG_FLAGS='
+    echo 'ac_add_options MOZ_EXECUTION_TRACING='
+    echo 'ac_add_options MOZ_INCLUDE_SOURCE_INFO=1'
+    echo 'ac_add_options MOZ_INSTRUMENTS='
+    echo 'ac_add_options MOZ_LTO=1'
+    echo 'ac_add_options MOZ_PACKAGE_JSSHELL='
+    echo 'ac_add_options MOZ_PHC='
+    echo 'ac_add_options MOZ_PROFILING='
+    echo 'ac_add_options MOZ_REQUIRE_SIGNING='
+    echo 'ac_add_options MOZ_RUST_SIMD=1'
+    echo 'ac_add_options MOZ_SECURITY_HARDENING=1'
+    echo 'ac_add_options MOZ_TELEMETRY_REPORTING='
+    echo 'ac_add_options MOZ_VTUNE='
+    echo 'ac_add_options MOZILLA_OFFICIAL=1'
+    echo 'ac_add_options NODEJS='
+    echo 'ac_add_options RUSTC_OPT_LEVEL=2'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
-    echo 'mk_add_options MOZ_SERVICES_HEALTHREPORT=0'
-    echo 'export MOZ_APP_BASENAME=IronFox'
-    echo 'export MOZ_APP_DISPLAYNAME=IronFox'
-    echo 'export MOZ_APP_NAME=ironfox'
-    echo 'export MOZ_APP_REMOTINGNAME=ironfox'
-    echo 'export MOZ_APP_UA_NAME=Firefox'
-    echo 'export MOZ_CRASHREPORTER='
-    echo 'export MOZ_CRASHREPORTER_URL=data;'
-    echo 'export MOZ_DATA_REPORTING='
-    echo 'export MOZ_DISTRIBUTION_ID=org.ironfoxoss'
+    echo 'export MOZ_APP_BASENAME="IronFox"'
+    echo 'export MOZ_APP_DISPLAYNAME="IronFox"'
+    echo 'export MOZ_APP_NAME="ironfox"'
+    echo 'export MOZ_APP_REMOTINGNAME="ironfox"'
+    echo 'export MOZ_ARTIFACT_BUILDS='
+    echo 'export MOZ_CALLGRIND='
+    echo 'export MOZ_CRASHREPORTER_URL="data;"'
+    echo 'export MOZ_EXECUTION_TRACING='
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
+    echo 'export MOZ_INSTRUMENTS='
     echo 'export MOZ_LTO=1'
+    echo 'export MOZ_PACKAGE_JSSHELL='
     echo 'export MOZ_PGO=1'
+    echo 'export MOZ_PHC='
+    echo 'export MOZ_PROFILING='
     echo 'export MOZ_REQUIRE_SIGNING='
+    echo 'export MOZ_RUST_SIMD=1'
+    echo 'export MOZ_SECURITY_HARDENING=1'
     echo 'export MOZ_TELEMETRY_REPORTING='
+    echo 'export MOZ_VTUNE='
     echo 'export MOZILLA_OFFICIAL=1'
     echo 'export RUSTC_OPT_LEVEL=2'
 } >>mozconfig

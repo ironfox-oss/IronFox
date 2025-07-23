@@ -1,0 +1,23 @@
+diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
+index a7a3554a5e..9f8e0c94b7 100644
+--- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
++++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
+@@ -12,6 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   DoHController: "moz-src:///toolkit/components/doh/DoHController.sys.mjs",
+   EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
+   PdfJs: "resource://pdf.js/PdfJs.sys.mjs",
++  RFPHelper: "resource://gre/modules/RFPHelper.sys.mjs",
+ });
+ 
+ const { debug, warn } = GeckoViewUtils.initLogging("Startup");
+@@ -361,6 +362,10 @@ export class GeckoViewStartup {
+         if (aData.requestedLocales) {
+           Services.locale.requestedLocales = aData.requestedLocales;
+         }
++        lazy.RFPHelper._handleSpoofEnglishChanged();
++        if (Services.prefs.getIntPref("privacy.spoof_english", 0) === 2) {
++          break;
++        }
+         const pls = Cc["@mozilla.org/pref-localizedstring;1"].createInstance(
+           Ci.nsIPrefLocalizedString
+         );

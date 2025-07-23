@@ -19,6 +19,10 @@ pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
 pref("extensions.webapi.enabled", false);
 pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 
+/// Enable our Beacon API (navigator.sendBeacon) Stub
+// Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
+pref("beacon.enabled", true); // [DEFAULT]
+
 /// Re-enable Password Manager & Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
 // https://gitlab.com/ironfox-oss/IronFox/-/issues/11
@@ -41,6 +45,11 @@ pref("dom.ipc.processCount", 2); // [DEFAULT]
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
+
+/// Temporarily disable unconditionally blocking Local Network Access requests
+// This appears to be causing breakage (ex. https://codeberg.org/celenity/Phoenix/issues/162 + https://codeberg.org/celenity/Phoenix/issues/164), and we still prevent websites from accessing LAN anyways with ex. uBlock Origin
+// We only need this temporarily, until the next Phoenix release
+pref("network.lna.blocking", false); // [DEFAULT]
 
 /// Unbreak Firefox Translations
 // We only need this temporarily, until the next Phoenix release

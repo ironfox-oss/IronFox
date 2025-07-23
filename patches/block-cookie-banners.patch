@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 9197b274db..dd608587a0 100644
+index 8913d9f230..78212d438c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -752,13 +752,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -758,13 +758,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      )
  
      val shouldUseCookieBannerPrivateModeDefaultValue: Boolean

@@ -290,7 +290,7 @@ Changes to patches are licensed according to the header in the files this patch 
 
 Parts of `branding.patch`, `librewolf-rs-blocker.patch`, and `ublock-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
-`disable-network-connectivity-monitoring.patch`, `disable-sslkeylogging.patch` and `tor-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
+`disable-network-connectivity-monitoring.patch`, `disable-sslkeylogging.patch` and `gecko-ironfox-settings-support-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
 Our current set of default wallpapers are taken from [Fennec F-Droid](https://gitlab.com/relan/fennecmedia), and are available under the [Unsplash license](https://gitlab.com/relan/fennecmedia#licenses).
 

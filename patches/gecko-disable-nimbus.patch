@@ -19,7 +19,7 @@ index 1f4d51c643..a2507eb8d1 100644
    lazy,
    "COLLECTION_ID",
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-index 165309d17b..689326135e 100644
+index 7861ceddf7..b51d523215 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 +++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 @@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
@@ -50,7 +50,7 @@ index 165309d17b..689326135e 100644
    }
  
 diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-index d3ab385732..700465258c 100644
+index ebb933e6fa..b1eea8bc5e 100644
 --- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 +++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 @@ -37,7 +37,7 @@ XPCOMUtils.defineLazyServiceGetter(
@@ -93,19 +93,6 @@ index 087e4ed51e..256972093f 100644
  const PREF_CHANGED_TOPIC = "nsPref:changed";
  
  const RUN_INTERVAL_PREF = "app.normandy.run_interval_seconds";
-diff --git a/toolkit/modules/AppConstants.sys.mjs b/toolkit/modules/AppConstants.sys.mjs
-index a794e82288..b14fa739bb 100644
---- a/toolkit/modules/AppConstants.sys.mjs
-+++ b/toolkit/modules/AppConstants.sys.mjs
-@@ -116,7 +116,7 @@ export var AppConstants = Object.freeze({
- 
-   MOZ_CRASHREPORTER: @MOZ_CRASHREPORTER_BOOL@,
- 
--  MOZ_NORMANDY: @MOZ_NORMANDY_BOOL@,
-+  MOZ_NORMANDY: false,
- 
-   MOZ_MAINTENANCE_SERVICE: @MOZ_MAINTENANCE_SERVICE_BOOL@,
- 
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
 index e09ea87de8..aedc380a5c 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
@@ -121,16 +108,3 @@ index e09ea87de8..aedc380a5c 100644
      ],
      quarantinedDomains: ["extensions.quarantinedDomains.list"],
    },
-diff --git a/tools/@types/subs/AppConstants.sys.d.mts b/tools/@types/subs/AppConstants.sys.d.mts
-index 04273576bd..0ad1edbda4 100644
---- a/tools/@types/subs/AppConstants.sys.d.mts
-+++ b/tools/@types/subs/AppConstants.sys.d.mts
-@@ -68,7 +68,7 @@ export const AppConstants: Readonly<{
- 
-   MOZ_CRASHREPORTER: boolean;
- 
--  MOZ_NORMANDY: boolean;
-+  MOZ_NORMANDY: false;
- 
-   MOZ_MAINTENANCE_SERVICE: boolean;
- 
