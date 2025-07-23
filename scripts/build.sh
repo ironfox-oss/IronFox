@@ -125,8 +125,8 @@ pushd "$mozilla_release"
 MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 export MOZ_CHROME_MULTILOCALE
 
-gradle :geckoview:publishReleasePublicationToMavenLocal
-gradle :exoplayer2:publishReleasePublicationToMavenLocal
+gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
+gradle -x javadocRelease :exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 # shellcheck disable=SC2154
