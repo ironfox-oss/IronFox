@@ -1,0 +1,13 @@
+diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
+index 02708ca763..b63ec8900a 100644
+--- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
++++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
+@@ -258,7 +258,7 @@ class PermissionsDialogFragment : AddonDialogFragment() {
+         }
+ 
+         val showTechnicalAndInteraction =
+-            dataCollectionPermissions.contains(TECHNICAL_AND_INTERACTION_PERM) && !forOptionalPermissions
++            false
+         val requiredDataCollectionPermissionText =
+             buildRequiredDataCollectionPermissionsText(
+                 dataCollectionPermissions.filter { it != TECHNICAL_AND_INTERACTION_PERM }
