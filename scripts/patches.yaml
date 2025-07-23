@@ -150,6 +150,13 @@ patches:
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Privacy"
 
+  - file: "disable-extension-data-collection.patch"
+    name: "Disable extension data collection"
+    description: "Prevents add-ons from prompting users for permission to submit technical and interaction data."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to authors of extensions."
+    effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
+    category: "Privacy"
+
   - file: "configure-doh.patch"
     name: "Configure DNS over HTTPS"
     description: |
@@ -360,7 +367,7 @@ patches:
     reason: "The Beacon API (navigator.sendBeacon)'s explicit, stated purpose/use case is for analytics/tracking (https://developer.mozilla.org/docs/Web/API/Beacon_API). However, disabling it entirely (like standard Firefox allows) is undesired, as it causes breakage, aids fingerprinting, and can allow trackers to fallback to other mechanisms for submitting data (as they can tell it's disabled/unavailable). Stubbing the API instead fixes these issues."
     effect: "Users are protected against tracking, and benefit from added attack surface reduction, without causing breakage and having to deal with the usual side effects that appear when the Beacon API is disabled."
     category: "Privacy"
-  
+
   - file: "prevent-pdfjs-fingerprinting.patch"
     name: "Prevent fingerprinting based on whether PDF.js is enabled/disabled"
     description: "Prevents aiding fingerprinting when Firefox's internal PDF viewer (PDF.js) is disabled."
