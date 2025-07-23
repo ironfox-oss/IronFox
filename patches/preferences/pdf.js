@@ -17,6 +17,5 @@ pref("pdfjs.enableSignatureEditor", true);
 pref("pdfjs.enableUpdatedAddImage", true);
 pref("pdfjs.enableXfa", false);
 pref("pdfjs.externalLinkTarget", 2);
-pref("pdfjs.historyUpdateUrl", true);
 pref("pdfjs.sidebarViewOnLoad", 2);
 pref("pdfjs.textLayerMode", 1);
