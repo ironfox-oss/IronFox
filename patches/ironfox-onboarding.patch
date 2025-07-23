@@ -1,3 +1,18 @@
+diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
+index 02708ca763..38ece16e99 100644
+--- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
++++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
+@@ -303,6 +303,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
+             technicalAndInteraction.isChecked = true
+         }
+ 
++        if (addon.id == "uBlock0@raymondhill.net") {
++            allowedInPrivateBrowsing.isChecked = true
++        }
++
+         positiveButton.setOnClickListener {
+             onPositiveButtonClicked?.invoke(
+                 addon,
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
 index eb51cfe835..b233fd9291 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
