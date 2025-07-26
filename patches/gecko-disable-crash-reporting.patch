@@ -1,13 +1,21 @@
-diff --git a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
-index d634f9def5..05e8007f24 100644
---- a/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
-+++ b/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
-@@ -12,7 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
-     "resource://services-settings/RemoteSettingsClient.sys.mjs",
- });
+diff --git a/mobile/android/geckoview/src/main/AndroidManifest.xml b/mobile/android/geckoview/src/main/AndroidManifest.xml
+index ac6e718f3c..85d5bc0d87 100644
+--- a/mobile/android/geckoview/src/main/AndroidManifest.xml
++++ b/mobile/android/geckoview/src/main/AndroidManifest.xml
+@@ -87,14 +87,14 @@
+                 android:isolatedProcess="false"
+                 android:process=":ipdlunittest">
+         </service>
+-        <service
++        <!-- <service
+                 android:name="org.mozilla.gecko.crashhelper.CrashHelper"
+                 android:enabled="true"
+                 android:exported="false"
+                 android:isolatedProcess="false"
+                 android:process=":crashhelper"
+                 android:stopWithTask="true">
+-        </service>
++        </service> -->
+     </application>
  
--const REMOTE_SETTINGS_CRASH_COLLECTION = "crash-reports-ondemand";
-+const REMOTE_SETTINGS_CRASH_COLLECTION = "";
- 
- // Remote Settings collections might want a different limit
- const PENDING_REMOTE_CRASH_REPORT_DAYS = 90;
+ </manifest>
