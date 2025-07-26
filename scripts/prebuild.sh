@@ -350,6 +350,9 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
+# Unbreak builds with --disable-pref-extensions
+sed -i -e 's|@BINPATH@/defaults/autoconfig/prefcalls.js|;@BINPATH@/defaults/autoconfig/prefcalls.js|g' mobile/android/installer/package-manifest.in
+
 # Remove glean telemetry URL
 remove_glean_telemetry "${glean}"
 remove_glean_telemetry "${application_services}"

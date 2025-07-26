@@ -412,13 +412,6 @@ patches:
     effect: "Prevents users from accidentally leaving remote debugging enabled."
     category: "Security"
 
-  - file: "remove-autoconfig-dependency.patch"
-    name: "Remove the Mozilla AutoConfig build dependency"
-    description: "Removes Mozilla's AutoConfig functionality in Firefox (also known as Mission Control Desktop, debuted in Netscape Communicator 4.5... https://www.internetnews.com/enterprise/netscape-unveils-enterprise-management-tools/)."
-    reason: "To unbreak builds with the '--disable-pref-extensions' argument (which removes this functionality)."
-    effect: "Reduces attack surface and legacy code."
-    category: "Security"
-
   - file: "disable-sslkeylogging.patch"
     name: "Disable SSLKEYLOGGING"
     description: "Disables the SSLKEYLOGGING feature in NSS (Mozilla's Network Security Services: https://firefox-source-docs.mozilla.org/security/nss/index.html)."
