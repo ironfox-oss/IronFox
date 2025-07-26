@@ -188,7 +188,7 @@ Once the packages have been installed successfully, follow the instructions to s
 
   ```sh
   mkdir -p $HOME/bin
-  wget https://gitlab.com/fdroid/fdroidserver/-/raw/master/gradlew-fdroid -O "$HOME/bin/gradle"
+  wget https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew-fdroid -O "$HOME/bin/gradle"
   chmod +x "$HOME/bin/gradle"
 
   export PATH=$HOME/bin:$PATH
