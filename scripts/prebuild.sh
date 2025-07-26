@@ -306,6 +306,7 @@ localize_maven
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/build-geckoview-lite.patch"
 
 # No-op Glean
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
 sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
 sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
@@ -349,15 +350,6 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/ac-disable-nimbus.patch"
 sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 
-# No-op Glean
-sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' components/external/glean/glean-core/android/build.gradle
-sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' components/external/glean/glean-core/python/glean/config.py
-sed -i -e '/enable_internal_pings:/s/true/false/' components/external/glean/glean-core/python/glean/config.py
-sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = ""/' components/external/glean/glean-core/rlb/src/configuration.rs
-sed -i -e '/enable_internal_pings:/s/true/false/' components/external/glean/glean-core/rlb/src/configuration.rs
-sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' components/external/glean/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
-sed -i -e '/enableInternalPings:/s/true/false/' components/external/glean/glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
-
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
@@ -372,6 +364,21 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
 sed -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
+
+popd
+
+# No-op Application Services Glean
+
+pushd "${application_services}/components/external/glean"
+
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
+sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
+sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
+sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
+sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = ""/' glean-core/rlb/src/configuration.rs
+sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
+sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
 popd
 

@@ -1,0 +1,48 @@
+diff --git a/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt b/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt
+index a1a4cd6..cea9391 100644
+--- a/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt
++++ b/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt
+@@ -250,7 +250,7 @@ open class GleanInternalAPI internal constructor() {
+                 dataPath = gleanDataDir.path,
+                 applicationId = applicationContext.packageName,
+                 languageBindingName = LANGUAGE_BINDING_NAME,
+-                uploadEnabled = uploadEnabled,
++                uploadEnabled = false,
+                 maxEvents = null,
+                 delayPingLifetimeIo = configuration.delayPingLifetimeIo,
+                 appBuild = "none",
+@@ -309,7 +309,7 @@ open class GleanInternalAPI internal constructor() {
+      */
+     @Deprecated("Use `setCollectionEnabled` instead.")
+     fun setUploadEnabled(enabled: Boolean) {
+-        gleanSetUploadEnabled(enabled)
++//        gleanSetUploadEnabled(enabled)
+     }
+ 
+     /**
+@@ -329,7 +329,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param enabled When true, enable metric collection.
+      */
+     fun setCollectionEnabled(enabled: Boolean) {
+-        gleanSetUploadEnabled(enabled)
++//        gleanSetUploadEnabled(enabled)
+     }
+ 
+     /**
+diff --git a/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt b/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt
+index 737896d..3b7f402 100644
+--- a/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt
++++ b/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt
+@@ -309,10 +309,10 @@ internal class MetricsPingScheduler(
+             //
+             // * Do not change this line without checking what it implies for the above wall
+             // of text. *
+-            gleanSubmitPingByNameSync("metrics", reasonString)
++//            gleanSubmitPingByNameSync("metrics", reasonString)
+             // The initialization process will take care of triggering the uploader here.
+         } else {
+-            Pings.metrics.submit(reason)
++//            Pings.metrics.submit(reason)
+         }
+         // Update the collection date: we don't really care if we have data or not, let's
+         // always update the sent date.
