@@ -3,6 +3,13 @@
 # Caution: Should not be sourced directly!
 # Use 'env_local.sh' or 'env_fdroid.sh' instead.
 
+# Configure Mach
+## https://firefox-source-docs.mozilla.org/mach/usage.html#user-settings
+## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#95
+## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#284
+export DISABLE_TELEMETRY=1
+export MACHRC="$patches/machrc"
+
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 
