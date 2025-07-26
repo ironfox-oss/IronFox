@@ -1,18 +1,3 @@
-diff --git a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt b/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
-index 81bf2dd7e2..7a43fac926 100644
---- a/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
-+++ b/mobile/android/android-components/components/service/pocket/src/main/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
-@@ -24,8 +24,8 @@ import org.json.JSONObject
- import java.io.IOException
- import java.util.UUID
- 
--private const val SPOCS_ENDPOINT_DEV_BASE_URL = "https://spocs.getpocket.dev/"
--private const val SPOCS_ENDPOINT_PROD_BASE_URL = "https://spocs.getpocket.com/"
-+private const val SPOCS_ENDPOINT_DEV_BASE_URL = ""
-+private const val SPOCS_ENDPOINT_PROD_BASE_URL = ""
- private const val SPOCS_ENDPOINT_DOWNLOAD_SPOCS_PATH = "spocs"
- private const val SPOCS_ENDPOINT_DELETE_PROFILE_PATH = "user"
- private const val SPOCS_PROXY_VERSION_KEY = "version"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt
 index d211d3625d..cbdc241b9b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/pocket/ContentRecommendationsFeatureHelper.kt

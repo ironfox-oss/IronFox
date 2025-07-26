@@ -29,21 +29,3 @@ index c21f63a00d..a8ea5237b6 100644
  
              // Build a list of installed extensions that are not built-in extensions.
              val installedAddons = installedExtensions
-diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 5bcd9c730b..043303febc 100644
---- a/mobile/android/fenix/app/build.gradle
-+++ b/mobile/android/fenix/app/build.gradle
-@@ -80,10 +80,10 @@ android {
-         buildConfigField "String", "VCS_HASH", "\"\""
-         // This should be the "public" base URL of AMO.
-         buildConfigField "String", "AMO_BASE_URL", "\"https://addons.mozilla.org\""
--        buildConfigField "String", "AMO_COLLECTION_NAME", "\"Extensions-for-Android\""
--        buildConfigField "String", "AMO_COLLECTION_USER", "\"mozilla\""
-+        buildConfigField "String", "AMO_COLLECTION_NAME", "\"IronFox\""
-+        buildConfigField "String", "AMO_COLLECTION_USER", "\"18588170\""
-         // This should be the base URL used to call the AMO API.
--        buildConfigField "String", "AMO_SERVER_URL", "\"https://services.addons.mozilla.org\""
-+        buildConfigField "String", "AMO_SERVER_URL", "\"\""
- 
-         def deepLinkSchemeValue = "fenix-dev"
-         buildConfigField "String", "DEEP_LINK_SCHEME", "\"$deepLinkSchemeValue\""

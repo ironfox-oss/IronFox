@@ -1,18 +1,3 @@
-diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
-index 89230fb4c1..4faeb9ee77 100644
---- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
-+++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
-@@ -29,8 +29,8 @@ import java.io.File
- import java.io.IOException
- import java.util.Date
- 
--internal const val CONTILE_ENDPOINT_URL = "https://contile.services.mozilla.com/v1/tiles"
--internal const val CACHE_FILE_NAME = "mozilla_components_service_contile.json"
-+internal const val CONTILE_ENDPOINT_URL = ""
-+internal const val CACHE_FILE_NAME = ""
- internal const val CACHE_VALID_FOR_KEY = "valid_for"
- internal const val CACHE_TOP_SITES_KEY = "tiles"
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 8913d9f230..50bf05c440 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
