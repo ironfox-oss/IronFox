@@ -291,6 +291,9 @@ pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 localize_maven
 
+# Unbreak GeckoView Lite builds
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/build-geckoview-lite.patch"
+
 # No-op Glean
 sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
@@ -611,6 +614,7 @@ fi
     echo 'ac_add_options --enable-android-subproject="fenix"'
     echo 'ac_add_options --enable-application="mobile/android"'
     echo 'ac_add_options --enable-disk-remnant-avoidance'
+    echo 'ac_add_options --enable-geckoview-lite'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-install-strip'
     echo 'ac_add_options --enable-minify=properties'

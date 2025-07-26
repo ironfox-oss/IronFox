@@ -140,6 +140,7 @@ IronFox **additionally**:
 - Disables [submission of technical and interaction data](https://support.mozilla.org/kb/technical-and-interaction-data) to Mozilla
 - Removes the built-in `Mozilla Android Components - Ads Telemetry` and `Mozilla Android Components - Search Telemetry` browser extensions
 - Removes the Firefox Sync onboarding page
+- Removes [the Glean library](https://docs.telemetry.mozilla.org/concepts/glean/glean.html) from GeckoView by building [GeckoView `Lite`, instead of GeckoView `Omni`](https://firefox-source-docs.mozilla.org/mobile/android/geckoview/contributor/geckoview-architecture.html#lite-and-omni-builds)
 - Removes Mozilla's default pins/shortcuts from the homepage
 - Removes Mozilla's URL referral parameters from the built-in DuckDuckGo and Wikipedia search engines
 - Removes the [Web Compatibility Reporter](https://support.mozilla.org/kb/report-breakage-due-blocking)
