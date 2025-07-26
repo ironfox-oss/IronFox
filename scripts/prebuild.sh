@@ -138,6 +138,8 @@ sed -i -e 's|SYNC_ADDRESSES_FEATURE = .*|SYNC_ADDRESSES_FEATURE = true|g' app/sr
 
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
+sed -i -e 's|.crashHandler|// .crashHandler|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+sed -i -e 's|import mozilla.components.lib.crash.handler.CrashHandlerService|// import mozilla.components.lib.crash.handler.CrashHandlerService|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Disable telemetry
 sed -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
@@ -162,6 +164,10 @@ sed -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeat
 # No-op Glean
 # https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
 echo 'glean.custom.server.url="data;"' >>local.properties
+
+# No-op Nimbus
+sed -i -e 's|.experimentDelegate|// .experimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+sed -i -e 's|import mozilla.components.experiment.NimbusExperimentDelegate|// import mozilla.components.experiment.NimbusExperimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Let it be IronFox
 sed -i \
