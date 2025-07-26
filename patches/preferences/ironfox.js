@@ -23,7 +23,11 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 // Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
 pref("beacon.enabled", true); // [DEFAULT]
 
-/// Re-enable Password Manager & Autofill in GeckoView
+/// Re-enable media autoplay in GeckoView
+// We still block this by default, just via a patch for Fenix's UI settings instead
+pref("media.geckoview.autoplay.request.testing", 0); // [DEFAULT]
+
+/// Re-enable Password Manager and Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
 // https://gitlab.com/ironfox-oss/IronFox/-/issues/11
 pref("extensions.formautofill.addresses.enabled", true); // [DEFAULT]
