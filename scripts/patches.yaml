@@ -193,13 +193,6 @@ patches:
       Reduces risk of credential exposure.
     category: "Privacy"
 
-  - file: "disable-doh-canary.patch"
-    name: "Disable DoH Canary Requests"
-    description: "Disables DNS over HTTPS canary requests."
-    reason: "To prevent unnecessary network connections to check DoH compatibility."
-    effect: "Reduces unwanted network activity."
-    category: "Privacy"
-
   - file: "disable-firefox-suggest.patch"
     name: "Disable Firefox Suggest"
     description: "Disables Firefox Suggest feature."
@@ -216,7 +209,7 @@ patches:
 
   - file: "disable-geoip.patch"
     name: "Disable Mozilla's GeoIP/Region Service"
-    description: "Disables Mozilla's GeoIP/Region Service."
+    description: "Disables Mozilla's GeoIP/Region Service (https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst)."
     reason: "To prevent Firefox from monitoring the user's region/general location."
     effect: "Reduces unwanted network activity and improves the privacy of users."
     category: "Privacy"
