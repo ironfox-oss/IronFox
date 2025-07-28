@@ -114,6 +114,7 @@ IronFox **additionally**:
 - Removes the [Google Play In-App Reviews](https://developer.android.com/guide/playcore/in-app-review) library
 - Removes the [Google Play Install Referrer](https://developer.android.com/google/play/installreferrer/library) library
 - Removes the proprietary [Google Play Firebase Messaging](https://firebase.google.com/docs/cloud-messaging/) library, and adds support for [UnifiedPush](https://unifiedpush.org/)
+- Removes the [Sentry](https://github.com/getsentry/sentry) library
 - Replaces the proprietary [Google Play FIDO](https://developers.google.com/android/reference/com/google/android/gms/fido/Fido) library with its FOSS [microG](https://github.com/microg/GmsCore/wiki) equivalent
 
 ## Mozilla
