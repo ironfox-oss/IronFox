@@ -345,6 +345,8 @@ popd
 
 pushd "${application_services}"
 
+# Remove Mozilla repositories substitution and explicitly add the required ones
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
 
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
