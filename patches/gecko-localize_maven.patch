@@ -122,10 +122,54 @@ index fe86bfc252..68713e57d7 100644
      }
  
      dependencies {
+diff --git a/mobile/android/android-components/components/service/mars/build.gradle b/mobile/android/android-components/components/service/mars/build.gradle
+index 79a9aea939..7841f131f1 100644
+--- a/mobile/android/android-components/components/service/mars/build.gradle
++++ b/mobile/android/android-components/components/service/mars/build.gradle
+@@ -4,14 +4,9 @@
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
 diff --git a/mobile/android/android-components/components/service/nimbus/build.gradle b/mobile/android/android-components/components/service/nimbus/build.gradle
 index 7f79cbdbd6..0a4b0c3a72 100644
 --- a/mobile/android/android-components/components/service/nimbus/build.gradle
 +++ b/mobile/android/android-components/components/service/nimbus/build.gradle
+@@ -4,14 +4,9 @@
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+diff --git a/mobile/android/android-components/components/service/pocket/build.gradle b/mobile/android/android-components/components/service/pocket/build.gradle
+index 0b19b3e03d..5eb26455bf 100644
+--- a/mobile/android/android-components/components/service/pocket/build.gradle
++++ b/mobile/android/android-components/components/service/pocket/build.gradle
 @@ -4,14 +4,9 @@
  
  buildscript {
