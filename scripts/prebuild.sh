@@ -315,6 +315,10 @@ sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configurati
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
+find "$patches/glean-overlay" -type f | while read -r src; do
+    cp -vrf "$src" "${src#"$patches/glean-overlay/"}"
+done
+
 popd
 
 #
@@ -382,6 +386,10 @@ sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = 
 sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+
+find "$patches/glean-overlay" -type f | while read -r src; do
+    cp -vrf "$src" "${src#"$patches/glean-overlay/"}"
+done
 
 popd
 

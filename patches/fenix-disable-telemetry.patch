@@ -106,33 +106,52 @@ index 6875486c72..55078dcc50 100644
      /**
       * Shortcut component for managing shortcuts on the device home screen.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-index d218b89663..21323dab77 100644
+index d218b89663..ab7a56b089 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-@@ -13,7 +13,7 @@ import mozilla.telemetry.glean.config.Configuration
- import org.mozilla.fenix.BuildConfig
- import org.mozilla.fenix.Config
- import org.mozilla.fenix.GleanMetrics.GleanBuildInfo
--import org.mozilla.fenix.GleanMetrics.Pings
-+//import org.mozilla.fenix.GleanMetrics.Pings
+@@ -4,7 +4,7 @@
+ 
+ package org.mozilla.fenix.components
+ 
+-import android.content.Context
++/*import android.content.Context
+ import mozilla.components.concept.fetch.Client
+ import mozilla.components.service.glean.net.ConceptFetchHttpUploader
+ import mozilla.components.support.base.log.logger.Logger
+@@ -16,7 +16,7 @@ import org.mozilla.fenix.GleanMetrics.GleanBuildInfo
+ import org.mozilla.fenix.GleanMetrics.Pings
  import org.mozilla.fenix.ext.getCustomGleanServerUrlIfAvailable
  import org.mozilla.fenix.ext.setCustomEndpointIfAvailable
- import org.mozilla.fenix.nimbus.FxNimbus
-@@ -34,10 +34,12 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
-         // for testing, if custom glean server url is set in the secret menu, use it to initialize Glean
-         getCustomGleanServerUrlIfAvailable(applicationContext)
-     } else {
--        null
-+        getCustomGleanServerUrlIfAvailable(applicationContext)
-     }
+-import org.mozilla.fenix.nimbus.FxNimbus
++import org.mozilla.fenix.nimbus.FxNimbus*/
  
-     val configuration = Configuration(
-+        enableInternalPings = false,
-+        serverEndpoint = "data;",
-         channel = BuildConfig.BUILD_TYPE,
-         httpClient = ConceptFetchHttpUploader(
-             lazy(LazyThreadSafetyMode.NONE) { client },
-@@ -52,15 +54,15 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
+ /**
+  * Helper function to initialize Glean.
+@@ -26,13 +26,13 @@ import org.mozilla.fenix.nimbus.FxNimbus
+  * [isTelemetryUploadEnabled] indicate if telemetry should be enabled to be uploaded.
+  * [client] an instance of [Client] used to upload metrics.
+  */
+-fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUploadEnabled: Boolean, client: Client) {
+-    logger.debug("Initializing Glean (uploadEnabled=$isTelemetryUploadEnabled})")
++fun initializeGlean() {
++//    logger.debug("Initializing Glean (uploadEnabled=$isTelemetryUploadEnabled})")
+ 
+     // for performance reasons, this is only available in Nightly or Debug builds
+-    val customEndpoint = if (Config.channel.isNightlyOrDebug) {
++//    val customEndpoint = if (Config.channel.isNightlyOrDebug) {
+         // for testing, if custom glean server url is set in the secret menu, use it to initialize Glean
+-        getCustomGleanServerUrlIfAvailable(applicationContext)
++/*        getCustomGleanServerUrlIfAvailable(applicationContext)
+     } else {
+         null
+     }
+@@ -47,20 +47,20 @@ fun initializeGlean(applicationContext: Context, logger: Logger, isTelemetryUplo
+         delayPingLifetimeIo = FxNimbus.features.glean.value().delayPingLifetimeIo,
+         pingLifetimeThreshold = FxNimbus.features.glean.value().pingLifetimeThreshold,
+         pingLifetimeMaxTime = FxNimbus.features.glean.value().pingLifetimeMaxTime,
+-    )
++    )*/
+ 
      // Since Glean v63.0.0, custom pings need to be registered prior to Glean init
      // in order to ensure they are enabled and able to collect data.
      // See https://bugzilla.mozilla.org/1934931 for more information.
@@ -141,15 +160,15 @@ index d218b89663..21323dab77 100644
  
      // Set the metric configuration from Nimbus.
 -    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().metricsEnabled.toString())
-+//    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().metricsEnabled.toString())
++/*    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().metricsEnabled.toString())
  
      Glean.initialize(
          applicationContext = applicationContext,
          configuration = configuration.setCustomEndpointIfAvailable(customEndpoint),
--        uploadEnabled = isTelemetryUploadEnabled,
-+        uploadEnabled = false,
+         uploadEnabled = isTelemetryUploadEnabled,
          buildInfo = GleanBuildInfo.buildInfo,
-     )
+-    )
++    )*/
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt
 index ea4ff1e0dd..1a63eba455 100644

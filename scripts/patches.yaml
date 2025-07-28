@@ -129,6 +129,13 @@ patches:
     effect: "Improves user privacy by preventing the collection and transmission of crash reports."
     category: "Privacy"
 
+  - file: "remove-glean-service.patch"
+    name: "Remove the Glean Service"
+    description: "Removes the Glean Service to prevent data collection and submission mechanisms."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla or third parties, and to reduce uwnanted dependencies."
+    effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
+    category: "Privacy"
+
   - file: "fenix-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Fenix)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Firefox for Android."
