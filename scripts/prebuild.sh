@@ -345,10 +345,6 @@ popd
 
 pushd "${application_services}"
 
-# No-op Nimbus (Experimentation)
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/ac-disable-nimbus.patch"
-sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
-sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
@@ -360,6 +356,11 @@ localize_maven
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+
+# No-op Nimbus (Experimentation)
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-disable-nimbus.patch"
+sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
@@ -409,9 +410,6 @@ echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 apply_patches
 
 # Fix v125 aar output not including native libraries
-sed -i \
-    -e 's/singleVariant("debug")/singleVariant("release")/' \
-    mobile/android/exoplayer2/build.gradle
 sed -i \
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
