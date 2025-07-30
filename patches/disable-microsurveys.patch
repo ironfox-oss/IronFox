@@ -12,10 +12,10 @@ index ac0f3bc013..a4f50027d2 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..b5f645dd97 100644
+index 774d43efab..7eee9e8f67 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2211,7 +2211,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2266,7 +2266,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var microsurveyFeatureEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
          default = { FxNimbus.features.microsurveys.value().enabled },

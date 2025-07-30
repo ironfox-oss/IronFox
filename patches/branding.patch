@@ -146,10 +146,10 @@ index 10488889d7..f916d94cc9 100644
                      lineThreeState,
                  ),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..0bad31b1a5 100644
+index 774d43efab..4a1b59e7c2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -444,7 +444,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -545,7 +545,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldShowPrivacyPopWindow by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),

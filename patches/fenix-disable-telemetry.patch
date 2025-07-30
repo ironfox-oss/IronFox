@@ -367,10 +367,10 @@ index 819b24954e..273349e0ca 100644
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index ac0f3bc013..bfd696a88b 100644
+index 752d111544..02ab51fe3c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -166,7 +166,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -172,7 +172,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
  
          lifecycleScope.launch {
              requirePreference<SwitchPreference>(R.string.pref_key_enable_debug_drawer).apply {
@@ -380,10 +380,10 @@ index ac0f3bc013..bfd696a88b 100644
                  onPreferenceChangeListener =
                      Preference.OnPreferenceChangeListener { _, newValue ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..5d81426619 100644
+index 774d43efab..02abf5ebe6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -386,19 +386,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -487,19 +487,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -412,7 +412,7 @@ index 8913d9f230..5d81426619 100644
      )
  
      var hasAcceptedTermsOfService by booleanPreference(
-@@ -412,11 +412,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -513,11 +513,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
