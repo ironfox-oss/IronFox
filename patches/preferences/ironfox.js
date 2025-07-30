@@ -50,18 +50,4 @@ pref("dom.ipc.processCount", 2); // [DEFAULT]
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
-/// Temporarily disable unconditionally blocking Local Network Access requests
-// This appears to be causing breakage (ex. https://codeberg.org/celenity/Phoenix/issues/162 + https://codeberg.org/celenity/Phoenix/issues/164), and we still prevent websites from accessing LAN anyways with ex. uBlock Origin
-// We only need this temporarily, until the next Phoenix release
-pref("network.lna.blocking", false); // [DEFAULT]
-
-/// Unbreak Firefox Translations
-// We only need this temporarily, until the next Phoenix release
-pref("extensions.webextensions.base-content-security-policy", "script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline'; upgrade-insecure-requests;");
-
-/// Unbreak the OS Geolocation Provider
-// We only need this temporarily, until the next Phoenix release
-// https://gitlab.com/ironfox-oss/IronFox/-/issues/130
-pref("geo.provider.use_mls", false); // [HIDDEN] [DEFAULT]
-
 pref("browser.ironfox.applied", true, locked);
