@@ -1,3 +1,25 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index a88ff8d3ac..f57c3d9145 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -367,7 +367,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+                         // new search suggestions. The worker requires us to have called
+                         // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
+                         // scheduling these tasks. When disabled we stop the periodic work.
+-                        if (settings().enableFxSuggest) {
++                        if (settings().enableFxSuggest && settings().showNonSponsoredSuggestions) {
+                             components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
+                         } else {
+                             components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
+@@ -470,7 +470,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         queueStorageMaintenance()
+         queueNimbusFetchInForeground()
+         queueDownloadWallpapers()
+-        if (settings().enableFxSuggest) {
++        if (settings().enableFxSuggest && settings().showNonSponsoredSuggestions) {
+             queueSuggestIngest()
+         }
+         queueCollectProcessExitInfo()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
 index baadbd7873..87a4d45b15 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
