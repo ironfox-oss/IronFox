@@ -37,9 +37,9 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/filters.min.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "ublock-badware": {
@@ -60,9 +60,9 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/badware.min.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://github.com/uBlockOrigin/uAssets",
         "instructionURL": "https://github.com/gorhill/uBlock/wiki/Badware-risks"
     },
@@ -84,9 +84,9 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/privacy.min.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "ublock-unbreak": {
@@ -106,9 +106,9 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/unbreak.min.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "ublock-quick-fixes": {
@@ -128,9 +128,9 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/quick-fixes.min.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "adguard-generic": {
@@ -167,9 +167,9 @@
             "https://ublockorigin.pages.dev/thirdparties/easylist.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://easylist.to/"
     },
     "adguard-spyware-url": {
@@ -218,9 +218,9 @@
             "https://ublockorigin.pages.dev/thirdparties/easyprivacy.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://easylist.to/"
     },
     "urlhaus-1": {
@@ -261,22 +261,22 @@
         "supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters"
     },
     "ublock-cookies-adguard": {
-		"content": "filters",
-		"group": "annoyances",
-		"group2": "cookies",
-		"parent": "AdGuard/uBO – Cookie Notices",
-		"off": true,
-		"title": "uBlock filters – Cookie Notices",
-		"tags": "annoyances cookies",
-		"contentURL": "https://ublockorigin.github.io/uAssets/filters/annoyances-cookies.txt",
-		"cdnURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/annoyances-cookies.txt",
-			"https://ublockorigin.pages.dev/filters/annoyances-cookies.txt",
-			"https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/annoyances-cookies.txt",
-			"https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/annoyances-cookies.txt"
-		],
-		"supportURL": "https://github.com/uBlockOrigin/uAssets"
-	},
+        "content": "filters",
+        "group": "annoyances",
+        "group2": "cookies",
+        "parent": "AdGuard/uBO – Cookie Notices",
+        "off": true,
+        "title": "uBlock filters – Cookie Notices",
+        "tags": "annoyances cookies",
+        "contentURL": "https://ublockorigin.github.io/uAssets/filters/annoyances-cookies.txt",
+        "cdnURLs": [
+            "https://ublockorigin.github.io/uAssetsCDN/filters/annoyances-cookies.txt",
+            "https://ublockorigin.pages.dev/filters/annoyances-cookies.txt",
+            "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/annoyances-cookies.txt",
+            "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/annoyances-cookies.txt"
+        ],
+        "supportURL": "https://github.com/uBlockOrigin/uAssets"
+    },
     "fanboy-cookiemonster": {
         "content": "filters",
         "group": "annoyances",
@@ -299,22 +299,22 @@
         "supportURL": "https://github.com/easylist/easylist#fanboy-lists"
     },
     "ublock-cookies-easylist": {
-		"content": "filters",
-		"group": "annoyances",
-		"group2": "cookies",
-		"parent": "EasyList/uBO – Cookie Notices",
-		"title": "uBlock filters – Cookie Notices",
-		"tags": "annoyances cookies",
-		"preferred": true,
-		"contentURL": "https://ublockorigin.github.io/uAssets/filters/annoyances-cookies.txt",
-		"cdnURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/annoyances-cookies.txt",
-			"https://ublockorigin.pages.dev/filters/annoyances-cookies.txt",
-			"https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/annoyances-cookies.txt",
-			"https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/annoyances-cookies.txt"
-		],
-		"supportURL": "https://github.com/uBlockOrigin/uAssets"
-	},
+        "content": "filters",
+        "group": "annoyances",
+        "group2": "cookies",
+        "parent": "EasyList/uBO – Cookie Notices",
+        "title": "uBlock filters – Cookie Notices",
+        "tags": "annoyances cookies",
+        "preferred": true,
+        "contentURL": "https://ublockorigin.github.io/uAssets/filters/annoyances-cookies.txt",
+        "cdnURLs": [
+            "https://ublockorigin.github.io/uAssetsCDN/filters/annoyances-cookies.txt",
+            "https://ublockorigin.pages.dev/filters/annoyances-cookies.txt",
+            "https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/annoyances-cookies.txt",
+            "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/annoyances-cookies.txt"
+        ],
+        "supportURL": "https://github.com/uBlockOrigin/uAssets"
+    },
     "adguard-social": {
         "content": "filters",
         "group": "annoyances",
@@ -455,7 +455,7 @@
         ],
         "supportURL": "https://easylist.to/"
     },
-    "ublock0-annoyances": {
+    "ublock-annoyances": {
         "content": "filters",
         "group": "annoyances",
         "title": "uBlock filters – Annoyances",
@@ -468,9 +468,9 @@
             "https://cdn.statically.io/gh/uBlockOrigin/uAssetsCDN/main/filters/annoyances.min.txt"
         ],
         "patchURLs": [
-			"https://ublockorigin.github.io/uAssetsCDN/filters/",
-			"https://ublockorigin.pages.dev/filters/"
-		],
+            "https://ublockorigin.github.io/uAssetsCDN/filters/",
+            "https://ublockorigin.pages.dev/filters/"
+        ],
         "supportURL": "https://github.com/uBlockOrigin/uAssets"
     },
     "dpollock-0": {
@@ -780,16 +780,16 @@
         "supportURL": "https://github.com/MajkiIT/polish-ads-filter"
     },
     "POL-3": {
-		"content": "filters",
-		"group": "regions",
+        "content": "filters",
+        "group": "regions",
         "parent": "🇵🇱pl: Oficjalne Polskie Filtry",
-		"off": true,
-		"title": "🇵🇱pl: CERT.PL's Warning List",
-		"tags": "malware polish polski",
-		"lang": "szl pl",
-		"contentURL": "https://hole.cert.pl/domains/v2/domains_adblock.txt",
-		"supportURL": "https://cert.pl/lista-ostrzezen/"
-	},
+        "off": true,
+        "title": "🇵🇱pl: CERT.PL's Warning List",
+        "tags": "malware polish polski",
+        "lang": "szl pl",
+        "contentURL": "https://hole.cert.pl/domains/v2/domains_adblock.txt",
+        "supportURL": "https://cert.pl/lista-ostrzezen/"
+    },
     "ROU-1": {
         "content": "filters",
         "group": "regions",
@@ -900,15 +900,15 @@
         "supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters"
     },
     "UKR-0": {
-		"content": "filters",
-		"group": "regions",
-		"off": true,
-		"title": "🇺🇦ua: AdGuard Ukrainian",
-		"tags": "ads ukraine україна",
-		"lang": "uk",
-		"contentURL": "https://filters.adtidy.org/extension/ublock/filters/23.txt",
-		"supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters"
-	},
+        "content": "filters",
+        "group": "regions",
+        "off": true,
+        "title": "🇺🇦ua: AdGuard Ukrainian",
+        "tags": "ads ukraine україна",
+        "lang": "uk",
+        "contentURL": "https://filters.adtidy.org/extension/ublock/filters/23.txt",
+        "supportURL": "https://github.com/AdguardTeam/AdguardFilters#adguard-filters"
+    },
     "VIE-1": {
         "content": "filters",
         "group": "regions",
