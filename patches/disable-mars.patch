@@ -1,24 +1,3 @@
-diff --git a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
-index facfce542c..5caf534fe3 100644
---- a/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
-+++ b/mobile/android/android-components/components/service/mars/src/main/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
-@@ -29,14 +29,14 @@ import java.io.File
- import java.io.IOException
- import java.util.Date
- 
--private const val MARS_ENDPOINT_URL = "https://ads.mozilla.org/v1/ads"
-+private const val MARS_ENDPOINT_URL = ""
- 
- private const val REQUEST_BODY_CONTEXT_ID_KEY = "context_id"
- private const val REQUEST_BODY_PLACEMENTS_KEY = "placements"
- private const val REQUEST_BODY_PLACEMENT_KEY = "placement"
- private const val REQUEST_BODY_COUNT_KEY = "count"
- 
--internal const val CACHE_FILE_NAME = "mozilla_components_service_mars_tiles.json"
-+internal const val CACHE_FILE_NAME = ""
- 
- /**
-  * Provides access to the MARS API for fetching top sites tile.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 index ac0f3bc013..5571c3d891 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
@@ -32,10 +11,10 @@ index ac0f3bc013..5571c3d891 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..f4de24204e 100644
+index 774d43efab..16a3d11246 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1797,7 +1797,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1852,7 +1852,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var marsAPIEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_mars_api_enabled),
          default = { FxNimbus.features.mars.value().enabled },

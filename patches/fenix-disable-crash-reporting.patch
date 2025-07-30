@@ -17,6 +17,189 @@ index d897b9af6f..086f87d87b 100644
 +//        this !is CancellationException &&
 +//        isRecoverable
  }
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+index 1b51219606..22f8f049c9 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+@@ -96,8 +96,8 @@ private const val START_OF_134_NIGHTLY_TIMESTAMP = 1730073600000L
+ class CrashReporter internal constructor(
+     private val services: List<CrashReporterService> = emptyList(),
+     private val telemetryServices: List<CrashTelemetryService> = emptyList(),
+-    private val shouldPrompt: Prompt = Prompt.NEVER,
+-    enabled: Boolean = true,
++    private val shouldPrompt: Prompt = Prompt.ALWAYS,
++    enabled: Boolean = false,
+     internal val promptConfiguration: PromptConfiguration = PromptConfiguration(),
+     private val nonFatalCrashIntent: PendingIntent? = null,
+     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
+@@ -111,8 +111,8 @@ class CrashReporter internal constructor(
+         context: Context,
+         services: List<CrashReporterService> = emptyList(),
+         telemetryServices: List<CrashTelemetryService> = emptyList(),
+-        shouldPrompt: Prompt = Prompt.NEVER,
+-        enabled: Boolean = true,
++        shouldPrompt: Prompt = Prompt.ALWAYS,
++        enabled: Boolean = false,
+         promptConfiguration: PromptConfiguration = PromptConfiguration(),
+         nonFatalCrashIntent: PendingIntent? = null,
+         scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
+@@ -146,16 +146,16 @@ class CrashReporter internal constructor(
+         get() = runtimeTagProviders.fold(emptyMap()) { acc, provider -> acc + provider() }
+ 
+     init {
+-        require(services.isNotEmpty() || telemetryServices.isNotEmpty()) {
+-            "No crash reporter services defined"
+-        }
++//        require(services.isNotEmpty() || telemetryServices.isNotEmpty()) {
++//            "No crash reporter services defined"
++//        }
+     }
+ 
+     /**
+      * Install this [CrashReporter] instance. At this point the component will be setup to collect crash reports.
+      */
+-    fun install(applicationContext: Context): CrashReporter {
+-        instance = this
++    fun install(applicationContext: Context) {
++/*        instance = this
+ 
+         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+         val handler = ExceptionHandler(
+@@ -165,7 +165,7 @@ class CrashReporter internal constructor(
+         )
+         Thread.setDefaultUncaughtExceptionHandler(handler)
+ 
+-        return this
++        return this*/
+     }
+ 
+     /**
+@@ -200,8 +200,8 @@ class CrashReporter internal constructor(
+     /**
+      * Submit a crash report to all registered services.
+      */
+-    fun submitReport(crash: Crash, then: () -> Unit = {}): Job {
+-        return scope.launch {
++    fun submitReport(crash: Crash, then: () -> Unit = {}) {
++/*        return scope.launch {
+             services.forEach { service ->
+                 val reportId = when (crash) {
+                     is Crash.NativeCodeCrash -> service.report(crash)
+@@ -221,14 +221,14 @@ class CrashReporter internal constructor(
+             withContext(Dispatchers.Main) {
+                 then()
+             }
+-        }
++        }*/
+     }
+ 
+     /**
+      * Submit a crash report to all registered telemetry services.
+      */
+-    fun submitCrashTelemetry(crash: Crash, then: () -> Unit = {}): Job {
+-        return scope.launch {
++    fun submitCrashTelemetry(crash: Crash, then: () -> Unit = {}) {
++/*        return scope.launch {
+             telemetryServices.forEach { telemetryService ->
+                 when (crash) {
+                     is Crash.NativeCodeCrash -> telemetryService.record(crash)
+@@ -240,7 +240,7 @@ class CrashReporter internal constructor(
+             withContext(Dispatchers.Main) {
+                 then()
+             }
+-        }
++        }*/
+     }
+ 
+     /**
+@@ -259,7 +259,7 @@ class CrashReporter internal constructor(
+         logger.info("Caught Exception report submitted to ${services.size} services")
+         return scope.launch {
+             services.forEach {
+-                it.report(reportThrowable, crashBreadcrumbsCopy())
++//                it.report(reportThrowable, crashBreadcrumbsCopy())
+             }
+         }
+     }
+@@ -274,7 +274,7 @@ class CrashReporter internal constructor(
+      * ```
+      */
+     override fun recordCrashBreadcrumb(breadcrumb: Breadcrumb) {
+-        crashBreadcrumbs.add(breadcrumb)
++//        crashBreadcrumbs.add(breadcrumb)
+     }
+ 
+     /**
+@@ -321,7 +321,7 @@ class CrashReporter internal constructor(
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal fun sendNonFatalCrashIntent(context: Context, crash: Crash) {
+-        logger.info("Invoking non-fatal PendingIntent")
++/*        logger.info("Invoking non-fatal PendingIntent")
+ 
+         val additionalIntent = Intent()
+         crash.fillIn(additionalIntent)
+@@ -340,7 +340,7 @@ class CrashReporter internal constructor(
+             )
+         } else {
+             nonFatalCrashIntent?.send(context, 0, additionalIntent)
+-        }
++        }*/
+     }
+ 
+     internal fun showPromptOrNotification(context: Context, crash: Crash) {
+@@ -363,24 +363,24 @@ class CrashReporter internal constructor(
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal fun showNotification(context: Context, crash: Crash) {
+-        val notification = CrashNotification(context, crash, promptConfiguration)
+-        notification.show()
++//        val notification = CrashNotification(context, crash, promptConfiguration)
++//        notification.show()
+     }
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal fun sendCrashReport(context: Context, crash: Crash) {
+-        ContextCompat.startForegroundService(context, SendCrashReportService.createReportIntent(context, crash))
++//        ContextCompat.startForegroundService(context, SendCrashReportService.createReportIntent(context, crash))
+     }
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal fun sendCrashTelemetry(context: Context, crash: Crash) {
+-        ContextCompat.startForegroundService(context, SendCrashTelemetryService.createReportIntent(context, crash))
++//        ContextCompat.startForegroundService(context, SendCrashTelemetryService.createReportIntent(context, crash))
+     }
+ 
+     @VisibleForTesting
+     internal fun showPrompt(context: Context, crash: Crash) {
+-        val prompt = CrashPrompt(context, crash)
+-        prompt.show()
++//        val prompt = CrashPrompt(context, crash)
++//        prompt.show()
+     }
+ 
+     private fun shouldSendIntent(crash: Crash): Boolean {
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
+index 8da0d84881..cc25fd14ea 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
+@@ -18,14 +18,14 @@ internal class MinidumpAnalyzer {
+          */
+         fun load(): MinidumpAnalyzer? {
+             try {
+-                System.loadLibrary("minidump_analyzer")
++//                System.loadLibrary("minidump_analyzer")
+                 logger.debug("loaded minidump_analyzer native library")
+             } catch (e: UnsatisfiedLinkError) {
+                 logger.info("failed to load minidump_analyzer native library: $e")
+                 return null
+             }
+ 
+-            return MinidumpAnalyzer()
++            return null
+         }
+     }
+ 
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
 index 68dd4d13fa..7266ac2b6e 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt
@@ -127,54 +310,6 @@ index 68dd4d13fa..7266ac2b6e 100644
 +//        recordCrashAction(GleanCrashAction.Count(CAUGHT_EXCEPTION_KEY))
      }
  }
-diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-index 37fa83d76a..c18428dc85 100644
---- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-+++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-@@ -103,7 +103,7 @@ class MozillaSocorroService(
-     override val name: String = "Socorro"
- 
-     override fun createCrashReportUrl(identifier: String): String? {
--        return "https://crash-stats.mozilla.org/report/index/$identifier"
-+        return ""
-     }
- 
-     init {
-@@ -556,7 +556,7 @@ class MozillaSocorroService(
-     }
- 
-     internal fun buildServerUrl(versionName: String): String =
--        "https://crash-reports.mozilla.com/submit".toUri()
-+        "".toUri()
-             .buildUpon()
-             .appendQueryParameter("id", appId)
-             .appendQueryParameter("version", versionName)
-diff --git a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-index 5b057f2579..7613b7ac06 100644
---- a/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-+++ b/mobile/android/android-components/components/lib/crash-sentry/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-@@ -44,7 +44,7 @@ class SentryService(
-     private val environment: String? = null,
-     private val sendEventForNativeCrashes: Boolean = false,
-     private val sentryProjectUrl: String? = null,
--    private val sendCaughtExceptions: Boolean = true,
-+    private val sendCaughtExceptions: Boolean = false,
- ) : CrashReporterService {
- 
-     override val id: String = "new-sentry-instance"
-diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 5bcd9c730b..3241341821 100644
---- a/mobile/android/fenix/app/build.gradle
-+++ b/mobile/android/fenix/app/build.gradle
-@@ -355,7 +355,7 @@ android.applicationVariants.configureEach { variant ->
- 
-     buildConfigField 'String', 'SENTRY_TOKEN', 'null'
-     if (!isDebug) {
--        buildConfigField 'boolean', 'CRASH_REPORTING', 'true'
-+        buildConfigField 'boolean', 'CRASH_REPORTING', 'false'
-         // Reading sentry token from local file (if it exists). In a release task on taskcluster it will be available.
-         try {
-             def token = new File("${rootDir}/.sentry_token").text.trim()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index a88ff8d3ac..a1ed1502ff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -193,19 +328,67 @@ index a88ff8d3ac..a1ed1502ff 100644
  
      protected open fun initializeNimbus() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index f04adf8312..fb8c49c827 100644
+index f04adf8312..e1eade2657 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -16,7 +16,7 @@ import mozilla.components.lib.crash.service.GleanCrashReporterService
- import mozilla.components.lib.crash.service.MozillaSocorroService
- import mozilla.components.support.ktx.android.content.isMainProcess
+@@ -4,30 +4,30 @@
+ 
+ package org.mozilla.fenix.components
+ 
+-import android.app.Application
++//import android.app.Application
+ import android.app.PendingIntent
+ import android.content.Context
+ import android.content.Intent
+ import android.os.Build
+ import mozilla.components.lib.crash.CrashReporter
+-import mozilla.components.lib.crash.sentry.SentryService
++//import mozilla.components.lib.crash.sentry.SentryService
+ import mozilla.components.lib.crash.service.CrashReporterService
+-import mozilla.components.lib.crash.service.GleanCrashReporterService
+-import mozilla.components.lib.crash.service.MozillaSocorroService
+-import mozilla.components.support.ktx.android.content.isMainProcess
++//import mozilla.components.lib.crash.service.GleanCrashReporterService
++//import mozilla.components.lib.crash.service.MozillaSocorroService
++//import mozilla.components.support.ktx.android.content.isMainProcess
  import mozilla.components.support.utils.BrowsersCache
 -import mozilla.components.support.utils.RunWhenReadyQueue
+-import org.mozilla.fenix.BuildConfig
 +//import mozilla.components.support.utils.RunWhenReadyQueue
- import org.mozilla.fenix.BuildConfig
++//import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.Config
  import org.mozilla.fenix.HomeActivity
-@@ -45,7 +45,7 @@ import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.ReleaseChannel
+-import org.mozilla.fenix.components.metrics.AdjustMetricsService
++//import org.mozilla.fenix.components.metrics.AdjustMetricsService
+ import org.mozilla.fenix.components.metrics.DefaultMetricsStorage
+-import org.mozilla.fenix.components.metrics.GleanMetricsService
+-import org.mozilla.fenix.components.metrics.GleanProfileIdPreferenceStore
+-import org.mozilla.fenix.components.metrics.GleanUsageReportingMetricsService
+-import org.mozilla.fenix.components.metrics.InstallReferrerMetricsService
++//import org.mozilla.fenix.components.metrics.GleanMetricsService
++//import org.mozilla.fenix.components.metrics.GleanProfileIdPreferenceStore
++//import org.mozilla.fenix.components.metrics.GleanUsageReportingMetricsService
++//import org.mozilla.fenix.components.metrics.InstallReferrerMetricsService
+ import org.mozilla.fenix.components.metrics.MetricController
+ import org.mozilla.fenix.components.metrics.MetricsStorage
+ import org.mozilla.fenix.crashes.CrashFactCollector
+@@ -35,27 +35,27 @@ import org.mozilla.fenix.crashes.ReleaseRuntimeTagProvider
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.perf.lazyMonitored
+-import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
+-import org.mozilla.geckoview.BuildConfig.MOZ_APP_VENDOR
+-import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
+-import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
++//import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
++//import org.mozilla.geckoview.BuildConfig.MOZ_APP_VENDOR
++//import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
++//import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
+ 
+ /**
+  * Component group for all functionality related to analytics e.g. crash reporting and telemetry.
   */
  class Analytics(
      private val context: Context,
@@ -214,33 +397,68 @@ index f04adf8312..fb8c49c827 100644
  ) {
      val crashReporter: CrashReporter by lazyMonitored {
          val services = mutableListOf<CrashReporterService>()
-@@ -74,12 +74,12 @@ class Analytics(
+         val distributionId = "Mozilla"
+ 
+-        if (isSentryEnabled()) {
++//        if (isSentryEnabled()) {
+             // We treat caught exceptions similar to debug logging.
+             // On the release channel volume of these is too high for our Sentry instances, and
+             // we get most value out of nightly/beta logging anyway.
+-            val shouldSendCaughtExceptions = when (Config.channel) {
++/*            val shouldSendCaughtExceptions = when (Config.channel) {
+                 ReleaseChannel.Release -> false
+                 else -> true
+             }
+@@ -70,21 +70,21 @@ class Analytics(
+                 sendEventForNativeCrashes = false, // Do not send native crashes to Sentry
+                 sendCaughtExceptions = shouldSendCaughtExceptions,
+                 sentryProjectUrl = getSentryProjectUrl(),
+-            )
++            )*/
  
              // We only want to initialize Sentry on startup on the main process.
-             if (context.isMainProcess()) {
--                runWhenReadyQueue.runIfReadyOrQueue {
--                    sentryService.initIfNeeded()
--                }
-+//                runWhenReadyQueue.runIfReadyOrQueue {
-+//                    sentryService.initIfNeeded()
-+//                }
+-            if (context.isMainProcess()) {
++/*            if (context.isMainProcess()) {
+                 runWhenReadyQueue.runIfReadyOrQueue {
+                     sentryService.initIfNeeded()
+                 }
              }
  
--            services.add(sentryService)
-+//            services.add(sentryService)
-         }
+             services.add(sentryService)
+-        }
++        }*/
  
          // The name "Fenix" here matches the product name on Socorro and is unrelated to the actual app name:
+         // https://bugzilla.mozilla.org/show_bug.cgi?id=1523284
+-        val socorroService = MozillaSocorroService(
++/*        val socorroService = MozillaSocorroService(
+             context,
+             appName = "Fenix",
+             version = MOZ_APP_VERSION,
 @@ -93,7 +93,7 @@ class Analytics(
              releaseChannel = MOZ_UPDATE_CHANNEL,
              distributionId = distributionId,
          )
 -        services.add(socorroService)
-+//        services.add(socorroService)
++        services.add(socorroService))*/
  
          val intent = Intent(context, HomeActivity::class.java).apply {
              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-@@ -126,7 +126,7 @@ class Analytics(
+@@ -114,19 +114,19 @@ class Analytics(
+             context = context,
+             services = services,
+             telemetryServices = listOf(
+-                GleanCrashReporterService(
++/*                GleanCrashReporterService(
+                     context,
+                     appChannel = MOZ_UPDATE_CHANNEL,
+                     appVersion = MOZ_APP_VERSION,
+                     appBuildId = MOZ_APP_BUILDID,
+-                ),
++                ),*/
+             ),
+             shouldPrompt = CrashReporter.Prompt.ALWAYS,
+             promptConfiguration = CrashReporter.PromptConfiguration(
                  appName = context.getString(R.string.app_name),
                  organizationName = "Mozilla",
              ),
@@ -249,19 +467,32 @@ index f04adf8312..fb8c49c827 100644
              nonFatalCrashIntent = pendingIntent,
              useLegacyReporting = !context.settings().crashReportAlwaysSend &&
                  !context.settings().useNewCrashReporterDialog,
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-index 36d4b4c349..f9ff9db3bf 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/NimbusSetup.kt
-@@ -104,7 +104,7 @@ private fun Context.reportError(message: String, e: Throwable) {
- fun NimbusException.isReportableError(): Boolean {
-     return when (this) {
-         is NimbusException.ClientException -> false
--        else -> true
-+        else -> false
+@@ -149,14 +149,14 @@ class Analytics(
+     val metrics: MetricController by lazyMonitored {
+         MetricController.create(
+             listOf(
+-                GleanMetricsService(context),
++/*                GleanMetricsService(context),
+                 AdjustMetricsService(
+                     application = context as Application,
+                     storage = metricsStorage,
+                     crashReporter = crashReporter,
+                 ),
+                 InstallReferrerMetricsService(context),
+-                GleanUsageReportingMetricsService(gleanProfileIdStore = GleanProfileIdPreferenceStore(context)),
++                GleanUsageReportingMetricsService(gleanProfileIdStore = GleanProfileIdPreferenceStore(context)),*/
+             ),
+             isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
+             isMarketingDataTelemetryEnabled = {
+@@ -168,7 +168,7 @@ class Analytics(
      }
  }
  
+-private fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()
++// private fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()
+ 
+ private fun getSentryProjectUrl(): String? {
+     val baseUrl = "https://sentry.io/organizations/mozilla/issues"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..0f9bb0a905 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
@@ -283,10 +514,10 @@ index 819b24954e..0f9bb0a905 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..317cc8ad23 100644
+index 774d43efab..1ecc0c894f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2300,10 +2300,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2355,10 +2355,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * A user preference indicating that crash reports should always be automatically sent. This can be updated
       * through the unsubmitted crash dialog or through data choice preferences.
       */
@@ -301,16 +532,3 @@ index 8913d9f230..317cc8ad23 100644
  
      /**
       * Indicates whether or not we should use the new crash reporter dialog.
-diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
-index 8e4b210580..e838c11913 100644
---- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
-+++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/CrashHandler.java
-@@ -38,7 +38,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
-   private static final String LOGTAG = "GeckoCrashHandler";
-   private static final Thread MAIN_THREAD = Thread.currentThread();
-   private static final String DEFAULT_SERVER_URL =
--      "https://crash-reports.mozilla.com/submit?id=%1$s&version=%2$s&buildid=%3$s";
-+      "";
- 
-   // Context for getting device information
-   private @Nullable final Context mAppContext;

@@ -1,0 +1,8 @@
+# https://firefox-source-docs.mozilla.org/mach/usage.html#user-settings
+
+[build]
+telemetry = false
+
+[mach_telemetry]
+is_enabled = false
+is_set_up = true

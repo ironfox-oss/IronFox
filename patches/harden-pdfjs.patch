@@ -1,125 +1,3 @@
-diff --git a/toolkit/components/pdfjs/content/build/pdf.mjs b/toolkit/components/pdfjs/content/build/pdf.mjs
-index 59ecfccf3c..b1b373ab14 100644
---- a/toolkit/components/pdfjs/content/build/pdf.mjs
-+++ b/toolkit/components/pdfjs/content/build/pdf.mjs
-@@ -473,7 +473,7 @@ function isLittleEndian() {
- function isEvalSupported() {
-   try {
-     new Function("");
--    return true;
-+    return false;
-   } catch {
-     return false;
-   }
-@@ -483,7 +483,7 @@ class util_FeatureTest {
-     return shadow(this, "isLittleEndian", isLittleEndian());
-   }
-   static get isEvalSupported() {
--    return shadow(this, "isEvalSupported", isEvalSupported());
-+    return false;
-   }
-   static get isOffscreenCanvasSupported() {
-     return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -10199,7 +10199,7 @@ function getDocument(src = {}) {
-   const {
-     docId
-   } = task;
--  const url = src.url ? getUrlProp(src.url) : null;
-+  const url = "resource://placeholder.pdf";
-   const data = src.data ? getDataProp(src.data) : null;
-   const httpHeaders = src.httpHeaders || null;
-   const withCredentials = src.withCredentials === true;
-@@ -10209,17 +10209,17 @@ function getDocument(src = {}) {
-   let worker = src.worker instanceof PDFWorker ? src.worker : null;
-   const verbosity = src.verbosity;
-   const docBaseUrl = typeof src.docBaseUrl === "string" && !isDataScheme(src.docBaseUrl) ? src.docBaseUrl : null;
--  const cMapUrl = getFactoryUrlProp(src.cMapUrl);
--  const cMapPacked = src.cMapPacked !== false;
-+  const cMapUrl = "resource://pdf.js/web/cmaps/";
-+  const cMapPacked = true;
-   const CMapReaderFactory = src.CMapReaderFactory || DOMCMapReaderFactory;
-   const iccUrl = getFactoryUrlProp(src.iccUrl);
--  const standardFontDataUrl = getFactoryUrlProp(src.standardFontDataUrl);
-+  const standardFontDataUrl = "resource://pdf.js/web/standard_fonts/";
-   const StandardFontDataFactory = src.StandardFontDataFactory || DOMStandardFontDataFactory;
--  const wasmUrl = getFactoryUrlProp(src.wasmUrl);
-+  const wasmUrl = "resource://pdf.js/web/wasm/";
-   const WasmFactory = src.WasmFactory || DOMWasmFactory;
-   const ignoreErrors = src.stopAtErrors !== true;
-   const maxImageSize = Number.isInteger(src.maxImageSize) && src.maxImageSize > -1 ? src.maxImageSize : -1;
--  const isEvalSupported = src.isEvalSupported !== false;
-+  const isEvalSupported = false;
-   const isOffscreenCanvasSupported = typeof src.isOffscreenCanvasSupported === "boolean" ? src.isOffscreenCanvasSupported : !isNodeJS;
-   const isImageDecoderSupported = typeof src.isImageDecoderSupported === "boolean" ? src.isImageDecoderSupported : true;
-   const canvasMaxAreaInBytes = Number.isInteger(src.canvasMaxAreaInBytes) ? src.canvasMaxAreaInBytes : -1;
-@@ -10236,7 +10236,7 @@ function getDocument(src = {}) {
-   const enableHWA = src.enableHWA === true;
-   const useWasm = src.useWasm !== false;
-   const length = rangeTransport ? rangeTransport.length : src.length ?? NaN;
--  const useSystemFonts = typeof src.useSystemFonts === "boolean" ? src.useSystemFonts : !isNodeJS && !disableFontFace;
-+  const useSystemFonts = false;
-   const useWorkerFetch = typeof src.useWorkerFetch === "boolean" ? src.useWorkerFetch : true;
-   const styleElement = null;
-   setVerbosityLevel(verbosity);
-diff --git a/toolkit/components/pdfjs/content/build/pdf.worker.mjs b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-index 814d28ab0d..447e5f3971 100644
---- a/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-+++ b/toolkit/components/pdfjs/content/build/pdf.worker.mjs
-@@ -473,7 +473,7 @@ function isLittleEndian() {
- function isEvalSupported() {
-   try {
-     new Function("");
--    return true;
-+    return false;
-   } catch {
-     return false;
-   }
-@@ -483,7 +483,7 @@ class FeatureTest {
-     return shadow(this, "isLittleEndian", isLittleEndian());
-   }
-   static get isEvalSupported() {
--    return shadow(this, "isEvalSupported", isEvalSupported());
-+    return false;
-   }
-   static get isOffscreenCanvasSupported() {
-     return shadow(this, "isOffscreenCanvasSupported", typeof OffscreenCanvas !== "undefined");
-@@ -28689,10 +28689,10 @@ class GlobalImageCache {
- class PDFFunctionFactory {
-   constructor({
-     xref,
--    isEvalSupported = true
-+    isEvalSupported = false
-   }) {
-     this.xref = xref;
--    this.isEvalSupported = isEvalSupported !== false;
-+    this.isEvalSupported = false;
-   }
-   create(fn, parseArray = false) {
-     let fnRef, parsedFn;
-@@ -31032,18 +31032,18 @@ const DefaultPartialEvaluatorOptions = Object.freeze({
-   maxImageSize: -1,
-   disableFontFace: false,
-   ignoreErrors: false,
--  isEvalSupported: true,
-+  isEvalSupported: false,
-   isOffscreenCanvasSupported: false,
-   isImageDecoderSupported: false,
-   canvasMaxAreaInBytes: -1,
-   fontExtraProperties: false,
--  useSystemFonts: true,
-+  useSystemFonts: false,
-   useWasm: true,
-   useWorkerFetch: true,
--  cMapUrl: null,
-+  cMapUrl: "resource://pdf.js/web/cmaps/",
-   iccUrl: null,
--  standardFontDataUrl: null,
--  wasmUrl: null
-+  standardFontDataUrl: "resource://pdf.js/web/cmaps/",
-+  wasmUrl: "resource://pdf.js/web/wasm/"
- });
- const PatternType = {
-   TILING: 1,
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.html b/toolkit/components/pdfjs/content/web/viewer-geckoview.html
 index 5e0a113820..e89114242e 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.html
@@ -133,15 +11,32 @@ index 5e0a113820..e89114242e 100644
      <title>PDF.js viewer</title>
  
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-index 114de09cb1..f9fe3b812f 100644
+index 114de09cb1..01f406e144 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-@@ -841,7 +841,7 @@ const defaultOptions = {
-     kind: OptionKind.API
-   },
-   isEvalSupported: {
--    value: true,
-+    value: false,
-     kind: OptionKind.API
-   },
-   isOffscreenCanvasSupported: {
+@@ -9340,13 +9340,24 @@ const PDFViewerApplication = {
+     }
+     const workerParams = AppOptions.getAll(OptionKind.WORKER);
+     Object.assign(GlobalWorkerOptions, workerParams);
++    GlobalWorkerOptions.workerSrc = "resource://pdf.js/build/pdf.worker.mjs";
+     if (args.data && isPdfFile(args.filename)) {
+       this._contentDispositionFilename = args.filename;
+     }
+     const apiParams = AppOptions.getAll(OptionKind.API);
+     const loadingTask = getDocument({
+       ...apiParams,
+-      ...args
++      ...args,
++      cMapPacked: true,
++      cMapUrl: "resource://pdf.js/web/cmaps/",
++      iccUrl: "resource://pdf.js/web/iccs/",
++      isEvalSupported: false,
++      standardFontDataUrl: "resource://pdf.js/web/cmaps/",
++      url: "resource://pdf.js/placeholder.pdf",
++      useSystemFonts: false,
++      useWasm: false,
++      useWorkerFetch: false,
++      wasmUrl: "resource://pdf.js/web/wasm/"
+     });
+     this.pdfLoadingTask = loadingTask;
+     loadingTask.onPassword = (updateCallback, reason) => {

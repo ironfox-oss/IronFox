@@ -32,14 +32,6 @@ function localize_maven {
     done
 }
 
-function remove_glean_telemetry() {
-    local dir="$1"
-    local telemetry_url="incoming.telemetry.mozilla.org"
-
-    # Set telemetry URL to an invalid localhost address
-    grep -rnlI "${dir}" -e "${telemetry_url}" | xargs -L1 sed -i -r -e "s|${telemetry_url}|localhost:70000|g"
-}
-
 if [ -z "$1" ]; then
     echo "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
@@ -141,13 +133,41 @@ sed -i \
 sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
 echo "official=true" >>local.properties
 
+# Allow users to sync addresses
+sed -i -e 's|SYNC_ADDRESSES_FEATURE = .*|SYNC_ADDRESSES_FEATURE = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Disable crash reporting
+sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
+sed -i -e 's|.crashHandler|// .crashHandler|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+sed -i -e 's|import mozilla.components.lib.crash.handler.CrashHandlerService|// import mozilla.components.lib.crash.handler.CrashHandlerService|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+
+# Disable telemetry
+sed -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
+sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
+sed -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Display live downloads in progress
+sed -i -e 's|showLiveDownloads = .*|showLiveDownloads = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Ensure we enable the about:config
 # Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
 sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
+# No-op AMO collections/recommendations
+sed -i -e 's|"AMO_COLLECTION_NAME", "\\".*\\""|"AMO_COLLECTION_NAME", "\\"\\""|g' app/build.gradle
+sed -i 's|Extensions-for-Android||g' app/build.gradle
+sed -i -e 's|"AMO_COLLECTION_USER", "\\".*\\""|"AMO_COLLECTION_USER", "\\"\\""|g' app/build.gradle
+sed -i -e 's|"AMO_SERVER_URL", "\\".*\\""|"AMO_SERVER_URL", "\\"\\""|g' app/build.gradle
+sed -i 's|https://services.addons.mozilla.org||g' app/build.gradle
+sed -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeature = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
 # No-op Glean
 # https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
 echo 'glean.custom.server.url="data;"' >>local.properties
+
+# No-op Nimbus
+sed -i -e 's|.experimentDelegate|// .experimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+sed -i -e 's|import mozilla.components.experiment.NimbusExperimentDelegate|// import mozilla.components.experiment.NimbusExperimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Let it be IronFox
 sed -i \
@@ -177,6 +197,11 @@ sed -i \
     -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
     -e 's/Google Search/Google search/' \
     app/src/*/res/values*/*strings.xml
+sed -i -e 's/GOOGLE_URL = ".*"/GOOGLE_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+sed -i -e 's/GOOGLE_US_URL = ".*"/GOOGLE_US_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+sed -i -e 's/GOOGLE_XX_URL = ".*"/GOOGLE_XX_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+sed -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+sed -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
@@ -201,7 +226,7 @@ sed -i \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
 # Remove default built-in search engines
-rm -vrf app/src/main/assets/searchplugins/*
+rm -vrf app/src/*/assets/searchplugins/*
 
 # Create wallpaper directories
 mkdir -vp app/src/main/assets/wallpapers/algae
@@ -209,6 +234,11 @@ mkdir -vp app/src/main/assets/wallpapers/colorful-bubbles
 mkdir -vp app/src/main/assets/wallpapers/dark-dune
 mkdir -vp app/src/main/assets/wallpapers/dune
 mkdir -vp app/src/main/assets/wallpapers/firey-red
+
+# Disable legacy packaging to improve performance
+## Mozilla only keeps this on for the Gecko Profiler; we disable the Gecko Profiler at build-time, so we don't need to worry about it
+## https://bugzilla.mozilla.org/show_bug.cgi?id=1865634
+sed -i -e 's|useLegacyPackaging = .*|useLegacyPackaging = false|g' app/build.gradle
 
 # Set up target parameters
 case "$1" in
@@ -271,6 +301,24 @@ popd
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 localize_maven
+
+# Unbreak GeckoView Lite builds
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/build-geckoview-lite.patch"
+
+# No-op Glean
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
+sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
+sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
+sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
+sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = ""/' glean-core/rlb/src/configuration.rs
+sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
+sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+
+find "$patches/glean-overlay" -type f | while read -r src; do
+    cp -vrf "$src" "${src#"$patches/glean-overlay/"}"
+done
+
 popd
 
 #
@@ -281,15 +329,15 @@ popd
 pushd "$android_components"
 
 # Remove default built-in search engines
-rm -vrf components/feature/search/src/main/assets/searchplugins/*
+rm -vrf components/feature/search/src/*/assets/searchplugins/*
 
-# Nuke the "Mozilla Android Components - Ads Telemetry" & "Mozilla Android Components - Search Telemetry" extensions
+# Nuke the "Mozilla Android Components - Ads Telemetry" and "Mozilla Android Components - Search Telemetry" extensions
 # We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
-rm -vrf components/feature/search/src/main/assets/extensions/ads
-rm -vrf components/feature/search/src/main/assets/extensions/search
+rm -vrf components/feature/search/src/*/assets/extensions/ads
+rm -vrf components/feature/search/src/*/assets/extensions/search
 
-# Remove the 'search telemetry' config...
-rm -vf components/feature/search/src/main/assets/search/search_telemetry_v2.json
+# Remove the 'search telemetry' config
+rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
 
 find "$patches/a-c-overlay" -type f | while read -r src; do
     cp -vrf "$src" "${src#"$patches/a-c-overlay/"}"
@@ -299,7 +347,11 @@ popd
 
 # Application Services
 
-pushd "$application_services"
+pushd "${application_services}"
+
+# Remove Mozilla repositories substitution and explicitly add the required ones
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
+
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
@@ -310,7 +362,35 @@ localize_maven
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/ac-disable-nimbus.patch"
+
+# No-op Nimbus (Experimentation)
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-disable-nimbus.patch"
+sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+
+# Remove the 'search telemetry' config
+rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
+sed -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
+
+popd
+
+# No-op Application Services Glean
+
+pushd "${application_services}/components/external/glean"
+
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
+sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
+sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
+sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
+sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = ""/' glean-core/rlb/src/configuration.rs
+sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
+sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+
+find "$patches/glean-overlay" -type f | while read -r src; do
+    cp -vrf "$src" "${src#"$patches/glean-overlay/"}"
+done
+
 popd
 
 # WASI SDK
@@ -332,14 +412,14 @@ pushd "$mozilla_release"
 mkdir -vp mobile/android/branding/ironfox/content
 mkdir -vp mobile/android/branding/ironfox/locales/en-US
 sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
+sed -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
+echo '' >>mobile/android/moz.configure
+echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
 # Apply patches
 apply_patches
 
 # Fix v125 aar output not including native libraries
-sed -i \
-    -e 's/singleVariant("debug")/singleVariant("release")/' \
-    mobile/android/exoplayer2/build.gradle
 sed -i \
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
@@ -350,13 +430,77 @@ sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
-# Remove glean telemetry URL
-remove_glean_telemetry "${glean}"
-remove_glean_telemetry "${application_services}"
-remove_glean_telemetry "${mozilla_release}/browser"
-remove_glean_telemetry "${mozilla_release}/modules"
-remove_glean_telemetry "${mozilla_release}/toolkit"
-remove_glean_telemetry "${mozilla_release}/netwerk"
+# Unbreak builds with --disable-pref-extensions
+sed -i -e 's|@BINPATH@/defaults/autoconfig/prefcalls.js|;@BINPATH@/defaults/autoconfig/prefcalls.js|g' mobile/android/installer/package-manifest.in
+
+# Disable Normandy (Experimentation)
+sed -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
+
+# Disable telemetry
+sed -i -e 's|"MOZ_SERVICES_HEALTHREPORT", .*)|"MOZ_SERVICES_HEALTHREPORT", False)|g' mobile/android/moz.configure
+
+# Ensure UA is always set to Firefox
+sed -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
+
+# Enable encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state
+sed -i -e 's|secureStateAtRest: Boolean = .*|secureStateAtRest: Boolean = true,|g' mobile/android/android-components/components/concept/sync/src/*/java/mozilla/components/concept/sync/Devices.kt
+
+# No-op AMO collections/recommendations
+sed -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+sed -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+sed -i -e 's/DEFAULT_COLLECTION_USER = ".*"/DEFAULT_COLLECTION_USER = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+sed -i -e 's/DEFAULT_SERVER_URL = ".*"/DEFAULT_SERVER_URL = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+sed -i 's|https://services.addons.mozilla.org||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+
+# No-op Contile
+sed -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
+
+# No-op crash reporting
+sed -i -e 's/MOZILLA_PRODUCT_ID = ".*"/MOZILLA_PRODUCT_ID = ""/' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+sed -i 's|{eeb82917-e434-4870-8148-5c03d4caa81b}||g' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+sed -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
+sed -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+sed -i 's|crash-reports-ondemand||g' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+
+# No-op MARS
+sed -i -e 's/MARS_ENDPOINT_URL = ".*"/MARS_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
+sed -i -e 's/MARS_ENDPOINT_BASE_URL = ".*"/MARS_ENDPOINT_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
+sed -i -e 's/MARS_ENDPOINT_STAGING_BASE_URL = ".*"/MARS_ENDPOINT_STAGING_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
+
+# No-op GeoIP/Region service
+## https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst
+sed -i -e 's/GEOIP_SERVICE_URL = ".*"/GEOIP_SERVICE_URL = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
+sed -i -e 's/USER_AGENT = ".*/USER_AGENT = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
+
+# No-op Normandy (Experimentation)
+sed -i -e 's/REMOTE_SETTINGS_COLLECTION = ".*"/REMOTE_SETTINGS_COLLECTION = ""/' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+sed -i 's|normandy-recipes-capabilities||g' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+
+# No-op Pocket
+sed -i -e 's/SPOCS_ENDPOINT_DEV_BASE_URL = ".*"/SPOCS_ENDPOINT_DEV_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
+sed -i -e 's/SPOCS_ENDPOINT_PROD_BASE_URL = ".*"/SPOCS_ENDPOINT_PROD_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
+sed -i -e 's/POCKET_ENDPOINT_URL = ".*"/POCKET_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/stories/api/PocketEndpointRaw.kt
+
+# No-op Search telemetry
+sed -i 's|search-telemetry-v2||g' mobile/android/fenix/app/src/*/java/org/mozilla/fenix/components/Core.kt
+
+# No-op telemetry
+sed -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/android/android-components/components/browser/engine-gecko/build.gradle
+sed -i -e 's/REMOTE_PROD_ENDPOINT_URL = ".*"/REMOTE_PROD_ENDPOINT_URL = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
+sed -i -e 's/REMOTE_ENDPOINT_BUCKET_NAME = ".*"/REMOTE_ENDPOINT_BUCKET_NAME = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
+sed -i -e '/enable_internal_pings:/s/true/false/' toolkit/components/glean/src/init/mod.rs
+sed -i -e '/upload_enabled =/s/true/false/' toolkit/components/glean/src/init/mod.rs
+sed -i -e '/use_core_mps:/s/true/false/' toolkit/components/glean/src/init/mod.rs
+sed -i 's|localhost||g' toolkit/components/telemetry/pingsender/pingsender.cpp
+sed -i 's|localhost||g' toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
+sed -i -e 's/usageDeletionRequest.setEnabled(.*)/usageDeletionRequest.setEnabled(false)/' toolkit/components/telemetry/app/UsageReporting.sys.mjs
+
+# Prevent DoH canary requests
+sed -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
+sed -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
+
+# Nuke undesired Mozilla endpoints
+source "$rootdir/scripts/noop_mozilla_endpoints.sh"
 
 # Take back control of preferences
 ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...
@@ -433,8 +577,8 @@ sed -i \
 if [[ -n ${FDROID_BUILD+x} ]]; then
 
     # Patch the LLVM source code
-    # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r27/ndk/toolchains.py
-    LLVM_SVN='522817'
+    # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
+    LLVM_SVN='530567'
     python3 "$toolchain_utils/llvm_tools/patch_manager.py" \
         --svn_version $LLVM_SVN \
         --patch_metadata_file "$llvm_android/patches/PATCHES.json" \
@@ -496,6 +640,7 @@ fi
     echo 'ac_add_options --enable-android-subproject="fenix"'
     echo 'ac_add_options --enable-application="mobile/android"'
     echo 'ac_add_options --enable-disk-remnant-avoidance'
+    echo 'ac_add_options --enable-geckoview-lite'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-install-strip'
     echo 'ac_add_options --enable-minify=properties'

@@ -23,7 +23,11 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 // Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
 pref("beacon.enabled", true); // [DEFAULT]
 
-/// Re-enable Password Manager & Autofill in GeckoView
+/// Re-enable media autoplay in GeckoView
+// We still block this by default, just via a patch for Fenix's UI settings instead
+pref("media.geckoview.autoplay.request.testing", 0); // [DEFAULT]
+
+/// Re-enable Password Manager and Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
 // https://gitlab.com/ironfox-oss/IronFox/-/issues/11
 pref("extensions.formautofill.addresses.enabled", true); // [DEFAULT]
@@ -45,19 +49,5 @@ pref("dom.ipc.processCount", 2); // [DEFAULT]
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
-
-/// Temporarily disable unconditionally blocking Local Network Access requests
-// This appears to be causing breakage (ex. https://codeberg.org/celenity/Phoenix/issues/162 + https://codeberg.org/celenity/Phoenix/issues/164), and we still prevent websites from accessing LAN anyways with ex. uBlock Origin
-// We only need this temporarily, until the next Phoenix release
-pref("network.lna.blocking", false); // [DEFAULT]
-
-/// Unbreak Firefox Translations
-// We only need this temporarily, until the next Phoenix release
-pref("extensions.webextensions.base-content-security-policy", "script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline'; upgrade-insecure-requests;");
-
-/// Unbreak the OS Geolocation Provider
-// We only need this temporarily, until the next Phoenix release
-// https://gitlab.com/ironfox-oss/IronFox/-/issues/130
-pref("geo.provider.use_mls", false); // [HIDDEN] [DEFAULT]
 
 pref("browser.ironfox.applied", true, locked);

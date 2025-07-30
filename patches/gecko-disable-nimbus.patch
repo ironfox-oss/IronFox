@@ -80,19 +80,6 @@ index ebb933e6fa..b1eea8bc5e 100644
  
  const RS_COLLECTION_OPTIONS = {
    [EXPERIMENTS_COLLECTION]: {
-diff --git a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
-index 087e4ed51e..256972093f 100644
---- a/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
-+++ b/toolkit/components/normandy/lib/RecipeRunner.sys.mjs
-@@ -36,7 +36,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
- 
- const log = LogManager.getLogger("recipe-runner");
- const TIMER_NAME = "recipe-client-addon-run";
--const REMOTE_SETTINGS_COLLECTION = "normandy-recipes-capabilities";
-+const REMOTE_SETTINGS_COLLECTION = "";
- const PREF_CHANGED_TOPIC = "nsPref:changed";
- 
- const RUN_INTERVAL_PREF = "app.normandy.run_interval_seconds";
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
 index e09ea87de8..aedc380a5c 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs

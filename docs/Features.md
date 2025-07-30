@@ -114,6 +114,7 @@ IronFox **additionally**:
 - Removes the [Google Play In-App Reviews](https://developer.android.com/guide/playcore/in-app-review) library
 - Removes the [Google Play Install Referrer](https://developer.android.com/google/play/installreferrer/library) library
 - Removes the proprietary [Google Play Firebase Messaging](https://firebase.google.com/docs/cloud-messaging/) library, and adds support for [UnifiedPush](https://unifiedpush.org/)
+- Removes the [Sentry](https://github.com/getsentry/sentry) library
 - Replaces the proprietary [Google Play FIDO](https://developers.google.com/android/reference/com/google/android/gms/fido/Fido) library with its FOSS [microG](https://github.com/microg/GmsCore/wiki) equivalent
 
 ## Mozilla
@@ -140,6 +141,7 @@ IronFox **additionally**:
 - Disables [submission of technical and interaction data](https://support.mozilla.org/kb/technical-and-interaction-data) to Mozilla
 - Removes the built-in `Mozilla Android Components - Ads Telemetry` and `Mozilla Android Components - Search Telemetry` browser extensions
 - Removes the Firefox Sync onboarding page
+- Removes [the Glean library](https://docs.telemetry.mozilla.org/concepts/glean/glean.html) from GeckoView by building [GeckoView `Lite`, instead of GeckoView `Omni`](https://firefox-source-docs.mozilla.org/mobile/android/geckoview/contributor/geckoview-architecture.html#lite-and-omni-builds)
 - Removes Mozilla's default pins/shortcuts from the homepage
 - Removes Mozilla's URL referral parameters from the built-in DuckDuckGo and Wikipedia search engines
 - Removes the [Web Compatibility Reporter](https://support.mozilla.org/kb/report-breakage-due-blocking)

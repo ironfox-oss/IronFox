@@ -122,10 +122,54 @@ index fe86bfc252..68713e57d7 100644
      }
  
      dependencies {
+diff --git a/mobile/android/android-components/components/service/mars/build.gradle b/mobile/android/android-components/components/service/mars/build.gradle
+index 79a9aea939..7841f131f1 100644
+--- a/mobile/android/android-components/components/service/mars/build.gradle
++++ b/mobile/android/android-components/components/service/mars/build.gradle
+@@ -4,14 +4,9 @@
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
 diff --git a/mobile/android/android-components/components/service/nimbus/build.gradle b/mobile/android/android-components/components/service/nimbus/build.gradle
 index 7f79cbdbd6..0a4b0c3a72 100644
 --- a/mobile/android/android-components/components/service/nimbus/build.gradle
 +++ b/mobile/android/android-components/components/service/nimbus/build.gradle
+@@ -4,14 +4,9 @@
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+diff --git a/mobile/android/android-components/components/service/pocket/build.gradle b/mobile/android/android-components/components/service/pocket/build.gradle
+index 0b19b3e03d..5eb26455bf 100644
+--- a/mobile/android/android-components/components/service/pocket/build.gradle
++++ b/mobile/android/android-components/components/service/pocket/build.gradle
 @@ -4,14 +4,9 @@
  
  buildscript {
@@ -474,68 +518,6 @@ diff --git a/mobile/android/fenix/settings.gradle b/mobile/android/fenix/setting
 index 7e461f97cc..65f0b42b0f 100644
 --- a/mobile/android/fenix/settings.gradle
 +++ b/mobile/android/fenix/settings.gradle
-@@ -10,14 +10,9 @@ pluginManagement {
-     }
- 
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url = repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
-     }
- 
-     includeBuild("../android-components/plugins/publicsuffixlist")
-diff --git a/mobile/android/focus-android/build.gradle b/mobile/android/focus-android/build.gradle
-index aa31f34889..76cf20d094 100644
---- a/mobile/android/focus-android/build.gradle
-+++ b/mobile/android/focus-android/build.gradle
-@@ -7,14 +7,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
- 
- buildscript {
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url = repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
-     }
- 
-     dependencies {
-@@ -76,14 +71,9 @@ tasks.withType(DetektCreateBaselineTask).configureEach() {
- 
- allprojects {
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url = repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- 
-         maven {
-             url = "${gradle.mozconfig.topobjdir}/gradle/maven"
-diff --git a/mobile/android/focus-android/settings.gradle b/mobile/android/focus-android/settings.gradle
-index 0f5dbd50a0..3143f62c77 100644
---- a/mobile/android/focus-android/settings.gradle
-+++ b/mobile/android/focus-android/settings.gradle
 @@ -10,14 +10,9 @@ pluginManagement {
      }
  

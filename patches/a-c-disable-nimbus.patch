@@ -1,0 +1,35 @@
+diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
+index 376ef90..735ff03 100644
+--- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
++++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
+@@ -46,7 +46,7 @@ import java.io.File
+ import java.io.IOException
+ import kotlin.system.measureTimeMillis
+ 
+-private const val EXPERIMENT_COLLECTION_NAME = "nimbus-mobile-experiments"
++private const val EXPERIMENT_COLLECTION_NAME = ""
+ const val NIMBUS_DATA_DIR: String = "nimbus_data"
+ 
+ /**
+@@ -137,10 +137,10 @@ open class Nimbus(
+     private val nimbusClient: NimbusClientInterface
+ 
+     override var globalUserParticipation: Boolean
+-        get() = nimbusClient.getGlobalUserParticipation()
++        get() = false
+         set(active) {
+             dbScope.launch {
+-                setGlobalUserParticipationOnThisThread(active)
++//                setGlobalUserParticipationOnThisThread(active)
+             }
+         }
+ 
+@@ -270,7 +270,7 @@ open class Nimbus(
+ 
+     override fun isFetchEnabled() = withCatchAll("isFetchEnabled") {
+         nimbusClient.isFetchEnabled()
+-    } ?: true
++    } ?: false
+ 
+     @WorkerThread
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

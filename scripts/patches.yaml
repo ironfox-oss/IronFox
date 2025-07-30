@@ -115,13 +115,6 @@ patches:
     effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
     category: "Privacy"
 
-  - file: "mach-disable-telemetry.patch"
-    name: "Disable Telemetry (Mach)"
-    description: "Disables data collection and submission mechanisms within Mozilla's Mach build system."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla during the build process."
-    effect: "Improves privacy for developers by preventing the collection and transmission of telemetry data."
-    category: "Privacy"
-
   - file: "fenix-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Fenix)"
     description: "Disables the collection and submission of crash reports within Firefox for Android."
@@ -134,6 +127,13 @@ patches:
     description: "Disables the collection and submission of crash reports within Gecko."
     reason: "To prevent submitting personal and/or sensitive data to Mozilla."
     effect: "Improves user privacy by preventing the collection and transmission of crash reports."
+    category: "Privacy"
+
+  - file: "remove-glean-service.patch"
+    name: "Remove the Glean Service"
+    description: "Removes the Glean Service to prevent data collection and submission mechanisms."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla or third parties, and to reduce uwnanted dependencies."
+    effect: "Improves user privacy by preventing the collection and transmission of telemetry data."
     category: "Privacy"
 
   - file: "fenix-disable-nimbus.patch"
@@ -200,13 +200,6 @@ patches:
       Reduces risk of credential exposure.
     category: "Privacy"
 
-  - file: "disable-doh-canary.patch"
-    name: "Disable DoH Canary Requests"
-    description: "Disables DNS over HTTPS canary requests."
-    reason: "To prevent unnecessary network connections to check DoH compatibility."
-    effect: "Reduces unwanted network activity."
-    category: "Privacy"
-
   - file: "disable-firefox-suggest.patch"
     name: "Disable Firefox Suggest"
     description: "Disables Firefox Suggest feature."
@@ -223,7 +216,7 @@ patches:
 
   - file: "disable-geoip.patch"
     name: "Disable Mozilla's GeoIP/Region Service"
-    description: "Disables Mozilla's GeoIP/Region Service."
+    description: "Disables Mozilla's GeoIP/Region Service (https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst)."
     reason: "To prevent Firefox from monitoring the user's region/general location."
     effect: "Reduces unwanted network activity and improves the privacy of users."
     category: "Privacy"
@@ -419,13 +412,6 @@ patches:
     effect: "Prevents users from accidentally leaving remote debugging enabled."
     category: "Security"
 
-  - file: "remove-autoconfig-dependency.patch"
-    name: "Remove the Mozilla AutoConfig build dependency"
-    description: "Removes Mozilla's AutoConfig functionality in Firefox (also known as Mission Control Desktop, debuted in Netscape Communicator 4.5... https://www.internetnews.com/enterprise/netscape-unveils-enterprise-management-tools/)."
-    reason: "To unbreak builds with the '--disable-pref-extensions' argument (which removes this functionality)."
-    effect: "Reduces attack surface and legacy code."
-    category: "Security"
-
   - file: "disable-sslkeylogging.patch"
     name: "Disable SSLKEYLOGGING"
     description: "Disables the SSLKEYLOGGING feature in NSS (Mozilla's Network Security Services: https://firefox-source-docs.mozilla.org/security/nss/index.html)."
@@ -438,6 +424,13 @@ patches:
     description: "Enables the use of encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state and certain preferences."
     reason: "To improve privacy and security for users, by leveraging Android's Keystore system for storing certain data."
     effect: "Protects users against unauthorized use/compromise of their data."
+    category: "Security"
+
+  - file: "increase-update-frequency.patch"
+    name: "Increase Update Frequency"
+    description: "Increases the rate at which Firefox checks for add-on updates, from every 12 hours to hourly, and the rate at which Firefox syncs with Remote Settings, from every 24 hours to hourly."
+    reason: "To improve security for users, by ensuring they are kept up to date as fast as possible."
+    effect: "Protects users against security vulnerabilities and other potential threats, by ensuring their extensions and Remote Settings are always up to date."
     category: "Security"
 
   # User Control
