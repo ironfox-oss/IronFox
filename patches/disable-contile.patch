@@ -1,8 +1,21 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
+index 64d220fdeb..b51c62f45e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
+@@ -54,7 +54,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<CheckBoxPreference>(R.string.pref_key_enable_contile).apply {
+-            isVisible = requireContext().settings().showHomepageSectionToggleSettings
++            isVisible = false
+             isChecked = context.settings().showContileFeature
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..50bf05c440 100644
+index 774d43efab..325336651e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1803,10 +1803,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1858,10 +1858,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Contile functionality should be visible.
       */
@@ -17,17 +30,3 @@ index 8913d9f230..50bf05c440 100644
  
      /**
       * Indicates if the Unified Search feature should be visible.
-diff --git a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-index 4fd1f8945a..d8586426ab 100644
---- a/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/home_preferences.xml
-@@ -13,7 +13,8 @@
-         android:dependency="@string/pref_key_show_top_sites"
-         android:layout="@layout/checkbox_left_sub_preference"
-         android:key="@string/pref_key_enable_contile"
--        android:title="@string/customize_toggle_contile" />
-+        android:title="@string/customize_toggle_contile"
-+        app:isPreferenceVisible="false" />
- 
-     <androidx.preference.SwitchPreference
-         android:key="@string/pref_key_recent_tabs"

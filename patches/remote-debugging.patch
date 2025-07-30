@@ -12,10 +12,10 @@ index 325e5d2141..3d1596f181 100644
              preference.context.settings().preferences.edit { putBoolean(preference.key, newValue) }
              requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..c78bdf93da 100644
+index 774d43efab..9648d9460c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -381,10 +381,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -482,10 +482,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
                  true,
              )
  

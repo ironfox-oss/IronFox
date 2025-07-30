@@ -744,7 +744,7 @@ index 325e5d2141..0a5ac75418 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..182ed03faa 100644
+index 774d43efab..ea6a3b6d63 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
@@ -755,7 +755,7 @@ index 8913d9f230..182ed03faa 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2468,4 +2469,151 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2523,4 +2524,151 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          key = appContext.getPreferenceKey(R.string.pref_key_distribution_id),
          default = "",
      )

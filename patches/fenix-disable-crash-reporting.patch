@@ -514,10 +514,10 @@ index 819b24954e..0f9bb0a905 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8913d9f230..317cc8ad23 100644
+index 774d43efab..1ecc0c894f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2300,10 +2300,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2355,10 +2355,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * A user preference indicating that crash reports should always be automatically sent. This can be updated
       * through the unsubmitted crash dialog or through data choice preferences.
       */
