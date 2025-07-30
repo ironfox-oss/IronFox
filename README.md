@@ -280,6 +280,12 @@ Finally, you can start the build process with:
 ./scripts/build.sh apk
 ```
 
+## Translation
+
+IronFox is translated using Weblate. Visit the [Weblate project](https://hosted.weblate.org/engage/ironfox/) to help with translations.
+
+[![Translation status](https://hosted.weblate.org/widget/ironfox/287x66-grey.png)](https://hosted.weblate.org/engage/ironfox/)
+
 ## Licenses
 
 The scripts are licensed under the [GNU Affero General Public License, version 3 or later](COPYING).
