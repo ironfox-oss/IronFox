@@ -32,14 +32,6 @@
 default:
   cache: []
 
-workflow:
-  rules:
-    - if: '$CI_MERGE_REQUEST_ID && $CI_PROJECT_PATH == $CI_MERGE_REQUEST_TARGET_PROJECT_PATH'
-      when: always
-    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
-      when: always
-    - when: never
-
 variables: &build_variables
   PRODUCTION_BRANCH: main
   SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
@@ -59,6 +51,8 @@ update-fdroid-repo:
   image: fedora:42
   stage: build_fdroid
   rules:
+    - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
+      when: never
     - if: $CI_COMMIT_TAG
   variables:
     TARGET_REPO_PATH: ironfox-oss/fdroid
@@ -78,6 +72,8 @@ update-site-repo:
   image: fedora:42
   stage: build_site
   rules:
+    - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
+      when: never
     - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH == "dev"
       changes:
@@ -113,6 +109,8 @@ build-docker:
         docker push "$CI_REGISTRY_IMAGE:latest"
       fi
   rules:
+    - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
+      when: never
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
@@ -148,6 +146,8 @@ build-apk:
       - $CI_PROJECT_DIR/artifacts/apk/**/*
       - $CI_PROJECT_DIR/artifacts/aar/**/*
   rules:
+    - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
+      when: never
     - changes:
         - patches/**/*
         - scripts/**/*
@@ -182,6 +182,8 @@ build-bundle:
     paths:
       - $CI_PROJECT_DIR/artifacts/apks/**/*
   rules:
+    - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
+      when: never
     - changes:
         - patches/**/*
         - scripts/**/*
