@@ -235,11 +235,6 @@ mkdir -vp app/src/main/assets/wallpapers/dark-dune
 mkdir -vp app/src/main/assets/wallpapers/dune
 mkdir -vp app/src/main/assets/wallpapers/firey-red
 
-# Disable legacy packaging to improve performance
-## Mozilla only keeps this on for the Gecko Profiler; we disable the Gecko Profiler at build-time, so we don't need to worry about it
-## https://bugzilla.mozilla.org/show_bug.cgi?id=1865634
-sed -i -e 's|useLegacyPackaging = .*|useLegacyPackaging = false|g' app/build.gradle
-
 # Set up target parameters
 case "$1" in
 arm)
