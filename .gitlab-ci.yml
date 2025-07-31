@@ -32,6 +32,14 @@
 default:
   cache: []
 
+workflow:
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID && $CI_PROJECT_PATH == $CI_MERGE_REQUEST_TARGET_PROJECT_PATH'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
+      when: always
+    - when: never
+
 variables: &build_variables
   PRODUCTION_BRANCH: main
   SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
