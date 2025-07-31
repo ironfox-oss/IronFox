@@ -36,7 +36,7 @@ workflow:
   rules:
     - if: '$CI_MERGE_REQUEST_ID && $CI_PROJECT_PATH == $CI_MERGE_REQUEST_TARGET_PROJECT_PATH'
       when: always
-    - if: '$CI_PIPELINE_SOURCE != "merge_request_event"'
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event" && $CI_PROJECT_NAMESPACE == "ironfox-oss"'
       when: always
     - when: never
 
