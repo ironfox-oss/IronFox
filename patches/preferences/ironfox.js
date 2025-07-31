@@ -23,9 +23,17 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 // Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
 pref("beacon.enabled", true); // [DEFAULT]
 
+/// Re-enable geolocation permission prompts in GeckoView
+// We still block this by default, just via a patch for Fenix's UI settings instead
+pref("geo.prompt.testing", false); // [HIDDEN] [DEFAULT]
+
 /// Re-enable media autoplay in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
 pref("media.geckoview.autoplay.request.testing", 0); // [DEFAULT]
+
+/// Re-enable notification permission prompts in GeckoView
+// We still block this by default, just via a patch for Fenix's UI settings instead
+pref("notification.prompt.testing", false); // [HIDDEN] [DEFAULT]
 
 /// Re-enable Password Manager and Autofill in GeckoView
 // We still disable these by default, just via a patch for Fenix's UI settings instead
