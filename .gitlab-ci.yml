@@ -109,6 +109,8 @@ build-docker:
         docker push "$CI_REGISTRY_IMAGE:latest"
       fi
   rules:
+    - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
+      when: never
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
