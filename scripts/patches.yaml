@@ -284,8 +284,8 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Privacy"
 
-  - file: "librewolf-rs-blocker.patch"
-    name: "Block Remote Settings"
+  - file: "gecko-rs-blocker.patch"
+    name: "Block Remote Settings (Gecko)"
     description: "Restricts Remote Settings to only download specific collections specified in preferences."
     reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
     effect: "Network activity is further limited, less data is shared with Mozilla, and the user is put in control of what specifically they want to download from Remote Settings."
