@@ -11,16 +11,3 @@ index 028742f2b3..7ae3b50470 100644
      )
  
      @VisibleForTesting
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 6875486c72..5a79c0cb55 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -663,7 +663,7 @@ class Core(
-         SecureAbove22Preferences(
-             context = context,
-             name = KEY_STORAGE_NAME,
--            forceInsecure = !Config.channel.isNightlyOrDebug,
-+            forceInsecure = false,
-         )
- 
-     // Temporary. See https://github.com/mozilla-mobile/fenix/issues/19155
