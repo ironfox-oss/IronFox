@@ -1414,7 +1414,7 @@ index 0000000000..b35658273e
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..5eff50dba9
+index 0000000000..bf1257df97
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
 @@ -0,0 +1,126 @@
@@ -1443,9 +1443,9 @@ index 0000000000..5eff50dba9
 +        settings.javascriptJitEnabled = isEnabled
 +
 +        components.core.engine.settings.javascriptJitBaselineEnabled = isEnabled
-+        components.core.engine.settings.javascriptJitBaselineWasmEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitHintsEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitIonEnabled = isEnabled
++        components.core.engine.settings.javascriptJitIonWasmEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitMainProcessEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitNativeRegexpEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = isEnabled
@@ -1458,9 +1458,9 @@ index 0000000000..5eff50dba9
 +        context: Context
 +    ): Boolean = context.components.core.engine.settings.run {
 +        javascriptJitBaselineEnabled &&
-+        javascriptJitBaselineWasmEnabled &&
 +        javascriptJitHintsEnabled &&
 +        javascriptJitIonEnabled &&
++        javascriptJitIonWasmEnabled &&
 +        javascriptJitMainProcessEnabled &&
 +        javascriptJitNativeRegexpEnabled &&
 +        javascriptJitTrustedPrincipalsEnabled
