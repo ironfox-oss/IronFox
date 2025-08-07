@@ -556,6 +556,8 @@ sed -i \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.boolean"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.integer"|' \
     -e 's|"network.security.ports.banned"|"z99.ignore.string"|' \
+    -e 's|"privacy.baselineFingerprintingProtection"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.baselineFingerprintingProtection.overrides"|"z99.ignore.string"|' \
     -e 's|"privacy.fingerprintingProtection"|"z99.ignore.boolean"|' \
     -e 's|"privacy.fingerprintingProtection.overrides"|"z99.ignore.string"|' \
     -e 's|"privacy.fingerprintingProtection.pbmode"|"z99.ignore.boolean"|' \
