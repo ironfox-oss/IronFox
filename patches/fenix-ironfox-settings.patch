@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 6875486c72..d976d249d5 100644
+index 6875486c72..efc10f2c47 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -196,6 +196,30 @@ class Core(
@@ -13,9 +13,9 @@ index 6875486c72..d976d249d5 100644
 +            ipv6Enabled = context.settings().ipv6Enabled,
 +            javascriptEnabled = context.settings().javascriptEnabled,
 +            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitBaselineWasmEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitIonWasmEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
@@ -43,7 +43,7 @@ index 6875486c72..d976d249d5 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..c6e76ab35b
+index 0000000000..98fc8fff31
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 @@ -0,0 +1,664 @@
@@ -231,7 +231,7 @@ index 0000000000..c6e76ab35b
 +        /**
 +         * Indicates whether or not we should enable JavaScript Just-in-time Compilation (JIT)
 +         * Default: false
-+         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jit_trustedprincipals, javascript.options.jithints, javascript.options.main_process_disable_jit, javascript.options.native_regexp, and javascript.options.wasm_baselinejit
++         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jit_trustedprincipals, javascript.options.jithints, javascript.options.main_process_disable_jit, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
 +         */
 +        val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_jit_enabled,
@@ -244,9 +244,9 @@ index 0000000000..c6e76ab35b
 +
 +            settings.javascriptJitEnabled = javascriptJitEnabled as Boolean
 +            components.core.engine.settings.javascriptJitBaselineEnabled = javascriptJitEnabled
-+            components.core.engine.settings.javascriptJitBaselineWasmEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitHintsEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitIonEnabled = javascriptJitEnabled
++            components.core.engine.settings.javascriptJitIonWasmEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitMainProcessEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitNativeRegexpEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitEnabled
@@ -938,7 +938,7 @@ index de8568b293..7dc7b7ab37 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..002e73a6a2
+index 0000000000..e34ef70e67
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 @@ -0,0 +1,256 @@
@@ -960,19 +960,19 @@ index 0000000000..002e73a6a2
 +            app:allowDividerAbove="false"
 +            app:iconSpaceReserved="false" />
 +
-+        <!-- Whether should set CSS prefers-color-scheme to light -->
++        <!-- Whether we should set CSS prefers-color-scheme to light -->
 +        <org.mozilla.fenix.settings.RadioButtonPreference
 +            android:defaultValue="true"
 +            android:key="@string/pref_key_prefers_light_color_scheme"
 +            android:title="@string/preference_prefers_light_color_scheme" />
 +
-+        <!-- Whether should set CSS prefers-color-scheme to dark -->
++        <!-- Whether we should set CSS prefers-color-scheme to dark -->
 +        <org.mozilla.fenix.settings.RadioButtonPreference
 +            android:defaultValue="false"
 +            android:key="@string/pref_key_prefers_dark_color_scheme"
 +            android:title="@string/preference_prefers_dark_color_scheme" />
 +
-+        <!-- Whether should set CSS prefers-color-scheme to follow the browser's theme -->
++        <!-- Whether we should set CSS prefers-color-scheme to follow the browser's theme -->
 +        <org.mozilla.fenix.settings.RadioButtonPreference
 +            android:defaultValue="false"
 +            android:key="@string/pref_key_prefers_browser_color_scheme"
