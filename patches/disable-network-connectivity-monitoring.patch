@@ -1,3 +1,16 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/ConnectivityManager.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/ConnectivityManager.kt
+index 7b60ad21a4..c2fc8c9b1d 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/ConnectivityManager.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/ConnectivityManager.kt
+@@ -15,7 +15,7 @@ import android.os.Build
+ * For devices above [Build.VERSION_CODES.M] it even checks if there's internet flowing through it or not.
+ * */
+ fun ConnectivityManager.isOnline(network: Network? = null): Boolean {
+-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
++    return true && if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+         getNetworkCapabilities(network ?: activeNetwork)?.let {
+             it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                 it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
 index a24ff6e34e..9e7bda60fa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt

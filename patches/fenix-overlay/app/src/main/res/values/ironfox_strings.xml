@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<resources xmlns:tools="http://schemas.android.com/tools"  xmlns:moz="http://mozac.org/tools">
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:moz="http://mozac.org/tools">
     <!-- Warn users that the browser will restart -->
     <string name="restart_required_summary">Changing this setting will restart your browser</string>
 
@@ -86,7 +87,7 @@
 
     <!-- UnifiedPush -->
     <!-- Label for enabling UnifiedPush -->
-    <string name="preferences_debug_settings_unifiedpush" translatable="false">Enable UnifiedPush</string>
+    <string name="preferences_debug_settings_unifiedpush">Enable UnifiedPush</string>
     <!-- Label for using UnifiedPush. UnifiedPush is a decentralized push notification system, so users can benefit from mobile push notifications without relying on Google Services. Users choose the application (and server) they wish to use to manage webpush for other applications. If enabled, the browser (e.g. IronFox) will receive webpush messages via the chosen app. -->
     <string name="preferences_unifiedpush">Use UnifiedPush</string>
     <!-- Toast shown after confirming the UnifiedPush configuration -->

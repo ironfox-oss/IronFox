@@ -294,7 +294,7 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
 
-Parts of `branding.patch`, `librewolf-rs-blocker.patch`, and `ublock-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
+Parts of `branding.patch`, `gecko-rs-blocker.patch`, and `ublock-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
 `disable-network-connectivity-monitoring.patch`, `disable-sslkeylogging.patch` and `gecko-ironfox-settings-support-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
