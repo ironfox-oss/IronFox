@@ -1,0 +1,35 @@
+diff --git a/netwerk/system/android/nsAndroidNetworkLinkService.cpp b/netwerk/system/android/nsAndroidNetworkLinkService.cpp
+index 309115e34d..c0b84cd109 100644
+--- a/netwerk/system/android/nsAndroidNetworkLinkService.cpp
++++ b/netwerk/system/android/nsAndroidNetworkLinkService.cpp
+@@ -126,11 +126,11 @@ nsAndroidNetworkLinkService::GetLinkType(uint32_t* aLinkType) {
+ 
+ NS_IMETHODIMP
+ nsAndroidNetworkLinkService::GetNetworkID(nsACString& aNetworkID) {
+-  if (!mNetlinkSvc) {
+-    return NS_ERROR_NOT_AVAILABLE;
+-  }
++//  if (!mNetlinkSvc) {
++//    return NS_ERROR_NOT_AVAILABLE;
++//  }
+ 
+-  mNetlinkSvc->GetNetworkID(aNetworkID);
++  aNetworkID.Truncate();
+   return NS_OK;
+ }
+ 
+diff --git a/netwerk/system/netlink/NetlinkService.cpp b/netwerk/system/netlink/NetlinkService.cpp
+index 52ecd01738..e383e61411 100644
+--- a/netwerk/system/netlink/NetlinkService.cpp
++++ b/netwerk/system/netlink/NetlinkService.cpp
+@@ -1885,8 +1885,8 @@ void NetlinkService::CalculateNetworkID() {
+ }
+ 
+ void NetlinkService::GetNetworkID(nsACString& aNetworkID) {
+-  MutexAutoLock lock(mMutex);
+-  aNetworkID = mNetworkId;
++//  MutexAutoLock lock(mMutex);
++  aNetworkID.Truncate();
+ }
+ 
+ nsresult NetlinkService::GetDnsSuffixList(nsTArray<nsCString>& aDnsSuffixList) {

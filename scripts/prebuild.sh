@@ -298,7 +298,7 @@ echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 localize_maven
 
 # Unbreak GeckoView Lite builds
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/build-geckoview-lite.patch"
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-unbreak-geckoview-lite.patch"
 
 # No-op Glean
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
@@ -345,7 +345,7 @@ popd
 pushd "${application_services}"
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-localize_maven.patch"
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-localize-maven.patch"
 
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
@@ -359,7 +359,7 @@ sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 
 # No-op Nimbus (Experimentation)
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-c-disable-nimbus.patch"
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-noop-nimbus.patch"
 sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 

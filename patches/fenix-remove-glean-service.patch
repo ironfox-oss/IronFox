@@ -1,0 +1,26 @@
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index 0620fba71e..36fad137e1 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -69,7 +69,7 @@ projects:
+     - components:lib-state
+     - components:service-digitalassetlinks
+     - components:service-firefox-accounts
+-    - components:service-glean
++#    - components:service-glean
+     - components:service-location
+     - components:service-mars
+     - components:service-nimbus
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index 5bcd9c730b..411e1fc77c 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -626,7 +626,7 @@ dependencies {
+     implementation project(':components:service-sync-autofill')
+     implementation project(':components:service-sync-logins')
+     implementation project(':components:service-firefox-accounts')
+-    implementation project(':components:service-glean')
++//    implementation project(':components:service-glean')
+     implementation libs.mozilla.glean
+     implementation project(':components:service-location')
+     implementation project(':components:service-nimbus')
