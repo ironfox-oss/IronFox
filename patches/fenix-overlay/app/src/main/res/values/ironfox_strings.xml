@@ -16,7 +16,7 @@
     <string name="if_preferences_secret">Secret settings</string>
     <string name="if_preferences_security">Security</string>
 
-    <!-- Accessibility Services -->
+    <!-- Accessibility services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
 
     <!-- Cross-origin referer policy -->

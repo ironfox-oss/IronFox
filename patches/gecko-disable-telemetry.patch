@@ -26,34 +26,10 @@ index 34e06ce332..906db3732c 100644
      'translations',
      'url-classifier',
      'webrtc',
-diff --git a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
-index cf0a7bd372..4f19716815 100644
---- a/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
-+++ b/toolkit/components/telemetry/app/TelemetryControllerBase.sys.mjs
-@@ -104,8 +104,8 @@ export var TelemetryControllerBase = Object.freeze({
-     const isReleaseCandidateOnBeta =
-       AppConstants.MOZ_UPDATE_CHANNEL === "release" &&
-       Services.prefs.getCharPref("app.update.channel", null) === "beta";
--    Services.telemetry.canRecordBase = true;
--    Services.telemetry.canRecordExtended =
-+    Services.telemetry.canRecordBase = false;
-+    Services.telemetry.canRecordExtended = false &&
-       isPrereleaseChannel ||
-       isReleaseCandidateOnBeta ||
-       Services.prefs.getBoolPref(this.Preferences.OverridePreRelease, false);
 diff --git a/toolkit/components/telemetry/core/Telemetry.cpp b/toolkit/components/telemetry/core/Telemetry.cpp
-index c07273a7b7..66a0191fec 100644
+index c07273a7b7..1e5e495a90 100644
 --- a/toolkit/components/telemetry/core/Telemetry.cpp
 +++ b/toolkit/components/telemetry/core/Telemetry.cpp
-@@ -895,7 +895,7 @@ NS_IMETHODIMP
- TelemetryImpl::GetIsOfficialTelemetry(bool* ret) {
- #if defined(MOZILLA_OFFICIAL) && defined(MOZ_TELEMETRY_REPORTING) && \
-     !defined(DEBUG)
--  *ret = true;
-+  *ret = false;
- #else
-   *ret = false;
- #endif
 @@ -914,7 +914,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
  #ifndef FUZZING
    if (XRE_IsParentProcess() || XRE_IsContentProcess() || XRE_IsGPUProcess() ||
@@ -63,27 +39,6 @@ index c07273a7b7..66a0191fec 100644
    }
  #endif
  #ifdef MOZ_BACKGROUNDTASKS
-diff --git a/toolkit/components/telemetry/core/TelemetryCommon.cpp b/toolkit/components/telemetry/core/TelemetryCommon.cpp
-index a52d8e0a64..2ecdbffc98 100644
---- a/toolkit/components/telemetry/core/TelemetryCommon.cpp
-+++ b/toolkit/components/telemetry/core/TelemetryCommon.cpp
-@@ -50,14 +50,14 @@ bool CanRecordDataset(uint32_t aDataset, bool aCanRecordBase,
-   // If we are extended telemetry is enabled, we are allowed to record
-   // regardless of the dataset.
-   if (aCanRecordExtended) {
--    return true;
-+    return false;
-   }
- 
-   // If base telemetry data is enabled and we're trying to record base
-   // telemetry, allow it.
-   if (aCanRecordBase &&
-       IsInDataset(aDataset, nsITelemetry::DATASET_ALL_CHANNELS)) {
--    return true;
-+    return false;
-   }
- 
-   // We're not recording extended telemetry or this is not the base
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
 index 83fcfac2d4..82a852c15c 100644
 --- a/toolkit/content/jar.mn

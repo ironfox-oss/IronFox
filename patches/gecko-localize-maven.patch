@@ -1,0 +1,212 @@
+diff --git a/build.gradle b/build.gradle
+index 3c6eb9e4c4..9b7621a44e 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -5,14 +5,9 @@ import org.tomlj.TomlTable
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+@@ -129,14 +124,9 @@ allprojects {
+     }
+ 
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     // Use the semanticdb-javac and semanticdb-kotlinc plugins to generate semanticdb files for Searchfox
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index 5bcd9c730b..9612ecd635 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -3,14 +3,9 @@ import java.time.format.DateTimeFormatter
+ 
+ buildscript {
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+diff --git a/mobile/android/fenix/build.gradle b/mobile/android/fenix/build.gradle
+index 94001b33fe..99aad74b2a 100644
+--- a/mobile/android/fenix/build.gradle
++++ b/mobile/android/fenix/build.gradle
+@@ -8,14 +8,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+ buildscript {
+     // This logic is duplicated in the allprojects block: I don't know how to fix that.
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+@@ -43,14 +38,9 @@ plugins {
+ allprojects {
+     // This logic is duplicated in the buildscript block: I don't know how to fix that.
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+ 
+         maven {
+             url = "${gradle.mozconfig.topobjdir}/gradle/maven"
+diff --git a/mobile/android/fenix/plugins/apksize/build.gradle b/mobile/android/fenix/plugins/apksize/build.gradle
+index ed6975809e..fb374e95b5 100644
+--- a/mobile/android/fenix/plugins/apksize/build.gradle
++++ b/mobile/android/fenix/plugins/apksize/build.gradle
+@@ -9,14 +9,9 @@ plugins {
+ buildDir = "${gradle.mozconfig.topobjdir}/gradle/build/mobile/android/fenix/plugins/apksize"
+ 
+ repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+ }
+ 
+ dependencies {
+diff --git a/mobile/android/fenix/plugins/apksize/settings.gradle b/mobile/android/fenix/plugins/apksize/settings.gradle
+index 8704f1f4b3..8580140364 100644
+--- a/mobile/android/fenix/plugins/apksize/settings.gradle
++++ b/mobile/android/fenix/plugins/apksize/settings.gradle
+@@ -11,14 +11,9 @@ pluginManagement {
+     }
+ 
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ }
+ 
+diff --git a/mobile/android/fenix/settings.gradle b/mobile/android/fenix/settings.gradle
+index 7e461f97cc..65f0b42b0f 100644
+--- a/mobile/android/fenix/settings.gradle
++++ b/mobile/android/fenix/settings.gradle
+@@ -10,14 +10,9 @@ pluginManagement {
+     }
+ 
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     includeBuild("../android-components/plugins/publicsuffixlist")
+diff --git a/mobile/android/shared-settings.gradle b/mobile/android/shared-settings.gradle
+index a6efbedbd2..a4c647f5e1 100644
+--- a/mobile/android/shared-settings.gradle
++++ b/mobile/android/shared-settings.gradle
+@@ -13,14 +13,9 @@ buildscript {
+     }
+ 
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     dependencies {
+diff --git a/settings.gradle b/settings.gradle
+index c66db7a77b..7a3365bfa7 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -9,14 +9,9 @@ pluginManagement {
+     }
+ 
+     repositories {
+-        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
+-            maven {
+-                url = repository
+-                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
+-                    allowInsecureProtocol = true
+-                }
+-            }
+-        }
++        mavenLocal()
++        maven { url "https://plugins.gradle.org/m2/" }
++        google()
+     }
+ 
+     includeBuild("${rootProject.projectDir.absolutePath}/mobile/android/android-components/plugins/config")

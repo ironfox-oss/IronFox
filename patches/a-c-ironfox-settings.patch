@@ -1,0 +1,214 @@
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+index abc5eb1d3c..13ed7d155d 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
++++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
+@@ -1503,6 +1503,114 @@ class GeckoEngine(
+         override var bannedPorts: String
+             get() = runtime.settings.bannedPorts
+             set(value) { runtime.settings.setBannedPorts(value) }
++
++        override var accessibilityEnabled: Boolean
++            get() = runtime.settings.accessibilityEnabled
++            set(value) { runtime.settings.accessibilityEnabled = value }
++
++        override var cacheEnabled: Boolean
++            get() = runtime.settings.cacheEnabled
++            set(value) { runtime.settings.cacheEnabled = value }
++
++        override var cacheSslEnabled: Boolean
++            get() = runtime.settings.cacheSslEnabled
++            set(value) { runtime.settings.cacheSslEnabled = value }
++
++        override var emeEnabled: Boolean
++            get() = runtime.settings.emeEnabled
++            set(value) { runtime.settings.emeEnabled = value }
++
++        override var ipv6Enabled: Boolean
++            get() = runtime.settings.ipv6Enabled
++            set(value) { runtime.settings.ipv6Enabled = value }
++
++        override var javascriptJitBaselineEnabled: Boolean
++            get() = runtime.settings.javaScriptJitBaselineEnabled
++            set(value) { runtime.settings.javaScriptJitBaselineEnabled = value }
++
++        override var javascriptJitHintsEnabled: Boolean
++            get() = runtime.settings.javaScriptJitHintsEnabled
++            set(value) { runtime.settings.javaScriptJitHintsEnabled = value }
++
++        override var javascriptJitIonEnabled: Boolean
++            get() = runtime.settings.javaScriptJitIonEnabled
++            set(value) { runtime.settings.javaScriptJitIonEnabled = value }
++
++        override var javascriptJitIonWasmEnabled: Boolean
++            get() = runtime.settings.javaScriptJitIonWasmEnabled
++            set(value) { runtime.settings.javaScriptJitIonWasmEnabled = value }
++
++        override var javascriptJitMainProcessEnabled: Boolean
++            get() = runtime.settings.javaScriptJitMainProcessEnabled
++            set(value) { runtime.settings.javaScriptJitMainProcessEnabled = value }
++
++        override var javascriptJitNativeRegexpEnabled: Boolean
++            get() = runtime.settings.javaScriptJitNativeRegexpEnabled
++            set(value) { runtime.settings.javaScriptJitNativeRegexpEnabled = value }
++
++        override var javascriptJitTrustedPrincipalsEnabled: Boolean
++            get() = runtime.settings.javaScriptJitTrustedPrincipalsEnabled
++            set(value) { runtime.settings.javaScriptJitTrustedPrincipalsEnabled = value }
++
++        override var ocspRequire: Boolean
++            get() = runtime.settings.ocspRequire
++            set(value) { runtime.settings.ocspRequire = value }
++
++        override var pdfjsDisabled: Boolean
++            get() = runtime.settings.pdfjsDisabled
++            set(value) { runtime.settings.pdfjsDisabled = value }
++
++        override var printEnabled: Boolean
++            get() = runtime.settings.printEnabled
++            set(value) { runtime.settings.printEnabled = value }
++
++        override var refererXOriginPolicy: Engine.RefererXOriginPolicy
++            get() = when (runtime.settings.refererXOriginPolicy) {
++                GeckoRuntimeSettings.REFERER_XORIGIN_ALWAYS -> Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
++                GeckoRuntimeSettings.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH -> Engine.RefererXOriginPolicy.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH
++                GeckoRuntimeSettings.REFERER_XORIGIN_IF_HOSTS_MATCH -> Engine.RefererXOriginPolicy.REFERER_XORIGIN_IF_HOSTS_MATCH
++                else -> throw java.lang.IllegalStateException("Unknown cross-origin referer policy returned by GeckoView")
++            }
++            set(value) {
++                runtime.settings.refererXOriginPolicy = when (value) {
++                    Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS -> GeckoRuntimeSettings.REFERER_XORIGIN_ALWAYS
++                    Engine.RefererXOriginPolicy.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH -> GeckoRuntimeSettings.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH
++                    Engine.RefererXOriginPolicy.REFERER_XORIGIN_IF_HOSTS_MATCH -> GeckoRuntimeSettings.REFERER_XORIGIN_IF_HOSTS_MATCH
++                }
++            }
++
++        override var spoofEnglish: Boolean
++            get() = runtime.settings.spoofEnglish
++            set(value) {
++                value.let {
++                    runtime.settings.spoofEnglish = it
++                    localeUpdater.updateValue()
++                }
++            }
++
++        override var svgEnabled: Boolean
++            get() = runtime.settings.svgEnabled
++            set(value) { runtime.settings.svgEnabled = value }
++
++        override var wasmEnabled: Boolean
++            get() = runtime.settings.wasmEnabled
++            set(value) { runtime.settings.wasmEnabled = value }
++
++        override var webglEnabled: Boolean
++            get() = runtime.settings.webglEnabled
++            set(value) { runtime.settings.webglEnabled = value }
++
++        override var webrtcEnabled: Boolean
++            get() = runtime.settings.webrtcEnabled
++            set(value) { runtime.settings.webrtcEnabled = value }
++
++        override var widevineEnabled: Boolean
++            get() = runtime.settings.widevineEnabled
++            set(value) { runtime.settings.widevineEnabled = value }
++
++        override var xpinstallEnabled: Boolean
++            get() = runtime.settings.xpinstallEnabled
++            set(value) { runtime.settings.xpinstallEnabled = value }
+     }.apply {
+         defaultSettings?.let {
+             this.javascriptEnabled = it.javascriptEnabled
+@@ -1549,6 +1657,29 @@ class GeckoEngine(
+             this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
+             this.dohAutoselectEnabled = it.dohAutoselectEnabled
+             this.bannedPorts = it.bannedPorts
++            this.accessibilityEnabled = it.accessibilityEnabled
++            this.cacheEnabled = it.cacheEnabled
++            this.cacheSslEnabled = it.cacheSslEnabled
++            this.emeEnabled = it.emeEnabled
++            this.ipv6Enabled = it.ipv6Enabled
++            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
++            this.javascriptJitHintsEnabled = it.javascriptJitHintsEnabled
++            this.javascriptJitIonEnabled = it.javascriptJitIonEnabled
++            this.javascriptJitIonWasmEnabled = it.javascriptJitIonWasmEnabled
++            this.javascriptJitMainProcessEnabled = it.javascriptJitMainProcessEnabled
++            this.javascriptJitNativeRegexpEnabled = it.javascriptJitNativeRegexpEnabled
++            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
++            this.ocspRequire = it.ocspRequire
++            this.pdfjsDisabled = it.pdfjsDisabled
++            this.printEnabled = it.printEnabled
++            this.refererXOriginPolicy = it.refererXOriginPolicy
++            this.spoofEnglish = it.spoofEnglish
++            this.svgEnabled = it.svgEnabled
++            this.wasmEnabled = it.wasmEnabled
++            this.webglEnabled = it.webglEnabled
++            this.webrtcEnabled = it.webrtcEnabled
++            this.widevineEnabled = it.widevineEnabled
++            this.xpinstallEnabled = it.xpinstallEnabled
+         }
+     }
+ 
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+index 5dd0b2beae..7a21bd1666 100644
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
+@@ -362,6 +362,30 @@ abstract class Settings {
+      * Comma-separated list of destination ports that the application should block connections to.
+      */
+     open var bannedPorts: String by UnsupportedSetting()
++
++    open var accessibilityEnabled: Boolean by UnsupportedSetting()
++    open var cacheEnabled: Boolean by UnsupportedSetting()
++    open var cacheSslEnabled: Boolean by UnsupportedSetting()
++    open var emeEnabled: Boolean by UnsupportedSetting()
++    open var ipv6Enabled: Boolean by UnsupportedSetting()
++    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitHintsEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitIonEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitIonWasmEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitMainProcessEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitNativeRegexpEnabled: Boolean by UnsupportedSetting()
++    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
++    open var ocspRequire: Boolean by UnsupportedSetting()
++    open var pdfjsDisabled: Boolean by UnsupportedSetting()
++    open var printEnabled: Boolean by UnsupportedSetting()
++    open var refererXOriginPolicy: Engine.RefererXOriginPolicy by UnsupportedSetting()
++    open var spoofEnglish: Boolean by UnsupportedSetting()
++    open var svgEnabled: Boolean by UnsupportedSetting()
++    open var wasmEnabled: Boolean by UnsupportedSetting()
++    open var webglEnabled: Boolean by UnsupportedSetting()
++    open var webrtcEnabled: Boolean by UnsupportedSetting()
++    open var widevineEnabled: Boolean by UnsupportedSetting()
++    open var xpinstallEnabled: Boolean by UnsupportedSetting()
+ }
+ 
+ /**
+@@ -434,6 +458,29 @@ data class DefaultSettings(
+     override var postQuantumKeyExchangeEnabled: Boolean? = null,
+     override var dohAutoselectEnabled: Boolean = false,
+     override var bannedPorts: String = "",
++    override var accessibilityEnabled: Boolean = false,
++    override var cacheEnabled: Boolean = false,
++    override var cacheSslEnabled: Boolean = false,
++    override var emeEnabled: Boolean = false,
++    override var ipv6Enabled: Boolean = true,
++    override var javascriptJitBaselineEnabled: Boolean = false,
++    override var javascriptJitHintsEnabled: Boolean = false,
++    override var javascriptJitIonEnabled: Boolean = false,
++    override var javascriptJitIonWasmEnabled: Boolean = false,
++    override var javascriptJitMainProcessEnabled: Boolean = false,
++    override var javascriptJitNativeRegexpEnabled: Boolean = false,
++    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
++    override var ocspRequire: Boolean = true,
++    override var pdfjsDisabled: Boolean = false,
++    override var printEnabled: Boolean = true,
++    override var refererXOriginPolicy: Engine.RefererXOriginPolicy = Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS,
++    override var spoofEnglish: Boolean = true,
++    override var svgEnabled: Boolean = true,
++    override var wasmEnabled: Boolean = true,
++    override var webglEnabled: Boolean = true,
++    override var webrtcEnabled: Boolean = true,
++    override var widevineEnabled: Boolean = false,
++    override var xpinstallEnabled: Boolean = false,
+ ) : Settings() {
+     override val desktopModeEnabled: Boolean
+         get() = getDesktopMode()

@@ -3,20 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- IronFox Settings -->
     <string name="pref_key_if_preferences" translatable="false">pref_key_if_preferences</string>
+    <string name="pref_key_if_secret" translatable="false">pref_key_if_secret</string>
 
-    <!-- Accessibility Services -->
+    <!-- Accessibility services -->
     <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
-
-    <!-- Content Settings -->
-    <string name="pref_key_cache_enabled" translatable="false">pref_key_cache_enabled</string>
-    <string name="pref_key_cache_ssl_enabled" translatable="false">pref_key_cache_ssl_enabled</string>
-    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
-    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
-    <string name="pref_key_pdfjs_disabled" translatable="false">pref_key_pdfjs_disabled</string>
-    <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
-    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
-    <string name="pref_key_webgl_enabled" translatable="false">pref_key_webgl_enabled</string>
-    <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>
 
     <!-- Cross-origin referer policy -->
     <string name="pref_key_referer_policy" translatable="false">pref_key_referer_policy</string>
@@ -24,27 +14,47 @@
     <string name="pref_key_referer_policy_base_domains_match" translatable="false">pref_key_referer_policy_base_domains_match</string>
     <string name="pref_key_referer_policy_hosts_match" translatable="false">pref_key_referer_policy_hosts_match</string>
 
+    <!-- Disk cache -->
+    <string name="pref_key_cache_enabled" translatable="false">pref_key_cache_enabled</string>
+    <string name="pref_key_cache_ssl_enabled" translatable="false">pref_key_cache_ssl_enabled</string>
+
+    <!-- EME -->
+    <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
+    <string name="pref_key_widevine_enabled" translatable="false">pref_key_widevine_enabled</string>
+
+    <!-- IPv6 -->
+    <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
+
+    <!-- JavaScript -->
+    <string name="pref_key_javascript_enabled" translatable="false">pref_key_javascript_enabled</string>
+
+    <!-- JavaScript JIT -->
+    <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
+
+    <!-- OCSP -->
+    <string name="pref_key_ocsp_require" translatable="false">pref_key_ocsp_require</string>
+
+    <!-- PDF.js -->
+    <string name="pref_key_pdfjs_disabled" translatable="false">pref_key_pdfjs_disabled</string>
+
     <!-- Preferred website appearance -->
     <string name="pref_key_prefers_browser_color_scheme" translatable="false">pref_key_prefers_browser_color_scheme</string>
     <string name="pref_key_prefers_dark_color_scheme" translatable="false">pref_key_prefers_dark_color_scheme</string>
     <string name="pref_key_prefers_light_color_scheme" translatable="false">pref_key_prefers_light_color_scheme</string>
     <string name="pref_key_website_appearance_description" translatable="false">pref_key_website_appearance_description</string>
 
-    <!-- Secret Settings -->
-    <string name="pref_key_if_secret" translatable="false">pref_key_if_secret</string>
-    <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
-    <string name="pref_key_widevine_enabled" translatable="false">pref_key_widevine_enabled</string>
-
-    <!-- Settings -->
-    <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
-    <string name="pref_key_ocsp_require" translatable="false">pref_key_ocsp_require</string>
+    <!-- Printing capabilities -->
     <string name="pref_key_print_enabled" translatable="false">pref_key_print_enabled</string>
+
+    <!-- Safe Browsing -->
     <string name="pref_key_safe_browsing_enabled" translatable="false">pref_key_safe_browsing_enabled</string>
     <string name="pref_key_safe_browsing_enabled_caption" translatable="false">pref_key_safe_browsing_enabled_caption</string>
-    <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
 
-    <!-- Spoof English -->
+    <!-- Spoof locale to English -->
     <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+
+    <!-- SVG -->
+    <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
 
     <!-- Tab Strip -->
     <string name="pref_key_tab_strip_show" translatable="false">pref_key_tab_strip_show</string>
@@ -53,4 +63,16 @@
     <!-- UnifiedPush -->
     <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
     <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
+
+    <!-- WebAssembly -->
+    <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
+
+    <!-- WebGL -->
+    <string name="pref_key_webgl_enabled" translatable="false">pref_key_webgl_enabled</string>
+
+    <!-- WebRTC -->
+    <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>
+
+    <!-- XPInstall -->
+    <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
 </resources>

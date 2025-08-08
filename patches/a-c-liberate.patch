@@ -1,0 +1,68 @@
+diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
+index 489c138b0d..ad9f3b49f0 100644
+--- a/mobile/android/android-components/.buildconfig.yml
++++ b/mobile/android/android-components/.buildconfig.yml
+@@ -1632,20 +1632,20 @@ projects:
+     - components:support-test
+     - components:support-utils
+     - components:tooling-lint
+-  components:lib-crash-sentry:
+-    description: A crash reporter for Sentry.io that that uses lib-crash.
+-    path: components/lib/crash-sentry
+-    publish: true
+-    upstream_dependencies:
+-    - components:concept-base
+-    - components:concept-fetch
+-    - components:lib-crash
+-    - components:lib-publicsuffixlist
+-    - components:support-base
+-    - components:support-ktx
+-    - components:support-test
+-    - components:support-utils
+-    - components:tooling-lint
++#  components:lib-crash-sentry:
++#    description: A crash reporter for Sentry.io that that uses lib-crash.
++#    path: components/lib/crash-sentry
++#    publish: true
++#    upstream_dependencies:
++#    - components:concept-base
++#    - components:concept-fetch
++#    - components:lib-crash
++#    - components:lib-publicsuffixlist
++#    - components:support-base
++#    - components:support-ktx
++#    - components:support-test
++#    - components:support-utils
++#    - components:tooling-lint
+   components:lib-dataprotect:
+     description: A component using AndroidKeyStore to protect user data.
+     path: components/lib/dataprotect
+@@ -1692,17 +1692,17 @@ projects:
+     - components:support-base
+     - components:support-test
+     - components:tooling-lint
+-  components:lib-push-firebase:
+-    description: An implementation of concept-push for the Firebase Message Service.
+-    path: components/lib/push-firebase
+-    publish: true
+-    upstream_dependencies:
+-    - components:concept-base
+-    - components:concept-fetch
+-    - components:concept-push
+-    - components:support-base
+-    - components:support-test
+-    - components:tooling-lint
++#  components:lib-push-firebase:
++#    description: An implementation of concept-push for the Firebase Message Service.
++#    path: components/lib/push-firebase
++#    publish: true
++#    upstream_dependencies:
++#    - components:concept-base
++#    - components:concept-fetch
++#    - components:concept-push
++#    - components:support-base
++#    - components:support-test
++#    - components:tooling-lint
+   components:lib-state:
+     description: A library for maintaining application state.
+     path: components/lib/state
