@@ -525,6 +525,13 @@ patches:
     effect: "Advanced users can access experimental or hidden features."
     category: "User Control"
 
+  - file: "gecko-enable-aboutinference.patch"
+    name: "Enable `about:inference`"
+    description: "Enables the `about:inference` page."
+    reason: "To allow users to control machine learning models."
+    effect: "Users can easily test and configure installed machine learning models, as well as other related functionality."
+    category: "User Interface"
+
   # User Experience
   - file: "fenix-default-site-permissions.patch"
     name: "Default Site Permissions"
