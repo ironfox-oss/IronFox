@@ -286,17 +286,17 @@ IronFox is translated using Weblate. Visit the [Weblate project](https://hosted.
 
 [![Translation status](https://hosted.weblate.org/widget/ironfox/287x66-grey.png)](https://hosted.weblate.org/engage/ironfox/)
 
-## Licenses
+## Licensing
 
 The scripts are licensed under the [GNU Affero General Public License, version 3 or later](COPYING).
 
 Changes to patches are licensed according to the header in the files this patch adds or modifies ([Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0) or [MPL 2.0](https://www.mozilla.org/MPL/)).
 
-[Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License, version 3 or later](https://phoenix.celenity.dev/LICENSE).
+[Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License v3.0 or later](https://spdx.org/licenses/GPL-3.0-or-later.html) _(`GPL-3.0-or-later`)_ where applicable. See [`COPYING`](https://phoenix.celenity.dev/COPYING.txt).
 
-Parts of `branding.patch`, `gecko-rs-blocker.patch`, and `ublock-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
+Parts of `fenix-branding.patch`, `gecko-rs-blocker.patch`, and `gecko-custom-ublock-origin-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
-`disable-network-connectivity-monitoring.patch`, `disable-sslkeylogging.patch` and `gecko-ironfox-settings-support-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [LICENSE](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
+`fenix-disable-network-connectivity-monitoring.patch`, `gecko-disable-network-id.patch`, `gecko-disable-sslkeylogging.patch`, `geckoview-disable-network-connectivity-monitoring.patch`,  and `geckoview-ironfox-settings-support-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [`LICENSE`](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
 Our current set of default wallpapers are taken from [Fennec F-Droid](https://gitlab.com/relan/fennecmedia), and are available under the [Unsplash license](https://gitlab.com/relan/fennecmedia#licenses).
 
@@ -308,6 +308,6 @@ This is not an officially supported Mozilla product. IronFox is in no way affili
 
 IronFox is not sponsored or endorsed by Mozilla.
 
-IronFox is not associated with DivestOS or Divested Computing Group in any manner.
+IronFox is not associated with DivestOS, Divested Computing Group, or Mull in any manner.
 
-Firefox source code is available at [https://hg.mozilla.org](https://hg.mozilla.org).
+Firefox source code is available at [https://github.com/mozilla-firefox/firefox](https://github.com/mozilla-firefox/firefox).
