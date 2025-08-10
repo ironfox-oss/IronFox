@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restart_required_summary">Das Ändern dieser Einstellung wird Ihren Browser neu starten</string>
+    <string name="unsupported_summary">Diese Einstellung ist NICHT empfohlen oder unterstützt. Bitte vorsichtig vorgehen.</string>
+    <string name="if_preferences">IronFox-Einstellungen</string>
+    <string name="if_preferences_misc">Verschiedenes</string>
+    <string name="if_preferences_privacy">Datenschutz</string>
+    <string name="if_preferences_privacy_security">Datenschutz und Sicherheit</string>
+    <string name="if_preferences_secret">Geheime Einstellungen</string>
+    <string name="if_preferences_security">Sicherheit</string>
+    <string name="preference_cache_enabled">Aktivieren des Festplattenpuffers</string>
+    <string name="preference_cache_ssl_enabled">Aktivieren des Festplattenpuffers für sichere Webseiten</string>
+    <string name="preferences_debug_settings_eme_enabled">Verschlüsselte Medienerweiterungen aktivieren (EME)</string>
+    <string name="preferences_debug_settings_widevine_enabled">Widevine CDM aktivieren</string>
+    <string name="preference_ipv6_enabled">IPv6-Netzwerkverbindungen aktivieren</string>
+    <string name="preference_javascript_enabled">JavaScript aktivieren</string>
+    <string name="preference_jit_enabled">JavaScript Just-in-time Kompilierung aktivieren (JIT)</string>
+</resources>

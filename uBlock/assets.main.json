@@ -1218,12 +1218,12 @@
         "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/abp/unsafe.txt",
         "supportURL": "https://badblock.celenity.dev/issues"
     },
-    "webgl": {
+    "ublock-webgl": {
         "content": "filters",
         "group": "default",
         "parent": "🛡️ Block WebGL",
         "title": "🛡️ Block WebGL",
-        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/89d8ba7fb39763836d9ee7858b5185ba2acf4a19/hardened/block-webgl.txt",
+        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/53a6f40838fe6e77d191373e38358bb7f965eee1/hardened/block-webgl.txt",
         "supportURL": "https://badblock.celenity.dev/issues",
         "instructionURL": "https://codeberg.org/celenity/BadBlock/src/branch/pages/hardened"
     },
