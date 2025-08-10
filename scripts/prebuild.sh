@@ -37,8 +37,9 @@ function localize_maven {
 function apply_overlay() {
     source_dir="$1"
     find "$source_dir" -type f| while read -r src; do
-        mkdir -p "$(dirname "$src")"
-        cp -vrf "$src" "${src#"$source_dir"}"
+        target="${src#"$source_dir"}"
+        mkdir -p "$(dirname "$target")"
+        cp -vrf "$src" "$target"
     done
 }
 
