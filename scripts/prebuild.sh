@@ -294,7 +294,7 @@ echo "autoPublish.application-services.dir=$application_services" >>local.proper
 echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
 
 # Apply Fenix overlay
-apply_overlay "$patches/fenix-overlay"
+apply_overlay "$patches/fenix-overlay/"
 
 popd
 
@@ -321,7 +321,7 @@ sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/'
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
 # Apply Glean overlay
-apply_overlay "$patches/glean-overlay"
+apply_overlay "$patches/glean-overlay/"
 
 popd
 
@@ -344,7 +344,7 @@ rm -vrf components/feature/search/src/*/assets/extensions/search
 rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
 
 # Apply a-c overlay
-apply_overlay "$patches/a-c-overlay"
+apply_overlay "$patches/a-c-overlay/"
 
 popd
 
@@ -391,7 +391,7 @@ sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/'
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
 # Apply Glean overlay
-apply_overlay "$patches/glean-overlay"
+apply_overlay "$patches/glean-overlay/"
 
 popd
 
@@ -779,6 +779,6 @@ sed -i \
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
 
 # Apply Glean overlay
-apply_overlay "$patches/gecko-overlay"
+apply_overlay "$patches/gecko-overlay/"
 
 popd
