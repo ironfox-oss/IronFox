@@ -55,13 +55,15 @@ update-fdroid-repo:
       when: never
     - if: $CI_COMMIT_TAG
   variables:
-    TARGET_REPO_PATH: ironfox-oss/fdroid
-    TARGET_REPO_BRANCH: dev
-    META_FILE: "./fdroid/metadata/org.ironfoxoss.ironfox.yml"
-    REPO_DIR: "./fdroid/repo"
+    FDROID_REPO_PATH: ironfox-oss/fdroid
+    FDROID_REPO_BRANCH: dev
+    META_REPO_BRANCH: main
+    META_DIR_PATH: "./fdroid/metadata"
+    META_FILE_NAME: "org.ironfoxoss.ironfox.yml"
+    REPO_DIR_PATH: "./fdroid/repo"
     <<: *build_variables
   before_script:
-    - sudo dnf install -y bash curl git jq make python3 python3-pip
+    - sudo dnf install -y bash curl git git-lfs jq make python3 python3-pip
     - pip install androguard
     - git config --global user.email "ci@ironfoxoss.org"
     - git config --global user.name "IronFox CI"
