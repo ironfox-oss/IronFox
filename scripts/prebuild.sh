@@ -32,6 +32,16 @@ function localize_maven {
     done
 }
 
+# Applies the overlay files in the given directory
+# to the current directory
+function apply_overlay() {
+    source_dir="$1"
+    find "$source_dir" -type f| while read -r src; do
+        mkdir -p "$(dirname "$src")"
+        cp -vrf "$src" "${src#"$source_dir"}"
+    done
+}
+
 if [ -z "$1" ]; then
     echo "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
@@ -282,9 +292,8 @@ echo "autoPublish.application-services.dir=$application_services" >>local.proper
 # Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
 echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
 
-find "$patches/fenix-overlay" -type f | while read -r src; do
-    cp -vrf "$src" "${src#"$patches/fenix-overlay/"}"
-done
+# Apply Fenix overlay
+apply_overlay "$patches/fenix-overlay"
 
 popd
 
@@ -310,9 +319,8 @@ sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configurati
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
-find "$patches/glean-overlay" -type f | while read -r src; do
-    cp -vrf "$src" "${src#"$patches/glean-overlay/"}"
-done
+# Apply Glean overlay
+apply_overlay "$patches/glean-overlay"
 
 popd
 
@@ -334,9 +342,8 @@ rm -vrf components/feature/search/src/*/assets/extensions/search
 # Remove the 'search telemetry' config
 rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
 
-find "$patches/a-c-overlay" -type f | while read -r src; do
-    cp -vrf "$src" "${src#"$patches/a-c-overlay/"}"
-done
+# Apply a-c overlay
+apply_overlay "$patches/a-c-overlay"
 
 popd
 
@@ -382,9 +389,8 @@ sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configurati
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
-find "$patches/glean-overlay" -type f | while read -r src; do
-    cp -vrf "$src" "${src#"$patches/glean-overlay/"}"
-done
+# Apply Glean overlay
+apply_overlay "$patches/glean-overlay"
 
 popd
 
@@ -771,8 +777,7 @@ sed -i \
     cat "$patches/preferences/pdf.js"
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
 
-find "$patches/gecko-overlay" -type f | while read -r src; do
-    cp -vrf "$src" "${src#"$patches/gecko-overlay/"}"
-done
+# Apply Glean overlay
+apply_overlay "$patches/gecko-overlay"
 
 popd
