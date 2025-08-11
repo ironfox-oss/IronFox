@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fx_mobile_layer_color_1_oled">@color/photonBlack</color>
+    <color name="fx_mobile_layer_color_2_oled">@color/photonDarkGrey90</color>
+    <color name="fx_mobile_action_color_secondary_oled">#ff25242b</color>
+</resources>

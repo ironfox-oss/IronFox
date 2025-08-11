@@ -1,19 +1,23 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 6875486c72..c8fb1d3d0b 100644
+index 6875486c72..37d68c132c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -679,9 +679,11 @@ class Core(
+@@ -678,10 +678,15 @@ class Core(
+         val inDark =
              (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                  Configuration.UI_MODE_NIGHT_YES
++        val settings = context.settings()
          return when {
 -            context.settings().shouldUseDarkTheme -> PreferredColorScheme.Dark
 -            context.settings().shouldUseLightTheme -> PreferredColorScheme.Light
 -            inDark -> PreferredColorScheme.Dark
-+            context.settings().prefersBrowserColorScheme && context.settings().shouldUseDarkTheme -> PreferredColorScheme.Dark
-+            context.settings().prefersBrowserColorScheme && context.settings().shouldUseLightTheme -> PreferredColorScheme.Light
-+            context.settings().prefersBrowserColorScheme && inDark -> PreferredColorScheme.Dark
-+            context.settings().prefersDarkColorScheme -> PreferredColorScheme.Dark
-+            context.settings().prefersLightColorScheme -> PreferredColorScheme.Light
++            settings.prefersBrowserColorScheme -> when {
++                settings.shouldUseDarkTheme || settings.shouldUseOledTheme || inDark -> PreferredColorScheme.Dark
++                settings.shouldUseLightTheme -> PreferredColorScheme.Light
++                else -> PreferredColorScheme.Light
++            }
++            settings.prefersDarkColorScheme -> PreferredColorScheme.Dark
++            settings.prefersLightColorScheme -> PreferredColorScheme.Light
              else -> PreferredColorScheme.Light
          }
      }
