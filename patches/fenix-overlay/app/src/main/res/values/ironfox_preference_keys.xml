@@ -95,4 +95,7 @@
 
     <!-- XPInstall -->
     <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
+
+    <!-- OLED Theme -->
+    <string name="pref_key_oled_theme" translatable="false">pref_key_oled_theme</string>
 </resources>
