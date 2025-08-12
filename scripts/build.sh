@@ -118,13 +118,17 @@ popd
 pushd "$mozilla_release"
 
 # shellcheck disable=SC2086
+echo "Running ./mach build..."
 ./mach build
+echo "Running ./mach package..."
 ./mach package
+echo "Running ./mach package-multi-locale..."
 ./mach package-multi-locale --locales ${IRONFOX_LOCALES}
 
 MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 export MOZ_CHROME_MULTILOCALE
 
+echo "Running gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
 gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
 popd
 
