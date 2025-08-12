@@ -91,6 +91,13 @@ patches:
     effect: "Allows users to use the Firefox Translations feature, without us needing to build and include unnecessary/unwanted debugging tools."
     category: "Build System"
 
+  - file: "gecko-remove-example-dependencies.patch"
+    name: "Remove Unwanted Example/Sample Dependencies"
+    description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."
+    reason: "Allows for faster builds, with less overhead."
+    effect: "Reduces build-time, and reduces the complexity of the overall build process."
+    category: "Build System"
+
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Remove Proprietary Libraries (Android Components)"

@@ -320,6 +320,9 @@ sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configurati
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
+# Do not build `glean-sample-app`
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
+
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
 
@@ -336,12 +339,18 @@ pushd "$android_components"
 rm -vrf components/feature/search/src/*/assets/searchplugins/*
 
 # Nuke the "Mozilla Android Components - Ads Telemetry" and "Mozilla Android Components - Search Telemetry" extensions
-# We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
+## We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
 rm -vrf components/feature/search/src/*/assets/extensions/ads
 rm -vrf components/feature/search/src/*/assets/extensions/search
 
 # Remove the 'search telemetry' config
 rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
+
+# Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
+## We don't build or use these sample libraries at all anyways, so instead of patching these files, I don't see a reason why we shouldn't just delete them. 
+rm -vf samples/browser/build.gradle
+rm -vf samples/crash/build.gradle
+rm -vf samples/glean/build.gradle
 
 # Apply a-c overlay
 apply_overlay "$patches/a-c-overlay/"
@@ -390,6 +399,9 @@ sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configurati
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 
+# Do not build `glean-sample-app`
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
+
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
 
@@ -407,7 +419,7 @@ else
     export wasi_install=$wasi
 fi
 
-# GeckoView
+# Gecko
 pushd "$mozilla_release"
 
 # Let it be IronFox (part 2...)
