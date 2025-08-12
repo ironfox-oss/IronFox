@@ -1227,7 +1227,7 @@
         "supportURL": "https://badblock.celenity.dev/issues",
         "instructionURL": "https://codeberg.org/celenity/BadBlock/src/branch/pages/hardened"
     },
-    "webgl-unbreak": {
+    "ublock-webgl-unbreak": {
         "content": "filters",
         "group": "default",
         "parent": "🛡️ Block WebGL",
