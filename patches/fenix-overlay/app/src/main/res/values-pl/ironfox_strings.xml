@@ -30,9 +30,7 @@
     <string name="preference_safe_browsing_enabled">Włącz Bezpieczne przeglądanie</string>
     <string name="preference_safe_browsing_enabled_caption">Uzyskaj ochronę w czasie rzeczywistym przed niebezpiecznymi stronami, złośliwym oprogramowaniem i próbami phishingu.</string>
     <string name="preference_safe_browsing_enabled_description">Funkcja Bezpiecznego przeglądania IronFox jest obecnie dostarczana przez Google. IronFox będzie okresowo aktualizować bazę danych, aby zapewnić użytkownikom ochronę przed najnowszymi zagrożeniami, a po napotkaniu potencjalnego dopasowania IronFox może przesłać częściowy skrót podejrzanego adresu URL do Google. Pamiętaj, że IronFox pośredniczy w tych połączeniach, aby zapobiec powiązaniu publicznego adresu IP użytkownika z tymi żądaniami.</string>
-    <string name="preference_tab_strip_show">Pokaż pasek kart</string>
     <string name="preference_toolbar_pref_disabled_explanation">Pasek adresu musi być na górze, kiedy wyświetlany jest pasek kart.</string>
-    <string name="preferences_tab_strip">Wyświetlanie paska kart</string>
     <string name="preferences_debug_settings_unifiedpush">Włącz UnifiedPush</string>
     <string name="preferences_unifiedpush">Używaj UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Zmieniono ustawienie UnifiedPush. Zamykam aplikację, aby zastosować zmiany…</string>

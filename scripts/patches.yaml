@@ -91,13 +91,6 @@ patches:
     effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
     category: "Build System"
 
-  - file: "gecko-unbreak-translations-without-gecko-profiler.patch"
-    name: "Unbreak Firefox Translations without Gecko Profiler"
-    description: "Unbreaks Firefox Translations when the Gecko Profiler debugging tools (https://firefox-source-docs.mozilla.org/tools/profiler/index.html) are disabled."
-    reason: "Works around an upstream bug (https://bugzilla.mozilla.org/show_bug.cgi?id=1977078) that we encounter, due to us disabling the Gecko Profiler at build-time."
-    effect: "Allows users to use the Firefox Translations feature, without us needing to build and include unnecessary/unwanted debugging tools."
-    category: "Build System"
-
   - file: "gecko-remove-example-dependencies.patch"
     name: "Remove Unwanted Example/Sample Dependencies"
     description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."
@@ -243,13 +236,6 @@ patches:
   - file: "fenix-disable-contile.patch"
     name: "Disable Contile"
     description: "Disables integration with Mozilla's Contile service (sponsored tiles) - https://mozilla-services.github.io/contile/."
-    reason: "To remove unwanted advertising and unnecessary third-party services."
-    effect: "Cleaner interface without promotional content."
-    category: "Mozilla"
-
-  - file: "fenix-disable-mars.patch"
-    name: "Disable MARS (Mozilla Ad Routing Service)"
-    description: "Disables integration with the Mozilla Ad Routing Service (MARS) - https://ads.mozilla.org/assets/docs/openapi/mars-api.html."
     reason: "To remove unwanted advertising and unnecessary third-party services."
     effect: "Cleaner interface without promotional content."
     category: "Mozilla"
@@ -641,13 +627,6 @@ patches:
     description: "Adds minor tweaks to the browser's user interface."
     reason: "To reduce clutter and improve the user experience."
     effect: "Users are provided with a cleaner, focused browsing experience."
-    category: "User Interface"
-
-  - file: "fenix-tab-strip.patch"
-    name: "Tab Strip"
-    description: "Adds a UI setting to enable/disable the Tab Strip feature."
-    reason: "To allow users to enable/disable the new Tab Strip feature (without Nimbus), which is especially useful for tablet devices (Reverts: https://github.com/mozilla-firefox/firefox/commit/acc4d6a7f8c7d7914c8f36da98ff9a26c6f84954)."
-    effect: "Users can enable or disable the Tab Strip, depending on their personal preference."
     category: "User Interface"
 
   - file: "a-c-ironfox-settings-support-cross-origin-referer-policy.patch"
