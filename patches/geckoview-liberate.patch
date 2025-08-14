@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
-index 9f2993090f..7b93871e74 100644
+index a04e43ca39..57cae0e428 100644
 --- a/mobile/android/geckoview/build.gradle
 +++ b/mobile/android/geckoview/build.gradle
-@@ -218,7 +218,7 @@ dependencies {
+@@ -219,7 +219,7 @@ dependencies {
      implementation libs.androidx.collection
      implementation libs.androidx.core
  

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 774d43efab..62aef43210 100644
+index 3fa564af49..1b5dd7eaf5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -842,10 +842,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -887,10 +887,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -17,7 +17,7 @@ index 774d43efab..62aef43210 100644
  
      var shouldEnableGlobalPrivacyControl by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_enable_global_privacy_control),
-@@ -952,20 +952,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -997,20 +997,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -48,13 +48,13 @@ index 774d43efab..62aef43210 100644
 +//        false,
 +//    )
  
-     @VisibleForTesting(otherwise = PRIVATE)
-     fun setStrictETP() {
+     var strictAllowListBaselineTrackingProtection by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_allow_list_baseline),
 diff --git a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
-index 2760c9c367..10835b79e3 100644
+index 54c4daacc5..8aa4822348 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/tracking_protection_preferences.xml
-@@ -14,25 +14,29 @@
+@@ -14,19 +14,22 @@
          android:key="@string/pref_key_tracking_protection"
          android:summary="@string/preference_enhanced_tracking_protection_summary"
          android:title="@string/preference_enhanced_tracking_protection"
@@ -62,8 +62,7 @@ index 2760c9c367..10835b79e3 100644
 +        app:iconSpaceReserved="false"
 +        app:isPreferenceVisible="false" />
      <org.mozilla.fenix.settings.RadioButtonInfoPreference
--        android:defaultValue="true"
-+        android:defaultValue="false"
+         android:defaultValue="true"
          android:dependency="@string/pref_key_tracking_protection"
          android:key="@string/pref_key_tracking_protection_standard_option"
          android:summary="@string/preference_enhanced_tracking_protection_standard_description_5"
@@ -71,16 +70,17 @@ index 2760c9c367..10835b79e3 100644
 +        android:title="@string/preference_enhanced_tracking_protection_standard_default_1"
 +        app:isPreferenceVisible="false" />
      <org.mozilla.fenix.settings.RadioButtonInfoPreference
--        android:defaultValue="false"
-+        android:defaultValue="true"
+         android:defaultValue="false"
          android:dependency="@string/pref_key_tracking_protection"
          android:key="@string/pref_key_tracking_protection_strict_default"
          android:summary="@string/preference_enhanced_tracking_protection_strict_description_4"
 -        android:title="@string/preference_enhanced_tracking_protection_strict" />
 +        android:title="@string/preference_enhanced_tracking_protection_strict"
 +        app:isPreferenceVisible="false" />
-     <org.mozilla.fenix.settings.RadioButtonInfoPreference
-         android:defaultValue="false"
+     <CheckBoxPreference
+         android:defaultValue="true"
+         android:dependency="@string/pref_key_tracking_protection_strict_default"
+@@ -43,7 +46,8 @@
          android:dependency="@string/pref_key_tracking_protection"
          android:key="@string/pref_key_tracking_protection_custom_option"
          android:summary="@string/preference_enhanced_tracking_protection_custom_description_2"

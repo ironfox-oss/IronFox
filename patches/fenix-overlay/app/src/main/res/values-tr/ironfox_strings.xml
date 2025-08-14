@@ -40,9 +40,7 @@
     <string name="tor_spoof_english">Web sayfalarının Ingilizce sürümünü talep et</string>
     <string name="tor_spoof_english_summary">Etkinleştirildiğinde, parmak izi korumasını güçlendirir</string>
     <string name="preference_svg_enabled">Ölçeklenebilir Vektör Grafiklerini (SVG) etkinleştir</string>
-    <string name="preference_tab_strip_show">Sekme çubuğunu göster</string>
     <string name="preference_toolbar_pref_disabled_explanation">Sekme çubuğu gösterildiğinde adres çubuğu üstte olmalı.</string>
-    <string name="preferences_tab_strip">Sekme çubuğu ekranı</string>
     <string name="preferences_unifiedpush">UnifiedPush\'u kullan</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush ayarları değistirildi. Uygulamayı kapatmak değişiklikleri uygular…</string>
     <string name="preference_wasm_enabled">WebAssembly\'i (WASM) etkinleştir</string>

@@ -201,22 +201,50 @@ index 819b24954e..0f9bb0a905 100644
              "about:addons" -> {
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 9113dc53a9..b92ecfb0be 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -244,7 +244,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_crash_pull_never_show_again).apply {
+-            isVisible = true
++            isVisible = false
+             isChecked = context.settings().crashPullNeverShowAgain
+             onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 774d43efab..1ecc0c894f 100644
+index 3fa564af49..861f5c38a8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2355,10 +2355,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * A user preference indicating that crash reports should always be automatically sent. This can be updated
-      * through the unsubmitted crash dialog or through data choice preferences.
+@@ -495,10 +495,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+                 true,
+             )
+ 
+-    var crashReportChoice by stringPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
+-        default = CrashReportOption.Ask.toString(),
+-    )
++    var crashReportChoice = CrashReportOption.Never.toString()
++//        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
++//        default = CrashReportOption.Ask.toString(),
++//    )
+ 
+     val isRemoteDebuggingEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
+@@ -776,10 +776,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * Indicates if the user denies to ever see again the Remote Settings crash
+      * pull UI.
       */
--    var crashReportAlwaysSend by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_always_report),
+-    var crashPullNeverShowAgain: Boolean by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),
 -        default = false,
 -    )
-+    var crashReportAlwaysSend = false
-+//        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_always_report),
++    var crashPullNeverShowAgain: Boolean = true
++//        appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),
 +//        default = false,
 +//    )
  
-     /**
-      * Indicates whether or not we should use the new crash reporter dialog.
+     @VisibleForTesting
+     internal fun timeNowInMillis(): Long = System.currentTimeMillis()

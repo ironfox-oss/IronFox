@@ -12,10 +12,10 @@ index ac6e718f3c..24199dbadd 100644
              tools:ignore="HighSamplingRate" />
      <uses-permission android:name="android.permission.INTERNET"/>
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-index cd93c8fca3..ccb6eebdd1 100644
+index 3eaf228e93..fbfad996f6 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-@@ -214,7 +214,7 @@ public final class GeckoRuntime implements Parcelable {
+@@ -190,7 +190,7 @@ public final class GeckoRuntime implements Parcelable {
        GeckoAppShell.resumeLocation();
        // Monitor network status and send change notifications to Gecko
        // while active.
@@ -24,7 +24,7 @@ index cd93c8fca3..ccb6eebdd1 100644
  
        // Set settings that may have changed between last app opening
        GeckoAppShell.setIs24HourFormat(
-@@ -236,7 +236,7 @@ public final class GeckoRuntime implements Parcelable {
+@@ -212,7 +212,7 @@ public final class GeckoRuntime implements Parcelable {
        // Pause listening for locations when in background
        GeckoAppShell.pauseLocation();
        // Stop monitoring network status while inactive.
