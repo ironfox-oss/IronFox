@@ -744,10 +744,10 @@ index 325e5d2141..0a5ac75418 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 774d43efab..ea6a3b6d63 100644
+index 3fa564af49..bcecd97869 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
+@@ -68,6 +68,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
  import org.mozilla.fenix.wallpapers.Wallpaper
  import java.security.InvalidParameterException
  import java.util.UUID
@@ -755,10 +755,10 @@ index 774d43efab..ea6a3b6d63 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2523,4 +2524,151 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         key = appContext.getPreferenceKey(R.string.pref_key_distribution_id),
-         default = "",
-     )
+@@ -2618,4 +2619,146 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
+         return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
+     }
 +
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
@@ -788,11 +788,6 @@ index 774d43efab..ea6a3b6d63 100644
 +    var ipv6Enabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_ipv6_enabled),
 +        default = true,
-+    )
-+
-+    var isTabStripEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_tab_strip_show),
-+        default = false,
 +    )
 +
 +    var javascriptEnabled by booleanPreference(

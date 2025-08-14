@@ -366,6 +366,10 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-localize-maven.patch"
 
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
+
+# Break the dependency on older Glean
+sed -i -e "/^glean = \"/c\\glean = \"${GLEAN_VERSION}\"" gradle/libs.versions.toml
+
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -432,6 +436,9 @@ echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
 # Apply patches
 apply_patches
+
+# Break the dependency on older Glean
+sed -i -e "/^mozilla-glean = \"/c\\mozilla-glean = \"${GLEAN_VERSION}\"" gradle/libs.versions.toml
 
 # Fix v125 aar output not including native libraries
 sed -i \
@@ -552,6 +559,7 @@ sed -i \
 
 sed -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
+    -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \

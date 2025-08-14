@@ -43,9 +43,7 @@
     <string name="tor_spoof_english">Запрашивать веб-страницы на английском языке</string>
     <string name="tor_spoof_english_summary">При включении усиливает защиту отпечатков пальцев</string>
     <string name="preference_svg_enabled">включить Scalable Vector Graphics (SVG)</string>
-    <string name="preference_tab_strip_show">показывать панель вкладок</string>
     <string name="preference_toolbar_pref_disabled_explanation">Адресная панель должна быть сверху, когда отображается панель вкладок.</string>
-    <string name="preferences_tab_strip">Отображение панели вкладок</string>
     <string name="preferences_debug_settings_unifiedpush">Включить UnifiedPush</string>
     <string name="preferences_unifiedpush">Использовать UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Изменена настройка UnifiedPush. Выход из приложения для применения изменений…</string>
