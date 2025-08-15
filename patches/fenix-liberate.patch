@@ -192,7 +192,7 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 600faec5bd..9336a74889 100644
+index 600faec5bd..76e39d11c1 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -235,7 +235,7 @@ index 600faec5bd..9336a74889 100644
                  <action android:name="com.attribution.SYSTEM_INSTALLER_REFERRER" />
              </intent-filter>
 -        </receiver>
-+        </receiver>-->
++        </receiver> -->
      </application>
  
  </manifest>
