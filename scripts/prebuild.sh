@@ -160,6 +160,12 @@ sed -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' a
 # Display live downloads in progress
 sed -i -e 's|showLiveDownloads = .*|showLiveDownloads = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
+# Disable "custom review pre-prompts"
+sed -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Allow users to select a custom app icon
+sed -i -e 's|alternativeAppIconFeatureEnabled = .*|alternativeAppIconFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Ensure we enable the about:config
 # Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
 sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
@@ -367,9 +373,6 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-localize-maven.patch"
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 
-# Break the dependency on older Glean
-sed -i -e "/^glean = \"/c\\glean = \"${GLEAN_VERSION}\"" gradle/libs.versions.toml
-
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -436,9 +439,6 @@ echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
 # Apply patches
 apply_patches
-
-# Break the dependency on older Glean
-sed -i -e "/^mozilla-glean = \"/c\\mozilla-glean = \"${GLEAN_VERSION}\"" gradle/libs.versions.toml
 
 # Fix v125 aar output not including native libraries
 sed -i \
@@ -704,6 +704,7 @@ fi
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
     fi
 
+    echo "ac_add_options ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
     echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
@@ -733,6 +734,7 @@ fi
     echo 'ac_add_options NODEJS='
     echo 'ac_add_options RUSTC_OPT_LEVEL=2'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
+    echo "export ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
     echo 'export MOZ_APP_BASENAME="IronFox"'
     echo 'export MOZ_APP_DISPLAYNAME="IronFox"'
     echo 'export MOZ_APP_NAME="ironfox"'
@@ -756,11 +758,6 @@ fi
     echo 'export MOZILLA_OFFICIAL=1'
     echo 'export RUSTC_OPT_LEVEL=2'
 } >>mozconfig
-
-# Point to our build of Bundletool
-sed -i \
-    -e "/bundletool_path = /s|toolchains_base_dir|\"$BUILDDIR\"|" \
-    build/moz.configure/android-sdk.configure
 
 # Fail on use of prebuilt binary
 sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py

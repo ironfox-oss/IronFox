@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-index 02708ca763..38ece16e99 100644
+index be8a66d479..f842cab839 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-@@ -303,6 +303,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
+@@ -295,6 +295,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
              technicalAndInteraction.isChecked = true
          }
  
@@ -147,7 +147,7 @@ index effc671c02..ac7cbafb7d 100644
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..3a509acade
+index 0000000000..683785ac46
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 @@ -0,0 +1,501 @@
@@ -179,16 +179,16 @@ index 0000000000..3a509acade
 +import androidx.compose.foundation.rememberScrollState
 +import androidx.compose.foundation.selection.selectable
 +import androidx.compose.foundation.verticalScroll
-+import androidx.compose.material.DropdownMenuItem
-+import androidx.compose.material.ExperimentalMaterialApi
-+import androidx.compose.material.ExposedDropdownMenuBox
-+import androidx.compose.material.ExposedDropdownMenuDefaults
-+import androidx.compose.material.MaterialTheme
-+import androidx.compose.material.OutlinedTextField
-+import androidx.compose.material.RadioButton
-+import androidx.compose.material.RadioButtonDefaults
-+import androidx.compose.material.Text
-+import androidx.compose.material.TextFieldDefaults
++import androidx.compose.material3.DropdownMenuItem
++import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.ExposedDropdownMenuBox
++import androidx.compose.material3.ExposedDropdownMenuDefaults
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.material3.OutlinedTextField
++import androidx.compose.material3.RadioButton
++import androidx.compose.material3.RadioButtonDefaults
++import androidx.compose.material3.Text
++import androidx.compose.material3.TextFieldDefaults
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
 +import androidx.compose.runtime.mutableStateOf
@@ -525,7 +525,7 @@ index 0000000000..3a509acade
 +}
 +
 +@Suppress("UnusedReceiverParameter")
-+@OptIn(ExperimentalMaterialApi::class)
++@OptIn(ExperimentalMaterial3Api::class)
 +@Composable
 +private fun ColumnScope.IronFoxPreferenceDoHProviderSelection(
 +    state: DohSettingsState,
@@ -654,7 +654,7 @@ index 0000000000..3a509acade
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..977b45f5c0
+index 0000000000..688ba9299d
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 @@ -0,0 +1,458 @@
@@ -681,9 +681,9 @@ index 0000000000..977b45f5c0
 +import androidx.compose.foundation.layout.wrapContentHeight
 +import androidx.compose.foundation.rememberScrollState
 +import androidx.compose.foundation.verticalScroll
-+import androidx.compose.material.LinearProgressIndicator
-+import androidx.compose.material.Switch
-+import androidx.compose.material.Text
++import androidx.compose.material3.LinearProgressIndicator
++import androidx.compose.material3.Switch
++import androidx.compose.material3.Text
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
 +import androidx.compose.runtime.mutableIntStateOf

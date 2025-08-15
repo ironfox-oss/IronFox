@@ -12,10 +12,10 @@ index 0620fba71e..2f6a78913f 100644
      - components:lib-crash
      - components:lib-crash-sentry
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 5bcd9c730b..eb5e4b109a 100644
+index 029784efad..5d74a0a507 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -618,7 +618,7 @@ dependencies {
+@@ -620,7 +620,7 @@ dependencies {
      implementation project(':components:feature-webauthn')
      implementation project(':components:feature-webcompat')
      implementation project(':components:feature-webnotifications')
@@ -25,10 +25,10 @@ index 5bcd9c730b..eb5e4b109a 100644
      implementation project(':components:service-pocket')
      implementation project(':components:service-mars')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index a6bfa3a688..998d97b326 100644
+index 8f877cc083..5e4f5f80e0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -345,7 +345,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -391,7 +391,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                          ?.requestedTranslationPair?.toLanguage
                      val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
                      val isWebCompatReporterSupported =
@@ -51,7 +51,7 @@ index e7e19273f9..2e6139bd25 100644
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index a88ff8d3ac..ba902e3a42 100644
+index b07cadf1e6..d17beed0a5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -49,7 +49,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
@@ -63,7 +63,7 @@ index a88ff8d3ac..ba902e3a42 100644
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -701,7 +701,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -689,7 +689,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      // TODO: Bug 1953359 - remove the code below in the next release.
                      if (Config.channel.isNightlyOrDebug || Config.channel.isBeta) {
                          logger.debug("Attempting to uninstall the WebCompat Reporter extension")

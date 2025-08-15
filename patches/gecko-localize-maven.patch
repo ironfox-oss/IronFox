@@ -1,5 +1,5 @@
 diff --git a/build.gradle b/build.gradle
-index 3c6eb9e4c4..9b7621a44e 100644
+index 0a5b220549..a13eaa1931 100644
 --- a/build.gradle
 +++ b/build.gradle
 @@ -5,14 +5,9 @@ import org.tomlj.TomlTable
@@ -39,7 +39,7 @@ index 3c6eb9e4c4..9b7621a44e 100644
  
      // Use the semanticdb-javac and semanticdb-kotlinc plugins to generate semanticdb files for Searchfox
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 5bcd9c730b..9612ecd635 100644
+index 029784efad..bafdcdd60b 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -3,14 +3,9 @@ import java.time.format.DateTimeFormatter

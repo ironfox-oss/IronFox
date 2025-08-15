@@ -1,15 +1,15 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..3d1596f181 100644
+index 03d80ed014..84688258c7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -530,7 +530,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -542,7 +542,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
              }
          }
  
 -        preferenceRemoteDebugging?.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 +        preferenceRemoteDebugging?.isVisible = false
          preferenceRemoteDebugging?.setOnPreferenceChangeListener<Boolean> { preference, newValue ->
-             preference.context.settings().preferences.edit { putBoolean(preference.key, newValue) }
+             settings.preferences.edit { putBoolean(preference.key, newValue) }
              requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 3fa564af49..7116c555f7 100644

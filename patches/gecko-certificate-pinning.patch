@@ -1,8 +1,8 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 1ab408a7f1..a39d4e02b6 100644
+index e5ab8acabc..6b70c215e5 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
-@@ -195,6 +195,26 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
+@@ -203,6 +203,26 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
  static const char kUSERTrust_RSA_Certification_AuthorityFingerprint[] =
    "x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=";
  
@@ -29,57 +29,7 @@ index 1ab408a7f1..a39d4e02b6 100644
  /* Pinsets are each an ordered list by the actual value of the fingerprint */
  struct StaticFingerprints {
    // See bug 1338873 about making these fields const.
-@@ -204,19 +224,19 @@ struct StaticFingerprints {
- 
- /* PreloadedHPKPins.json pinsets */
- static const char* const kPinset_google_root_pems_Data[] = {
--  kEntrust_Root_Certification_Authority___EC1Fingerprint,
-+//  kEntrust_Root_Certification_Authority___EC1Fingerprint,
-   kCOMODO_ECC_Certification_AuthorityFingerprint,
-   kDigiCert_Assured_ID_Root_G2Fingerprint,
-   kCOMODO_Certification_AuthorityFingerprint,
-   kGlobalSign_ECC_Root_CA___R4Fingerprint,
-   kDigiCert_Assured_ID_Root_G3Fingerprint,
-   kStarfield_Class_2_CAFingerprint,
--  kEntrust_net_Premium_2048_Secure_Server_CAFingerprint,
-+//  kEntrust_net_Premium_2048_Secure_Server_CAFingerprint,
-   kDigiCert_Assured_ID_Root_CAFingerprint,
-   kUSERTrust_ECC_Certification_AuthorityFingerprint,
-   kGlobalSign_Root_CAFingerprint,
-   kGo_Daddy_Root_Certificate_Authority___G2Fingerprint,
--  kAffirmTrust_Premium_ECCFingerprint,
-+//  kAffirmTrust_Premium_ECCFingerprint,
-   kGTS_Root_R3Fingerprint,
-   kGTS_Root_R2Fingerprint,
-   kGo_Daddy_Class_2_CAFingerprint,
-@@ -224,21 +244,21 @@ static const char* const kPinset_google_root_pems_Data[] = {
-   kDigiCert_High_Assurance_EV_Root_CAFingerprint,
-   kBaltimore_CyberTrust_RootFingerprint,
-   kGlobalSign_Root_CA___R6Fingerprint,
--  kAffirmTrust_CommercialFingerprint,
--  kEntrust_Root_Certification_AuthorityFingerprint,
-+//  kAffirmTrust_CommercialFingerprint,
-+//  kEntrust_Root_Certification_AuthorityFingerprint,
-   kGlobalSign_Root_CA___R3Fingerprint,
--  kEntrust_Root_Certification_Authority___G2Fingerprint,
-+//  kEntrust_Root_Certification_Authority___G2Fingerprint,
-   kGlobalSign_ECC_Root_CA___R5Fingerprint,
-   kStarfield_Root_Certificate_Authority___G2Fingerprint,
-   kCOMODO_RSA_Certification_AuthorityFingerprint,
-   kGTS_Root_R1Fingerprint,
-   kDigiCert_Global_Root_G2Fingerprint,
--  kAffirmTrust_NetworkingFingerprint,
-+//  kAffirmTrust_NetworkingFingerprint,
-   kGTS_Root_R4Fingerprint,
-   kDigiCert_Global_Root_CAFingerprint,
-   kDigiCert_Global_Root_G3Fingerprint,
-   kComodo_AAA_Services_rootFingerprint,
--  kAffirmTrust_PremiumFingerprint,
-+//  kAffirmTrust_PremiumFingerprint,
-   kUSERTrust_RSA_Certification_AuthorityFingerprint,
- };
- static const StaticFingerprints kPinset_google_root_pems = {
-@@ -316,6 +336,45 @@ static const StaticFingerprints kPinset_facebook = {
+@@ -326,6 +346,45 @@ static const StaticFingerprints kPinset_facebook = {
    kPinset_facebook_Data
  };
  
@@ -125,7 +75,7 @@ index 1ab408a7f1..a39d4e02b6 100644
  /* Domainlist */
  struct TransportSecurityPreload {
    // See bug 1338873 about making these fields const.
-@@ -341,8 +400,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -351,8 +410,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "appengine.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "apps.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "appspot.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -136,7 +86,7 @@ index 1ab408a7f1..a39d4e02b6 100644
    { "blogger.com", true, false, false, -1, &kPinset_google_root_pems },
    { "blogspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "bugs.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
-@@ -378,7 +437,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -388,7 +447,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "developer.android.com", true, false, false, -1, &kPinset_google_root_pems },
    { "developers.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "dl.google.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -145,7 +95,7 @@ index 1ab408a7f1..a39d4e02b6 100644
    { "docs.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "domains.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "doubleclick.net", true, false, false, -1, &kPinset_google_root_pems },
-@@ -390,7 +449,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -400,7 +459,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "facebook.com", true, false, false, -1, &kPinset_facebook },
    { "fi.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "firebaseio.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -154,7 +104,7 @@ index 1ab408a7f1..a39d4e02b6 100644
    { "g.co", false, false, false, -1, &kPinset_google_root_pems },
    { "g4w.co", true, false, false, -1, &kPinset_google_root_pems },
    { "ggpht.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -691,7 +750,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -701,7 +760,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "tablet.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "talk.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "talkgadget.google.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -163,7 +113,7 @@ index 1ab408a7f1..a39d4e02b6 100644
    { "test-mode.pinning.example.com", true, true, false, -1, &kPinset_mozilla_test },
    { "testpilot.firefox.com", false, false, true, 9, &kPinset_mozilla_services },
    { "touch.facebook.com", true, false, false, -1, &kPinset_facebook },
-@@ -730,9 +789,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -740,9 +799,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "youtube-nocookie.com", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -262,40 +212,10 @@ index 1ab408a7f1..a39d4e02b6 100644
  static const int32_t kUnknownId = -1;
  
 diff --git a/security/manager/tools/PreloadedHPKPins.json b/security/manager/tools/PreloadedHPKPins.json
-index 94989ed214..b3069801ab 100644
+index e5c10e2975..63722cda85 100644
 --- a/security/manager/tools/PreloadedHPKPins.json
 +++ b/security/manager/tools/PreloadedHPKPins.json
-@@ -85,10 +85,10 @@
-     {
-       "name": "google_root_pems",
-       "sha256_hashes": [
--        "AffirmTrust Commercial",
--        "AffirmTrust Networking",
--        "AffirmTrust Premium",
--        "AffirmTrust Premium ECC",
-+//        "AffirmTrust Commercial",
-+//        "AffirmTrust Networking",
-+//        "AffirmTrust Premium",
-+//        "AffirmTrust Premium ECC",
-         "Baltimore CyberTrust Root",
-         "Comodo AAA Services root",
-         "COMODO Certification Authority",
-@@ -102,10 +102,10 @@
-         "DigiCert Global Root G3",
-         "DigiCert High Assurance EV Root CA",
-         "DigiCert Trusted Root G4",
--        "Entrust Root Certification Authority",
--        "Entrust Root Certification Authority - EC1",
--        "Entrust Root Certification Authority - G2",
--        "Entrust.net Premium 2048 Secure Server CA",
-+//        "Entrust Root Certification Authority",
-+//        "Entrust Root Certification Authority - EC1",
-+//        "Entrust Root Certification Authority - G2",
-+//        "Entrust.net Premium 2048 Secure Server CA",
-         "GlobalSign ECC Root CA - R4",
-         "GlobalSign ECC Root CA - R5",
-         "GlobalSign Root CA",
-@@ -136,13 +136,13 @@
+@@ -127,13 +127,13 @@
      // AUS servers MUST remain in test mode
      // see: https://bugzilla.mozilla.org/show_bug.cgi?id=1301956#c23
      { "name": "aus4.mozilla.org", "include_subdomains": true,
@@ -312,7 +232,7 @@ index 94989ed214..b3069801ab 100644
      // Firefox Accounts & sync
      // superseded by catchall for firefox.com, but leaving for tracking
      { "name": "accounts.firefox.com", "include_subdomains": true,
-@@ -165,7 +165,7 @@
+@@ -156,7 +156,7 @@
      // Catch-all for everything hosted under telemetry.mozilla.org
      // MUST remain in test mode in order to receive telemetry on broken pins
      { "name": "telemetry.mozilla.org", "include_subdomains": true,

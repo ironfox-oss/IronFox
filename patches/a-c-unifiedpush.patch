@@ -1,17 +1,17 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 16b631eb0c..7ba978b9cb 100644
+index 447a52b8a4..9a68e43831 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -108,6 +108,8 @@ sentry = "8.14.0"
+@@ -109,6 +109,8 @@ sentry = "8.17.0"
  commons-exec = "1.3"
  tomlj = "1.1.0"
  
-+unifiedpush = "3.0.7"
++unifiedpush = "3.0.10"
 +
  [libraries]
  
  kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-@@ -240,6 +242,7 @@ thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref
+@@ -242,6 +244,7 @@ thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref
  thirdparty-zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
  thirdparty-disklrucache = { group = "com.jakewharton", name = "disklrucache", version.ref = "disklrucache" }
  thirdparty-androidsvg = { group = "com.caverock", name = "androidsvg-aar", version.ref = "androidsvg" }
@@ -20,7 +20,7 @@ index 16b631eb0c..7ba978b9cb 100644
  desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
  firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebase-messaging" }
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 489c138b0d..a25f7ca7bc 100644
+index d4a38d73fc..1235587fee 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
 @@ -602,6 +602,7 @@ projects:
@@ -31,7 +31,7 @@ index 489c138b0d..a25f7ca7bc 100644
    components:feature-addons:
      description: A feature that provides for managing add-ons.
      path: components/feature/addons
-@@ -2413,3 +2414,13 @@ projects:
+@@ -2416,3 +2417,13 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons
@@ -40,11 +40,11 @@ index 489c138b0d..a25f7ca7bc 100644
 +    path: components/feature/unifiedpush
 +    publish: true
 +    upstream_dependencies:
-+      - components:concept-base
-+      - components:concept-push
-+      - components:support-base
-+      - components:support-test
-+      - components:tooling-lint
++    - components:concept-base
++    - components:concept-push
++    - components:support-base
++    - components:support-test
++    - components:tooling-lint
 diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt
 new file mode 100644
 index 000000000000..85e18ea0d9f0

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index a88ff8d3ac..5110c0706f 100644
+index b07cadf1e6..33496717f2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -338,7 +338,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -336,7 +336,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                          // we can prevent with this.
                          components.core.topSitesStorage.getTopSites(
                              totalSites = components.settings.topSitesMaxLimit,

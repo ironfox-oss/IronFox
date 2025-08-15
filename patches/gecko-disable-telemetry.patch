@@ -27,7 +27,7 @@ index 34e06ce332..906db3732c 100644
      'url-classifier',
      'webrtc',
 diff --git a/toolkit/components/telemetry/core/Telemetry.cpp b/toolkit/components/telemetry/core/Telemetry.cpp
-index c07273a7b7..1e5e495a90 100644
+index 511e3eb3a6..f1b82b8463 100644
 --- a/toolkit/components/telemetry/core/Telemetry.cpp
 +++ b/toolkit/components/telemetry/core/Telemetry.cpp
 @@ -914,7 +914,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
@@ -40,7 +40,7 @@ index c07273a7b7..1e5e495a90 100644
  #endif
  #ifdef MOZ_BACKGROUNDTASKS
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index 83fcfac2d4..82a852c15c 100644
+index 46d1cb5ed7..a569524eef 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
 @@ -37,9 +37,9 @@ toolkit.jar:

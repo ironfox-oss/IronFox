@@ -11,10 +11,10 @@ index 0620fba71e..f6eae18675 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 5bcd9c730b..27bc3c0912 100644
+index 029784efad..08c92a5ff4 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -653,6 +653,8 @@ dependencies {
+@@ -655,6 +655,8 @@ dependencies {
      implementation project(':components:lib-dataprotect')
      testImplementation project(':components:support-test-fakes')
  
@@ -24,7 +24,7 @@ index 5bcd9c730b..27bc3c0912 100644
      debugImplementation libs.androidx.compose.ui.tooling
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index a88ff8d3ac..f391c627d0 100644
+index b07cadf1e6..1008db7bd3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -38,7 +38,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
@@ -36,7 +36,7 @@ index a88ff8d3ac..f391c627d0 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -501,7 +501,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -489,7 +489,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -46,17 +46,17 @@ index a88ff8d3ac..f391c627d0 100644
              WebPushEngineIntegration(components.core.engine, it).start()
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 028742f2b3..952f655b6f 100644
+index 68190994b3..2b59856daf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-@@ -225,8 +225,8 @@ class BackgroundServices(
+@@ -226,8 +226,8 @@ class BackgroundServices(
          accountManager.register(AccountManagerReadyObserver(accountManagerAvailableQueue))
  
          // Enable push if it's configured.
 -        push.feature?.let { autoPushFeature ->
 -            FxaPushSupportFeature(context, accountManager, autoPushFeature, crashReporter)
 +        push.feature?.let { pushFeature ->
-+            FxaPushSupportFeature(context, accountManager, pushFeature, crashReporter)
++            FxaPushSupportFeature(context, accountManager, pushFeature)
                  .initialize()
          }
  

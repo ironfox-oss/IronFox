@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index abc5eb1d3c..13ed7d155d 100644
+index 20edb92c74..523ea7545e 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1503,6 +1503,114 @@ class GeckoEngine(
+@@ -1525,6 +1525,114 @@ class GeckoEngine(
          override var bannedPorts: String
              get() = runtime.settings.bannedPorts
              set(value) { runtime.settings.setBannedPorts(value) }
@@ -117,7 +117,7 @@ index abc5eb1d3c..13ed7d155d 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1549,6 +1657,29 @@ class GeckoEngine(
+@@ -1571,6 +1679,29 @@ class GeckoEngine(
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts

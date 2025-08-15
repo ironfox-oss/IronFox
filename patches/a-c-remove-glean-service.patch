@@ -1,35 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 489c138b0d..f539e8a005 100644
+index d4a38d73fc..d3548204e8 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1775,7 +1775,7 @@ projects:
-     - components:lib-publicsuffixlist
-     - components:lib-state
-     - components:service-digitalassetlinks
--    - components:service-glean
-+#    - components:service-glean
-     - components:service-location
-     - components:service-nimbus
-     - components:service-sync-logins
-@@ -1857,7 +1857,7 @@ projects:
-     - components:lib-crash
-     - components:lib-fetch-httpurlconnection
-     - components:lib-publicsuffixlist
--    - components:service-glean
-+#    - components:service-glean
-     - components:support-base
-     - components:support-ktx
-     - components:support-utils
-@@ -1913,7 +1913,7 @@ projects:
-     - components:lib-publicsuffixlist
-     - components:lib-state
-     - components:samples-glean-library
--    - components:service-glean
-+#    - components:service-glean
-     - components:service-nimbus
-     - components:support-appservices
-     - components:support-base
-@@ -2037,22 +2037,22 @@ projects:
+@@ -2040,22 +2040,22 @@ projects:
      - components:support-test-libstate
      - components:support-utils
      - components:tooling-lint
@@ -49,7 +22,7 @@ index 489c138b0d..f539e8a005 100644
 -    - components:support-test
 -    - components:support-utils
 -    - components:tooling-lint
-+# components:service-glean:
++#  components:service-glean:
 +#    description: A client-side telemetry SDK for collecting metrics and sending them
 +#      to the Mozilla telemetry service
 +#    path: components/service/glean

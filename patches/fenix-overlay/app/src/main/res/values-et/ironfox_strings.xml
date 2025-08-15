@@ -48,5 +48,4 @@
     <string name="preference_website_appearance_title">Veebisaidi eelistatud välimus</string>
     <string name="preference_print_enabled">Kasuta printimisvõimalusi</string>
     <string name="preferences_debug_settings_unifiedpush">Kasuta UnifiedPushi</string>
-    <string name="preference_toolbar_pref_disabled_explanation">Kui vahekaartide riba on kuvatud, siis aadressiriba peab asuma ülevalpool.</string>
 </resources>

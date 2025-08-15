@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index a88ff8d3ac..f57c3d9145 100644
+index b07cadf1e6..ae5c410e2d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -367,7 +367,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -365,7 +365,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                          // new search suggestions. The worker requires us to have called
                          // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
                          // scheduling these tasks. When disabled we stop the periodic work.
@@ -11,7 +11,7 @@ index a88ff8d3ac..f57c3d9145 100644
                              components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
                          } else {
                              components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
-@@ -470,7 +470,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -458,7 +458,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          queueStorageMaintenance()
          queueNimbusFetchInForeground()
          queueDownloadWallpapers()
@@ -20,70 +20,70 @@ index a88ff8d3ac..f57c3d9145 100644
              queueSuggestIngest()
          }
          queueCollectProcessExitInfo()
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
-index baadbd7873..87a4d45b15 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/AwesomeBarView.kt
-@@ -110,7 +110,7 @@ class AwesomeBarView(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
+index b3e7086b89..ba7fbb3c7e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
+@@ -81,7 +81,7 @@ class SearchSuggestionsProvidersBuilder(
                  components.core.icons,
                  engineForSpeculativeConnects,
                  showEditSuggestion = false,
--                suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
-+//                suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
+-                suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++//                suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
              )
  
          defaultCombinedHistoryProvider =
-@@ -122,7 +122,7 @@ class AwesomeBarView(
+@@ -93,7 +93,7 @@ class SearchSuggestionsProvidersBuilder(
                  engine = engineForSpeculativeConnects,
                  maxNumberOfSuggestions = METADATA_SUGGESTION_LIMIT,
                  showEditSuggestion = false,
--                suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
-+//                suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
+-                suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++//                suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
              )
  
-         val searchBitmap = getDrawable(activity, R.drawable.ic_search)!!.apply {
-@@ -419,7 +419,7 @@ class AwesomeBarView(
+         val searchBitmap = suggestionIconProvider.getSearchIconBitmap()
+@@ -319,7 +319,7 @@ class SearchSuggestionsProvidersBuilder(
                      engine = engineForSpeculativeConnects,
                      maxNumberOfSuggestions = METADATA_SUGGESTION_LIMIT,
                      showEditSuggestion = false,
--                    suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
-+//                    suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
+-                    suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++//                    suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
                      resultsUriFilter = filter::shouldIncludeUri,
                  )
              } else {
-@@ -434,7 +434,7 @@ class AwesomeBarView(
+@@ -334,7 +334,7 @@ class SearchSuggestionsProvidersBuilder(
                      engine = engineForSpeculativeConnects,
                      maxNumberOfSuggestions = METADATA_SUGGESTION_LIMIT,
                      showEditSuggestion = false,
--                    suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
-+//                    suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
+-                    suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++//                    suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
                      resultsUriFilter = filter::shouldIncludeUri,
                  )
              } else {
-@@ -556,7 +556,7 @@ class AwesomeBarView(
-                 getDrawable(activity, R.drawable.ic_search_results_device_mobile),
-                 getDrawable(activity, R.drawable.ic_search_results_device_tablet),
+@@ -446,7 +446,7 @@ class SearchSuggestionsProvidersBuilder(
+                 suggestionIconProvider.getMobileIconDrawable(),
+                 suggestionIconProvider.getTabletIconDrawable(),
              ),
--            suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
-+//            suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
+-            suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++//            suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
              resultsUrlFilter = filter?.let { it::shouldIncludeUrl },
          )
      }
-@@ -579,7 +579,7 @@ class AwesomeBarView(
+@@ -468,7 +468,7 @@ class SearchSuggestionsProvidersBuilder(
              components.core.icons,
-             getDrawable(activity, R.drawable.ic_search_results_tab),
-             excludeSelectedSession = !fromHomeFragment,
--            suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
-+//            suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
+             suggestionIconProvider.getLocalTabIconDrawable(),
+             excludeSelectedSession = !includeSelectedTab,
+-            suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++//            suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
+             switchToTabDescription = suggestionsStringsProvider.getSwitchToTabDescriptionString(),
              resultsUriFilter = filter?.let { it::shouldIncludeUri },
          )
-     }
-@@ -602,7 +602,7 @@ class AwesomeBarView(
-             indicatorIcon = getDrawable(activity, R.drawable.ic_search_results_bookmarks),
+@@ -492,7 +492,7 @@ class SearchSuggestionsProvidersBuilder(
+             indicatorIcon = suggestionIconProvider.getBookmarkIconDrawable(),
              engine = engineForSpeculativeConnects,
              showEditSuggestion = false,
--            suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
-+//            suggestionsHeader = activity.getString(R.string.firefox_suggest_header),
+-            suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++//            suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
              resultsUriFilter = filter?.let { it::shouldIncludeUri },
          )
      }
