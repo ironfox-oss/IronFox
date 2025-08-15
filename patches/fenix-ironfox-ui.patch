@@ -24,10 +24,10 @@ index e7e19273f9..aed5661545 100644
                  ) {
                      printPageItem
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-index e27a4e82d7..f03148725b 100644
+index dcf9477c22..c656ec7b02 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-@@ -210,10 +210,10 @@ class HomeMenu(
+@@ -206,10 +206,10 @@ class HomeMenu(
              bookmarksItem,
              historyItem,
              downloadsItem,

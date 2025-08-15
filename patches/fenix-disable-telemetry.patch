@@ -1,3 +1,16 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index a79dcad0f3..f03f4d5e28 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -191,7 +191,7 @@ class Components(private val context: Context) {
+         AddonManager(core.store, core.engine, addonsProvider, addonUpdater)
+     }
+ 
+-    val analytics by lazyMonitored { Analytics(context, performance.visualCompletenessQueue.queue) }
++    val analytics by lazyMonitored { Analytics(context) }
+     val nimbus by lazyMonitored { NimbusComponents(context) }
+     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
+     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index fb213552b5..e76667b3ac 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
@@ -93,7 +106,7 @@ index fb213552b5..e76667b3ac 100644
      /**
       * Shortcut component for managing shortcuts on the device home screen.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
-index d218b89663..ab7a56b089 100644
+index 7761594c15..84b5367802 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/GleanHelper.kt
 @@ -4,7 +4,7 @@
@@ -146,8 +159,8 @@ index d218b89663..ab7a56b089 100644
 +//    Glean.registerPings(Pings)
  
      // Set the metric configuration from Nimbus.
--    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().metricsEnabled.toString())
-+/*    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().metricsEnabled.toString())
+-    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().gleanMetricConfiguration.toJSONObject().toString())
++/*    Glean.applyServerKnobsConfig(FxNimbus.features.glean.value().gleanMetricConfiguration.toJSONObject().toString())
  
      Glean.initialize(
          applicationContext = applicationContext,
@@ -212,33 +225,11 @@ index ea4ff1e0dd..1a63eba455 100644
 +        return false
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
-index 9d54f66a65..ee9cc8e139 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
-@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
- import mozilla.components.support.utils.ext.getPackageInfoCompat
- import org.mozilla.fenix.android.DefaultActivityLifecycleCallbacks
- import org.mozilla.fenix.ext.settings
--import org.mozilla.fenix.nimbus.FxNimbus
-+//import org.mozilla.fenix.nimbus.FxNimbus
- import org.mozilla.fenix.utils.Settings
- import java.text.SimpleDateFormat
- import java.util.Calendar
-@@ -275,7 +275,7 @@ internal class DefaultMetricsStorage(
-          */
-         fun shouldSendGenerally(context: Context): Boolean {
-             return context.settings().adjustCampaignId.isNotEmpty() &&
--                FxNimbus.features.growthData.value().enabled
-+                false
-         }
- 
-         fun getInstalledTime(context: Context): Long = context.packageManager
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index a88ff8d3ac..0578a2299a 100644
+index b07cadf1e6..f11e465e31 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -85,7 +85,7 @@ import org.mozilla.fenix.GleanMetrics.TopSites
+@@ -84,7 +84,7 @@ import org.mozilla.fenix.GleanMetrics.SearchDefaultEngine
  import org.mozilla.fenix.components.Components
  import org.mozilla.fenix.components.Core
  import org.mozilla.fenix.components.appstate.AppAction
@@ -247,7 +238,7 @@ index a88ff8d3ac..0578a2299a 100644
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
  import org.mozilla.fenix.experiments.maybeFetchExperiments
-@@ -186,7 +186,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -184,7 +184,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          // We delay the Glean initialization until, we have user consent (After onboarding).
          // If onboarding is disabled (when in local builds), continue to initialize Glean.
          if (components.fenixOnboarding.userHasBeenOnboarded() || !FeatureFlags.onboardingFeatureEnabled) {
@@ -256,7 +247,7 @@ index a88ff8d3ac..0578a2299a 100644
          }
  
          // We avoid blocking the main thread on startup by setting startup metrics on the background thread.
-@@ -222,7 +222,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -220,7 +220,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                  components.core.engine.warmUp()
              }
  
@@ -266,39 +257,23 @@ index a88ff8d3ac..0578a2299a 100644
              // Attention: Do not invoke any code from a-s in this scope.
              val megazordSetup = finishSetupMegazord()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
-index c1b54d7f27..122a865c84 100644
+index 229569e513..ab102a0474 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
-@@ -16,7 +16,7 @@ import org.mozilla.fenix.compose.snackbar.SnackbarState
- import org.mozilla.fenix.ext.components
- import org.mozilla.fenix.ext.getRootView
- import org.mozilla.fenix.ext.navigateWithBreadcrumb
--import org.mozilla.fenix.ext.settings
-+//import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.nimbus.NimbusBranchesAction
- import org.mozilla.fenix.nimbus.NimbusBranchesFragment
- import org.mozilla.fenix.nimbus.NimbusBranchesFragmentDirections
-@@ -42,12 +42,12 @@ class NimbusBranchesController(
- ) : NimbusBranchesAdapterDelegate {
- 
+@@ -35,7 +35,7 @@ class NimbusBranchesController(
      override fun onBranchItemClicked(branch: Branch) {
--        val telemetryEnabled = context.settings().isTelemetryEnabled
--        val experimentsEnabled = context.settings().isExperimentationEnabled
-+//        val telemetryEnabled = context.settings().isTelemetryEnabled
-+//        val experimentsEnabled = context.settings().isExperimentationEnabled
- 
          updateOptInState(branch)
  
--        if (!telemetryEnabled && !experimentsEnabled) {
+-        if (!isTelemetryEnabled() && !isExperimentationEnabled()) {
 +        if (false) {
-             context.getRootView()?.let { v ->
-                 Snackbar.make(
-                     snackBarParentView = v,
+             notifyUserToEnableExperiments()
+         }
+     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index e5ab956ac3..c4c45334dd 100644
+index 4263c2af62..d6d225f8e3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -29,12 +29,12 @@ import mozilla.components.service.nimbus.messaging.use
+@@ -30,11 +30,11 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.utils.BrowsersCache
  import org.mozilla.fenix.FenixApplication
@@ -306,14 +281,13 @@ index e5ab956ac3..c4c45334dd 100644
 +//import org.mozilla.fenix.GleanMetrics.Pings
  import org.mozilla.fenix.HomeActivity
  import org.mozilla.fenix.R
- import org.mozilla.fenix.browser.tabstrip.isTabStripEnabled
  import org.mozilla.fenix.components.accounts.FenixFxAEntryPoint
 -import org.mozilla.fenix.components.initializeGlean
 +//import org.mozilla.fenix.components.initializeGlean
  import org.mozilla.fenix.components.lazyStore
  import org.mozilla.fenix.components.startMetricsIfEnabled
  import org.mozilla.fenix.compose.LinkTextState
-@@ -320,18 +320,18 @@ class OnboardingFragment : Fragment() {
+@@ -340,18 +340,18 @@ class OnboardingFragment : Fragment() {
          requireComponents.fenixOnboarding.finish()
  
          val settings = requireContext().settings()
@@ -417,7 +391,7 @@ index 3fa564af49..24677b0d0c 100644
      var isExperimentationEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..70256ee809 100644
+index 5058f40c0b..a7b6291fde 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 @@ -141,10 +141,10 @@
@@ -425,7 +399,7 @@ index 4c6b14bf87..70256ee809 100644
              android:title="@string/preferences_notifications" />
  
 -        <androidx.preference.Preference
-+<!--        <androidx.preference.Preference
++        <!-- <androidx.preference.Preference
              android:key="@string/pref_key_data_choices"
              app:iconSpaceReserved="false"
 -            android:title="@string/preferences_data_collection" />

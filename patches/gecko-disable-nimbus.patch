@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-index 1f4d51c643..a2507eb8d1 100644
+index 266f2a2e1f..f40df2edc0 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 +++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 @@ -30,13 +30,13 @@ const CRASHREPORTER_ENABLED =
@@ -19,7 +19,7 @@ index 1f4d51c643..a2507eb8d1 100644
    lazy,
    "COLLECTION_ID",
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-index 7861ceddf7..b51d523215 100644
+index d2af5454d3..45f94697aa 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 +++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 @@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
@@ -31,7 +31,7 @@ index 7861ceddf7..b51d523215 100644
  
  export const UnenrollmentCause = {
    fromCheckRecipeResult(result) {
-@@ -146,7 +146,7 @@ export class ExperimentManager {
+@@ -165,7 +165,7 @@ export class ExperimentManager {
          return new Date();
        },
      };
@@ -40,7 +40,7 @@ index 7861ceddf7..b51d523215 100644
        enumerable: true,
        get: async () => {
          await this.store.ready();
-@@ -196,7 +196,7 @@ export class ExperimentManager {
+@@ -215,7 +215,7 @@ export class ExperimentManager {
            return acc;
          }, {});
        },
@@ -50,10 +50,10 @@ index 7861ceddf7..b51d523215 100644
    }
  
 diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-index ebb933e6fa..b1eea8bc5e 100644
+index fd4eec2688..9976ddbffb 100644
 --- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 +++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-@@ -37,7 +37,7 @@ XPCOMUtils.defineLazyServiceGetter(
+@@ -38,7 +38,7 @@ XPCOMUtils.defineLazyServiceGetter(
  );
  
  const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
@@ -62,7 +62,7 @@ index ebb933e6fa..b1eea8bc5e 100644
  const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
    "nimbus.telemetry.targetingContextEnabled";
  
-@@ -49,13 +49,13 @@ const NIMBUS_DEBUG_PREF = "nimbus.debug";
+@@ -50,13 +50,13 @@ const NIMBUS_DEBUG_PREF = "nimbus.debug";
  const NIMBUS_VALIDATION_PREF = "nimbus.validation.enabled";
  const NIMBUS_APPID_PREF = "nimbus.appId";
  
@@ -78,13 +78,13 @@ index ebb933e6fa..b1eea8bc5e 100644
 -  Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
 +  false;
  
+ const SECURE_FEATURE_IDS = new Set(["prefFlips", "newtabTrainhopAddon"]);
  const RS_COLLECTION_OPTIONS = {
-   [EXPERIMENTS_COLLECTION]: {
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index e09ea87de8..aedc380a5c 100644
+index 14b57fcca5..b95e2e4bfe 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -4591,8 +4591,8 @@ AMRemoteSettings = {
+@@ -4648,8 +4648,8 @@ AMRemoteSettings = {
     */
    RS_ENTRIES_MAP: {
      installTriggerDeprecation: [

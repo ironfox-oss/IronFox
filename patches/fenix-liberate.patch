@@ -16,7 +16,7 @@ index 0620fba71e..f8aa5b62bf 100644
      - components:service-digitalassetlinks
      - components:service-firefox-accounts
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 5bcd9c730b..c00691f4d3 100644
+index 029784efad..563893fa2f 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -557,7 +557,7 @@ dependencies {
@@ -26,9 +26,9 @@ index 5bcd9c730b..c00691f4d3 100644
 -    implementation libs.thirdparty.sentry
 +//    implementation libs.thirdparty.sentry
  
-     implementation project(':components:compose-awesomebar')
-     implementation project(':components:compose-base')
-@@ -647,8 +647,8 @@ dependencies {
+     implementation ComponentsDependencies.mozilla_appservices_syncmanager
+ 
+@@ -649,8 +649,8 @@ dependencies {
      implementation project(':components:ui-tabcounter')
  
      implementation project(':components:lib-crash')
@@ -39,7 +39,7 @@ index 5bcd9c730b..c00691f4d3 100644
      implementation project(':components:lib-state')
      implementation project(':components:lib-dataprotect')
      testImplementation project(':components:support-test-fakes')
-@@ -708,15 +708,15 @@ dependencies {
+@@ -709,15 +709,15 @@ dependencies {
      implementation libs.protobuf.javalite
      implementation libs.google.material
  
@@ -192,7 +192,7 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index e47c31743f..c143dd89d2 100644
+index 600faec5bd..9336a74889 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -222,6 +222,23 @@ index e47c31743f..c143dd89d2 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
+@@ -771,14 +771,14 @@
+ 
+         <!-- For adjust pre-installs -->
+         <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
+-        <receiver
++        <!-- <receiver
+             android:name="com.adjust.sdk.AdjustPreinstallReferrerReceiver"
+             android:exported="true"
+             tools:ignore="ExportedReceiver">
+             <intent-filter>
+                 <action android:name="com.attribution.SYSTEM_INSTALLER_REFERRER" />
+             </intent-filter>
+-        </receiver>
++        </receiver>-->
+     </application>
+ 
+ </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 index e1c3ed4d04..fc44972eff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
@@ -594,10 +611,10 @@ index e13ebe821f..4322aad38e 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 774d43efab..c24169a71b 100644
+index 3fa564af49..b4d9ae3831 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1907,7 +1907,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1981,7 +1981,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
@@ -607,15 +624,15 @@ index 774d43efab..c24169a71b 100644
  
      var shouldUseComposableToolbar by lazyFeatureFlagPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..9fc35fc6a8 100644
+index 5058f40c0b..0c0a575f53 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -207,10 +207,10 @@
+@@ -206,10 +206,10 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
 -        <androidx.preference.Preference
-+<!--        <androidx.preference.Preference
++        <!-- <androidx.preference.Preference
              android:key="@string/pref_key_rate"
              app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />

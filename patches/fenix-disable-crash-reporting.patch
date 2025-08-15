@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index a88ff8d3ac..a1ed1502ff 100644
+index b07cadf1e6..f4c1d221cb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -514,10 +514,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -502,10 +502,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
  
      private fun setupCrashReporting() {
@@ -16,10 +16,10 @@ index a88ff8d3ac..a1ed1502ff 100644
  
      protected open fun initializeNimbus() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index f04adf8312..e1eade2657 100644
+index 986150b124..9aac8a8977 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -4,30 +4,30 @@
+@@ -4,31 +4,31 @@
  
  package org.mozilla.fenix.components
  
@@ -35,9 +35,10 @@ index f04adf8312..e1eade2657 100644
  import mozilla.components.lib.crash.service.CrashReporterService
 -import mozilla.components.lib.crash.service.GleanCrashReporterService
 -import mozilla.components.lib.crash.service.MozillaSocorroService
--import mozilla.components.support.ktx.android.content.isMainProcess
 +//import mozilla.components.lib.crash.service.GleanCrashReporterService
 +//import mozilla.components.lib.crash.service.MozillaSocorroService
+ import mozilla.components.lib.crash.store.CrashReportOption
+-import mozilla.components.support.ktx.android.content.isMainProcess
 +//import mozilla.components.support.ktx.android.content.isMainProcess
  import mozilla.components.support.utils.BrowsersCache
 -import mozilla.components.support.utils.RunWhenReadyQueue
@@ -62,8 +63,8 @@ index f04adf8312..e1eade2657 100644
  import org.mozilla.fenix.components.metrics.MetricController
  import org.mozilla.fenix.components.metrics.MetricsStorage
  import org.mozilla.fenix.crashes.CrashFactCollector
-@@ -35,27 +35,27 @@ import org.mozilla.fenix.crashes.ReleaseRuntimeTagProvider
- import org.mozilla.fenix.ext.components
+@@ -36,27 +36,27 @@ import org.mozilla.fenix.crashes.ReleaseRuntimeTagProvider
+ import org.mozilla.fenix.crashes.crashReportOption
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.perf.lazyMonitored
 -import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
@@ -97,7 +98,7 @@ index f04adf8312..e1eade2657 100644
                  ReleaseChannel.Release -> false
                  else -> true
              }
-@@ -70,21 +70,21 @@ class Analytics(
+@@ -71,21 +71,21 @@ class Analytics(
                  sendEventForNativeCrashes = false, // Do not send native crashes to Sentry
                  sendCaughtExceptions = shouldSendCaughtExceptions,
                  sentryProjectUrl = getSentryProjectUrl(),
@@ -123,16 +124,16 @@ index f04adf8312..e1eade2657 100644
              context,
              appName = "Fenix",
              version = MOZ_APP_VERSION,
-@@ -93,7 +93,7 @@ class Analytics(
+@@ -94,7 +94,7 @@ class Analytics(
              releaseChannel = MOZ_UPDATE_CHANNEL,
              distributionId = distributionId,
          )
 -        services.add(socorroService)
-+        services.add(socorroService))*/
++        services.add(socorroService)*/
  
          val intent = Intent(context, HomeActivity::class.java).apply {
              flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-@@ -114,19 +114,19 @@ class Analytics(
+@@ -115,19 +115,19 @@ class Analytics(
              context = context,
              services = services,
              telemetryServices = listOf(
@@ -153,9 +154,9 @@ index f04adf8312..e1eade2657 100644
 -            enabled = true,
 +            enabled = false,
              nonFatalCrashIntent = pendingIntent,
-             useLegacyReporting = !context.settings().crashReportAlwaysSend &&
-                 !context.settings().useNewCrashReporterDialog,
-@@ -149,14 +149,14 @@ class Analytics(
+             useLegacyReporting =
+                 context.settings().crashReportOption() != CrashReportOption.Auto &&
+@@ -151,14 +151,14 @@ class Analytics(
      val metrics: MetricController by lazyMonitored {
          MetricController.create(
              listOf(
@@ -172,7 +173,7 @@ index f04adf8312..e1eade2657 100644
              ),
              isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
              isMarketingDataTelemetryEnabled = {
-@@ -168,7 +168,7 @@ class Analytics(
+@@ -170,7 +170,7 @@ class Analytics(
      }
  }
  

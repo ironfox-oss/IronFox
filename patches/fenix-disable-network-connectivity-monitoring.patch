@@ -37,7 +37,7 @@ index 5f5ceb60c0..b11f2165b7 100644
                  text = getString(R.string.preference_option_phone_feature_blocked)
                  setOnClickListener {
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index e47c31743f..7ec4cef9ae 100644
+index 600faec5bd..24b582a0ed 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -7,7 +7,7 @@

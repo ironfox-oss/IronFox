@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..90833e35cd 100644
+index 03d80ed014..014a63fa58 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -751,7 +751,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -772,7 +772,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
      @VisibleForTesting
      internal fun setLinkSharingPreference() {
          with(requirePreference<Preference>(R.string.pref_key_link_sharing)) {

@@ -1,5 +1,5 @@
 diff --git a/security/moz.build b/security/moz.build
-index e692bc32f5..f664e29ca5 100644
+index d2bd01526d..170d83df2a 100644
 --- a/security/moz.build
 +++ b/security/moz.build
 @@ -93,7 +93,7 @@ gyp_vars["nss_dist_obj_dir"] = "$PRODUCT_DIR/dist/bin"
