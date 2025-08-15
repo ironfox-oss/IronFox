@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 489c138b0d..ad9f3b49f0 100644
+index d4a38d73fc..e117490af7 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1632,20 +1632,20 @@ projects:
+@@ -1635,20 +1635,20 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint
@@ -37,7 +37,7 @@ index 489c138b0d..ad9f3b49f0 100644
    components:lib-dataprotect:
      description: A component using AndroidKeyStore to protect user data.
      path: components/lib/dataprotect
-@@ -1692,17 +1692,17 @@ projects:
+@@ -1695,17 +1695,17 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
