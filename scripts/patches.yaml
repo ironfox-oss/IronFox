@@ -135,7 +135,7 @@ patches:
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
-  - file: "gecko-remove-abouttelemetery.patch"
+  - file: "gecko-remove-abouttelemetry.patch"
     name: "Remove `about:telemetry`"
     description: "Removes the internal `about:telemetry` page."
     reason: "To improve UX."
