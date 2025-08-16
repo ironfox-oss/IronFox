@@ -1,16 +1,3 @@
-diff --git a/toolkit/components/extensions/NativeManifests.sys.mjs b/toolkit/components/extensions/NativeManifests.sys.mjs
-index 59313e821f..f20a4d209d 100644
---- a/toolkit/components/extensions/NativeManifests.sys.mjs
-+++ b/toolkit/components/extensions/NativeManifests.sys.mjs
-@@ -36,7 +36,7 @@ export var NativeManifests = {
-       let platform = AppConstants.platform;
-       if (platform == "win") {
-         this._lookup = this._winLookup;
--      } else if (platform == "macosx" || platform == "linux") {
-+      } else if (platform == "macosx" || platform == "linux" || platform == "android") {
-         let dirs = [
-           Services.dirsvc.get("XREUserNativeManifests", Ci.nsIFile).path,
-           Services.dirsvc.get("XRESysNativeManifests", Ci.nsIFile).path,
 diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
 index 61eb0fb48e..ecdd2bae9a 100644
 --- a/toolkit/components/extensions/parent/ext-storage.js
