@@ -13,6 +13,18 @@ index be8a66d479..f842cab839 100644
          positiveButton.setOnClickListener {
              onPositiveButtonClicked?.invoke(
                  addon,
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index 029784efad..98b9370c33 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -671,6 +671,7 @@ dependencies {
+     implementation libs.androidx.compose.ui
+     implementation libs.androidx.compose.ui.tooling.preview
+ 
++    implementation libs.androidx.compose.material
+     implementation libs.androidx.compose.material3
+     implementation libs.androidx.compose.material3.adaptive
+     implementation libs.androidx.compose.material3.adaptivelayout
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
 index eb51cfe835..b233fd9291 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
@@ -147,10 +159,10 @@ index effc671c02..ac7cbafb7d 100644
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..683785ac46
+index 0000000000..2ecb8e245e
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
-@@ -0,0 +1,501 @@
+@@ -0,0 +1,502 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import androidx.activity.compose.BackHandler
@@ -179,16 +191,16 @@ index 0000000000..683785ac46
 +import androidx.compose.foundation.rememberScrollState
 +import androidx.compose.foundation.selection.selectable
 +import androidx.compose.foundation.verticalScroll
++import androidx.compose.material.ExperimentalMaterialApi
++import androidx.compose.material.ExposedDropdownMenuBox
++import androidx.compose.material.ExposedDropdownMenuDefaults
++import androidx.compose.material.MaterialTheme
++import androidx.compose.material.OutlinedTextField
++import androidx.compose.material.TextFieldDefaults
 +import androidx.compose.material3.DropdownMenuItem
-+import androidx.compose.material3.ExperimentalMaterial3Api
-+import androidx.compose.material3.ExposedDropdownMenuBox
-+import androidx.compose.material3.ExposedDropdownMenuDefaults
-+import androidx.compose.material3.MaterialTheme
-+import androidx.compose.material3.OutlinedTextField
 +import androidx.compose.material3.RadioButton
 +import androidx.compose.material3.RadioButtonDefaults
 +import androidx.compose.material3.Text
-+import androidx.compose.material3.TextFieldDefaults
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
 +import androidx.compose.runtime.mutableStateOf
@@ -525,7 +537,7 @@ index 0000000000..683785ac46
 +}
 +
 +@Suppress("UnusedReceiverParameter")
-+@OptIn(ExperimentalMaterial3Api::class)
++@OptIn(ExperimentalMaterialApi::class)
 +@Composable
 +private fun ColumnScope.IronFoxPreferenceDoHProviderSelection(
 +    state: DohSettingsState,
@@ -588,17 +600,18 @@ index 0000000000..683785ac46
 +            ) {
 +                state.providers.forEach { provider ->
 +                    DropdownMenuItem(
++                        text = {
++                            Text(
++                                text = providerName(provider),
++                                style = FirefoxTheme.typography.body1,
++                                color = MaterialTheme.colors.onSurface,
++                            )
++                        },
 +                        onClick = {
 +                            setProvider(provider, provider is Provider.Custom)
 +                            expanded = false
 +                        },
-+                    ) {
-+                        Text(
-+                            text = providerName(provider),
-+                            style = FirefoxTheme.typography.body1,
-+                            color = MaterialTheme.colors.onSurface,
-+                        )
-+                    }
++                    )
 +                }
 +            }
 +        }
