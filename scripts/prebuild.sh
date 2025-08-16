@@ -164,8 +164,12 @@ sed -i -e 's|showLiveDownloads = .*|showLiveDownloads = true|g' app/src/*/java/o
 # Disable "custom review pre-prompts"
 sed -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
-# Allow users to select a custom app icon
-sed -i -e 's|alternativeAppIconFeatureEnabled = .*|alternativeAppIconFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+# Disable the ability for users to select a custom app icon
+## We currently don't add any custom icons to choose from, so no point exposing/cluttering the UI
+sed -i -e 's|alternativeAppIconFeatureEnabled = .*|alternativeAppIconFeatureEnabled = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Ensure onboarding is always enabled
+sed -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure certain preferences are configured at GeckoProvider.kt
 ## These should be unnecessary (since we take back control of the related Gecko preferences and set them directly), but it doesn't hurt to set these here either
@@ -527,6 +531,20 @@ sed -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/
 
 # Nuke undesired Mozilla endpoints
 source "$rootdir/scripts/noop_mozilla_endpoints.sh"
+
+# Ensure certain settings are configured at Fenix Core.kt
+## These should be unnecessary (since we generally either configure them with UI settings or take back control of the related Gecko preferences from GeckoProvider.kt and set them directly), but it doesn't hurt to set these here either
+## For reference, none of these are exposed in the UI
+sed -i -e 's|certificateTransparencyMode = .*|certificateTransparencyMode = 2,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # security.pki.certificate_transparency.mode
+sed -i -e 's|dohAutoselectEnabled = .*|dohAutoselectEnabled = false,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.android_doh.autoselect_enabled
+sed -i -e 's|emailTrackerBlockingPrivateBrowsing = .*|emailTrackerBlockingPrivateBrowsing = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # privacy.trackingprotection.emailtracking.pbmode.enabled
+sed -i -e 's|fdlibmMathEnabled = .*|fdlibmMathEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # javascript.options.use_fdlibm_for_sin_cos_tan
+sed -i -e 's|fetchPriorityEnabled = .*|fetchPriorityEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.fetchpriority.enabled
+sed -i -e 's|globalPrivacyControlEnabled = .*|globalPrivacyControlEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # privacy.globalprivacycontrol.enabled
+sed -i -e 's|parallelMarkingEnabled = .*|parallelMarkingEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # javascript.options.mem.gc_parallel_marking
+sed -i -e 's|postQuantumKeyExchangeEnabled = .*|postQuantumKeyExchangeEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.http.http3.enable_kyber + security.tls.enable_kyber
+sed -i -e 's|userCharacteristicPingCurrentVersion = .*|userCharacteristicPingCurrentVersion = 0,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # toolkit.telemetry.user_characteristics_ping.current_version
+sed -i -e 's|webContentIsolationStrategy = WebContentIsolationStrategy..*|webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_EVERYTHING,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # fission.webContentIsolationStrategy
 
 # Take back control of preferences
 ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...
