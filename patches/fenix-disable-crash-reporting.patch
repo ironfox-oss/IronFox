@@ -182,6 +182,26 @@ index 986150b124..9aac8a8977 100644
  
  private fun getSentryProjectUrl(): String? {
      val baseUrl = "https://sentry.io/organizations/mozilla/issues"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+index a754afa5a4..48ea595728 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+@@ -72,13 +72,13 @@ object GeckoProvider {
+             ),
+         )
+ 
+-        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
++/*        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
+             dispatcher = { crashIDs ->
+                 context.components.appStore.dispatch(
+                     AppAction.CrashActionWrapper(CrashAction.CheckDeferred(crashIDs.toList())),
+                 )
+             },
+-        )
++        )*/
+ 
+         return geckoRuntime
+     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..0f9bb0a905 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
