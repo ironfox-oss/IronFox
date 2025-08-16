@@ -382,7 +382,7 @@ rm -vf samples/crash/build.gradle
 rm -vf samples/glean/build.gradle
 
 # Prevent unsolicited favicon fetching
-sed -i -e 's|request.copy(resources = request.resources + resource)|request|' mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
+sed -i -e 's|request.copy(resources = request.resources + resource)|request|' components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
 
 # Apply a-c overlay
 apply_overlay "$patches/a-c-overlay/"
