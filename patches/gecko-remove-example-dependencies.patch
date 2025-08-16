@@ -32,16 +32,3 @@ index 866f9455d2..77def5f19b 100644
      ]
      return tasks
  
-diff --git a/mobile/android/shared-settings.gradle b/mobile/android/shared-settings.gradle
-index a6efbedbd2..dfbc3da6fc 100644
---- a/mobile/android/shared-settings.gradle
-+++ b/mobile/android/shared-settings.gradle
-@@ -117,7 +117,7 @@ def buildconfig = yaml.load(buildConfigFile.newInputStream())
- buildconfig.projects.each { project ->
-     // If we're building A-C, set up all projects, otherwise exclude samples e.g., if we're building Fenix or Focus.
-     // The samples are not relevant for the Fenix and Focus builds.
--    if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples")) {
-+    if (!project.key.startsWith("samples")) {
-         setupProject(project.key, project.value.path, project.value.description)
-     }
- }

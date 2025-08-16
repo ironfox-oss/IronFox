@@ -1,65 +1,3 @@
-diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 0620fba71e..f8aa5b62bf 100644
---- a/mobile/android/fenix/.buildconfig.yml
-+++ b/mobile/android/fenix/.buildconfig.yml
-@@ -62,10 +62,10 @@ projects:
-     - components:feature-webcompat-reporter
-     - components:feature-webnotifications
-     - components:lib-crash
--    - components:lib-crash-sentry
-+#    - components:lib-crash-sentry
-     - components:lib-dataprotect
-     - components:lib-publicsuffixlist
--    - components:lib-push-firebase
-+#    - components:lib-push-firebase
-     - components:lib-state
-     - components:service-digitalassetlinks
-     - components:service-firefox-accounts
-diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 029784efad..563893fa2f 100644
---- a/mobile/android/fenix/app/build.gradle
-+++ b/mobile/android/fenix/app/build.gradle
-@@ -557,7 +557,7 @@ dependencies {
-     testImplementation libs.testing.coroutines
-     implementation libs.accompanist.drawablepainter
- 
--    implementation libs.thirdparty.sentry
-+//    implementation libs.thirdparty.sentry
- 
-     implementation ComponentsDependencies.mozilla_appservices_syncmanager
- 
-@@ -649,8 +649,8 @@ dependencies {
-     implementation project(':components:ui-tabcounter')
- 
-     implementation project(':components:lib-crash')
--    implementation project(':components:lib-crash-sentry')
--    implementation project(':components:lib-push-firebase')
-+//    implementation project(':components:lib-crash-sentry')
-+//    implementation project(':components:lib-push-firebase')
-     implementation project(':components:lib-state')
-     implementation project(':components:lib-dataprotect')
-     testImplementation project(':components:support-test-fakes')
-@@ -709,15 +709,15 @@ dependencies {
-     implementation libs.protobuf.javalite
-     implementation libs.google.material
- 
--    implementation(libs.adjust)
--    implementation(libs.installreferrer)
-+//    implementation(libs.adjust)
-+//    implementation(libs.installreferrer)
- 
-     // Required for the Google Advertising ID
--    implementation libs.play.services.ads.id
-+//    implementation libs.play.services.ads.id
- 
-     // Required for in-app reviews
--    implementation libs.play.review
--    implementation libs.play.review.ktx
-+//    implementation libs.play.review
-+    implementation 'org.microg.gms:play-services-tasks:v0.0.0.250932'
- 
-     androidTestImplementation(libs.androidx.espresso.contrib) {
-         exclude module: 'protobuf-lite'
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
 index 982ef996de..4002614795 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
@@ -192,18 +130,9 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 600faec5bd..76e39d11c1 100644
+index 600faec5bd..ff22a251d1 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -52,7 +52,7 @@
- 
-     <!-- Needed to get distribution information from partners.
-     This is NOT required for the adjust plugin. -->
--    <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
-+    <!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->
- 
-     <application
-         android:name=".FenixApplication"
 @@ -740,7 +740,7 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
