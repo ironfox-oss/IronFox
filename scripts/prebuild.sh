@@ -151,6 +151,7 @@ sed -i -e 's|SYNC_ADDRESSES_FEATURE = .*|SYNC_ADDRESSES_FEATURE = true|g' app/sr
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 sed -i -e 's|.crashHandler|// .crashHandler|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 sed -i -e 's|import mozilla.components.lib.crash.handler.CrashHandlerService|// import mozilla.components.lib.crash.handler.CrashHandlerService|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+sed -i -e 's|import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|// import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Disable telemetry
 sed -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
@@ -166,9 +167,13 @@ sed -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = fa
 # Allow users to select a custom app icon
 sed -i -e 's|alternativeAppIconFeatureEnabled = .*|alternativeAppIconFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
-# Ensure we enable the about:config
-# Should be unnecessary since we enforce the 'general.aboutConfig.enable' pref, but doesn't hurt to set anyways...
-sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+# Ensure certain preferences are configured at GeckoProvider.kt
+## These should be unnecessary (since we take back control of the related Gecko preferences and set them directly), but it doesn't hurt to set these here either
+sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # general.aboutConfig.enable
+sed -i -e 's/crashPullNeverShowAgain(.*)/crashPullNeverShowAgain(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # browser.crashReports.requestedNeverShowAgain
+sed -i -e 's/disableShip(.*)/disableShip(false)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # fission.disableSessionHistoryInParent
+sed -i -e 's/extensionsWebAPIEnabled(.*)/extensionsWebAPIEnabled(false)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # extensions.webapi.enabled
+sed -i -e 's/fissionEnabled(.*)/fissionEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # fission.autostart
 
 # No-op AMO collections/recommendations
 sed -i -e 's|"AMO_COLLECTION_NAME", "\\".*\\""|"AMO_COLLECTION_NAME", "\\"\\""|g' app/build.gradle
@@ -536,6 +541,7 @@ sed -i \
     -e 's|"network.cookie.cookieBehavior"|"z99.ignore.integer"|' \
     -e 's|"network.cookie.cookieBehavior.pbmode"|"z99.ignore.integer"|' \
     -e 's|"privacy.annotate_channels.strict_list.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.bounceTrackingProtection.mode"|"z99.ignore.integer"|' \
     -e 's|"privacy.purge_trackers.enabled"|"z99.ignore.boolean"|' \
     -e 's|"privacy.query_stripping.allow_list"|"z99.ignore.string"|' \
     -e 's|"privacy.query_stripping.enabled"|"z99.ignore.boolean"|' \
