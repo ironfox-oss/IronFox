@@ -557,6 +557,7 @@ sed -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/andr
 sed -i -e 's/MOZILLA_PRODUCT_ID = ".*"/MOZILLA_PRODUCT_ID = ""/' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
 sed -i 's|{eeb82917-e434-4870-8148-5c03d4caa81b}||g' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
 sed -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
+sed -i -e 's|import org.mozilla.gecko.crashhelper.CrashHelper|// import org.mozilla.gecko.crashhelper.CrashHelper|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 sed -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 sed -i 's|crash-reports-ondemand||g' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 
@@ -585,12 +586,6 @@ sed -i 's|search-telemetry-v2||g' mobile/android/fenix/app/src/*/java/org/mozill
 # No-op telemetry (A-C)
 sed -i -e 's/REMOTE_PROD_ENDPOINT_URL = ".*"/REMOTE_PROD_ENDPOINT_URL = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
 sed -i -e 's/REMOTE_ENDPOINT_BUCKET_NAME = ".*"/REMOTE_ENDPOINT_BUCKET_NAME = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
-
-# No-op telemetry (Fenix)
-sed -i -e 's|Analytics(context, performance.visualCompletenessQueue.queue) }|Analytics(context) }|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-sed -i -e 's|import org.mozilla.fenix.components.initializeGlean|// import org.mozilla.fenix.components.initializeGlean|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-sed -i -e 's|private val activationPing|// private val activationPing|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-sed -i '/^\s*initializeGlean(/s/^/\/\/ /' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 
 # No-op telemetry (Gecko)
 sed -i -e '/enable_internal_pings:/s/true/false/' toolkit/components/glean/src/init/mod.rs

@@ -19,3 +19,28 @@ index ac6e718f3c..85d5bc0d87 100644
      </application>
  
  </manifest>
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
+index 3eaf228e93..0825f8e49d 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
+@@ -423,7 +423,7 @@ public final class GeckoRuntime implements Parcelable {
+   }
+ 
+   private int[] startCrashHelper() {
+-    final Context context = GeckoAppShell.getApplicationContext();
++/*    final Context context = GeckoAppShell.getApplicationContext();
+     final CrashHelper.Pipes pipes = CrashHelper.createCrashHelperPipes(context);
+ 
+     if (pipes == null) {
+@@ -444,9 +444,9 @@ public final class GeckoRuntime implements Parcelable {
+           Context.BIND_AUTO_CREATE);
+     } catch (final ClassNotFoundException e) {
+       Log.w(LOGTAG, "Couldn't find the crash helper class");
+-    }
++    }*/
+ 
+-    return new int[] {pipes.mBreakpadClient.detachFd(), pipes.mClient.detachFd()};
++    return new int[] {-1, -1};
+   }
+ 
+   /* package */ boolean init(
