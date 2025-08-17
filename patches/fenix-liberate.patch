@@ -325,10 +325,10 @@ index e1c3ed4d04..fc44972eff 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-index 638eb2e626..297123561f 100644
+index 638eb2e626..f48f766842 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-@@ -5,12 +5,12 @@
+@@ -5,15 +5,15 @@
  package org.mozilla.fenix.components.metrics
  
  import android.content.Context
@@ -344,8 +344,13 @@ index 638eb2e626..297123561f 100644
 +//import mozilla.components.support.base.log.logger.Logger
 +//import org.mozilla.fenix.ext.settings
  
- const val GCLID_PREFIX = "gclid="
- const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
+-const val GCLID_PREFIX = "gclid="
+-const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
++//const val GCLID_PREFIX = "gclid="
++//const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
+ 
+ /**
+  * A service to determine if marketing onboarding is needed. This will need to be started before
 @@ -22,67 +22,67 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
   * This should be only used when user has not gone through the onboarding flow.
   */
