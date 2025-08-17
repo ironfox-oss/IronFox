@@ -1059,6 +1059,53 @@ index 0000000000..9ad59a31e4
 +    }
 +
 +}
+diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+new file mode 100644
+index 0000000000..422132a996
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+@@ -0,0 +1,41 @@
++/* Hi, I'm a stub. ;) */
++
++package mozilla.components.lib.crash.sentry
++
++import android.content.Context
++import mozilla.components.concept.base.crash.Breadcrumb as MozillaBreadcrumb
++import mozilla.components.lib.crash.Crash
++import mozilla.components.lib.crash.service.CrashReporterService
++
++class SentryService(
++    private val applicationContext: Context,
++    private val dsn: String,
++    private val tags: Map<String, String> = emptyMap(),
++    private val environment: String? = null,
++    private val sendEventForNativeCrashes: Boolean = false,
++    private val sentryProjectUrl: String? = null,
++    private val sendCaughtExceptions: Boolean = false,
++) : CrashReporterService {
++
++    override val id: String = ""
++    override val name: String = ""
++
++    override fun createCrashReportUrl(identifier: String): String? = null
++
++    override fun report(crash: Crash.UncaughtExceptionCrash): String? {
++        return null
++    }
++
++    override fun report(crash: Crash.NativeCodeCrash): String? {
++        return null
++    }
++
++    override fun report(throwable: Throwable, breadcrumbs: ArrayList<MozillaBreadcrumb>): String? {
++        return null
++    }
++
++    @Synchronized
++    fun initIfNeeded() {
++        return
++    }
++}
 diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 new file mode 100644
 index 0000000000..b50a6f03a2

@@ -150,10 +150,10 @@ index ea4ff1e0dd..72870b7d29 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 4263c2af62..d6d225f8e3 100644
+index 4263c2af62..1cf042b311 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -30,11 +30,11 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+@@ -30,7 +30,7 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.utils.BrowsersCache
  import org.mozilla.fenix.FenixApplication
@@ -162,25 +162,8 @@ index 4263c2af62..d6d225f8e3 100644
  import org.mozilla.fenix.HomeActivity
  import org.mozilla.fenix.R
  import org.mozilla.fenix.components.accounts.FenixFxAEntryPoint
--import org.mozilla.fenix.components.initializeGlean
-+//import org.mozilla.fenix.components.initializeGlean
- import org.mozilla.fenix.components.lazyStore
- import org.mozilla.fenix.components.startMetricsIfEnabled
- import org.mozilla.fenix.compose.LinkTextState
-@@ -340,18 +340,18 @@ class OnboardingFragment : Fragment() {
-         requireComponents.fenixOnboarding.finish()
- 
-         val settings = requireContext().settings()
--        viewLifecycleOwner.lifecycleScope.launch {
-+/*        viewLifecycleOwner.lifecycleScope.launch {
-             initializeGlean(
-                 requireContext().applicationContext,
-                 logger,
-                 settings.isTelemetryEnabled,
-                 requireComponents.core.client,
-             )
--        }
-+        }*/
+@@ -350,8 +350,8 @@ class OnboardingFragment : Fragment() {
+         }
  
          if (!settings.isTelemetryEnabled) {
 -            Pings.onboardingOptOut.setEnabled(true)
