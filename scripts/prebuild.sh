@@ -38,7 +38,7 @@ function apply_overlay() {
     source_dir="$1"
     find "$source_dir" -type f| while read -r src; do
         target="${src#"$source_dir"}"
-        mkdir -p "$(dirname "$target")"
+        mkdir -vp "$(dirname "$target")"
         cp -vrf "$src" "$target"
     done
 }
@@ -380,6 +380,7 @@ rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
 rm -vf samples/browser/build.gradle
 rm -vf samples/crash/build.gradle
 rm -vf samples/glean/build.gradle
+rm -vf samples/glean/samples-glean-library/build.gradle
 
 # Prevent unsolicited favicon fetching
 sed -i -e 's|request.copy(resources = request.resources + resource)|request|' components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
@@ -489,8 +490,8 @@ sed -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_ST
 
 # Disable network connectivity status monitoring (GeckoView)
 ## (Also removes the `NETWORK_ACCESS_STATE` permission)
-sed -i -e 's|GeckoNetworkManager.|// GeckoNetworkManager.|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 sed -i -e 's|import org.mozilla.gecko.GeckoNetworkManager|// import org.mozilla.gecko.GeckoNetworkManager|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
+sed -i -e 's|GeckoNetworkManager.|// GeckoNetworkManager.|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 sed -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/geckoview/src/main/AndroidManifest.xml
 
 # Disable Normandy (Experimentation)
@@ -505,8 +506,9 @@ sed -i -e 's|FxNimbus.features.suggestShippedDomains.value().enabled|false|' mob
 # Disable SSLKEYLOGGING
 ## https://bugzilla.mozilla.org/show_bug.cgi?id=1183318
 ## https://bugzilla.mozilla.org/show_bug.cgi?id=1915224
-sed -i -e 's|["enable_sslkeylogfile"] = .*|["enable_sslkeylogfile"] = 0|g' security/moz.build
 sed -i -e 's|NSS_ALLOW_SSLKEYLOGFILE ?= .*|NSS_ALLOW_SSLKEYLOGFILE ?= 0|g' security/nss/lib/ssl/Makefile
+echo '' >>security/moz.build
+echo 'gyp_vars["enable_sslkeylogfile"] = 0' >>security/moz.build
 
 # Disable telemetry
 sed -i -e 's|"MOZ_SERVICES_HEALTHREPORT", .*)|"MOZ_SERVICES_HEALTHREPORT", False)|g' mobile/android/moz.configure
@@ -539,7 +541,7 @@ echo ']' >>services/settings/dumps/main/moz.build
 
 # Increase add-on update frequency
 ## Increases the rate at which Firefox checks for add-on updates, from every 12 hours to hourly
-sed -i -e 's|DefaultAddonUpdater(context, Frequency(.*,|DefaultAddonUpdater(context, Frequency(1,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|DefaultAddonUpdater(context, Frequency(.*, TimeUnit|DefaultAddonUpdater(context, Frequency(1, TimeUnit|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 
 # No-op AMO collections/recommendations
 sed -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
@@ -580,19 +582,32 @@ sed -i -e 's/POCKET_ENDPOINT_URL = ".*"/POCKET_ENDPOINT_URL = ""/' mobile/androi
 # No-op search telemetry
 sed -i 's|search-telemetry-v2||g' mobile/android/fenix/app/src/*/java/org/mozilla/fenix/components/Core.kt
 
-# No-op telemetry
-sed -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/android/android-components/components/browser/engine-gecko/build.gradle
+# No-op telemetry (A-C)
 sed -i -e 's/REMOTE_PROD_ENDPOINT_URL = ".*"/REMOTE_PROD_ENDPOINT_URL = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
 sed -i -e 's/REMOTE_ENDPOINT_BUCKET_NAME = ".*"/REMOTE_ENDPOINT_BUCKET_NAME = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
+
+# No-op telemetry (Fenix)
+sed -i -e 's|Analytics(context, performance.visualCompletenessQueue.queue) }|Analytics(context) }|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|import org.mozilla.fenix.components.initializeGlean|// import org.mozilla.fenix.components.initializeGlean|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|private val activationPing|// private val activationPing|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i '/^\s*initializeGlean(/s/^/\/\/ /' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+
+# No-op telemetry (Gecko)
 sed -i -e '/enable_internal_pings:/s/true/false/' toolkit/components/glean/src/init/mod.rs
 sed -i -e '/upload_enabled =/s/true/false/' toolkit/components/glean/src/init/mod.rs
 sed -i -e '/use_core_mps:/s/true/false/' toolkit/components/glean/src/init/mod.rs
-sed -i 's|localhost||g' toolkit/components/telemetry/pingsender/pingsender.cpp
 sed -i 's|localhost||g' toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
+sed -i 's|localhost||g' toolkit/components/telemetry/pingsender/pingsender.cpp
 sed -i -e 's/usageDeletionRequest.setEnabled(.*)/usageDeletionRequest.setEnabled(false)/' toolkit/components/telemetry/app/UsageReporting.sys.mjs
 sed -i -e 's|useTelemetry = .*|useTelemetry = false;|g' toolkit/components/telemetry/core/Telemetry.cpp
-echo '' >>toolkit/library/rust/gkrust-features.mozbuild
-echo 'gkrust_features += ["glean_disable_upload"]' >>toolkit/library/rust/gkrust-features.mozbuild
+sed -i '/# This must remain last./i gkrust_features += ["glean_disable_upload"]\n' toolkit/library/rust/gkrust-features.mozbuild
+
+# No-op telemetry (GeckoView)
+sed -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/android/android-components/components/browser/engine-gecko/build.gradle
+
+## Do not prompt users to enable telemetry/studies when enrolling in experiments
+### Currently unused
+sed -i -e 's|notifyUserToEnableExperiments()|// notifyUserToEnableExperiments()|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
 
 # Prevent DoH canary requests
 sed -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
