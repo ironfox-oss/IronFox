@@ -928,9 +928,10 @@
     "3pfonts": {
         "content": "filters",
         "group": "privacy",
-        "title": "🔍 Block third party fonts",
-        "contentURL": "https://raw.githubusercontent.com/yokoffing/filterlists/main/block_third_party_fonts.txt",
-        "supportURL": "https://github.com/yokoffing/filterlists/issues"
+        "title": "✍️ BadBlock - Fonts",
+        "contentURL": "https://gitlab.com/celenityy/BadBlock/-/raw/pages/abp/fonts.txt",
+        "supportURL": "https://badblock.celenity.dev/issues",
+        "instructionURL": "https://badblock.celenity.dev"
     },
     "badblockclick": {
         "content": "filters",
