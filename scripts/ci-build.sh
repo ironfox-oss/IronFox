@@ -34,7 +34,7 @@ esac
 if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     # Set uBO assets to production variant
     # shellcheck disable=2183
-    IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/IronFox/-/raw/${PRODUCTION_BRANCH}/uBlock/assets.${PRODUCTION_BRANCH}.json"
+    IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.${PRODUCTION_BRANCH}.json"
     export IRONFOX_UBO_ASSETS_URL
 
     echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
