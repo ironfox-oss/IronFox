@@ -38,7 +38,7 @@ fi
 if [[ -z ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
     # Default to development assets
     # shellcheck disable=SC2059
-    IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/IronFox/-/raw/dev/uBlock/assets.dev.json"
+    IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.dev.json"
     export IRONFOX_UBO_ASSETS_URL
 
     echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
