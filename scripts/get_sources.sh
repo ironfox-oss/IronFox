@@ -181,7 +181,6 @@ fi
 # Clone application-services
 echo "Cloning application-services..."
 git clone --branch "$APPSERVICES_BRANCH" --depth=1 https://github.com/mozilla/application-services "$APPSERVICESDIR"
-(cd "$APPSERVICESDIR" && git submodule update --init --depth=1)
 
 # Clone Firefox
 echo "Cloning Firefox..."
