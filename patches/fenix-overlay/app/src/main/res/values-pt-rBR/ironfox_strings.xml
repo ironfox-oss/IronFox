@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools"
-    xmlns:moz="http://mozac.org/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:moz="http://mozac.org/tools">
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english">Solicitar versões em Inglês das páginas para melhor proteção contra fingerprinting</string>
     <!-- Warn users that the browser will restart -->
