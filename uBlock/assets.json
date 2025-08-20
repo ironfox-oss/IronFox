@@ -1,0 +1,7 @@
+{
+    "assets.json": {
+        "content": "internal",
+        "updateAfter": 1,
+        "contentURL": "https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.main.json"
+    }
+}
