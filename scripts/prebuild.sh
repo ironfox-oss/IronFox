@@ -420,27 +420,6 @@ sed -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2")
 
 popd
 
-# No-op Application Services Glean
-
-pushd "${application_services}/components/external/glean"
-
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
-sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
-sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
-sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
-sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = ""/' glean-core/rlb/src/configuration.rs
-sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
-sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
-sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
-
-# Do not build `glean-sample-app`
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
-
-# Apply Glean overlay
-apply_overlay "$patches/glean-overlay/"
-
-popd
-
 # WASI SDK
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
