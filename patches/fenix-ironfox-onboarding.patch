@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-index 02708ca763..38ece16e99 100644
+index be8a66d479..f842cab839 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-@@ -303,6 +303,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
+@@ -295,6 +295,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
              technicalAndInteraction.isChecked = true
          }
  
@@ -147,19 +147,14 @@ index effc671c02..ac7cbafb7d 100644
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..3a509acade
+index 0000000000..f9e1f71a51
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
-@@ -0,0 +1,501 @@
+@@ -0,0 +1,494 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import androidx.activity.compose.BackHandler
 +import androidx.compose.animation.AnimatedContent
-+import androidx.compose.animation.fadeIn
-+import androidx.compose.animation.fadeOut
-+import androidx.compose.animation.slideInHorizontally
-+import androidx.compose.animation.slideOutHorizontally
-+import androidx.compose.animation.togetherWith
 +import androidx.compose.foundation.Image
 +import androidx.compose.foundation.background
 +import androidx.compose.foundation.layout.Arrangement
@@ -179,16 +174,16 @@ index 0000000000..3a509acade
 +import androidx.compose.foundation.rememberScrollState
 +import androidx.compose.foundation.selection.selectable
 +import androidx.compose.foundation.verticalScroll
-+import androidx.compose.material.DropdownMenuItem
-+import androidx.compose.material.ExperimentalMaterialApi
-+import androidx.compose.material.ExposedDropdownMenuBox
-+import androidx.compose.material.ExposedDropdownMenuDefaults
-+import androidx.compose.material.MaterialTheme
-+import androidx.compose.material.OutlinedTextField
-+import androidx.compose.material.RadioButton
-+import androidx.compose.material.RadioButtonDefaults
-+import androidx.compose.material.Text
-+import androidx.compose.material.TextFieldDefaults
++import androidx.compose.material3.DropdownMenuItem
++import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.ExposedDropdownMenuBox
++import androidx.compose.material3.ExposedDropdownMenuDefaults
++import androidx.compose.material3.MaterialTheme
++import androidx.compose.material3.MenuAnchorType
++import androidx.compose.material3.OutlinedTextField
++import androidx.compose.material3.RadioButton
++import androidx.compose.material3.RadioButtonDefaults
++import androidx.compose.material3.Text
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
 +import androidx.compose.runtime.mutableStateOf
@@ -524,8 +519,8 @@ index 0000000000..3a509acade
 +    }
 +}
 +
++@OptIn(ExperimentalMaterial3Api::class)
 +@Suppress("UnusedReceiverParameter")
-+@OptIn(ExperimentalMaterialApi::class)
 +@Composable
 +private fun ColumnScope.IronFoxPreferenceDoHProviderSelection(
 +    state: DohSettingsState,
@@ -565,7 +560,8 @@ index 0000000000..3a509acade
 +            onExpandedChange = { expanded = it },
 +        ) {
 +            OutlinedTextField(
-+                modifier = Modifier.fillMaxWidth(),
++                modifier = Modifier.fillMaxWidth()
++                    .menuAnchor(MenuAnchorType.PrimaryEditable, true),
 +                value = providerName(state.selectedProvider!!),
 +                onValueChange = {},
 +                readOnly = true,
@@ -576,10 +572,6 @@ index 0000000000..3a509acade
 +                    )
 +                },
 +                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-+                colors = TextFieldDefaults.outlinedTextFieldColors(
-+                    backgroundColor = MaterialTheme.colors.surface,
-+                    textColor = MaterialTheme.colors.onSurface,
-+                ),
 +            )
 +
 +            ExposedDropdownMenu(
@@ -588,17 +580,18 @@ index 0000000000..3a509acade
 +            ) {
 +                state.providers.forEach { provider ->
 +                    DropdownMenuItem(
++                        text = {
++                            Text(
++                                text = providerName(provider),
++                                style = FirefoxTheme.typography.body1,
++                                color = MaterialTheme.colorScheme.onSurface,
++                            )
++                        },
 +                        onClick = {
 +                            setProvider(provider, provider is Provider.Custom)
 +                            expanded = false
 +                        },
-+                    ) {
-+                        Text(
-+                            text = providerName(provider),
-+                            style = FirefoxTheme.typography.body1,
-+                            color = MaterialTheme.colors.onSurface,
-+                        )
-+                    }
++                    )
 +                }
 +            }
 +        }
@@ -654,7 +647,7 @@ index 0000000000..3a509acade
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..977b45f5c0
+index 0000000000..688ba9299d
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 @@ -0,0 +1,458 @@
@@ -681,9 +674,9 @@ index 0000000000..977b45f5c0
 +import androidx.compose.foundation.layout.wrapContentHeight
 +import androidx.compose.foundation.rememberScrollState
 +import androidx.compose.foundation.verticalScroll
-+import androidx.compose.material.LinearProgressIndicator
-+import androidx.compose.material.Switch
-+import androidx.compose.material.Text
++import androidx.compose.material3.LinearProgressIndicator
++import androidx.compose.material3.Switch
++import androidx.compose.material3.Text
 +import androidx.compose.runtime.Composable
 +import androidx.compose.runtime.getValue
 +import androidx.compose.runtime.mutableIntStateOf
@@ -1214,7 +1207,7 @@ index 795fcd7b7e..b6fd72c0dd 100644
 +    ifPreferenceOptions = onboardingPageUiData.ifPreferencesData
  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
-index bed8e9959a..d3e50c8636 100644
+index ff09ecbc5d..57751aa3c8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 @@ -6,6 +6,7 @@ package org.mozilla.fenix.onboarding.view
@@ -1256,7 +1249,7 @@ index bed8e9959a..d3e50c8636 100644
   * Model containing data for the terms of service page during onboarding.
   */
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
-index 29ef99bc73..d30ae89e90 100644
+index 6625e28ee5..f8aa6816d7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
 @@ -22,6 +22,7 @@ data class OnboardingPageUiData(
@@ -1281,10 +1274,10 @@ index 29ef99bc73..d30ae89e90 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-index 732a80cb03..baea33e988 100644
+index 0d6edf875f..8e9d7dae4e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-@@ -246,6 +246,12 @@ fun OnboardingScreen(
+@@ -219,6 +219,12 @@ fun OnboardingScreen(
              onMarketingDataContinueClick(allowMarketingDataCollection)
              scrollToNextPageOrDismiss()
          },
@@ -1297,7 +1290,7 @@ index 732a80cb03..baea33e988 100644
          onboardingStore = onboardingStore,
      )
  }
-@@ -293,6 +299,8 @@ private fun OnboardingContent(
+@@ -266,6 +272,8 @@ private fun OnboardingContent(
      onMarketingOptInToggle: (optIn: Boolean) -> Unit,
      onMarketingDataLearnMoreClick: () -> Unit,
      onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
@@ -1306,7 +1299,7 @@ index 732a80cb03..baea33e988 100644
  ) {
      val nestedScrollConnection = remember { DisableForwardSwipeNestedScrollConnection(pagerState) }
  
-@@ -322,6 +330,8 @@ private fun OnboardingContent(
+@@ -297,6 +305,8 @@ private fun OnboardingContent(
                  onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
                  onCustomizeThemeClick = onCustomizeThemeButtonClick,
                  onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
@@ -1315,7 +1308,7 @@ index 732a80cb03..baea33e988 100644
              )
              OnboardingPageForType(
                  type = pageUiState.type,
-@@ -412,6 +422,14 @@ private fun OnboardingPageForType(
+@@ -387,6 +397,14 @@ private fun OnboardingPageForType(
              state,
              termsOfServiceEventHandler,
          )
@@ -1330,7 +1323,7 @@ index 732a80cb03..baea33e988 100644
      }
  }
  
-@@ -461,6 +479,8 @@ private fun OnboardingScreenPreview() {
+@@ -436,6 +454,8 @@ private fun OnboardingScreenPreview() {
              onMarketingDataLearnMoreClick = {},
              onMarketingOptInToggle = {},
              onMarketingDataContinueClick = {},
@@ -1340,7 +1333,7 @@ index 732a80cb03..baea33e988 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-index f290b21561..bbe9d9d8f7 100644
+index 262d763533..aea26e1a2a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
 @@ -441,7 +441,7 @@ private fun buildProviderMenuItems(

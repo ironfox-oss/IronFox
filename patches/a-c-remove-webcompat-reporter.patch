@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 489c138b0d..ecc26e15f8 100644
+index d4a38d73fc..e74791dc0f 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1543,28 +1543,28 @@ projects:
+@@ -1546,28 +1546,28 @@ projects:
      - components:support-webextensions
      - components:tooling-lint
      - components:ui-icons
@@ -53,25 +53,3 @@ index 489c138b0d..ecc26e15f8 100644
    components:feature-webnotifications:
      description: Feature component for Web Notifications.
      path: components/feature/webnotifications
-@@ -1767,7 +1767,7 @@ projects:
-     - components:feature-toolbar
-     - components:feature-top-sites
-     - components:feature-webcompat
--    - components:feature-webcompat-reporter
-+#    - components:feature-webcompat-reporter
-     - components:feature-webnotifications
-     - components:lib-crash
-     - components:lib-dataprotect
-diff --git a/mobile/android/android-components/samples/browser/build.gradle b/mobile/android/android-components/samples/browser/build.gradle
-index 6ad158793d..3d4a033a0e 100644
---- a/mobile/android/android-components/samples/browser/build.gradle
-+++ b/mobile/android/android-components/samples/browser/build.gradle
-@@ -114,7 +114,7 @@ dependencies {
-     implementation project(':components:feature-findinpage')
-     implementation project(':components:feature-sitepermissions')
-     implementation project(':components:feature-webcompat')
--    implementation project(':components:feature-webcompat-reporter')
-+//    implementation project(':components:feature-webcompat-reporter')
-     implementation project(':components:feature-webnotifications')
-     implementation project(':components:feature-addons')
- 

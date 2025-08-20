@@ -11,19 +11,6 @@ index 7b60ad21a4..c2fc8c9b1d 100644
          getNetworkCapabilities(network ?: activeNetwork)?.let {
              it.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
                  it.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-index a24ff6e34e..9e7bda60fa 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-@@ -53,7 +53,7 @@ enum class PhoneFeature(val androidPermissionsList: Array<String>) : Parcelable
-                 AUTOPLAY_AUDIBLE ->
-                     when (settings?.getAutoplayUserSetting() ?: AUTOPLAY_BLOCK_ALL) {
-                         AUTOPLAY_ALLOW_ALL -> R.string.preference_option_autoplay_allowed2
--                        AUTOPLAY_ALLOW_ON_WIFI -> R.string.preference_option_autoplay_allowed_wifi_only2
-+//                        AUTOPLAY_ALLOW_ON_WIFI -> R.string.preference_option_autoplay_allowed_wifi_only2
-                         AUTOPLAY_BLOCK_AUDIBLE -> R.string.preference_option_autoplay_block_audio2
-                         AUTOPLAY_BLOCK_ALL -> R.string.preference_option_autoplay_blocked3
-                         else -> R.string.preference_option_autoplay_blocked3
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
 index 5f5ceb60c0..b11f2165b7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
@@ -36,16 +23,3 @@ index 5f5ceb60c0..b11f2165b7 100644
              } else {
                  text = getString(R.string.preference_option_phone_feature_blocked)
                  setOnClickListener {
-diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index e47c31743f..7ec4cef9ae 100644
---- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
-+++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -7,7 +7,7 @@
-     xmlns:tools="http://schemas.android.com/tools">
- 
-     <uses-permission android:name="android.permission.INTERNET" />
--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-+    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
- 
-     <!-- Allows for storing and retrieving screenshots -->
-     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"

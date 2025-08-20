@@ -43,9 +43,6 @@
     <string name="tor_spoof_english">Solicitar versões em Inglês das páginas para melhor proteção contra fingerprinting</string>
     <string name="tor_spoof_english_summary">Ao ativar, a proteção contra fingerprinting fica mais forte</string>
     <string name="preference_svg_enabled">Ativar Scalable Vector Graphics (SVG)</string>
-    <string name="preference_tab_strip_show">Mostrar barra de guias</string>
-    <string name="preference_toolbar_pref_disabled_explanation">A barra de endereço deve ficar em cima quando a barra de guias está ativada.</string>
-    <string name="preferences_tab_strip">Exibição da barra de guias</string>
     <string name="preferences_debug_settings_unifiedpush">Ativar UnifiedPush</string>
     <string name="preferences_unifiedpush">Usar UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Configuração do UnifiedPush alterada. Fechando a aplicação para aplicar as alterações…</string>

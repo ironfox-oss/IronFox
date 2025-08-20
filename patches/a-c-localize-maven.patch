@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/build.gradle b/mobile/android/android-components/build.gradle
-index 101bb5ba0f..8242623cd1 100644
+index d6dbfd7b52..00eb487204 100644
 --- a/mobile/android/android-components/build.gradle
 +++ b/mobile/android/android-components/build.gradle
 @@ -9,14 +9,9 @@ import static org.gradle.api.tasks.testing.TestResult.ResultType
@@ -302,50 +302,6 @@ index 84ca151cdc..a03568e09c 100644
      }
  
      includeBuild("../dependencies")
-diff --git a/mobile/android/android-components/samples/glean/build.gradle b/mobile/android/android-components/samples/glean/build.gradle
-index 3287dacaaa..e13d0f3a6a 100644
---- a/mobile/android/android-components/samples/glean/build.gradle
-+++ b/mobile/android/android-components/samples/glean/build.gradle
-@@ -4,14 +4,9 @@
- 
- buildscript {
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url = repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- 
-         dependencies {
-             classpath libs.glean.gradle.plugin
-diff --git a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
-index 092aa2f460..62b6083e86 100644
---- a/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
-+++ b/mobile/android/android-components/samples/glean/samples-glean-library/build.gradle
-@@ -4,14 +4,9 @@
- 
- buildscript {
-     repositories {
--        gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--            maven {
--                url = repository
--                if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                    allowInsecureProtocol = true
--                }
--            }
--        }
-+        mavenLocal()
-+        maven { url "https://plugins.gradle.org/m2/" }
-+        google()
- 
-         dependencies {
-             classpath libs.glean.gradle.plugin
 diff --git a/mobile/android/android-components/settings.gradle b/mobile/android/android-components/settings.gradle
 index 19dc9e9ccf..6adb734ad5 100644
 --- a/mobile/android/android-components/settings.gradle

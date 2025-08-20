@@ -238,6 +238,8 @@ publish-release:
   rules:
     - if: $CI_COMMIT_TAG
       when: never
+    - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH && $CI_COMMIT_MESSAGE =~ /\[skip-release\]/
+      when: never
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
   variables:
     <<: *build_variables

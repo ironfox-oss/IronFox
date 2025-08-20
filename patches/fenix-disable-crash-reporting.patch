@@ -1,186 +1,23 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index a88ff8d3ac..a1ed1502ff 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -514,10 +514,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-     }
- 
-     private fun setupCrashReporting() {
--        components
-+/*        components
-             .analytics
-             .crashReporter
--            .install(this)
-+            .install(this)*/
-     }
- 
-     protected open fun initializeNimbus() {
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-index f04adf8312..e1eade2657 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Analytics.kt
-@@ -4,30 +4,30 @@
- 
- package org.mozilla.fenix.components
- 
--import android.app.Application
-+//import android.app.Application
- import android.app.PendingIntent
- import android.content.Context
- import android.content.Intent
- import android.os.Build
- import mozilla.components.lib.crash.CrashReporter
--import mozilla.components.lib.crash.sentry.SentryService
-+//import mozilla.components.lib.crash.sentry.SentryService
- import mozilla.components.lib.crash.service.CrashReporterService
--import mozilla.components.lib.crash.service.GleanCrashReporterService
--import mozilla.components.lib.crash.service.MozillaSocorroService
--import mozilla.components.support.ktx.android.content.isMainProcess
-+//import mozilla.components.lib.crash.service.GleanCrashReporterService
-+//import mozilla.components.lib.crash.service.MozillaSocorroService
-+//import mozilla.components.support.ktx.android.content.isMainProcess
- import mozilla.components.support.utils.BrowsersCache
--import mozilla.components.support.utils.RunWhenReadyQueue
--import org.mozilla.fenix.BuildConfig
-+//import mozilla.components.support.utils.RunWhenReadyQueue
-+//import org.mozilla.fenix.BuildConfig
- import org.mozilla.fenix.Config
- import org.mozilla.fenix.HomeActivity
- import org.mozilla.fenix.R
- import org.mozilla.fenix.ReleaseChannel
--import org.mozilla.fenix.components.metrics.AdjustMetricsService
-+//import org.mozilla.fenix.components.metrics.AdjustMetricsService
- import org.mozilla.fenix.components.metrics.DefaultMetricsStorage
--import org.mozilla.fenix.components.metrics.GleanMetricsService
--import org.mozilla.fenix.components.metrics.GleanProfileIdPreferenceStore
--import org.mozilla.fenix.components.metrics.GleanUsageReportingMetricsService
--import org.mozilla.fenix.components.metrics.InstallReferrerMetricsService
-+//import org.mozilla.fenix.components.metrics.GleanMetricsService
-+//import org.mozilla.fenix.components.metrics.GleanProfileIdPreferenceStore
-+//import org.mozilla.fenix.components.metrics.GleanUsageReportingMetricsService
-+//import org.mozilla.fenix.components.metrics.InstallReferrerMetricsService
- import org.mozilla.fenix.components.metrics.MetricController
- import org.mozilla.fenix.components.metrics.MetricsStorage
- import org.mozilla.fenix.crashes.CrashFactCollector
-@@ -35,27 +35,27 @@ import org.mozilla.fenix.crashes.ReleaseRuntimeTagProvider
- import org.mozilla.fenix.ext.components
- import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.perf.lazyMonitored
--import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
--import org.mozilla.geckoview.BuildConfig.MOZ_APP_VENDOR
--import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
--import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
-+//import org.mozilla.geckoview.BuildConfig.MOZ_APP_BUILDID
-+//import org.mozilla.geckoview.BuildConfig.MOZ_APP_VENDOR
-+//import org.mozilla.geckoview.BuildConfig.MOZ_APP_VERSION
-+//import org.mozilla.geckoview.BuildConfig.MOZ_UPDATE_CHANNEL
- 
- /**
-  * Component group for all functionality related to analytics e.g. crash reporting and telemetry.
-  */
- class Analytics(
-     private val context: Context,
--    private val runWhenReadyQueue: RunWhenReadyQueue,
-+//    private val runWhenReadyQueue: RunWhenReadyQueue,
- ) {
-     val crashReporter: CrashReporter by lazyMonitored {
-         val services = mutableListOf<CrashReporterService>()
-         val distributionId = "Mozilla"
- 
--        if (isSentryEnabled()) {
-+//        if (isSentryEnabled()) {
-             // We treat caught exceptions similar to debug logging.
-             // On the release channel volume of these is too high for our Sentry instances, and
-             // we get most value out of nightly/beta logging anyway.
--            val shouldSendCaughtExceptions = when (Config.channel) {
-+/*            val shouldSendCaughtExceptions = when (Config.channel) {
-                 ReleaseChannel.Release -> false
-                 else -> true
-             }
-@@ -70,21 +70,21 @@ class Analytics(
-                 sendEventForNativeCrashes = false, // Do not send native crashes to Sentry
-                 sendCaughtExceptions = shouldSendCaughtExceptions,
-                 sentryProjectUrl = getSentryProjectUrl(),
--            )
-+            )*/
- 
-             // We only want to initialize Sentry on startup on the main process.
--            if (context.isMainProcess()) {
-+/*            if (context.isMainProcess()) {
-                 runWhenReadyQueue.runIfReadyOrQueue {
-                     sentryService.initIfNeeded()
-                 }
-             }
- 
-             services.add(sentryService)
--        }
-+        }*/
- 
-         // The name "Fenix" here matches the product name on Socorro and is unrelated to the actual app name:
-         // https://bugzilla.mozilla.org/show_bug.cgi?id=1523284
--        val socorroService = MozillaSocorroService(
-+/*        val socorroService = MozillaSocorroService(
-             context,
-             appName = "Fenix",
-             version = MOZ_APP_VERSION,
-@@ -93,7 +93,7 @@ class Analytics(
-             releaseChannel = MOZ_UPDATE_CHANNEL,
-             distributionId = distributionId,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+index a754afa5a4..48ea595728 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+@@ -72,13 +72,13 @@ object GeckoProvider {
+             ),
          )
--        services.add(socorroService)
-+        services.add(socorroService))*/
  
-         val intent = Intent(context, HomeActivity::class.java).apply {
-             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-@@ -114,19 +114,19 @@ class Analytics(
-             context = context,
-             services = services,
-             telemetryServices = listOf(
--                GleanCrashReporterService(
-+/*                GleanCrashReporterService(
-                     context,
-                     appChannel = MOZ_UPDATE_CHANNEL,
-                     appVersion = MOZ_APP_VERSION,
-                     appBuildId = MOZ_APP_BUILDID,
--                ),
-+                ),*/
-             ),
-             shouldPrompt = CrashReporter.Prompt.ALWAYS,
-             promptConfiguration = CrashReporter.PromptConfiguration(
-                 appName = context.getString(R.string.app_name),
-                 organizationName = "Mozilla",
-             ),
--            enabled = true,
-+            enabled = false,
-             nonFatalCrashIntent = pendingIntent,
-             useLegacyReporting = !context.settings().crashReportAlwaysSend &&
-                 !context.settings().useNewCrashReporterDialog,
-@@ -149,14 +149,14 @@ class Analytics(
-     val metrics: MetricController by lazyMonitored {
-         MetricController.create(
-             listOf(
--                GleanMetricsService(context),
-+/*                GleanMetricsService(context),
-                 AdjustMetricsService(
-                     application = context as Application,
-                     storage = metricsStorage,
-                     crashReporter = crashReporter,
-                 ),
-                 InstallReferrerMetricsService(context),
--                GleanUsageReportingMetricsService(gleanProfileIdStore = GleanProfileIdPreferenceStore(context)),
-+                GleanUsageReportingMetricsService(gleanProfileIdStore = GleanProfileIdPreferenceStore(context)),*/
-             ),
-             isDataTelemetryEnabled = { context.settings().isTelemetryEnabled },
-             isMarketingDataTelemetryEnabled = {
-@@ -168,7 +168,7 @@ class Analytics(
+-        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
++/*        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
+             dispatcher = { crashIDs ->
+                 context.components.appStore.dispatch(
+                     AppAction.CrashActionWrapper(CrashAction.CheckDeferred(crashIDs.toList())),
+                 )
+             },
+-        )
++        )*/
+ 
+         return geckoRuntime
      }
- }
- 
--private fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()
-+// private fun isSentryEnabled() = !BuildConfig.SENTRY_TOKEN.isNullOrEmpty()
- 
- private fun getSentryProjectUrl(): String? {
-     val baseUrl = "https://sentry.io/organizations/mozilla/issues"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..0f9bb0a905 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
@@ -201,22 +38,50 @@ index 819b24954e..0f9bb0a905 100644
              "about:addons" -> {
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index 9113dc53a9..b92ecfb0be 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -244,7 +244,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_crash_pull_never_show_again).apply {
+-            isVisible = true
++            isVisible = false
+             isChecked = context.settings().crashPullNeverShowAgain
+             onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 774d43efab..1ecc0c894f 100644
+index 3fa564af49..861f5c38a8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2355,10 +2355,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * A user preference indicating that crash reports should always be automatically sent. This can be updated
-      * through the unsubmitted crash dialog or through data choice preferences.
+@@ -495,10 +495,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+                 true,
+             )
+ 
+-    var crashReportChoice by stringPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
+-        default = CrashReportOption.Ask.toString(),
+-    )
++    var crashReportChoice = CrashReportOption.Never.toString()
++//        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
++//        default = CrashReportOption.Ask.toString(),
++//    )
+ 
+     val isRemoteDebuggingEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
+@@ -776,10 +776,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * Indicates if the user denies to ever see again the Remote Settings crash
+      * pull UI.
       */
--    var crashReportAlwaysSend by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_always_report),
+-    var crashPullNeverShowAgain: Boolean by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),
 -        default = false,
 -    )
-+    var crashReportAlwaysSend = false
-+//        appContext.getPreferenceKey(R.string.pref_key_crash_reporting_always_report),
++    var crashPullNeverShowAgain: Boolean = true
++//        appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),
 +//        default = false,
 +//    )
  
-     /**
-      * Indicates whether or not we should use the new crash reporter dialog.
+     @VisibleForTesting
+     internal fun timeNowInMillis(): Long = System.currentTimeMillis()

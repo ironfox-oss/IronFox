@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools"
-    xmlns:moz="http://mozac.org/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:moz="http://mozac.org/tools">
     <!-- Spoof locale to English -->
     <string name="tor_spoof_english">Solicitar versões em Inglês das páginas para melhor proteção contra fingerprinting</string>
     <!-- Warn users that the browser will restart -->
@@ -38,9 +37,6 @@
     <string name="tor_spoof_english_caption">Melhore sua privacidade mascarando o idioma do seu dispositivo.</string>
     <string name="tor_spoof_english_description">Solicitar versões em Inglês (en-US) das páginas. Isto pode ajudar seu navegador a ficar menos único, o que melhora sua proteção contra técnicas de fingerprinting que identificam usuários baseado nas suas configurações de idioma.</string>
     <string name="preference_svg_enabled">Ativar Scalable Vector Graphics (SVG)</string>
-    <string name="preference_tab_strip_show">Mostrar barra de abas</string>
-    <string name="preference_toolbar_pref_disabled_explanation">A barra de endereço deve ficar em cima quando a barra de abas está ativada.</string>
-    <string name="preferences_tab_strip">Exibição da barra de abas</string>
     <string name="preferences_unifiedpush">Usar UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Configuração do UnifiedPush alterada. Fechando o aplicativo para aplicar as alterações…</string>
     <string name="preference_webgl_enabled">Ativar WebGL</string>

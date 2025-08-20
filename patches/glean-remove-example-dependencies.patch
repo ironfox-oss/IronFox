@@ -1,0 +1,13 @@
+diff --git a/settings.gradle b/settings.gradle
+index 23a74d7..2736fd1 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -38,7 +38,7 @@ def setupProject(name, projectProps) {
+ def yaml = new Yaml()
+ def buildconfig = yaml.load(new File(rootDir, '.buildconfig.yml').newInputStream())
+ buildconfig.projects.each { project ->
+-    setupProject(project.key, project.value)
++    if (!project.key.startsWith("glean-sample")) { setupProject(project.key, project.value) }
+ }
+ 
+ gradle.projectsLoaded { ->

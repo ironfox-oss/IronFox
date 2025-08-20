@@ -1,65 +1,3 @@
-diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 0620fba71e..f8aa5b62bf 100644
---- a/mobile/android/fenix/.buildconfig.yml
-+++ b/mobile/android/fenix/.buildconfig.yml
-@@ -62,10 +62,10 @@ projects:
-     - components:feature-webcompat-reporter
-     - components:feature-webnotifications
-     - components:lib-crash
--    - components:lib-crash-sentry
-+#    - components:lib-crash-sentry
-     - components:lib-dataprotect
-     - components:lib-publicsuffixlist
--    - components:lib-push-firebase
-+#    - components:lib-push-firebase
-     - components:lib-state
-     - components:service-digitalassetlinks
-     - components:service-firefox-accounts
-diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 5bcd9c730b..c00691f4d3 100644
---- a/mobile/android/fenix/app/build.gradle
-+++ b/mobile/android/fenix/app/build.gradle
-@@ -557,7 +557,7 @@ dependencies {
-     testImplementation libs.testing.coroutines
-     implementation libs.accompanist.drawablepainter
- 
--    implementation libs.thirdparty.sentry
-+//    implementation libs.thirdparty.sentry
- 
-     implementation project(':components:compose-awesomebar')
-     implementation project(':components:compose-base')
-@@ -647,8 +647,8 @@ dependencies {
-     implementation project(':components:ui-tabcounter')
- 
-     implementation project(':components:lib-crash')
--    implementation project(':components:lib-crash-sentry')
--    implementation project(':components:lib-push-firebase')
-+//    implementation project(':components:lib-crash-sentry')
-+//    implementation project(':components:lib-push-firebase')
-     implementation project(':components:lib-state')
-     implementation project(':components:lib-dataprotect')
-     testImplementation project(':components:support-test-fakes')
-@@ -708,15 +708,15 @@ dependencies {
-     implementation libs.protobuf.javalite
-     implementation libs.google.material
- 
--    implementation(libs.adjust)
--    implementation(libs.installreferrer)
-+//    implementation(libs.adjust)
-+//    implementation(libs.installreferrer)
- 
-     // Required for the Google Advertising ID
--    implementation libs.play.services.ads.id
-+//    implementation libs.play.services.ads.id
- 
-     // Required for in-app reviews
--    implementation libs.play.review
--    implementation libs.play.review.ktx
-+//    implementation libs.play.review
-+    implementation 'org.microg.gms:play-services-tasks:v0.0.0.250932'
- 
-     androidTestImplementation(libs.androidx.espresso.contrib) {
-         exclude module: 'protobuf-lite'
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
 index 982ef996de..4002614795 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
@@ -192,18 +130,9 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index e47c31743f..c143dd89d2 100644
+index 600faec5bd..ff22a251d1 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -52,7 +52,7 @@
- 
-     <!-- Needed to get distribution information from partners.
-     This is NOT required for the adjust plugin. -->
--    <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
-+    <!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->
- 
-     <application
-         android:name=".FenixApplication"
 @@ -740,7 +740,7 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
@@ -222,6 +151,23 @@ index e47c31743f..c143dd89d2 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
+@@ -771,14 +771,14 @@
+ 
+         <!-- For adjust pre-installs -->
+         <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
+-        <receiver
++        <!-- <receiver
+             android:name="com.adjust.sdk.AdjustPreinstallReferrerReceiver"
+             android:exported="true"
+             tools:ignore="ExportedReceiver">
+             <intent-filter>
+                 <action android:name="com.attribution.SYSTEM_INSTALLER_REFERRER" />
+             </intent-filter>
+-        </receiver>
++        </receiver> -->
+     </application>
+ 
+ </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 index e1c3ed4d04..fc44972eff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
@@ -379,10 +325,10 @@ index e1c3ed4d04..fc44972eff 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-index 638eb2e626..297123561f 100644
+index 638eb2e626..f48f766842 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-@@ -5,12 +5,12 @@
+@@ -5,15 +5,15 @@
  package org.mozilla.fenix.components.metrics
  
  import android.content.Context
@@ -398,8 +344,13 @@ index 638eb2e626..297123561f 100644
 +//import mozilla.components.support.base.log.logger.Logger
 +//import org.mozilla.fenix.ext.settings
  
- const val GCLID_PREFIX = "gclid="
- const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
+-const val GCLID_PREFIX = "gclid="
+-const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
++//const val GCLID_PREFIX = "gclid="
++//const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
+ 
+ /**
+  * A service to determine if marketing onboarding is needed. This will need to be started before
 @@ -22,67 +22,67 @@ const val ADJUST_REFTAG_PREFIX = "adjust_reftag="
   * This should be only used when user has not gone through the onboarding flow.
   */
@@ -594,10 +545,10 @@ index e13ebe821f..4322aad38e 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 774d43efab..c24169a71b 100644
+index 3fa564af49..b4d9ae3831 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1907,7 +1907,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1981,7 +1981,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
@@ -607,15 +558,15 @@ index 774d43efab..c24169a71b 100644
  
      var shouldUseComposableToolbar by lazyFeatureFlagPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..9fc35fc6a8 100644
+index 5058f40c0b..0c0a575f53 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -207,10 +207,10 @@
+@@ -206,10 +206,10 @@
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
          android:layout="@layout/preference_category_no_icon_style">
 -        <androidx.preference.Preference
-+<!--        <androidx.preference.Preference
++        <!-- <androidx.preference.Preference
              android:key="@string/pref_key_rate"
              app:iconSpaceReserved="false"
 -            android:title="@string/preferences_rate" />
@@ -1107,6 +1058,53 @@ index 0000000000..9ad59a31e4
 +        return null;
 +    }
 +
++}
+diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+new file mode 100644
+index 0000000000..422132a996
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
+@@ -0,0 +1,41 @@
++/* Hi, I'm a stub. ;) */
++
++package mozilla.components.lib.crash.sentry
++
++import android.content.Context
++import mozilla.components.concept.base.crash.Breadcrumb as MozillaBreadcrumb
++import mozilla.components.lib.crash.Crash
++import mozilla.components.lib.crash.service.CrashReporterService
++
++class SentryService(
++    private val applicationContext: Context,
++    private val dsn: String,
++    private val tags: Map<String, String> = emptyMap(),
++    private val environment: String? = null,
++    private val sendEventForNativeCrashes: Boolean = false,
++    private val sentryProjectUrl: String? = null,
++    private val sendCaughtExceptions: Boolean = false,
++) : CrashReporterService {
++
++    override val id: String = ""
++    override val name: String = ""
++
++    override fun createCrashReportUrl(identifier: String): String? = null
++
++    override fun report(crash: Crash.UncaughtExceptionCrash): String? {
++        return null
++    }
++
++    override fun report(crash: Crash.NativeCodeCrash): String? {
++        return null
++    }
++
++    override fun report(throwable: Throwable, breadcrumbs: ArrayList<MozillaBreadcrumb>): String? {
++        return null
++    }
++
++    @Synchronized
++    fun initIfNeeded() {
++        return
++    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 new file mode 100644

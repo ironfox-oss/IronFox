@@ -20,7 +20,6 @@
     <string name="preference_cache_ssl_enabled">Kasuta turvaliste lehtede puhul puhverdamist</string>
     <string name="preference_ipv6_enabled">Kasuta IPv6 võrguühendust</string>
     <string name="preference_javascript_enabled">Kasuta JavaScripti</string>
-    <string name="preference_tab_strip_show">Näita vahekaartide riba</string>
     <string name="preferences_unifiedpush">Kasuta UnifiedPushi</string>
     <string name="toast_change_unifiedpush_done">UnifiedPushi seadistust on muudetud. Jõustamiseks käivitan rakenduse uuesti…</string>
     <string name="preference_wasm_enabled">Kasuta WebAssembly-t (WASM)</string>
@@ -49,6 +48,4 @@
     <string name="preference_website_appearance_title">Veebisaidi eelistatud välimus</string>
     <string name="preference_print_enabled">Kasuta printimisvõimalusi</string>
     <string name="preferences_debug_settings_unifiedpush">Kasuta UnifiedPushi</string>
-    <string name="preference_toolbar_pref_disabled_explanation">Kui vahekaartide riba on kuvatud, siis aadressiriba peab asuma ülevalpool.</string>
-    <string name="preferences_tab_strip">Vahekaartide riba kuvamine</string>
 </resources>

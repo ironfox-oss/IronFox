@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
-index 5508b90d04..6d3fd66067 100644
+index 590285305b..3efae229ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
-@@ -309,28 +309,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
+@@ -336,28 +336,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
          val syncEnginesStatus = SyncEnginesStorage(requireContext()).getStatus()
          requirePreference<CheckBoxPreference>(R.string.pref_key_sync_bookmarks).apply {
              isEnabled = syncEnginesStatus.containsKey(SyncEngine.Bookmarks)
@@ -30,12 +30,25 @@ index 5508b90d04..6d3fd66067 100644
 +            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Tabs) { false }
          }
          requirePreference<CheckBoxPreference>(R.string.pref_key_sync_address).apply {
-             isVisible = FeatureFlags.SYNC_ADDRESSES_FEATURE
+             isVisible = settings.isAddressSyncEnabled
              isEnabled = syncEnginesStatus.containsKey(SyncEngine.Addresses)
 -            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Addresses) { true }
 +            isChecked = syncEnginesStatus.getOrElse(SyncEngine.Addresses) { false }
          }
      }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 3fa564af49..b97ef63ca3 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1797,7 +1797,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var isAddressSyncEnabled by featureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_address_sync),
+-        default = FxNimbus.features.addressSync.value().enabled,
++        default = false,
+         featureFlag = isAddressFeatureEnabled(appContext),
+     )
  
 diff --git a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
 index 300331efb5..f1cbf8ea99 100644

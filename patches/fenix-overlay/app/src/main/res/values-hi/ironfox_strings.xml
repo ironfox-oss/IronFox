@@ -43,9 +43,6 @@
     <string name="tor_spoof_english">वेबपेज के अंग्रेजी संस्करण का अनुरोध करें</string>
     <string name="tor_spoof_english_summary">सक्षम होने पर, फिंगरप्रिंटिंग सुरक्षा को मजबूत करता है</string>
     <string name="preference_svg_enabled">स्केलेबल वेक्टर ग्राफ़िक्स (SVG) सक्षम करें</string>
-    <string name="preference_tab_strip_show">टैब बार दिखाएँ</string>
-    <string name="preference_toolbar_pref_disabled_explanation">टैब बार दिखाए जाने पर पता बार शीर्ष पर होना चाहिए।</string>
-    <string name="preferences_tab_strip">टैब बार डिस्प्ले</string>
     <string name="preferences_unifiedpush">UnifiedPush का उपयोग करें</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush सेटिंग संशोधित की गई। परिवर्तन लागू करने के लिए एप्लिकेशन से बाहर निकला जा रहा है…</string>
     <string name="preference_wasm_enabled">वेब असेंबली (WASM) सक्षम करें</string>

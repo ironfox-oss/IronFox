@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 6875486c72..efc10f2c47 100644
+index fb213552b5..a43820d199 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,30 @@ class Core(
+@@ -195,6 +195,30 @@ class Core(
              postQuantumKeyExchangeEnabled = FxNimbus.features.pqcrypto.value().postQuantumKeyExchangeEnabled,
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
@@ -33,7 +33,7 @@ index 6875486c72..efc10f2c47 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -229,6 +253,7 @@ class Core(
+@@ -228,6 +252,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -712,19 +712,19 @@ index 0000000000..98fc8fff31
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 325e5d2141..0a5ac75418 100644
+index 03d80ed014..7c53da22c8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -573,6 +573,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
-         setupHomepagePreference()
-         setupTrackingProtectionPreference()
-         setupDnsOverHttpsPreference(requireContext().settings())
+@@ -592,6 +592,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         setupHomepagePreference(settings)
+         setupTrackingProtectionPreference(settings)
+         setupDnsOverHttpsPreference(settings)
 +        setupIronFoxPreferences()
      }
  
      /**
-@@ -770,6 +771,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
-         }
+@@ -790,6 +791,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
+             }
      }
  
 +    @VisibleForTesting
@@ -744,10 +744,10 @@ index 325e5d2141..0a5ac75418 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 774d43efab..ea6a3b6d63 100644
+index 3fa564af49..bcecd97869 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
+@@ -68,6 +68,7 @@ import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_BLOCK_AUDIBLE
  import org.mozilla.fenix.wallpapers.Wallpaper
  import java.security.InvalidParameterException
  import java.util.UUID
@@ -755,10 +755,10 @@ index 774d43efab..ea6a3b6d63 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2523,4 +2524,151 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         key = appContext.getPreferenceKey(R.string.pref_key_distribution_id),
-         default = "",
-     )
+@@ -2618,4 +2619,146 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
+         return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
+     }
 +
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
@@ -788,11 +788,6 @@ index 774d43efab..ea6a3b6d63 100644
 +    var ipv6Enabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_ipv6_enabled),
 +        default = true,
-+    )
-+
-+    var isTabStripEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_tab_strip_show),
-+        default = false,
 +    )
 +
 +    var javascriptEnabled by booleanPreference(
@@ -908,10 +903,10 @@ index 774d43efab..ea6a3b6d63 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
-index de8568b293..7dc7b7ab37 100644
+index a4fd0897fa..634f9c1b8c 100644
 --- a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 +++ b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
-@@ -647,6 +647,13 @@
+@@ -676,6 +676,13 @@
              app:exitAnim="@anim/slide_out_left"
              app:popEnterAnim="@anim/slide_in_left"
              app:popExitAnim="@anim/slide_out_right" />
@@ -925,7 +920,7 @@ index de8568b293..7dc7b7ab37 100644
          <action
              android:id="@+id/action_settingsFragment_to_trackingProtectionFragment"
              app:destination="@id/trackingProtectionFragment"
-@@ -911,6 +918,10 @@
+@@ -947,6 +954,10 @@
          android:id="@+id/sponsoredStoriesSettings"
          android:name="org.mozilla.fenix.settings.SponsoredStoriesSettingsFragment"
          android:label="@string/preferences_debug_settings_custom_sponsored_stories_parameters" />
@@ -1199,10 +1194,10 @@ index 0000000000..e34ef70e67
 +
 +</androidx.preference.PreferenceScreen>
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 4c6b14bf87..2a59545ed6 100644
+index 5058f40c0b..a040bb1643 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -199,10 +199,22 @@
+@@ -198,10 +198,22 @@
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
