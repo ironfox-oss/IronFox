@@ -251,3 +251,4 @@ publish-release:
         --private-token "$GITLAB_CI_API_TOKEN" \
         create-from-file \
         --file build/release.yml
+
