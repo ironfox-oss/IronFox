@@ -6,7 +6,7 @@
 
 set -eu
 
-git clone --recurse-submodules "https://oauth2:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$FDROID_REPO_PATH.git" fdroid
+git clone --recurse-submodules "https://$IF_CI_USERNAME:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$FDROID_REPO_PATH.git" fdroid
 pushd fdroid || { echo "Unable to pushd into 'fdroid'"; exit 1; };
 mkdir -p "$REPO_DIR_PATH"
 git lfs install
