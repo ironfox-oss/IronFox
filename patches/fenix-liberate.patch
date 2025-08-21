@@ -544,6 +544,77 @@ index e13ebe821f..4322aad38e 100644
      }
  
      /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
+index 8892db30a2..288797595f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
+@@ -82,8 +82,8 @@ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.appstate.AppAction.ContentRecommendationsAction
+ import org.mozilla.fenix.components.appstate.AppAction.MessagingAction
+ import org.mozilla.fenix.components.appstate.AppAction.MessagingAction.MicrosurveyAction
+-import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
+-import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
++//import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
++//import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
+ import org.mozilla.fenix.components.appstate.AppState
+ import org.mozilla.fenix.components.components
+ import org.mozilla.fenix.components.toolbar.BottomToolbarContainerView
+@@ -143,8 +143,8 @@ import org.mozilla.fenix.onboarding.HomeScreenPopupManager
+ import org.mozilla.fenix.onboarding.WidgetPinnedReceiver
+ import org.mozilla.fenix.perf.MarkersFragmentLifecycleCallbacks
+ import org.mozilla.fenix.perf.StartupTimeline
+-import org.mozilla.fenix.reviewprompt.ReviewPromptState
+-import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
++//import org.mozilla.fenix.reviewprompt.ReviewPromptState
++//import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
+ import org.mozilla.fenix.search.SearchDialogFragment
+ import org.mozilla.fenix.search.awesomebar.AwesomeBarComposable
+ import org.mozilla.fenix.search.toolbar.DefaultSearchSelectorController
+@@ -1114,7 +1114,7 @@ class HomeFragment : Fragment() {
+         requireComponents.core.tabCollectionStorage.unregister(collectionStorageObserver)
+ 
+         // Trigger review prompt logic and show the appropriate prompt variation if applicable
+-        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
++//        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
+     }
+ 
+     @VisibleForTesting
+@@ -1316,7 +1316,7 @@ class HomeFragment : Fragment() {
+     }
+ 
+     private fun observeReviewPromptState() {
+-        consumeFlow(requireComponents.appStore) { appStates ->
++/*        consumeFlow(requireComponents.appStore) { appStates ->
+             observeReviewPromptState(
+                 appStates = appStates,
+                 dispatchAction = requireComponents.appStore::dispatch,
+@@ -1330,7 +1330,7 @@ class HomeFragment : Fragment() {
+                     )
+                 },
+             )
+-        }
++        }*/
+     }
+ 
+     @VisibleForTesting
+@@ -1340,7 +1340,7 @@ class HomeFragment : Fragment() {
+         tryShowPlayStorePrompt: suspend () -> Unit,
+         showCustomPrompt: () -> Unit,
+     ) {
+-        appStates
++/*        appStates
+             .map { it.reviewPrompt }
+             .distinctUntilChanged()
+             .collect {
+@@ -1355,7 +1355,7 @@ class HomeFragment : Fragment() {
+                         dispatchAction(ReviewPromptShown)
+                     }
+                 }
+-            }
++            }*/
+     }
+ 
+     companion object {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 3fa564af49..b4d9ae3831 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
