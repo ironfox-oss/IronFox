@@ -34,7 +34,7 @@ sed -i \
 pushd "$META_DIR_PATH" || { echo "Unable to pushd into '$META_DIR_PATH'"; exit 1; }
 
 # Update metadata repository
-git add "$META_FILE_PATH"
+git add "$META_FILE_NAME"
 git commit -m "feat: update for release ${CI_COMMIT_TAG}"
 git push origin "HEAD:$META_REPO_BRANCH"
 
