@@ -72,6 +72,7 @@ update-fdroid-repo:
     - pip install androguard
     - git config --global user.email "$IF_CI_EMAIL"
     - git config --global user.name "$IF_CI_NAME"
+    - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - bash -x scripts/ci-update-fdroid.sh
 
@@ -95,6 +96,7 @@ update-site-repo:
     - pip install pyyaml
     - git config --global user.email "$IF_CI_EMAIL"
     - git config --global user.name "$IF_CI_NAME"
+    - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - bash -x scripts/ci-update-site.sh
 
