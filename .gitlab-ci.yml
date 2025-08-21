@@ -54,6 +54,8 @@ update-fdroid-repo:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
     - if: $CI_COMMIT_TAG
+  tags:
+    - saas-linux-medium-amd64
   variables:
     FDROID_REPO_PATH: ironfox-oss/fdroid
     FDROID_REPO_BRANCH: dev
