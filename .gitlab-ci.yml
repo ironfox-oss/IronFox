@@ -39,6 +39,9 @@ variables: &build_variables
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.cache/gradle"
   CARGO_HOME: "$CI_PROJECT_DIR/.cache/cargo"
   BUNDLETOOL: 1.18.0
+  IF_CI_NAME: "IronFox CI"
+  IF_CI_USERNAME: "ironfox-ci"
+  IF_CI_EMAIL: "ci@ironfoxoss.org"
 
 stages:
   - build_fdroid
@@ -67,8 +70,8 @@ update-fdroid-repo:
   before_script:
     - sudo dnf install -y bash curl git git-lfs jq make python3 python3-pip
     - pip install androguard
-    - git config --global user.email "ci@ironfoxoss.org"
-    - git config --global user.name "IronFox CI"
+    - git config --global user.email "$IF_CI_EMAIL"
+    - git config --global user.name "$IF_CI_NAME"
   script:
     - bash -x scripts/ci-update-fdroid.sh
 
@@ -90,8 +93,8 @@ update-site-repo:
   before_script:
     - sudo dnf install -y bash curl git make python3 python3-pip yq
     - pip install pyyaml
-    - git config --global user.email "ci@ironfoxoss.org"
-    - git config --global user.name "IronFox CI"
+    - git config --global user.email "$IF_CI_EMAIL"
+    - git config --global user.name "$IF_CI_NAME"
   script:
     - bash -x scripts/ci-update-site.sh
 
@@ -253,3 +256,4 @@ publish-release:
         --private-token "$GITLAB_CI_API_TOKEN" \
         create-from-file \
         --file build/release.yml
+

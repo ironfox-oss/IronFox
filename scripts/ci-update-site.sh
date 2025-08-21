@@ -7,7 +7,7 @@ set -eu
 
 source "$(realpath $(dirname "$0"))/versions.sh"
 
-git clone "https://oauth2:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$TARGET_REPO_PATH.git" target-repo
+git clone "https://$IF_CI_USERNAME:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$TARGET_REPO_PATH.git" target-repo
 cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 
 # Generate documentation for patches

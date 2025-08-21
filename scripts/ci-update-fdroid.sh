@@ -6,7 +6,7 @@
 
 set -eu
 
-git clone --recurse-submodules "https://oauth2:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$FDROID_REPO_PATH.git" fdroid
+git clone --recurse-submodules "https://$IF_CI_USERNAME:$GITLAB_CI_PUSH_TOKEN@gitlab.com/$FDROID_REPO_PATH.git" fdroid
 pushd fdroid || { echo "Unable to pushd into 'fdroid'"; exit 1; };
 mkdir -p "$REPO_DIR_PATH"
 git lfs install
@@ -25,7 +25,6 @@ done
 # shellcheck disable=SC2046
 IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py $(ls "$REPO_DIR_PATH"/*.apk))"
 
-local META_FILE_PATH
 META_FILE_PATH="$META_DIR_PATH/$META_FILE_NAME"
 
 sed -i \
@@ -35,7 +34,7 @@ sed -i \
 pushd "$META_DIR_PATH" || { echo "Unable to pushd into '$META_DIR_PATH'"; exit 1; }
 
 # Update metadata repository
-git add "$META_FILE_PATH"
+git add "$META_FILE_NAME"
 git commit -m "feat: update for release ${CI_COMMIT_TAG}"
 git push origin "HEAD:$META_REPO_BRANCH"
 
