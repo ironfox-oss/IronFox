@@ -25,7 +25,6 @@ done
 # shellcheck disable=SC2046
 IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py $(ls "$REPO_DIR_PATH"/*.apk))"
 
-local META_FILE_PATH
 META_FILE_PATH="$META_DIR_PATH/$META_FILE_NAME"
 
 sed -i \
