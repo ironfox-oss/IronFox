@@ -24,6 +24,12 @@ fi
 
 set -euo pipefail
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=macos
+else
+    PLATFORM=linux
+fi
+
 build_type="$1"
 
 if [ "$build_type" != "apk" ] && [ "$build_type" != "bundle" ]; then
@@ -70,18 +76,18 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     popd
 fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ "$PLATFORM" == "macos" ]] || [[ -n ${FDROID_BUILD+x} ]]; then
     # Build WASI SDK
     # shellcheck disable=SC2154
     pushd "$wasi"
 
-    mkdir -p build/install/wasi
+    mkdir -vp build/install/wasi
     touch build/compiler-rt.BUILT # fool the build system
-    make \
+    $MAKE_LIB \
         PREFIX=/wasi \
         build/wasi-libc.BUILT \
         build/libcxx.BUILT \
-        -j"$(nproc)"
+        -j"$($NPROC_LIB)"
     popd
 fi
 
