@@ -20,8 +20,8 @@ if [[ "$PLATFORM" == "darwin" ]]; then
         PLATFORM_ARCHITECTURE=x86-64
     fi
 else
-    export NPROC_LIB="nproc"
     export MAKE_LIB="make"
+    export NPROC_LIB="nproc"
 fi
 
 # Configure Mach
