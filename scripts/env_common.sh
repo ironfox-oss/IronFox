@@ -9,16 +9,18 @@ else
     PLATFORM=linux
 fi
 
-# Set architecture, and set locations for GNU make + nproc
+# Set architecture
+PLATFORM_ARCH=$(uname -m)
+if [[ "$PLATFORM_ARCH" == "arm64" ]]; then
+    PLATFORM_ARCHITECTURE=aarch64
+else
+    PLATFORM_ARCHITECTURE=x86-64
+fi
+
+# Set locations for GNU make + nproc
 if [[ "$PLATFORM" == "darwin" ]]; then
-    PLATFORM_ARCH=$(uname -m)
     export MAKE_LIB="gmake"
     export NPROC_LIB="sysctl -n hw.logicalcpu"
-    if [[ "$PLATFORM_ARCH" == "arm64" ]]; then
-        PLATFORM_ARCHITECTURE=aarch64
-    else
-        PLATFORM_ARCHITECTURE=x86-64
-    fi
 else
     export MAKE_LIB="make"
     export NPROC_LIB="nproc"
