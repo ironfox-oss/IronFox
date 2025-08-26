@@ -360,6 +360,9 @@ sed -i -e 's|api project(":glean-native")|// api project(":glean-native")|g' gle
 sed -i -e 's|gleanNative project|// gleanNative project|g' glean-core/android/build.gradle
 sed -i -e 's|implementation project("path": ":glean-native",|// implementation project("path": ":glean-native",|g' glean-core/android/build.gradle
 
+# Ensure we're building for release
+sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
 
