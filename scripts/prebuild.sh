@@ -209,6 +209,9 @@ sed -i "s|implementation libs.play.review.ktx|implementation 'org.microg.gms:pla
 sed -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
 sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
+# Remove TelemetryMiddleware
+rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
+
 # Let it be IronFox
 sed -i \
     -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
@@ -336,21 +339,24 @@ pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 localize_maven
 
-# Unbreak GeckoView Lite builds
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-unbreak-geckoview-lite.patch"
-
 # No-op Glean
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
 sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
 sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
-sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = ""/' glean-core/rlb/src/configuration.rs
+sed -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g" glean-core/rlb/src/configuration.rs
 sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
 
-# Do not build `glean-sample-app`
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
+# Do not build `glean-native` and `glean-sample-app`
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-native-and-example-dependencies.patch"
+sed -i -e 's|api project(":glean-native")|// api project(":glean-native")|g' glean-core/android/build.gradle
+sed -i -e 's|gleanNative project|// gleanNative project|g' glean-core/android/build.gradle
+sed -i -e 's|implementation project("path": ":glean-native",|// implementation project("path": ":glean-native",|g' glean-core/android/build.gradle
 
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
