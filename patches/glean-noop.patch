@@ -1,16 +1,77 @@
+diff --git a/glean-core/android/proguard-rules-consumer.pro b/glean-core/android/proguard-rules-consumer.pro
+index 0ca6fc7..e365179 100644
+--- a/glean-core/android/proguard-rules-consumer.pro
++++ b/glean-core/android/proguard-rules-consumer.pro
+@@ -2,15 +2,15 @@
+ 
+ # JNA specific rules
+ # See https://github.com/java-native-access/jna/blob/master/www/FrequentlyAskedQuestions.md#jna-on-android
+--dontwarn java.awt.*
+--keep class com.sun.jna.* { *; }
+--keepclassmembers class * extends com.sun.jna.* { public *; }
++#-dontwarn java.awt.*
++#-keep class com.sun.jna.* { *; }
++#-keepclassmembers class * extends com.sun.jna.* { public *; }
+ 
+ # Glean specific rules
+--keep class mozilla.telemetry.** { *; }
++#-keep class mozilla.telemetry.** { *; }
+ 
+ # The Glean SDK ships with classes used for tests as well. They are disabled
+ # and not directly usable in production code: they throw if used there. They
+ # can be used in tests just fine but, outside of tests, the test dependency
+ # they use won't be there, hence the warning. It's safe to suppress these.
+--dontwarn mozilla.telemetry.glean.testing.**
++#-dontwarn mozilla.telemetry.glean.testing.**
 diff --git a/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt b/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt
-index a1a4cd6..cea9391 100644
+index a1a4cd6..39f2477 100644
 --- a/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt
 +++ b/glean-core/android/src/main/java/mozilla/telemetry/glean/Glean.kt
-@@ -250,7 +250,7 @@ open class GleanInternalAPI internal constructor() {
-                 dataPath = gleanDataDir.path,
-                 applicationId = applicationContext.packageName,
-                 languageBindingName = LANGUAGE_BINDING_NAME,
--                uploadEnabled = uploadEnabled,
-+                uploadEnabled = false,
-                 maxEvents = null,
-                 delayPingLifetimeIo = configuration.delayPingLifetimeIo,
-                 appBuild = "none",
+@@ -15,7 +15,7 @@ import androidx.annotation.VisibleForTesting
+ import androidx.lifecycle.ProcessLifecycleOwner
+ import kotlinx.coroutines.MainScope
+ import kotlinx.coroutines.launch
+-import mozilla.telemetry.glean.GleanMetrics.GleanValidation
++//import mozilla.telemetry.glean.GleanMetrics.GleanValidation
+ import mozilla.telemetry.glean.config.Configuration
+ import mozilla.telemetry.glean.internal.*
+ import mozilla.telemetry.glean.net.BaseUploader
+@@ -42,7 +42,7 @@ internal class OnGleanEventsImpl(val glean: GleanInternalAPI) : OnGleanEvents {
+     override fun initializeFinished() {
+         // Only set up the lifecycle observers if we don't provide a custom
+         // data path.
+-        if (!glean.isCustomDataPath) {
++/*        if (!glean.isCustomDataPath) {
+             MainScope().launch {
+                 ProcessLifecycleOwner.get().lifecycle.addObserver(glean.gleanLifecycleObserver)
+             }
+@@ -54,7 +54,7 @@ internal class OnGleanEventsImpl(val glean: GleanInternalAPI) : OnGleanEvents {
+             glean.afterInitQueue.forEach { block ->
+                 block()
+             }
+-        }
++        }*/
+     }
+ 
+     override fun triggerUpload() {
+@@ -179,7 +179,7 @@ open class GleanInternalAPI internal constructor() {
+         configuration: Configuration = Configuration(),
+         buildInfo: BuildInfo,
+     ) {
+-        gleanEnableLogging()
++        return
+ 
+         configuration.dataPath?.let { safeDataPath ->
+             // When the `dataPath` is provided, we need to make sure:
+@@ -287,7 +287,7 @@ open class GleanInternalAPI internal constructor() {
+     fun registerPings(pings: Any) {
+         // Instantiating the Pings object to send this function is enough to
+         // call the constructor and have it registered through [Glean.registerPingType].
+-        Log.i(LOG_TAG, "Registering pings for ${pings.javaClass.canonicalName}")
++        return
+     }
+ 
+     /**
 @@ -309,7 +309,7 @@ open class GleanInternalAPI internal constructor() {
       */
      @Deprecated("Use `setCollectionEnabled` instead.")
@@ -29,20 +90,473 @@ index a1a4cd6..cea9391 100644
      }
  
      /**
+@@ -348,8 +348,8 @@ open class GleanInternalAPI internal constructor() {
+         extra: Map<String, String>? = null,
+     ) {
+         Dispatchers.Delayed.launch {
+-            var map = extra ?: mapOf()
+-            gleanSetExperimentActive(experimentId, branch, map)
++//            var map = extra ?: mapOf()
++//            gleanSetExperimentActive(experimentId, branch, map)
+         }
+     }
+ 
+@@ -360,7 +360,7 @@ open class GleanInternalAPI internal constructor() {
+      */
+     fun setExperimentInactive(experimentId: String) {
+         Dispatchers.Delayed.launch {
+-            gleanSetExperimentInactive(experimentId)
++//            gleanSetExperimentInactive(experimentId)
+         }
+     }
+ 
+@@ -372,7 +372,7 @@ open class GleanInternalAPI internal constructor() {
+      */
+     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+     fun testIsExperimentActive(experimentId: String): Boolean {
+-        return gleanTestGetExperimentData(experimentId) != null
++        return false
+     }
+ 
+     /**
+@@ -383,8 +383,8 @@ open class GleanInternalAPI internal constructor() {
+      * @throws [NullPointerException] if the requested experiment is not active or data is corrupt.
+      */
+     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+-    fun testGetExperimentData(experimentId: String): RecordedExperiment {
+-        return gleanTestGetExperimentData(experimentId) ?: throw NullPointerException("Experiment data is not set")
++    fun testGetExperimentData(experimentId: String): RecordedExperiment? {
++        return null
+     }
+ 
+     /**
+@@ -394,7 +394,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param experimentationId the id to set for experimentation purposes
+      */
+     fun setExperimentationId(experimentationId: String) {
+-        gleanSetExperimentationId(experimentationId)
++//        gleanSetExperimentationId(experimentationId)
+     }
+ 
+     /**
+@@ -405,7 +405,7 @@ open class GleanInternalAPI internal constructor() {
+      */
+     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+     fun testGetExperimentationId(): String {
+-        return gleanTestGetExperimentationId() ?: throw NullPointerException("Experimentation Id is not set")
++        return ""
+     }
+ 
+     /**
+@@ -418,7 +418,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param listener implements the `GleanEventListener` interface
+      */
+     fun registerEventListener(tag: String, listener: GleanEventListener) {
+-        gleanRegisterEventListener(tag, listener)
++//        gleanRegisterEventListener(tag, listener)
+     }
+ 
+     /**
+@@ -427,7 +427,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param tag the tag used when registering the listener to be unregistered
+      */
+     fun unregisterEventListener(tag: String) {
+-        gleanUnregisterEventListener(tag)
++//        gleanUnregisterEventListener(tag)
+     }
+ 
+     /**
+@@ -435,21 +435,21 @@ open class GleanInternalAPI internal constructor() {
+      */
+     internal fun getClientInfo(configuration: Configuration, buildInfo: BuildInfo): ClientInfoMetrics {
+         return ClientInfoMetrics(
+-            appBuild = buildInfo.versionCode,
+-            appDisplayVersion = buildInfo.versionName,
++            appBuild = "",
++            appDisplayVersion = "",
+             appBuildDate = calendarToDatetime(buildInfo.buildDate),
+ 
+-            architecture = Build.SUPPORTED_ABIS[0],
+-            osVersion = Build.VERSION.RELEASE,
++            architecture = "",
++            osVersion = "",
+ 
+-            channel = configuration.channel,
++/*            channel = configuration.channel,
+ 
+             // https://developer.android.com/reference/android/os/Build.VERSION
+             androidSdkVersion = Build.VERSION.SDK_INT.toString(),
+             // https://developer.android.com/reference/android/os/Build
+             deviceManufacturer = Build.MANUFACTURER,
+             deviceModel = Build.MODEL,
+-            locale = getLocaleTag(),
++            locale = getLocaleTag(),*/
+         )
+     }
+ 
+@@ -457,7 +457,7 @@ open class GleanInternalAPI internal constructor() {
+      * Get the data directory for Glean.
+      */
+     internal fun getDataDir(): File {
+-        return this.gleanDataDir
++        return File("")
+     }
+ 
+     /**
+@@ -467,9 +467,9 @@ open class GleanInternalAPI internal constructor() {
+         // Note that this is sending the length of the last foreground session
+         // because it belongs to the baseline ping and that ping is sent every
+         // time the app goes to background.
+-        gleanHandleClientActive()
++//        gleanHandleClientActive()
+ 
+-        GleanValidation.foregroundCount.add(1)
++//        GleanValidation.foregroundCount.add(1)
+     }
+ 
+     /**
+@@ -479,7 +479,7 @@ open class GleanInternalAPI internal constructor() {
+         // Persist data on backgrounding the app
+         persistPingLifetimeData()
+ 
+-        gleanHandleClientInactive()
++//        gleanHandleClientInactive()
+     }
+ 
+     /**
+@@ -500,7 +500,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param reason The reason the ping is being submitted.
+      */
+     fun submitPingByName(pingName: String, reason: String? = null) {
+-        gleanSubmitPingByName(pingName, reason)
++//        gleanSubmitPingByName(pingName, reason)
+     }
+ 
+     /** Gets a `Set` of the currently registered ping names.
+@@ -511,7 +511,7 @@ open class GleanInternalAPI internal constructor() {
+      * @return The set of ping names that have been registered.
+      */
+     fun getRegisteredPingNames(): Set<String> {
+-        return gleanGetRegisteredPingNames().toSet()
++        return emptySet()
+     }
+ 
+     /**
+@@ -523,7 +523,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param value The value of the tag, which must be a valid HTTP header value.
+      */
+     fun setDebugViewTag(value: String): Boolean {
+-        return gleanSetDebugViewTag(value)
++        return false
+     }
+ 
+     /**
+@@ -535,7 +535,7 @@ open class GleanInternalAPI internal constructor() {
+      * @return The [String] value of the current debug tag or `null` if not set.
+      */
+     fun getDebugViewTag(): String? {
+-        return gleanGetDebugViewTag()
++        return null
+     }
+ 
+     /**
+@@ -547,7 +547,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param tags A list of tags, which must be valid HTTP header values.
+      */
+     fun setSourceTags(tags: Set<String>): Boolean {
+-        return gleanSetSourceTags(tags.toList())
++        return false
+     }
+ 
+     /**
+@@ -557,7 +557,7 @@ open class GleanInternalAPI internal constructor() {
+      * otherwise it will block until the persist is done and return its Result.
+      */
+     fun persistPingLifetimeData() {
+-        return gleanPersistPingLifetimeData()
++//        return gleanPersistPingLifetimeData()
+     }
+ 
+     /**
+@@ -567,7 +567,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param json Stringified JSON Server Knobs configuration.
+      */
+     fun applyServerKnobsConfig(json: String) {
+-        gleanApplyServerKnobsConfig(json)
++//        gleanApplyServerKnobsConfig(json)
+     }
+ 
+     /**
+@@ -577,7 +577,7 @@ open class GleanInternalAPI internal constructor() {
+      * @param value The value of the option.
+      */
+     fun setLogPings(value: Boolean) {
+-        gleanSetLogPings(value)
++//        gleanSetLogPings(value)
+     }
+ 
+     /**
+@@ -589,7 +589,7 @@ open class GleanInternalAPI internal constructor() {
+      * @return Returns a [Boolean] value indicating the state of debug ping logging.
+      */
+     fun getLogPings(): Boolean {
+-        return gleanGetLogPings()
++        return false
+     }
+ 
+     /**
+@@ -611,13 +611,13 @@ open class GleanInternalAPI internal constructor() {
+     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+     fun setTestingMode(enabled: Boolean) {
+         this.testingMode = enabled
+-        gleanSetTestMode(enabled)
+-        Dispatchers.API.setTestingMode(enabled)
++//        gleanSetTestMode(enabled)
++//        Dispatchers.API.setTestingMode(enabled)
+     }
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+     internal fun setDirtyFlag(flag: Boolean) {
+-        gleanSetDirtyFlag(flag)
++//        gleanSetDirtyFlag(flag)
+     }
+ 
+     /**
+@@ -634,20 +634,20 @@ open class GleanInternalAPI internal constructor() {
+         context: Context,
+         config: Configuration,
+         clearStores: Boolean,
+-        uploadEnabled: Boolean = true,
++        uploadEnabled: Boolean = false,
+     ) {
+-        isMainProcess = null
++//        isMainProcess = null
+ 
+         // Resetting MPS and uploader
+-        metricsPingScheduler?.cancel()
+-        PingUploadWorker.cancel(context)
++//        metricsPingScheduler?.cancel()
++//        PingUploadWorker.cancel(context)
+ 
+         // Init Glean.
+-        val gleanDataDir = config.dataPath?.let { safeDataPath ->
+-            File(safeDataPath)
+-        } ?: run {
+-            File(context.applicationInfo.dataDir, GLEAN_DATA_DIR)
+-        }
++//        val gleanDataDir = config.dataPath?.let { safeDataPath ->
++//            File(safeDataPath)
++//        } ?: run {
++//            File(context.applicationInfo.dataDir, GLEAN_DATA_DIR)
++//        }
+ 
+         Glean.testDestroyGleanHandle(clearStores, gleanDataDir.path)
+         // Enable test mode.
+@@ -672,7 +672,7 @@ open class GleanInternalAPI internal constructor() {
+         if (isInitialized()) {
+             block()
+         } else {
+-            this.afterInitQueue.add(block)
++//            this.afterInitQueue.add(block)
+         }
+     }
+ 
+@@ -743,15 +743,15 @@ open class GleanInternalAPI internal constructor() {
+      * AttributionMetrics fields with `null` values will not overwrite older values.
+      */
+     fun updateAttribution(attribution: AttributionMetrics) {
+-        gleanUpdateAttribution(attribution)
++//        gleanUpdateAttribution(attribution)
+     }
+ 
+     /**
+      * Test-only method for getting the current attribution metrics.
+      */
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+-    fun testGetAttribution(): AttributionMetrics {
+-        return gleanTestGetAttribution()
++    fun testGetAttribution() {
++//        return gleanTestGetAttribution()
+     }
+ 
+     /**
+@@ -759,7 +759,7 @@ open class GleanInternalAPI internal constructor() {
+      * DistributionMetrics fields with `null` values will not overwrite older values.
+      */
+     fun updateDistribution(distribution: DistributionMetrics) {
+-        gleanUpdateDistribution(distribution)
++//        gleanUpdateDistribution(distribution)
+     }
+ 
+     /**
+diff --git a/glean-core/android/src/main/java/mozilla/telemetry/glean/net/PingUploader.kt b/glean-core/android/src/main/java/mozilla/telemetry/glean/net/PingUploader.kt
+index 16eba59..a09dccf 100644
+--- a/glean-core/android/src/main/java/mozilla/telemetry/glean/net/PingUploader.kt
++++ b/glean-core/android/src/main/java/mozilla/telemetry/glean/net/PingUploader.kt
+@@ -33,7 +33,7 @@ data class PingUploadRequest(
+ 
+ class CapablePingUploadRequest(val request: PingUploadRequest) {
+     fun capable(f: (uploaderCapabilities: List<String>) -> Boolean): PingUploadRequest? {
+-        if (f(request.uploaderCapabilities)) {
++        if (false) {
+             return request
+         }
+         return null
 diff --git a/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt b/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt
-index 737896d..3b7f402 100644
+index 737896d..e055ac7 100644
 --- a/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt
 +++ b/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/MetricsPingScheduler.kt
-@@ -309,10 +309,10 @@ internal class MetricsPingScheduler(
+@@ -100,8 +100,8 @@ internal class MetricsPingScheduler(
+     ) {
+         // Compute how many milliseconds until the next time the metrics ping
+         // needs to collect data.
+-        val millisUntilNextDueTime = getMillisecondsUntilDueTime(sendTheNextCalendarDay, now)
+-        Log.d(LOG_TAG, "Scheduling the 'metrics' ping in ${millisUntilNextDueTime}ms")
++//        val millisUntilNextDueTime = getMillisecondsUntilDueTime(sendTheNextCalendarDay, now)
++//       Log.d(LOG_TAG, "Scheduling the 'metrics' ping in ${millisUntilNextDueTime}ms")
+ 
+         // Cancel the MPS scheduler, discarding any currently scheduled tasks. This does not
+         // interfere with a currently executing task (if one exists).
+@@ -112,9 +112,9 @@ internal class MetricsPingScheduler(
+         // done using`isDaemon: true`. We configure the timer to use a daemon-thread because it will
+         // not prevent the application from terminating gracefully, unlike the default user-thread.
+         // See: (https://developer.android.com/reference/java/util/Timer#Timer(boolean))
+-        timer = Timer("glean.MetricsPingScheduler", true)
++//        timer = Timer("glean.MetricsPingScheduler", true)
+ 
+-        timer?.schedule(MetricsPingTimer(this, reason), millisUntilNextDueTime)
++//        timer?.schedule(MetricsPingTimer(this, reason), millisUntilNextDueTime)
+     }
+ 
+     /**
+@@ -287,14 +287,14 @@ internal class MetricsPingScheduler(
+      */
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal fun collectPingAndReschedule(now: Calendar, startupPing: Boolean, reason: Pings.metricsReasonCodes) {
+-        val reasonString = Pings.metrics.reasonCodes[reason.ordinal]
++/*        val reasonString = Pings.metrics.reasonCodes[reason.ordinal]
+ 
+         @Suppress("MaxLineLength")
+         Log.i(
+             LOG_TAG,
+             "Collecting the 'metrics' ping, now = ${safeDateToString(now.time)}, startup = $startupPing, reason = $reasonString",
+         )
+-        if (startupPing) {
++        if (startupPing) {*/
+             // **IMPORTANT**
+             //
+             // During the Glean initialization, we require any metric recording to be
+@@ -309,21 +309,21 @@ internal class MetricsPingScheduler(
              //
              // * Do not change this line without checking what it implies for the above wall
              // of text. *
 -            gleanSubmitPingByNameSync("metrics", reasonString)
 +//            gleanSubmitPingByNameSync("metrics", reasonString)
              // The initialization process will take care of triggering the uploader here.
-         } else {
+-        } else {
 -            Pings.metrics.submit(reason)
+-        }
++//        } else {
 +//            Pings.metrics.submit(reason)
-         }
++//        }
          // Update the collection date: we don't really care if we have data or not, let's
          // always update the sent date.
+-        updateSentDate(getISOTimeString(now, truncateTo = TimeUnit.DAY))
++//        updateSentDate(getISOTimeString(now, truncateTo = TimeUnit.DAY))
+ 
+         // Schedule the next metrics ping collection
+-        schedulePingCollection(
+-            now,
+-            sendTheNextCalendarDay = true,
+-            reason = Pings.metricsReasonCodes.reschedule,
+-        )
++//        schedulePingCollection(
++//            now,
++//            sendTheNextCalendarDay = true,
++//            reason = Pings.metricsReasonCodes.reschedule,
++//        )
+     }
+ 
+     /**
+@@ -355,8 +355,8 @@ internal class MetricsPingScheduler(
+         // interfere with a currently executing task (if it exists). Once a timer has been
+         // terminated, its execution thread terminates gracefully, and no more tasks may be
+         // scheduled on it.
+-        timer?.cancel()
+-        timer = null
++//        timer?.cancel()
++//        timer = null
+     }
+ 
+     /**
+diff --git a/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/PingUploadWorker.kt b/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/PingUploadWorker.kt
+index 9983002..af12d0f 100644
+--- a/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/PingUploadWorker.kt
++++ b/glean-core/android/src/main/java/mozilla/telemetry/glean/scheduler/PingUploadWorker.kt
+@@ -62,11 +62,11 @@ class PingUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
+          * @param context the application [Context] to get the [WorkManager] instance for
+          */
+         internal fun enqueueWorker(context: Context) {
+-            WorkManager.getInstance(context).enqueueUniqueWork(
+-                PING_WORKER_TAG,
+-                ExistingWorkPolicy.KEEP,
+-                buildWorkRequest<PingUploadWorker>(PING_WORKER_TAG),
+-            )
++//            WorkManager.getInstance(context).enqueueUniqueWork(
++//                PING_WORKER_TAG,
++//                ExistingWorkPolicy.KEEP,
++//                buildWorkRequest<PingUploadWorker>(PING_WORKER_TAG),
++//            )
+ 
+             // Only flush pings immediately if sending to a test endpoint,
+             // which means we're probably in instrumented tests.
+@@ -87,14 +87,14 @@ class PingUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
+          */
+         @OptIn(ExperimentalUnsignedTypes::class)
+         internal fun performUpload() {
+-            do {
+-                when (val action = gleanGetUploadTask()) {
+-                    is PingUploadTask.Upload -> {
++//            do {
++//                when (val action = gleanGetUploadTask()) {
++//                    is PingUploadTask.Upload -> {
+                         // Upload the ping request.
+                         // If the status is `null` there was some kind of unrecoverable error
+                         // so we return a known unrecoverable error status code
+                         // which will ensure this gets treated as such.
+-                        val body = action.request.body.toUByteArray().asByteArray()
++/*                        val body = action.request.body.toUByteArray().asByteArray()
+                         val request = CapablePingUploadRequest(
+                             PingUploadRequest(
+                                 Glean.configuration.serverEndpoint + action.request.path,
+@@ -103,10 +103,10 @@ class PingUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
+                                 action.request.uploaderCapabilities,
+                             ),
+                         )
+-                        val result = Glean.httpClient.doUpload(request)
++                        val result = Glean.httpClient.doUpload(request)*/
+ 
+                         // Process the upload response
+-                        when (gleanProcessPingUploadResponse(action.request.documentId, result)) {
++/*                        when (gleanProcessPingUploadResponse(action.request.documentId, result)) {
+                             UploadTaskAction.NEXT -> continue
+                             UploadTaskAction.END -> break
+                         }
+@@ -114,7 +114,7 @@ class PingUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
+                     is PingUploadTask.Wait -> SystemClock.sleep(action.time.toLong())
+                     is PingUploadTask.Done -> break
+                 }
+-            } while (true)
++            } while (true)*/
+             // Limits are enforced by glean-core to avoid an inifinite loop here.
+             // Whenever a limit is reached, this binding will receive `PingUploadTask.Done` and step out.
+         }
+@@ -125,7 +125,7 @@ class PingUploadWorker(context: Context, params: WorkerParameters) : Worker(cont
+          * @param context the application [Context] to get the [WorkManager] instance for
+          */
+         internal fun cancel(context: Context) {
+-            WorkManager.getInstance(context).cancelUniqueWork(PING_WORKER_TAG)
++//            WorkManager.getInstance(context).cancelUniqueWork(PING_WORKER_TAG)
+         }
+     }
+ 
