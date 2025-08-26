@@ -428,6 +428,9 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-localize-maven.patch"
 # Break the dependency on older A-C
 $SED -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 
+# Break the dependency on older Rust
+$SED -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
+
 echo "rust.targets=$PLATFORM-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
 $SED -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 $SED -i -e '/content {/,/}/d' build.gradle
