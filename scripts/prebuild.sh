@@ -377,6 +377,9 @@ $SED -i -e 's|api project(":glean-native")|// api project(":glean-native")|g' gl
 $SED -i -e 's|gleanNative project|// gleanNative project|g' glean-core/android/build.gradle
 $SED -i -e 's|implementation project("path": ":glean-native",|// implementation project("path": ":glean-native",|g' glean-core/android/build.gradle
 
+# Ensure we're building for release
+sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
 
@@ -474,6 +477,9 @@ echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
 # Apply patches
 apply_patches
+
+# Ensure we're building for release
+sed -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
 
 # Fix v125 aar output not including native libraries
 $SED -i \
