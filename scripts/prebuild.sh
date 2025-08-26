@@ -413,6 +413,9 @@ rm -vf samples/glean/samples-glean-library/build.gradle
 # Prevent unsolicited favicon fetching
 $SED -i -e 's|request.copy(resources = request.resources + resource)|request|' components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
 
+# Remove unwanted Nimbus classes
+$SED -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' components/service/nimbus/proguard-rules-consumer.pro
+
 # Apply a-c overlay
 apply_overlay "$patches/a-c-overlay/"
 
@@ -638,6 +641,7 @@ $SED -i -e 's|content/global/gmp-sources|# content/global/gmp-sources|' toolkit/
 # Remove unwanted/sample dependencies
 ## Also see `gecko-remove-example-dependencies.patch`
 $SED -i -e 's#if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))#if (!project.key.startsWith("samples"))#' mobile/android/shared-settings.gradle
+$SED -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
 
 # Remove Web Compatibility Reporter
 ## Also see `fenix-remove-webcompat-reporter.patch`
