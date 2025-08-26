@@ -438,6 +438,9 @@ else
     fi
 fi
 
+# Ensure we're building for release
+sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
 
