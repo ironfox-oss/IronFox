@@ -356,6 +356,7 @@ sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/lib_unit_tests.rs
 
 # Do not build `glean-sample-app`
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
