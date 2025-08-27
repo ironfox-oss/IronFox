@@ -354,6 +354,7 @@ sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/lib_unit_tests.rs
 
 # Do not build `glean-sample-app`
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
@@ -428,6 +429,16 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-noop-nimbus.patch"
 sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+
+# Remove Glean
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-remove-glean.patch"
+sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
+sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
+sed -i "s|FxaClientMetrics|// FxaClientMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
+sed -i "s|import org.mozilla.appservices.fxaclient.GleanMetrics|// import org.mozilla.appservices.fxaclient.GleanMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
+sed -i "s|import org.mozilla.experiments.nimbus.GleanMetrics|// import org.mozilla.experiments.nimbus.GleanMetrics|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+sed -i "s|NimbusEvents|// NimbusEvents|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+rm -vf components/fxa-client/android/metrics.yaml
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
@@ -609,6 +620,14 @@ sed -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/
 ## Also see `gecko-remove-abouttelemetry.patch`
 sed -i -e "s|'telemetry'|# &|" docshell/build/components.conf
 sed -i -e 's|content/global/aboutTelemetry|# content/global/aboutTelemetry|' toolkit/content/jar.mn
+
+# Remove Glean
+sed -i "s|compileOnly libs.mozilla.glean|// compileOnly libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
+sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
+sed -i -e 's|GleanMessaging|// GleanMessaging|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
+sed -i -e 's|import mozilla.components.service.nimbus.GleanMetrics|// import mozilla.components.service.nimbus.GleanMetrics|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
+sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" mobile/android/android-components/components/service/sync-logins/build.gradle
+rm -vf mobile/android/android-components/components/browser/engine-gecko/metrics.yaml
 
 # Remove GMP sources
 ## Removes Firefox's default sources for installing Gecko Media Plugins (GMP), such as OpenH264 and Widevine (the latter is proprietary).

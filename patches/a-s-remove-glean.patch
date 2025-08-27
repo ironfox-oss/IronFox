@@ -1,0 +1,20 @@
+diff --git a/components/fxa-client/android/build.gradle b/components/fxa-client/android/build.gradle
+index 790cf54..bd374de 100644
+--- a/components/fxa-client/android/build.gradle
++++ b/components/fxa-client/android/build.gradle
+@@ -5,13 +5,13 @@ plugins {
+ apply from: "$appServicesRootDir/build-scripts/component-common.gradle"
+ apply from: "$appServicesRootDir/publish.gradle"
+ 
+-ext {
++/*ext {
+     gleanNamespace = "mozilla.telemetry.glean"
+     if (gradle.hasProperty("mozconfig")) {
+         gleanPythonEnvDir = gradle.mozconfig.substs.GRADLE_GLEAN_PARSER_VENV
+     }
+ }
+-apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
++apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"*/
+ 
+ android {
+     namespace 'org.mozilla.appservices.fxaclient'
