@@ -1,0 +1,18 @@
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+index 6bbc5b3ed8..a4fc3d45c6 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
++++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+@@ -101,11 +101,11 @@ dependencies {
+     androidTestImplementation project(':components:tooling-fetch-tests')
+ }
+ 
+-ext {
++/*ext {
+     gleanNamespace = "mozilla.telemetry.glean"
+     gleanPythonEnvDir = gradle.mozconfig.substs.GRADLE_GLEAN_PARSER_VENV
+ }
+-apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
++apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"*/
+ apply from: '../../../android-lint.gradle'
+ apply from: '../../../publish.gradle'
+ apply plugin: "org.mozilla.appservices.nimbus-gradle-plugin"
