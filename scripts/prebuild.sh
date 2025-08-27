@@ -339,6 +339,9 @@ pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 localize_maven
 
+# Unbreak GeckoView Lite builds
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-unbreak-geckoview-lite.patch"
+
 # No-op Glean
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
 sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
@@ -352,11 +355,8 @@ sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
 
-# Do not build `glean-native` and `glean-sample-app`
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-native-and-example-dependencies.patch"
-sed -i -e 's|api project(":glean-native")|// api project(":glean-native")|g' glean-core/android/build.gradle
-sed -i -e 's|gleanNative project|// gleanNative project|g' glean-core/android/build.gradle
-sed -i -e 's|implementation project("path": ":glean-native",|// implementation project("path": ":glean-native",|g' glean-core/android/build.gradle
+# Do not build `glean-sample-app`
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
 
 # Ensure we're building for release
 sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
