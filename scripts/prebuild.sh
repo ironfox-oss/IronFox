@@ -358,6 +358,9 @@ pushd "$glean"
 echo "rust.targets=$PLATFORM-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
 localize_maven
 
+# Unbreak GeckoView Lite builds
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-unbreak-geckoview-lite.patch"
+
 # No-op Glean
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
 $SED -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
