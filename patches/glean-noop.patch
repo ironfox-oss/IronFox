@@ -585,3 +585,17 @@ index 9983002..af12d0f 100644
          }
      }
  
+diff --git a/glean-core/android-native/proguard-rules-consumer.pro b/glean-core/android-native/proguard-rules-consumer.pro
+index 53519d424..855cad12e 100644
+--- a/glean-core/android-native/proguard-rules-consumer.pro
++++ b/glean-core/android-native/proguard-rules-consumer.pro
+@@ -2,6 +2,6 @@
+ 
+ # JNA specific rules
+ # See https://github.com/java-native-access/jna/blob/master/www/FrequentlyAskedQuestions.md#jna-on-android
+--dontwarn java.awt.*
+--keep class com.sun.jna.* { *; }
+--keepclassmembers class * extends com.sun.jna.* { public *; }
++#-dontwarn java.awt.*
++#-keep class com.sun.jna.* { *; }
++#-keepclassmembers class * extends com.sun.jna.* { public *; }
