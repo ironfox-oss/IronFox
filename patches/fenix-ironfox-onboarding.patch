@@ -1407,10 +1407,10 @@ index 0000000000..b35658273e
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..bf1257df97
+index 0000000000..a49cccd764
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
-@@ -0,0 +1,126 @@
+@@ -0,0 +1,94 @@
 +package org.mozilla.fenix.utils
 +
 +import android.content.Context
@@ -1449,39 +1449,7 @@ index 0000000000..bf1257df97
 +     */
 +    fun isJavascriptJitEnabled(
 +        context: Context
-+    ): Boolean = context.components.core.engine.settings.run {
-+        javascriptJitBaselineEnabled &&
-+        javascriptJitHintsEnabled &&
-+        javascriptJitIonEnabled &&
-+        javascriptJitIonWasmEnabled &&
-+        javascriptJitMainProcessEnabled &&
-+        javascriptJitNativeRegexpEnabled &&
-+        javascriptJitTrustedPrincipalsEnabled
-+    }
-+
-+    /**
-+     * Set whether to enable WebAssembly preferences.
-+     *
-+     * @param context The application context.
-+     * @param isEnabled Whether to enable WebAssembly.
-+     */
-+    fun setWebAssemblyEnabled(
-+        context: Context,
-+        isEnabled: Boolean,
-+    ) {
-+        val settings = context.settings()
-+        val components = context.components
-+
-+        settings.wasmEnabled = isEnabled
-+        components.core.engine.settings.wasmEnabled = isEnabled
-+    }
-+
-+    /**
-+     * Check if WebAssembly is enabled.
-+     */
-+    fun isWebAssemblyEnabled(
-+        context: Context
-+    ): Boolean = context.components.core.engine.settings.wasmEnabled
++    ): Boolean = context.settings().javascriptJitEnabled
 +
 +    /**
 +     * Set whether to enable Safe Browsing preferences.
@@ -1535,5 +1503,5 @@ index 0000000000..bf1257df97
 +     */
 +    fun isLocaleSpoofingEnabled(
 +        context: Context,
-+    ): Boolean = context.components.core.engine.settings.spoofEnglish
++    ): Boolean = context.settings().spoofEnglish
 +}
