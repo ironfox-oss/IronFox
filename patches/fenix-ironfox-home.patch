@@ -25,7 +25,7 @@ index 48b312d257..92b3b71f71 100644
              } else {
                  TopSitesFrecencyConfig(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..fc985b87a4 100644
+index 3fa564af49..b11a5734a8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -185,7 +185,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -60,14 +60,14 @@ index 3fa564af49..fc985b87a4 100644
       */
      val showSyncedTabs: Boolean
 -        get() = FxNimbus.features.homescreen.value().sectionsEnabled[HomeScreenSection.SYNCED_TABS] == true
-+        get() = false
++        get() = true
  
      /**
       * Indicates whether or not the "Collections" section should be shown on the home screen.
       */
      val collections: Boolean
 -        get() = FxNimbus.features.homescreen.value().sectionsEnabled[HomeScreenSection.COLLECTIONS] == true
-+        get() = false
++        get() = true
  
      /**
       * Indicates whether or not the homepage header should be shown.
