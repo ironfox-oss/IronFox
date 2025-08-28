@@ -1,0 +1,22 @@
+diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/BaseSearchTelemetry.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/BaseSearchTelemetry.kt
+index 971e41583a..b7abeda659 100644
+--- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/BaseSearchTelemetry.kt
++++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/telemetry/BaseSearchTelemetry.kt
+@@ -56,7 +56,7 @@ abstract class BaseSearchTelemetry {
+         store: BrowserStore,
+         extensionInfo: ExtensionInfo,
+     ) {
+-        engine.installBuiltInWebExtension(
++/*        engine.installBuiltInWebExtension(
+             id = extensionInfo.id,
+             url = extensionInfo.resourceUrl,
+             onSuccess = { extension ->
+@@ -67,7 +67,7 @@ abstract class BaseSearchTelemetry {
+             onError = { throwable ->
+                 Logger.error("Could not install ${extensionInfo.id} extension", throwable)
+             },
+-        )
++        )*/
+     }
+ 
+     protected fun emitFact(
