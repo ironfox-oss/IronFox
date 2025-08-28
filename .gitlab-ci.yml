@@ -38,7 +38,7 @@ variables: &build_variables
   KEYSTORE: /opt/IronFox/signing-key.jks
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.cache/gradle"
   CARGO_HOME: "$CI_PROJECT_DIR/.cache/cargo"
-  BUNDLETOOL: 1.18.0
+  BUNDLETOOL: 1.18.1
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
@@ -145,15 +145,17 @@ build-apk:
     <<: *build_variables
   <<: *build_setup_steps
   script:
-    - bash -x scripts/ci-build.sh
+    - echo "Building APK..." | tee -a build-apk.log
+    - bash -x scripts/ci-build.sh | tee -a build-apk.log
   artifacts:
     untracked: false
-    when: on_success
+    when: always
     access: all
     expire_in: "30 days"
     paths:
       - $CI_PROJECT_DIR/artifacts/apk/**/*
       - $CI_PROJECT_DIR/artifacts/aar/**/*
+      - build-apk.log
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
@@ -182,14 +184,16 @@ build-bundle:
     <<: *build_variables
   <<: *build_setup_steps
   script:
-    - bash -x scripts/ci-build.sh
+    - echo "Building Bundle..." | tee -a build-bundle.log
+    - bash -x scripts/ci-build.sh | tee -a build-bundle.log
   artifacts:
     untracked: false
-    when: on_success
+    when: always
     access: all
     expire_in: "30 days"
     paths:
       - $CI_PROJECT_DIR/artifacts/apks/**/*
+      - build-bundle.log
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
