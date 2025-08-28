@@ -210,6 +210,8 @@ sed -i 's|implementation libs.play|// implementation libs.play|g' app/build.grad
 sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
 # Remove TelemetryMiddleware
+sed -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.telemetry|' app/src/*/java/org/mozilla/fenix/components/Core.kt
+sed -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/*/java/org/mozilla/fenix/components/Core.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 # Let it be IronFox
