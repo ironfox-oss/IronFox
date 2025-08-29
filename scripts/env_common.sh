@@ -13,13 +13,8 @@ export MACHRC="$patches/machrc"
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 
-export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
+export NSS_DIR="$application_services/"
 export NSS_STATIC=1
-
-export ARTIFACTS="$rootdir/artifacts"
-export APK_ARTIFACTS=$ARTIFACTS/apk
-export APKS_ARTIFACTS=$ARTIFACTS/apks
-export AAR_ARTIFACTS=$ARTIFACTS/aar
 
 mkdir -p "$APK_ARTIFACTS"
 mkdir -p "$APKS_ARTIFACTS"
