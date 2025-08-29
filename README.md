@@ -228,7 +228,7 @@ Once the packages have been installed successfully, follow the instructions to s
 - Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation (default location is `$HOME/android-sdk`). Otherwise, you can execute the following to install and set up the SDK:
 
   ```sh
-  source scripts/setup-android-sdk.sh
+  ./scripts/setup-android-sdk.sh
   ```
 
 ### Get & patch sources
