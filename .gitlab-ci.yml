@@ -38,7 +38,6 @@ variables: &build_variables
   KEYSTORE: /opt/IronFox/signing-key.jks
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.cache/gradle"
   CARGO_HOME: "$CI_PROJECT_DIR/.cache/cargo"
-  BUNDLETOOL: 1.18.1
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
@@ -145,6 +144,7 @@ build-apk:
     <<: *build_variables
   <<: *build_setup_steps
   script:
+    - mkdir -vp "$CI_PROJECT_DIR/artifacts/logs"
     - BUILD_LOG_FILE="$CI_PROJECT_DIR/artifacts/logs/build-apk-$BUILD_VARIANT.log"
     - echo "Building APK..." | tee -a "$BUILD_LOG_FILE"
     - bash -x scripts/ci-build.sh | tee -a "$BUILD_LOG_FILE"
@@ -185,6 +185,7 @@ build-bundle:
     <<: *build_variables
   <<: *build_setup_steps
   script:
+    - mkdir -vp "$CI_PROJECT_DIR/artifacts/logs"
     - BUILD_LOG_FILE="$CI_PROJECT_DIR/artifacts/logs/build-bundle.log"
     - echo "Building Bundle..." | tee -a "$BUILD_LOG_FILE"
     - bash -x scripts/ci-build.sh | tee -a "$BUILD_LOG_FILE"

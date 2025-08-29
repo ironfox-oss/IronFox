@@ -19,6 +19,11 @@ BUNDLETOOL_TAG="1.18.1"
 RUST_VERSION="1.89.0"
 CBINDGEN_VERSION="0.29.0"
 
+# Android SDK
+BUILDTOOLS_VERSION="36.0.0"
+NDK_REVISION="28.1.13356709"
+SDK_REVISION="13114758"
+
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_SH="${ROOTDIR}/scripts/env_local.sh"
