@@ -120,6 +120,7 @@ rustup default "$RUST_VERSION"
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
+rustup target add i686-linux-android
 rustup target add x86_64-linux-android
 cargo install --vers "$CBINDGEN_VERSION" cbindgen
 
