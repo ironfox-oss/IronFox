@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$rootdir/scripts/versions.sh"
+source "$(dirname $0)/versions.sh"
 
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
