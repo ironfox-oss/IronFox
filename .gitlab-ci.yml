@@ -147,8 +147,8 @@ build-apk:
     <<: *build_variables
   <<: *build_setup_steps
   script:
-    - echo "Building APK..." | tee -a build-apk.log
-    - bash -x scripts/ci-build.sh | tee -a build-apk.log
+    - echo "Building APK..." | tee -a "build-apk-$BUILD_VARIANT.log"
+    - bash -x scripts/ci-build.sh | tee -a "build-apk-$BUILD_VARIANT.log"
   artifacts:
     untracked: false
     when: always
