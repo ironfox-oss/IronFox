@@ -145,8 +145,9 @@ build-apk:
     <<: *build_variables
   <<: *build_setup_steps
   script:
-    - echo "Building APK..." | tee -a "build-apk-$BUILD_VARIANT.log"
-    - bash -x scripts/ci-build.sh | tee -a "build-apk-$BUILD_VARIANT.log"
+    - BUILD_LOG_FILE="$CI_PROJECT_DIR/artifacts/logs/build-apk-$BUILD_VARIANT.log"
+    - echo "Building APK..." | tee -a "$BUILD_LOG_FILE"
+    - bash -x scripts/ci-build.sh | tee -a "$BUILD_LOG_FILE"
   artifacts:
     untracked: false
     when: always
@@ -155,7 +156,7 @@ build-apk:
     paths:
       - $CI_PROJECT_DIR/artifacts/apk/**/*
       - $CI_PROJECT_DIR/artifacts/aar/**/*
-      - build-apk.log
+      - $CI_PROJECT_DIR/artifacts/logs/**/*
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
@@ -184,8 +185,9 @@ build-bundle:
     <<: *build_variables
   <<: *build_setup_steps
   script:
-    - echo "Building Bundle..." | tee -a build-bundle.log
-    - bash -x scripts/ci-build.sh | tee -a build-bundle.log
+    - BUILD_LOG_FILE="$CI_PROJECT_DIR/artifacts/logs/build-bundle.log"
+    - echo "Building Bundle..." | tee -a "$BUILD_LOG_FILE"
+    - bash -x scripts/ci-build.sh | tee -a "$BUILD_LOG_FILE"
   artifacts:
     untracked: false
     when: always
@@ -193,7 +195,7 @@ build-bundle:
     expire_in: "30 days"
     paths:
       - $CI_PROJECT_DIR/artifacts/apks/**/*
-      - build-bundle.log
+      - $CI_PROJECT_DIR/artifacts/logs/**/*
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
