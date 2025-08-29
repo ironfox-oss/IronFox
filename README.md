@@ -273,7 +273,7 @@ Once the packages have been installed successfully, follow the instructions to s
 - Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation (default location is `$HOME/android-sdk`). Otherwise, you can execute the following to install and set up the SDK:
 
   ```sh
-  source scripts/setup-android-sdk.sh
+  ./scripts/setup-android-sdk.sh
   ```
 
   - **NOTE**: On **macOS**, you **MUST** ensure that the `ANDROID_HOME` variable is defined before running `setup-android-sdk.sh`. For example, if I want to use the default location _(`$HOME/android-sdk`)_ for my Android SDK, I would use:
