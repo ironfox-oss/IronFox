@@ -9,11 +9,9 @@ import org.mozilla.fenix.utils.Settings
 class InstallReferrerMetricsService(private val context: Context) : MetricsService {
     override val type = MetricServiceType.Data
 
-    override fun start() {
-    }
+    override fun start() {}
 
-    override fun stop() {
-    }
+    override fun stop() {}
 
     override fun track(event: Event) = Unit
 
@@ -27,7 +25,6 @@ data class UTMParams(
     val content: String,
     val term: String,
 ) {
-
     companion object {
         const val UTM_SOURCE = "utm_source"
         const val UTM_MEDIUM = "utm_medium"
@@ -55,12 +52,9 @@ data class UTMParams(
             )
     }
 
-    fun intoSettings(settings: Settings) {
-    }
+    fun intoSettings(settings: Settings) {}
 
-    fun isEmpty(): Boolean {
-        return true
-    }
+    fun isEmpty(): Boolean = true
 
     fun recordInstallReferrer(settings: Settings) {
         return

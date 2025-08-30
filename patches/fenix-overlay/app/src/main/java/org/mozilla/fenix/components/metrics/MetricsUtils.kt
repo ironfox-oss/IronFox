@@ -16,14 +16,12 @@ object MetricsUtils {
         isDefault: Boolean,
         searchAccessPoint: Source,
         nimbusEventStore: NimbusEventStore,
-    ) {
-    }
+    ) {}
 
     fun recordBookmarkMetrics(
         action: BookmarkAction,
         source: String,
-    ) {
-    }
+    ) {}
 
     enum class BookmarkAction {
         ADD, EDIT, DELETE, OPEN
