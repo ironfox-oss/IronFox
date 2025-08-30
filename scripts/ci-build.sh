@@ -49,7 +49,7 @@ fi
 source "/opt/env_docker.sh"
 
 # Setup Android SDK
-bash -x ./scripts/setup-android-sdk.sh
+source "scripts/setup-android-sdk.sh"
 
 # Get sources
 bash -x ./scripts/get_sources.sh
