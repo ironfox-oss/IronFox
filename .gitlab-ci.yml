@@ -152,8 +152,8 @@ build-apk:
   script:
     - mkdir -vp "$CI_PROJECT_DIR/artifacts/logs"
     - BUILD_LOG_FILE="$CI_PROJECT_DIR/artifacts/logs/build-apk-$BUILD_VARIANT.log"
-    - echo "Building APK..." | tee -a "$BUILD_LOG_FILE"
-    - bash -x scripts/ci-build.sh | tee -a "$BUILD_LOG_FILE"
+    - echo "Building APK..." > "$BUILD_LOG_FILE" 2>&1
+    - bash -x scripts/ci-build.sh >> "$BUILD_LOG_FILE" 2>&1
   artifacts:
     untracked: false
     when: always
@@ -194,8 +194,8 @@ build-bundle:
   script:
     - mkdir -vp "$CI_PROJECT_DIR/artifacts/logs"
     - BUILD_LOG_FILE="$CI_PROJECT_DIR/artifacts/logs/build-bundle.log"
-    - echo "Building Bundle..." | tee -a "$BUILD_LOG_FILE"
-    - bash -x scripts/ci-build.sh | tee -a "$BUILD_LOG_FILE"
+    - echo "Building Bundle..." > "$BUILD_LOG_FILE" 2>&1
+    - bash -x scripts/ci-build.sh >> "$BUILD_LOG_FILE" 2>&1
   artifacts:
     untracked: false
     when: always
