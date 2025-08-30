@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source "$(dirname $0)/versions.sh"
-
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 BUILDTOOLS_VERSION="36.0.0"
 NDK_REVISION="28.1.13356709"
