@@ -77,7 +77,7 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
         "$AAR_ARTIFACTS/geckoview-${BUILD_ABI}.aar"
 
     # Sign APK
-    APK_IN="$(ls "$mozilla_release"/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/*.apk)"
+    APK_IN="$mozilla_release/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-$BUILD_ABI-release-unsigned.apk"
     APK_OUT="$APK_ARTIFACTS/IronFox-v${IRONFOX_VERSION}-${BUILD_ABI}.apk"
     "$ANDROID_HOME/build-tools/$BUILDTOOLS_VERSION/apksigner" sign \
       --ks="$KEYSTORE" \
