@@ -120,6 +120,7 @@ rustup default "$RUST_VERSION"
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
+rustup target add i686-linux-android
 rustup target add x86_64-linux-android
 cargo install --vers "$CBINDGEN_VERSION" cbindgen
 
@@ -208,6 +209,11 @@ sed -i 's|implementation(libs.installreferrer)|// implementation(libs.installref
 sed -i "s|implementation libs.play.review.ktx|implementation 'org.microg.gms:play-services-tasks:v0.0.0.250932'|g" app/build.gradle
 sed -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
 sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
+
+# Remove TelemetryMiddleware
+sed -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.telemetry|' app/src/*/java/org/mozilla/fenix/components/Core.kt
+sed -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/*/java/org/mozilla/fenix/components/Core.kt
+rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 # Let it be IronFox
 sed -i \
@@ -344,13 +350,20 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
 sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
 sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
-sed -i -e 's/DEFAULT_GLEAN_ENDPOINT: &str = ".*"/DEFAULT_GLEAN_ENDPOINT: &str = ""/' glean-core/rlb/src/configuration.rs
+sed -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g" glean-core/rlb/src/configuration.rs
 sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
+sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/lib_unit_tests.rs
 
 # Do not build `glean-sample-app`
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
+
+# Ensure we're building for release
+sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
@@ -385,6 +398,9 @@ rm -vf samples/glean/samples-glean-library/build.gradle
 # Prevent unsolicited favicon fetching
 sed -i -e 's|request.copy(resources = request.resources + resource)|request|' components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
 
+# Remove unwanted Nimbus classes
+sed -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' components/service/nimbus/proguard-rules-consumer.pro
+
 # Apply a-c overlay
 apply_overlay "$patches/a-c-overlay/"
 
@@ -400,6 +416,9 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-localize-maven.patch"
 # Break the dependency on older A-C
 sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 
+# Break the dependency on older Rust
+sed -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
+
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -413,6 +432,16 @@ sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/moz
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-noop-nimbus.patch"
 sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+
+# Remove Glean
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-remove-glean.patch"
+sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
+sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
+sed -i "s|FxaClientMetrics|// FxaClientMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
+sed -i "s|import org.mozilla.appservices.fxaclient.GleanMetrics|// import org.mozilla.appservices.fxaclient.GleanMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
+sed -i "s|import org.mozilla.experiments.nimbus.GleanMetrics|// import org.mozilla.experiments.nimbus.GleanMetrics|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+sed -i "s|NimbusEvents|// NimbusEvents|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+rm -vf components/fxa-client/android/metrics.yaml
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
@@ -445,6 +474,9 @@ echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
 # Apply patches
 apply_patches
+
+# Ensure we're building for release
+sed -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
 
 # Fix v125 aar output not including native libraries
 sed -i \
@@ -592,6 +624,14 @@ sed -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/
 sed -i -e "s|'telemetry'|# &|" docshell/build/components.conf
 sed -i -e 's|content/global/aboutTelemetry|# content/global/aboutTelemetry|' toolkit/content/jar.mn
 
+# Remove Glean
+sed -i "s|compileOnly libs.mozilla.glean|// compileOnly libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
+sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
+sed -i -e 's|GleanMessaging|// GleanMessaging|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
+sed -i -e 's|import mozilla.components.service.nimbus.GleanMetrics|// import mozilla.components.service.nimbus.GleanMetrics|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
+sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" mobile/android/android-components/components/service/sync-logins/build.gradle
+rm -vf mobile/android/android-components/components/browser/engine-gecko/metrics.yaml
+
 # Remove GMP sources
 ## Removes Firefox's default sources for installing Gecko Media Plugins (GMP), such as OpenH264 and Widevine (the latter is proprietary).
 ## https://wiki.mozilla.org/GeckoMediaPlugins
@@ -600,6 +640,7 @@ sed -i -e 's|content/global/gmp-sources|# content/global/gmp-sources|' toolkit/c
 # Remove unwanted/sample dependencies
 ## Also see `gecko-remove-example-dependencies.patch`
 sed -i -e 's#if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))#if (!project.key.startsWith("samples"))#' mobile/android/shared-settings.gradle
+sed -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
 
 # Remove Web Compatibility Reporter
 ## Also see `fenix-remove-webcompat-reporter.patch`

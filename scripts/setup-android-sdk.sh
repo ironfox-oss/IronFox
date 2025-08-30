@@ -1,6 +1,8 @@
 #!/bin/bash
 
-SDK_REVISION=13114758
+BUILDTOOLS_VERSION="36.0.0"
+NDK_REVISION="28.1.13356709"
+SDK_REVISION="13114758"
 ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
@@ -41,12 +43,11 @@ export PATH
 # Accept licenses
 { yes || true; } | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
 
-$SDK_MANAGER 'build-tools;36.0.0' # for GeckoView
+$SDK_MANAGER "build-tools;$BUILDTOOLS_VERSION" # for GeckoView
 $SDK_MANAGER 'platforms;android-36' # for GeckoView
-$SDK_MANAGER 'ndk;28.0.13004108'  # for GleanAS
-$SDK_MANAGER 'ndk;28.1.13356709'  # for mozbuild; application-services
+$SDK_MANAGER "ndk;$NDK_REVISION"  # for mozbuild; application-services
 
-export ANDROID_NDK="$ANDROID_HOME/ndk/28.1.13356709"
+export ANDROID_NDK="$ANDROID_HOME/ndk/$NDK_REVISION"
 [ -d "$ANDROID_NDK" ] || {
     echo "$ANDROID_NDK does not exist."
     return

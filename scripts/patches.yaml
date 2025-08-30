@@ -163,10 +163,24 @@ patches:
     effect: "Prevents unwanted collection and transmission of crash reports."
     category: "Mozilla"
 
+  - file: "a-c-remove-glean.patch"
+    name: "Remove Glean (Android Components)"
+    description: "Reduces unwanted dependencies/reliance on the Glean SDK."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted collection and transmission of telemetry data."
+    category: "Mozilla"
+
   - file: "a-c-remove-glean-service.patch"
     name: "Remove the Glean Service (Android Components)"
     description: "Removes the Glean Service from Android Components, to prevent data collection and submission mechanisms."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce uwnanted dependencies."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted collection and transmission of telemetry data."
+    category: "Mozilla"
+
+  - file: "a-c-prevent-telemetry-extension-install.patch"
+    name: "Prevent installation of Telemetry browser extensions (Android Components)"
+    description: "Prevents Firefox from automatically installing the 'Mozilla Android Components - Ads Telemetry' and 'Mozilla Android Components - Search Telemetry' browser extensions."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce attack surface."
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
