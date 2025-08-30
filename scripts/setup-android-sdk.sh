@@ -1,9 +1,9 @@
 #!/bin/bash
 
-ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 BUILDTOOLS_VERSION="36.0.0"
 NDK_REVISION="28.1.13356709"
 SDK_REVISION="13114758"
+ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
