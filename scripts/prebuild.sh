@@ -158,6 +158,10 @@ sed -i -e 's|import mozilla.components.browser.engine.gecko.crash.GeckoCrashPull
 sed -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 sed -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+sed -i -e 's|measurementDataEnabled: Boolean = .*|measurementDataEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
+sed -i -e 's|studiesEnabled: Boolean = .*|studiesEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
+sed -i -e 's|telemetryEnabled: Boolean = .*|telemetryEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
+sed -i -e 's|usagePingEnabled: Boolean = .*|usagePingEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
 
 # Display live downloads in progress
 sed -i -e 's|showLiveDownloads = .*|showLiveDownloads = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
@@ -189,10 +193,12 @@ sed -i 's|https://services.addons.mozilla.org||g' app/build.gradle
 sed -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeature = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # No-op Glean
-# https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
+## https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
 sed -i 's|- components:service-glean|# - components:service-glean|g' .buildconfig.yml
 sed -i "s|implementation project(':components:service-glean')|// implementation project(':components:service-glean')|g" app/build.gradle
 echo 'glean.custom.server.url="data;"' >>local.properties
+sed -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
+sed -i -e 's|send_if_empty: .*|send_if_empty: false|g' app/pings.yaml
 
 # No-op Nimbus
 sed -i -e 's|.experimentDelegate|// .experimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
@@ -210,9 +216,34 @@ sed -i "s|implementation libs.play.review.ktx|implementation 'org.microg.gms:pla
 sed -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
 sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
-# Remove TelemetryMiddleware
-sed -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.telemetry|' app/src/*/java/org/mozilla/fenix/components/Core.kt
-sed -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/*/java/org/mozilla/fenix/components/Core.kt
+# Remove unused telemetry and marketing services/components
+sed -i -e 's|import androidx.core.app.NotificationManagerCompat|// import androidx.core.app.NotificationManagerCompat|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import mozilla.components.support.base.ext.areNotificationsEnabledSafe|// import mozilla.components.support.base.ext.areNotificationsEnabledSafe|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import mozilla.components.support.base.ext.isNotificationChannelEnabled|// import mozilla.components.support.base.ext.isNotificationChannelEnabled|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|import org.mozilla.fenix.components.metrics.fonts|// import org.mozilla.fenix.components.metrics.fonts|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|import org.mozilla.fenix.components.metrics.GrowthDataWorker|// import org.mozilla.fenix.components.metrics.GrowthDataWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|import org.mozilla.fenix.components.metrics.MarketingAttributionService|// import org.mozilla.fenix.components.metrics.MarketingAttributionService|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|// import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|// import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|// import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import org.mozilla.fenix.perf.StorageStatsMetrics|// import org.mozilla.fenix.perf.StorageStatsMetrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.telemetry|' app/src/main/java/org/mozilla/fenix/components/Core.kt
+
+sed -i -e 's|ApplicationExitInfoMetrics.|// ApplicationExitInfoMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|FontEnumerationWorker.|// FontEnumerationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|GrowthDataWorker.|// GrowthDataWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|MarketingAttributionService(|// MarketingAttributionService(|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|MetricsMiddleware(|// MetricsMiddleware(|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|PerfStartup.|// PerfStartup.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|ReEngagementNotificationWorker.|// ReEngagementNotificationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|StorageStatsMetrics.|// StorageStatsMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/main/java/org/mozilla/fenix/components/Core.kt
+
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 # Let it be IronFox
@@ -340,6 +371,7 @@ popd
 # shellcheck disable=SC2154
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
+
 localize_maven
 
 # Unbreak GeckoView Lite builds
@@ -355,10 +387,15 @@ sed -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g
 sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
 sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+sed -i -e '/enableEventTimestamps:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
 sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/lib_unit_tests.rs
+sed -i -e 's|include_client_id: .*|include_client_id: false|g' glean-core/pings.yaml
+sed -i -e 's|send_if_empty: .*|send_if_empty: false|g' glean-core/pings.yaml
+sed -i -e 's|"$rootDir/glean-core/android/metrics.yaml"|// "$rootDir/glean-core/android/metrics.yaml"|g' glean-core/android/build.gradle
+rm -vf glean-core/android/metrics.yaml
 
 # Do not build `glean-sample-app`
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
@@ -407,7 +444,9 @@ apply_overlay "$patches/a-c-overlay/"
 
 popd
 
+#
 # Application Services
+#
 
 pushd "${application_services}"
 
@@ -423,7 +462,9 @@ sed -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
+
 localize_maven
+
 # Fix stray
 sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
@@ -447,6 +488,9 @@ rm -vf components/fxa-client/android/metrics.yaml
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
 sed -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
+
+# Apply Application Services overlay
+apply_overlay "$patches/a-s-overlay/"
 
 popd
 
@@ -570,12 +614,19 @@ sed -i -e 's/MOZILLA_PRODUCT_ID = ".*"/MOZILLA_PRODUCT_ID = ""/' mobile/android/
 sed -i 's|{eeb82917-e434-4870-8148-5c03d4caa81b}||g' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
 sed -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
 sed -i -e 's|import org.mozilla.gecko.crashhelper.CrashHelper|// import org.mozilla.gecko.crashhelper.CrashHelper|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-sed -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+
+sed -i -e 's|enabled: Boolean = .*|enabled: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+sed -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
+sed -i -e 's|shouldPrompt: Prompt = .*|shouldPrompt: Prompt = Prompt.ALWAYS,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+sed -i -e 's|useLegacyReporting: Boolean = .*|useLegacyReporting: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+sed -i -e 's|var enabled: Boolean = false,|var enabled: Boolean = enabled|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+
 sed -i 's|crash-reports-ondemand||g' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+sed -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 
 # No-op MARS
-sed -i -e 's/MARS_ENDPOINT_URL = ".*"/MARS_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
 sed -i -e 's/MARS_ENDPOINT_BASE_URL = ".*"/MARS_ENDPOINT_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
+sed -i -e 's/MARS_ENDPOINT_URL = ".*"/MARS_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
 sed -i -e 's/MARS_ENDPOINT_STAGING_BASE_URL = ".*"/MARS_ENDPOINT_STAGING_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
 
 # No-op GeoIP/Region service
@@ -609,6 +660,11 @@ sed -i -e 's/usageDeletionRequest.setEnabled(.*)/usageDeletionRequest.setEnabled
 sed -i -e 's|useTelemetry = .*|useTelemetry = false;|g' toolkit/components/telemetry/core/Telemetry.cpp
 sed -i '/# This must remain last./i gkrust_features += ["glean_disable_upload"]\n' toolkit/library/rust/gkrust-features.mozbuild
 
+sed -i -e 's|include_client_id: .*|include_client_id: false|g' toolkit/components/glean/pings.yaml
+sed -i -e 's|send_if_empty: .*|send_if_empty: false|g' toolkit/components/glean/pings.yaml
+sed -i -e 's|include_client_id: .*|include_client_id: false|g' toolkit/components/nimbus/pings.yaml
+sed -i -e 's|send_if_empty: .*|send_if_empty: false|g' toolkit/components/nimbus/pings.yaml
+
 # No-op telemetry (GeckoView)
 sed -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/android/android-components/components/browser/engine-gecko/build.gradle
 
@@ -633,6 +689,10 @@ sed -i -e 's|import mozilla.components.service.nimbus.GleanMetrics|// import moz
 sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" mobile/android/android-components/components/service/sync-logins/build.gradle
 rm -vf mobile/android/android-components/components/browser/engine-gecko/metrics.yaml
 
+# Remove unused crash reporting services/components
+rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
+rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
+
 # Remove GMP sources
 ## Removes Firefox's default sources for installing Gecko Media Plugins (GMP), such as OpenH264 and Widevine (the latter is proprietary).
 ## https://wiki.mozilla.org/GeckoMediaPlugins
@@ -643,13 +703,23 @@ sed -i -e 's|content/global/gmp-sources|# content/global/gmp-sources|' toolkit/c
 sed -i -e 's#if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))#if (!project.key.startsWith("samples"))#' mobile/android/shared-settings.gradle
 sed -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
 
+# Remove classes for proprietary/tracking libraries
+sed -i 's|-include "adjust-keeps.cfg"|# -include "adjust-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
+sed -i 's|-include "play-services-keeps.cfg"|# -include "play-services-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
+sed -i 's|-include "proguard-leanplum.cfg"|# -include "proguard-leanplum.cfg"|g' mobile/android/config/proguard/proguard.cfg
+rm -vf mobile/android/config/proguard/adjust-keeps.cfg
+rm -vf mobile/android/config/proguard/play-services-keeps.cfg
+rm -vf mobile/android/config/proguard/proguard-leanplum.cfg
+
 # Remove Web Compatibility Reporter
 ## Also see `fenix-remove-webcompat-reporter.patch`
 sed -i 's|- components:feature-webcompat-reporter|# - components:feature-webcompat-reporter|g' mobile/android/fenix/.buildconfig.yml
 sed -i "s|implementation project(':components:feature-webcompat-reporter')|// implementation project(':components:feature-webcompat-reporter')|g" mobile/android/fenix/app/build.gradle
-sed -i -e 's|return !isAboutUrl && !isContentUrl|return false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-sed -i -e 's|FxNimbus.features.menuRedesign.value().reportSiteIssue|false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+
 sed -i -e 's|import mozilla.components.feature.webcompat.reporter|// import mozilla.components.feature.webcompat.reporter|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+
+sed -i -e 's|FxNimbus.features.menuRedesign.value().reportSiteIssue|false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+sed -i -e 's|return !isAboutUrl && !isContentUrl|return false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 sed -i -e 's|WebCompatReporterFeature.|// WebCompatReporterFeature.|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 
 # Replace Google Play FIDO with microG
@@ -753,7 +823,6 @@ sed -i \
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
-
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
     LLVM_SVN='530567'
@@ -949,7 +1018,7 @@ sed -i \
     cat "$patches/preferences/pdf.js"
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
 
-# Apply Glean overlay
+# Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
 
 popd
