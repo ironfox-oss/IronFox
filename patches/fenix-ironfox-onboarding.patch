@@ -132,19 +132,6 @@ index eb51cfe835..b233fd9291 100644
 +        description: Whether to request English versions of web pages for enhanced privacy.
 +      install-ublock:
 +        description: Whether to install uBlock Origin.
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
-index effc671c02..ac7cbafb7d 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
-@@ -132,6 +132,8 @@ class OnboardingTelemetryRecorder {
-                     ),
-                 )
-             }
-+            OnboardingPageUiData.Type.IF_PREFERENCE_DOH -> {}
-+            OnboardingPageUiData.Type.IF_PREFERENCES -> {}
-         }
-     }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
 index 0000000000..f9e1f71a51
@@ -647,7 +634,7 @@ index 0000000000..f9e1f71a51
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..688ba9299d
+index 0000000000..d22cd9b858
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 @@ -0,0 +1,458 @@
@@ -700,14 +687,14 @@ index 0000000000..688ba9299d
 +import kotlinx.coroutines.withContext
 +import mozilla.components.compose.base.button.PrimaryButton
 +import mozilla.components.support.base.log.logger.Logger
++import org.ironfoxoss.ironfox.utils.IronFoxAddons
++import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 +import org.mozilla.fenix.R
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Configuration
 +import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Error
 +import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Progress
 +import org.mozilla.fenix.theme.FirefoxTheme
-+import org.mozilla.fenix.utils.IronFoxAddons
-+import org.mozilla.fenix.utils.IronFoxPreferences
 +
 +/**
 + * The default ratio of the image height to the parent height.
@@ -1345,13 +1332,13 @@ index 262d763533..aea26e1a2a 100644
      customProviderErrorState: CustomProviderErrorState,
      onCustomCancelClicked: () -> Unit,
      onCustomAddClicked: (String) -> Unit,
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt
+diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxAddons.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxAddons.kt
 new file mode 100644
-index 0000000000..b35658273e
+index 0000000000..320d27bdac
 --- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt
++++ b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxAddons.kt
 @@ -0,0 +1,54 @@
-+package org.mozilla.fenix.utils
++package org.ironfoxoss.ironfox.utils
 +
 +import kotlinx.coroutines.CompletableDeferred
 +import kotlinx.coroutines.Dispatchers
@@ -1405,13 +1392,13 @@ index 0000000000..b35658273e
 +        }
 +    }
 +}
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
+diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..a49cccd764
+index 0000000000..0922fe89ba
 --- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
++++ b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
 @@ -0,0 +1,94 @@
-+package org.mozilla.fenix.utils
++package org.ironfoxoss.ironfox.utils
 +
 +import android.content.Context
 +import mozilla.components.concept.engine.EngineSession

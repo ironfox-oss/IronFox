@@ -1,3 +1,32 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/NoopCrashService.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/NoopCrashService.kt
+new file mode 100644
+index 0000000000..9dc712c3ff
+--- /dev/null
++++ b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/NoopCrashService.kt
+@@ -0,0 +1,23 @@
++/* Hi, I'm a stub. ;) */
++
++/* Based on https://github.com/ghostery/user-agent-android/blob/b634c81054bfdf378ef1c6668053cb043995a6a1/patches/0011-Disabling-Telemetry-CrashReports.patch (MPL-2.0) */
++
++package org.ironfoxoss.ironfox
++
++import mozilla.components.lib.crash.Crash
++import mozilla.components.lib.crash.service.CrashReporterService
++import mozilla.components.concept.base.crash.Breadcrumb
++
++class NoopCrashService : CrashReporterService {
++    override val id: String = ""
++
++    override val name: String = ""
++
++    override fun createCrashReportUrl(identifier: String): String? = null
++
++    override fun report(throwable: Throwable, breadcrumbs: ArrayList<Breadcrumb>): String? = null
++
++    override fun report(crash: Crash.NativeCodeCrash): String? = null
++
++    override fun report(crash: Crash.UncaughtExceptionCrash): String? = null
++}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 index a754afa5a4..48ea595728 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt

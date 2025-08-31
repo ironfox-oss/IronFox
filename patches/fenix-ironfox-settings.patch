@@ -43,7 +43,7 @@ index fb213552b5..a43820d199 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..0b19f1a190
+index 0000000000..b9bf0a1443
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 @@ -0,0 +1,664 @@
@@ -65,6 +65,7 @@ index 0000000000..0b19f1a190
 +import kotlin.system.exitProcess
 +import mozilla.components.concept.engine.EngineSession
 +import mozilla.components.ui.widgets.withCenterAlignedButtons
++import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 +import org.mozilla.fenix.components.Push
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.ext.getPreferenceKey
@@ -72,7 +73,6 @@ index 0000000000..0b19f1a190
 +import org.mozilla.fenix.ext.settings
 +import org.mozilla.fenix.ext.showToolbar
 +import org.mozilla.fenix.R
-+import org.mozilla.fenix.utils.IronFoxPreferences
 +import org.mozilla.fenix.utils.view.addToRadioGroup
 +
 +@Suppress("TooManyFunctions")
