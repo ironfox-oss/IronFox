@@ -377,6 +377,11 @@ localize_maven
 # Unbreak GeckoView Lite builds
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-unbreak-geckoview-lite.patch"
 
+# Break the dependency on older Rust
+sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/Cargo.toml
+sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/build/Cargo.toml
+sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/rlb/Cargo.toml
+
 # No-op Glean
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
 sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
@@ -459,6 +464,9 @@ sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION
 # Break the dependency on older Rust
 sed -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
 
+# Disable debug
+sed -i -e 's|debug = .*|debug = false|g' Cargo.toml
+
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
@@ -533,6 +541,15 @@ sed -i \
 sed -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
+
+# Break the dependency on older Rust
+sed -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" Cargo.toml
+sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" intl/icu_capi/Cargo.toml
+sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" intl/icu_segmenter_data/Cargo.toml
+
+# Disable debug
+sed -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
+sed -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
 
 # Unbreak builds with --disable-pref-extensions
 sed -i -e 's|@BINPATH@/defaults/autoconfig/prefcalls.js|;@BINPATH@/defaults/autoconfig/prefcalls.js|g' mobile/android/installer/package-manifest.in
