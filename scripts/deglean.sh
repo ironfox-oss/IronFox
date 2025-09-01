@@ -138,6 +138,9 @@ deglean "${mozilla_release}/mobile/android/geckoview"
 deglean "${mozilla_release}/mobile/android/gradle"
 deglean_fenix "${mozilla_release}/mobile/android/fenix"
 
+sed -i 's|mozilla-glean|# mozilla-glean|g' "${application_services}/gradle/libs.versions.toml"
+sed -i 's|glean|# glean|g' "${application_services}/gradle/libs.versions.toml"
+
 sed -i 's|classpath libs.glean.gradle.plugin|// classpath libs.glean.gradle.plugin|g' "${mozilla_release}/build.gradle"
 
 # Remove the Glean service
