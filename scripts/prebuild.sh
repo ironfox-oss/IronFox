@@ -700,9 +700,18 @@ rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozi
 ## https://wiki.mozilla.org/GeckoMediaPlugins
 sed -i -e 's|content/global/gmp-sources|# content/global/gmp-sources|' toolkit/content/jar.mn
 
-# Remove unwanted/sample dependencies
+# Remove example dependencies
 ## Also see `gecko-remove-example-dependencies.patch`
+sed -i "s|include ':annotations', .*|include ':annotations'|g" settings.gradle
+sed -i "s|project(':messaging_example'|// project(':messaging_example'|g" settings.gradle
+sed -i "s|project(':port_messaging_example'|// project(':port_messaging_example'|g" settings.gradle
 sed -i -e 's#if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))#if (!project.key.startsWith("samples"))#' mobile/android/shared-settings.gradle
+
+# Remove ExoPlayer
+sed -i "s|include ':exoplayer2'|// include ':exoplayer2'|g" settings.gradle
+sed -i "s|project(':exoplayer2'|// project(':exoplayer2'|g" settings.gradle
+
+# Remove unused/unnecessary DebugConfig class
 sed -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
 
 # Remove classes for proprietary/tracking libraries
