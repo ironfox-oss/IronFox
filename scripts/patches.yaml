@@ -198,13 +198,6 @@ patches:
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
-  - file: "a-c-prevent-telemetry-extension-install.patch"
-    name: "Prevent installation of Telemetry browser extensions (Android Components)"
-    description: "Prevents Firefox from automatically installing the 'Mozilla Android Components - Ads Telemetry' and 'Mozilla Android Components - Search Telemetry' browser extensions."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce attack surface."
-    effect: "Prevents unwanted collection and transmission of telemetry data."
-    category: "Mozilla"
-
   - file: "fenix-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Fenix)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Firefox for Android."
