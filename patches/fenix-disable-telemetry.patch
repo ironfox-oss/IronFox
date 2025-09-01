@@ -1,3 +1,51 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index fb213552b5..0f2aac1b70 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -373,7 +373,7 @@ class Core(
+             // Install the "icons" WebExtension to automatically load icons for every visited website.
+             icons.install(engine, this)
+ 
+-            CoroutineScope(Dispatchers.Main).launch {
++/*            CoroutineScope(Dispatchers.Main).launch {
+                 val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
+                 val providerList = withContext(Dispatchers.IO) {
+                     SerpTelemetryRepository(
+@@ -386,12 +386,12 @@ class Core(
+                             REMOTE_STAGE_ENDPOINT_URL
+                         },
+                     ).updateProviderList()
+-                }
++                }*/
+                 // Install the "ads" WebExtension to get the links in an partner page.
+-                adsTelemetry.install(engine, this@apply, providerList)
++                // adsTelemetry.install(engine, this@apply, providerList)
+                 // Install the "cookies" WebExtension and tracks user interaction with SERPs.
+-                searchTelemetry.install(engine, this@apply, providerList)
+-            }
++                // searchTelemetry.install(engine, this@apply, providerList)
++//            }
+ 
+             WebNotificationFeature(
+                 context,
+@@ -448,7 +448,7 @@ class Core(
+         BrowserIcons(context, client)
+     }
+ 
+-    val metrics by lazyMonitored {
++/*    val metrics by lazyMonitored {
+         context.components.analytics.metrics
+     }
+ 
+@@ -458,7 +458,7 @@ class Core(
+ 
+     val searchTelemetry by lazyMonitored {
+         InContentTelemetry()
+-    }
++    }*/
+ 
+     /**
+      * Shortcut component for managing shortcuts on the device home screen.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 3fa564af49..24677b0d0c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
