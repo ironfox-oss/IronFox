@@ -1,27 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 4263c2af62..1cf042b311 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -30,7 +30,7 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
- import mozilla.components.support.base.log.logger.Logger
- import mozilla.components.support.utils.BrowsersCache
- import org.mozilla.fenix.FenixApplication
--import org.mozilla.fenix.GleanMetrics.Pings
-+//import org.mozilla.fenix.GleanMetrics.Pings
- import org.mozilla.fenix.HomeActivity
- import org.mozilla.fenix.R
- import org.mozilla.fenix.components.accounts.FenixFxAEntryPoint
-@@ -350,8 +350,8 @@ class OnboardingFragment : Fragment() {
-         }
- 
-         if (!settings.isTelemetryEnabled) {
--            Pings.onboardingOptOut.setEnabled(true)
--            Pings.onboardingOptOut.submit()
-+//            Pings.onboardingOptOut.setEnabled(true)
-+//            Pings.onboardingOptOut.submit()
-         }
- 
-         startMetricsIfEnabled(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..273349e0ca 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
@@ -39,19 +15,6 @@ index 819b24954e..273349e0ca 100644
              "moz://a" -> openSearchOrUrl(
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 9113dc53a9..b2d6ea35e1 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -168,7 +168,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
- 
-         lifecycleScope.launch {
-             requirePreference<SwitchPreference>(R.string.pref_key_enable_debug_drawer).apply {
--                isVisible = true
-+                isVisible = false
-                 isChecked = debugSettingsRepository.debugDrawerEnabled.first()
-                 onPreferenceChangeListener =
-                     Preference.OnPreferenceChangeListener { _, newValue ->
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 3fa564af49..24677b0d0c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
