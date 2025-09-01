@@ -296,7 +296,7 @@ Changes to patches are licensed according to the header in the files this patch 
 
 Parts of `fenix-branding.patch`, `gecko-rs-blocker.patch`, and `gecko-custom-ublock-origin-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
-`fenix-disable-network-connectivity-monitoring.patch`, `gecko-disable-network-id.patch`, `gecko-disable-sslkeylogging.patch`, `geckoview-disable-network-connectivity-monitoring.patch`,  and `geckoview-ironfox-settings-support-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [`LICENSE`](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
+`fenix-disable-network-connectivity-monitoring.patch`, `gecko-disable-network-id.patch`, `geckoview-ironfox-settings-support-spoof-english.patch`, and `glean-noop.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [`LICENSE`](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
 Our current set of default wallpapers are taken from [Fennec F-Droid](https://gitlab.com/relan/fennecmedia), and are available under the [Unsplash license](https://gitlab.com/relan/fennecmedia#licenses).
 
