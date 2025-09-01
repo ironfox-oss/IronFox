@@ -669,10 +669,6 @@ sed -i -e 's/POCKET_ENDPOINT_URL = ".*"/POCKET_ENDPOINT_URL = ""/' mobile/androi
 # No-op search telemetry
 sed -i 's|search-telemetry-v2||g' mobile/android/fenix/app/src/*/java/org/mozilla/fenix/components/Core.kt
 
-# No-op telemetry (A-C)
-sed -i -e 's/REMOTE_PROD_ENDPOINT_URL = ".*"/REMOTE_PROD_ENDPOINT_URL = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
-sed -i -e 's/REMOTE_ENDPOINT_BUCKET_NAME = ".*"/REMOTE_ENDPOINT_BUCKET_NAME = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
-
 # No-op telemetry (Gecko)
 sed -i -e '/enable_internal_pings:/s/true/false/' toolkit/components/glean/src/init/mod.rs
 sed -i -e '/upload_enabled =/s/true/false/' toolkit/components/glean/src/init/mod.rs
