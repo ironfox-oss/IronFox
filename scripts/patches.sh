@@ -12,8 +12,12 @@ GREEN="\033[0;32m"
 NC="\033[0m"
 
 declare -a PATCH_FILES
+declare -a AS_PATCH_FILES
+declare -a GLEAN_PATCH_FILES
 # shellcheck disable=SC2207
 PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/patches.yaml))
+AS_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/a-s-patches.yaml))
+GLEAN_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/glean-patches.yaml))
 
 check_patch() {
     patch="$patches/$1"
@@ -36,8 +40,44 @@ check_patches() {
     done
 }
 
+a-s_check_patches() {
+    for patch in "${AS_PATCH_FILES[@]}"; do
+        if ! check_patch "$patch"; then
+            return 1
+        fi
+    done
+}
+
+glean_check_patches() {
+    for patch in "${GLEAN_PATCH_FILES[@]}"; do
+        if ! check_patch "$patch"; then
+            return 1
+        fi
+    done
+}
+
 test_patches() {
     for patch in "${PATCH_FILES[@]}"; do
+        if ! check_patch "$patch" >/dev/null 2>&1; then
+            printf "${RED}%-45s: FAILED${NC}\n" "$(basename "$patch")"
+        else
+            printf "${GREEN}%-45s: OK${NC}\n" "$(basename "$patch")"
+        fi
+    done
+}
+
+a-s_test_patches() {
+    for patch in "${AS_PATCH_FILES[@]}"; do
+        if ! check_patch "$patch" >/dev/null 2>&1; then
+            printf "${RED}%-45s: FAILED${NC}\n" "$(basename "$patch")"
+        else
+            printf "${GREEN}%-45s: OK${NC}\n" "$(basename "$patch")"
+        fi
+    done
+}
+
+glean_test_patches() {
+    for patch in "${GLEAN_PATCH_FILES[@]}"; do
         if ! check_patch "$patch" >/dev/null 2>&1; then
             printf "${RED}%-45s: FAILED${NC}\n" "$(basename "$patch")"
         else
@@ -62,8 +102,36 @@ apply_patches() {
     done
 }
 
+a-s_apply_patches() {
+    for patch in "${AS_PATCH_FILES[@]}"; do
+        if ! apply_patch "$patch"; then
+            echo "Failed to apply patch: $patch"
+        fi
+    done
+}
+
+glean_apply_patches() {
+    for patch in "${GLEAN_PATCH_FILES[@]}"; do
+        if ! apply_patch "$patch"; then
+            echo "Failed to apply patch: $patch"
+        fi
+    done
+}
+
 list_patches() {
     for patch in "${PATCH_FILES[@]}"; do
+        echo "$patch"
+    done
+}
+
+a-s_list_patches() {
+    for patch in "${AS_PATCH_FILES[@]}"; do
+        echo "$patch"
+    done
+}
+
+glean_list_patches() {
+    for patch in "${GLEAN_PATCH_FILES[@]}"; do
         echo "$patch"
     done
 }
