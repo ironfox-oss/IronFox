@@ -1,0 +1,36 @@
+categories:
+  - name: "Build System"
+    excerpt: "Modifications to improve and stabilize the build process."
+    description: >
+      Patches in this category focus on altering the build system by removing unnecessary dependencies,
+      fixing build issues, or optimizing the build flow to ensure successful compilation and better reproducibility.
+
+  - name: "Mozilla"
+    excerpt: "Changes that remove and/or replace undesired Mozilla functionality."
+    description: >
+      These patches disable, remove, or replace unwanted Mozilla-related functionality from the browser. This includes
+      advertising, data collection, promotions, and other services not required for critical functionality.
+
+patches:
+  # Build System
+  - file: "a-s-localize-maven.patch"
+    name: "Remove Mozilla Maven Repositories"
+    description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
+    reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
+    effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
+    category: "Build System"
+
+  # Mozilla
+  - file: "a-s-remove-glean.patch"
+    name: "Remove Glean"
+    description: "Removes the Glean SDK."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted collection and transmission of telemetry data."
+    category: "Mozilla"
+
+  - file: "a-s-noop-nimbus.patch"
+    name: "No-op Nimbus"
+    description: "Prevents A/B testing and remote configuration of settings via Nimbus within Firefox for Android."
+    reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
+    effect: "Ensures user configurations remain consistent and are controlled locally."
+    category: "Mozilla"
