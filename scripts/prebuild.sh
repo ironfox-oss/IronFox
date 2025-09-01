@@ -366,6 +366,9 @@ popd
 # Glean
 #
 
+# We currently remove Glean fully from Android Components (See `a-c-remove-glean.patch`) and Application Services (see `a-s-remove-glean.patch`). Unfortunately, it's currently untenable to remove Glean in its entirety from Fenix (though we do remove Mozilla's `Glean Service` library/implementation). So, our approach is to stub Glean for Fenix, which we can do thanks to Tor's no-op UniFFi binding generator, as well as our `fenix-remove-glean.patch` patch, and the commands below.
+## https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/tree/main/projects/glean
+
 # shellcheck disable=SC2154
 pushd "$glean"
 echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
@@ -404,6 +407,9 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-depen
 
 # Ensure we're building for release
 sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+
+# Use Tor's no-op UniFFi binding generator
+sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
 
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
