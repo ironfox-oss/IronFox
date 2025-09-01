@@ -283,6 +283,8 @@ rm -vrf app/src/main/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/main/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/main/java/org/mozilla/fenix/startupCrash
 
+sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+
 # Let it be IronFox
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
     $SED -i \
