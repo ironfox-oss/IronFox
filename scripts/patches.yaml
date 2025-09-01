@@ -16,7 +16,7 @@ categories:
     description: >
       These patches remove dependencies on closed-source or third-party services/libraries, replacing them with open-source
       alternatives (where desired) to enhance transparency, privacy, and control over the software stack.
-  
+
   - name: "Mozilla"
     excerpt: "Changes that remove and/or replace undesired Mozilla functionality."
     description: >
@@ -165,22 +165,8 @@ patches:
 
   - file: "a-c-remove-glean.patch"
     name: "Remove Glean (Android Components)"
-    description: "Reduces unwanted dependencies/reliance on the Glean SDK."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce unwanted dependencies."
-    effect: "Prevents unwanted collection and transmission of telemetry data."
-    category: "Mozilla"
-
-  - file: "a-c-remove-glean.patch"
-    name: "Remove Glean (Android Components)"
-    description: "Reduces unwanted dependencies/reliance on the Glean SDK."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce unwanted dependencies."
-    effect: "Prevents unwanted collection and transmission of telemetry data."
-    category: "Mozilla"
-
-  - file: "a-c-remove-glean-service.patch"
-    name: "Remove the Glean Service (Android Components)"
-    description: "Removes the Glean Service from Android Components, to prevent data collection and submission mechanisms."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, and to reduce unwanted dependencies."
+    description: "Removes the Glean SDK from Mozilla's Android Components."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
