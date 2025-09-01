@@ -11,3 +11,4 @@ __pycache__
 .DS_Store
 /patches/preferences/phoenix.js
 /patches/preferences/phoenix-extended.js
+/uniffi

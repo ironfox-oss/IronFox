@@ -99,6 +99,9 @@ extract_rmtoplevel() {
         *.tar.xz)
             tar xJf "$archive_path" -C "$temp_dir"
             ;;
+        *.tar.zst)
+            tar --zstd -xvf "$archive_path" -C "$temp_dir"
+            ;;
         *)
             echo "Unsupported archive format: $archive_path"
             rm -rf "$temp_dir"
@@ -125,6 +128,8 @@ download_and_extract() {
         extension=".tar.xz"
     elif [[ "$url" =~ \.tar\.gz$ ]]; then
         extension=".tar.gz"
+    elif [[ "$url" =~ \.tar\.zst$ ]]; then
+        extension=".tar.zst"
     else
         extension=".zip"
     fi
@@ -184,6 +189,15 @@ else
     download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
 fi
 
+# Get Tor's no-op UniFFi binding generator
+if [[ -z ${FDROID_BUILD+x} ]]; then
+    echo "Downloading prebuilt uniffi-bindgen..."
+    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
+else
+    echo "Cloning uniffi-bindgen..."
+    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs" "$UNIFFIDIR" "$UNIFFI_VERSION"
+fi
+
 # Clone application-services
 echo "Cloning application-services..."
 git clone --branch "$APPSERVICES_BRANCH" --depth=1 https://github.com/mozilla/application-services "$APPSERVICESDIR"
@@ -205,6 +219,7 @@ export glean=${GLEANDIR}
 export fenix=${FENIX}
 export mozilla_release=${GECKODIR}
 export gmscore=${GMSCOREDIR}
+export uniffi=${UNIFFIDIR}
 export wasi=${WASISDKDIR}
 
 source "\$rootdir/scripts/env_common.sh"
