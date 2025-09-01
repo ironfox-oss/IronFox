@@ -194,8 +194,6 @@ sed -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeat
 
 # No-op Glean
 ## https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
-sed -i 's|- components:service-glean|# - components:service-glean|g' .buildconfig.yml
-sed -i "s|implementation project(':components:service-glean')|// implementation project(':components:service-glean')|g" app/build.gradle
 echo 'glean.custom.server.url="data;"' >>local.properties
 sed -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
 sed -i -e 's|send_if_empty: .*|send_if_empty: false|g' app/pings.yaml
@@ -484,13 +482,6 @@ sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g'
 
 # Remove Glean
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-remove-glean.patch"
-sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
-sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
-sed -i "s|FxaClientMetrics|// FxaClientMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
-sed -i "s|import org.mozilla.appservices.fxaclient.GleanMetrics|// import org.mozilla.appservices.fxaclient.GleanMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
-sed -i "s|import org.mozilla.experiments.nimbus.GleanMetrics|// import org.mozilla.experiments.nimbus.GleanMetrics|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-sed -i "s|NimbusEvents|// NimbusEvents|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-rm -vf components/fxa-client/android/metrics.yaml
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
@@ -626,9 +617,6 @@ sed -i 's|https://services.addons.mozilla.org||g' mobile/android/android-compone
 sed -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
 
 # No-op crash reporting
-sed -i -e 's/MOZILLA_PRODUCT_ID = ".*"/MOZILLA_PRODUCT_ID = ""/' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-sed -i 's|{eeb82917-e434-4870-8148-5c03d4caa81b}||g' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-sed -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
 sed -i -e 's|import org.mozilla.gecko.crashhelper.CrashHelper|// import org.mozilla.gecko.crashhelper.CrashHelper|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 
 sed -i -e 's|enabled: Boolean = .*|enabled: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
@@ -697,14 +685,6 @@ sed -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/
 sed -i -e "s|'telemetry'|# &|" docshell/build/components.conf
 sed -i -e 's|content/global/aboutTelemetry|# content/global/aboutTelemetry|' toolkit/content/jar.mn
 
-# Remove Glean
-sed -i "s|compileOnly libs.mozilla.glean|// compileOnly libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
-sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
-sed -i -e 's|GleanMessaging|// GleanMessaging|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
-sed -i -e 's|import mozilla.components.service.nimbus.GleanMetrics|// import mozilla.components.service.nimbus.GleanMetrics|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
-sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" mobile/android/android-components/components/service/sync-logins/build.gradle
-rm -vf mobile/android/android-components/components/browser/engine-gecko/metrics.yaml
-
 # Remove unused crash reporting services/components
 rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
 rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
@@ -744,6 +724,9 @@ sed -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.2509
 # Unbreak our custom uBlock Origin config
 ## Also see `gecko-custom-ublock-origin-assets.patch`
 sed -i -e 's#else if (platform == "macosx" || platform == "linux")#else if (platform == "macosx" || platform == "linux" || platform == "android")#' toolkit/components/extensions/NativeManifests.sys.mjs
+
+# Remove Glean
+source "$rootdir/scripts/deglean.sh"
 
 # Nuke undesired Mozilla endpoints
 source "$rootdir/scripts/noop_mozilla_endpoints.sh"
