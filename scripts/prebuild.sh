@@ -217,6 +217,14 @@ $SED -i 's|implementation(libs.installreferrer)|// implementation(libs.installre
 $SED -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
 $SED -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
+sed -i 's|adjust|# adjust|g' gradle/libs.versions.toml
+sed -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
+sed -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
+sed -i 's|play-review|# play-review|g' gradle/libs.versions.toml
+sed -i 's|play-services|# play-services|g' gradle/libs.versions.toml
+sed -i 's|thirdparty-sentry|# thirdparty-sentry|g' gradle/libs.versions.toml
+sed -i 's|sentry|# sentry|g' gradle/libs.versions.toml
+
 # Remove unused telemetry and marketing services/components
 $SED -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
 $SED -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
@@ -261,6 +269,8 @@ rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTe
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
+
+sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 
 # Let it be IronFox
 $SED -i \
