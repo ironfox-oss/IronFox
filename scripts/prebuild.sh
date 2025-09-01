@@ -165,7 +165,7 @@ sed -i -e 's|SYNC_ADDRESSES_FEATURE = .*|SYNC_ADDRESSES_FEATURE = true|g' app/sr
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 sed -i -e 's|.crashHandler|// .crashHandler|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-sed -i -e 's|import mozilla.components.lib.crash.handler.CrashHandlerService|// import mozilla.components.lib.crash.handler.CrashHandlerService|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+sed -i -e 's|import mozilla.components.lib.crash|// import mozilla.components.lib.crash|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 sed -i -e 's|import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|// import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Disable telemetry
@@ -230,6 +230,8 @@ sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSIO
 
 # Remove unused telemetry and marketing services/components
 sed -i -e 's|import androidx.core.app.NotificationManagerCompat|// import androidx.core.app.NotificationManagerCompat|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware|// import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/components/Core.kt
+sed -i -e 's|import mozilla.components.feature.search.telemetry|// import mozilla.components.feature.search.telemetry|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 sed -i -e 's|import mozilla.components.support.base.ext.areNotificationsEnabledSafe|// import mozilla.components.support.base.ext.areNotificationsEnabledSafe|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|import mozilla.components.support.base.ext.isNotificationChannelEnabled|// import mozilla.components.support.base.ext.isNotificationChannelEnabled|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/components/Components.kt
@@ -242,6 +244,7 @@ sed -i -e 's|import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|// import 
 sed -i -e 's|import org.mozilla.fenix.perf.StorageStatsMetrics|// import org.mozilla.fenix.perf.StorageStatsMetrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.telemetry|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 
+sed -i -e 's|AdsTelemetryMiddleware|// AdsTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 sed -i -e 's|ApplicationExitInfoMetrics.|// ApplicationExitInfoMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|FontEnumerationWorker.|// FontEnumerationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 sed -i -e 's|GrowthDataWorker.|// GrowthDataWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
@@ -441,6 +444,10 @@ rm -vrf components/feature/search/src/*/assets/searchplugins/*
 ## We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
 rm -vrf components/feature/search/src/*/assets/extensions/ads
 rm -vrf components/feature/search/src/*/assets/extensions/search
+
+# We can also remove the directories/libraries themselves as well
+rm -vf mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt
+rm -vrf components/feature/search/src/*/java/mozilla/components/feature/search/telemetry
 
 # Remove the 'search telemetry' config
 rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
