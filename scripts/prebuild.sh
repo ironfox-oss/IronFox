@@ -110,6 +110,20 @@ mkdir -vp "$rootdir/build"
 # Check patch files
 source "$rootdir/scripts/patches.sh"
 
+pushd "$application_services"
+if ! a-s_check_patches; then
+    echo "Patch validation failed. Please check the patch files and try again."
+    exit 1
+fi
+popd
+
+pushd "$glean"
+if ! glean_check_patches; then
+    echo "Patch validation failed. Please check the patch files and try again."
+    exit 1
+fi
+popd
+
 pushd "$mozilla_release"
 if ! check_patches; then
     echo "Patch validation failed. Please check the patch files and try again."
@@ -392,10 +406,10 @@ pushd "$glean"
 
 echo "rust.targets=$PLATFORM-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
 
-localize_maven
+# Apply patches
+glean_apply_patches
 
-# Unbreak GeckoView Lite builds
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-unbreak-geckoview-lite.patch"
+localize_maven
 
 # Break the dependency on older Rust
 sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/Cargo.toml
@@ -403,7 +417,6 @@ sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" gle
 sed -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/rlb/Cargo.toml
 
 # No-op Glean
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
 $SED -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
 $SED -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
 $SED -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
@@ -421,14 +434,11 @@ $SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' glean-core/pings.yaml
 $SED -i -e 's|"$rootDir/glean-core/android/metrics.yaml"|// "$rootDir/glean-core/android/metrics.yaml"|g' glean-core/android/build.gradle
 rm -vf glean-core/android/metrics.yaml
 
-# Do not build `glean-sample-app`
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
-
 # Ensure we're building for release
 $SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Use Tor's no-op UniFFi binding generator
-sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
+$SED -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
 
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
@@ -477,8 +487,8 @@ popd
 
 pushd "${application_services}"
 
-# Remove Mozilla repositories substitution and explicitly add the required ones
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-localize-maven.patch"
+# Apply patches
+a-s_apply_patches
 
 # Break the dependency on older A-C
 $SED -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
@@ -501,12 +511,8 @@ $SED -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 $SED -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 
 # No-op Nimbus (Experimentation)
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-noop-nimbus.patch"
 $SED -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 $SED -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
-
-# Remove Glean
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-remove-glean.patch"
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
