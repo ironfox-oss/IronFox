@@ -228,14 +228,6 @@ sed -i "s|implementation libs.play.review.ktx|implementation 'org.microg.gms:pla
 sed -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
 sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
-sed -i 's|adjust|# adjust|g' gradle/libs.versions.toml
-sed -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
-sed -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
-sed -i 's|play-review|# play-review|g' gradle/libs.versions.toml
-sed -i 's|play-services|# play-services|g' gradle/libs.versions.toml
-sed -i 's|thirdparty-sentry|# thirdparty-sentry|g' gradle/libs.versions.toml
-sed -i 's|sentry|# sentry|g' gradle/libs.versions.toml
-
 # Remove unused telemetry and marketing services/components
 sed -i -e 's|import androidx.core.app.NotificationManagerCompat|// import androidx.core.app.NotificationManagerCompat|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware|// import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/components/Core.kt
@@ -733,7 +725,15 @@ sed -i "s|project(':exoplayer2'|// project(':exoplayer2'|g" settings.gradle
 # Remove unused/unnecessary DebugConfig class
 sed -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
 
-# Remove classes for proprietary/tracking libraries
+# Remove proprietary/tracking libraries
+sed -i 's|adjust|# adjust|g' gradle/libs.versions.toml
+sed -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
+sed -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
+sed -i 's|play-review|# play-review|g' gradle/libs.versions.toml
+sed -i 's|play-services|# play-services|g' gradle/libs.versions.toml
+sed -i 's|thirdparty-sentry|# thirdparty-sentry|g' gradle/libs.versions.toml
+sed -i 's|sentry|# sentry|g' gradle/libs.versions.toml
+
 sed -i 's|-include "adjust-keeps.cfg"|# -include "adjust-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
 sed -i 's|-include "play-services-keeps.cfg"|# -include "play-services-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
 sed -i 's|-include "proguard-leanplum.cfg"|# -include "proguard-leanplum.cfg"|g' mobile/android/config/proguard/proguard.cfg
