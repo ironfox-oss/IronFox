@@ -1,7 +1,7 @@
 """Version definitions for various components used to build IronFox."""
 
 
-class IronFoxVersions:
+class Versions:
     """Version definitions for various components used to build IronFox."""
 
     FIREFOX_VERSION = "142.0"

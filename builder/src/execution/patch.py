@@ -22,12 +22,11 @@ class PatchTask(TaskDefinition):
         self.target_dir = target_dir
 
     def execute(self, progress):
-        apply_patch(
+        return apply_patch(
             patch_file=self.patch_file,
             target_dir=self.target_dir,
             progress=progress,
         )
-        return super().execute(progress)
 
 
 def apply_patch(

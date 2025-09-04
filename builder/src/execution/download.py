@@ -8,8 +8,8 @@ from urllib3.util.retry import Retry
 from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
-from ..common.utils import sha256sum, format_bytes
-from ..common.versions import IronFoxVersions as Versions
+from common.utils import sha256sum, format_bytes
+from common.versions import Versions as Versions
 
 CHUNK_SIZE = 16 * 1024  # 16KB
 TIMEOUT_SECONDS = 30
@@ -35,13 +35,12 @@ class DownloadTask(TaskDefinition):
         self.sha256 = sha256
 
     def execute(self, progress):
-        download_if_needed(
+        return download_if_needed(
             url=self.url,
             destination=self.destination,
             sha256=self.sha256,
             progress=progress,
         )
-        return super().execute(progress)
 
 
 def download_if_needed(

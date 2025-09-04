@@ -10,6 +10,8 @@ from pathlib import Path
 from rich.progress import Progress
 from typing import Callable, List, TypeVar, Type
 
+from .types import Replacement
+
 
 def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
     return [f"{indent}{line}" for line in lines]
@@ -28,7 +30,7 @@ class TaskDefinition:
 
     @abstractmethod
     def execute(self, progress: Progress):
-        pass
+        raise NotImplementedError("Task execution has not been implemented")
 
     def do_first(self, func) -> TaskDefinition:
         """Registers a function to be executed before the main task action.
@@ -322,23 +324,91 @@ class BuildDefinition:
             assume_yes=assume_yes,
         )
 
-    def create_file(
+    def write_file(
         self,
         name: str,
-        file: Path,
+        target: Path,
         contents: Callable[[], bytes],
         chmod: int = 0o644,
         overwrite: bool = False,
     ) -> TaskDefinition:
-        from .files import CreateFileTask
+        from .files import FileCreateTask
 
         return self.create_task(
-            CreateFileTask,
+            FileCreateTask,
             name,
-            file=file,
+            target=target,
             contents=contents,
             chmod=chmod,
             overwrite=overwrite,
+        )
+
+    def mkdir(
+        self,
+        name: str,
+        target: Path,
+        parents: bool = False,
+        exist_ok: bool = False,
+    ) -> TaskDefinition:
+        from .files import DirCreateTask
+
+        return self.create_task(
+            DirCreateTask,
+            name,
+            target=target,
+            parents=parents,
+            exist_ok=exist_ok,
+        )
+
+    def delete(
+        self,
+        name: str,
+        target: Path,
+        recursive: bool = False,
+    ) -> TaskDefinition:
+        from .files import DeleteTask
+
+        return self.create_task(
+            DeleteTask,
+            name,
+            target=target,
+            recursive=recursive,
+        )
+
+    def sed(
+        self,
+        name: str,
+        target_files: List[Path],
+        replacement: List[Replacement],
+        backup: bool = False,
+        create_if_missing: bool = False,
+    ) -> TaskDefinition:
+        from .sed import SedTask
+
+        return self.create_task(
+            SedTask,
+            name,
+            target_files=target_files,
+            replacement=replacement,
+            backup=backup,
+            create_if_missing=create_if_missing,
+        )
+
+    def overlay(
+        self,
+        name: str,
+        source_dir: Path,
+        target_dir: Path,
+        preserve_permissions: bool = True,
+    ) -> TaskDefinition:
+        from .overlay import OverlayTask
+
+        return self.create_task(
+            OverlayTask,
+            name,
+            source_dir=source_dir,
+            target_dir=target_dir,
+            preserve_permissions=preserve_permissions,
         )
 
     def __repr__(self):

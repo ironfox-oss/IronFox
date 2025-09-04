@@ -2,10 +2,10 @@
 
 from pathlib import Path
 
-from .versions import IronFoxVersions as Versions
+from .versions import Versions
 
 
-class IronFoxPaths:
+class Paths:
     """Defines file system paths for building IronFox."""
 
     def __init__(

@@ -3,7 +3,7 @@
 from enum import Enum
 import logging
 
-from ..common.logging import setup_logging
+from common.logging import setup_logging
 from .base import BaseConfig, BaseCommand
 
 

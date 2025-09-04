@@ -1,13 +1,13 @@
 """Build configuration for building IronFox."""
 
 from pathlib import Path
-from builder.common.paths import IronFoxPaths
+from .paths import Paths
 
 
 class BuildConfig:
     """Build configuration for building IronFox."""
 
-    def __init__(self, paths: IronFoxPaths):
+    def __init__(self, paths: Paths):
         self.paths = paths
 
         _path_vars: dict[str, Path] = {

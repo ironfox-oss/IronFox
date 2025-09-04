@@ -1,10 +1,10 @@
 """The 'setup' command."""
 
 import logging
+import steps.setup as setup
 
-from ..steps import setup
-from ..execution.executor import ExecutorConfig, BuildExecutor
-from ..common.logging import setup_logging
+from execution.executor import ExecutorConfig, BuildExecutor
+from common.logging import setup_logging
 from .base import BaseConfig, BaseCommand
 
 
@@ -30,7 +30,7 @@ class SetupCommand(BaseCommand):
 
     def run(self):
         self.paths.mkdirs()
-        
+
         definition = setup.get_definition(self.paths)
         self.logger.debug(f"Starting setup with definition {definition}")
         executor = BuildExecutor(ExecutorConfig(jobs=self.base_config.jobs))

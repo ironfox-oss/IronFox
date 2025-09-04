@@ -28,14 +28,13 @@ class RunCommandsTask(TaskDefinition):
         self.commands = commands
 
     def execute(self, progress):
-        run_build_commands(
+        return run_build_commands(
             name=self.name,
             cwd=self.source_dir,
             commands=self.commands,
             progress=progress,
             assume_yes=self.assume_yes,
         )
-        return super().execute(progress)
 
 
 def run_build_commands(

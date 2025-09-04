@@ -1,7 +1,7 @@
 """The 'build' command."""
 
 import logging
-from ..common.logging import setup_logging
+from common.logging import setup_logging
 from .base import BaseConfig, BaseCommand
 
 from enum import Enum

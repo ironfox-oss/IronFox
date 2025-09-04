@@ -6,10 +6,10 @@ import multiprocessing
 from click.core import Context
 from pathlib import Path
 
-from .commands.base import BaseConfig
-from .commands.build import BuildCommand
-from .commands.prepare import PrepareCommand
-from .commands.setup import SetupCommand
+from commands.base import BaseConfig
+from commands.build import BuildCommand
+from commands.prepare import PrepareCommand
+from commands.setup import SetupCommand
 
 
 @click.group("Python scripts to build IronFox")

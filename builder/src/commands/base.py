@@ -3,7 +3,7 @@
 from abc import abstractmethod
 from pathlib import Path
 
-from ..common.paths import IronFoxPaths
+from common.paths import Paths
 
 
 class BaseConfig:
@@ -27,7 +27,7 @@ class BaseConfig:
         """
         self.jobs = jobs
         self.verbose = verbose
-        self.paths = IronFoxPaths(root_dir, sdk_home, java_home)
+        self.paths = Paths(root_dir, sdk_home, java_home)
 
 
 class BaseCommand:
@@ -44,6 +44,6 @@ class BaseCommand:
         pass
 
     @property
-    def paths(self) -> IronFoxPaths:
+    def paths(self) -> Paths:
         """File system paths for building IronFox."""
         return self.base_config.paths

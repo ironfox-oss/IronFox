@@ -1,44 +1,101 @@
+from __future__ import annotations
+
 import logging
 import os
-from pathlib import Path
-from rich.progress import Progress
-from typing import Callable
 
-from ..common.utils import format_bytes
+from pathlib import Path
+import shutil
+from rich.progress import Progress
+from typing import Callable, Union
+
+from common.utils import format_bytes
 from .definition import TaskDefinition
 
-logger = logging.getLogger("Files")
+logger = logging.getLogger("FileOperations")
 
 
-class CreateFileTask(TaskDefinition):
+class FileOpTask(TaskDefinition):
+    def __init__(self, name, id, build_def, target: Path):
+        super().__init__(name, id, build_def)
+        self.target = target
+
+
+class FileCreateTask(FileOpTask):
     def __init__(
         self,
         name,
         id,
         build_def,
-        file: Path,
+        target,
         contents: Callable[[], bytes],
         chmod: int = 0o644,
         overwrite: bool = False,
     ):
-        super().__init__(name, id, build_def)
-        self.file = file
+        super().__init__(name, id, build_def, target)
         self.contents = contents
         self.chmod = chmod
         self.overwrite = overwrite
 
     def execute(self, progress):
-        create_file_with_progress(
-            destination=self.file,
+        return write_file_with_progress(
+            destination=self.target,
             contents_func=self.contents,
             progress=progress,
             chmod=self.chmod,
             overwrite=self.overwrite,
         )
-        return super().execute(progress)
 
 
-def create_file_with_progress(
+class DirCreateTask(FileOpTask):
+    def __init__(
+        self, name, id, build_def, target, parents: bool = False, exist_ok: bool = False
+    ):
+        super().__init__(name, id, build_def, target)
+        self.parent = parents
+        self.exist_ok = exist_ok
+
+    def execute(self, progress):
+        task_id = progress.add_task(f"Create directory {self.target}")
+        try:
+            self.target.mkdir(parents=self.parent, exist_ok=self.exist_ok)
+        except Exception as e:
+            logger.error(f"Failed to create dir {self.target}")
+        finally:
+            try:
+                progress.remove_task(task_id)
+            except:
+                pass
+
+
+class DeleteTask(FileOpTask):
+
+    def __init__(self, name, id, build_def, target, recursive: bool = False):
+        super().__init__(name, id, build_def, target)
+        self.recursive = recursive
+
+    def execute(self, progress):
+        task_id = progress.add_task(f"Delete {self.target}")
+
+        try:
+            if self.target.is_dir():
+                if not self.recursive:
+                    raise RuntimeError(
+                        f"Cannot delete directory {self.target} without recursive flag"
+                    )
+
+                shutil.rmtree(self.target)
+            else:
+                self.target.unlink()
+        except Exception as e:
+            logger.error(f"Failed to delete {self.target}: {e}")
+        finally:
+            try:
+                progress.remove_task(task_id)
+            except:
+                pass
+
+
+def write_file_with_progress(
     destination: Path,
     contents_func: Callable[[], bytes],
     progress: Progress,
@@ -46,7 +103,7 @@ def create_file_with_progress(
     overwrite: bool = False,
 ):
     if destination.exists() and not overwrite:
-        raise RuntimeError(f"Cannot create {destination}. File already exists!")
+        raise RuntimeError(f"Cannot write {destination}. File already exists!")
 
     try:
         content_bytes = contents_func()

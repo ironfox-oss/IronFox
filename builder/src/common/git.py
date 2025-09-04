@@ -6,7 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 
-from .utils import find_prog, is_blank
+from utils import find_prog, is_blank
 
 
 class GitConfig:

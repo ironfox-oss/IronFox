@@ -11,7 +11,7 @@ from pathlib import Path
 from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
-from ..common.utils import format_bytes
+from common.utils import format_bytes
 
 logger = logging.getLogger("Extractor")
 
@@ -34,14 +34,13 @@ class ExtractTask(TaskDefinition):
         self.preserve_permissions = preserve_permissions
 
     def execute(self, progress):
-        extract_archive(
+        return extract_archive(
             archive_file=self.archive_file,
             extract_to=self.extract_to,
             archive_format=self.archive_format,
             progress=progress,
             preserve_permissions=self.preserve_permissions,
         )
-        return super().execute(progress)
 
 
 def extract_archive(
