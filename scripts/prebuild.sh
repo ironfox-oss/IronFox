@@ -159,9 +159,6 @@ sed -i \
 sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
 echo "official=true" >>local.properties
 
-# Allow users to sync addresses
-sed -i -e 's|SYNC_ADDRESSES_FEATURE = .*|SYNC_ADDRESSES_FEATURE = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 sed -i -e 's|.crashHandler|// .crashHandler|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
