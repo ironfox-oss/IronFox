@@ -448,7 +448,7 @@ rm -vrf components/feature/search/src/*/assets/extensions/ads
 rm -vrf components/feature/search/src/*/assets/extensions/search
 
 # We can also remove the directories/libraries themselves as well
-rm -vf mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt
+rm -vf components/feature/search/src/*/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt
 rm -vrf components/feature/search/src/*/java/mozilla/components/feature/search/telemetry
 
 # Remove the 'search telemetry' config
