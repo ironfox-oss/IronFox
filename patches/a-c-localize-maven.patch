@@ -60,6 +60,21 @@ index 6bbc5b3ed8..e009561361 100644
      }
  
      dependencies {
+diff --git a/mobile/android/android-components/components/feature/fxsuggest/build.gradle b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
+index 1fdc583cf7..933b4ec8d0 100644
+--- a/mobile/android/android-components/components/feature/fxsuggest/build.gradle
++++ b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
+@@ -6,9 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+ 
+ buildscript {
+     repositories {
+-        maven {
+-            url = "https://maven.mozilla.org/maven2"
+-        }
++        mavenLocal()
+     }
+ 
+     dependencies {
 diff --git a/mobile/android/android-components/components/lib/crash/build.gradle b/mobile/android/android-components/components/lib/crash/build.gradle
 index fe86bfc252..68713e57d7 100644
 --- a/mobile/android/android-components/components/lib/crash/build.gradle
