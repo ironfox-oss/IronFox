@@ -7,9 +7,6 @@ from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
 
-logger = logging.getLogger("Cloner")
-
-
 class CloneTask(TaskDefinition):
     def __init__(
         self,
@@ -32,6 +29,7 @@ class CloneTask(TaskDefinition):
             repo_url=self.repo_url,
             clone_to=self.clone_to,
             progress=params.progress,
+            logger=self.logger,
             branch=self.branch,
             depth=self.depth,
         )
@@ -41,6 +39,7 @@ def clone_repository(
     repo_url: str,
     clone_to: Path,
     progress: Progress,
+    logger: logging.Logger,
     branch: str | None = None,
     depth: int | None = None,
 ):

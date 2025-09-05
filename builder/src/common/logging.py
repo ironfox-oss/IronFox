@@ -7,7 +7,6 @@ def setup_logging(verbose: bool):
     """Sets up logging for the application.
 
     Args:
-        log_file (Path): Path to the log file.
         verbose (bool): Whether to enable verbose logging.
     """
 
@@ -21,7 +20,7 @@ def setup_logging(verbose: bool):
         show_path=True,
     )
     console_handler.setLevel(level)
-    console_formatter = logging.Formatter("%(message)s")
+    console_formatter = logging.Formatter("[%(name)s] %(message)s")
     console_handler.setFormatter(console_formatter)
 
     if not logger.hasHandlers():

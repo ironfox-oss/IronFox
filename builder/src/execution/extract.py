@@ -13,8 +13,6 @@ from rich.progress import Progress
 from .definition import BuildDefinition, TaskDefinition
 from common.utils import format_bytes
 
-logger = logging.getLogger("Extractor")
-
 
 class ExtractTask(TaskDefinition):
     def __init__(
@@ -39,6 +37,7 @@ class ExtractTask(TaskDefinition):
             extract_to=self.extract_to,
             archive_format=self.archive_format,
             progress=params.progress,
+            logger=self.logger,
             preserve_permissions=self.preserve_permissions,
         )
 
@@ -48,6 +47,7 @@ def extract_archive(
     extract_to: Path,
     archive_format: str,
     progress: Progress,
+    logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
     logger.info(f"Extracting {archive_file} to {extract_to}")
@@ -91,10 +91,17 @@ def extract_archive(
     # Extract based on format
     try:
         if archive_format == "zip":
-            _extract_zip(archive_file, extract_to, progress, preserve_permissions)
+            _extract_zip(
+                archive_file, extract_to, progress, logger, preserve_permissions
+            )
         elif archive_format in ("tar", "gztar", "bztar", "xztar"):
             _extract_tar(
-                archive_file, extract_to, progress, archive_format, preserve_permissions
+                archive_file,
+                extract_to,
+                archive_format,
+                progress,
+                logger,
+                preserve_permissions,
             )
         else:
             raise ValueError(f"Unsupported archive format: {archive_format}")
@@ -111,6 +118,7 @@ def _extract_zip(
     archive_file: Path,
     extract_to: Path,
     progress: Progress,
+    logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
     """Extract a ZIP archive with progress tracking and error handling."""
@@ -146,14 +154,18 @@ def _extract_zip(
             for member in members:
                 try:
                     # Security check: prevent path traversal attacks
-                    if _is_safe_path(extract_to, member.filename):
+                    if _is_safe_path(extract_to, member.filename, logger):
                         zip_ref.extract(member, extract_to)
                         extracted_count += 1
                         total_size += member.file_size
 
                         # Preserve permissions if requested and supported
                         if preserve_permissions:
-                            _set_zip_permissions(extract_to / member.filename, member)
+                            _set_zip_permissions(
+                                extract_to / member.filename,
+                                member,
+                                logger,
+                            )
 
                         # Log progress for large extractions
                         if extracted_count % 100 == 0:
@@ -194,8 +206,9 @@ def _extract_zip(
 def _extract_tar(
     archive_file: Path,
     extract_to: Path,
-    progress: Progress,
     archive_format: str,
+    progress: Progress,
+    logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
     """Extract a TAR archive with progress tracking and error handling."""
@@ -227,7 +240,7 @@ def _extract_tar(
             for member in members:
                 try:
                     # Security checks
-                    if not _is_safe_tar_member(extract_to, member):
+                    if not _is_safe_tar_member(extract_to, member, logger):
                         logger.warning(f"Skipping unsafe tar member: {member.name}")
                         progress.update(task_id, advance=1)
                         continue
@@ -267,7 +280,11 @@ def _extract_tar(
                 logger.debug(f"Failed to remove progress task: {e}")
 
 
-def _set_zip_permissions(file_path: Path, zip_info: zipfile.ZipInfo):
+def _set_zip_permissions(
+    file_path: Path,
+    zip_info: zipfile.ZipInfo,
+    logger: logging.Logger,
+):
     """Set file permissions for extracted ZIP files."""
     try:
         # ZIP files store Unix permissions in the external_attr field
@@ -289,10 +306,12 @@ def _set_zip_permissions(file_path: Path, zip_info: zipfile.ZipInfo):
                 logger.debug(f"Set permissions {oct(safe_permissions)} for {file_path}")
             else:
                 # Set default permissions if no valid permissions found
-                _set_default_permissions(file_path, zip_info.filename.endswith("/"))
+                _set_default_permissions(
+                    file_path, logger, zip_info.filename.endswith("/")
+                )
         else:
             # Set default permissions if external_attr is not available
-            _set_default_permissions(file_path, zip_info.filename.endswith("/"))
+            _set_default_permissions(file_path, logger, zip_info.filename.endswith("/"))
 
     except (OSError, PermissionError) as e:
         logger.debug(f"Failed to set permissions for {file_path}: {e}")
@@ -300,7 +319,9 @@ def _set_zip_permissions(file_path: Path, zip_info: zipfile.ZipInfo):
         logger.debug(f"Unexpected error setting permissions for {file_path}: {e}")
 
 
-def _set_default_permissions(file_path: Path, is_directory: bool = False):
+def _set_default_permissions(
+    file_path: Path, logger: logging.Logger, is_directory: bool = False
+):
     """Set default permissions for extracted files."""
     try:
         if is_directory:
@@ -313,7 +334,11 @@ def _set_default_permissions(file_path: Path, is_directory: bool = False):
         logger.debug(f"Failed to set default permissions for {file_path}: {e}")
 
 
-def _is_safe_path(base_path: Path, filename: str) -> bool:
+def _is_safe_path(
+    base_path: Path,
+    filename: str,
+    logger: logging.Logger,
+) -> bool:
     """Check if a filename is safe to extract (prevents directory traversal)."""
     try:
         # Resolve the full path
@@ -328,10 +353,14 @@ def _is_safe_path(base_path: Path, filename: str) -> bool:
         return False
 
 
-def _is_safe_tar_member(base_path: Path, member: tarfile.TarInfo) -> bool:
+def _is_safe_tar_member(
+    base_path: Path,
+    member: tarfile.TarInfo,
+    logger: logging.Logger,
+) -> bool:
     """Check if a tar member is safe to extract."""
     # Check for directory traversal
-    if not _is_safe_path(base_path, member.name):
+    if not _is_safe_path(base_path, member.name, logger):
         return False
 
     # Check for absolute paths

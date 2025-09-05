@@ -7,13 +7,9 @@ import shlex
 
 from pathlib import Path
 from rich.progress import Progress
-from rich.console import Console
-from threading import Thread
 
 from .definition import BuildDefinition, TaskDefinition
 from .types import CommandType
-
-logger = logging.getLogger("CommandRunner")
 
 
 class RunCommandsTask(TaskDefinition):
@@ -49,6 +45,7 @@ class RunCommandsTask(TaskDefinition):
             commands=self.commands,
             env=params.env.environment_variables,
             progress=params.progress,
+            logger=self.logger,
             assume_yes=self.assume_yes,
         )
 
@@ -58,6 +55,7 @@ def run_build_commands(
     cwd: Path,
     commands: list[CommandType],
     progress: Progress,
+    logger: logging.Logger,
     env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = False,
 ):
@@ -81,7 +79,7 @@ def run_build_commands(
     try:
         # Execute each command in sequence
         for i, command in enumerate(commands, 1):
-            logger.info(f"[{name}] Executing command {i}/{len(commands)}: {command}")
+            logger.info(f"Executing command {i}/{len(commands)}: {command}")
 
             cmd_name = "<unknown>"
             if isinstance(command, str):
@@ -94,19 +92,18 @@ def run_build_commands(
                 command=command,
                 cwd=cwd,
                 env=env,
+                logger=logger,
                 assume_yes=assume_yes,
             )
 
             if not success:
-                raise subprocess.CalledProcessError(
-                    1, cmd_name, f"[{name}] Command {i} failed"
-                )
+                raise subprocess.CalledProcessError(1, cmd_name, f"Command {i} failed")
 
             progress.update(task_id, description=task_desc(i), advance=1)
 
-            logger.info(f"[{name}] Command {i}/{len(commands)} completed successfully")
+            logger.info(f"Command {i}/{len(commands)} completed successfully")
 
-        logger.info(f"[{name}] All {len(commands)} commands completed successfully")
+        logger.info(f"All {len(commands)} commands completed successfully")
 
     finally:
         progress.remove_task(task_id)
@@ -116,9 +113,9 @@ def _execute_command(
     name: str,
     command: CommandType,
     cwd: Path,
+    logger: logging.Logger,
     env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = 0,
-    console=Console(),
 ) -> bool:
     try:
         result_handler = None
@@ -128,8 +125,8 @@ def _execute_command(
             cmd, result_handler = command
 
         args = shlex.split(cmd)
-        logger.debug(f"[{name}] Parsed command: {args}")
-        logger.debug(f"[{name}] Working directory: {cwd}")
+        logger.debug(f"Parsed command: {args}")
+        logger.debug(f"Working directory: {cwd}")
 
         input_data = None
         if assume_yes:
@@ -142,6 +139,7 @@ def _execute_command(
             args,
             cwd=cwd,
             input=input_data,
+            env=env,
             capture_output=True,
             text=True,
             check=True,
@@ -149,43 +147,43 @@ def _execute_command(
 
         # Log output
         if result.stdout:
-            logger.debug(f"[{name}] Command stdout:\n{result.stdout}")
+            logger.debug(f"Command stdout:\n{result.stdout}")
 
         if result.stderr:
             # Many build tools output progress/info to stderr
-            logger.debug(f"[{name}] Command stderr:\n{result.stderr}")
+            logger.debug(f"Command stderr:\n{result.stderr}")
 
         if result_handler:
             try:
+                logger.debug("Running result handler...")
                 result_handler(result.stdout, result.stderr)
             except Exception as e:
-                logger.error(f"[{name}] Result handler failed with exception {e}")
+                logger.error(f"Result handler failed with exception: {e}")
                 return False
 
         return True
 
     except subprocess.CalledProcessError as e:
-        logger.error(f"[{name}] Command failed with return code {e.returncode}")
-        logger.error(f"[{name}] Command: {command}")
+        logger.error(f"Command failed with return code {e.returncode}")
+        logger.error(f"Command: {command}")
 
         if e.stdout:
-            logger.error(f"[{name}] Command stdout:\n{e.stdout}")
+            logger.error(f"Command stdout:\n{e.stdout}")
 
         if e.stderr:
-            logger.error(f"[{name}] Command stderr:\n{e.stderr}")
+            logger.error(f"Command stderr:\n{e.stderr}")
 
         return False
 
     except FileNotFoundError as e:
-        logger.error(f"[{name}] Command not found: {command}")
-        logger.error(f"[{name}] Error: {e}")
+        logger.error(f"Command not found: {command}")
+        logger.error(f"Error: {e}")
         logger.error(
-            f"[{name}] Please ensure all required build tools are installed and in PATH"
+            f"Please ensure all required build tools are installed and in PATH"
         )
         return False
 
     except Exception as e:
-        logger.error(f"[{name}] Unexpected error executing command: {command}")
-        logger.error(f"[{name}] Error: {e}")
+        logger.error(f"Unexpected error executing command: {command}")
+        logger.error(f"Error: {e}")
         return False
-

@@ -11,9 +11,12 @@ def setup_java(d: BuildDefinition, paths: Paths):
     java = paths.java_home / "bin" / "java"
 
     def do_check_java_version(output: str) -> Tuple[bool, str] | None:
+        if not output:
+            return None
+
         match = re.search(r'version\s+"([\d._]+)"', output)
         if not match:
-            return None
+            return (False, f"Failed to parse Java version from: {output}")
 
         version_str = match.group(1)
         parts = version_str.split(".")
@@ -33,12 +36,13 @@ def setup_java(d: BuildDefinition, paths: Paths):
         return (True, f"Detected Java version '{version_str}'")
 
     def check_java_version(stdout: str, stderr: str):
-        stdout, stderr = stdout.strip(), stderr.strip()
+        result = do_check_java_version(stderr if stderr else stdout)
+        if result is None:
+            raise RuntimeError("Failed to check Java version. Is 'java' installed?")
 
-        if len(stderr) > 0 and do_check_java_version(stderr):
-            return
-
-        do_check_java_version(stdout)
+        success, message = result
+        if not success:
+            raise RuntimeError(message)
 
     d.run_commands(
         name="Check java version",

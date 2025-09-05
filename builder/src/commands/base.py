@@ -98,7 +98,7 @@ class BaseConfig:
         console.print("\n[bold]Environment variables:[/bold]")
         console.print(env_table)
         console.print()
-        console.print("    ========    ")
+        console.print("========")
         console.print()
 
     @property

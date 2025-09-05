@@ -6,8 +6,6 @@ from pathlib import Path
 from rich.progress import Progress
 from .definition import TaskDefinition
 
-logger = logging.getLogger("OverlayTask")
-
 
 class OverlayTask(TaskDefinition):
 
@@ -30,6 +28,7 @@ class OverlayTask(TaskDefinition):
             source_dir=self.source_dir,
             target_dir=self.target_dir,
             progress=params.progress,
+            logger=self.logger,
             preserve_permissions=self.preserve_permissions,
         )
 
@@ -38,6 +37,7 @@ def overlay_directory(
     source_dir: Path,
     target_dir: Path,
     progress: Progress,
+    logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
     if not source_dir.exists():

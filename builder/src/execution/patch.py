@@ -5,8 +5,6 @@ from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
 
-logger = logging.getLogger("Patcher")
-
 
 class PatchTask(TaskDefinition):
     def __init__(
@@ -27,6 +25,7 @@ class PatchTask(TaskDefinition):
             patch_file=self.patch_file,
             target_dir=self.target_dir,
             progress=progress,
+            logger=self.logger,
         )
 
 
@@ -34,6 +33,7 @@ def apply_patch(
     patch_file: Path,
     target_dir: Path,
     progress: Progress,
+    logger: logging.Logger,
 ):
     logger.info(f"Applying patch {patch_file} to {target_dir}")
 
@@ -52,7 +52,11 @@ def apply_patch(
         # First try git apply
         if _is_git_repository(target_dir):
             logger.debug("Target directory is a git repository, trying git apply")
-            success = _apply_with_git(patch_file, target_dir)
+            success = _apply_with_git(
+                patch_file,
+                target_dir,
+                logger,
+            )
             if success:
                 logger.info(f"Successfully applied patch using git apply: {patch_file}")
                 return
@@ -60,7 +64,7 @@ def apply_patch(
                 logger.debug("git apply failed, falling back to patch command")
 
         # Fall back to standard patch command
-        _apply_with_patch_command(patch_file, target_dir)
+        _apply_with_patch_command(patch_file, target_dir, logger)
         logger.info(f"Successfully applied patch using patch command: {patch_file}")
 
     finally:
@@ -72,7 +76,11 @@ def _is_git_repository(directory: Path) -> bool:
     return (directory / ".git").exists()
 
 
-def _apply_with_git(patch_file: Path, target_dir: Path) -> bool:
+def _apply_with_git(
+    patch_file: Path,
+    target_dir: Path,
+    logger: logging.Logger,
+) -> bool:
     """Try to apply patch using git apply.
 
     Returns:
@@ -104,7 +112,11 @@ def _apply_with_git(patch_file: Path, target_dir: Path) -> bool:
         return False
 
 
-def _apply_with_patch_command(patch_file: Path, target_dir: Path):
+def _apply_with_patch_command(
+    patch_file: Path,
+    target_dir: Path,
+    logger: logging.Logger,
+):
     """Apply patch using the standard patch command.
 
     Raises:

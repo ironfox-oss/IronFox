@@ -16,8 +16,6 @@ TIMEOUT_SECONDS = 30
 MAX_RETRIES = 3
 BACKOFF_FACTOR = 0.3
 
-logger = logging.getLogger("Downloader")
-
 
 class DownloadTask(TaskDefinition):
     def __init__(
@@ -40,6 +38,7 @@ class DownloadTask(TaskDefinition):
             destination=self.destination,
             sha256=self.sha256,
             progress=params.progress,
+            logger=self.logger,
         )
 
 
@@ -48,6 +47,7 @@ def download_if_needed(
     destination: Path,
     sha256: str,
     progress: Progress,
+    logger: logging.Logger,
 ):
     if destination.exists():
         try:
@@ -74,7 +74,13 @@ def download_if_needed(
         logger.error(f"Failed to create directory {destination.parent}: {e}")
         raise
 
-    download_with_progress(url, destination, sha256, progress)
+    download_with_progress(
+        url,
+        destination,
+        sha256,
+        progress,
+        logger,
+    )
 
 
 def download_with_progress(
@@ -82,6 +88,7 @@ def download_with_progress(
     destination: Path,
     sha256: str,
     progress: Progress,
+    logger: logging.Logger,
 ):
     logger.info(f"Downloading {url} to {destination}")
 

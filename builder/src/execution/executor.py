@@ -37,7 +37,7 @@ class BuildExecutor:
     def __init__(self, config: ExecutorConfig):
         self.config = config
         self.executor = ThreadPoolExecutor(max_workers=self.config.jobs)
-        self.logger = logging.getLogger(f"BuildExecutor[jobs={self.config.jobs}]")
+        self.logger = logging.getLogger("BuildExecutor")
         self._lock = threading.Lock()
 
     def submit(self, definition: BuildDefinition):
@@ -96,9 +96,7 @@ class BuildExecutor:
                                 completed_tasks.add(task_id)
                                 running_tasks.remove(task_id)
 
-                                self.logger.info(
-                                    f"Task completed successfully: {task_state.task.name}"
-                                )
+                                task_state.task.info("Completed successfully")
 
                                 # Check if any pending tasks are now ready
                                 newly_ready = self._find_newly_ready_tasks(
@@ -117,9 +115,7 @@ class BuildExecutor:
                                 failed_tasks.add(task_id)
                                 running_tasks.remove(task_id)
 
-                                self.logger.error(
-                                    f"Task {task_state.task.name} failed with exception: {e}"
-                                )
+                                task_state.task.error(f"Failed with exception: {e}")
 
                                 # Mark all dependent tasks as failed
                                 dependent_tasks = self._get_all_dependents(
@@ -146,8 +142,8 @@ class BuildExecutor:
                                     failed_tasks.add(dep_task_id)
 
                                     self.logger.error(
-                                        f"Task {task_states[dep_task_id].task.name} "
-                                        f"skipped due to failed dependency: {task_state.task.name}"
+                                        f"Task '{task_states[dep_task_id].task.name}' "
+                                        f"skipped due to failed dependency: '{task_state.task.name}'"
                                     )
 
                                 # Remove failed tasks from ready queue
@@ -177,9 +173,7 @@ class BuildExecutor:
                             )
                             failed_tasks.add(task_id)
                             pending_tasks.remove(task_id)
-                            self.logger.error(
-                                f"Task {task_state.task.name} skipped - no viable execution path"
-                            )
+                            task_state.task.error(f"skipped - no viable execution path")
 
                 # Check if any tasks failed and raise the first error
                 failed_task_states = [
@@ -279,29 +273,26 @@ class BuildExecutor:
 
     def _perform_task(self, task: TaskDefinition, progress: Progress) -> None:
         """Perform a single task with hooks."""
-        self.logger.info(f"Starting task: {task.name}")
-
+        task.info("Starting...")
         try:
             self._run_task_with_hooks(task, progress)
         except Exception as e:
-            self.logger.error(f"Task {task.name} failed with exception: {e}")
+            task.error(f"Failed with exception: {e}")
             raise
 
     def _run_task_with_hooks(self, task: TaskDefinition, progress: Progress):
         """Run a task with its pre and post hooks."""
         if len(task.do_firsts) > 0:
-            self.logger.debug(f"Running do_first hooks for task: {task.name}")
+            task.debug(f"Running do_first hooks...")
             task_id = progress.add_task(
-                f"Running pre-tasks for {task.name}", total=len(task.do_firsts)
+                f"Running do-firsts for {task.name}", total=len(task.do_firsts)
             )
             try:
                 for func in task.do_firsts:
                     func()
                     progress.update(task_id, advance=1)
             except Exception as e:
-                self.logger.error(
-                    f"Task {task.name} do_first hook failed with exception: {e}"
-                )
+                task.error(f"do_first hook failed with exception: {e}")
                 raise
             finally:
                 try:
@@ -312,18 +303,16 @@ class BuildExecutor:
         self._run_task(task, progress)
 
         if len(task.do_lasts) > 0:
-            self.logger.debug(f"Running do_last hooks for task: {task.name}")
+            task.debug(f"Running do_last hooks")
             task_id = progress.add_task(
-                f"Running post-tasks for {task.name}", total=len(task.do_lasts)
+                f"Running do-lasts for {task.name}", total=len(task.do_lasts)
             )
             try:
                 for func in task.do_lasts:
                     func()
                     progress.update(task_id, advance=1)
             except Exception as e:
-                self.logger.error(
-                    f"Task {task.name} do_last hook failed with exception: {e}"
-                )
+                task.error(f"do_last hook failed with exception: {e}")
                 raise
             finally:
                 try:
@@ -334,7 +323,7 @@ class BuildExecutor:
     def _run_task(self, task: TaskDefinition, progress: Progress):
         """Execute the main action of a task based on its type."""
         try:
-            self.logger.debug(f"Executing task: {task.name}")
+            task.debug(f"Executing...")
             task.execute(
                 TaskExecutionParams(
                     progress=progress,
@@ -342,7 +331,7 @@ class BuildExecutor:
                 )
             )
         finally:
-            self.logger.debug(f"Completed task: {task.name}")
+            task.debug(f"Completed")
 
     def shutdown(self):
         """Shutdown the executor and wait for all tasks to complete."""

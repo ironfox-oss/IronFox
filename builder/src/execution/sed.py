@@ -11,8 +11,6 @@ from .definition import TaskDefinition, BuildDefinition
 
 from .types import TargetFilesType, Replacement
 
-logger = logging.getLogger("SedTask")
-
 
 class SedTask(TaskDefinition):
     """Task for performing sed-like string replacements in files."""
@@ -43,6 +41,7 @@ class SedTask(TaskDefinition):
             target_files=self.target_files,
             replacements=self.replacements,
             progress=params.progress,
+            logger=self.logger,
             backup=self.backup,
             create_if_missing=self.create_if_missing,
         )
@@ -52,6 +51,7 @@ def sed_replace(
     target_files: List[Path],
     replacements: List[Replacement],
     progress: Progress,
+    logger: logging.Logger,
     backup: bool = False,
     create_if_missing: bool = False,
 ):

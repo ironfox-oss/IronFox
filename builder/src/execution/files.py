@@ -11,8 +11,6 @@ from typing import Callable, Union
 from common.utils import format_bytes
 from .definition import TaskDefinition
 
-logger = logging.getLogger("FileOperations")
-
 
 class FileOpTask(TaskDefinition):
     def __init__(self, name, id, build_def, target: Path):
@@ -41,6 +39,7 @@ class FileCreateTask(FileOpTask):
             destination=self.target,
             contents_func=self.contents,
             progress=params.progress,
+            logger=self.logger,
             chmod=self.chmod,
             overwrite=self.overwrite,
         )
@@ -60,7 +59,7 @@ class DirCreateTask(FileOpTask):
         try:
             self.target.mkdir(parents=self.parent, exist_ok=self.exist_ok)
         except Exception as e:
-            logger.error(f"Failed to create dir {self.target}")
+            self.error(f"Failed to create dir {self.target}")
         finally:
             try:
                 progress.remove_task(task_id)
@@ -89,7 +88,7 @@ class DeleteTask(FileOpTask):
             else:
                 self.target.unlink()
         except Exception as e:
-            logger.error(f"Failed to delete {self.target}: {e}")
+            self.error(f"Failed to delete {self.target}: {e}")
         finally:
             try:
                 progress.remove_task(task_id)
@@ -101,6 +100,7 @@ def write_file_with_progress(
     destination: Path,
     contents_func: Callable[[], bytes],
     progress: Progress,
+    logger: logging.Logger,
     chmod: int = 0o644,
     overwrite: bool = False,
 ):

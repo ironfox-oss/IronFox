@@ -36,9 +36,23 @@ class TaskDefinition:
         self.dependencies = []
         self._visited = False  # For cycle detection in dependencies
 
+        self.logger = logging.getLogger(name)
+
     @abstractmethod
     def execute(self, params: TaskExecutionParams):
         raise NotImplementedError("Task execution has not been implemented")
+
+    def debug(self, *args, **kwargs):
+        self.logger.debug(*args, *kwargs)
+
+    def info(self, *args, **kwargs):
+        self.logger.info(*args, *kwargs)
+
+    def warning(self, *args, **kwargs):
+        self.logger.warning(*args, *kwargs)
+
+    def error(self, *args, **kwargs):
+        self.logger.error(*args, *kwargs)
 
     def do_first(self, func) -> TaskDefinition:
         """Registers a function to be executed before the main task action.

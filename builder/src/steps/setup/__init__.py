@@ -9,6 +9,7 @@ from common.versions import Versions
 from execution.definition import BuildDefinition
 
 from .android_sdk import setup_android_sdk, setup_bundletool
+from .java import setup_java
 from .phoenix import setup_phoenix
 from .rust import setup_rust
 
@@ -20,6 +21,7 @@ def get_definition(paths: Paths) -> BuildDefinition:
 
     setup_android_sdk(d, paths)
     setup_bundletool(d, paths)
+    setup_java(d, paths)
     setup_phoenix(d, paths)
     setup_rust(d, paths)
 
