@@ -38,11 +38,11 @@ class SedTask(TaskDefinition):
         self.backup = backup
         self.create_if_missing = create_if_missing
 
-    def execute(self, progress: Progress):
+    def execute(self, params):
         return sed_replace(
             target_files=self.target_files,
             replacements=self.replacements,
-            progress=progress,
+            progress=params.progress,
             backup=self.backup,
             create_if_missing=self.create_if_missing,
         )

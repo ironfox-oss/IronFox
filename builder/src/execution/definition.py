@@ -7,14 +7,22 @@ import logging
 
 from abc import abstractmethod
 from pathlib import Path
+from commands.base import BuildEnvironment
 from rich.progress import Progress
 from typing import Callable, List, TypeVar, Type
 
-from .types import Replacement
+from .types import CommandType, Replacement
 
 
 def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
     return [f"{indent}{line}" for line in lines]
+
+
+class TaskExecutionParams:
+
+    def __init__(self, progress: Progress, env: BuildEnvironment):
+        self.progress = progress
+        self.env = env
 
 
 class TaskDefinition:
@@ -29,7 +37,7 @@ class TaskDefinition:
         self._visited = False  # For cycle detection in dependencies
 
     @abstractmethod
-    def execute(self, progress: Progress):
+    def execute(self, params: TaskExecutionParams):
         raise NotImplementedError("Task execution has not been implemented")
 
     def do_first(self, func) -> TaskDefinition:
@@ -310,8 +318,9 @@ class BuildDefinition:
     def run_commands(
         self,
         name: str,
-        source_dir: Path,
-        commands: list[str],
+        commands: list[CommandType],
+        cwd: Path = Path.cwd(),
+        env: dict[str, str] = dict(),
         assume_yes: bool | int = False,
     ) -> TaskDefinition:
         from .run import RunCommandsTask
@@ -319,8 +328,9 @@ class BuildDefinition:
         return self.create_task(
             RunCommandsTask,
             name,
-            source_dir=source_dir,
+            cwd=cwd,
             commands=commands,
+            env=env,
             assume_yes=assume_yes,
         )
 

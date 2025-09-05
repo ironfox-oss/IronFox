@@ -33,12 +33,12 @@ class ExtractTask(TaskDefinition):
         self.archive_format = archive_format
         self.preserve_permissions = preserve_permissions
 
-    def execute(self, progress):
+    def execute(self, params):
         return extract_archive(
             archive_file=self.archive_file,
             extract_to=self.extract_to,
             archive_format=self.archive_format,
-            progress=progress,
+            progress=params.progress,
             preserve_permissions=self.preserve_permissions,
         )
 

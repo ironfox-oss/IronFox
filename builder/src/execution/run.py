@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import logging
+import os
 import subprocess
 import shlex
 
 from pathlib import Path
 from rich.progress import Progress
+from rich.console import Console
+from threading import Thread
 
 from .definition import BuildDefinition, TaskDefinition
+from .types import CommandType
 
-logger = logging.getLogger("Compiler")
+logger = logging.getLogger("CommandRunner")
 
 
 class RunCommandsTask(TaskDefinition):
@@ -18,21 +22,33 @@ class RunCommandsTask(TaskDefinition):
         name: str,
         id: int,
         build_def: BuildDefinition,
-        source_dir: Path,
+        cwd: Path,
         assume_yes: bool | int,
-        commands: list[str],
+        commands: list[CommandType],
+        env: dict[str, str],
     ):
         super().__init__(name, id, build_def)
-        self.source_dir = source_dir
+        self.cwd = cwd
         self.assume_yes = assume_yes
         self.commands = commands
+        self.env = env
 
-    def execute(self, progress):
+    def execute(self, params):
+
+        # Set up environment variables
+        # 1. get os env vars
+        # 2. get build-wide env vars (can override os env vars)
+        # 3. command-specific env vars (can override os and build-wide env vars)
+        env = os.environ.copy()
+        env.update(params.env.environment_variables)
+        env.update(self.env)
+
         return run_build_commands(
             name=self.name,
-            cwd=self.source_dir,
+            cwd=self.cwd,
             commands=self.commands,
-            progress=progress,
+            env=params.env.environment_variables,
+            progress=params.progress,
             assume_yes=self.assume_yes,
         )
 
@@ -40,8 +56,9 @@ class RunCommandsTask(TaskDefinition):
 def run_build_commands(
     name: str,
     cwd: Path,
-    commands: list[str],
+    commands: list[CommandType],
     progress: Progress,
+    env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = False,
 ):
     logger.info(f"Running {len(commands)} commands in {cwd}")
@@ -66,11 +83,23 @@ def run_build_commands(
         for i, command in enumerate(commands, 1):
             logger.info(f"[{name}] Executing command {i}/{len(commands)}: {command}")
 
-            success = _execute_command(name, command, cwd, assume_yes=assume_yes)
+            cmd_name = "<unknown>"
+            if isinstance(command, str):
+                cmd_name = command
+            else:
+                cmd_name = command[0]
+
+            success = _execute_command(
+                name=name,
+                command=command,
+                cwd=cwd,
+                env=env,
+                assume_yes=assume_yes,
+            )
 
             if not success:
                 raise subprocess.CalledProcessError(
-                    1, command, f"[{name}] Command {i} failed"
+                    1, cmd_name, f"[{name}] Command {i} failed"
                 )
 
             progress.update(task_id, description=task_desc(i), advance=1)
@@ -85,37 +114,37 @@ def run_build_commands(
 
 def _execute_command(
     name: str,
-    command: str,
+    command: CommandType,
     cwd: Path,
+    env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = 0,
+    console=Console(),
 ) -> bool:
-    """Execute a single build command.
-
-    Args:
-        command (str): The command to execute.
-        cwd (Path): The working directory for the command.
-
-    Returns:
-        bool: True if command succeeded, False otherwise.
-    """
     try:
-        # Parse command into arguments
-        # This handles quoted arguments and shell escaping
-        args = shlex.split(command)
+        result_handler = None
+        if isinstance(command, str):
+            cmd = command
+        else:
+            cmd, result_handler = command
 
+        args = shlex.split(cmd)
         logger.debug(f"[{name}] Parsed command: {args}")
         logger.debug(f"[{name}] Working directory: {cwd}")
 
-        input = None
+        input_data = None
         if assume_yes:
-            if type(assume_yes) == bool:
+            if isinstance(assume_yes, bool):
                 assume_yes = 100
-
-            input = "y\n" * assume_yes
+            input_data = "y\n" * assume_yes
 
         # Execute the command
         result = subprocess.run(
-            args, cwd=cwd, input=input, capture_output=True, text=True, check=True
+            args,
+            cwd=cwd,
+            input=input_data,
+            capture_output=True,
+            text=True,
+            check=True,
         )
 
         # Log output
@@ -125,6 +154,13 @@ def _execute_command(
         if result.stderr:
             # Many build tools output progress/info to stderr
             logger.debug(f"[{name}] Command stderr:\n{result.stderr}")
+
+        if result_handler:
+            try:
+                result_handler(result.stdout, result.stderr)
+            except Exception as e:
+                logger.error(f"[{name}] Result handler failed with exception {e}")
+                return False
 
         return True
 
@@ -152,3 +188,4 @@ def _execute_command(
         logger.error(f"[{name}] Unexpected error executing command: {command}")
         logger.error(f"[{name}] Error: {e}")
         return False
+

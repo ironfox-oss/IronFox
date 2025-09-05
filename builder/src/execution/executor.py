@@ -6,16 +6,18 @@ import threading
 from typing import Dict, Set, List
 from collections import defaultdict, deque
 
+from commands.base import BuildEnvironment
 from rich.progress import Progress
 
-from .definition import BuildDefinition, TaskDefinition
+from .definition import BuildDefinition, TaskDefinition, TaskExecutionParams
 
 
 class ExecutorConfig:
     """Configuration for the executor."""
 
-    def __init__(self, jobs: int):
+    def __init__(self, jobs: int, env: BuildEnvironment):
         self.jobs = jobs
+        self.env = env
 
 
 class TaskState:
@@ -331,9 +333,16 @@ class BuildExecutor:
 
     def _run_task(self, task: TaskDefinition, progress: Progress):
         """Execute the main action of a task based on its type."""
-        self.logger.debug(f"Executing task: {task.name}")
-        task.execute(progress=progress)
-        self.logger.debug(f"Completed task: {task.name}")
+        try:
+            self.logger.debug(f"Executing task: {task.name}")
+            task.execute(
+                TaskExecutionParams(
+                    progress=progress,
+                    env=self.config.env,
+                )
+            )
+        finally:
+            self.logger.debug(f"Completed task: {task.name}")
 
     def shutdown(self):
         """Shutdown the executor and wait for all tasks to complete."""

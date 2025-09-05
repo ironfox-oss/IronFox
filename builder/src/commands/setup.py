@@ -26,14 +26,19 @@ class SetupCommand(BaseCommand):
         setup_logging(self.base_config.verbose)
 
         self.logger = logging.getLogger("SetupCommand")
-        self.logger.debug(f"Initialized setup command")
+        self.logger.debug(f"Initialized setup command with config {base_config}")
 
     def run(self):
         self.paths.mkdirs()
 
         definition = setup.get_definition(self.paths)
         self.logger.debug(f"Starting setup with definition {definition}")
-        executor = BuildExecutor(ExecutorConfig(jobs=self.base_config.jobs))
+        executor = BuildExecutor(
+            ExecutorConfig(
+                jobs=self.base_config.jobs,
+                env=self.base_config.env,
+            )
+        )
 
         try:
             executor.submit(definition)

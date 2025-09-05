@@ -21,7 +21,8 @@ class PatchTask(TaskDefinition):
         self.patch_file = patch_file
         self.target_dir = target_dir
 
-    def execute(self, progress):
+    def execute(self, params):
+        progress = params.progress
         return apply_patch(
             patch_file=self.patch_file,
             target_dir=self.target_dir,

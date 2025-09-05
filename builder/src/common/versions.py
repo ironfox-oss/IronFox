@@ -25,3 +25,6 @@ class Versions:
     BUILDTOOLS_VERSION = "36.0.0"
     NDK_REVISION = "28.1.13356709"
     SDK_REVISION = "13114758"
+    
+    # Java version required to build IronFox
+    JAVA_VERSION = 17

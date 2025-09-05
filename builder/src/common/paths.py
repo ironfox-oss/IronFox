@@ -11,8 +11,9 @@ class Paths:
     def __init__(
         self,
         root_dir: Path,
-        sdk_home: Path,
+        android_home: Path,
         java_home: Path,
+        cargo_home: Path,
     ):
         """Create a new IronFoxPaths instance.
 
@@ -20,8 +21,9 @@ class Paths:
             rootdir (Path): Path to the root IronFox source directory.
         """
         self._rootdir = root_dir
-        self._sdk_home = sdk_home
+        self._android_home = android_home
         self._java_home = java_home
+        self._cargo_home = cargo_home
 
     def mkdirs(self):
         """Create necessary directories if they do not exist."""
@@ -37,19 +39,24 @@ class Paths:
         return self._rootdir
 
     @property
-    def sdk_home(self) -> Path:
+    def android_home(self) -> Path:
         """Path to the Android SDK directory."""
-        return self._sdk_home
+        return self._android_home
 
     @property
     def ndk_home(self) -> Path:
         """Path to the Android NDK directory."""
-        return self.sdk_home / "ndk" / Versions.NDK_REVISION
+        return self.android_home / "ndk" / Versions.NDK_REVISION
 
     @property
     def java_home(self) -> Path:
         """Path to the JDK directory."""
         return self._java_home
+    
+    @property
+    def cargo_home(self) -> Path:
+        """Path to the .cargo directory."""
+        return self._cargo_home
 
     @property
     def artifacts_dir(self) -> Path:

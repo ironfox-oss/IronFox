@@ -36,11 +36,11 @@ class FileCreateTask(FileOpTask):
         self.chmod = chmod
         self.overwrite = overwrite
 
-    def execute(self, progress):
+    def execute(self, params):
         return write_file_with_progress(
             destination=self.target,
             contents_func=self.contents,
-            progress=progress,
+            progress=params.progress,
             chmod=self.chmod,
             overwrite=self.overwrite,
         )
@@ -54,7 +54,8 @@ class DirCreateTask(FileOpTask):
         self.parent = parents
         self.exist_ok = exist_ok
 
-    def execute(self, progress):
+    def execute(self, params):
+        progress = params.progress
         task_id = progress.add_task(f"Create directory {self.target}")
         try:
             self.target.mkdir(parents=self.parent, exist_ok=self.exist_ok)
@@ -73,7 +74,8 @@ class DeleteTask(FileOpTask):
         super().__init__(name, id, build_def, target)
         self.recursive = recursive
 
-    def execute(self, progress):
+    def execute(self, params):
+        progress = params.progress
         task_id = progress.add_task(f"Delete {self.target}")
 
         try:

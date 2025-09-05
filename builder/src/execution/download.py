@@ -34,12 +34,12 @@ class DownloadTask(TaskDefinition):
         self.destination = destination
         self.sha256 = sha256
 
-    def execute(self, progress):
+    def execute(self, params):
         return download_if_needed(
             url=self.url,
             destination=self.destination,
             sha256=self.sha256,
-            progress=progress,
+            progress=params.progress,
         )
 
 
@@ -263,6 +263,3 @@ def download_with_progress(
             session.close()
         except Exception as e:
             logger.debug(f"Error closing session: {e}")
-
-
-

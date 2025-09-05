@@ -1,5 +1,6 @@
 """The CLI interface for IronFox builder."""
 
+import os
 import click
 import multiprocessing
 
@@ -20,14 +21,22 @@ from commands.setup import SetupCommand
     type=click.Path(exists=True),
 )
 @click.option(
-    "--sdk-home",
+    "--android-home",
     help="Path to the Android SDK directory.",
     type=click.Path(exists=False),
+    default=os.getenv("ANDROID_HOME", ""),
 )
 @click.option(
     "--java-home",
     help="Path to the JDK installation directory.",
     type=click.Path(exists=True),
+    default=os.getenv("JAVA_HOME", ""),
+)
+@click.option(
+    "--cargo-home",
+    help="Path to the Cargo installation directory.",
+    type=click.Path(exists=True),
+    default=os.getenv("CARGO_HOME", ""),
 )
 @click.option(
     "--jobs",
@@ -45,15 +54,17 @@ from commands.setup import SetupCommand
 def cli(
     ctx: Context,
     root_dir: Path,
-    sdk_home: Path,
+    android_home: Path,
     java_home: Path,
+    cargo_home: Path,
     jobs: int,
     verbose: bool,
 ):
     ctx.obj = BaseConfig(
         root_dir=Path(root_dir),
-        sdk_home=Path(sdk_home),
+        android_home=Path(android_home),
         java_home=Path(java_home),
+        cargo_home=Path(cargo_home),
         jobs=jobs,
         verbose=verbose,
     )

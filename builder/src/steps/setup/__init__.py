@@ -10,6 +10,7 @@ from execution.definition import BuildDefinition
 
 from .android_sdk import setup_android_sdk, setup_bundletool
 from .phoenix import setup_phoenix
+from .rust import setup_rust
 
 logger = logging.getLogger("Setup")
 
@@ -20,6 +21,7 @@ def get_definition(paths: Paths) -> BuildDefinition:
     setup_android_sdk(d, paths)
     setup_bundletool(d, paths)
     setup_phoenix(d, paths)
+    setup_rust(d, paths)
 
     clone_glean = d.clone(
         name="Clone Glean",

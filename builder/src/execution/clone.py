@@ -27,11 +27,11 @@ class CloneTask(TaskDefinition):
         self.branch = branch
         self.depth = depth
 
-    def execute(self, progress):
+    def execute(self, params):
         return clone_repository(
             repo_url=self.repo_url,
             clone_to=self.clone_to,
-            progress=progress,
+            progress=params.progress,
             branch=self.branch,
             depth=self.depth,
         )

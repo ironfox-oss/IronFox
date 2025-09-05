@@ -16,11 +16,11 @@ sdk_tools = [
 
 
 def setup_android_sdk(d: BuildDefinition, paths: Paths):
-    cmdlinetools = paths.sdk_home / "cmdline-tools"
+    cmdlinetools = paths.android_home / "cmdline-tools"
     sdkman = cmdlinetools / "latest" / "bin" / "sdkmanager"
 
     download_task = None
-    if not paths.sdk_home.is_dir():
+    if not paths.android_home.is_dir():
         sdk_file = f"commandlinetools-linux-{Versions.SDK_REVISION}_latest.zip"
         url = f"https://dl.google.com/android/repository/{sdk_file}"
         sha256 = "7ec965280a073311c339e571cd5de778b9975026cfcbe79f2b1cdcb1e15317ee"
@@ -40,7 +40,7 @@ def setup_android_sdk(d: BuildDefinition, paths: Paths):
                 archive_format="zip",
                 preserve_permissions=True,
             )
-            .do_first(lambda: shutil.rmtree(paths.sdk_home, ignore_errors=True))
+            .do_first(lambda: shutil.rmtree(paths.android_home, ignore_errors=True))
             .do_last(
                 lambda: (
                     shutil.move(cmdlinetools / "cmdline-tools", cmdlinetools / "latest")
@@ -50,11 +50,11 @@ def setup_android_sdk(d: BuildDefinition, paths: Paths):
 
     install_task = d.run_commands(
         name="Install SDK tools",
-        source_dir=Path.cwd(),
+        cwd=Path.cwd(),
         assume_yes=True,
         commands=
         # Accept licenses
-        [f"{sdkman} --sdk_root={paths.sdk_home} --licenses"] +
+        [f"{sdkman} --sdk_root={paths.android_home} --licenses"] +
         # Install sdk tools
         [f"{sdkman} {tool}" for tool in sdk_tools],
     )
@@ -64,7 +64,7 @@ def setup_android_sdk(d: BuildDefinition, paths: Paths):
         # defer sdk tools installation to after we install cmdline-tools
         download_task.before(install_task)
 
-    logger.info(f"Using Android SDK: {paths.sdk_home}")
+    logger.info(f"Using Android SDK: {paths.android_home}")
     logger.info(f"Using Android NDK: {paths.ndk_home}")
 
 
