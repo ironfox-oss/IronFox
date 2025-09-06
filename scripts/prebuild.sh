@@ -169,10 +169,6 @@ sed -i -e 's|import mozilla.components.browser.engine.gecko.crash.GeckoCrashPull
 sed -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
 sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 sed -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-sed -i -e 's|measurementDataEnabled: Boolean = .*|measurementDataEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
-sed -i -e 's|studiesEnabled: Boolean = .*|studiesEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
-sed -i -e 's|telemetryEnabled: Boolean = .*|telemetryEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
-sed -i -e 's|usagePingEnabled: Boolean = .*|usagePingEnabled: Boolean = false,|g' app/src/*/java/org/mozilla/fenix/settings/datachoices/DataChoicesState.kt
 
 # Display live downloads in progress
 sed -i -e 's|showLiveDownloads = .*|showLiveDownloads = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
@@ -231,9 +227,14 @@ sed -i -e 's|import mozilla.components.feature.search.telemetry|// import mozill
 sed -i -e 's|import mozilla.components.support.base.ext.areNotificationsEnabledSafe|// import mozilla.components.support.base.ext.areNotificationsEnabledSafe|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|import mozilla.components.support.base.ext.isNotificationChannelEnabled|// import mozilla.components.support.base.ext.isNotificationChannelEnabled|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
+sed -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/home/mozonline/PrivacyContentDisplayHelper.kt
 sed -i -e 's|import org.mozilla.fenix.components.metrics.fonts|// import org.mozilla.fenix.components.metrics.fonts|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 sed -i -e 's|import org.mozilla.fenix.components.metrics.GrowthDataWorker|// import org.mozilla.fenix.components.metrics.GrowthDataWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 sed -i -e 's|import org.mozilla.fenix.components.metrics.MarketingAttributionService|// import org.mozilla.fenix.components.metrics.MarketingAttributionService|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+sed -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+sed -i -e 's|import org.mozilla.fenix.library.bookmarks.ui.BookmarksTelemetryMiddleware|// import org.mozilla.fenix.library.bookmarks.ui.BookmarksTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/library/bookmarks/BookmarkFragment.kt
 sed -i -e 's|import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|// import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|// import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 sed -i -e 's|import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|// import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -242,6 +243,7 @@ sed -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.tele
 
 sed -i -e 's|AdsTelemetryMiddleware|// AdsTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 sed -i -e 's|ApplicationExitInfoMetrics.|// ApplicationExitInfoMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/library/bookmarks/BookmarkFragment.kt
 sed -i -e 's|FontEnumerationWorker.|// FontEnumerationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 sed -i -e 's|GrowthDataWorker.|// GrowthDataWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 sed -i -e 's|MarketingAttributionService(|// MarketingAttributionService(|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
@@ -252,16 +254,37 @@ sed -i -e 's|StorageStatsMetrics.|// StorageStatsMetrics.|' app/src/main/java/or
 sed -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 sed -i -e 's|manager = ReviewManagerFactory|// manager = ReviewManagerFactory|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 sed -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
+sed -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+sed -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+sed -i -e 's|val Context.metrics|// val Context.metrics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
+sed -i -e 's|get() = this.components.analytics|// get() = this.components.analytics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
+sed -i -e 's|components.analytics.metricsStorage|// components.analytics.metricsStorage|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+sed -i -e 's|context.components.analytics|// context.components.analytics|' app/src/main/java/org/mozilla/fenix/home/mozonline/PrivacyContentDisplayHelper.kt
 
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/Event.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricController.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
+rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/library/bookmarks/ui/BookmarksTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
+rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
+rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 sed -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+
+sed -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
+sed -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
 
 # Let it be IronFox
 sed -i \
@@ -687,6 +710,11 @@ sed -i -e 's/USER_AGENT = ".*/USER_AGENT = ""/' mobile/android/android-component
 # No-op Normandy (Experimentation)
 sed -i -e 's/REMOTE_SETTINGS_COLLECTION = ".*"/REMOTE_SETTINGS_COLLECTION = ""/' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
 sed -i 's|normandy-recipes-capabilities||g' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+
+# No-op Nimbus (Experimentation)
+sed -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+sed -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+sed -i -e 's|FxNimbus.features.junoOnboarding.recordExposure|// FxNimbus.features.junoOnboarding.recordExposure|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 
 # No-op Pocket
 sed -i -e 's/SPOCS_ENDPOINT_DEV_BASE_URL = ".*"/SPOCS_ENDPOINT_DEV_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt

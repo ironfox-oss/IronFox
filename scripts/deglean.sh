@@ -195,6 +195,7 @@ sed -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.G
 sed -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
 sed -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt"
 sed -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt"
+sed -i -e 's|import org.mozilla.fenix.GleanMetrics.Pings|// import org.mozilla.fenix.GleanMetrics.Pings|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/RecordedNimbusContext.kt"
 
 sed -i -e 's|AppIcon.|// AppIcon.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
 sed -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
@@ -203,6 +204,7 @@ sed -i -e 's|Metrics.has|// Metrics.has|' "${mozilla_release}/mobile/android/fen
 sed -i -e 's|Metrics.recently|// Metrics.recently|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
 sed -i -e 's|Metrics.set|// Metrics.set|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
 sed -i -e 's|Pings.|// Pings.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt"
+sed -i -e 's|Pings.|// Pings.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/RecordedNimbusContext.kt"
 sed -i -e 's|StartOnHome.enterHome|// StartOnHome.enterHome|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
 
 # Remove Glean classes (Gecko)
