@@ -74,7 +74,9 @@ def run_build_commands(
     def task_desc(idx: int):
         return f"{name} [{idx}/{len(commands)}]"
 
-    task_id = progress.add_task(task_desc(0), total=len(commands))
+    task_id = progress.add_task(
+        task_desc(0), total=len(commands) if len(commands) > 1 else None
+    )
 
     try:
         # Execute each command in sequence

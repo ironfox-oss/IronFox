@@ -46,5 +46,7 @@ def setup_java(d: BuildDefinition, paths: Paths):
 
     d.run_commands(
         name="Check java version",
-        commands=[(f"{java} --version", check_java_version)],
+        # Use '-version' for backwards compatibility
+        # '--version' on newer versions of the JDK do not include the 'version' string
+        commands=[(f"{java} -version", check_java_version)],
     )
