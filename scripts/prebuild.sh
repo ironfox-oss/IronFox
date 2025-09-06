@@ -818,6 +818,102 @@ source "$rootdir/scripts/deglean.sh"
 # Nuke undesired Mozilla endpoints
 source "$rootdir/scripts/noop_mozilla_endpoints.sh"
 
+# Remove unused media
+## Based on Tor Browser: https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/264dc7cd915e75ba9db3a27e09253acffe3f2311
+## This should help reduce our APK sizes...
+rm -vf mobile/android/fenix/app/src/debug/ic_launcher-playstore.png
+rm -vf mobile/android/fenix/app/src/debug/ic_launcher-web.webp
+rm -vf mobile/android/fenix/app/src/debug/res/drawable/ic_launcher_foreground.xml
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-anydpi-v26/ic_launcher_round.xml
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-anydpi-v26/ic_launcher.xml
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-hdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-hdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-mdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-mdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/ic_launcher_private-web.webp
+rm -vf mobile/android/fenix/app/src/main/ic_launcher-web.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_launcher_foreground.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_launcher_monochrome.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_onboarding_search_widget.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_onboarding_sync.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_logo.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_text_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_text_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/microsurvey_success.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/onboarding_ctd_sync.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable-hdpi/fenix_search_widget.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-hdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-hdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-mdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-mdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private_round.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_firefox.xml
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_launcher_foreground.xml
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_logo.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_text_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_text_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-hdpi/fenix_search_widget.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-hdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-hdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-mdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-mdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/ic_launcher-web.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-hdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-hdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-mdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-mdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
+sed -i -e 's|R.drawable.microsurvey_success|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
+sed -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+sed -i -e 's|ic_onboarding_search_widget|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
+sed -i -e 's|ic_onboarding_sync|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
+
 # Ensure certain settings are configured at Fenix Core.kt
 ## These should be unnecessary (since we generally either configure them with UI settings or take back control of the related Gecko preferences from GeckoProvider.kt and set them directly), but it doesn't hurt to set these here either
 ## For reference, none of these are exposed in the UI
