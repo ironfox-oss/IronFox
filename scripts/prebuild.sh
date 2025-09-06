@@ -284,6 +284,7 @@ rm -vrf app/src/main/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/main/java/org/mozilla/fenix/startupCrash
 
 sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 
 # Let it be IronFox
 $SED -i \
