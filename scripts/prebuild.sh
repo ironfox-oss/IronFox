@@ -464,7 +464,9 @@ rm -vf samples/glean/samples-glean-library/build.gradle
 # Prevent unsolicited favicon fetching
 sed -i -e 's|request.copy(resources = request.resources + resource)|request|' components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
 
-# Remove unwanted Nimbus classes
+# Remove Nimbus
+rm -vf components/browser/engine-gecko/geckoview.fml.yaml
+rm -vrf components/browser/engine-gecko/src/main/java/mozilla/components/experiment
 sed -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' components/service/nimbus/proguard-rules-consumer.pro
 
 # Apply a-c overlay

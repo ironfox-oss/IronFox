@@ -1,3 +1,32 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 9fcbee8d66..38516db100 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -13,15 +13,15 @@ includes:
+   - onboarding.fml.yaml
+   - messaging-fenix.fml.yaml
+ import:
+-  - path: ../../android-components/components/browser/engine-gecko/geckoview.fml.yaml
+-    channel: release
+-    features:
+-      pdfjs:
+-        - channel: developer
+-          value: {
+-          download-button: true,
+-          open-in-app-button: true
+-        }
++#  - path: ../../android-components/components/browser/engine-gecko/geckoview.fml.yaml
++#    channel: release
++#    features:
++#      pdfjs:
++#        - channel: developer
++#          value: {
++#          download-button: true,
++#          open-in-app-button: true
++#        }
+   - path: ../../android-components/components/feature/fxsuggest/fxsuggest.fml.yaml
+     channel: release
+     features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 index ecfdb59389..dfceb4d491 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt

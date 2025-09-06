@@ -1,0 +1,35 @@
+diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+index 6bbc5b3ed8..198c14a2e5 100644
+--- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
++++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
+@@ -65,9 +65,9 @@ dependencies {
+     implementation project(':components:concept-fetch')
+     implementation project(':components:support-ktx')
+     implementation project(':components:support-utils')
+-    implementation(project(':components:service-nimbus')) {
+-        exclude group: 'org.mozilla.telemetry', module: 'glean-native'
+-    }
++    // implementation(project(':components:service-nimbus')) {
++        // exclude group: 'org.mozilla.telemetry', module: 'glean-native'
++    // }
+     implementation libs.kotlin.coroutines
+ 
+     if (findProject(":geckoview") != null) {
+@@ -108,7 +108,7 @@ ext {
+ apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
+ apply from: '../../../android-lint.gradle'
+ apply from: '../../../publish.gradle'
+-apply plugin: "org.mozilla.appservices.nimbus-gradle-plugin"
++/*apply plugin: "org.mozilla.appservices.nimbus-gradle-plugin"
+ nimbus {
+     // The path to the Nimbus feature manifest file
+     manifestFile = "geckoview.fml.yaml"
+@@ -123,7 +123,7 @@ nimbus {
+     // *NOTE*: This example will not work for all projects, but should work for Fenix, Focus, and Android Components
+     applicationServicesDir = gradle.hasProperty('localProperties.autoPublish.application-services.dir')
+             ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null
+-}
++}*/
+ ext.configurePublish(config.componentsGroupId, project.name, project.ext.description)
+ 
+ // Non-official versions are like "61.0a1", where "a1" is the milestone.
