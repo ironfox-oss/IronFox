@@ -221,7 +221,6 @@ sed -i "s|implementation project(':components:lib-crash-sentry')|// implementati
 sed -i "s|implementation project(':components:lib-push-firebase')|// implementation project(':components:lib-push-firebase')|g" app/build.gradle
 sed -i 's|implementation(libs.adjust)|// implementation(libs.adjust)|g' app/build.gradle
 sed -i 's|implementation(libs.installreferrer)|// implementation(libs.installreferrer)|g' app/build.gradle
-sed -i "s|implementation libs.play.review.ktx|implementation 'org.microg.gms:play-services-tasks:v0.0.0.250932'|g" app/build.gradle
 sed -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
 sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
@@ -251,14 +250,18 @@ sed -i -e 's|PerfStartup.|// PerfStartup.|' app/src/main/java/org/mozilla/fenix/
 sed -i -e 's|ReEngagementNotificationWorker.|// ReEngagementNotificationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 sed -i -e 's|StorageStatsMetrics.|// StorageStatsMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 sed -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/main/java/org/mozilla/fenix/components/Core.kt
+sed -i -e 's|manager = ReviewManagerFactory|// manager = ReviewManagerFactory|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
 
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 
 # Let it be IronFox
 sed -i \
