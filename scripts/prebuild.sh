@@ -641,6 +641,21 @@ $SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.grad
 $SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
 $SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 
+# Disable crash reporting (GeckoView)
+sed -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
+
+# Disable debug (GeckoView)
+sed -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
+
+# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
+# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
+# We're also setting the "MOZILLA_OFFICIAL" env variable below
+sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
+
+# Target release
+sed -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
+sed -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
+
 # Ensure UA is always set to Firefox
 $SED -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
 
