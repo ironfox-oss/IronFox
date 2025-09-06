@@ -253,6 +253,9 @@ rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 sed -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 
+sed -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
+sed -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
+
 # Let it be IronFox
 $SED -i \
     -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
