@@ -639,6 +639,13 @@ sed -i 's|https://services.addons.mozilla.org||g' mobile/android/android-compone
 sed -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
 
 # No-op crash reporting
+sed -i -e 's|AppServicesInitializer.init(components.analytics.*)|AppServicesInitializer.init()|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+rm -vrf mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/rusterrors
+sed -i -e 's|import mozilla.components.concept.base.crash|// import mozilla.components.concept.base.crash|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
+sed -i -e 's|import mozilla.components.support.rusterrors|// import mozilla.components.support.rusterrors|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
+sed -i -e 's|init(crashReporting.*)|init()|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
+sed -i -e 's|initializeRustErrors(|// initializeRustErrors(|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
+
 sed -i -e 's|import org.mozilla.gecko.crashhelper.CrashHelper|// import org.mozilla.gecko.crashhelper.CrashHelper|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 
 sed -i -e 's|enabled: Boolean = .*|enabled: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
