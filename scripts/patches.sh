@@ -91,9 +91,9 @@ glean_test_patches() {
 a-s_test_patches() {
     for patch in "${AS_PATCH_FILES[@]}"; do
         if ! check_patch "$patch" >/dev/null 2>&1; then
-            printf "${RED}%-45s: FAILED${NC}\n" "$(basename "$patch")"
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
         else
-            printf "${GREEN}%-45s: OK${NC}\n" "$(basename "$patch")"
+            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "$patch")"
         fi
     done
 }
@@ -101,9 +101,9 @@ a-s_test_patches() {
 glean_test_patches() {
     for patch in "${GLEAN_PATCH_FILES[@]}"; do
         if ! check_patch "$patch" >/dev/null 2>&1; then
-            printf "${RED}%-45s: FAILED${NC}\n" "$(basename "$patch")"
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
         else
-            printf "${GREEN}%-45s: OK${NC}\n" "$(basename "$patch")"
+            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "$patch")"
         fi
     done
 }
@@ -149,7 +149,9 @@ glean_apply_patches() {
 a-s_apply_patches() {
     for patch in "${AS_PATCH_FILES[@]}"; do
         if ! apply_patch "$patch"; then
-            echo "Failed to apply patch: $patch"
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+            echo "Failed to apply $patch"
+            return 1
         fi
     done
 }
@@ -157,7 +159,9 @@ a-s_apply_patches() {
 glean_apply_patches() {
     for patch in "${GLEAN_PATCH_FILES[@]}"; do
         if ! apply_patch "$patch"; then
-            echo "Failed to apply patch: $patch"
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+            echo "Failed to apply $patch"
+            return 1
         fi
     done
 }
