@@ -171,12 +171,15 @@ index 8f6e1eb8f1..f07ef8c740 100644
          loginsStorage = FakeLoginsStorage(),
          addressesDebugLocalesRepository = FakeAddressesDebugLocalesRepository(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index b07cadf1e6..ee748e0e5d 100644
+index b07cadf1e6..d1f4ec044b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -730,10 +730,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -728,12 +728,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         browserStore: BrowserStore,
+         settings: Settings,
          browsersCache: BrowsersCache = BrowsersCache,
-         mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
+-        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
++//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
      ) {
 -        setPreferenceMetrics(settings)
 -        with(Metrics) {
