@@ -191,6 +191,13 @@ patches:
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Mozilla"
 
+  - file: "a-c-remove-nimbus.patch"
+    name: "Disable Nimbus Experimentation (Android Components)"
+    description: "Removes the Nimbus library/service from Android Components."
+    reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
+    effect: "Ensures user configurations remain consistent and are controlled locally, reduces attack surface, and reduces unwanted dependencies."
+    category: "Mozilla"
+
   - file: "fenix-disable-firefox-suggest.patch"
     name: "Disable Firefox Suggest"
     description: "Disables Firefox Suggest functionality."
