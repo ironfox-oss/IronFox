@@ -256,6 +256,7 @@ rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 
 sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+sed -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 
 # Let it be IronFox
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
