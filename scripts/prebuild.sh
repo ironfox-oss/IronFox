@@ -568,7 +568,7 @@ else
 fi
 
 # uniffi-bindgen
-if [[ -n ${FDROID_BUILD+x}] ]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$uniffi"
 
     # Break the dependency on older Rust
