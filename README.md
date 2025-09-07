@@ -174,7 +174,7 @@ sudo dnf config-manager setopt adoptium-temurin-java-repository.enabled=1
 sudo dnf makecache
 ```
 
-Now, to install JDK 8 & 17:
+Now, to install JDK 8 and 17:
 
 ```sh
 sudo dnf install -y temurin-8-jdk temurin-17-jdk
@@ -187,8 +187,8 @@ Once the packages have been installed successfully, follow the instructions to s
 - Setup F-Droid's `gradle` script to be available in your `PATH`:
 
   ```sh
-  mkdir -p $HOME/bin
-  wget https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew-fdroid -O "$HOME/bin/gradle"
+  mkdir -vp $HOME/bin
+  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew-fdroid -O "$HOME/bin/gradle"
   chmod +x "$HOME/bin/gradle"
 
   export PATH=$HOME/bin:$PATH
@@ -197,7 +197,7 @@ Once the packages have been installed successfully, follow the instructions to s
 - Disable Gradle Daemons and configuration cache:
 
   ```sh
-  mkdir -p ~/.gradle
+  mkdir -vp ~/.gradle
   echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
   echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
   ```
