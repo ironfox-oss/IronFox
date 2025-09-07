@@ -548,11 +548,6 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 
     popd
 
-    # Break the dependency on older cmake
-    sed -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
-
-    popd
-
     export wasi_install=$wasi/build/install/wasi
 else
     export wasi_install=$wasi
