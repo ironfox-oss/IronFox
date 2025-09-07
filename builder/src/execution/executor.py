@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor, as_completed, Future
 import logging
 import threading
+
+from concurrent.futures import ThreadPoolExecutor, as_completed, Future
 from typing import Dict, Set, List
 from collections import defaultdict, deque
 
-from commands.base import BuildEnvironment
+import commands.base
 from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition, TaskExecutionParams
@@ -15,7 +16,12 @@ from .definition import BuildDefinition, TaskDefinition, TaskExecutionParams
 class ExecutorConfig:
     """Configuration for the executor."""
 
-    def __init__(self, jobs: int, dry_run: bool, env: BuildEnvironment,):
+    def __init__(
+        self,
+        jobs: int,
+        dry_run: bool,
+        env: commands.base.BuildEnvironment,
+    ):
         self.jobs = jobs
         self.dry_run = dry_run
         self.env = env

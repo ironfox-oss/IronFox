@@ -161,7 +161,7 @@ kotlin.internal.collectFUSMetrics=false
         
         # Remove SpashScreen style
         *_process_file(
-            path="",
+            path="app/src/main/res/values-v27/styles.xml",
             replacements=[
                 regex(r".*SplashScreen.*(?:\n.*){0,5}", ""),
             ]
@@ -169,9 +169,8 @@ kotlin.internal.collectFUSMetrics=false
         
         # Fenix uses reflection to create a instance of profile based on the text of
         # the label, see app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
-        *d.find_replace(
-            name="Process app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt",
-            target_file=paths.fenix_dir / "app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt",
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt",
             replacements=[
                 on_line_text(match_lines=r'Firefox\(.*, .*\)', on_text=r'Firefox', replace='IronFox'),
                 literal("firefox_threads", "ironfox_threads"),

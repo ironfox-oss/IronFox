@@ -1,7 +1,6 @@
 """Base implementation for all 'ironfox' commands."""
 
 import logging
-import os
 
 from abc import abstractmethod
 from pathlib import Path
@@ -161,7 +160,7 @@ class BaseCommand:
         try:
             executor.submit(definition)
         except Exception as e:
-            self.logger.error(f"Setup failed with exception: {e}")
+            self.logger.error(f"{self.name} failed with exception: {e}")
             raise
         finally:
             executor.shutdown()

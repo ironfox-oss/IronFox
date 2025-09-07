@@ -5,14 +5,15 @@ from __future__ import annotations
 import itertools
 import logging
 
+import commands.base
+
 from abc import abstractmethod
 from pathlib import Path
-from commands.base import BuildEnvironment
 from common.utils import resolve_glob
 from rich.progress import Progress
-from typing import Callable, Iterable, List, TypeVar, Type, Union
+from typing import Callable, List, TypeVar, Type, Union
 
-from .types import CommandType, PatternType, Replacement, ReplacementAction
+from .types import CommandType, ReplacementAction
 
 
 def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
@@ -20,8 +21,7 @@ def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
 
 
 class TaskExecutionParams:
-
-    def __init__(self, progress: Progress, env: BuildEnvironment):
+    def __init__(self, progress: Progress, env: commands.base.BuildEnvironment):
         self.progress = progress
         self.env = env
 
@@ -490,7 +490,7 @@ class BuildDefinition:
 
         files = resolve_glob(path)
         tasks = []
-        
+
         tasks = []
         for idx, f in enumerate(files, start=1):
             task_name = f"{name} [{idx}] ({f})" if len(files) > 1 else name
@@ -498,11 +498,11 @@ class BuildDefinition:
                 self.create_task(
                     DeleteTask,
                     task_name,
-                    target_file=f,
+                    target=f,
                     recursive=recursive,
                 )
             )
-    
+
         return tasks
 
     def find_replace(
@@ -514,21 +514,21 @@ class BuildDefinition:
         create_if_missing: bool = False,
     ) -> List[TaskDefinition]:
         """Creates one or more tasks to perform find and replace operations.
-    
+
         Args:
             name (str): The base name of the find/replace task(s).
             target_file (Path | str): The path to the file to modify, or a glob pattern.
             replacements (List[ReplacementAction]): Replacements to perform.
             backup (bool, optional): If True, create a backup before modification. Defaults to False.
             create_if_missing (bool, optional): If True, create the target file if it does not exist. Defaults to False.
-    
+
         Returns:
             List[TaskDefinition]: A list of FindReplaceTask instances.
         """
         from .find_replace import FindReplaceTask
-    
+
         # Resolve targets
-    
+
         files = resolve_glob(target_file)
         tasks = []
         for idx, f in enumerate(files, start=1):
@@ -543,9 +543,8 @@ class BuildDefinition:
                     create_if_missing=create_if_missing,
                 )
             )
-    
-        return tasks
 
+        return tasks
 
     def overlay(
         self,

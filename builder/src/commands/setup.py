@@ -1,7 +1,5 @@
 """The 'setup' command."""
 
-from steps.setup import get_definition as setup_step_definition
-
 from .base import BaseConfig, BaseCommand
 
 
@@ -22,4 +20,5 @@ class SetupCommand(BaseCommand):
         self.logger.debug(f"Initialized setup command with config {base_config}")
 
     def get_definition(self):
-        return setup_step_definition(self.setup_config, self.paths)
+        from steps.setup import get_definition
+        return get_definition(self.setup_config, self.paths)

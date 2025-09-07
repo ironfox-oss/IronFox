@@ -4,7 +4,6 @@ from enum import Enum
 from pathlib import Path
 
 from common.logging import setup_logging
-from steps.prepare import get_definition as prepare_step_definition
 from .base import AppConfig, BaseConfig, BaseCommand
 
 
@@ -54,17 +53,17 @@ class PrepareConfig:
             self.llvmtarget = "ARM"
             self.rusttarget = "arm"
         elif self.build_variant == BuildVariant.ARM64:
-            self.abi = '"arm64-v8a"'
+            self.abis = '"arm64-v8a"'
             self.target = "aarch64-linux-android"
             self.llvmtarget = "AArch64"
             self.rusttarget = "arm64"
         elif self.build_variant == BuildVariant.X86_64:
-            self.abi = '"x86_64"'
+            self.abis = '"x86_64"'
             self.target = "x86_64-linux-android"
             self.llvmtarget = "X86_64"
             self.rusttarget = "x86_64"
         elif self.build_variant == BuildVariant.BUNDLE:
-            self.abi = '"arm64-v8a", "armeabi-v7a", "x86_64"'
+            self.abis = '"arm64-v8a", "armeabi-v7a", "x86_64"'
             self.target = ""
             self.llvmtarget = "AArch64;ARM;X86_64"
             self.rusttarget = "arm64,arm,x86_64"
@@ -101,4 +100,6 @@ class PrepareCommand(BaseCommand):
         )
 
     def get_definition(self):
-        return prepare_step_definition(self.prepare_cofig, self.paths)
+        from steps.prepare import get_definition
+
+        return get_definition(self.prepare_cofig, self.paths)

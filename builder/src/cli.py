@@ -47,7 +47,7 @@ from commands.setup import SetupCommand
 @click.option(
     "--dry-run",
     help="Disable task execution.",
-    flag=True,
+    is_flag=True,
     default=False,
 )
 @click.option(
@@ -92,7 +92,7 @@ def setup(base_config: BaseConfig):
 @click.option(
     "--sb-gapi-file",
     help="Path to a file containing the Google Safe Browsing API key",
-    type=click.Path(exists=True, dir_okay=False, readable=True),
+    type=click.Path(exists=False, dir_okay=False),
     default=os.getenv("SB_GAPI_KEY_FILE", ""),
 )
 @click.argument(
