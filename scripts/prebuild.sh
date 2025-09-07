@@ -456,7 +456,11 @@ rm -vf glean-core/android/metrics.yaml
 sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Use Tor's no-op UniFFi binding generator
-sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
+if [[ -n ${FDROID_BUILD+x}] ]; then
+    sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
+else
+    sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
+fi
 
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
@@ -561,6 +565,16 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     export wasi_install=$wasi/build/install/wasi
 else
     export wasi_install=$wasi
+fi
+
+# uniffi-bindgen
+if [[ -n ${FDROID_BUILD+x}] ]; then
+    pushd "$uniffi"
+
+    # Break the dependency on older Rust
+    sed -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
+
+    popd
 fi
 
 # Gecko
