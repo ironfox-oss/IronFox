@@ -101,6 +101,15 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     popd
 fi
 
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    # Build uniffi-bindgen
+    pushd "$uniffi"
+
+    cargo build --release
+
+    popd
+fi
+
 # Build microG libraries
 # shellcheck disable=SC2154
 pushd "$gmscore"
