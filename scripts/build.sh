@@ -75,7 +75,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     # shellcheck disable=SC2154
     pushd "$wasi"
 
-    mkdir -p build/install/wasi
+    mkdir -vp build/install/wasi
     touch build/compiler-rt.BUILT # fool the build system
     make \
         PREFIX=/wasi \

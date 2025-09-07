@@ -63,10 +63,10 @@ download() {
         fi
     fi
 
-    mkdir -p "$(dirname "$filepath")"
+    mkdir -vp "$(dirname "$filepath")"
 
     echo "Downloading $url"
-    wget "$url" -O "$filepath"
+    wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose "$url" -O "$filepath"
 }
 
 # Extract zip removing top level directory
@@ -107,7 +107,7 @@ extract_rmtoplevel() {
     local to_parent=$(dirname "$extract_to")
 
     rm -rf "$extract_to"
-    mkdir -p "$to_parent"
+    mkdir -vp "$to_parent"
     mv "$temp_dir/$top_dir" "$to_parent/$to_name"
 
     rm -rf "$temp_dir"
@@ -142,7 +142,7 @@ download_and_extract() {
     echo
 }
 
-mkdir -p "$BUILDDIR"
+mkdir -vp "$BUILDDIR"
 
 if ! [[ -f "$BUILDDIR/bundletool.jar" ]]; then
     echo "Downloading bundletool..."

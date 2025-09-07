@@ -12,15 +12,15 @@ fi
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
 if [ ! -d "$ANDROID_HOME" ]; then
-    mkdir -p "$ANDROID_HOME"
+    mkdir -vp "$ANDROID_HOME"
     cd "$ANDROID_HOME/.." || exit 1
     rm -Rf "$(basename "$ANDROID_HOME")"
 
     # https://developer.android.com/studio/index.html#command-tools
     echo "Downloading Android SDK..."
-    wget https://dl.google.com/android/repository/${ANDROID_SDK_FILE} -O tools-$SDK_REVISION.zip
+    wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://dl.google.com/android/repository/${ANDROID_SDK_FILE} -O tools-$SDK_REVISION.zip
     rm -Rf "$ANDROID_HOME"
-    mkdir -p "$ANDROID_HOME/cmdline-tools"
+    mkdir -vp "$ANDROID_HOME/cmdline-tools"
     unzip -q tools-$SDK_REVISION.zip -d "$ANDROID_HOME/cmdline-tools"
     mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
     rm -vf tools-$SDK_REVISION.zip

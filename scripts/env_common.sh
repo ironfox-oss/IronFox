@@ -21,9 +21,9 @@ export APK_ARTIFACTS=$ARTIFACTS/apk
 export APKS_ARTIFACTS=$ARTIFACTS/apks
 export AAR_ARTIFACTS=$ARTIFACTS/aar
 
-mkdir -p "$APK_ARTIFACTS"
-mkdir -p "$APKS_ARTIFACTS"
-mkdir -p "$AAR_ARTIFACTS"
+mkdir -vp "$APK_ARTIFACTS"
+mkdir -vp "$APKS_ARTIFACTS"
+mkdir -vp "$AAR_ARTIFACTS"
 
 export env_source="true"
 
