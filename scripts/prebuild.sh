@@ -90,6 +90,14 @@ if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
     fi
 fi
 
+# Set architecture
+PLATFORM_ARCH=$(uname -m)
+if [[ "$PLATFORM_ARCH" == "arm64" ]]; then
+    PLATFORM_ARCHITECTURE=aarch64
+else
+    PLATFORM_ARCHITECTURE=x86-64
+fi
+
 # Create build directory
 mkdir -vp "$rootdir/build"
 
@@ -413,7 +421,7 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$glean"
-echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
+echo "rust.targets=linux-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
 
 # Apply patches
 glean_apply_patches
@@ -514,7 +522,7 @@ sed -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
 # Disable debug
 sed -i -e 's|debug = .*|debug = false|g' Cargo.toml
 
-echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
+echo "rust.targets=linux-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 sed -i -e '/content {/,/}/d' build.gradle
 

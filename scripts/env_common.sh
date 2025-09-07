@@ -3,6 +3,14 @@
 # Caution: Should not be sourced directly!
 # Use 'env_local.sh' or 'env_fdroid.sh' instead.
 
+# Set architecture
+PLATFORM_ARCH=$(uname -m)
+if [[ "$PLATFORM_ARCH" == "arm64" ]]; then
+    PLATFORM_ARCHITECTURE=aarch64
+else
+    PLATFORM_ARCHITECTURE=x86-64
+fi
+
 # Configure Mach
 ## https://firefox-source-docs.mozilla.org/mach/usage.html#user-settings
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#95
@@ -13,7 +21,7 @@ export MACHRC="$patches/machrc"
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 
-export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
+export NSS_DIR="$application_services/libs/desktop/linux-$PLATFORM_ARCHITECTURE/nss"
 export NSS_STATIC=1
 
 export ARTIFACTS="$rootdir/artifacts"
