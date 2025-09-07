@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import logging
 import threading
+import traceback
 
+from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor, as_completed, Future
-from typing import Dict, Set, List
+from typing import Dict, Set, List, Optional
 from collections import defaultdict, deque
 
 import commands.base
@@ -38,6 +40,18 @@ class TaskState:
         self.error: Exception = None  # type: ignore
 
 
+@dataclass
+class FailureDetail:
+    """A detailed record of a task failure to be returned by submit."""
+
+    task: TaskDefinition
+    task_id: int
+    task_name: str
+    reason: str
+    exception: Optional[BaseException]
+    traceback: Optional[str]
+
+
 class BuildExecutor:
     """Executor for build tasks with dependency-aware scheduling."""
 
@@ -47,8 +61,15 @@ class BuildExecutor:
         self.logger = logging.getLogger("BuildExecutor")
         self._lock = threading.Lock()
 
-    def submit(self, definition: BuildDefinition):
-        """Submit a build definition for execution with dependency-aware scheduling."""
+    def submit(self, definition: BuildDefinition) -> List[FailureDetail]:
+        """Submit a build definition for execution with dependency-aware scheduling.
+
+        Returns:
+            List[FailureDetail]: An empty list when all tasks succeed, otherwise a list
+            of failure details describing every failed or skipped task.
+        """
+        failures: List[FailureDetail] = []
+
         with Progress(transient=True) as progress:
             task_states = {task.id: TaskState(task) for task in definition.tasks}
             task_lookup = {task.id: task for task in definition.tasks}
@@ -64,7 +85,7 @@ class BuildExecutor:
                 if not task.dependencies:
                     ready_tasks.append(task.id)
 
-            future_to_task = {}
+            future_to_task: Dict[Future, int] = {}
 
             try:
                 while pending_tasks or running_tasks:
@@ -117,14 +138,26 @@ class BuildExecutor:
                                 ready_tasks.extend(newly_ready)
 
                             except Exception as e:
+                                # Record the failure for this task
                                 task_state.failed = True
                                 task_state.error = e
                                 failed_tasks.add(task_id)
                                 running_tasks.remove(task_id)
 
+                                tb = traceback.format_exc()
+                                failure = FailureDetail(
+                                    task=task_state.task,
+                                    task_id=task_state.task.id,
+                                    task_name=task_state.task.name,
+                                    reason="Exception during execution",
+                                    exception=e,
+                                    traceback=tb,
+                                )
+                                failures.append(failure)
+
                                 task_state.task.error(f"Failed with exception: {e}")
 
-                                # Mark all dependent tasks as failed
+                                # Mark all dependent tasks as failed/skipped
                                 dependent_tasks = self._get_all_dependents(
                                     task_id,
                                     dependency_graph,
@@ -142,16 +175,32 @@ class BuildExecutor:
                                         # Remove pending dependent tasks
                                         pending_tasks.remove(dep_task_id)
 
-                                    task_states[dep_task_id].failed = True
-                                    task_states[dep_task_id].error = Exception(
-                                        f"Dependency {task_state.task.name} failed"
-                                    )
-                                    failed_tasks.add(dep_task_id)
+                                    if not task_states[dep_task_id].failed:
+                                        task_states[dep_task_id].failed = True
+                                        reason_text = (
+                                            f"Dependency {task_state.task.name} failed"
+                                        )
+                                        task_states[dep_task_id].error = Exception(
+                                            reason_text
+                                        )
+                                        failed_tasks.add(dep_task_id)
 
-                                    self.logger.error(
-                                        f"Task '{task_states[dep_task_id].task.name}' "
-                                        f"skipped due to failed dependency: '{task_state.task.name}'"
-                                    )
+                                        failure_dep = FailureDetail(
+                                            task=task_states[dep_task_id].task,
+                                            task_id=task_states[dep_task_id].task.id,
+                                            task_name=task_states[
+                                                dep_task_id
+                                            ].task.name,
+                                            reason="Skipped due to failed dependency",
+                                            exception=task_states[dep_task_id].error,
+                                            traceback=None,
+                                        )
+                                        failures.append(failure_dep)
+
+                                        self.logger.error(
+                                            f"Task '{task_states[dep_task_id].task.name}' "
+                                            f"skipped due to failed dependency: '{task_state.task.name}'"
+                                        )
 
                                 # Remove failed tasks from ready queue
                                 ready_tasks = deque(
@@ -161,9 +210,6 @@ class BuildExecutor:
                                         if tid not in failed_tasks
                                     ]
                                 )
-
-                                # If this was a critical failure, we might want to stop
-                                # For now, we continue with remaining independent tasks
 
                             # Clean up the future mapping
                             del future_to_task[future]
@@ -180,28 +226,86 @@ class BuildExecutor:
                             )
                             failed_tasks.add(task_id)
                             pending_tasks.remove(task_id)
+
                             task_state.task.error(f"skipped - no viable execution path")
 
-                # Check if any tasks failed and raise the first error
-                failed_task_states = [
-                    state for state in task_states.values() if state.failed
-                ]
-                if failed_task_states:
-                    first_failure = failed_task_states[0]
+                            failure = FailureDetail(
+                                task=task_state.task,
+                                task_id=task_state.task.id,
+                                task_name=task_state.task.name,
+                                reason="All dependencies failed or were skipped",
+                                exception=task_state.error,
+                                traceback=None,
+                            )
+                            failures.append(failure)
+
+                # Build finished: return the failures list (empty if none)
+                if failures:
                     self.logger.error(
-                        f"Build failed. First failure: {first_failure.task.name}"
+                        "Build completed with failures. See returned failure details."
                     )
-                    raise first_failure.error
+                else:
+                    self.logger.info("All tasks completed successfully")
 
-                self.logger.info("All tasks completed successfully")
+                return failures
 
-            except Exception:
-                # Cancel any remaining futures
-                for task_id in running_tasks:
+            except Exception as outer_exc:
+                # Unexpected exception in the scheduler loop: try to cancel running futures and
+                # record cancellation failures for running tasks, then return failures.
+                tb_outer = traceback.format_exc()
+                self.logger.exception(
+                    "Executor encountered an unexpected error during scheduling."
+                )
+
+                # Record the unexpected scheduler failure as a non-task failure if needed
+                # (we include it as a synthetic FailureDetail with task=None not allowed by
+                # the dataclass - so instead we create a FailureDetail attached to a special message)
+                # Cancel any remaining futures and mark running tasks as failed/cancelled
+                for task_id in list(running_tasks):
                     future = task_states[task_id].future
                     if future:
                         future.cancel()
-                raise
+                    task_states[task_id].failed = True
+                    task_states[task_id].error = Exception(
+                        "Cancelled due to scheduler error"
+                    )
+                    failed_tasks.add(task_id)
+                    running_tasks.remove(task_id)
+
+                    failure = FailureDetail(
+                        task=task_states[task_id].task,
+                        task_id=task_states[task_id].task.id,
+                        task_name=task_states[task_id].task.name,
+                        reason="Cancelled due to scheduler error",
+                        exception=task_states[task_id].error,
+                        traceback=None,
+                    )
+                    failures.append(failure)
+
+                # Add a top-level failure entry describing the scheduler error
+                # We attach it to a synthetic TaskDefinition-like object by using the first task if available
+                synthetic_task = None
+                if definition.tasks:
+                    synthetic_task = definition.tasks[0]
+                if synthetic_task:
+                    failures.append(
+                        FailureDetail(
+                            task=synthetic_task,
+                            task_id=synthetic_task.id,
+                            task_name="__scheduler_error__",
+                            reason=f"Scheduler error: {outer_exc}",
+                            exception=outer_exc,
+                            traceback=tb_outer,
+                        )
+                    )
+                else:
+                    # No tasks in definition; append a minimal FailureDetail using None-like placeholders
+                    # (Users should normally supply tasks)
+                    # We create a tiny dummy TaskDefinition-like object by reusing a minimal one is not possible,
+                    # so we skip adding a synthetic task detail here.
+                    pass
+
+                return failures
 
     def _build_dependency_graph(
         self, tasks: List[TaskDefinition]

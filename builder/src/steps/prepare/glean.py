@@ -86,7 +86,7 @@ def setup_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
         *_process_file(
             path="glean-core/rlb/src/configuration.rs",
             replacements=[
-                regex(r"DEFAULT_GLEAN_ENDPOINT: .*", r'DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";'),
+                regex(r"DEFAULT_GLEAN_ENDPOINT: .*", r'DEFAULT_GLEAN_ENDPOINT: \&str = \"\";'),
                 on_line_text(match_lines=r"enable_internal_pings:", on_text=r"true", replace="false"),
             ],
         ),

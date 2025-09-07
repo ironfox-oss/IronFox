@@ -4,11 +4,16 @@ import logging
 
 from abc import abstractmethod
 from pathlib import Path
+
+from rich.table import Table
+from rich.console import Console
+from rich.panel import Panel
+from rich.syntax import Syntax
+from rich.text import Text
+
 from common.logging import setup_logging
 from execution.definition import BuildDefinition
 from execution.executor import BuildExecutor, ExecutorConfig
-from rich.table import Table
-from rich.console import Console
 
 from common.paths import Paths
 
@@ -157,13 +162,79 @@ class BaseCommand:
             )
         )
 
+        console = Console()
         try:
-            executor.submit(definition)
+            failures = executor.submit(definition)
+
+            # If there were failures, present them to the user
+            if failures:
+                self.print_failure_summary(console, failures)
+                console.print(
+                    "\n[bold red]Please inspect the failures above to diagnose and fix the build.[/bold red]\n"
+                )
+
+            else:
+                console.print(
+                    "\n[bold green]Build completed successfully — all tasks passed.[/bold green]\n"
+                )
+
         except Exception as e:
+            # If executor.submit itself raises (unexpected), log and re-raise to keep previous semantics
             self.logger.error(f"{self.name} failed with exception: {e}")
             raise
         finally:
             executor.shutdown()
+
+    def print_failure_summary(self, console, failures):
+        console.print("\n[bold red]Build completed with failures[/bold red]\n")
+
+        # Summary table
+        summary = Table(title="Failure Summary", show_lines=True)
+        summary.add_column("Task ID", style="bold")
+        summary.add_column("Task Name", style="cyan")
+        summary.add_column("Reason", style="magenta")
+        summary.add_column("Exception Type", style="yellow")
+        summary.add_column("Message")
+
+        for f in failures:
+            exc_type = type(f.exception).__name__ if f.exception else ""
+            message = str(f.exception) if f.exception else ""
+            summary.add_row(str(f.task_id), f.task_name, f.reason, exc_type, message)
+
+        console.print(summary)
+
+        # Detailed panels for each failure (tracebacks / messages)
+        for idx, f in enumerate(failures, start=1):
+            console.rule(f"[bold]Detail {idx} — {f.task_name} (ID: {f.task_id})[/bold]")
+
+            # Show a compact header
+            header = Text()
+            header.append(f"Reason: ", style="bold magenta")
+            header.append(f"{f.reason}\n")
+            if f.exception:
+                header.append("Exception: ", style="bold yellow")
+                header.append(f"{type(f.exception).__name__}: {str(f.exception)}\n")
+            else:
+                header.append("Exception: ", style="bold yellow")
+                header.append("None\n")
+
+            console.print(Panel(header, title="Overview", expand=False))
+
+            # If a traceback exists, render it with syntax highlighting for readability
+            if getattr(f, "traceback", None):
+                tb = f.traceback or ""
+                # Use 'pytb' lexer to make tracebacks readable; fall back to plain text if needed
+                syntax = Syntax(tb, "pytb", line_numbers=False)
+                console.print(Panel(syntax, title="Traceback", expand=False))
+            else:
+                # If no traceback, at least show the repr/message
+                detail_text = Text()
+                if f.exception:
+                    detail_text.append(repr(f.exception))
+                else:
+                    detail_text.append(f.reason)
+
+                console.print(Panel(detail_text, title="Detail", expand=False))
 
     @property
     def paths(self) -> Paths:

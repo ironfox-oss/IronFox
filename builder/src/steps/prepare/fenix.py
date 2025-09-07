@@ -218,11 +218,11 @@ kotlin.internal.collectFUSMetrics=false
                     prefix="// ",
                 ),
                 line_affix(
-                    "private fun provideTelemetryMiddleware",
+                    r"private fun provideTelemetryMiddleware",
                     prefix="// ",
                 ),
                 line_affix(
-                    "provideTelemetryMiddleware(",
+                    r"provideTelemetryMiddleware\(",
                     prefix="// ",
                 ),
             ],
@@ -235,7 +235,7 @@ kotlin.internal.collectFUSMetrics=false
                     prefix="// ",
                 ),
                 line_affix(
-                    "BookmarksTelemetryMiddleware(",
+                    r"BookmarksTelemetryMiddleware\(",
                     prefix="// ",
                 ),
             ],
@@ -244,7 +244,7 @@ kotlin.internal.collectFUSMetrics=false
             path="app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt",
             replacements=[
                 line_affix(
-                    "CustomReviewPromptTelemetryMiddleware(",
+                    r"CustomReviewPromptTelemetryMiddleware\(",
                     prefix="// ",
                 ),
             ],
