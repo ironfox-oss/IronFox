@@ -76,7 +76,7 @@ JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '
 }
 
 if [[ -z "$FIREFOX_VERSION" ]]; then
-    echo "\$FIREFOX_VERSION is not set! Aborting..."]
+    echo "\$FIREFOX_VERSION is not set! Aborting..."
     exit 1
 fi
 
