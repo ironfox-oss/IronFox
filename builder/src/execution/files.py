@@ -18,7 +18,7 @@ class FileOpTask(TaskDefinition):
         self.target = target
 
 
-class FileCreateTask(FileOpTask):
+class WriteFileTask(FileOpTask):
     def __init__(
         self,
         name,

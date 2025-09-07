@@ -52,11 +52,10 @@ def setup_android_sdk(d: BuildDefinition, paths: Paths):
         name="Install SDK tools",
         cwd=Path.cwd(),
         assume_yes=True,
-        commands=
-        # Accept licenses
-        [f"{sdkman} --sdk_root={paths.android_home} --licenses"] +
-        # Install sdk tools
-        [f"{sdkman} {tool}" for tool in sdk_tools],
+        commands=[
+            f"{sdkman} --sdk_root={paths.android_home} {task}"
+            for task in (["--licenses"] + sdk_tools)
+        ],
     )
 
     if download_task:

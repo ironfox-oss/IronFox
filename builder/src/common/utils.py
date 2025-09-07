@@ -63,6 +63,17 @@ def is_macos() -> bool:
     return current_platform() == "Darwin"
 
 
+def ndk_host_tag() -> str:
+    if is_linux():
+        return "linux-x86_64"
+    elif is_macos():
+        return "darwin-x86_64"
+    elif is_windows():
+        return "windows-x86_64"
+    else:
+        raise RuntimeError(f"Unsupported platform: {current_platform()}")
+
+
 def __is_tool(name: str):
     try:
         devnull = open(os.devnull)

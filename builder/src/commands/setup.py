@@ -1,15 +1,11 @@
 """The 'setup' command."""
 
-import logging
-import steps.setup as setup
+from steps.setup import get_definition as setup_step_definition
 
-from execution.executor import ExecutorConfig, BuildExecutor
-from common.logging import setup_logging
 from .base import BaseConfig, BaseCommand
 
 
 class SetupConfig:
-
     def __init__(self):
         pass
 
@@ -21,29 +17,9 @@ class SetupCommand(BaseCommand):
         self,
         base_config: BaseConfig,
     ):
-        super().__init__(base_config)
-
-        setup_logging(self.base_config.verbose)
-
-        self.logger = logging.getLogger("SetupCommand")
+        super().__init__("SetupCommand", base_config)
+        self.setup_config = SetupConfig()
         self.logger.debug(f"Initialized setup command with config {base_config}")
 
-    def run(self):
-        self.paths.mkdirs()
-
-        definition = setup.get_definition(self.paths)
-        self.logger.debug(f"Starting setup with definition {definition}")
-        executor = BuildExecutor(
-            ExecutorConfig(
-                jobs=self.base_config.jobs,
-                env=self.base_config.env,
-            )
-        )
-
-        try:
-            executor.submit(definition)
-        except Exception as e:
-            self.logger.error(f"Setup failed with exception: {e}")
-            raise
-        finally:
-            executor.shutdown()
+    def get_definition(self):
+        return setup_step_definition(self.setup_config, self.paths)

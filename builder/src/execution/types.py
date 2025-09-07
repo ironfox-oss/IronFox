@@ -7,14 +7,7 @@ from typing import Callable, List, Tuple, Union
 CommandWithResultHandler = Tuple[str, Callable[[str, str], None]]
 CommandType = Union[str, CommandWithResultHandler]
 
-### FILES
-
-TargetFilesType = Union[str, Path, List[Union[str, Path]]]
+### FIND REPLACE
 
 PatternType = Union[str, Pattern[str]]
-ReplacementType = Union[str, Callable[[Match[str]], str]]
-
-# Two forms: with or without flags
-Replacement = Union[
-    Tuple[PatternType, ReplacementType], Tuple[PatternType, ReplacementType, int]
-]
+Replacement = Callable[[str], str]

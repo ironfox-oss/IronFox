@@ -81,13 +81,27 @@ def setup(base_config: BaseConfig):
 
 
 @cli.command(help="Prepare source files for the build.")
+@click.option(
+    "--sb-gapi-file",
+    help="Path to a file containing the Google Safe Browsing API key",
+    type=click.Path(exists=True, dir_okay=False, readable=True),
+    default=os.getenv("SB_GAPI_KEY_FILE", ""),
+)
 @click.argument(
     "build_variant",
     type=click.Choice(["arm64", "arm", "x86_64", "bundle"]),
 )
 @pass_base_config
-def prepare(base_config: BaseConfig, build_variant: str):
-    cmd = PrepareCommand(base_config, build_variant)
+def prepare(
+    base_config: BaseConfig,
+    sb_gapi_file: Path,
+    build_variant: str,
+):
+    cmd = PrepareCommand(
+        base_config=base_config,
+        sb_gapi_file=Path(sb_gapi_file),
+        build_variant=build_variant,
+    )
     return cmd.run()
 
 

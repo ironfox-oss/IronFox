@@ -4,19 +4,20 @@ import logging
 
 from pathlib import Path
 
+from commands.setup import SetupConfig
 from common.paths import Paths
 from common.versions import Versions
 from execution.definition import BuildDefinition
 
+from steps.common.java import setup_java
 from .android_sdk import setup_android_sdk, setup_bundletool
-from .java import setup_java
 from .phoenix import setup_phoenix
 from .rust import setup_rust
 
 logger = logging.getLogger("Setup")
 
 
-def get_definition(paths: Paths) -> BuildDefinition:
+def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
     d = BuildDefinition(name="Setup")
 
     setup_android_sdk(d, paths)

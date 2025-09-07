@@ -9,9 +9,9 @@ from abc import abstractmethod
 from pathlib import Path
 from commands.base import BuildEnvironment
 from rich.progress import Progress
-from typing import Callable, List, TypeVar, Type
+from typing import Callable, List, Optional, TypeVar, Type
 
-from .types import CommandType, Replacement
+from .types import CommandType, PatternType, Replacement
 
 
 def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
@@ -266,6 +266,17 @@ class BuildDefinition:
         destination: Path,
         sha256: str,
     ) -> TaskDefinition:
+        """Creates a task to download a file from a URL.
+
+        Args:
+            name (str): The name of the download task.
+            url (str): The URL of the file to download.
+            destination (Path): The local path where the file should be saved.
+            sha256 (str): The expected SHA256 checksum of the downloaded file for verification.
+
+        Returns:
+            TaskDefinition: The created DownloadTask instance.
+        """
         from .download import DownloadTask
 
         return self.create_task(
@@ -284,6 +295,18 @@ class BuildDefinition:
         archive_format: str,
         preserve_permissions: bool = True,
     ) -> TaskDefinition:
+        """Creates a task to extract an archive file.
+
+        Args:
+            name (str): The name of the extraction task.
+            archive_file (Path): The path to the archive file to extract.
+            extract_to (Path): The directory where the archive contents should be extracted.
+            archive_format (str): The format of the archive (e.g., "zip", "tar", "gztar").
+            preserve_permissions (bool, optional): Whether to preserve file permissions during extraction.
+                                                    Defaults to True.
+        Returns:
+            TaskDefinition: The created ExtractTask instance.
+        """
         from .extract import ExtractTask
 
         return self.create_task(
@@ -303,6 +326,19 @@ class BuildDefinition:
         branch: str | None = None,
         depth: int | None = None,
     ) -> TaskDefinition:
+        """Creates a task to clone a Git repository.
+
+        Args:
+            name (str): The name of the clone task.
+            repo_url (str): The URL of the Git repository.
+            clone_to (Path): The local directory where the repository should be cloned.
+            branch (str | None, optional): The specific branch to clone. If None, the default branch is used.
+                                            Defaults to None.
+            depth (int | None, optional): The depth for a shallow clone. If None, a full clone is performed.
+                                            Defaults to None.
+        Returns:
+            TaskDefinition: The created CloneTask instance.
+        """
         from .clone import CloneTask
 
         return self.create_task(
@@ -320,6 +356,16 @@ class BuildDefinition:
         patch_file: Path,
         target_dir: Path,
     ) -> TaskDefinition:
+        """Creates a task to apply a patch file to a target directory.
+
+        Args:
+            name (str): The name of the patch task.
+            patch_file (Path): The path to the patch file (.patch, .diff).
+            target_dir (Path): The directory where the patch should be applied.
+
+        Returns:
+            TaskDefinition: The created PatchTask instance.
+        """
         from .patch import PatchTask
 
         return self.create_task(
@@ -337,6 +383,19 @@ class BuildDefinition:
         env: dict[str, str] = dict(),
         assume_yes: bool | int = False,
     ) -> TaskDefinition:
+        """Creates a task to run a list of shell commands.
+
+        Args:
+            name (str): The name of the command execution task.
+            commands (list[CommandType]): A list of commands to execute. Each command can be a string
+                                          or a tuple of (command_string, result_handler_callable).
+            cwd (Path, optional): The current working directory for the commands. Defaults to Path.cwd().
+            env (dict[str, str], optional): Additional environment variables for the commands. Defaults to empty dict.
+            assume_yes (bool | int, optional): If True, automatically input 'y' to prompts. If an integer,
+                                                inputs 'y' that many times. Defaults to False.
+        Returns:
+            TaskDefinition: The created RunCommandsTask instance.
+        """
         from .run import RunCommandsTask
 
         return self.create_task(
@@ -356,10 +415,22 @@ class BuildDefinition:
         chmod: int = 0o644,
         overwrite: bool = False,
     ) -> TaskDefinition:
-        from .files import FileCreateTask
+        """Creates a task to write content to a file.
+
+        Args:
+            name (str): The name of the write file task.
+            target (Path): The path to the file to write.
+            contents (Callable[[], bytes]): A callable that returns the bytes content to write to the file.
+            chmod (int, optional): The file permissions (octal) to set. Defaults to 0o644 (rw-r--r--).
+            overwrite (bool, optional): If True, overwrite the file if it already exists. If False,
+                                        raise an error if the file exists. Defaults to False.
+        Returns:
+            TaskDefinition: The created WriteFileTask instance.
+        """
+        from .files import WriteFileTask
 
         return self.create_task(
-            FileCreateTask,
+            WriteFileTask,
             name,
             target=target,
             contents=contents,
@@ -374,6 +445,17 @@ class BuildDefinition:
         parents: bool = False,
         exist_ok: bool = False,
     ) -> TaskDefinition:
+        """Creates a task to create a directory.
+
+        Args:
+            name (str): The name of the directory creation task.
+            target (Path): The path of the directory to create.
+            parents (bool, optional): If True, create any necessary parent directories. Defaults to False.
+            exist_ok (bool, optional): If True, do not raise an error if the directory already exists.
+                                        Defaults to False.
+        Returns:
+            TaskDefinition: The created DirCreateTask instance.
+        """
         from .files import DirCreateTask
 
         return self.create_task(
@@ -390,6 +472,16 @@ class BuildDefinition:
         target: Path,
         recursive: bool = False,
     ) -> TaskDefinition:
+        """Creates a task to delete a file or directory.
+
+        Args:
+            name (str): The name of the delete task.
+            target (Path): The path to the file or directory to delete.
+            recursive (bool, optional): If True, recursively delete directories and their contents.
+                                        Required for deleting non-empty directories. Defaults to False.
+        Returns:
+            TaskDefinition: The created DeleteTask instance.
+        """
         from .files import DeleteTask
 
         return self.create_task(
@@ -399,23 +491,39 @@ class BuildDefinition:
             recursive=recursive,
         )
 
-    def sed(
+    def find_replace(
         self,
         name: str,
-        target_files: List[Path],
-        replacement: List[Replacement],
+        target_file: Path,
+        replacement: Replacement,
         backup: bool = False,
         create_if_missing: bool = False,
+        match_lines: Optional[PatternType] = None,
     ) -> TaskDefinition:
-        from .sed import SedTask
+        """Creates a task to perform find and replace operations in a file.
+
+        Args:
+            name (str): The name of the find/replace task.
+            target_file (Path): The path to the file to modify.
+            replacement (Replacement): A callable that takes the content (or line if match_lines is used)
+                                       and returns the modified content/line.
+            backup (bool, optional): If True, create a backup of the original file before modification. Defaults to False.
+            create_if_missing (bool, optional): If True, create the target file if it does not exist. Defaults to False.
+            match_lines (Optional[PatternType], optional): If provided, the replacement is applied line by line
+                                                            only to lines matching this regex pattern. Defaults to None.
+        Returns:
+            TaskDefinition: The created FindReplaceTask instance.
+        """
+        from .find_replace import FindReplaceTask
 
         return self.create_task(
-            SedTask,
+            FindReplaceTask,
             name,
-            target_files=target_files,
+            target_file=target_file,
             replacement=replacement,
             backup=backup,
             create_if_missing=create_if_missing,
+            match_lines=match_lines,
         )
 
     def overlay(
@@ -425,6 +533,17 @@ class BuildDefinition:
         target_dir: Path,
         preserve_permissions: bool = True,
     ) -> TaskDefinition:
+        """Creates a task to overlay files from a source directory onto a target directory.
+        Files in the source directory will overwrite files with the same name in the target directory.
+
+        Args:
+            name (str): The name of the overlay task.
+            source_dir (Path): The directory containing files to copy.
+            target_dir (Path): The destination directory where files will be copied.
+            preserve_permissions (bool, optional): If True, attempt to preserve file permissions. Defaults to True.
+        Returns:
+            TaskDefinition: The created OverlayTask instance.
+        """
         from .overlay import OverlayTask
 
         return self.create_task(

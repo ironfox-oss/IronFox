@@ -4,10 +4,10 @@ import re
 from typing import Tuple
 from common.paths import Paths
 from common.versions import Versions
-from execution.definition import BuildDefinition
+from execution.definition import BuildDefinition, TaskDefinition
 
 
-def setup_java(d: BuildDefinition, paths: Paths):
+def setup_java(d: BuildDefinition, paths: Paths) -> TaskDefinition:
     java = paths.java_home / "bin" / "java"
 
     def do_check_java_version(output: str) -> Tuple[bool, str] | None:
@@ -44,7 +44,7 @@ def setup_java(d: BuildDefinition, paths: Paths):
         if not success:
             raise RuntimeError(message)
 
-    d.run_commands(
+    return d.run_commands(
         name="Check java version",
         # Use '-version' for backwards compatibility
         # '--version' on newer versions of the JDK do not include the 'version' string

@@ -5,12 +5,29 @@ import os
 
 from abc import abstractmethod
 from pathlib import Path
+from common.logging import setup_logging
+from execution.definition import BuildDefinition
+from execution.executor import BuildExecutor, ExecutorConfig
 from rich.table import Table
 from rich.console import Console
 
 from common.paths import Paths
 
 logger = logging.getLogger("BaseConfig")
+
+
+class AppConfig:
+    def __init__(
+        self,
+        app_name: str = "IronFox",
+        vendor: str = "IronFox OSS",
+        app_id: str = "org.ironfoxoss",
+        app_id_suffix: str = ".ironfox",
+    ):
+        self.app_name = app_name
+        self.vendor = vendor
+        self.app_id = app_id
+        self.app_id_suffix = app_id_suffix
 
 
 class BuildEnvironment:
@@ -111,13 +128,39 @@ class BaseCommand:
 
     def __init__(
         self,
+        name: str,
         base_config: BaseConfig,
     ):
+        self.name = name
         self.base_config = base_config
+
+        setup_logging(self.base_config.verbose)
+        self.logger = logging.getLogger(name)
+
+    @abstractmethod
+    def get_definition(self) -> BuildDefinition:
+        pass
 
     @abstractmethod
     def run(self):
-        pass
+        self.paths.mkdirs()
+
+        definition = self.get_definition()
+        self.logger.debug(f"Starting setup with definition {definition}")
+        executor = BuildExecutor(
+            ExecutorConfig(
+                jobs=self.base_config.jobs,
+                env=self.base_config.env,
+            )
+        )
+
+        try:
+            executor.submit(definition)
+        except Exception as e:
+            self.logger.error(f"Setup failed with exception: {e}")
+            raise
+        finally:
+            executor.shutdown()
 
     @property
     def paths(self) -> Paths:

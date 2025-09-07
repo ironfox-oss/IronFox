@@ -1,10 +1,11 @@
 """The 'prepare' command."""
 
 from enum import Enum
-import logging
+from pathlib import Path
 
 from common.logging import setup_logging
-from .base import BaseConfig, BaseCommand
+from steps.prepare import get_definition as prepare_step_definition
+from .base import AppConfig, BaseConfig, BaseCommand
 
 
 class BuildVariant(Enum):
@@ -24,15 +25,16 @@ class BuildVariant(Enum):
     shared libraries for all supported CPU architectures."""
 
 
-class PrepareCommand(BaseCommand):
-    """The 'prepare' command."""
+class PrepareConfig:
 
     def __init__(
         self,
-        base_config: BaseConfig,
+        sb_gapi_file: Path,
         build_variant: str,
+        app_config: AppConfig = AppConfig(),
     ):
-        super().__init__(base_config)
+        self.app_config = app_config
+        self.sb_gapi_file = sb_gapi_file
 
         build_variant = build_variant.lower()
         if build_variant == "arm64":
@@ -46,14 +48,36 @@ class PrepareCommand(BaseCommand):
         else:
             raise ValueError(f"Unknown build variant {build_variant}")
 
-        setup_logging(self.base_config.verbose)
-
-        self.logger = logging.getLogger("PrepareCommand")
-        self.logger.debug(
-            f"Initialized prepare command for build variant {self.build_variant}"
-        )
-
     @property
     def build_variant(self):
-        """Get the build variant."""
         return self._build_variant
+
+    def __repr__(self):
+        return (
+            f"PrepareConfig(build_variant={self.build_variant},"
+            " sb_gapi_file={self.sb_gapi_file})"
+        )
+
+
+class PrepareCommand(BaseCommand):
+    """The 'prepare' command."""
+
+    def __init__(
+        self,
+        base_config: BaseConfig,
+        sb_gapi_file: Path,
+        build_variant: str,
+    ):
+        super().__init__("PrepareCommad", base_config)
+        self.prepare_cofig = PrepareConfig(
+            sb_gapi_file=sb_gapi_file,
+            build_variant=build_variant,
+        )
+
+        setup_logging(self.base_config.verbose)
+        self.logger.debug(
+            f"Initialized prepare command with config: {self.prepare_cofig}"
+        )
+
+    def get_definition(self):
+        return prepare_step_definition(self.prepare_cofig, self.paths)

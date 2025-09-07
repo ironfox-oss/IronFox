@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+from common.utils import ndk_host_tag
+
 from .versions import Versions
 
 
@@ -49,10 +51,18 @@ class Paths:
         return self.android_home / "ndk" / Versions.NDK_REVISION
 
     @property
+    def ndk_toolchain_dir(self) -> Path:
+        return self.ndk_home / "toolchains" / "llvm" / "prebuilt" / ndk_host_tag()
+
+    @property
+    def libclang_dir(self) -> Path:
+        return self.ndk_toolchain_dir / "musl" / "lib"
+
+    @property
     def java_home(self) -> Path:
         """Path to the JDK directory."""
         return self._java_home
-    
+
     @property
     def cargo_home(self) -> Path:
         """Path to the .cargo directory."""
