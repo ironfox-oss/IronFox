@@ -470,6 +470,7 @@ $SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 if [[ "$PLATFORM" == "darwin" ]]; then
     # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
     ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
+    echo "macOS: Doing nothing..."
 else
     patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop-uniffi.patch"
     if [[ -n ${FDROID_BUILD+x} ]]; then

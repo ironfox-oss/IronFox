@@ -193,6 +193,7 @@ fi
 if [[ "$PLATFORM" == "macos" ]]; then
     # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
     ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
+    echo "macOS: Doing nothing..."
 else
     if [[ -n ${FDROID_BUILD+x} ]]; then
         echo "Cloning uniffi-bindgen..."
