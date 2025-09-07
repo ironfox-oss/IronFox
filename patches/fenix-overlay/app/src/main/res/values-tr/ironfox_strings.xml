@@ -2,7 +2,7 @@
 <resources>
     <string name="restart_required_summary">Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
     <string name="unsupported_summary">Bu ayar ÖNERİLMEMEKTEDİR ve DESTEKLENMEMEKTEDİR. Dikkatli olun.</string>
-    <string name="if_preferences">Ironfox ayarları</string>
+    <string name="if_preferences">IronFox ayarları</string>
     <string name="if_preferences_misc">Çeşitli</string>
     <string name="if_preferences_privacy">Gizlilik</string>
     <string name="if_preferences_privacy_security">Gizlilik ve güvenlik</string>
@@ -46,7 +46,7 @@
     <string name="preference_webgl_enabled">WebGL\'i etkinleştir</string>
     <string name="preference_webrtc_enabled">WebRTC\'yi etkinleştir</string>
     <string name="preference_xpinstall_enabled">Eklentilerin kurulmasına izin ver</string>
-    <string name="onboarding_if_preferences_title">Ironfox\'u özelleştir</string>
+    <string name="onboarding_if_preferences_title">IronFox\'u özelleştir</string>
     <string name="onboarding_if_preferences_description">IronFox\'u kendi zevkinize göre özelleştir</string>
     <string name="onboarding_if_preference_doh_caption">Gelişmiş gizlilik ve güvenlik için HTTPS-üzerinden-DNS (DoH) ile tarama işlemlerinizi güvence altına al.</string>
     <string name="onboarding_install_ublock_title">uBlock Origin\'i kur</string>
