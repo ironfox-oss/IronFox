@@ -24,7 +24,7 @@ if [ ! -d "$ANDROID_HOME" ]; then
     rm -Rf "$ANDROID_HOME"
     mkdir -vp "$ANDROID_HOME/cmdline-tools"
     unzip -q tools-$SDK_REVISION.zip -d "$ANDROID_HOME/cmdline-tools"
-    mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+    mv -v "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
     rm -vf tools-$SDK_REVISION.zip
 fi
 
