@@ -456,7 +456,7 @@ rm -vf glean-core/android/metrics.yaml
 sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Use Tor's no-op UniFFi binding generator
-if [[ -n ${FDROID_BUILD+x}] ]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
 else
     sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
