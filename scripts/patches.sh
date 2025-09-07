@@ -148,8 +148,8 @@ slugify() {
     local input="$1"
     echo "$input" |                  \
         tr '[:upper:]' '[:lower:]' | \
-        sed -E 's/[^a-z0-9]+/-/g' |  \
-        sed -E 's/^-+|-+$//g'
+        "$SED" -E 's/[^a-z0-9]+/-/g' |  \
+        "$SED" -E 's/^-+|-+$//g'
 }
 
 # Function to rebase a single patch file atomically

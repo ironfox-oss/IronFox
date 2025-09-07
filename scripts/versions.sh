@@ -36,3 +36,10 @@ WASISDKDIR="${ROOTDIR}/wasi-sdk"
 UNIFFIDIR="${ROOTDIR}/uniffi"
 ANDROID_COMPONENTS="${GECKODIR}/mobile/android/android-components"
 FENIX="${GECKODIR}/mobile/android/fenix"
+
+# Use GNU Sed on macOS instead of the built-in sed, due to differences in syntax
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    SED=gsed
+else
+    SED=sed
+fi
