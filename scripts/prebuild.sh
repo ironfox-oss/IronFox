@@ -552,10 +552,11 @@ popd
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
-    popd
 
     # Break the dependency on older cmake
     sed -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
+
+    popd
 
     export wasi_install=$wasi/build/install/wasi
 else
