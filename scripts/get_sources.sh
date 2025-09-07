@@ -174,22 +174,22 @@ download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoeni
 download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
 
 # Get WebAssembly SDK
-if [[ -z ${FDROID_BUILD+x} ]]; then
-    echo "Downloading prebuilt wasi-sdk..."
-    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
-else
+if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
     clone_repo "https://github.com/WebAssembly/wasi-sdk" "$WASISDKDIR" "$WASI_TAG"
-    (cd "$WASISDKDIR" && git submodule update --init --depth=1)
+    (cd "$WASISDKDIR" && git submodule update --init --depth=64)
+else
+    echo "Downloading prebuilt wasi-sdk..."
+    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
 fi
 
 # Get Tor's no-op UniFFi binding generator
-if [[ -z ${FDROID_BUILD+x} ]]; then
-    echo "Downloading prebuilt uniffi-bindgen..."
-    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
-else
+if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning uniffi-bindgen..."
     clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs" "$UNIFFIDIR" "$UNIFFI_VERSION"
+else
+    echo "Downloading prebuilt uniffi-bindgen..."
+    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
 fi
 
 # Clone application-services
