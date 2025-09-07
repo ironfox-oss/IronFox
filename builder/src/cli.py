@@ -45,6 +45,12 @@ from commands.setup import SetupCommand
     default=multiprocessing.cpu_count(),
 )
 @click.option(
+    "--dry-run",
+    help="Disable task execution.",
+    flag=True,
+    default=False,
+)
+@click.option(
     "--verbose",
     help="Enable verbose logging.",
     is_flag=True,
@@ -58,6 +64,7 @@ def cli(
     java_home: Path,
     cargo_home: Path,
     jobs: int,
+    dry_run: bool,
     verbose: bool,
 ):
     ctx.obj = BaseConfig(
@@ -66,6 +73,7 @@ def cli(
         java_home=Path(java_home),
         cargo_home=Path(cargo_home),
         jobs=jobs,
+        dry_run=dry_run,
         verbose=verbose,
     )
 

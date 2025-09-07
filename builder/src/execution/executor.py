@@ -15,8 +15,9 @@ from .definition import BuildDefinition, TaskDefinition, TaskExecutionParams
 class ExecutorConfig:
     """Configuration for the executor."""
 
-    def __init__(self, jobs: int, env: BuildEnvironment):
+    def __init__(self, jobs: int, dry_run: bool, env: BuildEnvironment,):
         self.jobs = jobs
+        self.dry_run = dry_run
         self.env = env
 
 
@@ -289,7 +290,8 @@ class BuildExecutor:
             )
             try:
                 for func in task.do_firsts:
-                    func()
+                    if not self.config.dry_run:
+                        func()
                     progress.update(task_id, advance=1)
             except Exception as e:
                 task.error(f"do_first hook failed with exception: {e}")
@@ -309,7 +311,8 @@ class BuildExecutor:
             )
             try:
                 for func in task.do_lasts:
-                    func()
+                    if not self.config.dry_run:
+                        func()
                     progress.update(task_id, advance=1)
             except Exception as e:
                 task.error(f"do_last hook failed with exception: {e}")
@@ -324,12 +327,13 @@ class BuildExecutor:
         """Execute the main action of a task based on its type."""
         try:
             task.debug(f"Executing...")
-            task.execute(
-                TaskExecutionParams(
-                    progress=progress,
-                    env=self.config.env,
+            if not self.config.dry_run:
+                task.execute(
+                    TaskExecutionParams(
+                        progress=progress,
+                        env=self.config.env,
+                    )
                 )
-            )
         finally:
             task.debug(f"Completed")
 

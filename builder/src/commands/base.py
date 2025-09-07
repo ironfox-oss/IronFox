@@ -78,6 +78,7 @@ class BaseConfig:
         java_home: Path,
         cargo_home: Path,
         jobs: int,
+        dry_run: bool,
         verbose: bool,
     ):
         """Creates a new BaseConfig instance.
@@ -90,6 +91,7 @@ class BaseConfig:
         """
         self.jobs = jobs
         self.verbose = verbose
+        self.dry_run = dry_run
         self.paths = Paths(
             root_dir=root_dir.resolve(),
             android_home=android_home.resolve(),
@@ -151,6 +153,7 @@ class BaseCommand:
         executor = BuildExecutor(
             ExecutorConfig(
                 jobs=self.base_config.jobs,
+                dry_run=self.base_config.dry_run,
                 env=self.base_config.env,
             )
         )
