@@ -1,13 +1,15 @@
 #!/bin/bash
 
+PLATFORM_VERSION="36"
 BUILDTOOLS_VERSION="36.0.0"
 NDK_REVISION="28.1.13356709"
 SDK_REVISION="13114758"
-ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
 fi
+
+ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
 
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
@@ -44,7 +46,7 @@ export PATH
 { yes || true; } | sdkmanager --sdk_root="$ANDROID_HOME" --licenses
 
 $SDK_MANAGER "build-tools;$BUILDTOOLS_VERSION" # for GeckoView
-$SDK_MANAGER 'platforms;android-36' # for GeckoView
+$SDK_MANAGER "platforms;android-$PLATFORM_VERSION" # for GeckoView
 $SDK_MANAGER "ndk;$NDK_REVISION"  # for mozbuild; application-services
 
 export ANDROID_NDK="$ANDROID_HOME/ndk/$NDK_REVISION"
