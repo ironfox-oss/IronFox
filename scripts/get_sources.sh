@@ -210,12 +210,12 @@ else
 fi
 
 # Get Tor's no-op UniFFi binding generator
-if [[ -z ${FDROID_BUILD+x} ]]; then
-    echo "Downloading prebuilt uniffi-bindgen..."
-    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
-else
+if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning uniffi-bindgen..."
     clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs" "$UNIFFIDIR" "$UNIFFI_VERSION"
+else
+    echo "Downloading prebuilt uniffi-bindgen..."
+    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
 fi
 
 # Clone application-services
