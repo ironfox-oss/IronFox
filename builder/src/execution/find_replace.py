@@ -1,13 +1,86 @@
+from functools import singledispatchmethod
 import logging
 import re
-import shutil
 
+from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Union
-from rich.progress import Progress
+from typing import List
+from rich.progress import Progress, TaskID
 
 from .definition import TaskDefinition, BuildDefinition
-from .types import PatternType, Replacement
+from .types import (
+    GlobalReplacement,
+    LineAffixReplacement,
+    LineReplacement,
+    LiteralReplacement,
+    PatternType,
+    Replacement,
+    ReplacementAction,
+)
+
+
+def on_lines(
+    match_lines: PatternType,
+    replace: Replacement,
+    count: int = 0,
+) -> LineReplacement:
+    return on_line_text(
+        match_lines=match_lines,
+        on_text=match_lines,
+        replace=replace,
+        count=count,
+    )
+
+
+def on_line_text(
+    match_lines: PatternType,
+    on_text: PatternType,
+    replace: Replacement,
+    count: int = 0,
+) -> LineReplacement:
+    return LineReplacement(
+        count=count,
+        line_match_pattern=match_lines,
+        text_match_pattern=on_text,
+        replacement=replace,
+    )
+
+
+def regex(
+    pattern: PatternType,
+    replacement: Replacement,
+    count: int = 0,
+) -> GlobalReplacement:
+    return GlobalReplacement(
+        count=count,
+        pattern=pattern,
+        replacement=replacement,
+    )
+
+
+def line_affix(
+    match_lines: PatternType,
+    prefix: str = "",
+    suffix: str = "",
+) -> LineAffixReplacement:
+    return LineAffixReplacement(
+        count=0,
+        line_match_pattern=match_lines,
+        prefix=prefix,
+        suffix=suffix,
+    )
+
+
+def literal(
+    old_text: str,
+    new_text: str,
+    count: int = 0,
+) -> LiteralReplacement:
+    return LiteralReplacement(
+        count=count,
+        old_text=old_text,
+        new_text=new_text,
+    )
 
 
 class FindReplaceTask(TaskDefinition):
@@ -19,103 +92,139 @@ class FindReplaceTask(TaskDefinition):
         id: int,
         build_def: BuildDefinition,
         target_file: Path,
-        replacement: Replacement,
+        replacements: List[ReplacementAction],
         backup: bool = False,
         create_if_missing: bool = False,
-        match_lines: Optional[PatternType] = None,
     ):
         super().__init__(name, id, build_def)
         self.target_file = target_file
-        self.replacement = replacement
+        self.replacements = replacements
         self.backup = backup
         self.create_if_missing = create_if_missing
-        self.match_lines = match_lines
 
     def execute(self, params):
-        return find_replace(
-            target_file=self.target_file,
-            replacement=self.replacement,
-            progress=params.progress,
-            logger=self.logger,
-            backup=self.backup,
-            create_if_missing=self.create_if_missing,
-            match_lines=self.match_lines,
+        task_id = params.progress.add_task(
+            f"Processing file: {self.target_file.name}",
+            total=len(self.replacements),
         )
+
+        try:
+            return find_replace(
+                target_file=self.target_file,
+                replacements=self.replacements,
+                progress=params.progress,
+                logger=self.logger,
+                backup=self.backup,
+                create_if_missing=self.create_if_missing,
+            )
+        finally:
+            params.progress.remove_task(task_id=task_id)
 
 
 def find_replace(
     target_file: Path,
-    replacement: Replacement,
+    replacements: List[ReplacementAction],
     progress: Progress,
     logger: logging.Logger,
     backup: bool = False,
     create_if_missing: bool = False,
-    match_lines: Optional[PatternType] = None,
 ):
-    task_id = progress.add_task(f"Processing file: {target_file.name}", total=None)
-
+    task_id = progress.add_task(
+        f"Processing file {target_file.name}", total=len(replacements)
+    )
     try:
         if not target_file.exists():
             if create_if_missing:
-                target_file.parent.mkdir(parents=True, exist_ok=True)
                 target_file.touch()
             else:
-                logger.warning(f"File {target_file} does not exist, skipping")
-                return
+                raise FileNotFoundError(f"Target file {target_file} does not exist")
 
-        content: Union[List[str], str]
-        modified_content: Union[List[str], str]
-        with open(target_file, "r", encoding="utf-8", errors="ignore") as f:
-            if match_lines:
-                content = f.readlines()
-            else:
-                content = f.read()
+        with open(target_file, "r", encoding="utf-8") as f:
+            original_content = f.read()
 
-        modified_content = content
-        if (
-            match_lines
-            and isinstance(content, list)
-            and isinstance(modified_content, list)
-        ):
-            for line in content:
-                modified_line = line
-                if len(re.findall(match_lines, line)) > 0:
-                    modified_line = replacement(line)
-                modified_content.append(modified_line)
-        elif (
-            not match_lines
-            and isinstance(content, str)
-            and isinstance(modified_content, str)
-        ):
-            modified_content = replacement(content)
-        else:
-            raise RuntimeError(
-                f"Invalid state: "
-                "match_lines={match_lines}, "
-                "content={type(content)}, "
-                "modified_content={type(modified_content)}"
+        if backup:
+            backup_path = Path(str(target_file) + ".bak")
+            with open(backup_path, "w", encoding="utf-8") as f:
+                f.write(original_content)
+
+        modified_content = _apply_replacements(
+            content=original_content,
+            replacements=replacements,
+            task_id=task_id,
+            progress=progress,
+        )
+
+        with open(target_file, "w", encoding="utf-8") as f:
+            f.write(modified_content)
+
+        logger.info(f"Applied {len(replacements)} replacements to {target_file}")
+    finally:
+        progress.remove_task(task_id)
+
+
+def _apply_replacements(
+    content: str,
+    replacements: List[ReplacementAction],
+    task_id: TaskID,
+    progress: Progress,
+) -> str:
+    result = content
+
+    for replacement in replacements:
+        if isinstance(replacement, LiteralReplacement):
+            result = result.replace(
+                replacement.old_text,
+                replacement.new_text,
+                replacement.count,
             )
 
-        # Write back if changed
-        if modified_content != content:
-            if backup:
-                backup_path = target_file.with_suffix(target_file.suffix + ".bak")
-                shutil.copy2(target_file, backup_path)
-
-            if isinstance(modified_content, list):
-                new_content = "".join(modified_content)
+        elif isinstance(replacement, GlobalReplacement):
+            if callable(replacement.replacement):
+                result = re.sub(
+                    pattern=replacement.pattern,
+                    repl=replacement.replacement(result),
+                    string=result,
+                    count=replacement.count,
+                )
             else:
-                new_content = modified_content
+                result = re.sub(
+                    replacement.pattern,
+                    replacement.replacement,
+                    result,
+                )
 
-            with open(target_file, "w", encoding="utf-8") as f:
-                f.write(new_content)
+        elif isinstance(replacement, LineReplacement):
+            lines = result.splitlines(keepends=True)
+            modified_lines = []
 
-            logger.debug(f"Applied replacements to {target_file}")
+            for line in lines:
+                if re.search(replacement.line_match_pattern, line):
+                    if callable(replacement.replacement):
+                        modified_line = replacement.replacement(line)
+                    else:
+                        modified_line = re.sub(
+                            replacement.text_match_pattern,
+                            replacement.replacement,
+                            line,
+                        )
+                    modified_lines.append(modified_line)
+                else:
+                    modified_lines.append(line)
+
+            result = "".join(modified_lines)
+
+        elif isinstance(replacement, LineAffixReplacement):
+            lines = result.splitlines(keepends=True)
+            modified_lines = []
+            for line in lines:
+                if re.search(replacement.line_match_pattern, line):
+                    modified_lines.append(
+                        f"{replacement.prefix}{line.rstrip()}{replacement.suffix}\n"
+                    )
+                else:
+                    modified_lines.append(line)
+            result = "".join(modified_lines)
 
         progress.update(task_id, advance=1)
 
-    except Exception as e:
-        logger.error(f"Failed to process {target_file}: {e}")
-        raise
-
-    progress.remove_task(task_id)
+    return result

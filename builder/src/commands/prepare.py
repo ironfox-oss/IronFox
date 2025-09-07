@@ -48,6 +48,27 @@ class PrepareConfig:
         else:
             raise ValueError(f"Unknown build variant {build_variant}")
 
+        if self.build_variant == BuildVariant.ARM:
+            self.abis = '"armeabi-v7a"'
+            self.target = "arm-linux-androideabi"
+            self.llvmtarget = "ARM"
+            self.rusttarget = "arm"
+        elif self.build_variant == BuildVariant.ARM64:
+            self.abi = '"arm64-v8a"'
+            self.target = "aarch64-linux-android"
+            self.llvmtarget = "AArch64"
+            self.rusttarget = "arm64"
+        elif self.build_variant == BuildVariant.X86_64:
+            self.abi = '"x86_64"'
+            self.target = "x86_64-linux-android"
+            self.llvmtarget = "X86_64"
+            self.rusttarget = "x86_64"
+        elif self.build_variant == BuildVariant.BUNDLE:
+            self.abi = '"arm64-v8a", "armeabi-v7a", "x86_64"'
+            self.target = ""
+            self.llvmtarget = "AArch64;ARM;X86_64"
+            self.rusttarget = "arm64,arm,x86_64"
+
     @property
     def build_variant(self):
         return self._build_variant

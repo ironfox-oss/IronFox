@@ -27,11 +27,13 @@ class WriteFileTask(FileOpTask):
         target,
         contents: Callable[[], bytes],
         chmod: int = 0o644,
+        append: bool = False,
         overwrite: bool = False,
     ):
         super().__init__(name, id, build_def, target)
         self.contents = contents
         self.chmod = chmod
+        self.append = append
         self.overwrite = overwrite
 
     def execute(self, params):
@@ -41,6 +43,7 @@ class WriteFileTask(FileOpTask):
             progress=params.progress,
             logger=self.logger,
             chmod=self.chmod,
+            append=self.append,
             overwrite=self.overwrite,
         )
 
@@ -102,9 +105,10 @@ def write_file_with_progress(
     progress: Progress,
     logger: logging.Logger,
     chmod: int = 0o644,
+    append: bool = False,
     overwrite: bool = False,
 ):
-    if destination.exists() and not overwrite:
+    if destination.exists() and not (overwrite or append):
         raise RuntimeError(f"Cannot write {destination}. File already exists!")
 
     try:
@@ -113,7 +117,7 @@ def write_file_with_progress(
         logger.error(f"Failed to generate contents for {destination}: {e}")
         raise
 
-    total_size = len(content_bytes)
+    new_data_size = len(content_bytes)
 
     # Ensure parent directories exist
     try:
@@ -122,25 +126,36 @@ def write_file_with_progress(
         logger.error(f"Failed to create directories for {destination}: {e}")
         raise
 
-    task_id = progress.add_task(f"Writing {destination.name}", total=total_size)
-    written = 0
+    open_mode = "ab" if append else "wb"
+
+    task_id = progress.add_task(
+        f"{'Appending to' if append else 'Writing'} {destination.name}",
+        total=new_data_size,
+    )
 
     try:
-        with open(destination, "wb") as f:
-            chunk_size = 16 * 1024  # Write in 16KB chunks
-            while written < total_size:
-                end = min(written + chunk_size, total_size)
+        with open(destination, open_mode) as f:
+            written = 0
+            chunk_size = 16 * 1024  # 16 KB chunks
+
+            while written < new_data_size:
+                end = min(written + chunk_size, new_data_size)
                 chunk = content_bytes[written:end]
                 f.write(chunk)
                 progress.update(task_id, advance=len(chunk))
                 written += len(chunk)
 
-        os.chmod(destination, chmod)
-        logger.info(f"File written: {destination} ({format_bytes(total_size)})")
+        # Only set chmod if we're creating or overwriting (not just appending to an existing file)
+        if not append or not destination.exists():
+            os.chmod(destination, chmod)
+
+        logger.info(
+            f"File {'appended' if append else 'written'}: {destination} ({format_bytes(new_data_size)})"
+        )
 
     except Exception as e:
         logger.error(f"Failed to write to {destination}: {e}")
-        if destination.exists():
+        if not append and destination.exists():
             try:
                 destination.unlink()
                 logger.debug("Partial file removed after error.")

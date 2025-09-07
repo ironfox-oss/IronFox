@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import errno
 import os
-from pathlib import Path
 import platform
 import subprocess
+
+from glob import glob
+from pathlib import Path
+from typing import List, Union
 
 CHUNK_SIZE = 16 * 1024  # 16KB
 
@@ -104,3 +107,17 @@ def find_prog(prog: str) -> Path | None:
         return None
 
     return path
+
+
+def resolve_glob(
+    target_file: Union[Path, str],
+    recursive: bool = False,
+) -> List[Path]:
+    if isinstance(target_file, Path) and any(c in str(target_file) for c in "*?[]"):
+        files = [Path(p) for p in glob(str(target_file), recursive=recursive)]
+    elif isinstance(target_file, str) and any(c in target_file for c in "*?[]"):
+        files = [Path(p) for p in glob(target_file, recursive=recursive)]
+    else:
+        files = [target_file if isinstance(target_file, Path) else Path(target_file)]
+
+    return files

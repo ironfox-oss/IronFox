@@ -18,13 +18,14 @@ class Versions:
     PHOENIX_TAG = "2025.08.06.1"
     APPSERVICES_BRANCH = "release-v142"
     BUNDLETOOL_TAG = "1.18.1"
-    RUST_VERSION = "1.89.0"
+    RUST_MAJOR_VERSION = "1.89"
+    RUST_VERSION = f"{RUST_MAJOR_VERSION}.0"
     CBINDGEN_VERSION = "0.29.0"
 
     ANDROID_PLATFORM_VERSION = "android-36"
     BUILDTOOLS_VERSION = "36.0.0"
     NDK_REVISION = "28.1.13356709"
     SDK_REVISION = "13114758"
-    
+
     # Java version required to build IronFox
     JAVA_VERSION = 17

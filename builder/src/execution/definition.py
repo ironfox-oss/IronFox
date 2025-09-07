@@ -8,10 +8,11 @@ import logging
 from abc import abstractmethod
 from pathlib import Path
 from commands.base import BuildEnvironment
+from common.utils import resolve_glob
 from rich.progress import Progress
-from typing import Callable, List, Optional, TypeVar, Type
+from typing import Callable, Iterable, List, TypeVar, Type, Union
 
-from .types import CommandType, PatternType, Replacement
+from .types import CommandType, PatternType, Replacement, ReplacementAction
 
 
 def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
@@ -413,6 +414,7 @@ class BuildDefinition:
         target: Path,
         contents: Callable[[], bytes],
         chmod: int = 0o644,
+        append: bool = True,
         overwrite: bool = False,
     ) -> TaskDefinition:
         """Creates a task to write content to a file.
@@ -422,6 +424,7 @@ class BuildDefinition:
             target (Path): The path to the file to write.
             contents (Callable[[], bytes]): A callable that returns the bytes content to write to the file.
             chmod (int, optional): The file permissions (octal) to set. Defaults to 0o644 (rw-r--r--).
+            append (bool, optional): If True, append to the file instead of overwriting. Defaults to True.
             overwrite (bool, optional): If True, overwrite the file if it already exists. If False,
                                         raise an error if the file exists. Defaults to False.
         Returns:
@@ -435,6 +438,7 @@ class BuildDefinition:
             target=target,
             contents=contents,
             chmod=chmod,
+            append=append,
             overwrite=overwrite,
         )
 
@@ -469,62 +473,79 @@ class BuildDefinition:
     def delete(
         self,
         name: str,
-        target: Path,
+        path: Union[Path, str],
         recursive: bool = False,
-    ) -> TaskDefinition:
+    ) -> List[TaskDefinition]:
         """Creates a task to delete a file or directory.
 
         Args:
             name (str): The name of the delete task.
-            target (Path): The path to the file or directory to delete.
+            target (Path): The path or glob to the files or directories to delete.
             recursive (bool, optional): If True, recursively delete directories and their contents.
                                         Required for deleting non-empty directories. Defaults to False.
         Returns:
-            TaskDefinition: The created DeleteTask instance.
+            TaskDefinition: The created DeleteTask instances for each resolved file.
         """
         from .files import DeleteTask
 
-        return self.create_task(
-            DeleteTask,
-            name,
-            target=target,
-            recursive=recursive,
-        )
+        files = resolve_glob(path)
+        tasks = []
+        
+        tasks = []
+        for idx, f in enumerate(files, start=1):
+            task_name = f"{name} [{idx}] ({f})" if len(files) > 1 else name
+            tasks.append(
+                self.create_task(
+                    DeleteTask,
+                    task_name,
+                    target_file=f,
+                    recursive=recursive,
+                )
+            )
+    
+        return tasks
 
     def find_replace(
         self,
         name: str,
-        target_file: Path,
-        replacement: Replacement,
+        target_file: Union[Path, str],
+        replacements: List[ReplacementAction],
         backup: bool = False,
         create_if_missing: bool = False,
-        match_lines: Optional[PatternType] = None,
-    ) -> TaskDefinition:
-        """Creates a task to perform find and replace operations in a file.
-
+    ) -> List[TaskDefinition]:
+        """Creates one or more tasks to perform find and replace operations.
+    
         Args:
-            name (str): The name of the find/replace task.
-            target_file (Path): The path to the file to modify.
-            replacement (Replacement): A callable that takes the content (or line if match_lines is used)
-                                       and returns the modified content/line.
-            backup (bool, optional): If True, create a backup of the original file before modification. Defaults to False.
+            name (str): The base name of the find/replace task(s).
+            target_file (Path | str): The path to the file to modify, or a glob pattern.
+            replacements (List[ReplacementAction]): Replacements to perform.
+            backup (bool, optional): If True, create a backup before modification. Defaults to False.
             create_if_missing (bool, optional): If True, create the target file if it does not exist. Defaults to False.
-            match_lines (Optional[PatternType], optional): If provided, the replacement is applied line by line
-                                                            only to lines matching this regex pattern. Defaults to None.
+    
         Returns:
-            TaskDefinition: The created FindReplaceTask instance.
+            List[TaskDefinition]: A list of FindReplaceTask instances.
         """
         from .find_replace import FindReplaceTask
+    
+        # Resolve targets
+    
+        files = resolve_glob(target_file)
+        tasks = []
+        for idx, f in enumerate(files, start=1):
+            task_name = f"{name} [{idx}] ({f})" if len(files) > 1 else name
+            tasks.append(
+                self.create_task(
+                    FindReplaceTask,
+                    task_name,
+                    target_file=f,
+                    replacements=replacements,
+                    backup=backup,
+                    create_if_missing=create_if_missing,
+                )
+            )
+    
+        return tasks
 
-        return self.create_task(
-            FindReplaceTask,
-            name,
-            target_file=target_file,
-            replacement=replacement,
-            backup=backup,
-            create_if_missing=create_if_missing,
-            match_lines=match_lines,
-        )
 
     def overlay(
         self,

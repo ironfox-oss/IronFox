@@ -28,6 +28,7 @@ class AppConfig:
         self.vendor = vendor
         self.app_id = app_id
         self.app_id_suffix = app_id_suffix
+        self.package_name = f"{app_id}{app_id_suffix}"
 
 
 class BuildEnvironment:
