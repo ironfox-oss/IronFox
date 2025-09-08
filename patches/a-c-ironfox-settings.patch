@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 20edb92c74..523ea7545e 100644
+index 20edb92c74..e0dd90140a 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1525,6 +1525,114 @@ class GeckoEngine(
+@@ -1525,6 +1525,106 @@ class GeckoEngine(
          override var bannedPorts: String
              get() = runtime.settings.bannedPorts
              set(value) { runtime.settings.setBannedPorts(value) }
@@ -14,10 +14,6 @@ index 20edb92c74..523ea7545e 100644
 +        override var cacheEnabled: Boolean
 +            get() = runtime.settings.cacheEnabled
 +            set(value) { runtime.settings.cacheEnabled = value }
-+
-+        override var cacheSslEnabled: Boolean
-+            get() = runtime.settings.cacheSslEnabled
-+            set(value) { runtime.settings.cacheSslEnabled = value }
 +
 +        override var emeEnabled: Boolean
 +            get() = runtime.settings.emeEnabled
@@ -54,10 +50,6 @@ index 20edb92c74..523ea7545e 100644
 +        override var javascriptJitTrustedPrincipalsEnabled: Boolean
 +            get() = runtime.settings.javaScriptJitTrustedPrincipalsEnabled
 +            set(value) { runtime.settings.javaScriptJitTrustedPrincipalsEnabled = value }
-+
-+        override var ocspRequire: Boolean
-+            get() = runtime.settings.ocspRequire
-+            set(value) { runtime.settings.ocspRequire = value }
 +
 +        override var pdfjsDisabled: Boolean
 +            get() = runtime.settings.pdfjsDisabled
@@ -117,13 +109,12 @@ index 20edb92c74..523ea7545e 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1571,6 +1679,29 @@ class GeckoEngine(
+@@ -1571,6 +1671,27 @@ class GeckoEngine(
              this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
 +            this.accessibilityEnabled = it.accessibilityEnabled
 +            this.cacheEnabled = it.cacheEnabled
-+            this.cacheSslEnabled = it.cacheSslEnabled
 +            this.emeEnabled = it.emeEnabled
 +            this.ipv6Enabled = it.ipv6Enabled
 +            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
@@ -133,7 +124,6 @@ index 20edb92c74..523ea7545e 100644
 +            this.javascriptJitMainProcessEnabled = it.javascriptJitMainProcessEnabled
 +            this.javascriptJitNativeRegexpEnabled = it.javascriptJitNativeRegexpEnabled
 +            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
-+            this.ocspRequire = it.ocspRequire
 +            this.pdfjsDisabled = it.pdfjsDisabled
 +            this.printEnabled = it.printEnabled
 +            this.refererXOriginPolicy = it.refererXOriginPolicy
@@ -148,17 +138,16 @@ index 20edb92c74..523ea7545e 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 5dd0b2beae..7a21bd1666 100644
+index 5dd0b2beae..b5396603a4 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -362,6 +362,30 @@ abstract class Settings {
+@@ -362,6 +362,28 @@ abstract class Settings {
       * Comma-separated list of destination ports that the application should block connections to.
       */
      open var bannedPorts: String by UnsupportedSetting()
 +
 +    open var accessibilityEnabled: Boolean by UnsupportedSetting()
 +    open var cacheEnabled: Boolean by UnsupportedSetting()
-+    open var cacheSslEnabled: Boolean by UnsupportedSetting()
 +    open var emeEnabled: Boolean by UnsupportedSetting()
 +    open var ipv6Enabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
@@ -168,7 +157,6 @@ index 5dd0b2beae..7a21bd1666 100644
 +    open var javascriptJitMainProcessEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitNativeRegexpEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
-+    open var ocspRequire: Boolean by UnsupportedSetting()
 +    open var pdfjsDisabled: Boolean by UnsupportedSetting()
 +    open var printEnabled: Boolean by UnsupportedSetting()
 +    open var refererXOriginPolicy: Engine.RefererXOriginPolicy by UnsupportedSetting()
@@ -182,13 +170,12 @@ index 5dd0b2beae..7a21bd1666 100644
  }
  
  /**
-@@ -434,6 +458,29 @@ data class DefaultSettings(
+@@ -434,6 +456,27 @@ data class DefaultSettings(
      override var postQuantumKeyExchangeEnabled: Boolean? = null,
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
 +    override var accessibilityEnabled: Boolean = false,
 +    override var cacheEnabled: Boolean = false,
-+    override var cacheSslEnabled: Boolean = false,
 +    override var emeEnabled: Boolean = false,
 +    override var ipv6Enabled: Boolean = true,
 +    override var javascriptJitBaselineEnabled: Boolean = false,
@@ -198,7 +185,6 @@ index 5dd0b2beae..7a21bd1666 100644
 +    override var javascriptJitMainProcessEnabled: Boolean = false,
 +    override var javascriptJitNativeRegexpEnabled: Boolean = false,
 +    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
-+    override var ocspRequire: Boolean = true,
 +    override var pdfjsDisabled: Boolean = false,
 +    override var printEnabled: Boolean = true,
 +    override var refererXOriginPolicy: Engine.RefererXOriginPolicy = Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS,
