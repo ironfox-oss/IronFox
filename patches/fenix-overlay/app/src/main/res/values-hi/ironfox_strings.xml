@@ -15,7 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">आधार डोमेन के मेल खाने पर क्रॉस-ओरिजिन रेफ़रर्स भेजें</string>
     <string name="preference_referer_policy_hosts_match">क्रॉस-ओरिजिन रेफ़रर्स अक्षम करें</string>
     <string name="preference_cache_enabled">डिस्क कैश सक्षम करें</string>
-    <string name="preference_cache_ssl_enabled">सुरक्षित वेबपेज के लिए डिस्क कैश सक्षम करें</string>
     <string name="preferences_debug_settings_eme_enabled">एन्क्रिप्टेड मीडिया एक्सटेंशन (ईएमई) सक्षम करें</string>
     <string name="preferences_debug_settings_widevine_enabled">वाइडवाइन सीडीएम सक्षम करें</string>
     <string name="preference_ipv6_enabled">IPv6 नेटवर्क कनेक्टिविटी सक्षम करें</string>
@@ -24,8 +23,6 @@
     <string name="preference_jit_enabled_caption">JIT को सक्षम करके जावास्क्रिप्ट प्रदर्शन में सुधार करें। (अधिकांश उपयोगकर्ताओं के लिए अनुशंसित नहीं)</string>
     <string name="preference_jit_enabled_description">सुरक्षा की कीमत पर, आप वेबसाइटों के प्रदर्शन को बेहतर बनाने के लिए JIT को सक्षम कर सकते हैं। यह केवल निम्न-स्तरीय डिवाइस वाले उपयोगकर्ताओं के लिए अनुशंसित है।</string>
     <string name="preference_jit_enabled_summary">अक्षम होने पर, जटिल वेबपृष्ठों के लिए प्रदर्शन कम हो सकता है - इस सेटिंग को बदलने से आपका ब्राउज़र पुनः प्रारंभ हो जाएगा</string>
-    <string name="preference_ocsp_require">OCSP निरसन जांचों में कठोरता लागू करें</string>
-    <string name="preference_ocsp_require_summary">सक्षम होने पर, आपको कभी-कभी कनेक्शन संबंधी त्रुटियाँ आ सकती हैं</string>
     <string name="preference_pdfjs_disabled">बाहरी ऐप्स में PDF फ़ाइलें खोलें</string>
     <string name="preference_website_appearance_title">पसंदीदा वेबसाइट उपस्थिति</string>
     <string name="preference_website_appearance_description">कुछ वेबसाइटें आपकी पसंद के अनुसार अपनी रंग योजना बदलती हैं। चुनें कि आप उन साइटों के लिए कौन सी रंग योजना इस्तेमाल करना चाहते हैं। ध्यान दें कि लाइट के अलावा अन्य विकल्प आपके ब्राउज़र को और भी अनोखा बनाकर फ़िंगरप्रिंटिंग में मदद कर सकते हैं।</string>

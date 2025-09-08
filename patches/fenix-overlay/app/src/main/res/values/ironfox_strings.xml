@@ -28,7 +28,6 @@
 
     <!-- Disk cache -->
     <string name="preference_cache_enabled">Enable disk cache</string>
-    <string name="preference_cache_ssl_enabled">Enable disk cache for secure webpages</string>
 
     <!-- EME -->
     <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
@@ -45,10 +44,6 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
     <string name="preference_jit_enabled_summary">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
-
-    <!-- OCSP -->
-    <string name="preference_ocsp_require">Hard-fail OCSP revocation checks</string>
-    <string name="preference_ocsp_require_summary">When enabled, you may encounter occasional connection errors</string>
 
     <!-- PDF.js -->
     <string name="preference_pdfjs_disabled">Open PDF files externally</string>

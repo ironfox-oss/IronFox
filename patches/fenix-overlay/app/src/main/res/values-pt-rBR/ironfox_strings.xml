@@ -18,13 +18,11 @@
     <string name="preference_referer_policy_base_domains_match">Apenas enviar referenciador entre origens quando o domínio base é igual</string>
     <string name="preference_referer_policy_hosts_match">Desativar referenciadores entre origens</string>
     <string name="preference_cache_enabled">Ativar cache em disco</string>
-    <string name="preference_cache_ssl_enabled">Ativar cache em disco para páginas seguras</string>
     <string name="preferences_debug_settings_eme_enabled">Ativar Extensões de Mídia Criptografada (EME)</string>
     <string name="preferences_debug_settings_widevine_enabled">Ativar Widevine CDM</string>
     <string name="preference_ipv6_enabled">Ativar conectividade de rede IPv6</string>
     <string name="preference_jit_enabled_caption">Melhore a performance do JavaScript ao ativar o JIT. (Não é recomendado para a maioria dos usuários)</string>
     <string name="preference_jit_enabled_description">Em troca de segurança, você pode ativar o JIT para melhorar a performance dos sites. Só é recomendado para usuários com dispositivos fracos.</string>
-    <string name="preference_ocsp_require">Verificação obrigatória do OCSP (hard-fail)</string>
     <string name="preference_pdfjs_disabled">Abrir arquivos PDF externamente</string>
     <string name="preference_website_appearance_title">Aparência dos sites</string>
     <string name="preference_website_appearance_description">Alguns sites adaptam seu esquema de cores dependendo nas suas preferências. Escolha qual esquema de cores você gostaria de usar nestes sites. Observe que opções que não sejam o Claro podem ajudar no fingerprinting e podem fazer com que seu navegador apareça mais único.</string>
@@ -60,7 +58,6 @@
     <string name="if_preferences_security">Segurança</string>
     <string name="preference_referer_policy_summary">Configure o comportamento do referenciador entre origins</string>
     <string name="preference_jit_enabled_summary">Ao desativar, a performance pode ser reduzida em páginas complexas - Ao alterar esta configuração, seu navegador será reiniciado</string>
-    <string name="preference_ocsp_require_summary">Ao ativar, você pode experienciar erros de conexão ocasionais</string>
     <string name="preference_print_enabled">Ativar capacidades de impressão</string>
     <string name="preference_safe_browsing_enabled_summary">Fornece proteção em tempo real contra sites perigosos, malware, e tentativas de phising - Ao alterar essa configuração, seu navegador será reiniciado</string>
     <string name="tor_spoof_english_summary">Ao ativar, a proteção contra fingerprinting fica mais forte</string>

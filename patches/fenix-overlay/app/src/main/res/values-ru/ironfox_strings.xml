@@ -15,7 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Отправлять между-доменные рефереры при совпадении базовых доменов</string>
     <string name="preference_referer_policy_hosts_match">отключить между-доменные рефереры</string>
     <string name="preference_cache_enabled">Включить кэш диска</string>
-    <string name="preference_cache_ssl_enabled">Включить кэш диска для защищенных веб-страниц</string>
     <string name="preferences_debug_settings_eme_enabled">включить расширения для зашифрованных медиа (EME)</string>
     <string name="preferences_debug_settings_widevine_enabled">Включить Widevine CDM</string>
     <string name="preference_ipv6_enabled">Включить подключение к сети IPv6</string>
@@ -24,8 +23,6 @@
     <string name="preference_jit_enabled_caption">Улучшите производительность JavaScript, включив JIT. (Не рекомендуется для большинства пользователей)</string>
     <string name="preference_jit_enabled_description">В ущерб безопасности вы можете включить JIT для повышения производительности веб-сайтов. Рекомендуется только для пользователей устройств низкого класса.</string>
     <string name="preference_jit_enabled_summary">Если этот параметр отключен, производительность может снизиться для сложных веб-страниц - изменение этого параметра приведет к перезапуску браузера</string>
-    <string name="preference_ocsp_require">Жесткие проверки отзыва OCSP</string>
-    <string name="preference_ocsp_require_summary">При включении вы можете столкнуться с случайными ошибками подключения</string>
     <string name="preference_pdfjs_disabled">Открывать PDF-файлы из внешних источников</string>
     <string name="preference_website_appearance_title">предпочтительная тема сайта</string>
     <string name="preference_website_appearance_description">Некоторые веб-сайты адаптируют свою цветовую схему на основе ваших предпочтений. Выберите, какую цветовую схему вы ’ хотели бы использовать для этих сайтов. Обратите внимание, что другие варианты, кроме Light, могут помочь индифицировать вас, делая ваш браузер более уникальным.</string>
