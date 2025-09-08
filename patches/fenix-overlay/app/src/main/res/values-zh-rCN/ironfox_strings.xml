@@ -15,7 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">在基础域名匹配时发送跨域引用</string>
     <string name="preference_referer_policy_hosts_match">禁用跨域引用</string>
     <string name="preference_cache_enabled">启用硬盘缓存</string>
-    <string name="preference_cache_ssl_enabled">为安全网页启用硬盘缓存</string>
     <string name="preferences_debug_settings_eme_enabled">启用加密媒体扩展 (EME)</string>
     <string name="preferences_debug_settings_widevine_enabled">启用 Widevine 内容加密模块</string>
     <string name="preference_ipv6_enabled">启用 IPv6 网络连接</string>
@@ -24,8 +23,6 @@
     <string name="preference_jit_enabled_caption">通过启用 JIT 提高 JavaScript 性能。(不建议大多数用户使用）</string>
     <string name="preference_jit_enabled_description">以牺牲安全性为代价，启用 JIT 可提高网站性能。仅建议使用低端设备的用户使用。</string>
     <string name="preference_jit_enabled_summary">禁用后，复杂网页的性能可能会降低——更改此设置将重启浏览器</string>
-    <string name="preference_ocsp_require">硬失效在线证书状态协议检查(Hard-fail OCSP revocation checks)</string>
-    <string name="preference_ocsp_require_summary">启用后，你可能会偶尔遇见连接失败</string>
     <string name="preference_pdfjs_disabled">使用外部应用打开 PDF</string>
     <string name="preference_website_appearance_title">网站主题偏好</string>
     <string name="preference_website_appearance_description">有些网站会根据您的偏好调整配色方案。请选择您希望在这些网站上使用的配色方案。请注意，除 「浅色 」外的其他选项可以使您的浏览器看起来更独特，从而有助于指纹识别。</string>

@@ -86,23 +86,6 @@ You can also set DNS over HTTPS to use your system's DNS resolver, by selecting 
 
 **Control**: Uncheck the box to install uBlock Origin on the onboarding if desired, though doing so is **NOT** recommended.
 
-### [Online Certificate Status Protocol (OCSP) Checks](https://wikipedia.org/wiki/Online_Certificate_Status_Protocol)
-
-- `http://ocsp.digicert.com/` - *[Privacy policy](https://privacy.digicert.com/policies/)*
-- `http://ocsp.globalsign.com/*` - *[Privacy policy](https://www.globalsign.com/repository/globalsign-privacy-policy.pdf)*
-- `http://r10.o.lencr.org/` - *[Privacy policy](https://letsencrypt.org/privacy/)*
-- `http://r11.o.lencr.org/` - *[Privacy policy](https://letsencrypt.org/privacy/)*
-
-You may also notice connections to additional servers as part of this functionality *(as specified by website operators)*, but the above specifically are known to result from default connections.
-
-**Purpose**: Validates HTTPS certificates.
-
-**Type(s) of data shared**: User Agent, public IP address.
-
-**How often the connection occurs**: Every time you connect to a server that doesn't support [CRLite](https://blog.mozilla.org/security/2020/01/09/crlite-part-1-all-web-pki-revocations-compressed/) or [OCSP stapling](https://wikipedia.org/wiki/OCSP_stapling).
-
-**Control**: This functionality can be disabled by setting `security.OCSP.enabled` to `0` in your [`about:config`](about:config), though it is **NOT** recommended to disable this feature.
-
 ### [Push Service](https://mozilla-push-service.readthedocs.io/en/latest/)
 
 - `wss://push.services.mozilla.com/`

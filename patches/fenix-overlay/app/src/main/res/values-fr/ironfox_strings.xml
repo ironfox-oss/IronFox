@@ -15,7 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Envoyer le referer inter-origines si les domaines de base correspondent</string>
     <string name="preference_referer_policy_hosts_match">Désactiver les referers inter-origines</string>
     <string name="preference_cache_enabled">Activer le cache sur disque</string>
-    <string name="preference_cache_ssl_enabled">Activer le cache sur disque pour les pages web sécurisées</string>
     <string name="preferences_debug_settings_eme_enabled">Activer Encrypted Media Extensions (EME)</string>
     <string name="preferences_debug_settings_widevine_enabled">Activer Widevine CDM</string>
     <string name="preference_ipv6_enabled">Activer la connectivité réseau IPv6</string>
@@ -24,8 +23,6 @@
     <string name="preference_jit_enabled_caption">Améliorer les performances de JavaScript en activant JIT. (Non recommandé pour la plupart des utilisateurs)</string>
     <string name="preference_jit_enabled_description">Au détriment de la sécurité, vous pouvez activer JIT pour améliorer les performances des sites web. Recommandé uniquement pour les utilisateurs disposant d’appareils d’entrée de gamme.</string>
     <string name="preference_jit_enabled_summary">Désactiver cette option peut réduire les performances sur les pages web complexes - ce changement redémarrera votre navigateur.</string>
-    <string name="preference_ocsp_require">Échec strict des vérifications de révocation OCSP</string>
-    <string name="preference_ocsp_require_summary">Activer cette option peut occasionner des erreurs de connexion</string>
     <string name="preference_pdfjs_disabled">Ouvrir les fichiers PDF avec une application externe</string>
     <string name="preference_website_appearance_title">Apparence de site web préférée</string>
     <string name="preference_website_appearance_description">Certains sites web adaptent leur jeu de couleurs en fonction de vos préférences. Choisissez le jeu de couleurs que vous souhaitez utiliser pour ces sites. Notez que les options autres que Clair peuvent faciliter l’empreinte numérique, en rendant votre navigateur plus unique.</string>

@@ -54,11 +54,6 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
 
-/// Skip ETP allow list migration so that privacy.trackingprotection.allow_list.baseline.enabled isn't overriden to false on first launch
-// https://searchfox.org/mozilla-central/rev/59cf9b74/netwerk/url-classifier/UrlClassifierExceptionListService.sys.mjs#236
-// (We'll only need this temporarily, added to Phoenix for next release)
-pref("privacy.trackingprotection.allow_list.hasMigratedCategoryPrefs", true, locked);
-
 /// Expose build options via the `about:config`
 // This allows users to easily see what build options we're using, and this makes it easier for us to test and confirm that our options are set as expected
 

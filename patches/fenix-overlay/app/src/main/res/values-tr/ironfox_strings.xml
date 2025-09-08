@@ -15,7 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Çapraz-kaynaklı yönlendiricileri alan adları uyuşunca gönder</string>
     <string name="preference_referer_policy_hosts_match">Çapraz-kaynaklı yönlendiricileri devre dışı bırak</string>
     <string name="preference_cache_enabled">Disk önbelleğini etkinleştir</string>
-    <string name="preference_cache_ssl_enabled">Güvenilir web sayfaları için disk önbelleklemeyi etkinleştir</string>
     <string name="preferences_debug_settings_eme_enabled">Şifrelenmiş Medya Eklentileri\'ni (EME) etkinleştir</string>
     <string name="preferences_debug_settings_widevine_enabled">Widevine CDM\'i etkinleştir</string>
     <string name="preference_ipv6_enabled">IPv6 ağ bağlantısını etkinleştir</string>
@@ -24,8 +23,6 @@
     <string name="preference_jit_enabled_caption">JavaScript performansını artırmak için JIT\'i etkinleştir. (Çoğu kullanıcı için önerilmez)</string>
     <string name="preference_jit_enabled_description">Güvenlik pahasında, JIT\'i web sayfalarının performansını artırmak için etkinleştirebilirsiniz. Yanlızca düşük donanımlı cihazlar için önerilir.</string>
     <string name="preference_jit_enabled_summary">Devre dışı bırakıldığında, komplex web sayfalarında performansı azaltabilir - Bunu değiştirmek tarayıcınızı yeniden başlatır</string>
-    <string name="preference_ocsp_require">Sert OCSP iptal kontrolleri</string>
-    <string name="preference_ocsp_require_summary">Etkinleştirildiğinde, bazı bağlantı hatalarıyla karşılaşabilirsiniz</string>
     <string name="preference_pdfjs_disabled">PDF dosyalarını harici olarak aç</string>
     <string name="preference_website_appearance_title">Tercih edilen web sayfası görünümü</string>
     <string name="preference_website_appearance_description">Bazı web sayfaları sizin tercihlerinize göre renk şemasını değiştirir. Bu sitelerde kullanmak için istediğiniz bir renk şeması seçin. Not olarak Aydınlıl dışındaki seçenekler, tarayıcınızın daha özel görünmesini sağlayarak parmak izi oluşturmaya yardımcı olabilir.</string>

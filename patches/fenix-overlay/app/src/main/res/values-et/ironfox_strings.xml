@@ -17,7 +17,6 @@
     <string name="onboarding_state_installing_ublock_error">uBlock Origini paigaldamisel tekkis viga: %1$s</string>
     <string name="onboarding_action_retry">Proovi uuesti</string>
     <string name="preference_cache_enabled">Kasuta puhverdamist</string>
-    <string name="preference_cache_ssl_enabled">Kasuta turvaliste lehtede puhul puhverdamist</string>
     <string name="preference_ipv6_enabled">Kasuta IPv6 võrguühendust</string>
     <string name="preference_javascript_enabled">Kasuta JavaScripti</string>
     <string name="preferences_unifiedpush">Kasuta UnifiedPushi</string>
@@ -43,7 +42,6 @@
     <string name="preference_referer_policy_always">Kasuta alati domeenivälise viitamise päisekirjeid</string>
     <string name="preference_referer_policy_base_domains_match">Kasuta domeenivälise viitamise kirjeid, kui põhidomeenid klapivad</string>
     <string name="preference_referer_policy_hosts_match">Keela domeeniväline viitamine</string>
-    <string name="preference_ocsp_require_summary">Kui see eelistus on kasutusel, siis võib ranguse tõttu tekkida juhuslikke ühendusvigu</string>
     <string name="preference_pdfjs_disabled">Ava PDF-failid välise rakendusega</string>
     <string name="preference_website_appearance_title">Veebisaidi eelistatud välimus</string>
     <string name="preference_print_enabled">Kasuta printimisvõimalusi</string>
