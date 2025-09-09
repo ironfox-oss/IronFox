@@ -95,7 +95,7 @@ class BuildExecutor:
                         task_id = ready_tasks.popleft()
                         if task_id in pending_tasks:
                             task_state = task_states[task_id]
-                            self.logger.info(f"Scheduling task: {task_state.task.name}")
+                            self.logger.debug(f"Scheduling task: {task_state.task.name}")
 
                             future = self.executor.submit(
                                 self._perform_task, task_state.task, progress
@@ -124,7 +124,7 @@ class BuildExecutor:
                                 completed_tasks.add(task_id)
                                 running_tasks.remove(task_id)
 
-                                task_state.task.info("Completed successfully")
+                                task_state.task.debug("Completed successfully")
 
                                 # Check if any pending tasks are now ready
                                 newly_ready = self._find_newly_ready_tasks(
@@ -245,7 +245,7 @@ class BuildExecutor:
                         "Build completed with failures. See returned failure details."
                     )
                 else:
-                    self.logger.info("All tasks completed successfully")
+                    self.logger.debug("All tasks completed successfully")
 
                 return failures
 
@@ -384,7 +384,7 @@ class BuildExecutor:
 
     def _perform_task(self, task: TaskDefinition, progress: Progress) -> None:
         """Perform a single task with hooks."""
-        task.info("Starting...")
+        task.debug("Starting...")
         try:
             self._run_task_with_hooks(task, progress)
         except Exception as e:

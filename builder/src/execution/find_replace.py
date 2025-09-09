@@ -157,7 +157,7 @@ def find_replace(
         with open(target_file, "w", encoding="utf-8") as f:
             f.write(modified_content)
 
-        logger.info(f"Applied {len(replacements)} replacements to {target_file}")
+        logger.debug(f"Applied {len(replacements)} replacements to {target_file}")
     finally:
         progress.remove_task(task_id)
 

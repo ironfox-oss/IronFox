@@ -59,7 +59,7 @@ def run_build_commands(
     env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = False,
 ):
-    logger.info(f"Running {len(commands)} commands in {cwd}")
+    logger.debug(f"Running {len(commands)} commands in {cwd}")
 
     if not cwd.exists():
         raise FileNotFoundError(f"Working directory not found: {cwd}")
@@ -81,7 +81,7 @@ def run_build_commands(
     try:
         # Execute each command in sequence
         for i, command in enumerate(commands, 1):
-            logger.info(f"Executing command {i}/{len(commands)}: {command}")
+            logger.debug(f"Executing command {i}/{len(commands)}: {command}")
 
             cmd_name = "<unknown>"
             if isinstance(command, str):
@@ -103,9 +103,9 @@ def run_build_commands(
 
             progress.update(task_id, description=task_desc(i), advance=1)
 
-            logger.info(f"Command {i}/{len(commands)} completed successfully")
+            logger.debug(f"Command {i}/{len(commands)} completed successfully")
 
-        logger.info(f"All {len(commands)} commands completed successfully")
+        logger.debug(f"All {len(commands)} commands completed successfully")
 
     finally:
         progress.remove_task(task_id)

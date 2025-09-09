@@ -149,7 +149,7 @@ def write_file_with_progress(
         if not append or not destination.exists():
             os.chmod(destination, chmod)
 
-        logger.info(
+        logger.debug(
             f"File {'appended' if append else 'written'}: {destination} ({format_bytes(new_data_size)})"
         )
 

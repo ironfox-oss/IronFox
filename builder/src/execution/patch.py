@@ -58,14 +58,14 @@ def apply_patch(
                 logger,
             )
             if success:
-                logger.info(f"Successfully applied patch using git apply: {patch_file}")
+                logger.debug(f"Successfully applied patch using git apply: {patch_file}")
                 return
             else:
                 logger.debug("git apply failed, falling back to patch command")
 
         # Fall back to standard patch command
         _apply_with_patch_command(patch_file, target_dir, logger)
-        logger.info(f"Successfully applied patch using patch command: {patch_file}")
+        logger.debug(f"Successfully applied patch using patch command: {patch_file}")
 
     finally:
         progress.remove_task(task_id)

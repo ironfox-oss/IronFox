@@ -73,7 +73,7 @@ def overlay_directory(
             logger.debug(f"Copied {rel_path} to {target_file}")
             progress.update(task_id, advance=1)
 
-        logger.info(
+        logger.debug(
             f"Applied overlay: {len(files_to_copy)} files from {source_dir} to {target_dir}"
         )
 
