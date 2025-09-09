@@ -271,11 +271,11 @@ rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
-sed -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
-sed -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+$SED -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
+$SED -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 
-sed -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
-sed -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
+$SED -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
+$SED -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
 
 # Let it be IronFox
 $SED -i \
@@ -453,7 +453,7 @@ else
 fi
 
 # Ensure we're building for release
-sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+$SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Use Tor's no-op UniFFi binding generator
 if [[ -n ${FDROID_BUILD+x} ]]; then
@@ -550,7 +550,7 @@ popd
 
 # WASI SDK
 # shellcheck disable=SC2154
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ "$PLATFORM" == "darwin" ]] || [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
 
@@ -654,19 +654,19 @@ $SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradl
 $SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 
 # Disable crash reporting (GeckoView)
-sed -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
+$SED -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
 
 # Disable debug (GeckoView)
-sed -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
+$SED -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
-sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
+$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
 
 # Target release
-sed -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
-sed -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
+$SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
+$SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 
 # Ensure UA is always set to Firefox
 $SED -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
