@@ -25,47 +25,47 @@ function noop_mozilla_endpoints() {
     # Check if any files were found and modify them
     if [ -n "$files" ]; then
         echo "Removing $endpoint from files... $files"
-        echo "$files" | xargs -L1 sed -i -r -e "s|\"${endpoint}[^\"']*\"|\"\"|g" -e "s|'${endpoint}[^\"']*'|''|g"
+        echo "$files" | xargs -L1 "$SED" -i -r -e "s|\"${endpoint}[^\"']*\"|\"\"|g" -e "s|'${endpoint}[^\"']*'|''|g"
     fi
 
     if [ -n "$files_slash" ]; then
         echo "Removing $endpoint/ from files... $files_slash"
-        echo "$files_slash" | xargs -L1 sed -i -r -e "s|\"${endpoint}/[^\"']*\"|\"\"|g" -e "s|'${endpoint}/[^\"']*'|''|g"
+        echo "$files_slash" | xargs -L1 "$SED" -i -r -e "s|\"${endpoint}/[^\"']*\"|\"\"|g" -e "s|'${endpoint}/[^\"']*'|''|g"
     fi
 
     if [ -n "$files_period" ]; then
         echo "Removing $endpoint. from files... $files_period"
-        echo "$files_period" | xargs -L1 sed -i -r -e "s|\"${endpoint}.[^\"']*\"|\"\"|g" -e "s|'${endpoint}.[^\"']*'|''|g"
+        echo "$files_period" | xargs -L1 "$SED" -i -r -e "s|\"${endpoint}.[^\"']*\"|\"\"|g" -e "s|'${endpoint}.[^\"']*'|''|g"
     fi
 
     if [ -n "$http_files" ]; then
         echo "Removing http://$endpoint from files... $http_files"
-        echo "$http_files" | xargs -L1 sed -i -r -e "s|\"http://${endpoint}[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}[^\"']*'|''|g"
+        echo "$http_files" | xargs -L1 "$SED" -i -r -e "s|\"http://${endpoint}[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}[^\"']*'|''|g"
     fi
 
     if [ -n "$http_files_slash" ]; then
         echo "Removing http://$endpoint/ from files... $http_files_slash"
-        echo "$http_files_slash" | xargs -L1 sed -i -r -e "s|\"http://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}/[^\"']*'|''|g"
+        echo "$http_files_slash" | xargs -L1 "$SED" -i -r -e "s|\"http://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}/[^\"']*'|''|g"
     fi
 
     if [ -n "$http_files_period" ]; then
         echo "Removing http://$endpoint. from files... $http_files_period"
-        echo "$http_files_period" | xargs -L1 sed -i -r -e "s|\"http://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}.[^\"']*'|''|g"
+        echo "$http_files_period" | xargs -L1 "$SED" -i -r -e "s|\"http://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}.[^\"']*'|''|g"
     fi
 
     if [ -n "$https_files" ]; then
         echo "Removing https://$endpoint from files... $https_files"
-        echo "$https_files" | xargs -L1 sed -i -r -e "s|\"https://${endpoint}[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}[^\"']*'|''|g"
+        echo "$https_files" | xargs -L1 "$SED" -i -r -e "s|\"https://${endpoint}[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}[^\"']*'|''|g"
     fi
 
     if [ -n "$https_files_slash" ]; then
         echo "Removing https://$endpoint/ from files... $https_files_slash"
-        echo "$https_files_slash" | xargs -L1 sed -i -r -e "s|\"https://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}/[^\"']*'|''|g"
+        echo "$https_files_slash" | xargs -L1 "$SED" -i -r -e "s|\"https://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}/[^\"']*'|''|g"
     fi
 
     if [ -n "$https_files_period" ]; then
         echo "Removing https://$endpoint. from files... $https_files_period"
-        echo "$https_files_period" | xargs -L1 sed -i -r -e "s|\"https://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}.[^\"']*'|''|g"
+        echo "$https_files_period" | xargs -L1 "$SED" -i -r -e "s|\"https://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}.[^\"']*'|''|g"
     fi
 }
 

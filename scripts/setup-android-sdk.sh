@@ -9,7 +9,13 @@ if [[ "${ANDROID_HOME+x}" == "" ]]; then
     export ANDROID_HOME=$HOME/android-sdk
 fi
 
-ANDROID_SDK_FILE=commandlinetools-linux-${SDK_REVISION}_latest.zip
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=mac
+else
+    PLATFORM=linux
+fi
+
+ANDROID_SDK_FILE=commandlinetools-${PLATFORM}-${SDK_REVISION}_latest.zip
 
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 

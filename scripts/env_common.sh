@@ -3,12 +3,27 @@
 # Caution: Should not be sourced directly!
 # Use 'env_local.sh' or 'env_fdroid.sh' instead.
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=darwin
+else
+    PLATFORM=linux
+fi
+
 # Set architecture
 PLATFORM_ARCH=$(uname -m)
 if [[ "$PLATFORM_ARCH" == "arm64" ]]; then
     PLATFORM_ARCHITECTURE=aarch64
 else
     PLATFORM_ARCHITECTURE=x86-64
+fi
+
+# Set locations for GNU make + nproc
+if [[ "$PLATFORM" == "darwin" ]]; then
+    export MAKE_LIB="gmake"
+    export NPROC_LIB="sysctl -n hw.logicalcpu"
+else
+    export MAKE_LIB="make"
+    export NPROC_LIB="nproc"
 fi
 
 # Configure Mach
@@ -21,7 +36,7 @@ export MACHRC="$patches/machrc"
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 
-export NSS_DIR="$application_services/libs/desktop/linux-$PLATFORM_ARCHITECTURE/nss"
+export NSS_DIR="$application_services/libs/desktop/$PLATFORM-$PLATFORM_ARCHITECTURE/nss"
 export NSS_STATIC=1
 
 export ARTIFACTS="$rootdir/artifacts"

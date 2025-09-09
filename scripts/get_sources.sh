@@ -4,6 +4,12 @@ set -euo pipefail
 
 source "$(dirname $0)/versions.sh"
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=macos
+else
+    PLATFORM=linux
+fi
+
 clone_repo() {
     url="$1"
     path="$2"
@@ -174,7 +180,7 @@ download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoeni
 download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
 
 # Get WebAssembly SDK
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ "$PLATFORM" == "macos" ]] || [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
     clone_repo "https://github.com/WebAssembly/wasi-sdk" "$WASISDKDIR" "$WASI_TAG"
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
@@ -184,12 +190,18 @@ else
 fi
 
 # Get Tor's no-op UniFFi binding generator
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    echo "Cloning uniffi-bindgen..."
-    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs" "$UNIFFIDIR" "$UNIFFI_VERSION"
+if [[ "$PLATFORM" == "macos" ]]; then
+    # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
+    ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
+    echo "macOS: Doing nothing..."
 else
-    echo "Downloading prebuilt uniffi-bindgen..."
-    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
+    if [[ -n ${FDROID_BUILD+x} ]]; then
+        echo "Cloning uniffi-bindgen..."
+        clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs" "$UNIFFIDIR" "$UNIFFI_VERSION"
+    else
+        echo "Downloading prebuilt uniffi-bindgen..."
+        download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
+    fi
 fi
 
 # Clone application-services
