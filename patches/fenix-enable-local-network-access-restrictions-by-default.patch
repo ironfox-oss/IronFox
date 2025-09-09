@@ -1,26 +1,26 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b2b40dd764..2ab9a65f44 100644
+index b2b40dd764..642d59cb9a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -259,7 +259,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -154,7 +154,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
-         requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
--            isVisible = true
-+            isVisible = false
-             isChecked = context.settings().useRemoteSearchConfiguration
+         requirePreference<SwitchPreference>(R.string.pref_key_enable_lna_blocking_enabled).apply {
+-            isVisible = Config.channel.isNightlyOrDebug
++            isVisible = true
+             isChecked = context.settings().isLnaBlockingEnabled
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..216d2faf60 100644
+index f0eeec863d..15ce8db8a2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2077,7 +2077,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     var useRemoteSearchConfiguration by lazyFeatureFlagPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
-         default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
--        featureFlag = true,
-+        featureFlag = false,
+@@ -794,7 +794,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var isLnaBlockingEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
+-        default = false,
++        default = true,
      )
  
      /**

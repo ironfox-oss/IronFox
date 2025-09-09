@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 9fcbee8d66..6c841f6b9c 100644
+index 15cacaa7c5..0f9f91307e 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
 @@ -239,30 +239,30 @@ features:
@@ -57,8 +57,8 @@ index 9fcbee8d66..6c841f6b9c 100644
  
    splash-screen:
      description: "A feature that extends splash screen duration, allowing additional data fetching time for the app's initial run."
-@@ -920,22 +920,22 @@ features:
-           enabled: true
+@@ -950,22 +950,22 @@ features:
+         default: false
  
  types:
 -  objects:
@@ -171,10 +171,10 @@ index 8f6e1eb8f1..f07ef8c740 100644
          loginsStorage = FakeLoginsStorage(),
          addressesDebugLocalesRepository = FakeAddressesDebugLocalesRepository(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index b07cadf1e6..d1f4ec044b 100644
+index 5340aa5258..a10bc165a9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -728,12 +728,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -722,12 +722,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          browserStore: BrowserStore,
          settings: Settings,
          browsersCache: BrowsersCache = BrowsersCache,
@@ -209,7 +209,7 @@ index b07cadf1e6..d1f4ec044b 100644
              searchSuggestionsEnabled.set(settings.shouldShowSearchSuggestions)
              remoteDebuggingEnabled.set(settings.isRemoteDebuggingEnabled)
              studiesEnabled.set(settings.isExperimentationEnabled)
-@@ -938,13 +938,13 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -945,13 +945,13 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
              inactiveTabsEnabled.set(settings.inactiveTabsAreEnabled)
          }
@@ -225,7 +225,7 @@ index b07cadf1e6..d1f4ec044b 100644
          GlobalScope.launch(IO) {
              try {
                  val autoFillStorage = applicationContext.components.core.autofillStorage
-@@ -960,7 +960,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -967,7 +967,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              } catch (e: LoginsApiException) {
                  logger.error("Failed to fetch list of logins", e)
              }
@@ -234,7 +234,7 @@ index b07cadf1e6..d1f4ec044b 100644
      }
  
      @VisibleForTesting
-@@ -970,27 +970,27 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -977,27 +977,27 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
  
      private fun reportOpeningScreenMetrics(settings: Settings) {
@@ -267,10 +267,10 @@ index b07cadf1e6..d1f4ec044b 100644
  
      private fun recordOnInit() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index e810197b35..b97de975c8 100644
+index a6fc6e8483..235b37be1c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -386,11 +386,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -406,11 +406,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              storage = DefaultSplashScreenStorage(components.settings),
              showSplashScreen = { installSplashScreen().setKeepOnScreenCondition(it) },
              onSplashScreenFinished = { result ->
@@ -284,7 +284,7 @@ index e810197b35..b97de975c8 100644
  
                  if (savedInstanceState == null && shouldShowOnboarding) {
                      navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
-@@ -483,11 +483,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -499,11 +499,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              safeIntent
                  ?.let(::getIntentSource)
                  ?.also { source ->
@@ -295,9 +295,9 @@ index e810197b35..b97de975c8 100644
                          ),
 -                    )
 +                    )*/
-                     // This will record an event in Nimbus' internal event store. Used for behavioral targeting
-                     recordEventInNimbus("app_opened")
  
+                     if (safeIntent.action.equals(ACTION_OPEN_PRIVATE_TAB) && source == APP_ICON) {
+                         AppIcon.newPrivateTabTapped.record(NoExtras())
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..273349e0ca 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
@@ -316,10 +316,10 @@ index 819b24954e..273349e0ca 100644
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..1b86478092 100644
+index f0eeec863d..dc8e251b34 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -375,7 +375,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -398,7 +398,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var contileContextId by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_contile_context_id),

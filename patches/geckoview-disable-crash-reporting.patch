@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/src/main/AndroidManifest.xml b/mobile/android/geckoview/src/main/AndroidManifest.xml
-index ac6e718f3c..85d5bc0d87 100644
+index d0c8bde278..ed0cc42222 100644
 --- a/mobile/android/geckoview/src/main/AndroidManifest.xml
 +++ b/mobile/android/geckoview/src/main/AndroidManifest.xml
-@@ -87,14 +87,14 @@
+@@ -94,14 +94,14 @@
                  android:isolatedProcess="false"
                  android:process=":ipdlunittest">
          </service>

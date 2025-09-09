@@ -1,5 +1,5 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index df5658c723..659a2a589d 100644
+index 83d84537f9..41c057444e 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
 @@ -201,8 +201,8 @@ static const RedirEntry kRedirMap[] = {
@@ -10,6 +10,6 @@ index df5658c723..659a2a589d 100644
 -     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
 +//    {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
 +//     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
-     {"translations", "chrome://global/content/translations/translations.html",
+     {"translations",
+      "chrome://global/content/translations/about-translations.html",
       nsIAboutModule::ALLOW_SCRIPT |
-          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |

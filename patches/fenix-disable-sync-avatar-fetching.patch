@@ -1,28 +1,28 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt
-index 606f2a214f..9f89d3cc5b 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuButton.kt
-@@ -160,7 +160,7 @@ private fun FallbackAvatarIcon() {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
+index 558141f7b2..864d5d51ea 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
+@@ -183,7 +183,7 @@ private fun AvatarIcon(
+     } else if (accountState is AuthenticationProblem) {
+         WarningAvatarIcon()
+     } else {
+-        val avatarUrl = account?.avatar?.url
++/*        val avatarUrl = account?.avatar?.url
  
- @Composable
- private fun AvatarIcon(account: Account?) {
--    val avatarUrl = account?.avatar?.url
-+/*    val avatarUrl = account?.avatar?.url
- 
-     if (avatarUrl != null) {
-         Image(
-@@ -177,9 +177,9 @@ private fun AvatarIcon(account: Account?) {
-             placeholder = { FallbackAvatarIcon() },
-             fallback = { FallbackAvatarIcon() },
-         )
--    } else {
-+    } else {*/
-         FallbackAvatarIcon()
--    }
-+//    }
+         if (avatarUrl != null) {
+             Image(
+@@ -195,9 +195,9 @@ private fun AvatarIcon(
+                 placeholder = { FallbackAvatarIcon() },
+                 fallback = { FallbackAvatarIcon() },
+             )
+-        } else {
++        } else {*/
+             FallbackAvatarIcon()
+-        }
++//        }
+     }
  }
  
- @Composable
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
 index da8fa9afaa..6e1e5cc588 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt

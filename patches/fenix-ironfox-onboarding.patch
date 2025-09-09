@@ -14,13 +14,13 @@ index be8a66d479..f842cab839 100644
              onPositiveButtonClicked?.invoke(
                  addon,
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
-index eb51cfe835..b233fd9291 100644
+index 971df3dc5b..93e1182454 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
 +++ b/mobile/android/fenix/app/onboarding.fml.yaml
 @@ -120,6 +120,43 @@ features:
                    body-line-one-text: onboarding_marketing_learn_more
                    body-line-one-link-text: onboarding_marketing_learn_more
-                   body-line-two-text: onboarding_marketing_opt_in_checkbox
+                   body-line-two-text: onboarding_marketing_opt_out_checkbox
 +
 +            if-preference-doh:
 +              card-type: if-preference-doh
@@ -102,7 +102,7 @@ index eb51cfe835..b233fd9291 100644
  enums:
  
    OnboardingCardType:
-@@ -437,6 +501,11 @@ enums:
+@@ -437,6 +501,10 @@ enums:
          description: Page to display the terms of services.
        marketing-data:
          description: Allows user to opt out of marketing data collection.
@@ -110,11 +110,10 @@ index eb51cfe835..b233fd9291 100644
 +        description: Allows user to configure DNS-over-HTTPS.
 +      if-preferences:
 +        description: Allows user to configure IronFox-specific preferences.
-+
  
    ToolbarType:
      description: An enum to describe a toolbar placement option.
-@@ -455,3 +524,17 @@ enums:
+@@ -455,3 +523,17 @@ enums:
          description: Sets the theme to light mode.
        theme-dark:
          description: Sets the theme to dark mode.

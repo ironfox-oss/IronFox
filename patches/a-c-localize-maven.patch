@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/build.gradle b/mobile/android/android-components/build.gradle
-index d6dbfd7b52..00eb487204 100644
+index f7336a3e78..19861a695e 100644
 --- a/mobile/android/android-components/build.gradle
 +++ b/mobile/android/android-components/build.gradle
 @@ -9,14 +9,9 @@ import static org.gradle.api.tasks.testing.TestResult.ResultType

@@ -130,10 +130,10 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 600faec5bd..ff22a251d1 100644
+index 43cf86f477..1b710b7192 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -740,7 +740,7 @@
+@@ -737,7 +737,7 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
@@ -142,7 +142,7 @@ index 600faec5bd..ff22a251d1 100644
              android:name=".push.FirebasePushService"
              android:exported="false">
              <intent-filter>
-@@ -756,7 +756,7 @@
+@@ -753,7 +753,7 @@
              android:value="false" />
          <meta-data
              android:name="firebase_analytics_collection_deactivated"
@@ -151,7 +151,7 @@ index 600faec5bd..ff22a251d1 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
-@@ -771,14 +771,14 @@
+@@ -768,14 +768,14 @@
  
          <!-- For adjust pre-installs -->
          <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
@@ -169,41 +169,41 @@ index 600faec5bd..ff22a251d1 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-index 8892db30a2..288797595f 100644
+index 3ee4690a76..15e1306605 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-@@ -82,8 +82,8 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -84,8 +84,8 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.appstate.AppAction.ContentRecommendationsAction
  import org.mozilla.fenix.components.appstate.AppAction.MessagingAction
  import org.mozilla.fenix.components.appstate.AppAction.MessagingAction.MicrosurveyAction
 -import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
 -import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
-+//import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
-+//import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
++// import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
++// import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
  import org.mozilla.fenix.components.appstate.AppState
+ import org.mozilla.fenix.components.appstate.qrScanner.QrScannerBinding
  import org.mozilla.fenix.components.components
- import org.mozilla.fenix.components.toolbar.BottomToolbarContainerView
-@@ -143,8 +143,8 @@ import org.mozilla.fenix.onboarding.HomeScreenPopupManager
- import org.mozilla.fenix.onboarding.WidgetPinnedReceiver
+@@ -149,8 +149,8 @@ import org.mozilla.fenix.pbmlock.NavigationOrigin
+ import org.mozilla.fenix.pbmlock.observePrivateModeLock
  import org.mozilla.fenix.perf.MarkersFragmentLifecycleCallbacks
  import org.mozilla.fenix.perf.StartupTimeline
 -import org.mozilla.fenix.reviewprompt.ReviewPromptState
 -import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
-+//import org.mozilla.fenix.reviewprompt.ReviewPromptState
-+//import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
++// import org.mozilla.fenix.reviewprompt.ReviewPromptState
++// import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
  import org.mozilla.fenix.search.SearchDialogFragment
  import org.mozilla.fenix.search.awesomebar.AwesomeBarComposable
  import org.mozilla.fenix.search.toolbar.DefaultSearchSelectorController
-@@ -1114,7 +1114,7 @@ class HomeFragment : Fragment() {
+@@ -1156,7 +1156,7 @@ class HomeFragment : Fragment() {
          requireComponents.core.tabCollectionStorage.unregister(collectionStorageObserver)
  
          // Trigger review prompt logic and show the appropriate prompt variation if applicable
 -        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
 +//        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
-     }
  
-     @VisibleForTesting
-@@ -1316,7 +1316,7 @@ class HomeFragment : Fragment() {
+         if (requireComponents.termsOfUseManager.shouldShowTermsOfUsePromptOnHomepage()) {
+             findNavController().navigate(
+@@ -1372,7 +1372,7 @@ class HomeFragment : Fragment() {
      }
  
      private fun observeReviewPromptState() {
@@ -212,7 +212,7 @@ index 8892db30a2..288797595f 100644
              observeReviewPromptState(
                  appStates = appStates,
                  dispatchAction = requireComponents.appStore::dispatch,
-@@ -1330,7 +1330,7 @@ class HomeFragment : Fragment() {
+@@ -1386,7 +1386,7 @@ class HomeFragment : Fragment() {
                      )
                  },
              )
@@ -221,7 +221,7 @@ index 8892db30a2..288797595f 100644
      }
  
      @VisibleForTesting
-@@ -1340,7 +1340,7 @@ class HomeFragment : Fragment() {
+@@ -1396,7 +1396,7 @@ class HomeFragment : Fragment() {
          tryShowPlayStorePrompt: suspend () -> Unit,
          showCustomPrompt: () -> Unit,
      ) {
@@ -230,7 +230,7 @@ index 8892db30a2..288797595f 100644
              .map { it.reviewPrompt }
              .distinctUntilChanged()
              .collect {
-@@ -1355,7 +1355,7 @@ class HomeFragment : Fragment() {
+@@ -1411,7 +1411,7 @@ class HomeFragment : Fragment() {
                          dispatchAction(ReviewPromptShown)
                      }
                  }
@@ -240,10 +240,10 @@ index 8892db30a2..288797595f 100644
  
      companion object {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..b4d9ae3831 100644
+index f0eeec863d..16aba158c7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1981,7 +1981,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2046,7 +2046,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

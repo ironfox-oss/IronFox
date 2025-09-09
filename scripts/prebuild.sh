@@ -248,12 +248,10 @@ $SED -i -e 's|import mozilla.components.support.base.ext.isNotificationChannelEn
 $SED -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 $SED -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
 $SED -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/home/mozonline/PrivacyContentDisplayHelper.kt
 $SED -i -e 's|import org.mozilla.fenix.components.metrics.fonts|// import org.mozilla.fenix.components.metrics.fonts|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|import org.mozilla.fenix.components.metrics.GrowthDataWorker|// import org.mozilla.fenix.components.metrics.GrowthDataWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|import org.mozilla.fenix.components.metrics.MarketingAttributionService|// import org.mozilla.fenix.components.metrics.MarketingAttributionService|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
-$SED -i -e 's|import org.mozilla.fenix.library.bookmarks.ui.BookmarksTelemetryMiddleware|// import org.mozilla.fenix.library.bookmarks.ui.BookmarksTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/library/bookmarks/BookmarkFragment.kt
 $SED -i -e 's|import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|// import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 $SED -i -e 's|import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|// import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|// import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -262,11 +260,10 @@ $SED -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.tel
 
 $SED -i -e 's|AdsTelemetryMiddleware|// AdsTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 $SED -i -e 's|ApplicationExitInfoMetrics.|// ApplicationExitInfoMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/library/bookmarks/BookmarkFragment.kt
+$SED -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt
 $SED -i -e 's|FontEnumerationWorker.|// FontEnumerationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|GrowthDataWorker.|// GrowthDataWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|MarketingAttributionService(|// MarketingAttributionService(|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|MetricsMiddleware(|// MetricsMiddleware(|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 $SED -i -e 's|PerfStartup.|// PerfStartup.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 $SED -i -e 's|ReEngagementNotificationWorker.|// ReEngagementNotificationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|StorageStatsMetrics.|// StorageStatsMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -278,8 +275,8 @@ $SED -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/s
 $SED -i -e 's|val Context.metrics|// val Context.metrics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
 $SED -i -e 's|get() = this.components.analytics|// get() = this.components.analytics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
 $SED -i -e 's|components.analytics.metricsStorage|// components.analytics.metricsStorage|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|context.components.analytics|// context.components.analytics|' app/src/main/java/org/mozilla/fenix/home/mozonline/PrivacyContentDisplayHelper.kt
 
+rm -vf app/src/*/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/Event.kt
@@ -293,7 +290,6 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/library/bookmarks/ui/BookmarksTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
@@ -632,9 +628,6 @@ $SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" in
 $SED -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
 $SED -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
 
-# Unbreak builds with --disable-pref-extensions
-$SED -i -e 's|@BINPATH@/defaults/autoconfig/prefcalls.js|;@BINPATH@/defaults/autoconfig/prefcalls.js|g' mobile/android/installer/package-manifest.in
-
 # Disable network connectivity status monitoring (Fenix)
 ## (Also removes the `NETWORK_ACCESS_STATE` permission)
 ## Also see `fenix-disable-network-connectivity-monitoring.patch`
@@ -650,6 +643,10 @@ $SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_S
 
 # Disable Normandy (Experimentation)
 $SED -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
+
+# Disable auto-population of recently visited sites on the browser homepage
+$SED -i -e 's|FxNimbus.features.homepageHideFrecentTopSites.value().enabled|true|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+$SED -i -e 's|FxNimbus.features.homepageHideFrecentTopSites.value().enabled|true|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
 
 # Disable shipped domains
 ## (Firefox's built-in list of domains used to autocomplete URLs)

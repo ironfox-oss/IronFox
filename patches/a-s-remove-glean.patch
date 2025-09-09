@@ -1,13 +1,13 @@
 diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-index af2aa85..addd600 100644
+index 20d615e..ddaa6e1 100644
 --- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
 +++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-@@ -158,12 +158,12 @@ enum class KeyRegenerationEventReason {
+@@ -159,12 +159,12 @@ enum class KeyRegenerationEventReason {
  
  fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
      // Avoid the deprecation warning when calling  `record()` without the optional EventExtras param
 -    @Suppress("DEPRECATION")
-+/*    @Suppress("DEPRECATION")
++/*   @Suppress("DEPRECATION")
      when (reason) {
          KeyRegenerationEventReason.Lost -> LoginsStoreMetrics.keyRegeneratedLost.record()
          KeyRegenerationEventReason.Corrupt -> LoginsStoreMetrics.keyRegeneratedCorrupt.record()
@@ -17,7 +17,7 @@ index af2aa85..addd600 100644
  }
  
  /**
-@@ -176,14 +176,14 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
+@@ -177,14 +177,14 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
   * This is a convenience wrapper to measure the two in one shot.
   */
  class LoginsStoreCounterMetrics(
@@ -32,11 +32,11 @@ index af2aa85..addd600 100644
      }
  
 -    @Suppress("ComplexMethod", "TooGenericExceptionCaught")
-+/*   @Suppress("ComplexMethod", "TooGenericExceptionCaught")
++/*    @Suppress("ComplexMethod", "TooGenericExceptionCaught")
      inline fun <U> measureIgnoring(
          shouldIgnore: (Exception) -> Boolean,
          callback: () -> U,
-@@ -214,5 +214,5 @@ class LoginsStoreCounterMetrics(
+@@ -215,5 +215,5 @@ class LoginsStoreCounterMetrics(
              }
              throw e
          }
@@ -44,7 +44,7 @@ index af2aa85..addd600 100644
 +    }*/
  }
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 2abc4ce..19c4d1b 100644
+index f5d173c..1428128 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 @@ -92,7 +92,7 @@ open class Nimbus(
@@ -138,7 +138,7 @@ index 2abc4ce..19c4d1b 100644
              recordExperimentTelemetryEvents(events!!)
              // Get the experiments to record in telemetry
              postEnrolmentCalculation()
-@@ -485,19 +485,19 @@ open class Nimbus(
+@@ -488,19 +488,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
@@ -165,7 +165,7 @@ index 2abc4ce..19c4d1b 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -545,7 +545,7 @@ open class Nimbus(
+@@ -548,7 +548,7 @@ open class Nimbus(
                      )
                  }
              }
@@ -175,19 +175,19 @@ index 2abc4ce..19c4d1b 100644
  
      // The exposure event should be recorded when the expected treatment (or no-treatment, such as
 diff --git a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
-index 6921181..a9d22e1 100644
+index 7d69d6a..f73c2a0 100644
 --- a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 +++ b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
-@@ -343,7 +343,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,
-     }
+@@ -349,7 +349,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,
  
+     @Suppress("MagicNumber")
      override fun runMaintenance(dbSizeLimit: UInt) {
 -        val pruneMetrics = PlacesManagerMetrics.runMaintenanceTime.measure {
 +/*        val pruneMetrics = PlacesManagerMetrics.runMaintenanceTime.measure {
              val pruneMetrics = PlacesManagerMetrics.runMaintenancePruneTime.measure {
                  this.conn.runMaintenancePrune(dbSizeLimit, 12U)
              }
-@@ -361,7 +361,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,
+@@ -367,7 +367,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,
              }
              pruneMetrics
          }
@@ -196,7 +196,7 @@ index 6921181..a9d22e1 100644
      }
  
      override fun deleteEverything() {
-@@ -921,13 +921,13 @@ data class HistoryMetadataKey(
+@@ -932,13 +932,13 @@ data class HistoryMetadataKey(
   * This is a convenience wrapper to measure the two in one shot.
   */
  class PlacesManagerCounterMetrics(
@@ -215,7 +215,7 @@ index 6921181..a9d22e1 100644
              return callback()
          } catch (e: Exception) {
              when (e) {
-@@ -954,6 +954,6 @@ class PlacesManagerCounterMetrics(
+@@ -965,6 +965,6 @@ class PlacesManagerCounterMetrics(
                  }
              }
              throw e
