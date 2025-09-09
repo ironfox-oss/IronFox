@@ -180,7 +180,7 @@ download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoeni
 download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
 
 # Get WebAssembly SDK
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ "$PLATFORM" == "macos" ]] || [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
     clone_repo "https://github.com/WebAssembly/wasi-sdk" "$WASISDKDIR" "$WASI_TAG"
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
