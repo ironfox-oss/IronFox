@@ -46,4 +46,15 @@
     <string name="preference_website_appearance_title">Veebisaidi eelistatud välimus</string>
     <string name="preference_print_enabled">Kasuta printimisvõimalusi</string>
     <string name="preferences_debug_settings_unifiedpush">Kasuta UnifiedPushi</string>
+    <string name="tor_spoof_english_title">Häma keeleks en-US</string>
+    <string name="tor_spoof_english_caption">Varjates seadme keeli saad parandada oma privaatsust.</string>
+    <string name="preference_svg_enabled">Kasuta SVG vektorgraafikat</string>
+    <string name="tor_spoof_english_summary">Kui see valik on kasutusel, siis parandab see kaitset sinu täpsema tuvastamise vastu</string>
+    <string name="tor_spoof_english">Küsi veebisaite inglisekeelsetena</string>
+    <string name="tor_spoof_english_description">Küsi veebisaite Ameerika inglisekeelsetena (en-US). Sellisel puhul on sinu brauser vähem unikaalne ning aitab täpsema tuvastamise vastu, mis põhineb kasutajate keele-eelistustel.</string>
+    <string name="preference_website_appearance_description">Mõned veebisaidid kohendavad oma värvivalikut sinu eelistuste alusel. Vali kujundus, mida sa sel puhul sooviksid kasutada. Aga palun arvesta et kõik muud valikud peale heleda kujunduse aitavad sind täpsemalt tuvastada ning sellega vähendavad privaatsust.</string>
+    <string name="preference_safe_browsing_enabled">Kasuta ohutut veebisirvimist</string>
+    <string name="preference_safe_browsing_enabled_caption">Reaalajas kaitse ohtlike veebisaitide, pahavara ja õngitsuskatsete vastu.</string>
+    <string name="preference_safe_browsing_enabled_summary">Tagab Google\'i teenuste abil reaalajas kaitse ohtlike veebisaitide, pahavara ja õngitsuskatsete vastu. Selle seadistuse muutmine käivitab sinu veebibrauseri uuesti</string>
+    <string name="preference_safe_browsing_enabled_description">IronFoxi ohutu veebisirvimise funktsionaalsus põhineb hetkel Google\'i teenustel. IronFox uuendab vahetevahel vastavat andmekogu ja tagab, et kasutajad on viimaste veebiohtude vastu kaitstud. Võimaliku ohu tuvastamisel võib IronFox saata kahtlase võrguaadressi fragmendi räsiväärtuse Google\'i serveritesse. Tagamaks, et sinu nutiseadme IP-aadress poleks seotud antud päringutega, kasutab IronFox eraldi puhverserverit.</string>
 </resources>
