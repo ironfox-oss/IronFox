@@ -2,7 +2,7 @@
 
 PLATFORM_VERSION="36"
 BUILDTOOLS_VERSION="36.0.0"
-NDK_REVISION="28.1.13356709"
+NDK_REVISION="28.2.13676358"
 SDK_REVISION="13114758"
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then
@@ -48,7 +48,7 @@ export PATH
 $SDK_MANAGER "build-tools;$BUILDTOOLS_VERSION" # for GeckoView
 $SDK_MANAGER "platforms;android-$PLATFORM_VERSION" # for GeckoView
 $SDK_MANAGER "ndk;$NDK_REVISION"  # for mozbuild; application-services
-$SDK_MANAGER "ndk;$NDK_REVISION"  # for mozbuild; application-services
+$SDK_MANAGER "ndk;28.1.13356709" # for Glean
 
 export ANDROID_NDK="$ANDROID_HOME/ndk/$NDK_REVISION"
 export ANDROID_NDK="$ANDROID_HOME/ndk/$NDK_REVISION"

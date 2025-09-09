@@ -1,5 +1,5 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index df5658c723..65073f6215 100644
+index 83d84537f9..eba9dc48f2 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
 @@ -101,8 +101,8 @@ static const RedirEntry kRedirMap[] = {

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index a79dcad0f3..5d51f71fa4 100644
+index 4d5067becf..8aa8bf68f2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -183,7 +183,7 @@ class Components(private val context: Context) {
+@@ -186,7 +186,7 @@ class Components(private val context: Context) {
      val remoteSettingsSyncScheduler by lazyMonitored {
          DefaultRemoteSettingsSyncScheduler(
              context,

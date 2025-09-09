@@ -1,5 +1,5 @@
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 2abc4ce..6d3ebf5 100644
+index f5d173c..fef0ffe 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 @@ -49,7 +49,7 @@ import java.io.File

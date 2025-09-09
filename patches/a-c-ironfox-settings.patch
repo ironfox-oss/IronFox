@@ -1,11 +1,11 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 20edb92c74..e0dd90140a 100644
+index 5233b8a8dd..dede673a20 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1525,6 +1525,106 @@ class GeckoEngine(
-         override var bannedPorts: String
-             get() = runtime.settings.bannedPorts
-             set(value) { runtime.settings.setBannedPorts(value) }
+@@ -1655,6 +1655,106 @@ class GeckoEngine(
+         override var lnaBlockingEnabled: Boolean
+             get() = runtime.settings.lnaBlockingEnabled
+             set(value) { runtime.settings.setLnaBlockingEnabled(value) }
 +
 +        override var accessibilityEnabled: Boolean
 +            get() = runtime.settings.accessibilityEnabled
@@ -109,10 +109,10 @@ index 20edb92c74..e0dd90140a 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1571,6 +1671,27 @@ class GeckoEngine(
-             this.postQuantumKeyExchangeEnabled = it.postQuantumKeyExchangeEnabled
+@@ -1702,6 +1802,27 @@ class GeckoEngine(
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
+             this.lnaBlockingEnabled = it.lnaBlockingEnabled
 +            this.accessibilityEnabled = it.accessibilityEnabled
 +            this.cacheEnabled = it.cacheEnabled
 +            this.emeEnabled = it.emeEnabled
@@ -138,13 +138,13 @@ index 20edb92c74..e0dd90140a 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index 5dd0b2beae..b5396603a4 100644
+index f9aa3b43e9..92b213c61d 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -362,6 +362,28 @@ abstract class Settings {
-      * Comma-separated list of destination ports that the application should block connections to.
+@@ -367,6 +367,28 @@ abstract class Settings {
+      * Setting to control blocking of local network & local device (localhost) access
       */
-     open var bannedPorts: String by UnsupportedSetting()
+     open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
 +
 +    open var accessibilityEnabled: Boolean by UnsupportedSetting()
 +    open var cacheEnabled: Boolean by UnsupportedSetting()
@@ -170,10 +170,10 @@ index 5dd0b2beae..b5396603a4 100644
  }
  
  /**
-@@ -434,6 +456,27 @@ data class DefaultSettings(
-     override var postQuantumKeyExchangeEnabled: Boolean? = null,
+@@ -440,6 +462,27 @@ data class DefaultSettings(
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
+     override var lnaBlockingEnabled: Boolean = false,
 +    override var accessibilityEnabled: Boolean = false,
 +    override var cacheEnabled: Boolean = false,
 +    override var emeEnabled: Boolean = false,

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
-index 5f5ceb60c0..b11f2165b7 100644
+index a82e8f0616..0a36a99e18 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
-@@ -119,6 +119,7 @@ class SitePermissionsManagePhoneFeatureFragment : Fragment() {
+@@ -120,6 +120,7 @@ class SitePermissionsManagePhoneFeatureFragment : Fragment() {
                      saveActionInSettings(AUTOPLAY_ALLOW_ON_WIFI)
                  }
                  restoreState(AUTOPLAY_ALLOW_ON_WIFI)

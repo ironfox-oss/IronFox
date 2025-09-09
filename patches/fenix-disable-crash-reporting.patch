@@ -68,10 +68,19 @@ index 819b24954e..0f9bb0a905 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 9113dc53a9..b92ecfb0be 100644
+index b2b40dd764..c767a93a99 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -244,7 +244,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -218,7 +218,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_use_new_crash_reporter).apply {
+-            isVisible = true
++            isVisible = false
+             isChecked = context.settings().useNewCrashReporterDialog
+             onPreferenceChangeListener =
+                 Preference.OnPreferenceChangeListener { _, newValue ->
+@@ -286,7 +286,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_crash_pull_never_show_again).apply {
@@ -81,10 +90,10 @@ index 9113dc53a9..b92ecfb0be 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..861f5c38a8 100644
+index f0eeec863d..8187bd7b73 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -495,10 +495,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -524,10 +524,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
                  true,
              )
  
@@ -99,7 +108,7 @@ index 3fa564af49..861f5c38a8 100644
  
      val isRemoteDebuggingEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
-@@ -776,10 +776,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -837,10 +837,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user denies to ever see again the Remote Settings crash
       * pull UI.
       */

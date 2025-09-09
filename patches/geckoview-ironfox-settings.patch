@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index aa061017f3..87a08ce963 100644
+index aea35cbd34..6197be20a4 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -1017,6 +1017,27 @@ package org.mozilla.geckoview {
+@@ -1028,6 +1028,27 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -30,7 +30,7 @@ index aa061017f3..87a08ce963 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1066,6 +1087,27 @@ package org.mozilla.geckoview {
+@@ -1078,6 +1099,27 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -58,7 +58,7 @@ index aa061017f3..87a08ce963 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1080,6 +1122,9 @@ package org.mozilla.geckoview {
+@@ -1092,6 +1134,9 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -68,7 +68,7 @@ index aa061017f3..87a08ce963 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1130,6 +1175,27 @@ package org.mozilla.geckoview {
+@@ -1143,6 +1188,27 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -96,7 +96,7 @@ index aa061017f3..87a08ce963 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1145,6 +1211,9 @@ package org.mozilla.geckoview {
+@@ -1158,6 +1224,9 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -107,10 +107,10 @@ index aa061017f3..87a08ce963 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 0d5fe1ccc2..05d85a6ef0 100644
+index 1aeae7c828..0e94be3024 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -652,6 +652,111 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -663,6 +663,111 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
        return this;
      }
@@ -222,7 +222,7 @@ index 0d5fe1ccc2..05d85a6ef0 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -785,6 +890,28 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -798,6 +903,28 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
@@ -251,7 +251,7 @@ index 0d5fe1ccc2..05d85a6ef0 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2284,6 +2411,221 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2317,6 +2444,221 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  

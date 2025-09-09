@@ -12,6 +12,7 @@ import org.mozilla.fenix.perf.lazyMonitored
 
 class Analytics(
     private val context: Context,
+    private val nimbusComponents: NimbusComponents,
     private val runWhenReadyQueue: RunWhenReadyQueue,
 ) {
     val crashReporter: CrashReporter by lazyMonitored {

@@ -1,8 +1,25 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 4d5067becf..bd5029ab74 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -269,10 +269,10 @@ class Components(private val context: Context) {
+                     controller = nimbus.messaging,
+                     settings = settings,
+                 ),
+-                MetricsMiddleware(
++/*                MetricsMiddleware(
+                     metrics = analytics.metrics,
+                     nimbusEventStore = nimbus.events,
+-                ),
++                ),*/
+                 CrashReportingAppMiddleware(
+                     CrashMiddleware(
+                         cache = SettingsCrashReportCache(settings),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index fb213552b5..0f2aac1b70 100644
+index 823b5909fa..c1ad3f914c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -373,7 +373,7 @@ class Core(
+@@ -377,7 +377,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -11,7 +28,7 @@ index fb213552b5..0f2aac1b70 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -386,12 +386,12 @@ class Core(
+@@ -390,12 +390,12 @@ class Core(
                              REMOTE_STAGE_ENDPOINT_URL
                          },
                      ).updateProviderList()
@@ -19,16 +36,16 @@ index fb213552b5..0f2aac1b70 100644
 +                }*/
                  // Install the "ads" WebExtension to get the links in an partner page.
 -                adsTelemetry.install(engine, this@apply, providerList)
-+                // adsTelemetry.install(engine, this@apply, providerList)
++//                adsTelemetry.install(engine, this@apply, providerList)
                  // Install the "cookies" WebExtension and tracks user interaction with SERPs.
 -                searchTelemetry.install(engine, this@apply, providerList)
 -            }
-+                // searchTelemetry.install(engine, this@apply, providerList)
++//                searchTelemetry.install(engine, this@apply, providerList)
 +//            }
  
              WebNotificationFeature(
                  context,
-@@ -448,7 +448,7 @@ class Core(
+@@ -452,7 +452,7 @@ class Core(
          BrowserIcons(context, client)
      }
  
@@ -37,7 +54,7 @@ index fb213552b5..0f2aac1b70 100644
          context.components.analytics.metrics
      }
  
-@@ -458,7 +458,7 @@ class Core(
+@@ -462,7 +462,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
@@ -47,10 +64,10 @@ index fb213552b5..0f2aac1b70 100644
      /**
       * Shortcut component for managing shortcuts on the device home screen.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..24677b0d0c 100644
+index f0eeec863d..6e56e10dd9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -505,19 +505,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -534,19 +534,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -79,7 +96,7 @@ index 3fa564af49..24677b0d0c 100644
      )
  
      var hasAcceptedTermsOfService by booleanPreference(
-@@ -540,11 +540,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -585,11 +585,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */

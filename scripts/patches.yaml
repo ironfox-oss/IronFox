@@ -98,6 +98,13 @@ patches:
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
 
+  - file: "geckoview-unbreak-fido.patch"
+    name: "Fix FIDO-related Compile Error"
+    description: "Fixes a compilation issue introduced in Firefox v143, related to FIDO."
+    reason: "Addresses technical bug in the build process."
+    effect: "Ensures successful compilation of the browser."
+    category: "Build System"
+
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Remove Proprietary Libraries (Android Components)"
@@ -380,6 +387,13 @@ patches:
     description: "Sets Enhanced Tracking Protection to Strict mode by default."
     reason: "To provide stronger protection against tracking without user configuration."
     effect: "Blocks more trackers and fingerprinting scripts out of the box, strengthens state partitioning, and enables protection against various other methods of cross-site tracking."
+    category: "Privacy"
+
+  - file: "fenix-enable-local-network-access-restrictions-by-default.patch"
+    name: "Enable Local Network Access Restrictions"
+    description: "Enables Local Network Access Restrictions by default."
+    reason: "To provide websites from accessing local network resources, to reduce fingerprintability, and to prevent unauthorized access to the local network."
+    effect: "Improves privacy and security for users."
     category: "Privacy"
 
   - file: "fenix-block-cookie-banners-in-pb-by-default-and-expose-ui.patch"
