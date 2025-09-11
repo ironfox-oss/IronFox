@@ -618,10 +618,10 @@ index 0000000000..f9e1f71a51
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..d22cd9b858
+index 0000000000..f4cf4b6d0b
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
-@@ -0,0 +1,458 @@
+@@ -0,0 +1,467 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import android.content.Context
@@ -953,13 +953,18 @@ index 0000000000..d22cd9b858
 +        }
 +
 +        IfPreferenceType.INSTALL_UBLOCK -> {
-+            installUBlockOrigin(context, onContentStateChange)
++            installUBlockOrigin(
++                context,
++                state.installUBlock,
++                onContentStateChange,
++            )
 +        }
 +    }
 +}
 +
 +private suspend fun installUBlockOrigin(
 +    context: Context,
++    shouldInstallUBlock: Boolean,
 +    onContentStateChange: (IfPreferencesContentState) -> Unit,
 +) {
 +    onContentStateChange(
@@ -967,6 +972,10 @@ index 0000000000..d22cd9b858
 +            context.getString(R.string.onboarding_state_installing_ublock),
 +        ),
 +    )
++
++    if (!shouldInstallUBlock) {
++        return
++    }
 +
 +    val components = context.components
 +    val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN)
