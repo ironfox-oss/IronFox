@@ -281,12 +281,6 @@ rm -vrf app/src/main/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/main/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/main/java/org/mozilla/fenix/startupCrash
 
-$SED -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
-$SED -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
-
-$SED -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
-$SED -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
-
 # Let it be IronFox
 "${IRONFOX_SED}" -i \
     -e 's/Address bar - Firefox Suggest/Address bar/' \
