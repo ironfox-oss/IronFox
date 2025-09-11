@@ -1,20 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 4d5067becf..bd5029ab74 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -269,10 +269,10 @@ class Components(private val context: Context) {
-                     controller = nimbus.messaging,
-                     settings = settings,
-                 ),
--                MetricsMiddleware(
-+/*                MetricsMiddleware(
-                     metrics = analytics.metrics,
-                     nimbusEventStore = nimbus.events,
--                ),
-+                ),*/
-                 CrashReportingAppMiddleware(
-                     CrashMiddleware(
-                         cache = SettingsCrashReportCache(settings),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index 2079fc1ba3..534ec2e035 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
