@@ -568,6 +568,13 @@ patches:
     effect: "Users can toggle features as per their liking before they take effect in the browser."
     category: "User Experience"
 
+  - file: "a-c-allow-ubo-in-private-browsing-by-default.patch"
+    name: "Allow uBlock Origin in Private Browsing by default"
+    description: "Allows uBlock Origin to run in private browsing windows by default."
+    reason: "To ensure that users are protected with strong content blocking in private browsing windows."
+    effect: "Users are always protected against ads/tracking/malware/etc."
+    category: "User Experience"
+
   - file: "fenix-disable-auto-pinning-recently-visited-sites-to-home.patch"
     name: "Disable Automatically Pinning Recently Visited Sites to Home"
     description: "Prevents Firefox from automatically pinning random recently visited website to the browser homepage."
