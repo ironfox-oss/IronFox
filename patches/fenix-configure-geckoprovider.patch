@@ -1,0 +1,50 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+index a754afa5a4..334a1c985b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
+@@ -7,14 +7,14 @@ package org.mozilla.fenix.gecko
+ import android.content.Context
+ import androidx.annotation.VisibleForTesting
+ import mozilla.components.browser.engine.gecko.autofill.GeckoAutocompleteStorageDelegate
+-import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate
++// import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate
+ import mozilla.components.browser.engine.gecko.ext.toContentBlockingSetting
+ import mozilla.components.concept.engine.EngineSession.TrackingProtectionPolicy
+ import mozilla.components.concept.storage.CreditCardsAddressesStorage
+ import mozilla.components.concept.storage.LoginsStorage
+-import mozilla.components.experiment.NimbusExperimentDelegate
+-import mozilla.components.lib.crash.handler.CrashHandlerService
+-import mozilla.components.lib.crash.store.CrashAction
++// import mozilla.components.experiment.NimbusExperimentDelegate
++// import mozilla.components.lib.crash.handler.CrashHandlerService
++// import mozilla.components.lib.crash.store.CrashAction
+ import mozilla.components.service.sync.autofill.GeckoCreditCardsAddressesStorageDelegate
+ import mozilla.components.service.sync.logins.GeckoLoginStorageDelegate
+ import org.mozilla.fenix.Config
+@@ -72,13 +72,13 @@ object GeckoProvider {
+             ),
+         )
+ 
+-        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
++/*        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
+             dispatcher = { crashIDs ->
+                 context.components.appStore.dispatch(
+                     AppAction.CrashActionWrapper(CrashAction.CheckDeferred(crashIDs.toList())),
+                 )
+             },
+-        )
++        )*/
+ 
+         return geckoRuntime
+     }
+@@ -89,8 +89,8 @@ object GeckoProvider {
+         policy: TrackingProtectionPolicy,
+     ): GeckoRuntimeSettings {
+         return GeckoRuntimeSettings.Builder()
+-            .crashHandler(CrashHandlerService::class.java)
+-            .experimentDelegate(NimbusExperimentDelegate())
++            // .crashHandler(CrashHandlerService::class.java)
++            // .experimentDelegate(NimbusExperimentDelegate())
+             .contentBlocking(
+                 policy.toContentBlockingSetting(
+                     cookieBannerHandlingMode = context.settings().getCookieBannerHandling(),

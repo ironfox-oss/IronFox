@@ -13,3 +13,33 @@ index 83d84537f9..41c057444e 100644
      {"translations",
       "chrome://global/content/translations/about-translations.html",
       nsIAboutModule::ALLOW_SCRIPT |
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 34e06ce332..faf0ec9e5c 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -29,7 +29,7 @@ about_pages = [
+     'serviceworkers',
+     'srcdoc',
+     'support',
+-    'telemetry',
++    # 'telemetry',
+     'translations',
+     'url-classifier',
+     'webrtc',
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+index 46d1cb5ed7..9d526faa67 100644
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -37,9 +37,9 @@ toolkit.jar:
+    content/global/aboutGlean.html
+    content/global/aboutGlean.css
+ #endif
+-   content/global/aboutTelemetry.js
+-   content/global/aboutTelemetry.xhtml
+-   content/global/aboutTelemetry.css
++   # content/global/aboutTelemetry.js
++   # content/global/aboutTelemetry.xhtml
++   # content/global/aboutTelemetry.css
+    content/global/aboutUrlClassifier.js
+    content/global/aboutUrlClassifier.xhtml
+    content/global/aboutUrlClassifier.css

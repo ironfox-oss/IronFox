@@ -1,24 +1,53 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 4d5067becf..bd5029ab74 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -269,10 +269,10 @@ class Components(private val context: Context) {
-                     controller = nimbus.messaging,
-                     settings = settings,
-                 ),
--                MetricsMiddleware(
-+/*                MetricsMiddleware(
-                     metrics = analytics.metrics,
-                     nimbusEventStore = nimbus.events,
--                ),
-+                ),*/
-                 CrashReportingAppMiddleware(
-                     CrashMiddleware(
-                         cache = SettingsCrashReportCache(settings),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..c1ad3f914c 100644
+index 823b5909fa..705320b7c0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -64,14 +64,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
+ import mozilla.components.feature.search.SearchApplicationName
+ import mozilla.components.feature.search.SearchDeviceType
+ import mozilla.components.feature.search.SearchUpdateChannel
+-import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware
++// import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware
+ import mozilla.components.feature.search.middleware.SearchExtraParams
+ import mozilla.components.feature.search.middleware.SearchMiddleware
+ import mozilla.components.feature.search.region.RegionMiddleware
+ import mozilla.components.feature.search.storage.SearchEngineSelectorConfig
+-import mozilla.components.feature.search.telemetry.SerpTelemetryRepository
+-import mozilla.components.feature.search.telemetry.ads.AdsTelemetry
+-import mozilla.components.feature.search.telemetry.incontent.InContentTelemetry
++// import mozilla.components.feature.search.telemetry.SerpTelemetryRepository
++// import mozilla.components.feature.search.telemetry.ads.AdsTelemetry
++// import mozilla.components.feature.search.telemetry.incontent.InContentTelemetry
+ import mozilla.components.feature.session.HistoryDelegate
+ import mozilla.components.feature.session.middleware.LastAccessMiddleware
+ import mozilla.components.feature.session.middleware.undo.UndoMiddleware
+@@ -133,7 +133,7 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
+ import org.mozilla.fenix.share.DefaultSentFromFirefoxManager
+ import org.mozilla.fenix.share.DefaultSentFromStorage
+ import org.mozilla.fenix.share.SaveToPDFMiddleware
+-import org.mozilla.fenix.telemetry.TelemetryMiddleware
++// import org.mozilla.fenix.telemetry.TelemetryMiddleware
+ import org.mozilla.fenix.utils.getUndoDelay
+ import org.mozilla.geckoview.GeckoRuntime
+ import java.util.UUID
+@@ -321,7 +321,7 @@ class Core(
+                     },
+                 ),
+                 ReaderViewMiddleware(),
+-                TelemetryMiddleware(context, context.settings(), metrics, crashReporter),
++//                TelemetryMiddleware(context, context.settings(), metrics, crashReporter),
+                 ThumbnailsMiddleware(thumbnailStorage),
+                 UndoMiddleware(context.getUndoDelay()),
+                 RegionMiddleware(context, locationService),
+@@ -334,7 +334,7 @@ class Core(
+                 ),
+                 RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
+                 PromptMiddleware(),
+-                AdsTelemetryMiddleware(adsTelemetry),
++//                AdsTelemetryMiddleware(adsTelemetry),
+                 LastMediaAccessMiddleware(),
+                 HistoryMetadataMiddleware(historyMetadataService),
+                 SessionPrioritizationMiddleware(),
 @@ -377,7 +377,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
@@ -63,6 +92,43 @@ index 823b5909fa..c1ad3f914c 100644
  
      /**
       * Shortcut component for managing shortcuts on the device home screen.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
+index 8645aaf290..4c96d174b1 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
+@@ -22,7 +22,7 @@ import mozilla.components.support.locale.LocaleManager
+ import org.mozilla.fenix.FenixApplication
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.components.Components
+-import org.mozilla.fenix.components.metrics.MetricController
++// import org.mozilla.fenix.components.metrics.MetricController
+ import org.mozilla.fenix.components.toolbar.ToolbarPosition
+ import org.mozilla.fenix.settings.advanced.getSelectedLocale
+ import org.mozilla.fenix.utils.isLargeScreenSize
+@@ -44,8 +44,8 @@ val Context.components: Components
+ /**
+  * Helper function to get the MetricController off of context.
+  */
+-val Context.metrics: MetricController
+-    get() = this.components.analytics.metrics
++// val Context.metrics: MetricController
++//    get() = this.components.analytics.metrics
+ 
+ fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
+     ?: this as? Activity
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
+index 229569e513..dd272629a3 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
+@@ -36,7 +36,7 @@ class NimbusBranchesController(
+         updateOptInState(branch)
+ 
+         if (!isTelemetryEnabled() && !isExperimentationEnabled()) {
+-            notifyUserToEnableExperiments()
++            // notifyUserToEnableExperiments()
+         }
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index f0eeec863d..6e56e10dd9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

@@ -171,9 +171,107 @@ index 8f6e1eb8f1..f07ef8c740 100644
          loginsStorage = FakeLoginsStorage(),
          addressesDebugLocalesRepository = FakeAddressesDebugLocalesRepository(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 5340aa5258..a10bc165a9 100644
+index 5340aa5258..10ee0e1a39 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -14,7 +14,7 @@ import android.util.Log.INFO
+ import androidx.annotation.OpenForTesting
+ import androidx.annotation.VisibleForTesting
+ import androidx.appcompat.app.AppCompatDelegate
+-import androidx.core.app.NotificationManagerCompat
++// import androidx.core.app.NotificationManagerCompat
+ import androidx.core.content.getSystemService
+ import androidx.core.net.toUri
+ import androidx.lifecycle.ProcessLifecycleOwner
+@@ -55,8 +55,8 @@ import mozilla.components.lib.crash.CrashReporter
+ import mozilla.components.service.fxa.manager.SyncEnginesStorage
+ import mozilla.components.service.sync.logins.LoginsApiException
+ import mozilla.components.support.AppServicesInitializer
+-import mozilla.components.support.base.ext.areNotificationsEnabledSafe
+-import mozilla.components.support.base.ext.isNotificationChannelEnabled
++// import mozilla.components.support.base.ext.areNotificationsEnabledSafe
++// import mozilla.components.support.base.ext.isNotificationChannelEnabled
+ import mozilla.components.support.base.facts.register
+ import mozilla.components.support.base.log.Log
+ import mozilla.components.support.base.log.logger.Logger
+@@ -86,7 +86,7 @@ import org.mozilla.fenix.components.Components
+ import org.mozilla.fenix.components.Core
+ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.initializeGlean
+-import org.mozilla.fenix.components.metrics.MozillaProductDetector
++// import org.mozilla.fenix.components.metrics.MozillaProductDetector
+ import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.experiments.maybeFetchExperiments
+ import org.mozilla.fenix.ext.components
+@@ -99,12 +99,12 @@ import org.mozilla.fenix.home.topsites.TopSitesConfigConstants.TOP_SITES_PROVIDE
+ import org.mozilla.fenix.lifecycle.StoreLifecycleObserver
+ import org.mozilla.fenix.lifecycle.VisibilityLifecycleObserver
+ import org.mozilla.fenix.nimbus.FxNimbus
+-import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID
+-import org.mozilla.fenix.perf.ApplicationExitInfoMetrics
++// import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID
++// import org.mozilla.fenix.perf.ApplicationExitInfoMetrics
+ import org.mozilla.fenix.perf.MarkersActivityLifecycleCallbacks
+ import org.mozilla.fenix.perf.ProfilerMarkerFactProcessor
+ import org.mozilla.fenix.perf.StartupTimeline
+-import org.mozilla.fenix.perf.StorageStatsMetrics
++// import org.mozilla.fenix.perf.StorageStatsMetrics
+ import org.mozilla.fenix.perf.runBlockingIncrement
+ import org.mozilla.fenix.push.PushFxaIntegration
+ import org.mozilla.fenix.push.WebPushEngineIntegration
+@@ -171,10 +171,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         val durationMillis = TimeUnit.NANOSECONDS.toMillis(stop - start)
+ 
+         // We avoid blocking the main thread on startup by calling into Glean on the background thread.
+-        @OptIn(DelicateCoroutinesApi::class)
++/*        @OptIn(DelicateCoroutinesApi::class)
+         GlobalScope.launch(IO) {
+             PerfStartup.applicationOnCreate.accumulateSamples(listOf(durationMillis))
+-        }
++        }*/
+     }
+ 
+     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+@@ -285,7 +285,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             VisibilityLifecycleObserver(),
+         )
+ 
+-        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
++//        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
+ 
+         CoroutineScope(IO).launch {
+             components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
+@@ -379,14 +379,14 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         }
+ 
+         fun queueMetrics() {
+-            if (SDK_INT >= Build.VERSION_CODES.O) { // required by StorageStatsMetrics.
++/*           if (SDK_INT >= Build.VERSION_CODES.O) { // required by StorageStatsMetrics.
+                 queue.runIfReadyOrQueue {
+                     // Because it may be slow to capture the storage stats, it might be preferred to
+                     // create a WorkManager task for this metric, however, I ran out of
+                     // implementation time and WorkManager is harder to test.
+                     StorageStatsMetrics.report(this.applicationContext)
+                 }
+-            }
++            }*/
+         }
+ 
+         @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+@@ -460,11 +460,11 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+ 
+     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+     private fun queueCollectProcessExitInfo() {
+-        if (SDK_INT >= Build.VERSION_CODES.R && settings().isTelemetryEnabled) {
++/*        if (SDK_INT >= Build.VERSION_CODES.R && settings().isTelemetryEnabled) {
+             GlobalScope.launch(IO) {
+                 ApplicationExitInfoMetrics.recordProcessExits(applicationContext)
+             }
+-        }
++        }*/
+     }
+ 
+     protected open fun setupLeakCanary() {
 @@ -722,12 +722,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          browserStore: BrowserStore,
          settings: Settings,
@@ -183,11 +281,11 @@ index 5340aa5258..a10bc165a9 100644
      ) {
 -        setPreferenceMetrics(settings)
 -        with(Metrics) {
-+//        setPreferenceMetrics(settings)
-+//        with(Metrics) {
++        // setPreferenceMetrics(settings)
++        // with(Metrics) {
              // Set this early to guarantee it's in every ping from here on.
 -            distributionId.set(components.distributionIdManager.getDistributionId())
-+/*            distributionId.set(components.distributionIdManager.getDistributionId())
++            /* distributionId.set(components.distributionIdManager.getDistributionId())
  
              defaultBrowser.set(browsersCache.all(applicationContext).isDefaultBrowser)
              mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
@@ -267,9 +365,76 @@ index 5340aa5258..a10bc165a9 100644
  
      private fun recordOnInit() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index a6fc6e8483..235b37be1c 100644
+index a6fc6e8483..01ca7b4f3e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+@@ -81,13 +81,13 @@ import mozilla.components.support.utils.BuildManufacturerChecker
+ import mozilla.components.support.utils.SafeIntent
+ import mozilla.components.support.utils.toSafeIntent
+ import mozilla.components.support.webextensions.WebExtensionPopupObserver
+-import mozilla.telemetry.glean.private.NoExtras
++// import mozilla.telemetry.glean.private.NoExtras
+ import org.mozilla.experiments.nimbus.initializeTooling
+-import org.mozilla.fenix.GleanMetrics.AppIcon
+-import org.mozilla.fenix.GleanMetrics.Events
+-import org.mozilla.fenix.GleanMetrics.Metrics
+-import org.mozilla.fenix.GleanMetrics.SplashScreen
+-import org.mozilla.fenix.GleanMetrics.StartOnHome
++// import org.mozilla.fenix.GleanMetrics.AppIcon
++// import org.mozilla.fenix.GleanMetrics.Events
++// import org.mozilla.fenix.GleanMetrics.Metrics
++// import org.mozilla.fenix.GleanMetrics.SplashScreen
++// import org.mozilla.fenix.GleanMetrics.StartOnHome
+ import org.mozilla.fenix.addons.ExtensionsProcessDisabledBackgroundController
+ import org.mozilla.fenix.addons.ExtensionsProcessDisabledForegroundController
+ import org.mozilla.fenix.bookmarks.DesktopFolders
+@@ -97,10 +97,10 @@ import org.mozilla.fenix.browser.browsingmode.DefaultBrowsingModeManager
+ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.appstate.AppAction.ShareAction
+ import org.mozilla.fenix.components.appstate.OrientationMode
+-import org.mozilla.fenix.components.metrics.BreadcrumbsRecorder
+-import org.mozilla.fenix.components.metrics.GrowthDataWorker
+-import org.mozilla.fenix.components.metrics.MarketingAttributionService
+-import org.mozilla.fenix.components.metrics.fonts.FontEnumerationWorker
++// import org.mozilla.fenix.components.metrics.BreadcrumbsRecorder
++// import org.mozilla.fenix.components.metrics.GrowthDataWorker
++// import org.mozilla.fenix.components.metrics.MarketingAttributionService
++// import org.mozilla.fenix.components.metrics.fonts.FontEnumerationWorker
+ import org.mozilla.fenix.crashes.CrashReporterBinding
+ import org.mozilla.fenix.crashes.UnsubmittedCrashDialog
+ import org.mozilla.fenix.customtabs.ExternalAppBrowserActivity
+@@ -119,7 +119,7 @@ import org.mozilla.fenix.ext.getNavDirections
+ import org.mozilla.fenix.ext.hasTopDestination
+ import org.mozilla.fenix.ext.nav
+ import org.mozilla.fenix.ext.openSetDefaultBrowserOption
+-import org.mozilla.fenix.ext.recordEventInNimbus
++// import org.mozilla.fenix.ext.recordEventInNimbus
+ import org.mozilla.fenix.ext.setNavigationIcon
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.extension.WebExtensionPromptFeature
+@@ -138,7 +138,7 @@ import org.mozilla.fenix.home.intent.StartSearchIntentProcessor
+ import org.mozilla.fenix.messaging.FenixMessageSurfaceId
+ import org.mozilla.fenix.messaging.MessageNotificationWorker
+ import org.mozilla.fenix.nimbus.FxNimbus
+-import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker
++// import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker
+ import org.mozilla.fenix.pbmlock.DefaultPrivateBrowsingLockStorage
+ import org.mozilla.fenix.pbmlock.PrivateBrowsingLockFeature
+ import org.mozilla.fenix.perf.MarkersActivityLifecycleCallbacks
+@@ -382,11 +382,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+         )
+ 
+         // This is a temporary solution to determine if we should show the marketing onboarding card.
+-        if (shouldShowOnboarding) {
++/*        if (shouldShowOnboarding) {
+             lifecycleScope.launch(IO) {
+                 MarketingAttributionService(applicationContext).start()
+             }
+-        }
++        }*/
+ 
+         SplashScreenManager(
+             splashScreenOperation = if (FxNimbus.features.splashScreen.value().offTrainOnboarding) {
 @@ -406,11 +406,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              storage = DefaultSplashScreenStorage(components.settings),
              showSplashScreen = { installSplashScreen().setKeepOnScreenCondition(it) },
@@ -284,20 +449,90 @@ index a6fc6e8483..235b37be1c 100644
  
                  if (savedInstanceState == null && shouldShowOnboarding) {
                      navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
-@@ -499,11 +499,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
-             safeIntent
-                 ?.let(::getIntentSource)
-                 ?.also { source ->
--                    Events.appOpened.record(
-+/*                    Events.appOpened.record(
-                         Events.AppOpenedExtra(
-                             source = source,
-                         ),
--                    )
-+                    )*/
+@@ -478,14 +478,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+                 }
+                 maybeShowSetAsDefaultBrowserPrompt()
+             } else {
+-                StartOnHome.enterHomeScreen.record(NoExtras())
++//                StartOnHome.enterHomeScreen.record(NoExtras())
+             }
+         }
  
-                     if (safeIntent.action.equals(ACTION_OPEN_PRIVATE_TAB) && source == APP_ICON) {
+         Performance.processIntentIfPerformanceTest(intent, this)
+ 
+         // This will record an event in Nimbus' internal event store. Used for behavioral targeting
+-        recordEventInNimbus("app_opened")
++/*        recordEventInNimbus("app_opened")
+         if (settings().isTelemetryEnabled) {
+             lifecycle.addObserver(
+                 BreadcrumbsRecorder(
+@@ -509,7 +509,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
                          AppIcon.newPrivateTabTapped.record(NoExtras())
+                     }
+                 }
+-        }
++        }*/
+         supportActionBar?.hide()
+ 
+         lifecycle.addObservers(
+@@ -604,7 +604,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+             components.strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {
+                 components.appStore.dispatch(AppAction.UpdateWasNativeDefaultBrowserPromptShown(true))
+                 showSetDefaultBrowserPrompt()
+-                Metrics.setAsDefaultBrowserNativePromptShown.record()
++//                Metrics.setAsDefaultBrowserNativePromptShown.record()
+                 settings().setAsDefaultPromptCalled()
+             }
+         }
+@@ -671,7 +671,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+         }
+ 
+         lifecycleScope.launch(IO) {
+-            if (settings().checkIfFenixIsDefaultBrowserOnAppResume()) {
++/*            if (settings().checkIfFenixIsDefaultBrowserOnAppResume()) {
+                 if (components.appStore.state.wasNativeDefaultBrowserPromptShown) {
+                     Metrics.defaultBrowserChangedViaNativeSystemPrompt.record(NoExtras())
+                 }
+@@ -679,10 +679,10 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+             }
+ 
+             GrowthDataWorker.sendActivatedSignalIfNeeded(applicationContext)
+-            FontEnumerationWorker.sendActivatedSignalIfNeeded(applicationContext)
++            FontEnumerationWorker.sendActivatedSignalIfNeeded(applicationContext)*/
+ 
+             if (NotificationManagerCompat.from(applicationContext).areNotificationsEnabled()) {
+-                ReEngagementNotificationWorker.setReEngagementNotificationIfNeeded(applicationContext)
++//                ReEngagementNotificationWorker.setReEngagementNotificationIfNeeded(applicationContext)
+                 MessageNotificationWorker.setMessageNotificationWorker(applicationContext)
+             }
+ 
+@@ -826,7 +826,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+         components.core.pocketStoriesService.stopPeriodicSponsoredContentsRefresh()
+         privateNotificationObserver?.stop()
+         components.notificationsDelegate.unBindActivity(this)
+-        MarketingAttributionService(applicationContext).stop()
++//        MarketingAttributionService(applicationContext).stop()
+ 
+         // clear hierarchy change listener set by AndroidX SplashScreen
+         // https://bugzilla.mozilla.org/show_bug.cgi?id=1950295
+@@ -1335,14 +1335,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+             activeThresholdMs = PWA_RECENTLY_USED_THRESHOLD,
+         )
+         if (recentlyUsedPwaCount == 0) {
+-            Metrics.hasRecentPwas.set(false)
++//            Metrics.hasRecentPwas.set(false)
+         } else {
+-            Metrics.hasRecentPwas.set(true)
++//            Metrics.hasRecentPwas.set(true)
+             // This metric's lifecycle is set to 'application', meaning that it gets reset upon
+             // application restart. Combined with the behaviour of the metric type itself (a growing counter),
+             // it's important that this metric is only set once per application's lifetime.
+             // Otherwise, we're going to over-count.
+-            Metrics.recentlyUsedPwaCount.add(recentlyUsedPwaCount)
++//            Metrics.recentlyUsedPwaCount.add(recentlyUsedPwaCount)
+         }
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..273349e0ca 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
@@ -315,6 +550,78 @@ index 819b24954e..273349e0ca 100644
              "moz://a" -> openSearchOrUrl(
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
+index aa7a251fe7..b96b582c69 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
+@@ -17,12 +17,12 @@ import mozilla.components.browser.state.state.TabSessionState
+ import mozilla.components.lib.state.Action
+ import mozilla.components.lib.state.Middleware
+ import mozilla.components.lib.state.MiddlewareContext
+-import org.mozilla.fenix.GleanMetrics.Events
++// import org.mozilla.fenix.GleanMetrics.Events
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.browser.StandardSnackbarError
+ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.ext.components
+-import org.mozilla.fenix.ext.recordEventInNimbus
++// import org.mozilla.fenix.ext.recordEventInNimbus
+ import org.mozilla.geckoview.GeckoSession
+ import org.mozilla.geckoview.GeckoSession.GeckoPrintException.ERROR_NO_ACTIVITY_CONTEXT
+ import org.mozilla.geckoview.GeckoSession.GeckoPrintException.ERROR_NO_ACTIVITY_CONTEXT_DELEGATE
+@@ -144,7 +144,7 @@ class SaveToPDFMiddleware(
+      * @param isPrint if the telemetry is for printing
+      */
+     private fun postTelemetryTapped(tab: TabSessionState?, isPrint: Boolean) {
+-        mainScope.launch {
++/*        mainScope.launch {
+             tab?.engineState?.engineSession?.checkForPdfViewer(
+                 onResult = { isPdf ->
+                     if (isPrint) {
+@@ -178,7 +178,7 @@ class SaveToPDFMiddleware(
+                     }
+                 },
+             )
+-        }
++        }*/
+     }
+ 
+     /**
+@@ -188,7 +188,7 @@ class SaveToPDFMiddleware(
+      * @param isPrint if the telemetry is for printing
+      */
+     private fun postTelemetryCompleted(tab: TabSessionState?, isPrint: Boolean) {
+-        mainScope.launch {
++/*        mainScope.launch {
+             tab?.engineState?.engineSession?.checkForPdfViewer(
+                 onResult = { isPdf ->
+                     if (isPrint) {
+@@ -221,7 +221,7 @@ class SaveToPDFMiddleware(
+                     }
+                 },
+             )
+-        }
++        }*/
+     }
+ 
+     /**
+@@ -232,7 +232,7 @@ class SaveToPDFMiddleware(
+      * @param isPrint if the telemetry is for printing
+      */
+     private fun postTelemetryFailed(tab: TabSessionState?, throwable: Throwable, isPrint: Boolean) {
+-        val telFailureReason = telemetryErrorReason(throwable as Exception)
++/*        val telFailureReason = telemetryErrorReason(throwable as Exception)
+         mainScope.launch {
+             tab?.engineState?.engineSession?.checkForPdfViewer(
+                 onResult = { isPdf ->
+@@ -270,6 +270,6 @@ class SaveToPDFMiddleware(
+                     }
+                 },
+             )
+-        }
++        }*/
+     }
+ }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index f0eeec863d..dc8e251b34 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

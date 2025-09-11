@@ -180,9 +180,6 @@ echo "official=true" >>local.properties
 
 # Disable crash reporting
 $SED -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
-$SED -i -e 's|.crashHandler|// .crashHandler|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-$SED -i -e 's|import mozilla.components.lib.crash|// import mozilla.components.lib.crash|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-$SED -i -e 's|import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|// import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
 
 # Disable telemetry
 $SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
@@ -202,14 +199,6 @@ $SED -i -e 's|alternativeAppIconFeatureEnabled = .*|alternativeAppIconFeatureEna
 # Ensure onboarding is always enabled
 $SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
-# Ensure certain preferences are configured at GeckoProvider.kt
-## These should be unnecessary (since we take back control of the related Gecko preferences and set them directly), but it doesn't hurt to set these here either
-$SED -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # general.aboutConfig.enable
-$SED -i -e 's/crashPullNeverShowAgain(.*)/crashPullNeverShowAgain(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # browser.crashReports.requestedNeverShowAgain
-$SED -i -e 's/disableShip(.*)/disableShip(false)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # fission.disableSessionHistoryInParent
-$SED -i -e 's/extensionsWebAPIEnabled(.*)/extensionsWebAPIEnabled(false)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # extensions.webapi.enabled
-$SED -i -e 's/fissionEnabled(.*)/fissionEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # fission.autostart
-
 # No-op AMO collections/recommendations
 $SED -i -e 's|"AMO_COLLECTION_NAME", "\\".*\\""|"AMO_COLLECTION_NAME", "\\"\\""|g' app/build.gradle
 $SED -i 's|Extensions-for-Android||g' app/build.gradle
@@ -224,10 +213,6 @@ echo 'glean.custom.server.url="data;"' >>local.properties
 $SED -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
 $SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' app/pings.yaml
 
-# No-op Nimbus
-$SED -i -e 's|.experimentDelegate|// .experimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-$SED -i -e 's|import mozilla.components.experiment.NimbusExperimentDelegate|// import mozilla.components.experiment.NimbusExperimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-
 # Remove proprietary/tracking libraries
 $SED -i 's|- components:lib-crash-sentry|# - components:lib-crash-sentry|g' .buildconfig.yml
 $SED -i 's|- components:lib-push-firebase|# - components:lib-push-firebase|g' .buildconfig.yml
@@ -240,45 +225,17 @@ $SED -i 's|implementation libs.play|// implementation libs.play|g' app/build.gra
 $SED -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
 # Remove unused telemetry and marketing services/components
-$SED -i -e 's|import androidx.core.app.NotificationManagerCompat|// import androidx.core.app.NotificationManagerCompat|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware|// import mozilla.components.feature.search.middleware.AdsTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/components/Core.kt
-$SED -i -e 's|import mozilla.components.feature.search.telemetry|// import mozilla.components.feature.search.telemetry|' app/src/main/java/org/mozilla/fenix/components/Core.kt
-$SED -i -e 's|import mozilla.components.support.base.ext.areNotificationsEnabledSafe|// import mozilla.components.support.base.ext.areNotificationsEnabledSafe|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import mozilla.components.support.base.ext.isNotificationChannelEnabled|// import mozilla.components.support.base.ext.isNotificationChannelEnabled|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/components/Components.kt
-$SED -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
-$SED -i -e 's|import org.mozilla.fenix.components.metrics|// import org.mozilla.fenix.components.metrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import org.mozilla.fenix.components.metrics.fonts|// import org.mozilla.fenix.components.metrics.fonts|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|import org.mozilla.fenix.components.metrics.GrowthDataWorker|// import org.mozilla.fenix.components.metrics.GrowthDataWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|import org.mozilla.fenix.components.metrics.MarketingAttributionService|// import org.mozilla.fenix.components.metrics.MarketingAttributionService|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 $SED -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
-$SED -i -e 's|import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|// import org.mozilla.fenix.onboarding.MARKETING_CHANNEL_ID|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|// import org.mozilla.fenix.onboarding.ReEngagementNotificationWorker|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|// import org.mozilla.fenix.perf.ApplicationExitInfoMetrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import org.mozilla.fenix.perf.StorageStatsMetrics|// import org.mozilla.fenix.perf.StorageStatsMetrics|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.telemetry|' app/src/main/java/org/mozilla/fenix/components/Core.kt
 
-$SED -i -e 's|AdsTelemetryMiddleware|// AdsTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/components/Core.kt
-$SED -i -e 's|ApplicationExitInfoMetrics.|// ApplicationExitInfoMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 $SED -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt
-$SED -i -e 's|FontEnumerationWorker.|// FontEnumerationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|GrowthDataWorker.|// GrowthDataWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|MarketingAttributionService(|// MarketingAttributionService(|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|PerfStartup.|// PerfStartup.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|ReEngagementNotificationWorker.|// ReEngagementNotificationWorker.|' app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-$SED -i -e 's|StorageStatsMetrics.|// StorageStatsMetrics.|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/main/java/org/mozilla/fenix/components/Core.kt
-$SED -i -e 's|manager = ReviewManagerFactory|// manager = ReviewManagerFactory|' app/src/main/java/org/mozilla/fenix/components/Components.kt
 $SED -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
 $SED -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
 $SED -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
-$SED -i -e 's|val Context.metrics|// val Context.metrics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
-$SED -i -e 's|get() = this.components.analytics|// get() = this.components.analytics|' app/src/main/java/org/mozilla/fenix/ext/Context.kt
-$SED -i -e 's|components.analytics.metricsStorage|// components.analytics.metricsStorage|' app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 
 rm -vf app/src/*/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/Event.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt
@@ -294,12 +251,6 @@ rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetry
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
-
-$SED -i -e 's|val push by lazyMonitored { Push(context, analytics.crashReporter) }|val push by lazyMonitored { Push(context) }|' app/src/main/java/org/mozilla/fenix/components/Components.kt
-$SED -i -e 's|import com.google.android.play.core.review|// import com.google.android.play.core.review|' app/src/main/java/org/mozilla/fenix/components/Components.kt
-
-$SED -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
-$SED -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt
 
 # Let it be IronFox
 $SED -i \
@@ -510,9 +461,6 @@ rm -vf samples/crash/build.gradle
 rm -vf samples/glean/build.gradle
 rm -vf samples/glean/samples-glean-library/build.gradle
 
-# Prevent unsolicited favicon fetching
-$SED -i -e 's|request.copy(resources = request.resources + resource)|request|' components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
-
 # Remove Nimbus
 rm -vf components/browser/engine-gecko/geckoview.fml.yaml
 rm -vrf components/browser/engine-gecko/src/main/java/mozilla/components/experiment
@@ -628,31 +576,14 @@ $SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" in
 $SED -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
 $SED -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
 
-# Disable network connectivity status monitoring (Fenix)
-## (Also removes the `NETWORK_ACCESS_STATE` permission)
-## Also see `fenix-disable-network-connectivity-monitoring.patch`
-$SED -i -e 's|AUTOPLAY_ALLOW_ON_WIFI ->|// AUTOPLAY_ALLOW_ON_WIFI ->|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-$SED -i -e 's|import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_ALLOW_ON_WIFI|// import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_ALLOW_ON_WIFI|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
+# Remove the `NETWORK_ACCESS_STATE` permission (Fenix)
 $SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/fenix/app/src/main/AndroidManifest.xml
 
-# Disable network connectivity status monitoring (GeckoView)
-## (Also removes the `NETWORK_ACCESS_STATE` permission)
-$SED -i -e 's|import org.mozilla.gecko.GeckoNetworkManager|// import org.mozilla.gecko.GeckoNetworkManager|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-$SED -i -e 's|GeckoNetworkManager.|// GeckoNetworkManager.|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
+# Remove the `NETWORK_ACCESS_STATE` permission (GeckoView)
 $SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/geckoview/src/main/AndroidManifest.xml
 
 # Disable Normandy (Experimentation)
 $SED -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
-
-# Disable auto-population of recently visited sites on the browser homepage
-$SED -i -e 's|FxNimbus.features.homepageHideFrecentTopSites.value().enabled|true|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-$SED -i -e 's|FxNimbus.features.homepageHideFrecentTopSites.value().enabled|true|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
-
-# Disable shipped domains
-## (Firefox's built-in list of domains used to autocomplete URLs)
-## To quote a Mozilla employee (https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0): 'Android's current list of 400+ domain names for address bar suggestions was created way back in December 2015... This list hasn't been updated since 2015 and now includes expired and squatted domains that might serve ads or malware'
-## Prevents suggesting squatted domains to users that serve ads and malware, and reduces annoyances/unwanted behavior.
-$SED -i -e 's|FxNimbus.features.suggestShippedDomains.value().enabled|false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 
 # Disable SSLKEYLOGGING
 ## https://bugzilla.mozilla.org/show_bug.cgi?id=1183318
@@ -682,14 +613,6 @@ $SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 # Ensure UA is always set to Firefox
 $SED -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
 
-# Enable encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state
-$SED -i -e 's|secureStateAtRest: Boolean = .*|secureStateAtRest: Boolean = true,|g' mobile/android/android-components/components/concept/sync/src/*/java/mozilla/components/concept/sync/Devices.kt
-$SED -i -e 's|secureStateAtRest = .*|secureStateAtRest = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-
-# Hide Remote Debugging UI setting
-## Also see `fenix-reset-remote-debugging-per-session.patch`
-$SED -i -e 's|preferenceRemoteDebugging?.isVisible = .*|preferenceRemoteDebugging?.isVisible = false|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-
 # Include additional Remote Settings local dumps (+ add our own...)
 $SED -i -e 's|"mobile/"|"0"|g' services/settings/dumps/blocklists/moz.build
 $SED -i -e 's|"mobile/"|"0"|g' services/settings/dumps/security-state/moz.build
@@ -705,10 +628,6 @@ echo '    "url-classifier-skip-urls.json",' >>services/settings/dumps/main/moz.b
 echo '    "url-parser-default-unknown-schemes-interventions.json",' >>services/settings/dumps/main/moz.build
 echo ']' >>services/settings/dumps/main/moz.build
 
-# Increase add-on update frequency
-## Increases the rate at which Firefox checks for add-on updates, from every 12 hours to hourly
-$SED -i -e 's|DefaultAddonUpdater(context, Frequency(.*, TimeUnit|DefaultAddonUpdater(context, Frequency(1, TimeUnit|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-
 # No-op AMO collections/recommendations
 $SED -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
 $SED -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
@@ -719,15 +638,8 @@ $SED -i 's|https://services.addons.mozilla.org||g' mobile/android/android-compon
 # No-op Contile
 $SED -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
 
-# No-op crash reporting
-$SED -i -e 's|AppServicesInitializer.init(components.analytics.*)|AppServicesInitializer.init()|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+# Remove unnecessary crash reporting components
 rm -vrf mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/rusterrors
-$SED -i -e 's|import mozilla.components.concept.base.crash|// import mozilla.components.concept.base.crash|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-$SED -i -e 's|import mozilla.components.support.rusterrors|// import mozilla.components.support.rusterrors|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-$SED -i -e 's|init(crashReporting.*)|init()|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-$SED -i -e 's|initializeRustErrors(|// initializeRustErrors(|' mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
-
-$SED -i -e 's|import org.mozilla.gecko.crashhelper.CrashHelper|// import org.mozilla.gecko.crashhelper.CrashHelper|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 
 $SED -i -e 's|enabled: Boolean = .*|enabled: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 $SED -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
@@ -783,27 +695,13 @@ $SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' toolkit/components/nimbu
 # No-op telemetry (GeckoView)
 $SED -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/android/android-components/components/browser/engine-gecko/build.gradle
 
-## Do not prompt users to enable telemetry/studies when enrolling in experiments
-### Currently unused
-$SED -i -e 's|notifyUserToEnableExperiments()|// notifyUserToEnableExperiments()|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
-
 # Prevent DoH canary requests
 $SED -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
 $SED -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
 
-# Remove `about:telemetry`
-## Also see `gecko-remove-abouttelemetry.patch`
-$SED -i -e "s|'telemetry'|# &|" docshell/build/components.conf
-$SED -i -e 's|content/global/aboutTelemetry|# content/global/aboutTelemetry|' toolkit/content/jar.mn
-
 # Remove unused crash reporting services/components
 rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
 rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-
-# Remove GMP sources
-## Removes Firefox's default sources for installing Gecko Media Plugins (GMP), such as OpenH264 and Widevine (the latter is proprietary).
-## https://wiki.mozilla.org/GeckoMediaPlugins
-$SED -i -e 's|content/global/gmp-sources|# content/global/gmp-sources|' toolkit/content/jar.mn
 
 # Remove example dependencies
 ## Also see `gecko-remove-example-dependencies.patch`
@@ -840,18 +738,8 @@ rm -vf mobile/android/config/proguard/proguard-leanplum.cfg
 $SED -i 's|- components:feature-webcompat-reporter|# - components:feature-webcompat-reporter|g' mobile/android/fenix/.buildconfig.yml
 $SED -i "s|implementation project(':components:feature-webcompat-reporter')|// implementation project(':components:feature-webcompat-reporter')|g" mobile/android/fenix/app/build.gradle
 
-$SED -i -e 's|import mozilla.components.feature.webcompat.reporter|// import mozilla.components.feature.webcompat.reporter|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-
-$SED -i -e 's|FxNimbus.features.menuRedesign.value().reportSiteIssue|false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-$SED -i -e 's|return !isAboutUrl && !isContentUrl|return false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-$SED -i -e 's|WebCompatReporterFeature.|// WebCompatReporterFeature.|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-
 # Replace Google Play FIDO with microG
 $SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
-
-# Unbreak our custom uBlock Origin config
-## Also see `gecko-custom-ublock-origin-assets.patch`
-$SED -i -e 's#else if (platform == "macosx" || platform == "linux")#else if (platform == "macosx" || platform == "linux" || platform == "android")#' toolkit/components/extensions/NativeManifests.sys.mjs
 
 # Remove Glean
 source "$rootdir/scripts/deglean.sh"
@@ -954,20 +842,6 @@ $SED -i -e 's|R.drawable.microsurvey_success|R.drawable.mozac_lib_crash_notifica
 $SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 $SED -i -e 's|ic_onboarding_search_widget|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
 $SED -i -e 's|ic_onboarding_sync|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
-
-# Ensure certain settings are configured at Fenix Core.kt
-## These should be unnecessary (since we generally either configure them with UI settings or take back control of the related Gecko preferences from GeckoProvider.kt and set them directly), but it doesn't hurt to set these here either
-## For reference, none of these are exposed in the UI
-$SED -i -e 's|certificateTransparencyMode = .*|certificateTransparencyMode = 2,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # security.pki.certificate_transparency.mode
-$SED -i -e 's|dohAutoselectEnabled = .*|dohAutoselectEnabled = false,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.android_doh.autoselect_enabled
-$SED -i -e 's|emailTrackerBlockingPrivateBrowsing = .*|emailTrackerBlockingPrivateBrowsing = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # privacy.trackingprotection.emailtracking.pbmode.enabled
-$SED -i -e 's|fdlibmMathEnabled = .*|fdlibmMathEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # javascript.options.use_fdlibm_for_sin_cos_tan
-$SED -i -e 's|fetchPriorityEnabled = .*|fetchPriorityEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.fetchpriority.enabled
-$SED -i -e 's|globalPrivacyControlEnabled = .*|globalPrivacyControlEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # privacy.globalprivacycontrol.enabled
-$SED -i -e 's|parallelMarkingEnabled = .*|parallelMarkingEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # javascript.options.mem.gc_parallel_marking
-$SED -i -e 's|postQuantumKeyExchangeEnabled = .*|postQuantumKeyExchangeEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.http.http3.enable_kyber + security.tls.enable_kyber
-$SED -i -e 's|userCharacteristicPingCurrentVersion = .*|userCharacteristicPingCurrentVersion = 0,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # toolkit.telemetry.user_characteristics_ping.current_version
-$SED -i -e 's|webContentIsolationStrategy = WebContentIsolationStrategy..*|webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_EVERYTHING,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # fission.webContentIsolationStrategy
 
 # Take back control of preferences
 ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...

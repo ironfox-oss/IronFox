@@ -1,3 +1,32 @@
+diff --git a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
+index 9e8098c79b..a7e0e6a181 100644
+--- a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
++++ b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
+@@ -5,8 +5,8 @@
+ package mozilla.components.support
+ 
+ import mozilla.appservices.RustComponentsInitializer
+-import mozilla.components.concept.base.crash.CrashReporting
+-import mozilla.components.support.rusterrors.initializeRustErrors
++// import mozilla.components.concept.base.crash.CrashReporting
++// import mozilla.components.support.rusterrors.initializeRustErrors
+ import mozilla.components.support.rustlog.RustLog
+ 
+ /**
+@@ -20,11 +20,11 @@ object AppServicesInitializer {
+      * N.B: The internals need to be executed in this particular order. Changes can lead to
+      * unexpected runtime failures.
+      */
+-    fun init(crashReporting: CrashReporting) {
++    fun init() {
+         // Rust components must be initialized at the very beginning, before any other Rust call, ...
+         RustComponentsInitializer.init()
+ 
+-        initializeRustErrors(crashReporting)
++        // initializeRustErrors(crashReporting)
+ 
+         // ... but RustHttpConfig.setClient() and RustLog.enable() can be called later.
+         RustLog.enable()
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 index 486e757b48..67a8937fef 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt

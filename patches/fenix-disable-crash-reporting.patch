@@ -27,26 +27,32 @@ index 0000000000..9dc712c3ff
 +
 +    override fun report(crash: Crash.UncaughtExceptionCrash): String? = null
 +}
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-index a754afa5a4..48ea595728 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-@@ -72,13 +72,13 @@ object GeckoProvider {
-             ),
-         )
- 
--        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
-+/*        geckoRuntime.crashPullDelegate = GeckoCrashPullDelegate(
-             dispatcher = { crashIDs ->
-                 context.components.appStore.dispatch(
-                     AppAction.CrashActionWrapper(CrashAction.CheckDeferred(crashIDs.toList())),
-                 )
-             },
--        )
-+        )*/
- 
-         return geckoRuntime
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 5340aa5258..fbaf09b577 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -496,10 +496,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
+ 
+     private fun setupCrashReporting() {
+-        components
++/*        components
+             .analytics
+             .crashReporter
+-            .install(this)
++            .install(this)*/
+     }
+ 
+     protected open fun initializeNimbus() {
+@@ -527,7 +527,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+      */
+     private fun beginSetupMegazord() {
+         // Rust components must be initialized at the very beginning, before any other Rust call, ...
+-        AppServicesInitializer.init(components.analytics.crashReporter)
++        AppServicesInitializer.init()
+     }
+ 
+     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..0f9bb0a905 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt

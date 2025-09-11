@@ -168,6 +168,113 @@ index 43cf86f477..1b710b7192 100644
      </application>
  
  </manifest>
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 4d5067becf..7ae98a47ff 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.ReadOnlyComposable
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.core.app.NotificationManagerCompat
+-import com.google.android.play.core.review.ReviewManagerFactory
++// import com.google.android.play.core.review.ReviewManagerFactory
+ import mozilla.components.feature.addons.AddonManager
+ import mozilla.components.feature.addons.amo.AMOAddonsProvider
+ import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
+ import mozilla.components.feature.addons.update.DefaultAddonUpdater
+ import mozilla.components.feature.autofill.AutofillConfiguration
+-import mozilla.components.lib.crash.store.CrashAction
+-import mozilla.components.lib.crash.store.CrashMiddleware
++// import mozilla.components.lib.crash.store.CrashAction
++// import mozilla.components.lib.crash.store.CrashMiddleware
+ import mozilla.components.lib.publicsuffixlist.PublicSuffixList
+ import mozilla.components.support.base.android.NotificationsDelegate
+ import mozilla.components.support.base.worker.Frequency
+@@ -39,9 +39,9 @@ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.appstate.AppState
+ import org.mozilla.fenix.components.appstate.setup.checklist.SetupChecklistState
+ import org.mozilla.fenix.components.appstate.setup.checklist.getSetupChecklistCollection
+-import org.mozilla.fenix.components.metrics.MetricsMiddleware
+-import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
+-import org.mozilla.fenix.crashes.SettingsCrashReportCache
++// import org.mozilla.fenix.components.metrics.MetricsMiddleware
++// import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
++// import org.mozilla.fenix.crashes.SettingsCrashReportCache
+ import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
+ import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
+ import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
+@@ -57,10 +57,10 @@ import org.mozilla.fenix.home.PocketMiddleware
+ import org.mozilla.fenix.home.SettingsBackedPocketSettings
+ import org.mozilla.fenix.home.blocklist.BlocklistHandler
+ import org.mozilla.fenix.home.blocklist.BlocklistMiddleware
+-import org.mozilla.fenix.home.middleware.HomeTelemetryMiddleware
++// import org.mozilla.fenix.home.middleware.HomeTelemetryMiddleware
+ import org.mozilla.fenix.home.setup.store.DefaultSetupChecklistRepository
+ import org.mozilla.fenix.home.setup.store.SetupChecklistPreferencesMiddleware
+-import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
++// import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
+ import org.mozilla.fenix.messaging.state.MessagingMiddleware
+ import org.mozilla.fenix.nimbus.FxNimbus
+ import org.mozilla.fenix.onboarding.FenixOnboarding
+@@ -69,7 +69,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
+ import org.mozilla.fenix.perf.StartupStateProvider
+ import org.mozilla.fenix.perf.StrictModeManager
+ import org.mozilla.fenix.perf.lazyMonitored
+-import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
++// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
+ import org.mozilla.fenix.termsofuse.TermsOfUseManager
+ import org.mozilla.fenix.utils.Settings
+ import org.mozilla.fenix.utils.isLargeScreenSize
+@@ -199,7 +199,7 @@ class Components(private val context: Context) {
+     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
+     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
+     val performance by lazyMonitored { PerformanceComponent() }
+-    val push by lazyMonitored { Push(context, analytics.crashReporter) }
++    val push by lazyMonitored { Push(context) }
+     val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
+ 
+     val strictMode by lazyMonitored {
+@@ -214,7 +214,7 @@ class Components(private val context: Context) {
+ 
+     val playStoreReviewPromptController by lazyMonitored {
+         PlayStoreReviewPromptController(
+-            manager = ReviewManagerFactory.create(context),
++//            manager = ReviewManagerFactory.create(context),
+             numberOfAppLaunches = { settings.numberOfAppLaunches },
+         )
+     }
+@@ -269,7 +269,7 @@ class Components(private val context: Context) {
+                     controller = nimbus.messaging,
+                     settings = settings,
+                 ),
+-                MetricsMiddleware(
++/*                MetricsMiddleware(
+                     metrics = analytics.metrics,
+                     nimbusEventStore = nimbus.events,
+                 ),
+@@ -280,18 +280,18 @@ class Components(private val context: Context) {
+                         currentTimeInMillis = { System.currentTimeMillis() },
+                     ),
+                 ),
+-                HomeTelemetryMiddleware(),
++                HomeTelemetryMiddleware(),*/
+                 SetupChecklistPreferencesMiddleware(DefaultSetupChecklistRepository(context)),
+-                SetupChecklistTelemetryMiddleware(),
++/*                SetupChecklistTelemetryMiddleware(),
+                 ReviewPromptMiddleware(
+                     settings = settings,
+                     createJexlHelper = nimbus::createJexlHelper,
+-                ),
++                ),*/
+                 AppVisualCompletenessMiddleware(performance.visualCompletenessQueue),
+             ),
+         ).also {
+             it.dispatch(AppAction.SetupChecklistAction.Init)
+-            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
++//            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
+         }
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
 index 3ee4690a76..15e1306605 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt

@@ -134,6 +134,13 @@ patches:
     effect: "Improves usability for users, by allowing them to receive push notifications if desired, and improves freedom, by allowing users to decide which push server/implementation they would like to use."
     category: "Dependency"
 
+  - file: "gecko-remove-gmp-sources.patch"
+    name: "Remove GMP (Gecko Media Plugins) Sources"
+    description: "Removes Firefox's default sources for installing Gecko Media Plugins (GMP: https://wiki.mozilla.org/GeckoMediaPlugins), such as OpenH264 and Widevine (the latter is proprietary)."
+    reason: "To prevent the installation of unwanted/unnecessary plug-ins."
+    effect: "Improves security for users, by reducing attack surface, and protects freedom, by ensuring that proprietary plug-ins are not installed."
+    category: "Dependency"
+
   # Mozilla
   - file: "fenix-disable-telemetry.patch"
     name: "Disable Telemetry (Fenix)"
@@ -282,6 +289,13 @@ patches:
     effect: "Simplifies the browser UI and prevents issue reports from being sent to Mozilla."
     category: "Mozilla"
 
+  - file: "fenix-remove-webcompat-reporter.patch"
+    name: "Remove Web Compatibility Reporter (Fenix)"
+    description: "Removes the Web Compatibility Reporter from Firefox for Android."
+    reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
+    effect: "Simplifies the browser UI and prevents issue reports from being sent to Mozilla."
+    category: "Mozilla"
+
   - file: "fenix-disable-nags.patch"
     name: "Disable Nags"
     description: "Disables Contextual Feature Recommendations, prompts encouraging users to set the browser as the system default, and other promotional messaging."
@@ -301,6 +315,13 @@ patches:
     description: "Adds a built-in collection of wallpapers for the browser's homepage."
     reason: "By default, Firefox fetches wallpapers from Mozilla servers on every browser launch. We disable this, due to the associated privacy concerns, and to reduce unwanted network activity."
     effect: "Users can personalize the browser and take advantage of wallpapers, without introducing unnecessary/unwanted network activity and dependence on Mozilla services."
+    category: "Mozilla"
+
+  - file: "fenix-configure-geckoprovider.patch"
+    name: "Configure GeckoProvider"
+    description: "Configures Firefox's implementation of GeckoView (GeckoProvider)"
+    reason: "Disables integration with crash reporting and experimentation (Nimbus)."
+    effect: "Prevents unwanted collection and transmission of crash reports, and ensures user configurations remain consistent and are controlled locally."
     category: "Mozilla"
 
   # Privacy
@@ -411,8 +432,15 @@ patches:
     category: "Privacy"
 
   - file: "fenix-disable-network-connectivity-monitoring.patch"
-    name: "Disable Network Connectivity Status Monitoring"
-    description: "Prevents Firefox from monitoring the status of the user's internet connection."
+    name: "Disable Network Connectivity Status Monitoring (Fenix)"
+    description: "Prevents Firefox for Android from monitoring the status of the user's internet connection."
+    reason: "To prevent the browser from accessing network information (with the `ACCESS_NETWORK_STATE` permission)."
+    effect: "Reduces required permissions and limits data exposed to the browser."
+    category: "Privacy"
+
+  - file: "geckoview-disable-network-connectivity-monitoring.patch"
+    name: "Disable Network Connectivity Status Monitoring (GeckoView)"
+    description: "Prevents GeckoView from monitoring the status of the user's internet connection."
     reason: "To prevent the browser from accessing network information (with the `ACCESS_NETWORK_STATE` permission)."
     effect: "Reduces required permissions and limits data exposed to the browser."
     category: "Privacy"
@@ -436,6 +464,13 @@ patches:
     description: "Prevents aiding fingerprinting when Firefox's internal PDF viewer (PDF.js) is disabled."
     reason: "To allow users to disable PDF.js if preferred (ex. in favor of an external viewer, like GrapheneOS's: https://github.com/GrapheneOS/PdfViewer), without increasing fingerprintability."
     effect: "Users can safely disable PDF.js if preferred, without compromising their privacy."
+    category: "Privacy"
+
+  - file: "a-c-disable-unsolicited-favicon-fetching.patch"
+    name: "Disable unsolicited favicon fetching"
+    description: "Prevents Firefox from automatically fetching favicons for websites pinned to the browser homepage."
+    reason: "To prevent unwanted network activity and connections to third parties."
+    effect: "Reduces network activity, provides users with more control, and provides a faster browser homepage."
     category: "Privacy"
 
   # Security
@@ -468,18 +503,32 @@ patches:
     effect: "Ensures browser settings aren't changed without explicit user consent."
     category: "Security"
 
-  - file: "fenix-reset-remote-debugging-per-session.patch"
+  - file: "fenix-hide-remote-debugging-and-reset-per-session.patch"
     name: "Reset Remote Debugging Per-session"
     description: "Forces Remote Debugging (`devtools.debugger.remote-enabled`) to reset to `false` per-session."
     reason: "To force remote debugging to reset per-session for security reasons."
     effect: "Prevents users from accidentally leaving remote debugging enabled."
     category: "Security"
 
-  - file: "fenix-increase-rs-update-frequency.patch"
-    name: "Increase Remote Settings Update Frequency"
-    description: "Increases the rate at which Firefox syncs with Remote Settings, from every 24 hours to hourly."
+  - file: "fenix-disable-shipped-domains.patch"
+    name: "Disable Shipped Domains"
+    description: "Disables Firefox's built-in list of domains for URL autocompletion."
+    reason: "To quote a Mozilla employee (https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0): 'Android's current list of 400+ domain names for address bar suggestions was created way back in December 2015... This list hasn't been updated since 2015 and now includes expired and squatted domains that might serve ads or malware'"
+    effect: "Prevents suggesting squatted domains to users that serve ads and malware, and reduces annoyances/unwanted behavior."
+    category: "Security"
+
+  - file: "fenix-increase-update-frequency.patch"
+    name: "Increase Update Frequency"
+    description: "Increases the rate at which Firefox syncs with Remote Settings, from every 24 hours to hourly, and the rate at which Firefox checks for add-on updates, from every 12 hours to hourly."
     reason: "To improve security for users, by ensuring they are kept up to date as fast as possible."
-    effect: "Protects users against security vulnerabilities and other potential threats, by ensuring their Remote Settings are always up to date."
+    effect: "Protects users against security vulnerabilities and other potential threats, by ensuring their add-ons and Remote Settings are always up to date."
+    category: "Security"
+
+  - file: "fenix-enable-encrypted-storage.patch"
+    name: "Enable Encrypted Storage"
+    description: "Enables encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state."
+    reason: "To improve privacy and security for users, by adding extra protection for sensitive data."
+    effect: "Protects users against unauthorized access/compromise to sensitive data."
     category: "Security"
 
   # User Control
@@ -517,6 +566,13 @@ patches:
     description: "Adds IronFox-specific onboarding screens."
     reason: "To allow users to configure IronFox to their liking on first install."
     effect: "Users can toggle features as per their liking before they take effect in the browser."
+    category: "User Experience"
+
+  - file: "fenix-disable-auto-pinning-recently-visited-sites-to-home.patch"
+    name: "Disable Automatically Pinning Recently Visited Sites to Home"
+    description: "Prevents Firefox from automatically pinning random recently visited website to the browser homepage."
+    reason: "To reduce annoyances and get rid of obnoxious/unwanted behavior."
+    effect: "Users are provided with a cleaner, faster, and more focused browser homepage."
     category: "User Experience"
 
   # User Interface
