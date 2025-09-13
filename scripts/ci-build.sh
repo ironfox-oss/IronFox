@@ -99,6 +99,11 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
 fi
 
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
+    # Create GeckoView AAR archives
+    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-$BUILD_ABI"
+    zip -r -FS "$AAR_ARTIFACTS/geckoview-$BUILD_ABI.zip" *
+    popd
+
     # Build signed APK set
     AAB_IN="$(ls "$mozilla_release"/obj/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="$APKS_ARTIFACTS/IronFox-v${IRONFOX_VERSION}.apks"
