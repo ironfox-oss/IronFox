@@ -57,9 +57,9 @@ bash -x ./scripts/prebuild.sh "$BUILD_VARIANT"
 
 # If we're building an APK set, the following environment variables are required
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="$AAR_ARTIFACTS/geckoview-armeabi-v7a.aar"
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64-v8a.aar"
-    export MOZ_ANDROID_FAT_AAR_X86_64="$AAR_ARTIFACTS/geckoview-x86_64.aar"
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64-v8a.zip"
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="$AAR_ARTIFACTS/geckoview-armeabi-v7a.zip"
+    export MOZ_ANDROID_FAT_AAR_X86_64="$AAR_ARTIFACTS/geckoview-x86_64.zip"
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES="armeabi-v7a,arm64-v8a,x86_64"
 fi
 
@@ -72,9 +72,18 @@ export IF_BUILD_DATE="$CI_PIPELINE_CREATED_AT"
 bash -x scripts/build.sh "$BUILD_TYPE"
 
 if [[ "$BUILD_TYPE" == "apk" ]]; then
-    # Copy geckoview AAR
-    cp -v "$mozilla_release"/obj/gradle/build/mobile/android/geckoview/outputs/aar/geckoview-release.aar \
-        "$AAR_ARTIFACTS/geckoview-${BUILD_ABI}.aar"
+    # Create GeckoView AAR archives
+    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-arm64-v8a"
+    zip -r -FS "$AAR_ARTIFACTS/geckoview-arm64-v8a.zip" *
+    popd
+
+    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-armeabi-v7a"
+    zip -r -FS "$AAR_ARTIFACTS/geckoview-armeabi-v7a.zip" *
+    popd
+
+    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-x86_64"
+    zip -r -FS "$AAR_ARTIFACTS/geckoview-x86_64.zip" *
+    popd
 
     # Sign APK
     APK_IN="$mozilla_release/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-$BUILD_ABI-release-unsigned.apk"
