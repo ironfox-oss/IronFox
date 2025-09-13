@@ -544,7 +544,7 @@ patches:
     description: "Enables the `about:inference` page."
     reason: "To allow users to control machine learning models."
     effect: "Users can easily test and configure installed machine learning models, as well as other related functionality."
-    category: "User Interface"
+    category: "User Control"
 
   # User Experience
   - file: "fenix-default-site-permissions.patch"
