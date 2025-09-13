@@ -73,16 +73,8 @@ bash -x scripts/build.sh "$BUILD_TYPE"
 
 if [[ "$BUILD_TYPE" == "apk" ]]; then
     # Create GeckoView AAR archives
-    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-arm64-v8a"
-    zip -r -FS "$AAR_ARTIFACTS/geckoview-arm64-v8a.zip" *
-    popd
-
-    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-armeabi-v7a"
-    zip -r -FS "$AAR_ARTIFACTS/geckoview-armeabi-v7a.zip" *
-    popd
-
-    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-x86_64"
-    zip -r -FS "$AAR_ARTIFACTS/geckoview-x86_64.zip" *
+    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-$BUILD_ABI"
+    zip -r -FS "$AAR_ARTIFACTS/geckoview-$BUILD_ABI.zip" *
     popd
 
     # Sign APK
