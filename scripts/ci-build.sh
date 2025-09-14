@@ -72,9 +72,10 @@ export IF_BUILD_DATE="$CI_PIPELINE_CREATED_AT"
 bash -x scripts/build.sh "$BUILD_TYPE"
 
 if [[ "$BUILD_TYPE" == "apk" ]]; then
-    # Copy GeckoView AARs
-    cp -v "$mozilla_release"/obj/gradle/build/mobile/android/geckoview/outputs/aar/geckoview-release.aar \
-        "$AAR_ARTIFACTS/geckoview-${BUILD_ABI}.aar"
+    # Create GeckoView AAR archives
+    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-$BUILD_ABI"
+    zip -r -FS "$AAR_ARTIFACTS/geckoview-$BUILD_ABI.zip" *
+    popd
 
     # Sign APK
     APK_IN="$mozilla_release/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-$BUILD_ABI-release-unsigned.apk"
@@ -89,11 +90,6 @@ if [[ "$BUILD_TYPE" == "apk" ]]; then
 fi
 
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
-    # Create GeckoView AAR archives
-    pushd "$mozilla_release/obj/gradle/maven/org/mozilla/geckoview/geckoview-$BUILD_ABI"
-    zip -r -FS "$AAR_ARTIFACTS/geckoview-$BUILD_ABI.zip" *
-    popd
-
     # Build signed APK set
     AAB_IN="$(ls "$mozilla_release"/obj/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="$APKS_ARTIFACTS/IronFox-v${IRONFOX_VERSION}.apks"
