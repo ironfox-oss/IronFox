@@ -186,15 +186,8 @@ $SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/bu
 $SED -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 $SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
-# Display live downloads in progress
-$SED -i -e 's|showLiveDownloads = .*|showLiveDownloads = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
 # Disable "custom review pre-prompts"
 $SED -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Disable the ability for users to select a custom app icon
-## We currently don't add any custom icons to choose from, so no point exposing/cluttering the UI
-$SED -i -e 's|alternativeAppIconFeatureEnabled = .*|alternativeAppIconFeatureEnabled = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure onboarding is always enabled
 $SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
