@@ -185,11 +185,13 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_VERSION"
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
 elif [[ "$PLATFORM" == "macos" ]]; then
+    mkdir -vp wasi-sdk
     echo "Downloading prebuilt wasi-sdk..."
     download "https://github.com/celenityy/wasi-sdk/releases/download/$WASI_VERSION/$WASI_VERSION-firefox-osx.tar.xz" "$BUILDDIR/wasi-sdk.tar.xz"
     mkdir -vp "$WASISDKDIR"
     tar xJf "$BUILDDIR/wasi-sdk.tar.xz" -C "$WASISDKDIR"
 else
+    mkdir -vp wasi-sdk
     echo "Downloading prebuilt wasi-sdk..."
     download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_VERSION/$WASI_VERSION-firefox.tar.xz"
 fi
