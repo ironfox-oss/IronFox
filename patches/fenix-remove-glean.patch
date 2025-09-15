@@ -97,10 +97,23 @@ index 15cacaa7c5..0f9f91307e 100644
    enums:
      HomeScreenSection:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index 52f6a4e0d9..21d35110a4 100644
+index 8d4b2daebe..c11a1e22c3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-@@ -52,10 +52,10 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+@@ -16,9 +16,9 @@ import org.mozilla.fenix.debugsettings.addresses.AddressesDebugLocalesRepository
+ import org.mozilla.fenix.debugsettings.addresses.AddressesTools
+ import org.mozilla.fenix.debugsettings.cfrs.CfrToolsState
+ import org.mozilla.fenix.debugsettings.cfrs.CfrToolsStore
+-import org.mozilla.fenix.debugsettings.crashtools.CrashTools
+-import org.mozilla.fenix.debugsettings.gleandebugtools.GleanDebugToolsStore
+-import org.mozilla.fenix.debugsettings.gleandebugtools.ui.GleanDebugToolsScreen
++// import org.mozilla.fenix.debugsettings.crashtools.CrashTools
++// import org.mozilla.fenix.debugsettings.gleandebugtools.GleanDebugToolsStore
++// import org.mozilla.fenix.debugsettings.gleandebugtools.ui.GleanDebugToolsScreen
+ import org.mozilla.fenix.debugsettings.logins.LoginsTools
+ import org.mozilla.fenix.debugsettings.region.RegionTools
+ import org.mozilla.fenix.debugsettings.store.DebugDrawerAction
+@@ -53,10 +53,10 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
          route = "cfr_tools",
          title = R.string.debug_drawer_cfr_tools_title,
      ),
@@ -113,7 +126,16 @@ index 52f6a4e0d9..21d35110a4 100644
      RegionDebugTools(
          route = "region_debug_tools",
          title = R.string.debug_drawer_region_tools_title,
-@@ -139,14 +139,14 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+@@ -89,7 +89,7 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+             debugDrawerStore: DebugDrawerStore,
+             browserStore: BrowserStore,
+             cfrToolsStore: CfrToolsStore,
+-            gleanDebugToolsStore: GleanDebugToolsStore,
++            // gleanDebugToolsStore: GleanDebugToolsStore,
+             loginsStorage: LoginsStorage,
+             addressesDebugLocalesRepository: AddressesDebugLocalesRepository,
+             creditCardsAddressesStorage: CreditCardsAddressesStorage,
+@@ -144,14 +144,14 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
                          }
                      }
  

@@ -27,6 +27,68 @@ index 0000000000..9dc712c3ff
 +
 +    override fun report(crash: Crash.UncaughtExceptionCrash): String? = null
 +}
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
+index 8d4b2daebe..283ba2f3a6 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
+@@ -65,10 +65,10 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+         route = "addons_debug_tools",
+         title = R.string.debug_drawer_addons_tools_title,
+     ),
+-    CrashDebugTools(
++/*    CrashDebugTools(
+         route = "crash_debug_tools",
+         title = R.string.crash_debug_tools_title,
+-    ),
++    ),*/
+     ;
+ 
+     companion object {
+@@ -173,14 +173,14 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+                         }
+                     }
+ 
+-                    CrashDebugTools -> {
++/*                   CrashDebugTools -> {
+                         onClick = {
+                             debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.CrashDebugTools)
+                         }
+                         content = {
+                             CrashTools()
+                         }
+-                    }
++                    }*/
+                 }
+ 
+                 DebugDrawerDestination(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt
+index 15ff8f9459..1fc422fef7 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt
+@@ -76,7 +76,7 @@ sealed class DebugDrawerAction : Action {
+         /**
+          * [NavigateTo] action fired when the debug drawer needs to navigate to [CrashTools].
+          */
+-        object CrashDebugTools : NavigateTo()
++        // object CrashDebugTools : NavigateTo()
+     }
+ 
+     /**
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
+index 1e17f81bda..a0fe4020fb 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
+@@ -49,8 +49,8 @@ class DebugDrawerNavigationMiddleware(
+                     navController.navigate(route = DebugDrawerRoute.RegionDebugTools.route)
+                 is DebugDrawerAction.NavigateTo.AddonsDebugTools ->
+                     navController.navigate(route = DebugDrawerRoute.AddonsDebugTools.route)
+-                is DebugDrawerAction.NavigateTo.CrashDebugTools ->
+-                    navController.navigate(route = DebugDrawerRoute.CrashDebugTools.route)
++                // is DebugDrawerAction.NavigateTo.CrashDebugTools ->
++                    // navController.navigate(route = DebugDrawerRoute.CrashDebugTools.route)
+                 is DebugDrawerAction.OnBackPressed -> navController.popBackStack()
+                 is DebugDrawerAction.DrawerOpened, DebugDrawerAction.DrawerClosed -> Unit // no-op
+             }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 5340aa5258..fbaf09b577 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt

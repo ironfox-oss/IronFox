@@ -168,7 +168,6 @@ rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fe
 $SED -i 's|object GleanDebugTools|// object GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt"
 $SED -i 's|is DebugDrawerAction.NavigateTo.GleanDebugTools|// is DebugDrawerAction.NavigateTo.GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt"
 $SED -i 's|navController.navigate(route = DebugDrawerRoute.GleanDebugTools|// navController.navigate(route = DebugDrawerRoute.GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt"
-$SED -i 's|gleanDebugToolsStore:|// gleanDebugToolsStore:|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt"
 $SED -i 's|gleanDebugToolsStore:|// gleanDebugToolsStore:|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt"
 $SED -i 's|gleanDebugToolsStore =|// gleanDebugToolsStore =|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt"
 $SED -i 's|BrowserDirection.FromGleanDebugToolsFragment|// BrowserDirection.FromGleanDebugToolsFragment|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Activity.kt"

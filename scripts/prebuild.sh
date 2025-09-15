@@ -754,6 +754,9 @@ $SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250
 # Remove Glean
 source "$rootdir/scripts/deglean.sh"
 
+# Remove Crash debugging tools
+rm -rvf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools
+
 # Nuke undesired Mozilla endpoints
 source "$rootdir/scripts/noop_mozilla_endpoints.sh"
 
