@@ -517,7 +517,7 @@ popd
 
 # WASI SDK
 # shellcheck disable=SC2154
-if [[ "$PLATFORM" == "darwin" ]] || [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
 
