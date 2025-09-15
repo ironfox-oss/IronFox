@@ -255,7 +255,7 @@ $SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Events|// import org.mozilla
 $SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Pings|// import org.mozilla.fenix.GleanMetrics.Pings|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/RecordedNimbusContext.kt"
 $SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Pings|// import org.mozilla.fenix.GleanMetrics.Pings|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
 $SED -i -e 's|import org.mozilla.fenix.GleanMetrics.SyncAccount|// import org.mozilla.fenix.GleanMetrics.SyncAccount|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/ShareController.kt"
-$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Tab|// import org.mozilla.fenix.GleanMetrics.Tab|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Tab as|// import org.mozilla.fenix.GleanMetrics.Tab as|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayController.kt"
 
 $SED -i -e 's|Addresses.deleted|// Addresses.deleted|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/view/AddressEditorView.kt"
 $SED -i -e 's|Addresses.management|// Addresses.management|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/AddressManagementFragment.kt"
