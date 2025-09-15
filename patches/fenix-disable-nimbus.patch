@@ -120,6 +120,47 @@ index e7e19273f9..1aaf569e14 100644
          } ?: false
      }
  
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 5340aa5258..f2f3d0973e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -88,7 +88,7 @@ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.initializeGlean
+ import org.mozilla.fenix.components.metrics.MozillaProductDetector
+ import org.mozilla.fenix.components.startMetricsIfEnabled
+-import org.mozilla.fenix.experiments.maybeFetchExperiments
++// import org.mozilla.fenix.experiments.maybeFetchExperiments
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.containsQueryParameters
+ import org.mozilla.fenix.ext.isCustomEngine
+@@ -419,13 +419,13 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+ 
+         @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+         fun queueNimbusFetchInForeground() {
+-            queue.runIfReadyOrQueue {
++/*            queue.runIfReadyOrQueue {
+                 GlobalScope.launch(IO) {
+                     components.nimbus.sdk.maybeFetchExperiments(
+                         context = this@FenixApplication,
+                     )
+                 }
+-            }
++            }*/
+         }
+ 
+         @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+@@ -506,9 +506,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         beginSetupMegazord()
+ 
+         // This lazily constructs the Nimbus object…
+-        val nimbus = components.nimbus.sdk
++        // val nimbus = components.nimbus.sdk
+         // … which we then can populate the feature configuration.
+-        FxNimbus.initialize { nimbus }
++        // FxNimbus.initialize { nimbus }
+     }
+ 
+     /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 index e387bc4ae0..c8482a0f6b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
