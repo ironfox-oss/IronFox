@@ -77,7 +77,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     popd
 fi
 
-if [[ "$PLATFORM" == "macos" ]] || [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n ${FDROID_BUILD+x} ]]; then
     # Build WASI SDK
     # shellcheck disable=SC2154
     pushd "$wasi"
