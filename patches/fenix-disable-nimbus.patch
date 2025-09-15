@@ -276,7 +276,7 @@ index 7ba0ffb8a8..5124d36172 100644
                      state.selectedTab?.translationsState?.settingsError
                  }.value,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..a12127b9fa 100644
+index f0eeec863d..33a3e32cfb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -361,10 +361,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -322,7 +322,7 @@ index f0eeec863d..a12127b9fa 100644
  
      var isOverrideTPPopupsForPerformanceTest = false
  
-@@ -727,10 +727,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -727,15 +727,15 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -335,8 +335,17 @@ index f0eeec863d..a12127b9fa 100644
 +//        default = false,
 +//    )
  
-     var isFirstNimbusRun: Boolean by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_is_first_run),
+-    var isFirstNimbusRun: Boolean by booleanPreference(
+-        appContext.getPreferenceKey(R.string.pref_key_is_first_run),
+-        default = true,
+-    )
++    var isFirstNimbusRun: Boolean = true
++//        appContext.getPreferenceKey(R.string.pref_key_is_first_run),
++//       default = true,
++//    )
+ 
+     var isFirstSplashScreenShown: Boolean by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_is_first_splash_screen_shown),
 @@ -2327,7 +2327,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the feature to close synced tabs is enabled.
       */
