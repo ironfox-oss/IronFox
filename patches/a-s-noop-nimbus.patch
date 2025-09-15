@@ -33,3 +33,16 @@ index f5d173c..fef0ffe 100644
  
      @WorkerThread
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+index cecfb84..6f86472 100644
+--- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
++++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+@@ -115,7 +115,7 @@ interface NimbusInterface : FeaturesInterface, NimbusMessagingInterface, NimbusE
+      * Application developers should allow users to opt out with [globalUserParticipation]
+      * instead.
+      */
+-    fun isFetchEnabled(): Boolean = true
++    fun isFetchEnabled(): Boolean = false
+ 
+     /**
+      * Calculates the experiment enrolment from experiments from the last `fetchExperiments` or
