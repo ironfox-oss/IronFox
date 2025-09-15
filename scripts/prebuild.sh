@@ -225,12 +225,25 @@ $SED -i 's|implementation libs.play|// implementation libs.play|g' app/build.gra
 $SED -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
 # Remove unused telemetry and marketing services/components
+$SED -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
 $SED -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+$SED -i -e 's|import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt
+$SED -i -e 's|import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt
+$SED -i -e 's|import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|// import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
+$SED -i -e 's|import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|// import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
 
 $SED -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt
+$SED -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt
+$SED -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt
 $SED -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
 $SED -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+$SED -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
 $SED -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+$SED -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
+$SED -i -e 's|SyncTelemetry.|// SyncTelemetry.|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
+$SED -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayFragment.kt
+$SED -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
+$SED -i -e 's|WebCompatReporterTelemetryMiddleware(|// WebCompatReporterTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
 
 rm -vf app/src/*/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
@@ -246,8 +259,12 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
