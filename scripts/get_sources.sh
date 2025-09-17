@@ -4,6 +4,12 @@ set -euo pipefail
 
 source "$(dirname $0)/versions.sh"
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=macos
+else
+    PLATFORM=linux
+fi
+
 clone_repo() {
     url="$1"
     path="$2"
@@ -63,10 +69,10 @@ download() {
         fi
     fi
 
-    mkdir -p "$(dirname "$filepath")"
+    mkdir -vp "$(dirname "$filepath")"
 
     echo "Downloading $url"
-    wget "$url" -O "$filepath"
+    wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose "$url" -O "$filepath"
 }
 
 # Extract zip removing top level directory
@@ -93,6 +99,9 @@ extract_rmtoplevel() {
         *.tar.xz)
             tar xJf "$archive_path" -C "$temp_dir"
             ;;
+        *.tar.zst)
+            tar --zstd -xvf "$archive_path" -C "$temp_dir"
+            ;;
         *)
             echo "Unsupported archive format: $archive_path"
             rm -rf "$temp_dir"
@@ -104,7 +113,7 @@ extract_rmtoplevel() {
     local to_parent=$(dirname "$extract_to")
 
     rm -rf "$extract_to"
-    mkdir -p "$to_parent"
+    mkdir -vp "$to_parent"
     mv "$temp_dir/$top_dir" "$to_parent/$to_name"
 
     rm -rf "$temp_dir"
@@ -119,6 +128,8 @@ download_and_extract() {
         extension=".tar.xz"
     elif [[ "$url" =~ \.tar\.gz$ ]]; then
         extension=".tar.gz"
+    elif [[ "$url" =~ \.tar\.zst$ ]]; then
+        extension=".tar.zst"
     else
         extension=".zip"
     fi
@@ -137,7 +148,7 @@ download_and_extract() {
     echo
 }
 
-mkdir -p "$BUILDDIR"
+mkdir -vp "$BUILDDIR"
 
 if ! [[ -f "$BUILDDIR/bundletool.jar" ]]; then
     echo "Downloading bundletool..."
@@ -169,13 +180,33 @@ download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoeni
 download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
 
 # Get WebAssembly SDK
-if [[ -z ${FDROID_BUILD+x} ]]; then
-    echo "Downloading prebuilt wasi-sdk..."
-    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
-else
+if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
     clone_repo "https://github.com/WebAssembly/wasi-sdk" "$WASISDKDIR" "$WASI_TAG"
-    (cd "$WASISDKDIR" && git submodule update --init --depth=1)
+    (cd "$WASISDKDIR" && git submodule update --init --depth=64)
+elif [[ "$PLATFORM" == "macos" ]]; then
+    echo "Downloading prebuilt wasi-sdk..."
+    download "https://github.com/celenityy/wasi-sdk/releases/download/$WASI_TAG/$WASI_TAG-firefox-osx.tar.xz" "$BUILDDIR/wasi-sdk.tar.xz"
+    mkdir -vp "$WASISDKDIR"
+    tar xJf "$BUILDDIR/wasi-sdk.tar.xz" -C "$WASISDKDIR"
+else
+    echo "Downloading prebuilt wasi-sdk..."
+    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
+fi
+
+# Get Tor's no-op UniFFi binding generator
+if [[ "$PLATFORM" == "macos" ]]; then
+    # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
+    ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
+    echo "macOS: Doing nothing..."
+else
+    if [[ -n ${FDROID_BUILD+x} ]]; then
+        echo "Cloning uniffi-bindgen..."
+        clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs" "$UNIFFIDIR" "$UNIFFI_VERSION"
+    else
+        echo "Downloading prebuilt uniffi-bindgen..."
+        download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
+    fi
 fi
 
 # Clone application-services
@@ -199,6 +230,7 @@ export glean=${GLEANDIR}
 export fenix=${FENIX}
 export mozilla_release=${GECKODIR}
 export gmscore=${GMSCOREDIR}
+export uniffi=${UNIFFIDIR}
 export wasi=${WASISDKDIR}
 
 source "\$rootdir/scripts/env_common.sh"

@@ -130,10 +130,10 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 600faec5bd..ff22a251d1 100644
+index 43cf86f477..1b710b7192 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -740,7 +740,7 @@
+@@ -737,7 +737,7 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
@@ -142,7 +142,7 @@ index 600faec5bd..ff22a251d1 100644
              android:name=".push.FirebasePushService"
              android:exported="false">
              <intent-filter>
-@@ -756,7 +756,7 @@
+@@ -753,7 +753,7 @@
              android:value="false" />
          <meta-data
              android:name="firebase_analytics_collection_deactivated"
@@ -151,7 +151,7 @@ index 600faec5bd..ff22a251d1 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
-@@ -771,14 +771,14 @@
+@@ -768,14 +768,14 @@
  
          <!-- For adjust pre-installs -->
          <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
@@ -168,42 +168,149 @@ index 600faec5bd..ff22a251d1 100644
      </application>
  
  </manifest>
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 4d5067becf..7ae98a47ff 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
+ import androidx.compose.runtime.ReadOnlyComposable
+ import androidx.compose.ui.platform.LocalContext
+ import androidx.core.app.NotificationManagerCompat
+-import com.google.android.play.core.review.ReviewManagerFactory
++// import com.google.android.play.core.review.ReviewManagerFactory
+ import mozilla.components.feature.addons.AddonManager
+ import mozilla.components.feature.addons.amo.AMOAddonsProvider
+ import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
+ import mozilla.components.feature.addons.update.DefaultAddonUpdater
+ import mozilla.components.feature.autofill.AutofillConfiguration
+-import mozilla.components.lib.crash.store.CrashAction
+-import mozilla.components.lib.crash.store.CrashMiddleware
++// import mozilla.components.lib.crash.store.CrashAction
++// import mozilla.components.lib.crash.store.CrashMiddleware
+ import mozilla.components.lib.publicsuffixlist.PublicSuffixList
+ import mozilla.components.support.base.android.NotificationsDelegate
+ import mozilla.components.support.base.worker.Frequency
+@@ -39,9 +39,9 @@ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.appstate.AppState
+ import org.mozilla.fenix.components.appstate.setup.checklist.SetupChecklistState
+ import org.mozilla.fenix.components.appstate.setup.checklist.getSetupChecklistCollection
+-import org.mozilla.fenix.components.metrics.MetricsMiddleware
+-import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
+-import org.mozilla.fenix.crashes.SettingsCrashReportCache
++// import org.mozilla.fenix.components.metrics.MetricsMiddleware
++// import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
++// import org.mozilla.fenix.crashes.SettingsCrashReportCache
+ import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
+ import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
+ import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
+@@ -57,10 +57,10 @@ import org.mozilla.fenix.home.PocketMiddleware
+ import org.mozilla.fenix.home.SettingsBackedPocketSettings
+ import org.mozilla.fenix.home.blocklist.BlocklistHandler
+ import org.mozilla.fenix.home.blocklist.BlocklistMiddleware
+-import org.mozilla.fenix.home.middleware.HomeTelemetryMiddleware
++// import org.mozilla.fenix.home.middleware.HomeTelemetryMiddleware
+ import org.mozilla.fenix.home.setup.store.DefaultSetupChecklistRepository
+ import org.mozilla.fenix.home.setup.store.SetupChecklistPreferencesMiddleware
+-import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
++// import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
+ import org.mozilla.fenix.messaging.state.MessagingMiddleware
+ import org.mozilla.fenix.nimbus.FxNimbus
+ import org.mozilla.fenix.onboarding.FenixOnboarding
+@@ -69,7 +69,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
+ import org.mozilla.fenix.perf.StartupStateProvider
+ import org.mozilla.fenix.perf.StrictModeManager
+ import org.mozilla.fenix.perf.lazyMonitored
+-import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
++// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
+ import org.mozilla.fenix.termsofuse.TermsOfUseManager
+ import org.mozilla.fenix.utils.Settings
+ import org.mozilla.fenix.utils.isLargeScreenSize
+@@ -199,7 +199,7 @@ class Components(private val context: Context) {
+     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
+     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
+     val performance by lazyMonitored { PerformanceComponent() }
+-    val push by lazyMonitored { Push(context, analytics.crashReporter) }
++    val push by lazyMonitored { Push(context) }
+     val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
+ 
+     val strictMode by lazyMonitored {
+@@ -214,7 +214,7 @@ class Components(private val context: Context) {
+ 
+     val playStoreReviewPromptController by lazyMonitored {
+         PlayStoreReviewPromptController(
+-            manager = ReviewManagerFactory.create(context),
++//            manager = ReviewManagerFactory.create(context),
+             numberOfAppLaunches = { settings.numberOfAppLaunches },
+         )
+     }
+@@ -269,7 +269,7 @@ class Components(private val context: Context) {
+                     controller = nimbus.messaging,
+                     settings = settings,
+                 ),
+-                MetricsMiddleware(
++/*                MetricsMiddleware(
+                     metrics = analytics.metrics,
+                     nimbusEventStore = nimbus.events,
+                 ),
+@@ -280,18 +280,18 @@ class Components(private val context: Context) {
+                         currentTimeInMillis = { System.currentTimeMillis() },
+                     ),
+                 ),
+-                HomeTelemetryMiddleware(),
++                HomeTelemetryMiddleware(),*/
+                 SetupChecklistPreferencesMiddleware(DefaultSetupChecklistRepository(context)),
+-                SetupChecklistTelemetryMiddleware(),
++/*                SetupChecklistTelemetryMiddleware(),
+                 ReviewPromptMiddleware(
+                     settings = settings,
+                     createJexlHelper = nimbus::createJexlHelper,
+-                ),
++                ),*/
+                 AppVisualCompletenessMiddleware(performance.visualCompletenessQueue),
+             ),
+         ).also {
+             it.dispatch(AppAction.SetupChecklistAction.Init)
+-            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
++//            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
+         }
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-index 8892db30a2..288797595f 100644
+index 3ee4690a76..15e1306605 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-@@ -82,8 +82,8 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -84,8 +84,8 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.appstate.AppAction.ContentRecommendationsAction
  import org.mozilla.fenix.components.appstate.AppAction.MessagingAction
  import org.mozilla.fenix.components.appstate.AppAction.MessagingAction.MicrosurveyAction
 -import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
 -import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
-+//import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
-+//import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
++// import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
++// import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
  import org.mozilla.fenix.components.appstate.AppState
+ import org.mozilla.fenix.components.appstate.qrScanner.QrScannerBinding
  import org.mozilla.fenix.components.components
- import org.mozilla.fenix.components.toolbar.BottomToolbarContainerView
-@@ -143,8 +143,8 @@ import org.mozilla.fenix.onboarding.HomeScreenPopupManager
- import org.mozilla.fenix.onboarding.WidgetPinnedReceiver
+@@ -149,8 +149,8 @@ import org.mozilla.fenix.pbmlock.NavigationOrigin
+ import org.mozilla.fenix.pbmlock.observePrivateModeLock
  import org.mozilla.fenix.perf.MarkersFragmentLifecycleCallbacks
  import org.mozilla.fenix.perf.StartupTimeline
 -import org.mozilla.fenix.reviewprompt.ReviewPromptState
 -import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
-+//import org.mozilla.fenix.reviewprompt.ReviewPromptState
-+//import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
++// import org.mozilla.fenix.reviewprompt.ReviewPromptState
++// import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
  import org.mozilla.fenix.search.SearchDialogFragment
  import org.mozilla.fenix.search.awesomebar.AwesomeBarComposable
  import org.mozilla.fenix.search.toolbar.DefaultSearchSelectorController
-@@ -1114,7 +1114,7 @@ class HomeFragment : Fragment() {
+@@ -1156,7 +1156,7 @@ class HomeFragment : Fragment() {
          requireComponents.core.tabCollectionStorage.unregister(collectionStorageObserver)
  
          // Trigger review prompt logic and show the appropriate prompt variation if applicable
 -        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
 +//        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
-     }
  
-     @VisibleForTesting
-@@ -1316,7 +1316,7 @@ class HomeFragment : Fragment() {
+         if (requireComponents.termsOfUseManager.shouldShowTermsOfUsePromptOnHomepage()) {
+             findNavController().navigate(
+@@ -1372,7 +1372,7 @@ class HomeFragment : Fragment() {
      }
  
      private fun observeReviewPromptState() {
@@ -212,7 +319,7 @@ index 8892db30a2..288797595f 100644
              observeReviewPromptState(
                  appStates = appStates,
                  dispatchAction = requireComponents.appStore::dispatch,
-@@ -1330,7 +1330,7 @@ class HomeFragment : Fragment() {
+@@ -1386,7 +1386,7 @@ class HomeFragment : Fragment() {
                      )
                  },
              )
@@ -221,7 +328,7 @@ index 8892db30a2..288797595f 100644
      }
  
      @VisibleForTesting
-@@ -1340,7 +1340,7 @@ class HomeFragment : Fragment() {
+@@ -1396,7 +1396,7 @@ class HomeFragment : Fragment() {
          tryShowPlayStorePrompt: suspend () -> Unit,
          showCustomPrompt: () -> Unit,
      ) {
@@ -230,7 +337,7 @@ index 8892db30a2..288797595f 100644
              .map { it.reviewPrompt }
              .distinctUntilChanged()
              .collect {
-@@ -1355,7 +1355,7 @@ class HomeFragment : Fragment() {
+@@ -1411,7 +1411,7 @@ class HomeFragment : Fragment() {
                          dispatchAction(ReviewPromptShown)
                      }
                  }
@@ -240,10 +347,10 @@ index 8892db30a2..288797595f 100644
  
      companion object {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..b4d9ae3831 100644
+index f0eeec863d..16aba158c7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1981,7 +1981,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2046,7 +2046,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
@@ -269,404 +376,6 @@ index 5058f40c0b..0c0a575f53 100644
  
          <androidx.preference.Preference
              android:key="@string/pref_key_about"
-diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
-new file mode 100644
-index 000000000000..d377e98bbf05
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Adjust.java
-@@ -0,0 +1,50 @@
-+/*
-+ * Copyright (c) 2012-2017 adjust GmbH,
-+ * http://www.adjust.com
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining
-+ * a copy of this software and associated documentation files (the
-+ * "Software"), to deal in the Software without restriction, including
-+ * without limitation the rights to use, copy, modify, merge, publish,
-+ * distribute, sublicense, and/or sell copies of the Software, and to
-+ * permit persons to whom the Software is furnished to do so, subject to
-+ * the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be
-+ * included in all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+package com.adjust.sdk;
-+
-+import android.content.Context;
-+
-+public class Adjust {
-+    public static void initSdk(AdjustConfig adjustConfig) {
-+    }
-+
-+    public static void trackEvent(AdjustEvent event) {
-+    }
-+
-+    public static void onResume() {
-+    }
-+
-+    public static void onPause() {
-+    }
-+
-+    public static void enable() {
-+    }
-+
-+    public static void disable() {
-+    }
-+
-+    public static void gdprForgetMe(final Context context) {
-+    }
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
-new file mode 100644
-index 000000000000..ab6b3badbdb1
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustAttribution.java
-@@ -0,0 +1,49 @@
-+/*
-+ * Copyright (c) 2012-2017 adjust GmbH,
-+ * http://www.adjust.com
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining
-+ * a copy of this software and associated documentation files (the
-+ * "Software"), to deal in the Software without restriction, including
-+ * without limitation the rights to use, copy, modify, merge, publish,
-+ * distribute, sublicense, and/or sell copies of the Software, and to
-+ * permit persons to whom the Software is furnished to do so, subject to
-+ * the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be
-+ * included in all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+package com.adjust.sdk;
-+
-+import java.io.Serializable;
-+
-+public class AdjustAttribution implements Serializable {
-+    public String network;
-+    public String campaign;
-+    public String adgroup;
-+    public String creative;
-+
-+    @Override
-+    public boolean equals(Object other) {
-+        return false;
-+    }
-+
-+    @Override
-+    public int hashCode() {
-+        return 0;
-+    }
-+
-+    @Override
-+    public String toString() {
-+        return "";
-+    }
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
-new file mode 100644
-index 000000000000..f563917d2070
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustConfig.java
-@@ -0,0 +1,49 @@
-+/*
-+ * Copyright (c) 2012-2017 adjust GmbH,
-+ * http://www.adjust.com
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining
-+ * a copy of this software and associated documentation files (the
-+ * "Software"), to deal in the Software without restriction, including
-+ * without limitation the rights to use, copy, modify, merge, publish,
-+ * distribute, sublicense, and/or sell copies of the Software, and to
-+ * permit persons to whom the Software is furnished to do so, subject to
-+ * the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be
-+ * included in all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+package com.adjust.sdk;
-+
-+import android.content.Context;
-+
-+import java.util.List;
-+
-+public class AdjustConfig {
-+    public static final String ENVIRONMENT_SANDBOX = "sandbox";
-+    public static final String ENVIRONMENT_PRODUCTION = "production";
-+
-+    public AdjustConfig(Context context, String appToken, String environment) {
-+    }
-+
-+    public AdjustConfig(Context context, String appToken, String environment, boolean allowSuppressLogLevel) {
-+    }
-+
-+    public void setOnAttributionChangedListener(OnAttributionChangedListener onAttributionChangedListener) {
-+    }
-+
-+    public void enablePreinstallTracking() {
-+    }
-+
-+    public void setLogLevel(LogLevel logLevel) {
-+    }
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
-new file mode 100644
-index 000000000000..0b4d80ed4b2c
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/AdjustEvent.java
-@@ -0,0 +1,31 @@
-+package com.adjust.sdk;
-+
-+/**
-+ * Created by pfms on 05/11/14.
-+ */
-+public class AdjustEvent {
-+
-+    public AdjustEvent(String eventToken) {
-+    }
-+
-+    public void setRevenue(double revenue, String currency) {
-+    }
-+
-+    public void addCallbackParameter(String key, String value) {
-+    }
-+
-+    public void addPartnerParameter(String key, String value) {
-+    }
-+
-+    public void setOrderId(String orderId) {
-+    }
-+
-+    public void setCallbackId(String callbackId) {
-+    }
-+
-+    public void setProductId(String productId) {
-+    }
-+
-+    public void setPurchaseToken(String purchaseToken) {
-+    }
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
-new file mode 100644
-index 000000000000..bfaeee26e8e1
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/Constants.java
-@@ -0,0 +1,18 @@
-+//
-+//  Constants.java
-+//  Adjust
-+//
-+//  Created by keyboardsurfer on 2013-11-08.
-+//  Copyright (c) 2012-2014 adjust GmbH. All rights reserved.
-+//  See the file MIT-LICENSE for copying permission.
-+//
-+
-+package com.adjust.sdk;
-+
-+/**
-+ * @author keyboardsurfer
-+ * @since 8.11.13
-+ */
-+public interface Constants {
-+    String ADJUST_PREINSTALL_SYSTEM_PROPERTY_PATH = "adjust.preinstall.path";
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
-new file mode 100644
-index 000000000000..f4ef17f4c492
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/LogLevel.java
-@@ -0,0 +1,43 @@
-+/*
-+ * Copyright (c) 2012-2017 adjust GmbH,
-+ * http://www.adjust.com
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining
-+ * a copy of this software and associated documentation files (the
-+ * "Software"), to deal in the Software without restriction, including
-+ * without limitation the rights to use, copy, modify, merge, publish,
-+ * distribute, sublicense, and/or sell copies of the Software, and to
-+ * permit persons to whom the Software is furnished to do so, subject to
-+ * the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be
-+ * included in all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+package com.adjust.sdk;
-+
-+import android.util.Log;
-+
-+/**
-+ * Created by pfms on 11/03/15.
-+ */
-+public enum LogLevel {
-+    VERBOSE(Log.VERBOSE), DEBUG(Log.DEBUG), INFO(Log.INFO), WARN(Log.WARN), ERROR(Log.ERROR), ASSERT(Log.ASSERT), SUPPRESS(8);
-+    final int androidLogLevel;
-+
-+    LogLevel(final int androidLogLevel) {
-+        this.androidLogLevel = androidLogLevel;
-+    }
-+
-+    public int getAndroidLogLevel() {
-+        return androidLogLevel;
-+    }
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
-new file mode 100644
-index 000000000000..7efa1c6804c6
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/adjust/sdk/OnAttributionChangedListener.java
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright (c) 2012-2017 adjust GmbH,
-+ * http://www.adjust.com
-+ *
-+ * Permission is hereby granted, free of charge, to any person obtaining
-+ * a copy of this software and associated documentation files (the
-+ * "Software"), to deal in the Software without restriction, including
-+ * without limitation the rights to use, copy, modify, merge, publish,
-+ * distribute, sublicense, and/or sell copies of the Software, and to
-+ * permit persons to whom the Software is furnished to do so, subject to
-+ * the following conditions:
-+ *
-+ * The above copyright notice and this permission notice shall be
-+ * included in all copies or substantial portions of the Software.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+package com.adjust.sdk;
-+
-+public interface OnAttributionChangedListener {
-+    void onAttributionChanged(AdjustAttribution attribution);
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/FakeReviewManager.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/FakeReviewManager.java
-new file mode 100644
-index 000000000000..0e6e73cc6248
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/FakeReviewManager.java
-@@ -0,0 +1,24 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.app.Activity;
-+import android.content.Context;
-+import com.google.android.gms.tasks.Task;
-+
-+public class FakeReviewManager implements ReviewManager {
-+
-+    public FakeReviewManager(Context context) {
-+    }
-+
-+    public Task<Void> launchReviewFlow(Activity activity, ReviewInfo reviewInfo) {
-+        return null;
-+    }
-+
-+    public Task<ReviewInfo> requestReviewFlow() {
-+        return null;
-+    }
-+
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java
-new file mode 100644
-index 000000000000..04cbef9f1395
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewInfo.java
-@@ -0,0 +1,10 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.os.Parcelable;
-+
-+public abstract class ReviewInfo extends Object implements Parcelable {
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java
-new file mode 100644
-index 000000000000..dd2c36c50411
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManager.java
-@@ -0,0 +1,14 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.app.Activity;
-+import com.google.android.gms.tasks.Task;
-+
-+public interface ReviewManager {
-+
-+    abstract Task<Void> launchReviewFlow(Activity activity, ReviewInfo reviewInfo);
-+    abstract Task<ReviewInfo> requestReviewFlow();
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java
-new file mode 100644
-index 000000000000..9bc9c5841f23
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/com/google/android/play/core/review/ReviewManagerFactory.java
-@@ -0,0 +1,15 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+package com.google.android.play.core.review;
-+
-+import android.content.Context;
-+
-+public class ReviewManagerFactory {
-+
-+    static public ReviewManager create(Context context) {
-+        return new FakeReviewManager(context);
-+    }
-+
-+}
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
 index 0000000000..4d5fd8153d
@@ -753,53 +462,6 @@ index 0000000000..9ad59a31e4
 +        return null;
 +    }
 +
-+}
-diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-new file mode 100644
-index 0000000000..422132a996
---- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/crash/sentry/SentryService.kt
-@@ -0,0 +1,41 @@
-+/* Hi, I'm a stub. ;) */
-+
-+package mozilla.components.lib.crash.sentry
-+
-+import android.content.Context
-+import mozilla.components.concept.base.crash.Breadcrumb as MozillaBreadcrumb
-+import mozilla.components.lib.crash.Crash
-+import mozilla.components.lib.crash.service.CrashReporterService
-+
-+class SentryService(
-+    private val applicationContext: Context,
-+    private val dsn: String,
-+    private val tags: Map<String, String> = emptyMap(),
-+    private val environment: String? = null,
-+    private val sendEventForNativeCrashes: Boolean = false,
-+    private val sentryProjectUrl: String? = null,
-+    private val sendCaughtExceptions: Boolean = false,
-+) : CrashReporterService {
-+
-+    override val id: String = ""
-+    override val name: String = ""
-+
-+    override fun createCrashReportUrl(identifier: String): String? = null
-+
-+    override fun report(crash: Crash.UncaughtExceptionCrash): String? {
-+        return null
-+    }
-+
-+    override fun report(crash: Crash.NativeCodeCrash): String? {
-+        return null
-+    }
-+
-+    override fun report(throwable: Throwable, breadcrumbs: ArrayList<MozillaBreadcrumb>): String? {
-+        return null
-+    }
-+
-+    @Synchronized
-+    fun initIfNeeded() {
-+        return
-+    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt b/mobile/android/fenix/app/src/main/java/mozilla/components/lib/push/firebase/AbstractFirebasePushService.kt
 new file mode 100644

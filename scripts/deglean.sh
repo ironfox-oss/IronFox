@@ -1,0 +1,321 @@
+#!/bin/bash
+
+source "$rootdir/scripts/versions.sh"
+
+if [[ "$env_source" != "true" ]]; then
+    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
+    return 1
+fi
+
+function deglean() {
+    local dir="$1"
+    local gradle_files=$(find "${dir}" -type f -name "*.gradle")
+    local kt_files=$(find "${dir}" -type f -name "*.kt")
+    local yaml_files=$(find "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
+
+    if [ -n "$gradle_files" ]; then
+        for file in $gradle_files; do
+            local modified=false
+            python3 "$rootdir/scripts/deglean.py" "$file"
+
+            if grep -q 'apply plugin.*glean' "$file"; then
+                $SED -i -r 's/^(.*apply plugin:.*glean.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if grep -q 'classpath.*glean' "$file"; then
+                $SED -i -r 's/^(.*classpath.*glean.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if grep -q 'compileOnly.*glean' "$file"; then
+                $SED -i -r 's/^(.*compileOnly.*glean.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if grep -q 'implementation.*glean' "$file"; then
+                $SED -i -r 's/^(.*implementation.*glean.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if grep -q 'testImplementation.*glean' "$file"; then
+                $SED -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if [ "$modified" = true ]; then
+                echo "De-gleaned $file."
+            fi
+        done
+    else
+        echo "No *.gradle files found in $dir."
+    fi
+
+    if [ -n "$kt_files" ]; then
+        for file in $kt_files; do
+            local modified=false
+
+            if grep -q 'import mozilla.telemetry.*' "$file"; then
+                $SED -i -r 's/^(.*import mozilla.telemetry.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if grep -q 'import .*GleanMetrics' "$file"; then
+                $SED -i -r 's/^(.*GleanMetrics.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if grep -q 'import .*gleandebugtools' "$file"; then
+                $SED -i -r 's/^(.*gleandebugtools.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if [ "$modified" = true ]; then
+                echo "De-gleaned $file."
+            fi
+        done
+    else
+        echo "No *.kt files found in $dir."
+    fi
+
+    if [ -n "$yaml_files" ]; then
+        for yaml_file in $yaml_files; do
+            rm -vf "$yaml_file"
+            echo "De-gleaned $yaml_file."
+        done
+    else
+        echo "No metrics.yaml or pings.yaml files found in $dir."
+    fi
+}
+
+function deglean_fenix() {
+    local dir="$1"
+    local gradle_files=$(find "${dir}" -type f -name "*.gradle")
+    local kt_files=$(find "${dir}" -type f -name "*.kt")
+
+    if [ -n "$gradle_files" ]; then
+        for file in $gradle_files; do
+            local modified=false
+
+            if grep -q 'implementation.*service-glean' "$file"; then
+                $SED -i -r 's/^(.*implementation.*service-glean.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if grep -q 'testImplementation.*glean' "$file"; then
+                $SED -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if [ "$modified" = true ]; then
+                echo "De-gleaned $file."
+            fi
+        done
+    else
+        echo "No *.gradle files found in $dir."
+    fi
+
+    if [ -n "$kt_files" ]; then
+        for file in $kt_files; do
+            local modified=false
+
+            if grep -q 'import .*gleandebugtools' "$file"; then
+                $SED -i -r 's/^(.*gleandebugtools.*)$/\/\/ \1/' "$file"
+                modified=true
+            fi
+
+            if [ "$modified" = true ]; then
+                echo "De-gleaned $file."
+            fi
+        done
+    else
+        echo "No *.kt files found in $dir."
+    fi
+}
+
+deglean "${application_services}"
+deglean "${mozilla_release}/mobile/android/android-components"
+deglean "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/gecko"
+deglean "${mozilla_release}/mobile/android/geckoview"
+deglean "${mozilla_release}/mobile/android/gradle"
+deglean_fenix "${mozilla_release}/mobile/android/fenix"
+
+$SED -i 's|mozilla-glean|# mozilla-glean|g' "${application_services}/gradle/libs.versions.toml"
+$SED -i 's|glean|# glean|g' "${application_services}/gradle/libs.versions.toml"
+
+$SED -i 's|classpath libs.glean.gradle.plugin|// classpath libs.glean.gradle.plugin|g' "${mozilla_release}/build.gradle"
+
+# Remove the Glean service
+## https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md
+$SED -i 's|- components:service-glean|# - components:service-glean|g' "${mozilla_release}/mobile/android/fenix/.buildconfig.yml"
+rm -rvf "${mozilla_release}/mobile/android/android-components/components/service/glean"
+rm -rvf "${mozilla_release}/mobile/android/android-components/samples/glean"
+
+# Remove unused/unnecessary Glean components (Application Services)
+rm -vf "${application_services}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"
+
+# Remove unused/unnecessary Glean components (Fenix)
+rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Configuration.kt"
+rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt"
+rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReporting.kt"
+rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingApi.kt"
+rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingLifecycleObserver.kt"
+rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingMetricsService.kt"
+
+# Remove Glean debugging tools
+## (Also see `fenix-remove-glean.patch`)
+## (In addition to reducing Glean dependencies, this also unbreaks the Debug Drawer)
+$SED -i 's|object GleanDebugTools|// object GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt"
+$SED -i 's|is DebugDrawerAction.NavigateTo.GleanDebugTools|// is DebugDrawerAction.NavigateTo.GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt"
+$SED -i 's|navController.navigate(route = DebugDrawerRoute.GleanDebugTools|// navController.navigate(route = DebugDrawerRoute.GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt"
+$SED -i 's|gleanDebugToolsStore:|// gleanDebugToolsStore:|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt"
+$SED -i 's|gleanDebugToolsStore =|// gleanDebugToolsStore =|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt"
+$SED -i 's|BrowserDirection.FromGleanDebugToolsFragment|// BrowserDirection.FromGleanDebugToolsFragment|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Activity.kt"
+$SED -i 's|FromGlean|// FromGlean|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/BrowserDirection.kt"
+rm -rvf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools"
+
+# Remove Glean classes (Android Components)
+$SED -i -e 's|GleanMessaging|// GleanMessaging|' "${mozilla_release}/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+$SED -i -e 's|Microsurvey.confirmation|// Microsurvey.confirmation|' "${mozilla_release}/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+$SED -i -e 's|Microsurvey.dismiss|// Microsurvey.dismiss|' "${mozilla_release}/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+$SED -i -e 's|Microsurvey.privacy|// Microsurvey.privacy|' "${mozilla_release}/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+$SED -i -e 's|Microsurvey.shown|// Microsurvey.shown|' "${mozilla_release}/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+$SED -i -e 's|GleanMessaging|// GleanMessaging|' "${mozilla_release}/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt"
+rm -vf "${mozilla_release}/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt"
+
+# Remove Glean classes (Application Services)
+$SED -i 's|FxaClientMetrics|// FxaClientMetrics|g' "${application_services}/components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt"
+$SED -i 's|LoginsStoreMetrics|// LoginsStoreMetrics|g' "${application_services}/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt"
+$SED -i 's|NimbusEvents.isReady|// NimbusEvents.isReady|g' "${application_services}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt"
+$SED -i 's|PlacesManagerMetrics|// PlacesManagerMetrics|g' "${application_services}/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt"
+
+# Remove Glean classes (Fenix)
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/SearchSelectorBinding.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/TabCounterView.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountProblemFragment.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/TurnOnSyncFragment.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/AddressManagementFragment.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/controller/CreditCardEditorController.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/interactor/CreditCardsManagementInteractor.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerDetailsController.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerHandlingDetailsView.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/QuickSettingsController.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/ShareController.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/controller/NavigationInteractor.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/NavigationInteractor.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/trackingprotection/TrackingProtectionPanelDialogFragment.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/trackingprotection/TrackingProtectionPanelView.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/ToolbarPopupWindow.kt"
+$SED -i -e 's|import mozilla.telemetry.glean|// import mozilla.telemetry.glean|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/widget/VoiceSearchActivity.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/SearchSelectorBinding.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/TabCounterView.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/ToolbarController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/IntentReceiverActivity.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountProblemFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/TurnOnSyncFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/AddressManagementFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/view/AddressEditorView.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/controller/CreditCardEditorController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/interactor/CreditCardsManagementInteractor.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerDetailsController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerHandlingDetailsView.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/QuickSettingsController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/shortcut/PwaOnboardingDialogFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/snackbar/SnackbarBinding.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/controller/NavigationInteractor.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/NavigationInteractor.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/trackingprotection/TrackingProtectionPanelDialogFragment.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/trackingprotection/TrackingProtectionPanelView.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/ToolbarPopupWindow.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/widget/VoiceSearchActivity.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.BrokenSiteReportBrowserInfoApp|// import org.mozilla.fenix.GleanMetrics.BrokenSiteReportBrowserInfoApp|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.BrokenSiteReportBrowserInfoPrefs|// import org.mozilla.fenix.GleanMetrics.BrokenSiteReportBrowserInfoPrefs|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.BrokenSiteReportBrowserInfoSystem|// import org.mozilla.fenix.GleanMetrics.BrokenSiteReportBrowserInfoSystem|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.BrokenSiteReportTabInfoFrameworks|// import org.mozilla.fenix.GleanMetrics.BrokenSiteReportTabInfoFrameworks|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Events|// import org.mozilla.fenix.GleanMetrics.Events|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/controller/TabManagerController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Events|// import org.mozilla.fenix.GleanMetrics.Events|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Pings|// import org.mozilla.fenix.GleanMetrics.Pings|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/RecordedNimbusContext.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Pings|// import org.mozilla.fenix.GleanMetrics.Pings|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.SyncAccount|// import org.mozilla.fenix.GleanMetrics.SyncAccount|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/ShareController.kt"
+$SED -i -e 's|import org.mozilla.fenix.GleanMetrics.Tab as|// import org.mozilla.fenix.GleanMetrics.Tab as|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayController.kt"
+
+$SED -i -e 's|Addresses.deleted|// Addresses.deleted|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/view/AddressEditorView.kt"
+$SED -i -e 's|Addresses.management|// Addresses.management|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/AddressManagementFragment.kt"
+$SED -i -e 's|Addresses.saved|// Addresses.saved|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/view/AddressEditorView.kt"
+$SED -i -e 's|Addresses.updated|// Addresses.updated|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/address/view/AddressEditorView.kt"
+$SED -i -e 's|AppIcon.|// AppIcon.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|AppMenu.|// AppMenu.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt"
+$SED -i -e 's|BrokenSiteReportBrowserInfoApp.|// BrokenSiteReportBrowserInfoApp.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|BrokenSiteReportBrowserInfoPrefs.|// BrokenSiteReportBrowserInfoPrefs.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|BrokenSiteReportBrowserInfoSystem.|// BrokenSiteReportBrowserInfoSystem.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|BrokenSiteReportTabInfoFrameworks.|// BrokenSiteReportTabInfoFrameworks.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|CookieBanners.exception|// CookieBanners.exception|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerDetailsController.kt"
+$SED -i -e 's|CookieBanners.report|// CookieBanners.report|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerDetailsController.kt"
+$SED -i -e 's|CookieBanners.report|// CookieBanners.report|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerHandlingDetailsView.kt"
+$SED -i -e 's|CookieBanners.visitedPanel|// CookieBanners.visitedPanel|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/QuickSettingsController.kt"
+$SED -i -e 's|CreditCards.deleted|// CreditCards.deleted|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/controller/CreditCardEditorController.kt"
+$SED -i -e 's|CreditCards.management|// CreditCards.management|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/interactor/CreditCardsManagementInteractor.kt"
+$SED -i -e 's|CreditCards.modified|// CreditCards.modified|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/controller/CreditCardEditorController.kt"
+$SED -i -e 's|CreditCards.saved|// CreditCards.saved|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/creditcards/controller/CreditCardEditorController.kt"
+$SED -i -e 's|DebugDrawerMetrics.|// DebugDrawerMetrics.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt"
+$SED -i -e 's|ErrorPage.visitedError|// ErrorPage.visitedError|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/IntentReceiverActivity.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/controller/NavigationInteractor.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/controller/TabManagerController.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/NavigationInteractor.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayController.kt"
+$SED -i -e 's|Events.|// Events.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/ToolbarPopupWindow.kt"
+$SED -i -e 's|Events.enteredUrl|// Events.enteredUrl|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/ToolbarController.kt"
+$SED -i -e 's|Events.searchBarTapped|// Events.searchBarTapped|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/ToolbarController.kt"
+$SED -i -e 's|Events.toolbarMenuVisible|// Events.toolbarMenuVisible|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt"
+$SED -i -e 's|Events.whatsNewTapped|// Events.whatsNewTapped|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt"
+$SED -i -e 's|GleanTab.|// GleanTab.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayController.kt"
+$SED -i -e 's|HomeMenuMetrics.|// HomeMenuMetrics.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt"
+$SED -i -e 's|HomeScreen.customizeHomeClicked|// HomeScreen.customizeHomeClicked|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt"
+$SED -i -e 's|Metrics.default|// Metrics.default|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|Metrics.has|// Metrics.has|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|Metrics.recently|// Metrics.recently|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|Metrics.set|// Metrics.set|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|Pings.|// Pings.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/experiments/RecordedNimbusContext.kt"
+$SED -i -e 's|Pings.|// Pings.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt"
+$SED -i -e 's|Pings.|// Pings.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/cookiebanners/CookieBannerDetailsController.kt"
+$SED -i -e 's|Pings.|// Pings.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterSubmissionMiddleware.kt"
+$SED -i -e 's|ProgressiveWebApp.onboardingCancel|// ProgressiveWebApp.onboardingCancel|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/shortcut/PwaOnboardingDialogFragment.kt"
+$SED -i -e 's|SearchWidget.voiceButton|// SearchWidget.voiceButton|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/widget/VoiceSearchActivity.kt"
+$SED -i -e 's|SentFromFirefox.snackbarClicked|// SentFromFirefox.snackbarClicked|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/snackbar/SnackbarBinding.kt"
+$SED -i -e 's|StartOnHome.enterHome|// StartOnHome.enterHome|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt"
+$SED -i -e 's|StartOnHome.longClickTabsTray|// StartOnHome.longClickTabsTray|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/TabCounterView.kt"
+$SED -i -e 's|StartOnHome.openTabsTray|// StartOnHome.openTabsTray|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/TabCounterView.kt"
+$SED -i -e 's|SyncAccount.|// SyncAccount.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt"
+$SED -i -e 's|SyncAccount.|// SyncAccount.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/share/ShareController.kt"
+$SED -i -e 's|SyncAuth.|// SyncAuth.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountProblemFragment.kt"
+$SED -i -e 's|SyncAuth.|// SyncAuth.|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/TurnOnSyncFragment.kt"
+$SED -i -e 's|TabsTray.closed|// TabsTray.closed|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/controller/NavigationInteractor.kt"
+$SED -i -e 's|TabsTray.closed|// TabsTray.closed|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/tabstray/NavigationInteractor.kt"
+$SED -i -e 's|TrackingProtection.etpTrackerList|// TrackingProtection.etpTrackerList|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/trackingprotection/TrackingProtectionPanelView.kt"
+$SED -i -e 's|TrackingProtection.exceptionAdded|// TrackingProtection.exceptionAdded|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/QuickSettingsController.kt"
+$SED -i -e 's|TrackingProtection.panelSettings|// TrackingProtection.panelSettings|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/trackingprotection/TrackingProtectionPanelDialogFragment.kt"
+$SED -i -e 's|Translations.action|// Translations.action|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/translations/TranslationSettingsFragment.kt"
+$SED -i -e 's|UnifiedSearch.searchMenuTapped|// UnifiedSearch.searchMenuTapped|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/toolbar/SearchSelectorBinding.kt"
+
+# Remove Glean classes (Gecko)
+$SED -i -e 's|Metrics|// Metrics|' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt"

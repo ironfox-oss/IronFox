@@ -14,7 +14,6 @@
 - [What add-ons/extensions should I install?](#what-add-onsextensions-should-i-install)
 - [Why is IronFox so slow?](#why-is-ironfox-so-slow)
 - [Why can't I stream certain content from streaming services *(Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)*](#why-cant-i-stream-certain-content-from-streaming-services-ex-amazon-prime-video-apple-tv-disney-hbo-max-hulu-netflix-peacock-plex-sling-spotify-etc)
-- [Why can't I connect to certain websites?](#why-cant-i-connect-to-certain-websites)
 - [Why are websites displayed in light mode?](#why-are-websites-displayed-in-light-mode)
 - [Why do websites display the incorrect timezone?](#why-do-websites-display-the-incorrect-timezone)
 - [Why are websites always displayed in English?](#why-are-websites-always-displayed-in-english)
@@ -134,7 +133,7 @@ By default, in order to improve security, IronFox disables [JavaScript Just-in-t
 
 **At the cost of security**, you can re-enable JIT by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security`, and selecting the option to `Enable JavaScript Just-in-time Compilation (JIT)`.
 
-If re-enabling JIT doesn't give you the desired outcome, **at the cost of privacy**, you can re-enable disk cache by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`, and selecting the option to `Enable disk cache`. You can also optionally enable it for secure webpages by selecting the option to `Enable disk cache for secure webpages` from the same screen.
+If re-enabling JIT doesn't give you the desired outcome, **at the cost of privacy**, you can re-enable disk cache by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`, and selecting the option to `Enable disk cache`.
 
 If this *still* doesn't give you the desired outcome, please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues) and let us know!
 
@@ -145,14 +144,6 @@ IronFox does not support [Encrypted Media Extensions *(EME)*](https://wikipedia.
 Unfortunately, certain streaming services *(such as the examples listed above)* arbitrarily prevent IronFox users *(as well as users of other privacy and security-focused projects)* from accessing content, by requiring EME for media playback. **When you encounter an issue due to this, please report this to the website's operator**! Please also [file an issue](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml), so that we can track/document impacted services.
 
 **At your own risk**, **at the cost of privacy and security**, you can re-enable support for EME with a **not supported**, **not recommended** hidden setting, by navigating to `Settings` -> `About` -> `About IronFox`, tapping the `IronFox` logo 7 times until you see a message stating `Debug menu enabled`, navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Secret settings`, and selecting the `Enable Encrypted Media Extensions (EME)` option. To play content, you will likely also need to enable the `Enable Widevine CDM` option from the same screen, which enables Google's Widevine Content Decryption Module *(CDM)*, provided by Android's [`MediaDrm` API](https://developer.android.com/reference/android/media/MediaDrm).
-
-## Why can't I connect to certain websites?
-
-By default, to improve security, IronFox [hard-fails](https://github.com/arkenfox/user.js/issues/1576) [OCSP](https://wikipedia.org/wiki/Online_Certificate_Status_Protocol) certificate revocation checks. Unfortunately, from time to time, OCSP servers can be down or inaccessible, which is most likely what's causing the connection issue you're experiencing.
-
-**At the cost of security**, you can disable hard-failing OCSP certificate revocation checks, by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security`, and selecting the option to `Hard-fail OCSP revocation checks`. **It is highly recommended to re-enable this option as soon as possible after visiting the impacted website(s)**. **Please also report this issue to the website's operator**!
-
-If you're still having connection issues, but can access the site from other browsers on your device, please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues) and let us know!
 
 ## Why are websites displayed in light mode?
 

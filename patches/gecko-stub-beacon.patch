@@ -1,12 +1,11 @@
 diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
-index 11a57adbb5..71a8762dd5 100644
+index 233e613886..80c79cc319 100644
 --- a/dom/base/Navigator.cpp
 +++ b/dom/base/Navigator.cpp
-@@ -1269,7 +1269,7 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
-   } else {
+@@ -1264,6 +1264,7 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,
      securityFlags |= nsILoadInfo::SEC_ALLOW_CROSS_ORIGIN_INHERITS_SEC_CONTEXT;
    }
--
+ 
 +  return true;
    nsCOMPtr<nsIChannel> channel;
    rv = NS_NewChannel(getter_AddRefs(channel), uri, doc, securityFlags,

@@ -25,7 +25,7 @@ index 593cf97b04..21a2b1aa53 100644
      importPrefBranch(
        aPrefBranch + "whitelist.add",
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index e09ea87de8..ab055f2409 100644
+index f544f44cf7..1ed6c60e65 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
 @@ -93,6 +93,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -37,7 +37,7 @@ index e09ea87de8..ab055f2409 100644
  });
  
  XPCOMUtils.defineLazyPreferenceGetter(
-@@ -2346,6 +2348,22 @@ var AddonManagerInternal = {
+@@ -2366,6 +2368,22 @@ var AddonManagerInternal = {
      return promiseInstall;
    },
  
@@ -60,7 +60,7 @@ index e09ea87de8..ab055f2409 100644
    /**
     * Starts installation of an AddonInstall notifying the registered
     * web install listener of a blocked or started install.
-@@ -2518,6 +2536,11 @@ var AddonManagerInternal = {
+@@ -2538,6 +2556,11 @@ var AddonManagerInternal = {
        );
  
        if (installAllowed) {
@@ -86,10 +86,10 @@ index 680aa57c07..47c8f5d5a5 100644
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',
 diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-index 042f9371de..27957784f6 100644
+index 70bf9cdbab..df3dc630d0 100644
 --- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-@@ -2256,6 +2256,7 @@ export const XPIDatabase = {
+@@ -2272,6 +2272,7 @@ export const XPIDatabase = {
     * manager for the user to change later.
     */
    importPermissions() {

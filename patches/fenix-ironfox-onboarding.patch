@@ -1,26 +1,11 @@
-diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-index be8a66d479..f842cab839 100644
---- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-+++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-@@ -295,6 +295,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
-             technicalAndInteraction.isChecked = true
-         }
- 
-+        if (addon.id == "uBlock0@raymondhill.net") {
-+            allowedInPrivateBrowsing.isChecked = true
-+        }
-+
-         positiveButton.setOnClickListener {
-             onPositiveButtonClicked?.invoke(
-                 addon,
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
-index eb51cfe835..b233fd9291 100644
+index 971df3dc5b..93e1182454 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
 +++ b/mobile/android/fenix/app/onboarding.fml.yaml
 @@ -120,6 +120,43 @@ features:
                    body-line-one-text: onboarding_marketing_learn_more
                    body-line-one-link-text: onboarding_marketing_learn_more
-                   body-line-two-text: onboarding_marketing_opt_in_checkbox
+                   body-line-two-text: onboarding_marketing_opt_out_checkbox
 +
 +            if-preference-doh:
 +              card-type: if-preference-doh
@@ -102,7 +87,7 @@ index eb51cfe835..b233fd9291 100644
  enums:
  
    OnboardingCardType:
-@@ -437,6 +501,11 @@ enums:
+@@ -437,6 +501,10 @@ enums:
          description: Page to display the terms of services.
        marketing-data:
          description: Allows user to opt out of marketing data collection.
@@ -110,11 +95,10 @@ index eb51cfe835..b233fd9291 100644
 +        description: Allows user to configure DNS-over-HTTPS.
 +      if-preferences:
 +        description: Allows user to configure IronFox-specific preferences.
-+
  
    ToolbarType:
      description: An enum to describe a toolbar placement option.
-@@ -455,3 +524,17 @@ enums:
+@@ -455,3 +523,17 @@ enums:
          description: Sets the theme to light mode.
        theme-dark:
          description: Sets the theme to dark mode.
@@ -132,19 +116,6 @@ index eb51cfe835..b233fd9291 100644
 +        description: Whether to request English versions of web pages for enhanced privacy.
 +      install-ublock:
 +        description: Whether to install uBlock Origin.
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
-index effc671c02..ac7cbafb7d 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingTelemetryRecorder.kt
-@@ -132,6 +132,8 @@ class OnboardingTelemetryRecorder {
-                     ),
-                 )
-             }
-+            OnboardingPageUiData.Type.IF_PREFERENCE_DOH -> {}
-+            OnboardingPageUiData.Type.IF_PREFERENCES -> {}
-         }
-     }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
 index 0000000000..f9e1f71a51
@@ -647,10 +618,10 @@ index 0000000000..f9e1f71a51
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..688ba9299d
+index 0000000000..f4cf4b6d0b
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
-@@ -0,0 +1,458 @@
+@@ -0,0 +1,467 @@
 +package org.mozilla.fenix.onboarding.view
 +
 +import android.content.Context
@@ -700,14 +671,14 @@ index 0000000000..688ba9299d
 +import kotlinx.coroutines.withContext
 +import mozilla.components.compose.base.button.PrimaryButton
 +import mozilla.components.support.base.log.logger.Logger
++import org.ironfoxoss.ironfox.utils.IronFoxAddons
++import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 +import org.mozilla.fenix.R
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Configuration
 +import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Error
 +import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Progress
 +import org.mozilla.fenix.theme.FirefoxTheme
-+import org.mozilla.fenix.utils.IronFoxAddons
-+import org.mozilla.fenix.utils.IronFoxPreferences
 +
 +/**
 + * The default ratio of the image height to the parent height.
@@ -982,13 +953,18 @@ index 0000000000..688ba9299d
 +        }
 +
 +        IfPreferenceType.INSTALL_UBLOCK -> {
-+            installUBlockOrigin(context, onContentStateChange)
++            installUBlockOrigin(
++                context,
++                state.installUBlock,
++                onContentStateChange,
++            )
 +        }
 +    }
 +}
 +
 +private suspend fun installUBlockOrigin(
 +    context: Context,
++    shouldInstallUBlock: Boolean,
 +    onContentStateChange: (IfPreferencesContentState) -> Unit,
 +) {
 +    onContentStateChange(
@@ -996,6 +972,10 @@ index 0000000000..688ba9299d
 +            context.getString(R.string.onboarding_state_installing_ublock),
 +        ),
 +    )
++
++    if (!shouldInstallUBlock) {
++        return
++    }
 +
 +    val components = context.components
 +    val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN)
@@ -1345,13 +1325,13 @@ index 262d763533..aea26e1a2a 100644
      customProviderErrorState: CustomProviderErrorState,
      onCustomCancelClicked: () -> Unit,
      onCustomAddClicked: (String) -> Unit,
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt
+diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxAddons.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxAddons.kt
 new file mode 100644
-index 0000000000..b35658273e
+index 0000000000..320d27bdac
 --- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxAddons.kt
++++ b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxAddons.kt
 @@ -0,0 +1,54 @@
-+package org.mozilla.fenix.utils
++package org.ironfoxoss.ironfox.utils
 +
 +import kotlinx.coroutines.CompletableDeferred
 +import kotlinx.coroutines.Dispatchers
@@ -1405,13 +1385,13 @@ index 0000000000..b35658273e
 +        }
 +    }
 +}
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
+diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..a49cccd764
+index 0000000000..0922fe89ba
 --- /dev/null
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/IronFoxPreferences.kt
++++ b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
 @@ -0,0 +1,94 @@
-+package org.mozilla.fenix.utils
++package org.ironfoxoss.ironfox.utils
 +
 +import android.content.Context
 +import mozilla.components.concept.engine.EngineSession

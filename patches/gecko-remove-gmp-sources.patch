@@ -1,0 +1,17 @@
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+index 46d1cb5ed7..b650aaf2b8 100644
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -174,9 +174,9 @@ toolkit.jar:
+ #ifdef XP_MACOSX
+    content/global/macWindowMenu.js
+ #endif
+-   content/global/gmp-sources/openh264.json    (gmp-sources/openh264.json)
+-   content/global/gmp-sources/widevinecdm.json (gmp-sources/widevinecdm.json)
+-   content/global/gmp-sources/widevinecdm_l1.json (gmp-sources/widevinecdm_l1.json)
++   # content/global/gmp-sources/openh264.json    (gmp-sources/openh264.json)
++   # content/global/gmp-sources/widevinecdm.json (gmp-sources/widevinecdm.json)
++   # content/global/gmp-sources/widevinecdm_l1.json (gmp-sources/widevinecdm_l1.json)
+ 
+ # Third party files
+    content/global/third_party/d3/d3.js                (/third_party/js/d3/d3.js)

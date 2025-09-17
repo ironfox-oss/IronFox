@@ -174,10 +174,42 @@ sudo dnf config-manager setopt adoptium-temurin-java-repository.enabled=1
 sudo dnf makecache
 ```
 
-Now, to install JDK 8 & 17:
+Now, to install JDK 8 and 17:
 
 ```sh
 sudo dnf install -y temurin-8-jdk temurin-17-jdk
+```
+
+</details>
+<summary>When building on macOS</summary>
+
+**NOTE**: [Homebrew](https://brew.sh/) is recommended for installation/management of dependencies on macOS.
+
+```sh
+/usr/bin/xcode-select --install
+brew install \
+    cmake \
+    gawk \
+    git \
+    gsed \
+    m4 \
+    make \
+    nasm \
+    ninja \
+    node \
+    perl \
+    python@3.9 \
+    temurin@17 \
+    wget \
+    xz \
+    yq \
+    zlib
+```
+
+You should also ensure that `python3.9` is available in your `PATH`:
+
+```sh
+export PATH="$PATH:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin"
 ```
 
 </details>
@@ -187,8 +219,8 @@ Once the packages have been installed successfully, follow the instructions to s
 - Setup F-Droid's `gradle` script to be available in your `PATH`:
 
   ```sh
-  mkdir -p $HOME/bin
-  wget https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew-fdroid -O "$HOME/bin/gradle"
+  mkdir -vp $HOME/bin
+  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew-fdroid -O "$HOME/bin/gradle"
   chmod +x "$HOME/bin/gradle"
 
   export PATH=$HOME/bin:$PATH
@@ -197,7 +229,7 @@ Once the packages have been installed successfully, follow the instructions to s
 - Disable Gradle Daemons and configuration cache:
 
   ```sh
-  mkdir -p ~/.gradle
+  mkdir -vp ~/.gradle
   echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
   echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
   ```
@@ -208,6 +240,12 @@ Once the packages have been installed successfully, follow the instructions to s
   python3.9 -m venv env
   source env/bin/activate
   ```
+
+  - On **macOS**, after creating your Python 3.9 virtual environment, you will also need to install `gyp-next`:
+
+    ```sh
+    pip install gyp-next
+    ```
 
 - Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running:
 
@@ -225,11 +263,24 @@ Once the packages have been installed successfully, follow the instructions to s
   export PATH=$JAVA_HOME/bin:$PATH
   ```
 
+  On **macOS**, the default location of JDK 17 is `/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home`:
+
+  ```sh
+  export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
+  export PATH=$JAVA_HOME/bin:$PATH
+  ```
+
 - Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation (default location is `$HOME/android-sdk`). Otherwise, you can execute the following to install and set up the SDK:
 
   ```sh
   source scripts/setup-android-sdk.sh
   ```
+
+  - **NOTE**: On **macOS**, you **MUST** ensure that the `ANDROID_HOME` variable is defined before running `setup-android-sdk.sh`. For example, if I want to use the default location _(`$HOME/android-sdk`)_ for my Android SDK, I would use:
+
+    ```sh
+    export ANDROID_HOME=/Users/user/android-sdk
+    ```
 
 ### Get & patch sources
 
@@ -296,7 +347,7 @@ Changes to patches are licensed according to the header in the files this patch 
 
 Parts of `fenix-branding.patch`, `gecko-rs-blocker.patch`, and `gecko-custom-ublock-origin-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
-`fenix-disable-network-connectivity-monitoring.patch`, `gecko-disable-network-id.patch`, `gecko-disable-sslkeylogging.patch`, `geckoview-disable-network-connectivity-monitoring.patch`,  and `geckoview-ironfox-settings-support-spoof-english.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [`LICENSE`](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
+`fenix-disable-network-connectivity-monitoring.patch`, `gecko-disable-network-id.patch`, `geckoview-ironfox-settings-support-spoof-english.patch`, and `glean-noop.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [`LICENSE`](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
 Our current set of default wallpapers are taken from [Fennec F-Droid](https://gitlab.com/relan/fennecmedia), and are available under the [Unsplash license](https://gitlab.com/relan/fennecmedia#licenses).
 
@@ -311,4 +362,3 @@ IronFox is not sponsored or endorsed by Mozilla.
 IronFox is not associated with DivestOS, Divested Computing Group, or Mull in any manner.
 
 Firefox source code is available at [https://github.com/mozilla-firefox/firefox](https://github.com/mozilla-firefox/firefox).
-

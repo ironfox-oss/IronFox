@@ -15,7 +15,6 @@ This list is not exhaustive...
 - Clears open tabs on exit by default
 - Disables autofill/autocompletion of URLs by default
 - Disables disk cache by default, and adds a toggle to control it, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Enable disk cache` in settings
-- Disables disk cache for secure webpages by default, and adds a toggle to control it, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Enable disk cache for secure webpages` in settings
 - Disables network connectivity monitoring, and removes the `ACCESS_NETWORK_STATE` permission
 - Disables search suggestions by default
 - Disables trending search suggestions by default
@@ -64,7 +63,6 @@ IronFox **additionally**:
 - Enables [Google Safe Browsing](https://support.mozilla.org/kb/how-does-phishing-and-malware-protection-work) by default, with [a proxy](https://gitlab.com/ironfox-oss/safebrowsing-proxy) to protect the privacy of users, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable Safe Browsing` in settings
 - Enables [HTTPS-Only Mode](https://support.mozilla.org/kb/https-only-prefs) by default
 - Expands the [list of domains](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning#Currently-pinned_Sites) supported by Firefox's [Strict Certificate Pinning](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning)
-- [Hard-fails](https://github.com/arkenfox/user.js/issues/1576) OCSP certificate revocation checks by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Hard-fail OCSP revocation checks` in settings
 - Hardens the browser's built-in PDF Viewer *(PDF.js)*, with changes inspired by [GrapheneOS's PDF Viewer](https://github.com/GrapheneOS/PdfViewer)
 - Hides the toggle to enable/disable [Remote Debugging](https://firefox-source-docs.mozilla.org/devtools/backend/protocol.html) from settings, and resets the preference per-session if configured via other means
 

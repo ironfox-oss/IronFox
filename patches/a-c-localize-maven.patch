@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/build.gradle b/mobile/android/android-components/build.gradle
-index d6dbfd7b52..00eb487204 100644
+index f7336a3e78..19861a695e 100644
 --- a/mobile/android/android-components/build.gradle
 +++ b/mobile/android/android-components/build.gradle
 @@ -9,14 +9,9 @@ import static org.gradle.api.tasks.testing.TestResult.ResultType
@@ -57,6 +57,21 @@ index 6bbc5b3ed8..e009561361 100644
 +        mavenLocal()
 +        maven { url "https://plugins.gradle.org/m2/" }
 +        google()
+     }
+ 
+     dependencies {
+diff --git a/mobile/android/android-components/components/feature/fxsuggest/build.gradle b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
+index 1fdc583cf7..933b4ec8d0 100644
+--- a/mobile/android/android-components/components/feature/fxsuggest/build.gradle
++++ b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
+@@ -6,9 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+ 
+ buildscript {
+     repositories {
+-        maven {
+-            url = "https://maven.mozilla.org/maven2"
+-        }
++        mavenLocal()
      }
  
      dependencies {

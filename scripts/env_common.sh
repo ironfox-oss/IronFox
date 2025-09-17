@@ -3,6 +3,29 @@
 # Caution: Should not be sourced directly!
 # Use 'env_local.sh' or 'env_fdroid.sh' instead.
 
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=darwin
+else
+    PLATFORM=linux
+fi
+
+# Set architecture
+PLATFORM_ARCH=$(uname -m)
+if [[ "$PLATFORM_ARCH" == "arm64" ]]; then
+    PLATFORM_ARCHITECTURE=aarch64
+else
+    PLATFORM_ARCHITECTURE=x86-64
+fi
+
+# Set locations for GNU make + nproc
+if [[ "$PLATFORM" == "darwin" ]]; then
+    export MAKE_LIB="gmake"
+    export NPROC_LIB="sysctl -n hw.logicalcpu"
+else
+    export MAKE_LIB="make"
+    export NPROC_LIB="nproc"
+fi
+
 # Configure Mach
 ## https://firefox-source-docs.mozilla.org/mach/usage.html#user-settings
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#95
@@ -13,7 +36,7 @@ export MACHRC="$patches/machrc"
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 
-export NSS_DIR="$application_services/libs/desktop/linux-x86-64/nss"
+export NSS_DIR="$application_services/libs/desktop/$PLATFORM-$PLATFORM_ARCHITECTURE/nss"
 export NSS_STATIC=1
 
 export ARTIFACTS="$rootdir/artifacts"
@@ -21,9 +44,9 @@ export APK_ARTIFACTS=$ARTIFACTS/apk
 export APKS_ARTIFACTS=$ARTIFACTS/apks
 export AAR_ARTIFACTS=$ARTIFACTS/aar
 
-mkdir -p "$APK_ARTIFACTS"
-mkdir -p "$APKS_ARTIFACTS"
-mkdir -p "$AAR_ARTIFACTS"
+mkdir -vp "$APK_ARTIFACTS"
+mkdir -vp "$APKS_ARTIFACTS"
+mkdir -vp "$AAR_ARTIFACTS"
 
 export env_source="true"
 
