@@ -1,0 +1,19 @@
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+index 2eea4c6af1..af2dee5a30 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+@@ -253,10 +253,10 @@ import org.mozilla.gecko.util.WebAuthnUtils;
+                       final AuthenticationExtensionsClientOutputs extensionsClientOutputsData =
+                           publicKeyCredentialData.getClientExtensionResults();
+                       if (extensionsClientOutputsData != null) {
+-                        final AuthenticationExtensionsCredPropsOutputs credPropsOutput =
+-                            extensionsClientOutputsData.getCredProps();
+-                        if (credPropsOutput != null) {
+-                          builder.setCredProps(credPropsOutput.getIsDiscoverableCredential());
++//                        final AuthenticationExtensionsCredPropsOutputs credPropsOutput =
++//                            extensionsClientOutputsData.getCredProps();
++                        if (true) {
++                          builder.setCredProps(true);
+                         }
+                       }
+ 

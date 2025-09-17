@@ -24,7 +24,7 @@ export APK_ARTIFACTS=$ARTIFACTS/apk
 export APKS_ARTIFACTS=$ARTIFACTS/apks
 export BUILD_DIR="$CI_PROJECT_DIR/build"
 
-mkdir -p "$BUILD_DIR"
+mkdir -vp "$BUILD_DIR"
 
 RELEASE_NOTES_FILE="$BUILD_DIR/release-notes.md"
 CHECKSUMS_FILE="$BUILD_DIR/asset-checksums.txt"

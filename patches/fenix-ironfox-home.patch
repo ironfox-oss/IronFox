@@ -1,34 +1,21 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index b07cadf1e6..33496717f2 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -336,7 +336,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-                         // we can prevent with this.
-                         components.core.topSitesStorage.getTopSites(
-                             totalSites = components.settings.topSitesMaxLimit,
--                            frecencyConfig = if (FxNimbus.features.homepageHideFrecentTopSites.value().enabled) {
-+                            frecencyConfig = if (true) {
-                                 null
-                             } else {
-                                 TopSitesFrecencyConfig(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
-index 48b312d257..92b3b71f71 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
-@@ -36,7 +36,7 @@ internal fun getTopSitesConfig(
-     return {
-         TopSitesConfig(
-             totalSites = settings.topSitesMaxLimit,
--            frecencyConfig = if (FxNimbus.features.homepageHideFrecentTopSites.value().enabled) {
-+            frecencyConfig = if (true) {
-                 null
-             } else {
-                 TopSitesFrecencyConfig(
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index b2b40dd764..8042d1c3e7 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -130,7 +130,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_override_user_specified_homepage_sections).apply {
+-            isVisible = Config.channel.isNightlyOrDebug
++            isVisible = false
+             isChecked = context.settings().overrideUserSpecifiedHomepageSections
+             onPreferenceChangeListener = SharedPreferenceUpdater()
+         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..b11a5734a8 100644
+index f0eeec863d..bb0a7fe0f0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -185,7 +185,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -190,7 +190,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          } else {
              preferences.getBoolean(
                  appContext.getPreferenceKey(R.string.pref_key_customization_bookmarks),
@@ -37,7 +24,7 @@ index 3fa564af49..b11a5734a8 100644
              )
          }
  
-@@ -198,7 +198,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -203,7 +203,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          } else {
              preferences.getBoolean(
                  appContext.getPreferenceKey(R.string.pref_key_recent_tabs),
@@ -46,7 +33,7 @@ index 3fa564af49..b11a5734a8 100644
              )
          }
          set(value) {
-@@ -234,7 +234,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -239,7 +239,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          } else {
              preferences.getBoolean(
                  appContext.getPreferenceKey(R.string.pref_key_history_metadata_feature),
@@ -55,7 +42,7 @@ index 3fa564af49..b11a5734a8 100644
              )
          }
          set(value) {
-@@ -247,13 +247,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -252,13 +252,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates whether or not the "Synced Tabs" section should be shown on the home screen.
       */
      val showSyncedTabs: Boolean
@@ -71,7 +58,16 @@ index 3fa564af49..b11a5734a8 100644
  
      /**
       * Indicates whether or not the homepage header should be shown.
-@@ -273,7 +273,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -266,7 +266,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var showHomepageHeader by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_enable_homepage_header),
+         featureFlag = true,
+-        default = { homescreenSections[HomeScreenSection.HEADER] == true },
++        default = { true },
+     )
+ 
+     /**
+@@ -278,7 +278,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          } else {
              preferences.getBoolean(
                  appContext.getPreferenceKey(R.string.pref_key_show_top_sites),
@@ -80,7 +76,7 @@ index 3fa564af49..b11a5734a8 100644
              )
          }
  
-@@ -291,7 +291,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -314,7 +314,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val overrideUserSpecifiedHomepageSections by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_override_user_specified_homepage_sections),
@@ -89,7 +85,7 @@ index 3fa564af49..b11a5734a8 100644
          default = { FxNimbus.features.overrideUserSpecifiedHomepageSections.value().enabled },
      )
  
-@@ -485,7 +485,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -514,7 +514,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var showCollectionsPlaceholderOnHome by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
@@ -98,7 +94,7 @@ index 3fa564af49..b11a5734a8 100644
      )
  
      val isCrashReportingEnabled: Boolean
-@@ -1320,7 +1320,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1381,7 +1381,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var defaultTopSitesAdded by booleanPreference(
          appContext.getPreferenceKey(R.string.default_top_sites_added),

@@ -1,5 +1,5 @@
 diff --git a/settings.gradle b/settings.gradle
-index 3d8a5e6..cc5bac9 100644
+index 096879b..a5bdd1b 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -28,14 +28,7 @@ buildscript {

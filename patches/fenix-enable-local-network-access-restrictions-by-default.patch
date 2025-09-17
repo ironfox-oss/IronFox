@@ -1,0 +1,26 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+index b2b40dd764..642d59cb9a 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
+@@ -154,7 +154,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<SwitchPreference>(R.string.pref_key_enable_lna_blocking_enabled).apply {
+-            isVisible = Config.channel.isNightlyOrDebug
++            isVisible = true
+             isChecked = context.settings().isLnaBlockingEnabled
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index f0eeec863d..15ce8db8a2 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -794,7 +794,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var isLnaBlockingEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
+-        default = false,
++        default = true,
+     )
+ 
+     /**

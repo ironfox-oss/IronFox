@@ -16,7 +16,6 @@
 
     <!-- Disk cache -->
     <string name="pref_key_cache_enabled" translatable="false">pref_key_cache_enabled</string>
-    <string name="pref_key_cache_ssl_enabled" translatable="false">pref_key_cache_ssl_enabled</string>
 
     <!-- EME -->
     <string name="pref_key_eme_enabled" translatable="false">pref_key_eme_enabled</string>
@@ -30,9 +29,6 @@
 
     <!-- JavaScript JIT -->
     <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
-
-    <!-- OCSP -->
-    <string name="pref_key_ocsp_require" translatable="false">pref_key_ocsp_require</string>
 
     <!-- PDF.js -->
     <string name="pref_key_pdfjs_disabled" translatable="false">pref_key_pdfjs_disabled</string>

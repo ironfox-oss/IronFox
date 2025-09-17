@@ -9,7 +9,6 @@
     <string name="if_preferences_secret">Geheime Einstellungen</string>
     <string name="if_preferences_security">Sicherheit</string>
     <string name="preference_cache_enabled">Aktivieren des Festplattenpuffers</string>
-    <string name="preference_cache_ssl_enabled">Aktivieren des Festplattenpuffers für sichere Webseiten</string>
     <string name="preferences_debug_settings_eme_enabled">Verschlüsselte Medienerweiterungen aktivieren (EME)</string>
     <string name="preferences_debug_settings_widevine_enabled">Widevine CDM aktivieren</string>
     <string name="preference_ipv6_enabled">IPv6-Netzwerkverbindungen aktivieren</string>
@@ -24,8 +23,6 @@
     <string name="preference_jit_enabled_caption">Verbessern Sie die JavaScript-Leistung, indem Sie JIT aktivieren. (Für die meisten Benutzer nicht empfohlen)</string>
     <string name="preference_jit_enabled_description">Auf Kosten der Sicherheit können Sie JIT aktivieren, um die Leistung von Websites zu verbessern. Nur für Benutzer mit weniger leistungsstarken Geräten empfohlen.</string>
     <string name="preference_jit_enabled_summary">Wenn diese Option deaktiviert ist, kann die Leistung bei komplexen Webseiten beeinträchtigt sein. Durch Ändern dieser Einstellung wird Ihr Browser neu gestartet</string>
-    <string name="preference_ocsp_require">Hard-Fail-OCSP-Widerrufprüfungen</string>
-    <string name="preference_ocsp_require_summary">Wenn diese Option aktiviert ist, können gelegentlich Verbindungsfehler auftreten</string>
     <string name="preference_pdfjs_disabled">PDF-Dateien extern öffnen</string>
     <string name="preference_website_appearance_title">Bevorzugte Darstellung der Website</string>
     <string name="preference_website_appearance_description">Einige Websites passen ihr Farbschema an Ihre Präferenzen an. Wählen Sie das Farbschema, das Sie für diese Websites verwenden möchten. Beachten Sie, dass andere Optionen als „Hell“ das Fingerprinting erleichtern können, da Ihr Browser dadurch einzigartiger erscheint.</string>

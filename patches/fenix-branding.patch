@@ -72,7 +72,7 @@ index b45fdee550..45dbba4891 100644
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 4263c2af62..e2ca6fbdf6 100644
+index eb55c6630d..e8321e4fe2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -84,7 +84,7 @@ class OnboardingFragment : Fragment() {
@@ -150,25 +150,27 @@ index 92a8a9a36d..c67e70ba65 100644
                      lineThreeState,
                  ),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..c1fb4c6f9c 100644
+index f0eeec863d..8906b4fce8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -520,10 +520,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -549,11 +549,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
 -    var hasAcceptedTermsOfService by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
 -        default = false,
+-        persistDefaultIfNotExists = true,
 -    )
 +    var hasAcceptedTermsOfService = true
 +//        appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
 +//        default = false,
++//        persistDefaultIfNotExists = true,
 +//    )
  
      /**
-      * Users who have not accepted ToS will see a popup asking them to accept.
-@@ -581,7 +581,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      * Timestamp in milliseconds when the terms of use prompt was last shown to the user.
+@@ -631,7 +631,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldShowPrivacyPopWindow by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),

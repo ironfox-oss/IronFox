@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-index 3885a06691..59b2c30931 100644
+index 911887b7a2..037e4e8736 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
-@@ -91,6 +91,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+@@ -104,6 +104,12 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
              navigateToPhoneFeature(phoneFeature)
              true
          }

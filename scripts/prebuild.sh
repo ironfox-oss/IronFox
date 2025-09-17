@@ -76,7 +76,7 @@ JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '
 }
 
 if [[ -z "$FIREFOX_VERSION" ]]; then
-    echo "\$FIREFOX_VERSION is not set! Aborting..."]
+    echo "\$FIREFOX_VERSION is not set! Aborting..."
     exit 1
 fi
 
@@ -90,11 +90,40 @@ if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
     fi
 fi
 
+# Set platform
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM=darwin
+else
+    PLATFORM=linux
+fi
+
+# Set architecture
+PLATFORM_ARCH=$(uname -m)
+if [[ "$PLATFORM_ARCH" == "arm64" ]]; then
+    PLATFORM_ARCHITECTURE=aarch64
+else
+    PLATFORM_ARCHITECTURE=x86-64
+fi
+
 # Create build directory
 mkdir -vp "$rootdir/build"
 
 # Check patch files
 source "$rootdir/scripts/patches.sh"
+
+pushd "$application_services"
+if ! a-s_check_patches; then
+    echo "Patch validation failed. Please check the patch files and try again."
+    exit 1
+fi
+popd
+
+pushd "$glean"
+if ! glean_check_patches; then
+    echo "Patch validation failed. Please check the patch files and try again."
+    exit 1
+fi
+popd
 
 pushd "$mozilla_release"
 if ! check_patches; then
@@ -108,10 +137,14 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     # shellcheck disable=SC2154
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 else
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
+    curl --doh-cert-status --no-insecure --no-proxy-insecure --no-sessionid --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --proto -all,https --proto-default https --proto-redir -all,https --show-error -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
 fi
 
-libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/musl/lib"
+if [[ "$PLATFORM" == "darwin" ]]; then
+    libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/lib"
+else
+    libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/musl/lib"
+fi
 echo "...libclang dir set to ${libclang}"
 
 # shellcheck disable=SC1090,SC1091
@@ -129,94 +162,108 @@ cargo install --vers "$CBINDGEN_VERSION" cbindgen
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
-sed -i \
+$SED -i \
     -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
     -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
     app/build.gradle
-sed -i \
+$SED -i \
     -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
     app/src/release/res/xml/shortcuts.xml
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 # We're also setting the "MOZILLA_OFFICIAL" env variable below
-sed -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
 echo "official=true" >>local.properties
 
-# Allow users to sync addresses
-sed -i -e 's|SYNC_ADDRESSES_FEATURE = .*|SYNC_ADDRESSES_FEATURE = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
 # Disable crash reporting
-sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
-sed -i -e 's|.crashHandler|// .crashHandler|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-sed -i -e 's|import mozilla.components.lib.crash.handler.CrashHandlerService|// import mozilla.components.lib.crash.handler.CrashHandlerService|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-sed -i -e 's|import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|// import mozilla.components.browser.engine.gecko.crash.GeckoCrashPullDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+$SED -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
 # Disable telemetry
-sed -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
-sed -i -e '/TELEMETRY/s/true/false/' app/build.gradle
-sed -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Display live downloads in progress
-sed -i -e 's|showLiveDownloads = .*|showLiveDownloads = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
+$SED -i -e '/TELEMETRY/s/true/false/' app/build.gradle
+$SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Disable "custom review pre-prompts"
-sed -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Disable the ability for users to select a custom app icon
-## We currently don't add any custom icons to choose from, so no point exposing/cluttering the UI
-sed -i -e 's|alternativeAppIconFeatureEnabled = .*|alternativeAppIconFeatureEnabled = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure onboarding is always enabled
-sed -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Ensure certain preferences are configured at GeckoProvider.kt
-## These should be unnecessary (since we take back control of the related Gecko preferences and set them directly), but it doesn't hurt to set these here either
-sed -i -e 's/aboutConfigEnabled(.*)/aboutConfigEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # general.aboutConfig.enable
-sed -i -e 's/crashPullNeverShowAgain(.*)/crashPullNeverShowAgain(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # browser.crashReports.requestedNeverShowAgain
-sed -i -e 's/disableShip(.*)/disableShip(false)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # fission.disableSessionHistoryInParent
-sed -i -e 's/extensionsWebAPIEnabled(.*)/extensionsWebAPIEnabled(false)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # extensions.webapi.enabled
-sed -i -e 's/fissionEnabled(.*)/fissionEnabled(true)/' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt # fission.autostart
+$SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # No-op AMO collections/recommendations
-sed -i -e 's|"AMO_COLLECTION_NAME", "\\".*\\""|"AMO_COLLECTION_NAME", "\\"\\""|g' app/build.gradle
-sed -i 's|Extensions-for-Android||g' app/build.gradle
-sed -i -e 's|"AMO_COLLECTION_USER", "\\".*\\""|"AMO_COLLECTION_USER", "\\"\\""|g' app/build.gradle
-sed -i -e 's|"AMO_SERVER_URL", "\\".*\\""|"AMO_SERVER_URL", "\\"\\""|g' app/build.gradle
-sed -i 's|https://services.addons.mozilla.org||g' app/build.gradle
-sed -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeature = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|"AMO_COLLECTION_NAME", "\\".*\\""|"AMO_COLLECTION_NAME", "\\"\\""|g' app/build.gradle
+$SED -i 's|Extensions-for-Android||g' app/build.gradle
+$SED -i -e 's|"AMO_COLLECTION_USER", "\\".*\\""|"AMO_COLLECTION_USER", "\\"\\""|g' app/build.gradle
+$SED -i -e 's|"AMO_SERVER_URL", "\\".*\\""|"AMO_SERVER_URL", "\\"\\""|g' app/build.gradle
+$SED -i 's|https://services.addons.mozilla.org||g' app/build.gradle
+$SED -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeature = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # No-op Glean
-# https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
-sed -i 's|- components:service-glean|# - components:service-glean|g' .buildconfig.yml
-sed -i "s|implementation project(':components:service-glean')|// implementation project(':components:service-glean')|g" app/build.gradle
+## https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
 echo 'glean.custom.server.url="data;"' >>local.properties
-
-# No-op Nimbus
-sed -i -e 's|.experimentDelegate|// .experimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
-sed -i -e 's|import mozilla.components.experiment.NimbusExperimentDelegate|// import mozilla.components.experiment.NimbusExperimentDelegate|' app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
+$SED -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
+$SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' app/pings.yaml
 
 # Remove proprietary/tracking libraries
-sed -i 's|- components:lib-crash-sentry|# - components:lib-crash-sentry|g' .buildconfig.yml
-sed -i 's|- components:lib-push-firebase|# - components:lib-push-firebase|g' .buildconfig.yml
-sed -i 's|implementation libs.thirdparty.sentry|// implementation libs.thirdparty.sentry|g' app/build.gradle
-sed -i "s|implementation project(':components:lib-crash-sentry')|// implementation project(':components:lib-crash-sentry')|g" app/build.gradle
-sed -i "s|implementation project(':components:lib-push-firebase')|// implementation project(':components:lib-push-firebase')|g" app/build.gradle
-sed -i 's|implementation(libs.adjust)|// implementation(libs.adjust)|g' app/build.gradle
-sed -i 's|implementation(libs.installreferrer)|// implementation(libs.installreferrer)|g' app/build.gradle
-sed -i "s|implementation libs.play.review.ktx|implementation 'org.microg.gms:play-services-tasks:v0.0.0.250932'|g" app/build.gradle
-sed -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
-sed -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
+$SED -i 's|- components:lib-crash-sentry|# - components:lib-crash-sentry|g' .buildconfig.yml
+$SED -i 's|- components:lib-push-firebase|# - components:lib-push-firebase|g' .buildconfig.yml
+$SED -i 's|implementation libs.thirdparty.sentry|// implementation libs.thirdparty.sentry|g' app/build.gradle
+$SED -i "s|implementation project(':components:lib-crash-sentry')|// implementation project(':components:lib-crash-sentry')|g" app/build.gradle
+$SED -i "s|implementation project(':components:lib-push-firebase')|// implementation project(':components:lib-push-firebase')|g" app/build.gradle
+$SED -i 's|implementation(libs.adjust)|// implementation(libs.adjust)|g' app/build.gradle
+$SED -i 's|implementation(libs.installreferrer)|// implementation(libs.installreferrer)|g' app/build.gradle
+$SED -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
+$SED -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
-# Remove TelemetryMiddleware
-sed -i -e 's|import org.mozilla.fenix.telemetry|// import org.mozilla.fenix.telemetry|' app/src/*/java/org/mozilla/fenix/components/Core.kt
-sed -i -e 's|TelemetryMiddleware(context.*)|// TelemetryMiddleware()|' app/src/*/java/org/mozilla/fenix/components/Core.kt
+# Remove unused telemetry and marketing services/components
+$SED -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
+$SED -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+$SED -i -e 's|import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.components.toolbar.BrowserToolbarTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt
+$SED -i -e 's|import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|// import org.mozilla.fenix.home.toolbar.BrowserToolbarTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt
+$SED -i -e 's|import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|// import org.mozilla.fenix.tabstray.TabsTrayTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
+$SED -i -e 's|import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|// import org.mozilla.fenix.webcompat.middleware.WebCompatReporterTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
+
+$SED -i -e 's|BookmarksTelemetryMiddleware(|// BookmarksTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt
+$SED -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt
+$SED -i -e 's|BrowserToolbarTelemetryMiddleware(|// BrowserToolbarTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt
+$SED -i -e 's|CustomReviewPromptTelemetryMiddleware(|// CustomReviewPromptTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
+$SED -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+$SED -i -e 's|private fun provideTelemetryMiddleware|// private fun provideTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
+$SED -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
+$SED -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
+$SED -i -e 's|SyncTelemetry.|// SyncTelemetry.|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
+$SED -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayFragment.kt
+$SED -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
+$SED -i -e 's|WebCompatReporterTelemetryMiddleware(|// WebCompatReporterTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
+
+rm -vf app/src/*/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/Event.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricController.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
+rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
+rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
+rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 # Let it be IronFox
-sed -i \
+$SED -i \
     -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
     -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
     -e 's/Agree and continue/Continue/' \
@@ -243,16 +290,16 @@ sed -i \
     -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
     -e 's/Google Search/Google search/' \
     app/src/*/res/values*/*strings.xml
-sed -i -e 's/GOOGLE_URL = ".*"/GOOGLE_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-sed -i -e 's/GOOGLE_US_URL = ".*"/GOOGLE_US_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-sed -i -e 's/GOOGLE_XX_URL = ".*"/GOOGLE_XX_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-sed -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-sed -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's/GOOGLE_URL = ".*"/GOOGLE_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's/GOOGLE_US_URL = ".*"/GOOGLE_US_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's/GOOGLE_XX_URL = ".*"/GOOGLE_XX_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
 # Fenix uses reflection to create a instance of profile based on the text of
 # the label, see
 # app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
-sed -i \
+$SED -i \
     -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
     -e 's/firefox_threads/ironfox_threads/' \
     -e 's/firefox_features/ironfox_features/' \
@@ -263,10 +310,10 @@ rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml
 rm -vf app/src/release/res/mipmap-*/ic_launcher.webp
 rm -vf app/src/release/res/values/colors.xml
 rm -vf app/src/main/res/values-v24/styles.xml
-sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
-sed -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
+$SED -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
+$SED -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
 mkdir -vp app/src/release/res/mipmap-anydpi-v26
-sed -i \
+$SED -i \
     -e 's/googleg_standard_color_18/ic_download/' \
     app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
@@ -317,7 +364,7 @@ bundle)
     ;;
 esac
 
-sed -i -e "s/include \".*\"/include $abi/" app/build.gradle
+$SED -i -e "s/include \".*\"/include $abi/" app/build.gradle
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
 # Enable the auto-publication workflow
@@ -337,33 +384,58 @@ popd
 # Glean
 #
 
+# We currently remove Glean fully from Android Components (See `a-c-remove-glean.patch`) and Application Services (see `a-s-remove-glean.patch`). Unfortunately, it's currently untenable to remove Glean in its entirety from Fenix (though we do remove Mozilla's `Glean Service` library/implementation). So, our approach is to stub Glean for Fenix, which we can do thanks to Tor's no-op UniFFi binding generator, as well as our `fenix-remove-glean.patch` patch, and the commands below.
+## https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/tree/main/projects/glean
+
 # shellcheck disable=SC2154
 pushd "$glean"
-echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
+
+echo "rust.targets=$PLATFORM-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
+
+# Apply patches
+glean_apply_patches
+
 localize_maven
 
-# Unbreak GeckoView Lite builds
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-unbreak-geckoview-lite.patch"
+# Break the dependency on older Rust
+$SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/Cargo.toml
+$SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/build/Cargo.toml
+$SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/rlb/Cargo.toml
 
 # No-op Glean
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop.patch"
-sed -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
-sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
-sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
-sed -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g" glean-core/rlb/src/configuration.rs
-sed -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
-sed -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
-sed -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
-sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
-sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
-sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
-sed -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/lib_unit_tests.rs
-
-# Do not build `glean-sample-app`
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-remove-example-dependencies.patch"
+$SED -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
+$SED -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
+$SED -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
+$SED -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g" glean-core/rlb/src/configuration.rs
+$SED -i -e '/enable_internal_pings:/s/true/false/' glean-core/rlb/src/configuration.rs
+$SED -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+$SED -i -e '/enableInternalPings:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+$SED -i -e '/enableEventTimestamps:/s/true/false/' glean-core/android/src/main/java/mozilla/telemetry/glean/config/Configuration.kt
+$SED -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/core_metrics.rs
+$SED -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/glean_metrics.rs
+$SED -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/internal_metrics.rs
+$SED -i -e 's|disabled: .*|disabled: true,|g' glean-core/src/lib_unit_tests.rs
+$SED -i -e 's|include_client_id: .*|include_client_id: false|g' glean-core/pings.yaml
+$SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' glean-core/pings.yaml
+$SED -i -e 's|"$rootDir/glean-core/android/metrics.yaml"|// "$rootDir/glean-core/android/metrics.yaml"|g' glean-core/android/build.gradle
+rm -vf glean-core/android/metrics.yaml
 
 # Ensure we're building for release
-sed -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+$SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+
+# Use Tor's no-op UniFFi binding generator
+if [[ "$PLATFORM" == "darwin" ]]; then
+    # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
+    ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
+    echo "macOS: Doing nothing..."
+else
+    patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop-uniffi.patch"
+    if [[ -n ${FDROID_BUILD+x} ]]; then
+        $SED -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
+    else
+        $SED -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
+    fi
+fi
 
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
@@ -385,6 +457,10 @@ rm -vrf components/feature/search/src/*/assets/searchplugins/*
 rm -vrf components/feature/search/src/*/assets/extensions/ads
 rm -vrf components/feature/search/src/*/assets/extensions/search
 
+# We can also remove the directories/libraries themselves as well
+rm -vf components/feature/search/src/*/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt
+rm -vrf components/feature/search/src/*/java/mozilla/components/feature/search/telemetry
+
 # Remove the 'search telemetry' config
 rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
 
@@ -395,57 +471,55 @@ rm -vf samples/crash/build.gradle
 rm -vf samples/glean/build.gradle
 rm -vf samples/glean/samples-glean-library/build.gradle
 
-# Prevent unsolicited favicon fetching
-sed -i -e 's|request.copy(resources = request.resources + resource)|request|' components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
-
-# Remove unwanted Nimbus classes
-sed -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' components/service/nimbus/proguard-rules-consumer.pro
+# Remove Nimbus
+rm -vf components/browser/engine-gecko/geckoview.fml.yaml
+rm -vrf components/browser/engine-gecko/src/main/java/mozilla/components/experiment
+$SED -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' components/service/nimbus/proguard-rules-consumer.pro
 
 # Apply a-c overlay
 apply_overlay "$patches/a-c-overlay/"
 
 popd
 
+#
 # Application Services
+#
 
 pushd "${application_services}"
 
-# Remove Mozilla repositories substitution and explicitly add the required ones
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-localize-maven.patch"
+# Apply patches
+a-s_apply_patches
 
 # Break the dependency on older A-C
-sed -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
+$SED -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 
 # Break the dependency on older Rust
-sed -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
+$SED -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
 
-echo "rust.targets=linux-x86-64,$rusttarget" >>local.properties
-sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
-sed -i -e '/content {/,/}/d' build.gradle
+# Disable debug
+$SED -i -e 's|debug = .*|debug = false|g' Cargo.toml
+
+echo "rust.targets=$PLATFORM-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
+$SED -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
+$SED -i -e '/content {/,/}/d' build.gradle
+
 localize_maven
+
 # Fix stray
-sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
+$SED -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 # Fail on use of prebuilt binary
-sed -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+$SED -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 
 # No-op Nimbus (Experimentation)
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-noop-nimbus.patch"
-sed -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
-sed -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
-
-# Remove Glean
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/a-s-remove-glean.patch"
-sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
-sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" components/fxa-client/android/build.gradle
-sed -i "s|FxaClientMetrics|// FxaClientMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
-sed -i "s|import org.mozilla.appservices.fxaclient.GleanMetrics|// import org.mozilla.appservices.fxaclient.GleanMetrics|g" components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt
-sed -i "s|import org.mozilla.experiments.nimbus.GleanMetrics|// import org.mozilla.experiments.nimbus.GleanMetrics|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-sed -i "s|NimbusEvents|// NimbusEvents|g" components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-rm -vf components/fxa-client/android/metrics.yaml
+$SED -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+$SED -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
-sed -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
+$SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
+
+# Apply Application Services overlay
+apply_overlay "$patches/a-s-overlay/"
 
 popd
 
@@ -454,11 +528,25 @@ popd
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+
+    # Break the dependency on older cmake
+    $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
+
     popd
 
     export wasi_install=$wasi/build/install/wasi
 else
     export wasi_install=$wasi
+fi
+
+# uniffi-bindgen
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    pushd "$uniffi"
+
+    # Break the dependency on older Rust
+    $SED -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
+
+    popd
 fi
 
 # Gecko
@@ -467,8 +555,8 @@ pushd "$mozilla_release"
 # Let it be IronFox (part 2...)
 mkdir -vp mobile/android/branding/ironfox/content
 mkdir -vp mobile/android/branding/ironfox/locales/en-US
-sed -i -e 's/Fennec/IronFox/; s/Firefox/IronFox/g' build/moz.configure/init.configure
-sed -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
+$SED -i -e 's/Fennec/IronFox/g; s/Firefox/IronFox/g' build/moz.configure/init.configure
+$SED -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
 echo '' >>mobile/android/moz.configure
 echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
@@ -476,68 +564,68 @@ echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 apply_patches
 
 # Ensure we're building for release
-sed -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
+$SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
 
 # Fix v125 aar output not including native libraries
-sed -i \
+$SED -i \
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
 
 # Hack the timeout for
 # geckoview:generateJNIWrappersForGeneratedWithGeckoBinariesDebug
-sed -i \
+$SED -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
 
-# Unbreak builds with --disable-pref-extensions
-sed -i -e 's|@BINPATH@/defaults/autoconfig/prefcalls.js|;@BINPATH@/defaults/autoconfig/prefcalls.js|g' mobile/android/installer/package-manifest.in
+# Break the dependency on older Rust
+$SED -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" Cargo.toml
+$SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" intl/icu_capi/Cargo.toml
+$SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" intl/icu_segmenter_data/Cargo.toml
 
-# Disable network connectivity status monitoring (Fenix)
-## (Also removes the `NETWORK_ACCESS_STATE` permission)
-## Also see `fenix-disable-network-connectivity-monitoring.patch`
-sed -i -e 's|AUTOPLAY_ALLOW_ON_WIFI ->|// AUTOPLAY_ALLOW_ON_WIFI ->|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-sed -i -e 's|import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_ALLOW_ON_WIFI|// import org.mozilla.fenix.settings.sitepermissions.AUTOPLAY_ALLOW_ON_WIFI|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-sed -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/fenix/app/src/main/AndroidManifest.xml
+# Disable debug
+$SED -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
+$SED -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
 
-# Disable network connectivity status monitoring (GeckoView)
-## (Also removes the `NETWORK_ACCESS_STATE` permission)
-sed -i -e 's|import org.mozilla.gecko.GeckoNetworkManager|// import org.mozilla.gecko.GeckoNetworkManager|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-sed -i -e 's|GeckoNetworkManager.|// GeckoNetworkManager.|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-sed -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/geckoview/src/main/AndroidManifest.xml
+# Remove the `NETWORK_ACCESS_STATE` permission (Fenix)
+$SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/fenix/app/src/main/AndroidManifest.xml
+
+# Remove the `NETWORK_ACCESS_STATE` permission (GeckoView)
+$SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/geckoview/src/main/AndroidManifest.xml
 
 # Disable Normandy (Experimentation)
-sed -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
-
-# Disable shipped domains
-## (Firefox's built-in list of domains used to autocomplete URLs)
-## To quote a Mozilla employee (https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0): 'Android's current list of 400+ domain names for address bar suggestions was created way back in December 2015... This list hasn't been updated since 2015 and now includes expired and squatted domains that might serve ads or malware'
-## Prevents suggesting squatted domains to users that serve ads and malware, and reduces annoyances/unwanted behavior.
-sed -i -e 's|FxNimbus.features.suggestShippedDomains.value().enabled|false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+$SED -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
 
 # Disable SSLKEYLOGGING
 ## https://bugzilla.mozilla.org/show_bug.cgi?id=1183318
 ## https://bugzilla.mozilla.org/show_bug.cgi?id=1915224
-sed -i -e 's|NSS_ALLOW_SSLKEYLOGFILE ?= .*|NSS_ALLOW_SSLKEYLOGFILE ?= 0|g' security/nss/lib/ssl/Makefile
+$SED -i -e 's|NSS_ALLOW_SSLKEYLOGFILE ?= .*|NSS_ALLOW_SSLKEYLOGFILE ?= 0|g' security/nss/lib/ssl/Makefile
 echo '' >>security/moz.build
 echo 'gyp_vars["enable_sslkeylogfile"] = 0' >>security/moz.build
 
 # Disable telemetry
-sed -i -e 's|"MOZ_SERVICES_HEALTHREPORT", .*)|"MOZ_SERVICES_HEALTHREPORT", False)|g' mobile/android/moz.configure
+$SED -i -e 's|"MOZ_SERVICES_HEALTHREPORT", .*)|"MOZ_SERVICES_HEALTHREPORT", False)|g' mobile/android/moz.configure
+
+# Disable crash reporting (GeckoView)
+$SED -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
+
+# Disable debug (GeckoView)
+$SED -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
+
+# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
+# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
+# We're also setting the "MOZILLA_OFFICIAL" env variable below
+$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
+
+# Target release
+$SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
+$SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 
 # Ensure UA is always set to Firefox
-sed -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
-
-# Enable encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state
-sed -i -e 's|secureStateAtRest: Boolean = .*|secureStateAtRest: Boolean = true,|g' mobile/android/android-components/components/concept/sync/src/*/java/mozilla/components/concept/sync/Devices.kt
-sed -i -e 's|secureStateAtRest = .*|secureStateAtRest = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-
-# Hide Remote Debugging UI setting
-## Also see `fenix-reset-remote-debugging-per-session.patch`
-sed -i -e 's|preferenceRemoteDebugging?.isVisible = .*|preferenceRemoteDebugging?.isVisible = false|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+$SED -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
 
 # Include additional Remote Settings local dumps (+ add our own...)
-sed -i -e 's|"mobile/"|"0"|g' services/settings/dumps/blocklists/moz.build
-sed -i -e 's|"mobile/"|"0"|g' services/settings/dumps/security-state/moz.build
+$SED -i -e 's|"mobile/"|"0"|g' services/settings/dumps/blocklists/moz.build
+$SED -i -e 's|"mobile/"|"0"|g' services/settings/dumps/security-state/moz.build
 echo '' >>services/settings/dumps/main/moz.build
 echo 'FINAL_TARGET_FILES.defaults.settings.main += [' >>services/settings/dumps/main/moz.build
 echo '    "anti-tracking-url-decoration.json",' >>services/settings/dumps/main/moz.build
@@ -550,136 +638,229 @@ echo '    "url-classifier-skip-urls.json",' >>services/settings/dumps/main/moz.b
 echo '    "url-parser-default-unknown-schemes-interventions.json",' >>services/settings/dumps/main/moz.build
 echo ']' >>services/settings/dumps/main/moz.build
 
-# Increase add-on update frequency
-## Increases the rate at which Firefox checks for add-on updates, from every 12 hours to hourly
-sed -i -e 's|DefaultAddonUpdater(context, Frequency(.*, TimeUnit|DefaultAddonUpdater(context, Frequency(1, TimeUnit|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-
 # No-op AMO collections/recommendations
-sed -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-sed -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-sed -i -e 's/DEFAULT_COLLECTION_USER = ".*"/DEFAULT_COLLECTION_USER = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-sed -i -e 's/DEFAULT_SERVER_URL = ".*"/DEFAULT_SERVER_URL = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-sed -i 's|https://services.addons.mozilla.org||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i -e 's/DEFAULT_COLLECTION_USER = ".*"/DEFAULT_COLLECTION_USER = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i -e 's/DEFAULT_SERVER_URL = ".*"/DEFAULT_SERVER_URL = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i 's|https://services.addons.mozilla.org||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
 
 # No-op Contile
-sed -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
+$SED -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
 
-# No-op crash reporting
-sed -i -e 's/MOZILLA_PRODUCT_ID = ".*"/MOZILLA_PRODUCT_ID = ""/' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-sed -i 's|{eeb82917-e434-4870-8148-5c03d4caa81b}||g' mobile/android/android-components/components/lib/crash/src/*/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
-sed -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
-sed -i -e 's|import org.mozilla.gecko.crashhelper.CrashHelper|// import org.mozilla.gecko.crashhelper.CrashHelper|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-sed -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
-sed -i 's|crash-reports-ondemand||g' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+# Remove unnecessary crash reporting components
+rm -vrf mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/rusterrors
+
+$SED -i -e 's|enabled: Boolean = .*|enabled: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+$SED -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
+$SED -i -e 's|shouldPrompt: Prompt = .*|shouldPrompt: Prompt = Prompt.ALWAYS,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+$SED -i -e 's|useLegacyReporting: Boolean = .*|useLegacyReporting: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+$SED -i -e 's|var enabled: Boolean = false,|var enabled: Boolean = enabled|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+
+$SED -i 's|crash-reports-ondemand||g' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
+$SED -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 
 # No-op MARS
-sed -i -e 's/MARS_ENDPOINT_URL = ".*"/MARS_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
-sed -i -e 's/MARS_ENDPOINT_BASE_URL = ".*"/MARS_ENDPOINT_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
-sed -i -e 's/MARS_ENDPOINT_STAGING_BASE_URL = ".*"/MARS_ENDPOINT_STAGING_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
+$SED -i -e 's/MARS_ENDPOINT_BASE_URL = ".*"/MARS_ENDPOINT_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
+$SED -i -e 's/MARS_ENDPOINT_URL = ".*"/MARS_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
+$SED -i -e 's/MARS_ENDPOINT_STAGING_BASE_URL = ".*"/MARS_ENDPOINT_STAGING_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
 
 # No-op GeoIP/Region service
 ## https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst
-sed -i -e 's/GEOIP_SERVICE_URL = ".*"/GEOIP_SERVICE_URL = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
-sed -i -e 's/USER_AGENT = ".*/USER_AGENT = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
+$SED -i -e 's/GEOIP_SERVICE_URL = ".*"/GEOIP_SERVICE_URL = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
+$SED -i -e 's/USER_AGENT = ".*/USER_AGENT = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
 
 # No-op Normandy (Experimentation)
-sed -i -e 's/REMOTE_SETTINGS_COLLECTION = ".*"/REMOTE_SETTINGS_COLLECTION = ""/' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
-sed -i 's|normandy-recipes-capabilities||g' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+$SED -i -e 's/REMOTE_SETTINGS_COLLECTION = ".*"/REMOTE_SETTINGS_COLLECTION = ""/' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+$SED -i 's|normandy-recipes-capabilities||g' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
+
+# No-op Nimbus (Experimentation)
+$SED -i -e 's|import org.mozilla.fenix.ext.recordEventInNimbus|// import org.mozilla.fenix.ext.recordEventInNimbus|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+$SED -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+$SED -i -e 's|FxNimbus.features.junoOnboarding.recordExposure|// FxNimbus.features.junoOnboarding.recordExposure|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 
 # No-op Pocket
-sed -i -e 's/SPOCS_ENDPOINT_DEV_BASE_URL = ".*"/SPOCS_ENDPOINT_DEV_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
-sed -i -e 's/SPOCS_ENDPOINT_PROD_BASE_URL = ".*"/SPOCS_ENDPOINT_PROD_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
-sed -i -e 's/POCKET_ENDPOINT_URL = ".*"/POCKET_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/stories/api/PocketEndpointRaw.kt
+$SED -i -e 's/SPOCS_ENDPOINT_DEV_BASE_URL = ".*"/SPOCS_ENDPOINT_DEV_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
+$SED -i -e 's/SPOCS_ENDPOINT_PROD_BASE_URL = ".*"/SPOCS_ENDPOINT_PROD_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
+$SED -i -e 's/POCKET_ENDPOINT_URL = ".*"/POCKET_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/stories/api/PocketEndpointRaw.kt
 
 # No-op search telemetry
-sed -i 's|search-telemetry-v2||g' mobile/android/fenix/app/src/*/java/org/mozilla/fenix/components/Core.kt
-
-# No-op telemetry (A-C)
-sed -i -e 's/REMOTE_PROD_ENDPOINT_URL = ".*"/REMOTE_PROD_ENDPOINT_URL = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
-sed -i -e 's/REMOTE_ENDPOINT_BUCKET_NAME = ".*"/REMOTE_ENDPOINT_BUCKET_NAME = ""/' mobile/android/android-components/components/feature/search/src/*/java/mozilla/components/feature/search/telemetry/SerpTelemetryRepository.kt
+$SED -i 's|search-telemetry-v2||g' mobile/android/fenix/app/src/*/java/org/mozilla/fenix/components/Core.kt
 
 # No-op telemetry (Gecko)
-sed -i -e '/enable_internal_pings:/s/true/false/' toolkit/components/glean/src/init/mod.rs
-sed -i -e '/upload_enabled =/s/true/false/' toolkit/components/glean/src/init/mod.rs
-sed -i -e '/use_core_mps:/s/true/false/' toolkit/components/glean/src/init/mod.rs
-sed -i 's|localhost||g' toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
-sed -i 's|localhost||g' toolkit/components/telemetry/pingsender/pingsender.cpp
-sed -i -e 's/usageDeletionRequest.setEnabled(.*)/usageDeletionRequest.setEnabled(false)/' toolkit/components/telemetry/app/UsageReporting.sys.mjs
-sed -i -e 's|useTelemetry = .*|useTelemetry = false;|g' toolkit/components/telemetry/core/Telemetry.cpp
-sed -i '/# This must remain last./i gkrust_features += ["glean_disable_upload"]\n' toolkit/library/rust/gkrust-features.mozbuild
+$SED -i -e '/enable_internal_pings:/s/true/false/' toolkit/components/glean/src/init/mod.rs
+$SED -i -e '/upload_enabled =/s/true/false/' toolkit/components/glean/src/init/mod.rs
+$SED -i -e '/use_core_mps:/s/true/false/' toolkit/components/glean/src/init/mod.rs
+$SED -i 's|localhost||g' toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
+$SED -i 's|localhost||g' toolkit/components/telemetry/pingsender/pingsender.cpp
+$SED -i -e 's/usageDeletionRequest.setEnabled(.*)/usageDeletionRequest.setEnabled(false)/' toolkit/components/telemetry/app/UsageReporting.sys.mjs
+$SED -i -e 's|useTelemetry = .*|useTelemetry = false;|g' toolkit/components/telemetry/core/Telemetry.cpp
+$SED -i '/# This must remain last./i gkrust_features += ["glean_disable_upload"]\n' toolkit/library/rust/gkrust-features.mozbuild
+
+$SED -i -e 's|include_client_id: .*|include_client_id: false|g' toolkit/components/glean/pings.yaml
+$SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' toolkit/components/glean/pings.yaml
+$SED -i -e 's|include_client_id: .*|include_client_id: false|g' toolkit/components/nimbus/pings.yaml
+$SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' toolkit/components/nimbus/pings.yaml
 
 # No-op telemetry (GeckoView)
-sed -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/android/android-components/components/browser/engine-gecko/build.gradle
-
-## Do not prompt users to enable telemetry/studies when enrolling in experiments
-### Currently unused
-sed -i -e 's|notifyUserToEnableExperiments()|// notifyUserToEnableExperiments()|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
+$SED -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/android/android-components/components/browser/engine-gecko/build.gradle
 
 # Prevent DoH canary requests
-sed -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
-sed -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
+$SED -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
+$SED -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
 
-# Remove `about:telemetry`
-## Also see `gecko-remove-abouttelemetry.patch`
-sed -i -e "s|'telemetry'|# &|" docshell/build/components.conf
-sed -i -e 's|content/global/aboutTelemetry|# content/global/aboutTelemetry|' toolkit/content/jar.mn
+# Remove unused crash reporting services/components
+rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
+rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt
 
-# Remove Glean
-sed -i "s|compileOnly libs.mozilla.glean|// compileOnly libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
-sed -i "s|testImplementation libs.mozilla.glean|// testImplementation libs.mozilla.glean|g" mobile/android/android-components/components/browser/engine-gecko/build.gradle
-sed -i -e 's|GleanMessaging|// GleanMessaging|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
-sed -i -e 's|import mozilla.components.service.nimbus.GleanMetrics|// import mozilla.components.service.nimbus.GleanMetrics|' mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt
-sed -i "s|implementation libs.mozilla.glean|// implementation libs.mozilla.glean|g" mobile/android/android-components/components/service/sync-logins/build.gradle
-rm -vf mobile/android/android-components/components/browser/engine-gecko/metrics.yaml
-
-# Remove GMP sources
-## Removes Firefox's default sources for installing Gecko Media Plugins (GMP), such as OpenH264 and Widevine (the latter is proprietary).
-## https://wiki.mozilla.org/GeckoMediaPlugins
-sed -i -e 's|content/global/gmp-sources|# content/global/gmp-sources|' toolkit/content/jar.mn
-
-# Remove unwanted/sample dependencies
+# Remove example dependencies
 ## Also see `gecko-remove-example-dependencies.patch`
-sed -i -e 's#if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))#if (!project.key.startsWith("samples"))#' mobile/android/shared-settings.gradle
-sed -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
+$SED -i "s|include ':annotations', .*|include ':annotations'|g" settings.gradle
+$SED -i "s|project(':messaging_example'|// project(':messaging_example'|g" settings.gradle
+$SED -i "s|project(':port_messaging_example'|// project(':port_messaging_example'|g" settings.gradle
+$SED -i -e 's#if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))#if (!project.key.startsWith("samples"))#' mobile/android/shared-settings.gradle
+
+# Remove ExoPlayer
+$SED -i "s|include ':exoplayer2'|// include ':exoplayer2'|g" settings.gradle
+$SED -i "s|project(':exoplayer2'|// project(':exoplayer2'|g" settings.gradle
+
+# Remove unused/unnecessary DebugConfig class
+$SED -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
+
+# Remove proprietary/tracking libraries
+$SED -i 's|adjust|# adjust|g' gradle/libs.versions.toml
+$SED -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
+$SED -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
+$SED -i 's|play-review|# play-review|g' gradle/libs.versions.toml
+$SED -i 's|play-services|# play-services|g' gradle/libs.versions.toml
+$SED -i 's|thirdparty-sentry|# thirdparty-sentry|g' gradle/libs.versions.toml
+$SED -i 's|sentry|# sentry|g' gradle/libs.versions.toml
+
+$SED -i 's|-include "adjust-keeps.cfg"|# -include "adjust-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
+$SED -i 's|-include "play-services-keeps.cfg"|# -include "play-services-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
+$SED -i 's|-include "proguard-leanplum.cfg"|# -include "proguard-leanplum.cfg"|g' mobile/android/config/proguard/proguard.cfg
+rm -vf mobile/android/config/proguard/adjust-keeps.cfg
+rm -vf mobile/android/config/proguard/play-services-keeps.cfg
+rm -vf mobile/android/config/proguard/proguard-leanplum.cfg
 
 # Remove Web Compatibility Reporter
 ## Also see `fenix-remove-webcompat-reporter.patch`
-sed -i 's|- components:feature-webcompat-reporter|# - components:feature-webcompat-reporter|g' mobile/android/fenix/.buildconfig.yml
-sed -i "s|implementation project(':components:feature-webcompat-reporter')|// implementation project(':components:feature-webcompat-reporter')|g" mobile/android/fenix/app/build.gradle
-sed -i -e 's|return !isAboutUrl && !isContentUrl|return false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-sed -i -e 's|FxNimbus.features.menuRedesign.value().reportSiteIssue|false|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-sed -i -e 's|import mozilla.components.feature.webcompat.reporter|// import mozilla.components.feature.webcompat.reporter|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-sed -i -e 's|WebCompatReporterFeature.|// WebCompatReporterFeature.|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+$SED -i 's|- components:feature-webcompat-reporter|# - components:feature-webcompat-reporter|g' mobile/android/fenix/.buildconfig.yml
+$SED -i "s|implementation project(':components:feature-webcompat-reporter')|// implementation project(':components:feature-webcompat-reporter')|g" mobile/android/fenix/app/build.gradle
 
 # Replace Google Play FIDO with microG
-sed -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
+$SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
 
-# Unbreak our custom uBlock Origin config
-## Also see `gecko-custom-ublock-origin-assets.patch`
-sed -i -e 's#else if (platform == "macosx" || platform == "linux")#else if (platform == "macosx" || platform == "linux" || platform == "android")#' toolkit/components/extensions/NativeManifests.sys.mjs
+# Remove Glean
+source "$rootdir/scripts/deglean.sh"
+
+# Remove Crash debugging tools
+rm -rvf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools
 
 # Nuke undesired Mozilla endpoints
 source "$rootdir/scripts/noop_mozilla_endpoints.sh"
 
-# Ensure certain settings are configured at Fenix Core.kt
-## These should be unnecessary (since we generally either configure them with UI settings or take back control of the related Gecko preferences from GeckoProvider.kt and set them directly), but it doesn't hurt to set these here either
-## For reference, none of these are exposed in the UI
-sed -i -e 's|certificateTransparencyMode = .*|certificateTransparencyMode = 2,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # security.pki.certificate_transparency.mode
-sed -i -e 's|dohAutoselectEnabled = .*|dohAutoselectEnabled = false,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.android_doh.autoselect_enabled
-sed -i -e 's|emailTrackerBlockingPrivateBrowsing = .*|emailTrackerBlockingPrivateBrowsing = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # privacy.trackingprotection.emailtracking.pbmode.enabled
-sed -i -e 's|fdlibmMathEnabled = .*|fdlibmMathEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # javascript.options.use_fdlibm_for_sin_cos_tan
-sed -i -e 's|fetchPriorityEnabled = .*|fetchPriorityEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.fetchpriority.enabled
-sed -i -e 's|globalPrivacyControlEnabled = .*|globalPrivacyControlEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # privacy.globalprivacycontrol.enabled
-sed -i -e 's|parallelMarkingEnabled = .*|parallelMarkingEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # javascript.options.mem.gc_parallel_marking
-sed -i -e 's|postQuantumKeyExchangeEnabled = .*|postQuantumKeyExchangeEnabled = true,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # network.http.http3.enable_kyber + security.tls.enable_kyber
-sed -i -e 's|userCharacteristicPingCurrentVersion = .*|userCharacteristicPingCurrentVersion = 0,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # toolkit.telemetry.user_characteristics_ping.current_version
-sed -i -e 's|webContentIsolationStrategy = WebContentIsolationStrategy..*|webContentIsolationStrategy = WebContentIsolationStrategy.ISOLATE_EVERYTHING,|g' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt # fission.webContentIsolationStrategy
+# Remove unused media
+## Based on Tor Browser: https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/264dc7cd915e75ba9db3a27e09253acffe3f2311
+## This should help reduce our APK sizes...
+rm -vf mobile/android/fenix/app/src/debug/ic_launcher-playstore.png
+rm -vf mobile/android/fenix/app/src/debug/ic_launcher-web.webp
+rm -vf mobile/android/fenix/app/src/debug/res/drawable/ic_launcher_foreground.xml
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-anydpi-v26/ic_launcher_round.xml
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-anydpi-v26/ic_launcher.xml
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-hdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-hdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-mdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-mdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/debug/res/mipmap-xxxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/ic_launcher_private-web.webp
+rm -vf mobile/android/fenix/app/src/main/ic_launcher-web.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_launcher_foreground.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_launcher_monochrome.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_onboarding_search_widget.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_onboarding_sync.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_logo.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_text_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_text_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable/microsurvey_success.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable/onboarding_ctd_sync.xml
+rm -vf mobile/android/fenix/app/src/main/res/drawable-hdpi/fenix_search_widget.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-hdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-hdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-mdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-mdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private_round.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_private_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_private.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_firefox.xml
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_launcher_foreground.xml
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_logo.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_text_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_text_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-hdpi/fenix_search_widget.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-hdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-hdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-mdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-mdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/ic_launcher-web.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-hdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-hdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-mdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-mdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher_round.webp
+rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
+$SED -i -e 's|R.drawable.microsurvey_success|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
+$SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+$SED -i -e 's|ic_onboarding_search_widget|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
+$SED -i -e 's|ic_onboarding_sync|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
 
 # Take back control of preferences
 ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
-sed -i \
+$SED -i \
     -e 's|"browser.safebrowsing.provider."|"z99.ignore.string."|' \
     -e 's|"cookiebanners.service.detectOnly"|"z99.ignore.boolean"|' \
     -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.boolean"|' \
@@ -710,7 +891,7 @@ sed -i \
     -e 's|"urlclassifier.trackingTable"|"z99.ignore.string"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java
 
-sed -i \
+$SED -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
     -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
@@ -752,7 +933,6 @@ sed -i \
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
-
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
     LLVM_SVN='530567'
@@ -860,9 +1040,9 @@ fi
     echo "ac_add_options ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
     echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
-    echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang\""
-    echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++\""
-    echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip\""
+    echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang\""
+    echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang++\""
+    echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/llvm-strip\""
     echo 'ac_add_options MOZ_APP_BASENAME="IronFox"'
     echo 'ac_add_options MOZ_APP_DISPLAYNAME="IronFox"'
     echo 'ac_add_options MOZ_APP_NAME="ironfox"'
@@ -913,18 +1093,18 @@ fi
 } >>mozconfig
 
 # Fail on use of prebuilt binary
-sed -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
+$SED -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
 
 # Make the build system think we installed the emulator and an AVD
 mkdir -vp "$ANDROID_HOME/emulator"
 mkdir -vp "$HOME/.mozbuild/android-device/avd"
 
 # Do not check the "emulator" utility which is obviously absent in the empty directory we created above
-sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
+$SED -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
 
 # Do not define `browser.safebrowsing.features.` prefs by default
 ## These are unnecessary, add extra confusion and complexity, and don't appear to interact well with our other prefs/settings
-sed -i \
+$SED -i \
     -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.boolean"|' \
@@ -948,7 +1128,7 @@ sed -i \
     cat "$patches/preferences/pdf.js"
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
 
-# Apply Glean overlay
+# Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
 
 popd

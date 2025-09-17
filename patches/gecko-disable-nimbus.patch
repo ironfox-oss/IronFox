@@ -50,7 +50,7 @@ index d2af5454d3..45f94697aa 100644
    }
  
 diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-index fd4eec2688..9976ddbffb 100644
+index ee0ea0baa1..44971bb255 100644
 --- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 +++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 @@ -38,7 +38,7 @@ XPCOMUtils.defineLazyServiceGetter(
@@ -81,10 +81,10 @@ index fd4eec2688..9976ddbffb 100644
  const SECURE_FEATURE_IDS = new Set(["prefFlips", "newtabTrainhopAddon"]);
  const RS_COLLECTION_OPTIONS = {
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index 14b57fcca5..b95e2e4bfe 100644
+index f544f44cf7..bdcb43bbdf 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -4648,8 +4648,8 @@ AMRemoteSettings = {
+@@ -4655,8 +4655,8 @@ AMRemoteSettings = {
     */
    RS_ENTRIES_MAP: {
      installTriggerDeprecation: [

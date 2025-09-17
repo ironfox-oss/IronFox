@@ -167,10 +167,10 @@ index 028be832d6..47175dcf47 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..332413f915 100644
+index f0eeec863d..abdfb522fb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2483,7 +2483,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2550,7 +2550,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val showDohEntryPoint by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_enabled),
@@ -179,7 +179,7 @@ index 3fa564af49..332413f915 100644
          featureFlag = true,
      )
  
-@@ -2496,7 +2496,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2563,7 +2563,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      private var trrMode by intPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
@@ -188,7 +188,7 @@ index 3fa564af49..332413f915 100644
      )
  
      /**
-@@ -2514,7 +2514,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2581,7 +2581,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val dohDefaultProviderUrl by stringPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_default_provider_uri),

@@ -1115,6 +1115,10 @@
     },
     {
       "overrides": "-JSDateTimeUTC",
+      "firstPartyDomain": "temoos.app"
+    },
+    {
+      "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "the-apothecary.club"
     },
     {

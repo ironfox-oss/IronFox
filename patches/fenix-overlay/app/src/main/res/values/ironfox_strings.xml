@@ -8,7 +8,7 @@
     <string name="unsupported_summary">This setting is NOT recommended or supported. Proceed with caution.</string>
 
     <!-- IronFox Settings -->
-    <string name="if_title">IronFox</string>
+    <string name="if_title" translatable="false">IronFox</string>
     <string name="if_preferences">IronFox settings</string>
     <string name="if_preferences_misc">Miscellaneous</string>
     <string name="if_preferences_privacy">Privacy</string>
@@ -28,7 +28,6 @@
 
     <!-- Disk cache -->
     <string name="preference_cache_enabled">Enable disk cache</string>
-    <string name="preference_cache_ssl_enabled">Enable disk cache for secure webpages</string>
 
     <!-- EME -->
     <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
@@ -45,10 +44,6 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
     <string name="preference_jit_enabled_summary">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
-
-    <!-- OCSP -->
-    <string name="preference_ocsp_require">Hard-fail OCSP revocation checks</string>
-    <string name="preference_ocsp_require_summary">When enabled, you may encounter occasional connection errors</string>
 
     <!-- PDF.js -->
     <string name="preference_pdfjs_disabled">Open PDF files externally</string>
@@ -106,7 +101,7 @@
 
     <!-- Onboarding - DoH -->
     <string name="onboarding_if_preference_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
-    <string name="onboarding_if_preference_doh_off_summary"></string>
+    <string name="onboarding_if_preference_doh_off_summary" translatable="false"></string>
 
     <!-- Onboarding - uBlock Origin -->
     <string name="onboarding_install_ublock_title">Install uBlock Origin</string>

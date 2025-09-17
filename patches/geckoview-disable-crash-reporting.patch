@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/src/main/AndroidManifest.xml b/mobile/android/geckoview/src/main/AndroidManifest.xml
-index ac6e718f3c..85d5bc0d87 100644
+index d0c8bde278..ed0cc42222 100644
 --- a/mobile/android/geckoview/src/main/AndroidManifest.xml
 +++ b/mobile/android/geckoview/src/main/AndroidManifest.xml
-@@ -87,14 +87,14 @@
+@@ -94,14 +94,14 @@
                  android:isolatedProcess="false"
                  android:process=":ipdlunittest">
          </service>
@@ -20,9 +20,18 @@ index ac6e718f3c..85d5bc0d87 100644
  
  </manifest>
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-index 3eaf228e93..0825f8e49d 100644
+index 3eaf228e93..7cb6a695b2 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
+@@ -52,7 +52,7 @@ import org.mozilla.gecko.GeckoScreenOrientation.ScreenOrientation;
+ import org.mozilla.gecko.GeckoSystemStateListener;
+ import org.mozilla.gecko.GeckoThread;
+ import org.mozilla.gecko.annotation.WrapForJNI;
+-import org.mozilla.gecko.crashhelper.CrashHelper;
++// import org.mozilla.gecko.crashhelper.CrashHelper;
+ import org.mozilla.gecko.process.MemoryController;
+ import org.mozilla.gecko.util.BundleEventListener;
+ import org.mozilla.gecko.util.DebugConfig;
 @@ -423,7 +423,7 @@ public final class GeckoRuntime implements Parcelable {
    }
  

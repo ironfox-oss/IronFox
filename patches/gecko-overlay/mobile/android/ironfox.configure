@@ -13,7 +13,7 @@ imply_option("MOZ_ANDROID_HLS_SUPPORT", False)
 # Disable Normandy (Experimentation)
 imply_option("MOZ_NORMANDY", False)
 
-# Disable Telemetry
+# Disable telemetry
 ## See the note at the top, we also configure this with our prebuild script.
 imply_option("MOZ_SERVICES_HEALTHREPORT", False)
 

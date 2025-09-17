@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 0620fba71e..f6eae18675 100644
+index 4d40600921..6a35884dd9 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -93,6 +93,7 @@ projects:
@@ -11,10 +11,10 @@ index 0620fba71e..f6eae18675 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 029784efad..08c92a5ff4 100644
+index 17f4dab078..a2222f7a40 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -655,6 +655,8 @@ dependencies {
+@@ -646,6 +646,8 @@ dependencies {
      implementation project(':components:lib-dataprotect')
      testImplementation project(':components:support-test-fakes')
  
@@ -24,19 +24,19 @@ index 029784efad..08c92a5ff4 100644
      debugImplementation libs.androidx.compose.ui.tooling
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index b07cadf1e6..1008db7bd3 100644
+index 5340aa5258..e36e63ac64 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -38,7 +38,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
+@@ -39,7 +39,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
  import mozilla.components.concept.base.crash.Breadcrumb
  import mozilla.components.concept.engine.webextension.WebExtension
  import mozilla.components.concept.engine.webextension.isUnsupported
 -import mozilla.components.concept.push.PushProcessor
-+//import mozilla.components.concept.push.PushProcessor
++// import mozilla.components.concept.push.PushProcessor
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -489,7 +489,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -483,7 +483,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -61,15 +61,15 @@ index 68190994b3..2b59856daf 100644
          }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index f99ef999cf..7c59fe8d6d 100644
+index f99ef999cf..5bd17ed950 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-@@ -8,31 +8,92 @@ import android.content.Context
+@@ -8,31 +8,89 @@ import android.content.Context
  import androidx.core.net.toUri
  import mozilla.components.feature.push.AutoPushFeature
  import mozilla.components.feature.push.Protocol
 -import mozilla.components.feature.push.PushConfig
- import mozilla.components.lib.crash.CrashReporter
+-import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.support.base.log.logger.Logger
  import org.mozilla.fenix.R
  import org.mozilla.fenix.ext.settings
@@ -93,7 +93,7 @@ index f99ef999cf..7c59fe8d6d 100644
 -class Push(val context: Context, crashReporter: CrashReporter) {
 -    val feature by lazyMonitored {
 -        pushConfig?.let { config ->
-+class Push(val context: Context, crashReporter: CrashReporter, val settings: Settings = context.settings(), val strictMode: StrictModeManager = context.components.strictMode, val notificationsDelegate: NotificationsDelegate = context.components.notificationsDelegate, val iAutoPushFeature: AutoPushFeature? = null, val iUnifiedPushFeature: UnifiedPushFeature? = null) {
++class Push(val context: Context, val settings: Settings = context.settings(), val strictMode: StrictModeManager = context.components.strictMode, val notificationsDelegate: NotificationsDelegate = context.components.notificationsDelegate, val iAutoPushFeature: AutoPushFeature? = null, val iUnifiedPushFeature: UnifiedPushFeature? = null) {
 +    private val logger = Logger("Push")
 +
 +    val feature: Pusher?
@@ -137,7 +137,7 @@ index f99ef999cf..7c59fe8d6d 100644
 -                service = pushService,
 +                service = firebasePushService,
                  config = config,
-                 crashReporter = crashReporter,
+-                crashReporter = crashReporter,
              )
          }
      }
@@ -148,7 +148,6 @@ index f99ef999cf..7c59fe8d6d 100644
 +            ?: UnifiedPushFeature(
 +            context = context,
 +            disableRateLimit = true,
-+            crashReporter = crashReporter,
 +        )
 +    }
 +
@@ -163,7 +162,7 @@ index f99ef999cf..7c59fe8d6d 100644
          val logger = Logger("PushConfig")
          val projectIdKey = context.getString(R.string.pref_key_push_project_id)
          val resId = context.resources.getIdentifier(projectIdKey, "string", context.packageName)
-@@ -43,12 +104,12 @@ class Push(val context: Context, crashReporter: CrashReporter) {
+@@ -43,12 +101,12 @@ class Push(val context: Context, crashReporter: CrashReporter) {
  
          logger.debug("Creating push configuration for autopush.")
          val projectId = context.resources.getString(resId)
@@ -179,7 +178,7 @@ index f99ef999cf..7c59fe8d6d 100644
                  projectId,
                  serverHost = uri.getHost() ?: "",
                  protocol = if (uri.getScheme() == "http") {
-@@ -61,5 +122,13 @@ class Push(val context: Context, crashReporter: CrashReporter) {
+@@ -61,5 +119,13 @@ class Push(val context: Context, crashReporter: CrashReporter) {
          }
      }
  
@@ -195,7 +194,7 @@ index f99ef999cf..7c59fe8d6d 100644
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
-index 3df203e6e7..27221ce39b 100644
+index f25cf4442e..090d1c7982 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
 @@ -13,12 +13,13 @@ import mozilla.components.concept.sync.AuthType
@@ -205,7 +204,7 @@ index 3df203e6e7..27221ce39b 100644
 -import mozilla.components.feature.push.AutoPushFeature
 -import mozilla.components.feature.push.PushScope
  import mozilla.components.service.fxa.manager.FxaAccountManager
- import mozilla.components.service.fxa.manager.ext.withConstellation
+ import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
  import org.mozilla.fenix.components.BackgroundServices
  import org.mozilla.fenix.components.Push
 +import mozilla.components.concept.push.PushObserver

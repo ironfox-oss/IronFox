@@ -1,5 +1,5 @@
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 30a157099f..5eb202ff2f 100644
+index 0e11de1d54..050fb4cda6 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 @@ -12,6 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -10,7 +10,7 @@ index 30a157099f..5eb202ff2f 100644
  });
  
  const { debug, warn } = GeckoViewUtils.initLogging("Startup");
-@@ -362,6 +363,10 @@ export class GeckoViewStartup {
+@@ -367,6 +368,10 @@ export class GeckoViewStartup {
          if (aData.requestedLocales) {
            Services.locale.requestedLocales = aData.requestedLocales;
          }

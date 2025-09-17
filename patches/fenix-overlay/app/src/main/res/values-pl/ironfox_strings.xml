@@ -18,8 +18,6 @@
     <string name="preference_jit_enabled_caption">Popraw wydajność JavaScript, poprzez włączenie JIT. (Niezalecane dla większości użytkowników)</string>
     <string name="preference_jit_enabled_description">Kosztem bezpieczeństwa możesz włączyć JIT, aby poprawić wydajność stron internetowych. Zalecane tylko dla użytkowników z mniej wydajnymi urządzeniami.</string>
     <string name="preference_jit_enabled_summary">Po wyłączeniu, wydajność może być zmniejszona dla bardziej rozbudowanych stron internetowych - zmiana tego ustawienia spowoduje ponowne uruchomienie przeglądarki</string>
-    <string name="preference_ocsp_require">Wymagaj potwierdzenia ważności certyfikatu przez OCSP</string>
-    <string name="preference_ocsp_require_summary">Po włączeniu mogą występować sporadyczne błędy połączenia</string>
     <string name="preference_pdfjs_disabled">Otwieraj pliki PDF zewnętrznie</string>
     <string name="preference_website_appearance_title">Preferowany wygląd strony internetowej</string>
     <string name="preference_website_appearance_description">Niektóre strony dostosowują swój schemat kolorów na podstawie preferencji użytkownika. Wybierz schemat kolorów, którego chcesz używać dla tych stron. Pamiętaj, że opcje inne niż Jasny sprawią, że przeglądarka będzie wyglądać bardziej unikalnie, co może ułatwić zbieranie odcisków palców.</string>
@@ -51,7 +49,6 @@
     <string name="onboarding_install_ublock_caption">Blokuj reklamy, elementy śledzące i złośliwe oprogramowanie, aby przeglądanie było bezpieczniejsze i wygodniejsze.</string>
     <string name="tor_spoof_english_title">Zamień język na en-US</string>
     <string name="preference_cache_enabled">Włącz pamięć podręczną dysku</string>
-    <string name="preference_cache_ssl_enabled">Włącz pamięć podręczną dysku dla bezpiecznych stron</string>
     <string name="preferences_debug_settings_eme_enabled">Włącz rozszerzenia zaszyfrowanych mediów (EME)</string>
     <string name="preference_ipv6_enabled">Włącz połączenie sieciowe przez IPv6</string>
     <string name="preference_referer_policy">Zasady zapytań między domenami</string>

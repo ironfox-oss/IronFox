@@ -9,7 +9,7 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
-index da1acbe272..e8e8ffe1f3 100644
+index f82613fdd6..52adbe4d75 100644
 --- a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
 +++ b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
 @@ -60,7 +60,13 @@ object Config {
@@ -27,7 +27,6 @@ index da1acbe272..e8e8ffe1f3 100644
  
          Math.floor((build.time - cutoff.time) / (1000.0 * 60.0 * 60.0)).toInt()
      }
-
 -- 
 2.49.0
 

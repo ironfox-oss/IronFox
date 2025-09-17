@@ -1,21 +1,21 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
-index 64d220fdeb..b51c62f45e 100644
+index a5d0860080..b66dbe2bb4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
 @@ -54,7 +54,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<CheckBoxPreference>(R.string.pref_key_enable_contile).apply {
--            isVisible = requireContext().settings().showHomepageSectionToggleSettings
+-            isVisible = requireContext().settings().showHomepageTopSitesSectionToggle
 +            isVisible = false
              isChecked = context.settings().showContileFeature
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..a60d68f78f 100644
+index f0eeec863d..1383d0f149 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1932,10 +1932,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1997,10 +1997,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Contile functionality should be visible.
       */

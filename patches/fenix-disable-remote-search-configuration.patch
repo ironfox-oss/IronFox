@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 9113dc53a9..a3e2af1c1b 100644
+index b2b40dd764..2ab9a65f44 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -211,7 +211,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -259,7 +259,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_use_remote_search_configuration).apply {
@@ -12,10 +12,10 @@ index 9113dc53a9..a3e2af1c1b 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..432a0333af 100644
+index f0eeec863d..216d2faf60 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2012,7 +2012,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2077,7 +2077,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var useRemoteSearchConfiguration by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
          default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },

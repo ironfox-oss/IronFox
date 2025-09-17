@@ -1,5 +1,5 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index e5ab8acabc..6b70c215e5 100644
+index fd1633b673..2e5ac1db31 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
 @@ -203,6 +203,26 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =

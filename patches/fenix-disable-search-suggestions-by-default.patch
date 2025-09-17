@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 3fa564af49..d69a441a88 100644
+index f0eeec863d..f88b802c82 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1310,7 +1310,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1371,7 +1371,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val shouldShowSearchSuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions),
@@ -11,7 +11,7 @@ index 3fa564af49..d69a441a88 100644
      )
  
      val shouldAutocompleteInAwesomebar by booleanPreference(
-@@ -1354,7 +1354,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1415,7 +1415,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var showSearchSuggestionsInPrivateOnboardingFinished by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions_in_private_onboarding),
