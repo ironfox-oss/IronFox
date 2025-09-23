@@ -597,6 +597,13 @@ patches:
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
     category: "User Interface"
 
+  - file: "fenix-enable-app-icon-selection.patch"
+    name: "Enable App Icon Selection"
+    description: "Enables the app icon selection feature."
+    reason: "Allows users to personalize their IronFox, by choosing from a selection of built-in app icons."
+    effect: "Users have more control over their web browser, and more ways to customize it to their liking."
+    category: "User Interface"
+
   - file: "fenix-disable-history-and-recent-search-suggestions-by-default.patch"
     name: "Disable Historical and Recent Search Suggestions"
     description: "Disables recent and historical search suggestions by default."
