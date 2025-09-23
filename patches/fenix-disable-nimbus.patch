@@ -140,10 +140,10 @@ index 03d80ed014..93ec356360 100644
                  getPreferenceKey(R.string.pref_key_debug_settings),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..33a3e32cfb 100644
+index 0bd15b53a6..04b47dafb0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -361,10 +361,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -371,10 +371,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = "",
      )
  
@@ -158,7 +158,7 @@ index f0eeec863d..33a3e32cfb 100644
  
      var utmParamsKnown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_utm_params_known),
-@@ -591,19 +591,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -601,19 +601,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          persistDefaultIfNotExists = true,
      )
  
@@ -186,7 +186,7 @@ index f0eeec863d..33a3e32cfb 100644
  
      var isOverrideTPPopupsForPerformanceTest = false
  
-@@ -727,15 +727,15 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -737,15 +737,15 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -205,17 +205,8 @@ index f0eeec863d..33a3e32cfb 100644
 -    )
 +    var isFirstNimbusRun: Boolean = true
 +//        appContext.getPreferenceKey(R.string.pref_key_is_first_run),
-+//       default = true,
++//        default = true,
 +//    )
  
      var isFirstSplashScreenShown: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_is_first_splash_screen_shown),
-@@ -2327,7 +2327,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * Indicates if the feature to close synced tabs is enabled.
-      */
-     val enableCloseSyncedTabs: Boolean
--        get() = FxNimbus.features.remoteTabManagement.value().closeTabsEnabled
-+        get() = true
- 
-     /**
-      * Returns the height of the bottom toolbar.

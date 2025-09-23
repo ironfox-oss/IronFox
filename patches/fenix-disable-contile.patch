@@ -12,10 +12,10 @@ index a5d0860080..b66dbe2bb4 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..1383d0f149 100644
+index 0bd15b53a6..e85aceff68 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1997,10 +1997,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2007,10 +2007,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates if the Contile functionality should be visible.
       */
@@ -30,3 +30,20 @@ index f0eeec863d..1383d0f149 100644
  
      /**
       * Indicates if the Unified Search feature should be visible.
+@@ -2670,11 +2670,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     /**
+      * Indicates if the sponsored tiles are suppressed.
+      */
+-    var suppressSponsoredTopSitesEnabled by lazyFeatureFlagPreference(
+-        key = appContext.getPreferenceKey(R.string.pref_key_suppress_sponsored_tiles),
+-        featureFlag = true,
+-        default = { FxNimbus.features.suppressSponsoredTopSites.value().enabled },
+-    )
++    var suppressSponsoredTopSitesEnabled = true
++//        key = appContext.getPreferenceKey(R.string.pref_key_suppress_sponsored_tiles),
++//        featureFlag = true,
++//        default = { FxNimbus.features.suppressSponsoredTopSites.value().enabled },
++//    )
+ 
+     /**
+      * Indicates whether or not to show the checklist feature.

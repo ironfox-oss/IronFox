@@ -169,7 +169,7 @@ index 43cf86f477..1b710b7192 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 4d5067becf..7ae98a47ff 100644
+index 4d5067becf..69e8080542 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
@@ -216,15 +216,6 @@ index 4d5067becf..7ae98a47ff 100644
  import org.mozilla.fenix.messaging.state.MessagingMiddleware
  import org.mozilla.fenix.nimbus.FxNimbus
  import org.mozilla.fenix.onboarding.FenixOnboarding
-@@ -69,7 +69,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
- import org.mozilla.fenix.perf.StartupStateProvider
- import org.mozilla.fenix.perf.StrictModeManager
- import org.mozilla.fenix.perf.lazyMonitored
--import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
-+// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
- import org.mozilla.fenix.termsofuse.TermsOfUseManager
- import org.mozilla.fenix.utils.Settings
- import org.mozilla.fenix.utils.isLargeScreenSize
 @@ -199,7 +199,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
@@ -252,7 +243,7 @@ index 4d5067becf..7ae98a47ff 100644
                      metrics = analytics.metrics,
                      nimbusEventStore = nimbus.events,
                  ),
-@@ -280,18 +280,18 @@ class Components(private val context: Context) {
+@@ -280,9 +280,9 @@ class Components(private val context: Context) {
                          currentTimeInMillis = { System.currentTimeMillis() },
                      ),
                  ),
@@ -260,13 +251,11 @@ index 4d5067becf..7ae98a47ff 100644
 +                HomeTelemetryMiddleware(),*/
                  SetupChecklistPreferencesMiddleware(DefaultSetupChecklistRepository(context)),
 -                SetupChecklistTelemetryMiddleware(),
-+/*                SetupChecklistTelemetryMiddleware(),
++//                SetupChecklistTelemetryMiddleware(),
                  ReviewPromptMiddleware(
                      settings = settings,
                      createJexlHelper = nimbus::createJexlHelper,
--                ),
-+                ),*/
-                 AppVisualCompletenessMiddleware(performance.visualCompletenessQueue),
+@@ -291,7 +291,7 @@ class Components(private val context: Context) {
              ),
          ).also {
              it.dispatch(AppAction.SetupChecklistAction.Init)
@@ -275,82 +264,20 @@ index 4d5067becf..7ae98a47ff 100644
          }
      }
  
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-index 3ee4690a76..15e1306605 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeFragment.kt
-@@ -84,8 +84,8 @@ import org.mozilla.fenix.components.appstate.AppAction
- import org.mozilla.fenix.components.appstate.AppAction.ContentRecommendationsAction
- import org.mozilla.fenix.components.appstate.AppAction.MessagingAction
- import org.mozilla.fenix.components.appstate.AppAction.MessagingAction.MicrosurveyAction
--import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
--import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
-+// import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.CheckIfEligibleForReviewPrompt
-+// import org.mozilla.fenix.components.appstate.AppAction.ReviewPromptAction.ReviewPromptShown
- import org.mozilla.fenix.components.appstate.AppState
- import org.mozilla.fenix.components.appstate.qrScanner.QrScannerBinding
- import org.mozilla.fenix.components.components
-@@ -149,8 +149,8 @@ import org.mozilla.fenix.pbmlock.NavigationOrigin
- import org.mozilla.fenix.pbmlock.observePrivateModeLock
- import org.mozilla.fenix.perf.MarkersFragmentLifecycleCallbacks
- import org.mozilla.fenix.perf.StartupTimeline
--import org.mozilla.fenix.reviewprompt.ReviewPromptState
--import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
-+// import org.mozilla.fenix.reviewprompt.ReviewPromptState
-+// import org.mozilla.fenix.reviewprompt.ReviewPromptState.Eligible.Type
- import org.mozilla.fenix.search.SearchDialogFragment
- import org.mozilla.fenix.search.awesomebar.AwesomeBarComposable
- import org.mozilla.fenix.search.toolbar.DefaultSearchSelectorController
-@@ -1156,7 +1156,7 @@ class HomeFragment : Fragment() {
-         requireComponents.core.tabCollectionStorage.unregister(collectionStorageObserver)
- 
-         // Trigger review prompt logic and show the appropriate prompt variation if applicable
--        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
-+//        requireComponents.appStore.dispatch(CheckIfEligibleForReviewPrompt)
- 
-         if (requireComponents.termsOfUseManager.shouldShowTermsOfUsePromptOnHomepage()) {
-             findNavController().navigate(
-@@ -1372,7 +1372,7 @@ class HomeFragment : Fragment() {
-     }
- 
-     private fun observeReviewPromptState() {
--        consumeFlow(requireComponents.appStore) { appStates ->
-+/*        consumeFlow(requireComponents.appStore) { appStates ->
-             observeReviewPromptState(
-                 appStates = appStates,
-                 dispatchAction = requireComponents.appStore::dispatch,
-@@ -1386,7 +1386,7 @@ class HomeFragment : Fragment() {
-                     )
-                 },
-             )
--        }
-+        }*/
-     }
- 
-     @VisibleForTesting
-@@ -1396,7 +1396,7 @@ class HomeFragment : Fragment() {
-         tryShowPlayStorePrompt: suspend () -> Unit,
-         showCustomPrompt: () -> Unit,
-     ) {
--        appStates
-+/*        appStates
-             .map { it.reviewPrompt }
-             .distinctUntilChanged()
-             .collect {
-@@ -1411,7 +1411,7 @@ class HomeFragment : Fragment() {
-                         dispatchAction(ReviewPromptShown)
-                     }
-                 }
--            }
-+            }*/
-     }
- 
-     companion object {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..16aba158c7 100644
+index 0bd15b53a6..778cc74e08 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2046,7 +2046,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -334,7 +334,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var customReviewPromptFeatureEnabled by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_custom_review_prompt_enabled),
+-        featureFlag = true,
++        featureFlag = false,
+         default = { FxNimbus.features.customReviewPrompt.value().enabled },
+     )
+ 
+@@ -2056,7 +2056,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

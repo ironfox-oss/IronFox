@@ -116,24 +116,11 @@ index 8645aaf290..4c96d174b1 100644
  
  fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
      ?: this as? Activity
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
-index 229569e513..dd272629a3 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/nimbus/controller/NimbusBranchesController.kt
-@@ -36,7 +36,7 @@ class NimbusBranchesController(
-         updateOptInState(branch)
- 
-         if (!isTelemetryEnabled() && !isExperimentationEnabled()) {
--            notifyUserToEnableExperiments()
-+            // notifyUserToEnableExperiments()
-         }
-     }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..6e56e10dd9 100644
+index 0bd15b53a6..c43a4857e4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -534,19 +534,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -544,19 +544,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -162,7 +149,7 @@ index f0eeec863d..6e56e10dd9 100644
      )
  
      var hasAcceptedTermsOfService by booleanPreference(
-@@ -585,11 +585,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -595,11 +595,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * sure that users who upgrade and had telemetry disabled don't start sending the
       * daily usage ping telemetry.
       */
