@@ -43,10 +43,10 @@ index 823b5909fa..8af14d7cf4 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..60b4804ba8
+index 0000000000..d8863f1947
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,657 @@
+@@ -0,0 +1,674 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -373,6 +373,23 @@ index 0000000000..60b4804ba8
 +        }
 +
 +        /*** Miscellaneous ***/
++
++        /**
++        * Indicates whether or not we should enable collections
++        * Default: true
++        * Gecko preference(s) impacted: N/A
++        */
++        val collectionsEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_collections_enabled,
++        )
++
++        collectionsEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, collectionsEnabled ->
++            val settings = preference.context.settings()
++
++            settings.collections = collectionsEnabled
++
++            true
++        }
 +
 +        /**
 +        * Indicates whether or not we should enable Firefox Translations
@@ -921,10 +938,10 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..caaf5ea1e1
+index 0000000000..932ddd0732
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,248 @@
+@@ -0,0 +1,255 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1108,6 +1125,13 @@ index 0000000000..caaf5ea1e1
 +        android:selectable="false"
 +        android:title="@string/if_preferences_misc"
 +        app:iconSpaceReserved="false">
++
++        <!-- Whether we should enable collections -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_collections_enabled"
++            android:title="@string/preference_collections_enabled"
++            app:iconSpaceReserved="false" />
 +
 +        <!-- Whether we should enable Firefox Translations -->
 +        <androidx.preference.SwitchPreference

@@ -8,6 +8,9 @@
     <!-- Accessibility services -->
     <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
 
+    <!-- Collections -->
+    <string name="pref_key_collections_enabled" translatable="false">pref_key_collections_enabled</string>
+
     <!-- Cross-origin referer policy -->
     <string name="pref_key_referer_policy" translatable="false">pref_key_referer_policy</string>
     <string name="pref_key_referer_policy_always" translatable="false">pref_key_referer_policy_always</string>

@@ -19,6 +19,9 @@
     <!-- Accessibility services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
 
+    <!-- Collections -->
+    <string name="preference_collections_enabled">Enable collections</string>
+
     <!-- Cross-origin referer policy -->
     <string name="preference_referer_policy">Cross-origin referer policy</string>
     <string name="preference_referer_policy_summary">Configure the behavior of cross-origin referers</string>
