@@ -452,6 +452,13 @@ patches:
     effect: "Protects users against tracking/fingerprinting."
     category: "Privacy"
 
+  - file: "geckoview-disable-speculative-connections.patch"
+    name: "Disable Speculative Connections"
+    description: "Prevents GeckoView from generating speculative/predictive connections."
+    reason: "To prevent unwanted/unsolicited network traffic (In Fenix, this is currently used for certain URL bar suggestions)."
+    effect: "Prevents the browser from connecting to third parties without explicit user consent, and provides users with more control over their network activity."
+    category: "Privacy"
+
   - file: "gecko-stub-beacon.patch"
     name: "Stub the Beacon API (navigator.sendBeacon)"
     description: "To prevent tracking and the submission of analytics, without aiding fingerprinting and causing undesired breakage."
