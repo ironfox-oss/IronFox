@@ -33,6 +33,9 @@
     <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
     <string name="preferences_debug_settings_widevine_enabled">Enable Widevine CDM</string>
 
+    <!-- Firefox Translations -->
+    <string name="preference_translations_enabled">Enable Firefox Translations</string>
+
     <!-- IPv6 -->
     <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
 

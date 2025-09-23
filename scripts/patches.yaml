@@ -685,6 +685,13 @@ patches:
     effect: "Users can enable or disable Safe Browsing from the UI."
     category: "User Interface"
 
+  - file: "fenix-ironfox-settings-support-translations.patch"
+    name: "IronFox Settings (Fenix) - Firefox Translations"
+    description: "Provides support for a UI toggle to enable/disable Firefox Translations."
+    reason: "To allow users to disable Firefox Translations if desired."
+    effect: "Users can enable or disable Firefox Translations from the UI."
+    category: "User Interface"
+
   - file: "geckoview-ironfox-settings-support-spoof-english.patch"
     name: "IronFox Settings Support (GeckoView) - Spoof English"
     description: "Provides support to GeckoView for a UI toggle to spoof the locale to English (en-US)."

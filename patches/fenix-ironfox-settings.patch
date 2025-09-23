@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..0e10070439 100644
+index 823b5909fa..8af14d7cf4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -198,6 +198,28 @@ class Core(
+@@ -198,6 +198,30 @@ class Core(
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
@@ -23,6 +23,8 @@ index 823b5909fa..0e10070439 100644
 +            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
 +            spoofEnglish = context.settings().spoofEnglish,
 +            svgEnabled = context.settings().svgEnabled,
++            translationsEnabled = context.settings().translationsEnabled,
++            translationsSupported = context.settings().translationsEnabled,
 +            wasmEnabled = context.settings().wasmEnabled,
 +            webglEnabled = context.settings().webglEnabled,
 +            webrtcEnabled = context.settings().webrtcEnabled,
@@ -31,7 +33,7 @@ index 823b5909fa..0e10070439 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -231,6 +253,7 @@ class Core(
+@@ -231,6 +255,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -41,10 +43,10 @@ index 823b5909fa..0e10070439 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..d917acddc4
+index 0000000000..60b4804ba8
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,625 @@
+@@ -0,0 +1,657 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -371,6 +373,38 @@ index 0000000000..d917acddc4
 +        }
 +
 +        /*** Miscellaneous ***/
++
++        /**
++        * Indicates whether or not we should enable Firefox Translations
++        * Default: true
++        * Gecko preference(s) impacted: browser.translations.enable, browser.translations.simulateUnsupportedEngine
++        */
++        val translationsEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_translations_enabled,
++        )
++
++        translationsEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, translationsEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.translationsEnabled = translationsEnabled
++            
++            components.core.engine.settings.translationsEnabled = translationsEnabled
++            components.core.engine.settings.translationsSupported = translationsEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
 +
 +        /**
 +        * Indicates whether or not we should enable IPv6 network connectivity
@@ -703,7 +737,7 @@ index 03d80ed014..7c53da22c8 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..e022684c63 100644
+index f0eeec863d..533e16505d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -71,6 +71,7 @@ import org.mozilla.fenix.tabstray.DefaultTabManagementFeatureHelper
@@ -714,7 +748,7 @@ index f0eeec863d..e022684c63 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2710,4 +2711,136 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2710,4 +2711,141 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -809,6 +843,11 @@ index f0eeec863d..e022684c63 100644
 +        default = true,
 +    )
 +
++    var translationsEnabled by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_translations_enabled),
++        default = true,
++    )
++
 +    var useUnifiedPush by booleanPreference(
 +        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
 +        default = false,
@@ -882,10 +921,10 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..ddf7d7f43d
+index 0000000000..caaf5ea1e1
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,248 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1069,6 +1108,14 @@ index 0000000000..ddf7d7f43d
 +        android:selectable="false"
 +        android:title="@string/if_preferences_misc"
 +        app:iconSpaceReserved="false">
++
++        <!-- Whether we should enable Firefox Translations -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_translations_enabled"
++            android:summary="@string/restart_required_summary"
++            android:title="@string/preference_translations_enabled"
++            app:iconSpaceReserved="false" />
 +
 +        <!-- Whether we should enable IPv6 network connectivity -->
 +        <androidx.preference.SwitchPreference
