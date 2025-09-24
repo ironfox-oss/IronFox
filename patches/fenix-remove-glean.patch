@@ -555,6 +555,24 @@ index a6fc6e8483..01ca7b4f3e 100644
          }
      }
  
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
+index 410981e1ed..ec6f6a748e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
+@@ -245,11 +245,11 @@ class BrowserToolbarSearchMiddleware(
+                         )
+                         browserStore.dispatch(EngagementFinished(abandoned = false))
+                     }
+-                    "about:glean" -> {
++/*                    "about:glean" -> {
+                         navController.navigate(
+                             NavGraphDirections.actionGlobalGleanDebugToolsFragment(),
+                         )
+-                    }
++                    }*/
+                     "moz://a" -> openSearchOrUrl(
+                         SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
+                         navController,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..273349e0ca 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
