@@ -942,7 +942,6 @@ $SED -i \
 
 $SED -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
-    -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \
@@ -956,12 +955,10 @@ $SED -i \
     -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.boolean"|' \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.integer"|' \
     -e 's|"formhelper.autozoom"|"z99.ignore.boolean"|' \
-    -e 's|"general.aboutConfig.enable"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.boolean"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.boolean"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.boolean"|' \
-    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.boolean"|' \
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.boolean"|' \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.boolean"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.integer"|' \
@@ -976,7 +973,6 @@ $SED -i \
     -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.boolean"|' \
     -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.integer"|' \
     -e 's|"security.tls.enable_kyber"|"z99.ignore.boolean"|' \
-    -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
