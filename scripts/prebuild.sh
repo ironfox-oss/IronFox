@@ -707,6 +707,12 @@ $SED -i -e 's/MARS_ENDPOINT_BASE_URL = ".*"/MARS_ENDPOINT_BASE_URL = ""/' mobile
 $SED -i -e 's/MARS_ENDPOINT_URL = ".*"/MARS_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
 $SED -i -e 's/MARS_ENDPOINT_STAGING_BASE_URL = ".*"/MARS_ENDPOINT_STAGING_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
 
+# Remove MARS
+$SED -i 's|- components:service-mars|# - components:service-mars|g' mobile/android/fenix/.buildconfig.yml
+$SED -i "s|implementation project(':components:service-mars')|// implementation project(':components:service-mars')|g" mobile/android/fenix/app/build.gradle
+
+rm -vf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/TopSitesRefresher.kt
+
 # No-op GeoIP/Region service
 ## https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst
 $SED -i -e 's/GEOIP_SERVICE_URL = ".*"/GEOIP_SERVICE_URL = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt

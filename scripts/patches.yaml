@@ -254,6 +254,20 @@ patches:
     effect: "Cleaner interface without promotional content or third-party integrations."
     category: "Mozilla"
 
+  - file: "a-c-remove-mars.patch"
+    name: "Remove MARS (Android Components)"
+    description: "Removes the Mozilla Ad Routing Service (MARS) from Mozilla's Android Components."
+    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted advertising."
+    category: "Mozilla"
+
+  - file: "fenix-remove-mars.patch"
+    name: "Remove MARS (Fenix)"
+    description: "Removes the Mozilla Ad Routing Service (MARS) from Firefox for Android."
+    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted advertising."
+    category: "Mozilla"
+
   - file: "fenix-disable-sync-engines-by-default.patch"
     name: "Disable Firefox Sync"
     description: "Disables Firefox Sync by default."
