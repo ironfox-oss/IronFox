@@ -38,10 +38,10 @@ index 590285305b..3efae229ef 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..e4ea24f095 100644
+index 0bd15b53a6..caf1c2c3e4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1862,7 +1862,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1872,7 +1872,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var isAddressSyncEnabled by featureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_address_sync),

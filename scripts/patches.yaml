@@ -452,6 +452,13 @@ patches:
     effect: "Protects users against tracking/fingerprinting."
     category: "Privacy"
 
+  - file: "geckoview-disable-speculative-connections.patch"
+    name: "Disable Speculative Connections"
+    description: "Prevents GeckoView from generating speculative/predictive connections."
+    reason: "To prevent unwanted/unsolicited network traffic (In Fenix, this is currently used for certain URL bar suggestions)."
+    effect: "Prevents the browser from connecting to third parties without explicit user consent, and provides users with more control over their network activity."
+    category: "Privacy"
+
   - file: "gecko-stub-beacon.patch"
     name: "Stub the Beacon API (navigator.sendBeacon)"
     description: "To prevent tracking and the submission of analytics, without aiding fingerprinting and causing undesired breakage."
@@ -597,6 +604,13 @@ patches:
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
     category: "User Interface"
 
+  - file: "fenix-enable-app-icon-selection.patch"
+    name: "Enable App Icon Selection"
+    description: "Enables the app icon selection feature."
+    reason: "Allows users to personalize their IronFox, by choosing from a selection of built-in app icons."
+    effect: "Users have more control over their web browser, and more ways to customize it to their liking."
+    category: "User Interface"
+
   - file: "fenix-disable-history-and-recent-search-suggestions-by-default.patch"
     name: "Disable Historical and Recent Search Suggestions"
     description: "Disables recent and historical search suggestions by default."
@@ -683,6 +697,13 @@ patches:
     description: "Provides support for a UI toggle to enable/disable Safe Browsing."
     reason: "To allow users to enable/disable Safe Browsing, directly from the UI."
     effect: "Users can enable or disable Safe Browsing from the UI."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-translations.patch"
+    name: "IronFox Settings (Fenix) - Firefox Translations"
+    description: "Provides support for a UI toggle to enable/disable Firefox Translations."
+    reason: "To allow users to disable Firefox Translations if desired."
+    effect: "Users can enable or disable Firefox Translations from the UI."
     category: "User Interface"
 
   - file: "geckoview-ironfox-settings-support-spoof-english.patch"

@@ -913,7 +913,7 @@
       "firstPartyDomain": "cvs.com"
     },
     {
-      "overrides": "-JSDateTimeUTC",
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-JSDateTimeUTC",
       "firstPartyDomain": "discord.com"
     },
     {
@@ -939,6 +939,10 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,+JSDateTimeUTC",
       "firstPartyDomain": "favicon.io"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-WebGLRenderCapability",
+      "firstPartyDomain": "figma.com"
     },
     {
       "overrides": "-JSDateTimeUTC",

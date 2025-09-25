@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..dede673a20 100644
+index 5233b8a8dd..906c5bdfdb 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1655,6 +1655,106 @@ class GeckoEngine(
+@@ -1655,6 +1655,114 @@ class GeckoEngine(
          override var lnaBlockingEnabled: Boolean
              get() = runtime.settings.lnaBlockingEnabled
              set(value) { runtime.settings.setLnaBlockingEnabled(value) }
@@ -87,6 +87,14 @@ index 5233b8a8dd..dede673a20 100644
 +            get() = runtime.settings.svgEnabled
 +            set(value) { runtime.settings.svgEnabled = value }
 +
++        override var translationsEnabled: Boolean
++            get() = runtime.settings.translationsEnabled
++            set(value) { runtime.settings.translationsEnabled = value }
++
++        override var translationsSupported: Boolean
++            get() = runtime.settings.translationsSupported
++            set(value) { runtime.settings.translationsSupported = value }
++
 +        override var wasmEnabled: Boolean
 +            get() = runtime.settings.wasmEnabled
 +            set(value) { runtime.settings.wasmEnabled = value }
@@ -109,7 +117,7 @@ index 5233b8a8dd..dede673a20 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1702,6 +1802,27 @@ class GeckoEngine(
+@@ -1702,6 +1810,29 @@ class GeckoEngine(
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
              this.lnaBlockingEnabled = it.lnaBlockingEnabled
@@ -129,6 +137,8 @@ index 5233b8a8dd..dede673a20 100644
 +            this.refererXOriginPolicy = it.refererXOriginPolicy
 +            this.spoofEnglish = it.spoofEnglish
 +            this.svgEnabled = it.svgEnabled
++            this.translationsEnabled = it.translationsEnabled
++            this.translationsSupported = it.translationsSupported
 +            this.wasmEnabled = it.wasmEnabled
 +            this.webglEnabled = it.webglEnabled
 +            this.webrtcEnabled = it.webrtcEnabled
@@ -138,10 +148,10 @@ index 5233b8a8dd..dede673a20 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..92b213c61d 100644
+index f9aa3b43e9..3a8476d3df 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -367,6 +367,28 @@ abstract class Settings {
+@@ -367,6 +367,30 @@ abstract class Settings {
       * Setting to control blocking of local network & local device (localhost) access
       */
      open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
@@ -162,6 +172,8 @@ index f9aa3b43e9..92b213c61d 100644
 +    open var refererXOriginPolicy: Engine.RefererXOriginPolicy by UnsupportedSetting()
 +    open var spoofEnglish: Boolean by UnsupportedSetting()
 +    open var svgEnabled: Boolean by UnsupportedSetting()
++    open var translationsEnabled: Boolean by UnsupportedSetting()
++    open var translationsSupported: Boolean by UnsupportedSetting()
 +    open var wasmEnabled: Boolean by UnsupportedSetting()
 +    open var webglEnabled: Boolean by UnsupportedSetting()
 +    open var webrtcEnabled: Boolean by UnsupportedSetting()
@@ -170,7 +182,7 @@ index f9aa3b43e9..92b213c61d 100644
  }
  
  /**
-@@ -440,6 +462,27 @@ data class DefaultSettings(
+@@ -440,6 +464,29 @@ data class DefaultSettings(
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
      override var lnaBlockingEnabled: Boolean = false,
@@ -190,6 +202,8 @@ index f9aa3b43e9..92b213c61d 100644
 +    override var refererXOriginPolicy: Engine.RefererXOriginPolicy = Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS,
 +    override var spoofEnglish: Boolean = true,
 +    override var svgEnabled: Boolean = true,
++    override var translationsEnabled: Boolean = true,
++    override var translationsSupported: Boolean = true,
 +    override var wasmEnabled: Boolean = true,
 +    override var webglEnabled: Boolean = true,
 +    override var webrtcEnabled: Boolean = true,

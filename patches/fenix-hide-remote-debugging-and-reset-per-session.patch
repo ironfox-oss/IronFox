@@ -12,10 +12,10 @@ index 03d80ed014..84688258c7 100644
              settings.preferences.edit { putBoolean(preference.key, newValue) }
              requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..d9a7f61a19 100644
+index 0bd15b53a6..fa1f2db68a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -529,10 +529,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -539,10 +539,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = CrashReportOption.Ask.toString(),
      )
  

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..b2c8669141 100644
+index 0bd15b53a6..edb942ea71 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1245,7 +1245,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1255,7 +1255,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldDeleteBrowsingDataOnQuit by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_browsing_data_on_quit),
@@ -11,7 +11,7 @@ index f0eeec863d..b2c8669141 100644
      )
  
      var deleteOpenTabs by booleanPreference(
-@@ -1331,8 +1331,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1341,8 +1341,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              return touchExplorationIsEnabled || switchServiceIsEnabled
          }
  

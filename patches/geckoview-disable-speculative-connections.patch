@@ -1,0 +1,13 @@
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
+index 9652d1873c..23575eacf4 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
+@@ -740,7 +740,7 @@ public class GeckoThread extends Thread {
+     // bother checking here if Gecko is actually loaded or not.
+     // Speculative connection depends on proxy settings,
+     // so the earliest it can happen is after profile is ready.
+-    queueNativeCallUntil(State.PROFILE_READY, GeckoThread.class, "speculativeConnectNative", uri);
++//    queueNativeCallUntil(State.PROFILE_READY, GeckoThread.class, "speculativeConnectNative", uri);
+   }
+ 
+   @UiThread

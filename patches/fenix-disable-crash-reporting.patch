@@ -115,6 +115,27 @@ index 5340aa5258..fbaf09b577 100644
      }
  
      @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
+index 410981e1ed..d9e71652d4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
+@@ -231,14 +231,14 @@ class BrowserToolbarSearchMiddleware(
+                 val navController = environment?.navController ?: return
+ 
+                 when (action.text) {
+-                    "about:crashes" -> {
++/*                    "about:crashes" -> {
+                         // The list of past crashes can be accessed via "settings > about", but desktop and
+                         // fennec users may be used to navigating to "about:crashes". So we intercept this here
+                         // and open the crash list activity instead.
+                         navController.navigate(
+                             NavGraphDirections.actionGlobalCrashListFragment(),
+                         )
+-                    }
++                    }*/
+                     "about:addons" -> {
+                         navController.navigate(
+                             NavGraphDirections.actionGlobalAddonsManagementFragment(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 index 819b24954e..0f9bb0a905 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
@@ -158,10 +179,10 @@ index b2b40dd764..c767a93a99 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..8187bd7b73 100644
+index 0bd15b53a6..96bc5909d5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -524,10 +524,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -534,10 +534,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
                  true,
              )
  
@@ -176,7 +197,7 @@ index f0eeec863d..8187bd7b73 100644
  
      val isRemoteDebuggingEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
-@@ -837,10 +837,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -847,10 +847,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if the user denies to ever see again the Remote Settings crash
       * pull UI.
       */
