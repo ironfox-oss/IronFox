@@ -150,10 +150,10 @@ index 92a8a9a36d..c67e70ba65 100644
                      lineThreeState,
                  ),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..8906b4fce8 100644
+index 0bd15b53a6..8724b4027f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -549,11 +549,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -559,11 +559,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -170,7 +170,7 @@ index f0eeec863d..8906b4fce8 100644
  
      /**
       * Timestamp in milliseconds when the terms of use prompt was last shown to the user.
-@@ -631,7 +631,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -641,7 +641,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldShowPrivacyPopWindow by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_pop_window),

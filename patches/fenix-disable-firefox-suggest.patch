@@ -101,10 +101,10 @@ index ce4b42ef4a..d5f03c9e2a 100644
          requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index f0eeec863d..032429242b 100644
+index 0bd15b53a6..a149052e1e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2275,7 +2275,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2285,7 +2285,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var enableFxSuggest by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
@@ -113,7 +113,7 @@ index f0eeec863d..032429242b 100644
          featureFlag = FeatureFlags.FX_SUGGEST,
      )
  
-@@ -2283,7 +2283,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2293,7 +2293,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       * Indicates if boosting AMP/wiki suggestions is enabled.
       */
      val boostAmpWikiSuggestions: Boolean
@@ -122,7 +122,7 @@ index f0eeec863d..032429242b 100644
  
      /**
       * Indicates first time engaging with signup
-@@ -2300,7 +2300,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2310,7 +2310,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
          default = { enableFxSuggest },
@@ -131,7 +131,7 @@ index f0eeec863d..032429242b 100644
      )
  
      /**
-@@ -2310,7 +2310,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2320,7 +2320,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showNonSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),

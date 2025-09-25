@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index e7e19273f9..aed5661545 100644
+index e7e19273f9..8711a59c6f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 @@ -438,9 +438,9 @@ open class DefaultToolbarMenu(
@@ -14,11 +14,13 @@ index e7e19273f9..aed5661545 100644
                  BrowserMenuDivider(),
                  findInPageItem,
                  translationsItem.apply { visible = ::shouldShowTranslations },
-@@ -454,7 +454,7 @@ open class DefaultToolbarMenu(
+@@ -453,8 +453,8 @@ open class DefaultToolbarMenu(
+                 addToHomeScreenItem.apply { visible = ::canAddToHomescreen },
                  addAppToHomeScreenItem.apply { visible = ::canAddAppToHomescreen },
                  if (shouldShowTopSites) addRemoveTopSitesItem else null,
-                 saveToCollectionItem,
+-                saveToCollectionItem,
 -                if (FxNimbus.features.print.value().browserPrintEnabled &&
++                if (context.settings().collections) saveToCollectionItem else null,
 +                if (context.settings().printEnabled &&
                      !context.isAndroidAutomotiveAvailable()
                  ) {

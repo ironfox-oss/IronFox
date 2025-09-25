@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restart_required_summary">Промени тази настройка преди да рестартираш браузара</string>
+    <string name="unsupported_summary">Тази настройка НЕ е препоръчана или поддържана. Продължи с предпазливост</string>
+    <string name="if_preferences">IronFox настройки</string>
+    <string name="if_preferences_misc">Разни</string>
+    <string name="if_preferences_privacy">Частно</string>
+    <string name="if_preferences_privacy_security">Частен и жаститен</string>
+    <string name="if_preferences_secret">Таини настройки</string>
+    <string name="if_preferences_security">Жастита</string>
+    <string name="preference_accessibility_enabled">Услуги за достъпност</string>
+    <string name="preference_referer_policy_summary">Оправи държанието на cross-origin referers</string>
+    <string name="preference_referer_policy_always">Винаги изпрати cross-origin referers</string>
+    <string name="preference_referer_policy_base_domains_match">Изпрати cross-origin referers когато домайна мачва</string>
+    <string name="preference_referer_policy_hosts_match">Изключи cross-origin referers</string>
+    <string name="preference_cache_enabled">Включи кеш на диска</string>
+    <string name="preferences_debug_settings_eme_enabled">Включи Encrypted Media Extensions (EME)</string>
+    <string name="preferences_debug_settings_widevine_enabled">Включи Widevine CDM</string>
+    <string name="preference_ipv6_enabled">Включи IPv6 мрежова свързаност</string>
+    <string name="preference_javascript_enabled">Включи JavaScript</string>
+    <string name="preference_jit_enabled">Включи JavaScript Just-in-time Compilation (JIT)</string>
+    <string name="preference_jit_enabled_caption">Подобри JavaScript performance като включиш JIT. (Не е препоръчано за потребители)</string>
+    <string name="preference_jit_enabled_description">За сметка на сигурността, можете да активирате JIT да подобрите перформанца на уебсайтовете. Само препоръчително за потребители с по-нисък клас устройства.</string>
+    <string name="preference_jit_enabled_summary">Когато е изключено, производителността може да бъде затруднена при сложни уеб страници - Промяната на тази настройка ще рестартира браузъра ви</string>
+    <string name="preference_pdfjs_disabled">Отвори PDF файловете с външна програма</string>
+</resources>

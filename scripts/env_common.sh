@@ -32,6 +32,7 @@ fi
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#284
 export DISABLE_TELEMETRY=1
 export MACHRC="$patches/machrc"
+export MOZCONFIG="$mozilla_release/mozconfig"
 
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
