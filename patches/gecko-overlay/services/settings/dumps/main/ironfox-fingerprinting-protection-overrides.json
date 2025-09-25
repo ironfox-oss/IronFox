@@ -913,7 +913,7 @@
       "firstPartyDomain": "cvs.com"
     },
     {
-      "overrides": "-JSDateTimeUTC",
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-JSDateTimeUTC",
       "firstPartyDomain": "discord.com"
     },
     {
