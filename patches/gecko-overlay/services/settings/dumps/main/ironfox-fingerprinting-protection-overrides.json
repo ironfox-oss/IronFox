@@ -941,6 +941,10 @@
       "firstPartyDomain": "favicon.io"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-WebGLRenderCapability",
+      "firstPartyDomain": "figma.com"
+    },
+    {
       "overrides": "-JSDateTimeUTC",
       "firstPartyDomain": "flieger.chat"
     },
