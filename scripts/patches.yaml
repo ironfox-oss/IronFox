@@ -531,13 +531,6 @@ patches:
     effect: "Prevents users from accidentally leaving remote debugging enabled."
     category: "Security"
 
-  - file: "fenix-disable-shipped-domains.patch"
-    name: "Disable Shipped Domains"
-    description: "Disables Firefox's built-in list of domains for URL autocompletion."
-    reason: "To quote a Mozilla employee (https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0): 'Android's current list of 400+ domain names for address bar suggestions was created way back in December 2015... This list hasn't been updated since 2015 and now includes expired and squatted domains that might serve ads or malware'"
-    effect: "Prevents suggesting squatted domains to users that serve ads and malware, and reduces annoyances/unwanted behavior."
-    category: "Security"
-
   - file: "fenix-increase-update-frequency.patch"
     name: "Increase Update Frequency"
     description: "Increases the rate at which Firefox syncs with Remote Settings, from every 24 hours to hourly, and the rate at which Firefox checks for add-on updates, from every 12 hours to hourly."
