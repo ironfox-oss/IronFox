@@ -1,26 +1,13 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 5340aa5258..dcb1eeffc7 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -332,7 +332,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-                         // we can prevent with this.
-                         components.core.topSitesStorage.getTopSites(
-                             totalSites = components.settings.topSitesMaxLimit,
--                            frecencyConfig = if (FxNimbus.features.homepageHideFrecentTopSites.value().enabled) {
-+                            frecencyConfig = if (true) {
-                                 null
-                             } else {
-                                 TopSitesFrecencyConfig(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
-index 328368f826..89a4780ba3 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSitesConfigCreator.kt
-@@ -37,7 +37,7 @@ internal fun getTopSitesConfig(
-         val limit = if (settings.suppressSponsoredTopSitesEnabled) 0 else TOP_SITES_PROVIDER_LIMIT
-         TopSitesConfig(
-             totalSites = settings.topSitesMaxLimit,
--            frecencyConfig = if (FxNimbus.features.homepageHideFrecentTopSites.value().enabled) {
-+            frecencyConfig = if (true) {
-                 null
-             } else {
-                 TopSitesFrecencyConfig(
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 4003350e99..63d49e48e5 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -746,7 +746,7 @@ features:
+         description: >
+           Whether or not to hide frecent top sites on the homepage.
+         type: Boolean
+-        default: false
++        default: true
+ 
+   user-characteristics:
+     description: A feature for control user characteristic data collection

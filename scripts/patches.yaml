@@ -226,6 +226,13 @@ patches:
     effect: "Reduces unwanted network activity and ensures search settings are controlled locally."
     category: "Mozilla"
 
+  - file: "fenix-remove-tos-privacy-policy.patch"
+    name: "Remove ToS and Privacy Policy"
+    description: "Removes unwanted elements related to Mozilla's terms of service and privacy policy."
+    reason: "To prevent confusing users and to remove unwanted Mozilla branding."
+    effect: "Users are provided with a cleaner browsing experience."
+    category: "Mozilla"
+
   - file: "fenix-disable-link-sharing.patch"
     name: "Disable 'Sent from Firefox' Link Sharing"
     description: "Disables the 'Sent from Firefox' footer/link sharing feature."
@@ -597,7 +604,7 @@ patches:
     category: "User Experience"
 
   # User Interface
-  - file: "fenix-branding.patch"
+  - file: "fenix-ironfox-branding.patch"
     name: "IronFox Branding"
     description: "Modifies the branding to IronFox."
     reason: "Creates distinct brand identity for the fork."
