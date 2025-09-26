@@ -167,18 +167,9 @@ index 028be832d6..47175dcf47 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..cdc4a3a47d 100644
+index 0bd15b53a6..5db365c1fc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2560,7 +2560,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     val showDohEntryPoint by lazyFeatureFlagPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_enabled),
--        default = { FxNimbus.features.doh.value().showUi },
-+        default = { true },
-         featureFlag = true,
-     )
- 
 @@ -2573,7 +2573,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      private var trrMode by intPreference(
