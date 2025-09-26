@@ -14,7 +14,7 @@
 	- [Why can't I install add-ons/extensions?](#why-cant-i-install-add-onsextensions)
 	- [What add-ons/extensions should I install?](#what-add-onsextensions-should-i-install)
 	- [Why is IronFox so slow?](#why-is-ironfox-so-slow)
-	- [Why can't I stream certain content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)](#why-cant-i-stream-certain-content-from-streaming-services-ex-amazon-prime-video-apple-tv-disney-hbo-max-hulu-netflix-peacock-plex-sling-spotify-etc)
+	- [Why can't I stream certain *(DRM-protected)* content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)](#why-cant-i-stream-certain-drm-protected-content-from-streaming-services-ex-amazon-prime-video-apple-tv-disney-hbo-max-hulu-netflix-peacock-plex-sling-spotify-etc)
 	- [Why are websites displayed in light mode?](#why-are-websites-displayed-in-light-mode)
 	- [Why do websites display the incorrect timezone?](#why-do-websites-display-the-incorrect-timezone)
 	- [Why are websites always displayed in English?](#why-are-websites-always-displayed-in-english)
@@ -138,7 +138,7 @@ If re-enabling JIT doesn't give you the desired outcome, **at the cost of privac
 
 If this *still* doesn't give you the desired outcome, please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues) and let us know!
 
-## Why can't I stream certain content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)
+## Why can't I stream certain *(DRM-protected)* content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)
 
 IronFox does not support [Encrypted Media Extensions *(EME)*](https://wikipedia.org/wiki/Encrypted_Media_Extensions), due to privacy, security, freedom, and ideological concerns. For more details, see [this article](https://www.eff.org/deeplinks/2017/10/drms-dead-canary-how-we-just-lost-web-what-we-learned-it-and-what-we-need-do-next) from the EFF, as well as [this post](https://celenity.dev/posts/thoughts/drm/).
 
