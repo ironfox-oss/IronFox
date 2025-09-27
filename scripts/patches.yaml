@@ -98,13 +98,6 @@ patches:
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
 
-  - file: "geckoview-unbreak-fido.patch"
-    name: "Fix FIDO-related Compile Error"
-    description: "Fixes a compilation issue introduced in Firefox v143, related to FIDO."
-    reason: "Addresses technical bug in the build process."
-    effect: "Ensures successful compilation of the browser."
-    category: "Build System"
-
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Remove Proprietary Libraries (Android Components)"
