@@ -134,6 +134,13 @@ patches:
     effect: "Improves usability for users, by allowing them to receive push notifications if desired, and improves freedom, by allowing users to decide which push server/implementation they would like to use."
     category: "Dependency"
 
+  - file: "geckoview-prioritize-cred-manager-over-gms.patch"
+    name: "Prioritize Credential Manager over microG/GMS"
+    description: "Prioritizes the use of Android's standard Credential Manager API, instead of first attempting to use microG/Google Play Services (if they're installed by the user)."
+    reason: "Avoids unnecessary/unwanted use of Google Play Services."
+    effect: "Improves privacy and freedom for users, by avoiding the use of Google Play Services."
+    category: "Dependency"
+
   - file: "gecko-remove-gmp-sources.patch"
     name: "Remove GMP (Gecko Media Plugins) Sources"
     description: "Removes Firefox's default sources for installing Gecko Media Plugins (GMP: https://wiki.mozilla.org/GeckoMediaPlugins), such as OpenH264 and Widevine (the latter is proprietary)."
