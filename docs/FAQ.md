@@ -6,6 +6,8 @@
 	- [Why isn't IronFox available on F-Droid?](#why-isnt-ironfox-available-on-f-droid)
 	- [Aren't Firefox-based browsers less secure than Chromium?](#arent-firefox-based-browsers-less-secure-than-chromium)
 	- [So IronFox is **insecure**? Why should I use it then, what's the point?](#so-ironfox-is-insecure-why-should-i-use-it-then-whats-the-point)
+	- [Does IronFox contain proprietary/tracking libraries?](#does-ironfox-contain-proprietarytracking-libraries)
+	- [Does IronFox depend on Google Play Services?](#does-ironfox-depend-on-google-play-services)
 	- [Why is Google Safe Browsing supported and enabled by default?](#why-is-google-safe-browsing-supported-and-enabled-by-default)
 	- [Why does IronFox crash on GrapheneOS?](#why-does-ironfox-crash-on-grapheneos)
 	- [Can I use FIDO/U2F/Passkeys?](#can-i-use-fidou2fpasskeys)
@@ -69,6 +71,30 @@ Even from a *security* perspective, IronFox has certain features that a majority
 Ultimately, while Firefox-based web browsers *(including IronFox)* provide weaker security compared to their Chromium peers *(and this is indeed something important to take into account)*, we wanted to highlight that IronFox brings a lot to the table in *other* aspects.
 
 **At the end of the day, we're not going to tell you that IronFox is the perfect browser, or even that you should use it at all**. Which browser you should use depends on your [threat model](https://www.privacyguides.org/en/basics/threat-modeling/), personal preference, and values. **Most importantly, the browser you should use is the one that works best for you**. If that browser turns out to be IronFox? Great, welcome aboard! If not? No problem. Hopefully, you at least learned something.
+
+## Does IronFox contain proprietary/tracking libraries?
+
+**No**. IronFox removes the following proprietary/tracking libraries from Firefox for Android:
+
+- [Adjust](https://github.com/adjust/android_sdk)
+- [Google Play Firebase Messaging](https://firebase.google.com/docs/cloud-messaging/) - *(Replaced with [UnifiedPush](https://unifiedpush.org/))*
+- [Google Play In-App Reviews](https://developer.android.com/google/play/installreferrer/library)
+- [Google Play Install Referrer](https://developer.android.com/google/play/installreferrer/library)
+- [Sentry](https://github.com/getsentry/sentry)
+
+Additionally, IronFox removes the proprietary [Google Play FIDO](https://developers.google.com/android/reference/com/google/android/gms/fido/Fido) library from GeckoView - *(Replaced with the [microG](https://github.com/microg/GmsCore/wiki) FIDO library)*.
+
+IronFox also removes Mozilla's [Glean](https://github.com/mozilla/glean) *(telemetry)* library from [Android Components](https://searchfox.org/firefox-main/source/mobile/android/android-components/README.md) and [Application Services](https://github.com/mozilla/application-services) *(dependencies that provide core functionality for Firefox on Android)*.
+
+For Firefox for Android itself, while it's untenable to fully remove all references to the Glean library, we do remove the [Glean *`service`*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md) library, and we stub the Glean library itself at build-time and break/neuter all of its functionality. Note that certain naive apps *(ex. `App Manager`, `Exodus`, and `Tracker Control`)* do not take this into account, and incorrectly claim that IronFox has `tracking` libraries *(referring to the `Glean` library)*. Keep in mind that these same apps claim that [Google Chrome has no tracking](https://reports.exodus-privacy.eu.org/en/reports/com.android.chrome/latest/), and even claim that [Tor Browser contains trackers](https://reports.exodus-privacy.eu.org/en/reports/org.torproject.torbrowser/latest/).
+
+`App Manager` specifically also claims that IronFox includes a `Mozilla Crashreport` tracking library, though this is incorrect; you can find the specific [class it's referencing here](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/CrashReporterService.kt), and see for yourself that this is simply an interface, which doesn't include any actual data collection or `tracking`.
+
+## Does IronFox depend on Google Play Services?
+
+**No**, IronFox does not depend on Google Play Services for any functionality.
+
+Due to our use of the [microG](https://github.com/microg/GmsCore/wiki) FIDO library, **GrapheneOS** is unfortunately known to incorrectly label IronFox as depending on Google Play services. This also results in IronFox being automatically granted the `Dynamic code loading via storage` permission, which is unnecessary unless you're using UnifiedPush *([as detailed below](#can-i-receive-push-notifications))*.
 
 ## Why is Google Safe Browsing supported and enabled by default?
 
