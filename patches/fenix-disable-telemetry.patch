@@ -116,6 +116,55 @@ index 8645aaf290..4c96d174b1 100644
  
  fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
      ?: this as? Activity
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 5340aa5258..eecb58787f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -86,7 +86,7 @@ import org.mozilla.fenix.components.Components
+ import org.mozilla.fenix.components.Core
+ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.initializeGlean
+-import org.mozilla.fenix.components.metrics.MozillaProductDetector
++// import org.mozilla.fenix.components.metrics.MozillaProductDetector
+ import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.experiments.maybeFetchExperiments
+ import org.mozilla.fenix.ext.components
+@@ -285,7 +285,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             VisibilityLifecycleObserver(),
+         )
+ 
+-        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
++//        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
+ 
+         CoroutineScope(IO).launch {
+             components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
+@@ -722,7 +722,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         browserStore: BrowserStore,
+         settings: Settings,
+         browsersCache: BrowsersCache = BrowsersCache,
+-        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
++//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
+     ) {
+         setPreferenceMetrics(settings)
+         with(Metrics) {
+@@ -730,7 +730,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             distributionId.set(components.distributionIdManager.getDistributionId())
+ 
+             defaultBrowser.set(browsersCache.all(applicationContext).isDefaultBrowser)
+-            mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
++/*            mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
+                 defaultMozBrowser.set(it)
+             }
+ 
+@@ -738,7 +738,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+                 mozillaProductDetector.getInstalledMozillaProducts(
+                     applicationContext,
+                 ),
+-            )
++            )*/
+ 
+             adjustCampaign.set(settings.adjustCampaignId)
+             adjustAdGroup.set(settings.adjustAdGroup)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 0bd15b53a6..9505216006 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

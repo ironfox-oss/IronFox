@@ -65,11 +65,6 @@ function deglean() {
                 modified=true
             fi
 
-            if grep -q 'import .*gleandebugtools' "$file"; then
-                $SED -i -r 's/^(.*gleandebugtools.*)$/\/\/ \1/' "$file"
-                modified=true
-            fi
-
             if [ "$modified" = true ]; then
                 echo "De-gleaned $file."
             fi
@@ -91,7 +86,6 @@ function deglean() {
 function deglean_fenix() {
     local dir="$1"
     local gradle_files=$(find "${dir}" -type f -name "*.gradle")
-    local kt_files=$(find "${dir}" -type f -name "*.kt")
 
     if [ -n "$gradle_files" ]; then
         for file in $gradle_files; do
@@ -113,23 +107,6 @@ function deglean_fenix() {
         done
     else
         echo "No *.gradle files found in $dir."
-    fi
-
-    if [ -n "$kt_files" ]; then
-        for file in $kt_files; do
-            local modified=false
-
-            if grep -q 'import .*gleandebugtools' "$file"; then
-                $SED -i -r 's/^(.*gleandebugtools.*)$/\/\/ \1/' "$file"
-                modified=true
-            fi
-
-            if [ "$modified" = true ]; then
-                echo "De-gleaned $file."
-            fi
-        done
-    else
-        echo "No *.kt files found in $dir."
     fi
 }
 
@@ -161,18 +138,6 @@ rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fe
 rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingApi.kt"
 rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingLifecycleObserver.kt"
 rm -vf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingMetricsService.kt"
-
-# Remove Glean debugging tools
-## (Also see `fenix-remove-glean.patch`)
-## (In addition to reducing Glean dependencies, this also unbreaks the Debug Drawer)
-$SED -i 's|object GleanDebugTools|// object GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerAction.kt"
-$SED -i 's|is DebugDrawerAction.NavigateTo.GleanDebugTools|// is DebugDrawerAction.NavigateTo.GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt"
-$SED -i 's|navController.navigate(route = DebugDrawerRoute.GleanDebugTools|// navController.navigate(route = DebugDrawerRoute.GleanDebugTools|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt"
-$SED -i 's|gleanDebugToolsStore:|// gleanDebugToolsStore:|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt"
-$SED -i 's|gleanDebugToolsStore =|// gleanDebugToolsStore =|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt"
-$SED -i 's|BrowserDirection.FromGleanDebugToolsFragment|// BrowserDirection.FromGleanDebugToolsFragment|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Activity.kt"
-$SED -i 's|FromGlean|// FromGlean|g' "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/BrowserDirection.kt"
-rm -rvf "${mozilla_release}/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools"
 
 # Remove Glean classes (Android Components)
 $SED -i -e 's|GleanMessaging|// GleanMessaging|' "${mozilla_release}/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"

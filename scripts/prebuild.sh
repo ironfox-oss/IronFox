@@ -264,7 +264,6 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemet
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/perf/ApplicationExitInfoMetrics.kt
 rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
@@ -808,9 +807,6 @@ $SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250
 
 # Remove Glean
 source "$rootdir/scripts/deglean.sh"
-
-# Remove Crash debugging tools
-rm -rvf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools
 
 # Nuke undesired Mozilla endpoints
 source "$rootdir/scripts/noop_mozilla_endpoints.sh"
