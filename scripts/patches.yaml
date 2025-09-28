@@ -581,6 +581,13 @@ patches:
     effect: "Users can easily test and configure installed machine learning models, as well as other related functionality."
     category: "User Control"
 
+  - file: "a-c-display-builtin-addons.patch"
+    name: "Display built-in add-ons"
+    description: "Displays built-in add-ons at the Extensions fragment."
+    reason: "To improve freedom/control for users, by allowing them to see the full list of extensions installed on their browser, as well as their permissions and other information. Also improves security/provides attack surface reduction by allowing users to disable unused extensions."
+    effect: "Users are provided with more control over their browsing experience, and can further improve their security if desired."
+    category: "User Control"
+
   # User Experience
   - file: "fenix-default-site-permissions.patch"
     name: "Default Site Permissions"
@@ -615,6 +622,13 @@ patches:
     description: "Prevents Firefox from automatically pinning random recently visited website to the browser homepage."
     reason: "To reduce annoyances and get rid of obnoxious/unwanted behavior."
     effect: "Users are provided with a cleaner, faster, and more focused browser homepage."
+    category: "User Experience"
+
+  - file: "fenix-hide-remove-and-pb-for-builtin-addons.patch"
+    name: "Hide the 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
+    description: "Hide the no-op 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
+    reason: "To improve UX and prevent users from seeing/attempting to use toggles that do not work (The 'Run in private browsing' toggle simply immediately resets, and built-in add-ons are simply re-installed on the next launch if uninstalled with the 'Remove' toggle)."
+    effect: "Users are provided with a cleaner UI and won't try to use toggles that do not work as expected."
     category: "User Experience"
 
   # User Interface
