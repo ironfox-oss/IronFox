@@ -633,10 +633,17 @@ patches:
     category: "User Interface"
 
   - file: "gecko-expose-aboutconfig.patch"
-    name: "Expose the `about:config`"
-    description: "Exposes the `about:config` at `about:about`, alongside other internal `about:` pages."
+    name: "Expose `about:config`"
+    description: "Exposes `about:config` at `about:about`, alongside other internal `about:` pages."
     reason: "To provide users with easier access to advanced configuration options."
-    effect: "Users can access the `about:config` easier to customize advanced Firefox settings not available in the regular settings menu."
+    effect: "Users can access `about:config` easier to customize advanced Firefox settings not available in the regular settings menu."
+    category: "User Interface"
+
+  - file: "gecko-expose-abouttranslations.patch"
+    name: "Expose `about:translations`"
+    description: "Exposes `about:translations` at `about:about`, alongside other internal `about:` pages."
+    reason: "To provide users with easier access to the Firefox Translations feature."
+    effect: "Users can access `about:translations` easier to translate text directly, without needing the text to be on an external webpage."
     category: "User Interface"
 
   - file: "fenix-hide-gpc.patch"
