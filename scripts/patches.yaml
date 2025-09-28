@@ -297,10 +297,17 @@ patches:
     category: "Mozilla"
 
   - file: "gecko-support-addon-installation-without-mozaddonmanager.patch"
-    name: "Adds support for installing add-ons without the mozAddonManager API."
+    name: "Support add-on installation without mozAddonManager"
     description: "Adds support for installing add-ons from `addons.mozilla.org`, without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the privileged mozAddonManager API), in addition to websites specified with the `xpinstall.whitelist.add` series of prefs."
     reason: "To prevent fingerprinting, reduce attack surface, and to improve freedom by allowing users to install add-ons from sites other than AMO if desired (though installing add-ons outside of AMO is of course STRONGLY recommended against)."
     effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API) without compromising their privacy and security, and allows installation from other sites if desired by the user."
+    category: "Mozilla"
+
+  - file: "gecko-remove-privileged-addon-signing-status.patch"
+    name: "Remove privileged add-on signing status"
+    description: "Prevents Mozilla add-ons from returning the 'PRIVILEGED' and 'SYSTEM' add-on signing states."
+    reason: "To improve privacy, security, and control for users, by preventing external add-ons developed By Mozilla from utilizing special privileged functionality."
+    effect: "Users have improved privacy, security, and control over their extensions."
     category: "Mozilla"
 
   - file: "a-c-remove-webcompat-reporter.patch"
