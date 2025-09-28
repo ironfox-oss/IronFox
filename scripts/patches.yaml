@@ -508,6 +508,13 @@ patches:
     effect: "Reduces network activity, provides users with more control, and provides a faster browser homepage."
     category: "Privacy"
 
+  - file: "a-c-do-not-unconditionally-allow-builtin-addons-to-access-private-browsing.patch"
+    name: "Do not allow built-in add-ons to access private browsing windows unconditionally"
+    description: "Prevents built-in add-ons from always being able to access private browsing windows, even if they don't request or need access."
+    reason: "To improve privacy and security for users by limiting the amount of access built-in add-ons have to the browser."
+    effect: "Users are provided with a more private and secure browsing experience."
+    category: "Privacy"
+
   # Security
   - file: "gecko-certificate-pinning.patch"
     name: "Certificate Pinning"
