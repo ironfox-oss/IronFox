@@ -576,6 +576,9 @@ fi
 # Gecko
 pushd "$mozilla_release"
 
+# Apply patches
+apply_patches
+
 # Let it be IronFox (part 2...)
 mkdir -vp mobile/android/branding/ironfox/content
 mkdir -vp mobile/android/branding/ironfox/locales/en-US
@@ -584,8 +587,15 @@ $SED -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/a
 echo '' >>mobile/android/moz.configure
 echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
-# Apply patches
-apply_patches
+$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/global\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
+$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
+$SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
+$SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution')" docshell/build/components.conf
+echo '' >>toolkit/content/jar.mn
+echo '   content/global/attribution.css' >>toolkit/content/jar.mn
+echo '   content/global/attribution.html' >>toolkit/content/jar.mn
+echo '   content/global/ironfox.css' >>toolkit/content/jar.mn
+echo '   content/global/ironfox.html' >>toolkit/content/jar.mn
 
 # Ensure we're building for release
 $SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
