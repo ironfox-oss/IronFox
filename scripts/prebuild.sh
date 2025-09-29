@@ -609,7 +609,7 @@ echo '   content/global/policies/policies-documentation.svg            (policies
 echo '   content/global/policies/policies-error.svg            (policies-error.svg)' >>toolkit/content/jar.mn
 cp -vf browser/locales/en-US/browser/aboutPolicies.ftl toolkit/locales/en-US/toolkit/about/
 cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl toolkit/locales/en-US/toolkit/about/
-cp -vrf browser/components/enterprisepolicies/content/ toolkit/content
+cp -vrf browser/components/enterprisepolicies/content toolkit
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
 
 # Ensure we're building for release
