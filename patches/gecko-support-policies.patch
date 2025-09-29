@@ -87,7 +87,7 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 3d8837cdb3..c39f9b5638 100644
+index 3d8837cdb3..06c94a9dcc 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -497,7 +497,7 @@ let InstallSources = null;
@@ -99,7 +99,7 @@ index 3d8837cdb3..c39f9b5638 100644
    }
  
    get hasPolicies() {
-@@ -604,6 +604,136 @@ class JSONPoliciesProvider {
+@@ -604,6 +604,144 @@ class JSONPoliciesProvider {
        }
      }
    }
@@ -185,6 +185,14 @@ index 3d8837cdb3..c39f9b5638 100644
 +    };
 +    this._policies.EncryptedMediaExtensions = {
 +      Enabled: false
++    };
++    this._policies.ExtensionSettings = {
++      "*": {
++        allowed_types: [
++          "extension"
++        ],
++        blocked_install_message: "I am Iron Man."
++      }
 +    };
 +    this._policies.FirefoxHome = {
 +      Highlights: false,
