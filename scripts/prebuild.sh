@@ -596,6 +596,22 @@ echo '   content/global/attribution.html' >>toolkit/content/jar.mn
 echo '   content/global/ironfox.css' >>toolkit/content/jar.mn
 echo '   content/global/ironfox.html' >>toolkit/content/jar.mn
 
+# Copy policy definitions/schema/etc. from Firefox for Desktop
+cp -vrf browser/components/enterprisepolicies mobile/android/components
+
+# about:policies
+echo '' >>toolkit/content/jar.mn
+echo '   content/global/policies/aboutPolicies.css              (aboutPolicies.css)' >>toolkit/content/jar.mn
+echo '   content/global/policies/aboutPolicies.html             (aboutPolicies.html)' >>toolkit/content/jar.mn
+echo '   content/global/policies/aboutPolicies.js               (aboutPolicies.js)' >>toolkit/content/jar.mn
+echo '   content/global/policies/policies-active.svg            (policies-active.svg)' >>toolkit/content/jar.mn
+echo '   content/global/policies/policies-documentation.svg            (policies-documentation.svg)' >>toolkit/content/jar.mn
+echo '   content/global/policies/policies-error.svg            (policies-error.svg)' >>toolkit/content/jar.mn
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl toolkit/locales/en-US/toolkit/about/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl toolkit/locales/en-US/toolkit/about/
+cp -vrf browser/components/enterprisepolicies/content/ toolkit/content
+$SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
+
 # Ensure we're building for release
 $SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
 
