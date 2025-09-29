@@ -98,6 +98,13 @@ patches:
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
 
+  - file: "gecko-support-policies.patch"
+    name: "Support Enterprise Policies"
+    description: "Adds support for, and configures a set of, enterprise policies for GeckoView."
+    reason: "Allows for additional control/configuration of the browsing behavior."
+    effect: "Allows users to take advantage of additional customizations, and helps to provide a superior browsing experience."
+    category: "Build System"
+
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Remove Proprietary Libraries (Android Components)"
