@@ -756,10 +756,24 @@ patches:
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-translations.patch"
-    name: "IronFox Settings (Fenix) - Firefox Translations"
+    name: "IronFox Settings Support (Fenix) - Firefox Translations"
     description: "Provides support for a UI toggle to enable/disable Firefox Translations."
     reason: "To allow users to disable Firefox Translations if desired."
     effect: "Users can enable or disable Firefox Translations from the UI."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-xpinstall.patch"
+    name: "IronFox Settings Support (Fenix) - XPInstall"
+    description: "Provides support for a UI toggle to enable/disable the installation of add-ons."
+    reason: "To show users a prompt when add-on installation is disabled, so that they can better understand why their add-on didn't install, and can know how/where to re-enable it if desired."
+    effect: "Users can enable or disable add-on installation from the UI."
+    category: "User Interface"
+
+  - file: "gecko-ironfox-settings-support-xpinstall.patch"
+    name: "IronFox Settings Support (Gecko) - XPInstall"
+    description: "Provides support for a UI toggle to enable/disable the installation of add-ons."
+    reason: "Leverages enterprise policies to enable/disable installation of add-ons."
+    effect: "Users can receive a prompt when add-on installation is disabled from the UI, and the installation of add-ons can be better controlled/fully disabled from policies."
     category: "User Interface"
 
   - file: "geckoview-ironfox-settings-support-spoof-english.patch"

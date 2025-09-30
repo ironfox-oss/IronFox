@@ -87,7 +87,7 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 3d8837cdb3..06c94a9dcc 100644
+index 3d8837cdb3..5876584d92 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -497,7 +497,7 @@ let InstallSources = null;
@@ -99,7 +99,7 @@ index 3d8837cdb3..06c94a9dcc 100644
    }
  
    get hasPolicies() {
-@@ -604,6 +604,144 @@ class JSONPoliciesProvider {
+@@ -604,6 +604,147 @@ class JSONPoliciesProvider {
        }
      }
    }
@@ -204,6 +204,9 @@ index 3d8837cdb3..06c94a9dcc 100644
 +      Stories: false
 +    };
 +    this._policies.HttpsOnlyMode = "enabled";
++    this._policies.InstallAddonsPermission = {
++      Default: false
++    };
 +    this._policies.ManualAppUpdateOnly = true;
 +    this._policies.MicrosoftEntraSSO = false;
 +    this._policies.NoDefaultBookmarks = true;

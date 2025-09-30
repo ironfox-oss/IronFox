@@ -99,6 +99,7 @@
     <string name="preference_webrtc_enabled">Enable WebRTC</string>
 
     <!-- XPInstall -->
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Installation of add-ons is currently disabled. If desired, at the cost of security, you can enable it by navigating to Settings -> IronFox -> IronFox settings -> Security -> Allow installation of add-ons.</string>
     <string name="preference_xpinstall_enabled">Allow installation of add-ons</string>
 
     <!-- Onboarding - Title and description -->
