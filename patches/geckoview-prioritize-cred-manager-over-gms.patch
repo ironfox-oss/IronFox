@@ -1,0 +1,13 @@
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+index 2eea4c6af1..ce2a758e6f 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/WebAuthnTokenManager.java
+@@ -603,7 +603,7 @@ import org.mozilla.gecko.util.WebAuthnUtils;
+       // Always use GMS on old Android
+       return GeckoResult.fromValue(true);
+     }
+-    if (!BuildConfig.MOZILLA_OFFICIAL) {
++    if (true) {
+       // No way to check credential in GMS. Use Credential Manager at first.
+       return GeckoResult.fromValue(false);
+     }

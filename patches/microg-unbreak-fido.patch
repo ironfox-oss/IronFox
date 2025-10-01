@@ -1,0 +1,16 @@
+diff --git a/play-services-fido/src/main/java/com/google/android/gms/fido/fido2/api/common/AuthenticationExtensionsClientOutputs.java b/play-services-fido/src/main/java/com/google/android/gms/fido/fido2/api/common/AuthenticationExtensionsClientOutputs.java
+index 53c90f4..29acaf0 100644
+--- a/play-services-fido/src/main/java/com/google/android/gms/fido/fido2/api/common/AuthenticationExtensionsClientOutputs.java
++++ b/play-services-fido/src/main/java/com/google/android/gms/fido/fido2/api/common/AuthenticationExtensionsClientOutputs.java
+@@ -34,6 +34,11 @@ public class AuthenticationExtensionsClientOutputs extends AbstractSafeParcelabl
+         this.uvmEntries = uvmEntries;
+     }
+ 
++    @Nullable
++    public AuthenticationExtensionsCredPropsOutputs getCredProps() {
++        return null;
++    }
++
+     @Nullable
+     public UvmEntries getUvmEntries() {
+         return uvmEntries;

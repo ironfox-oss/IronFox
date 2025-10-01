@@ -1,18 +1,5 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index eb55c6630d..f717fe5e01 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -367,7 +367,7 @@ class OnboardingFragment : Fragment() {
-     }
- 
-     private fun enableSearchBarCFRForNewUser() {
--        requireContext().settings().shouldShowSearchBarCFR = FxNimbus.features.encourageSearchCfr.value().enabled
-+        requireContext().settings().shouldShowSearchBarCFR = false
-     }
- 
-     private fun isNotDefaultBrowser(context: Context) =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..07b5eecc03 100644
+index 0bd15b53a6..c29a03539b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -344,7 +344,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -51,40 +38,6 @@ index 0bd15b53a6..07b5eecc03 100644
      )
  
      /**
-@@ -1011,12 +1011,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * This will lead to a performance regression since that function can be expensive to call.
-      */
-     fun checkIfFenixIsDefaultBrowserOnAppResume(): Boolean {
--        val prefKey = appContext.getPreferenceKey(R.string.pref_key_default_browser)
--        val isDefaultBrowserNow = isDefaultBrowserBlocking()
--        val wasDefaultBrowserOnLastResume =
--            this.preferences.getBoolean(prefKey, isDefaultBrowserNow)
--        this.preferences.edit { putBoolean(prefKey, isDefaultBrowserNow) }
--        return isDefaultBrowserNow && !wasDefaultBrowserOnLastResume
-+//        val prefKey = appContext.getPreferenceKey(R.string.pref_key_default_browser)
-+//        val isDefaultBrowserNow = isDefaultBrowserBlocking()
-+//        val wasDefaultBrowserOnLastResume =
-+//            this.preferences.getBoolean(prefKey, isDefaultBrowserNow)
-+//        this.preferences.edit { putBoolean(prefKey, isDefaultBrowserNow) }
-+        return false
-     }
- 
-     /**
-@@ -1025,12 +1025,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     fun isDefaultBrowserBlocking(): Boolean {
-         val browsers = BrowsersCache.all(appContext)
--        return browsers.isDefaultBrowser
-+        return false
-     }
- 
-     var reEngagementNotificationShown by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
--        default = false,
-+        default = true,
-     )
- 
-     /**
 @@ -1053,7 +1053,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
@@ -94,15 +47,6 @@ index 0bd15b53a6..07b5eecc03 100644
      )
  
      /**
-@@ -1061,7 +1061,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     val reEngagementNotificationType: Int
-         get() =
--            FxNimbus.features.reEngagementNotification.value().type
-+            0
- 
-     val shouldUseAutoBatteryTheme by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_auto_battery_theme),
 @@ -1143,7 +1143,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
@@ -175,30 +119,6 @@ index 0bd15b53a6..07b5eecc03 100644
      )
  
      /**
-@@ -2478,7 +2478,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     val shouldShowSetAsDefaultPrompt: Boolean
-         get() =
--            (System.currentTimeMillis() - lastSetAsDefaultPromptShownTimeInMillis) >
-+            false && (System.currentTimeMillis() - lastSetAsDefaultPromptShownTimeInMillis) >
-                 DAYS_BETWEEN_DEFAULT_BROWSER_PROMPTS * ONE_DAY_MS &&
-                 numberOfSetAsDefaultPromptShownTimes < MAX_NUMBER_OF_DEFAULT_BROWSER_PROMPTS &&
-                 coldStartsBetweenSetAsDefaultPrompts >= APP_COLD_STARTS_TO_SHOW_DEFAULT_PROMPT
-@@ -2662,10 +2662,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     /**
-      * Indicates if this is the default browser.
-      */
--    var isDefaultBrowser by booleanPreference(
--        key = appContext.getPreferenceKey(R.string.pref_key_default_browser),
--        default = false,
--    )
-+    var isDefaultBrowser = true
-+//        key = appContext.getPreferenceKey(R.string.pref_key_default_browser),
-+//        default = false,
-+//    )
- 
-     /**
-      * Indicates if the sponsored tiles are suppressed.
 @@ -2685,7 +2685,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              FxNimbus.features.setupChecklist.value().enabled &&
                      canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))

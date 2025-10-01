@@ -256,7 +256,6 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemet
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/perf/ApplicationExitInfoMetrics.kt
 rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
@@ -438,6 +437,16 @@ else
     fi
 fi
 
+# Ensure we're building for release
+$SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
+
+# Use Tor's no-op UniFFi binding generator
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
+else
+    sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
+fi
+
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
 
@@ -535,6 +544,11 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 
     popd
 
+    # Break the dependency on older cmake
+    sed -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
+
+    popd
+
     export wasi_install=$wasi/build/install/wasi
 else
     export wasi_install=$wasi
@@ -553,6 +567,9 @@ fi
 # Gecko
 pushd "$mozilla_release"
 
+# Apply patches
+apply_patches
+
 # Let it be IronFox (part 2...)
 mkdir -vp mobile/android/branding/ironfox/content
 mkdir -vp mobile/android/branding/ironfox/locales/en-US
@@ -561,8 +578,31 @@ $SED -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/a
 echo '' >>mobile/android/moz.configure
 echo 'include("ironfox.configure")' >>mobile/android/moz.configure
 
-# Apply patches
-apply_patches
+$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/global\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
+$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
+$SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
+$SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution')" docshell/build/components.conf
+echo '' >>toolkit/content/jar.mn
+echo '   content/global/attribution.css' >>toolkit/content/jar.mn
+echo '   content/global/attribution.html' >>toolkit/content/jar.mn
+echo '   content/global/ironfox.css' >>toolkit/content/jar.mn
+echo '   content/global/ironfox.html' >>toolkit/content/jar.mn
+
+# Copy policy definitions/schema/etc. from Firefox for Desktop
+cp -vrf browser/components/enterprisepolicies mobile/android/components
+
+# about:policies
+echo '' >>toolkit/content/jar.mn
+echo '   content/global/policies/aboutPolicies.css              (aboutPolicies.css)' >>toolkit/content/jar.mn
+echo '   content/global/policies/aboutPolicies.html             (aboutPolicies.html)' >>toolkit/content/jar.mn
+echo '   content/global/policies/aboutPolicies.js               (aboutPolicies.js)' >>toolkit/content/jar.mn
+echo '   content/global/policies/policies-active.svg            (policies-active.svg)' >>toolkit/content/jar.mn
+echo '   content/global/policies/policies-documentation.svg            (policies-documentation.svg)' >>toolkit/content/jar.mn
+echo '   content/global/policies/policies-error.svg            (policies-error.svg)' >>toolkit/content/jar.mn
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl toolkit/locales/en-US/toolkit/about/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl toolkit/locales/en-US/toolkit/about/
+cp -vrf browser/components/enterprisepolicies/content toolkit
+$SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
 
 # Ensure we're building for release
 $SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
@@ -624,6 +664,21 @@ $SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.grad
 $SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
 $SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 
+# Disable crash reporting (GeckoView)
+$SED -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
+
+# Disable debug (GeckoView)
+$SED -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
+
+# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
+# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
+# We're also setting the "MOZILLA_OFFICIAL" env variable below
+$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
+
+# Target release
+$SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
+$SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
+
 # Ensure UA is always set to Firefox
 $SED -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
 
@@ -649,9 +704,6 @@ $SED -i -e 's/DEFAULT_COLLECTION_USER = ".*"/DEFAULT_COLLECTION_USER = ""/' mobi
 $SED -i -e 's/DEFAULT_SERVER_URL = ".*"/DEFAULT_SERVER_URL = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
 $SED -i 's|https://services.addons.mozilla.org||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
 
-# No-op Contile
-$SED -i -e 's/CONTILE_ENDPOINT_URL = ".*"/CONTILE_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/contile/ContileTopSitesProvider.kt
-
 # Remove unnecessary crash reporting components
 rm -vrf mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/rusterrors
 
@@ -666,8 +718,13 @@ $SED -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLL
 
 # No-op MARS
 $SED -i -e 's/MARS_ENDPOINT_BASE_URL = ".*"/MARS_ENDPOINT_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
-$SED -i -e 's/MARS_ENDPOINT_URL = ".*"/MARS_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/mars/src/*/java/mozilla/components/service/mars/MarsTopSitesProvider.kt
 $SED -i -e 's/MARS_ENDPOINT_STAGING_BASE_URL = ".*"/MARS_ENDPOINT_STAGING_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt
+
+# Remove MARS
+$SED -i 's|- components:service-mars|# - components:service-mars|g' mobile/android/fenix/.buildconfig.yml
+$SED -i "s|implementation project(':components:service-mars')|// implementation project(':components:service-mars')|g" mobile/android/fenix/app/build.gradle
+
+rm -vf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/TopSitesRefresher.kt
 
 # No-op GeoIP/Region service
 ## https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst
@@ -758,9 +815,6 @@ $SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250
 
 # Remove Glean
 source "$rootdir/scripts/deglean.sh"
-
-# Remove Crash debugging tools
-rm -rvf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools
 
 # Nuke undesired Mozilla endpoints
 source "$rootdir/scripts/noop_mozilla_endpoints.sh"
@@ -898,7 +952,6 @@ $SED -i \
 
 $SED -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
-    -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \
@@ -912,12 +965,10 @@ $SED -i \
     -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.boolean"|' \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.integer"|' \
     -e 's|"formhelper.autozoom"|"z99.ignore.boolean"|' \
-    -e 's|"general.aboutConfig.enable"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.boolean"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.boolean"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.boolean"|' \
-    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.boolean"|' \
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.boolean"|' \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.boolean"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.integer"|' \
@@ -932,7 +983,6 @@ $SED -i \
     -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.boolean"|' \
     -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.integer"|' \
     -e 's|"security.tls.enable_kyber"|"z99.ignore.boolean"|' \
-    -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
@@ -1136,4 +1186,10 @@ $SED -i \
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
 
+popd
+
+# We temporarily need this to unbreak the FIDO library
+## https://github.com/microg/GmsCore/issues/3054
+pushd "$gmscore"
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/microg-unbreak-fido.patch"
 popd

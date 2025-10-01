@@ -345,7 +345,9 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License v3.0 or later](https://spdx.org/licenses/GPL-3.0-or-later.html) _(`GPL-3.0-or-later`)_ where applicable. See [`COPYING`](https://phoenix.celenity.dev/COPYING.txt).
 
-Parts of `fenix-branding.patch`, `gecko-rs-blocker.patch`, and `gecko-custom-ublock-origin-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
+`a-c-liberate.patch`, `a-c-localize-maven.patch`, `a-s-localize-maven.patch`, `fenix-liberate.patch`, `gecko-localize-maven.patch`, and `microg-unbreak-fido.patch` are adapted from [Fennec F-Droid](https://gitlab.com/relan/fennecbuild). See [`COPYING`](https://gitlab.com/relan/fennecbuild/-/blob/master/COPYING).
+
+`gecko-rs-blocker.patch` and `gecko-custom-ublock-origin-assets.patch`, are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
 `fenix-disable-network-connectivity-monitoring.patch`, `gecko-disable-network-id.patch`, `geckoview-ironfox-settings-support-spoof-english.patch`, and `glean-noop.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [`LICENSE`](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 

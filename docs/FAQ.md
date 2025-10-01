@@ -1,25 +1,28 @@
 # Frequently Asked Questions
 
-- [How can I download IronFox?](#how-can-i-download-ironfox)
-- [How should I download IronFox?](#how-should-i-download-ironfox)
-- [Why isn't IronFox available on F-Droid?](#why-isnt-ironfox-available-on-f-droid)
-- [Aren't Firefox-based browsers less secure than Chromium?](#arent-firefox-based-browsers-less-secure-than-chromium)
-	- [So IronFox is insecure? Why should I use it then, what's the point?](#so-ironfox-is-insecure-why-should-i-use-it-then-whats-the-point)
-- [Why is Google Safe Browsing supported and enabled by default?](#why-is-google-safe-browsing-supported-and-enabled-by-default)
-- [Why does IronFox crash on GrapheneOS?](#why-does-ironfox-crash-on-grapheneos)
-- [Can I use FIDO/U2F/Passkeys?](#can-i-use-fidou2fpasskeys)
-- [Can I receive push notifications?](#can-i-receive-push-notifications)
-- [Why isn't Resist Fingerprinting (RFP) enabled?](#why-isnt-resist-fingerprinting-rfp-enabled)
-- [Why can't I install add-ons/extensions?](#why-cant-i-install-add-onsextensions)
-- [What add-ons/extensions should I install?](#what-add-onsextensions-should-i-install)
-- [Why is IronFox so slow?](#why-is-ironfox-so-slow)
-- [Why can't I stream certain content from streaming services *(Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)*](#why-cant-i-stream-certain-content-from-streaming-services-ex-amazon-prime-video-apple-tv-disney-hbo-max-hulu-netflix-peacock-plex-sling-spotify-etc)
-- [Why are websites displayed in light mode?](#why-are-websites-displayed-in-light-mode)
-- [Why do websites display the incorrect timezone?](#why-do-websites-display-the-incorrect-timezone)
-- [Why are websites always displayed in English?](#why-are-websites-always-displayed-in-english)
-- [Why do some fonts display incorrectly?](#why-do-some-fonts-display-incorrectly)
-- [Why can't I see emojis?](#why-cant-i-see-emojis)
-- [Why doesn't this website work?](#why-doesnt-this-website-work)
+- [Frequently Asked Questions](#frequently-asked-questions)
+	- [How can I download IronFox?](#how-can-i-download-ironfox)
+	- [How *should* I download IronFox?](#how-should-i-download-ironfox)
+	- [Why isn't IronFox available on F-Droid?](#why-isnt-ironfox-available-on-f-droid)
+	- [Aren't Firefox-based browsers less secure than Chromium?](#arent-firefox-based-browsers-less-secure-than-chromium)
+	- [So IronFox is **insecure**? Why should I use it then, what's the point?](#so-ironfox-is-insecure-why-should-i-use-it-then-whats-the-point)
+	- [Does IronFox contain proprietary/tracking libraries?](#does-ironfox-contain-proprietarytracking-libraries)
+	- [Does IronFox depend on Google Play Services?](#does-ironfox-depend-on-google-play-services)
+	- [Why is Google Safe Browsing supported and enabled by default?](#why-is-google-safe-browsing-supported-and-enabled-by-default)
+	- [Why does IronFox crash on GrapheneOS?](#why-does-ironfox-crash-on-grapheneos)
+	- [Can I use FIDO/U2F/Passkeys?](#can-i-use-fidou2fpasskeys)
+	- [Can I receive push notifications?](#can-i-receive-push-notifications)
+	- [Why isn't Resist Fingerprinting (RFP) enabled?](#why-isnt-resist-fingerprinting-rfp-enabled)
+	- [Why can't I install add-ons/extensions?](#why-cant-i-install-add-onsextensions)
+	- [What add-ons/extensions should I install?](#what-add-onsextensions-should-i-install)
+	- [Why is IronFox so slow?](#why-is-ironfox-so-slow)
+	- [Why can't I stream certain *(DRM-protected)* content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)](#why-cant-i-stream-certain-drm-protected-content-from-streaming-services-ex-amazon-prime-video-apple-tv-disney-hbo-max-hulu-netflix-peacock-plex-sling-spotify-etc)
+	- [Why are websites displayed in light mode?](#why-are-websites-displayed-in-light-mode)
+	- [Why do websites display the incorrect timezone?](#why-do-websites-display-the-incorrect-timezone)
+	- [Why are websites always displayed in English?](#why-are-websites-always-displayed-in-english)
+	- [Why do some fonts display incorrectly?](#why-do-some-fonts-display-incorrectly)
+	- [Why can't I see emojis?](#why-cant-i-see-emojis)
+	- [Why doesn't this website work?](#why-doesnt-this-website-work)
 
 ## How can I download IronFox?
 
@@ -69,6 +72,30 @@ Ultimately, while Firefox-based web browsers *(including IronFox)* provide weake
 
 **At the end of the day, we're not going to tell you that IronFox is the perfect browser, or even that you should use it at all**. Which browser you should use depends on your [threat model](https://www.privacyguides.org/en/basics/threat-modeling/), personal preference, and values. **Most importantly, the browser you should use is the one that works best for you**. If that browser turns out to be IronFox? Great, welcome aboard! If not? No problem. Hopefully, you at least learned something.
 
+## Does IronFox contain proprietary/tracking libraries?
+
+**No**. IronFox removes the following proprietary/tracking libraries from Firefox for Android:
+
+- [Adjust](https://github.com/adjust/android_sdk)
+- [Google Play Firebase Messaging](https://firebase.google.com/docs/cloud-messaging/) - *(Replaced with [UnifiedPush](https://unifiedpush.org/))*
+- [Google Play In-App Reviews](https://developer.android.com/google/play/installreferrer/library)
+- [Google Play Install Referrer](https://developer.android.com/google/play/installreferrer/library)
+- [Sentry](https://github.com/getsentry/sentry)
+
+Additionally, IronFox removes the proprietary [Google Play FIDO](https://developers.google.com/android/reference/com/google/android/gms/fido/Fido) library from GeckoView - *(Replaced with the [microG](https://github.com/microg/GmsCore/wiki) FIDO library)*.
+
+IronFox also removes Mozilla's [Glean](https://github.com/mozilla/glean) *(telemetry)* library from [Android Components](https://searchfox.org/firefox-main/source/mobile/android/android-components/README.md) and [Application Services](https://github.com/mozilla/application-services) *(dependencies that provide core functionality for Firefox on Android)*.
+
+For Firefox for Android itself, while it's untenable to fully remove all references to the Glean library, we do remove the [Glean *`service`*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md) library, and we stub the Glean library itself at build-time and break/neuter all of its functionality. Note that certain naive apps *(ex. `App Manager`, `Exodus`, and `Tracker Control`)* do not take this into account, and incorrectly claim that IronFox has `tracking` libraries *(referring to the `Glean` library)*. Keep in mind that these same apps claim that [Google Chrome has no tracking](https://reports.exodus-privacy.eu.org/en/reports/com.android.chrome/latest/), and even claim that [Tor Browser contains trackers](https://reports.exodus-privacy.eu.org/en/reports/org.torproject.torbrowser/latest/).
+
+`App Manager` specifically also claims that IronFox includes a `Mozilla Crashreport` tracking library, though this is incorrect; you can find the specific [class it's referencing here](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/CrashReporterService.kt), and see for yourself that this is simply an interface, which doesn't include any actual data collection or `tracking`.
+
+## Does IronFox depend on Google Play Services?
+
+**No**, IronFox does not depend on Google Play Services for any functionality.
+
+Due to our use of the [microG](https://github.com/microg/GmsCore/wiki) FIDO library, **GrapheneOS** is unfortunately known to incorrectly label IronFox as depending on Google Play services. This also results in IronFox being automatically granted the `Dynamic code loading via storage` permission, which is unnecessary unless you're using UnifiedPush *([as detailed below](#can-i-receive-push-notifications))*.
+
 ## Why is Google Safe Browsing supported and enabled by default?
 
 Please see [our `Safe Browsing` page here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Safe-Browsing.md).
@@ -77,7 +104,7 @@ Please see [our `Safe Browsing` page here](https://gitlab.com/ironfox-oss/IronFo
 
 On **GrapheneOS**, if the `Dynamic code loading via memory` exploit mitigation is enabled, IronFox might crash on launch with an error, stating `IronFox tried to perform DCL via memory`. Unfortunately, Firefox-based web browsers are currently incompatible with this protection.
 
-If you encounter this issue, you can disable the `Dynamic code loading via memory` exploit mitigation for IronFox, by navigating to IronFox's `App info` *(You can get there by holding IronFox's app icon and selecting `App info`, *or* by navigating to `Settings` -> `Apps`, and finding + selecting `IronFox`), navigating to `Exploit protection` -> `Dynamic code loading via memory`, and selecting `Allowed`.
+If you encounter this issue, you can disable the `Dynamic code loading via memory` exploit mitigation for IronFox, by navigating to IronFox's `App info` *(You can get there by holding IronFox's app icon and selecting `App info`, or by navigating to `Settings` -> `Apps`, and finding + selecting `IronFox`), navigating to `Exploit protection` -> `Dynamic code loading via memory`, and selecting `Allowed`)*.
 
 ## Can I use FIDO/U2F/Passkeys?
 
@@ -97,7 +124,7 @@ After setting up your distributor, you can enable support for UnifiedPush by sel
 
 **NOTE**: By default, IronFox blocks prompts from websites to enable web notifications. If you'd like to receive notifications from websites, you can re-enable notifications prompts by navigating to `Privacy and security` -> `Site settings` -> `Permissions` -> `Notification` in settings, and selecting `Ask to allow`.
 
-**NOTE**: To receive notifications while IronFox is in the background, [**GrapheneOS** users might unfortunately need to disable the `Dynamic code loading via storage` exploit protection for IronFox](https://gitlab.com/ironfox-oss/IronFox/-/issues/124). You can do this by navigating to IronFox's `App info` *(You can get there by holding IronFox's app icon and selecting `App info`, *or* by navigating to `Settings` -> `Apps`, and finding + selecting `IronFox`), navigating to `Exploit protection` -> `Dynamic code loading via storage`, and selecting `Allowed`.
+**NOTE**: To receive notifications while IronFox is in the background, [**GrapheneOS** users might unfortunately need to disable the `Dynamic code loading via storage` exploit protection for IronFox](https://gitlab.com/ironfox-oss/IronFox/-/issues/124). You can do this by navigating to IronFox's `App info` *(You can get there by holding IronFox's app icon and selecting `App info`, or by navigating to `Settings` -> `Apps`, and finding + selecting `IronFox`), navigating to `Exploit protection` -> `Dynamic code loading via storage`, and selecting `Allowed`)*.
 
 ## Why isn't Resist Fingerprinting (RFP) enabled?
 
@@ -137,7 +164,7 @@ If re-enabling JIT doesn't give you the desired outcome, **at the cost of privac
 
 If this *still* doesn't give you the desired outcome, please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues) and let us know!
 
-## Why can't I stream certain content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)
+## Why can't I stream certain *(DRM-protected)* content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)
 
 IronFox does not support [Encrypted Media Extensions *(EME)*](https://wikipedia.org/wiki/Encrypted_Media_Extensions), due to privacy, security, freedom, and ideological concerns. For more details, see [this article](https://www.eff.org/deeplinks/2017/10/drms-dead-canary-how-we-just-lost-web-what-we-learned-it-and-what-we-need-do-next) from the EFF, as well as [this post](https://celenity.dev/posts/thoughts/drm/).
 

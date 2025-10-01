@@ -98,11 +98,11 @@ patches:
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
 
-  - file: "geckoview-unbreak-fido.patch"
-    name: "Fix FIDO-related Compile Error"
-    description: "Fixes a compilation issue introduced in Firefox v143, related to FIDO."
-    reason: "Addresses technical bug in the build process."
-    effect: "Ensures successful compilation of the browser."
+  - file: "gecko-support-policies.patch"
+    name: "Support Enterprise Policies"
+    description: "Adds support for, and configures a set of, enterprise policies for GeckoView."
+    reason: "Allows for additional control/configuration of the browsing behavior."
+    effect: "Allows users to take advantage of additional customizations, and helps to provide a superior browsing experience."
     category: "Build System"
 
   # Dependency
@@ -132,6 +132,13 @@ patches:
     description: "Adds support for UnifiedPush to Firefox for Android."
     reason: "To allow users to receive notifications without the use of a proprietary Google service."
     effect: "Improves usability for users, by allowing them to receive push notifications if desired, and improves freedom, by allowing users to decide which push server/implementation they would like to use."
+    category: "Dependency"
+
+  - file: "geckoview-prioritize-cred-manager-over-gms.patch"
+    name: "Prioritize Credential Manager over microG/GMS"
+    description: "Prioritizes the use of Android's standard Credential Manager API, instead of first attempting to use microG/Google Play Services (if they're installed by the user)."
+    reason: "Avoids unnecessary/unwanted use of Google Play Services."
+    effect: "Improves privacy and freedom for users, by avoiding the use of Google Play Services."
     category: "Dependency"
 
   - file: "gecko-remove-gmp-sources.patch"
@@ -226,6 +233,13 @@ patches:
     effect: "Reduces unwanted network activity and ensures search settings are controlled locally."
     category: "Mozilla"
 
+  - file: "fenix-remove-tos-privacy-policy.patch"
+    name: "Remove ToS and Privacy Policy"
+    description: "Removes unwanted elements related to Mozilla's terms of service and privacy policy."
+    reason: "To prevent confusing users and to remove unwanted Mozilla branding."
+    effect: "Users are provided with a cleaner browsing experience."
+    category: "Mozilla"
+
   - file: "fenix-disable-link-sharing.patch"
     name: "Disable 'Sent from Firefox' Link Sharing"
     description: "Disables the 'Sent from Firefox' footer/link sharing feature."
@@ -254,6 +268,20 @@ patches:
     effect: "Cleaner interface without promotional content or third-party integrations."
     category: "Mozilla"
 
+  - file: "a-c-remove-mars.patch"
+    name: "Remove MARS (Android Components)"
+    description: "Removes the Mozilla Ad Routing Service (MARS) from Mozilla's Android Components."
+    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted advertising."
+    category: "Mozilla"
+
+  - file: "fenix-remove-mars.patch"
+    name: "Remove MARS (Fenix)"
+    description: "Removes the Mozilla Ad Routing Service (MARS) from Firefox for Android."
+    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted advertising."
+    category: "Mozilla"
+
   - file: "fenix-disable-sync-engines-by-default.patch"
     name: "Disable Firefox Sync"
     description: "Disables Firefox Sync by default."
@@ -276,10 +304,17 @@ patches:
     category: "Mozilla"
 
   - file: "gecko-support-addon-installation-without-mozaddonmanager.patch"
-    name: "Adds support for installing add-ons without the mozAddonManager API."
+    name: "Support add-on installation without mozAddonManager"
     description: "Adds support for installing add-ons from `addons.mozilla.org`, without allowing Mozilla to enable, uninstall, and query a list of the user's installed add-ons (via the privileged mozAddonManager API), in addition to websites specified with the `xpinstall.whitelist.add` series of prefs."
     reason: "To prevent fingerprinting, reduce attack surface, and to improve freedom by allowing users to install add-ons from sites other than AMO if desired (though installing add-ons outside of AMO is of course STRONGLY recommended against)."
     effect: "Allows users to install add-ons from addons.mozilla.org (via the mozAddonManager API) without compromising their privacy and security, and allows installation from other sites if desired by the user."
+    category: "Mozilla"
+
+  - file: "gecko-remove-privileged-addon-signing-status.patch"
+    name: "Remove privileged add-on signing status"
+    description: "Prevents Mozilla add-ons from returning the 'PRIVILEGED' and 'SYSTEM' add-on signing states."
+    reason: "To improve privacy, security, and control for users, by preventing external add-ons developed By Mozilla from utilizing special privileged functionality."
+    effect: "Users have improved privacy, security, and control over their extensions."
     category: "Mozilla"
 
   - file: "a-c-remove-webcompat-reporter.patch"
@@ -480,6 +515,13 @@ patches:
     effect: "Reduces network activity, provides users with more control, and provides a faster browser homepage."
     category: "Privacy"
 
+  - file: "a-c-do-not-unconditionally-allow-builtin-addons-to-access-private-browsing.patch"
+    name: "Do not allow built-in add-ons to access private browsing windows unconditionally"
+    description: "Prevents built-in add-ons from always being able to access private browsing windows, even if they don't request or need access."
+    reason: "To improve privacy and security for users by limiting the amount of access built-in add-ons have to the browser."
+    effect: "Users are provided with a more private and secure browsing experience."
+    category: "Privacy"
+
   # Security
   - file: "gecko-certificate-pinning.patch"
     name: "Certificate Pinning"
@@ -517,13 +559,6 @@ patches:
     effect: "Prevents users from accidentally leaving remote debugging enabled."
     category: "Security"
 
-  - file: "fenix-disable-shipped-domains.patch"
-    name: "Disable Shipped Domains"
-    description: "Disables Firefox's built-in list of domains for URL autocompletion."
-    reason: "To quote a Mozilla employee (https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0): 'Android's current list of 400+ domain names for address bar suggestions was created way back in December 2015... This list hasn't been updated since 2015 and now includes expired and squatted domains that might serve ads or malware'"
-    effect: "Prevents suggesting squatted domains to users that serve ads and malware, and reduces annoyances/unwanted behavior."
-    category: "Security"
-
   - file: "fenix-increase-update-frequency.patch"
     name: "Increase Update Frequency"
     description: "Increases the rate at which Firefox syncs with Remote Settings, from every 24 hours to hourly, and the rate at which Firefox checks for add-on updates, from every 12 hours to hourly."
@@ -551,6 +586,13 @@ patches:
     description: "Enables the `about:inference` page."
     reason: "To allow users to control machine learning models."
     effect: "Users can easily test and configure installed machine learning models, as well as other related functionality."
+    category: "User Control"
+
+  - file: "a-c-display-builtin-addons.patch"
+    name: "Display built-in add-ons"
+    description: "Displays built-in add-ons at the Extensions fragment."
+    reason: "To improve freedom/control for users, by allowing them to see the full list of extensions installed on their browser, as well as their permissions and other information. Also improves security/provides attack surface reduction by allowing users to disable unused extensions."
+    effect: "Users are provided with more control over their browsing experience, and can further improve their security if desired."
     category: "User Control"
 
   # User Experience
@@ -589,8 +631,15 @@ patches:
     effect: "Users are provided with a cleaner, faster, and more focused browser homepage."
     category: "User Experience"
 
+  - file: "fenix-hide-remove-and-pb-for-builtin-addons.patch"
+    name: "Hide the 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
+    description: "Hide the no-op 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
+    reason: "To improve UX and prevent users from seeing/attempting to use toggles that do not work (The 'Run in private browsing' toggle simply immediately resets, and built-in add-ons are simply re-installed on the next launch if uninstalled with the 'Remove' toggle)."
+    effect: "Users are provided with a cleaner UI and won't try to use toggles that do not work as expected."
+    category: "User Experience"
+
   # User Interface
-  - file: "fenix-branding.patch"
+  - file: "fenix-ironfox-branding.patch"
     name: "IronFox Branding"
     description: "Modifies the branding to IronFox."
     reason: "Creates distinct brand identity for the fork."
@@ -619,10 +668,17 @@ patches:
     category: "User Interface"
 
   - file: "gecko-expose-aboutconfig.patch"
-    name: "Expose the `about:config`"
-    description: "Exposes the `about:config` at `about:about`, alongside other internal `about:` pages."
+    name: "Expose `about:config`"
+    description: "Exposes `about:config` at `about:about`, alongside other internal `about:` pages."
     reason: "To provide users with easier access to advanced configuration options."
-    effect: "Users can access the `about:config` easier to customize advanced Firefox settings not available in the regular settings menu."
+    effect: "Users can access `about:config` easier to customize advanced Firefox settings not available in the regular settings menu."
+    category: "User Interface"
+
+  - file: "gecko-expose-abouttranslations.patch"
+    name: "Expose `about:translations`"
+    description: "Exposes `about:translations` at `about:about`, alongside other internal `about:` pages."
+    reason: "To provide users with easier access to the Firefox Translations feature."
+    effect: "Users can access `about:translations` easier to translate text directly, without needing the text to be on an external webpage."
     category: "User Interface"
 
   - file: "fenix-hide-gpc.patch"
@@ -700,10 +756,24 @@ patches:
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-translations.patch"
-    name: "IronFox Settings (Fenix) - Firefox Translations"
+    name: "IronFox Settings Support (Fenix) - Firefox Translations"
     description: "Provides support for a UI toggle to enable/disable Firefox Translations."
     reason: "To allow users to disable Firefox Translations if desired."
     effect: "Users can enable or disable Firefox Translations from the UI."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-xpinstall.patch"
+    name: "IronFox Settings Support (Fenix) - XPInstall"
+    description: "Provides support for a UI toggle to enable/disable the installation of add-ons."
+    reason: "To show users a prompt when add-on installation is disabled, so that they can better understand why their add-on didn't install, and can know how/where to re-enable it if desired."
+    effect: "Users can enable or disable add-on installation from the UI."
+    category: "User Interface"
+
+  - file: "gecko-ironfox-settings-support-xpinstall.patch"
+    name: "IronFox Settings Support (Gecko) - XPInstall"
+    description: "Provides support for a UI toggle to enable/disable the installation of add-ons."
+    reason: "Leverages enterprise policies to enable/disable installation of add-ons."
+    effect: "Users can receive a prompt when add-on installation is disabled from the UI, and the installation of add-ons can be better controlled/fully disabled from policies."
     category: "User Interface"
 
   - file: "geckoview-ironfox-settings-support-spoof-english.patch"

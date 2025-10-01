@@ -116,56 +116,68 @@ index 8645aaf290..4c96d174b1 100644
  
  fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
      ?: this as? Activity
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 5340aa5258..eecb58787f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -86,7 +86,7 @@ import org.mozilla.fenix.components.Components
+ import org.mozilla.fenix.components.Core
+ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.initializeGlean
+-import org.mozilla.fenix.components.metrics.MozillaProductDetector
++// import org.mozilla.fenix.components.metrics.MozillaProductDetector
+ import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.experiments.maybeFetchExperiments
+ import org.mozilla.fenix.ext.components
+@@ -285,7 +285,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             VisibilityLifecycleObserver(),
+         )
+ 
+-        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
++//        components.analytics.metricsStorage.tryRegisterAsUsageRecorder(this)
+ 
+         CoroutineScope(IO).launch {
+             components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
+@@ -722,7 +722,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         browserStore: BrowserStore,
+         settings: Settings,
+         browsersCache: BrowsersCache = BrowsersCache,
+-        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
++//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
+     ) {
+         setPreferenceMetrics(settings)
+         with(Metrics) {
+@@ -730,7 +730,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             distributionId.set(components.distributionIdManager.getDistributionId())
+ 
+             defaultBrowser.set(browsersCache.all(applicationContext).isDefaultBrowser)
+-            mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
++/*            mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
+                 defaultMozBrowser.set(it)
+             }
+ 
+@@ -738,7 +738,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+                 mozillaProductDetector.getInstalledMozillaProducts(
+                     applicationContext,
+                 ),
+-            )
++            )*/
+ 
+             adjustCampaign.set(settings.adjustCampaignId)
+             adjustAdGroup.set(settings.adjustAdGroup)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..c43a4857e4 100644
+index 0bd15b53a6..9505216006 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -544,19 +544,19 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
-     )
+@@ -546,7 +546,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
--    var isTelemetryEnabled by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_telemetry),
+     var isTelemetryEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_telemetry),
 -        default = true,
--    )
-+    var isTelemetryEnabled = false
-+//        appContext.getPreferenceKey(R.string.pref_key_telemetry),
-+//        default = true,
-+//    )
- 
--    var isMarketingTelemetryEnabled by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
--        default = false,
--    )
-+    var isMarketingTelemetryEnabled = false
-+//        appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry),
-+//        default = false,
-+//    )
- 
-     var hasMadeMarketingTelemetrySelection by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_marketing_telemetry_selection_made),
--        default = false,
-+        default = true,
++        default = false,
      )
  
-     var hasAcceptedTermsOfService by booleanPreference(
-@@ -595,11 +595,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * sure that users who upgrade and had telemetry disabled don't start sending the
-      * daily usage ping telemetry.
-      */
--    var isDailyUsagePingEnabled by booleanPreference(
--        appContext.getPreferenceKey(R.string.pref_key_daily_usage_ping),
--        default = isTelemetryEnabled,
--        persistDefaultIfNotExists = true,
--    )
-+    var isDailyUsagePingEnabled = false
-+//        appContext.getPreferenceKey(R.string.pref_key_daily_usage_ping),
-+//        default = isTelemetryEnabled,
-+//        persistDefaultIfNotExists = true,
-+//    )
- 
-     var isExperimentationEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_experimentation_v2),
+     var isMarketingTelemetryEnabled by booleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 index 5058f40c0b..a7b6291fde 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
