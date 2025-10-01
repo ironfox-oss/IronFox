@@ -33,7 +33,7 @@
     <string name="preference_safe_browsing_enabled">Включить безопасный просмотр</string>
     <string name="preference_safe_browsing_enabled_caption">Включите защиту в реальном времени от опасных веб-сайтов, вредоносных программ и фишинговых попыток.</string>
     <string name="preference_safe_browsing_enabled_description">Функция IronFox’s Safe Browsing в настоящее время предоставляется Google. IronFox будет периодически обновлять базу данных, чтобы пользователи были защищены от последних угроз, и после встречи с потенциальным матчем IronFox может представить Google частичный хэш предполагаемого URL. Обратите внимание, что IronFox проксиирует эти соединения, чтобы ваш публичный IP-адрес не был связан с этими запросами.</string>
-    <string name="preference_safe_browsing_enabled_summary">Обеспечивает защиту в режиме реального времени от опасных веб-сайтов, вредоносных программ и попыток фишинга - изменение этого параметра приведет к перезапуску браузера.</string>
+    <string name="preference_safe_browsing_enabled_summary">Обеспечивает защиту в режиме реального времени от опасных веб-сайтов, вредоносных программ и попыток фишинга - Изменение этого параметра приведет к перезапуску браузера</string>
     <string name="tor_spoof_english_title">Подменить язык на en-US</string>
     <string name="tor_spoof_english_caption">Усилите вашу конфиденциальность, маскируя настройки языка устройств.</string>
     <string name="tor_spoof_english_description">Запрашивать английские (en-US) версии веб-страниц. Это помогает вашему браузеру выглядеть менее уникальным, усиливая защиту от методов отпечатков пальцев, которые идентифицируют пользователей на основе их языковых предпочтений.</string>
@@ -56,4 +56,6 @@
     <string name="onboarding_state_installing_ublock">Установка uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">При установке uBlock Origin произошла ошибка: %1$s</string>
     <string name="onboarding_action_retry">Попробовать снова</string>
+    <string name="preference_collections_enabled">Включить коллекции</string>
+    <string name="preference_translations_enabled">Включить переводы Firefox</string>
 </resources>

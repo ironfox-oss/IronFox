@@ -1,0 +1,13 @@
+diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
+index 0575b11666..6470f6a7f6 100644
+--- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
++++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
+@@ -127,7 +127,7 @@ class AddonManager(
+ 
+             // Build a list of installed extensions that are not built-in extensions.
+             val installedAddons = installedExtensions
+-                .filterValues { !it.isBuiltIn() }
++//                .filterValues { !it.isBuiltIn() }
+                 .map {
+                     val extension = it.value
+                     val installedState = toInstalledState(extension)

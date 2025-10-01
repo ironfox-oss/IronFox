@@ -57,4 +57,6 @@
     <string name="preference_safe_browsing_enabled_caption">Reaalajas kaitse ohtlike veebisaitide, pahavara ja õngitsuskatsete vastu.</string>
     <string name="preference_safe_browsing_enabled_summary">Tagab Google\'i teenuste abil reaalajas kaitse ohtlike veebisaitide, pahavara ja õngitsuskatsete vastu. Selle seadistuse muutmine käivitab sinu veebibrauseri uuesti</string>
     <string name="preference_safe_browsing_enabled_description">IronFoxi ohutu veebisirvimise funktsionaalsus põhineb hetkel Google\'i teenustel. IronFox uuendab vahetevahel vastavat andmekogu ja tagab, et kasutajad on viimaste veebiohtude vastu kaitstud. Võimaliku ohu tuvastamisel võib IronFox saata kahtlase võrguaadressi fragmendi räsiväärtuse Google\'i serveritesse. Tagamaks, et sinu nutiseadme IP-aadress poleks seotud antud päringutega, kasutab IronFox eraldi puhverserverit.</string>
+    <string name="preference_translations_enabled">Kasuta Firefoxi tõlkelahendust</string>
+    <string name="preference_collections_enabled">Luba kollektsioonide kasutamine</string>
 </resources>

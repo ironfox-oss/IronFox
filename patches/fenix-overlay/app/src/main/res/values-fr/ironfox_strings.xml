@@ -56,4 +56,6 @@
     <string name="onboarding_state_installing_ublock">Installation de uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Une erreur s\'est produite lors de l\'installation de uBlock Origin : %1$s</string>
     <string name="onboarding_action_retry">Réessayer</string>
+    <string name="preference_collections_enabled">Activer collections</string>
+    <string name="preference_translations_enabled">Activer traductions de Firefox</string>
 </resources>

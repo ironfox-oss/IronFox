@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="restart_required_summary">De browser zal opnieuw opstarten</string>
+    <string name="restart_required_summary">Na wijziging zal de browser opnieuw opstarten</string>
     <string name="unsupported_summary">Deze instelling wordt NIET aanbevolen of ondersteund. Wees voorzichtig.</string>
     <string name="if_preferences">IronFox-instellingen</string>
     <string name="if_preferences_misc">Overig</string>
@@ -12,7 +12,7 @@
     <string name="preference_referer_policy">Cross-origin referer-beleid</string>
     <string name="preference_referer_policy_summary">Stel het gedrag in voor cross-origin referers</string>
     <string name="preference_referer_policy_always">Altijd versturen</string>
-    <string name="preference_referer_policy_base_domains_match">Versturen wanneer het basisdomein overeenkomt</string>
+    <string name="preference_referer_policy_base_domains_match">Versturen wanneer het hoofddomein overeenkomt</string>
     <string name="preference_referer_policy_hosts_match">Uitschakelen</string>
     <string name="preference_cache_enabled">Schijfcache inschakelen</string>
     <string name="preferences_debug_settings_eme_enabled">Encrypted Media Extensions (EME) inschakelen</string>
@@ -22,10 +22,10 @@
     <string name="preference_jit_enabled">JavaScript Just-in-time Compilation (JIT) inschakelen</string>
     <string name="preference_jit_enabled_caption">Verbeter de prestaties van JavaScript door JIT in te schakelen. (Niet aanbevolen voor de meeste gebruikers)</string>
     <string name="preference_jit_enabled_description">Het inschakelen van JIT om de prestaties van websites te verbeteren gaat ten koste van de veiligheid. Alleen aanbevolen voor gebruikers met tragere apparaten.</string>
-    <string name="preference_jit_enabled_summary">Wanneer uitgeschakeld, kan de prestatie van complexe webpagina\'s verminderd zijn - Na het wijzigen wordt de browser opnieuw opgestart</string>
+    <string name="preference_jit_enabled_summary">Wanneer uitgeschakeld, kan de prestatie van complexe webpagina\'s verminderd zijn - Na wijziging zal de browser opnieuw opstarten</string>
     <string name="preference_pdfjs_disabled">PDF-bestanden openen in externe app</string>
     <string name="preference_website_appearance_title">Voorkeursweergave websites</string>
-    <string name="preference_website_appearance_description">Sommige websites passen hun kleurenschema aan op basis van jouw voorkeuren. Kies welk kleurenschema voor die sites gebruikt wordt. Houd er rekening mee dat andere opties dan \'Licht\' de browserinstellingen laten afwijken en dus fingerprinting kunnen bevorderen.</string>
+    <string name="preference_website_appearance_description">Sommige websites passen hun kleurenschema aan op basis van jouw voorkeuren. Kies welk kleurenschema voor die sites gebruikt wordt. Houd er rekening mee dat andere opties dan \'Licht\' de browserinstellingen laten afwijken en dus fingerprinting kunnen vergemakkelijken.</string>
     <string name="preference_prefers_browser_color_scheme">Browserthema volgen</string>
     <string name="preference_prefers_light_color_scheme">Licht</string>
     <string name="preference_prefers_dark_color_scheme">Donker</string>
@@ -33,7 +33,7 @@
     <string name="preference_safe_browsing_enabled">Safe Browsing inschakelen</string>
     <string name="preference_safe_browsing_enabled_caption">Real-time bescherming tegen gevaarlijke websites, malware en phishingpogingen.</string>
     <string name="preference_safe_browsing_enabled_description">De Safe Browsing-functionaliteit van IronFox wordt momenteel geleverd door Google. IronFox werkt de database regelmatig bij om ervoor te zorgen dat gebruikers beschermd zijn tegen de nieuwste bedreigingen. Wanneer IronFox een mogelijke dreiging tegenkomt, kan het een gedeeltelijke hash van de verdachte URL naar Google sturen. Deze verbindingen verlopen via een proxy om te voorkomen dat het openbare IP-adres aan deze verzoeken wordt gekoppeld.</string>
-    <string name="preference_safe_browsing_enabled_summary">Biedt real-time bescherming tegen gevaarlijke websites, malware en phishingpogingen - Na het wijzigen wordt de browser opnieuw opgestart</string>
+    <string name="preference_safe_browsing_enabled_summary">Biedt real-time bescherming tegen gevaarlijke websites, malware en phishingpogingen - Na wijziging zal de browser opnieuw opstarten</string>
     <string name="tor_spoof_english_title">Als taal en-US doorsturen</string>
     <string name="tor_spoof_english_caption">Verbeter de privacy door de taalinstellingen van het apparaat te maskeren.</string>
     <string name="tor_spoof_english_description">Vraag Engelse (en-US) versies van webpagina\'s op. Hierdoor lijkt de browser minder uniek, waardoor de bescherming tegen fingerprinting-technieken die gebruikers identificeren op basis van hun taalvoorkeuren, beter werkt.</string>
@@ -56,4 +56,6 @@
     <string name="onboarding_state_installing_ublock">uBlock Origin installeren…</string>
     <string name="onboarding_state_installing_ublock_error">Fout opgetreden bij het installeren van uBlock Origin: %1$s</string>
     <string name="onboarding_action_retry">Opnieuw proberen</string>
+    <string name="preference_translations_enabled">Firefox Vertalen inschakelen</string>
+    <string name="preference_collections_enabled">Verzamelingen inschakelen</string>
 </resources>

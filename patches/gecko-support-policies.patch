@@ -1,0 +1,263 @@
+diff --git a/browser/components/enterprisepolicies/content/aboutPolicies.html b/browser/components/enterprisepolicies/content/aboutPolicies.html
+index 3eb76eea5f..f61ac4ad0b 100644
+--- a/browser/components/enterprisepolicies/content/aboutPolicies.html
++++ b/browser/components/enterprisepolicies/content/aboutPolicies.html
+@@ -16,16 +16,16 @@
+     <title data-l10n-id="about-policies-title"></title>
+     <link
+       rel="stylesheet"
+-      href="chrome://browser/content/policies/aboutPolicies.css"
++      href="chrome://global/content/policies/aboutPolicies.css"
+     />
+     <link rel="localization" href="branding/brand.ftl" />
+-    <link rel="localization" href="browser/aboutPolicies.ftl" />
++    <link rel="localization" href="toolkit/about/aboutPolicies.ftl" />
+     <link
+       rel="localization"
+-      href="browser/policies/policies-descriptions.ftl"
++      href="toolkit/about/policies-descriptions.ftl"
+     />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+-    <script src="chrome://browser/content/policies/aboutPolicies.js"></script>
++    <script src="chrome://global/content/policies/aboutPolicies.js"></script>
+   </head>
+   <body id="body">
+     <moz-page-nav id="categories-nav" data-l10n-id="aboutpolicies-page-heading">
+@@ -33,21 +33,21 @@
+         data-l10n-id="active-policies-tab"
+         id="category-active"
+         view="view-one"
+-        iconSrc="chrome://browser/content/policies/policies-active.svg"
++        iconSrc="chrome://global/content/policies/policies-active.svg"
+       >
+       </moz-page-nav-button>
+       <moz-page-nav-button
+         data-l10n-id="documentation-tab"
+         id="category-documentation"
+         view="view-two"
+-        iconSrc="chrome://browser/content/policies/policies-documentation.svg"
++        iconSrc="chrome://global/content/policies/policies-documentation.svg"
+       >
+       </moz-page-nav-button>
+       <moz-page-nav-button
+         data-l10n-id="errors-tab"
+         id="category-errors"
+         view="view-three"
+-        iconSrc="chrome://browser/content/policies/policies-error.svg"
++        iconSrc="chrome://global/content/policies/policies-error.svg"
+       >
+       </moz-page-nav-button>
+     </moz-page-nav>
+diff --git a/browser/components/enterprisepolicies/moz.build b/browser/components/enterprisepolicies/moz.build
+index 047108084b..ff45016d77 100644
+--- a/browser/components/enterprisepolicies/moz.build
++++ b/browser/components/enterprisepolicies/moz.build
+@@ -20,6 +20,6 @@ EXTRA_JS_MODULES.policies += [
+     "Policies.sys.mjs",
+ ]
+ 
+-FINAL_LIBRARY = "browsercomps"
++FINAL_LIBRARY = "xul"
+ 
+ JAR_MANIFESTS += ["jar.mn"]
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 83d84537f9..edc68416b1 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -221,7 +221,9 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::URI_CAN_LOAD_IN_CHILD |
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
+     {"crashgpu", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+-    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT}};
++    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++    {"policies", "chrome://global/content/policies/aboutPolicies.html",
++     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI}};
+ static const int kRedirTotal = std::size(kRedirMap);
+ 
+ NS_IMETHODIMP
+diff --git a/mobile/android/components/moz.build b/mobile/android/components/moz.build
+index 7b81c01e71..fa4dba3ed0 100644
+--- a/mobile/android/components/moz.build
++++ b/mobile/android/components/moz.build
+@@ -8,5 +8,6 @@ with Files("**"):
+     BUG_COMPONENT = ("GeckoView", "General")
+ 
+ DIRS += [
++    "enterprisepolicies",
+     "geckoview",
+ ]
+diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+index 3d8837cdb3..371f8894e6 100644
+--- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
++++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+@@ -497,7 +497,7 @@ let InstallSources = null;
+ class JSONPoliciesProvider {
+   constructor() {
+     this._policies = null;
+-    this._readData();
++    this._initializeIronFoxPolicies();
+   }
+ 
+   get hasPolicies() {
+@@ -604,6 +604,148 @@ class JSONPoliciesProvider {
+       }
+     }
+   }
++
++  _initializeIronFoxPolicies() {
++    this._policies = {};
++    this._policies.AppAutoUpdate = false;
++    this._policies.AppUpdateURL = "https://localhost";
++    this._policies.BackgroundAppUpdate = false;
++    this._policies.BlockAboutAddons = false;
++    this._policies.BlockAboutConfig = false;
++    this._policies.BlockAboutProfiles = false;
++    this._policies.BlockAboutSupport = false;
++    this._policies.ContentAnalysis = {
++      DefaultResult: 0,
++      Enabled: false,
++      InterceptionPoints: {
++        Clipboard: {
++          Enabled: false
++        },
++        DragAndDrop: {
++          Enabled: false
++        },
++        FileUpload: {
++          Enabled: false
++        },
++        Print: {
++          Enabled: false
++        }
++      },
++      MaxConnectionsCount: 0,
++      ShowBlockedResult: true
++    };
++    this._policies.Cookies = {
++      Behavior: "reject-tracker-and-partition-foreign",
++      BehaviorPrivateBrowsing: "reject-tracker-and-partition-foreign",
++      Block: [
++        "http://amazon-adsystem.com/",
++        "https://amazon-adsystem.com/",
++        "http://bit.ly/",
++        "https://bit.ly/",
++        "http://click.discord.com/",
++        "https://click.discord.com/",
++        "http://fonts.googleapis.com/",
++        "https://fonts.googleapis.com/",
++        "http://fonts.gstatic.com/",
++        "https://fonts.gstatic.com/",
++        "http://links.mozilla.org/",
++        "https://links.mozilla.org/",
++        "http://raw.githubusercontent.com/",
++        "https://raw.githubusercontent.com/",
++        "http://t.co/",
++        "https://t.co/",
++        "http://youtu.be/",
++        "https://youtu.be/",
++        "http://youtube-nocookie.com/",
++        "https://youtube-nocookie.com/"
++      ],
++      Locked: false,
++      RejectTracker: true
++    };
++    this._policies.DisableAppUpdate = true;
++    this._policies.DisableDefaultBrowserAgent = true;
++    this._policies.DisableFeedbackCommands = true;
++    this._policies.DisableFirefoxStudies = true;
++    this._policies.DisablePrivateBrowsing = false;
++    this._policies.DisableProfileRefresh = true;
++    this._policies.DisableSetDesktopBackground = true;
++    this._policies.DisableTelemetry = true;
++    this._policies.DNSOverHTTPS = {
++      Enabled: true,
++      Fallback: false,
++      ProviderURL: "https://dns.quad9.net/dns-query"
++    };
++    this._policies.EnableTrackingProtection = {
++      BaselineExceptions: true,
++      ConvenienceExceptions: false,
++      Cryptomining: true,
++      EmailTracking: true,
++      Fingerprinting: true,
++      SuspectedFingerprinting: true,
++      Value: true
++    };
++    this._policies.EncryptedMediaExtensions = {
++      Enabled: false
++    };
++    this._policies.ExtensionSettings = {
++      "*": {
++        allowed_types: [
++          "extension"
++        ],
++        blocked_install_message: "I am Iron Man."
++      }
++    };
++    this._policies.FirefoxHome = {
++      Highlights: false,
++      Pocket: false,
++      Snippets: false,
++      SponsoredTopSites: false,
++      SponsoredPocket: false,
++      SponsoredStories: false,
++      Stories: false
++    };
++    this._policies.HttpsOnlyMode = "enabled";
++    this._policies.InstallAddonsPermission = {
++      Default: false
++    };
++    this._policies.LegacySameSiteCookieBehaviorEnabled = false;
++    this._policies.ManualAppUpdateOnly = true;
++    this._policies.MicrosoftEntraSSO = false;
++    this._policies.NoDefaultBookmarks = true;
++    this._policies.OverridePostUpdatePage = "";
++    this._policies.Permissions = {
++      Autoplay: {
++        Default: "block-audio-video",
++        Locked: false
++      },
++      VirtualReality: {
++        BlockNewRequests: true,
++        Locked: false
++      }
++    };
++    this._policies.PopupBlocking = {
++      Default: true,
++      Locked: false
++    };
++    this._policies.PrivateBrowsingModeAvailability = 0;
++    this._policies.Proxy = {
++      Mode: "none",
++      UseProxyForDNS: true
++    };
++    this._policies.SearchEngines = {
++      PreventInstalls: true
++    };
++    this._policies.SkipTermsOfUse = true;
++    this._policies.UserMessaging = {
++      ExtensionRecommendations: false,
++      FeatureRecommendations: false,
++      MoreFromMozilla: false,
++      SkipOnboarding: true,
++      UrlbarInterventions: false,
++      WhatsNew: false
++    };
++    this._policies.WindowsSSO = false;
++  }
+ }
+ 
+ class WindowsGPOPoliciesProvider {
+diff --git a/toolkit/components/enterprisepolicies/moz.build b/toolkit/components/enterprisepolicies/moz.build
+index 4fcb377c80..c4baf0c41a 100644
+--- a/toolkit/components/enterprisepolicies/moz.build
++++ b/toolkit/components/enterprisepolicies/moz.build
+@@ -15,7 +15,7 @@ XPIDL_MODULE = "enterprisepolicies"
+ 
+ TEST_DIRS += ["tests"]
+ 
+-if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
++if CONFIG["MOZ_WIDGET_TOOLKIT"] != "0":
+     EXTRA_JS_MODULES += [
+         "EnterprisePolicies.sys.mjs",
+         "EnterprisePoliciesContent.sys.mjs",

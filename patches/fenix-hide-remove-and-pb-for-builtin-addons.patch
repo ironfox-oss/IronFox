@@ -1,0 +1,28 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
+index e8878545e6..831c56265f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
+@@ -300,6 +300,11 @@ class InstalledAddonDetailsFragment : Fragment() {
+         val switch = providePrivateBrowsingSwitch()
+         switch.isVisible = addon.isEnabled()
+ 
++        if (addon.id == "fxa@mozac.org" || addon.id == "icons@mozac.org" || addon.id == "readerview@mozac.org" || addon.id == "webcompat@mozilla.org") {
++            switch.isVisible = false
++            return
++        }
++
+         if (addon.incognito == Addon.Incognito.NOT_ALLOWED) {
+             switch.isChecked = false
+             switch.isEnabled = false
+@@ -399,6 +404,11 @@ class InstalledAddonDetailsFragment : Fragment() {
+     }
+ 
+     private fun bindRemoveButton() {
++        if (addon.id == "fxa@mozac.org" || addon.id == "icons@mozac.org" || addon.id == "readerview@mozac.org" || addon.id == "webcompat@mozilla.org") {
++            binding.removeAddOn.isVisible = false
++            return
++        }
++
+         binding.removeAddOn.setOnClickListener {
+             setAllInteractiveViewsClickable(binding, false)
+             requireContext().components.addonManager.uninstallAddon(

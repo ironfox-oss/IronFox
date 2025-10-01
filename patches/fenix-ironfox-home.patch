@@ -1,18 +1,5 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b2b40dd764..8042d1c3e7 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -130,7 +130,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_override_user_specified_homepage_sections).apply {
--            isVisible = Config.channel.isNightlyOrDebug
-+            isVisible = false
-             isChecked = context.settings().overrideUserSpecifiedHomepageSections
-             onPreferenceChangeListener = SharedPreferenceUpdater()
-         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..60c945035a 100644
+index 0bd15b53a6..f9959c9255 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -190,7 +190,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -42,13 +29,7 @@ index 0bd15b53a6..60c945035a 100644
              )
          }
          set(value) {
-@@ -252,13 +252,15 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * Indicates whether or not the "Synced Tabs" section should be shown on the home screen.
-      */
-     val showSyncedTabs: Boolean
--        get() = FxNimbus.features.homescreen.value().sectionsEnabled[HomeScreenSection.SYNCED_TABS] == true
-+        get() = true
- 
+@@ -257,8 +257,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not the "Collections" section should be shown on the home screen.
       */
@@ -61,24 +42,6 @@ index 0bd15b53a6..60c945035a 100644
  
      /**
       * Indicates whether or not the homepage header should be shown.
-@@ -266,7 +268,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     var showHomepageHeader by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_enable_homepage_header),
-         featureFlag = true,
--        default = { homescreenSections[HomeScreenSection.HEADER] == true },
-+        default = { true },
-     )
- 
-     /**
-@@ -278,7 +280,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         } else {
-             preferences.getBoolean(
-                 appContext.getPreferenceKey(R.string.pref_key_show_top_sites),
--                homescreenSections[HomeScreenSection.TOP_SITES] == true,
-+                true,
-             )
-         }
- 
 @@ -314,7 +316,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val overrideUserSpecifiedHomepageSections by lazyFeatureFlagPreference(
