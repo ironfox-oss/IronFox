@@ -12,7 +12,6 @@ index 104433aee5..48796b555a 100644
 +        if (!Services.prefs.getBoolPref("xpinstall.enabled", false)) {
            manager.disallowFeature("installTemporaryAddon");
            setAndLockPref(
-             "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 index bb451a2795..edf5829bd4 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
