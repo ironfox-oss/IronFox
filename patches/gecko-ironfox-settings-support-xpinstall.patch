@@ -12,6 +12,7 @@ index afd6d7b6fb49..8021693bdb12 100644
 +        if (!Services.prefs.getBoolPref("browser.ironfox.xpinstall.enabled")) {
            manager.disallowFeature("installTemporaryAddon");
            setAndLockPref(
+             "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 index bb451a279599..1caad93eaed5 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
