@@ -58,4 +58,5 @@
     <string name="preferences_debug_settings_unifiedpush">UnifiedPush\'u etkinleştir</string>
     <string name="preference_collections_enabled">Koleksiyonları etkinleştir</string>
     <string name="preference_translations_enabled">Firefox çevirilerini etkinleştir</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Şu anda eklentilerin yüklenmesi devre dışı bırakılmıstır. Eğer istenirse, güvenlik pahasında Ayarlar -&gt; IronFox -&gt; IronFox ayarları -&gt; Güvenlik -&gt; Eklentilerin yüklenmesine izin ver\'e giderek etkinleştirilebilir.</string>
 </resources>

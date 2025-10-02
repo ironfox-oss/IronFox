@@ -58,4 +58,5 @@
     <string name="onboarding_action_retry">Wiederholen</string>
     <string name="preference_collections_enabled">Sammlungen aktivieren</string>
     <string name="preference_translations_enabled">Firefox Übersetzungen aktivieren</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Die Installation von Add-ons ist derzeit deaktiviert. Falls gewünscht, können Sie die Installation auf Kosten der Sicherheit aktivieren, indem Sie zu Einstellungen -&gt; IronFox -&gt; IronFox-Einstellungen -&gt; Sicherheit -&gt; Installation von Add-ons zulassen navigieren.</string>
 </resources>

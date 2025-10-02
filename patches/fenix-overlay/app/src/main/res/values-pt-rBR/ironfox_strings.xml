@@ -64,4 +64,5 @@
     <string name="preferences_debug_settings_unifiedpush">Ativar UnifiedPush</string>
     <string name="preference_translations_enabled">Ativar Traduções do Firefox</string>
     <string name="preference_collections_enabled">Ativar coleções</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">A instalação de extensões está desativada no momento. Se desejar, em troca de segurança, você pode ativá-la indo até às Configurações -&gt; IronFox -&gt; Configurações do IronFox -&gt; Segurança -&gt; Permitir instalação de extensões.</string>
 </resources>

@@ -87,7 +87,7 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 3d8837cdb3..371f8894e6 100644
+index 3d8837cdb3..aa9389b59e 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -497,7 +497,7 @@ let InstallSources = null;
@@ -99,7 +99,7 @@ index 3d8837cdb3..371f8894e6 100644
    }
  
    get hasPolicies() {
-@@ -604,6 +604,148 @@ class JSONPoliciesProvider {
+@@ -604,6 +604,163 @@ class JSONPoliciesProvider {
        }
      }
    }
@@ -108,6 +108,21 @@ index 3d8837cdb3..371f8894e6 100644
 +    this._policies = {};
 +    this._policies.AppAutoUpdate = false;
 +    this._policies.AppUpdateURL = "https://localhost";
++    this._policies.Authentication = {
++      AllowNonFQDN: {
++        NTLM: false,
++        SPNEGO: false
++      },
++      AllowProxies: {
++        NTLM: false,
++        SPNEGO: false
++      },
++      Delegated: [],
++      Locked: false,
++      NTLM: [],
++      PrivateBrowsing: false,
++      SPNEGO: []
++    };
 +    this._policies.BackgroundAppUpdate = false;
 +    this._policies.BlockAboutAddons = false;
 +    this._policies.BlockAboutConfig = false;
