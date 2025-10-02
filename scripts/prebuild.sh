@@ -437,16 +437,6 @@ else
     fi
 fi
 
-# Ensure we're building for release
-$SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
-
-# Use Tor's no-op UniFFi binding generator
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
-else
-    sed -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
-fi
-
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
 
@@ -541,11 +531,6 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
-
-    popd
-
-    # Break the dependency on older cmake
-    sed -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
 
     popd
 
@@ -648,21 +633,6 @@ echo 'gyp_vars["enable_sslkeylogfile"] = 0' >>security/moz.build
 
 # Disable telemetry
 $SED -i -e 's|"MOZ_SERVICES_HEALTHREPORT", .*)|"MOZ_SERVICES_HEALTHREPORT", False)|g' mobile/android/moz.configure
-
-# Disable crash reporting (GeckoView)
-$SED -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
-
-# Disable debug (GeckoView)
-$SED -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
-
-# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
-# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
-# We're also setting the "MOZILLA_OFFICIAL" env variable below
-$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
-
-# Target release
-$SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
-$SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
 
 # Disable crash reporting (GeckoView)
 $SED -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
