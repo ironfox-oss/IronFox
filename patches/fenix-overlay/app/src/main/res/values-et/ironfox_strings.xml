@@ -59,4 +59,5 @@
     <string name="preference_safe_browsing_enabled_description">IronFoxi ohutu veebisirvimise funktsionaalsus põhineb hetkel Google\'i teenustel. IronFox uuendab vahetevahel vastavat andmekogu ja tagab, et kasutajad on viimaste veebiohtude vastu kaitstud. Võimaliku ohu tuvastamisel võib IronFox saata kahtlase võrguaadressi fragmendi räsiväärtuse Google\'i serveritesse. Tagamaks, et sinu nutiseadme IP-aadress poleks seotud antud päringutega, kasutab IronFox eraldi puhverserverit.</string>
     <string name="preference_translations_enabled">Kasuta Firefoxi tõlkelahendust</string>
     <string name="preference_collections_enabled">Luba kollektsioonide kasutamine</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Lisamoodulite paigaldamine on hetkel keelatud. Kui seda siiski soovid, siis arvesta turvalisuse riskiga ning lülita see võimalus sisse valikust: Seadistused (Sätted) -&gt; IronFox -&gt; IronFoxi seadistused -&gt; Turvalisus -&gt; Luba lisamoodulite paigaldamine.</string>
 </resources>

@@ -58,4 +58,5 @@
     <string name="onboarding_action_retry">Opnieuw proberen</string>
     <string name="preference_translations_enabled">Firefox Vertalen inschakelen</string>
     <string name="preference_collections_enabled">Verzamelingen inschakelen</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Installatie van add-ons is momenteel uitgeschakeld. Dit kan, ten koste van de veiligheid, ingeschakeld worden via Instellingen -&gt; IronFox -&gt; IronFox-instellingen -&gt; Beveiliging -&gt; Installatie van add-ons toestaan.</string>
 </resources>
