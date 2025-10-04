@@ -12,10 +12,10 @@ index 03d80ed014..014a63fa58 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..dc3d71c71f 100644
+index a46a154665..a6705454f9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -904,13 +904,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -935,13 +935,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var whatsappLinkSharingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_link_sharing),

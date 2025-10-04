@@ -169,7 +169,7 @@ index 43cf86f477..1b710b7192 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 4d5067becf..69e8080542 100644
+index 1f2c7eb2d0..4d4b374e0f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
@@ -253,9 +253,9 @@ index 4d5067becf..69e8080542 100644
 -                SetupChecklistTelemetryMiddleware(),
 +//                SetupChecklistTelemetryMiddleware(),
                  ReviewPromptMiddleware(
-                     settings = settings,
-                     createJexlHelper = nimbus::createJexlHelper,
-@@ -291,7 +291,7 @@ class Components(private val context: Context) {
+                     isReviewPromptFeatureEnabled = { settings.customReviewPromptFeatureEnabled },
+                     numberOfAppLaunches = { settings.numberOfAppLaunches },
+@@ -297,7 +297,7 @@ class Components(private val context: Context) {
              ),
          ).also {
              it.dispatch(AppAction.SetupChecklistAction.Init)
@@ -265,10 +265,10 @@ index 4d5067becf..69e8080542 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..778cc74e08 100644
+index a46a154665..ea87053886 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -334,7 +334,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -365,7 +365,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var customReviewPromptFeatureEnabled by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_custom_review_prompt_enabled),
@@ -277,7 +277,7 @@ index 0bd15b53a6..778cc74e08 100644
          default = { FxNimbus.features.customReviewPrompt.value().enabled },
      )
  
-@@ -2056,7 +2056,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2087,7 +2087,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

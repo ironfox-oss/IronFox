@@ -1138,6 +1138,10 @@
       "firstPartyDomain": "unredacted.org"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "usgs.gov"
+    },
+    {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
       "firstPartyDomain": "usps.com"
     },
