@@ -766,18 +766,18 @@ index 03d80ed014..7c53da22c8 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..1c8bcc8063 100644
+index a46a154665..98e4a728ff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -71,6 +71,7 @@ import org.mozilla.fenix.tabstray.DefaultTabManagementFeatureHelper
- import org.mozilla.fenix.wallpapers.Wallpaper
+@@ -74,6 +74,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
  import java.security.InvalidParameterException
  import java.util.UUID
+ import java.util.concurrent.TimeUnit.MILLISECONDS
 +import mozilla.components.concept.engine.Engine.RefererXOriginPolicy
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2720,4 +2721,141 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2751,4 +2752,141 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }

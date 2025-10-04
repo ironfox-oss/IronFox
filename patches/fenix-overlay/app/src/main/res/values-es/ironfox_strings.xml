@@ -2,11 +2,11 @@
 <resources>
     <string name="restart_required_summary">Cambiar esta configuración reiniciará tu navegador</string>
     <string name="unsupported_summary">Esta configuración NO es recomendada ni soportada. Proceda con precaución.</string>
-    <string name="if_preferences">Configuraciones de IronFox</string>
+    <string name="if_preferences">Ajustes de IronFox</string>
     <string name="if_preferences_misc">Misceláneos</string>
     <string name="if_preferences_privacy">Privacidad</string>
     <string name="if_preferences_privacy_security">Privacidad y seguridad</string>
-    <string name="if_preferences_secret">Configuraciones secretas</string>
+    <string name="if_preferences_secret">Ajustes secretos</string>
     <string name="if_preferences_security">Seguridad</string>
     <string name="preference_accessibility_enabled">Habilitar servicios de accesibilidad</string>
     <string name="preference_referer_policy">Política de referer de origen cruzado</string>
@@ -58,4 +58,5 @@
     <string name="onboarding_action_retry">Reintentar</string>
     <string name="preference_collections_enabled">Habilitar colecciones</string>
     <string name="preference_translations_enabled">Habilitar Traducciones de Firefox</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Instalación de extensiones actualmente desactivada. Si lo deseas, a costa de seguridad, puedes habilitarla navegando a Ajustes -&gt; IronFox -&gt; Ajustes de IronFox -&gt; Seguridad -&gt; Permitir instalación de extensiones.</string>
 </resources>

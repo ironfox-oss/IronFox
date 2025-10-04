@@ -349,10 +349,10 @@ index 819b24954e..273349e0ca 100644
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..eec3465f64 100644
+index a46a154665..882e0e4ebd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -37,7 +37,7 @@ import mozilla.components.support.utils.BrowsersCache
+@@ -39,7 +39,7 @@ import org.mozilla.experiments.nimbus.NimbusEventStore
  import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.Config
  import org.mozilla.fenix.FeatureFlags
@@ -361,7 +361,7 @@ index 0bd15b53a6..eec3465f64 100644
  import org.mozilla.fenix.R
  import org.mozilla.fenix.browser.browsingmode.BrowsingMode
  import org.mozilla.fenix.components.settings.counterPreference
-@@ -408,7 +408,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -439,7 +439,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var contileContextId by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_contile_context_id),
