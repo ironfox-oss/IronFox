@@ -3,6 +3,13 @@
 
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
+/// Branding
+pref("app.releaseNotesURL", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
+pref("app.releaseNotesURL.prompt", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
+pref("app.update.url.details", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
+pref("app.update.url.manual", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
+pref("app.vendorURL", "https://ironfoxoss.org/", locked);
+
 /// Clear FPP global overrides
 // We're hardening FPP internally with our own `RFPTargetsDefault.inc` file instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
 pref("privacy.fingerprintingProtection.overrides", ""); // [DEFAULT]
