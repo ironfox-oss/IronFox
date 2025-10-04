@@ -12,10 +12,10 @@ index b2b40dd764..2ab9a65f44 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 0bd15b53a6..3b6ff5dbc5 100644
+index a46a154665..8823f308a4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2087,7 +2087,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2118,7 +2118,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var useRemoteSearchConfiguration by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
          default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
