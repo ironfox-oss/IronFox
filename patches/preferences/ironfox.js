@@ -26,6 +26,12 @@ pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
 pref("extensions.webapi.enabled", false);
 pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 
+/// Enable FPP overrides by default
+pref("browser.ironfox.fingerprintingProtection.hardenOverrides.enabled", true); // [DEFAULT] Overrides from us that *harden* protections for certain sites
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true); // [DEFAULT] Overrides from us that *relax* protections for certain sites by default
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true); // [DEFAULT] Overrides from us that disable timezone spoofing by default for certain sites
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true); // [DEFAULT] Overrides from Mozilla
+
 /// Enable our Beacon API (navigator.sendBeacon) Stub
 // Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
 pref("beacon.enabled", true); // [DEFAULT]
@@ -193,7 +199,7 @@ pref("notification.prompt.testing", false); // [HIDDEN] [DEFAULT]
 
 /// Restrict Remote Settings
 pref("browser.ironfox.services.settings.allowedCollections", "blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-manager-settings,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/ml-inference-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/query-stripping,main/remote-permissions,main/tracking-protection-lists,main/third-party-cookie-blocking-exempt-urls,main/translations-identification-models,main/translations-models,main/translations-wasm,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");
-pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironfox-fingerprinting-protection-overrides,blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,main/anti-tracking-url-decoration,main/cookie-banner-rules-list,main/moz-essential-domain-fallbacks,main/ml-inference-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/password-recipes,main/remote-permissions,main/translations-models,main/translations-wasm,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,security-state/intermediates,security-state/onecrl");
+pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironfox-fingerprinting-protection-overrides-harden,main/ironfox-fingerprinting-protection-overrides-unbreak,main/ironfox-fingerprinting-protection-overrides-unbreak-timezone,blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,main/anti-tracking-url-decoration,main/cookie-banner-rules-list,main/moz-essential-domain-fallbacks,main/ml-inference-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/password-recipes,main/remote-permissions,main/translations-models,main/translations-wasm,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,security-state/intermediates,security-state/onecrl");
 
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead

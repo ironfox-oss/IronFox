@@ -660,7 +660,9 @@ echo 'FINAL_TARGET_FILES.defaults.settings.main += [' >>services/settings/dumps/
 echo '    "anti-tracking-url-decoration.json",' >>services/settings/dumps/main/moz.build
 echo '    "cookie-banner-rules-list.json",' >>services/settings/dumps/main/moz.build
 echo '    "hijack-blocklists.json",' >>services/settings/dumps/main/moz.build
-echo '    "ironfox-fingerprinting-protection-overrides.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-harden.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-unbreak-timezone.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-unbreak.json",' >>services/settings/dumps/main/moz.build
 echo '    "translations-models.json",' >>services/settings/dumps/main/moz.build
 echo '    "translations-wasm.json",' >>services/settings/dumps/main/moz.build
 echo '    "url-classifier-skip-urls.json",' >>services/settings/dumps/main/moz.build
