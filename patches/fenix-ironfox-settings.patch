@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..8af14d7cf4 100644
+index 823b5909fa..4fff98a542 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -198,6 +198,30 @@ class Core(
@@ -17,7 +17,7 @@ index 823b5909fa..8af14d7cf4 100644
 +            javascriptJitIonWasmEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled,
 +            pdfjsDisabled = context.settings().pdfjsDisabled,
 +            printEnabled = context.settings().printEnabled,
 +            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
@@ -43,10 +43,10 @@ index 823b5909fa..8af14d7cf4 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..6b8c035731
+index 0000000000..aeb2978bf9
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,686 @@
+@@ -0,0 +1,715 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -225,7 +225,7 @@ index 0000000000..6b8c035731
 +        /**
 +         * Indicates whether or not we should enable JavaScript Just-in-time Compilation (JIT)
 +         * Default: false
-+         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jit_trustedprincipals, javascript.options.jithints, javascript.options.main_process_disable_jit, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
++         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jithints, javascript.options.main_process_disable_jit, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
 +         */
 +        val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_jit_enabled,
@@ -243,7 +243,36 @@ index 0000000000..6b8c035731
 +            components.core.engine.settings.javascriptJitIonWasmEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitMainProcessEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitNativeRegexpEnabled = javascriptJitEnabled
-+            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * If JavaScript Just-in-time Compilation (JIT) is disabled globally, indicates whether or not we should still enable JIT for extensions
++         * Default: false
++         * Gecko preference(s) impacted: javascript.options.jit_trustedprincipals
++         */
++        val javascriptJitTrustedPrincipalsEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_jit_trusted_principals_enabled,
++        )
++
++        javascriptJitTrustedPrincipalsEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitTrustedPrincipalsEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitTrustedPrincipalsEnabled as Boolean
++            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitTrustedPrincipalsEnabled
 +
 +            Toast.makeText(
 +                context,
@@ -766,7 +795,7 @@ index 03d80ed014..7c53da22c8 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..98e4a728ff 100644
+index a46a154665..6eb07ced20 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -74,6 +74,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
@@ -777,7 +806,7 @@ index a46a154665..98e4a728ff 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2751,4 +2752,141 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2751,4 +2752,146 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -814,6 +843,11 @@ index a46a154665..98e4a728ff 100644
 +
 +    var javascriptJitEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
++        default = false,
++    )
++
++    var javascriptJitTrustedPrincipalsEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_jit_trusted_principals_enabled),
 +        default = false,
 +    )
 +
@@ -950,10 +984,10 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..8f64d806a2
+index 0000000000..4606074aeb
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,256 @@
+@@ -0,0 +1,265 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1091,6 +1125,15 @@ index 0000000000..8f64d806a2
 +            android:key="@string/pref_key_jit_enabled"
 +            android:summary="@string/preference_jit_enabled_summary"
 +            android:title="@string/preference_jit_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable JavaScript Just-in-time Compilation (JIT) for extensions -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:dependency="@string/pref_key_javascript_enabled"
++            android:key="@string/pref_key_jit_trusted_principals_enabled"
++            android:summary="@string/preference_jit_trusted_principals_enabled_summary"
++            android:title="@string/preference_jit_trusted_principals_enabled"
 +            app:iconSpaceReserved="false" />
 +
 +        <!-- Whether we should enable printing capabilities -->

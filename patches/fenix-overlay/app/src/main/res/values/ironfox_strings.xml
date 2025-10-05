@@ -50,6 +50,8 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
     <string name="preference_jit_enabled_summary">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
+    <string name="preference_jit_trusted_principals_enabled">Enable JavaScript Just-in-time Compilation (JIT) for extensions</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Enables JIT for extensions when JIT is otherwise disabled globally - Changing this setting will restart your browser</string>
 
     <!-- PDF.js -->
     <string name="preference_pdfjs_disabled">Open PDF files externally</string>

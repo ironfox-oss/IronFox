@@ -90,7 +90,7 @@ pref("javascript.options.baselinejit.0.NOTE", "Locked in favor of the UI setting
 pref("javascript.options.baselinejit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
 pref("javascript.options.jit_trustedprincipals", false, locked);
 pref("javascript.options.jit_trustedprincipals.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.jit_trustedprincipals.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("javascript.options.jit_trustedprincipals.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT) for extensions'", locked);
 pref("javascript.options.jithints", false, locked);
 pref("javascript.options.jithints.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("javascript.options.jithints.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
