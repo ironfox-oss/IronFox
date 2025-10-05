@@ -1,13 +1,15 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..4fff98a542 100644
+index 823b5909fa..bf0abf0c5d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -198,6 +198,30 @@ class Core(
+@@ -198,6 +198,33 @@ class Core(
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
 +            accessibilityEnabled = context.settings().accessibilityEnabled,
++            addressAutofillEnabled = context.settings().shouldAutofillAddressDetails,
 +            cacheEnabled = context.settings().cacheEnabled,
++            cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails,
 +            emeEnabled = context.settings().emeEnabled,
 +            ipv6Enabled = context.settings().ipv6Enabled,
 +            javascriptEnabled = context.settings().javascriptEnabled,
@@ -18,6 +20,7 @@ index 823b5909fa..4fff98a542 100644
 +            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled,
++            passwordManagerEnabled = context.settings().shouldPromptToSaveLogins,
 +            pdfjsDisabled = context.settings().pdfjsDisabled,
 +            printEnabled = context.settings().printEnabled,
 +            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
@@ -33,7 +36,7 @@ index 823b5909fa..4fff98a542 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -231,6 +255,7 @@ class Core(
+@@ -231,6 +258,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {

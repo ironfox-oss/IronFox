@@ -748,6 +748,13 @@ patches:
     effect: "The UI for DRM-controlled content (EME) is hidden by default, while users can re-enable EME with the UI/site permission at their own risk if desired."
     category: "User Interface"
 
+  - file: "fenix-ironfox-settings-support-password-mgr-autofill.patch"
+    name: "IronFox Settings Support (Fenix) - Password Manager and Address/Credit Card Autofill"
+    description: "Modifies the UI settings to enable/disable the built-in password manager and address/credit card autofill to also disable the functionality within Gecko."
+    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that the password manager and autofill functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI setting."
+    effect: "Users can fully disable the built-in password manager and address/credit card autofill functionality fromt he UI."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-preferred-website-appearance.patch"
     name: "IronFox Settings Support (Fenix) - Preferred website appearance"
     description: "Provides support for UI settings to configure the preferred website appearance, independently of the browser theme."

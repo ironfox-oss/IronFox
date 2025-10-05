@@ -73,6 +73,12 @@ pref("dom.security.https_only_mode.1.NOTE", "'HTTPS-Only Mode'", locked);
 pref("dom.security.https_only_mode_pbm", false, locked);
 pref("dom.security.https_only_mode_pbm.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("dom.security.https_only_mode_pbm.1.NOTE", "'HTTPS-Only Mode'", locked);
+pref("extensions.formautofill.addresses.enabled", false, locked);
+pref("extensions.formautofill.addresses.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("extensions.formautofill.addresses.enabled.1.NOTE", "'Save and fill addresses'", locked);
+pref("extensions.formautofill.creditCards.enabled", false, locked);
+pref("extensions.formautofill.creditCards.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("extensions.formautofill.creditCards.enabled.1.NOTE", "'Save and fill payment methods'", locked);
 pref("font.size.inflation.minTwips", 0, locked);
 pref("font.size.inflation.minTwips.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("font.size.inflation.minTwips.1.NOTE", "'Automatic font sizing'", locked);
@@ -160,6 +166,9 @@ pref("security.enterprise_roots.enabled.1.NOTE", "'Use third party CA certificat
 pref("signon.autofillForms", false, locked);
 pref("signon.autofillForms.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("signon.autofillForms.1.NOTE", "'Autofill in IronFox'", locked);
+pref("signon.rememberSignons", false, locked);
+pref("signon.rememberSignons.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("signon.rememberSignons.1.NOTE", "'Save passwords'", locked);
 pref("svg.disabled", false, locked);
 pref("svg.disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("svg.disabled.1.NOTE", "'Enable Scalable Vector Graphics (SVG)'", locked);
@@ -181,13 +190,6 @@ pref("media.geckoview.autoplay.request.testing", 0, locked); // [DEFAULT]
 /// Re-enable notification permission prompts in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
 pref("notification.prompt.testing", false); // [HIDDEN] [DEFAULT]
-
-/// Re-enable Password Manager and Autofill in GeckoView
-// We still disable these by default, just via a patch for Fenix's UI settings instead
-// https://gitlab.com/ironfox-oss/IronFox/-/issues/11
-pref("extensions.formautofill.addresses.enabled", true); // [DEFAULT]
-pref("extensions.formautofill.creditCards.enabled", true); // [DEFAULT]
-pref("signon.rememberSignons", true); // [DEFAULT]
 
 /// Restrict Remote Settings
 pref("browser.ironfox.services.settings.allowedCollections", "blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-manager-settings,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/ml-inference-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/query-stripping,main/remote-permissions,main/tracking-protection-lists,main/third-party-cookie-blocking-exempt-urls,main/translations-identification-models,main/translations-models,main/translations-wasm,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");

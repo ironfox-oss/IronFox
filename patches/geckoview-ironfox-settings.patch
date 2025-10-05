@@ -1,13 +1,15 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index aea35cbd34..06a8ce7791 100644
+index aea35cbd34..14599611c9 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -1028,6 +1028,29 @@ package org.mozilla.geckoview {
+@@ -1028,6 +1028,32 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
 +    method public boolean getAccessibilityEnabled();
++    method public boolean getAddressAutofillEnabled();
 +    method public boolean getCacheEnabled();
++    method public boolean getCardAutofillEnabled();
 +    method public boolean getEmeEnabled();
 +    method public boolean getIpv6Enabled();
 +    method public boolean getJavaScriptJitBaselineEnabled();
@@ -17,6 +19,7 @@ index aea35cbd34..06a8ce7791 100644
 +    method public boolean getJavaScriptJitMainProcessEnabled();
 +    method public boolean getJavaScriptJitNativeRegexpEnabled();
 +    method public boolean getJavaScriptJitTrustedPrincipalsEnabled();
++    method public boolean getPasswordManagerEnabled();
 +    method public boolean getPdfjsDisabled();
 +    method public boolean getPrintEnabled();
 +    method public int getRefererXOriginPolicy();
@@ -32,12 +35,14 @@ index aea35cbd34..06a8ce7791 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1078,6 +1101,29 @@ package org.mozilla.geckoview {
+@@ -1078,6 +1104,32 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setAccessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setAddressAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setCacheEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setCardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setEmeEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setIpv6Enabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(boolean);
@@ -47,6 +52,7 @@ index aea35cbd34..06a8ce7791 100644
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitMainProcessEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitNativeRegexpEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setPasswordManagerEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setPdfjsDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setPrintEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setRefererXOriginPolicy(int);
@@ -62,7 +68,7 @@ index aea35cbd34..06a8ce7791 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1092,6 +1138,9 @@ package org.mozilla.geckoview {
+@@ -1092,6 +1144,9 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -72,12 +78,14 @@ index aea35cbd34..06a8ce7791 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1143,6 +1192,29 @@ package org.mozilla.geckoview {
+@@ -1143,6 +1198,32 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder accessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder addressAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder cacheEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder cardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder emeEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder ipv6Enabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineEnabled(boolean);
@@ -87,6 +95,7 @@ index aea35cbd34..06a8ce7791 100644
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitMainProcessEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitNativeRegexpEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder passwordManagerEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder pdfjsDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder printEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder refererXOriginPolicy(int);
@@ -102,7 +111,7 @@ index aea35cbd34..06a8ce7791 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1158,6 +1230,9 @@ package org.mozilla.geckoview {
+@@ -1158,6 +1239,9 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -113,10 +122,10 @@ index aea35cbd34..06a8ce7791 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 1aeae7c828..a75302fbfb 100644
+index 1aeae7c828..c9a65d3ec5 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -663,6 +663,121 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -663,6 +663,136 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
        return this;
      }
@@ -126,8 +135,18 @@ index 1aeae7c828..a75302fbfb 100644
 +      return this;
 +    }
 +
++    public @NonNull Builder addressAutofillEnabled(final boolean flag) {
++      getSettings().mAddressAutofillEnabled.set(flag);
++      return this;
++    }
++
 +    public @NonNull Builder cacheEnabled(final boolean flag) {
 +      getSettings().mCacheEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder cardAutofillEnabled(final boolean flag) {
++      getSettings().mCardAutofillEnabled.set(flag);
 +      return this;
 +    }
 +
@@ -173,6 +192,11 @@ index 1aeae7c828..a75302fbfb 100644
 +
 +    public @NonNull Builder javaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
 +      getSettings().mJavaScriptJitTrustedPrincipalsEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder passwordManagerEnabled(final boolean flag) {
++      getSettings().mPasswordManagerEnabled.set(flag);
 +      return this;
 +    }
 +
@@ -238,12 +262,14 @@ index 1aeae7c828..a75302fbfb 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -798,6 +913,30 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -798,6 +928,33 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
 +  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<Integer>("accessibility.force_disabled", 1);
++  /* package */ final Pref<Boolean> mAddressAutofillEnabled = new Pref<Boolean>("extensions.formautofill.addresses.enabled", false);
 +  /* package */ final Pref<Boolean> mCacheEnabled = new Pref<Boolean>("browser.cache.disk.enable", false);
++  /* package */ final Pref<Boolean> mCardAutofillEnabled = new Pref<Boolean>("extensions.formautofill.creditCards.enabled", false);
 +  /* package */ final Pref<Boolean> mEmeEnabled = new Pref<Boolean>("media.eme.enabled", false);
 +  /* package */ final Pref<Boolean> mIpv6Enabled = new Pref<Boolean>("network.dns.disableIPv6", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitBaselineEnabled = new Pref<Boolean>("javascript.options.baselinejit", false);
@@ -253,6 +279,7 @@ index 1aeae7c828..a75302fbfb 100644
 +  /* package */ final Pref<Boolean> mJavaScriptJitMainProcessEnabled = new Pref<Boolean>("javascript.options.main_process_disable_jit", true);
 +  /* package */ final Pref<Boolean> mJavaScriptJitNativeRegexpEnabled = new Pref<Boolean>("javascript.options.native_regexp", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
++  /* package */ final Pref<Boolean> mPasswordManagerEnabled = new Pref<Boolean>("signon.rememberSignons", false);
 +  /* package */ final Pref<Boolean> mPdfjsDisabled = new Pref<Boolean>("pdfjs.disabled", false);
 +  /* package */ final Pref<Boolean> mPrintEnabled = new Pref<Boolean>("print.enabled", true);
 +  /* package */ final Pref<Integer> mRefererXOriginPolicy = new Pref<Integer>("network.http.referer.XOriginPolicy", 0);
@@ -269,7 +296,7 @@ index 1aeae7c828..a75302fbfb 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2317,6 +2456,239 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2317,6 +2474,266 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  
@@ -282,12 +309,30 @@ index 1aeae7c828..a75302fbfb 100644
 +    return this;
 +  }
 +
++  public boolean getAddressAutofillEnabled() {
++    return mAddressAutofillEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setAddressAutofillEnabled(final boolean flag) {
++    mAddressAutofillEnabled.commit(flag);
++    return this;
++  }
++
 +  public boolean getCacheEnabled() {
 +    return mCacheEnabled.get();
 +  }
 +
 +  public @NonNull GeckoRuntimeSettings setCacheEnabled(final boolean flag) {
 +    mCacheEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getCardAutofillEnabled() {
++    return mCardAutofillEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setCardAutofillEnabled(final boolean flag) {
++    mCardAutofillEnabled.commit(flag);
 +    return this;
 +  }
 +
@@ -369,6 +414,15 @@ index 1aeae7c828..a75302fbfb 100644
 +
 +  public @NonNull GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
 +    mJavaScriptJitTrustedPrincipalsEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getPasswordManagerEnabled() {
++    return mPasswordManagerEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setPasswordManagerEnabled(final boolean flag) {
++    mPasswordManagerEnabled.commit(flag);
 +    return this;
 +  }
 +
