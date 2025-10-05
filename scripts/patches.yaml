@@ -638,6 +638,13 @@ patches:
     effect: "Users are provided with a cleaner UI and won't try to use toggles that do not work as expected."
     category: "User Experience"
 
+  - file: "geckoview-lock-runtime-settings-prefs.patch"
+    name: "Lock GeckoRuntimeSettings Preferences."
+    description: "Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix (Firefox for Android)'s UI settings."
+    reason: "To avoid bugs/unexpected behavior from UI settings not matching with related Gecko preferences, and to prevent from users from attempting to change these preferences directly from `about:config` (as doing so simply results in the pref resetting on the next browser launch)."
+    effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
+    category: "User Experience"
+
   # User Interface
   - file: "fenix-ironfox-branding.patch"
     name: "IronFox Branding"
