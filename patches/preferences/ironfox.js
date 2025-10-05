@@ -176,7 +176,7 @@ pref("geo.prompt.testing", false); // [HIDDEN] [DEFAULT]
 
 /// Re-enable media autoplay in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
-pref("media.geckoview.autoplay.request.testing", 0); // [DEFAULT]
+pref("media.geckoview.autoplay.request.testing", 0, locked); // [DEFAULT]
 
 /// Re-enable notification permission prompts in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
@@ -195,7 +195,7 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
-pref("layout.css.prefers-color-scheme.content-override", 2); // [DEFAULT]
+pref("layout.css.prefers-color-scheme.content-override", 2, locked); // [DEFAULT]
 
 /// Expose build options via the `about:config`
 // This allows users to easily see what build options we're using, and this makes it easier for us to test and confirm that our options are set as expected
