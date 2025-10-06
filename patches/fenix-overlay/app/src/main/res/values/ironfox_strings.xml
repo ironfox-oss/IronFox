@@ -39,6 +39,12 @@
     <!-- Firefox Translations -->
     <string name="preference_translations_enabled">Enable Firefox Translations</string>
 
+    <!-- FPP Overrides -->
+    <string name="preference_fpp_overrides_ironfox_enabled">Enable fingerprinting protection overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Relaxes fingerprinting protections to reduce breakage for certain websites, using a list from IronFox - Changing this setting will restart your browser</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Enable fingerprinting protection overrides from Mozilla</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Relaxes fingerprinting protections to reduce breakage for certain websites, using a list from Mozilla - Changing this setting will restart your browser</string>
+
     <!-- IPv6 -->
     <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
 

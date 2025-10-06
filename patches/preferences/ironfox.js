@@ -28,9 +28,7 @@ pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 
 /// Enable FPP overrides by default
 pref("browser.ironfox.fingerprintingProtection.hardenOverrides.enabled", true); // [DEFAULT] Overrides from us that *harden* protections for certain sites
-pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true); // [DEFAULT] Overrides from us that *relax* protections for certain sites by default
 pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true); // [DEFAULT] Overrides from us that disable timezone spoofing by default for certain sites
-pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true); // [DEFAULT] Overrides from Mozilla
 
 /// Enable our Beacon API (navigator.sendBeacon) Stub
 // Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
@@ -50,6 +48,9 @@ pref("accessibility.force_disabled.1.NOTE", "'Enable accessibility services'", l
 pref("browser.cache.disk.enable", false, locked);
 pref("browser.cache.disk.enable.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.cache.disk.enable.1.NOTE", "'Enable disk cache'", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true, locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.1.NOTE", "'Enable fingerprinting protection overrides from IronFox'", locked);
 pref("browser.safebrowsing.malware.enabled", true, locked);
 pref("browser.safebrowsing.malware.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.safebrowsing.malware.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
@@ -161,6 +162,9 @@ pref("pdfjs.disabled.1.NOTE", "'Open PDF files externally'", locked);
 pref("print.enabled", true, locked);
 pref("print.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("print.enabled.1.NOTE", "'Enable printing capabilities'", locked);
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true, locked);
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled.1.NOTE", "'Enable fingerprinting protection overrides from Mozilla'", locked);
 pref("privacy.spoof_english", 2, locked);
 pref("privacy.spoof_english.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("privacy.spoof_english.1.NOTE", "'Request English versions of webpages'", locked);

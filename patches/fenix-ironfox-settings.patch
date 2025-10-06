@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..bf0abf0c5d 100644
+index 823b5909fa..3be7aa00df 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -198,6 +198,33 @@ class Core(
+@@ -198,6 +198,35 @@ class Core(
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
@@ -11,6 +11,8 @@ index 823b5909fa..bf0abf0c5d 100644
 +            cacheEnabled = context.settings().cacheEnabled,
 +            cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails,
 +            emeEnabled = context.settings().emeEnabled,
++            fppOverridesIronFoxEnabled = context.settings().fppOverridesIronFoxEnabled,
++            fppOverridesMozillaEnabled = context.settings().fppOverridesMozillaEnabled,
 +            ipv6Enabled = context.settings().ipv6Enabled,
 +            javascriptEnabled = context.settings().javascriptEnabled,
 +            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
@@ -36,7 +38,7 @@ index 823b5909fa..bf0abf0c5d 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -231,6 +258,7 @@ class Core(
+@@ -231,6 +260,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -46,10 +48,10 @@ index 823b5909fa..bf0abf0c5d 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..aeb2978bf9
+index 0000000000..5e374f25e3
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,715 @@
+@@ -0,0 +1,774 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -151,7 +153,7 @@ index 0000000000..aeb2978bf9
 +        }
 +
 +        /*** Privacy ***/
-+        
++
 +        /**
 +         * Indicates whether or not we should enable disk cache
 +         * Default: false
@@ -168,6 +170,66 @@ index 0000000000..aeb2978bf9
 +            settings.cacheEnabled = cacheEnabled as Boolean
 +            components.core.engine.settings.cacheEnabled = cacheEnabled
 +
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable our fingerprinting protection overrides
++         * Default: true
++         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled
++         */
++        val fppOverridesIronFoxEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_fpp_overrides_ironfox_enabled,
++        )
++
++        fppOverridesIronFoxEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.fppOverridesIronFoxEnabled = fppOverridesIronFoxEnabled as Boolean
++            components.core.engine.settings.fppOverridesIronFoxEnabled = fppOverridesIronFoxEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable Mozilla's fingerprinting protection overrides
++         * Default: true
++         * Gecko preference(s) impacted: privacy.fingerprintingProtection.remoteOverrides.enabled
++         */
++        val fppOverridesMozillaEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_fpp_overrides_mozilla_enabled,
++        )
++
++        fppOverridesMozillaEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesMozillaEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.fppOverridesMozillaEnabled = fppOverridesMozillaEnabled as Boolean
++            components.core.engine.settings.fppOverridesMozillaEnabled = fppOverridesMozillaEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
 +            true
 +        }
 +
@@ -208,7 +270,6 @@ index 0000000000..aeb2978bf9
 +            val components = preference.context.components
 +
 +            settings.xpinstallEnabled = xpinstallEnabled
-+            
 +            components.core.engine.settings.xpinstallEnabled = xpinstallEnabled
 +
 +            Toast.makeText(
@@ -798,7 +859,7 @@ index 03d80ed014..7c53da22c8 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..6eb07ced20 100644
+index a46a154665..cfe5c3e23b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -74,6 +74,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
@@ -809,7 +870,7 @@ index a46a154665..6eb07ced20 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2751,4 +2752,146 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2751,4 +2752,156 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -831,6 +892,16 @@ index a46a154665..6eb07ced20 100644
 +
 +    var enableUnifiedPush by booleanPreference(
 +        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
++        default = true,
++    )
++
++    var fppOverridesIronFoxEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_enabled),
++        default = true,
++    )
++
++    var fppOverridesMozillaEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_mozilla_enabled),
 +        default = true,
 +    )
 +
@@ -987,10 +1058,10 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..4606074aeb
+index 0000000000..92a5b1a75a
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,265 @@
+@@ -0,0 +1,281 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1095,6 +1166,22 @@ index 0000000000..4606074aeb
 +            android:defaultValue="false"
 +            android:key="@string/pref_key_cache_enabled"
 +            android:title="@string/preference_cache_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable our FPP overrides -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_fpp_overrides_ironfox_enabled"
++            android:summary="@string/preference_fpp_overrides_ironfox_summary"
++            android:title="@string/preference_fpp_overrides_ironfox_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable Mozilla's FPP overrides -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_fpp_overrides_mozilla_enabled"
++            android:summary="@string/preference_fpp_overrides_mozilla_summary"
++            android:title="@string/preference_fpp_overrides_mozilla_enabled"
 +            app:iconSpaceReserved="false" />
 +
 +        <!-- Whether we should spoof the user's locale to en-US -->
