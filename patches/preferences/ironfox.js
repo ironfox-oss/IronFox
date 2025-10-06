@@ -36,6 +36,10 @@ pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true); // [DEFA
 // Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
 pref("beacon.enabled", true); // [DEFAULT]
 
+/// Enable the Phoenix add-on blocklist by default
+// https://codeberg.org/celenity/Phoenix/src/branch/pages/build/policies/blocklist.json
+pref("browser.ironfox.phoenix.extensions.blocklist.enabled", true); // [DEFAULT]
+
 /// Lock prefs controlled by UI settings
 // This prevents prefs from becoming out of sync with the corresponding UI toggle(s)/behavior in Fenix
 // Modifying these prefs directly from `about:config` also causes them to reset on the next browser launch, which users probably do not want/expect
