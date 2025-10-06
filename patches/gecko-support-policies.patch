@@ -87,7 +87,7 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 3d8837cdb3..43ecca1023 100644
+index 3d8837cdb3..d5e61cb4e8 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -497,7 +497,7 @@ let InstallSources = null;
@@ -99,7 +99,7 @@ index 3d8837cdb3..43ecca1023 100644
    }
  
    get hasPolicies() {
-@@ -604,6 +604,892 @@ class JSONPoliciesProvider {
+@@ -604,6 +604,896 @@ class JSONPoliciesProvider {
        }
      }
    }
@@ -207,6 +207,10 @@ index 3d8837cdb3..43ecca1023 100644
 +          "extension"
 +        ],
 +        blocked_install_message: "I am Iron Man."
++      },
++      "{03fdf33c-f6b1-4992-992e-f4115ab16ee0}": {
++        installation_mode: "blocked",
++        blocked_install_message: "'BrowsingBloc' https://addons.mozilla.org/addon/{03fdf33c-f6b1-4992-992e-f4115ab16ee0} - Fake/scam/impersonation, masquerading as the well known 'Adblock' extension (which itself is also quite sketchy...)"
 +      },
 +      "startpage@celenity.dev": {
 +        installation_mode: "blocked",
