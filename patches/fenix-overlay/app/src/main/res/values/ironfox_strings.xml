@@ -39,11 +39,11 @@
     <!-- Firefox Translations -->
     <string name="preference_translations_enabled">Enable Firefox Translations</string>
 
-    <!-- FPP Overrides -->
+    <!-- FPP overrides -->
     <string name="preference_fpp_overrides_ironfox_enabled">Enable fingerprinting protection overrides from IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_summary">Relaxes fingerprinting protections to reduce breakage for certain websites, using a list from IronFox - Changing this setting will restart your browser</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from IronFox - Changing this setting will restart your browser</string>
     <string name="preference_fpp_overrides_mozilla_enabled">Enable fingerprinting protection overrides from Mozilla</string>
-    <string name="preference_fpp_overrides_mozilla_summary">Relaxes fingerprinting protections to reduce breakage for certain websites, using a list from Mozilla - Changing this setting will restart your browser</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from Mozilla - Changing this setting will restart your browser</string>
 
     <!-- IPv6 -->
     <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
@@ -85,6 +85,12 @@
     <string name="tor_spoof_english_description">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
     <string name="tor_spoof_english">Request English versions of webpages</string>
     <string name="tor_spoof_english_summary">When enabled, strengthens fingerprinting protection</string>
+
+    <!-- Spoof timezone to UTC-0 -->
+    <string name="spoof_timezone">Spoof timezone to UTC-0</string>
+    <string name="spoof_timezone_summary">When enabled, strengthens fingerprinting protection</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Enable timezone spoofing overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Disables timezone spoofing for certain websites by default to reduce breakage - Changing this setting will restart your browser</string>
 
     <!-- SVG -->
     <string name="preference_svg_enabled">Enable Scalable Vector Graphics (SVG)</string>

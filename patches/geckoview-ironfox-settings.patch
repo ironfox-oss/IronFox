@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index aea35cbd34..136caefa9b 100644
+index aea35cbd34..7a427b1381 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -1028,6 +1028,34 @@ package org.mozilla.geckoview {
+@@ -1028,6 +1028,36 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -12,6 +12,7 @@ index aea35cbd34..136caefa9b 100644
 +    method public boolean getCardAutofillEnabled();
 +    method public boolean getEmeEnabled();
 +    method public boolean getFppOverridesIronFoxEnabled();
++    method public boolean getFppOverridesIronFoxTimezoneEnabled();
 +    method public boolean getFppOverridesMozillaEnabled();
 +    method public boolean getIpv6Enabled();
 +    method public boolean getJavaScriptJitBaselineEnabled();
@@ -26,6 +27,7 @@ index aea35cbd34..136caefa9b 100644
 +    method public boolean getPrintEnabled();
 +    method public int getRefererXOriginPolicy();
 +    method public boolean getSpoofEnglish();
++    method public boolean getSpoofTimezone();
 +    method public boolean getSvgEnabled();
 +    method public boolean getTranslationsEnabled();
 +    method public boolean getTranslationsSupported();
@@ -37,7 +39,7 @@ index aea35cbd34..136caefa9b 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1078,6 +1106,34 @@ package org.mozilla.geckoview {
+@@ -1078,6 +1108,36 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -47,6 +49,7 @@ index aea35cbd34..136caefa9b 100644
 +    method @NonNull public GeckoRuntimeSettings setCardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setEmeEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setFppOverridesIronFoxEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setFppOverridesIronFoxTimezoneEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setFppOverridesMozillaEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setIpv6Enabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(boolean);
@@ -61,6 +64,7 @@ index aea35cbd34..136caefa9b 100644
 +    method @NonNull public GeckoRuntimeSettings setPrintEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setRefererXOriginPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings setSpoofTimezone(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSvgEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setTranslationsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setTranslationsSupported(boolean);
@@ -72,7 +76,7 @@ index aea35cbd34..136caefa9b 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1092,6 +1148,9 @@ package org.mozilla.geckoview {
+@@ -1092,6 +1152,9 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -82,7 +86,7 @@ index aea35cbd34..136caefa9b 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1143,6 +1202,34 @@ package org.mozilla.geckoview {
+@@ -1143,6 +1206,36 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -92,6 +96,7 @@ index aea35cbd34..136caefa9b 100644
 +    method @NonNull public GeckoRuntimeSettings.Builder cardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder emeEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder fppOverridesIronFoxEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder fppOverridesIronFoxTimezoneEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder fppOverridesMozillaEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder ipv6Enabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineEnabled(boolean);
@@ -106,6 +111,7 @@ index aea35cbd34..136caefa9b 100644
 +    method @NonNull public GeckoRuntimeSettings.Builder printEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder refererXOriginPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder spoofTimezone(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder svgEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder translationsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder translationsSupported(boolean);
@@ -117,7 +123,7 @@ index aea35cbd34..136caefa9b 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1158,6 +1245,9 @@ package org.mozilla.geckoview {
+@@ -1158,6 +1251,9 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -128,10 +134,10 @@ index aea35cbd34..136caefa9b 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 1aeae7c828..d32bf9652f 100644
+index 1aeae7c828..4d5d9ff7ad 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -663,6 +663,146 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -663,6 +663,156 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
        return this;
      }
@@ -163,6 +169,11 @@ index 1aeae7c828..d32bf9652f 100644
 +
 +    public @NonNull Builder fppOverridesIronFoxEnabled(final boolean flag) {
 +      getSettings().mFppOverridesIronFoxEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder fppOverridesIronFoxTimezoneEnabled(final boolean flag) {
++      getSettings().mFppOverridesIronFoxTimezoneEnabled.set(flag);
 +      return this;
 +    }
 +
@@ -236,6 +247,11 @@ index 1aeae7c828..d32bf9652f 100644
 +      return this;
 +    }
 +
++    public @NonNull Builder spoofTimezone(final boolean flag) {
++      getSettings().mSpoofTimezone.set(flag);
++      return this;
++    }
++
 +    public @NonNull Builder svgEnabled(final boolean flag) {
 +      getSettings().mSvgEnabled.set(flag);
 +      return this;
@@ -278,7 +294,7 @@ index 1aeae7c828..d32bf9652f 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -798,6 +938,35 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -798,6 +948,37 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
@@ -288,6 +304,7 @@ index 1aeae7c828..d32bf9652f 100644
 +  /* package */ final Pref<Boolean> mCardAutofillEnabled = new Pref<Boolean>("extensions.formautofill.creditCards.enabled", false);
 +  /* package */ final Pref<Boolean> mEmeEnabled = new Pref<Boolean>("media.eme.enabled", false);
 +  /* package */ final Pref<Boolean> mFppOverridesIronFoxEnabled = new Pref<Boolean>("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true);
++  /* package */ final Pref<Boolean> mFppOverridesIronFoxTimezoneEnabled = new Pref<Boolean>("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true);
 +  /* package */ final Pref<Boolean> mFppOverridesMozillaEnabled = new Pref<Boolean>("privacy.fingerprintingProtection.remoteOverrides.enabled", true);
 +  /* package */ final Pref<Boolean> mIpv6Enabled = new Pref<Boolean>("network.dns.disableIPv6", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitBaselineEnabled = new Pref<Boolean>("javascript.options.baselinejit", false);
@@ -302,6 +319,7 @@ index 1aeae7c828..d32bf9652f 100644
 +  /* package */ final Pref<Boolean> mPrintEnabled = new Pref<Boolean>("print.enabled", true);
 +  /* package */ final Pref<Integer> mRefererXOriginPolicy = new Pref<Integer>("network.http.referer.XOriginPolicy", 0);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<Integer>("privacy.spoof_english", 2);
++  /* package */ final Pref<Boolean> mSpoofTimezone = new Pref<Boolean>("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false);
 +  /* package */ final Pref<Boolean> mSvgEnabled = new Pref<Boolean>("svg.disabled", false);
 +  /* package */ final Pref<Boolean> mTranslationsEnabled = new Pref<Boolean>("browser.translations.enable", true);
 +  /* package */ final Pref<Boolean> mTranslationsSupported = new Pref<Boolean>("browser.translations.simulateUnsupportedEngine", false);
@@ -314,7 +332,7 @@ index 1aeae7c828..d32bf9652f 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2317,6 +2486,284 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2317,6 +2498,302 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
    }
  
@@ -369,6 +387,15 @@ index 1aeae7c828..d32bf9652f 100644
 +
 +  public @NonNull GeckoRuntimeSettings setFppOverridesIronFoxEnabled(final boolean flag) {
 +    mFppOverridesIronFoxEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getFppOverridesIronFoxTimezoneEnabled() {
++    return mFppOverridesIronFoxTimezoneEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setFppOverridesIronFoxTimezoneEnabled(final boolean flag) {
++    mFppOverridesIronFoxTimezoneEnabled.commit(flag);
 +    return this;
 +  }
 +
@@ -521,6 +548,15 @@ index 1aeae7c828..d32bf9652f 100644
 +
 +  public @NonNull GeckoRuntimeSettings setSpoofEnglish(final boolean flag) {
 +    mSpoofEnglish.commit(flag ? 2 : 1);
++    return this;
++  }
++
++  public boolean getSpoofTimezone() {
++    return mSpoofTimezone.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setSpoofTimezone(final boolean flag) {
++    mSpoofTimezone.commit(flag);
 +    return this;
 +  }
 +

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..2d0bf286c2 100644
+index 5233b8a8dd..8673280eb3 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1655,6 +1655,134 @@ class GeckoEngine(
+@@ -1655,6 +1655,142 @@ class GeckoEngine(
          override var lnaBlockingEnabled: Boolean
              get() = runtime.settings.lnaBlockingEnabled
              set(value) { runtime.settings.setLnaBlockingEnabled(value) }
@@ -30,6 +30,10 @@ index 5233b8a8dd..2d0bf286c2 100644
 +        override var fppOverridesIronFoxEnabled: Boolean
 +            get() = runtime.settings.fppOverridesIronFoxEnabled
 +            set(value) { runtime.settings.fppOverridesIronFoxEnabled = value }
++
++        override var fppOverridesIronFoxTimezoneEnabled: Boolean
++            get() = runtime.settings.fppOverridesIronFoxTimezoneEnabled
++            set(value) { runtime.settings.fppOverridesIronFoxTimezoneEnabled = value }
 +
 +        override var fppOverridesMozillaEnabled: Boolean
 +            get() = runtime.settings.fppOverridesMozillaEnabled
@@ -103,6 +107,10 @@ index 5233b8a8dd..2d0bf286c2 100644
 +                }
 +            }
 +
++        override var spoofTimezone: Boolean
++            get() = runtime.settings.spoofTimezone
++            set(value) { runtime.settings.spoofTimezone = value }
++
 +        override var svgEnabled: Boolean
 +            get() = runtime.settings.svgEnabled
 +            set(value) { runtime.settings.svgEnabled = value }
@@ -137,7 +145,7 @@ index 5233b8a8dd..2d0bf286c2 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1702,6 +1830,34 @@ class GeckoEngine(
+@@ -1702,6 +1838,36 @@ class GeckoEngine(
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
              this.lnaBlockingEnabled = it.lnaBlockingEnabled
@@ -147,6 +155,7 @@ index 5233b8a8dd..2d0bf286c2 100644
 +            this.cardAutofillEnabled = it.cardAutofillEnabled
 +            this.emeEnabled = it.emeEnabled
 +            this.fppOverridesIronFoxEnabled = it.fppOverridesIronFoxEnabled
++            this.fppOverridesIronFoxTimezoneEnabled = it.fppOverridesIronFoxTimezoneEnabled
 +            this.fppOverridesMozillaEnabled = it.fppOverridesMozillaEnabled
 +            this.ipv6Enabled = it.ipv6Enabled
 +            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
@@ -161,6 +170,7 @@ index 5233b8a8dd..2d0bf286c2 100644
 +            this.printEnabled = it.printEnabled
 +            this.refererXOriginPolicy = it.refererXOriginPolicy
 +            this.spoofEnglish = it.spoofEnglish
++            this.spoofTimezone = it.spoofTimezone
 +            this.svgEnabled = it.svgEnabled
 +            this.translationsEnabled = it.translationsEnabled
 +            this.translationsSupported = it.translationsSupported
@@ -173,10 +183,10 @@ index 5233b8a8dd..2d0bf286c2 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..11a7b8a09f 100644
+index f9aa3b43e9..6efcfeaadc 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -367,6 +367,35 @@ abstract class Settings {
+@@ -367,6 +367,37 @@ abstract class Settings {
       * Setting to control blocking of local network & local device (localhost) access
       */
      open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
@@ -187,6 +197,7 @@ index f9aa3b43e9..11a7b8a09f 100644
 +    open var cardAutofillEnabled: Boolean by UnsupportedSetting()
 +    open var emeEnabled: Boolean by UnsupportedSetting()
 +    open var fppOverridesIronFoxEnabled: Boolean by UnsupportedSetting()
++    open var fppOverridesIronFoxTimezoneEnabled: Boolean by UnsupportedSetting()
 +    open var fppOverridesMozillaEnabled: Boolean by UnsupportedSetting()
 +    open var ipv6Enabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
@@ -201,6 +212,7 @@ index f9aa3b43e9..11a7b8a09f 100644
 +    open var printEnabled: Boolean by UnsupportedSetting()
 +    open var refererXOriginPolicy: Engine.RefererXOriginPolicy by UnsupportedSetting()
 +    open var spoofEnglish: Boolean by UnsupportedSetting()
++    open var spoofTimezone: Boolean by UnsupportedSetting()
 +    open var svgEnabled: Boolean by UnsupportedSetting()
 +    open var translationsEnabled: Boolean by UnsupportedSetting()
 +    open var translationsSupported: Boolean by UnsupportedSetting()
@@ -212,7 +224,7 @@ index f9aa3b43e9..11a7b8a09f 100644
  }
  
  /**
-@@ -440,6 +469,34 @@ data class DefaultSettings(
+@@ -440,6 +471,36 @@ data class DefaultSettings(
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
      override var lnaBlockingEnabled: Boolean = false,
@@ -222,6 +234,7 @@ index f9aa3b43e9..11a7b8a09f 100644
 +    override var cardAutofillEnabled: Boolean = false,
 +    override var emeEnabled: Boolean = false,
 +    override var fppOverridesIronFoxEnabled: Boolean = true,
++    override var fppOverridesIronFoxTimezoneEnabled: Boolean = true,
 +    override var fppOverridesMozillaEnabled: Boolean = true,
 +    override var ipv6Enabled: Boolean = true,
 +    override var javascriptJitBaselineEnabled: Boolean = false,
@@ -236,6 +249,7 @@ index f9aa3b43e9..11a7b8a09f 100644
 +    override var printEnabled: Boolean = true,
 +    override var refererXOriginPolicy: Engine.RefererXOriginPolicy = Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS,
 +    override var spoofEnglish: Boolean = true,
++    override var spoofTimezone: Boolean = false,
 +    override var svgEnabled: Boolean = true,
 +    override var translationsEnabled: Boolean = true,
 +    override var translationsSupported: Boolean = true,

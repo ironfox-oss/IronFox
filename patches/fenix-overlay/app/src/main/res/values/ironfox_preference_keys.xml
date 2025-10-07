@@ -27,7 +27,7 @@
     <!-- Firefox Translations -->
     <string name="pref_key_translations_enabled" translatable="false">pref_key_translations_enabled</string>
 
-    <!-- FPP Overrides -->
+    <!-- FPP overrides -->
     <string name="pref_key_fpp_overrides_ironfox_enabled" translatable="false">pref_key_fpp_overrides_ironfox_enabled</string>
     <string name="pref_key_fpp_overrides_mozilla_enabled" translatable="false">pref_key_fpp_overrides_mozilla_enabled</string>
 
@@ -59,6 +59,10 @@
 
     <!-- Spoof locale to English -->
     <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
+
+    <!-- Spoof timezone to UTC-0 -->
+    <string name="pref_key_spoof_timezone" translatable="false">pref_key_spoof_timezone</string>
+    <string name="pref_key_fpp_overrides_ironfox_timezone_enabled" translatable="false">pref_key_fpp_overrides_ironfox_timezone_enabled</string>
 
     <!-- SVG -->
     <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>

@@ -26,12 +26,8 @@ pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
 pref("extensions.webapi.enabled", false);
 pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 
-/// Disable timezone spoofing by default
-pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false); // [DEFAULT]
-
 /// Enable FPP overrides by default
 pref("browser.ironfox.fingerprintingProtection.hardenOverrides.enabled", true); // [DEFAULT] Overrides from us that *harden* protections for certain sites
-pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true); // [DEFAULT] Overrides from us that disable timezone spoofing by default for certain sites
 
 /// Enable our Beacon API (navigator.sendBeacon) Stub
 // Unlike standard Firefox, this doesn't actually enable the Beacon API; this just enables our stub - see the `stub-beacon` patch for more details
@@ -51,9 +47,15 @@ pref("accessibility.force_disabled.1.NOTE", "'Enable accessibility services'", l
 pref("browser.cache.disk.enable", false, locked);
 pref("browser.cache.disk.enable.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.cache.disk.enable.1.NOTE", "'Enable disk cache'", locked);
+pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false, locked);
+pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled.1.NOTE", "'Spoof timezone to UTC-0'", locked);
 pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true, locked);
 pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.1.NOTE", "'Enable fingerprinting protection overrides from IronFox'", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true, locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.1.NOTE", "'Enable timezone spoofing overrides from IronFox'", locked);
 pref("browser.safebrowsing.malware.enabled", true, locked);
 pref("browser.safebrowsing.malware.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.safebrowsing.malware.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
