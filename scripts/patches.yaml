@@ -786,6 +786,13 @@ patches:
     effect: "Users can enable or disable Firefox Translations from the UI."
     category: "User Interface"
 
+  - file: "gecko-ironfox-settings-support-timezone-spoofing.patch"
+    name: "IronFox Settings Support (Gecko) - Timezone Spoofing"
+    description: "Provides support for a UI toggle to enable/disable timezone spoofing."
+    reason: "Allows users to easily enable/disable timezone spoofing globally."
+    effect: "Users can enable or disable timezone spoofing, directly from the UI."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-xpinstall.patch"
     name: "IronFox Settings Support (Fenix) - XPInstall"
     description: "Provides support for a UI toggle to enable/disable the installation of add-ons."
