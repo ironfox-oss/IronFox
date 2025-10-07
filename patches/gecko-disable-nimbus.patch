@@ -80,18 +80,3 @@ index ee0ea0baa1..44971bb255 100644
  
  const SECURE_FEATURE_IDS = new Set(["prefFlips", "newtabTrainhopAddon"]);
  const RS_COLLECTION_OPTIONS = {
-diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index f544f44cf7..bdcb43bbdf 100644
---- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
-+++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -4655,8 +4655,8 @@ AMRemoteSettings = {
-    */
-   RS_ENTRIES_MAP: {
-     installTriggerDeprecation: [
--      "extensions.InstallTriggerImpl.enabled",
--      "extensions.InstallTrigger.enabled",
-+//      "extensions.InstallTriggerImpl.enabled",
-+//      "extensions.InstallTrigger.enabled",
-     ],
-     quarantinedDomains: ["extensions.quarantinedDomains.list"],
-   },
