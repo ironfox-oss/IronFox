@@ -62,9 +62,6 @@ pref("privacy.fingerprintingProtection.granularOverrides", ''); // [DEFAULT]
 pref("extensions.webapi.enabled", false);
 pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 
-/// Disable timezone spoofing by default
-pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false); // [DEFAULT]
-
 /// Enable FPP overrides by default
 pref("browser.ironfox.fingerprintingProtection.hardenOverrides.enabled", true); // [DEFAULT] Overrides from us that *harden* protections for certain sites
 
