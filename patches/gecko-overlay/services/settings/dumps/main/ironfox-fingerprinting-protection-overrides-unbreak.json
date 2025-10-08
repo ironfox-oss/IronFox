@@ -86,6 +86,10 @@
       "firstPartyDomain": "viliusle.github.io"
     },
     {
+      "overrides": "-ReduceTimerPrecision",
+      "firstPartyDomain": "vsynctester.com"
+    },
+    {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "watchduty.org"
     },
