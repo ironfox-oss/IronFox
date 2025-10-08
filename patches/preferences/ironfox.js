@@ -119,9 +119,6 @@ pref("javascript.options.jithints.1.NOTE", "'Enable JavaScript Just-in-time Comp
 pref("javascript.options.ion", false, locked);
 pref("javascript.options.ion.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("javascript.options.ion.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
-pref("javascript.options.main_process_disable_jit", true, locked);
-pref("javascript.options.main_process_disable_jit.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.main_process_disable_jit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
 pref("javascript.options.native_regexp", false, locked);
 pref("javascript.options.native_regexp.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("javascript.options.native_regexp.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);

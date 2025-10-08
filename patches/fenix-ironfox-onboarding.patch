@@ -1387,10 +1387,10 @@ index 0000000000..320d27bdac
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..0922fe89ba
+index 0000000000..7e3657089a
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,93 @@
 +package org.ironfoxoss.ironfox.utils
 +
 +import android.content.Context
@@ -1419,7 +1419,6 @@ index 0000000000..0922fe89ba
 +        components.core.engine.settings.javascriptJitHintsEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitIonEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitIonWasmEnabled = isEnabled
-+        components.core.engine.settings.javascriptJitMainProcessEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitNativeRegexpEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = isEnabled
 +    }

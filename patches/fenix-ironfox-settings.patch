@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..909069956f 100644
+index 823b5909fa..02039c74ea 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -198,6 +198,37 @@ class Core(
+@@ -198,6 +198,36 @@ class Core(
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
@@ -20,7 +20,6 @@ index 823b5909fa..909069956f 100644
 +            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitIonWasmEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled,
 +            passwordManagerEnabled = context.settings().shouldPromptToSaveLogins,
@@ -40,7 +39,7 @@ index 823b5909fa..909069956f 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -231,6 +262,7 @@ class Core(
+@@ -231,6 +261,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -50,10 +49,10 @@ index 823b5909fa..909069956f 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..de49fb9ebc
+index 0000000000..72cdc52110
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,823 @@
+@@ -0,0 +1,822 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -340,7 +339,7 @@ index 0000000000..de49fb9ebc
 +        /**
 +         * Indicates whether or not we should enable JavaScript Just-in-time Compilation (JIT)
 +         * Default: false
-+         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jithints, javascript.options.main_process_disable_jit, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
++         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jithints, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
 +         */
 +        val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_jit_enabled,
@@ -356,7 +355,6 @@ index 0000000000..de49fb9ebc
 +            components.core.engine.settings.javascriptJitHintsEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitIonEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitIonWasmEnabled = javascriptJitEnabled
-+            components.core.engine.settings.javascriptJitMainProcessEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitNativeRegexpEnabled = javascriptJitEnabled
 +
 +            Toast.makeText(

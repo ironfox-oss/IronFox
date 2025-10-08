@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..8673280eb3 100644
+index 5233b8a8dd..5b3855430d 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1655,6 +1655,142 @@ class GeckoEngine(
+@@ -1655,6 +1655,138 @@ class GeckoEngine(
          override var lnaBlockingEnabled: Boolean
              get() = runtime.settings.lnaBlockingEnabled
              set(value) { runtime.settings.setLnaBlockingEnabled(value) }
@@ -58,10 +58,6 @@ index 5233b8a8dd..8673280eb3 100644
 +        override var javascriptJitIonWasmEnabled: Boolean
 +            get() = runtime.settings.javaScriptJitIonWasmEnabled
 +            set(value) { runtime.settings.javaScriptJitIonWasmEnabled = value }
-+
-+        override var javascriptJitMainProcessEnabled: Boolean
-+            get() = runtime.settings.javaScriptJitMainProcessEnabled
-+            set(value) { runtime.settings.javaScriptJitMainProcessEnabled = value }
 +
 +        override var javascriptJitNativeRegexpEnabled: Boolean
 +            get() = runtime.settings.javaScriptJitNativeRegexpEnabled
@@ -145,7 +141,7 @@ index 5233b8a8dd..8673280eb3 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1702,6 +1838,36 @@ class GeckoEngine(
+@@ -1702,6 +1834,35 @@ class GeckoEngine(
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
              this.lnaBlockingEnabled = it.lnaBlockingEnabled
@@ -162,7 +158,6 @@ index 5233b8a8dd..8673280eb3 100644
 +            this.javascriptJitHintsEnabled = it.javascriptJitHintsEnabled
 +            this.javascriptJitIonEnabled = it.javascriptJitIonEnabled
 +            this.javascriptJitIonWasmEnabled = it.javascriptJitIonWasmEnabled
-+            this.javascriptJitMainProcessEnabled = it.javascriptJitMainProcessEnabled
 +            this.javascriptJitNativeRegexpEnabled = it.javascriptJitNativeRegexpEnabled
 +            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
 +            this.passwordManagerEnabled = it.passwordManagerEnabled
@@ -183,10 +178,10 @@ index 5233b8a8dd..8673280eb3 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..6efcfeaadc 100644
+index f9aa3b43e9..c3c40f47d6 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -367,6 +367,37 @@ abstract class Settings {
+@@ -367,6 +367,36 @@ abstract class Settings {
       * Setting to control blocking of local network & local device (localhost) access
       */
      open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
@@ -204,7 +199,6 @@ index f9aa3b43e9..6efcfeaadc 100644
 +    open var javascriptJitHintsEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitIonEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitIonWasmEnabled: Boolean by UnsupportedSetting()
-+    open var javascriptJitMainProcessEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitNativeRegexpEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
 +    open var passwordManagerEnabled: Boolean by UnsupportedSetting()
@@ -224,7 +218,7 @@ index f9aa3b43e9..6efcfeaadc 100644
  }
  
  /**
-@@ -440,6 +471,36 @@ data class DefaultSettings(
+@@ -440,6 +470,35 @@ data class DefaultSettings(
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
      override var lnaBlockingEnabled: Boolean = false,
@@ -241,7 +235,6 @@ index f9aa3b43e9..6efcfeaadc 100644
 +    override var javascriptJitHintsEnabled: Boolean = false,
 +    override var javascriptJitIonEnabled: Boolean = false,
 +    override var javascriptJitIonWasmEnabled: Boolean = false,
-+    override var javascriptJitMainProcessEnabled: Boolean = false,
 +    override var javascriptJitNativeRegexpEnabled: Boolean = false,
 +    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
 +    override var passwordManagerEnabled: Boolean = false,
