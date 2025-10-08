@@ -780,9 +780,11 @@ $SED -i 's|play-services|# play-services|g' gradle/libs.versions.toml
 $SED -i 's|thirdparty-sentry|# thirdparty-sentry|g' gradle/libs.versions.toml
 $SED -i 's|sentry|# sentry|g' gradle/libs.versions.toml
 
+$SED -i 's|-dontnote com.android.vending.licensing.ILicensingService|# -dontnote com.android.vending.licensing.ILicensingService|g' mobile/android/config/proguard/proguard.cfg
 $SED -i 's|-include "adjust-keeps.cfg"|# -include "adjust-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
 $SED -i 's|-include "play-services-keeps.cfg"|# -include "play-services-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
 $SED -i 's|-include "proguard-leanplum.cfg"|# -include "proguard-leanplum.cfg"|g' mobile/android/config/proguard/proguard.cfg
+$SED -i 's|-keep public interface com.android.vending.licensing.ILicensingService|# -keep public interface com.android.vending.licensing.ILicensingService|g' mobile/android/config/proguard/proguard.cfg
 rm -vf mobile/android/config/proguard/adjust-keeps.cfg
 rm -vf mobile/android/config/proguard/play-services-keeps.cfg
 rm -vf mobile/android/config/proguard/proguard-leanplum.cfg
