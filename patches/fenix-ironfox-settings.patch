@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..02039c74ea 100644
+index 823b5909fa..c2bd0b394f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -198,6 +198,36 @@ class Core(
+@@ -198,6 +198,37 @@ class Core(
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
@@ -13,6 +13,7 @@ index 823b5909fa..02039c74ea 100644
 +            emeEnabled = context.settings().emeEnabled,
 +            fppOverridesIronFoxEnabled = context.settings().fppOverridesIronFoxEnabled,
 +            fppOverridesIronFoxTimezoneEnabled = context.settings().fppOverridesIronFoxTimezoneEnabled,
++            fppOverridesIronFoxWebGLEnabled = context.settings().fppOverridesIronFoxWebGLEnabled,
 +            fppOverridesMozillaEnabled = context.settings().fppOverridesMozillaEnabled,
 +            ipv6Enabled = context.settings().ipv6Enabled,
 +            javascriptEnabled = context.settings().javascriptEnabled,
@@ -39,7 +40,7 @@ index 823b5909fa..02039c74ea 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -231,6 +261,7 @@ class Core(
+@@ -231,6 +262,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -49,10 +50,10 @@ index 823b5909fa..02039c74ea 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..72cdc52110
+index 0000000000..b059d34753
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,822 @@
+@@ -0,0 +1,852 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -150,6 +151,36 @@ index 0000000000..72cdc52110
 +            settings.webglEnabled = webglEnabled as Boolean
 +            components.core.engine.settings.webglEnabled = webglEnabled
 +
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable our WebGL overrides
++         * Default: true
++         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled
++         */
++        val fppOverridesIronFoxWebGLEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_fpp_overrides_ironfox_webgl_enabled,
++        )
++
++        fppOverridesIronFoxWebGLEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxWebGLEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.fppOverridesIronFoxWebGLEnabled = fppOverridesIronFoxWebGLEnabled as Boolean
++            components.core.engine.settings.fppOverridesIronFoxWebGLEnabled = fppOverridesIronFoxWebGLEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
 +            true
 +        }
 +
@@ -908,7 +939,7 @@ index 03d80ed014..7c53da22c8 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..422fcd0e35 100644
+index a46a154665..30fc83ed41 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -74,6 +74,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
@@ -919,7 +950,7 @@ index a46a154665..422fcd0e35 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2751,4 +2752,166 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2751,4 +2752,171 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -951,6 +982,11 @@ index a46a154665..422fcd0e35 100644
 +
 +    var fppOverridesIronFoxTimezoneEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_timezone_enabled),
++        default = true,
++    )
++
++    var fppOverridesIronFoxWebGLEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_webgl_enabled),
 +        default = true,
 +    )
 +
@@ -1117,10 +1153,10 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..3576754ce3
+index 0000000000..d3b6e1cb3c
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,298 @@
+@@ -0,0 +1,306 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1184,6 +1220,14 @@ index 0000000000..3576754ce3
 +            android:defaultValue="true"
 +            android:key="@string/pref_key_webgl_enabled"
 +            android:title="@string/preference_webgl_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable our WebGL overrides -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_fpp_overrides_ironfox_webgl_enabled"
++            android:summary="@string/preference_fpp_overrides_ironfox_webgl_summary"
++            android:title="@string/preference_fpp_overrides_ironfox_webgl_enabled"
 +            app:iconSpaceReserved="false" />
 +    </androidx.preference.PreferenceCategory>
 +

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..5b3855430d 100644
+index 5233b8a8dd..3828b37b61 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1655,6 +1655,138 @@ class GeckoEngine(
+@@ -1655,6 +1655,142 @@ class GeckoEngine(
          override var lnaBlockingEnabled: Boolean
              get() = runtime.settings.lnaBlockingEnabled
              set(value) { runtime.settings.setLnaBlockingEnabled(value) }
@@ -34,6 +34,10 @@ index 5233b8a8dd..5b3855430d 100644
 +        override var fppOverridesIronFoxTimezoneEnabled: Boolean
 +            get() = runtime.settings.fppOverridesIronFoxTimezoneEnabled
 +            set(value) { runtime.settings.fppOverridesIronFoxTimezoneEnabled = value }
++
++        override var fppOverridesIronFoxWebGLEnabled: Boolean
++            get() = runtime.settings.fppOverridesIronFoxWebGLEnabled
++            set(value) { runtime.settings.fppOverridesIronFoxWebGLEnabled = value }
 +
 +        override var fppOverridesMozillaEnabled: Boolean
 +            get() = runtime.settings.fppOverridesMozillaEnabled
@@ -141,7 +145,7 @@ index 5233b8a8dd..5b3855430d 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1702,6 +1834,35 @@ class GeckoEngine(
+@@ -1702,6 +1838,36 @@ class GeckoEngine(
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
              this.lnaBlockingEnabled = it.lnaBlockingEnabled
@@ -152,6 +156,7 @@ index 5233b8a8dd..5b3855430d 100644
 +            this.emeEnabled = it.emeEnabled
 +            this.fppOverridesIronFoxEnabled = it.fppOverridesIronFoxEnabled
 +            this.fppOverridesIronFoxTimezoneEnabled = it.fppOverridesIronFoxTimezoneEnabled
++            this.fppOverridesIronFoxWebGLEnabled = it.fppOverridesIronFoxWebGLEnabled
 +            this.fppOverridesMozillaEnabled = it.fppOverridesMozillaEnabled
 +            this.ipv6Enabled = it.ipv6Enabled
 +            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
@@ -178,10 +183,10 @@ index 5233b8a8dd..5b3855430d 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..c3c40f47d6 100644
+index f9aa3b43e9..3dd7b7fcec 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -367,6 +367,36 @@ abstract class Settings {
+@@ -367,6 +367,37 @@ abstract class Settings {
       * Setting to control blocking of local network & local device (localhost) access
       */
      open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
@@ -193,6 +198,7 @@ index f9aa3b43e9..c3c40f47d6 100644
 +    open var emeEnabled: Boolean by UnsupportedSetting()
 +    open var fppOverridesIronFoxEnabled: Boolean by UnsupportedSetting()
 +    open var fppOverridesIronFoxTimezoneEnabled: Boolean by UnsupportedSetting()
++    open var fppOverridesIronFoxWebGLEnabled: Boolean by UnsupportedSetting()
 +    open var fppOverridesMozillaEnabled: Boolean by UnsupportedSetting()
 +    open var ipv6Enabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
@@ -218,7 +224,7 @@ index f9aa3b43e9..c3c40f47d6 100644
  }
  
  /**
-@@ -440,6 +470,35 @@ data class DefaultSettings(
+@@ -440,6 +471,36 @@ data class DefaultSettings(
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
      override var lnaBlockingEnabled: Boolean = false,
@@ -229,6 +235,7 @@ index f9aa3b43e9..c3c40f47d6 100644
 +    override var emeEnabled: Boolean = false,
 +    override var fppOverridesIronFoxEnabled: Boolean = true,
 +    override var fppOverridesIronFoxTimezoneEnabled: Boolean = true,
++    override var fppOverridesIronFoxWebGLEnabled: Boolean = true,
 +    override var fppOverridesMozillaEnabled: Boolean = true,
 +    override var ipv6Enabled: Boolean = true,
 +    override var javascriptJitBaselineEnabled: Boolean = false,

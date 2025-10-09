@@ -108,6 +108,8 @@
 
     <!-- WebGL -->
     <string name="preference_webgl_enabled">Enable WebGL</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Enable WebGL overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Enables WebGL for certain websites by default when WebGL is otherwise disabled globally to reduce breakage - Changing this setting will restart your browser</string>
 
     <!-- WebRTC -->
     <string name="preference_webrtc_enabled">Enable WebRTC</string>
