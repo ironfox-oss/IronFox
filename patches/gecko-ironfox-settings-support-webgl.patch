@@ -1,0 +1,41 @@
+diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
+index f5ae1d9bef..1a90b44be3 100644
+--- a/dom/canvas/ClientWebGLContext.cpp
++++ b/dom/canvas/ClientWebGLContext.cpp
+@@ -879,6 +879,10 @@ bool ClientWebGLContext::CreateHostContext(const uvec2& requestedSize) {
+         .options = options,
+     };
+ 
++    if (ShouldResistFingerprinting(RFPTarget::DisableWebGL)) {
++      return Err("WebGL is currently disabled.");
++    }
++
+     // -
+ 
+     auto useOop = IsWebglOutOfProcessEnabled();
+diff --git a/dom/canvas/WebGLContext.cpp b/dom/canvas/WebGLContext.cpp
+index d6eff62ca2..f89dca53ff 100644
+--- a/dom/canvas/WebGLContext.cpp
++++ b/dom/canvas/WebGLContext.cpp
+@@ -534,7 +534,7 @@ RefPtr<WebGLContext> WebGLContext::Create(HostWebGLContext* host,
+   ScopedGfxFeatureReporter reporter("WebGL", forceEnabled);
+ 
+   auto res = [&]() -> Result<RefPtr<WebGLContext>, std::string> {
+-    bool disabled = StaticPrefs::webgl_disabled();
++    bool disabled = false;
+ 
+     // TODO: When we have software webgl support we should use that instead.
+     disabled |= gfxPlatform::InSafeMode();
+diff --git a/toolkit/components/resistfingerprinting/RFPTargets.inc b/toolkit/components/resistfingerprinting/RFPTargets.inc
+index d7e9d591d9..b983577747 100644
+--- a/toolkit/components/resistfingerprinting/RFPTargets.inc
++++ b/toolkit/components/resistfingerprinting/RFPTargets.inc
+@@ -105,7 +105,7 @@ ITEM_VALUE(WebCodecs,                   71)
+ ITEM_VALUE(MaxTouchPoints,              72)
+ ITEM_VALUE(MaxTouchPointsCollapse,      73)
+ ITEM_VALUE(NavigatorHWConcurrencyTiered,74)
+-
++ITEM_VALUE(DisableWebGL,75)
+ 
+ // !!! Don't forget to update kDefaultFingerprintingProtections in nsRFPService.cpp
+ // if necessary.

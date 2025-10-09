@@ -1,11 +1,15 @@
 diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-index 5a422395f5..bd0ffc72e2 100644
+index 5a422395f5..85e1c6bab9 100644
 --- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
 +++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-@@ -359,6 +359,10 @@ bool nsRFPService::IsRFPEnabledFor(
+@@ -359,6 +359,14 @@ bool nsRFPService::IsRFPEnabledFor(
      return aOverriddenFingerprintingSettings.ref().contains(aTarget);
    }
  
++  if (aTarget == RFPTarget::DisableWebGL) {
++    return Preferences::GetBool("webgl.disabled", false) && IsTargetActiveForMode(aTarget, mode);
++  }
++
 +  if (aTarget == RFPTarget::JSDateTimeUTC) {
 +    return Preferences::GetBool("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false) && IsTargetActiveForMode(aTarget, mode);
 +  }

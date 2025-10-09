@@ -720,6 +720,14 @@ patches:
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
 
+  - file: "gecko-ironfox-settings.patch"
+    name: "IronFox Settings (Gecko)"
+    description: "Adds support to Gecko for IronFox-specific preferences/UI settings to control various functionality."
+    reason: |
+      To allow users to easily control their browsing experience.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs."
+    category: "User Interface"
+
   - file: "fenix-ironfox-ui.patch"
     name: "IronFox UI"
     description: "Adds minor tweaks to the browser's user interface."
@@ -776,18 +784,18 @@ patches:
     effect: "Users can enable or disable Firefox Translations from the UI."
     category: "User Interface"
 
-  - file: "gecko-ironfox-settings-support-timezone-spoofing.patch"
-    name: "IronFox Settings Support (Gecko) - Timezone Spoofing"
-    description: "Provides support for a UI toggle to enable/disable timezone spoofing."
-    reason: "Allows users to easily enable/disable timezone spoofing globally."
-    effect: "Users can enable or disable timezone spoofing, directly from the UI."
-    category: "User Interface"
-
   - file: "fenix-ironfox-settings-support-xpinstall.patch"
     name: "IronFox Settings Support (Fenix) - XPInstall"
     description: "Provides support for a UI toggle to enable/disable the installation of add-ons."
     reason: "To show users a prompt when add-on installation is disabled, so that they can better understand why their add-on didn't install, and can know how/where to re-enable it if desired."
     effect: "Users can enable or disable add-on installation from the UI."
+    category: "User Interface"
+
+  - file: "gecko-ironfox-settings-support-webgl.patch"
+    name: "IronFox Settings Support (Gecko) - WebGL"
+    description: "Provides support for a UI toggle to enable/disable WebGL (including on a per-site basis)."
+    reason: "Users can enable or disable WebGL, globally or on a per-site basis."
+    effect: "Users can maximize privacy and security by disabling WebGL, without compromising usability, by allowing it to be re-enabled on a per-site basis."
     category: "User Interface"
 
   - file: "gecko-ironfox-settings-support-xpinstall.patch"

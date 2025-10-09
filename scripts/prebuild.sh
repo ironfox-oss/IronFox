@@ -662,6 +662,7 @@ echo '    "cookie-banner-rules-list.json",' >>services/settings/dumps/main/moz.b
 echo '    "hijack-blocklists.json",' >>services/settings/dumps/main/moz.build
 echo '    "ironfox-fingerprinting-protection-overrides-harden.json",' >>services/settings/dumps/main/moz.build
 echo '    "ironfox-fingerprinting-protection-overrides-unbreak-timezone.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-unbreak-webgl.json",' >>services/settings/dumps/main/moz.build
 echo '    "ironfox-fingerprinting-protection-overrides-unbreak.json",' >>services/settings/dumps/main/moz.build
 echo '    "translations-models.json",' >>services/settings/dumps/main/moz.build
 echo '    "translations-wasm.json",' >>services/settings/dumps/main/moz.build

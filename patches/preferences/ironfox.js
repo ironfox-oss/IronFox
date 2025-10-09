@@ -56,6 +56,9 @@ pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.1.NOTE",
 pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true, locked);
 pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.1.NOTE", "'Enable timezone spoofing overrides from IronFox'", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", true, locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.1.NOTE", "'Enable WebGL overrides from IronFox'", locked);
 pref("browser.safebrowsing.malware.enabled", true, locked);
 pref("browser.safebrowsing.malware.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.safebrowsing.malware.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
