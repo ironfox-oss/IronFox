@@ -139,6 +139,8 @@ Note that disabling this functionality is **NOT** recommended.
 
 - `https://safebrowsing.ironfoxoss.org/v4/fullHashes:find?$ct=application/x-protobuf&*`
 - `https://safebrowsing.ironfoxoss.org/v4/threatListUpdates:fetch?$ct=application/x-protobuf&*`
+- `https://safebrowsing.ironfoxoss.org/v5/hashes:search?*`
+- `https://safebrowsing.ironfoxoss.org/v5/hashLists:batchGet?*`
 
 **Operator**: [IronFox OSS](https://ironfoxoss.org/) - *[Privacy policy](https://codeberg.org/celenity/Phoenix/wiki/Transparency#google-safe-browsing)*
 
