@@ -1,13 +1,15 @@
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 0e11de1d54..a58e6e5791 100644
+index 6913517691..043685b9de 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-@@ -334,23 +334,33 @@ export class GeckoViewStartup {
+@@ -329,23 +329,35 @@ export class GeckoViewStartup {
        }
        case "GeckoView:ResetUserPrefs": {
          for (const name of aData.names) {
 -          Services.prefs.clearUserPref(name);
 +          Services.prefs.clearUserPref("devtools.debugger.remote-enabled");
++          Services.prefs.clearUserPref("browser.safebrowsing.provider.ironfox.lastupdatetime");
++          Services.prefs.clearUserPref("browser.safebrowsing.provider.ironfox.nextupdatetime");
          }
          break;
        }

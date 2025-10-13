@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index d4a38d73fc..e74791dc0f 100644
+index f9711dc715..2a121c10c0 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1546,28 +1546,28 @@ projects:
+@@ -1547,28 +1547,28 @@ projects:
      - components:support-webextensions
      - components:tooling-lint
      - components:ui-icons

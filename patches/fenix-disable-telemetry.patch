@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..705320b7c0 100644
+index 7d2ef5a331..173a214f14 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -64,14 +64,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
+@@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
  import mozilla.components.feature.search.SearchApplicationName
  import mozilla.components.feature.search.SearchDeviceType
  import mozilla.components.feature.search.SearchUpdateChannel
@@ -21,7 +21,7 @@ index 823b5909fa..705320b7c0 100644
  import mozilla.components.feature.session.HistoryDelegate
  import mozilla.components.feature.session.middleware.LastAccessMiddleware
  import mozilla.components.feature.session.middleware.undo.UndoMiddleware
-@@ -133,7 +133,7 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
+@@ -132,7 +132,7 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
  import org.mozilla.fenix.share.DefaultSentFromFirefoxManager
  import org.mozilla.fenix.share.DefaultSentFromStorage
  import org.mozilla.fenix.share.SaveToPDFMiddleware
@@ -30,7 +30,7 @@ index 823b5909fa..705320b7c0 100644
  import org.mozilla.fenix.utils.getUndoDelay
  import org.mozilla.geckoview.GeckoRuntime
  import java.util.UUID
-@@ -321,7 +321,7 @@ class Core(
+@@ -319,7 +319,7 @@ class Core(
                      },
                  ),
                  ReaderViewMiddleware(),
@@ -39,7 +39,7 @@ index 823b5909fa..705320b7c0 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -334,7 +334,7 @@ class Core(
+@@ -332,7 +332,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -48,7 +48,7 @@ index 823b5909fa..705320b7c0 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -377,7 +377,7 @@ class Core(
+@@ -375,7 +375,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -57,24 +57,16 @@ index 823b5909fa..705320b7c0 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -390,12 +390,12 @@ class Core(
-                             REMOTE_STAGE_ENDPOINT_URL
-                         },
-                     ).updateProviderList()
--                }
-+                }*/
+@@ -392,7 +392,7 @@ class Core(
                  // Install the "ads" WebExtension to get the links in an partner page.
--                adsTelemetry.install(engine, this@apply, providerList)
-+//                adsTelemetry.install(engine, this@apply, providerList)
+                 adsTelemetry.install(engine, this@apply, providerList)
                  // Install the "cookies" WebExtension and tracks user interaction with SERPs.
 -                searchTelemetry.install(engine, this@apply, providerList)
--            }
-+//                searchTelemetry.install(engine, this@apply, providerList)
-+//            }
++                searchTelemetry.install(engine, this@apply, providerList)*/
+             }
  
              WebNotificationFeature(
-                 context,
-@@ -452,7 +452,7 @@ class Core(
+@@ -450,7 +450,7 @@ class Core(
          BrowserIcons(context, client)
      }
  
@@ -83,7 +75,7 @@ index 823b5909fa..705320b7c0 100644
          context.components.analytics.metrics
      }
  
-@@ -462,7 +462,7 @@ class Core(
+@@ -460,7 +460,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
@@ -117,19 +109,19 @@ index 8645aaf290..4c96d174b1 100644
  fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
      ?: this as? Activity
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 5340aa5258..eecb58787f 100644
+index 29cd599a82..c9e0097634 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -86,7 +86,7 @@ import org.mozilla.fenix.components.Components
+@@ -84,7 +84,7 @@ import org.mozilla.fenix.components.Components
  import org.mozilla.fenix.components.Core
  import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.initializeGlean
 -import org.mozilla.fenix.components.metrics.MozillaProductDetector
 +// import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.crashes.StartupCrashCanary
  import org.mozilla.fenix.experiments.maybeFetchExperiments
- import org.mozilla.fenix.ext.components
-@@ -285,7 +285,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -301,7 +301,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              VisibilityLifecycleObserver(),
          )
  
@@ -138,38 +130,32 @@ index 5340aa5258..eecb58787f 100644
  
          CoroutineScope(IO).launch {
              components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
-@@ -722,7 +722,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -729,9 +729,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          browserStore: BrowserStore,
          settings: Settings,
          browsersCache: BrowsersCache = BrowsersCache,
 -        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
 +//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
      ) {
-         setPreferenceMetrics(settings)
+-        setPreferenceMetrics(settings)
++/*        setPreferenceMetrics(settings)
          with(Metrics) {
-@@ -730,7 +730,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             // Set this early to guarantee it's in every ping from here on.
              distributionId.set(components.distributionIdManager.getDistributionId())
- 
-             defaultBrowser.set(browsersCache.all(applicationContext).isDefaultBrowser)
--            mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
-+/*            mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
-                 defaultMozBrowser.set(it)
+@@ -847,7 +847,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              }
+         }
  
-@@ -738,7 +738,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-                 mozillaProductDetector.getInstalledMozillaProducts(
-                     applicationContext,
-                 ),
--            )
-+            )*/
+-        setAutofillMetrics()
++        setAutofillMetrics()*/
+     }
  
-             adjustCampaign.set(settings.adjustCampaignId)
-             adjustAdGroup.set(settings.adjustAdGroup)
+     @VisibleForTesting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..46b2851ba1 100644
+index 312b5b3de3..af6fa12e6c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -577,7 +577,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -575,7 +575,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),

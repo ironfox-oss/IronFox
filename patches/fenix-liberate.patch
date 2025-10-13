@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
-index 982ef996de..4002614795 100644
+index a5ba234af1..669e4d9865 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
 +++ b/mobile/android/fenix/app/proguard-rules.pro
 @@ -6,16 +6,16 @@
@@ -117,10 +117,14 @@ index 982ef996de..4002614795 100644
  
  # Keep Android Lifecycle methods
  # https://bugzilla.mozilla.org/show_bug.cgi?id=1596302
-@@ -130,3 +130,11 @@
- -dontwarn java.beans.IntrospectionException
- -dontwarn java.beans.Introspector
- -dontwarn java.beans.PropertyDescriptor
+@@ -135,5 +135,13 @@
+ # Add explicit keep rules for Nimbus RustBuffer and related structs to avoid
+ # overly-aggressive optimization when R8 fullMode is enabled, leading to crashes.
+ ####################################################################################################
+--keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,RuntimeVisibleTypeAnnotations,RuntimeInvisibleTypeAnnotations,AnnotationDefault,InnerClasses,EnclosingMethod,Signature
+--keep class org.mozilla.experiments.nimbus.internal.** { *; }
++#-keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,RuntimeVisibleTypeAnnotations,RuntimeInvisibleTypeAnnotations,AnnotationDefault,InnerClasses,EnclosingMethod,Signature
++#-keep class org.mozilla.experiments.nimbus.internal.** { *; }
 +
 +####################################################################################################
 +# Checker Framework
@@ -130,19 +134,35 @@ index 982ef996de..4002614795 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 43cf86f477..1b710b7192 100644
+index be6741fab0..adfbe14beb 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -737,7 +737,7 @@
+@@ -768,13 +768,13 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
 -        <service
-+        <!-- <service
++<!--         <service
              android:name=".push.FirebasePushService"
              android:exported="false">
              <intent-filter>
-@@ -753,7 +753,7 @@
+                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
+             </intent-filter>
+-        </service>
++        </service> -->
+ 
+         <service
+             android:name=".perf.ProfilerService"
+@@ -788,7 +788,7 @@
+             </intent-filter>
+         </service>
+ 
+-        <meta-data
++<!--        <meta-data
+             android:name="firebase_messaging_auto_init_enabled"
+             android:value="true" />
+         <meta-data
+@@ -796,7 +796,7 @@
              android:value="false" />
          <meta-data
              android:name="firebase_analytics_collection_deactivated"
@@ -151,12 +171,12 @@ index 43cf86f477..1b710b7192 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
-@@ -768,14 +768,14 @@
+@@ -811,14 +811,14 @@
  
          <!-- For adjust pre-installs -->
          <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
 -        <receiver
-+        <!-- <receiver
++<!--        <receiver
              android:name="com.adjust.sdk.AdjustPreinstallReferrerReceiver"
              android:exported="true"
              tools:ignore="ExportedReceiver">
@@ -265,10 +285,10 @@ index 1f2c7eb2d0..4d4b374e0f 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..ea87053886 100644
+index 312b5b3de3..03b1108803 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -365,7 +365,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -363,7 +363,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var customReviewPromptFeatureEnabled by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_custom_review_prompt_enabled),
@@ -277,7 +297,7 @@ index a46a154665..ea87053886 100644
          default = { FxNimbus.features.customReviewPrompt.value().enabled },
      )
  
-@@ -2087,7 +2087,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2152,7 +2152,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

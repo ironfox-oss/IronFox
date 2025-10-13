@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 935a71c0bb..df5862f2f0 100644
+index 6e8730ea60..6a43b2a0d2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -188,7 +188,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+@@ -201,7 +201,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
  
      private fun initTranslationsAction(context: Context, view: View) {
          if (
@@ -11,12 +11,12 @@ index 935a71c0bb..df5862f2f0 100644
          ) {
              return
          }
-@@ -271,7 +271,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
-     }
+@@ -299,7 +299,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+             view = rootView,
+         )
  
-     private fun initTranslationsUpdates(context: Context, view: View) {
--        if (!FxNimbus.features.translations.value().mainFlowToolbarEnabled) return
-+        if (!requireContext().settings().translationsEnabled) return
- 
-         translationsBinding.set(
-             feature = TranslationsBinding(
+-        if (FxNimbus.features.translations.value().mainFlowToolbarEnabled) {
++        if (requireContext().settings().translationsEnabled) {
+             translationsBinding.set(
+                 feature = TranslationsBinding(
+                     browserStore = rootView.context.components.core.store,

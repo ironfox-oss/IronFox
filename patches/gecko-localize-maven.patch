@@ -1,5 +1,5 @@
 diff --git a/build.gradle b/build.gradle
-index 9f5241cb8a..721e441e5a 100644
+index 90fe107e4f..0f18480156 100644
 --- a/build.gradle
 +++ b/build.gradle
 @@ -5,14 +5,9 @@ import org.tomlj.TomlTable
@@ -20,7 +20,7 @@ index 9f5241cb8a..721e441e5a 100644
      }
  
      dependencies {
-@@ -128,14 +123,9 @@ allprojects {
+@@ -125,14 +120,9 @@ allprojects {
      }
  
      repositories {
@@ -39,7 +39,7 @@ index 9f5241cb8a..721e441e5a 100644
  
      // Use the semanticdb-javac and semanticdb-kotlinc plugins to generate semanticdb files for Searchfox
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 17f4dab078..dbff00bd3d 100644
+index 1f26227889..aef29a1afb 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -3,14 +3,9 @@ import java.time.format.DateTimeFormatter
@@ -61,7 +61,7 @@ index 17f4dab078..dbff00bd3d 100644
  
      dependencies {
 diff --git a/mobile/android/fenix/build.gradle b/mobile/android/fenix/build.gradle
-index c2f6b914f3..f3ff05cdd6 100644
+index 5e6306803f..71cb4b5fd9 100644
 --- a/mobile/android/fenix/build.gradle
 +++ b/mobile/android/fenix/build.gradle
 @@ -8,14 +8,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -145,7 +145,7 @@ index 8704f1f4b3..8580140364 100644
  }
  
 diff --git a/mobile/android/fenix/settings.gradle b/mobile/android/fenix/settings.gradle
-index 7e461f97cc..65f0b42b0f 100644
+index fb375b4c8e..2fde18d348 100644
 --- a/mobile/android/fenix/settings.gradle
 +++ b/mobile/android/fenix/settings.gradle
 @@ -10,14 +10,9 @@ pluginManagement {
@@ -189,7 +189,7 @@ index 79251e0feb..6df389d767 100644
  
      dependencies {
 diff --git a/settings.gradle b/settings.gradle
-index db3a3e3dbf..f1b76fde68 100644
+index 7c80052cc3..ae711d930f 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -9,14 +9,9 @@ pluginManagement {

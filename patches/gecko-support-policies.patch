@@ -87,10 +87,10 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 3d8837cdb3..d5e61cb4e8 100644
+index 2bfec5537e..04f2cb0576 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -497,7 +497,7 @@ let InstallSources = null;
+@@ -506,7 +506,7 @@ let InstallSources = null;
  class JSONPoliciesProvider {
    constructor() {
      this._policies = null;
@@ -99,7 +99,7 @@ index 3d8837cdb3..d5e61cb4e8 100644
    }
  
    get hasPolicies() {
-@@ -604,6 +604,896 @@ class JSONPoliciesProvider {
+@@ -613,6 +613,902 @@ class JSONPoliciesProvider {
        }
      }
    }
@@ -254,7 +254,7 @@ index 3d8837cdb3..d5e61cb4e8 100644
 +      },
 +      "{0a3ee209-ab68-4b84-a9ef-eb0ee686dd8d}": {
 +        installation_mode: "blocked",
-+        blocked_install_message: "'Roblox+' https://addons.mozilla.org/firefox/addon/roblox-plus-firefox/ - Fake/scam/impersonation, the actual extension unfortunately doesn't support Firefox https://roblox.plus/about"
++        blocked_install_message: "'Roblox' https://addons.mozilla.org/firefox/addon/roblox-plus-firefox/ - Fake/scam/impersonation, the actual extension unfortunately doesn't support Firefox https://roblox.plus/about"
 +      },
 +      "dynamic-probe-telemetry-extension@mozilla.com": {
 +        installation_mode: "blocked",
@@ -949,6 +949,12 @@ index 3d8837cdb3..d5e61cb4e8 100644
 +      SponsoredPocket: false,
 +      SponsoredStories: false,
 +      Stories: false
++    };
++    this._policies.GenerativeAI = {
++      Chatbot: false,
++      Enabled: false,
++      LinkPreviews: false,
++      TabGroups: false
 +    };
 +    this._policies.HttpsOnlyMode = "enabled";
 +    this._policies.InstallAddonsPermission = {

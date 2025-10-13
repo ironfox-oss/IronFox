@@ -422,6 +422,12 @@ noop_mozilla_endpoints "spocs.mozilla.net" "${mozilla_release}/python"
 noop_mozilla_endpoints "spocs.mozilla.net" "${mozilla_release}/toolkit"
 noop_mozilla_endpoints "spocs.mozilla.net" "${glean}"
 
+## Remote search configuration
+noop_mozilla_endpoints "https://firefox.settings.services.allizom.org/v1/buckets/main/collections/search-config/records" "${mozilla_release}/toolkit/components/search/SearchUtils.sys.mjs"
+noop_mozilla_endpoints "https://firefox.settings.services.allizom.org/v1/buckets/main-preview/collections/search-config/records" "${mozilla_release}/toolkit/components/search/SearchUtils.sys.mjs"
+noop_mozilla_endpoints "https://firefox.settings.services.mozilla.com/v1/buckets/main/collections/search-config/records" "${mozilla_release}/toolkit/components/search/SearchUtils.sys.mjs"
+noop_mozilla_endpoints "https://firefox.settings.services.mozilla.com/v1/buckets/main-preview/collections/search-config/records" "${mozilla_release}/toolkit/components/search/SearchUtils.sys.mjs"
+
 ## Sentry
 noop_mozilla_endpoints "5cfe351fb3a24e8d82c751252b48722b@o1069899.ingest.sentry.io" "${application_services}"
 noop_mozilla_endpoints "5cfe351fb3a24e8d82c751252b48722b@o1069899.ingest.sentry.io" "${mozilla_release}/mobile"

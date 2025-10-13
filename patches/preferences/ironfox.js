@@ -35,7 +35,7 @@ pref("beacon.enabled", true); // [DEFAULT]
 
 /// Enable the Phoenix add-on blocklist by default
 // https://codeberg.org/celenity/Phoenix/src/branch/pages/build/policies/blocklist.json
-pref("browser.ironfox.phoenix.extensions.blocklist.enabled", true); // [DEFAULT]
+pref("browser.ironfox.extensions.blocklist.enabled", true); // [DEFAULT]
 
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]

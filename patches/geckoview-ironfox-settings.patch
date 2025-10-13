@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index aea35cbd34..b352af3fd7 100644
+index 22ea23ef5e..bd815cb8b0 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -1028,6 +1028,36 @@ package org.mozilla.geckoview {
+@@ -1031,6 +1031,36 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -39,7 +39,7 @@ index aea35cbd34..b352af3fd7 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1078,6 +1108,36 @@ package org.mozilla.geckoview {
+@@ -1081,6 +1111,36 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -76,7 +76,7 @@ index aea35cbd34..b352af3fd7 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1092,6 +1152,9 @@ package org.mozilla.geckoview {
+@@ -1095,6 +1155,9 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -86,7 +86,7 @@ index aea35cbd34..b352af3fd7 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1143,6 +1206,36 @@ package org.mozilla.geckoview {
+@@ -1147,6 +1210,36 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -123,7 +123,7 @@ index aea35cbd34..b352af3fd7 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1158,6 +1251,9 @@ package org.mozilla.geckoview {
+@@ -1162,6 +1255,9 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -134,11 +134,11 @@ index aea35cbd34..b352af3fd7 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 1aeae7c828..c78c6519e9 100644
+index 10c6a16381..b176e83346 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -663,6 +663,156 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
+@@ -681,6 +681,156 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+       getSettings().mIsolatedProcess = enabled;
        return this;
      }
 +
@@ -294,16 +294,7 @@ index 1aeae7c828..c78c6519e9 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -700,7 +850,7 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       new Pref<>("consoleservice.logcat", true);
-   /* package */ final Pref<Boolean> mDevToolsConsoleToLogcat =
-       new Pref<>("devtools.console.stdout.chrome", true);
--  /* package */ final Pref<Boolean> mAboutConfig = new Pref<>("general.aboutConfig.enable", false);
-+  /* package */ final Pref<Boolean> mAboutConfig = new Pref<>("z99.ignore.boolean", false);
-   /* package */ final PrefWithoutDefault<Boolean> mFissionEnabled =
-       new PrefWithoutDefault<>("fission.autostart");
-   /* package */ final Pref<Boolean> mForceUserScalable =
-@@ -798,6 +948,37 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -821,6 +971,37 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
@@ -341,8 +332,8 @@ index 1aeae7c828..c78c6519e9 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2317,6 +2498,302 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-     return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
+@@ -2356,6 +2537,302 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+     return mIsolatedProcess;
    }
  
 +  public boolean getAccessibilityEnabled() {

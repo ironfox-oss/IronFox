@@ -54,7 +54,6 @@ export PATH
 $SDK_MANAGER "build-tools;$BUILDTOOLS_VERSION" # for GeckoView
 $SDK_MANAGER "platforms;android-$PLATFORM_VERSION" # for GeckoView
 $SDK_MANAGER "ndk;$NDK_REVISION"  # for mozbuild; application-services
-$SDK_MANAGER "ndk;28.1.13356709" # for Glean
 
 export ANDROID_NDK="$ANDROID_HOME/ndk/$NDK_REVISION"
 [ -d "$ANDROID_NDK" ] || {

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index b2b40dd764..642d59cb9a 100644
+index c518b78ce9..f3818c2a33 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -154,7 +154,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -210,7 +210,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_lna_blocking_enabled).apply {
@@ -12,15 +12,15 @@ index b2b40dd764..642d59cb9a 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..a536ebea6b 100644
+index 312b5b3de3..f9208f141f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -835,7 +835,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     var isLnaBlockingEnabled by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
--        default = false,
-+        default = true,
+@@ -872,7 +872,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var isLnaBlockingEnabled by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
+         featureFlag = true,
+-        default = { FxNimbus.features.lnaBlocking.value().enabled },
++        default = { true },
      )
  
      /**

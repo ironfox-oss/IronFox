@@ -1,26 +1,26 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index c518b78ce9..333958309d 100644
+index c518b78ce9..0e4f92a9ac 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -330,7 +330,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -366,7 +366,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
-         requirePreference<SwitchPreference>(R.string.pref_key_microsurvey_feature_enabled).apply {
--            isVisible = true
-+            isVisible = false
-             isChecked = context.settings().microsurveyFeatureEnabled
+         requirePreference<SwitchPreference>(R.string.pref_key_enable_isolated_process).apply {
+-            isVisible = Config.channel.isNightlyOrDebug
++            isVisible = true
+             isChecked = context.settings().isIsolatedProcessEnabled
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..69f4244126 100644
+index 312b5b3de3..7537f8b8ea 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2511,7 +2511,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-     var microsurveyFeatureEnabled by lazyFeatureFlagPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
-         default = { FxNimbus.features.microsurveys.value().enabled },
--        featureFlag = true,
-+        featureFlag = false,
+@@ -881,7 +881,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var isIsolatedProcessEnabled by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_isolated_process),
+         featureFlag = true,
+-        default = { FxNimbus.features.isolatedContentProcesses.value().enabled },
++        default = { true },
      )
  
      /**

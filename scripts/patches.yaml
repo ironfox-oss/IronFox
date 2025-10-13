@@ -360,12 +360,12 @@ patches:
     category: "Mozilla"
 
   # Privacy
-  - file: "a-c-disable-extension-data-collection.patch"
-    name: "Disable extension data collection"
-    description: "Prevents add-ons from prompting users for permission to submit technical and interaction data."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to extension authors."
-    effect: "Prevents unwanted collection and transmission of telemetry data."
-    category: "Privacy"
+#  - file: "a-c-disable-extension-data-collection.patch"
+#    name: "Disable extension data collection"
+#    description: "Prevents add-ons from prompting users for permission to submit technical and interaction data."
+#    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to extension authors."
+#    effect: "Prevents unwanted collection and transmission of telemetry data."
+#    category: "Privacy"
 
   - file: "fenix-configure-doh.patch"
     name: "Configure DNS over HTTPS"
@@ -571,6 +571,13 @@ patches:
     description: "Enables encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state."
     reason: "To improve privacy and security for users, by adding extra protection for sensitive data."
     effect: "Protects users against unauthorized access/compromise to sensitive data."
+    category: "Security"
+
+  - file: "fenix-isolate-content-processes-by-default.patch"
+    name: "Enable Isolated Content Processes"
+    description: "Enables content process isolation by default."
+    reason: "To improve security for users, by strengthening the browser's sandbox."
+    effect: "Provides users with a stronger sandbox for stronger protection against various threats by default."
     category: "Security"
 
   # User Control

@@ -181,13 +181,13 @@ echo "official=true" >>local.properties
 # Disable crash reporting
 $SED -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
+# Disable Pocket "Discover More Stories"
+$SED -i -e 's|DISCOVER_MORE_STORIES = .*|DISCOVER_MORE_STORIES = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Disable telemetry
 $SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
 $SED -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 $SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Disable "custom review pre-prompts"
-$SED -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure onboarding is always enabled
 $SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
@@ -429,7 +429,7 @@ if [[ "$PLATFORM" == "darwin" ]]; then
     ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
     echo "macOS: Doing nothing..."
 else
-    patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop-uniffi.patch"
+    patch -p1 --no-backup-if-mismatch < "$patches/glean-noop-uniffi.patch"
     if [[ -n ${FDROID_BUILD+x} ]]; then
         $SED -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
     else
@@ -513,6 +513,9 @@ $SED -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mo
 # No-op Nimbus (Experimentation)
 $SED -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 $SED -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+$SED -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+$SED -i -e 's/EXPERIMENT_COLLECTION_NAME = ".*"/EXPERIMENT_COLLECTION_NAME = ""/' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
+$SED -i 's|nimbus-mobile-experiments||g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
@@ -527,7 +530,7 @@ popd
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+    patch -p1 --no-backup-if-mismatch <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
@@ -778,17 +781,7 @@ $SED -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
 $SED -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
 $SED -i 's|play-review|# play-review|g' gradle/libs.versions.toml
 $SED -i 's|play-services|# play-services|g' gradle/libs.versions.toml
-$SED -i 's|thirdparty-sentry|# thirdparty-sentry|g' gradle/libs.versions.toml
 $SED -i 's|sentry|# sentry|g' gradle/libs.versions.toml
-
-$SED -i 's|-dontnote com.android.vending.licensing.ILicensingService|# -dontnote com.android.vending.licensing.ILicensingService|g' mobile/android/config/proguard/proguard.cfg
-$SED -i 's|-include "adjust-keeps.cfg"|# -include "adjust-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
-$SED -i 's|-include "play-services-keeps.cfg"|# -include "play-services-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
-$SED -i 's|-include "proguard-leanplum.cfg"|# -include "proguard-leanplum.cfg"|g' mobile/android/config/proguard/proguard.cfg
-$SED -i 's|-keep public interface com.android.vending.licensing.ILicensingService|# -keep public interface com.android.vending.licensing.ILicensingService|g' mobile/android/config/proguard/proguard.cfg
-rm -vf mobile/android/config/proguard/adjust-keeps.cfg
-rm -vf mobile/android/config/proguard/play-services-keeps.cfg
-rm -vf mobile/android/config/proguard/proguard-leanplum.cfg
 
 # Remove Web Compatibility Reporter
 ## Also see `fenix-remove-webcompat-reporter.patch`
@@ -1044,6 +1037,7 @@ fi
     echo 'ac_add_options --enable-geckoview-lite'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-install-strip'
+    echo 'ac_add_options --enable-isolated-process'
     echo 'ac_add_options --enable-minify=properties'
     echo 'ac_add_options --enable-mobile-optimize'
     echo 'ac_add_options --enable-optimize'
@@ -1180,5 +1174,5 @@ popd
 # We temporarily need this to unbreak the FIDO library
 ## https://github.com/microg/GmsCore/issues/3054
 pushd "$gmscore"
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/microg-unbreak-fido.patch"
+patch -p1 --no-backup-if-mismatch < "$patches/microg-unbreak-fido.patch"
 popd
