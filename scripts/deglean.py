@@ -27,7 +27,7 @@ def deglean(file_path):
         if in_ext_block:
             ext_block_content.append(line)
             # Check if the line starts with "glean" (case insensitive)
-            if line.strip().lower().startswith("glean"):
+            if line.strip().lower().startswith("glean") and not line.strip().lower().startswith("gleanversion"):
                 contains_glean = True
             
             brace_depth += line.count("{") - line.count("}")

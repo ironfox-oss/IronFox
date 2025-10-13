@@ -1,5 +1,94 @@
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index 1753bcbd86..6efccc5c44 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -59,19 +59,19 @@ projects:
+     - components:feature-top-sites
+     - components:feature-webauthn
+     - components:feature-webcompat
+-    - components:feature-webcompat-reporter
++    # - components:feature-webcompat-reporter
+     - components:feature-webnotifications
+     - components:lib-crash
+-    - components:lib-crash-sentry
++    # - components:lib-crash-sentry
+     - components:lib-dataprotect
+     - components:lib-publicsuffixlist
+-    - components:lib-push-firebase
++    # - components:lib-push-firebase
+     - components:lib-state
+     - components:service-digitalassetlinks
+     - components:service-firefox-accounts
+-    - components:service-glean
++    # - components:service-glean
+     - components:service-location
+-    - components:service-mars
++    # - components:service-mars
+     - components:service-nimbus
+     - components:service-pocket
+     - components:service-sync-autofill
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index 1f26227889..6df523c176 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -613,13 +613,13 @@ dependencies {
+     implementation project(':components:feature-top-sites')
+     implementation project(':components:feature-webauthn')
+     implementation project(':components:feature-webcompat')
+-    implementation project(':components:feature-webcompat-reporter')
++//    implementation project(':components:feature-webcompat-reporter')
+     implementation project(':components:feature-webnotifications')
+     implementation project(':components:service-digitalassetlinks')
+     implementation project(':components:service-firefox-accounts')
+-    implementation project(':components:service-glean')
++//    implementation project(':components:service-glean')
+     implementation project(':components:service-location')
+-    implementation project(':components:service-mars')
++//    implementation project(':components:service-mars')
+     implementation project(':components:service-nimbus')
+     implementation project(':components:service-pocket')
+     implementation project(':components:service-sync-autofill')
+@@ -638,14 +638,14 @@ dependencies {
+     implementation project(':components:ui-tabcounter')
+     implementation project(':components:ui-widgets')
+     implementation project(':components:lib-crash')
+-    implementation project(':components:lib-crash-sentry')
++//    implementation project(':components:lib-crash-sentry')
+     implementation project(':components:lib-dataprotect')
+-    implementation project(':components:lib-push-firebase')
++//    implementation project(':components:lib-push-firebase')
+     implementation project(':components:lib-state')
+ 
+     implementation ComponentsDependencies.mozilla_appservices_syncmanager
+     implementation libs.accompanist.drawablepainter
+-    implementation libs.adjust
++//    implementation libs.adjust
+     implementation libs.androidx.activity
+     implementation libs.androidx.activity.ktx
+     implementation libs.androidx.annotation
+@@ -690,15 +690,15 @@ dependencies {
+     implementation libs.androidx.viewpager2
+     implementation libs.androidx.work.runtime
+     implementation libs.google.material
+-    implementation libs.installreferrer
++//    implementation libs.installreferrer
+     implementation libs.kotlinx.coroutines
+     implementation libs.kotlinx.serialization.json
+     implementation libs.mozilla.glean
+-    implementation libs.play.review
+-    implementation libs.play.review.ktx
+-    implementation libs.play.services.ads.id
++//    implementation libs.play.review
++//    implementation libs.play.review.ktx
++//    implementation libs.play.services.ads.id
+     implementation libs.protobuf.javalite
+-    implementation libs.sentry
++//    implementation libs.sentry
+ 
+     debugImplementation libs.androidx.compose.ui.tooling
+     debugImplementation libs.leakcanary
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
-index a5ba234af1..669e4d9865 100644
+index a5ba234af1..cd56a7efb5 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
 +++ b/mobile/android/fenix/app/proguard-rules.pro
 @@ -6,16 +6,16 @@
@@ -23,6 +112,15 @@ index a5ba234af1..669e4d9865 100644
  
  ####################################################################################################
  # Android and GeckoView built-ins
+@@ -29,7 +29,7 @@
+ # Raptor now writes a *-config.yaml file to specify Gecko runtime settings (e.g. the profile dir). This
+ # file gets deserialized into a DebugConfig object, which is why we need to keep this class
+ # and its members.
+--keep class org.mozilla.gecko.util.DebugConfig { *; }
++#-keep class org.mozilla.gecko.util.DebugConfig { *; }
+ 
+ ####################################################################################################
+ # kotlinx.coroutines: use the fast service loader to init MainDispatcherLoader by including a rule
 @@ -73,53 +73,53 @@
  # Adjust
  ####################################################################################################
@@ -134,15 +232,24 @@ index a5ba234af1..669e4d9865 100644
 +-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
 +-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index be6741fab0..adfbe14beb 100644
+index be6741fab0..3cb3980cc6 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -52,7 +52,7 @@
+ 
+     <!-- Needed to get distribution information from partners.
+     This is NOT required for the adjust plugin. -->
+-    <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
++    <!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->
+ 
+     <application
+         android:name=".FenixApplication"
 @@ -768,13 +768,13 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
 -        <service
-+<!--         <service
++        <!-- <service
              android:name=".push.FirebasePushService"
              android:exported="false">
              <intent-filter>
@@ -158,7 +265,7 @@ index be6741fab0..adfbe14beb 100644
          </service>
  
 -        <meta-data
-+<!--        <meta-data
++        <!-- <meta-data
              android:name="firebase_messaging_auto_init_enabled"
              android:value="true" />
          <meta-data
@@ -176,7 +283,7 @@ index be6741fab0..adfbe14beb 100644
          <!-- For adjust pre-installs -->
          <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
 -        <receiver
-+<!--        <receiver
++        <!-- <receiver
              android:name="com.adjust.sdk.AdjustPreinstallReferrerReceiver"
              android:exported="true"
              tools:ignore="ExportedReceiver">
@@ -283,6 +390,19 @@ index 1f2c7eb2d0..4d4b374e0f 100644
 +//            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
          }
      }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 4d499da8de..c10fdae6cb 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -478,7 +478,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+ 
+             // About preferences
+             resources.getString(R.string.pref_key_rate) -> {
+-                components.playStoreReviewPromptController.tryLaunchPlayStoreReview(requireActivity())
++//                components.playStoreReviewPromptController.tryLaunchPlayStoreReview(requireActivity())
+                 null
+             }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 312b5b3de3..03b1108803 100644

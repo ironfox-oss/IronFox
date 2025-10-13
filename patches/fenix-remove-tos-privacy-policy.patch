@@ -1,3 +1,61 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt
+index de41d50564..b786835445 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt
+@@ -131,7 +131,7 @@ private fun Subheaders(termsOfService: OnboardingTermsOfService) {
+ @Composable
+ private fun SubHeaderText(text: String) {
+     Text(
+-        text = text,
++        text = "",
+         style = FirefoxTheme.typography.body2.copy(
+             color = FirefoxTheme.colors.textSecondary,
+             textAlign = TextAlign.Center,
+@@ -147,9 +147,9 @@ private fun BodyText(
+     with(termsOfService) {
+         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+             val bodyOneLinkState = LinkTextState(
+-                text = lineOneLinkText,
++                text = "",
+                 url = lineOneLinkUrl,
+-                onClick = eventHandler::onTermsOfServiceLinkClicked,
++                onClick = {},
+             )
+             BodyLinkText(
+                 lineOneText.updateFirstPlaceholder(lineOneLinkText),
+@@ -157,9 +157,9 @@ private fun BodyText(
+             )
+ 
+             val bodyTwoLinkState = LinkTextState(
+-                text = lineTwoLinkText,
++                text = "",
+                 url = lineTwoLinkUrl,
+-                onClick = eventHandler::onPrivacyNoticeLinkClicked,
++                onClick = {},
+             )
+             BodyLinkText(
+                 lineTwoText.updateFirstPlaceholder(lineTwoLinkText),
+@@ -167,9 +167,9 @@ private fun BodyText(
+             )
+ 
+             val bodyThreeLinkState = LinkTextState(
+-                text = lineThreeLinkText,
++                text = "",
+                 url = "", // No URL
+-                onClick = { _ -> eventHandler.onManagePrivacyPreferencesLinkClicked() },
++                onClick = {},
+             )
+             BodyLinkText(
+                 lineThreeText.updateFirstPlaceholder(lineThreeLinkText),
+@@ -190,7 +190,7 @@ private fun BodyLinkText(
+     )
+ 
+     LinkText(
+-        text = text,
++        text = "",
+         linkTextStates = listOf(linkState),
+         style = style,
+         shouldApplyAccessibleSize = true,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 index 795fcd7b7e..1b4d2eef78 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt

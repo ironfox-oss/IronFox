@@ -70,6 +70,13 @@ patches:
     effect: "Ensures successful compilation of the browser."
     category: "Build System"
 
+  - file: "gecko-unbreak-wasi-sdk-20-clang.patch"
+    name: "Fix WASI SDK 20 clang Build Error"
+    description: "Fixes an upstream issue that prevents gecko from building with WASI SDK 20: https://bugzilla.mozilla.org/show_bug.cgi?id=1994063."
+    reason: "Required for builds with WASI SDK 20."
+    effect: "Ensures successful compilation of the browser."
+    category: "Build System"
+
   - file: "a-c-localize-maven.patch"
     name: "Remove Mozilla Maven Repositories (Android Components)"
     description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
@@ -107,16 +114,16 @@ patches:
 
   # Dependency
   - file: "a-c-liberate.patch"
-    name: "Remove Proprietary Libraries (Android Components)"
-    description: "Patches out proprietary and tracking libraries from Mozilla's Android Components (and replaces them with suitable alternatives if desired, such as microG)."
-    reason: "To remove unwanted proprietary and tracking libraries, and dependencies on related services."
+    name: "Remove Unwanted Libraries (Android Components)"
+    description: "Removes proprietary, tracking, and other unwanted libraries from Mozilla's Android Components (and replaces them with suitable alternatives if desired, such as microG)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
   - file: "fenix-liberate.patch"
-    name: "Remove Proprietary Libraries (Fenix)"
-    description: "Patches out proprietary and tracking libraries from Fenix (and replaces them with suitable alternatives if desired, such as microG)."
-    reason: "To remove unwanted proprietary and tracking libraries, and dependencies on related services."
+    name: "Remove Unwanted Libraries (Fenix)"
+    description: "Removes proprietary, tracking, and other unwanted libraries from Fenix (and replaces them with suitable alternatives if desired, such as microG)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
@@ -268,14 +275,7 @@ patches:
     effect: "Cleaner interface without promotional content or third-party integrations."
     category: "Mozilla"
 
-  - file: "a-c-remove-mars.patch"
-    name: "Remove MARS (Android Components)"
-    description: "Removes the Mozilla Ad Routing Service (MARS) from Mozilla's Android Components."
-    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
-    effect: "Prevents unwanted advertising."
-    category: "Mozilla"
-
-  - file: "fenix-remove-mars.patch"
+  - file: "fenix-liberate-support-mars.patch"
     name: "Remove MARS (Fenix)"
     description: "Removes the Mozilla Ad Routing Service (MARS) from Firefox for Android."
     reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
@@ -317,14 +317,7 @@ patches:
     effect: "Users have improved privacy, security, and control over their extensions."
     category: "Mozilla"
 
-  - file: "a-c-remove-webcompat-reporter.patch"
-    name: "Remove Web Compatibility Reporter (Android Components)"
-    description: "Removes the Web Compatibility Reporter from Android Components."
-    reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
-    effect: "Simplifies the browser UI and prevents issue reports from being sent to Mozilla."
-    category: "Mozilla"
-
-  - file: "fenix-remove-webcompat-reporter.patch"
+  - file: "fenix-liberate-support-webcompat-reporter.patch"
     name: "Remove Web Compatibility Reporter (Fenix)"
     description: "Removes the Web Compatibility Reporter from Firefox for Android."
     reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
@@ -360,13 +353,6 @@ patches:
     category: "Mozilla"
 
   # Privacy
-#  - file: "a-c-disable-extension-data-collection.patch"
-#    name: "Disable extension data collection"
-#    description: "Prevents add-ons from prompting users for permission to submit technical and interaction data."
-#    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to extension authors."
-#    effect: "Prevents unwanted collection and transmission of telemetry data."
-#    category: "Privacy"
-
   - file: "fenix-configure-doh.patch"
     name: "Configure DNS over HTTPS"
     description: |
@@ -571,13 +557,6 @@ patches:
     description: "Enables encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state."
     reason: "To improve privacy and security for users, by adding extra protection for sensitive data."
     effect: "Protects users against unauthorized access/compromise to sensitive data."
-    category: "Security"
-
-  - file: "fenix-isolate-content-processes-by-default.patch"
-    name: "Enable Isolated Content Processes"
-    description: "Enables content process isolation by default."
-    reason: "To improve security for users, by strengthening the browser's sandbox."
-    effect: "Provides users with a stronger sandbox for stronger protection against various threats by default."
     category: "Security"
 
   # User Control

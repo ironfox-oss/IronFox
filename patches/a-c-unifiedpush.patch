@@ -650,7 +650,7 @@ index 000000000000..c492a3879873
 +
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 new file mode 100644
-index 0000000000..d74042e4fb
+index 0000000000..516095077d
 --- /dev/null
 +++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 @@ -0,0 +1,52 @@
@@ -688,10 +688,10 @@ index 0000000000..d74042e4fb
 +    implementation project(':components:support-base')
 +    implementation project(':components:ui-icons')
 +
-+    implementation libs.kotlin.coroutines
 +    implementation libs.androidx.work.runtime
 +    implementation libs.androidx.lifecycle.runtime
-+    implementation (libs.thirdparty.unifiedpush) {
++    implementation libs.kotlinx.coroutines
++    implementation (libs.unifiedpush) {
 +        exclude group: "com.google.protobuf", module: "protobuf-java"
 +    }
 +
@@ -699,8 +699,8 @@ index 0000000000..d74042e4fb
 +
 +    testImplementation libs.androidx.test.core
 +    testImplementation libs.androidx.test.junit
-+    testImplementation libs.testing.robolectric
-+    testImplementation libs.testing.coroutines
++    testImplementation libs.kotlinx.coroutines.test
++    testImplementation libs.robolectric
 +}
 +
 +apply from: '../../../android-lint.gradle'

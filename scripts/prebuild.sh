@@ -206,17 +206,6 @@ echo 'glean.custom.server.url="data;"' >>local.properties
 $SED -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
 $SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' app/pings.yaml
 
-# Remove proprietary/tracking libraries
-$SED -i 's|- components:lib-crash-sentry|# - components:lib-crash-sentry|g' .buildconfig.yml
-$SED -i 's|- components:lib-push-firebase|# - components:lib-push-firebase|g' .buildconfig.yml
-$SED -i 's|implementation libs.thirdparty.sentry|// implementation libs.thirdparty.sentry|g' app/build.gradle
-$SED -i "s|implementation project(':components:lib-crash-sentry')|// implementation project(':components:lib-crash-sentry')|g" app/build.gradle
-$SED -i "s|implementation project(':components:lib-push-firebase')|// implementation project(':components:lib-push-firebase')|g" app/build.gradle
-$SED -i 's|implementation(libs.adjust)|// implementation(libs.adjust)|g' app/build.gradle
-$SED -i 's|implementation(libs.installreferrer)|// implementation(libs.installreferrer)|g' app/build.gradle
-$SED -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
-$SED -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
-
 # Remove unused telemetry and marketing services/components
 $SED -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
 $SED -i -e 's|import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|// import org.mozilla.fenix.downloads.listscreen.middleware.DownloadTelemetryMiddleware|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
@@ -303,6 +292,7 @@ $SED -i \
     -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
     -e 's/firefox_threads/ironfox_threads/' \
     -e 's/firefox_features/ironfox_features/' \
+    app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
 
 # Replace proprietary artwork
@@ -772,9 +762,6 @@ $SED -i -e 's#if (rootDir.toString().contains("android-components") || !project.
 $SED -i "s|include ':exoplayer2'|// include ':exoplayer2'|g" settings.gradle
 $SED -i "s|project(':exoplayer2'|// project(':exoplayer2'|g" settings.gradle
 
-# Remove unused/unnecessary DebugConfig class
-$SED -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
-
 # Remove proprietary/tracking libraries
 $SED -i 's|adjust|# adjust|g' gradle/libs.versions.toml
 $SED -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
@@ -782,11 +769,6 @@ $SED -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
 $SED -i 's|play-review|# play-review|g' gradle/libs.versions.toml
 $SED -i 's|play-services|# play-services|g' gradle/libs.versions.toml
 $SED -i 's|sentry|# sentry|g' gradle/libs.versions.toml
-
-# Remove Web Compatibility Reporter
-## Also see `fenix-remove-webcompat-reporter.patch`
-$SED -i 's|- components:feature-webcompat-reporter|# - components:feature-webcompat-reporter|g' mobile/android/fenix/.buildconfig.yml
-$SED -i "s|implementation project(':components:feature-webcompat-reporter')|// implementation project(':components:feature-webcompat-reporter')|g" mobile/android/fenix/app/build.gradle
 
 # Replace Google Play FIDO with microG
 $SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
@@ -888,10 +870,11 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher_round.
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher_round.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
-$SED -i -e 's|R.drawable.microsurvey_success|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
-$SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-$SED -i -e 's|ic_onboarding_search_widget|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
-$SED -i -e 's|ic_onboarding_sync|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
+$SED -i -e 's|R.drawable.microsurvey_success|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
+$SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
+$SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+$SED -i -e 's|ic_onboarding_search_widget|fox_alert_crash_dark|' mobile/android/fenix/app/onboarding.fml.yaml
+$SED -i -e 's|ic_onboarding_sync|fox_alert_crash_dark|' mobile/android/fenix/app/onboarding.fml.yaml
 
 # Take back control of preferences
 ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 7d2ef5a331..173a214f14 100644
+index 7d2ef5a331..4e5a15e574 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
@@ -57,15 +57,23 @@ index 7d2ef5a331..173a214f14 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -392,7 +392,7 @@ class Core(
+@@ -388,12 +388,12 @@ class Core(
+                             REMOTE_STAGE_ENDPOINT_URL
+                         },
+                     ).updateProviderList()
+-                }
++                }*/
                  // Install the "ads" WebExtension to get the links in an partner page.
-                 adsTelemetry.install(engine, this@apply, providerList)
+-                adsTelemetry.install(engine, this@apply, providerList)
++//                adsTelemetry.install(engine, this@apply, providerList)
                  // Install the "cookies" WebExtension and tracks user interaction with SERPs.
 -                searchTelemetry.install(engine, this@apply, providerList)
-+                searchTelemetry.install(engine, this@apply, providerList)*/
-             }
+-            }
++//                searchTelemetry.install(engine, this@apply, providerList)
++//            }
  
              WebNotificationFeature(
+                 context,
 @@ -450,7 +450,7 @@ class Core(
          BrowserIcons(context, client)
      }
@@ -109,7 +117,7 @@ index 8645aaf290..4c96d174b1 100644
  fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
      ?: this as? Activity
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 29cd599a82..c9e0097634 100644
+index 29cd599a82..9999c3220b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -84,7 +84,7 @@ import org.mozilla.fenix.components.Components
@@ -130,7 +138,7 @@ index 29cd599a82..c9e0097634 100644
  
          CoroutineScope(IO).launch {
              components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
-@@ -729,9 +729,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -729,12 +729,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          browserStore: BrowserStore,
          settings: Settings,
          browsersCache: BrowsersCache = BrowsersCache,
@@ -138,10 +146,15 @@ index 29cd599a82..c9e0097634 100644
 +//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
      ) {
 -        setPreferenceMetrics(settings)
-+/*        setPreferenceMetrics(settings)
-         with(Metrics) {
+-        with(Metrics) {
++//        setPreferenceMetrics(settings)
++//        with(Metrics) {
              // Set this early to guarantee it's in every ping from here on.
-             distributionId.set(components.distributionIdManager.getDistributionId())
+-            distributionId.set(components.distributionIdManager.getDistributionId())
++/*            distributionId.set(components.distributionIdManager.getDistributionId())
+ 
+             defaultBrowser.set(browsersCache.all(applicationContext).isDefaultBrowser)
+             mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
 @@ -847,7 +847,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              }
          }
