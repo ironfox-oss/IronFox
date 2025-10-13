@@ -40,9 +40,6 @@ pref("browser.ironfox.extensions.blocklist.enabled", true); // [DEFAULT]
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
 
-/// Ensure EME is always/only controlled by the UI/permission prompt
-pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
-
 /// Lock prefs controlled by UI settings
 // This prevents prefs from becoming out of sync with the corresponding UI toggle(s)/behavior in Fenix
 // Modifying these prefs directly from `about:config` also causes them to reset on the next browser launch, which users probably do not want/expect
