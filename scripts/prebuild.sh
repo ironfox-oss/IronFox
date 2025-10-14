@@ -1118,9 +1118,3 @@ $SED -i \
 apply_overlay "$patches/gecko-overlay/"
 
 popd
-
-# We temporarily need this to unbreak the FIDO library
-## https://github.com/microg/GmsCore/issues/3054
-pushd "$gmscore"
-patch -p1 --no-backup-if-mismatch < "$patches/microg-unbreak-fido.patch"
-popd
