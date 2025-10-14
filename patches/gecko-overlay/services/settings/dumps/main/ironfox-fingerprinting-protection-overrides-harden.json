@@ -878,6 +878,10 @@
     },
     {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "enza.fun"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
       "firstPartyDomain": "epicgames.com"
     },
     {
