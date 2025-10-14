@@ -54,6 +54,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "enza.fun"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "fancade.com"
     },
     {
@@ -102,6 +106,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "noclip.website"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "panerabread.com"
     },
     {
@@ -111,6 +119,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "poki-gdn.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "radio.garden"
     },
     {
       "overrides": "-DisableWebGL",
