@@ -174,8 +174,7 @@ $SED -i \
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
-# We're also setting the "MOZILLA_OFFICIAL" env variable below
-$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+# We also set "MOZILLA_OFFICIAL" for Gecko below
 echo "official=true" >>local.properties
 
 # Disable crash reporting
@@ -627,21 +626,6 @@ echo 'gyp_vars["enable_sslkeylogfile"] = 0' >>security/moz.build
 # Disable telemetry
 $SED -i -e 's|"MOZ_SERVICES_HEALTHREPORT", .*)|"MOZ_SERVICES_HEALTHREPORT", False)|g' mobile/android/moz.configure
 
-# Disable crash reporting (GeckoView)
-$SED -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
-
-# Disable debug (GeckoView)
-$SED -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
-
-# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
-# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
-# We're also setting the "MOZILLA_OFFICIAL" env variable below
-$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
-
-# Target release
-$SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
-$SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
-
 # Ensure UA is always set to Firefox
 $SED -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
 
@@ -1014,8 +998,8 @@ fi
     echo 'ac_add_options --disable-webrender-debugger'
     echo 'ac_add_options --disable-webspeechtestbackend'
     echo 'ac_add_options --disable-wmf'
-    echo 'ac_add_options --enable-android-subproject="fenix"'
-    echo 'ac_add_options --enable-application="mobile/android"'
+    echo 'ac_add_options --enable-android-subproject=fenix'
+    echo 'ac_add_options --enable-application=mobile/android'
     echo 'ac_add_options --enable-disk-remnant-avoidance'
     echo 'ac_add_options --enable-geckoview-lite'
     echo 'ac_add_options --enable-hardening'
@@ -1029,12 +1013,12 @@ fi
     echo 'ac_add_options --enable-replace-malloc'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
-    echo 'ac_add_options --enable-update-channel="release"'
-    echo 'ac_add_options --with-app-basename="IronFox"'
-    echo 'ac_add_options --with-app-name="ironfox"'
-    echo 'ac_add_options --with-branding="mobile/android/branding/ironfox"'
+    echo 'ac_add_options --enable-update-channel=release'
+    echo 'ac_add_options --with-app-basename=IronFox'
+    echo 'ac_add_options --with-app-name=ironfox'
+    echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
     echo 'ac_add_options --with-crashreporter-url="data;"'
-    echo 'ac_add_options --with-distribution-id="org.ironfoxoss"'
+    echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
     if [[ -n "${target}" ]]; then
@@ -1058,44 +1042,23 @@ fi
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
     fi
 
-    echo "ac_add_options ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
     echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/llvm-strip\""
-    echo 'ac_add_options MOZ_APP_BASENAME="IronFox"'
-    echo 'ac_add_options MOZ_APP_DISPLAYNAME="IronFox"'
-    echo 'ac_add_options MOZ_APP_NAME="ironfox"'
-    echo 'ac_add_options MOZ_APP_REMOTINGNAME="ironfox"'
-    echo 'ac_add_options MOZ_ARTIFACT_BUILDS='
-    echo 'ac_add_options MOZ_CALLGRIND='
-    echo 'ac_add_options MOZ_CRASHREPORTER_URL="data;"'
-    echo 'ac_add_options MOZ_DEBUG_FLAGS='
-    echo 'ac_add_options MOZ_EXECUTION_TRACING='
-    echo 'ac_add_options MOZ_INCLUDE_SOURCE_INFO=1'
-    echo 'ac_add_options MOZ_INSTRUMENTS='
-    echo 'ac_add_options MOZ_LTO=1'
-    echo 'ac_add_options MOZ_PACKAGE_JSSHELL='
-    echo 'ac_add_options MOZ_PHC='
-    echo 'ac_add_options MOZ_PROFILING='
-    echo 'ac_add_options MOZ_REQUIRE_SIGNING='
-    echo 'ac_add_options MOZ_RUST_SIMD=1'
-    echo 'ac_add_options MOZ_SECURITY_HARDENING=1'
-    echo 'ac_add_options MOZ_TELEMETRY_REPORTING='
-    echo 'ac_add_options MOZ_VTUNE='
-    echo 'ac_add_options MOZILLA_OFFICIAL=1'
-    echo 'ac_add_options NODEJS='
-    echo 'ac_add_options RUSTC_OPT_LEVEL=2'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
     echo "export ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
-    echo 'export MOZ_APP_BASENAME="IronFox"'
-    echo 'export MOZ_APP_DISPLAYNAME="IronFox"'
-    echo 'export MOZ_APP_NAME="ironfox"'
-    echo 'export MOZ_APP_REMOTINGNAME="ironfox"'
+    echo "export GRADLE_MAVEN_REPOSITORIES=\"file://$HOME/.m2/repository/\",\"https://plugins.gradle.org/m2/\",\"https://maven.google.com/\""
+    echo 'export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1'
+    echo 'export MOZ_APP_BASENAME=IronFox'
+    echo 'export MOZ_APP_NAME=ironfox'
+    echo 'export MOZ_APP_REMOTINGNAME=ironfox'
     echo 'export MOZ_ARTIFACT_BUILDS='
     echo 'export MOZ_CALLGRIND='
+    echo 'export MOZ_CRASHREPORTER='
     echo 'export MOZ_CRASHREPORTER_URL="data;"'
+    echo 'export MOZ_DEBUG_FLAGS='
     echo 'export MOZ_EXECUTION_TRACING='
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
     echo 'export MOZ_INSTRUMENTS='
@@ -1110,10 +1073,12 @@ fi
     echo 'export MOZ_TELEMETRY_REPORTING='
     echo 'export MOZ_VTUNE='
     echo 'export MOZILLA_OFFICIAL=1'
+    echo 'export NODEJS='
     echo 'export RUSTC_OPT_LEVEL=2'
 } >>mozconfig
 
 # Fail on use of prebuilt binary
+$SED -i 's|https://|hxxps://|' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 $SED -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
 
 # Make the build system think we installed the emulator and an AVD
