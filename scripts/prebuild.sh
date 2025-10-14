@@ -292,8 +292,8 @@ $SED -i \
     -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
     -e 's/firefox_threads/ironfox_threads/' \
     -e 's/firefox_features/ironfox_features/' \
-    app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
+$SED -i -e 's/ProfilerSettings.Firefox/ProfilerSettings.IronFox/' app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt
 
 # Replace proprietary artwork
 rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml
