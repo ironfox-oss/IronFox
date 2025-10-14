@@ -4,8 +4,8 @@
     <string name="unsupported_summary">Ce paramètre n\'est NI recommandé NI pris en charge. Procédez avec prudence.</string>
     <string name="if_preferences">Paramètres d\'IronFox</string>
     <string name="if_preferences_misc">Divers</string>
-    <string name="if_preferences_privacy">confidentialité</string>
-    <string name="if_preferences_privacy_security">confidentialité et sécurité</string>
+    <string name="if_preferences_privacy">Confidentialité</string>
+    <string name="if_preferences_privacy_security">Confidentialité et sécurité</string>
     <string name="if_preferences_secret">Paramètres secrets</string>
     <string name="if_preferences_security">Sécurité</string>
     <string name="preference_accessibility_enabled">Activer les services d\'accessibilité</string>
@@ -56,6 +56,17 @@
     <string name="onboarding_state_installing_ublock">Installation de uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Une erreur s\'est produite lors de l\'installation de uBlock Origin : %1$s</string>
     <string name="onboarding_action_retry">Réessayer</string>
-    <string name="preference_collections_enabled">Activer collections</string>
+    <string name="preference_collections_enabled">Activer les collections</string>
     <string name="preference_translations_enabled">Activer traductions de Firefox</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">L\'installations des modules complémentaires est actuellement désactivé. Si vous le voulez, vous pouvez l\'activer au détriment de la sécurité en navigant dans Paramètres -&gt; IronFox -&gt; paramètres d\'IronFox -&gt; Sécurité -&gt; Autoriser l\'installation des modules complémentaires.</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Activer les remplacements de protection par empreinte digitale d\'IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Assouplit par défaut les protections d’identification pour certains sites web afin de réduire les casses, en utilisant une liste de IronFox - Changer ce paramètre redémarrera votre navigateur</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Activer les substitutions de protection d’empreintes digitales par Mozilla</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Assouplit par défaut les protections d’identification pour certains sites web afin de réduire les casses, en utilisant une liste de Mozilla - Changer ce paramètre redémarrera votre navigateur</string>
+    <string name="preference_jit_trusted_principals_enabled">Activer la compilation juste-à-temps (JIT) JavaScript pour les extensions</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Active JIT pour les extensions lorsque JIT est autrement désactivé globalement - Changer ce paramètre redémarrera votre navigateur</string>
+    <string name="spoof_timezone">Fuseau horaire usurpé en UTC-0</string>
+    <string name="spoof_timezone_summary">Lorsqu’il est activé, renforce la protection des empreintes digitales</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Activer les remplacements d\'usurpation de fuseau horaire depuis IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Désactive l\'usurpation de fuseau horaire pour certains sites Web par défaut afin de réduire les risques de panne. La modification de ce paramètre redémarrera votre navigateur</string>
 </resources>

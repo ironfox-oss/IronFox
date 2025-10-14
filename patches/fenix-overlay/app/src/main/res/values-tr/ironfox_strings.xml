@@ -59,4 +59,16 @@
     <string name="preference_collections_enabled">Koleksiyonları etkinleştir</string>
     <string name="preference_translations_enabled">Firefox çevirilerini etkinleştir</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Şu anda eklentilerin yüklenmesi devre dışı bırakılmıstır. Eğer istenirse, güvenlik pahasında Ayarlar -&gt; IronFox -&gt; IronFox ayarları -&gt; Güvenlik -&gt; Eklentilerin yüklenmesine izin ver\'e giderek etkinleştirilebilir.</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">IronFox\'tan parmak izi korumasını geçersiz kılmasını etkinleştir</string>
+    <string name="preference_fpp_overrides_ironfox_summary">IronFox\'tan bir liste kullanarak bazı web sayfalarında parmak izi korumasını bozulmaları azaltmak için rahatlatır - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Mozilla\'dan parmak izi koruma geçersiz kılmaları etkinleştir</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Mozilla\'dan bir liste kullanarak bazı web sayfalarında parmak izi korumasını bozulmaları azaltmak için rahatlatır - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
+    <string name="preference_jit_trusted_principals_enabled">Eklentiler için Javascript Just-in-time Dermelesini (JIT) etkinleştir</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">JIT genel olarak devre dışı bırakıldığında eklentiler için JIT\'i etkinleştirir. Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
+    <string name="spoof_timezone">Zaman dilimini UTC-0\'e sahtele</string>
+    <string name="spoof_timezone_summary">Etkinleştirildiğinde parmak izi korumasını güçlendirir</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">IronFox\'tan zaman dilimi sahtelemesinin devre dışı bırakılmasını etkinleştir</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Zaman dilini sahtelemesini bazı webs sayfalarında bozulmaları azaltmak için devre dışı bırakır - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">IronFox\'tan WebGL devre dışı bırakılmasını etkinleştir</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Bazı web sayfalarında bozulmaları azaltmak için genel olarak devre dışı bırakılmasına rağmen etkinleştirir - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
 </resources>

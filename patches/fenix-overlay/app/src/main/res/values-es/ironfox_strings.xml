@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="restart_required_summary">Cambiar esta configuración reiniciará tu navegador</string>
+    <string name="restart_required_summary">Cambiar esta configuración reiniciará el navegador</string>
     <string name="unsupported_summary">Esta configuración NO es recomendada ni soportada. Proceda con precaución.</string>
     <string name="if_preferences">Ajustes de IronFox</string>
     <string name="if_preferences_misc">Misceláneos</string>
@@ -22,7 +22,7 @@
     <string name="preference_jit_enabled">Habilitar la compilación JavaScript Just-in-time (JIT)</string>
     <string name="preference_jit_enabled_caption">Mejora el rendimiento de JavaScript habilitando JIT. (No recomendado para la mayoría de los usuarios)</string>
     <string name="preference_jit_enabled_description">A costa de la seguridad, puedes habilitar JIT para mejorar el rendimiento de los sitios web. Solo se recomienda para usuarios con dispositivos de gama baja.</string>
-    <string name="preference_jit_enabled_summary">Cuando está deshabilitado, el rendimiento puede verse reducido en páginas web complejas. Cambiar esta configuración reiniciará tu navegador</string>
+    <string name="preference_jit_enabled_summary">Cuando está deshabilitado, el rendimiento puede verse reducido en páginas web complejas - Cambiar esta configuración reiniciará el navegador</string>
     <string name="preference_pdfjs_disabled">Abrir archivos PDF externamente</string>
     <string name="preference_website_appearance_title">Apariencia preferida del sitio web</string>
     <string name="preference_website_appearance_description">Algunos sitios web adaptan su esquema de colores según tus preferencias. Elige qué esquema de colores te gustaría usar para esos sitios. Ten en cuenta que las opciones distintas de Claro pueden ayudar al fingerprinting, ya que pueden causar que tu navegador parezca más único.</string>
@@ -33,7 +33,7 @@
     <string name="preference_safe_browsing_enabled">Habilitar Navegación Segura</string>
     <string name="preference_safe_browsing_enabled_caption">Obtén protección en tiempo real contra sitios web peligrosos, malware e intentos de phishing.</string>
     <string name="preference_safe_browsing_enabled_description">La funcionalidad de Navegación Segura de IronFox es actualmente proporcionada por Google. IronFox actualizará periódicamente la base de datos para garantizar que los usuarios estén protegidos contra las amenazas más recientes, y al encontrar una coincidencia potencial, IronFox podría enviar un hash parcial de la URL sospechosa a Google. Ten en cuenta que IronFox actúa como intermediario en estas conexiones, para evitar que tu dirección IP pública se asocie con estas solicitudes.</string>
-    <string name="preference_safe_browsing_enabled_summary">Proporciona protección en tiempo real contra sitios web peligrosos, malware e intentos de phishing. Cambiar esta configuración reiniciará tu navegador</string>
+    <string name="preference_safe_browsing_enabled_summary">Proporciona protección en tiempo real contra sitios web peligrosos, malware e intentos de phishing - Cambiar esta configuración reiniciará el navegador</string>
     <string name="tor_spoof_english_title">Suplantar idioma a en-US</string>
     <string name="tor_spoof_english_caption">Mejora tu privacidad al enmascarar la configuración de idioma de tu dispositivo.</string>
     <string name="tor_spoof_english_description">Solicita versiones en Inglés (en-US) de las páginas web. Esto ayuda a que tu navegador parezca menos único, fortaleciendo la protección contra técnicas de fingerprinting que identifican a los usuarios según sus preferencias de idioma.</string>
@@ -59,4 +59,16 @@
     <string name="preference_collections_enabled">Habilitar colecciones</string>
     <string name="preference_translations_enabled">Habilitar Traducciones de Firefox</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Instalación de extensiones actualmente desactivada. Si lo deseas, a costa de seguridad, puedes habilitarla navegando a Ajustes -&gt; IronFox -&gt; Ajustes de IronFox -&gt; Seguridad -&gt; Permitir instalación de extensiones.</string>
+    <string name="preference_jit_trusted_principals_enabled">Habilita la Compilación Just-in-Time (JIT) de JavaScript para extensiones</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Habilita JIT para extensiones cuando JIT está deshabilitado globalmente - Cambiar esta configuración reiniciará el navegador</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Habilita las excepciones de protección contra el fingerprinting de IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Relaja las protecciones contra huellas digitales para ciertos sitios web de forma predeterminada, con el fin de reducir interrupciones, utilizando una lista de IronFox - Cambiar esta configuración reiniciará el navegador</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Habilitar las excepciones de la protección contra fingerprinting en Mozilla</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Relaja, por defecto, las protecciones contra huellas digitales para ciertos sitios web, con el objetivo de reducir interrupciones, utilizando una lista de Mozilla - Cambiar esta configuración reiniciará el navegador</string>
+    <string name="spoof_timezone">Simular la zona horaria a UTC‑0</string>
+    <string name="spoof_timezone_summary">Cuando está activado, refuerza la protección contra el fingerprinting</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Habilitar excepciones de simulación de zona horaria de IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Desactiva las excepciones de simulación de zona horaria para ciertos sitios web por defecto, con el fin de reducir roturas – Cambiar esta configuración reiniciará el navegador</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Habilitar excepciones de WebGL de IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Habilita excepciones de WebGL para ciertos sitios web por defecto cuando WebGL está desactivado globalmente, con el fin de reducir roturas – Cambiar esta configuración reiniciará el navegador</string>
 </resources>
