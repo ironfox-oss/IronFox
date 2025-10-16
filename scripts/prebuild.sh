@@ -559,27 +559,20 @@ $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"
 $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution')" docshell/build/components.conf
-echo '' >>toolkit/content/jar.mn
-echo '   content/global/attribution.css' >>toolkit/content/jar.mn
-echo '   content/global/attribution.html' >>toolkit/content/jar.mn
-echo '   content/global/ironfox.css' >>toolkit/content/jar.mn
-echo '   content/global/ironfox.html' >>toolkit/content/jar.mn
+
+# about:policies
+$SED -i -e 's/browser.jar/geckoview.jar/g' browser/components/enterprisepolicies/jar.mn
+mkdir -vp mobile/locales/en-US/browser/policies
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl mobile/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl mobile/locales/en-US/browser/policies/
+echo '' >>mobile/locales/moz.build
+echo 'JAR_MANIFESTS += ["jar.mn"]' >>mobile/locales/moz.build
+echo '' >>mobile/shared/chrome/geckoview/jar.mn
+echo '% content browser %content/browser/' >>mobile/shared/chrome/geckoview/jar.mn
+$SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
 
 # Copy policy definitions/schema/etc. from Firefox for Desktop
 cp -vrf browser/components/enterprisepolicies mobile/android/components
-
-# about:policies
-echo '' >>toolkit/content/jar.mn
-echo '   content/global/policies/aboutPolicies.css              (aboutPolicies.css)' >>toolkit/content/jar.mn
-echo '   content/global/policies/aboutPolicies.html             (aboutPolicies.html)' >>toolkit/content/jar.mn
-echo '   content/global/policies/aboutPolicies.js               (aboutPolicies.js)' >>toolkit/content/jar.mn
-echo '   content/global/policies/policies-active.svg            (policies-active.svg)' >>toolkit/content/jar.mn
-echo '   content/global/policies/policies-documentation.svg            (policies-documentation.svg)' >>toolkit/content/jar.mn
-echo '   content/global/policies/policies-error.svg            (policies-error.svg)' >>toolkit/content/jar.mn
-cp -vf browser/locales/en-US/browser/aboutPolicies.ftl toolkit/locales/en-US/toolkit/about/
-cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl toolkit/locales/en-US/toolkit/about/
-cp -vrf browser/components/enterprisepolicies/content toolkit
-$SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
 
 # Ensure we're building for release
 $SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
