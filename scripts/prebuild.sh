@@ -162,15 +162,20 @@ cargo install --vers "$CBINDGEN_VERSION" cbindgen
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
+
+if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+    $SED -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' app/build.gradle
+    $SED -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' app/src/release/res/xml/shortcuts.xml
+else
+    $SED -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox.nightly"|' app/build.gradle
+    $SED -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox.nightly/' app/src/release/res/xml/shortcuts.xml
+fi
+
 $SED -i \
     -e 's|applicationId "org.mozilla"|applicationId "org.ironfoxoss"|' \
-    -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' \
     -e 's|"sharedUserId": "org.mozilla.firefox.sharedID"|"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|' \
     -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
     app/build.gradle
-$SED -i \
-    -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' \
-    app/src/release/res/xml/shortcuts.xml
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
@@ -251,7 +256,8 @@ rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 # Let it be IronFox
-$SED -i \
+if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+    $SED -i \
     -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
     -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
     -e 's/Agree and continue/Continue/' \
@@ -278,6 +284,36 @@ $SED -i \
     -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
     -e 's/Google Search/Google search/' \
     app/src/*/res/values*/*strings.xml
+else
+    $SED -i \
+    -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
+    -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
+    -e 's/Agree and continue/Continue/' \
+    -e 's/Address bar - Firefox Suggest/Address bar/' \
+    -e 's/Firefox Daylight/IronFox Nightly/; s/Firefox Fenix/IronFox Nightly/; s/Mozilla Firefox/IronFox Nightly/; s/Firefox/IronFox Nightly/g' \
+    -e '/about_content/s/Mozilla/IronFox OSS/' \
+    -e 's/IronFox Nightly Suggest/Firefox Suggest/' \
+    -e 's/Learn more about Firefox Suggest/Learn more about search suggestions/' \
+    -e 's/Suggestions from %1$s/Suggestions from Mozilla/' \
+    -e 's/Notifications for tabs received from other IronFox devices/Notifications for tabs received from other devices/' \
+    -e 's/To send a tab, sign in to IronFox Nightly/To send a tab, sign in to a Firefox-based web browser/' \
+    -e 's/On your computer open IronFox Nightly and/On your computer, open a Firefox-based web browser, and/' \
+    -e 's/Fast and secure web browsing/The private, secure, user first web browser for Android./' \
+    -e 's/Sync is on/Firefox Sync is on/' \
+    -e 's/No account?/No Firefox account?/' \
+    -e 's/to sync IronFox Nightly/to sync your browsing data/' \
+    -e 's/%s will stop syncing with your account/%s will stop syncing with your Firefox account/' \
+    -e 's/%1$s decides when to use secure DNS to protect your privacy/IronFox will use your system’s DNS resolver/' \
+    -e 's/Use your default DNS resolver if there is a problem with the secure DNS provider/Use your default DNS resolver/' \
+    -e 's/You control when to use secure DNS and choose your provider/IronFox will use secure DNS with your chosen provider by default, but might fallback to your system’s DNS resolver if secure DNS is unavailable/' \
+    -e '/preference_doh_off_summary/s/Use your default DNS resolver/Never use secure DNS, even if supported by your system’s DNS resolver/' \
+    -e 's/Learn more about sync/Learn more about Firefox Sync/' \
+    -e 's/search?client=firefox&amp;q=%s/search?q=%s/' \
+    -e 's/You don’t have any tabs open in IronFox Nightly on your other devices/You don’t have any tabs open on your other devices/' \
+    -e 's/Google Search/Google search/' \
+    app/src/*/res/values*/*strings.xml
+fi
+
 $SED -i -e 's/GOOGLE_URL = ".*"/GOOGLE_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 $SED -i -e 's/GOOGLE_US_URL = ".*"/GOOGLE_US_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 $SED -i -e 's/GOOGLE_XX_URL = ".*"/GOOGLE_XX_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
@@ -550,10 +586,15 @@ apply_patches
 # Let it be IronFox (part 2...)
 mkdir -vp mobile/android/branding/ironfox/content
 mkdir -vp mobile/android/branding/ironfox/locales/en-US
-$SED -i -e 's/Fennec/IronFox/g; s/Firefox/IronFox/g' build/moz.configure/init.configure
 $SED -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
 echo '' >>mobile/android/moz.configure
 echo 'include("ironfox.configure")' >>mobile/android/moz.configure
+
+if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+    $SED -i -e 's/Fennec/IronFox/g; s/Firefox/IronFox/g' build/moz.configure/init.configure
+else
+    $SED -i -e 's/Fennec/IronFox Nightly/g; s/Firefox/IronFox Nightly/g' build/moz.configure/init.configure
+fi
 
 $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/global\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
 $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
@@ -928,6 +969,13 @@ $SED -i \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
+if [[ "$IRONFOX_RELEASE" != 1 ]]; then
+    # On nightlies, allow remote debugging to be enabled persistently
+    ## (It's still disabled by default though)
+    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
+    $SED -i -e 's|clearUserPref("devtools.debugger.remote-enabled")|clearUserPref("z99.ignore.boolean")|' mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
+fi
+
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Patch the LLVM source code
@@ -1007,9 +1055,17 @@ fi
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo 'ac_add_options --enable-update-channel=release'
-    echo 'ac_add_options --with-app-basename=IronFox'
-    echo 'ac_add_options --with-app-name=ironfox'
-    echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
+    
+    if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+        echo 'ac_add_options --with-app-basename=IronFox'
+        echo 'ac_add_options --with-app-name=ironfox'
+        echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
+    else
+        echo 'ac_add_options --with-app-basename="IronFox Nightly"'
+        echo 'ac_add_options --with-app-name=ironfox-nightly'
+        echo 'ac_add_options --with-branding=mobile/android/branding/ironfox-nightly'
+    fi
+
     echo 'ac_add_options --with-crashreporter-url="data;"'
     echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
@@ -1044,9 +1100,17 @@ fi
     echo "export ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
     echo "export GRADLE_MAVEN_REPOSITORIES=\"file://$HOME/.m2/repository/\",\"https://plugins.gradle.org/m2/\",\"https://maven.google.com/\""
     echo 'export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1'
-    echo 'export MOZ_APP_BASENAME=IronFox'
-    echo 'export MOZ_APP_NAME=ironfox'
-    echo 'export MOZ_APP_REMOTINGNAME=ironfox'
+
+    if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+        echo 'export MOZ_APP_BASENAME=IronFox'
+        echo 'export MOZ_APP_NAME=ironfox'
+        echo 'export MOZ_APP_REMOTINGNAME=ironfox'
+    else
+        echo 'export MOZ_APP_BASENAME="IronFox Nightly"'
+        echo 'export MOZ_APP_NAME=ironfox-nightly'
+        echo 'export MOZ_APP_REMOTINGNAME=ironfox-nightly'
+    fi
+
     echo 'export MOZ_ARTIFACT_BUILDS='
     echo 'export MOZ_CALLGRIND='
     echo 'export MOZ_CRASHREPORTER='
@@ -1109,5 +1173,8 @@ $SED -i \
 
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
+
+# Copy certain assets shared between release and nightly
+cp -vrf "$patches/gecko-overlay/mobile/android/branding/ironfox/about" mobile/android/branding/ironfox-nightly
 
 popd

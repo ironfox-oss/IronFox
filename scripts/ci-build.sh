@@ -38,6 +38,11 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     export IRONFOX_UBO_ASSETS_URL
 
     echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
+    
+    # Target release
+    export IRONFOX_RELEASE=1
+    
+    echo "Preparing to build IronFox (Release)..."
 fi
 
 # Setup environment variables. See Dockerfile.
