@@ -1,16 +1,20 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
+index a5d0860080..b66dbe2bb4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
+@@ -54,7 +54,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<CheckBoxPreference>(R.string.pref_key_enable_contile).apply {
+-            isVisible = requireContext().settings().showHomepageTopSitesSectionToggle
++            isVisible = false
+             isChecked = context.settings().showContileFeature
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..11ee6d4fb0 100644
+index 312b5b3de3..1efc221321 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -292,7 +292,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      * Indicates if the top sites homepage section settings should be visible
-      */
-     val showHomepageTopSitesSectionToggle: Boolean
--        get() = !overrideUserSpecifiedHomepageSections || enableHomepageSearchBar
-+        get() = false
- 
-     /**
-      * Indicates if the recent tabs homepage section settings should be visible
 @@ -2096,7 +2096,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
