@@ -1,8 +1,8 @@
 diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-index 266f2a2e1f..f40df2edc0 100644
+index 266f2a2e1f..437ef2f414 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 +++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-@@ -30,13 +30,13 @@ const CRASHREPORTER_ENABLED =
+@@ -30,7 +30,7 @@ const CRASHREPORTER_ENABLED =
    AppConstants.MOZ_CRASHREPORTER && AppConstants.MOZ_APP_NAME !== "thunderbird";
  
  const IS_MAIN_PROCESS =
@@ -11,13 +11,6 @@ index 266f2a2e1f..f40df2edc0 100644
  
  const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
  const STUDIES_OPT_OUT_PREF = "app.shield.optoutstudies.enabled";
- 
- const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
--const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
-+const COLLECTION_ID_FALLBACK = "";
- XPCOMUtils.defineLazyPreferenceGetter(
-   lazy,
-   "COLLECTION_ID",
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 index d2af5454d3..45f94697aa 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
@@ -49,49 +42,3 @@ index d2af5454d3..45f94697aa 100644
      return context;
    }
  
-diff --git a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-index ee0ea0baa1..44971bb255 100644
---- a/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-+++ b/toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
-@@ -38,7 +38,7 @@ XPCOMUtils.defineLazyServiceGetter(
- );
- 
- const COLLECTION_ID_PREF = "messaging-system.rsexperimentloader.collection_id";
--const COLLECTION_ID_FALLBACK = "nimbus-desktop-experiments";
-+const COLLECTION_ID_FALLBACK = "";
- const TARGETING_CONTEXT_TELEMETRY_ENABLED_PREF =
-   "nimbus.telemetry.targetingContextEnabled";
- 
-@@ -50,13 +50,13 @@ const NIMBUS_DEBUG_PREF = "nimbus.debug";
- const NIMBUS_VALIDATION_PREF = "nimbus.validation.enabled";
- const NIMBUS_APPID_PREF = "nimbus.appId";
- 
--const SECURE_EXPERIMENTS_COLLECTION_ID = "nimbus-secure-experiments";
-+const SECURE_EXPERIMENTS_COLLECTION_ID = "";
- 
--const EXPERIMENTS_COLLECTION = "experiments";
--const SECURE_EXPERIMENTS_COLLECTION = "secureExperiments";
-+const EXPERIMENTS_COLLECTION = "";
-+const SECURE_EXPERIMENTS_COLLECTION = "";
- 
- const IS_MAIN_PROCESS =
--  Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
-+  false;
- 
- const SECURE_FEATURE_IDS = new Set(["prefFlips", "newtabTrainhopAddon"]);
- const RS_COLLECTION_OPTIONS = {
-diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index f544f44cf7..bdcb43bbdf 100644
---- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
-+++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -4655,8 +4655,8 @@ AMRemoteSettings = {
-    */
-   RS_ENTRIES_MAP: {
-     installTriggerDeprecation: [
--      "extensions.InstallTriggerImpl.enabled",
--      "extensions.InstallTrigger.enabled",
-+//      "extensions.InstallTriggerImpl.enabled",
-+//      "extensions.InstallTrigger.enabled",
-     ],
-     quarantinedDomains: ["extensions.quarantinedDomains.list"],
-   },

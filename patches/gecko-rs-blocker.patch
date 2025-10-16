@@ -1,8 +1,8 @@
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
-index 51fbfbea06..6f507fddfc 100644
+index 98c72c71a4..bca10097a4 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
-@@ -229,6 +229,11 @@ class AttachmentDownloader extends Downloader {
+@@ -212,6 +212,11 @@ class AttachmentDownloader extends Downloader {
     * @see Downloader.download
     */
    async download(record, options) {
@@ -14,7 +14,7 @@ index 51fbfbea06..6f507fddfc 100644
      await lazy.UptakeTelemetry.report(
        TELEMETRY_COMPONENT,
        lazy.UptakeTelemetry.STATUS.DOWNLOAD_START,
-@@ -658,6 +663,10 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -653,6 +658,10 @@ export class RemoteSettingsClient extends EventEmitter {
        return;
      }
  
@@ -25,7 +25,7 @@ index 51fbfbea06..6f507fddfc 100644
      // We want to know which timestamp we are expected to obtain in order to leverage
      // cache busting. We don't provide ETag because we don't want a 304.
      const { changes } = await lazy.Utils.fetchLatestChanges(
-@@ -1045,6 +1054,14 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -1040,6 +1049,14 @@ export class RemoteSettingsClient extends EventEmitter {
     * Import the JSON files from services/settings/dump into the local DB.
     */
    async _importJSONDump() {

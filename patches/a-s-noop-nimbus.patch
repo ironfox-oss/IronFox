@@ -1,30 +1,23 @@
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index f5d173c..fef0ffe 100644
+index f77d82a..dbc4ce5 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -49,7 +49,7 @@ import java.io.File
- import java.io.IOException
- import kotlin.system.measureTimeMillis
- 
--private const val EXPERIMENT_COLLECTION_NAME = "nimbus-mobile-experiments"
-+private const val EXPERIMENT_COLLECTION_NAME = ""
- const val NIMBUS_DATA_DIR: String = "nimbus_data"
- 
- /**
-@@ -141,10 +141,10 @@ open class Nimbus(
-     private val nimbusClient: NimbusClientInterface
+@@ -160,11 +160,11 @@ open class Nimbus(
+         }
  
      override var globalUserParticipation: Boolean
 -        get() = nimbusClient.getGlobalUserParticipation()
 +        get() = false
          set(active) {
              dbScope.launch {
--                setGlobalUserParticipationOnThisThread(active)
-+//                setGlobalUserParticipationOnThisThread(active)
+-                setExperimentParticipationOnThisThread(active)
+-                setRolloutParticipationOnThisThread(active)
++//                setExperimentParticipationOnThisThread(active)
++//                setRolloutParticipationOnThisThread(active)
              }
          }
  
-@@ -275,7 +275,7 @@ open class Nimbus(
+@@ -295,7 +295,7 @@ open class Nimbus(
  
      override fun isFetchEnabled() = withCatchAll("isFetchEnabled") {
          nimbusClient.isFetchEnabled()
@@ -33,16 +26,3 @@ index f5d173c..fef0ffe 100644
  
      @WorkerThread
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-index cecfb84..6f86472 100644
---- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-+++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-@@ -115,7 +115,7 @@ interface NimbusInterface : FeaturesInterface, NimbusMessagingInterface, NimbusE
-      * Application developers should allow users to opt out with [globalUserParticipation]
-      * instead.
-      */
--    fun isFetchEnabled(): Boolean = true
-+    fun isFetchEnabled(): Boolean = false
- 
-     /**
-      * Calculates the experiment enrolment from experiments from the last `fetchExperiments` or

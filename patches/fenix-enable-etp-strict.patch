@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..a8244b2a73 100644
+index 312b5b3de3..f65f620019 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -989,10 +989,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1035,10 +1035,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
@@ -17,7 +17,7 @@ index a46a154665..a8244b2a73 100644
  
      var shouldEnableGlobalPrivacyControl by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_enable_global_privacy_control),
-@@ -1099,20 +1099,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1145,20 +1145,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  

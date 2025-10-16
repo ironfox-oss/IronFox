@@ -25,10 +25,10 @@ index e7e19273f9..2e6139bd25 100644
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 5340aa5258..a9c1ac7cdf 100644
+index 29cd599a82..be0162a7bd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -50,7 +50,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
+@@ -48,7 +48,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
  import mozilla.components.feature.syncedtabs.commands.GlobalSyncedTabsCommandsProvider
  import mozilla.components.feature.top.sites.TopSitesFrecencyConfig
  import mozilla.components.feature.top.sites.TopSitesProviderConfig
@@ -37,7 +37,7 @@ index 5340aa5258..a9c1ac7cdf 100644
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -681,10 +681,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -688,10 +688,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      // This is added here because we need gecko to load the extension first.
                      //
                      // TODO: Bug 1953359 - remove the code below in the next release.

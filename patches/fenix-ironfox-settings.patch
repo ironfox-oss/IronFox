@@ -1,27 +1,34 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..8af14d7cf4 100644
+index 7d2ef5a331..698e4bf9d4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -198,6 +198,30 @@ class Core(
+@@ -196,6 +196,37 @@ class Core(
              dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
 +            accessibilityEnabled = context.settings().accessibilityEnabled,
++            addressAutofillEnabled = context.settings().shouldAutofillAddressDetails,
 +            cacheEnabled = context.settings().cacheEnabled,
++            cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails,
 +            emeEnabled = context.settings().emeEnabled,
++            fppOverridesIronFoxEnabled = context.settings().fppOverridesIronFoxEnabled,
++            fppOverridesIronFoxTimezoneEnabled = context.settings().fppOverridesIronFoxTimezoneEnabled,
++            fppOverridesIronFoxWebGLEnabled = context.settings().fppOverridesIronFoxWebGLEnabled,
++            fppOverridesMozillaEnabled = context.settings().fppOverridesMozillaEnabled,
 +            ipv6Enabled = context.settings().ipv6Enabled,
 +            javascriptEnabled = context.settings().javascriptEnabled,
 +            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitIonWasmEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitMainProcessEnabled = context.settings().javascriptJitEnabled,
 +            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitEnabled,
++            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled,
++            passwordManagerEnabled = context.settings().shouldPromptToSaveLogins,
 +            pdfjsDisabled = context.settings().pdfjsDisabled,
 +            printEnabled = context.settings().printEnabled,
 +            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
 +            spoofEnglish = context.settings().spoofEnglish,
++            spoofTimezone = context.settings().spoofTimezone,
 +            svgEnabled = context.settings().svgEnabled,
 +            translationsEnabled = context.settings().translationsEnabled,
 +            translationsSupported = context.settings().translationsEnabled,
@@ -33,7 +40,7 @@ index 823b5909fa..8af14d7cf4 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -231,6 +255,7 @@ class Core(
+@@ -229,6 +260,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -43,10 +50,10 @@ index 823b5909fa..8af14d7cf4 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..6b8c035731
+index 0000000000..b059d34753
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,686 @@
+@@ -0,0 +1,852 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -147,8 +154,38 @@ index 0000000000..6b8c035731
 +            true
 +        }
 +
++        /**
++         * Indicates whether or not we should enable our WebGL overrides
++         * Default: true
++         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled
++         */
++        val fppOverridesIronFoxWebGLEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_fpp_overrides_ironfox_webgl_enabled,
++        )
++
++        fppOverridesIronFoxWebGLEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxWebGLEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.fppOverridesIronFoxWebGLEnabled = fppOverridesIronFoxWebGLEnabled as Boolean
++            components.core.engine.settings.fppOverridesIronFoxWebGLEnabled = fppOverridesIronFoxWebGLEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
 +        /*** Privacy ***/
-+        
++
 +        /**
 +         * Indicates whether or not we should enable disk cache
 +         * Default: false
@@ -169,7 +206,67 @@ index 0000000000..6b8c035731
 +        }
 +
 +        /**
-+         * Indicates whether or not we should enable spoof the user's locale to en-US
++         * Indicates whether or not we should enable our fingerprinting protection overrides
++         * Default: true
++         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled
++         */
++        val fppOverridesIronFoxEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_fpp_overrides_ironfox_enabled,
++        )
++
++        fppOverridesIronFoxEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.fppOverridesIronFoxEnabled = fppOverridesIronFoxEnabled as Boolean
++            components.core.engine.settings.fppOverridesIronFoxEnabled = fppOverridesIronFoxEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable Mozilla's fingerprinting protection overrides
++         * Default: true
++         * Gecko preference(s) impacted: privacy.fingerprintingProtection.remoteOverrides.enabled
++         */
++        val fppOverridesMozillaEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_fpp_overrides_mozilla_enabled,
++        )
++
++        fppOverridesMozillaEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesMozillaEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.fppOverridesMozillaEnabled = fppOverridesMozillaEnabled as Boolean
++            components.core.engine.settings.fppOverridesMozillaEnabled = fppOverridesMozillaEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should spoof the user's locale to en-US
 +         * Default: true
 +         * Gecko preference(s) impacted: privacy.spoof_english
 +         */
@@ -184,6 +281,55 @@ index 0000000000..6b8c035731
 +
 +            settings.spoofEnglish = spoofEnglish as Boolean
 +            components.core.engine.settings.spoofEnglish = spoofEnglish
++
++            true
++        }
++
++        /**
++         * Indicates whether or not we should enable our timezone spoofing overrides
++         * Default: true
++         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled
++         */
++        val fppOverridesIronFoxTimezoneEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_fpp_overrides_ironfox_timezone_enabled,
++        )
++
++        fppOverridesIronFoxTimezoneEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxTimezoneEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.fppOverridesIronFoxTimezoneEnabled = fppOverridesIronFoxTimezoneEnabled as Boolean
++            components.core.engine.settings.fppOverridesIronFoxTimezoneEnabled = fppOverridesIronFoxTimezoneEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should spoof the user's timezone to UTC-0
++         * Default: false
++         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled
++         */
++        val spoofTimezonePreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_spoof_timezone,
++        )
++
++        spoofTimezonePreference.setOnPreferenceChangeListener { preference, spoofTimezone ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.spoofTimezone = spoofTimezone as Boolean
++            components.core.engine.settings.spoofTimezone = spoofTimezone
 +
 +            true
 +        }
@@ -205,7 +351,6 @@ index 0000000000..6b8c035731
 +            val components = preference.context.components
 +
 +            settings.xpinstallEnabled = xpinstallEnabled
-+            
 +            components.core.engine.settings.xpinstallEnabled = xpinstallEnabled
 +
 +            Toast.makeText(
@@ -225,7 +370,7 @@ index 0000000000..6b8c035731
 +        /**
 +         * Indicates whether or not we should enable JavaScript Just-in-time Compilation (JIT)
 +         * Default: false
-+         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jit_trustedprincipals, javascript.options.jithints, javascript.options.main_process_disable_jit, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
++         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jithints, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
 +         */
 +        val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
 +            R.string.pref_key_jit_enabled,
@@ -241,9 +386,37 @@ index 0000000000..6b8c035731
 +            components.core.engine.settings.javascriptJitHintsEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitIonEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitIonWasmEnabled = javascriptJitEnabled
-+            components.core.engine.settings.javascriptJitMainProcessEnabled = javascriptJitEnabled
 +            components.core.engine.settings.javascriptJitNativeRegexpEnabled = javascriptJitEnabled
-+            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitEnabled
++
++            Toast.makeText(
++                context,
++                getString(R.string.quit_application),
++                Toast.LENGTH_LONG,
++            ).show()
++            Handler(Looper.getMainLooper()).postDelayed(
++                {
++                    exitProcess(0)
++                },
++                DEFAULT_EXIT_DELAY,
++            )
++            true
++        }
++
++        /**
++         * If JavaScript Just-in-time Compilation (JIT) is disabled globally, indicates whether or not we should still enable JIT for extensions
++         * Default: false
++         * Gecko preference(s) impacted: javascript.options.jit_trustedprincipals
++         */
++        val javascriptJitTrustedPrincipalsEnabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_jit_trusted_principals_enabled,
++        )
++
++        javascriptJitTrustedPrincipalsEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitTrustedPrincipalsEnabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitTrustedPrincipalsEnabled as Boolean
++            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitTrustedPrincipalsEnabled
 +
 +            Toast.makeText(
 +                context,
@@ -734,10 +907,10 @@ index 0000000000..6b8c035731
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 03d80ed014..7c53da22c8 100644
+index 4d499da8de..636cefadda 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -592,6 +592,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -582,6 +582,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
          setupHomepagePreference(settings)
          setupTrackingProtectionPreference(settings)
          setupDnsOverHttpsPreference(settings)
@@ -745,7 +918,7 @@ index 03d80ed014..7c53da22c8 100644
      }
  
      /**
-@@ -790,6 +791,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -780,6 +781,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
              }
      }
  
@@ -766,10 +939,10 @@ index 03d80ed014..7c53da22c8 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..98e4a728ff 100644
+index 312b5b3de3..6568cf65f1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -74,6 +74,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
+@@ -72,6 +72,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
  import java.security.InvalidParameterException
  import java.util.UUID
  import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -777,7 +950,7 @@ index a46a154665..98e4a728ff 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2751,4 +2752,141 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2793,4 +2794,171 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -802,6 +975,26 @@ index a46a154665..98e4a728ff 100644
 +        default = true,
 +    )
 +
++    var fppOverridesIronFoxEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_enabled),
++        default = true,
++    )
++
++    var fppOverridesIronFoxTimezoneEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_timezone_enabled),
++        default = true,
++    )
++
++    var fppOverridesIronFoxWebGLEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_webgl_enabled),
++        default = true,
++    )
++
++    var fppOverridesMozillaEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_mozilla_enabled),
++        default = true,
++    )
++
 +    var ipv6Enabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_ipv6_enabled),
 +        default = true,
@@ -814,6 +1007,11 @@ index a46a154665..98e4a728ff 100644
 +
 +    var javascriptJitEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
++        default = false,
++    )
++
++    var javascriptJitTrustedPrincipalsEnabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_jit_trusted_principals_enabled),
 +        default = false,
 +    )
 +
@@ -864,7 +1062,12 @@ index a46a154665..98e4a728ff 100644
 +
 +    var spoofEnglish by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
-+        default = true
++        default = true,
++    )
++
++    var spoofTimezone by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_spoof_timezone),
++        default = false,
 +    )
 +
 +    var svgEnabled by booleanPreference(
@@ -950,10 +1153,10 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..8f64d806a2
+index 0000000000..d3b6e1cb3c
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,256 @@
+@@ -0,0 +1,306 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1018,6 +1221,14 @@ index 0000000000..8f64d806a2
 +            android:key="@string/pref_key_webgl_enabled"
 +            android:title="@string/preference_webgl_enabled"
 +            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable our WebGL overrides -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_fpp_overrides_ironfox_webgl_enabled"
++            android:summary="@string/preference_fpp_overrides_ironfox_webgl_summary"
++            android:title="@string/preference_fpp_overrides_ironfox_webgl_enabled"
++            app:iconSpaceReserved="false" />
 +    </androidx.preference.PreferenceCategory>
 +
 +    <!-- Privacy -->
@@ -1060,12 +1271,45 @@ index 0000000000..8f64d806a2
 +            android:title="@string/preference_cache_enabled"
 +            app:iconSpaceReserved="false" />
 +
++        <!-- Whether we should enable our FPP overrides -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_fpp_overrides_ironfox_enabled"
++            android:summary="@string/preference_fpp_overrides_ironfox_summary"
++            android:title="@string/preference_fpp_overrides_ironfox_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable Mozilla's FPP overrides -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_fpp_overrides_mozilla_enabled"
++            android:summary="@string/preference_fpp_overrides_mozilla_summary"
++            android:title="@string/preference_fpp_overrides_mozilla_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable our timezone spoofing overrides -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:dependency="@string/pref_key_spoof_timezone"
++            android:key="@string/pref_key_fpp_overrides_ironfox_timezone_enabled"
++            android:summary="@string/preference_fpp_overrides_ironfox_timezone_summary"
++            android:title="@string/preference_fpp_overrides_ironfox_timezone_enabled"
++            app:iconSpaceReserved="false" />
++
 +        <!-- Whether we should spoof the user's locale to en-US -->
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="true"
 +            android:key="@string/pref_key_spoof_english"
 +            android:summary="@string/tor_spoof_english_summary"
 +            android:title="@string/tor_spoof_english"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should spoof the user's timezone to UTC-0 -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_spoof_timezone"
++            android:summary="@string/spoof_timezone_summary"
++            android:title="@string/spoof_timezone"
 +            app:iconSpaceReserved="false" />
 +    </androidx.preference.PreferenceCategory>
 +
@@ -1091,6 +1335,15 @@ index 0000000000..8f64d806a2
 +            android:key="@string/pref_key_jit_enabled"
 +            android:summary="@string/preference_jit_enabled_summary"
 +            android:title="@string/preference_jit_enabled"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should enable JavaScript Just-in-time Compilation (JIT) for extensions -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="false"
++            android:dependency="@string/pref_key_javascript_enabled"
++            android:key="@string/pref_key_jit_trusted_principals_enabled"
++            android:summary="@string/preference_jit_trusted_principals_enabled_summary"
++            android:title="@string/preference_jit_trusted_principals_enabled"
 +            app:iconSpaceReserved="false" />
 +
 +        <!-- Whether we should enable printing capabilities -->

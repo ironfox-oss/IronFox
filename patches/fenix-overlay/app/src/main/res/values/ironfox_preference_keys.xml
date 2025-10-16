@@ -27,6 +27,10 @@
     <!-- Firefox Translations -->
     <string name="pref_key_translations_enabled" translatable="false">pref_key_translations_enabled</string>
 
+    <!-- FPP overrides -->
+    <string name="pref_key_fpp_overrides_ironfox_enabled" translatable="false">pref_key_fpp_overrides_ironfox_enabled</string>
+    <string name="pref_key_fpp_overrides_mozilla_enabled" translatable="false">pref_key_fpp_overrides_mozilla_enabled</string>
+
     <!-- IPv6 -->
     <string name="pref_key_ipv6_enabled" translatable="false">pref_key_ipv6_enabled</string>
 
@@ -35,6 +39,7 @@
 
     <!-- JavaScript JIT -->
     <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
+    <string name="pref_key_jit_trusted_principals_enabled" translatable="false">pref_key_jit_trusted_principals_enabled</string>
 
     <!-- PDF.js -->
     <string name="pref_key_pdfjs_disabled" translatable="false">pref_key_pdfjs_disabled</string>
@@ -55,6 +60,10 @@
     <!-- Spoof locale to English -->
     <string name="pref_key_spoof_english" translatable="false">pref_key_spoof_english</string>
 
+    <!-- Spoof timezone to UTC-0 -->
+    <string name="pref_key_spoof_timezone" translatable="false">pref_key_spoof_timezone</string>
+    <string name="pref_key_fpp_overrides_ironfox_timezone_enabled" translatable="false">pref_key_fpp_overrides_ironfox_timezone_enabled</string>
+
     <!-- SVG -->
     <string name="pref_key_svg_enabled" translatable="false">pref_key_svg_enabled</string>
 
@@ -67,6 +76,7 @@
 
     <!-- WebGL -->
     <string name="pref_key_webgl_enabled" translatable="false">pref_key_webgl_enabled</string>
+    <string name="pref_key_fpp_overrides_ironfox_webgl_enabled" translatable="false">pref_key_fpp_overrides_ironfox_webgl_enabled</string>
 
     <!-- WebRTC -->
     <string name="pref_key_webrtc_enabled" translatable="false">pref_key_webrtc_enabled</string>

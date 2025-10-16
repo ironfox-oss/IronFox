@@ -38,7 +38,7 @@ index dcf865c539..0de04f224f 100644
  
  UNIFIED_SOURCES += [
 diff --git a/toolkit/locales/jar.mn b/toolkit/locales/jar.mn
-index 207e007d2e..72b9c56f72 100644
+index 207e007d2e..0536d725ef 100644
 --- a/toolkit/locales/jar.mn
 +++ b/toolkit/locales/jar.mn
 @@ -11,7 +11,7 @@
@@ -46,7 +46,7 @@ index 207e007d2e..72b9c56f72 100644
    layoutdebug/layoutdebug.ftl                      (../../layout/tools/layout-debug/ui/content/layoutdebug.ftl)
  #endif
 -#if defined(NIGHTLY_BUILD)
-+#ifndef NIGHTLY_BUILD
++#if !defined(NIGHTLY_BUILD)
    preview/aboutInference.ftl                       (../components/aboutinference/content/aboutInference.ftl)
  #endif
  

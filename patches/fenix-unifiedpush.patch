@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 4d40600921..6a35884dd9 100644
+index 1753bcbd86..6cb5632fe9 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -93,6 +93,7 @@ projects:
@@ -11,23 +11,22 @@ index 4d40600921..6a35884dd9 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 17f4dab078..a2222f7a40 100644
+index 1f26227889..b00f946e80 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -646,6 +646,8 @@ dependencies {
-     implementation project(':components:lib-dataprotect')
-     testImplementation project(':components:support-test-fakes')
+@@ -745,6 +745,7 @@ dependencies {
+     androidTestUtil libs.androidx.test.orchestrator
  
+     lintChecks project(':components:tooling-lint')
 +    implementation project(':components:feature-unifiedpush')
-+
-     debugImplementation libs.leakcanary
-     debugImplementation libs.androidx.compose.ui.tooling
+ }
  
+ protobuf {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 5340aa5258..e36e63ac64 100644
+index 29cd599a82..efd2987139 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -39,7 +39,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
+@@ -37,7 +37,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
  import mozilla.components.concept.base.crash.Breadcrumb
  import mozilla.components.concept.engine.webextension.WebExtension
  import mozilla.components.concept.engine.webextension.isUnsupported
@@ -36,7 +35,7 @@ index 5340aa5258..e36e63ac64 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -483,7 +483,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -497,7 +497,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -234,10 +233,10 @@ index f25cf4442e..090d1c7982 100644
          // Ignore empty push messages.
          val rawBytes = message ?: return
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
-index 6681840f10..35aa2dab6c 100644
+index 5980161e96..3fde1ab08d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
-@@ -12,19 +12,21 @@ import mozilla.components.concept.engine.Engine
+@@ -12,23 +12,25 @@ import mozilla.components.concept.engine.Engine
  import mozilla.components.concept.engine.webpush.WebPushDelegate
  import mozilla.components.concept.engine.webpush.WebPushHandler
  import mozilla.components.concept.engine.webpush.WebPushSubscription
@@ -259,28 +258,32 @@ index 6681840f10..35aa2dab6c 100644
 -    private val pushFeature: AutoPushFeature,
 +    private val pushFeature: Pusher,
      private val coroutineScope: CoroutineScope = MainScope(),
+     stringDecoder: (String) -> ByteArray =
+         { s -> Base64.decode(s.toByteArray(), Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP) },
+     byteArrayEncoder: (ByteArray) -> String =
+         { ba -> Base64.encodeToString(ba, Base64.URL_SAFE or Base64.NO_PADDING or Base64.NO_WRAP) },
 -) : AutoPushFeature.Observer {
 +) : PushObserver {
  
      private var handler: WebPushHandler? = null
-     private val delegate = WebPushEngineDelegate(pushFeature)
-@@ -53,7 +55,7 @@ class WebPushEngineIntegration(
+     private val delegate = WebPushEngineDelegate(pushFeature, stringDecoder, byteArrayEncoder)
+@@ -57,7 +59,7 @@ class WebPushEngineIntegration(
  }
  
  internal class WebPushEngineDelegate(
 -    private val pushFeature: AutoPushFeature,
 +    private val pushFeature: PushSubscriptionProcessor,
+     private val stringDecoder: (String) -> ByteArray,
+     private val byteArrayEncoder: (ByteArray) -> String,
  ) : WebPushDelegate {
-     private val logger = Logger("WebPushEngineDelegate")
- 
-@@ -95,7 +97,7 @@ internal class WebPushEngineDelegate(
+@@ -101,7 +103,7 @@ internal class WebPushEngineDelegate(
      }
  }
  
--internal fun AutoPushSubscription.toEnginePushSubscription() = WebPushSubscription(
-+internal fun PushSubscription.toEnginePushSubscription() = WebPushSubscription(
+-internal fun AutoPushSubscription.toEnginePushSubscription(stringDecoder: (String) -> ByteArray) = WebPushSubscription(
++internal fun PushSubscription.toEnginePushSubscription(stringDecoder: (String) -> ByteArray) = WebPushSubscription(
      scope = this.scope,
-     publicKey = this.publicKey.toDecodedByteArray(),
+     publicKey = stringDecoder(this.publicKey),
      endpoint = this.endpoint,
 diff --git a/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/components/PushTest.kt b/mobile/android/fenix/app/src/test/java/org/mozilla/fenix/components/PushTest.kt
 new file mode 100644

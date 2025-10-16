@@ -25,7 +25,7 @@ index 593cf97b04..21a2b1aa53 100644
      importPrefBranch(
        aPrefBranch + "whitelist.add",
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index f544f44cf7..1ed6c60e65 100644
+index 2c1e187d14..b515a76a80 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
 @@ -93,6 +93,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -86,10 +86,10 @@ index 680aa57c07..47c8f5d5a5 100644
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',
 diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-index 70bf9cdbab..df3dc630d0 100644
+index be40900f37..bf33bf4596 100644
 --- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-@@ -2272,6 +2272,7 @@ export const XPIDatabase = {
+@@ -2275,6 +2275,7 @@ export const XPIDatabase = {
     * manager for the user to change later.
     */
    importPermissions() {

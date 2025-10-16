@@ -9,11 +9,11 @@
     <string name="if_preferences_secret">Geheime Einstellungen</string>
     <string name="if_preferences_security">Sicherheit</string>
     <string name="preference_cache_enabled">Festplattenpuffer aktivieren</string>
-    <string name="preferences_debug_settings_eme_enabled">Verschlüsselte Medienerweiterungen aktivieren (EME)</string>
+    <string name="preferences_debug_settings_eme_enabled">Verschlüsselte Medienerweiterungen (EME) aktivieren</string>
     <string name="preferences_debug_settings_widevine_enabled">Widevine CDM aktivieren</string>
     <string name="preference_ipv6_enabled">IPv6-Netzwerkverbindungen aktivieren</string>
     <string name="preference_javascript_enabled">JavaScript aktivieren</string>
-    <string name="preference_jit_enabled">JavaScript Just-in-time Kompilierung aktivieren (JIT)</string>
+    <string name="preference_jit_enabled">JavaScript Just-in-time-Kompilierung (JIT) aktivieren</string>
     <string name="preference_accessibility_enabled">Barrierefreiheitsdienste aktivieren</string>
     <string name="preference_referer_policy">Cross-Origin-Referer-Richtlinie</string>
     <string name="preference_referer_policy_summary">Konfigurieren Sie das Verhalten von Cross-Origin-Referern</string>
@@ -38,7 +38,7 @@
     <string name="tor_spoof_english_caption">Verbessern Sie Ihre Privatsphäre, indem Sie die Spracheinstellungen Ihres Geräts maskieren.</string>
     <string name="tor_spoof_english_description">Fordern Sie englische (en-US) Versionen von Webseiten an. Dadurch erscheint Ihr Browser weniger einzigartig, was den Schutz vor Fingerprinting-Techniken stärkt, die Nutzer anhand ihrer Spracheinstellungen identifizieren.</string>
     <string name="tor_spoof_english">Englische Versionen von Webseiten anfordern</string>
-    <string name="tor_spoof_english_summary">Wenn aktiviert, verstärkt den Schutz vor Fingerprinting</string>
+    <string name="tor_spoof_english_summary">Wenn aktiviert, verstärkt es den Schutz vor Fingerprinting</string>
     <string name="preference_svg_enabled">Skalierbare Vektorgrafiken (SVG) aktivieren</string>
     <string name="preferences_debug_settings_unifiedpush">UnifiedPush aktivieren</string>
     <string name="preferences_unifiedpush">UnifiedPush verwenden</string>
@@ -57,6 +57,11 @@
     <string name="onboarding_state_installing_ublock_error">Bei der Installation von uBlock Origin ist ein Fehler aufgetreten: %1$s</string>
     <string name="onboarding_action_retry">Wiederholen</string>
     <string name="preference_collections_enabled">Sammlungen aktivieren</string>
-    <string name="preference_translations_enabled">Firefox Übersetzungen aktivieren</string>
+    <string name="preference_translations_enabled">Firefox-Übersetzungen aktivieren</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Die Installation von Add-ons ist derzeit deaktiviert. Falls gewünscht, können Sie die Installation auf Kosten der Sicherheit aktivieren, indem Sie zu Einstellungen -&gt; IronFox -&gt; IronFox-Einstellungen -&gt; Sicherheit -&gt; Installation von Add-ons zulassen navigieren.</string>
+    <string name="preference_jit_trusted_principals_enabled">JavaScript Just-in-time-Kompilierung (JIT) für Erweiterungen aktivieren</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Aktiviert JIT für Erweiterungen, wenn JIT ansonsten global deaktiviert ist. Durch Ändern dieser Einstellung wird Ihr Browser neu gestartet</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von IronFox), um Probleme zu vermeiden. Änderung dieser Einstellung startet den Browser neu.</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von Mozilla), um Probleme zu vermeiden. Änderung dieser Einstellung startet den Browser neu.</string>
+    <string name="spoof_timezone_summary">Wenn aktiviert, verstärkt es den Schutz vor Fingerprinting</string>
 </resources>

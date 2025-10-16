@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 823b5909fa..64b41ea18c 100644
+index 7d2ef5a331..a606b48bba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -86,12 +86,12 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
+@@ -85,12 +85,12 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
  import mozilla.components.service.digitalassetlinks.local.StatementRelationChecker
  import mozilla.components.service.location.LocationService
  import mozilla.components.service.location.MozillaLocationService
@@ -17,7 +17,7 @@ index 823b5909fa..64b41ea18c 100644
  import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
  import mozilla.components.service.pocket.PocketStoriesConfig
  import mozilla.components.service.pocket.PocketStoriesRequestConfig
-@@ -581,7 +581,7 @@ class Core(
+@@ -579,7 +579,7 @@ class Core(
      }
      val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
  
@@ -26,7 +26,7 @@ index 823b5909fa..64b41ea18c 100644
          MarsTopSitesProvider(
              context = context,
              client = client,
-@@ -610,7 +610,7 @@ class Core(
+@@ -608,7 +608,7 @@ class Core(
              provider = marsTopSitesProvider,
              frequency = Frequency(3, TimeUnit.HOURS),
          )
@@ -35,7 +35,7 @@ index 823b5909fa..64b41ea18c 100644
  
      val topSitesStorage by lazyMonitored {
          val defaultTopSites = mutableListOf<Pair<String, String>>()
-@@ -638,7 +638,7 @@ class Core(
+@@ -636,7 +636,7 @@ class Core(
          DefaultTopSitesStorage(
              pinnedSitesStorage = pinnedSiteStorage,
              historyStorage = historyStorage,

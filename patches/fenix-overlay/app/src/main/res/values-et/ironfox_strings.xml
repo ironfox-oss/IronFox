@@ -60,4 +60,16 @@
     <string name="preference_translations_enabled">Kasuta Firefoxi tõlkelahendust</string>
     <string name="preference_collections_enabled">Luba kollektsioonide kasutamine</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Lisamoodulite paigaldamine on hetkel keelatud. Kui seda siiski soovid, siis arvesta turvalisuse riskiga ning lülita see võimalus sisse valikust: Seadistused (Sätted) -&gt; IronFox -&gt; IronFoxi seadistused -&gt; Turvalisus -&gt; Luba lisamoodulite paigaldamine.</string>
+    <string name="spoof_timezone">Häma ajavöönd Greenwichi ajaks (UTC-0)</string>
+    <string name="spoof_timezone_summary">Kui see valik on kasutusel, siis parandab see kaitset sinu täpsema tuvastamise vastu</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Lõdvenda sinu täpsema tuvastamise vastaseid meetmeid, mille on koostanud IronFox</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Lõdvenda sinu täpsema tuvastamise vastaseid meetmeid, mille on koostanud Mozilla Foundation</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Vältimaks veebisaitide mittetoimimist, ära kasuta tuvastusvastaseid meetmeid Mozilla Foundationi koostatud loendi alusel. Eeldab brauseri uuesti käivitamist</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Vältimaks veebisaitide mittetoimimist, ära kasuta tuvastusvastaseid meetmeid IronFoxi tiimi koostatud loendi alusel. Eeldab brauseri uuesti käivitamist</string>
+    <string name="preference_jit_trusted_principals_enabled">Kasuta JavaScripti dünaamilist kompileerimist (Just-in-time Compilation ehk JIT) brauseri lisamoodulite puhul</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Võimaldab JavaScripti dünaamilise kompileerimise lülitada brauseri lisamoodulite jaoks sisse siis, kui ta muidu on keelatud</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Lõdvenda ajavööndi hämamise võtteid loendi alusel, mille on koostanud IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Vältimaks veebisaitide mittetoimimist, ära kasuta ajavööndi hämamist IronFoxi tiimi koostatud loendi alusel. Eeldab brauseri uuesti käivitamist</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Lõdvenda sinu täpsema tuvastamise vastaseid meetmeid WebGL-i lubamise kontekstis, mille on koostanud IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Vältimaks veebisaitide mittetoimimist, luba mõnedes saitides WebGL-i kasutamist IronFoxi koostatud loendi alusel. Muus osas jääb WebGL keelatuks. Eeldab brauseri uuesti käivitamist</string>
 </resources>
