@@ -12,6 +12,7 @@
 	- [Why does IronFox crash on GrapheneOS?](#why-does-ironfox-crash-on-grapheneos)
 	- [Can I use FIDO/U2F/Passkeys?](#can-i-use-fidou2fpasskeys)
 	- [Can I receive push notifications?](#can-i-receive-push-notifications)
+	- [Why are certain preferences locked?](#why-are-certain-preferences-locked)
 	- [Why isn't Resist Fingerprinting (RFP) enabled?](#why-isnt-resist-fingerprinting-rfp-enabled)
 	- [Why can't I install add-ons/extensions?](#why-cant-i-install-add-onsextensions)
 	- [What add-ons/extensions should I install?](#what-add-onsextensions-should-i-install)
@@ -125,6 +126,24 @@ After setting up your distributor, you can enable support for UnifiedPush by sel
 **NOTE**: By default, IronFox blocks prompts from websites to enable web notifications. If you'd like to receive notifications from websites, you can re-enable notifications prompts by navigating to `Privacy and security` -> `Site settings` -> `Permissions` -> `Notification` in settings, and selecting `Ask to allow`.
 
 **NOTE**: To receive notifications while IronFox is in the background, [**GrapheneOS** users might unfortunately need to disable the `Dynamic code loading via storage` exploit protection for IronFox](https://gitlab.com/ironfox-oss/IronFox/-/issues/124). You can do this by navigating to IronFox's `App info` *(You can get there by holding IronFox's app icon and selecting `App info`, or by navigating to `Settings` -> `Apps`, and finding + selecting `IronFox`), navigating to `Exploit protection` -> `Dynamic code loading via storage`, and selecting `Allowed`)*.
+
+## Why are certain preferences locked?
+
+Due to the nature of Fenix *(Firefox for Android)*'s design, Gecko preferences don't quite work the same as they do on Firefox for Desktop/how you may expect.
+
+For background, Firefox for Desktop is very deeply integrated with the Gecko engine. Many Gecko preferences directly control/influence UI behavior and elements, and UI settings/behavior itself also directly influences Gecko preferences/behavior.
+
+For Fenix, this is **not** the case. Gecko is implemented through [the separate `Engine-Gecko` library](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/browser/engine-gecko/README.md), which itself implements [the separate `GeckoView` library](https://mozilla.github.io/geckoview/)... this provides multiple degrees of separation between the browser frontend/UI and the Gecko engine backend.
+
+What this means for users is that while Fenix's UI frontend/UI settings *can*, and often *do*, modify Gecko preferences: this only goes that one way. Gecko preferences are limited to controlling the behavior of the underlying browser engine itself, and they can't directly modify Fenix's behavior like they would on Desktop.
+
+This can be problematic, as it means that Fenix settings can get out of sync with Gecko preferences. For example, from Fenix's UI settings, a user could leave the `Cookie Banner Blocker in private browsing` toggle enabled, while setting the `cookiebanners.service.mode.privateBrowsing` pref from `about:config` to `0` *(Disabled)*. As you might imagine, the Fenix setting and Gecko preference not matching like this can lead to unexpected behavior and bugs/glitches.
+
+Another concern is that Gecko preferences controlled by Fenix settings like this are also *reset* on every browser launch. Back to the previous example: A user might set the `cookiebanners.service.mode.privateBrowsing` pref to `0` from `about:config`, and it might look like it works to disable the feature *(like it does on ex. Firefox for Desktop)*. However, unbeknownst to them, if they left the `Cookie Banner Blocker in private browsing` UI setting enabled, the pref would simply reset back to `1` *(Enabled)* the next time they launch the browser, and the feature would remain enabled *(despite them wishing to disable it)*.
+
+It's actually in large part due to these reasons that Mozilla disables access to `about:config` on standard Firefox releases. Of course, we disagree with Mozilla's approach here, and believe that preventing access to the `about:config` is an unacceptable compromise for user freedom and control.
+
+So, to mitigate the concerns detailed above, Gecko preferences controlled by UI settings will appear locked in `about:config`. **The preferences can still be modified by users**, but this ensures that the prefs are only set by their proper, corresponding UI toggle(s), and it ensures that the Gecko preferences always remain in sync with the frontend/Fenix's settings.
 
 ## Why isn't Resist Fingerprinting (RFP) enabled?
 

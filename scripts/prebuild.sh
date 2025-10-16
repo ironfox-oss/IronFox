@@ -174,20 +174,19 @@ $SED -i \
 
 # Set flag for 'official' builds to ensure we're not enabling debug/dev settings
 # https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
-# We're also setting the "MOZILLA_OFFICIAL" env variable below
-$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' app/build.gradle
+# We also set "MOZILLA_OFFICIAL" for Gecko below
 echo "official=true" >>local.properties
 
 # Disable crash reporting
 $SED -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
+# Disable Pocket "Discover More Stories"
+$SED -i -e 's|DISCOVER_MORE_STORIES = .*|DISCOVER_MORE_STORIES = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Disable telemetry
 $SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
 $SED -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 $SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Disable "custom review pre-prompts"
-$SED -i -e 's|CUSTOM_REVIEW_PROMPT_ENABLED = .*|CUSTOM_REVIEW_PROMPT_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure onboarding is always enabled
 $SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
@@ -205,17 +204,6 @@ $SED -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFea
 echo 'glean.custom.server.url="data;"' >>local.properties
 $SED -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
 $SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' app/pings.yaml
-
-# Remove proprietary/tracking libraries
-$SED -i 's|- components:lib-crash-sentry|# - components:lib-crash-sentry|g' .buildconfig.yml
-$SED -i 's|- components:lib-push-firebase|# - components:lib-push-firebase|g' .buildconfig.yml
-$SED -i 's|implementation libs.thirdparty.sentry|// implementation libs.thirdparty.sentry|g' app/build.gradle
-$SED -i "s|implementation project(':components:lib-crash-sentry')|// implementation project(':components:lib-crash-sentry')|g" app/build.gradle
-$SED -i "s|implementation project(':components:lib-push-firebase')|// implementation project(':components:lib-push-firebase')|g" app/build.gradle
-$SED -i 's|implementation(libs.adjust)|// implementation(libs.adjust)|g' app/build.gradle
-$SED -i 's|implementation(libs.installreferrer)|// implementation(libs.installreferrer)|g' app/build.gradle
-$SED -i 's|implementation libs.play|// implementation libs.play|g' app/build.gradle
-$SED -i -e 's|<uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>|<!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->|' app/src/*/AndroidManifest.xml
 
 # Remove unused telemetry and marketing services/components
 $SED -i -e 's|import mozilla.appservices.syncmanager.SyncTelemetry|// import mozilla.appservices.syncmanager.SyncTelemetry|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
@@ -304,6 +292,7 @@ $SED -i \
     -e 's/firefox_threads/ironfox_threads/' \
     -e 's/firefox_features/ironfox_features/' \
     app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
+$SED -i -e 's/ProfilerSettings.Firefox/ProfilerSettings.IronFox/' app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt
 
 # Replace proprietary artwork
 rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml
@@ -429,7 +418,7 @@ if [[ "$PLATFORM" == "darwin" ]]; then
     ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
     echo "macOS: Doing nothing..."
 else
-    patch -p1 --no-backup-if-mismatch --quiet < "$patches/glean-noop-uniffi.patch"
+    patch -p1 --no-backup-if-mismatch < "$patches/glean-noop-uniffi.patch"
     if [[ -n ${FDROID_BUILD+x} ]]; then
         $SED -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
     else
@@ -513,6 +502,9 @@ $SED -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mo
 # No-op Nimbus (Experimentation)
 $SED -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
 $SED -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
+$SED -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+$SED -i -e 's/EXPERIMENT_COLLECTION_NAME = ".*"/EXPERIMENT_COLLECTION_NAME = ""/' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
+$SED -i 's|nimbus-mobile-experiments||g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
@@ -527,7 +519,7 @@ popd
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch --quiet <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+    patch -p1 --no-backup-if-mismatch <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
@@ -634,21 +626,6 @@ echo 'gyp_vars["enable_sslkeylogfile"] = 0' >>security/moz.build
 # Disable telemetry
 $SED -i -e 's|"MOZ_SERVICES_HEALTHREPORT", .*)|"MOZ_SERVICES_HEALTHREPORT", False)|g' mobile/android/moz.configure
 
-# Disable crash reporting (GeckoView)
-$SED -i -e '/MOZ_CRASHREPORTER/s/true/false/' mobile/android/geckoview/build.gradle
-
-# Disable debug (GeckoView)
-$SED -i -e '/DEBUG_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
-
-# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
-# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
-# We're also setting the "MOZILLA_OFFICIAL" env variable below
-$SED -i -e '/MOZILLA_OFFICIAL/s/false/true/' mobile/android/geckoview/build.gradle
-
-# Target release
-$SED -i -e '/RELEASE_OR_BETA/s/false/true/' mobile/android/geckoview/build.gradle
-$SED -i -e '/NIGHTLY_BUILD/s/true/false/' mobile/android/geckoview/build.gradle
-
 # Ensure UA is always set to Firefox
 $SED -i -e 's|"MOZ_APP_UA_NAME", ".*"|"MOZ_APP_UA_NAME", "Firefox"|g' mobile/android/moz.configure
 
@@ -660,7 +637,10 @@ echo 'FINAL_TARGET_FILES.defaults.settings.main += [' >>services/settings/dumps/
 echo '    "anti-tracking-url-decoration.json",' >>services/settings/dumps/main/moz.build
 echo '    "cookie-banner-rules-list.json",' >>services/settings/dumps/main/moz.build
 echo '    "hijack-blocklists.json",' >>services/settings/dumps/main/moz.build
-echo '    "ironfox-fingerprinting-protection-overrides.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-harden.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-unbreak-timezone.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-unbreak-webgl.json",' >>services/settings/dumps/main/moz.build
+echo '    "ironfox-fingerprinting-protection-overrides-unbreak.json",' >>services/settings/dumps/main/moz.build
 echo '    "translations-models.json",' >>services/settings/dumps/main/moz.build
 echo '    "translations-wasm.json",' >>services/settings/dumps/main/moz.build
 echo '    "url-classifier-skip-urls.json",' >>services/settings/dumps/main/moz.build
@@ -711,6 +691,16 @@ $SED -i -e 's|context.recordEventInNimbus|// context.recordEventInNimbus|' mobil
 $SED -i -e 's|FxNimbus.features.junoOnboarding.recordExposure|// FxNimbus.features.junoOnboarding.recordExposure|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 $SED -i 's|classpath "${ApplicationServicesConfig.groupId}:tooling-nimbus-gradle|// "${ApplicationServicesConfig.groupId}:tooling-nimbus-gradle|g' build.gradle
 
+# No-op Nimbus (Experimentation) (Gecko)
+## (Primarily for defense in depth)
+$SED -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/' toolkit/components/nimbus/ExperimentAPI.sys.mjs
+$SED -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+$SED -i -e 's/EXPERIMENTS_COLLECTION = ".*"/EXPERIMENTS_COLLECTION = ""/' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+$SED -i -e 's/SECURE_EXPERIMENTS_COLLECTION_ID = ".*"/SECURE_EXPERIMENTS_COLLECTION_ID = ""/' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+$SED -i 's|nimbus-desktop-experiments||g' toolkit/components/nimbus/ExperimentAPI.sys.mjs
+$SED -i 's|nimbus-desktop-experiments||g' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+$SED -i 's|nimbus-secure-experiments||g' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+
 # No-op Pocket
 $SED -i -e 's/SPOCS_ENDPOINT_DEV_BASE_URL = ".*"/SPOCS_ENDPOINT_DEV_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
 $SED -i -e 's/SPOCS_ENDPOINT_PROD_BASE_URL = ".*"/SPOCS_ENDPOINT_PROD_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
@@ -756,29 +746,13 @@ $SED -i -e 's#if (rootDir.toString().contains("android-components") || !project.
 $SED -i "s|include ':exoplayer2'|// include ':exoplayer2'|g" settings.gradle
 $SED -i "s|project(':exoplayer2'|// project(':exoplayer2'|g" settings.gradle
 
-# Remove unused/unnecessary DebugConfig class
-$SED -i -e 's|-keep class org.mozilla.gecko.util.DebugConfig|#-keep class org.mozilla.gecko.util.DebugConfig|' mobile/android/fenix/app/proguard-rules.pro
-
 # Remove proprietary/tracking libraries
 $SED -i 's|adjust|# adjust|g' gradle/libs.versions.toml
 $SED -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
 $SED -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
 $SED -i 's|play-review|# play-review|g' gradle/libs.versions.toml
 $SED -i 's|play-services|# play-services|g' gradle/libs.versions.toml
-$SED -i 's|thirdparty-sentry|# thirdparty-sentry|g' gradle/libs.versions.toml
 $SED -i 's|sentry|# sentry|g' gradle/libs.versions.toml
-
-$SED -i 's|-include "adjust-keeps.cfg"|# -include "adjust-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
-$SED -i 's|-include "play-services-keeps.cfg"|# -include "play-services-keeps.cfg"|g' mobile/android/config/proguard/proguard.cfg
-$SED -i 's|-include "proguard-leanplum.cfg"|# -include "proguard-leanplum.cfg"|g' mobile/android/config/proguard/proguard.cfg
-rm -vf mobile/android/config/proguard/adjust-keeps.cfg
-rm -vf mobile/android/config/proguard/play-services-keeps.cfg
-rm -vf mobile/android/config/proguard/proguard-leanplum.cfg
-
-# Remove Web Compatibility Reporter
-## Also see `fenix-remove-webcompat-reporter.patch`
-$SED -i 's|- components:feature-webcompat-reporter|# - components:feature-webcompat-reporter|g' mobile/android/fenix/.buildconfig.yml
-$SED -i "s|implementation project(':components:feature-webcompat-reporter')|// implementation project(':components:feature-webcompat-reporter')|g" mobile/android/fenix/app/build.gradle
 
 # Replace Google Play FIDO with microG
 $SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
@@ -880,10 +854,11 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher_round.
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher_round.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
-$SED -i -e 's|R.drawable.microsurvey_success|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
-$SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.mozac_lib_crash_notification|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-$SED -i -e 's|ic_onboarding_search_widget|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
-$SED -i -e 's|ic_onboarding_sync|mozac_lib_crash_notification|' mobile/android/fenix/app/onboarding.fml.yaml
+$SED -i -e 's|R.drawable.microsurvey_success|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
+$SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
+$SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
+$SED -i -e 's|ic_onboarding_search_widget|fox_alert_crash_dark|' mobile/android/fenix/app/onboarding.fml.yaml
+$SED -i -e 's|ic_onboarding_sync|fox_alert_crash_dark|' mobile/android/fenix/app/onboarding.fml.yaml
 
 # Take back control of preferences
 ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...
@@ -922,6 +897,7 @@ $SED -i \
 
 $SED -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
+    -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \
@@ -935,8 +911,10 @@ $SED -i \
     -e 's|"fission.disableSessionHistoryInParent"|"z99.ignore.boolean"|' \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.integer"|' \
     -e 's|"formhelper.autozoom"|"z99.ignore.boolean"|' \
+    -e 's|"general.aboutConfig.enable"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.boolean"|' \
+    -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.boolean"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning"|"z99.ignore.boolean"|' \
     -e 's|"network.cookie.cookieBehavior.optInPartitioning.pbmode"|"z99.ignore.boolean"|' \
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.boolean"|' \
@@ -953,6 +931,7 @@ $SED -i \
     -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.boolean"|' \
     -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.integer"|' \
     -e 's|"security.tls.enable_kyber"|"z99.ignore.boolean"|' \
+    -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
@@ -1019,12 +998,13 @@ fi
     echo 'ac_add_options --disable-webrender-debugger'
     echo 'ac_add_options --disable-webspeechtestbackend'
     echo 'ac_add_options --disable-wmf'
-    echo 'ac_add_options --enable-android-subproject="fenix"'
-    echo 'ac_add_options --enable-application="mobile/android"'
+    echo 'ac_add_options --enable-android-subproject=fenix'
+    echo 'ac_add_options --enable-application=mobile/android'
     echo 'ac_add_options --enable-disk-remnant-avoidance'
     echo 'ac_add_options --enable-geckoview-lite'
     echo 'ac_add_options --enable-hardening'
     echo 'ac_add_options --enable-install-strip'
+    echo 'ac_add_options --enable-isolated-process'
     echo 'ac_add_options --enable-minify=properties'
     echo 'ac_add_options --enable-mobile-optimize'
     echo 'ac_add_options --enable-optimize'
@@ -1033,12 +1013,12 @@ fi
     echo 'ac_add_options --enable-replace-malloc'
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
-    echo 'ac_add_options --enable-update-channel="release"'
-    echo 'ac_add_options --with-app-basename="IronFox"'
-    echo 'ac_add_options --with-app-name="ironfox"'
-    echo 'ac_add_options --with-branding="mobile/android/branding/ironfox"'
+    echo 'ac_add_options --enable-update-channel=release'
+    echo 'ac_add_options --with-app-basename=IronFox'
+    echo 'ac_add_options --with-app-name=ironfox'
+    echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
     echo 'ac_add_options --with-crashreporter-url="data;"'
-    echo 'ac_add_options --with-distribution-id="org.ironfoxoss"'
+    echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
     echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
 
     if [[ -n "${target}" ]]; then
@@ -1062,44 +1042,23 @@ fi
         echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
     fi
 
-    echo "ac_add_options ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
     echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
     echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
     echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang\""
     echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang++\""
     echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/llvm-strip\""
-    echo 'ac_add_options MOZ_APP_BASENAME="IronFox"'
-    echo 'ac_add_options MOZ_APP_DISPLAYNAME="IronFox"'
-    echo 'ac_add_options MOZ_APP_NAME="ironfox"'
-    echo 'ac_add_options MOZ_APP_REMOTINGNAME="ironfox"'
-    echo 'ac_add_options MOZ_ARTIFACT_BUILDS='
-    echo 'ac_add_options MOZ_CALLGRIND='
-    echo 'ac_add_options MOZ_CRASHREPORTER_URL="data;"'
-    echo 'ac_add_options MOZ_DEBUG_FLAGS='
-    echo 'ac_add_options MOZ_EXECUTION_TRACING='
-    echo 'ac_add_options MOZ_INCLUDE_SOURCE_INFO=1'
-    echo 'ac_add_options MOZ_INSTRUMENTS='
-    echo 'ac_add_options MOZ_LTO=1'
-    echo 'ac_add_options MOZ_PACKAGE_JSSHELL='
-    echo 'ac_add_options MOZ_PHC='
-    echo 'ac_add_options MOZ_PROFILING='
-    echo 'ac_add_options MOZ_REQUIRE_SIGNING='
-    echo 'ac_add_options MOZ_RUST_SIMD=1'
-    echo 'ac_add_options MOZ_SECURITY_HARDENING=1'
-    echo 'ac_add_options MOZ_TELEMETRY_REPORTING='
-    echo 'ac_add_options MOZ_VTUNE='
-    echo 'ac_add_options MOZILLA_OFFICIAL=1'
-    echo 'ac_add_options NODEJS='
-    echo 'ac_add_options RUSTC_OPT_LEVEL=2'
     echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
     echo "export ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
-    echo 'export MOZ_APP_BASENAME="IronFox"'
-    echo 'export MOZ_APP_DISPLAYNAME="IronFox"'
-    echo 'export MOZ_APP_NAME="ironfox"'
-    echo 'export MOZ_APP_REMOTINGNAME="ironfox"'
+    echo "export GRADLE_MAVEN_REPOSITORIES=\"file://$HOME/.m2/repository/\",\"https://plugins.gradle.org/m2/\",\"https://maven.google.com/\""
+    echo 'export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1'
+    echo 'export MOZ_APP_BASENAME=IronFox'
+    echo 'export MOZ_APP_NAME=ironfox'
+    echo 'export MOZ_APP_REMOTINGNAME=ironfox'
     echo 'export MOZ_ARTIFACT_BUILDS='
     echo 'export MOZ_CALLGRIND='
+    echo 'export MOZ_CRASHREPORTER='
     echo 'export MOZ_CRASHREPORTER_URL="data;"'
+    echo 'export MOZ_DEBUG_FLAGS='
     echo 'export MOZ_EXECUTION_TRACING='
     echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
     echo 'export MOZ_INSTRUMENTS='
@@ -1114,10 +1073,12 @@ fi
     echo 'export MOZ_TELEMETRY_REPORTING='
     echo 'export MOZ_VTUNE='
     echo 'export MOZILLA_OFFICIAL=1'
+    echo 'export NODEJS='
     echo 'export RUSTC_OPT_LEVEL=2'
 } >>mozconfig
 
 # Fail on use of prebuilt binary
+$SED -i 's|https://|hxxps://|' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 $SED -i 's|https://github.com|hxxps://github.com|' python/mozboot/mozboot/android.py
 
 # Make the build system think we installed the emulator and an AVD
@@ -1156,10 +1117,4 @@ $SED -i \
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
 
-popd
-
-# We temporarily need this to unbreak the FIDO library
-## https://github.com/microg/GmsCore/issues/3054
-pushd "$gmscore"
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/microg-unbreak-fido.patch"
 popd

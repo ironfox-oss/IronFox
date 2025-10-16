@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restart_required_summary">Зміна цього параметра призведе до перезапуску браузера</string>
+    <string name="unsupported_summary">Цей параметр НЕ рекомендується і не підтримується. Будьте обережні.</string>
+    <string name="if_preferences">Налаштування IronFox</string>
+    <string name="if_preferences_misc">Різне</string>
+    <string name="if_preferences_privacy">Конфіденційність</string>
+    <string name="if_preferences_privacy_security">Конфіденційність та безпека</string>
+    <string name="if_preferences_secret">Секретні налаштування</string>
+    <string name="if_preferences_security">Безпека</string>
+    <string name="preference_accessibility_enabled">Увімкнути службу спеціальних можливостей</string>
+    <string name="preference_collections_enabled">Увімкнути колекції</string>
+    <string name="preference_referer_policy">Політика перехресних реферерів</string>
+    <string name="preference_referer_policy_summary">Налаштування поведінки міждоменних реферерів</string>
+    <string name="preference_referer_policy_always">Завжди надсилати реферери для міждомених запитів</string>
+    <string name="preference_referer_policy_base_domains_match">Надсилати перехресні посилання при збігові базових доменів</string>
+    <string name="preference_referer_policy_hosts_match">Не відправляти міждоменні реферери</string>
+    <string name="preference_cache_enabled">Увімкнути кеш диска</string>
+    <string name="preferences_debug_settings_eme_enabled">Увімкнути підтримку зашифрованого медіаконтенту (EME)</string>
+    <string name="preference_safe_browsing_enabled_description">Наразі функція «Безпечний перегляд» в IronFox надається Google. IronFox періодично оновлюватиме свою базу даних для захисту користувачів від новітніх загроз. При виявленні потенційно небезпечного сайту IronFox може надіслати в Google частковий хеш його URL-адреси. Зверніть увагу, що IronFox проксує ці з\'єднання, щоб ваша публічна IP-адреса не була пов\'язана з цими запитами.</string>
+    <string name="preference_safe_browsing_enabled_summary">Забезпечує захист у режимі реального часу від небезпечних веб-сайтів, шкідливого програмного забезпечення та спроб фішингу. Зміна цього параметра призведе до перезапуску браузера</string>
+    <string name="tor_spoof_english_title">Підмінити мову на en-US</string>
+    <string name="tor_spoof_english_caption">Покращте свою конфіденційність, маскуючи мовні налаштування вашого пристрою.</string>
+    <string name="tor_spoof_english_description">Запитувати англійські (en-US) версії веб-сторінок. Це зробить ваш браузер менш унікальним, посилюючи захист від технік відбитків пальців, які ідентифікують користувачів на основі їхніх мовних уподобань.</string>
+    <string name="tor_spoof_english">Запитувати веб-сторінки англійською мовою</string>
+</resources>

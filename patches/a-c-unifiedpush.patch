@@ -1,26 +1,26 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index f005b5872f..590781b777 100644
+index 2fbb96d4e1..3f5e9bee13 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -109,6 +109,8 @@ sentry = "8.20.0"
- commons-exec = "1.3"
- tomlj = "1.1.0"
+@@ -69,6 +69,8 @@ semanticdb-javac = "0.11.0"
+ semanticdb-kotlinc = "0.6.0"
+ tomlj = "1.1.1"
  
-+unifiedpush = "3.0.10"
++unifiedpush = "3.1.0"
 +
- [libraries]
+ # Linters
+ detekt = "1.23.8"
+ google-java-format = "1.28.0"
+@@ -271,6 +273,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
+ okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+ sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
+ zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
++unifiedpush = { group = "org.unifiedpush.android", name = "connector", version.ref = "unifiedpush" }
  
- kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
-@@ -243,6 +245,7 @@ thirdparty-sentry = { group = "io.sentry", name = "sentry-android", version.ref
- thirdparty-zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
- thirdparty-disklrucache = { group = "com.jakewharton", name = "disklrucache", version.ref = "disklrucache" }
- thirdparty-androidsvg = { group = "com.caverock", name = "androidsvg-aar", version.ref = "androidsvg" }
-+thirdparty-unifiedpush = { group = "org.unifiedpush.android", name = "connector", version.ref = "unifiedpush" }
- 
- desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
- firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebase-messaging" }
+ [plugins]
+ detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index d4a38d73fc..1235587fee 100644
+index f9711dc715..1421a44a87 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
 @@ -602,6 +602,7 @@ projects:
@@ -31,7 +31,7 @@ index d4a38d73fc..1235587fee 100644
    components:feature-addons:
      description: A feature that provides for managing add-ons.
      path: components/feature/addons
-@@ -2416,3 +2417,13 @@ projects:
+@@ -2418,3 +2419,13 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons
@@ -230,24 +230,24 @@ index 000000000000..802364f0a9ab
 +    abstract val disableRateLimit: Boolean
 +}
 diff --git a/mobile/android/android-components/components/feature/accounts-push/build.gradle b/mobile/android/android-components/components/feature/accounts-push/build.gradle
-index 12e4343bec..b939f32151 100644
+index ed3026775c..8d50f4791e 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/build.gradle
 +++ b/mobile/android/android-components/components/feature/accounts-push/build.gradle
-@@ -33,6 +33,7 @@ dependencies {
-     implementation project(':components:support-base')
-     implementation project(':components:concept-push')
-     implementation project(':components:feature-push')
+@@ -50,6 +50,7 @@ dependencies {
+     testRuntimeOnly libs.junit.vintage
+     testImplementation libs.kotlinx.coroutines.test
+     testImplementation libs.robolectric
 +    implementation project(':components:feature-unifiedpush')
+ }
  
-     implementation libs.androidx.work.runtime
-     implementation libs.androidx.lifecycle.process
+ apply from: '../../../android-lint.gradle'
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
-index d922dadc4a..2d983e04c6 100644
+index 7992e782db..f5ead8686e 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
-@@ -25,15 +25,17 @@ import mozilla.components.concept.sync.DeviceConstellationObserver
- import mozilla.components.concept.sync.DevicePushSubscription
+@@ -25,9 +25,6 @@ import mozilla.components.concept.sync.DevicePushSubscription
  import mozilla.components.concept.sync.OAuthAccount
+ import mozilla.components.feature.accounts.push.VerificationDelegate.Companion.PERIODIC_INTERVAL_MILLISECONDS
  import mozilla.components.feature.accounts.push.cache.PushScopeProperty
 -import mozilla.components.feature.push.AutoPushFeature
 -import mozilla.components.feature.push.AutoPushSubscription
@@ -255,8 +255,9 @@ index d922dadc4a..2d983e04c6 100644
  import mozilla.components.service.fxa.manager.FxaAccountManager
  import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
  import mozilla.components.support.base.log.logger.Logger
- import mozilla.components.support.base.utils.SharedPreferencesCache
+@@ -35,6 +32,11 @@ import mozilla.components.support.base.utils.SharedPreferencesCache
  import org.json.JSONObject
+ import kotlin.coroutines.CoroutineContext
  import mozilla.components.concept.sync.AccountObserver as SyncAccountObserver
 +import mozilla.components.concept.push.PushObserver
 +import mozilla.components.concept.push.PushScope
@@ -266,7 +267,7 @@ index d922dadc4a..2d983e04c6 100644
  
  internal const val PREFERENCE_NAME = "mozac_feature_accounts_push"
  internal const val PREF_LAST_VERIFIED = "last_verified_push_subscription"
-@@ -56,7 +58,7 @@ internal const val PREF_FXA_SCOPE = "fxa_push_scope"
+@@ -58,7 +60,7 @@ internal const val PREF_FXA_SCOPE = "fxa_push_scope"
  class FxaPushSupportFeature(
      private val context: Context,
      private val accountManager: FxaAccountManager,
@@ -274,18 +275,18 @@ index d922dadc4a..2d983e04c6 100644
 +    private val pushFeature: Pusher,
      private val crashReporter: CrashReporting? = null,
      private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
-     private val owner: LifecycleOwner = ProcessLifecycleOwner.get(),
-@@ -77,7 +79,7 @@ class FxaPushSupportFeature(
+     private val uiContext: CoroutineContext = Dispatchers.Main,
+@@ -80,7 +82,7 @@ class FxaPushSupportFeature(
      fun initialize() = coroutineScope.launch {
          val scopeValue = pushScope.value()
  
--        val autoPushObserver = AutoPushObserver(accountManager, pushFeature, scopeValue)
-+        val fxaPushObserver = FxaPushObserver(accountManager, pushFeature, scopeValue)
+-        val autoPushObserver = AutoPushObserver(accountManager, pushFeature, scopeValue, uiContext)
++        val fxaPushObserver = FxaPushObserver(accountManager, pushFeature, scopeValue, uiContext)
  
          val accountObserver = AccountObserver(
              context,
-@@ -91,7 +93,7 @@ class FxaPushSupportFeature(
-         coroutineScope.launch(Main) {
+@@ -95,7 +97,7 @@ class FxaPushSupportFeature(
+         coroutineScope.launch(uiContext) {
              accountManager.register(accountObserver)
  
 -            pushFeature.register(autoPushObserver, owner, autoPause)
@@ -293,7 +294,7 @@ index d922dadc4a..2d983e04c6 100644
          }
      }
  
-@@ -106,7 +108,7 @@ class FxaPushSupportFeature(
+@@ -110,7 +112,7 @@ class FxaPushSupportFeature(
   */
  internal class AccountObserver(
      private val context: Context,
@@ -302,7 +303,7 @@ index d922dadc4a..2d983e04c6 100644
      private val fxaPushScope: String,
      private val crashReporter: CrashReporting?,
      private val lifecycleOwner: LifecycleOwner,
-@@ -114,7 +116,7 @@ internal class AccountObserver(
+@@ -119,7 +121,7 @@ internal class AccountObserver(
  ) : SyncAccountObserver {
  
      private val logger = Logger(AccountObserver::class.java.simpleName)
@@ -311,7 +312,7 @@ index d922dadc4a..2d983e04c6 100644
  
      @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
      override fun onAuthenticated(account: OAuthAccount, authType: AuthType) {
-@@ -153,7 +155,7 @@ internal class AccountObserver(
+@@ -158,7 +160,7 @@ internal class AccountObserver(
   * it's OK to call this somewhat frequently.
   */
  internal fun pushSubscribe(
@@ -319,8 +320,8 @@ index d922dadc4a..2d983e04c6 100644
 +    push: PushSubscriptionProcessor,
      account: OAuthAccount,
      scope: String,
-     crashReporter: CrashReporting?,
-@@ -196,7 +198,7 @@ internal fun pushSubscribe(
+     uiContext: CoroutineContext,
+@@ -202,7 +204,7 @@ internal fun pushSubscribe(
   */
  internal class ConstellationObserver(
      context: Context,
@@ -329,7 +330,7 @@ index d922dadc4a..2d983e04c6 100644
      private val scope: String,
      private val account: OAuthAccount,
      private val verifier: VerificationDelegate = VerificationDelegate(context),
-@@ -240,12 +242,12 @@ internal class ConstellationObserver(
+@@ -247,13 +249,13 @@ internal class ConstellationObserver(
  /**
   * An [AutoPushFeature] observer to handle [FxaAccountManager] subscriptions and push events.
   */
@@ -339,6 +340,7 @@ index d922dadc4a..2d983e04c6 100644
 -    private val pushFeature: AutoPushFeature,
 +    private val pushFeature: PushSubscriptionProcessor,
      private val fxaPushScope: String,
+     private val uiContext: CoroutineContext,
 -) : AutoPushFeature.Observer {
 -    private val logger = Logger(AutoPushObserver::class.java.simpleName)
 +) : PushObserver {
@@ -346,7 +348,7 @@ index d922dadc4a..2d983e04c6 100644
  
      override fun onMessageReceived(scope: String, message: ByteArray?) {
          if (scope != fxaPushScope) {
-@@ -384,7 +386,7 @@ internal data class VerificationState(val timestamp: Long, val totalCount: Int)
+@@ -392,7 +394,7 @@ internal data class VerificationState(val timestamp: Long, val totalCount: Int)
  
  internal fun preference(context: Context) = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
  
@@ -648,7 +650,7 @@ index 000000000000..c492a3879873
 +
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 new file mode 100644
-index 0000000000..d74042e4fb
+index 0000000000..516095077d
 --- /dev/null
 +++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 @@ -0,0 +1,52 @@
@@ -686,10 +688,10 @@ index 0000000000..d74042e4fb
 +    implementation project(':components:support-base')
 +    implementation project(':components:ui-icons')
 +
-+    implementation libs.kotlin.coroutines
 +    implementation libs.androidx.work.runtime
 +    implementation libs.androidx.lifecycle.runtime
-+    implementation (libs.thirdparty.unifiedpush) {
++    implementation libs.kotlinx.coroutines
++    implementation (libs.unifiedpush) {
 +        exclude group: "com.google.protobuf", module: "protobuf-java"
 +    }
 +
@@ -697,8 +699,8 @@ index 0000000000..d74042e4fb
 +
 +    testImplementation libs.androidx.test.core
 +    testImplementation libs.androidx.test.junit
-+    testImplementation libs.testing.robolectric
-+    testImplementation libs.testing.coroutines
++    testImplementation libs.kotlinx.coroutines.test
++    testImplementation libs.robolectric
 +}
 +
 +apply from: '../../../android-lint.gradle'

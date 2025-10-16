@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..906c5bdfdb 100644
+index 5233b8a8dd..3828b37b61 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1655,6 +1655,114 @@ class GeckoEngine(
+@@ -1655,6 +1655,142 @@ class GeckoEngine(
          override var lnaBlockingEnabled: Boolean
              get() = runtime.settings.lnaBlockingEnabled
              set(value) { runtime.settings.setLnaBlockingEnabled(value) }
@@ -11,13 +11,37 @@ index 5233b8a8dd..906c5bdfdb 100644
 +            get() = runtime.settings.accessibilityEnabled
 +            set(value) { runtime.settings.accessibilityEnabled = value }
 +
++        override var addressAutofillEnabled: Boolean
++            get() = runtime.settings.addressAutofillEnabled
++            set(value) { runtime.settings.addressAutofillEnabled = value }
++
 +        override var cacheEnabled: Boolean
 +            get() = runtime.settings.cacheEnabled
 +            set(value) { runtime.settings.cacheEnabled = value }
 +
++        override var cardAutofillEnabled: Boolean
++            get() = runtime.settings.cardAutofillEnabled
++            set(value) { runtime.settings.cardAutofillEnabled = value }
++
 +        override var emeEnabled: Boolean
 +            get() = runtime.settings.emeEnabled
 +            set(value) { runtime.settings.emeEnabled = value }
++
++        override var fppOverridesIronFoxEnabled: Boolean
++            get() = runtime.settings.fppOverridesIronFoxEnabled
++            set(value) { runtime.settings.fppOverridesIronFoxEnabled = value }
++
++        override var fppOverridesIronFoxTimezoneEnabled: Boolean
++            get() = runtime.settings.fppOverridesIronFoxTimezoneEnabled
++            set(value) { runtime.settings.fppOverridesIronFoxTimezoneEnabled = value }
++
++        override var fppOverridesIronFoxWebGLEnabled: Boolean
++            get() = runtime.settings.fppOverridesIronFoxWebGLEnabled
++            set(value) { runtime.settings.fppOverridesIronFoxWebGLEnabled = value }
++
++        override var fppOverridesMozillaEnabled: Boolean
++            get() = runtime.settings.fppOverridesMozillaEnabled
++            set(value) { runtime.settings.fppOverridesMozillaEnabled = value }
 +
 +        override var ipv6Enabled: Boolean
 +            get() = runtime.settings.ipv6Enabled
@@ -39,10 +63,6 @@ index 5233b8a8dd..906c5bdfdb 100644
 +            get() = runtime.settings.javaScriptJitIonWasmEnabled
 +            set(value) { runtime.settings.javaScriptJitIonWasmEnabled = value }
 +
-+        override var javascriptJitMainProcessEnabled: Boolean
-+            get() = runtime.settings.javaScriptJitMainProcessEnabled
-+            set(value) { runtime.settings.javaScriptJitMainProcessEnabled = value }
-+
 +        override var javascriptJitNativeRegexpEnabled: Boolean
 +            get() = runtime.settings.javaScriptJitNativeRegexpEnabled
 +            set(value) { runtime.settings.javaScriptJitNativeRegexpEnabled = value }
@@ -50,6 +70,10 @@ index 5233b8a8dd..906c5bdfdb 100644
 +        override var javascriptJitTrustedPrincipalsEnabled: Boolean
 +            get() = runtime.settings.javaScriptJitTrustedPrincipalsEnabled
 +            set(value) { runtime.settings.javaScriptJitTrustedPrincipalsEnabled = value }
++
++        override var passwordManagerEnabled: Boolean
++            get() = runtime.settings.passwordManagerEnabled
++            set(value) { runtime.settings.passwordManagerEnabled = value }
 +
 +        override var pdfjsDisabled: Boolean
 +            get() = runtime.settings.pdfjsDisabled
@@ -82,6 +106,10 @@ index 5233b8a8dd..906c5bdfdb 100644
 +                    localeUpdater.updateValue()
 +                }
 +            }
++
++        override var spoofTimezone: Boolean
++            get() = runtime.settings.spoofTimezone
++            set(value) { runtime.settings.spoofTimezone = value }
 +
 +        override var svgEnabled: Boolean
 +            get() = runtime.settings.svgEnabled
@@ -117,25 +145,32 @@ index 5233b8a8dd..906c5bdfdb 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1702,6 +1810,29 @@ class GeckoEngine(
+@@ -1702,6 +1838,36 @@ class GeckoEngine(
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
              this.lnaBlockingEnabled = it.lnaBlockingEnabled
 +            this.accessibilityEnabled = it.accessibilityEnabled
++            this.addressAutofillEnabled = it.addressAutofillEnabled
 +            this.cacheEnabled = it.cacheEnabled
++            this.cardAutofillEnabled = it.cardAutofillEnabled
 +            this.emeEnabled = it.emeEnabled
++            this.fppOverridesIronFoxEnabled = it.fppOverridesIronFoxEnabled
++            this.fppOverridesIronFoxTimezoneEnabled = it.fppOverridesIronFoxTimezoneEnabled
++            this.fppOverridesIronFoxWebGLEnabled = it.fppOverridesIronFoxWebGLEnabled
++            this.fppOverridesMozillaEnabled = it.fppOverridesMozillaEnabled
 +            this.ipv6Enabled = it.ipv6Enabled
 +            this.javascriptJitBaselineEnabled = it.javascriptJitBaselineEnabled
 +            this.javascriptJitHintsEnabled = it.javascriptJitHintsEnabled
 +            this.javascriptJitIonEnabled = it.javascriptJitIonEnabled
 +            this.javascriptJitIonWasmEnabled = it.javascriptJitIonWasmEnabled
-+            this.javascriptJitMainProcessEnabled = it.javascriptJitMainProcessEnabled
 +            this.javascriptJitNativeRegexpEnabled = it.javascriptJitNativeRegexpEnabled
 +            this.javascriptJitTrustedPrincipalsEnabled = it.javascriptJitTrustedPrincipalsEnabled
++            this.passwordManagerEnabled = it.passwordManagerEnabled
 +            this.pdfjsDisabled = it.pdfjsDisabled
 +            this.printEnabled = it.printEnabled
 +            this.refererXOriginPolicy = it.refererXOriginPolicy
 +            this.spoofEnglish = it.spoofEnglish
++            this.spoofTimezone = it.spoofTimezone
 +            this.svgEnabled = it.svgEnabled
 +            this.translationsEnabled = it.translationsEnabled
 +            this.translationsSupported = it.translationsSupported
@@ -148,29 +183,36 @@ index 5233b8a8dd..906c5bdfdb 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..3a8476d3df 100644
+index f9aa3b43e9..3dd7b7fcec 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -367,6 +367,30 @@ abstract class Settings {
+@@ -367,6 +367,37 @@ abstract class Settings {
       * Setting to control blocking of local network & local device (localhost) access
       */
      open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
 +
 +    open var accessibilityEnabled: Boolean by UnsupportedSetting()
++    open var addressAutofillEnabled: Boolean by UnsupportedSetting()
 +    open var cacheEnabled: Boolean by UnsupportedSetting()
++    open var cardAutofillEnabled: Boolean by UnsupportedSetting()
 +    open var emeEnabled: Boolean by UnsupportedSetting()
++    open var fppOverridesIronFoxEnabled: Boolean by UnsupportedSetting()
++    open var fppOverridesIronFoxTimezoneEnabled: Boolean by UnsupportedSetting()
++    open var fppOverridesIronFoxWebGLEnabled: Boolean by UnsupportedSetting()
++    open var fppOverridesMozillaEnabled: Boolean by UnsupportedSetting()
 +    open var ipv6Enabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitBaselineEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitHintsEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitIonEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitIonWasmEnabled: Boolean by UnsupportedSetting()
-+    open var javascriptJitMainProcessEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitNativeRegexpEnabled: Boolean by UnsupportedSetting()
 +    open var javascriptJitTrustedPrincipalsEnabled: Boolean by UnsupportedSetting()
++    open var passwordManagerEnabled: Boolean by UnsupportedSetting()
 +    open var pdfjsDisabled: Boolean by UnsupportedSetting()
 +    open var printEnabled: Boolean by UnsupportedSetting()
 +    open var refererXOriginPolicy: Engine.RefererXOriginPolicy by UnsupportedSetting()
 +    open var spoofEnglish: Boolean by UnsupportedSetting()
++    open var spoofTimezone: Boolean by UnsupportedSetting()
 +    open var svgEnabled: Boolean by UnsupportedSetting()
 +    open var translationsEnabled: Boolean by UnsupportedSetting()
 +    open var translationsSupported: Boolean by UnsupportedSetting()
@@ -182,25 +224,32 @@ index f9aa3b43e9..3a8476d3df 100644
  }
  
  /**
-@@ -440,6 +464,29 @@ data class DefaultSettings(
+@@ -440,6 +471,36 @@ data class DefaultSettings(
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
      override var lnaBlockingEnabled: Boolean = false,
 +    override var accessibilityEnabled: Boolean = false,
++    override var addressAutofillEnabled: Boolean = false,
 +    override var cacheEnabled: Boolean = false,
++    override var cardAutofillEnabled: Boolean = false,
 +    override var emeEnabled: Boolean = false,
++    override var fppOverridesIronFoxEnabled: Boolean = true,
++    override var fppOverridesIronFoxTimezoneEnabled: Boolean = true,
++    override var fppOverridesIronFoxWebGLEnabled: Boolean = true,
++    override var fppOverridesMozillaEnabled: Boolean = true,
 +    override var ipv6Enabled: Boolean = true,
 +    override var javascriptJitBaselineEnabled: Boolean = false,
 +    override var javascriptJitHintsEnabled: Boolean = false,
 +    override var javascriptJitIonEnabled: Boolean = false,
 +    override var javascriptJitIonWasmEnabled: Boolean = false,
-+    override var javascriptJitMainProcessEnabled: Boolean = false,
 +    override var javascriptJitNativeRegexpEnabled: Boolean = false,
 +    override var javascriptJitTrustedPrincipalsEnabled: Boolean = false,
++    override var passwordManagerEnabled: Boolean = false,
 +    override var pdfjsDisabled: Boolean = false,
 +    override var printEnabled: Boolean = true,
 +    override var refererXOriginPolicy: Engine.RefererXOriginPolicy = Engine.RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS,
 +    override var spoofEnglish: Boolean = true,
++    override var spoofTimezone: Boolean = false,
 +    override var svgEnabled: Boolean = true,
 +    override var translationsEnabled: Boolean = true,
 +    override var translationsSupported: Boolean = true,

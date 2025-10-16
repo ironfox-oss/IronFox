@@ -1,0 +1,41 @@
+diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
+index 6913517691..043685b9de 100644
+--- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
++++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
+@@ -329,23 +329,35 @@ export class GeckoViewStartup {
+       }
+       case "GeckoView:ResetUserPrefs": {
+         for (const name of aData.names) {
+-          Services.prefs.clearUserPref(name);
++          Services.prefs.clearUserPref("devtools.debugger.remote-enabled");
++          Services.prefs.clearUserPref("browser.safebrowsing.provider.ironfox.lastupdatetime");
++          Services.prefs.clearUserPref("browser.safebrowsing.provider.ironfox.nextupdatetime");
+         }
+         break;
+       }
+       case "GeckoView:SetDefaultPrefs": {
+         const prefs = Services.prefs.getDefaultBranch("");
++        const userPrefs = Services.prefs.getBranch("");
+         for (const [name, value] of Object.entries(aData)) {
+           try {
+             switch (typeof value) {
+               case "string":
++                Services.prefs.unlockPref(name);
+                 prefs.setStringPref(name, value);
++                userPrefs.setStringPref(name, value);
++                Services.prefs.lockPref(name);
+                 break;
+               case "number":
++                Services.prefs.unlockPref(name);
+                 prefs.setIntPref(name, value);
++                userPrefs.setIntPref(name, value);
++                Services.prefs.lockPref(name);
+                 break;
+               case "boolean":
++                Services.prefs.unlockPref(name);
+                 prefs.setBoolPref(name, value);
++                userPrefs.setBoolPref(name, value);
++                Services.prefs.lockPref(name);
+                 break;
+               default:
+                 throw new Error(

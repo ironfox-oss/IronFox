@@ -70,15 +70,15 @@ patches:
     effect: "Ensures successful compilation of the browser."
     category: "Build System"
 
-  - file: "a-c-localize-maven.patch"
-    name: "Remove Mozilla Maven Repositories (Android Components)"
-    description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
-    reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
-    effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
+  - file: "gecko-unbreak-wasi-sdk-20-clang.patch"
+    name: "Fix WASI SDK 20 clang Build Error"
+    description: "Fixes an upstream issue that prevents gecko from building with WASI SDK 20: https://bugzilla.mozilla.org/show_bug.cgi?id=1994063."
+    reason: "Required for builds with WASI SDK 20."
+    effect: "Ensures successful compilation of the browser."
     category: "Build System"
 
-  - file: "gecko-localize-maven.patch"
-    name: "Remove Mozilla Maven Repositories (Gecko)"
+  - file: "a-c-localize-maven.patch"
+    name: "Remove Mozilla Maven Repositories (Android Components)"
     description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
     reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
     effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
@@ -107,16 +107,16 @@ patches:
 
   # Dependency
   - file: "a-c-liberate.patch"
-    name: "Remove Proprietary Libraries (Android Components)"
-    description: "Patches out proprietary and tracking libraries from Mozilla's Android Components (and replaces them with suitable alternatives if desired, such as microG)."
-    reason: "To remove unwanted proprietary and tracking libraries, and dependencies on related services."
+    name: "Remove Unwanted Libraries (Android Components)"
+    description: "Removes proprietary, tracking, and other unwanted libraries from Mozilla's Android Components (and replaces them with suitable alternatives if desired, such as microG)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
   - file: "fenix-liberate.patch"
-    name: "Remove Proprietary Libraries (Fenix)"
-    description: "Patches out proprietary and tracking libraries from Fenix (and replaces them with suitable alternatives if desired, such as microG)."
-    reason: "To remove unwanted proprietary and tracking libraries, and dependencies on related services."
+    name: "Remove Unwanted Libraries (Fenix)"
+    description: "Removes proprietary, tracking, and other unwanted libraries from Fenix (and replaces them with suitable alternatives if desired, such as microG)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
@@ -268,14 +268,7 @@ patches:
     effect: "Cleaner interface without promotional content or third-party integrations."
     category: "Mozilla"
 
-  - file: "a-c-remove-mars.patch"
-    name: "Remove MARS (Android Components)"
-    description: "Removes the Mozilla Ad Routing Service (MARS) from Mozilla's Android Components."
-    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
-    effect: "Prevents unwanted advertising."
-    category: "Mozilla"
-
-  - file: "fenix-remove-mars.patch"
+  - file: "fenix-liberate-support-mars.patch"
     name: "Remove MARS (Fenix)"
     description: "Removes the Mozilla Ad Routing Service (MARS) from Firefox for Android."
     reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
@@ -317,14 +310,7 @@ patches:
     effect: "Users have improved privacy, security, and control over their extensions."
     category: "Mozilla"
 
-  - file: "a-c-remove-webcompat-reporter.patch"
-    name: "Remove Web Compatibility Reporter (Android Components)"
-    description: "Removes the Web Compatibility Reporter from Android Components."
-    reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
-    effect: "Simplifies the browser UI and prevents issue reports from being sent to Mozilla."
-    category: "Mozilla"
-
-  - file: "fenix-remove-webcompat-reporter.patch"
+  - file: "fenix-liberate-support-webcompat-reporter.patch"
     name: "Remove Web Compatibility Reporter (Fenix)"
     description: "Removes the Web Compatibility Reporter from Firefox for Android."
     reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
@@ -360,13 +346,6 @@ patches:
     category: "Mozilla"
 
   # Privacy
-  - file: "a-c-disable-extension-data-collection.patch"
-    name: "Disable extension data collection"
-    description: "Prevents add-ons from prompting users for permission to submit technical and interaction data."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to extension authors."
-    effect: "Prevents unwanted collection and transmission of telemetry data."
-    category: "Privacy"
-
   - file: "fenix-configure-doh.patch"
     name: "Configure DNS over HTTPS"
     description: |
@@ -638,6 +617,13 @@ patches:
     effect: "Users are provided with a cleaner UI and won't try to use toggles that do not work as expected."
     category: "User Experience"
 
+  - file: "geckoview-lock-runtime-settings-prefs.patch"
+    name: "Lock GeckoRuntimeSettings Preferences."
+    description: "Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix (Firefox for Android)'s UI settings."
+    reason: "To avoid bugs/unexpected behavior from UI settings not matching with related Gecko preferences, and to prevent from users from attempting to change these preferences directly from `about:config` (as doing so simply results in the pref resetting on the next browser launch)."
+    effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
+    category: "User Experience"
+
   # User Interface
   - file: "fenix-ironfox-branding.patch"
     name: "IronFox Branding"
@@ -713,6 +699,14 @@ patches:
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
 
+  - file: "gecko-ironfox-settings.patch"
+    name: "IronFox Settings (Gecko)"
+    description: "Adds support to Gecko for IronFox-specific preferences/UI settings to control various functionality."
+    reason: |
+      To allow users to easily control their browsing experience.
+    effect: "Users can conveniently enable/disable these features as needed to meet their needs."
+    category: "User Interface"
+
   - file: "fenix-ironfox-ui.patch"
     name: "IronFox UI"
     description: "Adds minor tweaks to the browser's user interface."
@@ -741,6 +735,13 @@ patches:
     effect: "The UI for DRM-controlled content (EME) is hidden by default, while users can re-enable EME with the UI/site permission at their own risk if desired."
     category: "User Interface"
 
+  - file: "fenix-ironfox-settings-support-password-mgr-autofill.patch"
+    name: "IronFox Settings Support (Fenix) - Password Manager and Address/Credit Card Autofill"
+    description: "Modifies the UI settings to enable/disable the built-in password manager and address/credit card autofill to also disable the functionality within Gecko."
+    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that the password manager and autofill functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI setting."
+    effect: "Users can fully disable the built-in password manager and address/credit card autofill functionality fromt he UI."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-preferred-website-appearance.patch"
     name: "IronFox Settings Support (Fenix) - Preferred website appearance"
     description: "Provides support for UI settings to configure the preferred website appearance, independently of the browser theme."
@@ -767,6 +768,13 @@ patches:
     description: "Provides support for a UI toggle to enable/disable the installation of add-ons."
     reason: "To show users a prompt when add-on installation is disabled, so that they can better understand why their add-on didn't install, and can know how/where to re-enable it if desired."
     effect: "Users can enable or disable add-on installation from the UI."
+    category: "User Interface"
+
+  - file: "gecko-ironfox-settings-support-webgl.patch"
+    name: "IronFox Settings Support (Gecko) - WebGL"
+    description: "Provides support for a UI toggle to enable/disable WebGL (including on a per-site basis)."
+    reason: "Users can enable or disable WebGL, globally or on a per-site basis."
+    effect: "Users can maximize privacy and security by disabling WebGL, without compromising usability, by allowing it to be re-enabled on a per-site basis."
     category: "User Interface"
 
   - file: "gecko-ironfox-settings-support-xpinstall.patch"

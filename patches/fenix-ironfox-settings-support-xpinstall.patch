@@ -1,27 +1,27 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index c553538d96..c761b73cc2 100644
+index 09b7956a70..aff4e05e2f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-@@ -204,10 +204,12 @@ class WebExtensionPromptFeature(
+@@ -205,10 +205,12 @@ class WebExtensionPromptFeature(
                  // Title = Can't install extension
                  // Message = Failed to install $addonName
                  title = ""
 -                if (addonName.isNotEmpty()) {
 +                if (context.components.settings.xpinstallEnabled && addonName.isNotEmpty()) {
-                     context.getString(R.string.mozac_feature_addons_failed_to_install, addonName)
+                     context.getString(addonsR.string.mozac_feature_addons_failed_to_install, addonName)
 -                } else {
 +                } else if (context.components.settings.xpinstallEnabled) {
-                     context.getString(R.string.mozac_feature_addons_extension_failed_to_install)
+                     context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
 +                } else {
 +                    context.getString(R.string.extension_failed_to_install_xpinstall_disabled_error)
                  }
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 03d80ed014..75f60dfec3 100644
+index 4d499da8de..2428739de5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -765,7 +765,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -755,7 +755,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
      @VisibleForTesting
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {

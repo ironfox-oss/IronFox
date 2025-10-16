@@ -59,4 +59,16 @@
     <string name="preference_translations_enabled">Firefox Vertalen inschakelen</string>
     <string name="preference_collections_enabled">Verzamelingen inschakelen</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Installatie van add-ons is momenteel uitgeschakeld. Dit kan, ten koste van de veiligheid, ingeschakeld worden via Instellingen -&gt; IronFox -&gt; IronFox-instellingen -&gt; Beveiliging -&gt; Installatie van add-ons toestaan.</string>
+    <string name="preference_jit_trusted_principals_enabled">JavaScript Just-in-time Compilation (JIT) inschakelen voor extensies</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Schakelt JIT in voor extensies, ook wanneer JIT globaal is uitgeschakeld - Na wijziging zal de browser opnieuw opstarten</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Versoepelt middels een lijst van IronFox automatisch de fingerprintbescherming voor bepaalde websites om problemen te voorkomen - Na wijziging zal de browser opnieuw opstarten</string>
+    <string name="spoof_timezone_summary">Dit verbetert de fingerprintingbescherming</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Aanpassingen van IronFox voor fingerprintbescherming inschakelen</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Aanpassingen van Mozilla voor fingerprintbescherming inschakelen</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Versoepelt middels een lijst van Mozilla automatisch de fingerprintingbescherming voor bepaalde websites om problemen te voorkomen - Na wijziging zal de browser opnieuw opstarten</string>
+    <string name="spoof_timezone">Tijdzone spoofen naar UTC-0</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Schakelt het spoofen van de tijdzone uit voor bepaalde websites om problemen te voorkomen - Na wijziging zal de browser opnieuw opstarten</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Aanpassingen van IronFox voor het spoofen van de tijdzone inschakelen</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Aanpassingen van IronFox voor WebGL inschakelen</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Schakelt WebGL in voor bepaalde websites om problemen te voorkomen, ook wanneer WebGL globaal is uitgeschakeld - Na wijziging zal de browser opnieuw opstarten</string>
 </resources>

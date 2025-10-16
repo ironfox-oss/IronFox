@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 5340aa5258..1cc4e777f8 100644
+index 29cd599a82..0bde468c22 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -361,7 +361,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -377,7 +377,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                          // new search suggestions. The worker requires us to have called
                          // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
                          // scheduling these tasks. When disabled we stop the periodic work.
@@ -11,7 +11,7 @@ index 5340aa5258..1cc4e777f8 100644
                              components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
                          } else {
                              components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
-@@ -452,7 +452,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -466,7 +466,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          queueStorageMaintenance()
          queueNimbusFetchInForeground()
          queueDownloadWallpapers()
@@ -101,10 +101,10 @@ index ce4b42ef4a..d5f03c9e2a 100644
          requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a46a154665..0cf708e77d 100644
+index 312b5b3de3..f60936b5aa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2316,7 +2316,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2390,7 +2390,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var enableFxSuggest by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
@@ -113,7 +113,7 @@ index a46a154665..0cf708e77d 100644
          featureFlag = FeatureFlags.FX_SUGGEST,
      )
  
-@@ -2341,7 +2341,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2415,7 +2415,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
          default = { enableFxSuggest },
@@ -122,7 +122,7 @@ index a46a154665..0cf708e77d 100644
      )
  
      /**
-@@ -2351,7 +2351,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2425,7 +2425,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showNonSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),

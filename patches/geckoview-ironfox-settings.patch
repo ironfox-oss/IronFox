@@ -1,26 +1,33 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index aea35cbd34..06a8ce7791 100644
+index 22ea23ef5e..bd815cb8b0 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -1028,6 +1028,29 @@ package org.mozilla.geckoview {
+@@ -1031,6 +1031,36 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
 +    method public boolean getAccessibilityEnabled();
++    method public boolean getAddressAutofillEnabled();
 +    method public boolean getCacheEnabled();
++    method public boolean getCardAutofillEnabled();
 +    method public boolean getEmeEnabled();
++    method public boolean getFppOverridesIronFoxEnabled();
++    method public boolean getFppOverridesIronFoxTimezoneEnabled();
++    method public boolean getFppOverridesIronFoxWebGLEnabled();
++    method public boolean getFppOverridesMozillaEnabled();
 +    method public boolean getIpv6Enabled();
 +    method public boolean getJavaScriptJitBaselineEnabled();
 +    method public boolean getJavaScriptJitHintsEnabled();
 +    method public boolean getJavaScriptJitIonEnabled();
 +    method public boolean getJavaScriptJitIonWasmEnabled();
-+    method public boolean getJavaScriptJitMainProcessEnabled();
 +    method public boolean getJavaScriptJitNativeRegexpEnabled();
 +    method public boolean getJavaScriptJitTrustedPrincipalsEnabled();
++    method public boolean getPasswordManagerEnabled();
 +    method public boolean getPdfjsDisabled();
 +    method public boolean getPrintEnabled();
 +    method public int getRefererXOriginPolicy();
 +    method public boolean getSpoofEnglish();
++    method public boolean getSpoofTimezone();
 +    method public boolean getSvgEnabled();
 +    method public boolean getTranslationsEnabled();
 +    method public boolean getTranslationsSupported();
@@ -32,25 +39,32 @@ index aea35cbd34..06a8ce7791 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1078,6 +1101,29 @@ package org.mozilla.geckoview {
+@@ -1081,6 +1111,36 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setAccessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setAddressAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setCacheEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setCardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setEmeEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setFppOverridesIronFoxEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setFppOverridesIronFoxTimezoneEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setFppOverridesIronFoxWebGLEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setFppOverridesMozillaEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setIpv6Enabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitBaselineEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitHintsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitIonEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitIonWasmEnabled(boolean);
-+    method @NonNull public GeckoRuntimeSettings setJavaScriptJitMainProcessEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitNativeRegexpEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setPasswordManagerEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setPdfjsDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setPrintEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setRefererXOriginPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings setSpoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings setSpoofTimezone(boolean);
 +    method @NonNull public GeckoRuntimeSettings setSvgEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setTranslationsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setTranslationsSupported(boolean);
@@ -62,7 +76,7 @@ index aea35cbd34..06a8ce7791 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1092,6 +1138,9 @@ package org.mozilla.geckoview {
+@@ -1095,6 +1155,9 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -72,25 +86,32 @@ index aea35cbd34..06a8ce7791 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1143,6 +1192,29 @@ package org.mozilla.geckoview {
+@@ -1147,6 +1210,36 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder accessibilityEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder addressAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder cacheEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder cardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder emeEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder fppOverridesIronFoxEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder fppOverridesIronFoxTimezoneEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder fppOverridesIronFoxWebGLEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder fppOverridesMozillaEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder ipv6Enabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitBaselineEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitHintsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitIonEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitIonWasmEnabled(boolean);
-+    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitMainProcessEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitNativeRegexpEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder javaScriptJitTrustedPrincipalsEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder passwordManagerEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder pdfjsDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder printEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder refererXOriginPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings.Builder spoofEnglish(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder spoofTimezone(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder svgEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder translationsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder translationsSupported(boolean);
@@ -102,7 +123,7 @@ index aea35cbd34..06a8ce7791 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1158,6 +1230,9 @@ package org.mozilla.geckoview {
+@@ -1162,6 +1255,9 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -113,11 +134,11 @@ index aea35cbd34..06a8ce7791 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 1aeae7c828..a75302fbfb 100644
+index 10c6a16381..b176e83346 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -663,6 +663,121 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-       getSettings().setSameDocumentNavigationOverridesLoadTypeForceDisable(uri);
+@@ -681,6 +681,156 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+       getSettings().mIsolatedProcess = enabled;
        return this;
      }
 +
@@ -126,13 +147,43 @@ index 1aeae7c828..a75302fbfb 100644
 +      return this;
 +    }
 +
++    public @NonNull Builder addressAutofillEnabled(final boolean flag) {
++      getSettings().mAddressAutofillEnabled.set(flag);
++      return this;
++    }
++
 +    public @NonNull Builder cacheEnabled(final boolean flag) {
 +      getSettings().mCacheEnabled.set(flag);
 +      return this;
 +    }
 +
++    public @NonNull Builder cardAutofillEnabled(final boolean flag) {
++      getSettings().mCardAutofillEnabled.set(flag);
++      return this;
++    }
++
 +    public @NonNull Builder emeEnabled(final boolean flag) {
 +      getSettings().mEmeEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder fppOverridesIronFoxEnabled(final boolean flag) {
++      getSettings().mFppOverridesIronFoxEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder fppOverridesIronFoxTimezoneEnabled(final boolean flag) {
++      getSettings().mFppOverridesIronFoxTimezoneEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder fppOverridesIronFoxWebGLEnabled(final boolean flag) {
++      getSettings().mFppOverridesIronFoxWebGLEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder fppOverridesMozillaEnabled(final boolean flag) {
++      getSettings().mFppOverridesMozillaEnabled.set(flag);
 +      return this;
 +    }
 +
@@ -161,11 +212,6 @@ index 1aeae7c828..a75302fbfb 100644
 +      return this;
 +    }
 +
-+    public @NonNull Builder javaScriptJitMainProcessEnabled(final boolean flag) {
-+      getSettings().mJavaScriptJitMainProcessEnabled.set(!flag);
-+      return this;
-+    }
-+
 +    public @NonNull Builder javaScriptJitNativeRegexpEnabled(final boolean flag) {
 +      getSettings().mJavaScriptJitNativeRegexpEnabled.set(flag);
 +      return this;
@@ -173,6 +219,11 @@ index 1aeae7c828..a75302fbfb 100644
 +
 +    public @NonNull Builder javaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
 +      getSettings().mJavaScriptJitTrustedPrincipalsEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder passwordManagerEnabled(final boolean flag) {
++      getSettings().mPasswordManagerEnabled.set(flag);
 +      return this;
 +    }
 +
@@ -193,6 +244,11 @@ index 1aeae7c828..a75302fbfb 100644
 +
 +    public @NonNull Builder spoofEnglish(final boolean flag) {
 +      getSettings().mSpoofEnglish.set(flag ? 2 : 1);
++      return this;
++    }
++
++    public @NonNull Builder spoofTimezone(final boolean flag) {
++      getSettings().mSpoofTimezone.set(flag);
 +      return this;
 +    }
 +
@@ -238,25 +294,32 @@ index 1aeae7c828..a75302fbfb 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -798,6 +913,30 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -821,6 +971,37 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
 +  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<Integer>("accessibility.force_disabled", 1);
++  /* package */ final Pref<Boolean> mAddressAutofillEnabled = new Pref<Boolean>("extensions.formautofill.addresses.enabled", false);
 +  /* package */ final Pref<Boolean> mCacheEnabled = new Pref<Boolean>("browser.cache.disk.enable", false);
++  /* package */ final Pref<Boolean> mCardAutofillEnabled = new Pref<Boolean>("extensions.formautofill.creditCards.enabled", false);
 +  /* package */ final Pref<Boolean> mEmeEnabled = new Pref<Boolean>("media.eme.enabled", false);
++  /* package */ final Pref<Boolean> mFppOverridesIronFoxEnabled = new Pref<Boolean>("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true);
++  /* package */ final Pref<Boolean> mFppOverridesIronFoxTimezoneEnabled = new Pref<Boolean>("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true);
++  /* package */ final Pref<Boolean> mFppOverridesIronFoxWebGLEnabled = new Pref<Boolean>("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", true);
++  /* package */ final Pref<Boolean> mFppOverridesMozillaEnabled = new Pref<Boolean>("privacy.fingerprintingProtection.remoteOverrides.enabled", true);
 +  /* package */ final Pref<Boolean> mIpv6Enabled = new Pref<Boolean>("network.dns.disableIPv6", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitBaselineEnabled = new Pref<Boolean>("javascript.options.baselinejit", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitHintsEnabled = new Pref<Boolean>("javascript.options.jithints", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitIonEnabled = new Pref<Boolean>("javascript.options.ion", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitIonWasmEnabled = new Pref<Boolean>("javascript.options.wasm_optimizingjit", false);
-+  /* package */ final Pref<Boolean> mJavaScriptJitMainProcessEnabled = new Pref<Boolean>("javascript.options.main_process_disable_jit", true);
 +  /* package */ final Pref<Boolean> mJavaScriptJitNativeRegexpEnabled = new Pref<Boolean>("javascript.options.native_regexp", false);
 +  /* package */ final Pref<Boolean> mJavaScriptJitTrustedPrincipalsEnabled = new Pref<Boolean>("javascript.options.jit_trustedprincipals", false);
++  /* package */ final Pref<Boolean> mPasswordManagerEnabled = new Pref<Boolean>("signon.rememberSignons", false);
 +  /* package */ final Pref<Boolean> mPdfjsDisabled = new Pref<Boolean>("pdfjs.disabled", false);
 +  /* package */ final Pref<Boolean> mPrintEnabled = new Pref<Boolean>("print.enabled", true);
 +  /* package */ final Pref<Integer> mRefererXOriginPolicy = new Pref<Integer>("network.http.referer.XOriginPolicy", 0);
 +  /* package */ final Pref<Integer> mSpoofEnglish = new Pref<Integer>("privacy.spoof_english", 2);
++  /* package */ final Pref<Boolean> mSpoofTimezone = new Pref<Boolean>("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false);
 +  /* package */ final Pref<Boolean> mSvgEnabled = new Pref<Boolean>("svg.disabled", false);
 +  /* package */ final Pref<Boolean> mTranslationsEnabled = new Pref<Boolean>("browser.translations.enable", true);
 +  /* package */ final Pref<Boolean> mTranslationsSupported = new Pref<Boolean>("browser.translations.simulateUnsupportedEngine", false);
@@ -269,8 +332,8 @@ index 1aeae7c828..a75302fbfb 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2317,6 +2456,239 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
-     return mSameDocumentNavigationOverridesLoadTypeForceDisable.get();
+@@ -2356,6 +2537,302 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+     return mIsolatedProcess;
    }
  
 +  public boolean getAccessibilityEnabled() {
@@ -279,6 +342,15 @@ index 1aeae7c828..a75302fbfb 100644
 +
 +  public @NonNull GeckoRuntimeSettings setAccessibilityEnabled(final boolean flag) {
 +    mAccessibilityEnabled.commit(flag ? 0 : 1);
++    return this;
++  }
++
++  public boolean getAddressAutofillEnabled() {
++    return mAddressAutofillEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setAddressAutofillEnabled(final boolean flag) {
++    mAddressAutofillEnabled.commit(flag);
 +    return this;
 +  }
 +
@@ -291,12 +363,57 @@ index 1aeae7c828..a75302fbfb 100644
 +    return this;
 +  }
 +
++  public boolean getCardAutofillEnabled() {
++    return mCardAutofillEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setCardAutofillEnabled(final boolean flag) {
++    mCardAutofillEnabled.commit(flag);
++    return this;
++  }
++
 +  public boolean getEmeEnabled() {
 +    return mEmeEnabled.get();
 +  }
 +
 +  public @NonNull GeckoRuntimeSettings setEmeEnabled(final boolean flag) {
 +    mEmeEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getFppOverridesIronFoxEnabled() {
++    return mFppOverridesIronFoxEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setFppOverridesIronFoxEnabled(final boolean flag) {
++    mFppOverridesIronFoxEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getFppOverridesIronFoxTimezoneEnabled() {
++    return mFppOverridesIronFoxTimezoneEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setFppOverridesIronFoxTimezoneEnabled(final boolean flag) {
++    mFppOverridesIronFoxTimezoneEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getFppOverridesIronFoxWebGLEnabled() {
++    return mFppOverridesIronFoxWebGLEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setFppOverridesIronFoxWebGLEnabled(final boolean flag) {
++    mFppOverridesIronFoxWebGLEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getFppOverridesMozillaEnabled() {
++    return mFppOverridesMozillaEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setFppOverridesMozillaEnabled(final boolean flag) {
++    mFppOverridesMozillaEnabled.commit(flag);
 +    return this;
 +  }
 +
@@ -345,15 +462,6 @@ index 1aeae7c828..a75302fbfb 100644
 +    return this;
 +  }
 +
-+  public boolean getJavaScriptJitMainProcessEnabled() {
-+    return !mJavaScriptJitMainProcessEnabled.get();
-+  }
-+
-+  public @NonNull GeckoRuntimeSettings setJavaScriptJitMainProcessEnabled(final boolean flag) {
-+    mJavaScriptJitMainProcessEnabled.commit(!flag);
-+    return this;
-+  }
-+
 +  public boolean getJavaScriptJitNativeRegexpEnabled() {
 +    return mJavaScriptJitNativeRegexpEnabled.get();
 +  }
@@ -369,6 +477,15 @@ index 1aeae7c828..a75302fbfb 100644
 +
 +  public @NonNull GeckoRuntimeSettings setJavaScriptJitTrustedPrincipalsEnabled(final boolean flag) {
 +    mJavaScriptJitTrustedPrincipalsEnabled.commit(flag);
++    return this;
++  }
++
++  public boolean getPasswordManagerEnabled() {
++    return mPasswordManagerEnabled.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setPasswordManagerEnabled(final boolean flag) {
++    mPasswordManagerEnabled.commit(flag);
 +    return this;
 +  }
 +
@@ -431,6 +548,15 @@ index 1aeae7c828..a75302fbfb 100644
 +
 +  public @NonNull GeckoRuntimeSettings setSpoofEnglish(final boolean flag) {
 +    mSpoofEnglish.commit(flag ? 2 : 1);
++    return this;
++  }
++
++  public boolean getSpoofTimezone() {
++    return mSpoofTimezone.get();
++  }
++
++  public @NonNull GeckoRuntimeSettings setSpoofTimezone(final boolean flag) {
++    mSpoofTimezone.commit(flag);
 +    return this;
 +  }
 +

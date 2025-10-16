@@ -1,30 +1,39 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-index 6bbc5b3ed8..198c14a2e5 100644
+index 8c410ec1f4..64b726c6d3 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 +++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-@@ -65,9 +65,9 @@ dependencies {
+@@ -21,7 +21,7 @@ buildscript {
+ 
+ plugins {
+     alias(libs.plugins.python.envs.plugin)
+-    id 'org.mozilla.nimbus-gradle-plugin'
++//    id 'org.mozilla.nimbus-gradle-plugin'
+ }
+ 
+ apply plugin: 'com.android.library'
+@@ -73,9 +73,9 @@ dependencies {
+ 
+     implementation project(':components:concept-engine')
      implementation project(':components:concept-fetch')
-     implementation project(':components:support-ktx')
-     implementation project(':components:support-utils')
 -    implementation(project(':components:service-nimbus')) {
 -        exclude group: 'org.mozilla.telemetry', module: 'glean-native'
 -    }
-+    // implementation(project(':components:service-nimbus')) {
-+        // exclude group: 'org.mozilla.telemetry', module: 'glean-native'
-+    // }
-     implementation libs.kotlin.coroutines
++//    implementation(project(':components:service-nimbus')) {
++//        exclude group: 'org.mozilla.telemetry', module: 'glean-native'
++//    }
+     implementation project(':components:support-ktx')
+     implementation project(':components:support-utils')
  
-     if (findProject(":geckoview") != null) {
-@@ -108,7 +108,7 @@ ext {
+@@ -110,7 +110,7 @@ ext {
  apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
  apply from: '../../../android-lint.gradle'
  apply from: '../../../publish.gradle'
--apply plugin: "org.mozilla.appservices.nimbus-gradle-plugin"
-+/*apply plugin: "org.mozilla.appservices.nimbus-gradle-plugin"
- nimbus {
+-nimbus {
++/*nimbus {
      // The path to the Nimbus feature manifest file
      manifestFile = "geckoview.fml.yaml"
-@@ -123,7 +123,7 @@ nimbus {
+ 
+@@ -124,7 +124,7 @@ nimbus {
      // *NOTE*: This example will not work for all projects, but should work for Fenix, Focus, and Android Components
      applicationServicesDir = gradle.hasProperty('localProperties.autoPublish.application-services.dir')
              ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null

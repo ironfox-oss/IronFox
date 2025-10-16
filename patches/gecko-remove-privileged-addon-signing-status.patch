@@ -1,8 +1,8 @@
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-index 0c6c7a6637..b4c4287f1b 100644
+index 60fcad0870..260067ec91 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-@@ -871,13 +871,13 @@ function getSignedStatus(aRv, aCert, aAddonID) {
+@@ -873,13 +873,13 @@ function getSignedStatus(aRv, aCert, aAddonID) {
          return AddonManager.SIGNEDSTATE_BROKEN;
        }
  

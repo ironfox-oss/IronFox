@@ -28,21 +28,21 @@ index 9e8098c79b..a7e0e6a181 100644
          // ... but RustHttpConfig.setClient() and RustLog.enable() can be called later.
          RustLog.enable()
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-index 486e757b48..67a8937fef 100644
+index ce7dff483c..4941ef3068 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-@@ -154,8 +154,8 @@ class CrashReporter internal constructor(
-     /**
-      * Install this [CrashReporter] instance. At this point the component will be setup to collect crash reports.
-      */
--    fun install(applicationContext: Context): CrashReporter {
+@@ -157,8 +157,8 @@ class CrashReporter internal constructor(
+     fun install(
+         applicationContext: Context,
+         handleCaughtExceptionSideEffects: (() -> Unit)? = null,
+-    ): CrashReporter {
 -        instance = this
-+    fun install(applicationContext: Context) {
++    ) {
 +/*        instance = this
  
          val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
          val handler = ExceptionHandler(
-@@ -165,7 +165,7 @@ class CrashReporter internal constructor(
+@@ -169,7 +169,7 @@ class CrashReporter internal constructor(
          )
          Thread.setDefaultUncaughtExceptionHandler(handler)
  

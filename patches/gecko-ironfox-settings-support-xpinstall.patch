@@ -1,8 +1,8 @@
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index 68728ba359..8d97eb6e70 100644
+index bcb53dc10c..6307b6f9ef 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
-@@ -1738,8 +1738,8 @@ export var Policies = {
+@@ -1767,8 +1767,8 @@ export var Policies = {
          addAllowDenyPermissions("install", param.Allow, null);
        }
        if ("Default" in param) {
@@ -14,10 +14,10 @@ index 68728ba359..8d97eb6e70 100644
            setAndLockPref(
              "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 3d8837cdb3..d1edd52293 100644
+index 2bfec5537e..9267d8e24a 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -399,9 +399,14 @@ EnterprisePoliciesManager.prototype = {
+@@ -411,11 +411,14 @@ EnterprisePoliciesManager.prototype = {
  
    mayInstallAddon(addon) {
      // See https://dev.chromium.org/administrators/policy-list-3/extension-settings-full
@@ -25,19 +25,20 @@ index 3d8837cdb3..d1edd52293 100644
 +    if (addon.id === "uBlock0@raymondhill.net" && addon.type === "extension" && addon.isWebExtension && addon.sourceURI === "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi" && addon.name === "uBlock Origin" && addon.isCorrectlySigned && addon.providesUpdatesSecurely && addon.isCompatible && addon.isPlatformCompatible && addon.blocklistState === 0) {
        return true;
      }
-+
 +    if (!addon.inDatabase && !Services.prefs.getBoolPref("xpinstall.enabled", false)) {
 +      return false;
 +    }
-+
      if (addon.id in ExtensionSettings) {
-       if ("installation_mode" in ExtensionSettings[addon.id]) {
+-      if ("installation_mode" in ExtensionSettings[addon.id]) {
++      if ("installation_mode" in ExtensionSettings[addon.id] && Services.prefs.getBoolPref("browser.ironfox.extensions.blocklist.enabled", true)) {
          switch (ExtensionSettings[addon.id].installation_mode) {
+           case "blocked":
+             return false;
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-index 0c6c7a6637..6c921c6341 100644
+index 60fcad0870..d572b79ff8 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-@@ -4463,7 +4463,7 @@ export var XPIInstall = {
+@@ -4480,7 +4480,7 @@ export var XPIInstall = {
     */
    isInstallEnabled() {
      // Default to enabled if the preference does not exist

@@ -10,9 +10,11 @@ On top of [Firefox's already privacy-respecting design and implementation of Saf
 
 **At the cost of security**, you can disable Safe Browsing if desired, by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security` -> `Enable Safe Browsing`.
 
-**If you'd like to keep Safe Browsing enabled, but prefer to disable our proxy and connect to Google directly**, you can do this by navigating to your `about:config`, and following these steps:
+**If you'd like to keep Safe Browsing enabled, but prefer to disable our proxy and connect to Google directly**, you can do this by setting the following preferences in your [`about:config`](about:config):
 
-- Find the `browser.safebrowsing.provider.ironfox.lists` preference. Select and **Copy** its current value, and change it to `disabled`.
-- Find the `browser.safebrowsing.provider.google4.lists` preference, and change its value to the value of the `browser.safebrowsing.provider.ironfox.lists` preference that you copied before.
+- `browser.safebrowsing.provider.google4.gethashURL` -> `https://safebrowsing.googleapis.com/v4/fullHashes:find?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST`
+- `browser.safebrowsing.provider.google4.updateURL` -> `https://safebrowsing.googleapis.com/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST`
+- `browser.safebrowsing.provider.google5.gethashURL` -> `https://safebrowsing.googleapis.com/v5/hashes:search?key=%GOOGLE_SAFEBROWSING_API_KEY%`
+- `browser.safebrowsing.provider.google5.updateURL` -> `https://safebrowsing.googleapis.com/v5/hashLists:batchGet?key=%GOOGLE_SAFEBROWSING_API_KEY%`
 
-If you'd like to revert back to using our proxy, you can do so at any time by resetting the values of the `browser.safebrowsing.provider.google4.lists` and `browser.safebrowsing.provider.ironfox.lists` preferences.
+If you'd like to revert back to using our proxy, you can do so at any time by resetting the values of the `browser.safebrowsing.provider.google4.gethashURL`, `browser.safebrowsing.provider.google4.updateURL`, `browser.safebrowsing.provider.google5.gethashURL`, and `browser.safebrowsing.provider.google5.updateURL` preferences.

@@ -39,6 +39,12 @@
     <!-- Firefox Translations -->
     <string name="preference_translations_enabled">Enable Firefox Translations</string>
 
+    <!-- FPP overrides -->
+    <string name="preference_fpp_overrides_ironfox_enabled">Enable fingerprinting protection overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from IronFox - Changing this setting will restart your browser</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Enable fingerprinting protection overrides from Mozilla</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from Mozilla - Changing this setting will restart your browser</string>
+
     <!-- IPv6 -->
     <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
 
@@ -50,6 +56,8 @@
     <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
     <string name="preference_jit_enabled_summary">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
+    <string name="preference_jit_trusted_principals_enabled">Enable JavaScript Just-in-time Compilation (JIT) for extensions</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Enables JIT for extensions when JIT is otherwise disabled globally - Changing this setting will restart your browser</string>
 
     <!-- PDF.js -->
     <string name="preference_pdfjs_disabled">Open PDF files externally</string>
@@ -78,6 +86,12 @@
     <string name="tor_spoof_english">Request English versions of webpages</string>
     <string name="tor_spoof_english_summary">When enabled, strengthens fingerprinting protection</string>
 
+    <!-- Spoof timezone to UTC-0 -->
+    <string name="spoof_timezone">Spoof timezone to UTC-0</string>
+    <string name="spoof_timezone_summary">When enabled, strengthens fingerprinting protection</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Enable timezone spoofing overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Disables timezone spoofing for certain websites by default to reduce breakage - Changing this setting will restart your browser</string>
+
     <!-- SVG -->
     <string name="preference_svg_enabled">Enable Scalable Vector Graphics (SVG)</string>
 
@@ -94,6 +108,8 @@
 
     <!-- WebGL -->
     <string name="preference_webgl_enabled">Enable WebGL</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Enable WebGL overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Enables WebGL for certain websites by default when WebGL is otherwise disabled globally to reduce breakage - Changing this setting will restart your browser</string>
 
     <!-- WebRTC -->
     <string name="preference_webrtc_enabled">Enable WebRTC</string>

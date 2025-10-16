@@ -116,6 +116,59 @@ index 971df3dc5b..93e1182454 100644
 +        description: Whether to request English versions of web pages for enhanced privacy.
 +      install-ublock:
 +        description: Whether to install uBlock Origin.
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
+index ed98060904..0ff50c5aec 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
+@@ -215,6 +215,12 @@ fun OnboardingScreenRedesign(
+             onMarketingDataContinueClick(allowMarketingDataCollection)
+             scrollToNextPageOrDismiss()
+         },
++        onIfPreferenceDohButtonClick = {
++            scrollToNextPageOrDismiss()
++        },
++        onIfPreferencesButtonClick = {
++            scrollToNextPageOrDismiss()
++        },
+         onboardingStore = onboardingStore,
+     )
+ }
+@@ -259,6 +265,8 @@ private fun OnboardingContent(
+     onMarketingOptInToggle: (optIn: Boolean) -> Unit,
+     onMarketingDataLearnMoreClick: () -> Unit,
+     onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
++    onIfPreferenceDohButtonClick: () -> Unit,
++    onIfPreferencesButtonClick: () -> Unit,
+ ) {
+     val nestedScrollConnection = remember { DisableForwardSwipeNestedScrollConnection(pagerState) }
+ 
+@@ -305,6 +313,8 @@ private fun OnboardingContent(
+                     onAddFirefoxWidgetSkipClick = onSkipFirefoxWidgetClick,
+                     onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
+                     onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
++                    onIfPreferenceDohButtonClick = onIfPreferenceDohButtonClick,
++                    onIfPreferencesButtonClick = onIfPreferencesButtonClick,
+                 )
+ 
+                 OnboardingPageForType(
+@@ -383,6 +393,8 @@ private fun OnboardingPageForType(
+         // no-ops
+         OnboardingPageUiData.Type.NOTIFICATION_PERMISSION,
+         OnboardingPageUiData.Type.THEME_SELECTION,
++        OnboardingPageUiData.Type.IF_PREFERENCE_DOH,
++        OnboardingPageUiData.Type.IF_PREFERENCES,
+             -> {
+             logger.error("Unsupported page type: $type used for onboarding redesign.")
+         }
+@@ -449,6 +461,8 @@ private fun OnboardingScreenPreview() {
+             onMarketingDataLearnMoreClick = {},
+             onMarketingOptInToggle = {},
+             onMarketingDataContinueClick = {},
++            onIfPreferenceDohButtonClick = {},
++            onIfPreferencesButtonClick = {},
+         )
+     }
+ }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
 index 0000000000..f9e1f71a51
@@ -1387,10 +1440,10 @@ index 0000000000..320d27bdac
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
 new file mode 100644
-index 0000000000..0922fe89ba
+index 0000000000..7e3657089a
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/IronFoxPreferences.kt
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,93 @@
 +package org.ironfoxoss.ironfox.utils
 +
 +import android.content.Context
@@ -1419,7 +1472,6 @@ index 0000000000..0922fe89ba
 +        components.core.engine.settings.javascriptJitHintsEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitIonEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitIonWasmEnabled = isEnabled
-+        components.core.engine.settings.javascriptJitMainProcessEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitNativeRegexpEnabled = isEnabled
 +        components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = isEnabled
 +    }

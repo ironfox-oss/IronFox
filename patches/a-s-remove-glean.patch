@@ -44,10 +44,24 @@ index 20d615e..ddaa6e1 100644
 +    }*/
  }
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index f5d173c..1428128 100644
+index f77d82a..40bcadd 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -92,7 +92,7 @@ open class Nimbus(
+@@ -26,10 +26,10 @@ import kotlinx.coroutines.runBlocking
+ import kotlinx.coroutines.withContext
+ import mozilla.appservices.remotesettings.RemoteSettingsConfig
+ import mozilla.appservices.remotesettings.RemoteSettingsServer
+-import mozilla.telemetry.glean.Glean
++// import mozilla.telemetry.glean.Glean
+ import org.json.JSONObject
+-import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
+-import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
++// import org.mozilla.experiments.nimbus.GleanMetrics.NimbusEvents
++// import org.mozilla.experiments.nimbus.GleanMetrics.NimbusHealth
+ import org.mozilla.experiments.nimbus.internal.AppContext
+ import org.mozilla.experiments.nimbus.internal.AvailableExperiment
+ import org.mozilla.experiments.nimbus.internal.EnrolledExperiment
+@@ -93,7 +93,7 @@ open class Nimbus(
  
      private val metricsHandler = object : MetricsHandler {
          override fun recordEnrollmentStatuses(enrollmentStatusExtras: List<EnrollmentStatusExtraDef>) {
@@ -56,7 +70,7 @@ index f5d173c..1428128 100644
                  NimbusEvents.enrollmentStatus.record(
                      NimbusEvents.EnrollmentStatusExtra(
                          branch = extra.branch,
-@@ -103,38 +103,38 @@ open class Nimbus(
+@@ -104,38 +104,38 @@ open class Nimbus(
                          conflictSlug = extra.conflictSlug,
                      ),
                  )
@@ -102,7 +116,7 @@ index f5d173c..1428128 100644
          }
      }
  
-@@ -201,11 +201,11 @@ open class Nimbus(
+@@ -221,11 +221,11 @@ open class Nimbus(
          try {
              nimbusClient.getFeatureConfigVariables(featureId)?.let { JSONObject(it) }
          } catch (e: NimbusException.DatabaseNotReady) {
@@ -116,7 +130,7 @@ index f5d173c..1428128 100644
              null
          } catch (e: Throwable) {
              reportError("getFeatureConfigVariablesJson", e)
-@@ -281,9 +281,9 @@ open class Nimbus(
+@@ -301,9 +301,9 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun fetchExperimentsOnThisThread() = withCatchAll("fetchExperiments") {
          try {
@@ -129,7 +143,7 @@ index f5d173c..1428128 100644
              updateObserver {
                  it.onExperimentsFetched()
              }
-@@ -318,7 +318,7 @@ open class Nimbus(
+@@ -338,7 +338,7 @@ open class Nimbus(
              val time = measureTimeMillis {
                  events = nimbusClient.applyPendingExperiments()
              }
@@ -138,24 +152,20 @@ index f5d173c..1428128 100644
              recordExperimentTelemetryEvents(events!!)
              // Get the experiments to record in telemetry
              postEnrolmentCalculation()
-@@ -488,19 +488,19 @@ open class Nimbus(
+@@ -534,19 +534,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
 -        experiments.forEach { experiment ->
-+//        experiments.forEach { experiment ->
++/*        experiments.forEach { experiment ->
              // For now, we will just record the experiment id and the branch id. Once we can call
              // Glean from Rust, this will move to the nimbus-sdk Rust core.
--            Glean.setExperimentActive(
--                experiment.slug,
--                experiment.branchSlug,
--            )
+             Glean.setExperimentActive(
+                 experiment.slug,
+                 experiment.branchSlug,
+             )
 -        }
-+//            Glean.setExperimentActive(
-+//                experiment.slug,
-+//                experiment.branchSlug,
-+//            )
-+//        }
++        }*/
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -165,7 +175,7 @@ index f5d173c..1428128 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -548,7 +548,7 @@ open class Nimbus(
+@@ -594,7 +594,7 @@ open class Nimbus(
                      )
                  }
              }
