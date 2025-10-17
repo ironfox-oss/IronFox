@@ -4,6 +4,7 @@
 	- [How can I download IronFox?](#how-can-i-download-ironfox)
 	- [How *should* I download IronFox?](#how-should-i-download-ironfox)
 	- [Why isn't IronFox available on F-Droid?](#why-isnt-ironfox-available-on-f-droid)
+	- [How can I download Nightly builds?](#how-can-i-download-nightly-builds)
 	- [Aren't Firefox-based browsers less secure than Chromium?](#arent-firefox-based-browsers-less-secure-than-chromium)
 	- [So IronFox is **insecure**? Why should I use it then, what's the point?](#so-ironfox-is-insecure-why-should-i-use-it-then-whats-the-point)
 	- [Does IronFox contain proprietary/tracking libraries?](#does-ironfox-contain-proprietarytracking-libraries)
@@ -44,6 +45,22 @@ We'd also recommend checking out [this article from privacy and security researc
 While we do provide our own [F-Droid repository](https://fdroid.ironfoxoss.org/fdroid/repo/index.html) for those who insist on using F-Droid, F-Droid's client isn't without its own privacy and security issues *(notably: [not properly notifying users of updates...](https://codeberg.org/celenity/Phoenix/issues/89#issuecomment-3145034))*, so other installation methods, such as [Accrescent](https://accrescent.app/app/org.ironfoxoss.ironfox), should be preferred if possible.
 
 For those who do insist on using F-Droid to install and update IronFox, we would recommend using [F-Droid Basic](https://f-droid.org/packages/org.fdroid.basic/) as your preferred client of choice, as it is more secure than the standard F-Droid client, due to its reduced feature-set.
+
+## How can I download Nightly builds?
+
+IronFox Nightly builds are builds of IronFox that are automatically generated from our GitLab CI. These builds are bleeding edge, and contain the latest changes as we add them. **These builds can be installed alongside your main/existing IronFox install**.
+
+When reporting an issue, we'll likely direct you to install and attempt to reproduce the issue on the latest Nightly build, to ensure that we haven't already fixed the problem.
+
+**You can find and install the latest IronFox Nightly build with the following steps**:
+
+**1**. Navigate to [the `Artifacts` tab](https://gitlab.com/ironfox-oss/IronFox/-/artifacts) on our GitLab repository.
+
+**2**. Select the **folder icon** to the right of the latest artifact for your device's architecture. If you're not sure what architecture to use, we'd recommend trying `build-apk:` **[`arm64`]** first. If that doesn't work, you can try `build-apk:` **[`arm`]** instead.
+
+**3**. Navigate to `artifacts` -> `apk`, and select the file ending in `.apk`.
+
+**4**. Select `Download`, and proceed to download and install the application.
 
 ## Aren't Firefox-based browsers less secure than Chromium?
 
