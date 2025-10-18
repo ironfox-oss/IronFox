@@ -542,6 +542,9 @@ $SED -i -e 's|isFetchEnabled(): Boolean = .*|isFetchEnabled(): Boolean = false|g
 $SED -i -e 's/EXPERIMENT_COLLECTION_NAME = ".*"/EXPERIMENT_COLLECTION_NAME = ""/' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 $SED -i 's|nimbus-mobile-experiments||g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 
+# Remove default built-in search engines
+rm -vrf components/remote_settings/dumps/*/attachments/search-config-icons/*
+
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
 $SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs

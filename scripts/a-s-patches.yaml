@@ -11,6 +11,12 @@ categories:
       These patches disable, remove, or replace unwanted Mozilla-related functionality from the browser. This includes
       advertising, data collection, promotions, and other services not required for critical functionality.
 
+  - name: "Privacy"
+    excerpt: "Enhancements that improve user privacy and strengthen data protection."
+    description: >
+      This category includes patches that protect against various forms of tracking, as well as patches that limit
+      data exposure and reduce the browser's required permissions.
+
 patches:
   # Build System
   - file: "a-s-localize-maven.patch"
@@ -36,8 +42,16 @@ patches:
     category: "Mozilla"
 
   - file: "a-s-rs-blocker.patch"
-    name: "Block Remote Settings (Application Services)"
+    name: "Block Remote Settings"
     description: "Restricts Remote Settings to only download specified collections."
     reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
     effect: "Network activity is further limited, less data is shared with Mozilla, and we can better control what specifically is downloaded from Remote Settings."
     category: "Mozilla"
+
+  # Privacy
+  - file: "a-s-configure-default-search-engines.patch"
+    name: "Custom Search Engines"
+    description: "Adds custom privacy-focused search engines."
+    reason: "To provide alternatives to tracking-heavy default search engines."
+    effect: "Users can easily use privacy-respecting search engines."
+    category: "Privacy"
