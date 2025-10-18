@@ -1,0 +1,77 @@
+diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
+index f3e54d3..ed3ae22 100644
+--- a/components/remote_settings/src/client.rs
++++ b/components/remote_settings/src/client.rs
+@@ -193,6 +193,11 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+         jexl_filter: JexlFilter,
+         api_client: C,
+     ) -> Self {
++        let collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") {
++            collection_name
++        } else {
++            String::from("")
++        };
+         Self {
+             collection_name,
+             inner: Mutex::new(RemoteSettingsClientInner {
+@@ -667,11 +672,19 @@ impl Client {
+             ))?,
+         };
+ 
++        let collection_name = if config.collection_name == String::from("quicksuggest-other") {
++            String::from("quicksuggest-other")
++        } else {
++            Err(Error::ConfigError(
++                "Download attempt to RS collection was blocked.".into(),
++            ))?
++        };
++
+         let bucket_name = config.bucket_name.unwrap_or_else(|| String::from("main"));
+         let endpoints = RemoteSettingsEndpoints::new(
+             &server.get_base_url()?,
+             &bucket_name,
+-            &config.collection_name,
++            &collection_name,
+         );
+ 
+         Ok(Self {
+diff --git a/components/remote_settings/src/service.rs b/components/remote_settings/src/service.rs
+index d5cc558..7ad51d7 100644
+--- a/components/remote_settings/src/service.rs
++++ b/components/remote_settings/src/service.rs
+@@ -63,17 +63,24 @@ impl RemoteSettingsService {
+ 
+     pub fn make_client(&self, collection_name: String) -> Arc<RemoteSettingsClient> {
+         let mut inner = self.inner.lock();
++
++        let overridden_collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") {
++            collection_name
++        } else {
++            String::from("")
++        };
++
+         // Allow using in-memory databases for testing of external crates.
+         let storage = if inner.storage_dir == ":memory:" {
+             Storage::new(inner.storage_dir.clone())
+         } else {
+-            Storage::new(inner.storage_dir.join(format!("{collection_name}.sql")))
++            Storage::new(inner.storage_dir.join(format!("{overridden_collection_name}.sql")))
+         };
+ 
+         let client = Arc::new(RemoteSettingsClient::new(
+             inner.base_url.clone(),
+             inner.bucket_name.clone(),
+-            collection_name.clone(),
++            overridden_collection_name.clone(),
+             inner.app_context.clone(),
+             storage,
+         ));
+@@ -107,7 +114,7 @@ impl RemoteSettingsService {
+                     }
+                 }
+             }
+-            if synced_collections.insert(collection_name.to_string()) {
++            if collection_name == String::from("quicksuggest-other") && synced_collections.insert(collection_name.to_string()) {
+                 trace!("syncing collection: {collection_name}");
+                 client.sync()?;
+             }

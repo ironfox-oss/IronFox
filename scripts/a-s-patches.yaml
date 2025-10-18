@@ -34,3 +34,10 @@ patches:
     reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Mozilla"
+
+  - file: "a-s-rs-blocker.patch"
+    name: "Block Remote Settings (Application Services)"
+    description: "Restricts Remote Settings to only download specified collections."
+    reason: "To prevent the download/use of unnecessary and undesired Remote Settings from Mozilla (ex. for experimentation)."
+    effect: "Network activity is further limited, less data is shared with Mozilla, and we can better control what specifically is downloaded from Remote Settings."
+    category: "Mozilla"
