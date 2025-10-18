@@ -681,6 +681,9 @@ echo '    "url-classifier-skip-urls.json",' >>services/settings/dumps/main/moz.b
 echo '    "url-parser-default-unknown-schemes-interventions.json",' >>services/settings/dumps/main/moz.build
 echo ']' >>services/settings/dumps/main/moz.build
 
+# Remove unused about:telemetry assets
+rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js toolkit/content/aboutTelemetry.xhtml
+
 # No-op AMO collections/recommendations
 $SED -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
 $SED -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
@@ -764,6 +767,20 @@ $SED -i -e 's|allowMetricsFromAAR = .*|allowMetricsFromAAR = false|g' mobile/and
 # Prevent DoH canary requests
 $SED -i -e 's/GLOBAL_CANARY = ".*"/GLOBAL_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
 $SED -i -e 's/ZSCALER_CANARY = ".*"/ZSCALER_CANARY = ""/' toolkit/components/doh/DoHHeuristics.sys.mjs
+
+# Prevent DoH remote config/rollout
+$SED -i -e 's/RemoteSettings(".*"/RemoteSettings(""/' toolkit/components/doh/DoHConfig.sys.mjs
+$SED -i -e 's/kConfigCollectionKey = ".*"/kConfigCollectionKey = ""/' toolkit/components/doh/DoHTestUtils.sys.mjs
+$SED -i -e 's/kProviderCollectionKey = ".*"/kProviderCollectionKey = ""/' toolkit/components/doh/DoHTestUtils.sys.mjs
+$SED -i 's|"doh-config"||g' toolkit/components/doh/DoHConfig.sys.mjs
+$SED -i 's|"doh-providers"||g' toolkit/components/doh/DoHConfig.sys.mjs
+$SED -i 's|"doh-config"||g' toolkit/components/doh/DoHTestUtils.sys.mjs
+$SED -i 's|"doh-providers"||g' toolkit/components/doh/DoHTestUtils.sys.mjs
+
+# Remove DoH config/rollout local dumps
+$SED -i -e 's|"doh-config.json"|# "doh-config.json"|g' services/settings/static-dumps/main/moz.build
+$SED -i -e 's|"doh-providers.json"|# "doh-providers.json"|g' services/settings/static-dumps/main/moz.build
+rm -vf services/settings/static-dumps/main/doh-config.json services/settings/static-dumps/main/doh-providers.json
 
 # Remove unused crash reporting services/components
 rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt
