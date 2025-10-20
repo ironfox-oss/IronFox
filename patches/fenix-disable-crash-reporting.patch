@@ -1,3 +1,21 @@
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index be6741fab0..913d21b04c 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -488,11 +488,11 @@
+             </intent-filter>
+         </activity-alias>
+ 
+-        <activity
++        <!-- <activity
+             android:name=".startupCrash.StartupCrashActivity"
+             android:exported="true"
+             >
+-        </activity>
++        </activity> -->
+ 
+         <activity
+             android:name=".HomeActivity"
 diff --git a/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/NoopCrashService.kt b/mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/NoopCrashService.kt
 new file mode 100644
 index 0000000000..9dc712c3ff
