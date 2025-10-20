@@ -1,6 +1,10 @@
 {
   "data": [
     {
+      "overrides": "-WebGLRenderCapability",
+      "firstPartyDomain": "abeto.co"
+    },
+    {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "brave.com"
     },
@@ -19,6 +23,10 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-WebGLRenderCapability",
       "firstPartyDomain": "figma.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "fittingbox.com"
     },
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
@@ -96,6 +104,11 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "x.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "zennioptical.com",
+      "thirdPartyDomain": "fittingbox.com"
     },
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
