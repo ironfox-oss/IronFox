@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-index 82baf5f19a..1c3972da37 100644
+index 82baf5f19a..0c5eed3160 100644
 --- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
 +++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
 @@ -361,6 +361,14 @@ bool nsRFPService::IsRFPEnabledFor(
@@ -8,7 +8,7 @@ index 82baf5f19a..1c3972da37 100644
    }
 +  
 +  if (aTarget == RFPTarget::DisableWebGL) {
-+    return Preferences::GetBool("webgl.disabled", false) && IsTargetActiveForMode(aTarget, mode);
++    return Preferences::GetBool("webgl.disabled", true) && IsTargetActiveForMode(aTarget, mode);
 +  }
 +
 +  if (aTarget == RFPTarget::JSDateTimeUTC) {

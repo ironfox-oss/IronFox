@@ -43,7 +43,6 @@
     <string name="preferences_unifiedpush">使用 UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush 设置已修改。退出应用程序以应用更改……</string>
     <string name="preference_wasm_enabled">启用 WebAssembly (WASM)</string>
-    <string name="preference_webgl_enabled">启用 WebGL</string>
     <string name="preference_webrtc_enabled">启用 WebRTC</string>
     <string name="preference_xpinstall_enabled">允许安装附加组件</string>
     <string name="onboarding_if_preferences_title">个性化 IronFox</string>

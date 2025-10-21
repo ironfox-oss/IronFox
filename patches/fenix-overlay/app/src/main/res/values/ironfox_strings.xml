@@ -57,7 +57,7 @@
     <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
     <string name="preference_jit_enabled_summary">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
     <string name="preference_jit_trusted_principals_enabled">Enable JavaScript Just-in-time Compilation (JIT) for extensions</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Enables JIT for extensions when JIT is otherwise disabled globally - Changing this setting will restart your browser</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">When JIT is disabled, re-enables JIT for extensions - Changing this setting will restart your browser</string>
 
     <!-- PDF.js -->
     <string name="preference_pdfjs_disabled">Open PDF files externally</string>
@@ -107,9 +107,9 @@
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
     <!-- WebGL -->
-    <string name="preference_webgl_enabled">Enable WebGL</string>
+    <string name="preference_webgl_disabled">Disable WebGL</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Enable WebGL overrides from IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">Enables WebGL for certain websites by default when WebGL is otherwise disabled globally to reduce breakage - Changing this setting will restart your browser</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">When WebGL is disabled, re-enables WebGL for certain websites by default to reduce breakage - Changing this setting will restart your browser</string>
 
     <!-- WebRTC -->
     <string name="preference_webrtc_enabled">Enable WebRTC</string>

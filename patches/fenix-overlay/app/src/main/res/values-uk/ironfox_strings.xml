@@ -56,7 +56,6 @@
     <string name="preferences_unifiedpush">Використовуйте UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Налаштування UnifiedPush змінено. Вихід із програми для застосування змін…</string>
     <string name="preference_wasm_enabled">Увімкнути WebAssembly (WASM)</string>
-    <string name="preference_webgl_enabled">Увімкнути WebGL</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Увімкнути перевизначення WebGL від IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Вмикає WebGL для певних веб-сайтів за замовчуванням, коли WebGL вимкнено глобально, щоб зменшити поломки. Зміна цього налаштування перезапустить ваш браузер</string>
     <string name="preference_webrtc_enabled">Увімкнути WebRTC</string>

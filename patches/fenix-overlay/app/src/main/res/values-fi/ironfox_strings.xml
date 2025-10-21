@@ -44,7 +44,6 @@
     <string name="preferences_unifiedpush">Käytä UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush asetusta on muutettu. Sovellus suljetaan asetuksen muuttamiseksi…</string>
     <string name="preference_wasm_enabled">Ota käyttöön WebAssembly (WASM)</string>
-    <string name="preference_webgl_enabled">Ota käyttöön WebGL</string>
     <string name="preference_webrtc_enabled">Ota käyttöön WebRTC</string>
     <string name="preference_xpinstall_enabled">Salli lisäosien asentaminen</string>
     <string name="onboarding_if_preferences_title">IronFoxin mukauttaminen</string>

@@ -46,7 +46,6 @@
     <string name="preferences_unifiedpush">Použít službu UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Nastavení služby UnifedPush upravena. Ukončování aplikace pro uplatnění změn…</string>
     <string name="preference_wasm_enabled">Povolit WebAssembly (WASM)</string>
-    <string name="preference_webgl_enabled">Povolit WebGL</string>
     <string name="preference_webrtc_enabled">Povolit WebRTC</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Instalace doplňků je v tuto chvíli zakázána. Pokud ji chcete povolit (za cenu bezpečnosti), můžete tak učinit v Nastavení -&gt; IronFox -&gt; Nastavení IronFox -&gt; Bezpečnost -&gt; Povolit instalaci doplňků.</string>
     <string name="preference_xpinstall_enabled">Povolit instalaci doplňků</string>
