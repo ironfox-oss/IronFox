@@ -196,6 +196,8 @@ By default, in order to improve security, IronFox disables [JavaScript Just-in-t
 
 **At the cost of security**, you can re-enable JIT by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security`, and selecting the option to `Enable JavaScript Just-in-time Compilation (JIT)`.
 
+**Alternatively**, you can also try enabling JIT **only** for extensions, by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Security`, and selecting the option to `Enable JavaScript Just-in-time Compilation (JIT) for extensions`.
+
 If re-enabling JIT doesn't give you the desired outcome, **at the cost of privacy**, you can re-enable disk cache by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`, and selecting the option to `Enable disk cache`.
 
 If this *still* doesn't give you the desired outcome, please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues) and let us know!
