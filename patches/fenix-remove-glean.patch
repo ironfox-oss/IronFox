@@ -145,7 +145,7 @@ index 29cd599a82..509f022a7b 100644
  import org.mozilla.fenix.GleanMetrics.Addresses
  import org.mozilla.fenix.GleanMetrics.AndroidAutofill
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index a6fc6e8483..01ca7b4f3e 100644
+index fa2bf86a5b..8ea6b9dca6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 @@ -81,13 +81,13 @@ import mozilla.components.support.utils.BuildManufacturerChecker
@@ -153,13 +153,14 @@ index a6fc6e8483..01ca7b4f3e 100644
  import mozilla.components.support.utils.toSafeIntent
  import mozilla.components.support.webextensions.WebExtensionPopupObserver
 -import mozilla.telemetry.glean.private.NoExtras
-+// import mozilla.telemetry.glean.private.NoExtras
- import org.mozilla.experiments.nimbus.initializeTooling
+-import org.mozilla.experiments.nimbus.initializeTooling
 -import org.mozilla.fenix.GleanMetrics.AppIcon
 -import org.mozilla.fenix.GleanMetrics.Events
 -import org.mozilla.fenix.GleanMetrics.Metrics
 -import org.mozilla.fenix.GleanMetrics.SplashScreen
 -import org.mozilla.fenix.GleanMetrics.StartOnHome
++// import mozilla.telemetry.glean.private.NoExtras
++// import org.mozilla.experiments.nimbus.initializeTooling
 +// import org.mozilla.fenix.GleanMetrics.AppIcon
 +// import org.mozilla.fenix.GleanMetrics.Events
 +// import org.mozilla.fenix.GleanMetrics.Metrics
@@ -181,9 +182,9 @@ index a6fc6e8483..01ca7b4f3e 100644
 +// import org.mozilla.fenix.components.metrics.MarketingAttributionService
 +// import org.mozilla.fenix.components.metrics.fonts.FontEnumerationWorker
  import org.mozilla.fenix.crashes.CrashReporterBinding
+ import org.mozilla.fenix.crashes.StartupCrashCanary
  import org.mozilla.fenix.crashes.UnsubmittedCrashDialog
- import org.mozilla.fenix.customtabs.ExternalAppBrowserActivity
-@@ -119,7 +119,7 @@ import org.mozilla.fenix.ext.getNavDirections
+@@ -120,7 +120,7 @@ import org.mozilla.fenix.ext.getNavDirections
  import org.mozilla.fenix.ext.hasTopDestination
  import org.mozilla.fenix.ext.nav
  import org.mozilla.fenix.ext.openSetDefaultBrowserOption
@@ -192,7 +193,7 @@ index a6fc6e8483..01ca7b4f3e 100644
  import org.mozilla.fenix.ext.setNavigationIcon
  import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.extension.WebExtensionPromptFeature
-@@ -138,7 +138,7 @@ import org.mozilla.fenix.home.intent.StartSearchIntentProcessor
+@@ -139,7 +139,7 @@ import org.mozilla.fenix.home.intent.StartSearchIntentProcessor
  import org.mozilla.fenix.messaging.FenixMessageSurfaceId
  import org.mozilla.fenix.messaging.MessageNotificationWorker
  import org.mozilla.fenix.nimbus.FxNimbus
@@ -201,7 +202,7 @@ index a6fc6e8483..01ca7b4f3e 100644
  import org.mozilla.fenix.pbmlock.DefaultPrivateBrowsingLockStorage
  import org.mozilla.fenix.pbmlock.PrivateBrowsingLockFeature
  import org.mozilla.fenix.perf.MarkersActivityLifecycleCallbacks
-@@ -382,11 +382,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -403,11 +403,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          )
  
          // This is a temporary solution to determine if we should show the marketing onboarding card.
@@ -215,7 +216,7 @@ index a6fc6e8483..01ca7b4f3e 100644
  
          SplashScreenManager(
              splashScreenOperation = if (FxNimbus.features.splashScreen.value().offTrainOnboarding) {
-@@ -406,11 +406,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -426,11 +426,11 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              storage = DefaultSplashScreenStorage(components.settings),
              showSplashScreen = { installSplashScreen().setKeepOnScreenCondition(it) },
              onSplashScreenFinished = { result ->
@@ -229,7 +230,7 @@ index a6fc6e8483..01ca7b4f3e 100644
  
                  if (savedInstanceState == null && shouldShowOnboarding) {
                      navHost.navController.navigate(NavGraphDirections.actionGlobalOnboarding())
-@@ -478,14 +478,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -495,14 +495,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
                  }
                  maybeShowSetAsDefaultBrowserPrompt()
              } else {
@@ -246,7 +247,7 @@ index a6fc6e8483..01ca7b4f3e 100644
          if (settings().isTelemetryEnabled) {
              lifecycle.addObserver(
                  BreadcrumbsRecorder(
-@@ -509,7 +509,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -526,7 +526,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
                          AppIcon.newPrivateTabTapped.record(NoExtras())
                      }
                  }
@@ -255,7 +256,7 @@ index a6fc6e8483..01ca7b4f3e 100644
          supportActionBar?.hide()
  
          lifecycle.addObservers(
-@@ -604,7 +604,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -621,7 +621,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              components.strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {
                  components.appStore.dispatch(AppAction.UpdateWasNativeDefaultBrowserPromptShown(true))
                  showSetDefaultBrowserPrompt()
@@ -264,7 +265,7 @@ index a6fc6e8483..01ca7b4f3e 100644
                  settings().setAsDefaultPromptCalled()
              }
          }
-@@ -671,7 +671,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -688,7 +688,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          }
  
          lifecycleScope.launch(IO) {
@@ -273,7 +274,7 @@ index a6fc6e8483..01ca7b4f3e 100644
                  if (components.appStore.state.wasNativeDefaultBrowserPromptShown) {
                      Metrics.defaultBrowserChangedViaNativeSystemPrompt.record(NoExtras())
                  }
-@@ -679,10 +679,10 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -696,10 +696,10 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              }
  
              GrowthDataWorker.sendActivatedSignalIfNeeded(applicationContext)
@@ -286,7 +287,7 @@ index a6fc6e8483..01ca7b4f3e 100644
                  MessageNotificationWorker.setMessageNotificationWorker(applicationContext)
              }
  
-@@ -826,7 +826,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -842,7 +842,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          components.core.pocketStoriesService.stopPeriodicSponsoredContentsRefresh()
          privateNotificationObserver?.stop()
          components.notificationsDelegate.unBindActivity(this)
@@ -295,7 +296,7 @@ index a6fc6e8483..01ca7b4f3e 100644
  
          // clear hierarchy change listener set by AndroidX SplashScreen
          // https://bugzilla.mozilla.org/show_bug.cgi?id=1950295
-@@ -1335,14 +1335,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -1349,14 +1349,14 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              activeThresholdMs = PWA_RECENTLY_USED_THRESHOLD,
          )
          if (recentlyUsedPwaCount == 0) {

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..3828b37b61 100644
+index 5233b8a8dd..b64d994704 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 @@ -1655,6 +1655,142 @@ class GeckoEngine(
@@ -127,9 +127,9 @@ index 5233b8a8dd..3828b37b61 100644
 +            get() = runtime.settings.wasmEnabled
 +            set(value) { runtime.settings.wasmEnabled = value }
 +
-+        override var webglEnabled: Boolean
-+            get() = runtime.settings.webglEnabled
-+            set(value) { runtime.settings.webglEnabled = value }
++        override var webglDisabled: Boolean
++            get() = runtime.settings.webglDisabled
++            set(value) { runtime.settings.webglDisabled = value }
 +
 +        override var webrtcEnabled: Boolean
 +            get() = runtime.settings.webrtcEnabled
@@ -175,7 +175,7 @@ index 5233b8a8dd..3828b37b61 100644
 +            this.translationsEnabled = it.translationsEnabled
 +            this.translationsSupported = it.translationsSupported
 +            this.wasmEnabled = it.wasmEnabled
-+            this.webglEnabled = it.webglEnabled
++            this.webglDisabled = it.webglDisabled
 +            this.webrtcEnabled = it.webrtcEnabled
 +            this.widevineEnabled = it.widevineEnabled
 +            this.xpinstallEnabled = it.xpinstallEnabled
@@ -183,7 +183,7 @@ index 5233b8a8dd..3828b37b61 100644
      }
  
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..3dd7b7fcec 100644
+index f9aa3b43e9..5433fbda47 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 @@ -367,6 +367,37 @@ abstract class Settings {
@@ -217,7 +217,7 @@ index f9aa3b43e9..3dd7b7fcec 100644
 +    open var translationsEnabled: Boolean by UnsupportedSetting()
 +    open var translationsSupported: Boolean by UnsupportedSetting()
 +    open var wasmEnabled: Boolean by UnsupportedSetting()
-+    open var webglEnabled: Boolean by UnsupportedSetting()
++    open var webglDisabled: Boolean by UnsupportedSetting()
 +    open var webrtcEnabled: Boolean by UnsupportedSetting()
 +    open var widevineEnabled: Boolean by UnsupportedSetting()
 +    open var xpinstallEnabled: Boolean by UnsupportedSetting()
@@ -254,7 +254,7 @@ index f9aa3b43e9..3dd7b7fcec 100644
 +    override var translationsEnabled: Boolean = true,
 +    override var translationsSupported: Boolean = true,
 +    override var wasmEnabled: Boolean = true,
-+    override var webglEnabled: Boolean = true,
++    override var webglDisabled: Boolean = true,
 +    override var webrtcEnabled: Boolean = true,
 +    override var widevineEnabled: Boolean = false,
 +    override var xpinstallEnabled: Boolean = false,

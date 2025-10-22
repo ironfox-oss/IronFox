@@ -59,6 +59,13 @@ if [[ -z ${GRADLE_USER_HOME+x} ]]; then
     export GRADLE_USER_HOME=$HOME/.gradle
 fi
 
+if [[ -z ${IRONFOX_RELEASE+x} ]]; then
+    # Default to a "nightly" dev build
+    export IRONFOX_RELEASE=0
+
+    echo "Preparing to build IronFox Nightly..."
+fi
+
 if [[ -z ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
     # Default to development assets
     # shellcheck disable=SC2059

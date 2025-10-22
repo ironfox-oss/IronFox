@@ -40,7 +40,6 @@
     <string name="preferences_unifiedpush">UnifiedPush\'u kullan</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush ayarları değistirildi. Uygulamayı kapatmak değişiklikleri uygular…</string>
     <string name="preference_wasm_enabled">WebAssembly\'i (WASM) etkinleştir</string>
-    <string name="preference_webgl_enabled">WebGL\'i etkinleştir</string>
     <string name="preference_webrtc_enabled">WebRTC\'yi etkinleştir</string>
     <string name="preference_xpinstall_enabled">Eklentilerin kurulmasına izin ver</string>
     <string name="onboarding_if_preferences_title">IronFox\'u özelleştir</string>

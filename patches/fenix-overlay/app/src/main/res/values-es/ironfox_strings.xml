@@ -44,7 +44,6 @@
     <string name="preferences_unifiedpush">Usar UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Configuración de UnifiedPush modificada. Saliendo de la aplicación para aplicar los cambios…</string>
     <string name="preference_wasm_enabled">Habilitar WebAssembly (WASM)</string>
-    <string name="preference_webgl_enabled">Habilitar WebGL</string>
     <string name="preference_webrtc_enabled">Habilitar WebRTC</string>
     <string name="preference_xpinstall_enabled">Permitir la instalación de extensiones</string>
     <string name="onboarding_if_preferences_title">Personalizar IronFox</string>

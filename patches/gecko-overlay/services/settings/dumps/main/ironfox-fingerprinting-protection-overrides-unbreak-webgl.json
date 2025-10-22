@@ -2,6 +2,10 @@
   "data": [
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "abeto.co"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "adguard-mail.com"
     },
     {
@@ -63,6 +67,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "figma.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "fittingbox.com"
     },
     {
       "overrides": "-DisableWebGL",
@@ -163,6 +171,11 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "wplace.live"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "zennioptical.com",
+      "thirdPartyDomain": "fittingbox.com"
     },
     {
       "overrides": "-DisableWebGL",

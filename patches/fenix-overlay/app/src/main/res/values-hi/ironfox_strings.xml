@@ -43,7 +43,6 @@
     <string name="preferences_unifiedpush">UnifiedPush का उपयोग करें</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush सेटिंग संशोधित की गई। परिवर्तन लागू करने के लिए एप्लिकेशन से बाहर निकला जा रहा है…</string>
     <string name="preference_wasm_enabled">वेब असेंबली (WASM) सक्षम करें</string>
-    <string name="preference_webgl_enabled">WebGL सक्षम करें</string>
     <string name="preference_webrtc_enabled">WebRTC सक्षम करें</string>
     <string name="preference_xpinstall_enabled">ऐड-ऑन की स्थापना की अनुमति दें</string>
     <string name="onboarding_if_preferences_title">आयरनफॉक्स को अनुकूलित करें</string>

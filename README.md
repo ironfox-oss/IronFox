@@ -75,6 +75,8 @@ https://gitlab.com/ironfox-oss/fdroid/-/raw/main/fdroid/repo
 
 **Package ID**: `org.ironfoxoss.ironfox`
 
+If you're using a CI/Nightly build: `org.ironfoxoss.ironfox.nightly`
+
 **SHA-256 Hash of Signing Certificate**:
 
 ```sh

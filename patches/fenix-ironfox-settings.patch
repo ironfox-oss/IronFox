@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 7d2ef5a331..698e4bf9d4 100644
+index 7d2ef5a331..20904ea669 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -196,6 +196,37 @@ class Core(
@@ -33,7 +33,7 @@ index 7d2ef5a331..698e4bf9d4 100644
 +            translationsEnabled = context.settings().translationsEnabled,
 +            translationsSupported = context.settings().translationsEnabled,
 +            wasmEnabled = context.settings().wasmEnabled,
-+            webglEnabled = context.settings().webglEnabled,
++            webglDisabled = context.settings().webglDisabled,
 +            webrtcEnabled = context.settings().webrtcEnabled,
 +            widevineEnabled = context.settings().widevineEnabled,
 +            xpinstallEnabled = context.settings().xpinstallEnabled,
@@ -50,7 +50,7 @@ index 7d2ef5a331..698e4bf9d4 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..b059d34753
+index 0000000000..e12c11ef12
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 @@ -0,0 +1,852 @@
@@ -98,6 +98,25 @@ index 0000000000..b059d34753
 +        /*** Privacy and Security ***/
 +
 +        /**
++         * Indicates whether or not we should disable WebGL
++         * Default: true
++         * Gecko preference(s) impacted: webgl.disabled
++         */
++        val webglDisabledPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_webgl_disabled,
++        )
++
++        webglDisabledPreference.setOnPreferenceChangeListener { preference, webglDisabled ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.webglDisabled = webglDisabled as Boolean
++            components.core.engine.settings.webglDisabled = webglDisabled
++
++            true
++        }
++
++        /**
 +         * Indicates whether or not we should enable Accessibility Services
 +         * Default: false
 +         * Gecko preference(s) impacted: accessibility.force_disabled
@@ -131,25 +150,6 @@ index 0000000000..b059d34753
 +
 +            settings.javascriptEnabled = javascriptEnabled as Boolean
 +            components.core.engine.settings.javascriptEnabled = javascriptEnabled
-+
-+            true
-+        }
-+
-+        /**
-+         * Indicates whether or not we should enable WebGL globally
-+         * Default: true
-+         * Gecko preference(s) impacted: webgl.disabled
-+         */
-+        val webglEnabledPreference = requirePreference<SwitchPreference>(
-+            R.string.pref_key_webgl_enabled,
-+        )
-+
-+        webglEnabledPreference.setOnPreferenceChangeListener { preference, webglEnabled ->
-+            val settings = preference.context.settings()
-+            val components = preference.context.components
-+
-+            settings.webglEnabled = webglEnabled as Boolean
-+            components.core.engine.settings.webglEnabled = webglEnabled
 +
 +            true
 +        }
@@ -939,7 +939,7 @@ index 4d499da8de..636cefadda 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..6568cf65f1 100644
+index 312b5b3de3..091fd39c7e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -72,6 +72,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
@@ -1090,8 +1090,8 @@ index 312b5b3de3..6568cf65f1 100644
 +        default = true,
 +    )
 +
-+    var webglEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_webgl_enabled),
++    var webglDisabled by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_webgl_disabled),
 +        default = true,
 +    )
 +
@@ -1153,10 +1153,10 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..d3b6e1cb3c
+index 0000000000..5275abe497
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,306 @@
+@@ -0,0 +1,307 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -1201,6 +1201,13 @@ index 0000000000..d3b6e1cb3c
 +        android:title="@string/if_preferences_privacy_security"
 +        app:iconSpaceReserved="false">
 +
++        <!-- Whether we should disable WebGL -->
++        <androidx.preference.SwitchPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_webgl_disabled"
++            android:title="@string/preference_webgl_disabled"
++            app:iconSpaceReserved="false" />
++
 +        <!-- Whether we should enable Accessibility Services -->
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="false"
@@ -1215,16 +1222,10 @@ index 0000000000..d3b6e1cb3c
 +            android:title="@string/preference_javascript_enabled"
 +            app:iconSpaceReserved="false" />
 +
-+        <!-- Whether we should enable WebGL globally -->
-+        <androidx.preference.SwitchPreference
-+            android:defaultValue="true"
-+            android:key="@string/pref_key_webgl_enabled"
-+            android:title="@string/preference_webgl_enabled"
-+            app:iconSpaceReserved="false" />
-+
 +        <!-- Whether we should enable our WebGL overrides -->
 +        <androidx.preference.SwitchPreference
 +            android:defaultValue="true"
++            android:dependency="@string/pref_key_webgl_disabled"
 +            android:key="@string/pref_key_fpp_overrides_ironfox_webgl_enabled"
 +            android:summary="@string/preference_fpp_overrides_ironfox_webgl_summary"
 +            android:title="@string/preference_fpp_overrides_ironfox_webgl_enabled"
