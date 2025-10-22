@@ -44,7 +44,6 @@
     <string name="preferences_unifiedpush">Utiliser UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Paramètre UnifiedPush modifié. Fermeture de l’application pour appliquer les changements…</string>
     <string name="preference_wasm_enabled">Activer WebAssembly (WASM)</string>
-    <string name="preference_webgl_enabled">Activer WebGL</string>
     <string name="preference_webrtc_enabled">Activer WebRTC</string>
     <string name="preference_xpinstall_enabled">Permettre l\'installation d\'add-ons</string>
     <string name="onboarding_if_preferences_title">Personnaliser IronFox</string>
@@ -69,4 +68,6 @@
     <string name="spoof_timezone_summary">Lorsqu’il est activé, renforce la protection des empreintes digitales</string>
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Activer les remplacements d\'usurpation de fuseau horaire depuis IronFox</string>
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Désactive l\'usurpation de fuseau horaire pour certains sites Web par défaut afin de réduire les risques de panne. La modification de ce paramètre redémarrera votre navigateur</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Permettre de substituer WebGL depuis IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Active WebGL pour certains sites web par défaut lorsque WebGL est autrement désactivé globalement pour réduire les casses - Changer ce paramètre redémarrera votre navigateur</string>
 </resources>

@@ -75,7 +75,7 @@
     <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
 
     <!-- WebGL -->
-    <string name="pref_key_webgl_enabled" translatable="false">pref_key_webgl_enabled</string>
+    <string name="pref_key_webgl_disabled" translatable="false">pref_key_webgl_disabled</string>
     <string name="pref_key_fpp_overrides_ironfox_webgl_enabled" translatable="false">pref_key_fpp_overrides_ironfox_webgl_enabled</string>
 
     <!-- WebRTC -->

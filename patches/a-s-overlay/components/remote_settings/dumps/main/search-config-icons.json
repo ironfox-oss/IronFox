@@ -1,0 +1,90 @@
+{
+  "data": [
+    {
+      "attachment": {
+        "filename": "ddg-16-firefox.ico",
+        "hash": "d994f806b1e4225b50be5ab681b2cecf845cc216a19a432d878cea3cb815bafd",
+        "location": "",
+        "mimetype": "image/x-icon",
+        "size": 2799
+      },
+      "engineIdentifiers": [
+        "ddg",
+        "ddghtml",
+        "ddglite",
+        "ddgnoai"
+      ],
+      "id": "a06dc3fd-4bdb-41f3-2ebc-4cbed06a9bd3",
+      "imageSize": 16,
+      "last_modified": 1744118264845,
+      "schema": 1743687735700
+    },
+    {
+      "attachment": {
+        "filename": "mojeek.ico",
+        "hash": "29aaa5b4d0b0f61f90902c7d0b731326de99ee931bb55998cacfa81ba60bbf93",
+        "location": "",
+        "mimetype": "image/x-icon",
+        "size": 4414
+      },
+      "engineIdentifiers": [
+        "mojeek"
+      ],
+      "id": "7cd086c7-43f6-42fe-a240-17deeeef034b",
+      "imageSize": 32,
+      "last_modified": 1744118264845,
+      "schema": 1743687735700
+    },
+    {
+      "attachment": {
+        "filename": "leta.ico",
+        "hash": "289e7b283afa98a55448c2977f5cff7b9b0f67c6a4177483d00ba89ee24a1fbf",
+        "location": "",
+        "mimetype": "image/x-icon",
+        "size": 15086
+      },
+      "engineIdentifiers": [
+        "leta-brave",
+        "leta-google"
+      ],
+      "id": "28e347e4-0188-48e4-8d45-45618c985b53",
+      "imageSize": 48,
+      "last_modified": 1744118264845,
+      "schema": 1743687735700
+    },
+    {
+      "attachment": {
+        "filename": "startpage.png",
+        "hash": "500d1cc2122cfd807392fb0fede7d64b7cee2d998a4ccbe22716736a6752e399",
+        "location": "",
+        "mimetype": "image/png",
+        "size": 1193
+      },
+      "engineIdentifiers": [
+        "startpage",
+        "startpage-eu"
+      ],
+      "id": "be7ba9bc-d68f-4ba3-ad3b-4fc0aaea5f3c",
+      "imageSize": 32,
+      "last_modified": 1744118264924,
+      "schema": 1743687919606
+    },
+    {
+      "attachment": {
+        "filename": "wikipedia_mobile.png",
+        "hash": "e9849089ffced59563896974afee0fceedac7fc8455bbeaa5bae230f54c933d9",
+        "location": "",
+        "mimetype": "image/png",
+        "size": 1100
+      },
+      "engineIdentifiers": [
+        "wikipedia*"
+      ],
+      "id": "6e36a151-e4f4-4117-9067-1ca82c47d01a",
+      "imageSize": 96,
+      "last_modified": 1744118264924,
+      "schema": 1743687919606
+    }
+  ],
+  "timestamp": 2147483647
+}

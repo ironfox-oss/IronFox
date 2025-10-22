@@ -1,53 +1,3 @@
-diff --git a/browser/components/enterprisepolicies/content/aboutPolicies.html b/browser/components/enterprisepolicies/content/aboutPolicies.html
-index 3eb76eea5f..f61ac4ad0b 100644
---- a/browser/components/enterprisepolicies/content/aboutPolicies.html
-+++ b/browser/components/enterprisepolicies/content/aboutPolicies.html
-@@ -16,16 +16,16 @@
-     <title data-l10n-id="about-policies-title"></title>
-     <link
-       rel="stylesheet"
--      href="chrome://browser/content/policies/aboutPolicies.css"
-+      href="chrome://global/content/policies/aboutPolicies.css"
-     />
-     <link rel="localization" href="branding/brand.ftl" />
--    <link rel="localization" href="browser/aboutPolicies.ftl" />
-+    <link rel="localization" href="toolkit/about/aboutPolicies.ftl" />
-     <link
-       rel="localization"
--      href="browser/policies/policies-descriptions.ftl"
-+      href="toolkit/about/policies-descriptions.ftl"
-     />
-     <link rel="localization" href="toolkit/branding/brandings.ftl" />
--    <script src="chrome://browser/content/policies/aboutPolicies.js"></script>
-+    <script src="chrome://global/content/policies/aboutPolicies.js"></script>
-   </head>
-   <body id="body">
-     <moz-page-nav id="categories-nav" data-l10n-id="aboutpolicies-page-heading">
-@@ -33,21 +33,21 @@
-         data-l10n-id="active-policies-tab"
-         id="category-active"
-         view="view-one"
--        iconSrc="chrome://browser/content/policies/policies-active.svg"
-+        iconSrc="chrome://global/content/policies/policies-active.svg"
-       >
-       </moz-page-nav-button>
-       <moz-page-nav-button
-         data-l10n-id="documentation-tab"
-         id="category-documentation"
-         view="view-two"
--        iconSrc="chrome://browser/content/policies/policies-documentation.svg"
-+        iconSrc="chrome://global/content/policies/policies-documentation.svg"
-       >
-       </moz-page-nav-button>
-       <moz-page-nav-button
-         data-l10n-id="errors-tab"
-         id="category-errors"
-         view="view-three"
--        iconSrc="chrome://browser/content/policies/policies-error.svg"
-+        iconSrc="chrome://global/content/policies/policies-error.svg"
-       >
-       </moz-page-nav-button>
-     </moz-page-nav>
 diff --git a/browser/components/enterprisepolicies/moz.build b/browser/components/enterprisepolicies/moz.build
 index 047108084b..ff45016d77 100644
 --- a/browser/components/enterprisepolicies/moz.build
@@ -61,7 +11,7 @@ index 047108084b..ff45016d77 100644
  
  JAR_MANIFESTS += ["jar.mn"]
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 83d84537f9..edc68416b1 100644
+index 83d84537f9..480c26666f 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
 @@ -221,7 +221,9 @@ static const RedirEntry kRedirMap[] = {
@@ -70,7 +20,7 @@ index 83d84537f9..edc68416b1 100644
      {"crashgpu", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
 -    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT}};
 +    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
-+    {"policies", "chrome://global/content/policies/aboutPolicies.html",
++    {"policies", "chrome://browser/content/policies/aboutPolicies.html",
 +     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI}};
  static const int kRedirTotal = std::size(kRedirMap);
  
@@ -87,7 +37,7 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 2bfec5537e..04f2cb0576 100644
+index 2bfec5537e..01554fa9ec 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -506,7 +506,7 @@ let InstallSources = null;
@@ -99,7 +49,7 @@ index 2bfec5537e..04f2cb0576 100644
    }
  
    get hasPolicies() {
-@@ -613,6 +613,902 @@ class JSONPoliciesProvider {
+@@ -613,6 +613,901 @@ class JSONPoliciesProvider {
        }
      }
    }
@@ -181,7 +131,6 @@ index 2bfec5537e..04f2cb0576 100644
 +    this._policies.DisableFeedbackCommands = true;
 +    this._policies.DisableFirefoxStudies = true;
 +    this._policies.DisablePrivateBrowsing = false;
-+    this._policies.DisableProfileRefresh = true;
 +    this._policies.DisableSetDesktopBackground = true;
 +    this._policies.DisableTelemetry = true;
 +    this._policies.DNSOverHTTPS = {

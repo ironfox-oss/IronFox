@@ -44,7 +44,6 @@
     <string name="preferences_unifiedpush">UnifiedPush gebruiken</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush-instelling gewijzigd. De browser wordt afgesloten om de wijzigingen toe te passen…</string>
     <string name="preference_wasm_enabled">WebAssembly (WASM) inschakelen</string>
-    <string name="preference_webgl_enabled">WebGL inschakelen</string>
     <string name="preference_webrtc_enabled">WebRTC inschakelen</string>
     <string name="preference_xpinstall_enabled">Installatie van add-ons toestaan</string>
     <string name="onboarding_if_preferences_title">IronFox personaliseren</string>

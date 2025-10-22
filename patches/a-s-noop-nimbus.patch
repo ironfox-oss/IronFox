@@ -1,28 +1,93 @@
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index f77d82a..dbc4ce5 100644
+index f77d82a..3b14db3 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -160,11 +160,11 @@ open class Nimbus(
-         }
+@@ -141,32 +141,32 @@ open class Nimbus(
  
-     override var globalUserParticipation: Boolean
--        get() = nimbusClient.getGlobalUserParticipation()
-+        get() = false
+     private val nimbusClient: NimbusClientInterface
+ 
+-    override var experimentParticipation: Boolean
+-        get() = nimbusClient.getExperimentParticipation()
++    override var experimentParticipation: Boolean = false
++/*        get() = nimbusClient.getExperimentParticipation()
          set(active) {
              dbScope.launch {
--                setExperimentParticipationOnThisThread(active)
--                setRolloutParticipationOnThisThread(active)
-+//                setExperimentParticipationOnThisThread(active)
-+//                setRolloutParticipationOnThisThread(active)
+                 nimbusClient.setExperimentParticipation(active)
+                 applyPendingExperimentsOnThisThread()
              }
+-        }
++        }*/
+ 
+-    override var rolloutParticipation: Boolean
+-        get() = nimbusClient.getRolloutParticipation()
++    override var rolloutParticipation: Boolean = false
++/*        get() = nimbusClient.getRolloutParticipation()
+         set(active) {
+             dbScope.launch {
+                 nimbusClient.setRolloutParticipation(active)
+                 applyPendingExperimentsOnThisThread()
+             }
+-        }
++        }*/
+ 
+-    override var globalUserParticipation: Boolean
+-        get() = nimbusClient.getGlobalUserParticipation()
++    override var globalUserParticipation: Boolean = false
++/*        get() = nimbusClient.getGlobalUserParticipation()
+         set(active) {
+             dbScope.launch {
+                 setExperimentParticipationOnThisThread(active)
+                 setRolloutParticipationOnThisThread(active)
+             }
+-        }
++        }*/
+ 
+     init {
+         NullVariables.instance.setContext(context)
+@@ -293,9 +293,7 @@ open class Nimbus(
          }
+     }
  
-@@ -295,7 +295,7 @@ open class Nimbus(
- 
-     override fun isFetchEnabled() = withCatchAll("isFetchEnabled") {
-         nimbusClient.isFetchEnabled()
+-    override fun isFetchEnabled() = withCatchAll("isFetchEnabled") {
+-        nimbusClient.isFetchEnabled()
 -    } ?: true
-+    } ?: false
++    override fun isFetchEnabled() = false
  
      @WorkerThread
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+index fab193d..368c66b 100644
+--- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
++++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
+@@ -199,10 +199,10 @@ interface NimbusInterface : FeaturesInterface, NimbusMessagingInterface, NimbusE
+     fun resetTelemetryIdentifiers() = Unit
+ 
+     var globalUserParticipation: Boolean
+-        get() = experimentParticipation && rolloutParticipation
++        get() = false
+         set(value) {
+-            experimentParticipation = value
+-            rolloutParticipation = value
++            experimentParticipation = false
++            rolloutParticipation = false
+         }
+ 
+     /**
+@@ -210,7 +210,7 @@ interface NimbusInterface : FeaturesInterface, NimbusMessagingInterface, NimbusE
+     * When set to false, the user will be opted out of all experiments but not rollouts.
+     */
+     var experimentParticipation: Boolean
+-        get() = true
++        get() = false
+         set(_) = Unit
+ 
+     /**
+@@ -218,7 +218,7 @@ interface NimbusInterface : FeaturesInterface, NimbusMessagingInterface, NimbusE
+     * When set to false, the user will be opted out of all rollouts but not experiments.
+     */
+     var rolloutParticipation: Boolean
+-        get() = true
++        get() = false
+         set(_) = Unit
+ 
+     override val events: NimbusEventStore

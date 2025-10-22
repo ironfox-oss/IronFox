@@ -1,5 +1,5 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index 22ea23ef5e..bd815cb8b0 100644
+index 22ea23ef5e..bbd18e50d5 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
 @@ -1031,6 +1031,36 @@ package org.mozilla.geckoview {
@@ -32,7 +32,7 @@ index 22ea23ef5e..bd815cb8b0 100644
 +    method public boolean getTranslationsEnabled();
 +    method public boolean getTranslationsSupported();
 +    method public boolean getWasmEnabled();
-+    method public boolean getWebglEnabled();
++    method public boolean getWebglDisabled();
 +    method public boolean getWebrtcEnabled();
 +    method public boolean getWidevineEnabled();
 +    method public boolean getXpinstallEnabled();
@@ -69,7 +69,7 @@ index 22ea23ef5e..bd815cb8b0 100644
 +    method @NonNull public GeckoRuntimeSettings setTranslationsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setTranslationsSupported(boolean);
 +    method @NonNull public GeckoRuntimeSettings setWasmEnabled(boolean);
-+    method @NonNull public GeckoRuntimeSettings setWebglEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setWebglDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setWebrtcEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setWidevineEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setXpinstallEnabled(boolean);
@@ -116,7 +116,7 @@ index 22ea23ef5e..bd815cb8b0 100644
 +    method @NonNull public GeckoRuntimeSettings.Builder translationsEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder translationsSupported(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder wasmEnabled(boolean);
-+    method @NonNull public GeckoRuntimeSettings.Builder webglEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder webglDisabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder webrtcEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder widevineEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder xpinstallEnabled(boolean);
@@ -134,7 +134,7 @@ index 22ea23ef5e..bd815cb8b0 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 10c6a16381..b176e83346 100644
+index 10c6a16381..a4927a9e06 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -681,6 +681,156 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -272,8 +272,8 @@ index 10c6a16381..b176e83346 100644
 +      return this;
 +    }
 +
-+    public @NonNull Builder webglEnabled(final boolean flag) {
-+      getSettings().mWebglEnabled.set(flag);
++    public @NonNull Builder webglDisabled(final boolean flag) {
++      getSettings().mWebglDisabled.set(flag);
 +      return this;
 +    }
 +
@@ -324,7 +324,7 @@ index 10c6a16381..b176e83346 100644
 +  /* package */ final Pref<Boolean> mTranslationsEnabled = new Pref<Boolean>("browser.translations.enable", true);
 +  /* package */ final Pref<Boolean> mTranslationsSupported = new Pref<Boolean>("browser.translations.simulateUnsupportedEngine", false);
 +  /* package */ final Pref<Boolean> mWasmEnabled = new Pref<Boolean>("javascript.options.wasm", true);
-+  /* package */ final Pref<Boolean> mWebglEnabled = new Pref<Boolean>("webgl.disabled", false);
++  /* package */ final Pref<Boolean> mWebglDisabled = new Pref<Boolean>("webgl.disabled", true);
 +  /* package */ final Pref<Boolean> mWebrtcEnabled = new Pref<Boolean>("media.peerconnection.enabled", true);
 +  /* package */ final Pref<Boolean> mWidevineEnabled = new Pref<Boolean>("media.mediadrm-widevinecdm.visible", false);
 +  /* package */ final Pref<Boolean> mXpinstallEnabled = new Pref<Boolean>("xpinstall.enabled", false);
@@ -596,12 +596,12 @@ index 10c6a16381..b176e83346 100644
 +    return this;
 +  }
 +
-+  public boolean getWebglEnabled() {
-+    return !mWebglEnabled.get();
++  public boolean getWebglDisabled() {
++    return mWebglDisabled.get();
 +  }
 +
-+  public @NonNull GeckoRuntimeSettings setWebglEnabled(final boolean flag) {
-+    mWebglEnabled.commit(!flag);
++  public @NonNull GeckoRuntimeSettings setWebglDisabled(final boolean flag) {
++    mWebglDisabled.commit(flag);
 +    return this;
 +  }
 +

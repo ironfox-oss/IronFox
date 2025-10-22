@@ -653,6 +653,13 @@ patches:
     effect: "Cleaner interface so that users can focus on where they want to go now, instead of where they went in the past."
     category: "User Interface"
 
+  - file: "gecko-expose-hidden-aboutsupport-settings.patch"
+    name: "Expose hidden settings at `about:support`"
+    description: "Enables advanced options at `about:support`."
+    reason: "Allows users to clear the browser's startup cache, kill the GPU process, and reset GPU devices if necessary."
+    effect: "Users have more control over their web browser."
+    category: "User Interface"
+
   - file: "gecko-expose-aboutconfig.patch"
     name: "Expose `about:config`"
     description: "Exposes `about:config` at `about:about`, alongside other internal `about:` pages."
