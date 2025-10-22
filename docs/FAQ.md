@@ -20,8 +20,9 @@
 	- [Why is IronFox so slow?](#why-is-ironfox-so-slow)
 	- [Why can't I stream certain *(DRM-protected)* content from streaming services (Ex. Amazon Prime Video, Apple TV+, Disney+, HBO Max, Hulu, Netflix, Peacock, Plex, Sling, Spotify, etc?)](#why-cant-i-stream-certain-drm-protected-content-from-streaming-services-ex-amazon-prime-video-apple-tv-disney-hbo-max-hulu-netflix-peacock-plex-sling-spotify-etc)
 	- [Why are websites displayed in light mode?](#why-are-websites-displayed-in-light-mode)
-	- [Why do websites display the incorrect timezone?](#why-do-websites-display-the-incorrect-timezone)
 	- [Why are websites always displayed in English?](#why-are-websites-always-displayed-in-english)
+	- [How can I allow websites to use WebGL?](#how-can-i-allow-websites-to-use-webgl)
+	- [If timezone spoofing is enabled, how can I allow certain websites to access my real timezone?](#if-timezone-spoofing-is-enabled-how-can-i-allow-certain-websites-to-access-my-real-timezone)
 	- [Why do some fonts display incorrectly?](#why-do-some-fonts-display-incorrectly)
 	- [Why can't I see emojis?](#why-cant-i-see-emojis)
 	- [Why doesn't this website work?](#why-doesnt-this-website-work)
@@ -172,7 +173,7 @@ Thankfully, for Firefox, Mozilla has recently developed [Suspected Fingerprinter
 
 Due to RFP's issues, we enable **FPP** instead. Additionally, as Mozilla's default protections for FPP are currently very limited, we use our own [hardened configuration](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/toolkit/components/resistfingerprinting/RFPTargetsDefault.inc) for it. Our hardened configuration is designed to match RFP, but with exceptions to avoid certain behaviors that are known to cause issues and undesired behavior for users. You can see our [`Features` page](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Features.md#fingerprinting) for more details.
 
-We also include [a list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides.json) of default overrides to fix breakage or harden protection on a per-site basis. If desired, you can disable our overrides, as well as overrides from Mozilla that serve a similar purpose, by setting `privacy.fingerprintingProtection.remoteOverrides.enabled` to `false` in your [`about:config`](about:config).
+We also include [a list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides-unbreak.json) of default overrides to fix breakage or harden protection on a per-site basis. If desired, you can disable our default overrides with the `Enable fingerprinting protection overrides from IronFox` toggle, located under `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`. Similarly, you can disable Mozilla's default overrides that serve a similar purpose with the `Enable fingerprinting protection overrides from Mozilla` toggle, located under `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`.
 
 **Due to our use of FPP, and the reasons listed above, RFP is NOT recommended or supported**.
 
@@ -216,15 +217,7 @@ By default, to protect against fingerprinting, IronFox sets the preferred websit
 
 **At the cost of privacy**, you can change this by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Preferred website appearance`, and selecting `Dark` or `Follow browser theme`.
 
-**NOTE**: The **[Dark Reader](https://addons.mozilla.org/addon/darkreader/)** add-on is known to cause severe performance issues on hardened Firefox-based browsers/configurations. Installing Dark Reader also poses privacy and security concerns, as detailed above. Dark Reader should be **AVOIDED** if possible, in favor of the `Preferred website appearance` setting.
-
-## Why do websites display the incorrect timezone?
-
-By default, to protect against fingerprinting, IronFox spoofs the system's timezone to `UTC-0`.
-
-**At the cost of privacy**, you can disable this protection globally by setting the value of `privacy.fingerprintingProtection.overrides` in your [`about:config`](about:config) to `-JSDateTimeUTC`. You can also disable this protection on a per-site basis by setting the value of `privacy.fingerprintingProtection.granularOverrides` in your [`about:config`](about:config) to `[{"firstPartyDomain":"example.com","overrides":"-JSDateTimeUTC"}]`, replacing `example.com` with the base domain of the website you'd like to disable timezone spoofing for.
-
-**Please [file an issue](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml) for websites impacted by this, so that we can track/document the issue, and potentially add the site to [our list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides.json) of default overrides**.
+**NOTE**: The **[Dark Reader](https://addons.mozilla.org/addon/darkreader/)** add-on is known to cause severe performance issues on hardened Firefox-based browsers/configurations. Installing Dark Reader also poses privacy and security concerns, as detailed above. Dark Reader should be **AVOIDED** if possible, in favor of the `Preferred website appearance` setting if necessary.
 
 ## Why are websites always displayed in English?
 
@@ -232,23 +225,45 @@ By default, to protect against fingerprinting, IronFox spoofs the preferred loca
 
 **At the cost of privacy**, you can change this by navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`, and selecting `Request English versions of webpages`.
 
+## How can I allow websites to use WebGL?
+
+By default, IronFox disables WebGL for websites, due to privacy and security concerns.
+
+**At the cost of privacy and security**, you can re-enable WebGL on a per-site basis by setting the value of `privacy.fingerprintingProtection.granularOverrides` at [`about:config`](about:config) to `[{"firstPartyDomain":"example.com","overrides":"-DisableWebGL"}]`, replacing `example.com` with the base domain of the website you'd like to enable WebGL for.
+
+If desired, **at the cost of privacy and security**, you can re-enable WebGL for *all* websites with the `Disable WebGL` toggle, located under `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy and security`.
+
+Note that when WebGL is disabled, by default, we re-enable it for [certain websites](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides-unbreak-webgl.json) to avoid breakage and unwanted/unexpected behavior. If desired, you can disable our default overrides with the `Enable WebGL overrides from IronFox` toggle, located under `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy and security`.
+
+**Please [file an issue](https://gitlab.com/ironfox-oss/IronFox/-/issues)  when you encounter breakage related to this, so that we can track/document the issue, and potentially add the site to [our list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides-unbreak-webgl.json) of default overrides**.
+
+## If timezone spoofing is enabled, how can I allow certain websites to access my real timezone?
+
+To protect against fingerprinting, IronFox offers a setting to spoof the system's timezone to `UTC-0`, located at `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy` -> `Spoof timezone to UTC-0`.
+
+**At the cost of privacy**, when timezone spoofing is enabled, you can disable it on a per-site basis by setting the value of `privacy.fingerprintingProtection.granularOverrides` at [`about:config`](about:config) to `[{"firstPartyDomain":"example.com","overrides":"-JSDateTimeUTC"}]`, replacing `example.com` with the base domain of the website you'd like to disable timezone spoofing for.
+
+Note that when timezone spoofing is enabled, by default, we re-enable it for [certain websites](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides-unbreak-timezone.json) to avoid breakage and unwanted/unexpected behavior. If desired, you can disable our default overrides with the `Enable timezone spoofing overrides from IronFox` toggle, located under `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`.
+
+**Please [file an issue](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml) when you encounter breakage related to this, so that we can track/document the issue, and potentially add the site to [our list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides-unbreak-timezone.json) of default overrides**.
+
 ## Why do some fonts display incorrectly?
 
 By default, to protect against fingerprinting, IronFox restricts the visibility of fonts exposed to websites. Unfortunately, this is known to [cause issues with displaying certain text in Korean](https://gitlab.com/ironfox-oss/IronFox/-/issues/31).
 
-**At the cost of privacy**, if you encounter this issue, you can disable this protection globally by setting the value of `privacy.fingerprintingProtection.overrides` in your [`about:config`](about:config) to `-FontVisibilityBaseSystem`. You can also disable this protection on a per-site basis by setting the value of `privacy.fingerprintingProtection.granularOverrides` in your [`about:config`](about:config) to `[{"firstPartyDomain":"example.com","overrides":"-FontVisibilityBaseSystem"}]`, replacing `example.com` with the base domain of the website you'd like to disable this protection for.
+**At the cost of privacy**, if you encounter this issue, you can disable this protection globally by setting the value of `privacy.fingerprintingProtection.overrides` at [`about:config`](about:config) to `-FontVisibilityBaseSystem`. You can also disable this protection on a per-site basis by setting the value of `privacy.fingerprintingProtection.granularOverrides` at [`about:config`](about:config) to `[{"firstPartyDomain":"example.com","overrides":"-FontVisibilityBaseSystem"}]`, replacing `example.com` with the base domain of the website you'd like to disable this protection for.
 
 ## Why can't I see emojis?
 
 By default, to protect against fingerprinting, IronFox restricts the visibility of fonts exposed to websites. Unfortunately, this is known to break the display of emojis *(See [a testing page here](https://tmh.conlang.org/emoji-language/all-emoji.html))* for users on **Android 10** or lower.
 
-If you encounter this issue, please upgrade to a newer version of Android as soon as possible ;)... but, for a work-around, **at the cost of privacy**, you can disable this protection globally by setting the value of `privacy.fingerprintingProtection.overrides` in your [`about:config`](about:config) to `-FontVisibilityBaseSystem,-FontVisibilityLangPack`. You can also disable this protection on a per-site basis by setting the value of `privacy.fingerprintingProtection.granularOverrides` in your [`about:config`](about:config) to `[{"firstPartyDomain":"example.com","overrides":"-FontVisibilityBaseSystem,-FontVisibilityLangPack"}]`, replacing `example.com` with the base domain of the website you'd like to disable this protection for.
+If you encounter this issue, please upgrade to a newer version of Android as soon as possible ;)... but, for a work-around, **at the cost of privacy**, you can disable this protection globally by setting the value of `privacy.fingerprintingProtection.overrides` at [`about:config`](about:config) to `-FontVisibilityBaseSystem,-FontVisibilityLangPack`. You can also disable this protection on a per-site basis by setting the value of `privacy.fingerprintingProtection.granularOverrides` at [`about:config`](about:config) to `[{"firstPartyDomain":"example.com","overrides":"-FontVisibilityBaseSystem,-FontVisibilityLangPack"}]`, replacing `example.com` with the base domain of the website you'd like to disable this protection for.
 
 ## Why doesn't this website work?
 
 For background, IronFox uses configs from **[Phoenix](https://phoenix.celenity.dev)** to harden and configure Gecko's preferences and underlying behavior. While it is both the goal of IronFox *and* Phoenix to provide users with a balance between strong privacy and security, while also preventing breakage where possible and preserving compatibility with websites, you may occasionally encounter issues.
 
-As these issues generally stem from Gecko, **unless you're confident that the issue is caused by a IronFox-specific change**, please report the issue on [Phoenix's issue tracker](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml).
+As these issues generally stem from Gecko, **unless you're confident that the issue is caused by a IronFox-specific change**, please report the issue on [Phoenix's issue tracker](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml). A notable exception to this is issues caused by **WebGL** being disabled; these *are* caused by IronFox-specific changes, so should be reported with the IronFox issue tracker.
 
 **If you're confident that the change is IronFox-specific**, please report the issue on [our issue tracker](https://gitlab.com/ironfox-oss/IronFox/-/issues) instead.
 
