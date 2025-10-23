@@ -2,7 +2,6 @@
 
 - [Frequently Asked Questions](#frequently-asked-questions)
 	- [How can I download IronFox?](#how-can-i-download-ironfox)
-	- [How *should* I download IronFox?](#how-should-i-download-ironfox)
 	- [Why isn't IronFox available on F-Droid?](#why-isnt-ironfox-available-on-f-droid)
 	- [How can I download Nightly builds?](#how-can-i-download-nightly-builds)
 	- [Aren't Firefox-based browsers less secure than Chromium?](#arent-firefox-based-browsers-less-secure-than-chromium)
@@ -29,13 +28,9 @@
 
 ## How can I download IronFox?
 
-You can currently download IronFox from [Accrescent](https://accrescent.app/app/org.ironfoxoss.ironfox), directly from [our GitLab releases](https://gitlab.com/ironfox-oss/IronFox/-/releases), or from [our F-Droid repository](https://fdroid.ironfoxoss.org/fdroid/repo/index.html).
+You can currently download IronFox from [our F-Droid repository](https://fdroid.ironfoxoss.org/fdroid/repo/index.html), or directly from [our GitLab releases](https://gitlab.com/ironfox-oss/IronFox/-/releases).
 
-## How *should* I download IronFox?
-
-If possible, we highly recommend downloading IronFox from [Accrescent](https://accrescent.app/app/org.ironfoxoss.ironfox). If you're unfamiliar, [Accrescent](https://accrescent.app/) is an up-and-coming free and open source app store for Android, with a focus on [privacy and security](https://accrescent.app/features). Due to Accrescent's strong privacy and security properties, it's the most secure way to download and install IronFox; As a result, it's what we recommend using if possible.
-
-For reference, Accrescent is also recommended by [GrapheneOS](https://grapheneos.org/), and supported by other privacy and security-focused projects, such as [Cake Wallet](https://cakewallet.com/), [Cryptomator](https://cryptomator.org/), [Molly](https://molly.im/), [IVPN](https://www.ivpn.net/en/), and [Organic Maps](https://organicmaps.app/).
+While IronFox is also available on **Accrescent**, We are currently unable to provide updates there, [due to ongoing client and server issues that Accrescent is facing](https://infosec.exchange/@accrescent/115408303090609483). This impacts **all** apps on Accrescent, and is not just limited to IronFox. Therefore, for the time-being, we do **NOT** recommend installing IronFox from Accrescent. **See [here](https://gitlab.com/ironfox-oss/IronFox/-/issues/193) for more details**.
 
 ## Why isn't IronFox available on F-Droid?
 
@@ -43,9 +38,9 @@ We currently do not support IronFox's inclusion in F-Droid's official repository
 
 We'd also recommend checking out [this article from privacy and security researchers](https://privsec.dev/posts/android/f-droid-security-issues/), [this post from the developer of WireGuard](https://gitlab.com/fdroid/fdroiddata/-/issues/3110#note_1613430404), and [this thread from GrapheneOS](https://infosec.exchange/@GrapheneOS@grapheneos.social/113900951182535101).
 
-While we do provide our own [F-Droid repository](https://fdroid.ironfoxoss.org/fdroid/repo/index.html) for those who insist on using F-Droid, F-Droid's client isn't without its own privacy and security issues *(notably: [not properly notifying users of updates...](https://codeberg.org/celenity/Phoenix/issues/89#issuecomment-3145034))*, so other installation methods, such as [Accrescent](https://accrescent.app/app/org.ironfoxoss.ironfox), should be preferred if possible.
+While we do provide our own [F-Droid repository](https://fdroid.ironfoxoss.org/fdroid/repo/index.html) for those who insist on using F-Droid, F-Droid's client isn't without its own privacy and security issues *(notably: [not properly notifying users of updates...](https://codeberg.org/celenity/Phoenix/issues/89#issuecomment-3145034))*.
 
-For those who do insist on using F-Droid to install and update IronFox, we would recommend using [F-Droid Basic](https://f-droid.org/packages/org.fdroid.basic/) as your preferred client of choice, as it is more secure than the standard F-Droid client, due to its reduced feature-set.
+For those who do use F-Droid to install and update IronFox, we would recommend using [F-Droid Basic](https://f-droid.org/packages/org.fdroid.basic/) as your preferred client of choice, as it is more secure than the standard F-Droid client, due to its reduced feature-set.
 
 ## How can I download Nightly builds?
 
