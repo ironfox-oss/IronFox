@@ -160,3 +160,8 @@ class Paths:
     def wasi_sdk_dir(self) -> Path:
         """Path to the wasi-sdk pre-built installation directory."""
         return self._rootdir / "wasi-sdk"
+    
+    @property
+    def uniffi_dir(self) -> Path:
+        """Path to uniffi source directory."""
+        return self._rootdir / "uniffi-bindgen"

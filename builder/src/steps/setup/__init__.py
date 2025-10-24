@@ -66,4 +66,12 @@ def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         depth=config.clone_depth,
     )
 
+    clone_uniffi = d.clone(
+        name="Clone uniffi-bindgen",
+        repo_url="https://gitlab.torproject.org/tpo/applications/uniffi-rs",
+        clone_to=paths.uniffi_dir,
+        branch=Versions.UNIFFI_VERSION,
+        depth=config.clone_depth,
+    )
+
     return d
