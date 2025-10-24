@@ -82,9 +82,15 @@ pass_base_config = click.make_pass_decorator(BaseConfig)
 
 
 @cli.command(help="Setup the build environment.")
+@click.option(
+    "--clone-depth",
+    help="The clone depth for cloning repositories. Defaults to 1 (shallow-clone).",
+    type=int,
+    default=1,
+)
 @pass_base_config
-def setup(base_config: BaseConfig):
-    cmd = SetupCommand(base_config)
+def setup(base_config: BaseConfig, clone_depth: int):
+    cmd = SetupCommand(base_config, clone_depth)
     return cmd.run()
 
 

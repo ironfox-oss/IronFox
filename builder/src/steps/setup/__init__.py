@@ -31,7 +31,7 @@ def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         repo_url="https://github.com/mozilla/glean",
         clone_to=paths.glean_dir,
         branch=Versions.GLEAN_TAG,
-        depth=1,
+        depth=config.clone_depth,
     )
 
     clone_microg = d.clone(
@@ -39,7 +39,7 @@ def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         repo_url="https://github.com/microg/GmsCore",
         clone_to=paths.gmscore_dir,
         branch=Versions.GMSCORE_TAG,
-        depth=1,
+        depth=config.clone_depth,
     )
 
     clone_app_services = d.clone(
@@ -47,7 +47,7 @@ def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         repo_url="https://github.com/mozilla/application-services",
         clone_to=paths.application_services_dir,
         branch=Versions.APPSERVICES_BRANCH,
-        depth=1,
+        depth=config.clone_depth,
     )
 
     clone_firefox = d.clone(
@@ -55,7 +55,7 @@ def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         repo_url="https://github.com/mozilla-firefox/firefox",
         clone_to=paths.firefox_dir,
         branch=Versions.FIREFOX_RELEASE_TAG,
-        depth=1,
+        depth=config.clone_depth,
     )
 
     clone_wasi = d.clone(
@@ -63,7 +63,7 @@ def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         repo_url="https://github.com/WebAssembly/wasi-sdk",
         clone_to=paths.wasi_sdk_dir,
         branch=Versions.WASI_TAG,
-        depth=1,
+        depth=config.clone_depth,
     )
 
     return d
