@@ -348,20 +348,6 @@ kotlin.internal.collectFUSMetrics=false
             ],
         ),
         
-        # Remove telemetry
-        *_process_file(
-            path="app/src/main/java/org/mozilla/fenix/home/mozonline/PrivacyContentDisplayHelper.kt",
-            replacements=[
-                line_affix(
-                    r"^\s*import org\.mozilla\.fenix\.components\.metrics",
-                    prefix="// ",
-                ),
-                line_affix(
-                    r"context.components.analytics",
-                    prefix="// ",
-                ),
-            ],
-        ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt",
             replacements=[
@@ -380,7 +366,7 @@ kotlin.internal.collectFUSMetrics=false
             ],
         ),
         *_process_file(
-            path="app/src/main/java/org/mozilla/fenix/library/bookmarks/BookmarkFragment.kt",
+            path="app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt",
             replacements=[
                 line_affix(
                     r"^\s*import org\.mozilla\.fenix\.library\.bookmarks\.ui\.BookmarksTelemetryMiddleware",
