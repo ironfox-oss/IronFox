@@ -73,6 +73,22 @@ def prepare_application_services(
             ]
         ),
         
+        # Remove NDK ez-install section from verify-android-ci-environment.sh
+        *_process_file(
+            path="libs/verify-android-ci-environment.sh",
+            replacements=[
+                regex(r'NDK ez-install[\s\S]*?\n\n', r''),
+            ],
+        ),
+
+        # Remove Gradle content block (content { ... }) entirely
+        *_process_file(
+            path="build.gradle",
+            replacements=[
+                regex(r'content\s*{[\s\S]*?}', r''),
+            ],
+        ),
+
         # TODO: Localize maven
         
         # Remove line following mavenLocal block in Gradle config
