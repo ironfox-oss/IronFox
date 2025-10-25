@@ -21,7 +21,7 @@ def setup_android_sdk(d: BuildDefinition, paths: Paths):
 
     if is_linux():
         platform = "linux"
-    if is_macos():
+    elif is_macos():
         platform = "mac"
     elif is_windows():
         platform = "win"
