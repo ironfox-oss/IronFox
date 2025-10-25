@@ -35,8 +35,6 @@ class CopyTask(FileOpTask):
                 shutil.copyfile(self.source, self.target)
             else:
                 shutil.copytree(self.source, self.target)
-        except Exception as e:
-            self.error(f"Failed to copy file {self.target}: {e}")
         finally:
             progress.remove_task(task_id=task_id)
 
@@ -84,8 +82,6 @@ class DirCreateTask(FileOpTask):
         task_id = progress.add_task(f"Create directory {self.target}")
         try:
             self.target.mkdir(parents=self.parent, exist_ok=self.exist_ok)
-        except Exception as e:
-            self.error(f"Failed to create dir {self.target}: {e}")
         finally:
             try:
                 progress.remove_task(task_id)
@@ -104,6 +100,9 @@ class DeleteTask(FileOpTask):
         task_id = progress.add_task(f"Delete {self.target}")
 
         try:
+            if not self.target.exists():
+                return
+            
             if self.target.is_dir():
                 if not self.recursive:
                     raise RuntimeError(
@@ -113,8 +112,6 @@ class DeleteTask(FileOpTask):
                 shutil.rmtree(self.target)
             else:
                 self.target.unlink()
-        except Exception as e:
-            self.error(f"Failed to delete {self.target}: {e}")
         finally:
             try:
                 progress.remove_task(task_id)
