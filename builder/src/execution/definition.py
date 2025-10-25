@@ -255,6 +255,9 @@ class BuildDefinition:
         *args,
         **kwargs,
     ) -> TaskType:
+        if not name or len(name.strip()) == 0:
+            raise ValueError("Name cannot be empty!")
+
         task = task_cls(name, self.next_task_id, self, *args, **kwargs)
         self.logger.debug(f"New task created: {task}({args}, {kwargs})")
         self.add_task(task)
