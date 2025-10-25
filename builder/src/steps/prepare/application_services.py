@@ -89,7 +89,11 @@ def prepare_application_services(
             ],
         ),
 
-        # TODO: Localize maven
+        # Local maven repos
+        *d.localize_maven(
+            name="Localize application-services",
+            target_file=f"{paths.application_services_dir}/**/*.gradle",
+        ),
         
         # Remove line following mavenLocal block in Gradle config
         *_process_file(

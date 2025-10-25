@@ -65,7 +65,11 @@ rust.targets={current_platform().lower()}-{current_machine()},{config.rusttarget
         
         # TODO: Apply Glean patches
         
-        # TODO: Localize maven
+        # Local maven repos
+        *d.localize_maven(
+            name="Localize Glean",
+            target_file=f"{paths.glean_dir}/**/*.gradle",
+        ),
         
         # Break dependency on older Rust
         *_process_file(
