@@ -10,7 +10,6 @@ import commands.base
 from abc import abstractmethod
 from pathlib import Path
 from common.utils import resolve_glob
-from execution.files import CopyTask
 from rich.progress import Progress
 from typing import Callable, List, TypeVar, Type, Union
 
@@ -524,6 +523,8 @@ class BuildDefinition:
         Returns:
             TaskDefinition: The task definition of the copy task.
         """
+
+        from execution.files import CopyTask
 
         return self.create_task(
             CopyTask,
