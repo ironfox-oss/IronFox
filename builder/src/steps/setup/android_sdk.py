@@ -85,7 +85,7 @@ def setup_android_sdk(d: BuildDefinition, paths: Paths):
 
 def setup_bundletool(d: BuildDefinition, paths: Paths):
     url = f"https://github.com/google/bundletool/releases/download/{Versions.BUNDLETOOL_TAG}/bundletool-all-{Versions.BUNDLETOOL_TAG}.jar"
-    sha256 = "675786493983787ffa11550bdb7c0715679a44e1643f3ff980a529e9c822595c"
+    sha256 = "378b5434cd1378bef6b2bc527b8c7f0ff2584b273830335bce54d6d0813c8584"
     d.download(
         name="Download bundletool",
         url=url,

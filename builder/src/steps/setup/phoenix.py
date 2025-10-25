@@ -8,12 +8,12 @@ def setup_phoenix(d: BuildDefinition, paths: Paths):
         name="Download phoenix.js",
         url=f"https://gitlab.com/celenityy/Phoenix/-/raw/{Versions.PHOENIX_TAG}/android/phoenix.js",
         destination=paths.patches_dir / "preferences" / "phoenix.js",
-        sha256="5f6aaac66f7c9c1da181ded905791bd5201228a4dff7813ee76cef8690a74c85",
+        sha256="4941d2ba3f77c02e426dd47bf1e1aec1fa554565e9a57323cda917f1cccecc50",
     )
 
     download_phoenix_extended_js = d.download(
         name="Download phoenix-extended.js",
         url=f"https://gitlab.com/celenityy/Phoenix/-/raw/{Versions.PHOENIX_TAG}/android/phoenix-extended.js",
         destination=paths.patches_dir / "preferences" / "phoenix-extended.js",
-        sha256="2392202836967a193ad8b2a876fbdd11da42f17fb62b49cca193aad4b7098f22",
+        sha256="d556dea64ec31af394e1fa8c9a3d56689fbaad65fbedee40ed2d33acb7a7b4c2",
     )
