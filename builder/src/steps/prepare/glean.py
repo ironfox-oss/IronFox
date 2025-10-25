@@ -30,18 +30,6 @@ def prepare_glean(
             name=f"Delete {path}", path=paths.glean_dir / path, recursive=recursive
         )
 
-    def _mkdirs(
-        path: str,
-        parents: bool = True,
-        exist_ok: bool = True,
-    ) -> TaskDefinition:
-        return d.mkdir(
-            name=f"Create directory {path}",
-            target=paths.glean_dir / path,
-            parents=parents,
-            exist_ok=exist_ok,
-        )
-
     rust_version = (
         regex(
             r"rust-version = .*",

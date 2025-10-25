@@ -213,7 +213,7 @@ class BuildDefinition:
         """
         task._add_dependency(depends_on, self.tasks)
 
-    def chain(self, *tasks: TaskDefinition) -> TaskDefinition | None:
+    def chain(self, *tasks: TaskDefinition) -> TaskDefinition:
         """Create a dependency chain from multiple tasks.
 
         Args:
@@ -226,8 +226,12 @@ class BuildDefinition:
             build.chain(download_task, extract_task, compile_task)
             # Equivalent to: download_task.then(extract_task).then(compile_task)
         """
-        if len(tasks) < 2:
-            return tasks[0] if tasks else None
+
+        if not tasks or len(tasks) == 0:
+            raise ValueError("No tasks to chain")
+
+        if len(tasks) == 1:
+            return tasks[0]
 
         for i in range(len(tasks) - 1):
             tasks[i].then(tasks[i + 1])

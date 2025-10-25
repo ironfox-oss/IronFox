@@ -1,12 +1,7 @@
 from pathlib import Path
-from types import MethodType
-from typing import List
 from commands.prepare import PrepareConfig
 from common.paths import Paths
-from common.versions import Versions
-from execution.definition import BuildDefinition, TaskDefinition
-from execution.find_replace import line_affix, literal, on_line_text, regex
-from execution.types import ReplacementAction
+from execution.definition import BuildDefinition
 from steps.common.java import setup_java
 
 from .android_components import prepare_android_components
@@ -36,22 +31,29 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
     # fmt:off
     d.chain(
         setup_java(d, paths),
-    ).then(  # type: ignore
-           
+    ).then(
+        
+        # Use d.chain(...) such that each component's prepare tasks run
+        # in the sequence their defined sequence
+        
+        # The then(...) call in combination with chain(...) will ensure
+        # all components are set up in parallel while the individual preparation
+        # tasks of each component are sequential
+        
         # Android Components
-        *prepare_android_components(d, paths),
-           
+        d.chain(*prepare_android_components(d, paths)),
+
         # Fenix
-        *prepare_fenix(d, paths, config),
-        
+        d.chain(*prepare_fenix(d, paths, config)),
+
         # Glean
-        *prepare_glean(d, paths, config),
-        
+        d.chain(*prepare_glean(d, paths, config)),
+
         # Application services
-        *prepare_application_services(d, paths),
-        
+        d.chain(*prepare_application_services(d, paths)),
+
         # Firefox
-        *prepare_firefox(d, paths, config),
+        d.chain(*prepare_firefox(d, paths, config)),
     )
     # fmt:on
 

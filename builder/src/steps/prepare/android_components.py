@@ -30,18 +30,6 @@ def prepare_android_components(
             recursive=recursive,
         )
 
-    def _mkdirs(
-        path: str,
-        parents: bool = True,
-        exist_ok: bool = True,
-    ) -> TaskDefinition:
-        return d.mkdir(
-            name=f"Create directory {path}",
-            target=paths.android_components_dir / path,
-            parents=parents,
-            exist_ok=exist_ok,
-        )
-
     return [
         # fmt:off
         

@@ -29,18 +29,6 @@ def prepare_application_services(
             recursive=recursive,
         )
 
-    def _mkdirs(
-        path: str,
-        parents: bool = True,
-        exist_ok: bool = True,
-    ) -> TaskDefinition:
-        return d.mkdir(
-            name=f"Create directory {path}",
-            target=paths.application_services_dir / path,
-            parents=parents,
-            exist_ok=exist_ok,
-        )
-
     return [
         # fmt:off
         

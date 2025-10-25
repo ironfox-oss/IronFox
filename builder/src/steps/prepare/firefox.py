@@ -6,7 +6,7 @@ from common.paths import Paths
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
-from execution.find_replace import comment_out, line_affix, literal, on_line_text, regex
+from execution.find_replace import comment_out, line_affix, literal, regex
 from execution.types import ReplacementAction
 
 
