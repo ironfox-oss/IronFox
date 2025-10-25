@@ -85,6 +85,7 @@ class PrepareCommand(BaseCommand):
     def __init__(
         self,
         base_config: BaseConfig,
+        app_config: AppConfig,
         sb_gapi_file: Path,
         build_variant: str,
     ):
@@ -92,6 +93,7 @@ class PrepareCommand(BaseCommand):
         self.prepare_cofig = PrepareConfig(
             sb_gapi_file=sb_gapi_file,
             build_variant=build_variant,
+            app_config=app_config
         )
 
         setup_logging(self.base_config.verbose)

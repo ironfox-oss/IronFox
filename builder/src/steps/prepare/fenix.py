@@ -114,7 +114,7 @@ kotlin.internal.collectFUSMetrics=false
         
         
         # app/build.gradle
-        *_build_gradle_replacements(config.abis),
+        *_build_gradle_replacements(config),
         
         # app/src/*/java/org/mozilla/fenix/*/GeckoProvider.kt
         *_gecko_provider_kt_replacements(),
@@ -154,7 +154,7 @@ kotlin.internal.collectFUSMetrics=false
                 on_line_text(
                     match_lines=r"android:targetPackage",
                     on_text="org.mozilla.firefox",
-                    replace="org.ironfoxoss.ironfox",
+                    replace=config.app_config.package_name,
                 )
             ],
         ),
@@ -324,23 +324,23 @@ def _gecko_provider_kt_replacements():
     )
 
 
-def _build_gradle_replacements(abis: str):
+def _build_gradle_replacements(config: PrepareConfig):
     return _process_file(
         path="app/build.gradle",
         replacements=[
             # fmt:off
             
             # Change applicationId and suffix
-            literal('applicationId "org.mozilla"', 'applicationId "org.ironfoxoss"'),
+            literal('applicationId "org.mozilla"', f'applicationId "{config.app_config.app_id_base}"'),
             literal(
                 'applicationIdSuffix ".firefox"',
-                'applicationIdSuffix ".ironfox"',
+                f'applicationIdSuffix ".{config.app_config.app_id}"',
             ),
             
             # Update sharedUserId
             literal(
                 '"sharedUserId": "org.mozilla.firefox.sharedID"',
-                f'"sharedUserId": "org.ironfoxoss.ironfox.sharedID"|',
+                f'"sharedUserId": "{config.app_config.package_name}.sharedID"|',
             ),
             
             # Replace version name with IRONFOX_VERSION
@@ -392,7 +392,7 @@ def _build_gradle_replacements(abis: str):
             regex(r'Telemetry enabled: " \+ .*\)', 'Telemetry enabled: " + false)'),
             
             # Update included CPU ABIs
-            regex(r'include ".*"', f'include {abis}')
+            regex(r'include ".*"', f'include {config.abis}')
             # fmt:on
         ],
     )

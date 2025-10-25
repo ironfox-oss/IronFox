@@ -7,7 +7,7 @@ import multiprocessing
 from click.core import Context
 from pathlib import Path
 
-from commands.base import BaseConfig
+from commands.base import DEFAULT_APP_CONFIG, AppConfig, BaseConfig
 from commands.build import BuildCommand
 from commands.prepare import PrepareCommand
 from commands.setup import SetupCommand
@@ -101,6 +101,30 @@ def setup(base_config: BaseConfig, clone_depth: int):
     type=click.Path(exists=False, dir_okay=False),
     default=os.getenv("SB_GAPI_KEY_FILE", ""),
 )
+@click.option(
+    "--app-name",
+    help="Name of the browser. Defaults to 'IronFox'.",
+    type=str,
+    default=DEFAULT_APP_CONFIG.app_name,
+)
+@click.option(
+    "--app-vendor",
+    help="Name of the vendor. Defaults to 'IronFox OSS'.",
+    type=str,
+    default=DEFAULT_APP_CONFIG.vendor,
+)
+@click.option(
+    "--app-id-base",
+    help="Base package ID (organization-level). Defaults to 'org.ironfoxoss'.",
+    type=str,
+    default=DEFAULT_APP_CONFIG.app_id_base,
+)
+@click.option(
+    "--app-id",
+    help="Application identifier (may include variant, e.g. 'ironfox.nightly'). Defaults to 'ironfox'.",
+    type=str,
+    default=DEFAULT_APP_CONFIG.app_id,
+)
 @click.argument(
     "build_variant",
     type=click.Choice(["arm64", "arm", "x86_64", "bundle"]),
@@ -110,12 +134,25 @@ def prepare(
     base_config: BaseConfig,
     sb_gapi_file: Path,
     build_variant: str,
+    app_name: str,
+    app_vendor: str,
+    app_id_base: str,
+    app_id: str,
 ):
+    app_config = AppConfig(
+        app_name=app_name,
+        vendor=app_vendor,
+        app_id_base=app_id_base,
+        app_id=app_id,
+    )
+
     cmd = PrepareCommand(
         base_config=base_config,
+        app_config=app_config,
         sb_gapi_file=Path(sb_gapi_file),
         build_variant=build_variant,
     )
+    
     return cmd.run()
 
 

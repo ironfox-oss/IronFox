@@ -25,14 +25,17 @@ class AppConfig:
         self,
         app_name: str = "IronFox",
         vendor: str = "IronFox OSS",
-        app_id: str = "org.ironfoxoss",
-        app_id_suffix: str = ".ironfox",
+        app_id_base: str = "org.ironfoxoss",
+        app_id: str = ".ironfox",
     ):
         self.app_name = app_name
         self.vendor = vendor
+        self.app_id_base = app_id_base
         self.app_id = app_id
-        self.app_id_suffix = app_id_suffix
-        self.package_name = f"{app_id}{app_id_suffix}"
+        self.package_name = f"{app_id_base}.{app_id}"
+
+
+DEFAULT_APP_CONFIG = AppConfig()
 
 
 class BuildEnvironment:
