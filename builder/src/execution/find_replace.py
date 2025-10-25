@@ -71,6 +71,13 @@ def line_affix(
     )
 
 
+def comment_out(
+    match_lines: PatternType,
+    comment_token: str = "//",
+) -> LineAffixReplacement:
+    return line_affix(match_lines=match_lines, prefix=comment_token)
+
+
 def literal(
     old_text: str,
     new_text: str,

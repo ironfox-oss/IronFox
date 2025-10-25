@@ -103,7 +103,7 @@ def setup(base_config: BaseConfig, clone_depth: int):
 )
 @click.option(
     "--app-name",
-    help="Name of the browser. Defaults to 'IronFox'.",
+    help="Name of the application (as shown in launchers). Defaults to 'IronFox'.",
     type=str,
     default=DEFAULT_APP_CONFIG.app_name,
 )
@@ -125,6 +125,12 @@ def setup(base_config: BaseConfig, clone_depth: int):
     type=str,
     default=DEFAULT_APP_CONFIG.app_id,
 )
+@click.option(
+    "--browser-name",
+    help="Name of the browser (as shown in-app). Defaults to 'IronFox'.",
+    type=str,
+    default=DEFAULT_APP_CONFIG.app_name,
+)
 @click.argument(
     "build_variant",
     type=click.Choice(["arm64", "arm", "x86_64", "bundle"]),
@@ -138,12 +144,14 @@ def prepare(
     app_vendor: str,
     app_id_base: str,
     app_id: str,
+    browser_name: str,
 ):
     app_config = AppConfig(
         app_name=app_name,
         vendor=app_vendor,
         app_id_base=app_id_base,
         app_id=app_id,
+        browser_name=browser_name,
     )
 
     cmd = PrepareCommand(
@@ -152,7 +160,7 @@ def prepare(
         sb_gapi_file=Path(sb_gapi_file),
         build_variant=build_variant,
     )
-    
+
     return cmd.run()
 
 

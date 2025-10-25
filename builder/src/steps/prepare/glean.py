@@ -131,6 +131,12 @@ def setup_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
             ],
         ),
         
+        d.patch(
+            name="Apply glean-noop-uniffi.patch",
+            patch_file=paths.patches_dir / "glean-noop-uniffi.patch",
+            target_dir=paths.glean_dir
+        ),
+        
         # Use Tor's no-op UniFFi binding generator
         *_process_file(
             path="glean-core/android/build.gradle",

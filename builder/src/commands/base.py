@@ -23,11 +23,13 @@ logger = logging.getLogger("BaseConfig")
 class AppConfig:
     def __init__(
         self,
+        browser_name: str = "IronFox",
         app_name: str = "IronFox",
         vendor: str = "IronFox OSS",
         app_id_base: str = "org.ironfoxoss",
         app_id: str = ".ironfox",
     ):
+        self.browser_name = browser_name
         self.app_name = app_name
         self.vendor = vendor
         self.app_id_base = app_id_base

@@ -4,7 +4,7 @@ from common.paths import Paths
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
-from execution.find_replace import line_affix, literal, on_line_text, regex
+from execution.find_replace import comment_out, line_affix, literal, on_line_text, regex
 from execution.types import ReplacementAction
 
 
@@ -72,30 +72,128 @@ kotlin.internal.collectFUSMetrics=false
         # ---- FILE SYSTEM OPERATIONS ----
         
         # Telemetry
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/Event.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/MetricController.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/library/bookmarks/ui/BookmarksTelemetryMiddleware.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt"),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/components/metrics/fonts", recursive=True),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/settings/datachoices", recursive=True),
-        *_delete_fs_entity(path="app/src/*/java/org/mozilla/fenix/telemetry", recursive=True),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/Event.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/MetricController.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt"),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/components/metrics/fonts", recursive=True),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/settings/datachoices", recursive=True),
+        *_delete_fs_entity("app/src/*/java/org/mozilla/fenix/telemetry", recursive=True),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/TopSitesRefresher.kt"),
+        
+        # Remove unused media
+        ## Based on Tor Browser: https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/264dc7cd915e75ba9db3a27e09253acffe3f2311
+        ## This should help reduce our APK sizes...
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/ic_launcher-playstore.png"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/ic_launcher-web.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/drawable/ic_launcher_foreground.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-anydpi-v26/ic_launcher_round.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-anydpi-v26/ic_launcher.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-hdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-hdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-mdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-mdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-xhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-xhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-xxhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-xxhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-xxxhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/debug/res/mipmap-xxxhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/ic_launcher_private-web.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/ic_launcher-web.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/ic_launcher_foreground.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/ic_launcher_monochrome.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/ic_onboarding_search_widget.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/ic_onboarding_sync.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_logo.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_text_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/ic_wordmark_text_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/microsurvey_success.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable/onboarding_ctd_sync.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-hdpi/fenix_search_widget.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-hdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-hdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-mdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-mdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-xhdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-xhdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private_round.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_private_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-hdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_private_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-mdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_private_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_private_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_private_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable/ic_firefox.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable/ic_launcher_foreground.xml"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_logo.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_text_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable/ic_wordmark_text_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-hdpi/fenix_search_widget.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-hdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-hdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-mdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-mdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-xhdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-xhdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-xxhdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-xxhdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/ic_launcher-web.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-hdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-hdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-mdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-mdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-xhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-xhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher_round.webp"),
+        *_delete_fs_entity("mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp"),
         
         # Replace proprietary artwork
-        *_delete_fs_entity(path="app/src/release/res/drawable/ic_launcher_foreground.xml"),
-        *_delete_fs_entity(path="app/src/release/res/mipmap-*/ic_launcher.webp"),
-        *_delete_fs_entity(path="app/src/release/res/values/colors.xml"),
-        *_delete_fs_entity(path="app/src/main/res/values-v24/styles.xml"),
+        *_delete_fs_entity("app/src/release/res/drawable/ic_launcher_foreground.xml"),
+        *_delete_fs_entity("app/src/release/res/mipmap-*/ic_launcher.webp"),
+        *_delete_fs_entity("app/src/release/res/values/colors.xml"),
+        *_delete_fs_entity("app/src/main/res/values-v24/styles.xml"),
         
         # Create directories
         _mkdirs("app/src/release/res/mipmap-anydpi-v26"),
@@ -141,10 +239,56 @@ kotlin.internal.collectFUSMetrics=false
         *_home_activity_kt_replacements(),
         
         # app/src/*/res/values*/*strings.xml
-        *_strings_xml_replacements(),
+        *_strings_xml_replacements(config),
         
         # app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
         *_support_utils_kt_replacements(),
+        
+        # Disable sync telemetry
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt",
+            replacements=[
+                comment_out(r"import\s+mozilla\.appservices\.syncmanager\.SyncTelemetry"),
+                comment_out("SyncTelemetry."),
+            ]
+        ),
+        
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt",
+            replacements=[
+                comment_out(r"import\s+org\.mozilla\.fenix\.components\.toolbar\.BrowserToolbarTelemetryMiddleware"),
+                comment_out(r"BrowserToolbarTelemetryMiddleware\(")
+            ],
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt",
+            replacements=[
+                comment_out(r"import\s+org\.mozilla\.fenix\.home\.toolbar\.BrowserToolbarTelemetryMiddleware"),
+                comment_out(r"BrowserToolbarTelemetryMiddleware\(")
+            ],
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayFragment.kt",
+            replacements=[
+                comment_out(r"TabsTrayTelemetryMiddleware\(")
+            ]  
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt",
+            replacements=[
+                comment_out(r"import\s+org\.mozilla\.fenix\.tabstray\.TabsTrayTelemetryMiddleware"),
+                comment_out(r"TabsTrayTelemetryMiddleware\(")
+            ],
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt",
+            replacements=[
+                comment_out(r"import\s+org\.mozilla\.fenix\.webcompat\.middleware\.WebCompatReporterTelemetryMiddleware"),
+                comment_out(r"private fun provideTelemetryMiddleware"),
+                comment_out(r"provideTelemetryMiddleware\("),
+                comment_out(r"WebCompatReporterTelemetryMiddleware\("),
+            ],
+        ),
         
         # Ensure application shortcuts, when clicked, resolve to IronFox instead of Firefox
         *_process_file(
@@ -177,6 +321,15 @@ kotlin.internal.collectFUSMetrics=false
                 literal("firefox_features", "ironfox_features"),
             ],
         ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt",
+            replacements=[
+                literal(
+                    old_text="ProfilerSettings.Firefox",
+                    new_text="ProfilerSettings.IronFox",
+                )      
+            ]
+        ),
         
         # No-op Glean
         *_process_file(
@@ -191,8 +344,7 @@ kotlin.internal.collectFUSMetrics=false
         *_process_file(
             path=".buildconfig.yml",
             replacements=[
-                line_affix(r"^- components:lib-crash-sentry", prefix="# "),
-                line_affix(r"^- components:lib-push-firebase", prefix="# "),
+                line_affix("- components:service-mars", prefix="#"),
             ],
         ),
         
@@ -263,6 +415,17 @@ kotlin.internal.collectFUSMetrics=false
             ],
         ),
         
+        # No-op Nimbus (Experimentation)
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/utils/Settings.kt",
+            replacements=[
+                line_affix(
+                    match_lines="FxNimbus.features.junoOnboarding.recordExposure",
+                    prefix="//"
+                )
+            ]
+        ),
+        
         # Fix missing icons
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/components/menu/compose/MenuItem.kt",
@@ -274,6 +437,31 @@ kotlin.internal.collectFUSMetrics=false
             path="app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt",
             replacements=[
                 literal("googleg_standard_color_18", "ic_download"),
+            ],
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt",
+            replacements=[
+                literal("R.drawable.microsurvey_success", "R.drawable.fox_alert_crash_dark"),
+            ],
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt",
+            replacements=[
+                literal("R.drawable.ic_onboarding_sync", "R.drawable.fox_alert_crash_dark"),
+            ],
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt",
+            replacements=[
+                literal("R.drawable.ic_onboarding_sync", "R.drawable.fox_alert_crash_dark"),
+            ],
+        ),
+        *_process_file(
+            path="app/onboarding.fml.yaml",
+            replacements=[
+                literal("ic_onboarding_search_widget", "fox_alert_crash_dark"),
+                literal("ic_onboarding_sync", "fox_alert_crash_dark"),
             ],
         ),
         
@@ -377,14 +565,9 @@ def _build_gradle_replacements(config: PrepareConfig):
             regex(r'(AMO_COLLECTION_USER\s*[:=]\s*")[^"]*(")', r"\1\2"),
             regex(r'(AMO_SERVER_URL\s*[:=]\s*")[^"]*(")', r"\1\2"),
             
-            # Comment out Sentry and Firebase crash reporting
-            line_affix(r"implementation libs.thirdparty.sentry", prefix="// "),
+            # Comment out service-mars dependency
             line_affix(
-                r"implementation project\(':components:lib-crash-sentry'\)",
-                prefix="// ",
-            ),
-            line_affix(
-                r"implementation project\(':components:lib-push-firebase'\)",
+                r"implementation project\(':components:service-mars'\)",
                 prefix="// ",
             ),
             
@@ -406,6 +589,9 @@ def _feature_flags_kt_replacements():
             
             # Disable telemetry
             regex(r"META_ATTRIBUTION_ENABLED = .*", "META_ATTRIBUTION_ENABLED = false"),
+            
+            # Disable Pocket "Discover More Stories"
+            regex(r"DISCOVER_MORE_STORIES = .*", "DISCOVER_MORE_STORIES = false"),
             
             # Show live downloads in progress
             regex(r"showLiveDownloads = .*", "showLiveDownloads = true"),
@@ -491,7 +677,8 @@ def _support_utils_kt_replacements():
     )
 
 
-def _strings_xml_replacements():
+def _strings_xml_replacements(config: PrepareConfig):
+    app = config.app_config
     return _process_file(
         path="app/src/*/res/values*/*strings.xml",
         replacements=[
@@ -504,18 +691,18 @@ def _strings_xml_replacements():
             ),
             literal(
                 "Securely send tabs between your devices and discover other privacy features in Firefox.",
-                "IronFox can remind you when private tabs are open and show you the progress of file downloads.",
+                f"{app.browser_name} can remind you when private tabs are open and show you the progress of file downloads.",
             ),
             literal("Agree and continue", "Continue"),
             literal("Address bar - Firefox Suggest", "Address bar"),
-            literal("Firefox Daylight", "IronFox"),
-            literal("Firefox Fenix", "IronFox"),
-            literal("Mozilla Firefox", "IronFox"),
-            literal("Firefox", "IronFox"),
+            literal("Firefox Daylight", app.app_name),
+            literal("Firefox Fenix", app.app_name),
+            literal("Mozilla Firefox", app.app_name),
+            literal("Firefox", app.app_name),
             on_line_text(
-                match_lines=r"about_content", on_text=r"Mozilla", replace="IronFox OSS"
+                match_lines=r"about_content", on_text=r"Mozilla", replace=app.vendor
             ),
-            literal("IronFox Suggest", "Firefox Suggest"),
+            literal(f"{app.app_name} Suggest", "Firefox Suggest"),
             literal(
                 "Learn more about Firefox Suggest",
                 "Learn more about search suggestions",
@@ -526,11 +713,11 @@ def _strings_xml_replacements():
                 "Notifications for tabs received from other devices",
             ),
             literal(
-                "To send a tab, sign in to IronFox",
+                f"To send a tab, sign in to {app.app_name}",
                 "To send a tab, sign in to a Firefox-based web browser",
             ),
             literal(
-                "On your computer open IronFox and",
+                f"On your computer open {app.app_name} and",
                 "On your computer, open a Firefox-based web browser, and",
             ),
             literal(
@@ -539,14 +726,14 @@ def _strings_xml_replacements():
             ),
             literal("Sync is on", "Firefox Sync is on"),
             literal("No account?", "No Firefox account?"),
-            literal("to sync IronFox", "to sync your browsing data"),
+            literal(f"to sync {app.app_name}", "to sync your browsing data"),
             literal(
                 "%s will stop syncing with your account",
                 "%s will stop syncing with your Firefox account",
             ),
             literal(
                 "%1$s decides when to use secure DNS to protect your privacy",
-                "IronFox will use your system’s DNS resolver",
+                f"{app.app_name} will use your system’s DNS resolver",
             ),
             literal(
                 "Use your default DNS resolver if there is a problem with the secure DNS provider",
@@ -554,7 +741,7 @@ def _strings_xml_replacements():
             ),
             literal(
                 "You control when to use secure DNS and choose your provider",
-                "IronFox will use secure DNS with your chosen provider by default, but might fallback to your system’s DNS resolver if secure DNS is unavailable",
+                f"{app.app_name} will use secure DNS with your chosen provider by default, but might fallback to your system’s DNS resolver if secure DNS is unavailable",
             ),
             on_line_text(
                 match_lines=r"preference_doh_off_summary",
@@ -563,7 +750,7 @@ def _strings_xml_replacements():
             ),
             literal("Learn more about sync", "Learn more about Firefox Sync"),
             literal(
-                "You don’t have any tabs open in IronFox on your other devices",
+                f"You don’t have any tabs open in {app.app_name} on your other devices",
                 "You don’t have any tabs open on your other devices",
             ),
             literal("Google Search", "Google search"),
@@ -662,6 +849,7 @@ def _core_kt_replacements():
             line_affix("AdsTelemetryMiddleware", prefix="// "),
             line_affix(r"TelemetryMiddleware\(context.*\)", prefix="// "),
             line_affix(r"TelemetryMiddleware\(context.*\)", r"// "),
+            literal("search-telemetry-v2", ""),
         ],
     )
 
