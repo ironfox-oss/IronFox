@@ -45,7 +45,7 @@ from common.utils import find_prog
     "--gradle-exec",
     help="Path to the Gradle executable file",
     type=click.Path(exists=True, dir_okay=False, executable=True),
-    default=find_prog("gradle"),
+    default=None,
 )
 @click.option(
     "--jobs",
@@ -68,24 +68,24 @@ from common.utils import find_prog
 @click.pass_context
 def cli(
     ctx: Context,
-    root_dir: Path,
-    android_home: Path,
-    java_home: Path,
-    cargo_home: Path,
-    gradle_exec: Path | None,
+    root_dir: str,
+    android_home: str,
+    java_home: str,
+    cargo_home: str,
+    gradle_exec: str | None,
     jobs: int,
     dry_run: bool,
     verbose: bool,
 ):
-    if not gradle_exec:
-        raise RuntimeError("Unable to find 'gradle' executable")
+    if not gradle_exec or len(gradle_exec.strip()) == 0:
+        raise RuntimeError(f"Invalid gradle executable path: {gradle_exec}")
 
     ctx.obj = BaseConfig(
         root_dir=Path(root_dir),
         android_home=Path(android_home),
         java_home=Path(java_home),
         cargo_home=Path(cargo_home),
-        gradle_exec=gradle_exec,
+        gradle_exec=Path(gradle_exec),
         jobs=jobs,
         dry_run=dry_run,
         verbose=verbose,
