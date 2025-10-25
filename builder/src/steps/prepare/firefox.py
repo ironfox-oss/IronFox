@@ -144,12 +144,12 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         d.copy(
             name="Copy aboutPolicies.ftl",
             source=paths.firefox_dir / "browser/locales/en-US/browser/aboutPolicies.ftl",
-            target=paths.firefox_dir / "mobile/locales/en-US/browser",
+            target=paths.firefox_dir / "mobile/locales/en-US/browser/aboutPolicies.ftl",
         ),
         d.copy(
             name="Copy policies-descriptions.ftl",
             source=paths.firefox_dir / "browser/locales/en-US/browser/policies/policies-descriptions.ftl",
-            target=paths.firefox_dir / "mobile/locales/en-US/browser/policies/",
+            target=paths.firefox_dir / "mobile/locales/en-US/browser/policies/policies-descriptions.ftl",
         ),
         d.write_file(
             name="Update moz.build to include jar.mn in JAR_MANIFESTS",
