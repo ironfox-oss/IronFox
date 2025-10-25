@@ -1,5 +1,7 @@
 """The CLI interface for IronFox builder."""
 
+from __future__ import annotations
+
 import os
 import click
 import multiprocessing
@@ -11,6 +13,7 @@ from commands.base import DEFAULT_APP_CONFIG, AppConfig, BaseConfig
 from commands.build import BuildCommand
 from commands.prepare import PrepareCommand
 from commands.setup import SetupCommand
+from common.utils import find_prog
 
 
 @click.group("Python scripts to build IronFox")
@@ -39,6 +42,12 @@ from commands.setup import SetupCommand
     default=os.getenv("CARGO_HOME", ""),
 )
 @click.option(
+    "--gradle-exec",
+    help="Path to the Gradle executable file",
+    type=click.Path(exists=True, dir_okay=False, executable=True),
+    default=find_prog("gradle"),
+)
+@click.option(
     "--jobs",
     help="Number of parallel jobs to run.",
     type=int,
@@ -63,15 +72,20 @@ def cli(
     android_home: Path,
     java_home: Path,
     cargo_home: Path,
+    gradle_exec: Path | None,
     jobs: int,
     dry_run: bool,
     verbose: bool,
 ):
+    if not gradle_exec:
+        raise RuntimeError("Unable to find 'gradle' executable")
+
     ctx.obj = BaseConfig(
         root_dir=Path(root_dir),
         android_home=Path(android_home),
         java_home=Path(java_home),
         cargo_home=Path(cargo_home),
+        gradle_exec=gradle_exec,
         jobs=jobs,
         dry_run=dry_run,
         verbose=verbose,
@@ -131,20 +145,34 @@ def setup(base_config: BaseConfig, clone_depth: int):
     type=str,
     default=DEFAULT_APP_CONFIG.app_name,
 )
+@click.option(
+    "--nightly",
+    help="Whether to build a nightly build. Defaults to false.",
+    is_flag=True,
+    default=DEFAULT_APP_CONFIG.nightly,
+)
 @click.argument(
     "build_variant",
     type=click.Choice(["arm64", "arm", "x86_64", "bundle"]),
+)
+@click.option(
+    "--ubo-assets",
+    help="URL to the uBlock Origin assets file.",
+    type=str,
+    default="",
 )
 @pass_base_config
 def prepare(
     base_config: BaseConfig,
     sb_gapi_file: Path,
     build_variant: str,
+    ubo_assets: str,
     app_name: str,
     app_vendor: str,
     app_id_base: str,
     app_id: str,
     browser_name: str,
+    nightly: bool,
 ):
     app_config = AppConfig(
         app_name=app_name,
@@ -152,6 +180,7 @@ def prepare(
         app_id_base=app_id_base,
         app_id=app_id,
         browser_name=browser_name,
+        nightly=nightly,
     )
 
     cmd = PrepareCommand(
@@ -159,6 +188,7 @@ def prepare(
         app_config=app_config,
         sb_gapi_file=Path(sb_gapi_file),
         build_variant=build_variant,
+        ubo_assets=ubo_assets,
     )
 
     return cmd.run()

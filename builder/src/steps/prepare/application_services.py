@@ -75,6 +75,15 @@ def prepare_application_services(
         
         # TODO: Localize maven
         
+        # Remove line following mavenLocal block in Gradle config
+        *_process_file(
+            path="tools/nimbus-gradle-plugin/build.gradle",
+            replacements=[
+                regex(r'^    mavenLocal\s*\n.*\n?', r''),
+            ],
+        ),
+
+        
         # Fail on use of pre-built binary
         *_process_file(
             path="Cargo.toml",

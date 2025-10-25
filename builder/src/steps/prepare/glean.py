@@ -1,5 +1,7 @@
 from typing import List
+from commands.prepare import PrepareConfig
 from common.paths import Paths
+from common.utils import current_machine, current_platform
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
@@ -7,7 +9,9 @@ from execution.find_replace import line_affix, on_line_text, regex
 from execution.types import ReplacementAction
 
 
-def prepare_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
+def prepare_glean(
+    d: BuildDefinition, paths: Paths, config: PrepareConfig
+) -> List[TaskDefinition]:
     def _process_file(
         path: str,
         replacements: List[ReplacementAction],
@@ -49,6 +53,15 @@ def prepare_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
 
     return [
         # fmt:off
+        
+        d.write_file(
+            name="Write local.properties",
+            target=paths.glean_dir / "local.properties",
+            contents=lambda: f'''
+rust.targets={current_platform().lower()}-{current_machine()},{config.rusttarget}
+            '''.encode(),
+            append=True,
+        ),
         
         # TODO: Apply Glean patches
         

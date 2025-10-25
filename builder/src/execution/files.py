@@ -18,6 +18,29 @@ class FileOpTask(TaskDefinition):
         self.target = target
 
 
+class CopyTask(FileOpTask):
+    def __init__(
+        self, name, id, build_def, target, source: Path, recursive: bool = False
+    ):
+        super().__init__(name, id, build_def, target)
+        self.source = source
+        self.recursive = recursive
+
+    def execute(self, params):
+        progress = params.progress
+        task_id = progress.add_task(f"Copy {self.source} to {self.target}")
+
+        try:
+            if not self.source.is_dir():
+                shutil.copyfile(self.source, self.target)
+            else:
+                shutil.copytree(self.source, self.target)
+        except Exception as e:
+            self.error(f"Failed to copy file {self.target}: {e}")
+        finally:
+            progress.remove_task(task_id=task_id)
+
+
 class WriteFileTask(FileOpTask):
     def __init__(
         self,
@@ -62,7 +85,7 @@ class DirCreateTask(FileOpTask):
         try:
             self.target.mkdir(parents=self.parent, exist_ok=self.exist_ok)
         except Exception as e:
-            self.error(f"Failed to create dir {self.target}")
+            self.error(f"Failed to create dir {self.target}: {e}")
         finally:
             try:
                 progress.remove_task(task_id)

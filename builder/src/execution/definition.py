@@ -10,6 +10,7 @@ import commands.base
 from abc import abstractmethod
 from pathlib import Path
 from common.utils import resolve_glob
+from execution.files import CopyTask
 from rich.progress import Progress
 from typing import Callable, List, TypeVar, Type, Union
 
@@ -504,6 +505,33 @@ class BuildDefinition:
             )
 
         return tasks
+
+    def copy(
+        self,
+        name: str,
+        source: Path,
+        target: Path,
+        recursive: bool = False,
+    ) -> TaskDefinition:
+        """Copy the given source file to the given target file.
+
+        Args:
+            name (str): The name of the copy task.
+            source (Path): The source file path.
+            target (Path): The target file path.
+            recursive (bool, optional): Whether copy recursively if source is a directory. Defaults to False.
+
+        Returns:
+            TaskDefinition: The task definition of the copy task.
+        """
+
+        return self.create_task(
+            CopyTask,
+            name=name,
+            source=source,
+            target=target,
+            recursive=recursive,
+        )
 
     def find_replace(
         self,

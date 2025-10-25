@@ -27,14 +27,20 @@ class AppConfig:
         app_name: str = "IronFox",
         vendor: str = "IronFox OSS",
         app_id_base: str = "org.ironfoxoss",
-        app_id: str = ".ironfox",
+        app_id: str = "ironfox",
+        nightly: bool = False,
     ):
+        if nightly :
+            app_name += " Nightly"
+            app_id += ".nightly"
+        
         self.browser_name = browser_name
         self.app_name = app_name
         self.vendor = vendor
         self.app_id_base = app_id_base
         self.app_id = app_id
         self.package_name = f"{app_id_base}.{app_id}"
+        self.nightly = nightly
 
 
 DEFAULT_APP_CONFIG = AppConfig()
@@ -86,6 +92,7 @@ class BaseConfig:
         android_home: Path,
         java_home: Path,
         cargo_home: Path,
+        gradle_exec: Path,
         jobs: int,
         dry_run: bool,
         verbose: bool,
@@ -106,6 +113,7 @@ class BaseConfig:
             android_home=android_home.resolve(),
             java_home=java_home.resolve(),
             cargo_home=cargo_home.resolve(),
+            gradle_exec=gradle_exec.resolve(),
         )
 
         self.env = BuildEnvironment(paths=self.paths)

@@ -1,8 +1,9 @@
 """File system path definitions for building IronFox."""
 
+import os
 from pathlib import Path
 
-from common.utils import ndk_host_tag
+from common.utils import is_macos, ndk_host_tag
 
 from .versions import Versions
 
@@ -16,16 +17,19 @@ class Paths:
         android_home: Path,
         java_home: Path,
         cargo_home: Path,
+        gradle_exec: Path,
     ):
         """Create a new IronFoxPaths instance.
 
         Args:
             rootdir (Path): Path to the root IronFox source directory.
         """
+        self._user_home = Path.home()
         self._rootdir = root_dir
         self._android_home = android_home
         self._java_home = java_home
         self._cargo_home = cargo_home
+        self._gradle_exec = gradle_exec
 
     def mkdirs(self):
         """Create necessary directories if they do not exist."""
@@ -34,6 +38,11 @@ class Paths:
         self.artifacts_apk_dir.mkdir(parents=True, exist_ok=True)
         self.artifacts_apks_dir.mkdir(parents=True, exist_ok=True)
         self.artifacts_aar_dir.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def user_home(self) -> Path:
+        """Path to the user's home directory"""
+        return self._user_home
 
     @property
     def root_dir(self) -> Path:
@@ -56,6 +65,9 @@ class Paths:
 
     @property
     def libclang_dir(self) -> Path:
+        if is_macos():
+            return self.ndk_toolchain_dir / "lib"
+        
         return self.ndk_toolchain_dir / "musl" / "lib"
 
     @property
@@ -67,6 +79,11 @@ class Paths:
     def cargo_home(self) -> Path:
         """Path to the .cargo directory."""
         return self._cargo_home
+
+    @property
+    def gradle_exec(self) -> Path:
+        """Path to the 'gradle' executable."""
+        return self._gradle_exec
 
     @property
     def artifacts_dir(self) -> Path:
@@ -117,7 +134,7 @@ class Paths:
     @property
     def android_components_dir(self) -> Path:
         """Path to the android-components directory in Firefox source code."""
-        return self._rootdir / "gecko" / "mobile" / "android" / "android-components"
+        return self.firefox_dir / "mobile" / "android" / "android-components"
 
     @property
     def application_services_dir(self) -> Path:
@@ -160,7 +177,7 @@ class Paths:
     def wasi_sdk_dir(self) -> Path:
         """Path to the wasi-sdk pre-built installation directory."""
         return self._rootdir / "wasi-sdk"
-    
+
     @property
     def uniffi_dir(self) -> Path:
         """Path to uniffi source directory."""

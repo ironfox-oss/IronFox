@@ -7,7 +7,9 @@ from execution.find_replace import line_affix, literal, on_line_text, regex
 from execution.types import ReplacementAction
 
 
-def prepare_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
+def prepare_android_components(
+    d: BuildDefinition, paths: Paths
+) -> List[TaskDefinition]:
     def _process_file(
         path: str,
         replacements: List[ReplacementAction],
@@ -77,6 +79,13 @@ def prepare_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDef
         *_rm(path="samples/glean/build.gradle",),
         *_rm(path="samples/glean/samples-glean-library/build.gradle",),
         
+        # Remove unnecessary crash reporting components
+        *_rm("components/support/appservices/src/main/java/mozilla/components/support/rusterrors"),
+        
+        # Remove unused crash reporting services/components
+        *_rm("components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt"),
+        *_rm("components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt"),
+        
         # Prevent unsolicited favicon fetching
         *_process_file(
             path="components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt",
@@ -101,6 +110,81 @@ def prepare_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDef
                     r"^\s*-keep class mozilla\.components\.service\.nimbus",
                     prefix="#",
                 ),
+            ],
+        ),
+        
+        # No-op AMO collections/recommendations
+        *_process_file(
+            path="components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt",
+            replacements=[
+                regex(r'DEFAULT_COLLECTION_NAME = ".*"', r'DEFAULT_COLLECTION_NAME = ""'),
+                literal("7e8d6dc651b54ab385fb8791bf9dac", ""),
+                regex(r'DEFAULT_COLLECTION_USER = ".*"', r'DEFAULT_COLLECTION_USER = ""'),
+                regex(r'DEFAULT_SERVER_URL = ".*"', r'DEFAULT_SERVER_URL = ""'),
+                literal("https://services.addons.mozilla.org", ""),
+            ],
+        ),
+        
+        # Configure CrashReporter defaults
+        *_process_file(
+            path="components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt",
+            replacements=[
+                regex(r"enabled: Boolean = .*", r"enabled: Boolean = false,"),
+                regex(r"shouldPrompt: Prompt = .*", r"shouldPrompt: Prompt = Prompt.ALWAYS,"),
+                regex(r"useLegacyReporting: Boolean = .*", r"useLegacyReporting: Boolean = false,"),
+                regex(r"var enabled: Boolean = false,", r"var enabled: Boolean = enabled,"),
+            ],
+        ),
+
+        # Disable SentryService caught exception reporting
+        *_process_file(
+            path="components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt",
+            replacements=[
+                regex(r"sendCaughtExceptions: Boolean = .*", r"sendCaughtExceptions: Boolean = false,"),
+            ],
+        ),
+        
+        # No-op MARS
+        *_process_file(
+            path="components/service/pocket/src/*/java/mozilla/components/service/pocket/mars/api/MarsSpocsEndpointRaw.kt",
+            replacements=[
+                regex(r'MARS_ENDPOINT_BASE_URL = ".*"', r'MARS_ENDPOINT_BASE_URL = ""'),
+                regex(r'MARS_ENDPOINT_STAGING_BASE_URL = ".*"', r'MARS_ENDPOINT_STAGING_BASE_URL = ""'),
+            ],
+        ),
+        
+        # No-op GeoIP/Region service
+        ## https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst
+        *_process_file(
+            path="components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt",
+            replacements=[
+                regex(r'GEOIP_SERVICE_URL = ".*"', r'GEOIP_SERVICE_URL = ""'),
+                regex(r'USER_AGENT = ".*', r'USER_AGENT = ""'),
+            ],
+        ),
+        
+        # No-op Pocket SPOCS endpoints
+        *_process_file(
+            path="components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt",
+            replacements=[
+                regex(r'SPOCS_ENDPOINT_DEV_BASE_URL = ".*"', r'SPOCS_ENDPOINT_DEV_BASE_URL = ""'),
+                regex(r'SPOCS_ENDPOINT_PROD_BASE_URL = ".*"', r'SPOCS_ENDPOINT_PROD_BASE_URL = ""'),
+            ],
+        ),
+
+        # No-op Pocket main endpoint
+        *_process_file(
+            path="components/service/pocket/src/*/java/mozilla/components/service/pocket/stories/api/PocketEndpointRaw.kt",
+            replacements=[
+                regex(r'POCKET_ENDPOINT_URL = ".*"', r'POCKET_ENDPOINT_URL = ""'),
+            ],
+        ),
+        
+        # No-op telemetry (GeckoView)
+        *_process_file(
+            path="components/browser/engine-gecko/build.gradle",
+            replacements=[
+                regex(r'allowMetricsFromAAR = .*', r'allowMetricsFromAAR = false'),
             ],
         ),
         

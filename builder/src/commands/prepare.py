@@ -30,10 +30,12 @@ class PrepareConfig:
         self,
         sb_gapi_file: Path,
         build_variant: str,
+        ubo_assets: str,
         app_config: AppConfig = AppConfig(),
     ):
         self.app_config = app_config
         self.sb_gapi_file = sb_gapi_file
+        self.ubo_assets = ubo_assets
 
         build_variant = build_variant.lower()
         if build_variant == "arm64":
@@ -88,11 +90,13 @@ class PrepareCommand(BaseCommand):
         app_config: AppConfig,
         sb_gapi_file: Path,
         build_variant: str,
+        ubo_assets: str,
     ):
         super().__init__("PrepareCommad", base_config)
         self.prepare_cofig = PrepareConfig(
             sb_gapi_file=sb_gapi_file,
             build_variant=build_variant,
+            ubo_assets=ubo_assets,
             app_config=app_config
         )
 

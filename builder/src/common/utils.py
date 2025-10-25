@@ -51,6 +51,14 @@ def current_platform() -> str:
     return platform.system()
 
 
+def current_machine() -> str:
+    """The current machine type"""
+    machine = platform.machine()
+    if machine == "arm64":
+        machine = "aarch64"
+    return machine
+
+
 def is_windows() -> bool:
     """Whether the current platform is Windows."""
     return current_platform() == "Windows"

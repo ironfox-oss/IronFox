@@ -44,7 +44,7 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
         *prepare_fenix(d, paths, config),
         
         # Glean
-        *prepare_glean(d, paths),
+        *prepare_glean(d, paths, config),
         
         # Application services
         *prepare_application_services(d, paths),
