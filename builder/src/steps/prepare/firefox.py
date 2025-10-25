@@ -332,9 +332,9 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         *_process_file(
             path="toolkit/components/glean/src/init/mod.rs",
             replacements=[
-                regex(r'(?<=enable_internal_pings:\s*)true', r'false'),
-                regex(r'(?<=upload_enabled\s*=\s*)true', r'false'),
-                regex(r'(?<=use_core_mps:\s*)true', r'false'),
+                regex(r'enable_internal_pings:\s*true', r'enable_internal_pings: false'),
+                regex(r'upload_enabled\s*=\s*true', r'upload_enabled = false'),
+                regex(r'use_core_mps:\s*true', r'use_core_mps: false'),
             ],
         ),
 
