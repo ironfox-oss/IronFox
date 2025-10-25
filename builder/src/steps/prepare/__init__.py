@@ -9,9 +9,10 @@ from execution.find_replace import line_affix, literal, on_line_text, regex
 from execution.types import ReplacementAction
 from steps.common.java import setup_java
 
-from .android_components import setup_android_components
-from .fenix import setup_fenix
-from .glean import setup_glean
+from .android_components import prepare_android_components
+from .application_services import prepare_application_services
+from .fenix import prepare_fenix
+from .glean import prepare_glean
 
 
 def _require_dir_exists(dir: Path):
@@ -37,13 +38,16 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
     ).then(  # type: ignore
            
         # Android Components
-        *setup_android_components(d, paths),
+        *prepare_android_components(d, paths),
            
         # Fenix
-        *setup_fenix(d, paths, config),
+        *prepare_fenix(d, paths, config),
         
         # Glean
-        *setup_glean(d, paths),
+        *prepare_glean(d, paths),
+        
+        # Application services
+        *prepare_application_services(d, paths),
     )
     # fmt:on
 

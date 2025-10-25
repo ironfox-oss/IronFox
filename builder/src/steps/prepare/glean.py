@@ -7,7 +7,7 @@ from execution.find_replace import line_affix, on_line_text, regex
 from execution.types import ReplacementAction
 
 
-def setup_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
+def prepare_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
     def _process_file(
         path: str,
         replacements: List[ReplacementAction],
@@ -18,7 +18,7 @@ def setup_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
             replacements=replacements,
         )
 
-    def _delete_fs_entity(
+    def _rm(
         path: str,
         recursive: bool = False,
     ) -> List[TaskDefinition]:
@@ -121,7 +121,7 @@ def setup_glean(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
                 regex(r"send_if_empty: .*", r"send_if_empty: false"),
             ],
         ),
-        *_delete_fs_entity(path="glean-core/android/metrics.yaml"),
+        *_rm(path="glean-core/android/metrics.yaml"),
         
         # Ensure we're building for release
         *_process_file(

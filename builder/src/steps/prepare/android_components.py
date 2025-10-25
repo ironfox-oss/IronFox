@@ -7,7 +7,7 @@ from execution.find_replace import line_affix, literal, on_line_text, regex
 from execution.types import ReplacementAction
 
 
-def setup_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
+def prepare_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDefinition]:
     def _process_file(
         path: str,
         replacements: List[ReplacementAction],
@@ -18,7 +18,7 @@ def setup_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDefin
             replacements=replacements,
         )
 
-    def _delete_fs_entity(
+    def _rm(
         path: str,
         recursive: bool = False,
     ) -> List[TaskDefinition]:
@@ -44,38 +44,38 @@ def setup_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDefin
         # fmt:off
         
         # Remove default built-in search engines
-        *_delete_fs_entity(
+        *_rm(
             path="components/feature/search/src/*/assets/searchplugins/*",
             recursive=True,
         ),
         
         # Nuke the "Mozilla Android Components - Ads Telemetry" and "Mozilla Android Components - Search Telemetry" extensions
         ## We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
-        *_delete_fs_entity(
+        *_rm(
             path="components/feature/search/src/*/assets/extensions/ads",
             recursive=True,
         ),
-        *_delete_fs_entity(
+        *_rm(
             path="components/feature/search/src/*/assets/extensions/search",
             recursive=True,
         ),
         
         # We can also remove the directories/libraries themselves as well
-        *_delete_fs_entity(path="components/feature/search/src/*/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt",),
-        *_delete_fs_entity(
+        *_rm(path="components/feature/search/src/*/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt",),
+        *_rm(
             path="components/feature/search/src/*/java/mozilla/components/feature/search/telemetry",
             recursive=True,
         ),
         
         # Remove the 'search telemetry' config
-        *_delete_fs_entity(path="components/feature/search/src/*/assets/search/search_telemetry_v2.json",),
+        *_rm(path="components/feature/search/src/*/assets/search/search_telemetry_v2.json",),
         
         # Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
         ## We don't build or use these sample libraries at all anyways, so instead of patching these files, I don't see a reason why we shouldn't just delete them. 
-        *_delete_fs_entity(path="samples/browser/build.gradle",),
-        *_delete_fs_entity(path="samples/crash/build.gradle",),
-        *_delete_fs_entity(path="samples/glean/build.gradle",),
-        *_delete_fs_entity(path="samples/glean/samples-glean-library/build.gradle",),
+        *_rm(path="samples/browser/build.gradle",),
+        *_rm(path="samples/crash/build.gradle",),
+        *_rm(path="samples/glean/build.gradle",),
+        *_rm(path="samples/glean/samples-glean-library/build.gradle",),
         
         # Prevent unsolicited favicon fetching
         *_process_file(
@@ -89,8 +89,8 @@ def setup_android_components(d: BuildDefinition, paths: Paths) -> List[TaskDefin
         ),
         
         # Remove Nimbus
-        *_delete_fs_entity(path="components/browser/engine-gecko/geckoview.fml.yaml",),
-        *_delete_fs_entity(
+        *_rm(path="components/browser/engine-gecko/geckoview.fml.yaml",),
+        *_rm(
             path="components/browser/engine-gecko/src/main/java/mozilla/components/experiment",
             recursive=True,
         ),
