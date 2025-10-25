@@ -87,6 +87,16 @@ def prepare_application_services(
             target_file=f"{paths.application_services_dir}/**/*.gradle",
         ),
         
+        # Overwrite Gradle wrapper scripts
+        *d.write_files(
+            name="Overwrite gradlew scripts",
+            targets=f"{paths.application_services_dir}/**/gradlew",
+            contents=lambda: b'#!/bin/sh\ngradle "$@"',
+            overwrite=True,
+            append=False,
+            chmod=755,
+        ),
+        
         # Remove line following mavenLocal block in Gradle config
         *_process_file(
             path="tools/nimbus-gradle-plugin/build.gradle",

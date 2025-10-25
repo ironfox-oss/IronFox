@@ -34,7 +34,7 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
     ).then(
         
         # Use d.chain(...) such that each component's prepare tasks run
-        # in the sequence their defined sequence
+        # in the sequence they are defined
         
         # The then(...) call in combination with chain(...) will ensure
         # all components are set up in parallel while the individual preparation

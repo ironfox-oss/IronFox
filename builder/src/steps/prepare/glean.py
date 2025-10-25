@@ -64,6 +64,16 @@ rust.targets={current_platform().lower()}-{current_machine()},{config.rusttarget
             target_file=f"{paths.glean_dir}/**/*.gradle",
         ),
         
+        # Overwrite Gradle wrapper scripts
+        *d.write_files(
+            name="Overwrite gradlew scripts",
+            targets=f"{paths.glean_dir}/**/gradlew",
+            contents=lambda: b'#!/bin/sh\ngradle "$@"',
+            overwrite=True,
+            append=False,
+            chmod=755,
+        ),
+        
         # Break dependency on older Rust
         *_process_file(
             path="glean-core/Cargo.toml",
