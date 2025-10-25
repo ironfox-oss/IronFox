@@ -1,7 +1,9 @@
 import logging
 import subprocess
 from pathlib import Path
+from common.patches import PatchConfig
 from rich.progress import Progress
+import yaml
 
 from .definition import BuildDefinition, TaskDefinition
 
@@ -21,12 +23,47 @@ class PatchTask(TaskDefinition):
 
     def execute(self, params):
         progress = params.progress
-        return apply_patch(
-            patch_file=self.patch_file,
-            target_dir=self.target_dir,
-            progress=progress,
-            logger=self.logger,
+        patch_file = self.patch_file
+        target_dir = self.target_dir
+
+        if not patch_file.exists():
+            raise FileNotFoundError(f"Patch file not found: {patch_file}")
+
+        if not patch_file.is_file():
+            raise RuntimeError(f"Not a file: {patch_file}")
+
+        if not target_dir.exists():
+            raise FileNotFoundError(f"Target directory not found: {target_dir}")
+
+        if not target_dir.is_dir():
+            raise NotADirectoryError(f"Target path is not a directory: {target_dir}")
+
+        ext = patch_file.name[max(0, patch_file.name.index(".")) :]
+        if ext != "yaml" or ext != "yml":
+            return apply_patch(
+                patch_file=patch_file,
+                target_dir=target_dir,
+                progress=progress,
+                logger=self.logger,
+            )
+
+        with open(patch_file, "r") as f:
+            config = PatchConfig(**yaml.safe_load(f))
+
+        task_name = f"Apply patches from {patch_file.name}"
+        task_id = progress.add_task(
+            f"{task_name} (0/{len(config.patches)})", total=len(config.patches)
         )
+        try:
+            for index, patch in enumerate(config.patches):
+                do_apply_patch(
+                    patch_file=params.env.paths.patches_dir / patch.file,
+                    target_dir=target_dir,
+                    logger=self.logger,
+                )
+                progress.update(task_id=task_id, completed=index + 1)
+        finally:
+            progress.remove_task(task_id=task_id)
 
 
 def apply_patch(
@@ -36,39 +73,31 @@ def apply_patch(
     logger: logging.Logger,
 ):
     logger.info(f"Applying patch {patch_file} to {target_dir}")
-
-    if not patch_file.exists():
-        raise FileNotFoundError(f"Patch file not found: {patch_file}")
-
-    if not target_dir.exists():
-        raise FileNotFoundError(f"Target directory not found: {target_dir}")
-
-    if not target_dir.is_dir():
-        raise NotADirectoryError(f"Target path is not a directory: {target_dir}")
-
     task_id = progress.add_task(f"Applying {patch_file.name}", total=None)
 
     try:
-        # First try git apply
-        if _is_git_repository(target_dir):
-            logger.debug("Target directory is a git repository, trying git apply")
-            success = _apply_with_git(
-                patch_file,
-                target_dir,
-                logger,
-            )
-            if success:
-                logger.debug(f"Successfully applied patch using git apply: {patch_file}")
-                return
-            else:
-                logger.debug("git apply failed, falling back to patch command")
-
-        # Fall back to standard patch command
-        _apply_with_patch_command(patch_file, target_dir, logger)
-        logger.debug(f"Successfully applied patch using patch command: {patch_file}")
-
+        do_apply_patch(patch_file, target_dir, logger)
     finally:
         progress.remove_task(task_id)
+
+
+def do_apply_patch(patch_file: Path, target_dir: Path, logger: logging.Logger):
+    if _is_git_repository(target_dir):
+        logger.debug("Target directory is a git repository, trying git apply")
+        success = _apply_with_git(
+            patch_file,
+            target_dir,
+            logger,
+        )
+        if success:
+            logger.debug(f"Successfully applied patch using git apply: {patch_file}")
+            return
+        else:
+            logger.debug("git apply failed, falling back to patch command")
+
+        # Fall back to standard patch command
+    _apply_with_patch_command(patch_file, target_dir, logger)
+    logger.debug(f"Successfully applied patch using patch command: {patch_file}")
 
 
 def _is_git_repository(directory: Path) -> bool:

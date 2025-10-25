@@ -364,7 +364,7 @@ class BuildDefinition:
 
         Args:
             name (str): The name of the patch task.
-            patch_file (Path): The path to the patch file (.patch, .diff).
+            patch_file (Path): The path to the patch file (.patch, .diff) or the patch config file (.yaml, .yml).
             target_dir (Path): The directory where the patch should be applied.
 
         Returns:
@@ -494,7 +494,6 @@ class BuildDefinition:
         files = resolve_glob(path)
         tasks = []
 
-        tasks = []
         for idx, f in enumerate(files, start=1):
             task_name = f"{name} [{idx}] ({f})" if len(files) > 1 else name
             tasks.append(
