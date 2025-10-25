@@ -71,7 +71,7 @@ class CopyIntoTask(CopyTask):
         task_id = progress.add_task(f"Copy {self.source}/* into {self.target}")
 
         try:
-            self.target.parent.mkdir(parents=True, exist_ok=True)
+            self.target.mkdir(parents=True, exist_ok=True)
             for item in os.listdir(self.source):
                 src_path = os.path.join(self.source, item)
                 dst_path = os.path.join(self.target, item)
