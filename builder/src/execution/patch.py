@@ -38,8 +38,8 @@ class PatchTask(TaskDefinition):
         if not target_dir.is_dir():
             raise NotADirectoryError(f"Target path is not a directory: {target_dir}")
 
-        ext = patch_file.name[max(0, patch_file.name.index(".")) :]
-        if ext != "yaml" or ext != "yml":
+        ext = patch_file.name[max(0, patch_file.name.index(".") + 1) :]
+        if ext != "yaml" and ext != "yml":
             return apply_patch(
                 patch_file=patch_file,
                 target_dir=target_dir,
