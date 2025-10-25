@@ -13,6 +13,7 @@ from .android_components import prepare_android_components
 from .application_services import prepare_application_services
 from .fenix import prepare_fenix
 from .glean import prepare_glean
+from .firefox import prepare_firefox
 
 
 def _require_dir_exists(dir: Path):
@@ -48,6 +49,9 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
         
         # Application services
         *prepare_application_services(d, paths),
+        
+        # Firefox
+        *prepare_firefox(d, paths, config),
     )
     # fmt:on
 
