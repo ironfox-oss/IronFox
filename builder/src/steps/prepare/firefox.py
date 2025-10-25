@@ -624,16 +624,16 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         ),
         
         # Copy certain assets shared between release and nightly
-        d.copy(
+        d.copy_dir_contents(
             name="",
-            source=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/about",
-            target=paths.firefox_dir / "mobile/android/branding/ironfox-nightly",
+            source_dir=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/about",
+            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly",
             recursive=True,
         ),
-        d.copy(
+        d.copy_dir_contents(
             name="",
-            source=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/dumps",
-            target=paths.firefox_dir / "mobile/android/branding/ironfox-nightly",
+            source_dir=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/dumps",
+            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly",
             recursive=True,
         ),
         
