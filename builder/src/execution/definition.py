@@ -638,6 +638,38 @@ class BuildDefinition:
             preserve_permissions=preserve_permissions,
         )
 
+    def localize_maven(
+        self,
+        name: str,
+        target_file: Union[Path, str],
+    ) -> List[TaskDefinition]:
+        """Update Gradle build scripts for the given files such that they only depend on local maven repositories.
+
+        Args:
+            name (str): The name of the task.
+            target_file (Union[Path, str]): The file path or glob pattern for the target files.
+
+        Returns:
+            List[TaskDefinition]: The list of tasks for each target file.
+        """
+        from .localize_maven import LocalizeMavenTask
+
+        # Resolve targets
+
+        files = resolve_glob(target_file)
+        tasks = []
+        for idx, f in enumerate(files, start=1):
+            task_name = f"{name} [{idx}] ({f})" if len(files) > 1 else name
+            tasks.append(
+                self.create_task(
+                    LocalizeMavenTask,
+                    task_name,
+                    target=f,
+                )
+            )
+
+        return tasks
+
     def __repr__(self):
         lines = [f"BuildDefinition(name={self.name!r})"]
         for task in self.tasks:

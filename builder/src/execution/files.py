@@ -5,17 +5,11 @@ import os
 
 from pathlib import Path
 import shutil
+from execution.common import FileOpTask
 from rich.progress import Progress
-from typing import Callable, Union
+from typing import Callable
 
 from common.utils import format_bytes
-from .definition import TaskDefinition
-
-
-class FileOpTask(TaskDefinition):
-    def __init__(self, name, id, build_def, target: Path):
-        super().__init__(name, id, build_def)
-        self.target = target
 
 
 class CopyTask(FileOpTask):
