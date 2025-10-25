@@ -39,7 +39,7 @@ class CopyTask(FileOpTask):
         task_id = progress.add_task(f"Copy {self.source} to {self.target}")
 
         try:
-            self.target.parent.mkdir(parents=True)
+            self.target.parent.mkdir(parents=True, exist_ok=True)
             if not self.source.is_dir():
                 if self.target.exists() and not self.overwrite:
                     raise RuntimeError(
@@ -71,6 +71,7 @@ class CopyIntoTask(CopyTask):
         task_id = progress.add_task(f"Copy {self.source}/* into {self.target}")
 
         try:
+            self.target.parent.mkdir(parents=True, exist_ok=True)
             for item in os.listdir(self.source):
                 src_path = os.path.join(self.source, item)
                 dst_path = os.path.join(self.target, item)
