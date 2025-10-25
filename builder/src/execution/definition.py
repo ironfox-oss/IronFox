@@ -511,6 +511,7 @@ class BuildDefinition:
         source: Path,
         target: Path,
         recursive: bool = False,
+        overwrite: bool = False,
     ) -> TaskDefinition:
         """Copy the given source file to the given target file.
 
@@ -519,6 +520,7 @@ class BuildDefinition:
             source (Path): The source file path.
             target (Path): The target file path.
             recursive (bool, optional): Whether copy recursively if source is a directory. Defaults to False.
+            overwrite (bool, optional): Whether to overwrite existing files. Defaults to False.
 
         Returns:
             TaskDefinition: The task definition of the copy task.
@@ -532,6 +534,7 @@ class BuildDefinition:
             source=source,
             target=target,
             recursive=recursive,
+            overwrite=overwrite,
         )
 
     def copy_dir_contents(
@@ -553,12 +556,12 @@ class BuildDefinition:
             TaskDefinition: The task definition of the copy task.
         """
 
-        from execution.files import CopyTask
+        from execution.files import CopyIntoTask
 
         return self.create_task(
-            CopyTask,
+            CopyIntoTask,
             name=name,
-            source=source_dir,
+            source_dir=source_dir,
             target=target_dir,
             recursive=recursive,
         )

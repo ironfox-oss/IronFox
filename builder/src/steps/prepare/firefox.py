@@ -150,6 +150,7 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
             name="Copy policies-descriptions.ftl",
             source=paths.firefox_dir / "browser/locales/en-US/browser/policies/policies-descriptions.ftl",
             target=paths.firefox_dir / "mobile/locales/en-US/browser/policies/policies-descriptions.ftl",
+            overwrite=True,
         ),
         d.write_file(
             name="Update moz.build to include jar.mn in JAR_MANIFESTS",
@@ -165,10 +166,10 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         ),
         
         # Copy policy definitions/schema/etc. from Firefox for Desktop
-        d.copy(
+        d.copy_dir_contents(
             name="Copy policy definitions/schema from Firefox for Desktop",
-            source=paths.firefox_dir / "browser/components/enterprisepolicies",
-            target=paths.firefox_dir / "mobile/android/components",
+            source_dir=paths.firefox_dir / "browser/components/enterprisepolicies",
+            target_dir=paths.firefox_dir / "mobile/android/components",
             recursive=True,
         ),
         

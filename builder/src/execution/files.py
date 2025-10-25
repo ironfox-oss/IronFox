@@ -20,11 +20,19 @@ class FileOpTask(TaskDefinition):
 
 class CopyTask(FileOpTask):
     def __init__(
-        self, name, id, build_def, target, source: Path, recursive: bool = False
+        self,
+        name,
+        id,
+        build_def,
+        target,
+        source: Path,
+        recursive: bool = False,
+        overwrite: bool = False,
     ):
         super().__init__(name, id, build_def, target)
         self.source = source
         self.recursive = recursive
+        self.overwrite = overwrite
 
     def execute(self, params):
         progress = params.progress
@@ -33,6 +41,10 @@ class CopyTask(FileOpTask):
         try:
             self.target.parent.mkdir(parents=True)
             if not self.source.is_dir():
+                if self.target.exists() and not self.overwrite:
+                    raise RuntimeError(
+                        f"Cannot copy {self.source}, file already exists: Consider using overwrite=True."
+                    )
                 shutil.copy2(self.source, self.target)
             else:
                 shutil.copytree(self.source, self.target)
@@ -40,13 +52,19 @@ class CopyTask(FileOpTask):
             progress.remove_task(task_id=task_id)
 
 
-class CopyIntoTask(FileOpTask):
+class CopyIntoTask(CopyTask):
     def __init__(
-        self, name, id, build_def, target, source_dir: Path, recursive: bool = False
+        self,
+        name,
+        id,
+        build_def,
+        target,
+        source_dir: Path,
+        recursive: bool = False,
     ):
-        super().__init__(name, id, build_def, target)
-        self.source = source_dir
-        self.recursive = recursive
+        super().__init__(
+            name, id, build_def, target, source_dir, recursive, overwrite=True
+        )
 
     def execute(self, params):
         progress = params.progress
@@ -58,6 +76,10 @@ class CopyIntoTask(FileOpTask):
                 dst_path = os.path.join(self.target, item)
 
                 if os.path.isdir(src_path):
+                    if not self.recursive:
+                        raise RuntimeError(
+                            f"Cannot {src_path}: Is a directory. Consider using recursive=True."
+                        )
                     shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
                 else:
                     shutil.copy2(src_path, dst_path)
