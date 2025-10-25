@@ -10,7 +10,7 @@ from execution.find_replace import comment_out, line_affix, literal, on_line_tex
 from execution.types import ReplacementAction
 
 
-def prepare_fenix(
+def prepare_firefox(
     d: BuildDefinition,
     paths: Paths,
     config: PrepareConfig,
