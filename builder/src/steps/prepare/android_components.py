@@ -80,7 +80,7 @@ def prepare_android_components(
         *_rm(path="samples/glean/samples-glean-library/build.gradle",),
         
         # Remove unnecessary crash reporting components
-        *_rm("components/support/appservices/src/main/java/mozilla/components/support/rusterrors"),
+        *_rm("components/support/appservices/src/main/java/mozilla/components/support/rusterrors", recursive=True),
         
         # Remove unused crash reporting services/components
         *_rm("components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt"),
