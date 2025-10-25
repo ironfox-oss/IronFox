@@ -534,6 +534,35 @@ class BuildDefinition:
             recursive=recursive,
         )
 
+    def copy_dir_contents(
+        self,
+        name: str,
+        source_dir: Path,
+        target_dir: Path,
+        recursive: bool = False,
+    ) -> TaskDefinition:
+        """Copy the contents of the given source directory into the given target directory.
+
+        Args:
+            name (str): The name of the copy task.
+            source (Path): The source directory path.
+            target (Path): The target directory path.
+            recursive (bool, optional): Whether copy recursively if any children or sub-children of source is a directory. Defaults to False.
+
+        Returns:
+            TaskDefinition: The task definition of the copy task.
+        """
+
+        from execution.files import CopyTask
+
+        return self.create_task(
+            CopyTask,
+            name=name,
+            source=source_dir,
+            target=target_dir,
+            recursive=recursive,
+        )
+
     def find_replace(
         self,
         name: str,

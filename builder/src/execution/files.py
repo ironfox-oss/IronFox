@@ -31,10 +31,36 @@ class CopyTask(FileOpTask):
         task_id = progress.add_task(f"Copy {self.source} to {self.target}")
 
         try:
+            self.target.parent.mkdir(parents=True)
             if not self.source.is_dir():
-                shutil.copyfile(self.source, self.target)
+                shutil.copy2(self.source, self.target)
             else:
                 shutil.copytree(self.source, self.target)
+        finally:
+            progress.remove_task(task_id=task_id)
+
+
+class CopyIntoTask(FileOpTask):
+    def __init__(
+        self, name, id, build_def, target, source_dir: Path, recursive: bool = False
+    ):
+        super().__init__(name, id, build_def, target)
+        self.source = source_dir
+        self.recursive = recursive
+
+    def execute(self, params):
+        progress = params.progress
+        task_id = progress.add_task(f"Copy {self.source}/* into {self.target}")
+
+        try:
+            for item in os.listdir(self.source):
+                src_path = os.path.join(self.source, item)
+                dst_path = os.path.join(self.target, item)
+
+                if os.path.isdir(src_path):
+                    shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
+                else:
+                    shutil.copy2(src_path, dst_path)
         finally:
             progress.remove_task(task_id=task_id)
 
@@ -102,7 +128,7 @@ class DeleteTask(FileOpTask):
         try:
             if not self.target.exists():
                 return
-            
+
             if self.target.is_dir():
                 if not self.recursive:
                     raise RuntimeError(
