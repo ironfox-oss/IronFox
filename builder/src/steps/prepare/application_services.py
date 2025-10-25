@@ -32,7 +32,11 @@ def prepare_application_services(
     return [
         # fmt:off
         
-        # TODO: Apply patches
+        d.patch(
+            name="Apply a-s patches",
+            patch_file=paths.patches_dir / "a-s-patches.yaml",
+            target_dir=paths.application_services_dir,
+        ),
         
         *_rm("components/remote_settings/dumps/*/attachments/search-config-icons/*", recursive=True),
         *_rm("components/remote_settings/dumps/*/search-telemetry-v2.json"),

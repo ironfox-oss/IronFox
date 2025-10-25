@@ -58,6 +58,13 @@ def prepare_firefox(
     return [
         # fmt:off
         
+        # Apply patches
+        d.patch(
+            name="Apply Firefox patches",
+            patch_file=paths.patches_dir / "patches.yaml",
+            target_dir=paths.firefox_dir,
+        ),
+
         _mkdirs(f"{paths.android_home}/emulator"),
         _mkdirs(f"{paths.user_home}/.mozbuild/android-device/avd"),
         
