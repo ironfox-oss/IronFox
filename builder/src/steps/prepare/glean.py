@@ -63,7 +63,12 @@ rust.targets={current_platform().lower()}-{current_machine()},{config.rusttarget
             append=True,
         ),
         
-        # TODO: Apply Glean patches
+        # Apply patches
+        d.patch(
+            name="Apply Glean patches",
+            patch_file=paths.patches_dir / "glean-patches.yaml",
+            target_dir=paths.glean_dir,
+        ),
         
         # Local maven repos
         *d.localize_maven(
