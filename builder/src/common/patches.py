@@ -1,5 +1,5 @@
 from typing import List
-from pydantic import BaseModel, Field, field_validator, validator
+from pydantic import BaseModel, Field, model_validator
 
 
 class Category(BaseModel):
@@ -23,14 +23,13 @@ class PatchConfig(BaseModel):
     categories: List[Category]
     patches: List[Patch]
 
-    @field_validator("patches", mode="before")
-    @classmethod
-    def validate_patch_categories(cls, patches, values):
+    @model_validator(mode="after")
+    def validate_patch_categories(self):
         """Ensure each patch.category matches a defined category name."""
-        defined_cats = {c.name for c in values.get("categories", [])}
-        for p in patches:
+        defined_cats = {c.name for c in self.categories}
+        for p in self.patches:
             if p.category not in defined_cats:
                 raise ValueError(
                     f"Patch '{p.name}' refers to unknown category '{p.category}'"
                 )
-        return patches
+        return self
