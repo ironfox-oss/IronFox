@@ -1,10 +1,14 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import concurrent.futures
+from copyreg import constructor
 import logging
 from pathlib import Path
 import platform
+from typing import List
 from commands.base import BaseConfig
 from commands.prepare import PrepareConfig
 from common.paths import Paths
+import concurrent
 from execution.definition import BuildDefinition
 from rich.progress import Progress
 from steps.common.java import setup_java
@@ -71,21 +75,22 @@ def get_definition(
     with Progress(transient=False) as progress:
         items = get_moz_endpoints(paths)
 
-        executor = ThreadPoolExecutor(max_workers=base.jobs)
-        futures = []
-        for endpoint, dir in items:
-            def action():
-                task_name = "No-op endpoint"
-                task_id = progress.add_task(f"{task_name}: {dir}")
+        def action(dir: Path, endpoints: List[str]):
+            task_name = "No-op endpoint"
+            task_id = progress.add_task(
+                f"{task_name}: {dir.relative_to(paths.root_dir)}"
+            )
+            try:
+                noop_moz_endpoints(d, dir, endpoints)
+            finally:
+                progress.remove_task(task_id)
 
-                try:
-                    noop_moz_endpoints(d, endpoint, dir)
-                finally:
-                    progress.remove_task(task_id)
+        with ThreadPoolExecutor(max_workers=base.jobs) as executor:
+            futures = []
+            for dir, endpoints in items.items():
+                future = executor.submit(action, dir, endpoints)
+                futures.append(future)
 
-            future = executor.submit(action)
-            futures.append(future)
-
-        as_completed(futures)
+            concurrent.futures.wait(futures)
 
     return d

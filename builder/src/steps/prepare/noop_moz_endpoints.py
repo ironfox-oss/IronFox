@@ -1,4 +1,6 @@
 # noop_mozilla_endpoints.py
+from itertools import groupby
+from operator import itemgetter
 from pathlib import Path
 import re
 from typing import Dict, List, Tuple
@@ -29,11 +31,11 @@ def _should_skip(path: Path) -> bool:
 
 def noop_moz_endpoints(
     d: BuildDefinition,
-    endpoint: str,
-    dir: Path
+    dir: Path,
+    endpoints: List[str],
 ) -> List[TaskDefinition]:
     """
-    Find occurrences of endpoint in files under `dir` and return a list
+    Find occurrences of given endpoints in files under `dir` and return a list
     of tasks which replace those occurrences with empty quoted strings.
 
     For each affected file the function produces EXACTLY ONE d.find_replace call
@@ -42,7 +44,7 @@ def noop_moz_endpoints(
 
     Parameters
     - d: BuildDefinition from the build system
-    - endpoint: the endpoint string to search for (e.g. "example.com")
+    - endpoints: the endpoint strings to search for (e.g. "example.com")
     - dir: Path to the directory to search under
 
     Returns:
@@ -50,46 +52,48 @@ def noop_moz_endpoints(
     """
 
     # precompile a set of regex patterns (double- and single-quoted variants)
-    esc = re.escape(endpoint)
+    escaped = [re.escape(endpoint) for endpoint in endpoints]
 
     # Each pattern is a regex that will match the entire quoted token;
     # the replacement puts an empty quoted string back.
-    patterns = [
-        # fmt:off
-        
-        # "endpoint..." and 'endpoint...'
-        (rf'"{esc}[^"\']*"', r'""'),
-        (rf"'{esc}[^\"']*'", r"''"),
-        
-        # "endpoint/...", 'endpoint/...'
-        (rf'"{esc}/[^"\']*"', r'""'),
-        (rf"'{esc}/[^\"']*'", r"''"),
-        
-        # "endpoint.xxx" (dot), 'endpoint.xxx'
-        (rf'"{esc}\.[^"\']*"', r'""'),
-        (rf"'{esc}\.[^\"']*'", r"''"),
-        
-        # http://endpoint...
-        (rf'"http://{esc}[^"\']*"', r'""'),
-        (rf"'http://{esc}[^\"']*'", r"''"),
-        
-        # http://endpoint/...
-        (rf'"http://{esc}/[^"\']*"', r'""'),
-        (rf"'http://{esc}/[^\"']*'", r"''"),
-        
-        # http://endpoint.xxx
-        (rf'"http://{esc}\.[^"\']*"', r'""'),
-        (rf"'http://{esc}\.[^\"']*'", r"''"),
-        
-        # https:// variants
-        (rf'"https://{esc}[^"\']*"', r'""'),
-        (rf"'https://{esc}[^\"']*'", r"''"),
-        (rf'"https://{esc}/[^"\']*"', r'""'),
-        (rf"'https://{esc}/[^\"']*'", r"''"),
-        (rf'"https://{esc}\.[^"\']*"', r'""'),
-        (rf"'https://{esc}\.[^\"']*'", r"''"),
-        # fmt:on
-    ]
+    patterns = []
+    for esc in escaped:
+        patterns.extend([
+            # fmt:off
+
+            # "endpoint..." and 'endpoint...'
+            (rf'"{esc}[^"\']*"', r'""'),
+            (rf"'{esc}[^\"']*'", r"''"),
+
+            # "endpoint/...", 'endpoint/...'
+            (rf'"{esc}/[^"\']*"', r'""'),
+            (rf"'{esc}/[^\"']*'", r"''"),
+
+            # "endpoint.xxx" (dot), 'endpoint.xxx'
+            (rf'"{esc}\.[^"\']*"', r'""'),
+            (rf"'{esc}\.[^\"']*'", r"''"),
+
+            # http://endpoint...
+            (rf'"http://{esc}[^"\']*"', r'""'),
+            (rf"'http://{esc}[^\"']*'", r"''"),
+
+            # http://endpoint/...
+            (rf'"http://{esc}/[^"\']*"', r'""'),
+            (rf"'http://{esc}/[^\"']*'", r"''"),
+
+            # http://endpoint.xxx
+            (rf'"http://{esc}\.[^"\']*"', r'""'),
+            (rf"'http://{esc}\.[^\"']*'", r"''"),
+
+            # https:// variants
+            (rf'"https://{esc}[^"\']*"', r'""'),
+            (rf"'https://{esc}[^\"']*'", r"''"),
+            (rf'"https://{esc}/[^"\']*"', r'""'),
+            (rf"'https://{esc}/[^\"']*'", r"''"),
+            (rf'"https://{esc}\.[^"\']*"', r'""'),
+            (rf"'https://{esc}\.[^\"']*'", r"''"),
+            # fmt:on
+        ])
 
     # Walk the directory tree and collect files that match any of the patterns.
     tasks: Dict[Path, List[TaskDefinition]] = {}
@@ -115,7 +119,7 @@ def noop_moz_endpoints(
 
         t.extend(
             d.find_replace(
-                name=f"Remove endpoint {endpoint} in {rel_path}",
+                name=f"Remove {len(endpoints)} endpoints in {rel_path}",
                 target_file=path,
                 replacements=replacements,
             )
@@ -126,12 +130,12 @@ def noop_moz_endpoints(
     return [item for items in tasks.values() for item in items]
 
 
-def get_moz_endpoints(paths: Paths) -> List[Tuple[str, Path]]:
+def get_moz_endpoints(paths: Paths) -> Dict[Path, List[str]]:
     application_services = paths.application_services_dir
     mozilla_release = paths.firefox_dir
     glean = paths.glean_dir
 
-    return [
+    items = [
         # fmt:off
         ## AMO Discovery/recommendations
         ("discovery.addons.allizom.org", application_services  ),
@@ -788,3 +792,10 @@ def get_moz_endpoints(paths: Paths) -> List[Tuple[str, Path]]:
         ("topsites.services.mozilla.com", glean),
         # fmt:on
     ]
+
+    items.sort(key=itemgetter(1))
+
+    return {
+        path: [endpoint for endpoint, _ in group]
+        for path, group in groupby(items, key=itemgetter(1))
+    }
