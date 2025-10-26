@@ -176,6 +176,9 @@ def find_replace(
             f.write(modified_content)
 
         logger.debug(f"Applied {len(replacements)} replacements to {target_file}")
+    except UnicodeDecodeError:
+        # ignore non-utf files
+        pass
     finally:
         progress.remove_task(task_id)
 

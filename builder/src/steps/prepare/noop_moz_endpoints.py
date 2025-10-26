@@ -1,9 +1,8 @@
-# noop_mozilla_endpoints.py
 from itertools import groupby
 from operator import itemgetter
 from pathlib import Path
 import re
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from common.paths import Paths
 from execution.definition import BuildDefinition, TaskDefinition
