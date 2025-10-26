@@ -127,7 +127,7 @@ build-docker:
       changes:
         - Dockerfile
         - .gitlab-ci.yml
-        - scripts/setup-android-sdk.sh
+        - builder/pyproject.toml
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
 
 build-apk:
@@ -164,6 +164,7 @@ build-apk:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
     - changes:
+        - builder/**/*
         - patches/**/*
         - scripts/**/*
         - Dockerfile
@@ -205,6 +206,7 @@ build-bundle:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
     - changes:
+        - builder/**/*
         - patches/**/*
         - scripts/**/*
         - Dockerfile
