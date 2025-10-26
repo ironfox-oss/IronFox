@@ -123,12 +123,12 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
             path="docshell/base/nsAboutRedirector.cpp",
             replacements=[
                 regex(
-                    r"(\{\"about\", \"chrome:\/\/global\/content\/aboutAbout.html\", 0\},)",
-                    r"\1\n {\"ironfox\", \"chrome:\/\/global\/content\/ironfox.html\",\n nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},",
+                    r'(\{"about", "chrome://global/content/aboutAbout.html", 0\},)',
+                    r'\1\n {"ironfox", "chrome://global/content/ironfox.html",\n nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},',
                 ),
                 regex(
-                    r"(\{\"about\", \"chrome:\/\/global\/content\/aboutAbout.html\", 0\},)",
-                    r"\1\n {\"attribution\", \"chrome:\/\/global\/content\/attribution.html\",\n nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},",
+                    r'(\{"about", "chrome://global/content/aboutAbout.html", 0\},)',
+                    r'\1\n {"attribution", "chrome://global/content/attribution.html",\n nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},',
                 ),
             ],
         ),
