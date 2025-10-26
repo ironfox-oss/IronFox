@@ -14,6 +14,18 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.li"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.se"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "apple.com"
     },
     {
@@ -86,7 +98,15 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "hoyoverse.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "jerseymikes.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "klippy.pro"
     },
     {
       "overrides": "-DisableWebGL",
@@ -122,6 +142,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "paxhistoria.co"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "pogospike.com"
     },
     {
@@ -143,6 +167,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "tojicode.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "tripo3d.ai"
     },
     {
       "overrides": "-DisableWebGL",
@@ -171,6 +199,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "wplace.live"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "x.ai"
     },
     {
       "overrides": "-DisableWebGL",
