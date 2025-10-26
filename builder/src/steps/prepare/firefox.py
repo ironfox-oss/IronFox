@@ -802,7 +802,7 @@ ac_add_options --without-mozilla-api-keyfile
 ac_add_options --without-leanplum-sdk-keyfile
 ac_add_options --without-pocket-api-keyfile
 
-{f"ac_add_options --with-google-safebrowsing-api-keyfile={config.sb_gapi_file}" if config.sb_gapi_file.exists() else ""}
+{f"ac_add_options --with-google-safebrowsing-api-keyfile={config.sb_gapi_file}" if config.sb_gapi_file.is_file() else ""}
 
 ac_add_options WASM_CC="{wasi_install}/bin/clang"
 ac_add_options WASM_CXX="{wasi_install}/bin/clang++"
