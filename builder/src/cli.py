@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import click
 import multiprocessing
@@ -16,6 +17,7 @@ from commands.setup import SetupCommand
 from commands.utils import dump_config
 from common.utils import find_prog
 
+logger = logging.getLogger("CLI")
 
 @click.group("Python scripts to build IronFox")
 @click.option(
@@ -39,7 +41,7 @@ from common.utils import find_prog
 @click.option(
     "--cargo-home",
     help="Path to the Cargo installation directory.",
-    type=click.Path(exists=True),
+    type=click.Path(exists=False, file_okay=False),
     default=os.getenv("CARGO_HOME", ""),
 )
 @click.option(
@@ -80,6 +82,9 @@ def cli(
 ):
     if not gradle_exec or len(gradle_exec.strip()) == 0:
         raise RuntimeError(f"Invalid gradle executable path: {gradle_exec}")
+    
+    if not cargo_home :
+        cargo_home = str(Path.home() / ".cargo")
 
     ctx.obj = BaseConfig(
         root_dir=Path(root_dir),
