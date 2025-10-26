@@ -12,6 +12,7 @@ from pathlib import Path
 from common.utils import resolve_glob
 from rich.progress import Progress
 from typing import Callable, List, TypeVar, Type, Union
+from threading import Lock
 
 from .types import CommandType, ReplacementAction
 
@@ -185,6 +186,7 @@ class BuildDefinition:
 
     def __init__(self, name: str):
         self.name = name
+        self.lock = Lock()
         self.tasks: list[TaskDefinition] = []
         self._id_counter = itertools.count(1)
         self.logger = logging.getLogger(f"BuildDefinition[{self.name}]")
@@ -262,10 +264,15 @@ class BuildDefinition:
         if not name or len(name.strip()) == 0:
             raise ValueError("Name cannot be empty!")
 
-        task = task_cls(name, self.next_task_id, self, *args, **kwargs)
-        self.logger.debug(f"New task created: {task}({args}, {kwargs})")
-        self.add_task(task)
-        return task
+        with self.lock:
+            try:
+                task = task_cls(name, self.next_task_id, self, *args, **kwargs)
+                self.logger.debug(f"New task created: {task}({args}, {kwargs})")
+                self.add_task(task)
+                return task
+            except Exception as e:
+                self.logger.error(f"Unable to add task {name}")
+                raise
 
     def download(
         self,
@@ -454,7 +461,7 @@ class BuildDefinition:
                     overwrite=overwrite,
                 )
             )
-            
+
         return tasks
 
     def write_file(

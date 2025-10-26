@@ -1,5 +1,8 @@
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
 from pathlib import Path
+import platform
+from commands.base import BaseConfig
 from commands.prepare import PrepareConfig
 from common.paths import Paths
 from execution.definition import BuildDefinition
@@ -21,7 +24,9 @@ def _require_dir_exists(dir: Path):
         raise RuntimeError(f"{dir} does not exist or is not a directory!")
 
 
-def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
+def get_definition(
+    base: BaseConfig, config: PrepareConfig, paths: Paths
+) -> BuildDefinition:
     d = BuildDefinition("Prepare")
 
     paths.build_dir.mkdir(parents=True, exist_ok=True)
@@ -34,7 +39,7 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
     _require_dir_exists(paths.cargo_home)
 
     # fmt:off
-    preparation_task = d.chain(
+    d.chain(
         setup_java(d, paths),
     ).then(
         
@@ -63,20 +68,24 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
     # fmt:on
 
     # No-op Mozilla endpoints
-    with Progress(transient=False ) as progress:
+    with Progress(transient=False) as progress:
         items = get_moz_endpoints(paths)
-        total = len(items)
-        task_name = "No-op endpoints"
-        task_id = progress.add_task(task_name, total=total)
 
-        try:
-            for index, (endpoint, dir) in enumerate(items):
-                noop_moz_endpoints(d, endpoint=endpoint, dir=dir)
-                progress.update(
-                    task_id=task_id,
-                    description=f"{task_id}: {index + 1}/{total} ({dir.relative_to(paths.root_dir)})",
-                )
-        finally:
-            progress.remove_task(task_id=task_id)
+        executor = ThreadPoolExecutor(max_workers=base.jobs)
+        futures = []
+        for endpoint, dir in items:
+            def action():
+                task_name = "No-op endpoint"
+                task_id = progress.add_task(f"{task_name}: {dir}")
+
+                try:
+                    noop_moz_endpoints(d, endpoint, dir)
+                finally:
+                    progress.remove_task(task_id)
+
+            future = executor.submit(action)
+            futures.append(future)
+
+        as_completed(futures)
 
     return d

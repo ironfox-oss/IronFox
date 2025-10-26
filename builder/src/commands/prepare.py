@@ -97,7 +97,7 @@ class PrepareCommand(BaseCommand):
             sb_gapi_file=sb_gapi_file,
             build_variant=build_variant,
             ubo_assets=ubo_assets,
-            app_config=app_config
+            app_config=app_config,
         )
 
         setup_logging(self.base_config.verbose)
@@ -108,4 +108,4 @@ class PrepareCommand(BaseCommand):
     def get_definition(self):
         from steps.prepare import get_definition
 
-        return get_definition(self.prepare_cofig, self.paths)
+        return get_definition(self.base_config, self.prepare_cofig, self.paths)

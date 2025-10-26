@@ -59,7 +59,6 @@ class BuildExecutor:
         self.config = config
         self.executor = ThreadPoolExecutor(max_workers=self.config.jobs)
         self.logger = logging.getLogger("BuildExecutor")
-        self._lock = threading.Lock()
 
     def submit(self, definition: BuildDefinition) -> List[FailureDetail]:
         """Submit a build definition for execution with dependency-aware scheduling.
