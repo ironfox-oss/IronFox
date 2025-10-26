@@ -1,7 +1,9 @@
+import logging
 from pathlib import Path
 from commands.prepare import PrepareConfig
 from common.paths import Paths
 from execution.definition import BuildDefinition
+from rich.progress import Progress
 from steps.common.java import setup_java
 
 from .android_components import prepare_android_components
@@ -10,6 +12,8 @@ from .fenix import prepare_fenix
 from .glean import prepare_glean
 from .firefox import prepare_firefox
 from .noop_moz_endpoints import get_moz_endpoints, noop_moz_endpoints
+
+logger = logging.getLogger("prepare")
 
 
 def _require_dir_exists(dir: Path):
@@ -59,7 +63,20 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
     # fmt:on
 
     # No-op Mozilla endpoints
-    for endpoint, dir in get_moz_endpoints(paths):
-        noop_moz_endpoints(d, endpoint=endpoint, dir=dir)
+    with Progress(transient=False ) as progress:
+        items = get_moz_endpoints(paths)
+        total = len(items)
+        task_name = "No-op endpoints"
+        task_id = progress.add_task(task_name, total=total)
+
+        try:
+            for index, (endpoint, dir) in enumerate(items):
+                noop_moz_endpoints(d, endpoint=endpoint, dir=dir)
+                progress.update(
+                    task_id=task_id,
+                    description=f"{task_id}: {index + 1}/{total} ({dir.relative_to(paths.root_dir)})",
+                )
+        finally:
+            progress.remove_task(task_id=task_id)
 
     return d

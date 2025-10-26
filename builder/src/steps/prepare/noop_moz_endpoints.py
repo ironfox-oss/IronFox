@@ -28,7 +28,9 @@ def _should_skip(path: Path) -> bool:
 
 
 def noop_moz_endpoints(
-    d: BuildDefinition, endpoint: str, dir: Path
+    d: BuildDefinition,
+    endpoint: str,
+    dir: Path
 ) -> List[TaskDefinition]:
     """
     Find occurrences of endpoint in files under `dir` and return a list
