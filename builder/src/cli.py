@@ -13,6 +13,7 @@ from commands.base import DEFAULT_APP_CONFIG, AppConfig, BaseConfig
 from commands.build import BuildCommand
 from commands.prepare import PrepareCommand
 from commands.setup import SetupCommand
+from commands.utils import dump_config
 from common.utils import find_prog
 
 
@@ -105,6 +106,10 @@ pass_base_config = click.make_pass_decorator(BaseConfig)
 @pass_base_config
 def setup(base_config: BaseConfig, clone_depth: int):
     cmd = SetupCommand(base_config, clone_depth)
+    dump_config(
+        base_config=base_config,
+        setup_config=cmd.setup_config,
+    )
     return cmd.run()
 
 
@@ -189,6 +194,11 @@ def prepare(
         sb_gapi_file=Path(sb_gapi_file),
         build_variant=build_variant,
         ubo_assets=ubo_assets,
+    )
+
+    dump_config(
+        base_config=base_config,
+        prepare_config=cmd.prepare_cofig,
     )
 
     return cmd.run()

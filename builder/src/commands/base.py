@@ -19,7 +19,6 @@ from common.paths import Paths
 
 logger = logging.getLogger("BaseConfig")
 
-
 class AppConfig:
     def __init__(
         self,
@@ -117,26 +116,6 @@ class BaseConfig:
         )
 
         self.env = BuildEnvironment(paths=self.paths)
-
-        config_table = Table(show_header=False, box=None, pad_edge=False)
-        config_table.add_row("IronFox root", str(self.paths.root_dir))
-        config_table.add_row("Android SDK", str(self.paths.android_home))
-        config_table.add_row("Cargo", str(self.paths.cargo_home))
-        config_table.add_row("JDK", str(self.paths.java_home))
-
-        env_table = Table(show_header=False, box=None, pad_edge=False)
-        for key, value in self.env.environment_variables.items():
-            env_table.add_row(key, value)
-
-        # Print with spacing
-        console = Console()
-        console.print("\n[bold]Using configuration:[/bold]")
-        console.print(config_table)
-        console.print("\n[bold]Environment variables:[/bold]")
-        console.print(env_table)
-        console.print()
-        console.print("========")
-        console.print()
 
     @property
     def environment_variables(self):
