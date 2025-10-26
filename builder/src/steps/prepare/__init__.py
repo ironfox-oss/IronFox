@@ -9,6 +9,7 @@ from .application_services import prepare_application_services
 from .fenix import prepare_fenix
 from .glean import prepare_glean
 from .firefox import prepare_firefox
+from .noop_moz_endpoints import get_moz_endpoints, noop_moz_endpoints
 
 
 def _require_dir_exists(dir: Path):
@@ -29,7 +30,7 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
     _require_dir_exists(paths.cargo_home)
 
     # fmt:off
-    d.chain(
+    preparation_task = d.chain(
         setup_java(d, paths),
     ).then(
         
@@ -56,5 +57,9 @@ def get_definition(config: PrepareConfig, paths: Paths) -> BuildDefinition:
         d.chain(*prepare_firefox(d, paths, config)),
     )
     # fmt:on
+
+    # No-op Mozilla endpoints
+    for endpoint, dir in get_moz_endpoints(paths):
+        noop_moz_endpoints(d, endpoint=endpoint, dir=dir)
 
     return d
