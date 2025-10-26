@@ -3,7 +3,9 @@
 import logging
 
 from abc import abstractmethod
+import os
 from pathlib import Path
+from typing import Dict
 
 from rich.table import Table
 from rich.console import Console
@@ -19,6 +21,7 @@ from common.paths import Paths
 
 logger = logging.getLogger("BaseConfig")
 
+
 class AppConfig:
     def __init__(
         self,
@@ -29,10 +32,10 @@ class AppConfig:
         app_id: str = "ironfox",
         nightly: bool = False,
     ):
-        if nightly :
+        if nightly:
             app_name += " Nightly"
             app_id += ".nightly"
-        
+
         self.browser_name = browser_name
         self.app_name = app_name
         self.vendor = vendor
@@ -74,7 +77,7 @@ class BuildEnvironment:
         }
 
     @property
-    def environment_variables(self):
+    def environment_variables(self) -> Dict[str, str]:
         """The environment variables that should be available to the IronFox build."""
         return self._env_vars
 

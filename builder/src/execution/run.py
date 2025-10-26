@@ -56,7 +56,7 @@ def run_build_commands(
     commands: list[CommandType],
     progress: Progress,
     logger: logging.Logger,
-    env: dict[str, str] = os.environ.copy(),
+    env: dict[str, str] = {},
     assume_yes: bool | int = False,
 ):
     logger.debug(f"Running {len(commands)} commands in {cwd}")
@@ -116,7 +116,7 @@ def _execute_command(
     command: CommandType,
     cwd: Path,
     logger: logging.Logger,
-    env: dict[str, str] = os.environ.copy(),
+    env: dict[str, str] = {},
     assume_yes: bool | int = 0,
 ) -> bool:
     try:
@@ -141,7 +141,7 @@ def _execute_command(
             args,
             cwd=cwd,
             input=input_data,
-            env=env,
+            env={**os.environ.copy(), **env},
             capture_output=True,
             text=True,
             check=True,
