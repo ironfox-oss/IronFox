@@ -4,6 +4,7 @@ from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 from execution.find_replace import comment_out, literal, regex
 from execution.types import ReplacementAction
+from .deglean import deglean
 
 
 def prepare_application_services(
@@ -45,7 +46,9 @@ def prepare_application_services(
         *_process_file(
             path="gradle/libs.versions.toml",
             replacements=[
-                regex(r"^android-components = \"", f'android-components = "{Versions.FIREFOX_VERSION}"')
+                regex(r"^android-components = \"", f'android-components = "{Versions.FIREFOX_VERSION}"'),
+                comment_out(r'mozilla-glean'),
+                comment_out(r'glean'),
             ]
         ),
         
@@ -135,6 +138,7 @@ def prepare_application_services(
                     pattern=r"isFetchEnabled(): Boolean = .*",
                     replacement="isFetchEnabled(): Boolean = false"
                 ),
+                comment_out('NimbusEvents.isReady')
             ]
         ),
         *_process_file(
@@ -155,6 +159,28 @@ def prepare_application_services(
             replacements=[
                 comment_out('("main", "search-telemetry-v2"),'),
             ]
+        ),
+        
+        # De-Glean
+        *deglean(d, paths.application_services_dir),
+        *_rm("components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"),
+        *_process_file(
+            path="components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt",
+            replacements=[
+                comment_out("FxaClientMetrics"),
+            ],
+        ),
+        *_process_file(
+            path="components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt",
+            replacements=[
+                comment_out("LoginsStoreMetrics"),
+            ],
+        ),
+        *_process_file(
+            path="components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt",
+            replacements=[
+                comment_out("PlacesManagerMetrics"),
+            ],
         ),
         
         # Apply a-s overlay

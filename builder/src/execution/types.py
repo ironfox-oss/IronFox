@@ -10,12 +10,19 @@ CommandType = Union[str, CommandWithResultHandler]
 ### FIND REPLACE
 
 PatternType = Union[str, Pattern[str]]
-Replacement = Union[str, Callable[[str], str]]
+Replacer = Callable[[str], str]
+Replacement = Union[str, Replacer]
 
 
 @dataclass
 class ReplacementAction:
     count: int
+
+
+@dataclass
+class CustomReplacement(ReplacementAction):
+    """Represents a custom replacement that processes whole file contents"""
+    replacer: Replacer
 
 
 @dataclass

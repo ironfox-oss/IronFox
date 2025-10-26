@@ -9,6 +9,7 @@ from execution.definition import BuildDefinition, TaskDefinition
 from execution.find_replace import comment_out, line_affix, literal, regex
 from execution.types import ReplacementAction
 
+from .deglean import deglean
 
 def prepare_firefox(
     d: BuildDefinition,
@@ -307,10 +308,8 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         *_process_file(
             path="build.gradle",
             replacements=[
-                line_affix(
-                    match_lines='classpath "${ApplicationServicesConfig.groupId}:tooling-nimbus-gradle"',
-                    prefix="//"
-                )
+                comment_out('classpath "${ApplicationServicesConfig.groupId}:tooling-nimbus-gradle"'),
+                comment_out(r'classpath libs\.glean\.gradle\.plugin')
             ]
         ),
 
@@ -622,6 +621,10 @@ FINAL_TARGET_FILES.defaults.settings.main += [
                 regex(r'"browser\.safebrowsing\.features\.trackingProtection\.update"', r'"z99.ignore.boolean"'),
             ],
         ),
+        
+        # De-Glean
+        *deglean(d, paths.firefox_dir / "mobile/android/geckoview"),
+        *deglean(d, paths.firefox_dir / "mobile/android/gradle"),
         
         # Apply overlay
         d.overlay(

@@ -4,19 +4,30 @@ import re
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import Callable, List
 from rich.progress import Progress, TaskID
 
 from .definition import TaskDefinition, BuildDefinition
 from .types import (
+    CustomReplacement,
     GlobalReplacement,
     LineAffixReplacement,
     LineReplacement,
     LiteralReplacement,
     PatternType,
     Replacement,
+    Replacer,
     ReplacementAction,
 )
+
+
+def custom_replacement(
+    replacer: Replacer,
+) -> CustomReplacement:
+    return CustomReplacement(
+        count=1,
+        replacer=replacer,
+    )
 
 
 def on_lines(
@@ -231,6 +242,8 @@ def _apply_replacements(
                 else:
                     modified_lines.append(line)
             result = "".join(modified_lines)
+        elif isinstance(replacement, CustomReplacement):
+            result = replacement.replacer(result)
 
         progress.update(task_id, advance=1)
 

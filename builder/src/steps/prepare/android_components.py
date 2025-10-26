@@ -6,6 +6,8 @@ from execution.definition import BuildDefinition, TaskDefinition
 from execution.find_replace import line_affix, literal, on_line_text, regex
 from execution.types import ReplacementAction
 
+from .deglean import deglean
+
 
 def prepare_android_components(
     d: BuildDefinition, paths: Paths
@@ -173,6 +175,28 @@ def prepare_android_components(
             path="components/browser/engine-gecko/build.gradle",
             replacements=[
                 regex(r'allowMetricsFromAAR = .*', r'allowMetricsFromAAR = false'),
+            ],
+        ),
+        
+        # De-Glean
+        *deglean(d, paths.android_components_dir),
+        *_rm("components/service/glean", recursive=True),
+        *_rm("samples/glean", recursive=True),
+        *_rm("components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt"),
+        *_process_file(
+            path="components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt",
+            replacements=[
+                literal("GleanMessaging", "// GleanMessaging"),
+                literal("Microsurvey.confirmation", "// Microsurvey.confirmation"),
+                literal("Microsurvey.dismiss", "// Microsurvey.dismiss"),
+                literal("Microsurvey.privacy", "// Microsurvey.privacy"),
+                literal("Microsurvey.shown", "// Microsurvey.shown"),
+            ],
+        ),
+        *_process_file(
+            path="components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt",
+            replacements=[
+                literal("GleanMessaging", "// GleanMessaging"),
             ],
         ),
         

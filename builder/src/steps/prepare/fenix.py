@@ -7,6 +7,8 @@ from execution.definition import BuildDefinition, TaskDefinition
 from execution.find_replace import comment_out, line_affix, literal, on_line_text, regex
 from execution.types import ReplacementAction
 
+from .deglean import deglean
+
 
 def prepare_fenix(
     d: BuildDefinition,
@@ -345,6 +347,7 @@ kotlin.internal.collectFUSMetrics=false
             path=".buildconfig.yml",
             replacements=[
                 line_affix("- components:service-mars", prefix="#"),
+                line_affix("- components:service-glean", prefix="#"),
             ],
         ),
         
@@ -450,6 +453,28 @@ kotlin.internal.collectFUSMetrics=false
                 literal("ic_onboarding_sync", "fox_alert_crash_dark"),
             ],
         ),
+        
+        # De-Glean
+        *deglean(d, paths.fenix_dir / "app/src/main/java/org/mozilla/gecko"),
+        *_process_file(
+            path="**/*.gradle",
+            replacements=[
+                comment_out(r'.*implementation.*service-glean.*$'),
+                comment_out(r'.*testImplementation.*glean.*$'),
+            ]
+        ),
+        *_process_file(
+            path="app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt",
+            replacements=[
+                comment_out("Metrics"),
+            ],
+        ),
+        *_rm("app/src/main/java/org/mozilla/fenix/ext/Configuration.kt"),
+        *_rm("app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt"),
+        *_rm("app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReporting.kt"),
+        *_rm("app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingApi.kt"),
+        *_rm("app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingLifecycleObserver.kt"),
+        *_rm("app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingMetricsService.kt"),
         
         # Apply overlay
         d.overlay(
