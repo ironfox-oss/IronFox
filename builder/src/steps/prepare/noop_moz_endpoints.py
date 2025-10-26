@@ -107,7 +107,7 @@ def noop_moz_endpoints(
             continue
 
         rel_path = path.relative_to(dir)
-        t = tasks[path]
+        t = tasks.get(path)
         if not t:
             t = []
 
