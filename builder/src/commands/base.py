@@ -1,10 +1,12 @@
 """Base implementation for all 'ironfox' commands."""
 
+import io
 import logging
 
 from abc import abstractmethod
 import os
 from pathlib import Path
+import pstats
 from typing import Dict
 
 from rich.table import Table
@@ -98,18 +100,13 @@ class BaseConfig:
         jobs: int,
         dry_run: bool,
         verbose: bool,
+        profile: bool,
     ):
-        """Creates a new BaseConfig instance.
-
-        Args:
-            sdk_home (Path): Path to the Android SDK directory.
-            java_home (Path): Path to the JDK directory.
-            jobs (int): Number of parallel jobs to run.
-            verbose (bool): Whether verbose logging is enabled.
-        """
+        """Creates a new BaseConfig instance."""
         self.jobs = jobs
         self.verbose = verbose
         self.dry_run = dry_run
+        self.profile = profile
         self.paths = Paths(
             root_dir=root_dir.resolve(),
             android_home=android_home.resolve(),
@@ -145,6 +142,24 @@ class BaseCommand:
 
     @abstractmethod
     def run(self):
+        if not self.base_config.profile:
+            return self.do_run()
+
+        import cProfile
+
+        profile = cProfile.Profile()
+        profile.enable()
+
+        try:
+            self.do_run()
+        finally:
+            profile.disable()
+            s = io.StringIO()
+            ps = pstats.Stats(profile, stream=s).sort_stats("tottime")
+            ps.print_stats(20)
+            print(s.getvalue())
+
+    def do_run(self):
         self.paths.mkdirs()
 
         definition = self.get_definition()

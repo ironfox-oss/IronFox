@@ -68,6 +68,12 @@ logger = logging.getLogger("CLI")
     is_flag=True,
     default=False,
 )
+@click.option(
+    "--profile",
+    help="Enable profiling.",
+    is_flag=True,
+    default=False,
+)
 @click.pass_context
 def cli(
     ctx: Context,
@@ -79,6 +85,7 @@ def cli(
     jobs: int,
     dry_run: bool,
     verbose: bool,
+    profile: bool,
 ):
     if not gradle_exec or len(gradle_exec.strip()) == 0:
         raise RuntimeError(f"Invalid gradle executable path: {gradle_exec}")
@@ -95,6 +102,7 @@ def cli(
         jobs=jobs,
         dry_run=dry_run,
         verbose=verbose,
+        profile=profile,
     )
 
 
