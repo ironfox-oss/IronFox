@@ -68,22 +68,23 @@ class BuildExecutor:
         self._total_tasks = 0
         self._completed = 0
         self._last_progress_len = 0
+        self._reported_task_ids = set()
 
-    def display_progress(self):
-        with self._progress_lock:
-            if self._total_tasks:
-                msg = f"[{self._completed}/{self._total_tasks}]"
-                sys.stdout.write("\r" + msg.ljust(self._last_progress_len))
-                sys.stdout.flush()
+    def _report_progress(self, task: TaskDefinition) -> None:
+        self._report_task_progress(task.id, task.name)
 
-    def _print_progress(self, task_name: str) -> None:
+    def _report_task_progress(self, task_id: int, task_name: str) -> None:
         with self._progress_lock:
+            if task_id in self._reported_task_ids:
+                return
+
+            self._reported_task_ids.add(task_id)
+            self._completed += 1
+            # Print using current counters and task name
             msg = f"[{self._completed}/{self._total_tasks}] {task_name}"
-
-            # ensure we overwrite any previous longer line
             padded = msg.ljust(max(self._last_progress_len, len(msg)))
-            sys.stdout.write("\r" + padded)
-            sys.stdout.flush()
+            sys.stderr.write("\r" + padded)
+            sys.stderr.flush()
             self._last_progress_len = len(padded)
 
     def execute(self) -> List[FailureDetail]:
@@ -115,6 +116,8 @@ class BuildExecutor:
         self._total_tasks = len(definition.tasks)
         self._completed = 0
         self._last_progress_len = 0
+        self._reported_task_ids.clear()
+
         if self._total_tasks == 0:
             sys.stdout.write("\n")
             sys.stdout.flush()
@@ -158,8 +161,9 @@ class BuildExecutor:
 
                             task_state.task.debug("Completed successfully")
 
-                            self._completed += 1
-                            self._print_progress(task_state.task.name)
+                            self._report_task_progress(
+                                task_state.task.id, task_state.task.name
+                            )
 
                             # Check if any pending tasks are now ready
                             newly_ready = self._find_newly_ready_tasks(
@@ -179,8 +183,7 @@ class BuildExecutor:
                             failed_tasks.add(task_id)
                             running_tasks.remove(task_id)
 
-                            self._completed += 1
-                            self._print_progress(task_state.task.name)
+                            self._report_progress(task_state.task)
 
                             tb = traceback.format_exc()
                             failure = FailureDetail(
@@ -223,8 +226,7 @@ class BuildExecutor:
                                     )
                                     failed_tasks.add(dep_task_id)
 
-                                    self._completed += 1
-                                    self._print_progress(task_state.task.name)
+                                    self._report_progress(task_state.task)
 
                                     failure_dep = FailureDetail(
                                         task=task_states[dep_task_id].task,
@@ -264,8 +266,7 @@ class BuildExecutor:
 
                         task_state.task.error(f"skipped - no viable execution path")
 
-                        self._completed += 1
-                        self._print_progress(task_state.task.name)
+                        self._report_progress(task_state.task)
 
                         failure = FailureDetail(
                             task=task_state.task,
