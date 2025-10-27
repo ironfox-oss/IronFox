@@ -93,7 +93,7 @@ class BuildExecutor:
 
         self._total_tasks = len(definition.tasks)
 
-        with Progress(transient=True) as progess:
+        with Progress(transient=True, refresh_per_second=1) as progess:
 
             progress_task = progess.add_task("IronFox build", total=total_tasks)
 
