@@ -2,7 +2,6 @@ import logging
 import subprocess
 from pathlib import Path
 from common.patches import PatchConfig
-from rich.progress import Progress
 import yaml
 
 from .definition import BuildDefinition, TaskDefinition
@@ -22,7 +21,6 @@ class PatchTask(TaskDefinition):
         self.target_dir = target_dir
 
     def execute(self, params):
-        progress = params.progress
         patch_file = self.patch_file
         target_dir = self.target_dir
 
@@ -43,42 +41,27 @@ class PatchTask(TaskDefinition):
             return apply_patch(
                 patch_file=patch_file,
                 target_dir=target_dir,
-                progress=progress,
                 logger=self.logger,
             )
 
         with open(patch_file, "r") as f:
             config = PatchConfig(**yaml.safe_load(f))
 
-        task_name = f"Apply patches from {patch_file.name}"
-        task_id = progress.add_task(
-            f"{task_name} (0/{len(config.patches)})", total=len(config.patches)
-        )
-        try:
-            for index, patch in enumerate(config.patches):
-                do_apply_patch(
-                    patch_file=params.env.paths.patches_dir / patch.file,
-                    target_dir=target_dir,
-                    logger=self.logger,
-                )
-                progress.update(task_id=task_id, completed=index + 1)
-        finally:
-            progress.remove_task(task_id=task_id)
+        for index, patch in enumerate(config.patches):
+            do_apply_patch(
+                patch_file=params.env.paths.patches_dir / patch.file,
+                target_dir=target_dir,
+                logger=self.logger,
+            )
 
 
 def apply_patch(
     patch_file: Path,
     target_dir: Path,
-    progress: Progress,
     logger: logging.Logger,
 ):
     logger.info(f"Applying patch {patch_file} to {target_dir}")
-    task_id = progress.add_task(f"Applying {patch_file.name}", total=None)
-
-    try:
-        do_apply_patch(patch_file, target_dir, logger)
-    finally:
-        progress.remove_task(task_id)
+    do_apply_patch(patch_file, target_dir, logger)
 
 
 def do_apply_patch(patch_file: Path, target_dir: Path, logger: logging.Logger):

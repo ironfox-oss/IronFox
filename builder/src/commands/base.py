@@ -169,12 +169,13 @@ class BaseCommand:
                 jobs=self.base_config.jobs,
                 dry_run=self.base_config.dry_run,
                 env=self.base_config.env,
-            )
+            ),
+            definition=definition,
         )
 
         console = Console()
         try:
-            failures = executor.submit(definition)
+            failures = executor.execute()
 
             # If there were failures, present them to the user
             if failures:

@@ -4,8 +4,7 @@ import re
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, List
-from rich.progress import Progress, TaskID
+from typing import List
 
 from .definition import TaskDefinition, BuildDefinition
 from .types import (
@@ -121,35 +120,22 @@ class FindReplaceTask(TaskDefinition):
         self.create_if_missing = create_if_missing
 
     def execute(self, params):
-        task_id = params.progress.add_task(
-            f"Processing file: {self.target_file.name}",
-            total=len(self.replacements),
+        return find_replace(
+            target_file=self.target_file,
+            replacements=self.replacements,
+            logger=self.logger,
+            backup=self.backup,
+            create_if_missing=self.create_if_missing,
         )
-
-        try:
-            return find_replace(
-                target_file=self.target_file,
-                replacements=self.replacements,
-                progress=params.progress,
-                logger=self.logger,
-                backup=self.backup,
-                create_if_missing=self.create_if_missing,
-            )
-        finally:
-            params.progress.remove_task(task_id=task_id)
 
 
 def find_replace(
     target_file: Path,
     replacements: List[ReplacementAction],
-    progress: Progress,
     logger: logging.Logger,
     backup: bool = False,
     create_if_missing: bool = False,
 ):
-    task_id = progress.add_task(
-        f"Processing file {target_file.name}", total=len(replacements)
-    )
     try:
         if not target_file.exists():
             if create_if_missing:
@@ -168,8 +154,6 @@ def find_replace(
         modified_content = _apply_replacements(
             content=original_content,
             replacements=replacements,
-            task_id=task_id,
-            progress=progress,
         )
 
         with open(target_file, "w", encoding="utf-8") as f:
@@ -179,15 +163,11 @@ def find_replace(
     except UnicodeDecodeError:
         # ignore non-utf files
         pass
-    finally:
-        progress.remove_task(task_id)
 
 
 def _apply_replacements(
     content: str,
     replacements: List[ReplacementAction],
-    task_id: TaskID,
-    progress: Progress,
 ) -> str:
     result = content
 
@@ -247,7 +227,5 @@ def _apply_replacements(
             result = "".join(modified_lines)
         elif isinstance(replacement, CustomReplacement):
             result = replacement.replacer(result)
-
-        progress.update(task_id, advance=1)
 
     return result

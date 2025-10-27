@@ -6,7 +6,6 @@ import subprocess
 import shlex
 
 from pathlib import Path
-from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
 from .types import CommandType
@@ -35,16 +34,13 @@ class RunCommandsTask(TaskDefinition):
         # 1. get os env vars
         # 2. get build-wide env vars (can override os env vars)
         # 3. command-specific env vars (can override os and build-wide env vars)
-        env = os.environ.copy()
-        env.update(params.env.environment_variables)
-        env.update(self.env)
+        env = {**os.environ.copy(), **params.env.environment_variables, **self.env}
 
         return run_build_commands(
             name=self.name,
             cwd=self.cwd,
             commands=self.commands,
-            env=params.env.environment_variables,
-            progress=params.progress,
+            env=env,
             logger=self.logger,
             assume_yes=self.assume_yes,
         )
@@ -54,9 +50,8 @@ def run_build_commands(
     name: str,
     cwd: Path,
     commands: list[CommandType],
-    progress: Progress,
     logger: logging.Logger,
-    env: dict[str, str] = {},
+    env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = False,
 ):
     logger.debug(f"Running {len(commands)} commands in {cwd}")
@@ -74,49 +69,37 @@ def run_build_commands(
     def task_desc(idx: int):
         return f"{name} [{idx}/{len(commands)}]"
 
-    task_id = progress.add_task(
-        task_desc(0), total=len(commands) if len(commands) > 1 else None
-    )
+    # Execute each command in sequence
+    for i, command in enumerate(commands, 1):
+        logger.debug(f"Executing command {i}/{len(commands)}: {command}")
 
-    try:
-        # Execute each command in sequence
-        for i, command in enumerate(commands, 1):
-            logger.debug(f"Executing command {i}/{len(commands)}: {command}")
+        cmd_name = "<unknown>"
+        if isinstance(command, str):
+            cmd_name = command
+        else:
+            cmd_name = command[0]
 
-            cmd_name = "<unknown>"
-            if isinstance(command, str):
-                cmd_name = command
-            else:
-                cmd_name = command[0]
+        success = _execute_command(
+            command=command,
+            cwd=cwd,
+            env=env,
+            logger=logger,
+            assume_yes=assume_yes,
+        )
 
-            success = _execute_command(
-                name=name,
-                command=command,
-                cwd=cwd,
-                env=env,
-                logger=logger,
-                assume_yes=assume_yes,
-            )
+        if not success:
+            raise subprocess.CalledProcessError(1, cmd_name, f"Command {i} failed")
 
-            if not success:
-                raise subprocess.CalledProcessError(1, cmd_name, f"Command {i} failed")
+        logger.debug(f"Command {i}/{len(commands)} completed successfully")
 
-            progress.update(task_id, description=task_desc(i), advance=1)
-
-            logger.debug(f"Command {i}/{len(commands)} completed successfully")
-
-        logger.debug(f"All {len(commands)} commands completed successfully")
-
-    finally:
-        progress.remove_task(task_id)
+    logger.debug(f"All {len(commands)} commands completed successfully")
 
 
 def _execute_command(
-    name: str,
     command: CommandType,
     cwd: Path,
     logger: logging.Logger,
-    env: dict[str, str] = {},
+    env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = 0,
 ) -> bool:
     try:
@@ -141,7 +124,7 @@ def _execute_command(
             args,
             cwd=cwd,
             input=input_data,
-            env={**os.environ.copy(), **env},
+            env=env,
             capture_output=True,
             text=True,
             check=True,

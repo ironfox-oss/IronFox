@@ -10,9 +10,7 @@ import commands.base
 from abc import abstractmethod
 from pathlib import Path
 from common.utils import resolve_glob
-from rich.progress import Progress
 from typing import Callable, List, TypeVar, Type, Union
-from threading import Lock
 
 from .types import CommandType, ReplacementAction
 
@@ -22,8 +20,7 @@ def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
 
 
 class TaskExecutionParams:
-    def __init__(self, progress: Progress, env: commands.base.BuildEnvironment):
-        self.progress = progress
+    def __init__(self, env: commands.base.BuildEnvironment):
         self.env = env
 
 
