@@ -1,16 +1,11 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import concurrent.futures
-from copyreg import constructor
 import logging
 from pathlib import Path
-import platform
 from typing import List, Tuple
 from commands.base import BaseConfig
 from commands.prepare import PrepareConfig
 from common.paths import Paths
-import concurrent
 from execution.definition import BuildDefinition
-from execution.parallel import ParallelExecutor, Task, TaskType, parallel_map
+from execution.parallel import TaskType, parallel_map
 from rich.progress import Progress
 from steps.common.java import setup_java
 
@@ -20,6 +15,7 @@ from .fenix import prepare_fenix
 from .glean import prepare_glean
 from .firefox import prepare_firefox
 from .noop_moz_endpoints import get_moz_endpoints, noop_moz_endpoints
+from .wasi_sdk import prepare_wasi_sdk
 
 logger = logging.getLogger("prepare")
 
@@ -69,6 +65,9 @@ async def get_definition(
 
         # Firefox
         d.chain(*prepare_firefox(d, paths, config)),
+
+        # Wasi-SDK
+        d.chain(*prepare_wasi_sdk(d, paths, config)),
     )
     # fmt:on
 
