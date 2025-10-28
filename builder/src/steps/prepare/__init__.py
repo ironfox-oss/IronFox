@@ -78,7 +78,10 @@ async def get_definition(
 
         async def action(params: Tuple[Path, List[str]]) -> None:
             dir, endpoints = params
-            task_name = "No-op endpoint"
+            root_parts = dir.relative_to(paths.root_dir).parts
+            task_name = (
+                f"Remove endpoints: {''.join(root_parts[:min(2, len(root_parts))])}"
+            )
             task_id = progress.add_task(
                 f"{task_name}: {dir.relative_to(paths.root_dir)}"
             )

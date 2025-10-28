@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import itertools
 import logging
+import subprocess
 
 import commands.base
 
@@ -616,6 +617,37 @@ class BuildDefinition:
             recursive=recursive,
         )
 
+    def _git_ls_files(self, path: Path, files_only: bool = False) -> List[Path]:
+        if path.is_file() and files_only:
+            return [path]
+
+        out = subprocess.check_output(["git", "-C", str(path), "ls-files"], text=True)
+        files = [Path(p) for p in out.strip().splitlines()]
+        if files_only:
+            files = [p for p in files if p.is_file()]
+        return files
+
+    def find_replace_dir_tracked(
+        self,
+        name: str,
+        dir: Path,
+        replacements: List[ReplacementAction],
+        backup: bool = False,
+        create_if_missing: bool = False,
+        batch_size: int = 50,
+        file_filter: Callable[[Path], bool] | None = None,
+    ) -> List[TaskDefinition]:
+        files = self._git_ls_files(dir, files_only=True)
+        return self._find_replace(
+            name=name,
+            files=files,
+            replacements=replacements,
+            backup=backup,
+            create_if_missing=create_if_missing,
+            batch_size=batch_size,
+            file_filter=file_filter,
+        )
+
     def find_replace(
         self,
         name: str,
@@ -625,11 +657,37 @@ class BuildDefinition:
         create_if_missing: bool = False,
         batch_size: int = 50,
         recursive: bool = True,
+        file_filter: Callable[[Path], bool] | None = None,
+    ) -> List[TaskDefinition]:
+        files = resolve_glob(target_files, recursive=recursive)
+        return self._find_replace(
+            name=name,
+            files=files,
+            replacements=replacements,
+            backup=backup,
+            create_if_missing=create_if_missing,
+            batch_size=batch_size,
+            file_filter=file_filter,
+        )
+
+    def _find_replace(
+        self,
+        name: str,
+        files: List[Path],
+        replacements: List[ReplacementAction],
+        backup: bool = False,
+        create_if_missing: bool = False,
+        batch_size: int = 50,
+        file_filter: Callable[[Path], bool] | None = None,
     ) -> List[TaskDefinition]:
         from .find_replace import FindReplaceTask
 
-        files = resolve_glob(target_files, recursive=recursive)
-        file_batches = [files[i:i+batch_size] for i in range(0, len(files), batch_size)]
+        if file_filter and callable(file_filter):
+            files = [file for file in files if file_filter(file)]
+
+        file_batches = [
+            files[i : i + batch_size] for i in range(0, len(files), batch_size)
+        ]
 
         tasks = []
         for idx, batch in enumerate(file_batches, start=1):

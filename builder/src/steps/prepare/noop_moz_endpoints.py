@@ -2,7 +2,7 @@ from itertools import groupby
 from operator import itemgetter
 from pathlib import Path
 import re
-from typing import Dict, List
+from typing import Callable, Dict, List
 
 from common.paths import Paths
 from execution.definition import BuildDefinition, TaskDefinition
@@ -16,11 +16,9 @@ _EXCLUDED_EXTS = {".json", ".md", ".swift"}
 
 
 def _should_skip(path: Path) -> bool:
-    # skip excluded extensions
     if path.suffix in _EXCLUDED_EXTS:
         return True
 
-    # skip files inside excluded directories
     for part in path.parts:
         if part in _EXCLUDED_DIRS:
             return True
@@ -32,6 +30,7 @@ def noop_moz_endpoints(
     d: BuildDefinition,
     dir: Path,
     endpoints: List[str],
+    task_name: str = "",
 ) -> List[TaskDefinition]:
     escaped = [re.escape(endpoint) for endpoint in endpoints]
     patterns = []
@@ -63,11 +62,16 @@ def noop_moz_endpoints(
         regex(pat, repl) for pat, repl in patterns
     ]
 
-    return d.find_replace(
-        name=f"Remove {len(endpoints)} endpoints",
-        target_files=f"{dir}/**/*",
+    return d.find_replace_dir_tracked(
+        name=(
+            f"Remove endpoints: {dir.name}"
+            if len(task_name.strip()) == 0
+            else task_name
+        ),
+        dir=dir,
         replacements=all_replacements,
         batch_size=50,
+        file_filter=_should_skip,
     )
 
 
