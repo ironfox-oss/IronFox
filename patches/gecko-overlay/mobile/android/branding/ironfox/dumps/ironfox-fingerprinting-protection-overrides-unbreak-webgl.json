@@ -142,6 +142,11 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "newgrounds.com",
+      "thirdPartyDomain": "ungrounded.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "noclip.website"
     },
     {
