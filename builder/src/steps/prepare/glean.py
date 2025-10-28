@@ -94,6 +94,9 @@ rust.targets={current_platform().lower()}-{current_machine()},{config.rusttarget
             replacements=[
                 regex(r"allowGleanInternal = .*", r"allowGleanInternal = false"),
                 line_affix(r'"\$rootDir/glean-core/android/metrics.yaml"', prefix="// "),
+
+                # Use Tor's no-op UniFFi binding generator
+                regex(r"commandLine 'cargo', 'uniffi-bindgen'", f"commandLine '{paths.uniffi_dir}/target/release/uniffi-bindgen'"),
             ],
         ),
         *_process_file(
@@ -148,14 +151,6 @@ rust.targets={current_platform().lower()}-{current_machine()},{config.rusttarget
             path="build.gradle",
             replacements=[
                 regex(r"ext.cargoProfile = .*", r'ext.cargoProfile = "release"'),
-            ],
-        ),
-        
-        # Use Tor's no-op UniFFi binding generator
-        *_process_file(
-            path="glean-core/android/build.gradle",
-            replacements=[
-                regex(r"commandLine 'cargo', 'uniffi-bindgen'", r"commandLine '$uniffi/uniffi-bindgen'"),
             ],
         ),
         
