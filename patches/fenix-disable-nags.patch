@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..f01f9f1e62 100644
+index 8e89ba9018..615dab9b92 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -373,7 +373,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -29,7 +29,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      var defaultSearchEngineName by stringPreference(
-@@ -909,7 +909,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -911,7 +911,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showFirstTimeTranslation: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
@@ -38,7 +38,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      /**
-@@ -1130,7 +1130,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1132,7 +1132,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
          default = { FxNimbus.features.reEngagementNotification.value().enabled },
@@ -47,7 +47,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      /**
-@@ -1220,7 +1220,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1222,7 +1222,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
@@ -56,7 +56,7 @@ index 312b5b3de3..f01f9f1e62 100644
          default = { shouldShowCookieBannerUI },
      )
  
-@@ -1231,7 +1231,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1233,7 +1233,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var hasShownTabSwipeCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
@@ -65,7 +65,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-@@ -1546,12 +1546,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1548,12 +1548,12 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
@@ -80,7 +80,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      val shouldShowOpenInAppCfr: Boolean
-@@ -1559,17 +1559,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1561,17 +1561,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
@@ -101,7 +101,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      /**
-@@ -1577,7 +1577,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1579,7 +1579,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
@@ -110,7 +110,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      /**
-@@ -2405,7 +2405,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2407,7 +2407,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var isFirstTimeEngagingWithSignup: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
@@ -119,7 +119,7 @@ index 312b5b3de3..f01f9f1e62 100644
      )
  
      /**
-@@ -2766,7 +2766,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2768,7 +2768,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
              FxNimbus.features.setupChecklist.value().enabled &&
                      canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
          },

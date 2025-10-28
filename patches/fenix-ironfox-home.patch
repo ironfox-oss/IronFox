@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..c97e01906f 100644
+index 8e89ba9018..8a20a3df8d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -193,7 +193,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -60,7 +60,7 @@ index 312b5b3de3..c97e01906f 100644
      )
  
      val isCrashReportingEnabled: Boolean
-@@ -1478,7 +1480,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1480,7 +1482,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var defaultTopSitesAdded by booleanPreference(
          appContext.getPreferenceKey(R.string.default_top_sites_added),
