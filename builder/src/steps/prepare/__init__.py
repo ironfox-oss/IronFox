@@ -8,6 +8,7 @@ from execution.definition import BuildDefinition
 from execution.parallel import TaskType, parallel_map
 from rich.progress import Progress
 from steps.common.java import setup_java
+from steps.prepare.uniffi import prepare_uniffi
 
 from .android_components import prepare_android_components
 from .application_services import prepare_application_services
@@ -68,6 +69,9 @@ async def get_definition(
 
         # Wasi-SDK
         d.chain(*prepare_wasi_sdk(d, paths, config)),
+
+        # UniFFI Bindgen
+        d.chain(*prepare_uniffi(d, paths, config)),
     )
     # fmt:on
 
