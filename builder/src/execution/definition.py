@@ -618,7 +618,7 @@ class BuildDefinition:
         )
 
     def _git_ls_files(self, path: Path, files_only: bool = False) -> List[Path]:
-        if path.is_file() and files_only:
+        if not path.is_dir() and files_only:
             return [path]
 
         out = subprocess.check_output(["git", "-C", str(path), "ls-files"], text=True)

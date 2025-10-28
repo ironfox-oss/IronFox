@@ -71,7 +71,7 @@ def noop_moz_endpoints(
         dir=dir,
         replacements=all_replacements,
         batch_size=50,
-        file_filter=_should_skip,
+        file_filter=lambda f: not _should_skip(f),
     )
 
 

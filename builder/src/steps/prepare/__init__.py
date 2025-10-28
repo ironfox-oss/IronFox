@@ -86,7 +86,12 @@ async def get_definition(
                 f"{task_name}: {dir.relative_to(paths.root_dir)}"
             )
             try:
-                noop_moz_endpoints(d, dir, endpoints)
+                noop_moz_endpoints(
+                    d=d,
+                    dir=dir,
+                    endpoints=endpoints,
+                    task_name=task_name,
+                )
             finally:
                 progress.remove_task(task_id)
 
