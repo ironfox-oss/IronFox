@@ -64,6 +64,7 @@ async def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         clone_to=paths.wasi_sdk_dir,
         branch=Versions.WASI_TAG,
         depth=config.clone_depth,
+        recurse_submodules=True,
     )
 
     clone_uniffi = d.clone(

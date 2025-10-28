@@ -336,20 +336,9 @@ class BuildDefinition:
         clone_to: Path,
         branch: str | None = None,
         depth: int | None = None,
+        recurse_submodules: bool = False,
     ) -> TaskDefinition:
-        """Creates a task to clone a Git repository.
-
-        Args:
-            name (str): The name of the clone task.
-            repo_url (str): The URL of the Git repository.
-            clone_to (Path): The local directory where the repository should be cloned.
-            branch (str | None, optional): The specific branch to clone. If None, the default branch is used.
-                                            Defaults to None.
-            depth (int | None, optional): The depth for a shallow clone. If None, a full clone is performed.
-                                            Defaults to None.
-        Returns:
-            TaskDefinition: The created CloneTask instance.
-        """
+        """Creates a task to clone a Git repository."""
         from .clone import CloneTask
 
         return self.create_task(
@@ -359,6 +348,7 @@ class BuildDefinition:
             clone_to=clone_to,
             branch=branch,
             depth=depth,
+            recurse_submodules=recurse_submodules,
         )
 
     def patch(

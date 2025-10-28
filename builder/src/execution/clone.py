@@ -7,6 +7,7 @@ from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
 
+
 class CloneTask(TaskDefinition):
     def __init__(
         self,
@@ -17,12 +18,14 @@ class CloneTask(TaskDefinition):
         clone_to: Path,
         branch: str | None = None,
         depth: int | None = None,
+        recurse_submodules: bool = False,
     ):
         super().__init__(name, id, build_def)
         self.repo_url = repo_url
         self.clone_to = clone_to
         self.branch = branch
         self.depth = depth
+        self.recurse_submodules = recurse_submodules
 
     async def execute(self, params):
         return clone_repository(
@@ -31,6 +34,7 @@ class CloneTask(TaskDefinition):
             logger=self.logger,
             branch=self.branch,
             depth=self.depth,
+            recurse_submodules=self.recurse_submodules,
         )
 
 
@@ -40,6 +44,7 @@ def clone_repository(
     logger: logging.Logger,
     branch: str | None = None,
     depth: int | None = None,
+    recurse_submodules: bool = False,
 ):
     logger.info(f"Cloning repository {repo_url} to {clone_to}")
 
@@ -60,6 +65,9 @@ def clone_repository(
     if branch is not None:
         cmd.extend(["--branch", branch])
         logger.debug(f"Cloning specific branch: {branch}")
+
+    if recurse_submodules:
+        cmd.append("--recurse-submodules")
 
     cmd.extend([repo_url, str(clone_to)])
 
