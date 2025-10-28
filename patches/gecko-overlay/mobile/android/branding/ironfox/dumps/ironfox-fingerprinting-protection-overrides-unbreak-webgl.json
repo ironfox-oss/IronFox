@@ -66,6 +66,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "dndbeyond.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "doordash.com"
     },
     {
