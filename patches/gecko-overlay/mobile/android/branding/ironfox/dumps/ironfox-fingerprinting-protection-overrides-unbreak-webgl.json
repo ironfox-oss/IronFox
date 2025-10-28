@@ -50,6 +50,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "comaps.at"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "coolmath4kids.com"
     },
     {
