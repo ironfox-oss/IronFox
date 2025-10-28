@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..1feb3a40f2 100644
+index 8e89ba9018..48d435bb45 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1492,7 +1492,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1494,7 +1494,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      @VisibleForTesting
      internal var trendingSearchSuggestionsEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_trending_search_suggestions),
@@ -11,7 +11,7 @@ index 312b5b3de3..1feb3a40f2 100644
      )
  
      /**
-@@ -2320,7 +2320,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2322,7 +2322,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var isTrendingSearchesVisible by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_trending_searches),
