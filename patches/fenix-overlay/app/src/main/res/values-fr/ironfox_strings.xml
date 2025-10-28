@@ -53,7 +53,7 @@
     <string name="onboarding_install_ublock_caption">Bloquer les publicités, les traqueurs et les logiciels malveillants pour une navigation plus sûre et plus propre.</string>
     <string name="onboarding_install_ublock_description">uBlock Origin améliore votre confidentialité et votre sécurité en bloquant le contenu indésirable. IronFox utilise une configuration personnalisée de uBlock Origin avec des listes de filtres sélectionnées pour une protection et des performances optimales.</string>
     <string name="onboarding_state_installing_ublock">Installation de uBlock Origin…</string>
-    <string name="onboarding_state_installing_ublock_error">Une erreur s\'est produite lors de l\'installation de uBlock Origin : %1$s</string>
+    <string name="onboarding_state_installing_ublock_error">Une erreur s\'est produite lors de l\'installation de uBlock Origin : %1$s</string>
     <string name="onboarding_action_retry">Réessayer</string>
     <string name="preference_collections_enabled">Activer les collections</string>
     <string name="preference_translations_enabled">Activer traductions de Firefox</string>
