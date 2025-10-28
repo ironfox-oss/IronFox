@@ -1,140 +1,110 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<resources xmlns:tools="http://schemas.android.com/tools"
-    xmlns:moz="http://mozac.org/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:moz="http://mozac.org/tools">
     <!-- Warn users that the browser will restart -->
-    <string name="restart_required_summary">Changing this setting will restart your browser</string>
-
+    <string name="restart_required_summary" translatable="false">Changing this setting will restart your browser</string>
     <!-- Warn users that this setting is not recommended or supported -->
-    <string name="unsupported_summary">This setting is NOT recommended or supported. Proceed with caution.</string>
-
+    <string name="unsupported_summary" translatable="false">This setting is NOT recommended or supported. Proceed with caution.</string>
     <!-- IronFox Settings -->
     <string name="if_title" translatable="false">IronFox</string>
-    <string name="if_preferences">IronFox settings</string>
-    <string name="if_preferences_misc">Miscellaneous</string>
-    <string name="if_preferences_privacy">Privacy</string>
-    <string name="if_preferences_privacy_security">Privacy and security</string>
-    <string name="if_preferences_secret">Secret settings</string>
-    <string name="if_preferences_security">Security</string>
-
+    <string name="if_preferences" translatable="false">IronFox settings</string>
+    <string name="if_preferences_misc" translatable="false">Miscellaneous</string>
+    <string name="if_preferences_privacy" translatable="false">Privacy</string>
+    <string name="if_preferences_privacy_security" translatable="false">Privacy and security</string>
+    <string name="if_preferences_secret" translatable="false">Secret settings</string>
+    <string name="if_preferences_security" translatable="false">Security</string>
     <!-- Accessibility services -->
-    <string name="preference_accessibility_enabled">Enable accessibility services</string>
-
+    <string name="preference_accessibility_enabled" translatable="false">Enable accessibility services</string>
     <!-- Collections -->
-    <string name="preference_collections_enabled">Enable collections</string>
-
+    <string name="preference_collections_enabled" translatable="false">Enable collections</string>
     <!-- Cross-origin referer policy -->
-    <string name="preference_referer_policy">Cross-origin referer policy</string>
-    <string name="preference_referer_policy_summary">Configure the behavior of cross-origin referers</string>
-    <string name="preference_referer_policy_always">Always send cross-origin referers</string>
-    <string name="preference_referer_policy_base_domains_match">Send cross-origin referers when base domains match</string>
-    <string name="preference_referer_policy_hosts_match">Disable cross-origin referers</string>
-
+    <string name="preference_referer_policy" translatable="false">Cross-origin referer policy</string>
+    <string name="preference_referer_policy_summary" translatable="false">Configure the behavior of cross-origin referers</string>
+    <string name="preference_referer_policy_always" translatable="false">Always send cross-origin referers</string>
+    <string name="preference_referer_policy_base_domains_match" translatable="false">Send cross-origin referers when base domains match</string>
+    <string name="preference_referer_policy_hosts_match" translatable="false">Disable cross-origin referers</string>
     <!-- Disk cache -->
-    <string name="preference_cache_enabled">Enable disk cache</string>
-
+    <string name="preference_cache_enabled" translatable="false">Enable disk cache</string>
     <!-- EME -->
-    <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Enable Widevine CDM</string>
-
+    <string name="preferences_debug_settings_eme_enabled" translatable="false">Enable Encrypted Media Extensions (EME)</string>
+    <string name="preferences_debug_settings_widevine_enabled" translatable="false">Enable Widevine CDM</string>
     <!-- Firefox Translations -->
-    <string name="preference_translations_enabled">Enable Firefox Translations</string>
-
+    <string name="preference_translations_enabled" translatable="false">Enable Firefox Translations</string>
     <!-- FPP overrides -->
-    <string name="preference_fpp_overrides_ironfox_enabled">Enable fingerprinting protection overrides from IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from IronFox - Changing this setting will restart your browser</string>
-    <string name="preference_fpp_overrides_mozilla_enabled">Enable fingerprinting protection overrides from Mozilla</string>
-    <string name="preference_fpp_overrides_mozilla_summary">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from Mozilla - Changing this setting will restart your browser</string>
-
+    <string name="preference_fpp_overrides_ironfox_enabled" translatable="false">Enable fingerprinting protection overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_summary" translatable="false">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from IronFox - Changing this setting will restart your browser</string>
+    <string name="preference_fpp_overrides_mozilla_enabled" translatable="false">Enable fingerprinting protection overrides from Mozilla</string>
+    <string name="preference_fpp_overrides_mozilla_summary" translatable="false">Relaxes fingerprinting protections for certain websites by default to reduce breakage, using a list from Mozilla - Changing this setting will restart your browser</string>
     <!-- IPv6 -->
-    <string name="preference_ipv6_enabled">Enable IPv6 network connectivity</string>
-
+    <string name="preference_ipv6_enabled" translatable="false">Enable IPv6 network connectivity</string>
     <!-- JavaScript -->
-    <string name="preference_javascript_enabled">Enable JavaScript</string>
-
+    <string name="preference_javascript_enabled" translatable="false">Enable JavaScript</string>
     <!-- JavaScript JIT -->
-    <string name="preference_jit_enabled">Enable JavaScript Just-in-time Compilation (JIT)</string>
-    <string name="preference_jit_enabled_caption">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
-    <string name="preference_jit_enabled_description">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
-    <string name="preference_jit_enabled_summary">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
-    <string name="preference_jit_trusted_principals_enabled">Enable JavaScript Just-in-time Compilation (JIT) for extensions</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">When JIT is disabled, re-enables JIT for extensions - Changing this setting will restart your browser</string>
-
+    <string name="preference_jit_enabled" translatable="false">Enable JavaScript Just-in-time Compilation (JIT)</string>
+    <string name="preference_jit_enabled_caption" translatable="false">Improve JavaScript performance by enabling JIT. (Not recommended for most users)</string>
+    <string name="preference_jit_enabled_description" translatable="false">At the cost of security, you can enable JIT to improve performance of websites. Only recommended for users with lower-end devices.</string>
+    <string name="preference_jit_enabled_summary" translatable="false">When disabled, performance may be reduced for complex webpages - Changing this setting will restart your browser</string>
+    <string name="preference_jit_trusted_principals_enabled" translatable="false">Enable JavaScript Just-in-time Compilation (JIT) for extensions</string>
+    <string name="preference_jit_trusted_principals_enabled_summary" translatable="false">When JIT is disabled, re-enables JIT for extensions - Changing this setting will restart your browser</string>
     <!-- PDF.js -->
-    <string name="preference_pdfjs_disabled">Open PDF files externally</string>
-
+    <string name="preference_pdfjs_disabled" translatable="false">Open PDF files externally</string>
     <!-- Preferred website appearance -->
     <!-- (The description here is adapted from Firefox for Desktop: https://searchfox.org/mozilla-release/rev/34c2c305/browser/locales/en-US/browser/preferences/preferences.ftl#277) -->
-    <string name="preference_website_appearance_title">Preferred website appearance</string>
-    <string name="preference_website_appearance_description">Some websites adapt their color scheme based on your preferences. Choose which color scheme you’d like to use for those sites. Note that options other than Light can aid fingerprinting by causing your browser to appear more unique.</string>
-    <string name="preference_prefers_browser_color_scheme">Follow browser theme</string>
-    <string name="preference_prefers_light_color_scheme">Light</string>
-    <string name="preference_prefers_dark_color_scheme">Dark</string>
-
+    <string name="preference_website_appearance_title" translatable="false">Preferred website appearance</string>
+    <string name="preference_website_appearance_description" translatable="false">Some websites adapt their color scheme based on your preferences. Choose which color scheme you’d like to use for those sites. Note that options other than Light can aid fingerprinting by causing your browser to appear more unique.</string>
+    <string name="preference_prefers_browser_color_scheme" translatable="false">Follow browser theme</string>
+    <string name="preference_prefers_light_color_scheme" translatable="false">Light</string>
+    <string name="preference_prefers_dark_color_scheme" translatable="false">Dark</string>
     <!-- Printing capabilities -->
-    <string name="preference_print_enabled">Enable printing capabilities</string>
-
+    <string name="preference_print_enabled" translatable="false">Enable printing capabilities</string>
     <!-- Safe Browsing -->
-    <string name="preference_safe_browsing_enabled">Enable Safe Browsing</string>
-    <string name="preference_safe_browsing_enabled_caption">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
-    <string name="preference_safe_browsing_enabled_description">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
-    <string name="preference_safe_browsing_enabled_summary">Provides real-time protection against dangerous websites, malware, and phishing attempts - Changing this setting will restart your browser</string>
-
+    <string name="preference_safe_browsing_enabled" translatable="false">Enable Safe Browsing</string>
+    <string name="preference_safe_browsing_enabled_caption" translatable="false">Get real-time protection against dangerous websites, malware, and phishing attempts.</string>
+    <string name="preference_safe_browsing_enabled_description" translatable="false">IronFox’s Safe Browsing functionality is currently provided by Google. IronFox will periodically update the database to ensure users are protected against the latest threats, and upon encountering a potential match, IronFox might submit a partial hash of the suspected URL to Google. Note that IronFox proxies these connections, to prevent your public IP address from being associated with these requests.</string>
+    <string name="preference_safe_browsing_enabled_summary" translatable="false">Provides real-time protection against dangerous websites, malware, and phishing attempts - Changing this setting will restart your browser</string>
     <!-- Spoof locale to English -->
-    <string name="tor_spoof_english_title">Spoof language to en-US</string>
-    <string name="tor_spoof_english_caption">Enhance your privacy by masking your device’s language settings.</string>
-    <string name="tor_spoof_english_description">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
-    <string name="tor_spoof_english">Request English versions of webpages</string>
-    <string name="tor_spoof_english_summary">When enabled, strengthens fingerprinting protection</string>
-
+    <string name="tor_spoof_english_title" translatable="false">Spoof language to en-US</string>
+    <string name="tor_spoof_english_caption" translatable="false">Enhance your privacy by masking your device’s language settings.</string>
+    <string name="tor_spoof_english_description" translatable="false">Request English (en-US) versions of webpages. This helps your browser appear less unique, strengthening protection against fingerprinting techniques that identify users based on their language preferences.</string>
+    <string name="tor_spoof_english" translatable="false">Request English versions of webpages</string>
+    <string name="tor_spoof_english_summary" translatable="false">When enabled, strengthens fingerprinting protection</string>
     <!-- Spoof timezone to UTC-0 -->
-    <string name="spoof_timezone">Spoof timezone to UTC-0</string>
-    <string name="spoof_timezone_summary">When enabled, strengthens fingerprinting protection</string>
-    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Enable timezone spoofing overrides from IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_timezone_summary">Disables timezone spoofing for certain websites by default to reduce breakage - Changing this setting will restart your browser</string>
-
+    <string name="spoof_timezone" translatable="false">Spoof timezone to UTC-0</string>
+    <string name="spoof_timezone_summary" translatable="false">When enabled, strengthens fingerprinting protection</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled" translatable="false">Enable timezone spoofing overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary" translatable="false">Disables timezone spoofing for certain websites by default to reduce breakage - Changing this setting will restart your browser</string>
     <!-- SVG -->
-    <string name="preference_svg_enabled">Enable Scalable Vector Graphics (SVG)</string>
-
+    <string name="preference_svg_enabled" translatable="false">Enable Scalable Vector Graphics (SVG)</string>
     <!-- UnifiedPush -->
     <!-- Label for enabling UnifiedPush -->
-    <string name="preferences_debug_settings_unifiedpush">Enable UnifiedPush</string>
+    <string name="preferences_debug_settings_unifiedpush" translatable="false">Enable UnifiedPush</string>
     <!-- Label for using UnifiedPush. UnifiedPush is a decentralized push notification system, so users can benefit from mobile push notifications without relying on Google Services. Users choose the application (and server) they wish to use to manage webpush for other applications. If enabled, the browser (e.g. IronFox) will receive webpush messages via the chosen app. -->
-    <string name="preferences_unifiedpush">Use UnifiedPush</string>
+    <string name="preferences_unifiedpush" translatable="false">Use UnifiedPush</string>
     <!-- Toast shown after confirming the UnifiedPush configuration -->
-    <string name="toast_change_unifiedpush_done">UnifiedPush setting modified. Quitting the application to apply changes…</string>
-
+    <string name="toast_change_unifiedpush_done" translatable="false">UnifiedPush setting modified. Quitting the application to apply changes…</string>
     <!-- WebAssembly -->
-    <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
-
+    <string name="preference_wasm_enabled" translatable="false">Enable WebAssembly (WASM)</string>
     <!-- WebGL -->
-    <string name="preference_webgl_disabled">Disable WebGL</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Enable WebGL overrides from IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">When WebGL is disabled, re-enables WebGL for certain websites by default to reduce breakage - Changing this setting will restart your browser</string>
-
+    <string name="preference_webgl_disabled" translatable="false">Disable WebGL</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled" translatable="false">Enable WebGL overrides from IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary" translatable="false">When WebGL is disabled, re-enables WebGL for certain websites by default to reduce breakage - Changing this setting will restart your browser</string>
     <!-- WebRTC -->
-    <string name="preference_webrtc_enabled">Enable WebRTC</string>
-
+    <string name="preference_webrtc_enabled" translatable="false">Enable WebRTC</string>
     <!-- XPInstall -->
-    <string name="extension_failed_to_install_xpinstall_disabled_error">Installation of add-ons is currently disabled. If desired, at the cost of security, you can enable it by navigating to Settings -> IronFox -> IronFox settings -> Security -> Allow installation of add-ons.</string>
-    <string name="preference_xpinstall_enabled">Allow installation of add-ons</string>
-
+    <string name="extension_failed_to_install_xpinstall_disabled_error" translatable="false">Installation of add-ons is currently disabled. If desired, at the cost of security, you can enable it by navigating to Settings -&gt; IronFox -&gt; IronFox settings -&gt; Security -&gt; Allow installation of add-ons.</string>
+    <string name="preference_xpinstall_enabled" translatable="false">Allow installation of add-ons</string>
     <!-- Onboarding - Title and description -->
-    <string name="onboarding_if_preferences_title">Customize IronFox</string>
-    <string name="onboarding_if_preferences_description">Customize IronFox to suit your liking</string>
-
+    <string name="onboarding_if_preferences_title" translatable="false">Customize IronFox</string>
+    <string name="onboarding_if_preferences_description" translatable="false">Customize IronFox to suit your liking</string>
     <!-- Onboarding - DoH -->
-    <string name="onboarding_if_preference_doh_caption">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
+    <string name="onboarding_if_preference_doh_caption" translatable="false">Secure your browsing with DNS-over-HTTPS for enhanced privacy and security.</string>
     <string name="onboarding_if_preference_doh_off_summary" translatable="false"></string>
-
     <!-- Onboarding - uBlock Origin -->
-    <string name="onboarding_install_ublock_title">Install uBlock Origin</string>
-    <string name="onboarding_install_ublock_caption">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
-    <string name="onboarding_install_ublock_description">uBlock Origin enhances your privacy and security by blocking unwanted content. IronFox uses a custom uBlock Origin configuration with curated filter lists for optimal protection and performance.</string>
-
+    <string name="onboarding_install_ublock_title" translatable="false">Install uBlock Origin</string>
+    <string name="onboarding_install_ublock_caption" translatable="false">Block ads, trackers, and malware for a safer, cleaner browsing experience.</string>
+    <string name="onboarding_install_ublock_description" translatable="false">uBlock Origin enhances your privacy and security by blocking unwanted content. IronFox uses a custom uBlock Origin configuration with curated filter lists for optimal protection and performance.</string>
     <!-- Onboarding - States -->
-    <string name="onboarding_state_installing_ublock">Installing uBlock Origin…</string>
-    <string name="onboarding_state_installing_ublock_error">An error occurred while installing uBlock Origin: %1$s</string>
-
+    <string name="onboarding_state_installing_ublock" translatable="false">Installing uBlock Origin…</string>
+    <string name="onboarding_state_installing_ublock_error" translatable="false">An error occurred while installing uBlock Origin: %1$s</string>
     <!-- Onboarding - Actions -->
-    <string name="onboarding_action_retry">Retry</string>
+    <string name="onboarding_action_retry" translatable="false">Retry</string>
 </resources>

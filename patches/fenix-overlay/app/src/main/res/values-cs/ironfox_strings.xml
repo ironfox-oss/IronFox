@@ -63,11 +63,12 @@
     <string name="preference_fpp_overrides_mozilla_enabled">Povolit přepsání ochrany proti vytváření otisku prohlížeče od organizace Mozilla</string>
     <string name="preference_fpp_overrides_mozilla_summary">Uvolní ochranu proti vytváření otisku prohlížeče na určitých stránkách pro snížení jejich nefunkčnosti, použitím seznamu od organizace Mozilla. Změna tohoto nastavení restartuje váš prohlížeč</string>
     <string name="preference_jit_trusted_principals_enabled">Povolit kompilaci JavaScriptu v reálném čase (JIT) pro rozšíření</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Povolí JIT pro rozšíření, i když je JIT globálně zakázán. Změna tohoto nastavení restartuje váš prohlížeč</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Pokud je JIT zakázán, tato funkce jej povolí pro rozšíření. Změna tohoto nastavení restartuje váš prohlížeč</string>
     <string name="spoof_timezone">Zamaskovat časové pásmo na UTC-0</string>
     <string name="spoof_timezone_summary">Pokud je povoleno, zvýší ochranu proti vytváření otisku prohlížeče</string>
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Povolit přepsání maskování časového pásma z projektu IronFox</string>
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Ve výchozím nastavení zakáže u některých stránek maskování časového pásma pro snížení jejich nefunkčnosti. Změna tohoto nastavení restartuje váš prohlížeč</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Povolit přepsání WebGL z projektu IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">Ve výchozím nastavení povolí WebGL na určitých stránkách, i když je globálně zakázáno, pro snížení nefunkčnosti stránek. Změna tohoto nastavení restartuje váš prohlížeč</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Pokud je WebGL zakázán, tato funkce jej povolí na určitých webových stránkách pro snížení nefunkčnosti stránek. Změna tohoto nastavení restartuje váš prohlížeč</string>
+    <string name="preference_webgl_disabled" translatable="false">Zakázat WebGL</string>
 </resources>

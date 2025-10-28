@@ -350,7 +350,7 @@ index 819b24954e..273349e0ca 100644
                  SupportUtils.getMozillaPageUrl(SupportUtils.MozillaPage.MANIFESTO),
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..5045491116 100644
+index 8e89ba9018..8258dcafa1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -38,7 +38,7 @@ import org.mozilla.experiments.nimbus.NimbusEventStore

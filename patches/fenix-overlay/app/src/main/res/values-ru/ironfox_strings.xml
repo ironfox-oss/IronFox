@@ -63,11 +63,12 @@
     <string name="preference_fpp_overrides_mozilla_enabled">Включить переопределения защиты от фингерпринтинга, созданные Mozilla</string>
     <string name="preference_fpp_overrides_mozilla_summary">По умолчанию смягчает защиту от фингерпринтинга на некоторых сайтах, чтобы избежать проблем с их работой, используя список исключений от Mozilla - Изменение этого параметра перезапустит браузер</string>
     <string name="preference_jit_trusted_principals_enabled">Включить JavaScript Just-in-time Compilation (JIT) для расширений</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Разрешает использование JIT для расширений, даже если он отключён для всего остального - Изменение этой настройки перезапустит ваш браузер</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Пока JIT отключён, автоматически перезапускать JIT для расширений - Изменение этой настройки перезапустит ваш браузер</string>
     <string name="spoof_timezone">Подменять часовой пояс на UTC-0</string>
     <string name="spoof_timezone_summary">При включении усиливает защиту от фингерпринтинга</string>
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Включить переопределения для подмены часового пояса, созданные IronFox</string>
     <string name="preference_fpp_overrides_ironfox_timezone_summary">По умолчанию отключает подмену часового пояса на некоторых сайтах, чтобы избежать проблем с их работой - Изменение этой настройки перезапустит браузер</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Включить переопределения WebGL, созданные IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">По умолчанию включает WebGL на некоторых сайтах, даже если он отключён для всего браузера, чтобы избежать проблем с их работой - Изменение этой настройки перезапустит браузер</string>
+    <string name="preference_webgl_disabled" translatable="false">Отключить WebGL</string>
 </resources>

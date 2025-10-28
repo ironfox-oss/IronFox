@@ -40,6 +40,11 @@ pref("browser.ironfox.extensions.blocklist.enabled", true); // [DEFAULT]
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
 
+/// Ensure ToU/pre-onboarding is disabled
+// We only need this temporarily, fixed for next Phoenix release
+// This was previously only referenced in browser (Firefox Desktop) code, but it's now present in toolit
+pref("browser.preonboarding.enabled", false); // [HIDDEN]
+
 /// Lock prefs controlled by UI settings
 // This prevents prefs from becoming out of sync with the corresponding UI toggle(s)/behavior in Fenix
 // Modifying these prefs directly from `about:config` also causes them to reset on the next browser launch, which users probably do not want/expect

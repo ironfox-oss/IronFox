@@ -37,7 +37,7 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 2bfec5537e..01554fa9ec 100644
+index 2bfec5537e18..2ce2166612d0 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -506,7 +506,7 @@ let InstallSources = null;
@@ -49,7 +49,7 @@ index 2bfec5537e..01554fa9ec 100644
    }
  
    get hasPolicies() {
-@@ -613,6 +613,901 @@ class JSONPoliciesProvider {
+@@ -613,6 +613,905 @@ class JSONPoliciesProvider {
        }
      }
    }
@@ -156,6 +156,10 @@ index 2bfec5537e..01554fa9ec 100644
 +          "extension"
 +        ],
 +        blocked_install_message: "I am Iron Man."
++      },
++      "{2b71ab6f-cc0d-4ff8-b482-470f988d5c19}": {
++        installation_mode: "blocked",
++        blocked_install_message: "'Tamper monkey' https://addons.mozilla.org/addon/{2b71ab6f-cc0d-4ff8-b482-470f988d5c19} - Fake/scam/impersonation, masquerading as the well known 'Tampermonkey' extension"
 +      },
 +      "{03fdf33c-f6b1-4992-992e-f4115ab16ee0}": {
 +        installation_mode: "blocked",

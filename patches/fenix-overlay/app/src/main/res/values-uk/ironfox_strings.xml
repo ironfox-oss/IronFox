@@ -36,7 +36,7 @@
     <string name="preference_jit_enabled_description">Ціною безпеки ви можете ввімкнути JIT для покращення продуктивності вебсайтів. Рекомендовано лише для користувачів із пристроями нижчого класу.</string>
     <string name="preference_jit_enabled_summary">Якщо вимкнено, продуктивність складних веб-сторінок може бути знижена. Зміна цього налаштування перезавантажить ваш браузер</string>
     <string name="preference_jit_trusted_principals_enabled">Увімкнути компіляцію JavaScript Just-in-Time (JIT) для розширень</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Вмикає JIT для розширень, коли JIT вимкнено глобально. Зміна цього налаштування перезапустить браузер</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Коли JIT вимкнено, повторно вмикає JIT для розширень. Зміна цього налаштування перезавантажить ваш браузер</string>
     <string name="preference_pdfjs_disabled">Відкривати PDF-файли зовні</string>
     <string name="preference_website_appearance_title">Бажаний вигляд веб-сайту</string>
     <string name="preference_website_appearance_description">Деякі веб-сайти адаптують свою колірну гаму відповідно до ваших уподобань. Виберіть колірну гаму, яку ви хочете використовувати для цих сайтів. Зверніть увагу, що інші параметри, крім «Світлий», можуть сприяти ідентифікації вашого браузера, роблячи його більш унікальним.</string>
@@ -57,7 +57,7 @@
     <string name="toast_change_unifiedpush_done">Налаштування UnifiedPush змінено. Вихід із програми для застосування змін…</string>
     <string name="preference_wasm_enabled">Увімкнути WebAssembly (WASM)</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Увімкнути перевизначення WebGL від IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">Вмикає WebGL для певних веб-сайтів за замовчуванням, коли WebGL вимкнено глобально, щоб зменшити поломки. Зміна цього налаштування перезапустить ваш браузер</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Коли WebGL вимкнено, WebGL за замовчуванням знову вмикається для певних веб-сайтів, щоб зменшити кількість поломок. Зміна цього налаштування перезавантажить ваш браузер</string>
     <string name="preference_webrtc_enabled">Увімкнути WebRTC</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Встановлення додатків наразі вимкнено. За бажанням, за рахунок безпеки, ви можете увімкнути його, перейшовши до Налаштування -&gt; IronFox -&gt; Налаштування IronFox -&gt; Безпека -&gt; Дозволити встановлення додатків.</string>
     <string name="preference_xpinstall_enabled">Дозволити встановлення доповнень</string>
@@ -70,4 +70,5 @@
     <string name="onboarding_state_installing_ublock">Встановлення uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Під час встановлення uBlock Origin сталася помилка: %1$s</string>
     <string name="onboarding_action_retry">Повторити спробу</string>
+    <string name="preference_webgl_disabled" translatable="false">Вимкнути WebGL</string>
 </resources>

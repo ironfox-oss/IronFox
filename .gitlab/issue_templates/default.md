@@ -3,11 +3,11 @@
 <!--
 This is for any general issues or unexpected/unintended behavior you come across while using IronFox.
 
-Please set the title of your issue to "[BUG]", followed by a summary of your issue..."
+Please set the title of your issue to "[BUG]", followed by a summary of your issue.
 
-NOTE that this is *NOT* for issues related to website breakage/compatibility issues.
+NOTE that this is *NOT* for issues related to website breakage/compatibility issues (that are not IronFox-specific).
 
-Website compatibility issues MUST be reported to the Phoenix issue tracker instead, which depending on your preferred platform of choice, can be found at:
+Website compatibility issues (that are not IronFox-specific) MUST be reported to the Phoenix issue tracker instead, which depending on your preferred platform of choice, can be found at:
 
 GitLab: https://gitlab.com/celenityy/Phoenix/-/issues/new?issuable_template=web-compat#
 
@@ -33,13 +33,6 @@ After completing each step, modify the corresponding [ ] box to [x].
 - [ ] I confirm that this issue does **NOT** occur on the latest release of Mozilla Firefox. You can find the latest `APK`s here: [https://ftp.mozilla.org/pub/fenix/releases/](https://ftp.mozilla.org/pub/fenix/releases/).
 - [ ] I confirm that this issue does **NOT** occur on the latest release of Mozilla Firefox **Nightly**. You can find the latest `APK`s here: [https://ftp.mozilla.org/pub/fenix/nightly/](https://ftp.mozilla.org/pub/fenix/nightly/).
 
-### Version
-<!--
-What version of IronFox are you using?
-
-An easy way to tell is by navigating to `Settings` -> `About` -> `About IronFox`.
--->
-
 ### Android
 <!--
 What version of Android are you using with IronFox?
@@ -49,9 +42,32 @@ Steps will vary depending on your OEM, but on AOSP, this can be typically be fou
 Please also indicate whether you are using an alternate Android OS, such as GrapheneOS or LineageOS.
 -->
 
+### Version
+<!--
+What version of IronFox are you using?
+
+An easy way to tell is by navigating to `Settings` -> `About` -> `About IronFox`.
+-->
+
+### First Version
+<!-- If you remember, what version of IronFox did you first notice the issue on?
+-->
+
+### Add-ons
+<!-- Please share a list of your currently installed browser add-ons/extensions, as well as the versions you have installed.
+
+ You can find (and copy or screenshot) this information from the `Add-ons` section of `about:support`.
+-->
+
 ### Reason
 <!--
 Please explain the issue you are experiencing.
 
 Be sure to include as many relevant details as possible! :)
+-->
+
+### Reproduce
+<!-- Please provide detailed steps to reproduce the issue.
+
+Please be as specific as possible. For example, don't just say that an issue occurs on "all websites", provide specific websites where you encounter the problem.
 -->

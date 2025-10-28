@@ -28,10 +28,10 @@ index 1753bcbd86..6efccc5c44 100644
      - components:service-pocket
      - components:service-sync-autofill
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 1f26227889..6df523c176 100644
+index 4f56be19b0..dff2f31d37 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -613,13 +613,13 @@ dependencies {
+@@ -620,13 +620,13 @@ dependencies {
      implementation project(':components:feature-top-sites')
      implementation project(':components:feature-webauthn')
      implementation project(':components:feature-webcompat')
@@ -48,7 +48,7 @@ index 1f26227889..6df523c176 100644
      implementation project(':components:service-nimbus')
      implementation project(':components:service-pocket')
      implementation project(':components:service-sync-autofill')
-@@ -638,14 +638,14 @@ dependencies {
+@@ -645,14 +645,14 @@ dependencies {
      implementation project(':components:ui-tabcounter')
      implementation project(':components:ui-widgets')
      implementation project(':components:lib-crash')
@@ -66,7 +66,7 @@ index 1f26227889..6df523c176 100644
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -690,15 +690,15 @@ dependencies {
+@@ -697,15 +697,15 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -405,7 +405,7 @@ index 4d499da8de..c10fdae6cb 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..03b1108803 100644
+index 8e89ba9018..c8b5a1e681 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -363,7 +363,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -417,7 +417,7 @@ index 312b5b3de3..03b1108803 100644
          default = { FxNimbus.features.customReviewPrompt.value().enabled },
      )
  
-@@ -2152,7 +2152,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2154,7 +2154,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

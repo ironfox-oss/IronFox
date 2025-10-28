@@ -13,6 +13,11 @@
       "firstPartyDomain": "bsky.app"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "cryptpad.fr",
+      "thirdPartyDomain": "cryptpad.info"
+    },
+    {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "discord.com"
     },

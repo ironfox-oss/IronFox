@@ -275,6 +275,33 @@
     {
       "base": {
         "aliases": [
+          "marginalia"
+        ],
+        "classification": "general",
+        "name": "Marginalia",
+        "urls": {
+          "search": {
+            "base": "https://marginalia-search.com/search",
+            "searchTermParamName": "query"
+          }
+        }
+      },
+      "id": "9172d7b0-5984-4daf-9b08-61a7302f1429",
+      "identifier": "marginalia",
+      "last_modified": 1718719100285,
+      "recordType": "engine",
+      "schema": 1718698362015,
+      "variants": [
+        {
+          "environment": {
+            "allRegionsAndLocales": true
+          }
+        }
+      ]
+    },
+    {
+      "base": {
+        "aliases": [
           "mojeek"
         ],
         "classification": "general",
@@ -4038,6 +4065,7 @@
             "ddgnoai",
             "ddghtml",
             "ddglite",
+            "marginalia",
             "mojeek",
             "leta-brave",
             "leta-google",

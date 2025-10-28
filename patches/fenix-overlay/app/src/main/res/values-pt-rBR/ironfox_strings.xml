@@ -65,7 +65,7 @@
     <string name="preference_collections_enabled">Ativar coleções</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">A instalação de extensões está desativada no momento. Se desejar, em troca de segurança, você pode ativá-la indo até às Configurações -&gt; IronFox -&gt; Configurações do IronFox -&gt; Segurança -&gt; Permitir instalação de extensões.</string>
     <string name="preference_jit_trusted_principals_enabled">Ativar a compilação Just-In-Time do JavaScript para extensões</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Ativa o JIT para extensões quando está desativado globalmente - Ao alterar esta configuração, o seu navegador será reiniciado</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Quando o JIT está desativado, reativa o JIT para as extensões - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preference_fpp_overrides_ironfox_enabled">Ativar substituições de proteção contra fingerprinting do IronFox</string>
     <string name="preference_fpp_overrides_ironfox_summary">Relaxa as proteções contra fingerprinting para certos sites com o fim de reduzir sua quebra, usando uma lista do IronFox - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preference_fpp_overrides_mozilla_enabled">Ativar substituições de proteção contra fingerprinting da Mozilla</string>
@@ -75,5 +75,6 @@
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Ativar substituições de simulação de fuso horário do IronFox</string>
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Desativa a simulação de fuso horário para certos sites por padrão com o fim de reduzir sua quebra - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Ativar substituições de WebGL do IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">Ativa o WebGL para alguns sites por padrão para reduzir quebra quando o WebGL é desativado globalmente - Ao alterar esta configuração, seu navegador será reiniciado</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Quando o WebGL está desativado, reativa ele para alguns sites para reduzir quebra - Ao alterar esta configuração, seu navegador será reiniciado</string>
+    <string name="preference_webgl_disabled" translatable="false">Desativar WebGL</string>
 </resources>

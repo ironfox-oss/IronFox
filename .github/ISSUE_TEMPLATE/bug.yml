@@ -3,14 +3,25 @@ description: For any general issues or unexpected/unintended behavior you come a
 title: "[BUG] PLEASE REPLACE THIS TEXT WITH A SUMMARY OF YOUR ISSUE..."
 labels: ["bug"]
 body:
-  - type: textarea
-    id: version
+  - type: checkboxes
+    id: checklist
     attributes:
-      label: What version of IronFox are you using?
-      description: |
-        An easy way to tell is by navigating to `Settings` -> `About` -> `About IronFox`.
-    validations:
-      required: true
+      label: Confirmation Checklist
+      options:
+        - label: I confirm that this issue occurs on the **latest release** of IronFox. You can check what the latest version is [on the `Releases` page](https://gitlab.com/ironfox-oss/IronFox/-/releases).
+          required: true
+        - label: I confirm that this issue occurs on the latest **Nightly** release of IronFox. You can find steps on how to find and install the latest Nightly release [here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md#how-can-i-download-nightly-builds).
+          required: true
+        - label: I confirm that this issue has **NOT** already been reported on [the GitLab issue tracker](https://gitlab.com/ironfox-oss/IronFox/-/issues) **and/or** [the Codeberg issue tracker](https://codeberg.org/ironfox-oss/IronFox/issues).
+          required: true
+        - label: I confirm that this issue is **NOT** already covered on [the `FAQ` page](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md).
+          required: true
+        - label: I confirm that this issue is **NOT** related to a website breakage or compatibility issue that is not IronFox-specific (Such issues MUST be reported to [the Phoenix issue tracker](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml) instead).
+          required: true
+        - label: I confirm that this issue does **NOT** occur on the latest release of Mozilla Firefox. You can find the latest `APK`s [here](https://ftp.mozilla.org/pub/fenix/releases/).
+          required: true
+        - label: I confirm that this issue does **NOT** occur on the latest release of Mozilla Firefox **Nightly**. You can find the latest `APK`s [here](https://ftp.mozilla.org/pub/fenix/nightly/).
+          required: true
 
   - type: textarea
     id: android
@@ -22,10 +33,44 @@ body:
       required: true
 
   - type: textarea
+    id: version
+    attributes:
+      label: What version of IronFox are you using?
+      description: |
+        An easy way to tell is by navigating to `Settings` -> `About` -> `About IronFox`.
+    validations:
+      required: true
+
+  - type: textarea
+    id: first-version
+    attributes:
+      label: If you remember, what version of IronFox did you first notice the issue on?
+    validations:
+      required: false
+
+  - type: textarea
+    id: addons
+    attributes:
+      label: Please share a list of your currently installed browser add-ons/extensions, as well as the versions you have installed.
+      description: |
+        You can find (and copy or screenshot) this information from the `Add-ons` section of `about:support`.
+    validations:
+      required: true
+
+  - type: textarea
     id: reason
     attributes:
       label: Please explain the issue you are experiencing.
       description: |
         Be sure to include as many relevant details as possible! :)
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Please provide detailed steps to reproduce the issue.
+      description: |
+        Please be as specific as possible. For example, don't just say that an issue occurs on "all websites", provide specific websites where you encounter the problem.
     validations:
       required: true
