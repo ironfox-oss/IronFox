@@ -105,7 +105,6 @@ class PrepareCommand(BaseCommand):
             f"Initialized prepare command with config: {self.prepare_cofig}"
         )
 
-    def get_definition(self):
+    async def get_definition(self):
         from steps.prepare import get_definition
-
-        return get_definition(self.base_config, self.prepare_cofig, self.paths)
+        return await get_definition(self.base_config, self.prepare_cofig, self.paths)

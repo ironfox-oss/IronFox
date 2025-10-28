@@ -17,7 +17,10 @@ from rich.text import Text
 
 from common.logging import setup_logging
 from execution.definition import BuildDefinition
-from execution.executor import BuildExecutor, ExecutorConfig
+from execution.executor import (
+    AsyncBuildExecutor,
+    ExecutorConfig,
+)
 
 from common.paths import Paths
 
@@ -137,11 +140,11 @@ class BaseCommand:
         self.logger = logging.getLogger(name)
 
     @abstractmethod
-    def get_definition(self) -> BuildDefinition:
+    async def get_definition(self) -> BuildDefinition:
         pass
 
     @abstractmethod
-    def run(self):
+    async def run(self):
         if not self.base_config.profile:
             return self.do_run()
 
@@ -151,7 +154,7 @@ class BaseCommand:
         profile.enable()
 
         try:
-            self.do_run()
+            await self.do_run()
         finally:
             profile.disable()
             s = io.StringIO()
@@ -159,23 +162,24 @@ class BaseCommand:
             ps.print_stats(20)
             print(s.getvalue())
 
-    def do_run(self):
+    async def do_run(self):
         self.paths.mkdirs()
 
-        definition = self.get_definition()
-        self.logger.debug(f"Starting setup with definition {definition}")
-        executor = BuildExecutor(
-            ExecutorConfig(
-                jobs=self.base_config.jobs,
-                dry_run=self.base_config.dry_run,
-                env=self.base_config.env,
-            ),
-            definition=definition,
+        config = ExecutorConfig(
+            jobs=self.base_config.jobs,
+            dry_run=self.base_config.dry_run,
+            env=self.base_config.env,
         )
+
+        definition = await self.get_definition()
+        
+        executor = AsyncBuildExecutor(config=config, definition=definition)
+        
+        self.logger.debug(f"Starting setup with definition {definition}")
 
         console = Console()
         try:
-            failures = executor.execute()
+            failures = await executor.execute()
 
             # If there were failures, present them to the user
             if failures:
@@ -193,8 +197,6 @@ class BaseCommand:
             # If executor.submit itself raises (unexpected), log and re-raise to keep previous semantics
             self.logger.error(f"{self.name} failed with exception: {e}")
             raise
-        finally:
-            executor.shutdown()
 
     def print_failure_summary(self, console, failures):
         console.print("\n[bold red]Build completed with failures[/bold red]\n")

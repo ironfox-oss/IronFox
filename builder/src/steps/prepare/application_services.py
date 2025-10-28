@@ -16,7 +16,7 @@ def prepare_application_services(
     ) -> List[TaskDefinition]:
         return d.find_replace(
             name=f"Process {path}",
-            target_file=paths.application_services_dir / path,
+            target_files=paths.application_services_dir / path,
             replacements=replacements,
         )
 

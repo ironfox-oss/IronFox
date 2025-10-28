@@ -8,7 +8,7 @@ class LocalizeMavenTask(FileOpTask):
     def __init__(self, name, id, build_def, target):
         super().__init__(name, id, build_def, target)
 
-    def execute(self, params):
+    async def execute(self, params):
         if self.target.is_dir():
             raise ValueError(
                 f"Cannot localize maven for path {self.target}: is a directory"

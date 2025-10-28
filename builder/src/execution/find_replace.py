@@ -1,3 +1,4 @@
+import asyncio
 from functools import singledispatchmethod
 import logging
 import re
@@ -5,6 +6,8 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
+
+import aiofiles
 
 from .definition import TaskDefinition, BuildDefinition
 from .types import (
@@ -101,35 +104,36 @@ def literal(
 
 
 class FindReplaceTask(TaskDefinition):
-    """Task for performing string replacements in files."""
+    """Task for performing replacements on multiple files (batched)."""
 
     def __init__(
         self,
         name: str,
         id: int,
         build_def: BuildDefinition,
-        target_file: Path,
+        target_files: List[Path],  # Multiple files
         replacements: List[ReplacementAction],
         backup: bool = False,
         create_if_missing: bool = False,
     ):
         super().__init__(name, id, build_def)
-        self.target_file = target_file
+        self.target_files = target_files
         self.replacements = replacements
         self.backup = backup
         self.create_if_missing = create_if_missing
 
-    def execute(self, params):
-        return find_replace(
-            target_file=self.target_file,
-            replacements=self.replacements,
-            logger=self.logger,
-            backup=self.backup,
-            create_if_missing=self.create_if_missing,
-        )
+    async def execute(self, params):
+        for target_file in self.target_files:
+            await find_replace(
+                target_file=target_file,
+                replacements=self.replacements,
+                logger=self.logger,
+                backup=self.backup,
+                create_if_missing=self.create_if_missing,
+            )
 
 
-def find_replace(
+async def find_replace(
     target_file: Path,
     replacements: List[ReplacementAction],
     logger: logging.Logger,
@@ -141,23 +145,27 @@ def find_replace(
             if create_if_missing:
                 target_file.touch()
             else:
-                raise FileNotFoundError(f"Target file {target_file} does not exist")
+                logger.warning(f"Target file {target_file} does not exist. Skipping find-replace.")
+                return
 
-        with open(target_file, "r", encoding="utf-8") as f:
-            original_content = f.read()
+        async with aiofiles.open(target_file, "r", encoding="utf-8") as f:
+            original_content = await f.read()
 
         if backup:
             backup_path = Path(str(target_file) + ".bak")
             with open(backup_path, "w", encoding="utf-8") as f:
                 f.write(original_content)
 
-        modified_content = _apply_replacements(
-            content=original_content,
-            replacements=replacements,
+        loop = asyncio.get_event_loop()
+        modified_content = await loop.run_in_executor(
+            None,
+            _apply_replacements,
+            original_content,
+            replacements,
         )
 
-        with open(target_file, "w", encoding="utf-8") as f:
-            f.write(modified_content)
+        async with aiofiles.open(target_file, "w", encoding="utf-8") as f:
+            await f.write(modified_content)
 
         logger.debug(f"Applied {len(replacements)} replacements to {target_file}")
     except UnicodeDecodeError:

@@ -31,7 +31,7 @@ class ExtractTask(TaskDefinition):
         self.archive_format = archive_format
         self.preserve_permissions = preserve_permissions
 
-    def execute(self, params):
+    async def execute(self, params):
         return extract_archive(
             archive_file=self.archive_file,
             extract_to=self.extract_to,

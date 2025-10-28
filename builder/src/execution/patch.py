@@ -20,7 +20,7 @@ class PatchTask(TaskDefinition):
         self.patch_file = patch_file
         self.target_dir = target_dir
 
-    def execute(self, params):
+    async def execute(self, params):
         patch_file = self.patch_file
         target_dir = self.target_dir
 

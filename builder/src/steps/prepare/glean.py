@@ -18,7 +18,7 @@ def prepare_glean(
     ) -> List[TaskDefinition]:
         return d.find_replace(
             name=f"Process {path}",
-            target_file=paths.glean_dir / path,
+            target_files=paths.glean_dir / path,
             replacements=replacements,
         )
 

@@ -33,100 +33,42 @@ def noop_moz_endpoints(
     dir: Path,
     endpoints: List[str],
 ) -> List[TaskDefinition]:
-    """
-    Find occurrences of given endpoints in files under `dir` and return a list
-    of tasks which replace those occurrences with empty quoted strings.
-
-    For each affected file the function produces EXACTLY ONE d.find_replace call
-    (i.e. one task definition per file), and that call contains all replacement
-    actions relevant for that file.
-
-    Parameters
-    - d: BuildDefinition from the build system
-    - endpoints: the endpoint strings to search for (e.g. "example.com")
-    - dir: Path to the directory to search under
-
-    Returns:
-    - List[TaskDefinition] ready to be returned by the prepare module
-    """
-
-    # precompile a set of regex patterns (double- and single-quoted variants)
     escaped = [re.escape(endpoint) for endpoint in endpoints]
-
-    # Each pattern is a regex that will match the entire quoted token;
-    # the replacement puts an empty quoted string back.
     patterns = []
     for esc in escaped:
-        patterns.extend([
-            # fmt:off
-
-            # "endpoint..." and 'endpoint...'
-            (rf'"{esc}[^"\']*"', r'""'),
-            (rf"'{esc}[^\"']*'", r"''"),
-
-            # "endpoint/...", 'endpoint/...'
-            (rf'"{esc}/[^"\']*"', r'""'),
-            (rf"'{esc}/[^\"']*'", r"''"),
-
-            # "endpoint.xxx" (dot), 'endpoint.xxx'
-            (rf'"{esc}\.[^"\']*"', r'""'),
-            (rf"'{esc}\.[^\"']*'", r"''"),
-
-            # http://endpoint...
-            (rf'"http://{esc}[^"\']*"', r'""'),
-            (rf"'http://{esc}[^\"']*'", r"''"),
-
-            # http://endpoint/...
-            (rf'"http://{esc}/[^"\']*"', r'""'),
-            (rf"'http://{esc}/[^\"']*'", r"''"),
-
-            # http://endpoint.xxx
-            (rf'"http://{esc}\.[^"\']*"', r'""'),
-            (rf"'http://{esc}\.[^\"']*'", r"''"),
-
-            # https:// variants
-            (rf'"https://{esc}[^"\']*"', r'""'),
-            (rf"'https://{esc}[^\"']*'", r"''"),
-            (rf'"https://{esc}/[^"\']*"', r'""'),
-            (rf"'https://{esc}/[^\"']*'", r"''"),
-            (rf'"https://{esc}\.[^"\']*"', r'""'),
-            (rf"'https://{esc}\.[^\"']*'", r"''"),
-            # fmt:on
-        ])
-
-    # Walk the directory tree and collect files that match any of the patterns.
-    tasks: Dict[Path, List[TaskDefinition]] = {}
-    for path in dir.rglob("*"):
-        if not path.is_file():
-            continue
-
-        if _should_skip(path):
-            continue
-
-        # Determine which patterns match this file. Only include replacements that actually match.
-        replacements: List[ReplacementAction] = []
-        for pat, repl in patterns:
-            replacements.append(regex(pat, repl))
-
-        if not replacements or len(replacements) == 0:
-            continue
-
-        rel_path = path.relative_to(dir)
-        t = tasks.get(path)
-        if not t:
-            t = []
-
-        t.extend(
-            d.find_replace(
-                name=f"Remove {len(endpoints)} endpoints in {rel_path}",
-                target_file=path,
-                replacements=replacements,
-            )
+        patterns.extend(
+            [
+                (rf'"{esc}[^"\']*"', r'""'),
+                (rf"'{esc}[^\"']*'", r"''"),
+                (rf'"{esc}/[^"\']*"', r'""'),
+                (rf"'{esc}/[^\"']*'", r"''"),
+                (rf'"{esc}\.[^"\']*"', r'""'),
+                (rf"'{esc}\.[^\"']*'", r"''"),
+                (rf'"http://{esc}[^"\']*"', r'""'),
+                (rf"'http://{esc}[^\"']*'", r"''"),
+                (rf'"http://{esc}/[^"\']*"', r'""'),
+                (rf"'http://{esc}/[^\"']*'", r"''"),
+                (rf'"http://{esc}\.[^"\']*"', r'""'),
+                (rf"'http://{esc}\.[^\"']*'", r"''"),
+                (rf'"https://{esc}[^"\']*"', r'""'),
+                (rf"'https://{esc}[^\"']*'", r"''"),
+                (rf'"https://{esc}/[^"\']*"', r'""'),
+                (rf"'https://{esc}/[^\"']*'", r"''"),
+                (rf'"https://{esc}\.[^"\']*"', r'""'),
+                (rf"'https://{esc}\.[^\"']*'", r"''"),
+            ]
         )
 
-        tasks[path] = t
+    all_replacements: List[ReplacementAction] = [
+        regex(pat, repl) for pat, repl in patterns
+    ]
 
-    return [item for items in tasks.values() for item in items]
+    return d.find_replace(
+        name=f"Remove {len(endpoints)} endpoints",
+        target_files=f"{dir}/**/*",
+        replacements=all_replacements,
+        batch_size=50,
+    )
 
 
 def get_moz_endpoints(paths: Paths) -> Dict[Path, List[str]]:

@@ -38,20 +38,20 @@ class TaskDefinition:
         self.logger = logging.getLogger(name)
 
     @abstractmethod
-    def execute(self, params: TaskExecutionParams):
+    async def execute(self, params: TaskExecutionParams):
         raise NotImplementedError("Task execution has not been implemented")
 
     def debug(self, *args, **kwargs):
-        self.logger.debug(*args, *kwargs)
+        self.logger.debug(*args, stacklevel=2, *kwargs)
 
     def info(self, *args, **kwargs):
-        self.logger.info(*args, *kwargs)
+        self.logger.info(*args, stacklevel=2, *kwargs)
 
     def warning(self, *args, **kwargs):
-        self.logger.warning(*args, *kwargs)
+        self.logger.warning(*args, stacklevel=2, *kwargs)
 
     def error(self, *args, **kwargs):
-        self.logger.error(*args, *kwargs)
+        self.logger.error(*args, stacklevel=2, *kwargs)
 
     def do_first(self, func) -> TaskDefinition:
         """Registers a function to be executed before the main task action.
@@ -619,36 +619,26 @@ class BuildDefinition:
     def find_replace(
         self,
         name: str,
-        target_file: Union[Path, str],
+        target_files: Union[Path, str],
         replacements: List[ReplacementAction],
         backup: bool = False,
         create_if_missing: bool = False,
+        batch_size: int = 50,
+        recursive: bool = True,
     ) -> List[TaskDefinition]:
-        """Creates one or more tasks to perform find and replace operations.
-
-        Args:
-            name (str): The base name of the find/replace task(s).
-            target_file (Path | str): The path to the file to modify, or a glob pattern.
-            replacements (List[ReplacementAction]): Replacements to perform.
-            backup (bool, optional): If True, create a backup before modification. Defaults to False.
-            create_if_missing (bool, optional): If True, create the target file if it does not exist. Defaults to False.
-
-        Returns:
-            List[TaskDefinition]: A list of FindReplaceTask instances.
-        """
         from .find_replace import FindReplaceTask
 
-        # Resolve targets
+        files = resolve_glob(target_files, recursive=recursive)
+        file_batches = [files[i:i+batch_size] for i in range(0, len(files), batch_size)]
 
-        files = resolve_glob(target_file)
         tasks = []
-        for idx, f in enumerate(files, start=1):
-            task_name = f"{name} [{idx}] ({f})" if len(files) > 1 else name
+        for idx, batch in enumerate(file_batches, start=1):
+            task_name = f"{name} [batch {idx}/{len(file_batches)}]"
             tasks.append(
                 self.create_task(
                     FindReplaceTask,
                     task_name,
-                    target_file=f,
+                    target_files=batch,
                     replacements=replacements,
                     backup=backup,
                     create_if_missing=create_if_missing,

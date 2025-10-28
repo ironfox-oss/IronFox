@@ -18,7 +18,7 @@ def prepare_android_components(
     ) -> List[TaskDefinition]:
         return d.find_replace(
             name=f"Process {path}",
-            target_file=paths.android_components_dir / path,
+            target_files=paths.android_components_dir / path,
             replacements=replacements,
         )
 

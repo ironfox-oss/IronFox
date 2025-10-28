@@ -28,7 +28,7 @@ class CopyTask(FileOpTask):
         self.recursive = recursive
         self.overwrite = overwrite
 
-    def execute(self, params):
+    async def execute(self, params):
         self.target.parent.mkdir(parents=True, exist_ok=True)
         if not self.source.is_dir():
             if self.target.exists() and not self.overwrite:
@@ -54,7 +54,7 @@ class CopyIntoTask(CopyTask):
             name, id, build_def, target, source_dir, recursive, overwrite=True
         )
 
-    def execute(self, params):
+    async def execute(self, params):
         self.target.mkdir(parents=True, exist_ok=True)
         for item in os.listdir(self.source):
             src_path = os.path.join(self.source, item)
@@ -88,7 +88,7 @@ class WriteFileTask(FileOpTask):
         self.append = append
         self.overwrite = overwrite
 
-    def execute(self, params):
+    async def execute(self, params):
         return write_file_with_progress(
             destination=self.target,
             contents_func=self.contents,
@@ -107,7 +107,7 @@ class DirCreateTask(FileOpTask):
         self.parent = parents
         self.exist_ok = exist_ok
 
-    def execute(self, params):
+    async def execute(self, params):
         self.target.mkdir(parents=self.parent, exist_ok=self.exist_ok)
 
 
@@ -117,7 +117,7 @@ class DeleteTask(FileOpTask):
         super().__init__(name, id, build_def, target)
         self.recursive = recursive
 
-    def execute(self, params):
+    async def execute(self, params):
         if not self.target.exists():
             return
 

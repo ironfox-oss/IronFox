@@ -28,7 +28,7 @@ class RunCommandsTask(TaskDefinition):
         self.commands = commands
         self.env = env
 
-    def execute(self, params):
+    async def execute(self, params):
 
         # Set up environment variables
         # 1. get os env vars
@@ -37,7 +37,6 @@ class RunCommandsTask(TaskDefinition):
         env = {**os.environ.copy(), **params.env.environment_variables, **self.env}
 
         return run_build_commands(
-            name=self.name,
             cwd=self.cwd,
             commands=self.commands,
             env=env,
@@ -47,7 +46,6 @@ class RunCommandsTask(TaskDefinition):
 
 
 def run_build_commands(
-    name: str,
     cwd: Path,
     commands: list[CommandType],
     logger: logging.Logger,
@@ -65,9 +63,6 @@ def run_build_commands(
     if not commands:
         logger.warning("No commands provided")
         return
-
-    def task_desc(idx: int):
-        return f"{name} [{idx}/{len(commands)}]"
 
     # Execute each command in sequence
     for i, command in enumerate(commands, 1):

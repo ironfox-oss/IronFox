@@ -32,7 +32,7 @@ class DownloadTask(TaskDefinition):
         self.destination = destination
         self.sha256 = sha256
 
-    def execute(self, params):
+    async def execute(self, params):
         return download_if_needed(
             url=self.url,
             destination=self.destination,

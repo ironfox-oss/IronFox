@@ -17,7 +17,7 @@ from .rust import setup_rust
 logger = logging.getLogger("Setup")
 
 
-def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
+async def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
     d = BuildDefinition(name="Setup")
 
     setup_java(d, paths)

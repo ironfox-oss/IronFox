@@ -25,7 +25,7 @@ def prepare_firefox(
     ) -> List[TaskDefinition]:
         return d.find_replace(
             name=f"Process {path}",
-            target_file=paths.firefox_dir / path,
+            target_files=paths.firefox_dir / path,
             replacements=replacements,
         )
 

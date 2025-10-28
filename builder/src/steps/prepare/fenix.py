@@ -24,7 +24,7 @@ def prepare_fenix(
     ) -> List[TaskDefinition]:
         return d.find_replace(
             name=f"Process {path}",
-            target_file=paths.fenix_dir / path,
+            target_files=paths.fenix_dir / path,
             replacements=replacements,
         )
 

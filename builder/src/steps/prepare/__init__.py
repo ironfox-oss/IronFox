@@ -4,12 +4,13 @@ from copyreg import constructor
 import logging
 from pathlib import Path
 import platform
-from typing import List
+from typing import List, Tuple
 from commands.base import BaseConfig
 from commands.prepare import PrepareConfig
 from common.paths import Paths
 import concurrent
 from execution.definition import BuildDefinition
+from execution.parallel import ParallelExecutor, Task, TaskType, parallel_map
 from rich.progress import Progress
 from steps.common.java import setup_java
 
@@ -28,7 +29,7 @@ def _require_dir_exists(dir: Path):
         raise RuntimeError(f"{dir} does not exist or is not a directory!")
 
 
-def get_definition(
+async def get_definition(
     base: BaseConfig, config: PrepareConfig, paths: Paths
 ) -> BuildDefinition:
     d = BuildDefinition("Prepare")
@@ -75,7 +76,8 @@ def get_definition(
     with Progress(transient=False) as progress:
         items = get_moz_endpoints(paths)
 
-        def action(dir: Path, endpoints: List[str]):
+        async def action(params: Tuple[Path, List[str]]) -> None:
+            dir, endpoints = params
             task_name = "No-op endpoint"
             task_id = progress.add_task(
                 f"{task_name}: {dir.relative_to(paths.root_dir)}"
@@ -85,12 +87,11 @@ def get_definition(
             finally:
                 progress.remove_task(task_id)
 
-        with ThreadPoolExecutor(max_workers=base.jobs) as executor:
-            futures = []
-            for dir, endpoints in items.items():
-                future = executor.submit(action, dir, endpoints)
-                futures.append(future)
-
-            concurrent.futures.wait(futures)
+        await parallel_map(
+            action,
+            max_workers=base.jobs,
+            task_type=TaskType.ASYNC,
+            items=list(items.items()),
+        )
 
     return d

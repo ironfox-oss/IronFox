@@ -19,7 +19,7 @@ def deglean(d: BuildDefinition, dir: Path) -> List[TaskDefinition]:
     ) -> List[TaskDefinition]:
         return d.find_replace(
             name=f"Process {path}",
-            target_file=dir / path,
+            target_files=dir / path,
             replacements=replacements,
         )
 

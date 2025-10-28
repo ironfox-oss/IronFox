@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import os
 import click
 import multiprocessing
 
 from click.core import Context
+from functools import wraps
 from pathlib import Path
 
-from commands.base import DEFAULT_APP_CONFIG, AppConfig, BaseConfig
+from commands.base import DEFAULT_APP_CONFIG, AppConfig, BaseCommand, BaseConfig
 from commands.build import BuildCommand
 from commands.prepare import PrepareCommand
 from commands.setup import SetupCommand
@@ -18,6 +20,18 @@ from commands.utils import dump_config
 from common.utils import find_prog
 
 logger = logging.getLogger("CLI")
+
+
+def coro(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return asyncio.run(f(*args, **kwargs))
+
+    return wrapper
+
+async def _exec_cmd(cmd: BaseCommand):
+    return await cmd.run()
+
 
 @click.group("Python scripts to build IronFox")
 @click.option(
@@ -75,7 +89,8 @@ logger = logging.getLogger("CLI")
     default=False,
 )
 @click.pass_context
-def cli(
+@coro
+async def cli(
     ctx: Context,
     root_dir: str,
     android_home: str,
@@ -89,8 +104,8 @@ def cli(
 ):
     if not gradle_exec or len(gradle_exec.strip()) == 0:
         raise RuntimeError(f"Invalid gradle executable path: {gradle_exec}")
-    
-    if not cargo_home :
+
+    if not cargo_home:
         cargo_home = str(Path.home() / ".cargo")
 
     ctx.obj = BaseConfig(
@@ -117,13 +132,14 @@ pass_base_config = click.make_pass_decorator(BaseConfig)
     default=1,
 )
 @pass_base_config
-def setup(base_config: BaseConfig, clone_depth: int):
+@coro
+async def setup(base_config: BaseConfig, clone_depth: int):
     cmd = SetupCommand(base_config, clone_depth)
     dump_config(
         base_config=base_config,
         setup_config=cmd.setup_config,
     )
-    return cmd.run()
+    return await _exec_cmd(cmd)
 
 
 @cli.command(help="Prepare source files for the build.")
@@ -180,7 +196,8 @@ def setup(base_config: BaseConfig, clone_depth: int):
     default="",
 )
 @pass_base_config
-def prepare(
+@coro
+async def prepare(
     base_config: BaseConfig,
     sb_gapi_file: Path,
     build_variant: str,
@@ -214,16 +231,17 @@ def prepare(
         prepare_config=cmd.prepare_cofig,
     )
 
-    return cmd.run()
+    return await _exec_cmd(cmd)
 
 
 @cli.command(help="Start the build.")
 @click.argument("build_type", type=click.Choice(["apk", "bundle"]))
 @pass_base_config
-def build(base_config: BaseConfig, build_type: str):
+@coro
+async def build(base_config: BaseConfig, build_type: str):
     cmd = BuildCommand(base_config, build_type)
-    return cmd.run()
+    return await _exec_cmd(cmd)
 
 
 if __name__ == "__main__":
-    cli()
+    asyncio.run(cli())

@@ -1,18 +1,14 @@
 from __future__ import annotations
 
+import asyncio
 import logging
-import threading
 import traceback
-
 from dataclasses import dataclass
-from concurrent.futures import ThreadPoolExecutor, as_completed, Future
-from typing import Dict, Set, List, Optional
+from typing import Dict, Set, List, Optional, Callable, Any
 from collections import defaultdict, deque
 
 import commands.base
-import rich
 from rich.progress import Progress
-import rich.progress
 
 from .definition import BuildDefinition, TaskDefinition, TaskExecutionParams
 
@@ -36,7 +32,6 @@ class TaskState:
 
     def __init__(self, task: TaskDefinition):
         self.task = task
-        self.future: Future = None  # type: ignore
         self.completed = False
         self.failed = False
         self.error: Exception = None  # type: ignore
@@ -54,16 +49,13 @@ class FailureDetail:
     traceback: Optional[str]
 
 
-class BuildExecutor:
-    """Executor for build tasks with dependency-aware scheduling."""
-
+class AsyncBuildExecutor:
     def __init__(self, config: ExecutorConfig, definition: BuildDefinition):
         self.config = config
         self.definition = definition
-        self.executor = ThreadPoolExecutor(max_workers=self.config.jobs)
-        self.logger = logging.getLogger("BuildExecutor")
+        self.logger = logging.getLogger("UltraFastAsyncBuildExecutor")
 
-    def execute(self) -> List[FailureDetail]:
+    async def execute(self) -> List[FailureDetail]:
         """Start execution with dependency-aware scheduling.
 
         Returns:
@@ -77,199 +69,184 @@ class BuildExecutor:
         task_lookup = {task.id: task for task in definition.tasks}
         dependency_graph = self._build_dependency_graph(definition.tasks)
 
-        ready_tasks = deque()
         pending_tasks = set(task.id for task in definition.tasks)
-        running_tasks = set()
         completed_tasks = set()
         failed_tasks = set()
 
         total_tasks = len(pending_tasks)
 
+        # Find initial ready tasks
+        ready_queue = asyncio.Queue()
         for task in definition.tasks:
             if not task.dependencies:
-                ready_tasks.append(task.id)
+                await ready_queue.put(task.id)
 
-        future_to_task: Dict[Future, int] = {}
+        # Queue for completed tasks - this is KEY to avoiding isinstance overhead
+        completion_queue = asyncio.Queue()
+
+        # Event to signal when we should check for new work
+        work_available = asyncio.Event()
 
         self._total_tasks = len(definition.tasks)
 
-        with Progress(transient=True, refresh_per_second=1) as progess:
+        with Progress(transient=True, refresh_per_second=1) as progress:
 
-            progress_task = progess.add_task("IronFox build", total=total_tasks)
+            progress_task = progress.add_task("IronFox build", total=total_tasks)
 
             def _report_progress(task: TaskDefinition):
                 completed = len(completed_tasks)
                 msg = f"[{completed}/{total_tasks}] {task.name}"
-                progess.update(
+                progress.update(
                     task_id=progress_task,
                     description=msg,
                     total=total_tasks,
                     completed=completed,
                 )
 
+            async def worker():
+                """Worker that processes tasks from the ready queue."""
+                while True:
+                    try:
+                        # Get next ready task with timeout to allow checking for shutdown
+                        task_id = await asyncio.wait_for(ready_queue.get(), timeout=0.1)
+                    except asyncio.TimeoutError:
+                        # Check if we're done
+                        if not pending_tasks and ready_queue.empty():
+                            break
+                        continue
+
+                    if task_id is None:  # Poison pill to shutdown
+                        break
+
+                    task_state = task_states[task_id]
+
+                    try:
+                        # Run the synchronous task in a thread pool
+                        await self._perform_task(task_state.task)
+
+                        task_state.completed = True
+                        task_state.task.debug("Completed successfully")
+
+                        # Signal completion - NO isinstance checks here!
+                        await completion_queue.put((task_id, None))
+
+                    except Exception as e:
+                        task_state.failed = True
+                        task_state.error = e
+                        task_state.task.error(f"Failed with exception: {e}")
+
+                        # Signal failure
+                        await completion_queue.put((task_id, e))
+
+            # Pre-create worker tasks - reuse them instead of creating new ones
+            workers = [asyncio.create_task(worker()) for _ in range(self.config.jobs)]
+
             try:
-                while pending_tasks or running_tasks:
+                # Main coordination loop
+                while pending_tasks or not ready_queue.empty():
 
-                    # Schedule ready tasks up to the job limit
-                    while ready_tasks and len(running_tasks) < self.config.jobs:
-                        task_id = ready_tasks.popleft()
-                        if task_id in pending_tasks:
-                            task_state = task_states[task_id]
-                            self.logger.debug(
-                                f"Scheduling task: {task_state.task.name}"
-                            )
+                    # Wait for a completion with timeout to keep loop responsive
+                    try:
+                        task_id, error = await asyncio.wait_for(
+                            completion_queue.get(), timeout=0.1
+                        )
+                    except asyncio.TimeoutError:
+                        # No completions yet, continue
+                        continue
 
-                            future = self.executor.submit(
-                                self._perform_task, task_state.task
-                            )
-                            task_state.future = future
-                            future_to_task[future] = task_id
+                    task_state = task_states[task_id]
 
-                            pending_tasks.remove(task_id)
-                            running_tasks.add(task_id)
+                    # Remove from pending
+                    pending_tasks.discard(task_id)
 
-                    # Wait for at least one task to complete
-                    if running_tasks:
-                        running_futures = [
-                            task_states[task_id].future for task_id in running_tasks
-                        ]
+                    if error is None:
+                        # Task succeeded
+                        completed_tasks.add(task_id)
+                        _report_progress(task_state.task)
 
-                        for future in as_completed(running_futures):
-                            task_id = future_to_task[future]
-                            task_state = task_states[task_id]
+                        # Find newly ready tasks and add to queue
+                        newly_ready = self._find_newly_ready_tasks(
+                            task_id,
+                            dependency_graph,
+                            completed_tasks,
+                            failed_tasks,
+                            pending_tasks,
+                            task_lookup,
+                        )
 
-                            try:
-                                # Get the result (this will raise if task failed)
-                                future.result()
+                        for ready_id in newly_ready:
+                            await ready_queue.put(ready_id)
 
-                                task_state.completed = True
-                                completed_tasks.add(task_id)
-                                running_tasks.remove(task_id)
+                    else:
+                        # Task failed
+                        failed_tasks.add(task_id)
+                        _report_progress(task_state.task)
 
-                                task_state.task.debug("Completed successfully")
+                        tb = traceback.format_exc()
+                        failure = FailureDetail(
+                            task=task_state.task,
+                            task_id=task_state.task.id,
+                            task_name=task_state.task.name,
+                            reason="Exception during execution",
+                            exception=error,
+                            traceback=tb,
+                        )
+                        failures.append(failure)
 
-                                _report_progress(task_state.task)
+                        # Mark all dependent tasks as failed/skipped
+                        dependent_tasks = self._get_all_dependents(
+                            task_id,
+                            dependency_graph,
+                            pending_tasks,
+                        )
 
-                                # Check if any pending tasks are now ready
-                                newly_ready = self._find_newly_ready_tasks(
-                                    task_id,
-                                    dependency_graph,
-                                    completed_tasks,
-                                    failed_tasks,
-                                    pending_tasks,
-                                    task_lookup,
+                        for dep_task_id in dependent_tasks:
+                            if dep_task_id in pending_tasks:
+                                task_states[dep_task_id].failed = True
+                                task_states[dep_task_id].error = Exception(
+                                    "Skipped due to dependency failure"
                                 )
-                                ready_tasks.extend(newly_ready)
+                                failed_tasks.add(dep_task_id)
+                                pending_tasks.remove(dep_task_id)
 
-                            except Exception as e:
-                                # Record the failure for this task
-                                task_state.failed = True
-                                task_state.error = e
-                                failed_tasks.add(task_id)
-                                running_tasks.remove(task_id)
-
-                                _report_progress(task_state.task)
-
-                                tb = traceback.format_exc()
                                 failure = FailureDetail(
-                                    task=task_state.task,
-                                    task_id=task_state.task.id,
-                                    task_name=task_state.task.name,
-                                    reason="Exception during execution",
-                                    exception=e,
-                                    traceback=tb,
+                                    task=task_states[dep_task_id].task,
+                                    task_id=task_states[dep_task_id].task.id,
+                                    task_name=task_states[dep_task_id].task.name,
+                                    reason="Skipped due to dependency failure",
+                                    exception=task_states[dep_task_id].error,
+                                    traceback=None,
                                 )
                                 failures.append(failure)
 
-                                task_state.task.error(f"Failed with exception: {e}")
+                # Shutdown workers gracefully
+                for _ in range(len(workers)):
+                    await ready_queue.put(None)  # Poison pill
 
-                                # Mark all dependent tasks as failed/skipped
-                                dependent_tasks = self._get_all_dependents(
-                                    task_id,
-                                    dependency_graph,
-                                    pending_tasks.union(running_tasks),
-                                )
+                # Wait for all workers to finish
+                await asyncio.gather(*workers, return_exceptions=True)
 
-                                for dep_task_id in dependent_tasks:
-                                    if dep_task_id in running_tasks:
-                                        # Cancel running dependent tasks
-                                        dep_future = task_states[dep_task_id].future
-                                        if dep_future:
-                                            dep_future.cancel()
-                                        running_tasks.remove(dep_task_id)
-                                    elif dep_task_id in pending_tasks:
-                                        # Remove pending dependent tasks
-                                        pending_tasks.remove(dep_task_id)
+                # Record failures for any still-pending tasks
+                for task_id in list(pending_tasks):
+                    task_state = task_states[task_id]
+                    if not self._all_dependencies_satisfied(
+                        task_state.task, completed_tasks, failed_tasks
+                    ):
+                        task_state.failed = True
+                        pending_tasks.remove(task_id)
+                        failed_tasks.add(task_id)
 
-                                    if not task_states[dep_task_id].failed:
-                                        task_states[dep_task_id].failed = True
-                                        reason_text = (
-                                            f"Dependency {task_state.task.name} failed"
-                                        )
-                                        task_states[dep_task_id].error = Exception(
-                                            reason_text
-                                        )
-                                        failed_tasks.add(dep_task_id)
+                        failure = FailureDetail(
+                            task=task_state.task,
+                            task_id=task_state.task.id,
+                            task_name=task_state.task.name,
+                            reason="All dependencies failed or were skipped",
+                            exception=task_state.error,
+                            traceback=None,
+                        )
+                        failures.append(failure)
 
-                                        _report_progress(task_state.task)
-
-                                        failure_dep = FailureDetail(
-                                            task=task_states[dep_task_id].task,
-                                            task_id=task_states[dep_task_id].task.id,
-                                            task_name=task_states[
-                                                dep_task_id
-                                            ].task.name,
-                                            reason="Skipped due to failed dependency",
-                                            exception=task_states[dep_task_id].error,
-                                            traceback=None,
-                                        )
-                                        failures.append(failure_dep)
-
-                                        self.logger.error(
-                                            f"Task '{task_states[dep_task_id].task.name}' "
-                                            f"skipped due to failed dependency: '{task_state.task.name}'"
-                                        )
-
-                                # Remove failed tasks from ready queue
-                                ready_tasks = deque(
-                                    [
-                                        tid
-                                        for tid in ready_tasks
-                                        if tid not in failed_tasks
-                                    ]
-                                )
-
-                            # Clean up the future mapping
-                            del future_to_task[future]
-                            break  # Process one completion at a time
-
-                    # If we have no running tasks and no ready tasks, but still have pending tasks,
-                    # it means all remaining tasks depend on failed tasks
-                    if not running_tasks and not ready_tasks and pending_tasks:
-                        for task_id in list(pending_tasks):
-                            task_state = task_states[task_id]
-                            task_state.failed = True
-                            task_state.error = Exception(
-                                "All dependencies failed or were skipped"
-                            )
-                            failed_tasks.add(task_id)
-                            pending_tasks.remove(task_id)
-
-                            task_state.task.error(f"skipped - no viable execution path")
-
-                            _report_progress(task_state.task)
-
-                            failure = FailureDetail(
-                                task=task_state.task,
-                                task_id=task_state.task.id,
-                                task_name=task_state.task.name,
-                                reason="All dependencies failed or were skipped",
-                                exception=task_state.error,
-                                traceback=None,
-                            )
-                            failures.append(failure)
-
-                # Build finished: return the failures list (empty if none)
+                # Build finished
                 if failures:
                     self.logger.error(
                         "Build completed with failures. See returned failure details."
@@ -280,27 +257,25 @@ class BuildExecutor:
                 return failures
 
             except Exception as outer_exc:
-                # Unexpected exception in the scheduler loop: try to cancel running futures and
-                # record cancellation failures for running tasks, then return failures.
+                # Unexpected exception in the scheduler loop
                 tb_outer = traceback.format_exc()
                 self.logger.exception(
                     "Executor encountered an unexpected error during scheduling."
                 )
 
-                # Record the unexpected scheduler failure as a non-task failure if needed
-                # (we include it as a synthetic FailureDetail with task=None not allowed by
-                # the dataclass - so instead we create a FailureDetail attached to a special message)
-                # Cancel any remaining futures and mark running tasks as failed/cancelled
-                for task_id in list(running_tasks):
-                    future = task_states[task_id].future
-                    if future:
-                        future.cancel()
+                # Cancel all workers
+                for _worker in workers:
+                    _worker.cancel()
+
+                await asyncio.gather(*workers, return_exceptions=True)
+
+                # Record failures
+                for task_id in list(pending_tasks):
                     task_states[task_id].failed = True
                     task_states[task_id].error = Exception(
                         "Cancelled due to scheduler error"
                     )
                     failed_tasks.add(task_id)
-                    running_tasks.remove(task_id)
 
                     failure = FailureDetail(
                         task=task_states[task_id].task,
@@ -312,28 +287,18 @@ class BuildExecutor:
                     )
                     failures.append(failure)
 
-                # Add a top-level failure entry describing the scheduler error
-                # We attach it to a synthetic TaskDefinition-like object by using the first task if available
-                synthetic_task = None
+                # Add scheduler error
                 if definition.tasks:
-                    synthetic_task = definition.tasks[0]
-                if synthetic_task:
                     failures.append(
                         FailureDetail(
-                            task=synthetic_task,
-                            task_id=synthetic_task.id,
+                            task=definition.tasks[0],
+                            task_id=definition.tasks[0].id,
                             task_name="__scheduler_error__",
                             reason=f"Scheduler error: {outer_exc}",
                             exception=outer_exc,
                             traceback=tb_outer,
                         )
                     )
-                else:
-                    # No tasks in definition; append a minimal FailureDetail using None-like placeholders
-                    # (Users should normally supply tasks)
-                    # We create a tiny dummy TaskDefinition-like object by reusing a minimal one is not possible,
-                    # so we skip adding a synthetic task detail here.
-                    pass
 
                 return failures
 
@@ -361,10 +326,8 @@ class BuildExecutor:
         """Find tasks that are now ready to run after a task completion."""
         newly_ready = []
 
-        # Check all dependents of the completed task
         for dependent_id in dependency_graph.get(completed_task_id, set()):
             if dependent_id in pending_tasks and dependent_id not in failed_tasks:
-                # Check if all dependencies of this dependent are now complete
                 dependent_task = task_lookup[dependent_id]
 
                 if self._all_dependencies_satisfied(
@@ -380,12 +343,9 @@ class BuildExecutor:
         """Check if all dependencies of a task are satisfied."""
         for dep_id in task.dependencies:
             if dep_id not in completed_tasks:
-                # Dependency is not completed
                 if dep_id in failed_tasks:
-                    # Dependency failed - task cannot run
                     return False
                 else:
-                    # Dependency is still pending
                     return False
         return True
 
@@ -412,16 +372,16 @@ class BuildExecutor:
 
         return all_dependents
 
-    def _perform_task(self, task: TaskDefinition) -> None:
+    async def _perform_task(self, task: TaskDefinition) -> None:
         """Perform a single task with hooks."""
         task.debug("Starting...")
         try:
-            self._run_task_with_hooks(task)
+            await self._run_task_with_hooks(task)
         except Exception as e:
             task.error(f"Failed with exception: {e}")
             raise
 
-    def _run_task_with_hooks(self, task: TaskDefinition):
+    async def _run_task_with_hooks(self, task: TaskDefinition):
         """Run a task with its pre and post hooks."""
         if len(task.do_firsts) > 0:
             task.debug(f"Running do_first hooks...")
@@ -433,7 +393,7 @@ class BuildExecutor:
                 task.error(f"do_first hook failed with exception: {e}")
                 raise
 
-        self._run_task(task)
+        await self._run_task(task)
 
         if len(task.do_lasts) > 0:
             task.debug(f"Running do_last hooks")
@@ -445,23 +405,15 @@ class BuildExecutor:
                 task.error(f"do_last hook failed with exception: {e}")
                 raise
 
-    def _run_task(self, task: TaskDefinition):
+    async def _run_task(self, task: TaskDefinition):
         """Execute the main action of a task based on its type."""
         try:
             task.debug(f"Executing...")
             if not self.config.dry_run:
-                task.execute(
+                await task.execute(
                     TaskExecutionParams(
                         env=self.config.env,
                     )
                 )
         finally:
             task.debug(f"Completed")
-
-    def shutdown(self):
-        """Shutdown the executor and wait for all tasks to complete."""
-        self.executor.shutdown(wait=True)
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        """Context manager exit - ensure proper shutdown."""
-        self.shutdown()

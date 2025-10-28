@@ -22,7 +22,7 @@ class OverlayTask(TaskDefinition):
         self.target_dir = target_dir
         self.preserve_permissions = preserve_permissions
 
-    def execute(self, params):
+    async def execute(self, params):
         return overlay_directory(
             source_dir=self.source_dir,
             target_dir=self.target_dir,
