@@ -10,6 +10,9 @@
 
 <div align="center">
 
+[<img src="assets/accrescent.png"
+    alt="Get it on Accrescent"
+    height="80">](https://accrescent.app/app/org.ironfoxoss.ironfox)
 [<img src="assets/f-droid.png"
     alt="Get it on F-Droid"
     height="80">](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904)
@@ -31,9 +34,6 @@
 
 ---
 
-> [!IMPORTANT]
->⚠️ We are currently unable to provide updates to IronFox on **Accrescent**, [due to ongoing client and server issues that Accrescent is facing](https://infosec.exchange/@accrescent/115408303090609483). This impacts **all** apps on Accrescent, and is not just limited to IronFox. Therefore, for the time-being, we do **NOT** recommend installing IronFox from Accrescent. **See [here](https://gitlab.com/ironfox-oss/IronFox/-/issues/193) for more details**.
-
 IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull Browser](https://divestos.org/pages/our_apps#mull), based on [Mozilla Firefox](https://www.mozilla.org/firefox/). **Our goal is to continue the legacy of Mull by providing a free and open source, privacy and security-oriented web browser for daily use.**
 
 > [!IMPORTANT]
@@ -47,7 +47,7 @@ We'd love to see you over on [Matrix](https://matrix.to/#/#ironfox:unredacted.or
 
 ## App Installation
 
-Currently, you can install IronFox from your preferred F-Droid client via our [F-Droid repository](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904), with [Obtainium](obtainium://app/%7B%22id%22%3A%22org.ironfoxoss.ironfox%22%2C%22url%22%3A%22https%3A%2F%2Fgitlab.com%2Fironfox-oss%2Fironfox%22%2C%22author%22%3A%22ironfox-oss%22%2C%22name%22%3A%22ironfox%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22IronFox%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22A%20privacy%20and%20security-oriented%20Firefox-based%20browser%20for%20Android.%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%7D%22%2C%22overrideSource%22%3A%22GitLab%22%7D), or directly from our [GitLab releases](https://gitlab.com/ironfox-oss/IronFox/-/releases).
+Currently, you can install IronFox from [Accrescent](https://accrescent.app/app/org.ironfoxoss.ironfox), from your preferred F-Droid client via our [F-Droid repository](fdroidrepos://fdroid.ironfoxoss.org/fdroid/repo?fingerprint=C5E291B5A571F9C8CD9A9799C2C94E02EC9703948893F2CA756D67B94204F904), with [Obtainium](obtainium://app/%7B%22id%22%3A%22org.ironfoxoss.ironfox%22%2C%22url%22%3A%22https%3A%2F%2Fgitlab.com%2Fironfox-oss%2Fironfox%22%2C%22author%22%3A%22ironfox-oss%22%2C%22name%22%3A%22ironfox%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22IronFox%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22A%20privacy%20and%20security-oriented%20Firefox-based%20browser%20for%20Android.%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%7D%22%2C%22overrideSource%22%3A%22GitLab%22%7D), or directly from our [GitLab releases](https://gitlab.com/ironfox-oss/IronFox/-/releases).
 
 Regardless of your installation method, we recommend verifying Ironfox's package ID and the checksum of its signing certificate. You can simplify this process using [AppVerifier](https://github.com/soupslurpr/AppVerifier), which also has easy integration with Obtainium. **See [App Verification](#app-verification) below for IronFox's Package ID & SHA-256 of the signing certificate.**
 
