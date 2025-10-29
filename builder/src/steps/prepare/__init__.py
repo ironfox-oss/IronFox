@@ -27,7 +27,9 @@ def _require_dir_exists(dir: Path):
 
 
 async def get_definition(
-    base: BaseConfig, config: PrepareConfig, paths: Paths
+    base: BaseConfig,
+    config: PrepareConfig,
+    paths: Paths,
 ) -> BuildDefinition:
     d = BuildDefinition("Prepare")
 

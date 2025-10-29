@@ -26,7 +26,7 @@ def prepare_wasi_sdk(
             name="Break dependency on older CMake",
             target_files=paths.wasi_sdk_dir / "wasi-sdk.cmake",
             replacements=[
-                regex(r'(cmake_minimum_required\(VERSION\s+).*(\))', rf'\1{Versions.WASI_CMAKE_VERSION}\2')
+                regex(r'(cmake_minimum_required\(VERSION\s+).*(\))', r'\1' + Versions.WASI_CMAKE_VERSION + r'\2')
             ]
         ),
         # fmt:on

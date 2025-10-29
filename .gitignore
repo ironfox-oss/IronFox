@@ -6,6 +6,7 @@ __pycache__
 /glean
 /application-services
 /gmscore
+/uniffi-bindgen
 /wasi-sdk
 /scripts/env_local.sh
 .DS_Store

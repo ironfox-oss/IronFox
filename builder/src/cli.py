@@ -29,6 +29,7 @@ def coro(f):
 
     return wrapper
 
+
 async def _exec_cmd(cmd: BaseCommand):
     return await cmd.run()
 
@@ -235,11 +236,25 @@ async def prepare(
 
 
 @cli.command(help="Start the build.")
+@click.option(
+    "--with-make",
+    help="Path to the 'make' executable",
+    type=click.Path(exists=True, dir_okay=False, readable=True, executable=True),
+    default="/usr/bin/make",
+)
 @click.argument("build_type", type=click.Choice(["apk", "bundle"]))
 @pass_base_config
 @coro
-async def build(base_config: BaseConfig, build_type: str):
-    cmd = BuildCommand(base_config, build_type)
+async def build(
+    base_config: BaseConfig,
+    build_type: str,
+    with_make: str,
+):
+    cmd = BuildCommand(
+        base_config=base_config,
+        build_type=build_type,
+        exec_make=Path(with_make),
+    )
     return await _exec_cmd(cmd)
 
 

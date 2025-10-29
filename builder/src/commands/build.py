@@ -1,6 +1,9 @@
 """The 'build' command."""
 
 import logging
+
+from dataclasses import dataclass
+from pathlib import Path
 from common.logging import setup_logging
 from .base import BaseConfig, BaseCommand
 
@@ -14,6 +17,12 @@ class BuildType(Enum):
     BUNDLE = 1
 
 
+@dataclass
+class BuildConfig:
+    build_type: BuildType
+    exec_make: Path
+
+
 class BuildCommand(BaseCommand):
     """The 'build' command."""
 
@@ -21,26 +30,29 @@ class BuildCommand(BaseCommand):
         self,
         base_config: BaseConfig,
         build_type: str,
+        exec_make: Path,
     ):
-        super().__init__(base_config)
+        super().__init__("BuildCommand", base_config=base_config)
 
         build_type = build_type.lower()
         if build_type == "apk":
-            self._build_type = BuildType.APK
+            _build_type = BuildType.APK
         elif build_type == "bundle":
-            self._build_type = BuildType.BUNDLE
+            _build_type = BuildType.BUNDLE
         else:
             raise ValueError(f"Unknown build type {build_type}")
+
+        self.build_config = BuildConfig(
+            build_type=_build_type,
+            exec_make=exec_make,
+        )
 
         setup_logging(self.base_config.verbose)
 
         self.logger = logging.getLogger("BuildCommand")
-        self.logger.debug(f"Initialized build command to build {self.build_type}")
+        self.logger.debug(f"Initialized build command to build {_build_type}")
 
-    @property
-    def build_type(self) -> BuildType:
-        """The build type to build."""
-        return self._build_type
+    async def get_definition(self):
+        from steps.build import get_definition
 
-    def run(self):
-        print(f"Running build command to build {self.build_type}")
+        return await get_definition(self.base_config, self.build_config, self.paths)
