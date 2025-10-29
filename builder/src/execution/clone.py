@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import subprocess
 from pathlib import Path
+from typing import List
 from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
@@ -66,24 +67,31 @@ def clone_repository(
         cmd.extend(["--branch", branch])
         logger.debug(f"Cloning specific branch: {branch}")
 
-    if recurse_submodules:
-        cmd.append("--recurse-submodules")
-
     cmd.extend([repo_url, str(clone_to)])
 
     logger.debug(f"Executing command: {' '.join(cmd)}")
 
     try:
 
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        def exec(cmd: List[str]):
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
-        if result.stdout:
-            logger.debug(f"Git clone stdout: {result.stdout}")
-        if result.stderr:
-            # Git often outputs progress to stderr, so log as debug
-            logger.debug(f"Git clone stderr: {result.stderr}")
+            if result.stdout:
+                logger.debug(f"'{''.join(cmd)}' stdout: {result.stdout}")
 
+            if result.stderr:
+                # Git often outputs progress to stderr, so log as debug
+                logger.debug(f"'{''.join(cmd)}' stderr: {result.stderr}")
+
+        exec(cmd)
         logger.info(f"Successfully cloned repository to {clone_to}")
+
+        if recurse_submodules:
+            cmd = ["git", "submodule", "update", "--init", "--recursive"]
+            if depth is not None:
+                cmd.extend(["--depth", str(depth)])
+
+            exec(cmd)
 
     except subprocess.CalledProcessError as e:
         logger.error(f"Git clone failed with return code {e.returncode}")
