@@ -105,8 +105,7 @@ def _execute_command(
             cmd, result_handler = command
 
         args = shlex.split(cmd)
-        logger.debug(f"Parsed command: {args}")
-        logger.debug(f"Working directory: {cwd}")
+        logger.info(f"Running {args} in {cwd}")
 
         input_data = None
         if assume_yes:
