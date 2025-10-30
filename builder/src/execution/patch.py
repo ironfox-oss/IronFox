@@ -153,7 +153,11 @@ def _apply_with_patch_command(
 
         try:
             result = subprocess.run(
-                cmd, cwd=target_dir, capture_output=True, text=True, check=True
+                cmd,
+                cwd=target_dir,
+                capture_output=True,
+                text=True,
+                check=True,
             )
 
             if result.stdout:

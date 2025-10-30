@@ -16,7 +16,6 @@ from .fenix import prepare_fenix
 from .glean import prepare_glean
 from .firefox import prepare_firefox
 from .noop_moz_endpoints import get_moz_endpoints, noop_moz_endpoints
-from .wasi_sdk import prepare_wasi_sdk
 
 logger = logging.getLogger("prepare")
 
@@ -68,9 +67,6 @@ async def get_definition(
 
         # Firefox
         d.chain(*prepare_firefox(d, paths, config)),
-
-        # Wasi-SDK
-        d.chain(*prepare_wasi_sdk(d, paths, config)),
 
         # UniFFI Bindgen
         d.chain(*prepare_uniffi(d, paths, config)),

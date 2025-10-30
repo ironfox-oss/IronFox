@@ -357,16 +357,7 @@ class BuildDefinition:
         patch_file: Path,
         target_dir: Path,
     ) -> TaskDefinition:
-        """Creates a task to apply a patch file to a target directory.
-
-        Args:
-            name (str): The name of the patch task.
-            patch_file (Path): The path to the patch file (.patch, .diff) or the patch config file (.yaml, .yml).
-            target_dir (Path): The directory where the patch should be applied.
-
-        Returns:
-            TaskDefinition: The created PatchTask instance.
-        """
+        """Creates a task to apply a patch file to a target directory."""
         from .patch import PatchTask
 
         return self.create_task(
