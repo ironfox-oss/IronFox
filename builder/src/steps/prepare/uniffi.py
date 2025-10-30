@@ -19,7 +19,7 @@ def prepare_uniffi(
             name="# Break dependency on older Rust",
             target_files=paths.uniffi_dir / "rust-toolchain.toml",
             replacements=[
-                regex(r'(channel\s*=\s*).*', rf'\1"{Versions.WASI_CMAKE_VERSION}"')
+                regex(r'(channel\s*=\s*).*', rf'\1"{Versions.RUST_VERSION}"')
             ]
         ),
         # fmt:on
