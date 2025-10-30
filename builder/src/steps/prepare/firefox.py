@@ -717,7 +717,7 @@ def mozconfig(config: PrepareConfig, paths: Paths) -> str:
         else "mobile/android/branding/ironfox"
     )
 
-    wasi_install = paths.wasi_sdk_dir / "build/install/wasi"
+    wasi_install = paths.wasi_sdk_dir
 
     return f"""
 ac_add_options --disable-address-sanitizer-reporter

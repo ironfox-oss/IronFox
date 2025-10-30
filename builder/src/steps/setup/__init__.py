@@ -6,6 +6,7 @@ from pathlib import Path
 
 from commands.setup import SetupConfig
 from common.paths import Paths
+from common.utils import current_platform, is_linux, is_macos
 from common.versions import Versions
 from execution.definition import BuildDefinition
 
@@ -58,13 +59,31 @@ async def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         depth=config.clone_depth,
     )
 
-    clone_wasi = d.clone(
-        name="Clone WASI SDK",
-        repo_url="https://github.com/WebAssembly/wasi-sdk",
-        clone_to=paths.wasi_sdk_dir,
-        branch=Versions.WASI_TAG,
-        depth=config.clone_depth,
-        recurse_submodules=True,
+    if is_linux():
+        wasi_archive = f"{Versions.WASI_TAG}-firefox-linux.tar.xz"
+        wasi_checksum = (
+            "d008e2559bc230bb384bcb02fe229d3137af0ccfad58391efe0ec797992c9f0c"
+        )
+    elif is_macos():
+        wasi_archive = f"{Versions.WASI_TAG}-firefox-osx.tar.xz"
+        wasi_checksum = (
+            "6c46f13458fe702272aa73bc06bf266091e6fe199da3793e1670c556f7937409"
+        )
+    else:
+        raise RuntimeError(f"Unsupported platform: {current_platform()}")
+
+    download_wasi = d.download(
+        name="Download pre-built Wasi SDK sysroot",
+        url=f"https://github.com/ironfox-oss/IronFox/releases/download/{Versions.WASI_TAG}/{wasi_archive}",
+        destination=paths.build_dir / wasi_archive,
+        sha256=wasi_checksum,
+    ).then(
+        d.extract(
+            name="Extract Wasi SDK sysroot",
+            archive_file=paths.build_dir / wasi_archive,
+            extract_to=paths.wasi_sdk_dir,
+            archive_format="xztar",
+        )
     )
 
     clone_uniffi = d.clone(
