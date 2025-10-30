@@ -1,40 +1,80 @@
+diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java
+index dcd5d39ad9..b1791288f1 100644
+--- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java
++++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java
+@@ -106,7 +106,7 @@ public abstract class RuntimeSettings implements Parcelable {
+      */
+     public void commit(final T newValue) {
+       if (newValue.equals(mValue)) {
+-        return;
++//        return;
+       }
+       set(newValue);
+       commit();
+diff --git a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
+index a795b36e6a..a679b4632d 100644
+--- a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
++++ b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
+@@ -131,15 +131,21 @@ export const GeckoViewPreferences = {
+     try {
+       switch (type) {
+         case PREF_STRING:
++          Services.prefs.unlockPref(pref);
+           branch.setStringPref(pref, value);
++          Services.prefs.lockPref(pref);
+           return true;
+ 
+         case PREF_BOOL:
++          Services.prefs.unlockPref(pref);
+           branch.setBoolPref(pref, value);
++          Services.prefs.lockPref(pref);
+           return true;
+ 
+         case PREF_INT:
++          Services.prefs.unlockPref(pref);
+           branch.setIntPref(pref, value);
++          Services.prefs.lockPref(pref);
+           return true;
+ 
+         default:
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 6913517691..043685b9de 100644
+index 6913517691..7292947a24 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-@@ -329,23 +329,35 @@ export class GeckoViewStartup {
+@@ -329,7 +329,16 @@ export class GeckoViewStartup {
        }
        case "GeckoView:ResetUserPrefs": {
          for (const name of aData.names) {
 -          Services.prefs.clearUserPref(name);
++          Services.prefs.lockPref("browser.translations.automaticallyPopup");
++          Services.prefs.lockPref("consoleservice.logcat");
++          Services.prefs.lockPref("cookiebanners.service.mode.privateBrowsing");
++          Services.prefs.lockPref("devtools.console.stdout.chrome");
++          Services.prefs.lockPref("geckoview.logging");
++          Services.prefs.lockPref("privacy.trackingprotection.allow_list.baseline.enabled");
++          Services.prefs.lockPref("privacy.trackingprotection.allow_list.convenience.enabled");
 +          Services.prefs.clearUserPref("devtools.debugger.remote-enabled");
 +          Services.prefs.clearUserPref("browser.safebrowsing.provider.ironfox.lastupdatetime");
 +          Services.prefs.clearUserPref("browser.safebrowsing.provider.ironfox.nextupdatetime");
          }
          break;
        }
-       case "GeckoView:SetDefaultPrefs": {
-         const prefs = Services.prefs.getDefaultBranch("");
-+        const userPrefs = Services.prefs.getBranch("");
-         for (const [name, value] of Object.entries(aData)) {
+@@ -339,13 +348,19 @@ export class GeckoViewStartup {
            try {
              switch (typeof value) {
                case "string":
 +                Services.prefs.unlockPref(name);
                  prefs.setStringPref(name, value);
-+                userPrefs.setStringPref(name, value);
 +                Services.prefs.lockPref(name);
                  break;
                case "number":
 +                Services.prefs.unlockPref(name);
                  prefs.setIntPref(name, value);
-+                userPrefs.setIntPref(name, value);
 +                Services.prefs.lockPref(name);
                  break;
                case "boolean":
 +                Services.prefs.unlockPref(name);
                  prefs.setBoolPref(name, value);
-+                userPrefs.setBoolPref(name, value);
 +                Services.prefs.lockPref(name);
                  break;
                default:
