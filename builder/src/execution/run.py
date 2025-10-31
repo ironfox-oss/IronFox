@@ -6,7 +6,10 @@ import subprocess
 import shlex
 
 from pathlib import Path
+from typing import Optional
+from common import subproc
 from rich.progress import Progress
+from rich.console import Console
 
 from .definition import BuildDefinition, TaskDefinition
 from .types import CommandType
@@ -37,7 +40,7 @@ class RunCommandsTask(TaskDefinition):
         # 3. command-specific env vars (can override os and build-wide env vars)
         env = {**os.environ.copy(), **params.env.environment_variables, **self.env}
 
-        return run_build_commands(
+        return await run_build_commands(
             name=self.name,
             cwd=self.cwd,
             commands=self.commands,
@@ -48,7 +51,7 @@ class RunCommandsTask(TaskDefinition):
         )
 
 
-def run_build_commands(
+async def run_build_commands(
     name: str,
     cwd: Path,
     commands: list[CommandType],
@@ -87,12 +90,14 @@ def run_build_commands(
             else:
                 cmd_name = command[0]
 
-            success = _execute_command(
+            success = await _execute_command(
+                name=name,
                 command=command,
                 cwd=cwd,
                 env=env,
                 logger=logger,
                 assume_yes=assume_yes,
+                progress=progress,
             )
 
             if not success:
@@ -108,10 +113,12 @@ def run_build_commands(
         progress.remove_task(task_id)
 
 
-def _execute_command(
+async def _execute_command(
+    name: str,
     command: CommandType,
     cwd: Path,
     logger: logging.Logger,
+    progress: Optional[Progress] = None,
     env: dict[str, str] = os.environ.copy(),
     assume_yes: bool | int = 0,
 ) -> bool:
@@ -132,28 +139,29 @@ def _execute_command(
             input_data = "y\n" * assume_yes
 
         # Execute the command
-        result = subprocess.run(
-            args,
+        (returncode, stdout, stderr) = await subproc.run_command_with_progress(
+            title=name,
+            cmd=args,
             cwd=cwd,
-            input=input_data,
+            stdin=input_data.encode() if input_data is not None else None,
             env=env,
-            capture_output=True,
-            text=True,
-            check=True,
+            console=progress.console if progress is not None else Console(),
         )
 
-        # Log output
-        if result.stdout:
-            logger.debug(f"Command stdout:\n{result.stdout}")
+        if returncode != 0:
+            raise subprocess.CalledProcessError(returncode, args, stdout, stderr)
 
-        if result.stderr:
-            # Many build tools output progress/info to stderr
-            logger.debug(f"Command stderr:\n{result.stderr}")
+        # Log output
+        if stdout:
+            logger.debug(f"Command stdout:\n{stdout}")
+
+        if stderr:
+            logger.debug(f"Command stderr:\n{stderr}")
 
         if result_handler:
             try:
                 logger.debug("Running result handler...")
-                result_handler(result.stdout, result.stderr)
+                result_handler(stdout, stderr)
             except Exception as e:
                 logger.error(f"Result handler failed with exception: {e}")
                 return False
