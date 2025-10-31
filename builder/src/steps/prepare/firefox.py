@@ -137,9 +137,9 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         *_process_file(
             path="docshell/build/components.conf",
             replacements=[
-                regex(r"(about_pages.append\('inference'\))", r"\1\n about_pages.append('ironfox')"),
-                regex(r"(about_pages.append\('inference'\))", r"\1\n about_pages.append('attribution')"),
-                regex(r"(about_pages.append\('inference'\))", r"\1\n about_pages.append('policies')"),
+                regex(r"(about_pages.append\('inference'\))", r"\1\nabout_pages.append('ironfox')"),
+                regex(r"(about_pages.append\('inference'\))", r"\1\nabout_pages.append('attribution')"),
+                regex(r"(about_pages.append\('inference'\))", r"\1\nabout_pages.append('policies')"),
             ],
         ),
         
