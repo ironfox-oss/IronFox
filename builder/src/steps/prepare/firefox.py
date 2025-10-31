@@ -785,19 +785,19 @@ ac_add_options --enable-rust-simd
 ac_add_options --enable-strip
 ac_add_options --enable-update-channel=release
 
-ac_add_options --with-app-basename={app.app_name}
-ac_add_options --with-app-name={app.app_name.lower()}
-ac_add_options --with-branding={branding_path}
+ac_add_options --with-app-basename='{app.app_name}'
+ac_add_options --with-app-name='{app.app_name.lower()}'
+ac_add_options --with-branding='{branding_path}'
 
-ac_add_options --with-crashreporter-url="data;"
-ac_add_options --with-distribution-id={app.app_id_base}
-ac_add_options --with-java-bin-path="{paths.java_home}/bin"
-ac_add_options --target={config.target}
-ac_add_options --with-android-ndk="{paths.ndk_home}"
-ac_add_options --with-android-sdk="{paths.android_home}"
-ac_add_options --with-gradle={paths.gradle_exec}
-ac_add_options --with-libclang-path="{paths.libclang_dir}"
-ac_add_options --with-wasi-sysroot="{wasi_install}/share/wasi-sysroot"
+ac_add_options --with-crashreporter-url='data;'
+ac_add_options --with-distribution-id='{app.app_id_base}'
+ac_add_options --with-java-bin-path='{paths.java_home / "bin"}'
+ac_add_options --target='{config.target}'
+ac_add_options --with-android-ndk='{paths.ndk_home}'
+ac_add_options --with-android-sdk='{paths.android_home}
+ac_add_options --with-gradle='{paths.gradle_exec}'
+ac_add_options --with-libclang-path='{paths.libclang_dir}
+ac_add_options --with-wasi-sysroot='{wasi_install / "share/wasi-sysroot"}
 ac_add_options --without-adjust-sdk-keyfile
 ac_add_options --without-android-googlevr-sdk
 ac_add_options --without-bing-api-keyfile
@@ -806,16 +806,16 @@ ac_add_options --without-mozilla-api-keyfile
 ac_add_options --without-leanplum-sdk-keyfile
 ac_add_options --without-pocket-api-keyfile
 
-{f"ac_add_options --with-google-safebrowsing-api-keyfile={config.sb_gapi_file}" if config.sb_gapi_file.is_file() else ""}
+{f"ac_add_options --with-google-safebrowsing-api-keyfile='{config.sb_gapi_file}'" if config.sb_gapi_file.is_file() else ""}
 
-ac_add_options WASM_CC="{wasi_install}/bin/clang"
-ac_add_options WASM_CXX="{wasi_install}/bin/clang++"
-ac_add_options CC="{paths.ndk_toolchain_dir}/bin/clang"
-ac_add_options CXX="{paths.ndk_toolchain_dir}/bin/clang++"
-ac_add_options STRIP="{paths.ndk_toolchain_dir}/bin/llvm-strip"
+ac_add_options WASM_CC='{wasi_install / "bin/clang"}'
+ac_add_options WASM_CXX='{wasi_install / "bin/clang++"}'
+ac_add_options CC='{paths.ndk_toolchain_dir / "bin/clang"}'
+ac_add_options CXX='{paths.ndk_toolchain_dir / "bin/clang++"}'
+ac_add_options STRIP='{paths.ndk_toolchain_dir / "bin/llvm-strip"}'
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
-export ANDROID_BUNDLETOOL_PATH="{paths.build_dir}/bundletool.jar"
-export GRADLE_MAVEN_REPOSITORIES="file://$HOME/.m2/repository/","https://plugins.gradle.org/m2/","https://maven.google.com/"
+export ANDROID_BUNDLETOOL_PATH='{paths.build_dir}/bundletool.jar'
+export GRADLE_MAVEN_REPOSITORIES='file://{paths.user_home / ".m2/repository"}','https://plugins.gradle.org/m2/','https://maven.google.com/'
 export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1
 
 export MOZ_APP_BASENAME={app.app_name}
@@ -825,7 +825,7 @@ export MOZ_APP_REMOTINGNAME={app.app_name.lower().replace(' ', '-')}
 export MOZ_ARTIFACT_BUILDS=
 export MOZ_CALLGRIND=
 export MOZ_CRASHREPORTER=
-export MOZ_CRASHREPORTER_URL="data;"
+export MOZ_CRASHREPORTER_URL='data;'
 export MOZ_DEBUG_FLAGS=
 export MOZ_EXECUTION_TRACING=
 export MOZ_INCLUDE_SOURCE_INFO=1
