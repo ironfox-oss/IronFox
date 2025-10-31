@@ -21,6 +21,7 @@ class BuildType(Enum):
 class BuildConfig:
     build_type: BuildType
     exec_make: Path
+    exec_sh: Path
 
 
 class BuildCommand(BaseCommand):
@@ -31,6 +32,7 @@ class BuildCommand(BaseCommand):
         base_config: BaseConfig,
         build_type: str,
         exec_make: Path,
+        exec_sh: Path,
     ):
         super().__init__("BuildCommand", base_config=base_config)
 
@@ -45,6 +47,7 @@ class BuildCommand(BaseCommand):
         self.build_config = BuildConfig(
             build_type=_build_type,
             exec_make=exec_make,
+            exec_sh=exec_sh,
         )
 
         setup_logging(self.base_config.verbose)

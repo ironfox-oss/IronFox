@@ -242,6 +242,12 @@ async def prepare(
     type=click.Path(exists=True, dir_okay=False, readable=True, executable=True),
     default="/usr/bin/make",
 )
+@click.option(
+    "--with-shell",
+    help="Path to the shell executable (preferably, bash)",
+    type=click.Path(exists=True, dir_okay=False, readable=True, executable=True),
+    default="/usr/bin/bash",
+)
 @click.argument("build_type", type=click.Choice(["apk", "bundle"]))
 @pass_base_config
 @coro
@@ -249,11 +255,13 @@ async def build(
     base_config: BaseConfig,
     build_type: str,
     with_make: str,
+    with_shell: str,
 ):
     cmd = BuildCommand(
         base_config=base_config,
         build_type=build_type,
         exec_make=Path(with_make),
+        exec_sh=Path(with_shell),
     )
     return await _exec_cmd(cmd)
 
