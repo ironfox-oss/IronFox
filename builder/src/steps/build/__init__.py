@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 from commands.base import BaseConfig
 from commands.build import BuildConfig, BuildType
 from common.paths import Paths
@@ -35,16 +36,16 @@ async def get_definition(
         # defined before them to be successful
 
         # Build application-services
-        build_application_services(d, config, paths),
+        *build_application_services(d, config, paths),
         
         # Build Firefox
-        build_firefox(d, config, paths),
+        *build_firefox(d, config, paths),
         
         # Build Android Components
-        build_android_components(d, config, paths),
+        *build_android_components(d, config, paths),
         
         # Build Fenix
-        build_fenix(d, config, paths),
+        *build_fenix(d, config, paths),
         # fmt:on
     ).depends_on(
         # fmt:off
@@ -55,13 +56,13 @@ async def get_definition(
         # depends_on(...) call
         
         # Build UniFFI bindgen
-        build_uniffi(d, paths),
+        d.chain(*build_uniffi(d, paths)),
         
         # Build microG
-        build_microg(d=d, paths=paths),
+        d.chain(*build_microg(d=d, paths=paths)),
         
         # Build Glean
-        build_glean(d, paths),
+        d.chain(*build_glean(d, paths)),
         # fmt:on
     )
 
@@ -71,18 +72,20 @@ async def get_definition(
 def build_uniffi(
     d: BuildDefinition,
     paths: Paths,
-) -> TaskDefinition:
-    return d.run_commands(
-        name="Build uniffi-bindgen",
-        commands=[f"{paths.cargo_home}/bin/cargo build --release"],
-        cwd=paths.uniffi_dir,
-    )
+) -> List[TaskDefinition]:
+    return [
+        d.run_commands(
+            name="Build uniffi-bindgen",
+            commands=[f"{paths.cargo_home}/bin/cargo build --release"],
+            cwd=paths.uniffi_dir,
+        )
+    ]
 
 
 def build_microg(
     d: BuildDefinition,
     paths: Paths,
-) -> TaskDefinition:
+) -> List[TaskDefinition]:
     tasks = [
         "javaDocReleaseGeneration",
         ":play-services-ads-identifier:publishToMavenLocal",
@@ -92,70 +95,78 @@ def build_microg(
         ":play-services-tasks:publishToMavenLocal",
     ]
 
-    return d.run_commands(
-        name="Build microG",
-        commands=[f"{paths.gradle_exec} -x {' '.join(tasks)}"],
-        cwd=paths.gmscore_dir,
-        env={"GRADLE_MICROG_VERSION_WITHOUT_GIT": "1"},
-    )
+    return [
+        d.run_commands(
+            name="Build microG",
+            commands=[f"{paths.gradle_exec} -x {' '.join(tasks)}"],
+            cwd=paths.gmscore_dir,
+            env={"GRADLE_MICROG_VERSION_WITHOUT_GIT": "1"},
+        )
+    ]
 
 
 def build_glean(
     d: BuildDefinition,
     paths: Paths,
-) -> TaskDefinition:
+) -> List[TaskDefinition]:
     tasks = ["publishToMavenLocal"]
-    return d.run_commands(
-        name="Build Glean",
-        commands=[f"{paths.gradle_exec} {' '.join(tasks)}"],
-        cwd=paths.glean_dir,
-        env={"TARGET_CFLAGS": "-DNDEBUG"},
-    )
+    return [
+        d.run_commands(
+            name="Build Glean",
+            commands=[f"{paths.gradle_exec} {' '.join(tasks)}"],
+            cwd=paths.glean_dir,
+            env={"TARGET_CFLAGS": "-DNDEBUG"},
+        )
+    ]
 
 
 def build_application_services(
     d: BuildDefinition,
     config: BuildConfig,
     paths: Paths,
-) -> TaskDefinition:
+) -> List[TaskDefinition]:
     env = {"CI": "true"}
-    return d.run_commands(
-        name="Build A-S",
-        commands=[
-            f"{config.exec_sh} -c './libs/verify-android-environment.sh'",
-            f"{paths.gradle_exec} :tooling-nimbus-gradle:publishToMavenLocal",
-        ],
-        cwd=paths.application_services_dir,
-        env=env,
-    )
+    return [
+        d.run_commands(
+            name="Build A-S",
+            commands=[
+                f"{config.exec_sh} -c './libs/verify-android-environment.sh'",
+                f"{paths.gradle_exec} :tooling-nimbus-gradle:publishToMavenLocal",
+            ],
+            cwd=paths.application_services_dir,
+            env=env,
+        )
+    ]
 
 
 def build_firefox(
     d: BuildDefinition,
     config: BuildConfig,
     paths: Paths,
-) -> TaskDefinition:
+) -> List[TaskDefinition]:
     locales = " ".join(IRONFOX_LOCALES)
     env = {"MOZ_CHROME_MULTILOCALE": locales}
-    return d.run_commands(
-        name="Build Firefox",
-        commands=[
-            "./mach build",
-            "./mach package",
-            f"./mach package-multi-locale --locales {locales}",
-            f"{paths.gradle_exec} -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal",
-        ],
-        cwd=paths.firefox_dir,
-        env=env,
-    )
+    return [
+        d.run_commands(
+            name="Build Firefox",
+            commands=[
+                "./mach build",
+                "./mach package",
+                f"./mach package-multi-locale --locales {locales}",
+                f"{paths.gradle_exec} -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal",
+            ],
+            cwd=paths.firefox_dir,
+            env=env,
+        )
+    ]
 
 
 def build_android_components(
     d: BuildDefinition,
     config: BuildConfig,
     paths: Paths,
-) -> TaskDefinition:
-    return d.chain(
+) -> List[TaskDefinition]:
+    return [
         *d.find_replace(
             name="Disable A-S auto-pubish",
             target_files=paths.android_components_dir / "local.properties",
@@ -190,21 +201,23 @@ def build_android_components(
             ],
             cwd=paths.android_components_dir,
         ),
-    )
+    ]
 
 
 def build_fenix(
     d: BuildDefinition,
     config: BuildConfig,
     paths: Paths,
-) -> TaskDefinition:
+) -> List[TaskDefinition]:
     task = (
         f":app:assembleRelease"
         if config.build_type == BuildType.APK
         else ":app:bundleRelease -Paab"
     )
-    return d.run_commands(
-        name="Build Fenix",
-        commands=[f"{paths.gradle_exec} {task}"],
-        cwd=paths.firefox_dir,
-    )
+    return [
+        d.run_commands(
+            name="Build Fenix",
+            commands=[f"{paths.gradle_exec} {task}"],
+            cwd=paths.firefox_dir,
+        )
+    ]

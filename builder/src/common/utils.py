@@ -120,7 +120,8 @@ def find_prog(prog: str) -> Path | None:
 def resolve_glob(
     target_file: Union[Path, str],
     recursive: bool = False,
-    files_only: bool = True,
+    files_only: bool = False,
+    exists_only: bool = False,
 ) -> List[Path]:
     if isinstance(target_file, Path) and any(c in str(target_file) for c in "*?[]"):
         files = [Path(p) for p in glob(str(target_file), recursive=recursive)]
@@ -129,7 +130,11 @@ def resolve_glob(
     else:
         files = [target_file if isinstance(target_file, Path) else Path(target_file)]
 
-    if files_only:
-        files = [path for path in files if path.is_file()]
+    if exists_only or files_only:
+        files = [
+            path
+            for path in files
+            if (not exists_only or path.exists()) and (not files_only or path.is_file())
+        ]
 
     return files
