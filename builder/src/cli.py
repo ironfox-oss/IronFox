@@ -74,15 +74,9 @@ async def _exec_cmd(cmd: BaseCommand):
 )
 @click.option(
     "--write-task-graph",
-    help="If specified, the task graph to written to the specified file path.",
+    help="If specified, the task graph will be written to the specified file path as a mermaid diagram. Best used with --dry-run.",
     type=click.Path(dir_okay=False, writable=True),
     default=None,
-)
-@click.option(
-    "--task-graph-type",
-    help="The type of task graph to print. Defaults to 'image'.",
-    type=click.Choice(choices=["image", "ascii"]),
-    default="image",
 )
 @click.option(
     "--dry-run",
@@ -113,7 +107,6 @@ async def cli(
     gradle_exec: str | None,
     jobs: int,
     write_task_graph: str,
-    task_graph_type: str,
     dry_run: bool,
     verbose: bool,
     profile: bool,
@@ -131,7 +124,6 @@ async def cli(
         cargo_home=Path(cargo_home),
         gradle_exec=Path(gradle_exec),
         write_task_graph=Path(write_task_graph) if write_task_graph else None,
-        task_graph_type=task_graph_type,
         jobs=jobs,
         dry_run=dry_run,
         verbose=verbose,
