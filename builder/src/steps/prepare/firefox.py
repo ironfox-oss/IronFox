@@ -794,10 +794,10 @@ ac_add_options --with-distribution-id='{app.app_id_base}'
 ac_add_options --with-java-bin-path='{paths.java_home / "bin"}'
 ac_add_options --target='{config.target}'
 ac_add_options --with-android-ndk='{paths.ndk_home}'
-ac_add_options --with-android-sdk='{paths.android_home}
+ac_add_options --with-android-sdk='{paths.android_home}'
 ac_add_options --with-gradle='{paths.gradle_exec}'
-ac_add_options --with-libclang-path='{paths.libclang_dir}
-ac_add_options --with-wasi-sysroot='{wasi_install / "share/wasi-sysroot"}
+ac_add_options --with-libclang-path='{paths.libclang_dir}'
+ac_add_options --with-wasi-sysroot='{wasi_install / "share/wasi-sysroot"}'
 ac_add_options --without-adjust-sdk-keyfile
 ac_add_options --without-android-googlevr-sdk
 ac_add_options --without-bing-api-keyfile
@@ -818,9 +818,9 @@ export ANDROID_BUNDLETOOL_PATH='{paths.build_dir}/bundletool.jar'
 export GRADLE_MAVEN_REPOSITORIES='file://{paths.user_home / ".m2/repository"}','https://plugins.gradle.org/m2/','https://maven.google.com/'
 export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1
 
-export MOZ_APP_BASENAME={app.app_name}
-export MOZ_APP_NAME={app.app_name.lower()}
-export MOZ_APP_REMOTINGNAME={app.app_name.lower().replace(' ', '-')}
+export MOZ_APP_BASENAME='{app.app_name}'
+export MOZ_APP_NAME='{app.app_name.lower()}'
+export MOZ_APP_REMOTINGNAME='{app.app_name.lower().replace(' ', '-')}'
 
 export MOZ_ARTIFACT_BUILDS=
 export MOZ_CALLGRIND=
