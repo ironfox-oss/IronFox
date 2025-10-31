@@ -35,19 +35,11 @@ class LineReplacement(ReplacementAction):
 
 
 @dataclass
-class GlobalReplacement(ReplacementAction):
+class RegexReplacement(ReplacementAction):
     """Represents a replacement that applies to the entire file content."""
 
     pattern: PatternType
     replacement: Replacement
-
-
-@dataclass
-class LiteralReplacement(ReplacementAction):
-    """Represents a simple literal string replacement (like sed s/old/new/g)."""
-
-    old_text: str
-    new_text: str
 
 
 @dataclass

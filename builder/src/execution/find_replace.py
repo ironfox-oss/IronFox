@@ -13,10 +13,9 @@ import aiofiles
 from .definition import TaskDefinition, BuildDefinition
 from .types import (
     CustomReplacement,
-    GlobalReplacement,
+    RegexReplacement,
     LineAffixReplacement,
     LineReplacement,
-    LiteralReplacement,
     PatternType,
     Replacement,
     Replacer,
@@ -64,8 +63,8 @@ def regex(
     pattern: PatternType,
     replacement: Replacement,
     count: int = 0,
-) -> GlobalReplacement:
-    return GlobalReplacement(
+) -> RegexReplacement:
+    return RegexReplacement(
         count=count,
         pattern=pattern,
         replacement=replacement,
@@ -96,11 +95,11 @@ def literal(
     old_text: str,
     new_text: str,
     count: int = 0,
-) -> LiteralReplacement:
-    return LiteralReplacement(
+) -> RegexReplacement:
+    return RegexReplacement(
         count=count,
-        old_text=old_text,
-        new_text=new_text,
+        pattern=re.escape(old_text),
+        replacement=new_text,
     )
 
 
@@ -191,14 +190,7 @@ def _apply_replacements(
     result = content
 
     for replacement in replacements:
-        if isinstance(replacement, LiteralReplacement):
-            result = result.replace(
-                replacement.old_text,
-                replacement.new_text,
-                replacement.count,
-            )
-
-        elif isinstance(replacement, GlobalReplacement):
+        if isinstance(replacement, RegexReplacement):
             if callable(replacement.replacement):
                 result = re.sub(
                     pattern=replacement.pattern,
@@ -211,7 +203,7 @@ def _apply_replacements(
                     replacement.pattern,
                     replacement.replacement,
                     string=result,
-                    count=replacement.count
+                    count=replacement.count,
                 )
 
         elif isinstance(replacement, LineReplacement):

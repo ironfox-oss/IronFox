@@ -470,9 +470,9 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         *_process_file(
             path="mobile/android/shared-settings.gradle",
             replacements=[
-                regex(
-                    r'if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))',
-                    r'if (!project.key.startsWith("samples"))'
+                literal(
+                    'if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))',
+                    'if (!project.key.startsWith("samples"))'
                 ),
             ],
         ),
