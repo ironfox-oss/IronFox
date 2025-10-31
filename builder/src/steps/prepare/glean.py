@@ -38,6 +38,7 @@ def prepare_glean(
     )
 
     metrics_disabled = regex(r"disabled: .*", "disabled: true,")
+    host_target = f"{current_platform().lower()}-{current_machine().replace('_', '-')}"
 
     return [
         # fmt:off
@@ -46,7 +47,7 @@ def prepare_glean(
             name="Write local.properties",
             target=paths.glean_dir / "local.properties",
             contents=lambda: f'''
-rust.targets={current_platform().lower()}-{current_machine()},{config.rusttarget}
+rust.targets={host_target},{config.rusttarget}
             '''.encode(),
             append=True,
         ),
