@@ -126,9 +126,6 @@ class FindReplaceTask(TaskDefinition):
     async def execute(self, params):
         progress = params.progress
         name = f"Process files (0/{len(self.target_files)})"
-        if len(self.target_files) == 1:
-            name = f"Process file {self.target_files[0].relative_to(params.env.paths.root_dir)}"
-
         task_id = progress.add_task(name, total=len(self.target_files))
 
         try:
@@ -185,15 +182,11 @@ async def find_replace(
     except UnicodeDecodeError:
         # ignore non-utf files
         pass
-    finally:
-        progress.remove_task(task_id)
 
 
 def _apply_replacements(
     content: str,
     replacements: List[ReplacementAction],
-    task_id: TaskID,
-    progress: Progress,
 ) -> str:
     result = content
 
@@ -253,7 +246,4 @@ def _apply_replacements(
             result = "".join(modified_lines)
         elif isinstance(replacement, CustomReplacement):
             result = replacement.replacer(result)
-
-        progress.update(task_id, advance=1)
-
     return result

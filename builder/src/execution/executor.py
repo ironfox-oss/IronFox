@@ -53,7 +53,7 @@ class AsyncBuildExecutor:
     def __init__(self, config: ExecutorConfig, definition: BuildDefinition):
         self.config = config
         self.definition = definition
-        self.logger = logging.getLogger("UltraFastAsyncBuildExecutor")
+        self.logger = logging.getLogger("AsyncBuildExecutor")
 
     async def execute(self) -> List[FailureDetail]:
         """Start execution with dependency-aware scheduling.
@@ -73,8 +73,6 @@ class AsyncBuildExecutor:
         completed_tasks = set()
         failed_tasks = set()
 
-        total_tasks = len(pending_tasks)
-
         # Find initial ready tasks
         ready_queue = asyncio.Queue()
         for task in definition.tasks:
@@ -84,24 +82,9 @@ class AsyncBuildExecutor:
         # Queue for completed tasks - this is KEY to avoiding isinstance overhead
         completion_queue = asyncio.Queue()
 
-        # Event to signal when we should check for new work
-        work_available = asyncio.Event()
-
         self._total_tasks = len(definition.tasks)
 
-        with Progress(transient=True, refresh_per_second=1) as progress:
-
-            progress_task = progress.add_task("IronFox build", total=total_tasks)
-
-            def _report_progress(task: TaskDefinition):
-                completed = len(completed_tasks)
-                msg = f"[{completed}/{total_tasks}] {task.name}"
-                progress.update(
-                    task_id=progress_task,
-                    description=msg,
-                    total=total_tasks,
-                    completed=completed,
-                )
+        with Progress(transient=True) as progress:
 
             async def worker():
                 """Worker that processes tasks from the ready queue."""
@@ -162,7 +145,6 @@ class AsyncBuildExecutor:
                     if error is None:
                         # Task succeeded
                         completed_tasks.add(task_id)
-                        _report_progress(task_state.task)
 
                         # Find newly ready tasks and add to queue
                         newly_ready = self._find_newly_ready_tasks(
@@ -180,7 +162,6 @@ class AsyncBuildExecutor:
                     else:
                         # Task failed
                         failed_tasks.add(task_id)
-                        _report_progress(task_state.task)
 
                         tb = traceback.format_exc()
                         failure = FailureDetail(

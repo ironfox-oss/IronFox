@@ -146,7 +146,7 @@ class BaseCommand:
     @abstractmethod
     async def run(self):
         if not self.base_config.profile:
-            return self.do_run()
+            return await self.do_run()
 
         import cProfile
 
@@ -172,9 +172,9 @@ class BaseCommand:
         )
 
         definition = await self.get_definition()
-        
+
         executor = AsyncBuildExecutor(config=config, definition=definition)
-        
+
         self.logger.debug(f"Starting setup with definition {definition}")
 
         console = Console()
