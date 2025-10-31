@@ -96,7 +96,7 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         *_process_file(
             path="mobile/android/moz.configure",
             replacements=[
-                regex(r'("MOZ_APP_VENDOR",\s*").*(")', r'\1%s\2'.format(config.app_config.vendor)),
+                regex(r'("MOZ_APP_VENDOR",\s*").*(")', fr'\1{config.app_config.vendor}\2'),
                 regex(r'("MOZ_NORMANDY",\s*).*(\))', r'\1False\2'),
                 regex(r'("MOZ_SERVICES_HEALTHREPORT",\s*).*(\))', r'\1False\2'),
                 regex(r'("MOZ_APP_UA_NAME",\s*").*(")', r'\1Firefox\2'),

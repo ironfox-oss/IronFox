@@ -2,8 +2,6 @@
 
 import logging
 
-from pathlib import Path
-
 from commands.setup import SetupConfig
 from common.paths import Paths
 from common.utils import current_platform, is_linux, is_macos
