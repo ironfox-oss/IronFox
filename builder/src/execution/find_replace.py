@@ -210,7 +210,8 @@ def _apply_replacements(
                 result = re.sub(
                     replacement.pattern,
                     replacement.replacement,
-                    result,
+                    string=result,
+                    count=replacement.count
                 )
 
         elif isinstance(replacement, LineReplacement):
@@ -223,9 +224,10 @@ def _apply_replacements(
                         modified_line = replacement.replacement(line)
                     else:
                         modified_line = re.sub(
-                            replacement.text_match_pattern,
-                            replacement.replacement,
-                            line,
+                            pattern=replacement.text_match_pattern,
+                            repl=replacement.replacement,
+                            string=line,
+                            count=replacement.count,
                         )
                     modified_lines.append(modified_line)
                 else:
