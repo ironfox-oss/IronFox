@@ -647,13 +647,13 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         d.copy_dir_contents(
             name="Create nightly branding (1/2)",
             source_dir=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/about",
-            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly",
+            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly/about",
             recursive=True,
         ),
         d.copy_dir_contents(
             name="Create nightly branding (2/2)",
             source_dir=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/dumps",
-            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly",
+            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly/dumps",
             recursive=True,
         ),
         
