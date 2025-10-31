@@ -178,7 +178,7 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         d.copy_dir_contents(
             name="Copy policy definitions/schema from Firefox for Desktop",
             source_dir=paths.firefox_dir / "browser/components/enterprisepolicies",
-            target_dir=paths.firefox_dir / "mobile/android/components",
+            target_dir=paths.firefox_dir / "mobile/android/components/enterprisepolicies",
             recursive=True,
         ),
         
