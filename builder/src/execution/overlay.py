@@ -3,6 +3,7 @@ import os
 import shutil
 
 from pathlib import Path
+from rich.progress import Progress
 from .definition import TaskDefinition
 
 
@@ -26,6 +27,7 @@ class OverlayTask(TaskDefinition):
         return overlay_directory(
             source_dir=self.source_dir,
             target_dir=self.target_dir,
+            progress=params.progress,
             logger=self.logger,
             preserve_permissions=self.preserve_permissions,
         )
@@ -34,6 +36,7 @@ class OverlayTask(TaskDefinition):
 def overlay_directory(
     source_dir: Path,
     target_dir: Path,
+    progress: Progress,
     logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
@@ -50,6 +53,10 @@ def overlay_directory(
         logger.info(f"No files found in overlay directory {source_dir}")
         return
 
+    task_id = progress.add_task(
+        f"Applying overlay from {source_dir.name}", total=len(files_to_copy)
+    )
+
     try:
         for src_file in files_to_copy:
             rel_path = src_file.relative_to(source_dir)
@@ -64,6 +71,7 @@ def overlay_directory(
                 os.chmod(target_file, src_stat.st_mode)
 
             logger.debug(f"Copied {rel_path} to {target_file}")
+            progress.update(task_id, advance=1)
 
         logger.debug(
             f"Applied overlay: {len(files_to_copy)} files from {source_dir} to {target_dir}"
@@ -72,3 +80,5 @@ def overlay_directory(
     except Exception as e:
         logger.error(f"Failed to apply overlay: {e}")
         raise
+    finally:
+        progress.remove_task(task_id)

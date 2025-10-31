@@ -122,7 +122,7 @@ class AsyncBuildExecutor:
 
                     try:
                         # Run the synchronous task in a thread pool
-                        await self._perform_task(task_state.task)
+                        await self._perform_task(task_state.task, progress)
 
                         task_state.completed = True
                         task_state.task.debug("Completed successfully")
@@ -372,16 +372,16 @@ class AsyncBuildExecutor:
 
         return all_dependents
 
-    async def _perform_task(self, task: TaskDefinition) -> None:
+    async def _perform_task(self, task: TaskDefinition, progress: Progress) -> None:
         """Perform a single task with hooks."""
         task.debug("Starting...")
         try:
-            await self._run_task_with_hooks(task)
+            await self._run_task_with_hooks(task, progress)
         except Exception as e:
             task.error(f"Failed with exception: {e}")
             raise
 
-    async def _run_task_with_hooks(self, task: TaskDefinition):
+    async def _run_task_with_hooks(self, task: TaskDefinition, progress: Progress):
         """Run a task with its pre and post hooks."""
         if len(task.do_firsts) > 0:
             task.debug(f"Running do_first hooks...")
@@ -393,7 +393,7 @@ class AsyncBuildExecutor:
                 task.error(f"do_first hook failed with exception: {e}")
                 raise
 
-        await self._run_task(task)
+        await self._run_task(task, progress)
 
         if len(task.do_lasts) > 0:
             task.debug(f"Running do_last hooks")
@@ -405,7 +405,7 @@ class AsyncBuildExecutor:
                 task.error(f"do_last hook failed with exception: {e}")
                 raise
 
-    async def _run_task(self, task: TaskDefinition):
+    async def _run_task(self, task: TaskDefinition, progress: Progress):
         """Execute the main action of a task based on its type."""
         try:
             task.debug(f"Executing...")
@@ -413,6 +413,7 @@ class AsyncBuildExecutor:
                 await task.execute(
                     TaskExecutionParams(
                         env=self.config.env,
+                        progress=progress,
                     )
                 )
         finally:

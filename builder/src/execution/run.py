@@ -6,6 +6,7 @@ import subprocess
 import shlex
 
 from pathlib import Path
+from rich.progress import Progress
 
 from .definition import BuildDefinition, TaskDefinition
 from .types import CommandType
@@ -37,8 +38,10 @@ class RunCommandsTask(TaskDefinition):
         env = {**os.environ.copy(), **params.env.environment_variables, **self.env}
 
         return run_build_commands(
+            name=self.name,
             cwd=self.cwd,
             commands=self.commands,
+            progress=params.progress,
             env=env,
             logger=self.logger,
             assume_yes=self.assume_yes,
@@ -46,10 +49,12 @@ class RunCommandsTask(TaskDefinition):
 
 
 def run_build_commands(
+    name: str,
     cwd: Path,
     commands: list[CommandType],
+    progress: Progress,
     logger: logging.Logger,
-    env: dict[str, str] = os.environ.copy(),
+    env: dict[str, str] = {},
     assume_yes: bool | int = False,
 ):
     logger.debug(f"Running {len(commands)} commands in {cwd}")
@@ -64,30 +69,43 @@ def run_build_commands(
         logger.warning("No commands provided")
         return
 
-    # Execute each command in sequence
-    for i, command in enumerate(commands, 1):
-        logger.debug(f"Executing command {i}/{len(commands)}: {command}")
+    def task_desc(idx: int):
+        return f"{name} [{idx}/{len(commands)}]"
 
-        cmd_name = "<unknown>"
-        if isinstance(command, str):
-            cmd_name = command
-        else:
-            cmd_name = command[0]
+    task_id = progress.add_task(
+        task_desc(0), total=len(commands) if len(commands) > 1 else None
+    )
 
-        success = _execute_command(
-            command=command,
-            cwd=cwd,
-            env=env,
-            logger=logger,
-            assume_yes=assume_yes,
-        )
+    try:
+        # Execute each command in sequence
+        for i, command in enumerate(commands, 1):
+            logger.debug(f"Executing command {i}/{len(commands)}: {command}")
 
-        if not success:
-            raise subprocess.CalledProcessError(1, cmd_name, f"Command {i} failed")
+            cmd_name = "<unknown>"
+            if isinstance(command, str):
+                cmd_name = command
+            else:
+                cmd_name = command[0]
 
-        logger.debug(f"Command {i}/{len(commands)} completed successfully")
+            success = _execute_command(
+                command=command,
+                cwd=cwd,
+                env=env,
+                logger=logger,
+                assume_yes=assume_yes,
+            )
 
-    logger.debug(f"All {len(commands)} commands completed successfully")
+            if not success:
+                raise subprocess.CalledProcessError(1, cmd_name, f"Command {i} failed")
+
+            progress.update(task_id, description=task_desc(i), advance=1)
+
+            logger.debug(f"Command {i}/{len(commands)} completed successfully")
+
+        logger.debug(f"All {len(commands)} commands completed successfully")
+
+    finally:
+        progress.remove_task(task_id)
 
 
 def _execute_command(

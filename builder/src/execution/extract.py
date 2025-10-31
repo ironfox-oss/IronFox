@@ -36,6 +36,7 @@ class ExtractTask(TaskDefinition):
             archive_file=self.archive_file,
             extract_to=self.extract_to,
             archive_format=self.archive_format,
+            progress=params.progress,
             logger=self.logger,
             preserve_permissions=self.preserve_permissions,
         )
@@ -45,6 +46,7 @@ def extract_archive(
     archive_file: Path,
     extract_to: Path,
     archive_format: str,
+    progress: Progress,
     logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
@@ -89,12 +91,15 @@ def extract_archive(
     # Extract based on format
     try:
         if archive_format == "zip":
-            _extract_zip(archive_file, extract_to, logger, preserve_permissions)
+            _extract_zip(
+                archive_file, extract_to, progress, logger, preserve_permissions
+            )
         elif archive_format in ("tar", "gztar", "bztar", "xztar"):
             _extract_tar(
                 archive_file,
                 extract_to,
                 archive_format,
+                progress,
                 logger,
                 preserve_permissions,
             )
@@ -112,6 +117,7 @@ def extract_archive(
 def _extract_zip(
     archive_file: Path,
     extract_to: Path,
+    progress: Progress,
     logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
@@ -137,6 +143,10 @@ def _extract_zip(
                 return
 
             logger.info(f"Extracting {total_files} files from ZIP archive")
+
+            task_id = progress.add_task(
+                f"Extracting {archive_file.name}", total=total_files
+            )
 
             extracted_count = 0
             total_size = 0
@@ -166,8 +176,12 @@ def _extract_zip(
                     else:
                         logger.warning(f"Skipping unsafe path: {member.filename}")
 
+                    progress.update(task_id, advance=1)
+
                 except Exception as e:
                     logger.error(f"Failed to extract {member.filename}: {e}")
+                    # Continue with other files
+                    progress.update(task_id, advance=1)
 
             logger.info(
                 f"Extracted {extracted_count}/{total_files} files, total size: {format_bytes(total_size)}"
@@ -181,11 +195,19 @@ def _extract_zip(
         logger.error(f"Error extracting ZIP file: {e}")
         raise
 
+    finally:
+        if task_id is not None and progress:
+            try:
+                progress.remove_task(task_id)
+            except Exception as e:
+                logger.debug(f"Failed to remove progress task: {e}")
+
 
 def _extract_tar(
     archive_file: Path,
     extract_to: Path,
     archive_format: str,
+    progress: Progress,
     logger: logging.Logger,
     preserve_permissions: bool = True,
 ):
@@ -208,6 +230,10 @@ def _extract_tar(
 
             logger.info(f"Extracting {total_files} files from TAR archive")
 
+            task_id = progress.add_task(
+                f"Extracting {archive_file.name}", total=total_files
+            )
+
             extracted_count = 0
             total_size = 0
 
@@ -216,6 +242,7 @@ def _extract_tar(
                     # Security checks
                     if not _is_safe_tar_member(extract_to, member, logger):
                         logger.warning(f"Skipping unsafe tar member: {member.name}")
+                        progress.update(task_id, advance=1)
                         continue
 
                     tar_ref.extract(member, extract_to, set_attrs=preserve_permissions)
@@ -226,8 +253,12 @@ def _extract_tar(
                     if extracted_count % 100 == 0:
                         logger.debug(f"Extracted {extracted_count}/{total_files} files")
 
+                    progress.update(task_id, advance=1)
+
                 except Exception as e:
                     logger.error(f"Failed to extract {member.name}: {e}")
+                    # Continue with other files
+                    progress.update(task_id, advance=1)
 
             logger.info(
                 f"Extracted {extracted_count}/{total_files} files, total size: {format_bytes(total_size)}"
@@ -240,6 +271,13 @@ def _extract_tar(
     except Exception as e:
         logger.error(f"Error extracting TAR file: {e}")
         raise
+
+    finally:
+        if task_id is not None and progress:
+            try:
+                progress.remove_task(task_id)
+            except Exception as e:
+                logger.debug(f"Failed to remove progress task: {e}")
 
 
 def _set_zip_permissions(

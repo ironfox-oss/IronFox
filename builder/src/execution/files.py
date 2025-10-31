@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import shutil
 from execution.common import FileOpTask
+from execution.definition import TaskExecutionParams
 from rich.progress import Progress
 from typing import Callable
 
@@ -28,16 +29,22 @@ class CopyTask(FileOpTask):
         self.recursive = recursive
         self.overwrite = overwrite
 
-    async def execute(self, params):
-        self.target.parent.mkdir(parents=True, exist_ok=True)
-        if not self.source.is_dir():
-            if self.target.exists() and not self.overwrite:
-                raise RuntimeError(
-                    f"Cannot copy {self.source}, file already exists: Consider using overwrite=True."
-                )
-            shutil.copy2(self.source, self.target)
-        else:
-            shutil.copytree(self.source, self.target)
+    async def execute(self, params: TaskExecutionParams):
+        progress = params.progress
+        task_id = progress.add_task(f"Copy {self.source} to {self.target}")
+
+        try:
+            self.target.parent.mkdir(parents=True, exist_ok=True)
+            if not self.source.is_dir():
+                if self.target.exists() and not self.overwrite:
+                    raise RuntimeError(
+                        f"Cannot copy {self.source}, file already exists: Consider using overwrite=True."
+                    )
+                shutil.copy2(self.source, self.target)
+            else:
+                shutil.copytree(self.source, self.target)
+        finally:
+            progress.remove_task(task_id)
 
 
 class CopyIntoTask(CopyTask):
@@ -55,19 +62,25 @@ class CopyIntoTask(CopyTask):
         )
 
     async def execute(self, params):
-        self.target.mkdir(parents=True, exist_ok=True)
-        for item in os.listdir(self.source):
-            src_path = os.path.join(self.source, item)
-            dst_path = os.path.join(self.target, item)
+        progress = params.progress
+        task_id = progress.add_task(f"Copy {self.source}/* into {self.target}")
 
-            if os.path.isdir(src_path):
-                if not self.recursive:
-                    raise RuntimeError(
-                        f"Cannot {src_path}: Is a directory. Consider using recursive=True."
-                    )
-                shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
-            else:
-                shutil.copy2(src_path, dst_path)
+        try:
+            self.target.mkdir(parents=True, exist_ok=True)
+            for item in os.listdir(self.source):
+                src_path = os.path.join(self.source, item)
+                dst_path = os.path.join(self.target, item)
+
+                if os.path.isdir(src_path):
+                    if not self.recursive:
+                        raise RuntimeError(
+                            f"Cannot {src_path}: Is a directory. Consider using recursive=True."
+                        )
+                    shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
+                else:
+                    shutil.copy2(src_path, dst_path)
+        finally:
+            progress.remove_task(task_id)
 
 
 class WriteFileTask(FileOpTask):
@@ -92,6 +105,7 @@ class WriteFileTask(FileOpTask):
         return write_file_with_progress(
             destination=self.target,
             contents_func=self.contents,
+            progress=params.progress,
             logger=self.logger,
             chmod=self.chmod,
             append=self.append,
@@ -121,20 +135,26 @@ class DeleteTask(FileOpTask):
         if not self.target.exists():
             return
 
-        if self.target.is_dir():
-            if not self.recursive:
-                raise RuntimeError(
-                    f"Cannot delete directory {self.target} without recursive flag"
-                )
+        progress = params.progress
+        task_id = progress.add_task(f"Delete {self.target}")
+        try:
+            if self.target.is_dir():
+                if not self.recursive:
+                    raise RuntimeError(
+                        f"Cannot delete directory {self.target} without recursive flag"
+                    )
 
-            shutil.rmtree(self.target)
-        else:
-            self.target.unlink()
+                shutil.rmtree(self.target)
+            else:
+                self.target.unlink()
+        finally:
+            progress.remove_task(task_id)
 
 
 def write_file_with_progress(
     destination: Path,
     contents_func: Callable[[], bytes],
+    progress: Progress,
     logger: logging.Logger,
     chmod: int = 0o644,
     append: bool = False,
@@ -159,6 +179,11 @@ def write_file_with_progress(
         raise
 
     open_mode = "ab" if append else "wb"
+
+    task_id = progress.add_task(
+        f"{'Appending to' if append else 'Writing'} {destination.name}",
+        total=new_data_size,
+    )
 
     try:
         with open(destination, open_mode) as f:
@@ -188,3 +213,5 @@ def write_file_with_progress(
             except Exception as cleanup_error:
                 logger.warning(f"Failed to clean up partial file: {cleanup_error}")
         raise
+    finally:
+        progress.remove_task(task_id)

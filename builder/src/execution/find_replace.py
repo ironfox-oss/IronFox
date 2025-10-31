@@ -5,7 +5,8 @@ import re
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import Callable, List
+from rich.progress import Progress, TaskID
 
 import aiofiles
 
@@ -123,14 +124,25 @@ class FindReplaceTask(TaskDefinition):
         self.create_if_missing = create_if_missing
 
     async def execute(self, params):
-        for target_file in self.target_files:
-            await find_replace(
-                target_file=target_file,
-                replacements=self.replacements,
-                logger=self.logger,
-                backup=self.backup,
-                create_if_missing=self.create_if_missing,
-            )
+        progress = params.progress
+        name = f"Process files (0/{len(self.target_files)})"
+        if len(self.target_files) == 1:
+            name = f"Process file {self.target_files[0].relative_to(params.env.paths.root_dir)}"
+
+        task_id = progress.add_task(name, total=len(self.target_files))
+
+        try:
+            for index, target_file in enumerate(self.target_files):
+                await find_replace(
+                    target_file=target_file,
+                    replacements=self.replacements,
+                    logger=self.logger,
+                    backup=self.backup,
+                    create_if_missing=self.create_if_missing,
+                )
+                progress.update(task_id, completed=index + 1)
+        finally:
+            progress.remove_task(task_id)
 
 
 async def find_replace(
@@ -145,7 +157,9 @@ async def find_replace(
             if create_if_missing:
                 target_file.touch()
             else:
-                logger.warning(f"Target file {target_file} does not exist. Skipping find-replace.")
+                logger.warning(
+                    f"Target file {target_file} does not exist. Skipping find-replace."
+                )
                 return
 
         async with aiofiles.open(target_file, "r", encoding="utf-8") as f:
@@ -171,11 +185,15 @@ async def find_replace(
     except UnicodeDecodeError:
         # ignore non-utf files
         pass
+    finally:
+        progress.remove_task(task_id)
 
 
 def _apply_replacements(
     content: str,
     replacements: List[ReplacementAction],
+    task_id: TaskID,
+    progress: Progress,
 ) -> str:
     result = content
 
@@ -235,5 +253,7 @@ def _apply_replacements(
             result = "".join(modified_lines)
         elif isinstance(replacement, CustomReplacement):
             result = replacement.replacer(result)
+
+        progress.update(task_id, advance=1)
 
     return result

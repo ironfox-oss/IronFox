@@ -37,6 +37,7 @@ class DownloadTask(TaskDefinition):
             url=self.url,
             destination=self.destination,
             sha256=self.sha256,
+            progress=params.progress,
             logger=self.logger,
         )
 
@@ -45,6 +46,7 @@ def download_if_needed(
     url: str,
     destination: Path,
     sha256: str,
+    progress: Progress,
     logger: logging.Logger,
 ):
     if destination.exists():
@@ -76,6 +78,7 @@ def download_if_needed(
         url,
         destination,
         sha256,
+        progress,
         logger,
     )
 
@@ -84,6 +87,7 @@ def download_with_progress(
     url: str,
     destination: Path,
     sha256: str,
+    progress: Progress,
     logger: logging.Logger,
 ):
     logger.info(f"Downloading {url} to {destination}")
@@ -131,6 +135,11 @@ def download_with_progress(
         else:
             logger.info("Download size unknown")
 
+        task_id = progress.add_task(
+            f"Downloading {destination.name}",
+            total=total_size if total_size > 0 else None,
+        )
+
         temp_file = destination.with_suffix(destination.suffix + ".tmp")
 
         with open(temp_file, "wb") as f:
@@ -143,6 +152,9 @@ def download_with_progress(
                     if chunk:  # Filter out keep-alive chunks
                         bytes_written = f.write(chunk)
                         total_downloaded += bytes_written
+
+                        if task_id is not None:
+                            progress.update(task_id, advance=bytes_written)
 
                         current_time = time.time()
                         if current_time - last_log_time >= 5.0:  # Log every 5 seconds
@@ -240,6 +252,13 @@ def download_with_progress(
         raise
 
     finally:
+        # Clean up
+        if task_id is not None and progress:
+            try:
+                progress.remove_task(task_id)
+            except Exception as e:
+                logger.debug(f"Failed to remove progress task: {e}")
+
         if temp_file and temp_file.exists():
             try:
                 temp_file.unlink()

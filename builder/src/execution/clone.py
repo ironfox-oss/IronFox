@@ -32,6 +32,7 @@ class CloneTask(TaskDefinition):
         return clone_repository(
             repo_url=self.repo_url,
             clone_to=self.clone_to,
+            progress=params.progress,
             logger=self.logger,
             branch=self.branch,
             depth=self.depth,
@@ -42,6 +43,7 @@ class CloneTask(TaskDefinition):
 def clone_repository(
     repo_url: str,
     clone_to: Path,
+    progress: Progress,
     logger: logging.Logger,
     branch: str | None = None,
     depth: int | None = None,
@@ -70,6 +72,8 @@ def clone_repository(
     cmd.extend([repo_url, str(clone_to)])
 
     logger.debug(f"Executing command: {' '.join(cmd)}")
+
+    task_id = progress.add_task(f"Cloning {Path(repo_url).name}", total=None)
 
     try:
 
@@ -114,3 +118,6 @@ def clone_repository(
             "Git command not found. Please ensure Git is installed and in PATH."
         )
         raise subprocess.CalledProcessError(127, cmd, "Git command not found")
+
+    finally:
+        progress.remove_task(task_id)
