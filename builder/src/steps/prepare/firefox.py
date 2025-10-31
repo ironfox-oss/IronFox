@@ -11,6 +11,7 @@ from execution.types import ReplacementAction
 
 from .deglean import deglean
 
+
 def prepare_firefox(
     d: BuildDefinition,
     paths: Paths,
@@ -650,7 +651,7 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         # Write mozconfig
         d.write_file(
             name="Write mozconfig",
-            target=paths.firefox_dir / "mozconfig",
+            target=paths.mozconfig_file,
             overwrite=True,
             append=False,
             contents=lambda: mozconfig(config, paths).encode()

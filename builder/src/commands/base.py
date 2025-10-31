@@ -2,11 +2,10 @@
 
 import io
 import logging
+import pstats
 
 from abc import abstractmethod
-import os
 from pathlib import Path
-import pstats
 from typing import Dict
 
 from rich.table import Table
@@ -61,6 +60,7 @@ class BuildEnvironment:
 
         _path_vars: dict[str, Path] = {
             "MACHRC": paths.machrc_file,
+            "MOZCONFIG": paths.mozconfig_file,
             "NSS_DIR": paths.application_services_nss_dir,
             "ARTIFACTS": paths.artifacts_dir,
             "APK_ARTIFACTS": paths.artifacts_apk_dir,

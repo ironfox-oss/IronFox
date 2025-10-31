@@ -1,9 +1,10 @@
 from pathlib import Path
-from typing import List
 from commands.base import BaseConfig
-from commands.build import BuildConfig
+from commands.build import BuildConfig, BuildType
 from common.paths import Paths
+from common.locales import IRONFOX_LOCALES
 from execution.definition import BuildDefinition, TaskDefinition
+from execution.find_replace import on_line_text, on_lines
 
 
 def _require_dir_exists(dir: Path):
@@ -27,8 +28,31 @@ async def get_definition(
     _require_dir_exists(paths.java_home)
     _require_dir_exists(paths.cargo_home)
 
-    d.parallel(
+    d.chain(
         # fmt:off
+
+        # These tasks are chained because they depend on the task
+        # defined before them to be successful
+
+        # Build application-services
+        build_application_services(d, config, paths),
+        
+        # Build Firefox
+        build_firefox(d, config, paths),
+        
+        # Build Android Components
+        build_android_components(d, config, paths),
+        
+        # Build Fenix
+        build_fenix(d, config, paths),
+        # fmt:on
+    ).depends_on(
+        # fmt:off
+
+        # These tasks can be run in parallel since they're independent of
+        # each other. However, the tasks defined in the above chain(...)
+        # call must be run AFTER the below tasks are successful, hence the
+        # depends_on(...) call
         
         # Build UniFFI bindgen
         build_uniffi(d, paths),
@@ -38,9 +62,6 @@ async def get_definition(
         
         # Build Glean
         build_glean(d, paths),
-        
-        # Build application-services
-        build_application_services(d, config, paths),
         # fmt:on
     )
 
@@ -114,13 +135,76 @@ def build_firefox(
     config: BuildConfig,
     paths: Paths,
 ) -> TaskDefinition:
-    env = {"CI": "true"}
+    locales = " ".join(IRONFOX_LOCALES)
+    env = {"MOZ_CHROME_MULTILOCALE": locales}
     return d.run_commands(
-        name="Build Firefox [build]",
+        name="Build Firefox",
         commands=[
             "./mach build",
             "./mach package",
+            f"./mach package-multi-locale --locales {locales}",
+            f"{paths.gradle_exec} -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal",
         ],
         cwd=paths.firefox_dir,
         env=env,
+    )
+
+
+def build_android_components(
+    d: BuildDefinition,
+    config: BuildConfig,
+    paths: Paths,
+) -> TaskDefinition:
+    return d.chain(
+        *d.find_replace(
+            name="Disable A-S auto-pubish",
+            target_files=paths.android_components_dir / "local.properties",
+            replacements=[
+                # Publish concept-fetch (required by A-S) with auto-publication disabled,
+                # otherwise automatically triggered publication of A-S will fail
+                on_line_text(
+                    match_lines=r"^autoPublish.application-services.dir=",
+                    on_text=r".*",
+                    replace="",
+                )
+            ],
+        ),
+        d.run_commands(
+            name="Build Android Components",
+            commands=[
+                f"{paths.gradle_exec} :components:concept-fetch:publishToMavenLocal",
+            ],
+            cwd=paths.android_components_dir,
+        ),
+        # Enable the auto-publication workflow now that concept-fetch is published
+        d.write_file(
+            name="Enable A-S auto-pubish",
+            target=paths.android_components_dir / "local.properties",
+            contents=lambda: f"autoPublish.application-services.dir={paths.application_services_dir}".encode(),
+            append=True,
+        ),
+        d.run_commands(
+            name="Publish Android Components",
+            commands=[
+                f"{paths.gradle_exec} publishToMavenLocal",
+            ],
+            cwd=paths.android_components_dir,
+        ),
+    )
+
+
+def build_fenix(
+    d: BuildDefinition,
+    config: BuildConfig,
+    paths: Paths,
+) -> TaskDefinition:
+    task = (
+        f":app:assembleRelease"
+        if config.build_type == BuildType.APK
+        else ":app:bundleRelease -Paab"
+    )
+    return d.run_commands(
+        name="Build Fenix",
+        commands=[f"{paths.gradle_exec} {task}"],
+        cwd=paths.firefox_dir,
     )

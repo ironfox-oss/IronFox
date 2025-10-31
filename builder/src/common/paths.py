@@ -67,7 +67,7 @@ class Paths:
     def libclang_dir(self) -> Path:
         if is_macos():
             return self.ndk_toolchain_dir / "lib"
-        
+
         return self.ndk_toolchain_dir / "musl" / "lib"
 
     @property
@@ -115,13 +115,6 @@ class Paths:
         return self._rootdir / "patches"
 
     @property
-    def locales_file(self) -> Path:
-        """Path to the `locales` file containing space-separated
-        locale codes to include in final IronFox build.
-        """
-        return self.patches_dir / "locales"
-
-    @property
     def machrc_file(self) -> Path:
         """Path to the `machrc` file used to configure the `mach` command during IronFox build."""
         return self.patches_dir / "machrc"
@@ -167,6 +160,11 @@ class Paths:
     def firefox_dir(self) -> Path:
         """Path to the mozilla-release (gecko) source directory."""
         return self._rootdir / "gecko"
+
+    @property
+    def mozconfig_file(self) -> Path:
+        """Path to the mozconfig file"""
+        return self.firefox_dir / "mozconfig"
 
     @property
     def gmscore_dir(self) -> Path:

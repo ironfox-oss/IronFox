@@ -77,6 +77,7 @@ class AsyncBuildExecutor:
         ready_queue = asyncio.Queue()
         for task in definition.tasks:
             if not task.dependencies:
+                self.logger.warning(f"Readying task: {task.name}")
                 await ready_queue.put(task.id)
 
         # Queue for completed tasks - this is KEY to avoiding isinstance overhead
