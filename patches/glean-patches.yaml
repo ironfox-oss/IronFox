@@ -27,6 +27,13 @@ patches:
     effect: "Unbreaks the build process when building GeckoView without Glean."
     category: "Build System"
 
+  - file: "glean-unbreak-uniffi-cmd.patch"
+    name: "Unbreak command to build Kotlin bindings"
+    description: "Unbreaks the command used to generate Kotlin bindings for Glean."
+    reason: "Allows building Glean without errors."
+    effect: "Unbreaks the build process when building Glean."
+    category: "Build System"
+
   # Mozilla
   - file: "glean-noop.patch"
     name: "No-op Glean"
