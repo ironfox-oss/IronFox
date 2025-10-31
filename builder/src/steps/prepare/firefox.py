@@ -429,6 +429,15 @@ FINAL_TARGET_FILES.defaults.settings.main += [
             ],
         ),
         
+        # Remove DoH config/rollout - local dumps
+        *_process_file(
+            path="services/settings/static-dumps/main/moz.build",
+            replacements=[
+                line_affix(r'doh-config.json', prefix="#"),
+                line_affix(r'doh-providers.json', prefix="#"),
+            ]
+        ),
+
         # Remove example dependencies, ExoPlayer, and comment out sample projects in settings.gradle
         *_process_file(
             path="settings.gradle",
