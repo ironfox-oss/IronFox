@@ -110,7 +110,6 @@ class AsyncBuildExecutor:
                         task_state.completed = True
                         task_state.task.debug("Completed successfully")
 
-                        # Signal completion - NO isinstance checks here!
                         await completion_queue.put((task_id, None))
 
                     except Exception as e:
@@ -125,28 +124,19 @@ class AsyncBuildExecutor:
             workers = [asyncio.create_task(worker()) for _ in range(self.config.jobs)]
 
             try:
-                # Main coordination loop
                 while pending_tasks or not ready_queue.empty():
-
-                    # Wait for a completion with timeout to keep loop responsive
                     try:
                         task_id, error = await asyncio.wait_for(
                             completion_queue.get(), timeout=0.1
                         )
                     except asyncio.TimeoutError:
-                        # No completions yet, continue
                         continue
 
                     task_state = task_states[task_id]
-
-                    # Remove from pending
                     pending_tasks.discard(task_id)
 
                     if error is None:
-                        # Task succeeded
                         completed_tasks.add(task_id)
-
-                        # Find newly ready tasks and add to queue
                         newly_ready = self._find_newly_ready_tasks(
                             task_id,
                             dependency_graph,
