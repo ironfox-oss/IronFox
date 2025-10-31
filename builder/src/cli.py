@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from email.policy import default
 import logging
 import os
 import click
@@ -72,6 +73,18 @@ async def _exec_cmd(cmd: BaseCommand):
     default=multiprocessing.cpu_count(),
 )
 @click.option(
+    "--write-task-graph",
+    help="If specified, the task graph to written to the specified file path.",
+    type=click.Path(dir_okay=False, writable=True),
+    default=None,
+)
+@click.option(
+    "--task-graph-type",
+    help="The type of task graph to print. Defaults to 'image'.",
+    type=click.Choice(choices=["image", "ascii"]),
+    default="image",
+)
+@click.option(
     "--dry-run",
     help="Disable task execution.",
     is_flag=True,
@@ -99,6 +112,8 @@ async def cli(
     cargo_home: str,
     gradle_exec: str | None,
     jobs: int,
+    write_task_graph: str,
+    task_graph_type: str,
     dry_run: bool,
     verbose: bool,
     profile: bool,
@@ -115,6 +130,8 @@ async def cli(
         java_home=Path(java_home),
         cargo_home=Path(cargo_home),
         gradle_exec=Path(gradle_exec),
+        write_task_graph=Path(write_task_graph) if write_task_graph else None,
+        task_graph_type=task_graph_type,
         jobs=jobs,
         dry_run=dry_run,
         verbose=verbose,

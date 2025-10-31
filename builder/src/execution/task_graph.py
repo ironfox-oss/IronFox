@@ -1,3 +1,4 @@
+from pathlib import Path
 import networkx as _nx
 import matplotlib.pyplot as _plt
 import os as _os
@@ -8,7 +9,7 @@ from collections import defaultdict as _defaultdict, deque as _deque
 
 def write_img_graph(
     build: BuildDefinition,
-    filepath: str,
+    filepath: Path,
     figsize=(12, 8),
     dpi: int = 150,
     show: bool = False,
@@ -40,7 +41,9 @@ def write_img_graph(
     _nx.draw_networkx_labels(G, pos, labels, font_size=9)
     _plt.axis("off")
 
-    _os.makedirs(_os.path.dirname(_os.path.abspath(filepath)) or ".", exist_ok=True)
+    filepath = filepath.absolute()
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+
     _plt.savefig(filepath, bbox_inches="tight")
     if show:
         _plt.show()
@@ -49,7 +52,7 @@ def write_img_graph(
 
 def write_ascii_graph(
     build: BuildDefinition,
-    file_path: str,
+    filepath: Path,
     indent_unit: str = "    ",
 ) -> None:
     id_to_name = {t.id: getattr(t, "name", f"#{t.id}") for t in build.tasks}
@@ -140,6 +143,7 @@ def write_ascii_graph(
                 lines.append(f"  [{dep_id}] {dep_label} -> (no outward edges)")
 
     # Write out file (ensure directory exists)
-    _os.makedirs(_os.path.dirname(_os.path.abspath(file_path)) or ".", exist_ok=True)
-    with open(file_path, "w", encoding="utf-8") as f:
+    filepath = filepath.absolute()
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    with open(filepath, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))

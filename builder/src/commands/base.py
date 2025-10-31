@@ -1,5 +1,8 @@
 """Base implementation for all 'ironfox' commands."""
 
+from __future__ import annotations
+
+from enum import Enum
 import io
 import logging
 import pstats
@@ -8,6 +11,7 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Dict
 
+from execution.task_graph import write_ascii_graph, write_img_graph
 from rich.table import Table
 from rich.console import Console
 from rich.panel import Panel
@@ -90,6 +94,11 @@ class BuildEnvironment:
         return f"BuildEnvironment({''.join(f'{key}={value}' for key, value in self.environment_variables.items())})"
 
 
+class TaskGraphType(Enum):
+    Image = 0
+    Ascii = 1
+
+
 class BaseConfig:
     """Base class for all configurations."""
 
@@ -100,6 +109,8 @@ class BaseConfig:
         java_home: Path,
         cargo_home: Path,
         gradle_exec: Path,
+        write_task_graph: Path | None,
+        task_graph_type: str | None,
         jobs: int,
         dry_run: bool,
         verbose: bool,
@@ -110,6 +121,10 @@ class BaseConfig:
         self.verbose = verbose
         self.dry_run = dry_run
         self.profile = profile
+        self.task_graph_path = write_task_graph
+        self.task_graph_type = (
+            TaskGraphType.Ascii if task_graph_type == "ascii" else TaskGraphType.Image
+        )
         self.paths = Paths(
             root_dir=root_dir.resolve(),
             android_home=android_home.resolve(),
@@ -172,6 +187,18 @@ class BaseCommand:
         )
 
         definition = await self.get_definition()
+
+        if self.base_config.task_graph_path:
+            if self.base_config.task_graph_type == TaskGraphType.Image:
+                write_img_graph(
+                    build=definition,
+                    filepath=self.base_config.task_graph_path,
+                )
+            elif self.base_config.task_graph_type == TaskGraphType.Ascii:
+                write_ascii_graph(
+                    build=definition,
+                    filepath=self.base_config.task_graph_path,
+                )
 
         executor = AsyncBuildExecutor(config=config, definition=definition)
 
