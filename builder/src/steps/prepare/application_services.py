@@ -47,8 +47,8 @@ def prepare_application_services(
             path="gradle/libs.versions.toml",
             replacements=[
                 regex(r"^android-components = \"", f'android-components = "{Versions.FIREFOX_VERSION}"'),
-                comment_out(r'mozilla-glean'),
-                comment_out(r'glean'),
+                comment_out(r'mozilla-glean', comment_token="#"),
+                comment_out(r'glean', comment_token="#"),
             ]
         ),
         
