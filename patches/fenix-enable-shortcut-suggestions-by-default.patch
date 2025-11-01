@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 8e89ba9018..b40a6a0e7a 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -743,7 +743,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     val shortcutSuggestionsEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_show_shortcuts_suggestions),
+-        default = false,
++        default = true,
+     )
+ 
+     /**
