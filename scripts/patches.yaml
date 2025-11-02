@@ -438,9 +438,9 @@ patches:
     effect: "Cleaner websites without cookie banners, while automatically opting users out of tracking where possible."
     category: "Privacy"
 
-  - file: "gecko-custom-ublock-origin-assets.patch"
-    name: "Enhanced uBlock Configuration"
-    description: "Sets uBlock Origin to use a custom/enhanced config by default."
+  - file: "gecko-configure-ublock-origin.patch"
+    name: "Configure uBlock Origin"
+    description: "Sets uBlock Origin to use a custom/enhanced config, and changes certain settings by default."
     reason: "To provide stronger out-of-box content blocking."
     effect: "Better ad and tracker blocking with optimized filter lists."
     category: "Privacy"
