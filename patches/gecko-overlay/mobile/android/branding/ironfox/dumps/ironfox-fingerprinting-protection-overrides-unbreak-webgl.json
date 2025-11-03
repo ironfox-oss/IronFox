@@ -126,6 +126,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "mapcomplete.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "mapgenie.io"
     },
     {
