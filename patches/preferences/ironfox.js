@@ -45,6 +45,9 @@ pref("beacon.enabled", true); // [DEFAULT]
 // https://codeberg.org/celenity/Phoenix/src/branch/pages/build/policies/blocklist.json
 pref("browser.ironfox.extensions.blocklist.enabled", true); // [DEFAULT]
 
+/// Ensure media autoplay is always/only controlled by the UI/permission prompt
+pref("media.geckoview.autoplay.request", true, locked); // [DEFAULT]
+
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
 
