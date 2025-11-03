@@ -50,7 +50,7 @@ index 7d2ef5a331..20904ea669 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..e12c11ef12
+index 0000000000..3b75ca0c87
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 @@ -0,0 +1,852 @@
@@ -266,26 +266,6 @@ index 0000000000..e12c11ef12
 +        }
 +
 +        /**
-+         * Indicates whether or not we should spoof the user's locale to en-US
-+         * Default: true
-+         * Gecko preference(s) impacted: privacy.spoof_english
-+         */
-+        val spoofEnglishPreference = requirePreference<SwitchPreference>(
-+            R.string.pref_key_spoof_english,
-+        )
-+
-+        spoofEnglishPreference.isChecked = IronFoxPreferences.isLocaleSpoofingEnabled(requireContext())
-+        spoofEnglishPreference.setOnPreferenceChangeListener { preference, spoofEnglish ->
-+            val settings = preference.context.settings()
-+            val components = preference.context.components
-+
-+            settings.spoofEnglish = spoofEnglish as Boolean
-+            components.core.engine.settings.spoofEnglish = spoofEnglish
-+
-+            true
-+        }
-+
-+        /**
 +         * Indicates whether or not we should enable our timezone spoofing overrides
 +         * Default: true
 +         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled
@@ -312,6 +292,26 @@ index 0000000000..e12c11ef12
 +                },
 +                DEFAULT_EXIT_DELAY,
 +            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should spoof the user's locale to en-US
++         * Default: true
++         * Gecko preference(s) impacted: privacy.spoof_english
++         */
++        val spoofEnglishPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_spoof_english,
++        )
++
++        spoofEnglishPreference.isChecked = IronFoxPreferences.isLocaleSpoofingEnabled(requireContext())
++        spoofEnglishPreference.setOnPreferenceChangeListener { preference, spoofEnglish ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.spoofEnglish = spoofEnglish as Boolean
++            components.core.engine.settings.spoofEnglish = spoofEnglish
++
 +            true
 +        }
 +
