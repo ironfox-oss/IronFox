@@ -1076,6 +1076,8 @@ fi
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo 'ac_add_options --enable-update-channel=release'
+    echo 'ac_add_options --enable-wasm-branch-hinting'
+    echo 'ac_add_options --enable-wasm-memory-control'
     
     if [[ "$IRONFOX_RELEASE" == 1 ]]; then
         echo 'ac_add_options --with-app-basename=IronFox'
