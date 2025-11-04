@@ -137,6 +137,8 @@ pref("javascript.options.wasm.0.NOTE", "Locked in favor of the UI setting:", loc
 pref("javascript.options.wasm.1.NOTE", "'Enable WebAssembly (WASM)'", locked);
 pref("javascript.options.wasm_optimizingjit.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("javascript.options.wasm_optimizingjit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("media.autoplay.blocking_policy.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("media.autoplay.blocking_policy.1.NOTE", "'Media autoplay'", locked);
 pref("media.eme.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("media.eme.enabled.1.NOTE", "'Enable Encrypted Media Extensions (EME)'", locked);
 pref("media.mediadrm-widevinecdm.visible.0.NOTE", "Locked in favor of the UI setting:", locked);

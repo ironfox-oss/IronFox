@@ -41,6 +41,12 @@
     <string name="pref_key_jit_enabled" translatable="false">pref_key_jit_enabled</string>
     <string name="pref_key_jit_trusted_principals_enabled" translatable="false">pref_key_jit_trusted_principals_enabled</string>
 
+    <!-- Media autoplay-->
+    <string name="pref_key_autoplay_policy_click_to_play" translatable="false">pref_key_autoplay_policy_click_to_play</string>
+    <string name="pref_key_autoplay_policy_sticky" translatable="false">pref_key_autoplay_policy_sticky</string>
+    <string name="pref_key_autoplay_policy_transient" translatable="false">pref_key_autoplay_policy_transient</string>
+    <string name="pref_key_media_autoplay_description" translatable="false">pref_key_media_autoplay_description</string>
+
     <!-- PDF.js -->
     <string name="pref_key_pdfjs_disabled" translatable="false">pref_key_pdfjs_disabled</string>
 

@@ -728,13 +728,6 @@ patches:
     effect: "Users are provided with a cleaner, focused browsing experience."
     category: "User Interface"
 
-  - file: "a-c-ironfox-settings-support-cross-origin-referer-policy.patch"
-    name: "IronFox Settings Support (Android Components) - Cross-origin referer policy"
-    description: "Provides support for UI settings to configure the behavior of cross-origin referers."
-    reason: "To allow users to harden or relax the handling of cross-origin referers, directly from the UI."
-    effect: "Users can configure the cross-origin referer policy from the UI."
-    category: "User Interface"
-
   - file: "fenix-ironfox-settings-support-accessibility-services.patch"
     name: "IronFox Settings (Fenix) - Accessibility services"
     description: "Provides support for a UI toggle to enable/disable accessibility services."

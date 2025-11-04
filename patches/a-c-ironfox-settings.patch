@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..b64d994704 100644
+index 5233b8a8dd..294c3472c7 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1655,6 +1655,142 @@ class GeckoEngine(
+@@ -1655,6 +1655,157 @@ class GeckoEngine(
          override var lnaBlockingEnabled: Boolean
              get() = runtime.settings.lnaBlockingEnabled
              set(value) { runtime.settings.setLnaBlockingEnabled(value) }
@@ -14,6 +14,21 @@ index 5233b8a8dd..b64d994704 100644
 +        override var addressAutofillEnabled: Boolean
 +            get() = runtime.settings.addressAutofillEnabled
 +            set(value) { runtime.settings.addressAutofillEnabled = value }
++
++        override var autoplayBlockingPolicy: Engine.AutoplayBlockingPolicy
++            get() = when (runtime.settings.autoplayBlockingPolicy) {
++                GeckoRuntimeSettings.AUTOPLAY_BLOCKING_STICKY -> Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_STICKY
++                GeckoRuntimeSettings.AUTOPLAY_BLOCKING_TRANSIENT -> Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT
++                GeckoRuntimeSettings.AUTOPLAY_BLOCKING_CLICKTOPLAY -> Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_CLICKTOPLAY
++                else -> throw java.lang.IllegalStateException("Unknown media autoplay blocking policy returned by GeckoView")
++            }
++            set(value) {
++                runtime.settings.autoplayBlockingPolicy = when (value) {
++                    Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_STICKY -> GeckoRuntimeSettings.AUTOPLAY_BLOCKING_STICKY
++                    Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT -> GeckoRuntimeSettings.AUTOPLAY_BLOCKING_TRANSIENT
++                    Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_CLICKTOPLAY -> GeckoRuntimeSettings.AUTOPLAY_BLOCKING_CLICKTOPLAY
++                }
++            }
 +
 +        override var cacheEnabled: Boolean
 +            get() = runtime.settings.cacheEnabled
@@ -145,12 +160,13 @@ index 5233b8a8dd..b64d994704 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1702,6 +1838,36 @@ class GeckoEngine(
+@@ -1702,6 +1853,37 @@ class GeckoEngine(
              this.dohAutoselectEnabled = it.dohAutoselectEnabled
              this.bannedPorts = it.bannedPorts
              this.lnaBlockingEnabled = it.lnaBlockingEnabled
 +            this.accessibilityEnabled = it.accessibilityEnabled
 +            this.addressAutofillEnabled = it.addressAutofillEnabled
++            this.autoplayBlockingPolicy = it.autoplayBlockingPolicy
 +            this.cacheEnabled = it.cacheEnabled
 +            this.cardAutofillEnabled = it.cardAutofillEnabled
 +            this.emeEnabled = it.emeEnabled
@@ -182,17 +198,41 @@ index 5233b8a8dd..b64d994704 100644
          }
      }
  
+diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
+index 6d394e4c2b..37fe25bc3d 100644
+--- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
++++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Engine.kt
+@@ -110,6 +110,18 @@ interface Engine : WebExtensionRuntime, TranslationsRuntime, BrowserPreferencesR
+         OFF,
+     }
+ 
++    enum class AutoplayBlockingPolicy {
++        AUTOPLAY_BLOCKING_STICKY,
++        AUTOPLAY_BLOCKING_TRANSIENT,
++        AUTOPLAY_BLOCKING_CLICKTOPLAY,
++    }
++
++    enum class RefererXOriginPolicy {
++        REFERER_XORIGIN_ALWAYS,
++        REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH,
++        REFERER_XORIGIN_IF_HOSTS_MATCH,
++    }
++
+     /**
+      * Makes sure all required engine initialization logic is executed. The
+      * details are specific to individual implementations, but the following must be true:
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..5433fbda47 100644
+index f9aa3b43e9..dbd361340a 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -367,6 +367,37 @@ abstract class Settings {
+@@ -367,6 +367,38 @@ abstract class Settings {
       * Setting to control blocking of local network & local device (localhost) access
       */
      open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
 +
 +    open var accessibilityEnabled: Boolean by UnsupportedSetting()
 +    open var addressAutofillEnabled: Boolean by UnsupportedSetting()
++    open var autoplayBlockingPolicy: Engine.AutoplayBlockingPolicy by UnsupportedSetting()
 +    open var cacheEnabled: Boolean by UnsupportedSetting()
 +    open var cardAutofillEnabled: Boolean by UnsupportedSetting()
 +    open var emeEnabled: Boolean by UnsupportedSetting()
@@ -224,12 +264,13 @@ index f9aa3b43e9..5433fbda47 100644
  }
  
  /**
-@@ -440,6 +471,36 @@ data class DefaultSettings(
+@@ -440,6 +472,37 @@ data class DefaultSettings(
      override var dohAutoselectEnabled: Boolean = false,
      override var bannedPorts: String = "",
      override var lnaBlockingEnabled: Boolean = false,
 +    override var accessibilityEnabled: Boolean = false,
 +    override var addressAutofillEnabled: Boolean = false,
++    override var autoplayBlockingPolicy: Engine.AutoplayBlockingPolicy = Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT,
 +    override var cacheEnabled: Boolean = false,
 +    override var cardAutofillEnabled: Boolean = false,
 +    override var emeEnabled: Boolean = false,

@@ -1,13 +1,14 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index 22ea23ef5e..bbd18e50d5 100644
+index 22ea23ef5e..47e4363e5f 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -1031,6 +1031,36 @@ package org.mozilla.geckoview {
+@@ -1031,6 +1031,37 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
 +    method public boolean getAccessibilityEnabled();
 +    method public boolean getAddressAutofillEnabled();
++    method public int getAutoplayBlockingPolicy();
 +    method public boolean getCacheEnabled();
 +    method public boolean getCardAutofillEnabled();
 +    method public boolean getEmeEnabled();
@@ -39,12 +40,13 @@ index 22ea23ef5e..bbd18e50d5 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1081,6 +1111,36 @@ package org.mozilla.geckoview {
+@@ -1081,6 +1112,37 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setAccessibilityEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setAddressAutofillEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings setAutoplayBlockingPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings setCacheEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setCardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings setEmeEnabled(boolean);
@@ -76,22 +78,26 @@ index 22ea23ef5e..bbd18e50d5 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1095,6 +1155,9 @@ package org.mozilla.geckoview {
+@@ -1095,6 +1157,12 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
++    field public static final int AUTOPLAY_BLOCKING_STICKY = 0;
++    field public static final int AUTOPLAY_BLOCKING_TRANSIENT = 1;
++    field public static final int AUTOPLAY_BLOCKING_CLICKTOPLAY = 2;
 +    field public static final int REFERER_XORIGIN_ALWAYS = 0;
 +    field public static final int REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH = 1;
 +    field public static final int REFERER_XORIGIN_IF_HOSTS_MATCH = 2;
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1147,6 +1210,36 @@ package org.mozilla.geckoview {
+@@ -1147,6 +1215,37 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder accessibilityEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder addressAutofillEnabled(boolean);
++    method @NonNull public GeckoRuntimeSettings.Builder autoplayBlockingPolicy(int);
 +    method @NonNull public GeckoRuntimeSettings.Builder cacheEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder cardAutofillEnabled(boolean);
 +    method @NonNull public GeckoRuntimeSettings.Builder emeEnabled(boolean);
@@ -123,10 +129,13 @@ index 22ea23ef5e..bbd18e50d5 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1162,6 +1255,9 @@ package org.mozilla.geckoview {
+@@ -1162,6 +1261,12 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
++  @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.AutoplayBlockingPolicy {
++  }
++
 +  @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.RefererXOriginPolicy {
 +  }
 +
@@ -134,10 +143,10 @@ index 22ea23ef5e..bbd18e50d5 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 10c6a16381..a4927a9e06 100644
+index 10c6a16381..b03c86601d 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-@@ -681,6 +681,156 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -681,6 +681,161 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
        getSettings().mIsolatedProcess = enabled;
        return this;
      }
@@ -149,6 +158,11 @@ index 10c6a16381..a4927a9e06 100644
 +
 +    public @NonNull Builder addressAutofillEnabled(final boolean flag) {
 +      getSettings().mAddressAutofillEnabled.set(flag);
++      return this;
++    }
++
++    public @NonNull Builder autoplayBlockingPolicy(final @AutoplayBlockingPolicy int level) {
++      getSettings().setAutoplayBlockingPolicy(level);
 +      return this;
 +    }
 +
@@ -294,12 +308,13 @@ index 10c6a16381..a4927a9e06 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -821,6 +971,37 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -821,6 +976,38 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
 +  /* package */ final Pref<Integer> mAccessibilityEnabled = new Pref<Integer>("accessibility.force_disabled", 1);
 +  /* package */ final Pref<Boolean> mAddressAutofillEnabled = new Pref<Boolean>("extensions.formautofill.addresses.enabled", false);
++  /* package */ final Pref<Integer> mAutoplayBlockingPolicy = new Pref<Integer>("media.autoplay.blocking_policy", 1);
 +  /* package */ final Pref<Boolean> mCacheEnabled = new Pref<Boolean>("browser.cache.disk.enable", false);
 +  /* package */ final Pref<Boolean> mCardAutofillEnabled = new Pref<Boolean>("extensions.formautofill.creditCards.enabled", false);
 +  /* package */ final Pref<Boolean> mEmeEnabled = new Pref<Boolean>("media.eme.enabled", false);
@@ -332,7 +347,7 @@ index 10c6a16381..a4927a9e06 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2356,6 +2537,302 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2356,6 +2543,337 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mIsolatedProcess;
    }
  
@@ -351,6 +366,41 @@ index 10c6a16381..a4927a9e06 100644
 +
 +  public @NonNull GeckoRuntimeSettings setAddressAutofillEnabled(final boolean flag) {
 +    mAddressAutofillEnabled.commit(flag);
++    return this;
++  }
++
++  @Retention(RetentionPolicy.SOURCE)
++  @IntDef({AUTOPLAY_BLOCKING_STICKY, AUTOPLAY_BLOCKING_TRANSIENT, AUTOPLAY_BLOCKING_CLICKTOPLAY})
++  public @interface AutoplayBlockingPolicy {}
++
++  public static final int AUTOPLAY_BLOCKING_STICKY = 0;
++  public static final int AUTOPLAY_BLOCKING_TRANSIENT = 1;
++  public static final int AUTOPLAY_BLOCKING_CLICKTOPLAY = 2;
++
++  public @AutoplayBlockingPolicy int getAutoplayBlockingPolicy() {
++    final int level = mAutoplayBlockingPolicy.get();
++    switch (level) {
++      case 0:
++        return AUTOPLAY_BLOCKING_STICKY;
++      case 2:
++        return AUTOPLAY_BLOCKING_CLICKTOPLAY;
++      default:
++      case 1:
++        return AUTOPLAY_BLOCKING_TRANSIENT;
++    }
++  }
++
++  public @NonNull GeckoRuntimeSettings setAutoplayBlockingPolicy(
++      final @AutoplayBlockingPolicy int level) {
++    switch (level) {
++      case AUTOPLAY_BLOCKING_STICKY:
++      case AUTOPLAY_BLOCKING_TRANSIENT:
++      case AUTOPLAY_BLOCKING_CLICKTOPLAY:
++        mAutoplayBlockingPolicy.commit(level);
++        break;
++      default:
++        throw new IllegalArgumentException("Invalid setting for setAutoplayBlockingPolicy");
++    }
 +    return this;
 +  }
 +
