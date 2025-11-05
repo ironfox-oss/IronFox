@@ -39,7 +39,7 @@ async def get_definition(
         *build_application_services(d, config, paths),
         
         # Build Firefox
-        *build_firefox(d, config, paths),
+        *build_firefox(d, base, config, paths),
         
         # Build Android Components
         *build_android_components(d, config, paths),
@@ -141,19 +141,21 @@ def build_application_services(
 
 def build_firefox(
     d: BuildDefinition,
+    base: BaseConfig,
     config: BuildConfig,
     paths: Paths,
 ) -> List[TaskDefinition]:
     locales = " ".join(IRONFOX_LOCALES)
     env = {"MOZ_CHROME_MULTILOCALE": locales}
+    verbose = "--verbose" if base.verbose else ""
     return [
         d.run_commands(
             name="Build Firefox",
             commands=[
-                "./mach build",
-                "./mach package",
-                f"./mach package-multi-locale --locales {locales}",
-                f"{paths.gradle_exec} -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal",
+                f"./mach build {verbose}",
+                f"./mach package {verbose}",
+                f"./mach package-multi-locale --locales {locales} {verbose}",
+                f"{paths.gradle_exec} -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal {'--info' if base.verbose else ''}",
             ],
             cwd=paths.firefox_dir,
             env=env,
