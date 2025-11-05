@@ -80,7 +80,7 @@ async def run_command_with_progress(
         render_panel(),
         refresh_per_second=refresh_per_second,
         console=console,
-        transient=False,
+        transient=True,
     ) as live:
         while True:
             try:
@@ -99,9 +99,6 @@ async def run_command_with_progress(
             combined.append(line)
             live.update(render_panel())
         await asyncio.gather(task_out, task_err, return_exceptions=True)
-
-    # Clear the console so the panel disappears
-    console.clear()
 
     stdout_str = "".join(stdout_parts)
     stderr_str = "".join(stderr_parts)
