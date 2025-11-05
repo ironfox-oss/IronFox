@@ -56,6 +56,9 @@ class PatchTask(TaskDefinition):
         )
         try:
             for index, patch in enumerate(config.patches):
+                self.info(
+                    f"[{index + 1}/{len(config.patches)}] Applying patch {patch.file}..."
+                )
                 do_apply_patch(
                     patch_file=params.env.paths.patches_dir / patch.file,
                     target_dir=target_dir,
