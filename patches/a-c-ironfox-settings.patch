@@ -1,11 +1,11 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-index 5233b8a8dd..294c3472c7 100644
+index 8f00c57f6b..fe4cbd0134 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/GeckoEngine.kt
-@@ -1655,6 +1655,157 @@ class GeckoEngine(
-         override var lnaBlockingEnabled: Boolean
-             get() = runtime.settings.lnaBlockingEnabled
-             set(value) { runtime.settings.setLnaBlockingEnabled(value) }
+@@ -1659,6 +1659,157 @@ class GeckoEngine(
+         override var crliteChannel: String?
+             get() = runtime.settings.crliteChannel
+             set(value) { value?.let { runtime.settings.setCrliteChannel(value) } }
 +
 +        override var accessibilityEnabled: Boolean
 +            get() = runtime.settings.accessibilityEnabled
@@ -160,10 +160,10 @@ index 5233b8a8dd..294c3472c7 100644
      }.apply {
          defaultSettings?.let {
              this.javascriptEnabled = it.javascriptEnabled
-@@ -1702,6 +1853,37 @@ class GeckoEngine(
-             this.dohAutoselectEnabled = it.dohAutoselectEnabled
+@@ -1707,6 +1858,37 @@ class GeckoEngine(
              this.bannedPorts = it.bannedPorts
              this.lnaBlockingEnabled = it.lnaBlockingEnabled
+             this.crliteChannel = it.crliteChannel
 +            this.accessibilityEnabled = it.accessibilityEnabled
 +            this.addressAutofillEnabled = it.addressAutofillEnabled
 +            this.autoplayBlockingPolicy = it.autoplayBlockingPolicy
@@ -222,13 +222,13 @@ index 6d394e4c2b..37fe25bc3d 100644
       * Makes sure all required engine initialization logic is executed. The
       * details are specific to individual implementations, but the following must be true:
 diff --git a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-index f9aa3b43e9..dbd361340a 100644
+index e5089a6ba4..ce7c15ea9d 100644
 --- a/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
 +++ b/mobile/android/android-components/components/concept/engine/src/main/java/mozilla/components/concept/engine/Settings.kt
-@@ -367,6 +367,38 @@ abstract class Settings {
-      * Setting to control blocking of local network & local device (localhost) access
+@@ -372,6 +372,38 @@ abstract class Settings {
+      * Setting to control the CRLite certificate blocklist channel
       */
-     open var lnaBlockingEnabled: Boolean by UnsupportedSetting()
+     open var crliteChannel: String? by UnsupportedSetting()
 +
 +    open var accessibilityEnabled: Boolean by UnsupportedSetting()
 +    open var addressAutofillEnabled: Boolean by UnsupportedSetting()
@@ -264,10 +264,10 @@ index f9aa3b43e9..dbd361340a 100644
  }
  
  /**
-@@ -440,6 +472,37 @@ data class DefaultSettings(
-     override var dohAutoselectEnabled: Boolean = false,
+@@ -446,6 +478,37 @@ data class DefaultSettings(
      override var bannedPorts: String = "",
      override var lnaBlockingEnabled: Boolean = false,
+     override var crliteChannel: String? = null,
 +    override var accessibilityEnabled: Boolean = false,
 +    override var addressAutofillEnabled: Boolean = false,
 +    override var autoplayBlockingPolicy: Engine.AutoplayBlockingPolicy = Engine.AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT,

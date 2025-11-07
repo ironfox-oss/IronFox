@@ -985,6 +985,7 @@ $SED -i \
     -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.boolean"|' \
     -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.boolean"|' \
     -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.integer"|' \
+    -e 's|"security.pki.crlite_channel"|"z99.ignore.string"|' \
     -e 's|"security.tls.enable_kyber"|"z99.ignore.boolean"|' \
     -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \

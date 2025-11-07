@@ -28,7 +28,7 @@ index 9e8098c79b..a7e0e6a181 100644
          // ... but RustHttpConfig.setClient() and RustLog.enable() can be called later.
          RustLog.enable()
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-index ce7dff483c..4941ef3068 100644
+index 810eb70491..f11b2767f1 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 @@ -157,8 +157,8 @@ class CrashReporter internal constructor(

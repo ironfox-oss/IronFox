@@ -76,6 +76,10 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2, locked); // [DEFAULT]
 
+/// Use CRLite clubcards that contain all revocations, instead of just "priority" revocations
+// We only need this temporarily, added to Phoenix for next release
+pref("security.pki.crlite_channel", "default");
+
 /// Annotate locked prefs controlled by UI settings
 pref("accessibility.force_disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("accessibility.force_disabled.1.NOTE", "'Enable accessibility services'", locked);

@@ -77,13 +77,6 @@ patches:
     effect: "Ensures successful compilation of the browser."
     category: "Build System"
 
-  - file: "a-c-localize-maven.patch"
-    name: "Remove Mozilla Maven Repositories (Android Components)"
-    description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
-    reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
-    effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
-    category: "Build System"
-
   - file: "a-c-allow-build-date-override.patch"
     name: "Allow overriding the build date"
     description: "Allows devs to override the build date."
