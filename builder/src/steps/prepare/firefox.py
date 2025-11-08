@@ -722,11 +722,8 @@ def read_contents(paths: List[Path]) -> str:
 
 def mozconfig(config: PrepareConfig, paths: Paths) -> str:
     app = config.app_config
-    branding_path = (
-        "mobile/android/branding/ironfox-nightly"
-        if (app.nightly)
-        else "mobile/android/branding/ironfox"
-    )
+    app_name = app.app_name.lower().replace(" ", "-")
+    branding_path = f"mobile/android/branding/{app_name}"
 
     wasi_install = paths.wasi_sdk_dir
 
@@ -798,7 +795,7 @@ ac_add_options --enable-wasm-branch-hinting
 ac_add_options --enable-wasm-memory-control
 
 ac_add_options --with-app-basename='{app.app_name}'
-ac_add_options --with-app-name='{app.app_name.lower()}'
+ac_add_options --with-app-name='{app_name}'
 ac_add_options --with-branding='{branding_path}'
 
 ac_add_options --with-crashreporter-url='data;'
@@ -831,8 +828,8 @@ export GRADLE_MAVEN_REPOSITORIES='file://{paths.user_home / ".m2/repository"}','
 export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1
 
 export MOZ_APP_BASENAME='{app.app_name}'
-export MOZ_APP_NAME='{app.app_name.lower()}'
-export MOZ_APP_REMOTINGNAME='{app.app_name.lower().replace(' ', '-')}'
+export MOZ_APP_NAME='{app_name}'
+export MOZ_APP_REMOTINGNAME='{app_name}'
 
 export MOZ_ARTIFACT_BUILDS=
 export MOZ_CALLGRIND=
