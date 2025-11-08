@@ -2,7 +2,7 @@ from typing import List
 from common.paths import Paths
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
-from execution.find_replace import comment_out, literal, regex
+from execution.find_replace import comment_out, line_affix, literal, regex
 from execution.types import ReplacementAction
 from .deglean import deglean
 
@@ -41,6 +41,16 @@ def prepare_application_services(
         
         *_rm("components/remote_settings/dumps/*/attachments/search-config-icons/*", recursive=True),
         *_rm("components/remote_settings/dumps/*/search-telemetry-v2.json"),
+        
+        # Remove the 'regions' configs
+        *_rm("components/remote_settings/dumps/*/regions.json"),
+        *_rm("components/remote_settings/dumps/*/attachments/regions", recursive=True),
+        *_process_file(
+            path="components/remote_settings/src/client.rs",
+            replacements=[
+                comment_out(r'\("main", "regions"\)')
+            ]
+        ),
         
         # Break dependency on older A-C
         *_process_file(

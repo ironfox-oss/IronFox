@@ -578,6 +578,7 @@ FINAL_TARGET_FILES.defaults.settings.main += [
                 regex(r'"privacy\.globalprivacycontrol\.functionality\.enabled"', r'"z99.ignore.boolean"'),
                 regex(r'"privacy\.globalprivacycontrol\.pbmode\.enabled"', r'"z99.ignore.boolean"'),
                 regex(r'"security\.pki\.certificate_transparency\.mode"', r'"z99.ignore.integer"'),
+                regex(r'"security\.pki\.crlite_channel"', r'"z99.ignore.string"'),
                 regex(r'"security\.tls\.enable_kyber"', r'"z99.ignore.boolean"'),
                 regex(r'"toolkit\.telemetry\.user_characteristics_ping\.current_version"', r'"z99.ignore.integer"'),
                 regex(r'"webgl\.msaa-samples"', r'"z99.ignore.integer"'),
@@ -793,6 +794,8 @@ ac_add_options --enable-replace-malloc
 ac_add_options --enable-rust-simd
 ac_add_options --enable-strip
 ac_add_options --enable-update-channel=release
+ac_add_options --enable-wasm-branch-hinting
+ac_add_options --enable-wasm-memory-control
 
 ac_add_options --with-app-basename='{app.app_name}'
 ac_add_options --with-app-name='{app.app_name.lower()}'
