@@ -26,3 +26,16 @@ index 06f1d0a26e..baad9bd12c 100644
      about_pages.append('translations')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
      about_pages.append('crashcontentjava')
+diff --git a/toolkit/modules/ActorManagerParent.sys.mjs b/toolkit/modules/ActorManagerParent.sys.mjs
+index 4211e30738..3ab4f2f3eb 100644
+--- a/toolkit/modules/ActorManagerParent.sys.mjs
++++ b/toolkit/modules/ActorManagerParent.sys.mjs
+@@ -730,7 +730,7 @@ if (AppConstants.platform != "android") {
+     messageManagerGroups: ["browsers"],
+     allFrames: true,
+   };
+-
++} else {
+   JSWINDOWACTORS.AboutTranslations = {
+     parent: {
+       esModuleURI: "resource://gre/actors/AboutTranslationsParent.sys.mjs",
