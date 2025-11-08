@@ -155,6 +155,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "nvidia.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "panerabread.com"
     },
     {
