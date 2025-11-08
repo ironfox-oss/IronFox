@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import List
 from commands.base import BaseConfig
@@ -173,6 +174,14 @@ def build_android_components(
     paths: Paths,
 ) -> List[TaskDefinition]:
     return [
+        # In case the local.properties file does not exist, create it.
+        # If it exists, this will append an empty line
+        d.write_file(
+            name="Create local.properties if needed",
+            target=paths.android_components_dir / "local.properties",
+            contents=lambda: os.linesep.encode("utf-8"),
+            append=True,
+        ),
         *d.find_replace(
             name="Disable A-S auto-pubish",
             target_files=paths.android_components_dir / "local.properties",
