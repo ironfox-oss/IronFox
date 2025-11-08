@@ -1,3 +1,15 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
+index 191a4187a5..b79de304d4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
+@@ -53,6 +53,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat() {
+         }
+ 
+         requirePreference<CheckBoxPreference>(R.string.pref_key_enable_contile).apply {
++            isVisible = false
+             isChecked = context.settings().showContileFeature
+             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
+                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 6ef1bc0ace..fd417a5b4a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

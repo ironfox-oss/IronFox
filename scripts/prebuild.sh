@@ -250,10 +250,10 @@ rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/Download
 rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/telemetry/TelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
-rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 # Let it be IronFox
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then

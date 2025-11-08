@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 09b7956a70..aff4e05e2f 100644
+index 561bf5206d..a10dd4f97f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-@@ -205,10 +205,12 @@ class WebExtensionPromptFeature(
+@@ -199,10 +199,12 @@ class WebExtensionPromptFeature(
                  // Title = Can't install extension
                  // Message = Failed to install $addonName
                  title = ""
@@ -18,10 +18,10 @@ index 09b7956a70..aff4e05e2f 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4d499da8de..2428739de5 100644
+index e1a67a6da4..f186d3ec00 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -755,7 +755,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -764,7 +764,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
      @VisibleForTesting
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {

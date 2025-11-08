@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-index a754afa5a4..334a1c985b 100644
+index 9c6b51b2fc..daa81d336a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 @@ -7,14 +7,14 @@ package org.mozilla.fenix.gecko
@@ -43,8 +43,8 @@ index a754afa5a4..334a1c985b 100644
          return GeckoRuntimeSettings.Builder()
 -            .crashHandler(CrashHandlerService::class.java)
 -            .experimentDelegate(NimbusExperimentDelegate())
-+            // .crashHandler(CrashHandlerService::class.java)
-+            // .experimentDelegate(NimbusExperimentDelegate())
++//            .crashHandler(CrashHandlerService::class.java)
++//            .experimentDelegate(NimbusExperimentDelegate())
              .contentBlocking(
                  policy.toContentBlockingSetting(
                      cookieBannerHandlingMode = context.settings().getCookieBannerHandling(),

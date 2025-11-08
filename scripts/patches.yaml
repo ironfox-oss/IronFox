@@ -667,11 +667,11 @@ patches:
     effect: "Users can access `about:config` easier to customize advanced Firefox settings not available in the regular settings menu."
     category: "User Interface"
 
-  - file: "gecko-expose-abouttranslations.patch"
-    name: "Expose `about:translations`"
-    description: "Exposes `about:translations` at `about:about`, alongside other internal `about:` pages."
-    reason: "To provide users with easier access to the Firefox Translations feature."
-    effect: "Users can access `about:translations` easier to translate text directly, without needing the text to be on an external webpage."
+  - file: "gecko-enable-abouttranslations.patch"
+    name: "Enable `about:translations`"
+    description: "Enables `about:translations`."
+    reason: "To provide users with direct access to the Firefox Translations feature."
+    effect: "Like on Desktop, users can access `about:translations` to translate text directly, without needing the text to be on an external webpage."
     category: "User Interface"
 
   - file: "fenix-hide-gpc.patch"

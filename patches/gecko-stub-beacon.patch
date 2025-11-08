@@ -1,5 +1,5 @@
 diff --git a/dom/base/Navigator.cpp b/dom/base/Navigator.cpp
-index 233e613886..80c79cc319 100644
+index 69c9557c06..8106d51e76 100644
 --- a/dom/base/Navigator.cpp
 +++ b/dom/base/Navigator.cpp
 @@ -1264,6 +1264,7 @@ bool Navigator::SendBeaconInternal(const nsAString& aUrl,

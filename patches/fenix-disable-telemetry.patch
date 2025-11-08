@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 7d2ef5a331..4e5a15e574 100644
+index 9d690c06bc..c30826158d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
@@ -30,7 +30,7 @@ index 7d2ef5a331..4e5a15e574 100644
  import org.mozilla.fenix.utils.getUndoDelay
  import org.mozilla.geckoview.GeckoRuntime
  import java.util.UUID
-@@ -319,7 +319,7 @@ class Core(
+@@ -322,7 +322,7 @@ class Core(
                      },
                  ),
                  ReaderViewMiddleware(),
@@ -39,7 +39,7 @@ index 7d2ef5a331..4e5a15e574 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -332,7 +332,7 @@ class Core(
+@@ -335,7 +335,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -48,7 +48,7 @@ index 7d2ef5a331..4e5a15e574 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -375,7 +375,7 @@ class Core(
+@@ -378,7 +378,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -57,7 +57,7 @@ index 7d2ef5a331..4e5a15e574 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -388,12 +388,12 @@ class Core(
+@@ -391,12 +391,12 @@ class Core(
                              REMOTE_STAGE_ENDPOINT_URL
                          },
                      ).updateProviderList()
@@ -74,7 +74,7 @@ index 7d2ef5a331..4e5a15e574 100644
  
              WebNotificationFeature(
                  context,
-@@ -450,7 +450,7 @@ class Core(
+@@ -453,7 +453,7 @@ class Core(
          BrowserIcons(context, client)
      }
  
@@ -83,7 +83,7 @@ index 7d2ef5a331..4e5a15e574 100644
          context.components.analytics.metrics
      }
  
-@@ -460,7 +460,7 @@ class Core(
+@@ -463,7 +463,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()

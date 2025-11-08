@@ -1,0 +1,28 @@
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 625640eef4..b0599cddba 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -219,8 +219,8 @@ static const RedirEntry kRedirMap[] = {
+      nsIAboutModule::ALLOW_SCRIPT |
+          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+          nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+-         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
++//         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+ #endif
+     {"url-classifier", "chrome://global/content/aboutUrlClassifier.xhtml",
+      nsIAboutModule::ALLOW_SCRIPT},
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 06f1d0a26e..baad9bd12c 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -40,7 +40,7 @@ if defined('MOZ_CRASHREPORTER'):
+     about_pages.append('crashes')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
+     about_pages.append('profiles')
+-if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
++if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != '0':
+     about_pages.append('translations')
+ if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
+     about_pages.append('crashcontentjava')

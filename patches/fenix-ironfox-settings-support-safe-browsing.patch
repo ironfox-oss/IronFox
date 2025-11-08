@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-index a754afa5a4..e2fda9705e 100644
+index 9c6b51b2fc..2cc9dd131e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 @@ -24,6 +24,8 @@ import org.mozilla.fenix.ext.settings
@@ -11,8 +11,8 @@ index a754afa5a4..e2fda9705e 100644
  
  object GeckoProvider {
      private var runtime: GeckoRuntime? = null
-@@ -133,4 +135,12 @@ object GeckoProvider {
-             )
+@@ -134,4 +136,12 @@ object GeckoProvider {
+             .isolatedProcessEnabled(context.settings().isIsolatedProcessEnabled)
              .build()
      }
 +

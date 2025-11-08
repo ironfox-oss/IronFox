@@ -650,7 +650,7 @@ index 000000000000..c492a3879873
 +
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 new file mode 100644
-index 0000000000..516095077d
+index 0000000000..80b2c95cea
 --- /dev/null
 +++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 @@ -0,0 +1,52 @@
@@ -703,7 +703,7 @@ index 0000000000..516095077d
 +    testImplementation libs.robolectric
 +}
 +
-+apply from: '../../../android-lint.gradle'
++apply from: '../../../common-config.gradle'
 +apply from: '../../../publish.gradle'
 +ext.configurePublish(config.componentsGroupId, project.name, project.ext.description)
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro b/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro

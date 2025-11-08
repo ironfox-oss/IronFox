@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/api.txt b/mobile/android/geckoview/api.txt
-index 22ea23ef5e..47e4363e5f 100644
+index 060ed3138d..36bc46e546 100644
 --- a/mobile/android/geckoview/api.txt
 +++ b/mobile/android/geckoview/api.txt
-@@ -1031,6 +1031,37 @@ package org.mozilla.geckoview {
+@@ -1032,6 +1032,37 @@ package org.mozilla.geckoview {
      method @Nullable public Integer getWebContentIsolationStrategy();
      method public boolean getWebFontsEnabled();
      method public boolean getWebManifestEnabled();
@@ -40,7 +40,7 @@ index 22ea23ef5e..47e4363e5f 100644
      method @NonNull public GeckoRuntimeSettings setAboutConfigEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setAllowInsecureConnections(int);
      method @NonNull public GeckoRuntimeSettings setAutomaticFontSizeAdjustment(boolean);
-@@ -1081,6 +1112,37 @@ package org.mozilla.geckoview {
+@@ -1083,6 +1114,37 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings setWebContentIsolationStrategy(@NonNull Integer);
      method @NonNull public GeckoRuntimeSettings setWebFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings setWebManifestEnabled(boolean);
@@ -78,7 +78,7 @@ index 22ea23ef5e..47e4363e5f 100644
      field public static final int ALLOW_ALL = 0;
      field public static final int COLOR_SCHEME_DARK = 1;
      field public static final int COLOR_SCHEME_LIGHT = 0;
-@@ -1095,6 +1157,12 @@ package org.mozilla.geckoview {
+@@ -1097,6 +1159,12 @@ package org.mozilla.geckoview {
      field public static final int TRR_MODE_FIRST = 2;
      field public static final int TRR_MODE_OFF = 0;
      field public static final int TRR_MODE_ONLY = 3;
@@ -91,7 +91,7 @@ index 22ea23ef5e..47e4363e5f 100644
    }
  
    @AnyThread public static final class GeckoRuntimeSettings.Builder extends RuntimeSettings.Builder<GeckoRuntimeSettings> {
-@@ -1147,6 +1215,37 @@ package org.mozilla.geckoview {
+@@ -1149,6 +1217,37 @@ package org.mozilla.geckoview {
      method @NonNull public GeckoRuntimeSettings.Builder useMaxScreenDepth(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webFontsEnabled(boolean);
      method @NonNull public GeckoRuntimeSettings.Builder webManifest(boolean);
@@ -129,7 +129,7 @@ index 22ea23ef5e..47e4363e5f 100644
      method @NonNull protected GeckoRuntimeSettings newSettings(@Nullable GeckoRuntimeSettings);
    }
  
-@@ -1162,6 +1261,12 @@ package org.mozilla.geckoview {
+@@ -1164,6 +1263,12 @@ package org.mozilla.geckoview {
    @Retention(value=RetentionPolicy.SOURCE) public static interface GeckoRuntimeSettings.WebContentIsolationStrategy {
    }
  
@@ -143,7 +143,7 @@ index 22ea23ef5e..47e4363e5f 100644
      ctor public GeckoSession();
      ctor public GeckoSession(@Nullable GeckoSessionSettings);
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-index 10c6a16381..b03c86601d 100644
+index 0a68ac5130..4996c1bd36 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 @@ -681,6 +681,161 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
@@ -308,7 +308,7 @@ index 10c6a16381..b03c86601d 100644
    }
  
    private GeckoRuntime mRuntime;
-@@ -821,6 +976,38 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -823,6 +978,38 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
    /* package */ String[] mRequestedLocales;
    /* package */ ExperimentDelegate mExperimentDelegate;
  
@@ -347,7 +347,7 @@ index 10c6a16381..b03c86601d 100644
    /**
     * Attach and commit the settings to the given runtime.
     *
-@@ -2356,6 +2543,337 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
+@@ -2381,6 +2568,337 @@ public final class GeckoRuntimeSettings extends RuntimeSettings {
      return mIsolatedProcess;
    }
  

@@ -1,8 +1,8 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 83d84537f9..e6faae60b2 100644
+index 625640eef4..b47c7570ec 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -127,7 +127,7 @@ static const RedirEntry kRedirMap[] = {
+@@ -137,7 +137,7 @@ static const RedirEntry kRedirMap[] = {
       nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
           nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
           nsIAboutModule::HIDE_FROM_ABOUTABOUT},
@@ -12,10 +12,10 @@ index 83d84537f9..e6faae60b2 100644
       nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
  #endif
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 34e06ce332..e8f5e7b055 100644
+index 06f1d0a26e..fee6c36527 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
-@@ -50,7 +50,7 @@ if not defined('MOZ_GLEAN_ANDROID'):
+@@ -52,7 +52,7 @@ if not defined('MOZ_GLEAN_ANDROID'):
      about_pages.append('glean')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android' and buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'windows':
      about_pages.append('webauthn')
@@ -25,10 +25,10 @@ index 34e06ce332..e8f5e7b055 100644
  
  Headers = ['/docshell/build/nsDocShellModule.h']
 diff --git a/toolkit/components/moz.build b/toolkit/components/moz.build
-index dcf865c539..0de04f224f 100644
+index 89be70ba12..f97e2c79a8 100644
 --- a/toolkit/components/moz.build
 +++ b/toolkit/components/moz.build
-@@ -145,7 +145,7 @@ if CONFIG["MOZ_BACKGROUNDTASKS"]:
+@@ -146,7 +146,7 @@ if CONFIG["MOZ_BACKGROUNDTASKS"]:
  if CONFIG["MOZ_UNIFFI_FIXTURES"]:
      DIRS += ["uniffi-bindgen-gecko-js/tests"]
  
