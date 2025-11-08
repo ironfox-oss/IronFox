@@ -80,7 +80,7 @@ async def run_command_with_progress(
         render_panel(),
         refresh_per_second=refresh_per_second,
         console=console,
-        transient=True,
+        screen=True,
     ) as live:
         while True:
             try:
