@@ -51,11 +51,6 @@ pref("media.geckoview.autoplay.request", true, locked); // [DEFAULT]
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
 
-/// Ensure ToU/pre-onboarding is disabled
-// We only need this temporarily, fixed for next Phoenix release
-// This was previously only referenced in browser (Firefox Desktop) code, but it's now present in toolit
-pref("browser.preonboarding.enabled", false); // [HIDDEN]
-
 /// Re-enable geolocation permission prompts in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
 pref("geo.prompt.testing", false); // [HIDDEN] [DEFAULT]
@@ -75,10 +70,6 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2, locked); // [DEFAULT]
-
-/// Use CRLite clubcards that contain all revocations, instead of just "priority" revocations
-// We only need this temporarily, added to Phoenix for next release
-pref("security.pki.crlite_channel", "default");
 
 /// Annotate locked prefs controlled by UI settings
 pref("accessibility.force_disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
