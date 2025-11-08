@@ -660,6 +660,13 @@ patches:
     effect: "Users have more control over their web browser."
     category: "User Interface"
 
+  - file: "gecko-expose-aboutsupport-prefs.patch"
+    name: "Expose additional preferences at `about:support`"
+    description: "Enables the display of certain important preferences at `about:support`."
+    reason: "Allows for easier troubleshooting and support."
+    effect: "Users can easily see if they have modified these important preferences."
+    category: "User Interface"
+
   - file: "gecko-expose-aboutconfig.patch"
     name: "Expose `about:config`"
     description: "Exposes `about:config` at `about:about`, alongside other internal `about:` pages."
