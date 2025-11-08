@@ -32,7 +32,7 @@ def build_wasi_sdk(
         ),
         
         # Build Wasi SDK
-        d.run_commands(
+        d.run_cmds(
             name="Build Wasi SDK",
             commands=[str(config.exec_make), 'PREFIX=/wasi', 'build/wasi-libc.BUILT', 'build/libcxx.BUILD', f'-j{base.jobs}'],
             cwd=paths.wasi_sdk_dir,

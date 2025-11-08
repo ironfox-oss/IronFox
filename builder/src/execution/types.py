@@ -1,6 +1,7 @@
 from dataclasses import dataclass
+from pathlib import Path
 from re import Pattern
-from typing import Callable, Tuple, Union
+from typing import Callable, Dict, Tuple, Union
 
 ### RUN
 
@@ -22,6 +23,7 @@ class ReplacementAction:
 @dataclass
 class CustomReplacement(ReplacementAction):
     """Represents a custom replacement that processes whole file contents"""
+
     replacer: Replacer
 
 
@@ -49,3 +51,11 @@ class LineAffixReplacement(ReplacementAction):
     line_match_pattern: PatternType
     prefix: str = ""
     suffix: str = ""
+
+
+@dataclass
+class RunTaskCmd:
+    command: CommandType
+    cwd: Path
+    assume_yes: Union[bool, int]
+    env: Dict[str, str]

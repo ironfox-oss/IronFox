@@ -44,7 +44,7 @@ def setup_java(d: BuildDefinition, paths: Paths) -> TaskDefinition:
         if not success:
             raise RuntimeError(message)
 
-    return d.run_commands(
+    return d.run_cmds(
         name="Check java version",
         # Use '-version' for backwards compatibility
         # '--version' on newer versions of the JDK do not include the 'version' string

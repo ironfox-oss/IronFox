@@ -64,7 +64,7 @@ def setup_android_sdk(d: BuildDefinition, paths: Paths):
             )
         )
 
-    install_task = d.run_commands(
+    install_task = d.run_cmds(
         name="Install SDK tools",
         cwd=Path.cwd(),
         assume_yes=True,

@@ -1,18 +1,33 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 import logging
 import os
 import subprocess
 import shlex
 
 from pathlib import Path
-from typing import Optional
+from typing import Dict, List, Optional
 from common import subproc
 from rich.progress import Progress
 from rich.console import Console
 
 from .definition import BuildDefinition, TaskDefinition
-from .types import CommandType
+from .types import CommandType, RunTaskCmd
+
+
+def run_cmd(
+    command: CommandType,
+    cwd: Path,
+    assume_yes: bool | int = False,
+    env: Dict[str, str] = {},
+) -> RunTaskCmd:
+    return RunTaskCmd(
+        command=command,
+        cwd=cwd,
+        assume_yes=assume_yes,
+        env=env,
+    )
 
 
 class RunCommandsTask(TaskDefinition):
@@ -21,16 +36,10 @@ class RunCommandsTask(TaskDefinition):
         name: str,
         id: int,
         build_def: BuildDefinition,
-        cwd: Path,
-        assume_yes: bool | int,
-        commands: list[CommandType],
-        env: dict[str, str],
+        cmds: List[RunTaskCmd],
     ):
         super().__init__(name, id, build_def)
-        self.cwd = cwd
-        self.assume_yes = assume_yes
-        self.commands = commands
-        self.env = env
+        self.cmds = cmds
 
     async def execute(self, params):
 
@@ -38,35 +47,25 @@ class RunCommandsTask(TaskDefinition):
         # 1. get os env vars
         # 2. get build-wide env vars (can override os env vars)
         # 3. command-specific env vars (can override os and build-wide env vars)
-        env = {**os.environ.copy(), **params.env.environment_variables, **self.env}
+        env = {**os.environ.copy(), **params.env.environment_variables}
 
         return await run_build_commands(
             name=self.name,
-            cwd=self.cwd,
-            commands=self.commands,
+            commands=self.cmds,
             progress=params.progress,
             env=env,
             logger=self.logger,
-            assume_yes=self.assume_yes,
         )
 
 
 async def run_build_commands(
     name: str,
-    cwd: Path,
-    commands: list[CommandType],
+    commands: List[RunTaskCmd],
     progress: Progress,
     logger: logging.Logger,
     env: dict[str, str] = {},
-    assume_yes: bool | int = False,
 ):
-    logger.debug(f"Running {len(commands)} commands in {cwd}")
-
-    if not cwd.exists():
-        raise FileNotFoundError(f"Working directory not found: {cwd}")
-
-    if not cwd.is_dir():
-        raise NotADirectoryError(f"Cwd path is not a directory: {cwd}")
+    logger.debug(f"Running {len(commands)} commands")
 
     if not commands:
         logger.warning("No commands provided")
@@ -81,22 +80,28 @@ async def run_build_commands(
 
     try:
         # Execute each command in sequence
-        for i, command in enumerate(commands, 1):
-            logger.debug(f"Executing command {i}/{len(commands)}: {command}")
+        for i, d in enumerate(commands, 1):
+            logger.debug(f"Executing command {i}/{len(commands)}: {d}")
+
+            if not d.cwd.exists():
+                raise FileNotFoundError(f"Working directory not found: {d.cwd}")
+
+            if not d.cwd.is_dir():
+                raise NotADirectoryError(f"Cwd path is not a directory: {d.cwd}")
 
             cmd_name = "<unknown>"
-            if isinstance(command, str):
-                cmd_name = command
+            if isinstance(d.command, str):
+                cmd_name = d.command
             else:
-                cmd_name = command[0]
+                cmd_name = d.command[0]
 
             success = await _execute_command(
                 name=name,
-                command=command,
-                cwd=cwd,
-                env=env,
+                command=d.command,
+                cwd=d.cwd,
+                env={**env, **d.env},
                 logger=logger,
-                assume_yes=assume_yes,
+                assume_yes=d.assume_yes,
                 progress=progress,
             )
 

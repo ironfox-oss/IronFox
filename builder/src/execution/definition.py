@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import cmd
 import itertools
 import logging
 import subprocess
@@ -15,7 +16,7 @@ from rich.progress import Progress
 from typing import Callable, List, TypeVar, Type, Union
 from threading import Lock
 
-from .types import CommandType, ReplacementAction
+from .types import CommandType, ReplacementAction, RunTaskCmd
 
 
 def _indent_lines(lines: list[str], indent: str = "    ") -> list[str]:
@@ -370,7 +371,7 @@ class BuildDefinition:
             target_dir=target_dir,
         )
 
-    def run_commands(
+    def run_cmds(
         self,
         name: str,
         commands: list[CommandType],
@@ -378,28 +379,49 @@ class BuildDefinition:
         env: dict[str, str] = dict(),
         assume_yes: bool | int = False,
     ) -> TaskDefinition:
-        """Creates a task to run a list of shell commands.
+        from execution.run import run_cmd
 
-        Args:
-            name (str): The name of the command execution task.
-            commands (list[CommandType]): A list of commands to execute. Each command can be a string
-                                          or a tuple of (command_string, result_handler_callable).
-            cwd (Path, optional): The current working directory for the commands. Defaults to Path.cwd().
-            env (dict[str, str], optional): Additional environment variables for the commands. Defaults to empty dict.
-            assume_yes (bool | int, optional): If True, automatically input 'y' to prompts. If an integer,
-                                                inputs 'y' that many times. Defaults to False.
-        Returns:
-            TaskDefinition: The created RunCommandsTask instance.
-        """
+        return self.run_cmd_defs(
+            name=name,
+            cmds=[
+                run_cmd(command=cmd, cwd=cwd, assume_yes=assume_yes, env=env)
+                for cmd in commands
+            ],
+        )
+
+    def run_cmds_mixed(
+        self,
+        name: str,
+        commands: list[Union[RunTaskCmd, CommandType]],
+        cwd: Path = Path.cwd(),
+        env: dict[str, str] = dict(),
+        assume_yes: bool | int = False,
+    ) -> TaskDefinition:
+        from execution.run import run_cmd
+
+        return self.run_cmd_defs(
+            name=name,
+            cmds=[
+                (
+                    cmd
+                    if isinstance(cmd, RunTaskCmd)
+                    else run_cmd(command=cmd, cwd=cwd, assume_yes=assume_yes, env=env)
+                )
+                for cmd in commands
+            ],
+        )
+
+    def run_cmd_defs(
+        self,
+        name: str,
+        cmds: List[RunTaskCmd],
+    ) -> TaskDefinition:
         from .run import RunCommandsTask
 
         return self.create_task(
             RunCommandsTask,
             name,
-            cwd=cwd,
-            commands=commands,
-            env=env,
-            assume_yes=assume_yes,
+            cmds=cmds,
         )
 
     def write_files(
@@ -411,19 +433,6 @@ class BuildDefinition:
         append: bool = True,
         overwrite: bool = False,
     ) -> List[TaskDefinition]:
-        """Creates tasks to write given content to one or more files.
-
-        Args:
-            name (str): The name of the write file task.
-            targets (Path|str): The path to the file to write, or a glob pattern.
-            contents (Callable[[], bytes]): A callable that returns the bytes content to write to the file.
-            chmod (int, optional): The file permissions (octal) to set. Defaults to 0o644 (rw-r--r--).
-            append (bool, optional): If True, append to the file instead of overwriting. Defaults to True.
-            overwrite (bool, optional): If True, overwrite the file if it already exists. If False,
-                                        raise an error if the file exists. Defaults to False.
-        Returns:
-            TaskDefinition: The created WriteFileTask instance.
-        """
         from .files import WriteFileTask
 
         files = resolve_glob(targets)

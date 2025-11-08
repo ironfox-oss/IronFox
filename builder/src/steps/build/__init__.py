@@ -6,6 +6,7 @@ from common.paths import Paths
 from common.locales import IRONFOX_LOCALES
 from execution.definition import BuildDefinition, TaskDefinition
 from execution.find_replace import on_line_text, on_lines
+from execution.run import run_cmd
 
 
 def _require_dir_exists(dir: Path):
@@ -74,7 +75,7 @@ def build_uniffi(
     paths: Paths,
 ) -> List[TaskDefinition]:
     return [
-        d.run_commands(
+        d.run_cmds(
             name="Build uniffi-bindgen",
             commands=[f"{paths.cargo_home}/bin/cargo build --release"],
             cwd=paths.uniffi_dir,
@@ -96,7 +97,7 @@ def build_microg(
     ]
 
     return [
-        d.run_commands(
+        d.run_cmds(
             name="Build microG",
             commands=[f"{paths.gradle_exec} -x {' '.join(tasks)}"],
             cwd=paths.gmscore_dir,
@@ -111,7 +112,7 @@ def build_glean(
 ) -> List[TaskDefinition]:
     tasks = ["publishToMavenLocal"]
     return [
-        d.run_commands(
+        d.run_cmds(
             name="Build Glean",
             commands=[f"{paths.gradle_exec} {' '.join(tasks)}"],
             cwd=paths.glean_dir,
@@ -127,7 +128,7 @@ def build_application_services(
 ) -> List[TaskDefinition]:
     env = {"CI": "true"}
     return [
-        d.run_commands(
+        d.run_cmds(
             name="Build A-S",
             commands=[
                 f"{config.exec_sh} -c './libs/verify-android-environment.sh'",
@@ -149,16 +150,19 @@ def build_firefox(
     env = {"MOZ_CHROME_MULTILOCALE": locales}
     verbose = "--verbose" if base.verbose else ""
     return [
-        d.run_commands(
+        d.run_cmds_mixed(
             name="Build Firefox",
             commands=[
                 f"./mach build {verbose}",
                 f"./mach package {verbose}",
                 f"./mach package-multi-locale --locales {locales} {verbose}",
-                f"{paths.gradle_exec} -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal {'--info' if base.verbose else ''}",
+                run_cmd(
+                    command=f"{paths.gradle_exec} -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal {'--info' if base.verbose else ''}",
+                    cwd=paths.firefox_dir,
+                    env=env,
+                ),
             ],
             cwd=paths.firefox_dir,
-            env=env,
         )
     ]
 
@@ -182,7 +186,7 @@ def build_android_components(
                 )
             ],
         ),
-        d.run_commands(
+        d.run_cmds(
             name="Build Android Components",
             commands=[
                 f"{paths.gradle_exec} :components:concept-fetch:publishToMavenLocal",
@@ -196,7 +200,7 @@ def build_android_components(
             contents=lambda: f"autoPublish.application-services.dir={paths.application_services_dir}".encode(),
             append=True,
         ),
-        d.run_commands(
+        d.run_cmds(
             name="Publish Android Components",
             commands=[
                 f"{paths.gradle_exec} publishToMavenLocal",
@@ -217,7 +221,7 @@ def build_fenix(
         else ":app:bundleRelease -Paab"
     )
     return [
-        d.run_commands(
+        d.run_cmds(
             name="Build Fenix",
             commands=[f"{paths.gradle_exec} {task}"],
             cwd=paths.firefox_dir,
