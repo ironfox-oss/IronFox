@@ -167,7 +167,7 @@ def prepare_application_services(
         *_process_file(
             path="components/remote_settings/src/client.rs",
             replacements=[
-                comment_out('("main", "search-telemetry-v2"),'),
+                comment_out(r'\("main", "search-telemetry-v2"\),'),
             ]
         ),
         
