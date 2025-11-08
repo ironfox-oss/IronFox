@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 7d2ef5a331..4e5a15e574 100644
+index 9d690c06bc..c30826158d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
@@ -30,7 +30,7 @@ index 7d2ef5a331..4e5a15e574 100644
  import org.mozilla.fenix.utils.getUndoDelay
  import org.mozilla.geckoview.GeckoRuntime
  import java.util.UUID
-@@ -319,7 +319,7 @@ class Core(
+@@ -322,7 +322,7 @@ class Core(
                      },
                  ),
                  ReaderViewMiddleware(),
@@ -39,7 +39,7 @@ index 7d2ef5a331..4e5a15e574 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -332,7 +332,7 @@ class Core(
+@@ -335,7 +335,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -48,7 +48,7 @@ index 7d2ef5a331..4e5a15e574 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -375,7 +375,7 @@ class Core(
+@@ -378,7 +378,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -57,7 +57,7 @@ index 7d2ef5a331..4e5a15e574 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -388,12 +388,12 @@ class Core(
+@@ -391,12 +391,12 @@ class Core(
                              REMOTE_STAGE_ENDPOINT_URL
                          },
                      ).updateProviderList()
@@ -74,7 +74,7 @@ index 7d2ef5a331..4e5a15e574 100644
  
              WebNotificationFeature(
                  context,
-@@ -450,7 +450,7 @@ class Core(
+@@ -453,7 +453,7 @@ class Core(
          BrowserIcons(context, client)
      }
  
@@ -83,7 +83,7 @@ index 7d2ef5a331..4e5a15e574 100644
          context.components.analytics.metrics
      }
  
-@@ -460,7 +460,7 @@ class Core(
+@@ -463,7 +463,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
@@ -93,7 +93,7 @@ index 7d2ef5a331..4e5a15e574 100644
      /**
       * Shortcut component for managing shortcuts on the device home screen.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
-index 8645aaf290..4c96d174b1 100644
+index fc3ef34c4f..aa12c12edb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/ext/Context.kt
 @@ -22,7 +22,7 @@ import mozilla.components.support.locale.LocaleManager
@@ -117,7 +117,7 @@ index 8645aaf290..4c96d174b1 100644
  fun Context.asActivity() = (this as? ContextThemeWrapper)?.baseContext as? Activity
      ?: this as? Activity
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 29cd599a82..9999c3220b 100644
+index bd75990cd8..3ef2ec02a8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -84,7 +84,7 @@ import org.mozilla.fenix.components.Components
@@ -129,7 +129,7 @@ index 29cd599a82..9999c3220b 100644
  import org.mozilla.fenix.components.startMetricsIfEnabled
  import org.mozilla.fenix.crashes.StartupCrashCanary
  import org.mozilla.fenix.experiments.maybeFetchExperiments
-@@ -301,7 +301,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -322,7 +322,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              VisibilityLifecycleObserver(),
          )
  
@@ -138,16 +138,16 @@ index 29cd599a82..9999c3220b 100644
  
          CoroutineScope(IO).launch {
              components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
-@@ -729,12 +729,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-         browserStore: BrowserStore,
-         settings: Settings,
+@@ -762,12 +762,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+             settings,
+         ),
          browsersCache: BrowsersCache = BrowsersCache,
 -        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
 +//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
      ) {
--        setPreferenceMetrics(settings)
+-        setPreferenceMetrics(settings, dohSettingsProvider)
 -        with(Metrics) {
-+//        setPreferenceMetrics(settings)
++//        setPreferenceMetrics(settings, dohSettingsProvider)
 +//        with(Metrics) {
              // Set this early to guarantee it's in every ping from here on.
 -            distributionId.set(components.distributionIdManager.getDistributionId())
@@ -155,7 +155,7 @@ index 29cd599a82..9999c3220b 100644
  
              defaultBrowser.set(browsersCache.all(applicationContext).isDefaultBrowser)
              mozillaProductDetector.getMozillaBrowserDefault(applicationContext)?.also {
-@@ -847,7 +847,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -880,7 +880,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              }
          }
  
@@ -165,10 +165,10 @@ index 29cd599a82..9999c3220b 100644
  
      @VisibleForTesting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..af6fa12e6c 100644
+index 6ef1bc0ace..609c75f1d6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -575,7 +575,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -522,7 +522,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),

@@ -21,6 +21,22 @@
     },
     {
       "attachment": {
+        "filename": "marginalia.png",
+        "hash": "6e6b649b48da11a64b9b1f4b25bb26853b4e0e35941e13899dca366810c3f722",
+        "location": "",
+        "mimetype": "image/png",
+        "size": 1211
+      },
+      "engineIdentifiers": [
+        "marginalia"
+      ],
+      "id": "b71f7782-aaa7-40de-9407-9fd505059b61",
+      "imageSize": 16,
+      "last_modified": 1744118264845,
+      "schema": 1743687735700
+    },
+    {
+      "attachment": {
         "filename": "mojeek.ico",
         "hash": "29aaa5b4d0b0f61f90902c7d0b731326de99ee931bb55998cacfa81ba60bbf93",
         "location": "",

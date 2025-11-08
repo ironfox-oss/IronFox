@@ -77,13 +77,6 @@ patches:
     effect: "Ensures successful compilation of the browser."
     category: "Build System"
 
-  - file: "a-c-localize-maven.patch"
-    name: "Remove Mozilla Maven Repositories (Android Components)"
-    description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
-    reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
-    effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
-    category: "Build System"
-
   - file: "a-c-allow-build-date-override.patch"
     name: "Allow overriding the build date"
     description: "Allows devs to override the build date."
@@ -438,9 +431,9 @@ patches:
     effect: "Cleaner websites without cookie banners, while automatically opting users out of tracking where possible."
     category: "Privacy"
 
-  - file: "gecko-custom-ublock-origin-assets.patch"
-    name: "Enhanced uBlock Configuration"
-    description: "Sets uBlock Origin to use a custom/enhanced config by default."
+  - file: "gecko-configure-ublock-origin.patch"
+    name: "Configure uBlock Origin"
+    description: "Sets uBlock Origin to use a custom/enhanced config, and changes certain settings by default."
     reason: "To provide stronger out-of-box content blocking."
     effect: "Better ad and tracker blocking with optimized filter lists."
     category: "Privacy"
@@ -610,6 +603,13 @@ patches:
     effect: "Users are provided with a cleaner, faster, and more focused browser homepage."
     category: "User Experience"
 
+  - file: "fenix-enable-shortcut-suggestions-by-default.patch"
+    name: "Enable Shortcut Suggestions by default"
+    description: "Enables URL bar suggestions for local shortcuts by default."
+    reason: "Provides users with quicker/easier access to shortcuts."
+    effect: "Users are provided with an improved browsing experience."
+    category: "User Experience"
+
   - file: "fenix-hide-remove-and-pb-for-builtin-addons.patch"
     name: "Hide the 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
     description: "Hide the no-op 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
@@ -660,6 +660,13 @@ patches:
     effect: "Users have more control over their web browser."
     category: "User Interface"
 
+  - file: "gecko-expose-aboutsupport-prefs.patch"
+    name: "Expose additional preferences at `about:support`"
+    description: "Enables the display of certain important preferences at `about:support`."
+    reason: "Allows for easier troubleshooting and support."
+    effect: "Users can easily see if they have modified these important preferences."
+    category: "User Interface"
+
   - file: "gecko-expose-aboutconfig.patch"
     name: "Expose `about:config`"
     description: "Exposes `about:config` at `about:about`, alongside other internal `about:` pages."
@@ -667,11 +674,11 @@ patches:
     effect: "Users can access `about:config` easier to customize advanced Firefox settings not available in the regular settings menu."
     category: "User Interface"
 
-  - file: "gecko-expose-abouttranslations.patch"
-    name: "Expose `about:translations`"
-    description: "Exposes `about:translations` at `about:about`, alongside other internal `about:` pages."
-    reason: "To provide users with easier access to the Firefox Translations feature."
-    effect: "Users can access `about:translations` easier to translate text directly, without needing the text to be on an external webpage."
+  - file: "gecko-enable-abouttranslations.patch"
+    name: "Enable `about:translations`"
+    description: "Enables `about:translations`."
+    reason: "To provide users with direct access to the Firefox Translations feature."
+    effect: "Like on Desktop, users can access `about:translations` to translate text directly, without needing the text to be on an external webpage."
     category: "User Interface"
 
   - file: "fenix-hide-gpc.patch"
@@ -719,13 +726,6 @@ patches:
     description: "Adds minor tweaks to the browser's user interface."
     reason: "To reduce clutter and improve the user experience."
     effect: "Users are provided with a cleaner, focused browsing experience."
-    category: "User Interface"
-
-  - file: "a-c-ironfox-settings-support-cross-origin-referer-policy.patch"
-    name: "IronFox Settings Support (Android Components) - Cross-origin referer policy"
-    description: "Provides support for UI settings to configure the behavior of cross-origin referers."
-    reason: "To allow users to harden or relax the handling of cross-origin referers, directly from the UI."
-    effect: "Users can configure the cross-origin referer policy from the UI."
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-accessibility-services.patch"

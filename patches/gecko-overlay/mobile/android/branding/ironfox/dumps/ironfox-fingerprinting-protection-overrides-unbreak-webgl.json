@@ -14,6 +14,18 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.li"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.se"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "apple.com"
     },
     {
@@ -38,6 +50,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "comaps.at"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "coolmath4kids.com"
     },
     {
@@ -47,6 +63,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "crazygames.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "dndbeyond.com"
     },
     {
       "overrides": "-DisableWebGL",
@@ -86,7 +106,15 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "hoyoverse.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "jerseymikes.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "klippy.pro"
     },
     {
       "overrides": "-DisableWebGL",
@@ -95,6 +123,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "libretro.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "mapcomplete.org"
     },
     {
       "overrides": "-DisableWebGL",
@@ -114,11 +146,24 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "newgrounds.com",
+      "thirdPartyDomain": "ungrounded.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "noclip.website"
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "nvidia.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "panerabread.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "paxhistoria.co"
     },
     {
       "overrides": "-DisableWebGL",
@@ -143,6 +188,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "tojicode.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "tripo3d.ai"
     },
     {
       "overrides": "-DisableWebGL",
@@ -171,6 +220,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "wplace.live"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "x.ai"
     },
     {
       "overrides": "-DisableWebGL",

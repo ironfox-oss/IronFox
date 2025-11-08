@@ -59,7 +59,7 @@
     <string name="preference_translations_enabled">Habilitar Traducciones de Firefox</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Instalación de extensiones actualmente desactivada. Si lo deseas, a costa de seguridad, puedes habilitarla navegando a Ajustes -&gt; IronFox -&gt; Ajustes de IronFox -&gt; Seguridad -&gt; Permitir instalación de extensiones.</string>
     <string name="preference_jit_trusted_principals_enabled">Habilita la Compilación Just-in-Time (JIT) de JavaScript para extensiones</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Habilita JIT para extensiones cuando JIT está deshabilitado globalmente - Cambiar esta configuración reiniciará el navegador</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Cuando JIT está deshabilitado, JIT se habilita para extensiones - Cambiar esta configuración reiniciará el navegador</string>
     <string name="preference_fpp_overrides_ironfox_enabled">Habilita las excepciones de protección contra el fingerprinting de IronFox</string>
     <string name="preference_fpp_overrides_ironfox_summary">Relaja las protecciones contra huellas digitales para ciertos sitios web de forma predeterminada, con el fin de reducir interrupciones, utilizando una lista de IronFox - Cambiar esta configuración reiniciará el navegador</string>
     <string name="preference_fpp_overrides_mozilla_enabled">Habilitar las excepciones de la protección contra fingerprinting en Mozilla</string>
@@ -69,5 +69,6 @@
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Habilitar excepciones de simulación de zona horaria de IronFox</string>
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Desactiva las excepciones de simulación de zona horaria para ciertos sitios web por defecto, con el fin de reducir roturas – Cambiar esta configuración reiniciará el navegador</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Habilitar excepciones de WebGL de IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">Habilita excepciones de WebGL para ciertos sitios web por defecto cuando WebGL está desactivado globalmente, con el fin de reducir roturas – Cambiar esta configuración reiniciará el navegador</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Cuando WebGL está deshabilitado, se vuelve a habilitar por defecto para ciertos sitios web con el fin de reducir errores – Cambiar esta configuración reiniciará el navegador</string>
+    <string name="preference_webgl_disabled" translatable="false">Deshabilitar WebGL</string>
 </resources>

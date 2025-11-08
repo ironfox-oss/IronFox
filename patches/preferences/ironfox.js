@@ -10,6 +10,14 @@ pref("app.update.url.details", "https://gitlab.com/ironfox-oss/IronFox/-/release
 pref("app.update.url.manual", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.vendorURL", "https://ironfoxoss.org/", locked);
 
+/// Configure uBlock Origin
+pref("browser.ironfox.uBO.autoCommentFilterTemplate", "{{url}}");
+pref("browser.ironfox.uBO.autoUpdateDelayAfterLaunch", "10");
+pref("browser.ironfox.uBO.disableWebAssembly", "true");
+pref("browser.ironfox.uBO.filterAuthorMode", "true");
+pref("browser.ironfox.uBO.uiPopupConfig", "+logger");
+pref("browser.ironfox.uBO.updateAssetBypassBrowserCache", "true");
+
 /// Clear FPP global overrides
 // We're hardening FPP internally with our own `RFPTargetsDefault.inc` file instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
 pref("privacy.fingerprintingProtection.overrides", ""); // [DEFAULT]
@@ -37,169 +45,11 @@ pref("beacon.enabled", true); // [DEFAULT]
 // https://codeberg.org/celenity/Phoenix/src/branch/pages/build/policies/blocklist.json
 pref("browser.ironfox.extensions.blocklist.enabled", true); // [DEFAULT]
 
+/// Ensure media autoplay is always/only controlled by the UI/permission prompt
+pref("media.geckoview.autoplay.request", true, locked); // [DEFAULT]
+
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
-
-/// Lock prefs controlled by UI settings
-// This prevents prefs from becoming out of sync with the corresponding UI toggle(s)/behavior in Fenix
-// Modifying these prefs directly from `about:config` also causes them to reset on the next browser launch, which users probably do not want/expect
-// (These prefs can still be modified, just from the UI settings instead of from the `about:config`)
-pref("accessibility.force_disabled", 1, locked);
-pref("accessibility.force_disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("accessibility.force_disabled.1.NOTE", "'Enable accessibility services'", locked);
-pref("browser.cache.disk.enable", false, locked);
-pref("browser.cache.disk.enable.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.cache.disk.enable.1.NOTE", "'Enable disk cache'", locked);
-pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false, locked);
-pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled.1.NOTE", "'Spoof timezone to UTC-0'", locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true, locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.1.NOTE", "'Enable fingerprinting protection overrides from IronFox'", locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true, locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.1.NOTE", "'Enable timezone spoofing overrides from IronFox'", locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", true, locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.1.NOTE", "'Enable WebGL overrides from IronFox'", locked);
-pref("browser.safebrowsing.malware.enabled", true, locked);
-pref("browser.safebrowsing.malware.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.safebrowsing.malware.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
-pref("browser.safebrowsing.phishing.enabled", true, locked);
-pref("browser.safebrowsing.phishing.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.safebrowsing.phishing.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
-pref("browser.translations.automaticallyPopup", true, locked);
-pref("browser.translations.automaticallyPopup.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.translations.automaticallyPopup.1.NOTE", "'Offer to translate when possible'", locked);
-pref("browser.translations.enable", true, locked);
-pref("browser.translations.enable.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.translations.enable.1.NOTE", "'Enable Firefox Translations'", locked);
-pref("browser.translations.simulateUnsupportedEngine", false, locked);
-pref("browser.translations.simulateUnsupportedEngine.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.translations.simulateUnsupportedEngine.1.NOTE", "'Enable Firefox Translations'", locked);
-pref("browser.ui.zoom.force-user-scalable", true, locked);
-pref("browser.ui.zoom.force-user-scalable.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("browser.ui.zoom.force-user-scalable.1.NOTE", "'Zoom on all websites'", locked);
-pref("consoleservice.logcat", false, locked);
-pref("consoleservice.logcat.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("consoleservice.logcat.1.NOTE", "'Enable Gecko logs'", locked);
-pref("cookiebanners.service.mode.privateBrowsing", 1, locked);
-pref("cookiebanners.service.mode.privateBrowsing.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("cookiebanners.service.mode.privateBrowsing.1.NOTE", "'Cookie Banner Blocker in private browsing'", locked);
-pref("devtools.console.stdout.chrome", false, locked);
-pref("devtools.console.stdout.chrome.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("devtools.console.stdout.chrome.1.NOTE", "'Enable Gecko logs'", locked);
-pref("dom.security.https_only_mode", true, locked);
-pref("dom.security.https_only_mode.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("dom.security.https_only_mode.1.NOTE", "'HTTPS-Only Mode'", locked);
-pref("dom.security.https_only_mode_pbm", false, locked);
-pref("dom.security.https_only_mode_pbm.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("dom.security.https_only_mode_pbm.1.NOTE", "'HTTPS-Only Mode'", locked);
-pref("extensions.formautofill.addresses.enabled", false, locked);
-pref("extensions.formautofill.addresses.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("extensions.formautofill.addresses.enabled.1.NOTE", "'Save and fill addresses'", locked);
-pref("extensions.formautofill.creditCards.enabled", false, locked);
-pref("extensions.formautofill.creditCards.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("extensions.formautofill.creditCards.enabled.1.NOTE", "'Save and fill payment methods'", locked);
-pref("font.size.inflation.minTwips", 0, locked);
-pref("font.size.inflation.minTwips.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("font.size.inflation.minTwips.1.NOTE", "'Automatic font sizing'", locked);
-pref("geckoview.console.enabled", false, locked);
-pref("geckoview.console.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("geckoview.console.enabled.1.NOTE", "'Enable Gecko logs'", locked);
-pref("geckoview.logging", "Warn", locked);
-pref("geckoview.logging.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("geckoview.logging.1.NOTE", "'Enable Gecko logs'", locked);
-pref("javascript.enabled", true, locked);
-pref("javascript.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.enabled.1.NOTE", "'Enable JavaScript'", locked);
-pref("javascript.options.baselinejit", false, locked);
-pref("javascript.options.baselinejit.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.baselinejit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
-pref("javascript.options.jit_trustedprincipals", false, locked);
-pref("javascript.options.jit_trustedprincipals.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.jit_trustedprincipals.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT) for extensions'", locked);
-pref("javascript.options.jithints", false, locked);
-pref("javascript.options.jithints.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.jithints.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
-pref("javascript.options.ion", false, locked);
-pref("javascript.options.ion.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.ion.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
-pref("javascript.options.native_regexp", false, locked);
-pref("javascript.options.native_regexp.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.native_regexp.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
-pref("javascript.options.wasm", true, locked);
-pref("javascript.options.wasm.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.wasm.1.NOTE", "'Enable WebAssembly (WASM)'", locked);
-pref("javascript.options.wasm_optimizingjit", false, locked);
-pref("javascript.options.wasm_optimizingjit.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("javascript.options.wasm_optimizingjit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
-pref("media.eme.enabled", false, locked);
-pref("media.eme.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("media.eme.enabled.1.NOTE", "'Enable Encrypted Media Extensions (EME)'", locked);
-pref("media.mediadrm-widevinecdm.visible", false, locked);
-pref("media.mediadrm-widevinecdm.visible.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("media.mediadrm-widevinecdm.visible.1.NOTE", "'Enable Widevine CDM'", locked);
-pref("media.peerconnection.enabled", true, locked);
-pref("media.peerconnection.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("media.peerconnection.enabled.1.NOTE", "'Enable Widevine CDM'", locked);
-pref("network.dns.disableIPv6", false, locked);
-pref("network.dns.disableIPv6.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("network.dns.disableIPv6.1.NOTE", "'Enable IPv6 network connectivity'", locked);
-pref("network.http.referer.XOriginPolicy", 0, locked);
-pref("network.http.referer.XOriginPolicy.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("network.http.referer.XOriginPolicy.1.NOTE", "'Cross-origin referer policy'", locked);
-pref("network.lna.blocking", true, locked);
-pref("network.lna.blocking.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("network.lna.blocking.1.NOTE", "'Enable LNA blocking'", locked);
-pref("network.trr.default_provider_uri", "https://dns.quad9.net/dns-query", locked);
-pref("network.trr.default_provider_uri.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("network.trr.default_provider_uri.1.NOTE", "'DNS over HTTPS'", locked);
-pref("network.trr.excluded-domains", "", locked);
-pref("network.trr.excluded-domains.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("network.trr.excluded-domains.1.NOTE", "'DNS over HTTPS'", locked);
-pref("network.trr.mode", 3, locked);
-pref("network.trr.mode.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("network.trr.mode.1.NOTE", "'DNS over HTTPS'", locked);
-pref("network.trr.uri", "", locked);
-pref("network.trr.uri.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("network.trr.uri.1.NOTE", "'DNS over HTTPS'", locked);
-pref("pdfjs.disabled", false, locked);
-pref("pdfjs.disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("pdfjs.disabled.1.NOTE", "'Open PDF files externally'", locked);
-pref("print.enabled", true, locked);
-pref("print.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("print.enabled.1.NOTE", "'Enable printing capabilities'", locked);
-pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true, locked);
-pref("privacy.fingerprintingProtection.remoteOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("privacy.fingerprintingProtection.remoteOverrides.enabled.1.NOTE", "'Enable fingerprinting protection overrides from Mozilla'", locked);
-pref("privacy.spoof_english", 2, locked);
-pref("privacy.spoof_english.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("privacy.spoof_english.1.NOTE", "'Request English versions of webpages'", locked);
-pref("privacy.trackingprotection.allow_list.baseline.enabled", true, locked);
-pref("privacy.trackingprotection.allow_list.baseline.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("privacy.trackingprotection.allow_list.baseline.enabled.1.NOTE", "'Enhanced Tracking Protection'", locked);
-pref("privacy.trackingprotection.allow_list.convenience.enabled", false, locked);
-pref("privacy.trackingprotection.allow_list.convenience.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("privacy.trackingprotection.allow_list.convenience.enabled.1.NOTE", "'Enhanced Tracking Protection'", locked);
-pref("security.enterprise_roots.enabled", false, locked);
-pref("security.enterprise_roots.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("security.enterprise_roots.enabled.1.NOTE", "'Use third party CA certificates'", locked);
-pref("signon.autofillForms", false, locked);
-pref("signon.autofillForms.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("signon.autofillForms.1.NOTE", "'Autofill in IronFox'", locked);
-pref("signon.rememberSignons", false, locked);
-pref("signon.rememberSignons.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("signon.rememberSignons.1.NOTE", "'Save passwords'", locked);
-pref("svg.disabled", false, locked);
-pref("svg.disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("svg.disabled.1.NOTE", "'Enable Scalable Vector Graphics (SVG)'", locked);
-pref("webgl.disabled", true, locked);
-pref("webgl.disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("webgl.disabled.1.NOTE", "'Disable WebGL'", locked);
-pref("xpinstall.enabled", false, locked);
-pref("xpinstall.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("xpinstall.enabled.1.NOTE", "'Allow installation of add-ons'", locked);
 
 /// Re-enable geolocation permission prompts in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
@@ -220,5 +70,113 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 /// Set light/dark mode to match system
 // We still enable light mode by default, just via a patch for Fenix's UI settings instead
 pref("layout.css.prefers-color-scheme.content-override", 2, locked); // [DEFAULT]
+
+/// Annotate locked prefs controlled by UI settings
+pref("accessibility.force_disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("accessibility.force_disabled.1.NOTE", "'Enable accessibility services'", locked);
+pref("browser.cache.disk.enable.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.cache.disk.enable.1.NOTE", "'Enable disk cache'", locked);
+pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled.1.NOTE", "'Spoof timezone to UTC-0'", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled.1.NOTE", "'Enable fingerprinting protection overrides from IronFox'", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.1.NOTE", "'Enable timezone spoofing overrides from IronFox'", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.1.NOTE", "'Enable WebGL overrides from IronFox'", locked);
+pref("browser.safebrowsing.malware.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.safebrowsing.malware.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
+pref("browser.safebrowsing.phishing.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.safebrowsing.phishing.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
+pref("browser.translations.automaticallyPopup.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.translations.automaticallyPopup.1.NOTE", "'Offer to translate when possible'", locked);
+pref("browser.translations.enable.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.translations.enable.1.NOTE", "'Enable Firefox Translations'", locked);
+pref("browser.translations.simulateUnsupportedEngine.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.translations.simulateUnsupportedEngine.1.NOTE", "'Enable Firefox Translations'", locked);
+pref("browser.ui.zoom.force-user-scalable.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.ui.zoom.force-user-scalable.1.NOTE", "'Zoom on all websites'", locked);
+pref("consoleservice.logcat.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("consoleservice.logcat.1.NOTE", "'Enable Gecko logs'", locked);
+pref("cookiebanners.service.mode.privateBrowsing.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("cookiebanners.service.mode.privateBrowsing.1.NOTE", "'Cookie Banner Blocker in private browsing'", locked);
+pref("devtools.console.stdout.chrome.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("devtools.console.stdout.chrome.1.NOTE", "'Enable Gecko logs'", locked);
+pref("dom.security.https_only_mode.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("dom.security.https_only_mode.1.NOTE", "'HTTPS-Only Mode'", locked);
+pref("dom.security.https_only_mode_pbm.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("dom.security.https_only_mode_pbm.1.NOTE", "'HTTPS-Only Mode'", locked);
+pref("extensions.formautofill.addresses.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("extensions.formautofill.addresses.enabled.1.NOTE", "'Save and fill addresses'", locked);
+pref("extensions.formautofill.creditCards.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("extensions.formautofill.creditCards.enabled.1.NOTE", "'Save and fill payment methods'", locked);
+pref("font.size.inflation.minTwips.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("font.size.inflation.minTwips.1.NOTE", "'Automatic font sizing'", locked);
+pref("geckoview.console.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("geckoview.console.enabled.1.NOTE", "'Enable Gecko logs'", locked);
+pref("geckoview.logging.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("geckoview.logging.1.NOTE", "'Enable Gecko logs'", locked);
+pref("javascript.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.enabled.1.NOTE", "'Enable JavaScript'", locked);
+pref("javascript.options.baselinejit.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.options.baselinejit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("javascript.options.jit_trustedprincipals.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.options.jit_trustedprincipals.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT) for extensions'", locked);
+pref("javascript.options.jithints.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.options.jithints.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("javascript.options.ion.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.options.ion.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("javascript.options.native_regexp.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.options.native_regexp.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("javascript.options.wasm.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.options.wasm.1.NOTE", "'Enable WebAssembly (WASM)'", locked);
+pref("javascript.options.wasm_optimizingjit.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("javascript.options.wasm_optimizingjit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("media.autoplay.blocking_policy.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("media.autoplay.blocking_policy.1.NOTE", "'Media autoplay'", locked);
+pref("media.eme.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("media.eme.enabled.1.NOTE", "'Enable Encrypted Media Extensions (EME)'", locked);
+pref("media.mediadrm-widevinecdm.visible.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("media.mediadrm-widevinecdm.visible.1.NOTE", "'Enable Widevine CDM'", locked);
+pref("media.peerconnection.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("media.peerconnection.enabled.1.NOTE", "'Enable Widevine CDM'", locked);
+pref("network.dns.disableIPv6.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("network.dns.disableIPv6.1.NOTE", "'Enable IPv6 network connectivity'", locked);
+pref("network.http.referer.XOriginPolicy.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("network.http.referer.XOriginPolicy.1.NOTE", "'Cross-origin referer policy'", locked);
+pref("network.lna.blocking.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("network.lna.blocking.1.NOTE", "'Enable LNA blocking'", locked);
+pref("network.trr.default_provider_uri.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("network.trr.default_provider_uri.1.NOTE", "'DNS over HTTPS'", locked);
+pref("network.trr.excluded-domains.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("network.trr.excluded-domains.1.NOTE", "'DNS over HTTPS'", locked);
+pref("network.trr.mode.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("network.trr.mode.1.NOTE", "'DNS over HTTPS'", locked);
+pref("network.trr.uri.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("network.trr.uri.1.NOTE", "'DNS over HTTPS'", locked);
+pref("pdfjs.disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("pdfjs.disabled.1.NOTE", "'Open PDF files externally'", locked);
+pref("print.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("print.enabled.1.NOTE", "'Enable printing capabilities'", locked);
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled.1.NOTE", "'Enable fingerprinting protection overrides from Mozilla'", locked);
+pref("privacy.spoof_english.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("privacy.spoof_english.1.NOTE", "'Request English versions of webpages'", locked);
+pref("privacy.trackingprotection.allow_list.baseline.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("privacy.trackingprotection.allow_list.baseline.enabled.1.NOTE", "'Enhanced Tracking Protection'", locked);
+pref("privacy.trackingprotection.allow_list.convenience.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("privacy.trackingprotection.allow_list.convenience.enabled.1.NOTE", "'Enhanced Tracking Protection'", locked);
+pref("security.enterprise_roots.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("security.enterprise_roots.enabled.1.NOTE", "'Use third party CA certificates'", locked);
+pref("signon.autofillForms.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("signon.autofillForms.1.NOTE", "'Autofill in IronFox'", locked);
+pref("signon.rememberSignons.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("signon.rememberSignons.1.NOTE", "'Save passwords'", locked);
+pref("svg.disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("svg.disabled.1.NOTE", "'Enable Scalable Vector Graphics (SVG)'", locked);
+pref("webgl.disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("webgl.disabled.1.NOTE", "'Disable WebGL'", locked);
+pref("xpinstall.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("xpinstall.enabled.1.NOTE", "'Allow installation of add-ons'", locked);
 
 pref("browser.ironfox.applied", true, locked);

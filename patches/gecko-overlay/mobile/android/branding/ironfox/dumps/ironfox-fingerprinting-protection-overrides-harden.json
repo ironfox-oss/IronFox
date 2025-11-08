@@ -854,6 +854,10 @@
     },
     {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "annas-archive.org"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
       "firstPartyDomain": "apple.com"
     },
     {
@@ -898,6 +902,14 @@
     },
     {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "hoyoverse.com"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "klippy.pro"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
       "firstPartyDomain": "kroger.com"
     },
     {
@@ -935,6 +947,10 @@
     {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
       "firstPartyDomain": "stacksocial.com"
+    },
+    {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "starlink.com"
     },
     {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC,+JSLocale",

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index ac33dabf2e..c4b18e685e 100644
+index 61dd19233b..f02ace3dc3 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
 @@ -13,15 +13,15 @@ includes:
@@ -28,10 +28,19 @@ index ac33dabf2e..c4b18e685e 100644
      channel: release
      features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 29cd599a82..3b3e4cb171 100644
+index bd75990cd8..91115a6898 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -433,13 +433,13 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -87,7 +87,7 @@ import org.mozilla.fenix.components.initializeGlean
+ import org.mozilla.fenix.components.metrics.MozillaProductDetector
+ import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.crashes.StartupCrashCanary
+-import org.mozilla.fenix.experiments.maybeFetchExperiments
++// import org.mozilla.fenix.experiments.maybeFetchExperiments
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.containsQueryParameters
+ import org.mozilla.fenix.ext.isCustomEngine
+@@ -454,13 +454,13 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
          @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
          fun queueNimbusFetchInForeground() {
@@ -47,7 +56,7 @@ index 29cd599a82..3b3e4cb171 100644
          }
  
          @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
-@@ -528,9 +528,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -549,9 +549,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          beginSetupMegazord()
  
          // This lazily constructs the Nimbus object…
@@ -60,10 +69,10 @@ index 29cd599a82..3b3e4cb171 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index fa2bf86a5b..2e04d0c37d 100644
+index e505349935..5478f0c5ca 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -362,7 +362,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -376,7 +376,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          val startTimeProfiler = components.core.engine.profiler?.getProfilerTime()
  
          // Setup nimbus-cli tooling. This is a NOOP when launching normally.
@@ -104,7 +113,7 @@ index e387bc4ae0..c8482a0f6b 100644
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
              activity.overrideActivityTransition(Activity.OVERRIDE_TRANSITION_OPEN, 0, 0)
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index c518b78ce9..1bf884f7e5 100644
+index 40212e28e9..2af4a76165 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 @@ -57,7 +57,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
@@ -117,10 +126,10 @@ index c518b78ce9..1bf884f7e5 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4d499da8de..e05cecc850 100644
+index e1a67a6da4..bbf660f90e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -211,10 +211,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -212,10 +212,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
          super.onResume()
  
          // Use nimbus to set the title, and a trivial addition
@@ -131,10 +140,10 @@ index 4d499da8de..e05cecc850 100644
 -        val suffix = nimbusValidation.settingsPunctuation
 +        val title = getString(R.string.settings_title)
 +        val suffix = ""
- 
-         showToolbar("$title$suffix")
- 
-@@ -551,7 +551,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         val toolbarTitle = "$title$suffix"
+         if (requireContext().settings().isSettingsSearchEnabled) {
+             showToolbarWithIconButton(
+@@ -560,7 +560,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
          with(settings) {
              findPreference<Preference>(
                  getPreferenceKey(R.string.pref_key_nimbus_experiments),
@@ -144,10 +153,10 @@ index 4d499da8de..e05cecc850 100644
                  getPreferenceKey(R.string.pref_key_debug_settings),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..b0c466ff6b 100644
+index 6ef1bc0ace..754d319b7e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -402,7 +402,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -349,7 +349,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var nimbusExperimentsFetched by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_nimbus_experiments_fetched),

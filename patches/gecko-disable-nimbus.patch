@@ -12,7 +12,7 @@ index 266f2a2e1f..437ef2f414 100644
  const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
  const STUDIES_OPT_OUT_PREF = "app.shield.optoutstudies.enabled";
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-index d2af5454d3..45f94697aa 100644
+index d37ccfd130..d9886c7c94 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 +++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 @@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {

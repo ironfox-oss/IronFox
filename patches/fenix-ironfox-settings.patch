@@ -1,13 +1,14 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 7d2ef5a331..20904ea669 100644
+index 9d690c06bc..0c0abf22db 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -196,6 +196,37 @@ class Core(
-             dohAutoselectEnabled = FxNimbus.features.doh.value().autoselectEnabled,
+@@ -197,6 +197,38 @@ class Core(
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
+             crliteChannel = FxNimbus.features.pki.value().crliteChannel,
 +            accessibilityEnabled = context.settings().accessibilityEnabled,
 +            addressAutofillEnabled = context.settings().shouldAutofillAddressDetails,
++            autoplayBlockingPolicy = context.settings().getAutoplayBlockingPolicy(),
 +            cacheEnabled = context.settings().cacheEnabled,
 +            cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails,
 +            emeEnabled = context.settings().emeEnabled,
@@ -40,7 +41,7 @@ index 7d2ef5a331..20904ea669 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -229,6 +260,7 @@ class Core(
+@@ -230,6 +262,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -50,10 +51,10 @@ index 7d2ef5a331..20904ea669 100644
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
 new file mode 100644
-index 0000000000..e12c11ef12
+index 0000000000..899080112b
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/IronFoxSettingsFragment.kt
-@@ -0,0 +1,852 @@
+@@ -0,0 +1,910 @@
 +package org.mozilla.fenix.settings
 +
 +import android.content.DialogInterface
@@ -84,6 +85,9 @@ index 0000000000..e12c11ef12
 +
 +@Suppress("TooManyFunctions")
 +class IronFoxSettingsFragment : PreferenceFragmentCompat() {
++    private lateinit var radioAutoplayBlockingSticky: RadioButtonPreference
++    private lateinit var radioAutoplayBlockingTransient: RadioButtonPreference
++    private lateinit var radioAutoplayBlockingClickToPlay: RadioButtonPreference
 +    private lateinit var radioPrefersLightColorScheme: RadioButtonPreference
 +    private lateinit var radioPrefersDarkColorScheme: RadioButtonPreference
 +    private lateinit var radioPrefersBrowserColorScheme: RadioButtonPreference
@@ -266,26 +270,6 @@ index 0000000000..e12c11ef12
 +        }
 +
 +        /**
-+         * Indicates whether or not we should spoof the user's locale to en-US
-+         * Default: true
-+         * Gecko preference(s) impacted: privacy.spoof_english
-+         */
-+        val spoofEnglishPreference = requirePreference<SwitchPreference>(
-+            R.string.pref_key_spoof_english,
-+        )
-+
-+        spoofEnglishPreference.isChecked = IronFoxPreferences.isLocaleSpoofingEnabled(requireContext())
-+        spoofEnglishPreference.setOnPreferenceChangeListener { preference, spoofEnglish ->
-+            val settings = preference.context.settings()
-+            val components = preference.context.components
-+
-+            settings.spoofEnglish = spoofEnglish as Boolean
-+            components.core.engine.settings.spoofEnglish = spoofEnglish
-+
-+            true
-+        }
-+
-+        /**
 +         * Indicates whether or not we should enable our timezone spoofing overrides
 +         * Default: true
 +         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled
@@ -312,6 +296,26 @@ index 0000000000..e12c11ef12
 +                },
 +                DEFAULT_EXIT_DELAY,
 +            )
++            true
++        }
++
++        /**
++         * Indicates whether or not we should spoof the user's locale to en-US
++         * Default: true
++         * Gecko preference(s) impacted: privacy.spoof_english
++         */
++        val spoofEnglishPreference = requirePreference<SwitchPreference>(
++            R.string.pref_key_spoof_english,
++        )
++
++        spoofEnglishPreference.isChecked = IronFoxPreferences.isLocaleSpoofingEnabled(requireContext())
++        spoofEnglishPreference.setOnPreferenceChangeListener { preference, spoofEnglish ->
++            val settings = preference.context.settings()
++            val components = preference.context.components
++
++            settings.spoofEnglish = spoofEnglish as Boolean
++            components.core.engine.settings.spoofEnglish = spoofEnglish
++
 +            true
 +        }
 +
@@ -725,8 +729,22 @@ index 0000000000..e12c11ef12
 +                getPreferenceKey(R.string.pref_key_widevine_enabled),
 +            )?.isVisible = showSecretDebugMenuThisSession
 +        }
++        setupAutoplayBlockingPolicy()
 +        setupCrossOriginRefererPolicy()
 +        setupWebsiteAppearance()
++    }
++
++    /*** Autoplay blocking policy ***/
++
++    private fun setupAutoplayBlockingPolicy() {
++        bindAutoplayBlockingSticky()
++        bindAutoplayBlockingTransient()
++        bindAutoplayBlockingClickToPlay()
++        addToRadioGroup(
++            radioAutoplayBlockingSticky,
++            radioAutoplayBlockingTransient,
++            radioAutoplayBlockingClickToPlay
++        )
 +    }
 +
 +    /*** Cross-origin referer policy ***/
@@ -753,6 +771,42 @@ index 0000000000..e12c11ef12
 +            radioPrefersDarkColorScheme,
 +            radioPrefersBrowserColorScheme
 +        )
++    }
++
++    /**
++    * Indicates whether or not we should use the sticky media autoplay blocking policy
++    * Default: false
++    * Gecko preference(s) impacted: media.autoplay.blocking_policy (0)
++    */
++    private fun bindAutoplayBlockingSticky() {
++        radioAutoplayBlockingSticky = requirePreference(R.string.pref_key_autoplay_policy_sticky)
++        radioAutoplayBlockingSticky.onClickListener {
++            updateEngineAutoplayBlockingPolicy()
++        }
++    }
++
++    /**
++    * Indicates whether or not we should use the transient media autoplay blocking policy
++    * Default: true
++    * Gecko preference(s) impacted: media.autoplay.blocking_policy (1)
++    */
++    private fun bindAutoplayBlockingTransient() {
++        radioAutoplayBlockingTransient = requirePreference(R.string.pref_key_autoplay_policy_transient)
++        radioAutoplayBlockingTransient.onClickListener {
++            updateEngineAutoplayBlockingPolicy()
++        }
++    }
++
++    /**
++    * Indicates whether or not we should use the click-to-play media autoplay blocking policy
++    * Default: false
++    * Gecko preference(s) impacted: media.autoplay.blocking_policy (2)
++    */
++    private fun bindAutoplayBlockingClickToPlay() {
++        radioAutoplayBlockingClickToPlay = requirePreference(R.string.pref_key_autoplay_policy_click_to_play)
++        radioAutoplayBlockingClickToPlay.onClickListener {
++            updateEngineAutoplayBlockingPolicy()
++        }
 +    }
 +
 +    /**
@@ -834,6 +888,11 @@ index 0000000000..e12c11ef12
 +        requireComponents.useCases.sessionUseCases.reload.invoke()
 +    }
 +
++    private fun updateEngineAutoplayBlockingPolicy() {
++        requireContext().components.core.engine.settings.autoplayBlockingPolicy =
++            requireContext().settings().getAutoplayBlockingPolicy()
++    }
++
 +    private fun updateEngineRefererXOriginPolicy() {
 +        requireContext().components.core.engine.settings.refererXOriginPolicy =
 +            requireContext().settings().getRefererXOriginPolicy()
@@ -907,10 +966,10 @@ index 0000000000..e12c11ef12
 +    }
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4d499da8de..636cefadda 100644
+index e1a67a6da4..a98b4656aa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -582,6 +582,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -591,6 +591,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
          setupHomepagePreference(settings)
          setupTrackingProtectionPreference(settings)
          setupDnsOverHttpsPreference(settings)
@@ -918,7 +977,7 @@ index 4d499da8de..636cefadda 100644
      }
  
      /**
-@@ -780,6 +781,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -789,6 +790,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
              }
      }
  
@@ -939,18 +998,19 @@ index 4d499da8de..636cefadda 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..091fd39c7e 100644
+index 6ef1bc0ace..6f1d71cbda 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -72,6 +72,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
+@@ -75,6 +75,8 @@ import org.mozilla.fenix.wallpapers.Wallpaper
  import java.security.InvalidParameterException
  import java.util.UUID
  import java.util.concurrent.TimeUnit.MILLISECONDS
++import mozilla.components.concept.engine.Engine.AutoplayBlockingPolicy
 +import mozilla.components.concept.engine.Engine.RefererXOriginPolicy
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2793,4 +2794,171 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2730,4 +2732,198 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -958,6 +1018,21 @@ index 312b5b3de3..091fd39c7e 100644
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
 +        default = false,
++    )
++
++    var autoplayBlockingClickToPlay by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_autoplay_policy_click_to_play),
++        default = false,
++    )
++
++    var autoplayBlockingSticky by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_autoplay_policy_sticky),
++        default = false,
++    )
++
++    var autoplayBlockingTransient by booleanPreference(
++        key = appContext.getPreferenceKey(R.string.pref_key_autoplay_policy_transient),
++        default = true,
 +    )
 +
 +    var cacheEnabled by booleanPreference(
@@ -1110,6 +1185,18 @@ index 312b5b3de3..091fd39c7e 100644
 +        default = false,
 +    )
 +
++    fun getAutoplayBlockingPolicy(): AutoplayBlockingPolicy {
++        return if (autoplayBlockingSticky) {
++            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_STICKY
++        } else if (autoplayBlockingTransient) {
++            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT
++        } else if (autoplayBlockingClickToPlay) {
++            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_CLICKTOPLAY
++        } else {
++            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT
++        }
++    }
++
 +    fun getRefererXOriginPolicy(): RefererXOriginPolicy {
 +        return if (refererXOriginAlways) {
 +            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
@@ -1153,13 +1240,46 @@ index a4fd0897fa..634f9c1b8c 100644
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
 new file mode 100644
-index 0000000000..5275abe497
+index 0000000000..4c9711f318
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/res/xml/ironfox_preferences.xml
-@@ -0,0 +1,307 @@
+@@ -0,0 +1,340 @@
 +<?xml version="1.0" encoding="utf-8"?>
 +<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
 +    xmlns:app="http://schemas.android.com/apk/res-auto">
++
++<!-- Media autoplay -->
++    <androidx.preference.PreferenceCategory
++        android:layout="@layout/preference_category_no_icon_style"
++        android:selectable="false"
++        android:title="@string/preference_media_autoplay_title"
++        app:iconSpaceReserved="false">
++        <androidx.preference.Preference
++            android:key="@string/pref_key_media_autoplay_description"
++            android:title=""
++            android:summary="@string/preference_media_autoplay_description"
++            android:selectable="false"
++            app:allowDividerAbove="false"
++            app:iconSpaceReserved="false" />
++
++        <!-- Whether we should use the sticky media autoplay blocking policy -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_autoplay_policy_sticky"
++            android:title="@string/preference_autoplay_policy_sticky" />
++
++        <!-- Whether we should use the transient media autoplay blocking policy -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="true"
++            android:key="@string/pref_key_autoplay_policy_transient"
++            android:title="@string/preference_autoplay_policy_transient" />
++
++        <!-- Whether we should use the click-to-play media autoplay blocking policy -->
++        <org.mozilla.fenix.settings.RadioButtonPreference
++            android:defaultValue="false"
++            android:key="@string/pref_key_autoplay_policy_click_to_play"
++            android:title="@string/preference_autoplay_policy_click_to_play" />
++    </androidx.preference.PreferenceCategory>
 +
 +    <!-- Preferred website appearance -->
 +    <androidx.preference.PreferenceCategory

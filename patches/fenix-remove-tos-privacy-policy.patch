@@ -122,10 +122,10 @@ index 92a8a9a36d..c67e70ba65 100644
                      lineThreeState,
                  ),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..3f93f28f4d 100644
+index 6ef1bc0ace..06be5a734f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -590,7 +590,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -537,7 +537,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
@@ -134,7 +134,7 @@ index 312b5b3de3..3f93f28f4d 100644
          persistDefaultIfNotExists = true,
      )
  
-@@ -600,7 +600,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -547,7 +547,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var isTermsOfUsePromptEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_terms_prompt_enabled),
          default = { FxNimbus.features.termsOfUsePrompt.value().enabled },

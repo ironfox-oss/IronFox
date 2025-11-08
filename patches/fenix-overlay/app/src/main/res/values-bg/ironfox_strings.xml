@@ -31,7 +31,7 @@
     <string name="preference_fpp_overrides_mozilla_enabled">Активиране на отменяния на защитата с пръстови отпечатъци от Mozilla</string>
     <string name="preference_fpp_overrides_mozilla_summary">Отслабва защитата за пръстови отпечатъци за определени уебсайтове по подразбиране, за да намали счупването, използвайки списък от Mozilla - Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="preference_jit_trusted_principals_enabled">Активиране на JavaScript Just-in-time компилация (JIT) за разширения</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Активира JIT за разширения, когато JIT е деактивиран глобално - Промяната на тази настройка ще рестартира браузъра ви</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Когато JIT е деактивиран, той се активира отново за разширения - Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="preference_website_appearance_title">Предпочитан външен вид на уебсайта</string>
     <string name="preference_website_appearance_description">Някои уебсайтове адаптират цветовата си схема въз основа на вашите предпочитания. Изберете коя цветова схема искате да използвате за тези сайтове. Обърнете внимание, че опции, различни от „Светла“, могат да помогнат за разпознаването на пръстови отпечатъци, като направят браузъра ви да изглежда по-уникален.</string>
     <string name="preference_prefers_browser_color_scheme">Следвайте темата на браузъра</string>
@@ -57,7 +57,7 @@
     <string name="toast_change_unifiedpush_done">Настройката на UnifiedPush е променена. Излизане от приложението, за да се приложат промените…</string>
     <string name="preference_wasm_enabled">Активиране на WebAssembly (WASM)</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Активиране на WebGL презаписвания от IronFox</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">Активира WebGL за определени уебсайтове по подразбиране, когато WebGL е деактивиран глобално, за да се намали прекъсването - Промяната на тази настройка ще рестартира браузъра ви</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Когато WebGL е деактивиран, WebGL се активира отново по подразбиране за определени уебсайтове, за да се намали прекъсването - Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="preference_webrtc_enabled">Активиране на WebRTC</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Инсталирането на добавки в момента е деактивирано. Ако желаете, за сметка на сигурността, можете да го активирате, като отидете в Настройки -&gt; IronFox -&gt; Настройки на IronFox -&gt; Защита -&gt; Разрешаване на инсталирането на добавки.</string>
     <string name="preference_xpinstall_enabled">Разрешаване на инсталирането на добавки</string>
@@ -70,4 +70,5 @@
     <string name="onboarding_state_installing_ublock">Инсталиране на uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Възникна грешка при инсталирането на uBlock Origin: %1$s</string>
     <string name="onboarding_action_retry">Опитай отново</string>
+    <string name="preference_webgl_disabled" translatable="false">Деактивиране на WebGL</string>
 </resources>

@@ -3,6 +3,16 @@ description: Have any new features you want to see or any ideas to make IronFox 
 title: "[ENHANCEMENT] PLEASE REPLACE THIS TEXT WITH A SUMMARY OF YOUR SUGGESTION..."
 labels: ["enhancement"]
 body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Confirmation Checklist
+      options:
+        - label: I confirm that this issue occurs on the **latest release** of IronFox. You can check what the latest version is [on the `Releases` page](https://gitlab.com/ironfox-oss/IronFox/-/releases).
+          required: true
+        - label: I confirm that this issue has **NOT** already been reported on [the GitLab issue tracker](https://gitlab.com/ironfox-oss/IronFox/-/issues) **and/or** [the Codeberg issue tracker](https://codeberg.org/ironfox-oss/IronFox/issues).
+          required: true
+
   - type: textarea
     id: reason
     attributes:

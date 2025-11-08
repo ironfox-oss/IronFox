@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4d499da8de..df086baa43 100644
+index e1a67a6da4..52bd20d8ac 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -532,7 +532,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -541,7 +541,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
              }
          }
  
@@ -12,10 +12,10 @@ index 4d499da8de..df086baa43 100644
              settings.preferences.edit { putBoolean(preference.key, newValue) }
              requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 312b5b3de3..b9ca88c804 100644
+index 6ef1bc0ace..69c7baeadc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -568,10 +568,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -515,10 +515,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = CrashReportOption.Ask.toString(),
      )
  
