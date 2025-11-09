@@ -46,6 +46,11 @@ def is_blank(str: str) -> bool:
     return len(str.strip()) == 0
 
 
+def host_target() -> str:
+    "Returns the machine name for the host platform (e.g. 'linux-x86-64')"
+    return f"{current_platform().lower()}-{current_machine().replace('_', '-')}"
+
+
 def current_platform() -> str:
     """The current platform/system name."""
     return platform.system()

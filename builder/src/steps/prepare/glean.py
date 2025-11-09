@@ -1,7 +1,7 @@
 from typing import List
 from commands.prepare import PrepareConfig
 from common.paths import Paths
-from common.utils import current_machine, current_platform
+from common.utils import host_target
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
@@ -38,7 +38,6 @@ def prepare_glean(
     )
 
     metrics_disabled = regex(r"disabled: .*", "disabled: true,")
-    host_target = f"{current_platform().lower()}-{current_machine().replace('_', '-')}"
 
     return [
         # fmt:off
@@ -47,7 +46,7 @@ def prepare_glean(
             name="Write local.properties",
             target=paths.glean_dir / "local.properties",
             contents=lambda: f'''
-rust.targets={host_target},{config.rusttarget}
+rust.targets={host_target()},{config.rusttarget}
             '''.encode(),
             append=True,
         ),

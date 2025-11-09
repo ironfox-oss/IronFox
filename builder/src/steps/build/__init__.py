@@ -127,12 +127,12 @@ def build_application_services(
     config: BuildConfig,
     paths: Paths,
 ) -> List[TaskDefinition]:
-    env = {"CI": "true"}
+    env = {"CI": ""}
     return [
         d.run_cmds(
             name="Build A-S",
             commands=[
-                f"{config.exec_sh} -c './libs/verify-android-environment.sh'",
+                f"{config.exec_sh} ./libs/verify-android-environment.sh",
                 f"{paths.gradle_exec} :tooling-nimbus-gradle:publishToMavenLocal",
             ],
             cwd=paths.application_services_dir,

@@ -1,14 +1,19 @@
+import os
 from typing import List
+from commands.prepare import PrepareConfig
 from common.paths import Paths
+from common.utils import host_target
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
-from execution.find_replace import comment_out, line_affix, literal, regex
+from execution.find_replace import comment_out, literal, regex
 from execution.types import ReplacementAction
 from .deglean import deglean
 
 
 def prepare_application_services(
-    d: BuildDefinition, paths: Paths
+    d: BuildDefinition,
+    config: PrepareConfig,
+    paths: Paths,
 ) -> List[TaskDefinition]:
     def _process_file(
         path: str,
@@ -84,6 +89,15 @@ def prepare_application_services(
             replacements=[
                 regex(r'NDK ez-install[\s\S]*?\n\n', r''),
             ],
+        ),
+        
+        # Ensure we're only building for expected architectures
+        d.write_file(
+            name="Set rust targets in local.properties",
+            target=paths.application_services_dir / "local.properties",
+            contents=lambda: f"{os.linesep}rust.targets={host_target()},{config.rusttarget}".encode(),
+            append=True,
+            overwrite=False,
         ),
 
         # Remove Gradle content block (content { ... }) entirely

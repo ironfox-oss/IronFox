@@ -63,7 +63,7 @@ async def get_definition(
         d.chain(*prepare_glean(d, paths, config)),
 
         # Application services
-        d.chain(*prepare_application_services(d, paths)),
+        d.chain(*prepare_application_services(d, config, paths)),
 
         # Firefox
         d.chain(*prepare_firefox(d, paths, config)),

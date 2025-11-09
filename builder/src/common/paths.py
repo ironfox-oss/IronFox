@@ -3,7 +3,7 @@
 import os
 from pathlib import Path
 
-from common.utils import is_macos, ndk_host_tag
+from common.utils import current_platform, host_target, is_macos, ndk_host_tag
 
 from .versions import Versions
 
@@ -138,7 +138,11 @@ class Paths:
     def application_services_nss_dir(self) -> Path:
         """Path to the `nss` directory in application-services."""
         return (
-            self.application_services_dir / "libs" / "desktop" / "linux-x86-64" / "nss"
+            self.application_services_dir
+            / "libs"
+            / "desktop"
+            / f"{host_target()}"
+            / "nss"
         )
 
     @property
