@@ -84,11 +84,21 @@ def line_affix(
     )
 
 
-def comment_out(
+def eol_comment_line(
     match_lines: PatternType,
     comment_token: str = "//",
 ) -> LineAffixReplacement:
     return line_affix(match_lines=match_lines, prefix=comment_token)
+
+
+def eol_comment_text(
+    match_text: PatternType,
+    comment_token: str = "//",
+) -> RegexReplacement:
+    return regex(
+        pattern=match_text,
+        replacement=rf"{comment_token} \g<0>",
+    )
 
 
 def literal(

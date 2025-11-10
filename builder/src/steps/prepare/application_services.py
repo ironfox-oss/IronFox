@@ -5,7 +5,14 @@ from common.paths import Paths
 from common.utils import host_target
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
-from execution.find_replace import comment_out, literal, regex
+from execution.find_replace import (
+    eol_comment_line,
+    eol_comment_text,
+    line_affix,
+    literal,
+    on_lines,
+    regex,
+)
 from execution.types import ReplacementAction
 from .deglean import deglean
 
@@ -53,7 +60,7 @@ def prepare_application_services(
         *_process_file(
             path="components/remote_settings/src/client.rs",
             replacements=[
-                comment_out(r'\("main", "regions"\)')
+                eol_comment_text(r'\("main", "regions"\)')
             ]
         ),
         
@@ -62,8 +69,8 @@ def prepare_application_services(
             path="gradle/libs.versions.toml",
             replacements=[
                 regex(r"^android-components = \"", f'android-components = "{Versions.FIREFOX_VERSION}"'),
-                comment_out(r'mozilla-glean', comment_token="#"),
-                comment_out(r'glean', comment_token="#"),
+                eol_comment_line(r'mozilla-glean', comment_token="#"),
+                eol_comment_line(r'glean', comment_token="#"),
             ]
         ),
         
@@ -162,7 +169,7 @@ def prepare_application_services(
                     pattern=r"isFetchEnabled(): Boolean = .*",
                     replacement="isFetchEnabled(): Boolean = false"
                 ),
-                comment_out('NimbusEvents.isReady')
+                eol_comment_text(r'NimbusEvents\.isReady')
             ]
         ),
         *_process_file(
@@ -181,7 +188,7 @@ def prepare_application_services(
         *_process_file(
             path="components/remote_settings/src/client.rs",
             replacements=[
-                comment_out(r'\("main", "search-telemetry-v2"\),'),
+                eol_comment_line(r'\("main", "search-telemetry-v2"\),'),
             ]
         ),
         
@@ -191,19 +198,19 @@ def prepare_application_services(
         *_process_file(
             path="components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt",
             replacements=[
-                comment_out("FxaClientMetrics"),
+                eol_comment_text("FxaClientMetrics"),
             ],
         ),
         *_process_file(
             path="components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt",
             replacements=[
-                comment_out("LoginsStoreMetrics"),
+                eol_comment_text("LoginsStoreMetrics"),
             ],
         ),
         *_process_file(
             path="components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt",
             replacements=[
-                comment_out("PlacesManagerMetrics"),
+                eol_comment_text("PlacesManagerMetrics"),
             ],
         ),
         

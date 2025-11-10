@@ -177,7 +177,7 @@ class Paths:
 
     @property
     def wasi_sdk_dir(self) -> Path:
-        """Path to the wasi-sdk pre-built installation directory."""
+        """Path to the wasi-sdk directory."""
         return self._rootdir / "wasi-sdk"
 
     @property

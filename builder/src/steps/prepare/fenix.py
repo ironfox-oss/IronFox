@@ -4,7 +4,14 @@ from common.paths import Paths
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
-from execution.find_replace import comment_out, line_affix, literal, on_line_text, regex
+from execution.find_replace import (
+    eol_comment_line,
+    eol_comment_text,
+    line_affix,
+    literal,
+    on_line_text,
+    regex,
+)
 from execution.types import ReplacementAction
 
 from .deglean import deglean
@@ -250,45 +257,45 @@ kotlin.internal.collectFUSMetrics=false
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt",
             replacements=[
-                comment_out(r"import\s+mozilla\.appservices\.syncmanager\.SyncTelemetry"),
-                comment_out("SyncTelemetry."),
+                eol_comment_line(r"^\s*import\s+mozilla\.appservices\.syncmanager\.SyncTelemetry"),
+                eol_comment_text(r"SyncTelemetry\."),
             ]
         ),
         
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/browser/BrowserToolbarStoreBuilder.kt",
             replacements=[
-                comment_out(r"import\s+org\.mozilla\.fenix\.components\.toolbar\.BrowserToolbarTelemetryMiddleware"),
-                comment_out(r"BrowserToolbarTelemetryMiddleware\(")
+                eol_comment_line(r"import\s+org\.mozilla\.fenix\.components\.toolbar\.BrowserToolbarTelemetryMiddleware"),
+                eol_comment_text(r"BrowserToolbarTelemetryMiddleware\("),
             ],
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/home/store/HomeToolbarStoreBuilder.kt",
             replacements=[
-                comment_out(r"import\s+org\.mozilla\.fenix\.home\.toolbar\.BrowserToolbarTelemetryMiddleware"),
-                comment_out(r"BrowserToolbarTelemetryMiddleware\(")
+                eol_comment_line(r"import\s+org\.mozilla\.fenix\.home\.toolbar\.BrowserToolbarTelemetryMiddleware"),
+                eol_comment_text(r"BrowserToolbarTelemetryMiddleware\(")
             ],
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayFragment.kt",
             replacements=[
-                comment_out(r"TabsTrayTelemetryMiddleware\(")
+                eol_comment_text(r"TabsTrayTelemetryMiddleware\(")
             ]  
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt",
             replacements=[
-                comment_out(r"import\s+org\.mozilla\.fenix\.tabstray\.TabsTrayTelemetryMiddleware"),
-                comment_out(r"TabsTrayTelemetryMiddleware\(")
+                eol_comment_line(r"import\s+org\.mozilla\.fenix\.tabstray\.TabsTrayTelemetryMiddleware"),
+                eol_comment_text(r"TabsTrayTelemetryMiddleware\(")
             ],
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt",
             replacements=[
-                comment_out(r"import\s+org\.mozilla\.fenix\.webcompat\.middleware\.WebCompatReporterTelemetryMiddleware"),
-                comment_out(r"private fun provideTelemetryMiddleware"),
-                comment_out(r"provideTelemetryMiddleware\("),
-                comment_out(r"WebCompatReporterTelemetryMiddleware\("),
+                eol_comment_line(r"import\s+org\.mozilla\.fenix\.webcompat\.middleware\.WebCompatReporterTelemetryMiddleware"),
+                eol_comment_text(r"private fun provideTelemetryMiddleware"),
+                eol_comment_text(r"provideTelemetryMiddleware\("),
+                eol_comment_text(r"WebCompatReporterTelemetryMiddleware\("),
             ],
         ),
         
@@ -459,14 +466,14 @@ kotlin.internal.collectFUSMetrics=false
         *_process_file(
             path="**/*.gradle",
             replacements=[
-                comment_out(r'.*implementation.*service-glean.*$'),
-                comment_out(r'.*testImplementation.*glean.*$'),
+                eol_comment_line(r'.*implementation.*service-glean.*$'),
+                eol_comment_line(r'.*testImplementation.*glean.*$'),
             ]
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt",
             replacements=[
-                comment_out("Metrics"),
+                eol_comment_text("Metrics"),
             ],
         ),
         *_rm("app/src/main/java/org/mozilla/fenix/ext/Configuration.kt"),

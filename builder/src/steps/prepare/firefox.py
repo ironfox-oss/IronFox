@@ -6,7 +6,7 @@ from common.paths import Paths
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
-from execution.find_replace import comment_out, line_affix, literal, regex
+from execution.find_replace import eol_comment_line, line_affix, literal, regex
 from execution.types import ReplacementAction
 
 from .deglean import deglean
@@ -309,8 +309,8 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         *_process_file(
             path="build.gradle",
             replacements=[
-                comment_out('classpath "${ApplicationServicesConfig.groupId}:tooling-nimbus-gradle"'),
-                comment_out(r'classpath libs\.glean\.gradle\.plugin')
+                eol_comment_line('classpath "${ApplicationServicesConfig.groupId}:tooling-nimbus-gradle"'),
+                eol_comment_line(r'classpath libs\.glean\.gradle\.plugin')
             ]
         ),
 
@@ -445,11 +445,11 @@ FINAL_TARGET_FILES.defaults.settings.main += [
                 # leave include ':annotations' only, remove the trailing extra includes on the same line
                 regex(r"include ':annotations', .*", r"include ':annotations'"),
                 # comment out sample projects
-                comment_out(r"project\(':messaging_example'",),
-                comment_out(r"project\(':port_messaging_example'",),
+                eol_comment_line(r"project\(':messaging_example'",),
+                eol_comment_line(r"project\(':port_messaging_example'",),
                 # comment out ExoPlayer includes/projects
-                comment_out(r"include ':exoplayer2'",),
-                comment_out(r"project\(':exoplayer2'",),
+                eol_comment_line(r"include ':exoplayer2'",),
+                eol_comment_line(r"project\(':exoplayer2'",),
             ],
         ),
 

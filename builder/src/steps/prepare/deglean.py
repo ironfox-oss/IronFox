@@ -3,10 +3,7 @@ from pathlib import Path
 import re
 from typing import List
 from execution.definition import BuildDefinition, TaskDefinition
-from execution.find_replace import (
-    comment_out,
-    custom_replacement,
-)
+from execution.find_replace import custom_replacement, eol_comment_line, line_affix
 from execution.types import ReplacementAction
 
 
@@ -34,18 +31,18 @@ def deglean(d: BuildDefinition, dir: Path) -> List[TaskDefinition]:
             path="**/*.gradle",
             replacements=[
                 custom_replacement(wrap_ext),
-                comment_out(r"^.*apply plugin:.*glean.*$"),
-                comment_out(r"^.*classpath.*glean.*$"),
-                comment_out(r"^.*compileOnly.*glean.*$"),
-                comment_out(r"^.*implementation.*glean.*$"),
-                comment_out(r"^.*testImplementation.*glean.*$"),
+                eol_comment_line(r"^.*apply plugin:.*glean.*$"),
+                eol_comment_line(r"^.*classpath.*glean.*$"),
+                eol_comment_line(r"^.*compileOnly.*glean.*$"),
+                eol_comment_line(r"^.*implementation.*glean.*$"),
+                eol_comment_line(r"^.*testImplementation.*glean.*$"),
             ],
         ),
         *_process_file(
             path="**/*.kt",
             replacements=[
-                comment_out(r"^.*import mozilla.telemetry.*$"),
-                comment_out(r"^.*GleanMetrics.*$"),
+                eol_comment_line(r"^.*import mozilla.telemetry.*$"),
+                eol_comment_line(r"^.*GleanMetrics.*$"),
             ],
         ),
         *_rm("**/metrics.yaml"),
