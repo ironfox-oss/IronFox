@@ -1,11 +1,11 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e89ba9018..06475c94e1 100644
+index 6ef1bc0ace..6081e06d3e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -511,7 +511,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -458,7 +458,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      val appIconSelection by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_app_icon_selection_enabled),
-         featureFlag = true,
+         featureFlag = FeatureFlags.APP_ICON_SELECTION,
 -        default = { FxNimbus.features.appIconSelection.value().enabled },
 +        default = { true },
      )

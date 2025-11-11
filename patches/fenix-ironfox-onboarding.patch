@@ -171,7 +171,7 @@ index ed98060904..0ff50c5aec 100644
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 new file mode 100644
-index 0000000000..f9e1f71a51
+index 0000000000..c4b1df9f56
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferenceDohOnboardingPage.kt
 @@ -0,0 +1,494 @@
@@ -200,10 +200,10 @@ index 0000000000..f9e1f71a51
 +import androidx.compose.foundation.verticalScroll
 +import androidx.compose.material3.DropdownMenuItem
 +import androidx.compose.material3.ExperimentalMaterial3Api
++import androidx.compose.material3.ExposedDropdownMenuAnchorType
 +import androidx.compose.material3.ExposedDropdownMenuBox
 +import androidx.compose.material3.ExposedDropdownMenuDefaults
 +import androidx.compose.material3.MaterialTheme
-+import androidx.compose.material3.MenuAnchorType
 +import androidx.compose.material3.OutlinedTextField
 +import androidx.compose.material3.RadioButton
 +import androidx.compose.material3.RadioButtonDefaults
@@ -223,7 +223,7 @@ index 0000000000..f9e1f71a51
 +import androidx.compose.ui.text.style.TextAlign
 +import androidx.compose.ui.unit.Dp
 +import androidx.compose.ui.unit.dp
-+import mozilla.components.compose.base.button.PrimaryButton
++import mozilla.components.compose.base.button.FilledButton
 +import org.mozilla.fenix.R
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.ext.settings
@@ -409,7 +409,7 @@ index 0000000000..f9e1f71a51
 +
 +                Spacer(modifier = Modifier.height(32.dp))
 +
-+                PrimaryButton(
++                FilledButton(
 +                    text = primaryButton.text,
 +                    modifier = Modifier
 +                        .width(width = FirefoxTheme.layout.size.maxWidth.small)
@@ -585,7 +585,7 @@ index 0000000000..f9e1f71a51
 +        ) {
 +            OutlinedTextField(
 +                modifier = Modifier.fillMaxWidth()
-+                    .menuAnchor(MenuAnchorType.PrimaryEditable, true),
++                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable, true),
 +                value = providerName(state.selectedProvider!!),
 +                onValueChange = {},
 +                readOnly = true,
@@ -671,7 +671,7 @@ index 0000000000..f9e1f71a51
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 new file mode 100644
-index 0000000000..f4cf4b6d0b
+index 0000000000..fb65929ac3
 --- /dev/null
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/IronFoxPreferencesPage.kt
 @@ -0,0 +1,467 @@
@@ -722,7 +722,7 @@ index 0000000000..f4cf4b6d0b
 +import kotlinx.coroutines.Job
 +import kotlinx.coroutines.launch
 +import kotlinx.coroutines.withContext
-+import mozilla.components.compose.base.button.PrimaryButton
++import mozilla.components.compose.base.button.FilledButton
 +import mozilla.components.support.base.log.logger.Logger
 +import org.ironfoxoss.ironfox.utils.IronFoxAddons
 +import org.ironfoxoss.ironfox.utils.IronFoxPreferences
@@ -911,7 +911,7 @@ index 0000000000..f4cf4b6d0b
 +                if (contentState is Configuration) {
 +                    Spacer(modifier = Modifier.height(16.dp))
 +
-+                    PrimaryButton(
++                    FilledButton(
 +                        text = if (preferenceOptions.lastIndex == currentPreferenceIndex) {
 +                            primaryButton.text
 +                        } else {
@@ -1125,7 +1125,7 @@ index 0000000000..f4cf4b6d0b
 +                .fillMaxWidth(),
 +        )
 +
-+        PrimaryButton(
++        FilledButton(
 +            text = stringResource(R.string.onboarding_action_retry),
 +            modifier = Modifier
 +                .width(width = FirefoxTheme.layout.size.maxWidth.small),

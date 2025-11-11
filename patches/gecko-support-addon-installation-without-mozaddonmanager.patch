@@ -25,10 +25,10 @@ index 593cf97b04..21a2b1aa53 100644
      importPrefBranch(
        aPrefBranch + "whitelist.add",
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index 2c1e187d14..b515a76a80 100644
+index 3562dfc61f..d7157b8582 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -93,6 +93,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
+@@ -97,6 +97,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
      "resource://gre/modules/addons/siteperms-addon-utils.sys.mjs",
    isPrincipalInSitePermissionsBlocklist:
      "resource://gre/modules/addons/siteperms-addon-utils.sys.mjs",
@@ -37,7 +37,7 @@ index 2c1e187d14..b515a76a80 100644
  });
  
  XPCOMUtils.defineLazyPreferenceGetter(
-@@ -2366,6 +2368,22 @@ var AddonManagerInternal = {
+@@ -2382,6 +2384,22 @@ var AddonManagerInternal = {
      return promiseInstall;
    },
  
@@ -60,7 +60,7 @@ index 2c1e187d14..b515a76a80 100644
    /**
     * Starts installation of an AddonInstall notifying the registered
     * web install listener of a blocked or started install.
-@@ -2538,6 +2556,11 @@ var AddonManagerInternal = {
+@@ -2554,6 +2572,11 @@ var AddonManagerInternal = {
        );
  
        if (installAllowed) {

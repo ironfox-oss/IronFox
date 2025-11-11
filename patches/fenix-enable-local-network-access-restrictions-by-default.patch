@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index c518b78ce9..f3818c2a33 100644
+index 40212e28e9..50f59cd1ba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -210,7 +210,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -209,7 +209,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_enable_lna_blocking_enabled).apply {
@@ -12,10 +12,10 @@ index c518b78ce9..f3818c2a33 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e89ba9018..2cc551946c 100644
+index 6ef1bc0ace..bd572702f6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -874,7 +874,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -821,7 +821,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var isLnaBlockingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
          featureFlag = true,

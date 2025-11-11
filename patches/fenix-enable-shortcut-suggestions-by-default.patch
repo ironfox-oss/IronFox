@@ -1,13 +1,13 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..aa112a6a5b 100644
+index 6ef1bc0ace..af271723d0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -971,7 +971,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
- 
-     var shouldUseHttpsOnly by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_https_only),
+@@ -690,7 +690,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     val shortcutSuggestionsEnabled by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_show_shortcuts_suggestions),
 -        default = false,
 +        default = true,
      )
  
-     var shouldUseHttpsOnlyInAllTabs by booleanPreference(
+     /**

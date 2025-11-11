@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 7d2ef5a331..3f5efb43d0 100644
+index 9d690c06bc..ab3eb44a80 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -673,9 +673,11 @@ class Core(
+@@ -676,9 +676,11 @@ class Core(
              (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) ==
                  Configuration.UI_MODE_NIGHT_YES
          return when {

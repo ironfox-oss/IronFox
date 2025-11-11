@@ -20,7 +20,7 @@ index d0c8bde278..ed0cc42222 100644
  
  </manifest>
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-index c4a9c9f6cb..95fd37bdf4 100644
+index a26169b0d6..1332eda566 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 @@ -52,7 +52,7 @@ import org.mozilla.gecko.GeckoScreenOrientation.ScreenOrientation;

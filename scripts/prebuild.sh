@@ -250,10 +250,10 @@ rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/Download
 rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/telemetry/TelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
-rm -vrf app/src/*/java/org/mozilla/fenix/telemetry
 
 # Let it be IronFox
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
@@ -544,6 +544,11 @@ $SED -i 's|nimbus-mobile-experiments||g' components/nimbus/android/src/main/java
 
 # Remove default built-in search engines
 rm -vrf components/remote_settings/dumps/*/attachments/search-config-icons/*
+
+# Remove the 'regions' configs
+rm -vf components/remote_settings/dumps/*/regions.json
+rm -vrf components/remote_settings/dumps/*/attachments/regions
+$SED -i -e 's|("main", "regions"),|// ("main", "regions"),|g' components/remote_settings/src/client.rs
 
 # Remove the 'search telemetry' config
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
@@ -980,6 +985,7 @@ $SED -i \
     -e 's|"privacy.globalprivacycontrol.functionality.enabled"|"z99.ignore.boolean"|' \
     -e 's|"privacy.globalprivacycontrol.pbmode.enabled"|"z99.ignore.boolean"|' \
     -e 's|"security.pki.certificate_transparency.mode"|"z99.ignore.integer"|' \
+    -e 's|"security.pki.crlite_channel"|"z99.ignore.string"|' \
     -e 's|"security.tls.enable_kyber"|"z99.ignore.boolean"|' \
     -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
@@ -1071,6 +1077,8 @@ fi
     echo 'ac_add_options --enable-rust-simd'
     echo 'ac_add_options --enable-strip'
     echo 'ac_add_options --enable-update-channel=release'
+    echo 'ac_add_options --enable-wasm-branch-hinting'
+    echo 'ac_add_options --enable-wasm-memory-control'
     
     if [[ "$IRONFOX_RELEASE" == 1 ]]; then
         echo 'ac_add_options --with-app-basename=IronFox'

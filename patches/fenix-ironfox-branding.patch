@@ -46,10 +46,10 @@ index b45fdee550..45dbba4891 100644
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index eb55c6630d..e8321e4fe2 100644
+index 8d46a483fc..c15384947c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -84,7 +84,7 @@ class OnboardingFragment : Fragment() {
+@@ -85,7 +85,7 @@ class OnboardingFragment : Fragment() {
              pagesToDisplay(
                  showDefaultBrowserPage = isNotDefaultBrowser(this) && !isDefaultBrowserPromptSupported(),
                  showNotificationPage = canShowNotificationPage(),

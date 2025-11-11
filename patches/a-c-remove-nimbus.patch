@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-index 8c410ec1f4..64b726c6d3 100644
+index 8b57d01c4f..29053b3844 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 +++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 @@ -21,7 +21,7 @@ buildscript {
@@ -11,7 +11,7 @@ index 8c410ec1f4..64b726c6d3 100644
  }
  
  apply plugin: 'com.android.library'
-@@ -73,9 +73,9 @@ dependencies {
+@@ -59,9 +59,9 @@ dependencies {
  
      implementation project(':components:concept-engine')
      implementation project(':components:concept-fetch')
@@ -24,16 +24,16 @@ index 8c410ec1f4..64b726c6d3 100644
      implementation project(':components:support-ktx')
      implementation project(':components:support-utils')
  
-@@ -110,7 +110,7 @@ ext {
+@@ -96,7 +96,7 @@ ext {
  apply plugin: "org.mozilla.telemetry.glean-gradle-plugin"
- apply from: '../../../android-lint.gradle'
+ apply from: '../../../common-config.gradle'
  apply from: '../../../publish.gradle'
 -nimbus {
 +/*nimbus {
      // The path to the Nimbus feature manifest file
      manifestFile = "geckoview.fml.yaml"
  
-@@ -124,7 +124,7 @@ nimbus {
+@@ -110,7 +110,7 @@ nimbus {
      // *NOTE*: This example will not work for all projects, but should work for Fenix, Focus, and Android Components
      applicationServicesDir = gradle.hasProperty('localProperties.autoPublish.application-services.dir')
              ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null

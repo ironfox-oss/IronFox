@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
-index e8878545e6..831c56265f 100644
+index dbb3d349e9..7b2111449e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
-@@ -300,6 +300,11 @@ class InstalledAddonDetailsFragment : Fragment() {
+@@ -293,6 +293,11 @@ class InstalledAddonDetailsFragment : Fragment() {
          val switch = providePrivateBrowsingSwitch()
          switch.isVisible = addon.isEnabled()
  
@@ -14,7 +14,7 @@ index e8878545e6..831c56265f 100644
          if (addon.incognito == Addon.Incognito.NOT_ALLOWED) {
              switch.isChecked = false
              switch.isEnabled = false
-@@ -399,6 +404,11 @@ class InstalledAddonDetailsFragment : Fragment() {
+@@ -393,6 +398,11 @@ class InstalledAddonDetailsFragment : Fragment() {
      }
  
      private fun bindRemoveButton() {

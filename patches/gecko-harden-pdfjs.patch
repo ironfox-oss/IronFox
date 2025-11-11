@@ -11,10 +11,10 @@ index 5e0a113820..e89114242e 100644
      <title>PDF.js viewer</title>
  
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-index 765b6023f1..f836fc5ed0 100644
+index 737c2b60b4..d1baaa4b76 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-@@ -9824,13 +9824,24 @@ const PDFViewerApplication = {
+@@ -10571,13 +10571,24 @@ const PDFViewerApplication = {
      }
      const workerParams = AppOptions.getAll(OptionKind.WORKER);
      Object.assign(GlobalWorkerOptions, workerParams);

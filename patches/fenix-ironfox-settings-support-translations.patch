@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 6e8730ea60..6a43b2a0d2 100644
+index 7cf3be8c7b..14a621d100 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-@@ -201,7 +201,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+@@ -203,7 +203,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
  
      private fun initTranslationsAction(context: Context, view: View) {
          if (
@@ -11,7 +11,7 @@ index 6e8730ea60..6a43b2a0d2 100644
          ) {
              return
          }
-@@ -299,7 +299,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
+@@ -301,7 +301,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
              view = rootView,
          )
  

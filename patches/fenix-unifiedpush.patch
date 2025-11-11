@@ -11,10 +11,10 @@ index 1753bcbd86..6cb5632fe9 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 1f26227889..b00f946e80 100644
+index af2ddca5a6..8bdcdc0a61 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -745,6 +745,7 @@ dependencies {
+@@ -743,6 +743,7 @@ dependencies {
      androidTestUtil libs.androidx.test.orchestrator
  
      lintChecks project(':components:tooling-lint')
@@ -23,7 +23,7 @@ index 1f26227889..b00f946e80 100644
  
  protobuf {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 29cd599a82..efd2987139 100644
+index bd75990cd8..12f6bd31f0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -37,7 +37,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
@@ -35,7 +35,7 @@ index 29cd599a82..efd2987139 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -497,7 +497,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -518,7 +518,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -60,7 +60,7 @@ index 68190994b3..2b59856daf 100644
          }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index f99ef999cf..5bd17ed950 100644
+index f99ef999cf..10b8f0b500 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 @@ -8,31 +8,89 @@ import android.content.Context
@@ -96,7 +96,7 @@ index f99ef999cf..5bd17ed950 100644
 +    private val logger = Logger("Push")
 +
 +    val feature: Pusher?
-+        get() = strictMode.resetAfter(StrictMode.allowThreadDiskReads()) {
++        get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
 +            if (settings.useUnifiedPush) {
 +                unifiedPushFeature.also { feature ->
 +                    if (feature.isAvailable(context)) {

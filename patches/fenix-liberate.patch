@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 1753bcbd86..6efccc5c44 100644
+index 1753bcbd86..07aedf78c7 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -59,19 +59,19 @@ projects:
@@ -7,31 +7,31 @@ index 1753bcbd86..6efccc5c44 100644
      - components:feature-webauthn
      - components:feature-webcompat
 -    - components:feature-webcompat-reporter
-+    # - components:feature-webcompat-reporter
++#    - components:feature-webcompat-reporter
      - components:feature-webnotifications
      - components:lib-crash
 -    - components:lib-crash-sentry
-+    # - components:lib-crash-sentry
++#    - components:lib-crash-sentry
      - components:lib-dataprotect
      - components:lib-publicsuffixlist
 -    - components:lib-push-firebase
-+    # - components:lib-push-firebase
++#    - components:lib-push-firebase
      - components:lib-state
      - components:service-digitalassetlinks
      - components:service-firefox-accounts
 -    - components:service-glean
-+    # - components:service-glean
++#    - components:service-glean
      - components:service-location
 -    - components:service-mars
-+    # - components:service-mars
++#    - components:service-mars
      - components:service-nimbus
      - components:service-pocket
      - components:service-sync-autofill
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 4f56be19b0..dff2f31d37 100644
+index af2ddca5a6..66c233fece 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -620,13 +620,13 @@ dependencies {
+@@ -610,13 +610,13 @@ dependencies {
      implementation project(':components:feature-top-sites')
      implementation project(':components:feature-webauthn')
      implementation project(':components:feature-webcompat')
@@ -48,7 +48,7 @@ index 4f56be19b0..dff2f31d37 100644
      implementation project(':components:service-nimbus')
      implementation project(':components:service-pocket')
      implementation project(':components:service-sync-autofill')
-@@ -645,14 +645,14 @@ dependencies {
+@@ -635,14 +635,14 @@ dependencies {
      implementation project(':components:ui-tabcounter')
      implementation project(':components:ui-widgets')
      implementation project(':components:lib-crash')
@@ -66,7 +66,7 @@ index 4f56be19b0..dff2f31d37 100644
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -697,15 +697,15 @@ dependencies {
+@@ -688,15 +688,15 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -88,31 +88,10 @@ index 4f56be19b0..dff2f31d37 100644
      debugImplementation libs.androidx.compose.ui.tooling
      debugImplementation libs.leakcanary
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
-index a5ba234af1..cd56a7efb5 100644
+index 39a6df6fb6..2002dfacf6 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
 +++ b/mobile/android/fenix/app/proguard-rules.pro
-@@ -6,16 +6,16 @@
- 
- # Recommended config via https://docs.sentry.io/clients/java/modules/android/#manual-integration
- # Since we don't obfuscate, we don't need to use their Gradle plugin to upload ProGuard mappings.
---keepattributes LineNumberTable,SourceFile
---dontwarn org.slf4j.**
---dontwarn javax.**
-+#-keepattributes LineNumberTable,SourceFile
-+#-dontwarn org.slf4j.**
-+#-dontwarn javax.**
- 
- # Our addition: this class is saved to disk via Serializable, which ProGuard doesn't like.
- # If we exclude this, upload silently fails (Sentry swallows a NPE so we don't crash).
- # I filed https://github.com/getsentry/sentry-java/issues/572
- #
- # If Sentry ever mysteriously stops working after we upgrade it, this could be why.
---keep class io.sentry.event.Event { *; }
-+#-keep class io.sentry.event.Event { *; }
- 
- ####################################################################################################
- # Android and GeckoView built-ins
-@@ -29,7 +29,7 @@
+@@ -9,7 +9,7 @@
  # Raptor now writes a *-config.yaml file to specify Gecko runtime settings (e.g. the profile dir). This
  # file gets deserialized into a DebugConfig object, which is why we need to keep this class
  # and its members.
@@ -120,119 +99,15 @@ index a5ba234af1..cd56a7efb5 100644
 +#-keep class org.mozilla.gecko.util.DebugConfig { *; }
  
  ####################################################################################################
- # kotlinx.coroutines: use the fast service loader to init MainDispatcherLoader by including a rule
-@@ -73,53 +73,53 @@
- # Adjust
- ####################################################################################################
- 
---keep public class com.adjust.sdk.** { *; }
---keep class com.google.android.gms.common.ConnectionResult {
--    int SUCCESS;
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
--    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
--    java.lang.String getId();
--    boolean isLimitAdTrackingEnabled();
--}
---keep public class com.android.installreferrer.** { *; }
---keep class dalvik.system.VMRuntime {
--    java.lang.String getRuntime();
--}
---keep class android.os.Build {
--    java.lang.String[] SUPPORTED_ABIS;
--    java.lang.String CPU_ABI;
--}
---keep class android.content.res.Configuration {
--    android.os.LocaledList getLocales();
--    java.util.Locale locale;
--}
---keep class android.os.LocaleList {
--    java.util.Locale get(int);
--}
-+#-keep public class com.adjust.sdk.** { *; }
-+#-keep class com.google.android.gms.common.ConnectionResult {
-+#    int SUCCESS;
-+#}
-+#-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
-+#    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
-+#}
-+#-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
-+#    java.lang.String getId();
-+#    boolean isLimitAdTrackingEnabled();
-+#}
-+#-keep public class com.android.installreferrer.** { *; }
-+#-keep class dalvik.system.VMRuntime {
-+#    java.lang.String getRuntime();
-+#}
-+#-keep class android.os.Build {
-+#    java.lang.String[] SUPPORTED_ABIS;
-+#    java.lang.String CPU_ABI;
-+#}
-+#-keep class android.content.res.Configuration {
-+#    android.os.LocaledList getLocales();
-+#    java.util.Locale locale;
-+#}
-+#-keep class android.os.LocaleList {
-+#    java.util.Locale get(int);
-+#}
+ # Remove debug logs from release builds
+@@ -27,4 +27,4 @@
+ -keep class mozilla.appservices.** { *; }
  
  # Keep code generated from Glean Metrics
 --keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 +#-keep class org.mozilla.fenix.GleanMetrics.** {  *; }
- 
- # Keep motionlayout internal methods
- # https://github.com/mozilla-mobile/fenix/issues/2094
---keep class androidx.constraintlayout.** { *; }
-+#-keep class androidx.constraintlayout.** { *; }
- 
- # Keep adjust relevant classes
---keep class com.adjust.sdk.** { *; }
---keep class com.google.android.gms.common.ConnectionResult {
--    int SUCCESS;
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
--    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
--}
---keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
--    java.lang.String getId();
--    boolean isLimitAdTrackingEnabled();
--}
---keep public class com.android.installreferrer.** { *; }
-+#-keep class com.adjust.sdk.** { *; }
-+#-keep class com.google.android.gms.common.ConnectionResult {
-+#    int SUCCESS;
-+#}
-+#-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
-+#    com.google.android.gms.ads.identifier.AdvertisingIdClient$Info getAdvertisingIdInfo(android.content.Context);
-+#}
-+#-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
-+#    java.lang.String getId();
-+#    boolean isLimitAdTrackingEnabled();
-+#}
-+#-keep public class com.android.installreferrer.** { *; }
- 
- # Keep Android Lifecycle methods
- # https://bugzilla.mozilla.org/show_bug.cgi?id=1596302
-@@ -135,5 +135,13 @@
- # Add explicit keep rules for Nimbus RustBuffer and related structs to avoid
- # overly-aggressive optimization when R8 fullMode is enabled, leading to crashes.
- ####################################################################################################
---keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,RuntimeVisibleTypeAnnotations,RuntimeInvisibleTypeAnnotations,AnnotationDefault,InnerClasses,EnclosingMethod,Signature
---keep class org.mozilla.experiments.nimbus.internal.** { *; }
-+#-keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,RuntimeVisibleTypeAnnotations,RuntimeInvisibleTypeAnnotations,AnnotationDefault,InnerClasses,EnclosingMethod,Signature
-+#-keep class org.mozilla.experiments.nimbus.internal.** { *; }
-+
-+####################################################################################################
-+# Checker Framework
-+####################################################################################################
-+
-+-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNull
-+-dontwarn org.checkerframework.checker.nullness.qual.EnsuresNonNullIf
-+-dontwarn org.checkerframework.checker.nullness.qual.RequiresNonNull
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index be6741fab0..3cb3980cc6 100644
+index 2f0e243bfa..1a93793850 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -244,7 +119,7 @@ index be6741fab0..3cb3980cc6 100644
  
      <application
          android:name=".FenixApplication"
-@@ -768,13 +768,13 @@
+@@ -770,13 +770,13 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
@@ -260,7 +135,7 @@ index be6741fab0..3cb3980cc6 100644
  
          <service
              android:name=".perf.ProfilerService"
-@@ -788,7 +788,7 @@
+@@ -790,7 +790,7 @@
              </intent-filter>
          </service>
  
@@ -269,7 +144,7 @@ index be6741fab0..3cb3980cc6 100644
              android:name="firebase_messaging_auto_init_enabled"
              android:value="true" />
          <meta-data
-@@ -796,7 +796,7 @@
+@@ -798,7 +798,7 @@
              android:value="false" />
          <meta-data
              android:name="firebase_analytics_collection_deactivated"
@@ -278,7 +153,7 @@ index be6741fab0..3cb3980cc6 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
-@@ -811,14 +811,14 @@
+@@ -813,14 +813,14 @@
  
          <!-- For adjust pre-installs -->
          <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
@@ -296,10 +171,10 @@ index be6741fab0..3cb3980cc6 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 1f2c7eb2d0..4d4b374e0f 100644
+index 5c75c14625..b31acafecf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
+@@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
  import androidx.compose.runtime.ReadOnlyComposable
  import androidx.compose.ui.platform.LocalContext
  import androidx.core.app.NotificationManagerCompat
@@ -315,8 +190,8 @@ index 1f2c7eb2d0..4d4b374e0f 100644
 +// import mozilla.components.lib.crash.store.CrashAction
 +// import mozilla.components.lib.crash.store.CrashMiddleware
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
+ import mozilla.components.support.base.android.DefaultProcessInfoProvider
  import mozilla.components.support.base.android.NotificationsDelegate
- import mozilla.components.support.base.worker.Frequency
 @@ -39,9 +39,9 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.appstate.AppState
  import org.mozilla.fenix.components.appstate.setup.checklist.SetupChecklistState
@@ -343,7 +218,7 @@ index 1f2c7eb2d0..4d4b374e0f 100644
  import org.mozilla.fenix.messaging.state.MessagingMiddleware
  import org.mozilla.fenix.nimbus.FxNimbus
  import org.mozilla.fenix.onboarding.FenixOnboarding
-@@ -199,7 +199,7 @@ class Components(private val context: Context) {
+@@ -200,7 +200,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
      val performance by lazyMonitored { PerformanceComponent() }
@@ -352,7 +227,7 @@ index 1f2c7eb2d0..4d4b374e0f 100644
      val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
  
      val strictMode by lazyMonitored {
-@@ -214,7 +214,7 @@ class Components(private val context: Context) {
+@@ -215,7 +215,7 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -361,7 +236,7 @@ index 1f2c7eb2d0..4d4b374e0f 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-@@ -269,7 +269,7 @@ class Components(private val context: Context) {
+@@ -277,7 +277,7 @@ class Components(private val context: Context) {
                      controller = nimbus.messaging,
                      settings = settings,
                  ),
@@ -370,7 +245,7 @@ index 1f2c7eb2d0..4d4b374e0f 100644
                      metrics = analytics.metrics,
                      nimbusEventStore = nimbus.events,
                  ),
-@@ -280,9 +280,9 @@ class Components(private val context: Context) {
+@@ -288,9 +288,9 @@ class Components(private val context: Context) {
                          currentTimeInMillis = { System.currentTimeMillis() },
                      ),
                  ),
@@ -381,8 +256,8 @@ index 1f2c7eb2d0..4d4b374e0f 100644
 +//                SetupChecklistTelemetryMiddleware(),
                  ReviewPromptMiddleware(
                      isReviewPromptFeatureEnabled = { settings.customReviewPromptFeatureEnabled },
-                     numberOfAppLaunches = { settings.numberOfAppLaunches },
-@@ -297,7 +297,7 @@ class Components(private val context: Context) {
+                     isTelemetryEnabled = { settings.isTelemetryEnabled },
+@@ -303,7 +303,7 @@ class Components(private val context: Context) {
              ),
          ).also {
              it.dispatch(AppAction.SetupChecklistAction.Init)
@@ -391,11 +266,33 @@ index 1f2c7eb2d0..4d4b374e0f 100644
          }
      }
  
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt
+index 67a0d72da3..503c40facd 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt
+@@ -25,7 +25,7 @@ import mozilla.components.browser.state.search.RegionState
+ import mozilla.components.lib.state.ext.observeAsState
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.components.components
+-import org.mozilla.fenix.components.metrics.MarketingAttributionService
++// import org.mozilla.fenix.components.metrics.MarketingAttributionService
+ import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
+ import org.mozilla.fenix.distributions.LegacyDistributionProviderChecker
+ import org.mozilla.fenix.ext.showToolbar
+@@ -67,7 +67,7 @@ private fun SecretDebugSettingsScreen() {
+     val playInstallReferrer: String by remember {
+         mutableStateOf(
+             """
+-                rawValue: ${MarketingAttributionService.response}
++                rawValue: ""
+                 utmTerm: ${settings.utmTerm}
+                 utmMedium: ${settings.utmMedium}
+                 utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4d499da8de..c10fdae6cb 100644
+index e1a67a6da4..722f2fcac5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -478,7 +478,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -487,7 +487,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
  
              // About preferences
              resources.getString(R.string.pref_key_rate) -> {
@@ -405,10 +302,10 @@ index 4d499da8de..c10fdae6cb 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e89ba9018..c8b5a1e681 100644
+index 6ef1bc0ace..1be3d1f1b5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -363,7 +363,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -310,7 +310,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var customReviewPromptFeatureEnabled by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_custom_review_prompt_enabled),
@@ -417,7 +314,7 @@ index 8e89ba9018..c8b5a1e681 100644
          default = { FxNimbus.features.customReviewPrompt.value().enabled },
      )
  
-@@ -2154,7 +2154,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2106,7 +2106,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

@@ -1,17 +1,17 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 2fbb96d4e1..3f5e9bee13 100644
+index 52e9a741e9..59a3c78aeb 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -69,6 +69,8 @@ semanticdb-javac = "0.11.0"
- semanticdb-kotlinc = "0.6.0"
+@@ -69,6 +69,8 @@ semanticdb-javac = "0.11.1"
+ semanticdb-kotlinc = "0.7.0"
  tomlj = "1.1.1"
  
-+unifiedpush = "3.1.0"
++unifiedpush = "3.1.2"
 +
  # Linters
  detekt = "1.23.8"
  google-java-format = "1.28.0"
-@@ -271,6 +273,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
+@@ -270,6 +272,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
  okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
  sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
  zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
@@ -650,7 +650,7 @@ index 000000000000..c492a3879873
 +
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 new file mode 100644
-index 0000000000..516095077d
+index 0000000000..80b2c95cea
 --- /dev/null
 +++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 @@ -0,0 +1,52 @@
@@ -703,7 +703,7 @@ index 0000000000..516095077d
 +    testImplementation libs.robolectric
 +}
 +
-+apply from: '../../../android-lint.gradle'
++apply from: '../../../common-config.gradle'
 +apply from: '../../../publish.gradle'
 +ext.configurePublish(config.componentsGroupId, project.name, project.ext.description)
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro b/mobile/android/android-components/components/feature/unifiedpush/proguard-rules.pro

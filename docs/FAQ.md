@@ -28,9 +28,7 @@
 
 ## How can I download IronFox?
 
-You can currently download IronFox from [our F-Droid repository](https://fdroid.ironfoxoss.org/fdroid/repo/index.html), or directly from [our GitLab releases](https://gitlab.com/ironfox-oss/IronFox/-/releases).
-
-While IronFox is also available on **Accrescent**, We are currently unable to provide updates there, [due to ongoing client and server issues that Accrescent is facing](https://infosec.exchange/@accrescent/115408303090609483). This impacts **all** apps on Accrescent, and is not just limited to IronFox. Therefore, for the time-being, we do **NOT** recommend installing IronFox from Accrescent. **See [here](https://gitlab.com/ironfox-oss/IronFox/-/issues/193) for more details**.
+You can currently download IronFox from [Accrescent](https://accrescent.app/app/org.ironfoxoss.ironfox), from [our F-Droid repository](https://fdroid.ironfoxoss.org/fdroid/repo/index.html), or directly from [our GitLab releases](https://gitlab.com/ironfox-oss/IronFox/-/releases).
 
 ## Why isn't IronFox available on F-Droid?
 
