@@ -430,7 +430,7 @@ class BuildDefinition:
         targets: Union[str, Path],
         contents: Callable[[], bytes],
         chmod: int = 0o644,
-        append: bool = True,
+        append: bool = False,
         overwrite: bool = False,
     ) -> List[TaskDefinition]:
         from .files import WriteFileTask
@@ -459,22 +459,9 @@ class BuildDefinition:
         target: Path,
         contents: Callable[[], bytes],
         chmod: int = 0o644,
-        append: bool = True,
+        append: bool = False,
         overwrite: bool = False,
     ) -> TaskDefinition:
-        """Creates a task to write content to a file.
-
-        Args:
-            name (str): The name of the write file task.
-            target (Path): The path to the file to write.
-            contents (Callable[[], bytes]): A callable that returns the bytes content to write to the file.
-            chmod (int, optional): The file permissions (octal) to set. Defaults to 0o644 (rw-r--r--).
-            append (bool, optional): If True, append to the file instead of overwriting. Defaults to True.
-            overwrite (bool, optional): If True, overwrite the file if it already exists. If False,
-                                        raise an error if the file exists. Defaults to False.
-        Returns:
-            TaskDefinition: The created WriteFileTask instance.
-        """
         from .files import WriteFileTask
 
         return self.create_task(
