@@ -546,7 +546,7 @@ def _build_gradle_replacements(config: PrepareConfig):
             # Update sharedUserId
             literal(
                 '"sharedUserId": "org.mozilla.firefox.sharedID"',
-                f'"sharedUserId": "{config.app_config.package_name}.sharedID"|',
+                f'"sharedUserId": "{config.app_config.package_name}.sharedID"',
             ),
             
             # Replace version name with IRONFOX_VERSION
