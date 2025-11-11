@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index e7e19273f9..8711a59c6f 100644
+index b5cd2868a6..9fbbe6bca1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -438,9 +438,9 @@ open class DefaultToolbarMenu(
+@@ -439,9 +439,9 @@ open class DefaultToolbarMenu(
                  bookmarksItem,
                  historyItem,
                  downloadsItem,
@@ -14,7 +14,7 @@ index e7e19273f9..8711a59c6f 100644
                  BrowserMenuDivider(),
                  findInPageItem,
                  translationsItem.apply { visible = ::shouldShowTranslations },
-@@ -453,8 +453,8 @@ open class DefaultToolbarMenu(
+@@ -454,8 +454,8 @@ open class DefaultToolbarMenu(
                  addToHomeScreenItem.apply { visible = ::canAddToHomescreen },
                  addAppToHomeScreenItem.apply { visible = ::canAddAppToHomescreen },
                  if (shouldShowTopSites) addRemoveTopSitesItem else null,
@@ -26,7 +26,7 @@ index e7e19273f9..8711a59c6f 100644
                  ) {
                      printPageItem
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-index dcf9477c22..c656ec7b02 100644
+index 849660153d..6c6722c499 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 @@ -206,10 +206,10 @@ class HomeMenu(

@@ -1,8 +1,8 @@
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index f01c39248e..bd9382029a 100644
+index 75c1c06efe..069e270d95 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
-@@ -175,9 +175,9 @@ toolkit.jar:
+@@ -179,9 +179,9 @@ toolkit.jar:
  #ifdef XP_MACOSX
     content/global/macWindowMenu.js
  #endif

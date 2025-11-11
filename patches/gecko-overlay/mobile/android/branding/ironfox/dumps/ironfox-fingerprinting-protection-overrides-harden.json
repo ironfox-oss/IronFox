@@ -949,6 +949,10 @@
       "firstPartyDomain": "stacksocial.com"
     },
     {
+      "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+      "firstPartyDomain": "starlink.com"
+    },
+    {
       "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,+CSSPrefersColorScheme,+FrameRate,+JSDateTimeUTC,+JSLocale",
       "firstPartyDomain": "t.co"
     },

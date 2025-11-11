@@ -1,35 +1,35 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e89ba9018..8a20a3df8d 100644
+index 6ef1bc0ace..f08734e195 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -193,7 +193,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         } else {
-             preferences.getBoolean(
-                 appContext.getPreferenceKey(R.string.pref_key_customization_bookmarks),
--                homescreenSections[HomeScreenSection.BOOKMARKS] == true,
-+                false,
-             )
-         }
+@@ -177,7 +177,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var showBookmarksHomeFeature by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_customization_bookmarks),
+-        default = { homescreenSections[HomeScreenSection.BOOKMARKS] == true },
++        default = { false },
+         featureFlag = true,
+     )
  
-@@ -206,7 +206,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         } else {
-             preferences.getBoolean(
-                 appContext.getPreferenceKey(R.string.pref_key_recent_tabs),
--                homescreenSections[HomeScreenSection.JUMP_BACK_IN] == true,
-+                false,
-             )
-         }
-         set(value) {
-@@ -242,7 +242,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         } else {
-             preferences.getBoolean(
-                 appContext.getPreferenceKey(R.string.pref_key_history_metadata_feature),
--                homescreenSections[HomeScreenSection.RECENT_EXPLORATIONS] == true,
-+                false,
-             )
-         }
-         set(value) {
-@@ -260,8 +260,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -187,7 +187,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+     var showRecentTabsFeature by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_recent_tabs),
+         featureFlag = true,
+-        default = { homescreenSections[HomeScreenSection.JUMP_BACK_IN] == true },
++        default = { false },
+     )
+ 
+     /**
+@@ -213,7 +213,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+      */
+     var historyMetadataUIFeature by lazyFeatureFlagPreference(
+         appContext.getPreferenceKey(R.string.pref_key_history_metadata_feature),
+-        default = { homescreenSections[HomeScreenSection.RECENT_EXPLORATIONS] == true },
++        default = { false },
+         featureFlag = true,
+     )
+ 
+@@ -226,8 +226,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not the "Collections" section should be shown on the home screen.
       */
@@ -42,16 +42,7 @@ index 8e89ba9018..8a20a3df8d 100644
  
      /**
       * Indicates whether or not the homepage header should be shown.
-@@ -317,7 +319,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     val overrideUserSpecifiedHomepageSections by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_override_user_specified_homepage_sections),
--        featureFlag = true,
-+        featureFlag = false,
-         default = { FxNimbus.features.overrideUserSpecifiedHomepageSections.value().enabled },
-     )
- 
-@@ -553,7 +555,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -500,7 +502,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var showCollectionsPlaceholderOnHome by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_collections_placeholder_home),
@@ -60,7 +51,7 @@ index 8e89ba9018..8a20a3df8d 100644
      )
  
      val isCrashReportingEnabled: Boolean
-@@ -1480,7 +1482,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1427,7 +1429,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var defaultTopSitesAdded by booleanPreference(
          appContext.getPreferenceKey(R.string.default_top_sites_added),

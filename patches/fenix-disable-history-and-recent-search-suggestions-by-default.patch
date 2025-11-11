@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 8e89ba9018..d9d8d051e6 100644
+index 6ef1bc0ace..448b424d04 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -730,7 +730,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -677,7 +677,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val shouldShowHistorySuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_search_browsing_history),
@@ -11,7 +11,7 @@ index 8e89ba9018..d9d8d051e6 100644
      )
  
      val shouldShowBookmarkSuggestions by booleanPreference(
-@@ -1503,7 +1503,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1450,7 +1450,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      @VisibleForTesting
      internal var recentSearchSuggestionsEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_recent_search_suggestions),
@@ -20,15 +20,6 @@ index 8e89ba9018..d9d8d051e6 100644
      )
  
      /**
-@@ -2331,7 +2331,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     var isRecentSearchesVisible by lazyFeatureFlagPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_recent_searches),
--        default = { FxNimbus.features.recentSearches.value().enabled },
-+        default = { true },
-         featureFlag = true,
-     )
- 
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 index f7ca109331..e55f3b2beb 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index aa74e21d1d..df682ef540 100644
+index 7c5c3ec0bd..6ac5d708c0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -393,7 +393,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -390,7 +390,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                          ?.requestedTranslationPair?.toLanguage
                      val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
                      val isWebCompatReporterSupported =
@@ -12,10 +12,10 @@ index aa74e21d1d..df682ef540 100644
                      val isDesktopMode by store.observeAsState(initialValue = false) { state ->
                          state.isDesktopMode
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index e7e19273f9..2e6139bd25 100644
+index b5cd2868a6..e865699356 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -216,7 +216,7 @@ open class DefaultToolbarMenu(
+@@ -217,7 +217,7 @@ open class DefaultToolbarMenu(
          val url = store.state.selectedTab?.content?.url
          val isAboutUrl = url?.isAboutUrl() ?: false
          val isContentUrl = url?.isContentUrl() ?: false
@@ -25,7 +25,7 @@ index e7e19273f9..2e6139bd25 100644
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 29cd599a82..be0162a7bd 100644
+index bd75990cd8..c07ea6775e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -48,7 +48,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
@@ -37,7 +37,7 @@ index 29cd599a82..be0162a7bd 100644
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -688,10 +688,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -717,10 +717,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      // This is added here because we need gecko to load the extension first.
                      //
                      // TODO: Bug 1953359 - remove the code below in the next release.

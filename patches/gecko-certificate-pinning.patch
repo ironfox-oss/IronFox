@@ -1,8 +1,8 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index fd1633b673..2e5ac1db31 100644
+index f0c863c8dc..16eb70e2a9 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
-@@ -203,6 +203,26 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
+@@ -183,6 +183,34 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
  static const char kUSERTrust_RSA_Certification_AuthorityFingerprint[] =
    "x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=";
  
@@ -26,11 +26,19 @@ index fd1633b673..2e5ac1db31 100644
 +static const char kGlobalSign_Root_E46Fingerprint[] =
 +  "4EoCLOMvTM8sf2BGKHuCijKpCfXnUUR/g/0scfb9gXM=";
 +
++/* GlobalSign Root R46 */
++static const char kGlobalSign_Root_R46Fingerprint[] =
++  "rn+WLLnmp9v3uDP7GPqbcaiRdd+UnCMrap73yz3yu/w=";
++
++/* ISRG Root X2 */
++static const char kISRG_Root_X2Fingerprint[] =
++  "diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=";
++
  /* Pinsets are each an ordered list by the actual value of the fingerprint */
  struct StaticFingerprints {
    // See bug 1338873 about making these fields const.
-@@ -326,6 +346,45 @@ static const StaticFingerprints kPinset_facebook = {
-   kPinset_facebook_Data
+@@ -279,6 +307,45 @@ static const StaticFingerprints kPinset_google = {
+   kPinset_google_Data
  };
  
 +static const char* const kPinset_ironfox_Data[] = {
@@ -75,9 +83,9 @@ index fd1633b673..2e5ac1db31 100644
  /* Domainlist */
  struct TransportSecurityPreload {
    // See bug 1338873 about making these fields const.
-@@ -351,8 +410,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -303,8 +370,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+   { "apis.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "appengine.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "apps.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "appspot.com", true, false, false, -1, &kPinset_google_root_pems },
 -  { "aus4.mozilla.org", true, true, true, 3, &kPinset_mozilla_services },
 -  { "aus5.mozilla.org", true, true, true, 7, &kPinset_mozilla_services },
@@ -86,17 +94,17 @@ index fd1633b673..2e5ac1db31 100644
    { "blogger.com", true, false, false, -1, &kPinset_google_root_pems },
    { "blogspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "bugs.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
-@@ -388,7 +447,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -337,7 +404,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+   { "datastudio.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "developer.android.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "developers.facebook.com", true, false, false, -1, &kPinset_facebook },
    { "dl.google.com", true, false, false, -1, &kPinset_google_root_pems },
 -  { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
 +//  { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "docs.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "domains.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "doubleclick.net", true, false, false, -1, &kPinset_google_root_pems },
-@@ -400,7 +459,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "facebook.com", true, false, false, -1, &kPinset_facebook },
+@@ -348,7 +415,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+   { "exclude-subdomains.pinning.example.com", false, false, false, -1, &kPinset_mozilla_test },
    { "fi.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "firebaseio.com", true, false, false, -1, &kPinset_google_root_pems },
 -  { "firefox.com", true, true, true, 15, &kPinset_mozilla_services },
@@ -104,16 +112,16 @@ index fd1633b673..2e5ac1db31 100644
    { "g.co", false, false, false, -1, &kPinset_google_root_pems },
    { "g4w.co", true, false, false, -1, &kPinset_google_root_pems },
    { "ggpht.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -701,7 +760,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "tablet.facebook.com", true, false, false, -1, &kPinset_facebook },
+@@ -640,7 +707,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+   { "sync.services.mozilla.com", true, false, true, 13, &kPinset_mozilla_services },
    { "talk.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "talkgadget.google.com", true, false, false, -1, &kPinset_google_root_pems },
 -  { "telemetry.mozilla.org", true, true, true, 8, &kPinset_mozilla_services },
 +  { "telemetry.mozilla.org", true, false, true, 8, &kPinset_mozilla_services },
    { "test-mode.pinning.example.com", true, true, false, -1, &kPinset_mozilla_test },
    { "testpilot.firefox.com", false, false, true, 9, &kPinset_mozilla_services },
-   { "touch.facebook.com", true, false, false, -1, &kPinset_facebook },
-@@ -740,9 +799,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+   { "translate.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
+@@ -675,9 +742,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "youtube-nocookie.com", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -206,8 +214,8 @@ index fd1633b673..2e5ac1db31 100644
 +  { "www.ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
  };
  
--// Pinning Preload List Length = 401;
-+// Pinning Preload List Length = 490;
+-// Pinning Preload List Length = 383;
++// Pinning Preload List Length = 472;
  
  static const int32_t kUnknownId = -1;
  
