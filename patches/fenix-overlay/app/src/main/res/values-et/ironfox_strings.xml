@@ -44,7 +44,7 @@
     <string name="preference_pdfjs_disabled">Ava PDF-failid välise rakendusega</string>
     <string name="preference_website_appearance_title">Veebisaidi eelistatud välimus</string>
     <string name="preference_print_enabled">Kasuta printimisvõimalusi</string>
-    <string name="preferences_debug_settings_unifiedpush">Kasuta UnifiedPushi</string>
+    <string name="preferences_debug_settings_unifiedpush">Võta UnifiedPush kasutusele</string>
     <string name="tor_spoof_english_title">Häma keeleks en-US</string>
     <string name="tor_spoof_english_caption">Varjates seadme keeli saad parandada oma privaatsust.</string>
     <string name="preference_svg_enabled">Kasuta SVG vektorgraafikat</string>

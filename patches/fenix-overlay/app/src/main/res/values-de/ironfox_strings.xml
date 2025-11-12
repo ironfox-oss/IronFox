@@ -59,8 +59,16 @@
     <string name="preference_translations_enabled">Firefox-Übersetzungen aktivieren</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Die Installation von Add-ons ist derzeit deaktiviert. Falls gewünscht, können Sie die Installation auf Kosten der Sicherheit aktivieren, indem Sie zu Einstellungen -&gt; IronFox -&gt; IronFox-Einstellungen -&gt; Sicherheit -&gt; Installation von Add-ons zulassen navigieren.</string>
     <string name="preference_jit_trusted_principals_enabled">JavaScript Just-in-time-Kompilierung (JIT) für Erweiterungen aktivieren</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Aktiviert JIT für Erweiterungen, wenn JIT ansonsten global deaktiviert ist. Durch Ändern dieser Einstellung wird Ihr Browser neu gestartet</string>
-    <string name="preference_fpp_overrides_ironfox_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von IronFox), um Probleme zu vermeiden. Änderung dieser Einstellung startet den Browser neu.</string>
-    <string name="preference_fpp_overrides_mozilla_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von Mozilla), um Probleme zu vermeiden. Änderung dieser Einstellung startet den Browser neu.</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Aktiviert JIT für Erweiterungen, wenn JIT ansonsten global deaktiviert ist - Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von IronFox), um Probleme zu vermeiden - Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von Mozilla), um Probleme zu vermeiden - Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="spoof_timezone_summary">Wenn aktiviert, verstärkt es den Schutz vor Fingerprinting</string>
+    <string name="spoof_timezone">Zeitzone auf UTC-0 fälschen</string>
+    <string name="preference_webgl_disabled">WebGL deaktivieren</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Re-aktiviert WebGL für bestimmte Webseiten standardmäßig, auch wenn WebGL global deaktiviert ist, um Fehler zu reduzieren - Das ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Aktiviere Fingerprintschutz-Überschreibungen von IronFox</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Aktiviere Fingerprintschutz-Überschreibungen von Mozilla</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Aktiviere Zeitzonenfälschungs-Überschreibungen von IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Deaktiviert standardmäßig das Zeitzonen-Fälschen für bestimmte Websites, um Fehler zu reduzieren -Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">WebGL-Überschreibungen von IronFox aktivieren</string>
 </resources>

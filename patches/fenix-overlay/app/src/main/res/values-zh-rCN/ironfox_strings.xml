@@ -58,6 +58,17 @@
     <string name="preference_collections_enabled">启用收集</string>
     <string name="preference_translations_enabled">启用火狐翻译</string>
     <string name="preference_jit_trusted_principals_enabled">为扩展启用 JavaScript 即时编译 (JIT)</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">当 JIT 全局禁用时为扩展启用 JIT - 更改此设置将重启浏览器</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">禁用 JIT 时，为扩展程序重新启用 JIT - 更改此设置将重启浏览器</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">附加组件安装当前已被禁用。如需启用（将降低安全性），请前往设置 -&gt; IronFox -&gt; IronFox 设置 -&gt; 安全 -&gt; 允许安装附加组件。</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">启用 IronFox 的指纹保护覆写功能</string>
+    <string name="preference_fpp_overrides_ironfox_summary">默认情况下放宽对某些网站的指纹识别保护，以减少破坏，使用的是 IronFox 提供的列表 - 更改此设置将重启浏览器</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">启用来自 Mozilla 的覆写指纹保护功能</string>
+    <string name="preference_fpp_overrides_mozilla_summary">默认情况下放宽对某些网站的指纹保护，以减少破损，使用的是 Mozilla 提供的列表 - 更改此设置将重启浏览器</string>
+    <string name="spoof_timezone">欺骗时区为 UTC-0</string>
+    <string name="spoof_timezone_summary">启用后，可加强指纹识别保护</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">从 IronFox 启用时区欺骗覆盖功能</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">默认情况下禁用某些网站的时区欺骗，以减少网页破损 - 更改此设置将重启浏览器</string>
+    <string name="preference_webgl_disabled">禁用 WebGL</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">从 IronFox 启用 WebGL 覆写</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">禁用 WebGL 时，默认情况下会重新启用某些网站的 WebGL，以减少网页破损 - 更改此设置将重启浏览器</string>
 </resources>
