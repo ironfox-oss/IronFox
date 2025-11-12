@@ -179,6 +179,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "roll20.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "santen.com"
     },
     {
