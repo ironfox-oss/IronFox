@@ -179,7 +179,7 @@ index bb451a2795..010d73bb37 100644
 +      },
 +      "google-leta@celenity.dev": {
 +        installation_mode: "blocked",
-+        blocked_install_message: "Mullvad shutdown Leta on November 27, 2025"
++        blocked_install_message: "Deprecated"
 +      },
 +      "duckduckgo-lite@celenity.dev": {
 +        installation_mode: "blocked",
@@ -195,7 +195,7 @@ index bb451a2795..010d73bb37 100644
 +      },
 +      "brave-leta@celenity.dev": {
 +        installation_mode: "blocked",
-+        blocked_install_message: "Mullvad shutdown Leta on November 27, 2025"
++        blocked_install_message: "Deprecated"
 +      },
 +      "brave-search-extension@brave.com": {
 +        installation_mode: "blocked",
@@ -231,11 +231,11 @@ index bb451a2795..010d73bb37 100644
 +      },
 +      "leta-brave@celenity.dev": {
 +        installation_mode: "blocked",
-+        blocked_install_message: "Mullvad shutdown Leta on November 27, 2025"
++        blocked_install_message: "Deprecated"
 +      },
 +      "leta-google@celenity.dev": {
 +        installation_mode: "blocked",
-+        blocked_install_message: "Mullvad shutdown Leta on November 27, 2025"
++        blocked_install_message: "Deprecated"
 +      },
 +      "metager@celenity.dev": {
 +        installation_mode: "blocked",
