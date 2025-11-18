@@ -247,11 +247,16 @@ Once the packages have been installed successfully, follow the instructions to s
   source env/bin/activate
   ```
 
-  - On **macOS**, after creating your Python 3.9 virtual environment, you will also need to install `gyp-next` and `requests`:
+- After creating your Python 3.9 virtual environment, install `requests`:
+
+    ```sh
+    pip install requests
+    ```
+
+- On **macOS**, after creating your Python 3.9 virtual environment, you will also need to install `gyp-next`:
 
     ```sh
     pip install gyp-next
-    pip install requests
     ```
 
 - Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running:
