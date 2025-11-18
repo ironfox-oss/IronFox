@@ -8,7 +8,7 @@
     <string name="if_preferences_privacy_security">Privaatsus ja turvalisus</string>
     <string name="unsupported_summary">See POLE soovitatav ega toetatud. Jätka palun ettevaatlikult ja omal vastutusel.</string>
     <string name="preference_prefers_browser_color_scheme">Järgi brauseri kujundust</string>
-    <string name="preference_prefers_light_color_scheme">Hele kujundus</string>
+    <string name="preference_prefers_light_color_scheme">Hele kujundus (vaikimisi)</string>
     <string name="preference_prefers_dark_color_scheme">Tume kujundus</string>
     <string name="onboarding_install_ublock_title">Paigalda uBlock Origin</string>
     <string name="onboarding_install_ublock_caption">Blokeerib reklaame, jälitajaid ja pahavara ning tagab turvalisema ja müravabama kasutajakogemuse.</string>
@@ -38,7 +38,7 @@
     <string name="preference_accessibility_enabled">Kasuta hõlpsusteenuseid</string>
     <string name="preference_referer_policy">Domeenivälise viitamise reeglid</string>
     <string name="preference_referer_policy_summary">Seadista domeenivälist viitamist</string>
-    <string name="preference_referer_policy_always">Kasuta alati domeenivälise viitamise päisekirjeid</string>
+    <string name="preference_referer_policy_always">Kasuta alati domeenivälise viitamise päisekirjeid (vaikimisi)</string>
     <string name="preference_referer_policy_base_domains_match">Kasuta domeenivälise viitamise kirjeid, kui põhidomeenid klapivad</string>
     <string name="preference_referer_policy_hosts_match">Keela domeeniväline viitamine</string>
     <string name="preference_pdfjs_disabled">Ava PDF-failid välise rakendusega</string>
@@ -72,4 +72,9 @@
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Lõdvenda sinu täpsema tuvastamise vastaseid meetmeid WebGL-i lubamise kontekstis, mille on koostanud IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Kui WebGL on lülitatud välja, siis vältimaks veebisaitide mittetoimimist, luba mõnedes valitud saitides WebGL-i kasutamist IronFoxi koostatud loendi alusel. Eeldab sinu veebibrauseri uuesti käivitamist</string>
     <string name="preference_webgl_disabled" translatable="false">Lülita WebGL välja</string>
+    <string name="preference_media_autoplay_title">Meediafailide automaatne esitamine</string>
+    <string name="preference_media_autoplay_description">Halda meediafailide automaatse esitamise viisi IronFoxis.</string>
+    <string name="preference_autoplay_policy_sticky">Kleepuv</string>
+    <string name="preference_autoplay_policy_transient">Põgus (vaikimisi)</string>
+    <string name="preference_autoplay_policy_click_to_play">Esitamine eeldab klõpsimist</string>
 </resources>

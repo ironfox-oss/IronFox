@@ -81,5 +81,5 @@
     <string name="preference_media_autoplay_description">Controle como o IronFox bloqueia a reprodução automática de mídia.</string>
     <string name="preference_autoplay_policy_transient">Transitória (Padrão)</string>
     <string name="preference_autoplay_policy_click_to_play">Clicar para reproduzir</string>
-    <string name="preference_autoplay_policy_sticky">Ficante</string>
+    <string name="preference_autoplay_policy_sticky">Adesivo</string>
 </resources>

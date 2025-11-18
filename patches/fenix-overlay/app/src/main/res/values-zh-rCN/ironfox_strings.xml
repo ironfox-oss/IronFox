@@ -11,7 +11,7 @@
     <string name="preference_accessibility_enabled">启用无障碍服务</string>
     <string name="preference_referer_policy">引荐来源网址政策</string>
     <string name="preference_referer_policy_summary">配置跨域引用的行为</string>
-    <string name="preference_referer_policy_always">始终发送跨域引用</string>
+    <string name="preference_referer_policy_always">始终发送跨域引用（默认）</string>
     <string name="preference_referer_policy_base_domains_match">在基础域名匹配时发送跨域引用</string>
     <string name="preference_referer_policy_hosts_match">禁用跨域引用</string>
     <string name="preference_cache_enabled">启用硬盘缓存</string>
@@ -27,7 +27,7 @@
     <string name="preference_website_appearance_title">网站主题偏好</string>
     <string name="preference_website_appearance_description">有些网站会根据您的偏好调整配色方案。请选择您希望在这些网站上使用的配色方案。请注意，除 「浅色 」外的其他选项可以使您的浏览器看起来更独特，从而有助于指纹识别。</string>
     <string name="preference_prefers_browser_color_scheme">跟随浏览器设置</string>
-    <string name="preference_prefers_light_color_scheme">浅色</string>
+    <string name="preference_prefers_light_color_scheme">浅色（默认）</string>
     <string name="preference_prefers_dark_color_scheme">深色</string>
     <string name="preference_print_enabled">启用打印功能</string>
     <string name="preference_safe_browsing_enabled">启用安全浏览</string>
@@ -71,4 +71,9 @@
     <string name="preference_webgl_disabled">禁用 WebGL</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">从 IronFox 启用 WebGL 覆写</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">禁用 WebGL 时，默认情况下会重新启用某些网站的 WebGL，以减少网页破损 - 更改此设置将重启浏览器</string>
+    <string name="preference_media_autoplay_title">媒体自动播放</string>
+    <string name="preference_media_autoplay_description">控制 IronFox 如何阻止媒体自动播放。</string>
+    <string name="preference_autoplay_policy_click_to_play">点击播放</string>
+    <string name="preference_autoplay_policy_sticky">与页面互动后允许</string>
+    <string name="preference_autoplay_policy_transient">允许在与页面快速交互后使用（默认值）</string>
 </resources>

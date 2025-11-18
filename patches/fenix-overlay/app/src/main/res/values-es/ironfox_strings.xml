@@ -11,7 +11,7 @@
     <string name="preference_accessibility_enabled">Habilitar servicios de accesibilidad</string>
     <string name="preference_referer_policy">Política de referer de origen cruzado</string>
     <string name="preference_referer_policy_summary">Configurar el comportamiento de los referers de origen cruzado</string>
-    <string name="preference_referer_policy_always">Enviar siempre referers de origen cruzado</string>
+    <string name="preference_referer_policy_always">Enviar siempre referers de origen-cruzado (Predeterminado)</string>
     <string name="preference_referer_policy_base_domains_match">Enviar referers de origen cruzado cuando los dominios base coincidan</string>
     <string name="preference_referer_policy_hosts_match">Deshabilitar referers de origen cruzado</string>
     <string name="preference_cache_enabled">Habilitar caché en disco</string>
@@ -27,7 +27,7 @@
     <string name="preference_website_appearance_title">Apariencia preferida del sitio web</string>
     <string name="preference_website_appearance_description">Algunos sitios web adaptan su esquema de colores según tus preferencias. Elige qué esquema de colores te gustaría usar para esos sitios. Ten en cuenta que las opciones distintas de Claro pueden ayudar al fingerprinting, ya que pueden causar que tu navegador parezca más único.</string>
     <string name="preference_prefers_browser_color_scheme">Seguir el tema del navegador</string>
-    <string name="preference_prefers_light_color_scheme">Claro</string>
+    <string name="preference_prefers_light_color_scheme">Claro (Predeterminado)</string>
     <string name="preference_prefers_dark_color_scheme">Oscuro</string>
     <string name="preference_print_enabled">Habilitar capacidades de impresión</string>
     <string name="preference_safe_browsing_enabled">Habilitar Navegación Segura</string>
@@ -71,4 +71,9 @@
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Habilitar excepciones de WebGL de IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Cuando WebGL está deshabilitado, se vuelve a habilitar por defecto para ciertos sitios web con el fin de reducir errores – Cambiar esta configuración reiniciará el navegador</string>
     <string name="preference_webgl_disabled" translatable="false">Deshabilitar WebGL</string>
+    <string name="preference_media_autoplay_title">Reproducción automática de medios</string>
+    <string name="preference_media_autoplay_description">Controla cómo IronFox bloquea la reproducción automática de medios.</string>
+    <string name="preference_autoplay_policy_sticky">Fijo</string>
+    <string name="preference_autoplay_policy_transient">Transitorio (Predeterminado)</string>
+    <string name="preference_autoplay_policy_click_to_play">Clic-para-reproducir</string>
 </resources>
