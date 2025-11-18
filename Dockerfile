@@ -46,9 +46,6 @@ RUN chmod +x "/root/bin/gradle" && \
 # Set up Python virtual environment
 RUN python3.9 -m venv /root/env
 
-# Install requests
-RUN pip install requests
-
 # Set JDK 17 as default
 RUN echo "export JAVA_HOME=$JAVA_HOME" >> $ENVDOCKER && \
     echo "export PATH=$JAVA_HOME/bin:/root/bin:/root/env/bin:\${PATH}" >> $ENVDOCKER
