@@ -59,7 +59,7 @@ DEFAULT_APP_CONFIG = AppConfig()
 class BuildEnvironment:
     """Build configuration for building IronFox."""
 
-    def __init__(self, paths: Paths):
+    def __init__(self, paths: Paths, env: Dict[str, str] = {}):
         self.paths = paths
 
         _path_vars: dict[str, Path] = {
@@ -81,6 +81,7 @@ class BuildEnvironment:
         }
 
         self._env_vars: dict[str, str] = {
+            **env,
             **_flag_vars,
             **{key: str(path) for key, path in _path_vars.items()},
         }
@@ -124,7 +125,11 @@ class BaseConfig:
             gradle_exec=gradle_exec.resolve(),
         )
 
-        self.env = BuildEnvironment(paths=self.paths)
+        _opt_vars = {}
+        if self.verbose:
+            _opt_vars["GRADLE_OPTS"] = "-Dorg.gradle.logging.level=info"
+
+        self.env = BuildEnvironment(paths=self.paths, env=_opt_vars)
 
     @property
     def environment_variables(self):
