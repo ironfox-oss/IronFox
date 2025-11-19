@@ -220,7 +220,7 @@ Once the packages have been installed successfully, follow the instructions to s
 
   ```sh
   mkdir -vp $HOME/bin
-  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew-fdroid -O "$HOME/bin/gradle"
+  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/f1ff9690936cec83cde22bb9ee15a569198a264a/gradlew-fdroid -O "$HOME/bin/gradle"
   chmod +x "$HOME/bin/gradle"
 
   export PATH=$HOME/bin:$PATH
@@ -241,7 +241,13 @@ Once the packages have been installed successfully, follow the instructions to s
   source env/bin/activate
   ```
 
-  - On **macOS**, after creating your Python 3.9 virtual environment, you will also need to install `gyp-next`:
+- After creating your Python 3.9 virtual environment, install `requests`:
+
+    ```sh
+    pip install requests
+    ```
+
+- On **macOS**, after creating your Python 3.9 virtual environment, you will also need to install `gyp-next`:
 
     ```sh
     pip install gyp-next

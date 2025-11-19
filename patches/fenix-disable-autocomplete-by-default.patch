@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..04d325c0a6 100644
+index 1c7b0fce0d..a35dd184a0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1422,7 +1422,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1428,7 +1428,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val shouldAutocompleteInAwesomebar by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_enable_autocomplete_urls),

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 61dd19233b..f02ace3dc3 100644
+index b1b0dec5a9..b0d7d024a6 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
 @@ -13,15 +13,15 @@ includes:
@@ -69,10 +69,10 @@ index bd75990cd8..91115a6898 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index e505349935..5478f0c5ca 100644
+index 7d375ea30f..4cb743802b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -376,7 +376,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -387,7 +387,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          val startTimeProfiler = components.core.engine.profiler?.getProfilerTime()
  
          // Setup nimbus-cli tooling. This is a NOOP when launching normally.
@@ -153,10 +153,10 @@ index e1a67a6da4..bbf660f90e 100644
                  getPreferenceKey(R.string.pref_key_debug_settings),
              )?.isVisible = showSecretDebugMenuThisSession
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..754d319b7e 100644
+index 1c7b0fce0d..69df597187 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -349,7 +349,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -355,7 +355,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var nimbusExperimentsFetched by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_nimbus_experiments_fetched),

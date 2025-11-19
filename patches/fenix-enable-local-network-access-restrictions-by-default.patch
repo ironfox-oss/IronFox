@@ -12,10 +12,10 @@ index 40212e28e9..50f59cd1ba 100644
              onPreferenceChangeListener = object : SharedPreferenceUpdater() {
                  override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..bd572702f6 100644
+index 1c7b0fce0d..a4d84a2e41 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -821,7 +821,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -827,7 +827,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var isLnaBlockingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
          featureFlag = true,

@@ -11,7 +11,7 @@
     <string name="preference_accessibility_enabled">Toegankelijkheidsservices</string>
     <string name="preference_referer_policy">Cross-origin referer-beleid</string>
     <string name="preference_referer_policy_summary">Stel het gedrag in voor cross-origin referers</string>
-    <string name="preference_referer_policy_always">Altijd versturen</string>
+    <string name="preference_referer_policy_always">Altijd versturen (standaard)</string>
     <string name="preference_referer_policy_base_domains_match">Versturen wanneer het hoofddomein overeenkomt</string>
     <string name="preference_referer_policy_hosts_match">Uitschakelen</string>
     <string name="preference_cache_enabled">Schijfcache inschakelen</string>
@@ -27,7 +27,7 @@
     <string name="preference_website_appearance_title">Voorkeursweergave websites</string>
     <string name="preference_website_appearance_description">Sommige websites passen hun kleurenschema aan op basis van jouw voorkeuren. Kies welk kleurenschema voor die sites gebruikt wordt. Houd er rekening mee dat andere opties dan \'Licht\' de browserinstellingen laten afwijken en dus fingerprinting kunnen vergemakkelijken.</string>
     <string name="preference_prefers_browser_color_scheme">Browserthema volgen</string>
-    <string name="preference_prefers_light_color_scheme">Licht</string>
+    <string name="preference_prefers_light_color_scheme">Licht (standaard)</string>
     <string name="preference_prefers_dark_color_scheme">Donker</string>
     <string name="preference_print_enabled">Afdrukfuncties inschakelen</string>
     <string name="preference_safe_browsing_enabled">Safe Browsing inschakelen</string>
@@ -71,4 +71,9 @@
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Aanpassingen van IronFox voor WebGL inschakelen</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Schakelt WebGL in voor bepaalde websites om problemen te voorkomen, ook wanneer WebGL globaal is uitgeschakeld - Na wijziging zal de browser opnieuw opstarten</string>
     <string name="preference_webgl_disabled" translatable="false">WebGL uitschakelen</string>
+    <string name="preference_media_autoplay_title">Automatisch afspelen</string>
+    <string name="preference_media_autoplay_description">Bepaal wanneer IronFox het automatisch afspelen van media toestaat.</string>
+    <string name="preference_autoplay_policy_transient">Toestaan na snelle interactie met pagina (standaard)</string>
+    <string name="preference_autoplay_policy_sticky">Toestaan na interactie met pagina</string>
+    <string name="preference_autoplay_policy_click_to_play">Klik om af te spelen</string>
 </resources>

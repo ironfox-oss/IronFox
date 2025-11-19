@@ -12,7 +12,7 @@
     <string name="preference_collections_enabled">Увімкнути колекції</string>
     <string name="preference_referer_policy">Політика перехресних реферерів</string>
     <string name="preference_referer_policy_summary">Налаштування поведінки міждоменних реферерів</string>
-    <string name="preference_referer_policy_always">Завжди надсилати реферери для міждомених запитів</string>
+    <string name="preference_referer_policy_always">Завжди надсилати перехресні посилання (за замовчуванням)</string>
     <string name="preference_referer_policy_base_domains_match">Надсилати перехресні посилання при збігові базових доменів</string>
     <string name="preference_referer_policy_hosts_match">Не відправляти міждоменні реферери</string>
     <string name="preference_cache_enabled">Увімкнути кеш диска</string>
@@ -41,7 +41,7 @@
     <string name="preference_website_appearance_title">Бажаний вигляд веб-сайту</string>
     <string name="preference_website_appearance_description">Деякі веб-сайти адаптують свою колірну гаму відповідно до ваших уподобань. Виберіть колірну гаму, яку ви хочете використовувати для цих сайтів. Зверніть увагу, що інші параметри, крім «Світлий», можуть сприяти ідентифікації вашого браузера, роблячи його більш унікальним.</string>
     <string name="preference_prefers_browser_color_scheme">Слідкуйте за темою браузера</string>
-    <string name="preference_prefers_light_color_scheme">Світло</string>
+    <string name="preference_prefers_light_color_scheme">Світло (за замовчуванням)</string>
     <string name="preference_prefers_dark_color_scheme">Темний</string>
     <string name="preference_print_enabled">Увімкнути можливості друку</string>
     <string name="preference_safe_browsing_enabled">Увімкнути безпечний перегляд</string>
@@ -71,4 +71,9 @@
     <string name="onboarding_state_installing_ublock_error">Під час встановлення uBlock Origin сталася помилка: %1$s</string>
     <string name="onboarding_action_retry">Повторити спробу</string>
     <string name="preference_webgl_disabled" translatable="false">Вимкнути WebGL</string>
+    <string name="preference_media_autoplay_title">Автоматичне відтворення медіафайлів</string>
+    <string name="preference_media_autoplay_description">Керуйте тим, як IronFox блокує автоматичне відтворення медіафайлів.</string>
+    <string name="preference_autoplay_policy_sticky">Липкий</string>
+    <string name="preference_autoplay_policy_transient">Перехідний (за замовчуванням)</string>
+    <string name="preference_autoplay_policy_click_to_play">Відтворення за натисканням</string>
 </resources>

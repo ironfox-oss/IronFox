@@ -12,21 +12,20 @@ index e1a67a6da4..52bd20d8ac 100644
              settings.preferences.edit { putBoolean(preference.key, newValue) }
              requireComponents.core.engine.settings.remoteDebuggingEnabled = newValue
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..69c7baeadc 100644
+index 1c7b0fce0d..f453d992cc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -515,10 +515,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -521,10 +521,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = CrashReportOption.Ask.toString(),
      )
  
 -    val isRemoteDebuggingEnabled by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
--        default = false,
--    )
 +    val isRemoteDebuggingEnabled = false
-+//        appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
-+//        default = false,
-+//    )
++/*        appContext.getPreferenceKey(R.string.pref_key_remote_debugging),
+         default = false,
+-    )
++    ) */
  
      var isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),

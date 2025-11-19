@@ -14,7 +14,7 @@
     <string name="preference_wasm_enabled">Ativar WebAssembly (WASM)</string>
     <string name="unsupported_summary">Esta configuração não é recomendada ou suportada. Prossiga com cautela.</string>
     <string name="preference_referer_policy">Política de referenciador entre origens</string>
-    <string name="preference_referer_policy_always">Sempre enviar referenciador entre origens</string>
+    <string name="preference_referer_policy_always">Sempre enviar referenciador entre origens (Padrão)</string>
     <string name="preference_referer_policy_base_domains_match">Apenas enviar referenciador entre origens quando o domínio base é igual</string>
     <string name="preference_referer_policy_hosts_match">Desativar referenciadores entre origens</string>
     <string name="preference_cache_enabled">Ativar cache em disco</string>
@@ -27,7 +27,7 @@
     <string name="preference_website_appearance_title">Aparência dos sites</string>
     <string name="preference_website_appearance_description">Alguns sites adaptam seu esquema de cores dependendo nas suas preferências. Escolha qual esquema de cores você gostaria de usar nestes sites. Observe que opções que não sejam o Claro podem ajudar no fingerprinting e podem fazer com que seu navegador apareça mais único.</string>
     <string name="preference_prefers_browser_color_scheme">Seguir o tema do navegador</string>
-    <string name="preference_prefers_light_color_scheme">Claro</string>
+    <string name="preference_prefers_light_color_scheme">Claro (Padrão)</string>
     <string name="preference_prefers_dark_color_scheme">Escuro</string>
     <string name="preference_safe_browsing_enabled_caption">Receba proteção em tempo real contra sites perigosos, vírus, e tentativas de phishing.</string>
     <string name="preference_safe_browsing_enabled_description">A funcionalidade de Safe Browsing do IronFox depende do Google no momento. O IronFox irá atualizar o banco de dados periodicamente para garantir que os usuários estão protegidos contra as mais recentes ameaças, e ao encontrar uma possível correspondência, o IronFox pode enviar uma hash parcial do URL suspeito ao Google. Observe que o IronFox adiciona uma proxy nestas conexões, para prevenir que seu endereço público de IP seja associado com essas solicitações.</string>
@@ -77,4 +77,9 @@
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Ativar substituições de WebGL do IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Quando o WebGL está desativado, reativa ele para alguns sites para reduzir quebra - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preference_webgl_disabled" translatable="false">Desativar WebGL</string>
+    <string name="preference_media_autoplay_title">Reprodução automática de mídia</string>
+    <string name="preference_media_autoplay_description">Controle como o IronFox bloqueia a reprodução automática de mídia.</string>
+    <string name="preference_autoplay_policy_transient">Transitória (Padrão)</string>
+    <string name="preference_autoplay_policy_click_to_play">Clicar para reproduzir</string>
+    <string name="preference_autoplay_policy_sticky">Adesivo</string>
 </resources>

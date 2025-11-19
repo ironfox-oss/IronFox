@@ -46,10 +46,10 @@ index 0000000000..9dc712c3ff
 +    override fun report(crash: Crash.UncaughtExceptionCrash): String? = null
 +}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index 8d4b2daebe..ed1ee81cf8 100644
+index e53b2e6ad2..4665880a98 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-@@ -65,10 +65,10 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+@@ -70,10 +70,10 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
          route = "addons_debug_tools",
          title = R.string.debug_drawer_addons_tools_title,
      ),
@@ -58,11 +58,11 @@ index 8d4b2daebe..ed1ee81cf8 100644
          route = "crash_debug_tools",
          title = R.string.crash_debug_tools_title,
 -    ),
-+    ),*/
++    ), */
      ;
  
      companion object {
-@@ -173,14 +173,14 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+@@ -189,14 +189,14 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
                          }
                      }
  
@@ -75,7 +75,7 @@ index 8d4b2daebe..ed1ee81cf8 100644
                              CrashTools()
                          }
 -                    }
-+                    }*/
++                    } */
                  }
  
                  DebugDrawerDestination(
@@ -129,10 +129,10 @@ index bd75990cd8..7f0303631a 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-index 410981e1ed..d9e71652d4 100644
+index efcf8963de..7e93d1e715 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-@@ -231,14 +231,14 @@ class BrowserToolbarSearchMiddleware(
+@@ -242,14 +242,14 @@ class BrowserToolbarSearchMiddleware(
                  val navController = environment?.navController ?: return
  
                  when (action.text) {
@@ -145,15 +145,15 @@ index 410981e1ed..d9e71652d4 100644
                              NavGraphDirections.actionGlobalCrashListFragment(),
                          )
 -                    }
-+                    }*/
++                    } */
                      "about:addons" -> {
                          navController.navigate(
                              NavGraphDirections.actionGlobalAddonsManagementFragment(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-index 819b24954e..0f9bb0a905 100644
+index b57cdc1bf5..163f38cbd7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-@@ -83,13 +83,13 @@ class SearchDialogController(
+@@ -84,13 +84,13 @@ class SearchDialogController(
          }
  
          when (url) {
@@ -165,7 +165,7 @@ index 819b24954e..0f9bb0a905 100644
                  val directions = SearchDialogFragmentDirections.actionCrashListFragment()
                  navController.navigate(directions)
 -            }
-+            }*/
++            } */
              "about:addons" -> {
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
@@ -192,10 +192,10 @@ index 40212e28e9..9790be1da4 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..0422f1514d 100644
+index 1c7b0fce0d..9c6bf88590 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -512,7 +512,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -518,7 +518,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
@@ -204,7 +204,7 @@ index 6ef1bc0ace..0422f1514d 100644
      )
  
      val isRemoteDebuggingEnabled by booleanPreference(
-@@ -875,7 +875,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -881,7 +881,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var crashPullNeverShowAgain: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),

@@ -1,52 +1,48 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..72b0f3073e 100644
+index 1c7b0fce0d..5c485f4e76 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -984,10 +984,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -990,10 +990,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
 -    var shouldUseTrackingProtection by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_tracking_protection),
--        default = true,
--    )
 +    var shouldUseTrackingProtection = true
-+//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection),
-+//        default = true,
-+//    )
++/*        appContext.getPreferenceKey(R.string.pref_key_tracking_protection),
+         default = true,
+-    )
++    ) */
  
      var shouldEnableGlobalPrivacyControl by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_privacy_enable_global_privacy_control),
-@@ -1094,20 +1094,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1100,20 +1100,20 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          default = false,
      )
  
 -    val useStandardTrackingProtection by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
--        true,
--    )
 +    val useStandardTrackingProtection = false
-+//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
-+//        true,
-+//    )
++/*        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_standard_option),
+         true,
+-    )
++    ) */
  
 -    val useStrictTrackingProtection by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
--        false,
--    )
 +    val useStrictTrackingProtection = true
-+//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
-+//        false,
-+//    )
++/*        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_default),
+         false,
+-    )
++    ) */
  
 -    val useCustomTrackingProtection by booleanPreference(
 -        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_option),
--        false,
--    )
 +    val useCustomTrackingProtection = false
-+//        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_option),
-+//        false,
-+//    )
++/*        appContext.getPreferenceKey(R.string.pref_key_tracking_protection_custom_option),
+         false,
+-    )
++    ) */
  
      var strictAllowListBaselineTrackingProtection by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_tracking_protection_strict_allow_list_baseline),

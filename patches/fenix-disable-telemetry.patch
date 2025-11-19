@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 9d690c06bc..c30826158d 100644
+index 2be5597f36..a19fe7e8bb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -63,14 +63,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
+@@ -62,14 +62,14 @@ import mozilla.components.feature.recentlyclosed.RecentlyClosedTabsStorage
  import mozilla.components.feature.search.SearchApplicationName
  import mozilla.components.feature.search.SearchDeviceType
  import mozilla.components.feature.search.SearchUpdateChannel
@@ -13,15 +13,14 @@ index 9d690c06bc..c30826158d 100644
  import mozilla.components.feature.search.region.RegionMiddleware
  import mozilla.components.feature.search.storage.SearchEngineSelectorConfig
 -import mozilla.components.feature.search.telemetry.SerpTelemetryRepository
--import mozilla.components.feature.search.telemetry.ads.AdsTelemetry
++/* import mozilla.components.feature.search.telemetry.SerpTelemetryRepository
+ import mozilla.components.feature.search.telemetry.ads.AdsTelemetry
 -import mozilla.components.feature.search.telemetry.incontent.InContentTelemetry
-+// import mozilla.components.feature.search.telemetry.SerpTelemetryRepository
-+// import mozilla.components.feature.search.telemetry.ads.AdsTelemetry
-+// import mozilla.components.feature.search.telemetry.incontent.InContentTelemetry
++import mozilla.components.feature.search.telemetry.incontent.InContentTelemetry */
  import mozilla.components.feature.session.HistoryDelegate
  import mozilla.components.feature.session.middleware.LastAccessMiddleware
  import mozilla.components.feature.session.middleware.undo.UndoMiddleware
-@@ -132,7 +132,7 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
+@@ -130,7 +130,7 @@ import org.mozilla.fenix.settings.advanced.getSelectedLocale
  import org.mozilla.fenix.share.DefaultSentFromFirefoxManager
  import org.mozilla.fenix.share.DefaultSentFromStorage
  import org.mozilla.fenix.share.SaveToPDFMiddleware
@@ -30,7 +29,7 @@ index 9d690c06bc..c30826158d 100644
  import org.mozilla.fenix.utils.getUndoDelay
  import org.mozilla.geckoview.GeckoRuntime
  import java.util.UUID
-@@ -322,7 +322,7 @@ class Core(
+@@ -320,7 +320,7 @@ class Core(
                      },
                  ),
                  ReaderViewMiddleware(),
@@ -39,7 +38,7 @@ index 9d690c06bc..c30826158d 100644
                  ThumbnailsMiddleware(thumbnailStorage),
                  UndoMiddleware(context.getUndoDelay()),
                  RegionMiddleware(context, locationService),
-@@ -335,7 +335,7 @@ class Core(
+@@ -333,7 +333,7 @@ class Core(
                  ),
                  RecordingDevicesMiddleware(context, context.components.notificationsDelegate),
                  PromptMiddleware(),
@@ -48,7 +47,7 @@ index 9d690c06bc..c30826158d 100644
                  LastMediaAccessMiddleware(),
                  HistoryMetadataMiddleware(historyMetadataService),
                  SessionPrioritizationMiddleware(),
-@@ -378,7 +378,7 @@ class Core(
+@@ -376,7 +376,7 @@ class Core(
              // Install the "icons" WebExtension to automatically load icons for every visited website.
              icons.install(engine, this)
  
@@ -57,24 +56,16 @@ index 9d690c06bc..c30826158d 100644
                  val readJson = { context.assets.readJSONObject("search/search_telemetry_v2.json") }
                  val providerList = withContext(Dispatchers.IO) {
                      SerpTelemetryRepository(
-@@ -391,12 +391,12 @@ class Core(
-                             REMOTE_STAGE_ENDPOINT_URL
-                         },
-                     ).updateProviderList()
--                }
-+                }*/
-                 // Install the "ads" WebExtension to get the links in an partner page.
--                adsTelemetry.install(engine, this@apply, providerList)
-+//                adsTelemetry.install(engine, this@apply, providerList)
+@@ -394,7 +394,7 @@ class Core(
+                 adsTelemetry.install(engine, this@apply, providerList)
                  // Install the "cookies" WebExtension and tracks user interaction with SERPs.
--                searchTelemetry.install(engine, this@apply, providerList)
+                 searchTelemetry.install(engine, this@apply, providerList)
 -            }
-+//                searchTelemetry.install(engine, this@apply, providerList)
-+//            }
++            } */
  
              WebNotificationFeature(
                  context,
-@@ -453,7 +453,7 @@ class Core(
+@@ -451,7 +451,7 @@ class Core(
          BrowserIcons(context, client)
      }
  
@@ -83,12 +74,12 @@ index 9d690c06bc..c30826158d 100644
          context.components.analytics.metrics
      }
  
-@@ -463,7 +463,7 @@ class Core(
+@@ -461,7 +461,7 @@ class Core(
  
      val searchTelemetry by lazyMonitored {
          InContentTelemetry()
 -    }
-+    }*/
++    } */
  
      /**
       * Shortcut component for managing shortcuts on the device home screen.
@@ -165,10 +156,10 @@ index bd75990cd8..3ef2ec02a8 100644
  
      @VisibleForTesting
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..609c75f1d6 100644
+index 1c7b0fce0d..232d6429b7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -522,7 +522,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -528,7 +528,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var isTelemetryEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_telemetry),
