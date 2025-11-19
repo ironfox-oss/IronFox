@@ -62,8 +62,4 @@ RUN echo '#!/bin/bash' > $ENTRYPOINT && \
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
 
-# Install requests
-RUN pip install requests
-
 CMD ["/bin/bash"]
-
