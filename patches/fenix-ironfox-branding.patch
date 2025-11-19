@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-index 9e88fb54ae..5b94890932 100644
+index fbd12fc813..a67c104033 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-@@ -72,10 +72,15 @@ class MarketingPageRemovalSupport(
+@@ -67,10 +67,15 @@ class MarketingPageRemovalSupport(
  
  internal fun MutableList<OnboardingPageUiData>.removeIfPageNotReached(index: Int) {
      val marketingIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.MARKETING_DATA }
@@ -19,7 +19,7 @@ index 9e88fb54ae..5b94890932 100644
  
  internal fun SharedPreferences.flowScopedBooleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index b45fdee550..45dbba4891 100644
+index b45fdee550..ee60e9cab8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 @@ -206,11 +206,11 @@ class AboutFragment(
@@ -41,12 +41,12 @@ index b45fdee550..45dbba4891 100644
                  ),
                  getString(R.string.about_know_your_rights),
 -            ),
-+            ),*/
++            ), */
              AboutPageItem(
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 8d46a483fc..c15384947c 100644
+index 3b7336c90f..52c5551ae6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -85,7 +85,7 @@ class OnboardingFragment : Fragment() {

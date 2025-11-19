@@ -12,10 +12,10 @@ index 31eea9b8a4..3700c94c4a 100644
  
          binding.trackingProtectionDetails.setOnClickListener {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..c5eb71edfa 100644
+index 1c7b0fce0d..648434762a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1001,13 +1001,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1007,13 +1007,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      )
  
      val shouldUseCookieBannerPrivateModeDefaultValue: Boolean

@@ -814,6 +814,9 @@ $SED -i 's|sentry|# sentry|g' gradle/libs.versions.toml
 # Replace Google Play FIDO with microG
 $SED -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
 
+# UnifiedPush
+$SED -i "s|UNIFIEDPUSH_VERSION|$UNIFIEDPUSH_VERSION|" gradle/libs.versions.toml
+
 # Remove Glean
 source "$rootdir/scripts/deglean.sh"
 
