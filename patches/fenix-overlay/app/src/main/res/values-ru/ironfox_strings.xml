@@ -11,7 +11,7 @@
     <string name="preference_accessibility_enabled">Включить службу специальных возможностей</string>
     <string name="preference_referer_policy">Междоменная политика реферера</string>
     <string name="preference_referer_policy_summary">Настройка поведения междоменных рефереров</string>
-    <string name="preference_referer_policy_always">Всегда отправлять междоменные рефереры</string>
+    <string name="preference_referer_policy_always">Всегда отправлять междоменные рефереры (по умолчанию)</string>
     <string name="preference_referer_policy_base_domains_match">Отправлять междоменные рефереры при совпадении базовых доменов</string>
     <string name="preference_referer_policy_hosts_match">Не отправлять междоменные рефереры</string>
     <string name="preference_cache_enabled">Включить кэш диска</string>
@@ -27,7 +27,7 @@
     <string name="preference_website_appearance_title">Предпочтительный вид сайтов</string>
     <string name="preference_website_appearance_description">Некоторые сайты подстраивают свою цветовую схему под ваши предпочтения. Выберите, какую схему использовать для этих сайтов. Учтите, что выбор темы, отличной от Светлой, упрощает фингерпринтинг, так как это делает ваш браузер более уникальным.</string>
     <string name="preference_prefers_browser_color_scheme">Использовать тему браузера</string>
-    <string name="preference_prefers_light_color_scheme">Светлая</string>
+    <string name="preference_prefers_light_color_scheme">Светлая (по умолчанию)</string>
     <string name="preference_prefers_dark_color_scheme">Тёмная</string>
     <string name="preference_print_enabled">Включить возможность печати</string>
     <string name="preference_safe_browsing_enabled">Включить Безопасный просмотр</string>
@@ -71,4 +71,9 @@
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Включить переопределения WebGL, созданные IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">По умолчанию включает WebGL на некоторых сайтах, даже если он отключён для всего браузера, чтобы избежать проблем с их работой - Изменение этой настройки перезапустит браузер</string>
     <string name="preference_webgl_disabled" translatable="false">Отключить WebGL</string>
+    <string name="preference_media_autoplay_title">Автовоспроизведение медиа</string>
+    <string name="preference_media_autoplay_description">Настройте, как IronFox будет блокировать автовоспроизведение медиа.</string>
+    <string name="preference_autoplay_policy_sticky">Запоминать выбор</string>
+    <string name="preference_autoplay_policy_transient">Не запоминать (по умолчанию)</string>
+    <string name="preference_autoplay_policy_click_to_play">Воспроизведение по клику</string>
 </resources>

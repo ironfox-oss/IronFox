@@ -34,7 +34,7 @@ RUN echo "#!/bin/bash" >> $ENVDOCKER
 
 # Set up gradle from F-Droid
 RUN mkdir -p /root/bin
-ADD https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew-fdroid /root/bin/gradle
+ADD https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew.py /root/bin/gradle
 RUN chmod +x "/root/bin/gradle" && \
     echo "export PATH=\$PATH:/root/bin" >> $ENVDOCKER
 
@@ -60,5 +60,5 @@ RUN echo '#!/bin/bash' > $ENTRYPOINT && \
     chmod +x $ENTRYPOINT
 
 ENTRYPOINT ["/opt/entrypoint.sh"]
-CMD ["/bin/bash"]
 
+CMD ["/bin/bash"]

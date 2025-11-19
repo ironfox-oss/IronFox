@@ -1,0 +1,243 @@
+{
+  "data": [
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "abeto.co"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "adguard-mail.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "alula.me"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.li"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "annas-archive.se"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "apple.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "beacondb.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "beep8.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "brave.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "cakepay.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "cartes.app"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "comaps.at"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "coolmath4kids.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "coolmathgames.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "crazygames.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "dndbeyond.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "doordash.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "emulatrix.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "enza.fun"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "fancade.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "figma.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "fittingbox.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "flightradar24.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "google.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "gsi.go.jp"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "hoyoverse.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "jerseymikes.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "klippy.pro"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "krunker.io"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "libretro.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "mapcomplete.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "mapgenie.io"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "maplibre.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "mathplayzone.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "minecraft.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "newgrounds.com",
+      "thirdPartyDomain": "ungrounded.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "noclip.website"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "nvidia.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "panerabread.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "paxhistoria.co"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "pogospike.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "poki-gdn.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "radio.garden"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "roll20.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "santen.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "sketchfab.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "tojicode.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "tripo3d.ai"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "usgs.gov"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "vizzy.io"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "watchduty.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "weather.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "weathernews.jp"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "webglsamples.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "wplace.live"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "x.ai"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "zennioptical.com",
+      "thirdPartyDomain": "fittingbox.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "zombs.io"
+    }
+  ],
+  "timestamp": 2147483647
+}

@@ -17,7 +17,7 @@
     <string name="preference_accessibility_enabled">Barrierefreiheitsdienste aktivieren</string>
     <string name="preference_referer_policy">Cross-Origin-Referer-Richtlinie</string>
     <string name="preference_referer_policy_summary">Konfigurieren Sie das Verhalten von Cross-Origin-Referern</string>
-    <string name="preference_referer_policy_always">Immer Cross-Origin-Referer senden</string>
+    <string name="preference_referer_policy_always">Immer Cross-Origin-Referer senden (Standard)</string>
     <string name="preference_referer_policy_base_domains_match">Cross-Origin-Referer senden, wenn die Basisdomänen übereinstimmen</string>
     <string name="preference_referer_policy_hosts_match">Cross-Origin-Referer deaktivieren</string>
     <string name="preference_jit_enabled_caption">Verbessern Sie die JavaScript-Leistung, indem Sie JIT aktivieren. (Für die meisten Benutzer nicht empfohlen)</string>
@@ -27,7 +27,7 @@
     <string name="preference_website_appearance_title">Bevorzugte Darstellung der Website</string>
     <string name="preference_website_appearance_description">Einige Websites passen ihr Farbschema an Ihre Präferenzen an. Wählen Sie das Farbschema, das Sie für diese Websites verwenden möchten. Beachten Sie, dass andere Optionen als „Hell“ das Fingerprinting erleichtern können, da Ihr Browser dadurch einzigartiger erscheint.</string>
     <string name="preference_prefers_browser_color_scheme">Browser-Design übernehmen</string>
-    <string name="preference_prefers_light_color_scheme">Hell</string>
+    <string name="preference_prefers_light_color_scheme">Hell (Standard)</string>
     <string name="preference_prefers_dark_color_scheme">Dunkel</string>
     <string name="preference_print_enabled">Druckfunktionen aktivieren</string>
     <string name="preference_safe_browsing_enabled">Sicheres Surfen aktivieren</string>
@@ -59,8 +59,21 @@
     <string name="preference_translations_enabled">Firefox-Übersetzungen aktivieren</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Die Installation von Add-ons ist derzeit deaktiviert. Falls gewünscht, können Sie die Installation auf Kosten der Sicherheit aktivieren, indem Sie zu Einstellungen -&gt; IronFox -&gt; IronFox-Einstellungen -&gt; Sicherheit -&gt; Installation von Add-ons zulassen navigieren.</string>
     <string name="preference_jit_trusted_principals_enabled">JavaScript Just-in-time-Kompilierung (JIT) für Erweiterungen aktivieren</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Aktiviert JIT für Erweiterungen, wenn JIT ansonsten global deaktiviert ist. Durch Ändern dieser Einstellung wird Ihr Browser neu gestartet</string>
-    <string name="preference_fpp_overrides_ironfox_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von IronFox), um Probleme zu vermeiden. Änderung dieser Einstellung startet den Browser neu.</string>
-    <string name="preference_fpp_overrides_mozilla_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von Mozilla), um Probleme zu vermeiden. Änderung dieser Einstellung startet den Browser neu.</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Aktiviert JIT für Erweiterungen, wenn JIT ansonsten global deaktiviert ist - Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von IronFox), um Probleme zu vermeiden - Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von Mozilla), um Probleme zu vermeiden - Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="spoof_timezone_summary">Wenn aktiviert, verstärkt es den Schutz vor Fingerprinting</string>
+    <string name="spoof_timezone">Zeitzone auf UTC-0 fälschen</string>
+    <string name="preference_webgl_disabled">WebGL deaktivieren</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Re-aktiviert WebGL für bestimmte Webseiten standardmäßig, auch wenn WebGL global deaktiviert ist, um Fehler zu reduzieren - Das ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Fingerprintschutz-Überschreibungen von IronFox aktivieren</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Fingerprintschutz-Überschreibungen von Mozilla aktivieren</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Zeitzonenfälschungs-Überschreibungen von IronFox aktivieren</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Deaktiviert standardmäßig das Zeitzonen-Fälschen für bestimmte Websites, um Fehler zu reduzieren -Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">WebGL-Überschreibungen von IronFox aktivieren</string>
+    <string name="preference_media_autoplay_title">Automatische Medienwiedergabe</string>
+    <string name="preference_media_autoplay_description">Steuern Sie, wie IronFox die automatische Wiedergabe von Medien blockiert.</string>
+    <string name="preference_autoplay_policy_sticky">Angeheftet</string>
+    <string name="preference_autoplay_policy_transient">Transient (Standard)</string>
+    <string name="preference_autoplay_policy_click_to_play">Zum Abspielen anklicken</string>
 </resources>

@@ -592,11 +592,11 @@ pushd "$mozilla_release"
 apply_patches
 
 # Let it be IronFox (part 2...)
-mkdir -vp mobile/android/branding/ironfox/content
-mkdir -vp mobile/android/branding/ironfox/locales/en-US
 $SED -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
 echo '' >>mobile/android/moz.configure
 echo 'include("ironfox.configure")' >>mobile/android/moz.configure
+echo '' >>moz.build
+echo 'DIRS += ["ironfox"]' >>moz.build
 
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
     $SED -i -e 's/Fennec/IronFox/g; s/Firefox/IronFox/g' build/moz.configure/init.configure
@@ -648,6 +648,7 @@ $SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" in
 # Disable debug
 $SED -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
 $SED -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
+$SED -i -e 's|debug = .*|debug = false|g' gfx/wr/Cargo.toml
 
 # Remove the `NETWORK_ACCESS_STATE` permission (Fenix)
 $SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/fenix/app/src/main/AndroidManifest.xml
@@ -737,6 +738,7 @@ $SED -i 's|classpath "${ApplicationServicesConfig.groupId}:tooling-nimbus-gradle
 $SED -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/' toolkit/components/nimbus/ExperimentAPI.sys.mjs
 $SED -i -e 's/COLLECTION_ID_FALLBACK = ".*"/COLLECTION_ID_FALLBACK = ""/' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 $SED -i -e 's/EXPERIMENTS_COLLECTION = ".*"/EXPERIMENTS_COLLECTION = ""/' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
+$SED -i -e 's/SECURE_EXPERIMENTS_COLLECTION = ".*"/SECURE_EXPERIMENTS_COLLECTION = ""/' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 $SED -i -e 's/SECURE_EXPERIMENTS_COLLECTION_ID = ".*"/SECURE_EXPERIMENTS_COLLECTION_ID = ""/' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 $SED -i 's|nimbus-desktop-experiments||g' toolkit/components/nimbus/ExperimentAPI.sys.mjs
 $SED -i 's|nimbus-desktop-experiments||g' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
@@ -1083,11 +1085,11 @@ fi
     if [[ "$IRONFOX_RELEASE" == 1 ]]; then
         echo 'ac_add_options --with-app-basename=IronFox'
         echo 'ac_add_options --with-app-name=ironfox'
-        echo 'ac_add_options --with-branding=mobile/android/branding/ironfox'
+        echo 'ac_add_options --with-branding=ironfox/branding/ironfox'
     else
         echo 'ac_add_options --with-app-basename="IronFox Nightly"'
         echo 'ac_add_options --with-app-name=ironfox-nightly'
-        echo 'ac_add_options --with-branding=mobile/android/branding/ironfox-nightly'
+        echo 'ac_add_options --with-branding=ironfox/branding/ironfox-nightly'
     fi
 
     echo 'ac_add_options --with-crashreporter-url="data;"'
@@ -1195,11 +1197,10 @@ $SED -i \
     cat "$patches/preferences/pdf.js"
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
 
+$SED -i "s|IRONFOX_VERSION|$IRONFOX_VERSION|" mobile/android/app/geckoview-prefs.js
+$SED -i "s|PHOENIX_VERSION|$PHOENIX_TAG|" mobile/android/app/geckoview-prefs.js
+
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
-
-# Copy certain assets shared between release and nightly
-cp -vrf "$patches/gecko-overlay/mobile/android/branding/ironfox/about" mobile/android/branding/ironfox-nightly
-cp -vrf "$patches/gecko-overlay/mobile/android/branding/ironfox/dumps" mobile/android/branding/ironfox-nightly
 
 popd

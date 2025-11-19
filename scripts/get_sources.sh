@@ -168,11 +168,11 @@ echo "'bundletool' is set up at $BUILDDIR/bundletool"
 
 # Clone Glean
 echo "Cloning Glean..."
-clone_repo "https://github.com/mozilla/glean" "$GLEANDIR" "$GLEAN_TAG"
+clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_TAG"
 
 # Clone MicroG
 echo "Cloning microG..."
-clone_repo "https://github.com/microg/GmsCore" "$GMSCOREDIR" "$GMSCORE_TAG"
+clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_TAG"
 
 # Download Phoenix
 echo "Downloading Phoenix..."
@@ -182,7 +182,7 @@ download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoeni
 # Get WebAssembly SDK
 if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
-    clone_repo "https://github.com/WebAssembly/wasi-sdk" "$WASISDKDIR" "$WASI_TAG"
+    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_TAG"
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
 elif [[ "$PLATFORM" == "macos" ]]; then
     echo "Downloading prebuilt wasi-sdk..."
@@ -202,7 +202,7 @@ if [[ "$PLATFORM" == "macos" ]]; then
 else
     if [[ -n ${FDROID_BUILD+x} ]]; then
         echo "Cloning uniffi-bindgen..."
-        clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs" "$UNIFFIDIR" "$UNIFFI_VERSION"
+        clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_VERSION"
     else
         echo "Downloading prebuilt uniffi-bindgen..."
         download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
@@ -211,11 +211,11 @@ fi
 
 # Clone application-services
 echo "Cloning application-services..."
-git clone --branch "$APPSERVICES_BRANCH" --depth=1 https://github.com/mozilla/application-services "$APPSERVICESDIR"
+git clone --branch "$APPSERVICES_BRANCH" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
 
 # Clone Firefox
 echo "Cloning Firefox..."
-clone_repo "https://github.com/mozilla-firefox/firefox" "$GECKODIR" "${FIREFOX_RELEASE_TAG}"
+clone_repo "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "${FIREFOX_RELEASE_TAG}"
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."

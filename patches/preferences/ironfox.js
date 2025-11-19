@@ -6,9 +6,19 @@
 /// Branding
 pref("app.releaseNotesURL", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.releaseNotesURL.prompt", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
+pref("app.support.vendor", "IronFox: IRONFOX_VERSION | Phoenix - Extended: PHOENIX_VERSION", locked);
 pref("app.update.url.details", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.update.url.manual", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.vendorURL", "https://ironfoxoss.org/", locked);
+pref("browser.ironfox.version", "IRONFOX_VERSION", locked);
+
+/// Configure uBlock Origin
+pref("browser.ironfox.uBO.autoCommentFilterTemplate", "{{url}}");
+pref("browser.ironfox.uBO.autoUpdateDelayAfterLaunch", "10");
+pref("browser.ironfox.uBO.disableWebAssembly", "true");
+pref("browser.ironfox.uBO.filterAuthorMode", "true");
+pref("browser.ironfox.uBO.uiPopupConfig", "+logger");
+pref("browser.ironfox.uBO.updateAssetBypassBrowserCache", "true");
 
 /// Configure uBlock Origin
 pref("browser.ironfox.uBO.autoCommentFilterTemplate", "{{url}}");
