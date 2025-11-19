@@ -1,17 +1,16 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index 52e9a741e9..59a3c78aeb 100644
+index 0069f9bc29..db9f297c3e 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -69,6 +69,8 @@ semanticdb-javac = "0.11.1"
- semanticdb-kotlinc = "0.7.0"
- tomlj = "1.1.1"
+@@ -102,6 +102,7 @@ okhttp = "4.12.0"
+ okio = "3.15.0"
+ sentry = "8.23.0"
+ zxing = "3.5.3"
++unifiedpush = "UNIFIEDPUSH_VERSION"
  
-+unifiedpush = "3.1.2"
-+
- # Linters
- detekt = "1.23.8"
- google-java-format = "1.28.0"
-@@ -270,6 +272,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
+ [libraries]
+ # AGP
+@@ -270,6 +271,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
  okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
  sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
  zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }

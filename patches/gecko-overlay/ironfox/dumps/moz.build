@@ -1,0 +1,7 @@
+
+FINAL_TARGET_FILES.defaults.settings.main += [
+    "ironfox-fingerprinting-protection-overrides-harden.json",
+    "ironfox-fingerprinting-protection-overrides-unbreak-timezone.json",
+    "ironfox-fingerprinting-protection-overrides-unbreak-webgl.json",
+    "ironfox-fingerprinting-protection-overrides-unbreak.json",
+]

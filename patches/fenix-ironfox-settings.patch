@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 9d690c06bc..0c0abf22db 100644
+index 2be5597f36..22ffd0bdfb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -197,6 +197,38 @@ class Core(
+@@ -195,6 +195,38 @@ class Core(
              bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
              lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
              crliteChannel = FxNimbus.features.pki.value().crliteChannel,
@@ -41,7 +41,7 @@ index 9d690c06bc..0c0abf22db 100644
          )
  
          // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -230,6 +262,7 @@ class Core(
+@@ -228,6 +260,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -998,7 +998,7 @@ index e1a67a6da4..a98b4656aa 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..6f1d71cbda 100644
+index 1c7b0fce0d..f27ee6b414 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -75,6 +75,8 @@ import org.mozilla.fenix.wallpapers.Wallpaper
@@ -1010,7 +1010,7 @@ index 6ef1bc0ace..6f1d71cbda 100644
  
  private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
  
-@@ -2730,4 +2732,198 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2736,4 +2738,198 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }

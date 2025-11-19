@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="restart_required_summary">Промени тази настройка преди да рестартираш браузара</string>
+    <string name="restart_required_summary">Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="unsupported_summary">Тази настройка НЕ е препоръчана или поддържана. Продължи с предпазливост.</string>
     <string name="if_preferences">IronFox настройки</string>
     <string name="if_preferences_misc">Разни</string>
-    <string name="if_preferences_privacy">Частно</string>
-    <string name="if_preferences_privacy_security">Частен и жаститен</string>
-    <string name="if_preferences_secret">Таини настройки</string>
-    <string name="if_preferences_security">Жастита</string>
-    <string name="preference_accessibility_enabled">Услуги за достъпност</string>
-    <string name="preference_referer_policy_summary">Оправи държанието на cross-origin referers</string>
-    <string name="preference_referer_policy_always">Винаги изпрати cross-origin referers</string>
-    <string name="preference_referer_policy_base_domains_match">Изпрати cross-origin referers когато домайна мачва</string>
-    <string name="preference_referer_policy_hosts_match">Изключи cross-origin referers</string>
-    <string name="preference_cache_enabled">Включи кеш на диска</string>
-    <string name="preferences_debug_settings_eme_enabled">Включи Encrypted Media Extensions (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Включи Widevine CDM</string>
-    <string name="preference_ipv6_enabled">Включи IPv6 мрежова свързаност</string>
-    <string name="preference_javascript_enabled">Включи JavaScript</string>
-    <string name="preference_jit_enabled">Включи JavaScript Just-in-time Compilation (JIT)</string>
-    <string name="preference_jit_enabled_caption">Подобри JavaScript performance като включиш JIT. (Не е препоръчано за потребители)</string>
-    <string name="preference_jit_enabled_description">За сметка на сигурността, можете да активирате JIT да подобрите перформанца на уебсайтовете. Само препоръчително за потребители с по-нисък клас устройства.</string>
-    <string name="preference_jit_enabled_summary">Когато е изключено, производителността може да бъде затруднена при сложни уеб страници - Промяната на тази настройка ще рестартира браузъра ви</string>
-    <string name="preference_pdfjs_disabled">Отвори PDF файловете с външна програма</string>
+    <string name="if_preferences_privacy">Поверителност</string>
+    <string name="if_preferences_privacy_security">Поверителност и сигурност</string>
+    <string name="if_preferences_secret">Тайни настройки</string>
+    <string name="if_preferences_security">Сигурност</string>
+    <string name="preference_accessibility_enabled">Активиране на услуги за достъпност</string>
+    <string name="preference_referer_policy_summary">Конфигуриране на поведението на препращащи устройства от друг произход</string>
+    <string name="preference_referer_policy_always">Винаги изпращайте препращащи файлове от друг произход (По подразбиране)</string>
+    <string name="preference_referer_policy_base_domains_match">Изпращане на препратки от друг произход, когато базовите домейни съвпадат</string>
+    <string name="preference_referer_policy_hosts_match">Деактивиране на препращащи устройства от друг произход</string>
+    <string name="preference_cache_enabled">Активиране на кеш на диска</string>
+    <string name="preferences_debug_settings_eme_enabled">Активиране на разширения за криптирана медия (EME)</string>
+    <string name="preferences_debug_settings_widevine_enabled">Активиране на Widevine CDM</string>
+    <string name="preference_ipv6_enabled">Активиране на IPv6 мрежова свързаност</string>
+    <string name="preference_javascript_enabled">Активиране на JavaScript</string>
+    <string name="preference_jit_enabled">Активиране на JavaScript компилация навреме (JIT)</string>
+    <string name="preference_jit_enabled_caption">Подобрете производителността на JavaScript, като активирате JIT. (Не се препоръчва за повечето потребители)</string>
+    <string name="preference_jit_enabled_description">За сметка на сигурността, можете да активирате JIT, за да подобрите производителността на уебсайтове. Препоръчва се само за потребители с устройства от по-нисък клас.</string>
+    <string name="preference_jit_enabled_summary">Когато е деактивирана, производителността може да бъде намалена за сложни уеб страници - Промяната на тази настройка ще рестартира браузъра ви</string>
+    <string name="preference_pdfjs_disabled">Отваряне на PDF файлове външно</string>
     <string name="preference_collections_enabled">Активиране на колекции</string>
     <string name="preference_referer_policy">Политика за препращане от друг произход</string>
     <string name="preference_translations_enabled">Активиране на преводите на Firefox</string>
@@ -34,8 +34,8 @@
     <string name="preference_jit_trusted_principals_enabled_summary">Когато JIT е деактивиран, той се активира отново за разширения - Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="preference_website_appearance_title">Предпочитан външен вид на уебсайта</string>
     <string name="preference_website_appearance_description">Някои уебсайтове адаптират цветовата си схема въз основа на вашите предпочитания. Изберете коя цветова схема искате да използвате за тези сайтове. Обърнете внимание, че опции, различни от „Светла“, могат да помогнат за разпознаването на пръстови отпечатъци, като направят браузъра ви да изглежда по-уникален.</string>
-    <string name="preference_prefers_browser_color_scheme">Следвайте темата на браузъра</string>
-    <string name="preference_prefers_light_color_scheme">Светла</string>
+    <string name="preference_prefers_browser_color_scheme">Следвай темата на браузъра</string>
+    <string name="preference_prefers_light_color_scheme">Светла (По подразбиране)</string>
     <string name="preference_prefers_dark_color_scheme">Тъмна</string>
     <string name="preference_print_enabled">Активиране на възможностите за печат</string>
     <string name="preference_safe_browsing_enabled">Активиране на безопасно сърфиране</string>
@@ -53,9 +53,9 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Деактивира подправянето на часови зони за определени уебсайтове по подразбиране, за да намали прекъсванията - Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="preference_svg_enabled">Активиране на мащабируема векторна графика (SVG)</string>
     <string name="preferences_debug_settings_unifiedpush">Активиране на UnifiedPush</string>
-    <string name="preferences_unifiedpush">Използвайте UnifiedPush</string>
+    <string name="preferences_unifiedpush">Използвай UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Настройката на UnifiedPush е променена. Излизане от приложението, за да се приложат промените…</string>
-    <string name="preference_wasm_enabled">Активиране на WebAssembly (WASM)</string>
+    <string name="preference_wasm_enabled">Активиране на уеб сглобяване (WASM)</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Активиране на WebGL презаписвания от IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Когато WebGL е деактивиран, WebGL се активира отново по подразбиране за определени уебсайтове, за да се намали прекъсването - Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="preference_webrtc_enabled">Активиране на WebRTC</string>
@@ -71,4 +71,9 @@
     <string name="onboarding_state_installing_ublock_error">Възникна грешка при инсталирането на uBlock Origin: %1$s</string>
     <string name="onboarding_action_retry">Опитай отново</string>
     <string name="preference_webgl_disabled" translatable="false">Деактивиране на WebGL</string>
+    <string name="preference_media_autoplay_title">Автоматично възпроизвеждане на медийно съдържание</string>
+    <string name="preference_media_autoplay_description">Контролирайте как IronFox блокира автоматичното възпроизвеждане на медийни файлове.</string>
+    <string name="preference_autoplay_policy_sticky">Лепкаво</string>
+    <string name="preference_autoplay_policy_transient">Преходно (По подразбиране)</string>
+    <string name="preference_autoplay_policy_click_to_play">Кликни за възпроизвеждане</string>
 </resources>

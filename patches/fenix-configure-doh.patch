@@ -167,10 +167,10 @@ index 028be832d6..47175dcf47 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 6ef1bc0ace..b2582baf12 100644
+index 1c7b0fce0d..100043f7f8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2591,7 +2591,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2597,7 +2597,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      private var trrMode by intPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
@@ -179,7 +179,7 @@ index 6ef1bc0ace..b2582baf12 100644
      )
  
      /**
-@@ -2609,7 +2609,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2615,7 +2615,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      val dohDefaultProviderUrl by stringPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_default_provider_uri),

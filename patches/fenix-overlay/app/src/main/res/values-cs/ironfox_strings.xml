@@ -12,7 +12,7 @@
     <string name="preference_collections_enabled">Povolit sbírky</string>
     <string name="preference_referer_policy">Zásady refererů z jiných domén</string>
     <string name="preference_referer_policy_summary">Nastavení chování zásad refererů z jiných domén</string>
-    <string name="preference_referer_policy_always">Vždy posílat referery z jiných domén</string>
+    <string name="preference_referer_policy_always">Vždy posílat referery z jiných domén (výchozí)</string>
     <string name="preference_referer_policy_base_domains_match">Posílat referery při shodě domén</string>
     <string name="preference_referer_policy_hosts_match">Zakázat referery z jiných domén</string>
     <string name="preference_cache_enabled">Povolit diskovou mezipaměť</string>
@@ -29,7 +29,7 @@
     <string name="preference_website_appearance_title">Preferovaný vzhled webových stránek</string>
     <string name="preference_website_appearance_description">Některé webové stránky mění své barevné schéma v závislosti na vašich předvolbách. Vyberte, které barevné schéma chcete u těchto stránek používat. Upozorňujeme, že jiné možnosti než Světlý mohou pomoci s vaším sledováním, jelikož způsobí, že bude váš prohlížeč vypadat unikátněji.</string>
     <string name="preference_prefers_browser_color_scheme">Podle motivu prohlížeče</string>
-    <string name="preference_prefers_light_color_scheme">Světlý tmavý</string>
+    <string name="preference_prefers_light_color_scheme">Světlý (výchozí)</string>
     <string name="preference_prefers_dark_color_scheme">Tmavý</string>
     <string name="preference_print_enabled">Povolit možnost tisku</string>
     <string name="preference_safe_browsing_enabled">Povolit funkci Bezpečné prohlížení</string>
@@ -71,4 +71,9 @@
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Povolit přepsání WebGL z projektu IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Pokud je WebGL zakázán, tato funkce jej povolí na určitých webových stránkách pro snížení nefunkčnosti stránek. Změna tohoto nastavení restartuje váš prohlížeč</string>
     <string name="preference_webgl_disabled" translatable="false">Zakázat WebGL</string>
+    <string name="preference_media_autoplay_title">Automatické přehrávání médií</string>
+    <string name="preference_media_autoplay_description">Ovládání funkce blokování automatického přehrávání médií prohlížeče IronFox.</string>
+    <string name="preference_autoplay_policy_sticky">Připnutý</string>
+    <string name="preference_autoplay_policy_transient">Přechodný (výchozí)</string>
+    <string name="preference_autoplay_policy_click_to_play">Kliknutí pro přehrání</string>
 </resources>

@@ -11,7 +11,7 @@
     <string name="preference_accessibility_enabled">Erişelibilirlik hizmetlerini etkinleştir</string>
     <string name="preference_referer_policy">Çapraz-kaynaklı yönlendirme politikası</string>
     <string name="preference_referer_policy_summary">Çapraz-kaynaklı yönlediricilerin davranışını ayarla</string>
-    <string name="preference_referer_policy_always">Her zaman çapraz-kaynaklı yönlendiricileri gönder</string>
+    <string name="preference_referer_policy_always">Her zaman çapraz-kaynaklı yönlendiricileri gönder (Varsayılan)</string>
     <string name="preference_referer_policy_base_domains_match">Çapraz-kaynaklı yönlendiricileri alan adları uyuşunca gönder</string>
     <string name="preference_referer_policy_hosts_match">Çapraz-kaynaklı yönlendiricileri devre dışı bırak</string>
     <string name="preference_cache_enabled">Disk önbelleğini etkinleştir</string>
@@ -27,7 +27,7 @@
     <string name="preference_website_appearance_title">Tercih edilen web sayfası görünümü</string>
     <string name="preference_website_appearance_description">Bazı web sayfaları sizin tercihlerinize göre renk şemasını değiştirir. Bu sitelerde kullanmak için istediğiniz bir renk şeması seçin. Not olarak Aydınlıl dışındaki seçenekler, tarayıcınızın daha özel görünmesini sağlayarak parmak izi oluşturmaya yardımcı olabilir.</string>
     <string name="preference_prefers_browser_color_scheme">Tarayıcı temasına uy</string>
-    <string name="preference_prefers_light_color_scheme">Aydınlık</string>
+    <string name="preference_prefers_light_color_scheme">Aydınlık (Varsayılan)</string>
     <string name="preference_prefers_dark_color_scheme">Karanlık</string>
     <string name="preference_print_enabled">Yazdırma yeteneklerini etkinleştir</string>
     <string name="preference_safe_browsing_enabled">Güvenli taramayı etkinleştir</string>
@@ -71,4 +71,9 @@
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">IronFox\'tan WebGL devre dışı bırakılmasını etkinleştir</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">WebGL devre dışı bırakıldığında bazı web sayfalarında bozulmaları azaltmak için etkinleştirir - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
     <string name="preference_webgl_disabled" translatable="false">WebGL\'i devre dışı bırak</string>
+    <string name="preference_media_autoplay_title">Medya otomatik oynatma</string>
+    <string name="preference_media_autoplay_description">Ironfox\'un medya otomatik oynatmasını nasıl engellediğini kontrol et.</string>
+    <string name="preference_autoplay_policy_sticky">Yapışkan</string>
+    <string name="preference_autoplay_policy_transient">Geçici (Varsayılan)</string>
+    <string name="preference_autoplay_policy_click_to_play">Oynatmak için tıkla</string>
 </resources>

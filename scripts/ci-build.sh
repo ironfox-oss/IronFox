@@ -60,6 +60,9 @@ source "scripts/env_local.sh"
 # Prepare sources
 bash -x ./scripts/prebuild.sh "$BUILD_VARIANT"
 
+# Install requests
+pip install requests
+
 # If we're building an APK set, the following environment variables are required
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
     export MOZ_ANDROID_FAT_AAR_ARM64_V8A="$AAR_ARTIFACTS/geckoview-arm64-v8a.zip"
