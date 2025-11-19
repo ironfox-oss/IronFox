@@ -70,8 +70,6 @@ def prepare_firefox(
         _mkdirs(f"{paths.android_home}/emulator"),
         _mkdirs(f"{paths.user_home}/.mozbuild/android-device/avd"),
         
-        _mkdirs("mobile/android/branding/ironfox/content"),
-        _mkdirs("mobile/android/branding/ironfox/locales/en-US"),
         _mkdirs("mobile/locales/en-US/browser/policies"),
         
         # Remove unused telemetry assets
@@ -164,7 +162,10 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         d.write_file(
             name="Update moz.build to include jar.mn in JAR_MANIFESTS",
             target=paths.firefox_dir / "mobile/locales/moz.build",
-            contents=lambda: b'\nJAR_MANIFESTS += ["jar.mn"]',
+            contents=lambda: b'''
+JAR_MANIFESTS += ["jar.mn"]
+DIRS += ["ironfox"]
+            ''',
             append=True,
         ),
         d.write_file(
@@ -229,6 +230,12 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         # Disable debug
         *_process_file(
             path="gfx/harfbuzz/src/rust/Cargo.toml",
+            replacements=[
+                regex(r'debug = .*', r'debug = false')
+            ]
+        ),
+        *_process_file(
+            path="gfx/wr/Cargo.toml",
             replacements=[
                 regex(r'debug = .*', r'debug = false')
             ]
@@ -329,6 +336,7 @@ FINAL_TARGET_FILES.defaults.settings.main += [
             replacements=[
                 regex(r'COLLECTION_ID_FALLBACK = ".*"', r'COLLECTION_ID_FALLBACK = ""'),
                 regex(r'EXPERIMENTS_COLLECTION = ".*"', r'EXPERIMENTS_COLLECTION = ""'),
+                regex(r'SECURE_EXPERIMENTS_COLLECTION = ".*"', r'SECURE_EXPERIMENTS_COLLECTION = ""'),
                 regex(r'SECURE_EXPERIMENTS_COLLECTION_ID = ".*"', r'SECURE_EXPERIMENTS_COLLECTION_ID = ""'),
                 literal("nimbus-desktop-experiments", ""),
                 literal("nimbus-secure-experiments", ""),
@@ -637,27 +645,22 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         *deglean(d, paths.firefox_dir / "mobile/android/geckoview"),
         *deglean(d, paths.firefox_dir / "mobile/android/gradle"),
         
+        # Update IronFox and Phoenix versions
+        *_process_file(
+            path="mobile/android/app/geckoview-prefs.js",
+            replacements=[
+                literal("IRONFOX_VERSION", Versions.IRONFOX_VERSION),
+                literal("PHOENIX_VERSION", Versions.PHOENIX_TAG),
+            ]
+        ),
+        
         # Apply overlay
         d.overlay(
             name="Apply Firefox overlay",
             source_dir=paths.patches_dir / "gecko-overlay",
             target_dir=paths.firefox_dir,
         ),
-        
-        # Copy certain assets shared between release and nightly
-        d.copy_dir_contents(
-            name="Create nightly branding (1/2)",
-            source_dir=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/about",
-            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly/about",
-            recursive=True,
-        ),
-        d.copy_dir_contents(
-            name="Create nightly branding (2/2)",
-            source_dir=paths.patches_dir / "gecko-overlay/mobile/android/branding/ironfox/dumps",
-            target_dir=paths.firefox_dir / "mobile/android/branding/ironfox-nightly/dumps",
-            recursive=True,
-        ),
-        
+
         # Write mozconfig
         d.write_file(
             name="Write mozconfig",
@@ -723,7 +726,7 @@ def read_contents(paths: List[Path]) -> str:
 def mozconfig(config: PrepareConfig, paths: Paths) -> str:
     app = config.app_config
     app_name = app.app_name.lower().replace(" ", "-")
-    branding_path = f"mobile/android/branding/{app_name}"
+    branding_path = f"ironfox/branding/{app_name}"
 
     wasi_install = paths.wasi_sdk_dir
 

@@ -6,10 +6,10 @@ class Versions:
 
     FIREFOX_VERSION = "145.0"
     IRONFOX_VERSION = f"{FIREFOX_VERSION}"
-    # FIREFOX_RELEASE_TAG = f"FIREFOX-ANDROID_{FIREFOX_VERSION.replace('.', '_')}_RELEASE"
+    FIREFOX_RELEASE_TAG = f"FIREFOX-ANDROID_{FIREFOX_VERSION.replace('.', '_')}_RELEASE"
 
     # Uncomment this when building RC builds and comment out the above variable
-    FIREFOX_RELEASE_TAG = f"FIREFOX-ANDROID_{FIREFOX_VERSION.replace('.', '_')}_BUILD2"
+    # FIREFOX_RELEASE_TAG = f"FIREFOX-ANDROID_{FIREFOX_VERSION.replace('.', '_')}_BUILD2"
 
     WASI_TAG = "wasi-sdk-20"
     WASI_CMAKE_VERSION = "3.5.0"
