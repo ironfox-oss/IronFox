@@ -353,61 +353,37 @@ kotlin.internal.collectFUSMetrics=false
         *_process_file(
             path=".buildconfig.yml",
             replacements=[
-                line_affix("- components:service-mars", prefix="#"),
-                line_affix("- components:service-glean", prefix="#"),
+                eol_comment_line("- components:service-mars", comment_token="#"),
+                eol_comment_line("- components:service-glean", comment_token="#"),
             ],
         ),
         
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt",
             replacements=[
-                line_affix(
-                    r"^\s*import org\.mozilla\.fenix\.downloads\.listscreen\.middleware\.DownloadTelemetryMiddleware",
-                    prefix="// ",
-                ),
-                line_affix(
-                    r"private fun provideTelemetryMiddleware",
-                    prefix="// ",
-                ),
-                line_affix(
-                    r"provideTelemetryMiddleware\(",
-                    prefix="// ",
-                ),
+                eol_comment_line(r"^\s*import org\.mozilla\.fenix\.downloads\.listscreen\.middleware\.DownloadTelemetryMiddleware"),
+                eol_comment_line(r"private fun provideTelemetryMiddleware"),
+                eol_comment_line(r"provideTelemetryMiddleware\("),
             ],
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/bookmarks/BookmarkFragment.kt",
             replacements=[
-                line_affix(
-                    r"^\s*import org\.mozilla\.fenix\.library\.bookmarks\.ui\.BookmarksTelemetryMiddleware",
-                    prefix="// ",
-                ),
-                line_affix(
-                    r"BookmarksTelemetryMiddleware\(",
-                    prefix="// ",
-                ),
+                eol_comment_line(r"^\s*import org\.mozilla\.fenix\.library\.bookmarks\.ui\.BookmarksTelemetryMiddleware",),
+                eol_comment_text(r"BookmarksTelemetryMiddleware\("),
             ],
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt",
             replacements=[
-                line_affix(
-                    r"CustomReviewPromptTelemetryMiddleware\(",
-                    prefix="// ",
-                ),
+                eol_comment_text(r"CustomReviewPromptTelemetryMiddleware\("),
             ],
         ),
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/share/SaveToPDFMiddleware.kt",
             replacements=[
-                line_affix(
-                    r"^\s*import org\.mozilla\.fenix\.ext\.recordEventInNimbus",
-                    prefix="// ",
-                ),
-                line_affix(
-                    "context.recordEventInNimbus",
-                    prefix="// ",
-                ),
+                eol_comment_line(r"^\s*import org\.mozilla\.fenix\.ext\.recordEventInNimbus"),
+                eol_comment_text("context.recordEventInNimbus"),
             ],
         ),
         
@@ -415,10 +391,7 @@ kotlin.internal.collectFUSMetrics=false
         *_process_file(
             path="app/src/main/java/org/mozilla/fenix/utils/Settings.kt",
             replacements=[
-                line_affix(
-                    match_lines="FxNimbus.features.junoOnboarding.recordExposure",
-                    prefix="//"
-                )
+                eol_comment_text(r"FxNimbus\.features\.junoOnboarding\.recordExposure")
             ]
         ),
         
@@ -500,15 +473,9 @@ def _gecko_provider_kt_replacements():
             # fmt:off
             
             # Disable crash handler
-            line_affix(r"\.crashHandler", prefix="// "),
-            line_affix(
-                r"import\s*mozilla\.components\.lib\.crash",
-                prefix="// ",
-            ),
-            line_affix(
-                r"import\s*mozilla\.components\.browser\.engine\.gecko\.crash\.GeckoCrashPullDelegate",
-                prefix="// ",
-            ),
+            eol_comment_text(r"\.crashHandler"),
+            eol_comment_line(r"import\s*mozilla\.components\.lib\.crash"),
+            eol_comment_line(r"import\s*mozilla\.components\.browser\.engine\.gecko\.crash\.GeckoCrashPullDelegate",),
             
             # Ensure certain preferences are configured at GeckoProvider.kt
             ## These should be unnecessary (since we take back control of the related Gecko preferences and set them directly),
@@ -520,11 +487,8 @@ def _gecko_provider_kt_replacements():
             regex(r"fissionEnabled\(.*\)", "fissionEnabled(true)"),
             
             # No-op Nimbus
-            literal(".experimentDelegate", "// .experimentDelegate"),
-            line_affix(
-                r"import mozilla\.components\.experiment\.NimbusExperimentDelegate",
-                prefix="// ",
-            ),
+            eol_comment_text(r"\.experimentDelegate"),
+            eol_comment_line(r"import mozilla\.components\.experiment\.NimbusExperimentDelegate"),
             # fmt:on
         ],
     )
@@ -566,9 +530,9 @@ def _build_gradle_replacements(config: PrepareConfig):
             
             # Comment out Adjust / installreferrer / Play dependencies in Gradle
             # (prefix the matching implementation line with // )
-            line_affix(r"implementation\(libs\.adjust\)", prefix="// "),
-            line_affix(r"implementation\(libs\.installreferrer\)", prefix="// "),
-            line_affix(r"implementation\s+libs\.play", prefix="// "),
+            eol_comment_line(r"implementation\(libs\.adjust\)"),
+            eol_comment_line(r"implementation\(libs\.installreferrer\)"),
+            eol_comment_line(r"implementation\s+libs\.play"),
             
             # Remove literal occurrences of the addons services URL (exact literal)
             literal("https://services.addons.mozilla.org", ""),
@@ -584,10 +548,7 @@ def _build_gradle_replacements(config: PrepareConfig):
             regex(r'(AMO_SERVER_URL\s*[:=]\s*")[^"]*(")', r"\1\2"),
             
             # Comment out service-mars dependency
-            line_affix(
-                r"implementation project\(':components:service-mars'\)",
-                prefix="// ",
-            ),
+            eol_comment_line(r"implementation project\(':components:service-mars'\)"),
             
             # Update message indicating whether telemetry is enabled or not
             regex(r'Telemetry enabled: " \+ .*\)', 'Telemetry enabled: " + false)'),
@@ -787,24 +748,13 @@ def _home_activity_kt_replacements():
             # fmt:off
             
             # Remove telemetry
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.components\.metrics\.fonts",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.components\.metrics\.GrowthDataWorker",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.components\.metrics\.MarketingAttributionService",
-                prefix="// ",
-            ),
-            literal("FontEnumerationWorker.", "// FontEnumerationWorker."),
-            literal("GrowthDataWorker.", "// GrowthDataWorker."),
-            literal("MarketingAttributionService(", "// MarketingAttributionService("),
-            literal(
-                "ReEngagementNotificationWorker.", "// ReEngagementNotificationWorker."
-            ),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics\.fonts"),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics\.GrowthDataWorker"),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics\.MarketingAttributionService"),
+            eol_comment_text(r"FontEnumerationWorker\."),
+            eol_comment_text(r"GrowthDataWorker\."),
+            eol_comment_text(r"MarketingAttributionService\("),
+            eol_comment_text(r"ReEngagementNotificationWorker\."),
             # fmt:on
         ],
     )
@@ -815,14 +765,9 @@ def _context_kt_replacements():
         path="app/src/main/java/org/mozilla/fenix/ext/Context.kt",
         replacements=[
             # Remove telemetry
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.components\.metrics", prefix="// "
-            ),
-            literal("val Context.metrics", "// val Context.metrics"),
-            literal(
-                "get() = this.components.analytics",
-                "// get() = this.components.analytics",
-            ),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics"),
+            eol_comment_text(r"val Context\.metrics"),
+            eol_comment_text(r"get\(\) = this\.components\.analytics"),
         ],
     )
 
@@ -832,19 +777,13 @@ def _components_kt_replacements():
         path="app/src/main/java/org/mozilla/fenix/components/Components.kt",
         replacements=[
             # Remove telemetry
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.components\.metrics", prefix="// "
-            ),
-            literal("MetricsMiddleware(", "// MetricsMiddleware("),
-            literal(
-                "manager = ReviewManagerFactory", "// manager = ReviewManagerFactory"
-            ),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics"),
+            eol_comment_line(r"^\s*import com\.google\.android\.play\.core\.review"),
+            eol_comment_text(r"MetricsMiddleware\(",),
+            eol_comment_text(r"manager = ReviewManagerFactory"),
             regex(
                 r"val push by lazyMonitored \{ Push\(context, analytics\.crashReporter\) \}",
                 r"val push by lazyMonitored { Push(context) }",
-            ),
-            line_affix(
-                r"^\s*import com\.google\.android\.play\.core\.review", prefix="// "
             ),
         ],
     )
@@ -855,18 +794,12 @@ def _core_kt_replacements():
         path="app/src/main/java/org/mozilla/fenix/components/Core.kt",
         replacements=[
             # Remove telemetry
-            line_affix(
-                r"^\s*import mozilla\.components\.feature\.search\.middleware\.AdsTelemetryMiddleware",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import mozilla\.components\.feature\.search\.telemetry",
-                prefix="// ",
-            ),
-            line_affix(r"^\s*import org\.mozilla\.fenix\.telemetry", prefix="// "),
-            line_affix("AdsTelemetryMiddleware", prefix="// "),
-            line_affix(r"TelemetryMiddleware\(context.*\)", prefix="// "),
-            line_affix(r"TelemetryMiddleware\(context.*\)", r"// "),
+            eol_comment_line(r"^\s*import mozilla\.components\.feature\.search\.middleware\.AdsTelemetryMiddleware"),
+            eol_comment_line(r"^\s*import mozilla\.components\.feature\.search\.telemetry"),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.telemetry",),
+            eol_comment_text(r"AdsTelemetryMiddleware"),
+            eol_comment_text(r"TelemetryMiddleware\(context.*\)"),
+            eol_comment_text(r"TelemetryMiddleware\(context.*\)"),
             literal("search-telemetry-v2", ""),
         ],
     )
@@ -876,45 +809,18 @@ def _fenix_application_kt_replacements():
     return _process_file(
         path="app/src/main/java/org/mozilla/fenix/FenixApplication.kt",
         replacements=[
-            line_affix(
-                r"^\s*import androidx\.core\.app\.NotificationManagerCompat",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import mozilla\.components\.support\.base\.ext\.areNotificationsEnabledSafe",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import mozilla\.components\.support\.base\.ext\.isNotificationChannelEnabled",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.components\.metrics", prefix="// "
-            ),
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.onboarding\.MARKETING_CHANNEL_ID",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.perf\.ApplicationExitInfoMetrics",
-                prefix="// ",
-            ),
-            line_affix(
-                r"^\s*import org\.mozilla\.fenix\.perf\.StorageStatsMetrics",
-                prefix="// ",
-            ),
-            literal("ApplicationExitInfoMetrics.", "// ApplicationExitInfoMetrics."),
-            literal("PerfStartup.", "// PerfStartup."),
-            literal("StorageStatsMetrics.", "// StorageStatsMetrics."),
-            literal(
-                "components.analytics.metricsStorage",
-                "// components.analytics.metricsStorage",
-            ),
-            regex(
-                r"components.analytics.metricsStorage",
-                r"// components.analytics.metricsStorage",
-            ),
-            regex(r"StorageStatsMetrics\.", r"// StorageStatsMetrics."),
-            regex(r"ApplicationExitInfoMetrics\.", r"// ApplicationExitInfoMetrics."),
+            eol_comment_line(r"^\s*import androidx\.core\.app\.NotificationManagerCompat"),
+            eol_comment_line(r"^\s*import mozilla\.components\.support\.base\.ext\.areNotificationsEnabledSafe"),
+            eol_comment_line(r"^\s*import mozilla\.components\.support\.base\.ext\.isNotificationChannelEnabled"),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics",),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.onboarding\.MARKETING_CHANNEL_ID"),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.perf\.ApplicationExitInfoMetrics"),
+            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.perf\.StorageStatsMetrics"),
+            eol_comment_text(r"ApplicationExitInfoMetrics\.",),
+            eol_comment_text(r"PerfStartup\."),
+            eol_comment_text(r"StorageStatsMetrics\."),
+            eol_comment_text(r"components\.analytics\.metricsStorage",),
+            eol_comment_text(r"StorageStatsMetrics\."),
+            eol_comment_text(r"ApplicationExitInfoMetrics\."),
         ],
     )
