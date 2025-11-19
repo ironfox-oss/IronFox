@@ -33,7 +33,7 @@ async def run_command_with_progress(
     title: str,
     cmd: Iterable[str],
     *,
-    n: int = 10,
+    n: int = 30,
     refresh_per_second: int = 20,
     env: Optional[EnvType] = None,
     cwd: Optional[Path] = None,
