@@ -172,7 +172,7 @@ clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_VERSION"
 
 # Clone MicroG
 echo "Cloning microG..."
-clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_TAG"
+clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_VERSION"
 
 # Download Phoenix
 echo "Downloading Phoenix..."
