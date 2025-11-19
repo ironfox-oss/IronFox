@@ -152,7 +152,7 @@ mkdir -vp "$BUILDDIR"
 
 if ! [[ -f "$BUILDDIR/bundletool.jar" ]]; then
     echo "Downloading bundletool..."
-    download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_TAG}/bundletool-all-${BUNDLETOOL_TAG}.jar" "$BUILDDIR/bundletool.jar"
+    download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "$BUILDDIR/bundletool.jar"
 fi
 
 if ! [[ -f "$BUILDDIR/bundletool" ]]; then
@@ -168,7 +168,7 @@ echo "'bundletool' is set up at $BUILDDIR/bundletool"
 
 # Clone Glean
 echo "Cloning Glean..."
-clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_TAG"
+clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_VERSION"
 
 # Clone MicroG
 echo "Cloning microG..."
@@ -176,22 +176,22 @@ clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_TAG"
 
 # Download Phoenix
 echo "Downloading Phoenix..."
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix.js" "$PATCHDIR/preferences/phoenix.js"
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_TAG/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix.js" "$PATCHDIR/preferences/phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
 
 # Get WebAssembly SDK
 if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
-    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_TAG"
+    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_VERSION"
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
 elif [[ "$PLATFORM" == "macos" ]]; then
     echo "Downloading prebuilt wasi-sdk..."
-    download "https://github.com/celenityy/wasi-sdk/releases/download/$WASI_TAG/$WASI_TAG-firefox-osx.tar.xz" "$BUILDDIR/wasi-sdk.tar.xz"
+    download "https://github.com/celenityy/wasi-sdk/releases/download/$WASI_VERSION/$WASI_VERSION-firefox-osx.tar.xz" "$BUILDDIR/wasi-sdk.tar.xz"
     mkdir -vp "$WASISDKDIR"
     tar xJf "$BUILDDIR/wasi-sdk.tar.xz" -C "$WASISDKDIR"
 else
     echo "Downloading prebuilt wasi-sdk..."
-    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_TAG/$WASI_TAG-firefox.tar.xz"
+    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_VERSION/$WASI_VERSION-firefox.tar.xz"
 fi
 
 # Get Tor's no-op UniFFi binding generator
@@ -211,7 +211,7 @@ fi
 
 # Clone application-services
 echo "Cloning application-services..."
-git clone --branch "$APPSERVICES_BRANCH" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
+git clone --branch "$APPSERVICES_VERSION" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
 
 # Clone Firefox
 echo "Cloning Firefox..."

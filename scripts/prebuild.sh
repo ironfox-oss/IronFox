@@ -1198,7 +1198,7 @@ $SED -i \
 } >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
 
 $SED -i "s|IRONFOX_VERSION|$IRONFOX_VERSION|" mobile/android/app/geckoview-prefs.js
-$SED -i "s|PHOENIX_VERSION|$PHOENIX_TAG|" mobile/android/app/geckoview-prefs.js
+$SED -i "s|PHOENIX_VERSION|$PHOENIX_VERSION|" mobile/android/app/geckoview-prefs.js
 
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
