@@ -220,7 +220,7 @@ Once the packages have been installed successfully, follow the instructions to s
 
   ```sh
   mkdir -vp $HOME/bin
-  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew.py -O "$HOME/bin/gradle"
+  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/f1ff9690936cec83cde22bb9ee15a569198a264a/gradlew-fdroid -O "$HOME/bin/gradle"
   chmod +x "$HOME/bin/gradle"
 
   export PATH=$HOME/bin:$PATH
@@ -232,12 +232,6 @@ Once the packages have been installed successfully, follow the instructions to s
   mkdir -vp ~/.gradle
   echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
   echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
-  ```
-
-- On **macOS**, you'll need to overwrite the Gradle cache directory, as we don't have write access to the default location *(`/vagrant/cache`)*:
-
-  ```sh
-  export CACHEDIR="$HOME/vagrant/cache"
   ```
 
 - Create a new Python 3.9 virtual environment, then activate it:

@@ -39,7 +39,7 @@ RUN bash -x /tmp/setup-android-sdk.sh && \
 
 # Set up gradle from F-Droid
 RUN mkdir -p /root/bin
-ADD https://gitlab.com/fdroid/gradlew-fdroid/-/raw/main/gradlew.py /root/bin/gradle
+ADD https://gitlab.com/fdroid/gradlew-fdroid/-/raw/f1ff9690936cec83cde22bb9ee15a569198a264a/gradlew-fdroid /root/bin/gradle
 RUN chmod +x "/root/bin/gradle" && \
     echo "export PATH=\$PATH:/root/bin" >> $ENVDOCKER
 
