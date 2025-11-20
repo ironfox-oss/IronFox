@@ -91,3 +91,15 @@ index fab193d..368c66b 100644
          set(_) = Unit
  
      override val events: NimbusEventStore
+diff --git a/proguard-rules-consumer-jna.pro b/proguard-rules-consumer-jna.pro
+index 2a3934c..71f82ed 100644
+--- a/proguard-rules-consumer-jna.pro
++++ b/proguard-rules-consumer-jna.pro
+@@ -11,5 +11,5 @@
+ # Add explicit keep rules for Nimbus RustBuffer and related structs to avoid
+ # overly-aggressive optimization when R8 fullMode is enabled, leading to crashes.
+ ####################################################################################################
+--keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,RuntimeVisibleTypeAnnotations,RuntimeInvisibleTypeAnnotations,AnnotationDefault,InnerClasses,EnclosingMethod,Signature
+--keep class org.mozilla.experiments.nimbus.internal.** { *; }
++# -keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,RuntimeVisibleTypeAnnotations,RuntimeInvisibleTypeAnnotations,AnnotationDefault,InnerClasses,EnclosingMethod,Signature
++# -keep class org.mozilla.experiments.nimbus.internal.** { *; }
