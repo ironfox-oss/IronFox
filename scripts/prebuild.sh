@@ -594,7 +594,7 @@ apply_patches
 # Let it be IronFox (part 2...)
 $SED -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
 echo '' >>mobile/android/moz.configure
-echo 'include("ironfox.configure")' >>mobile/android/moz.configure
+echo 'include("../../ironfox/ironfox.configure")' >>mobile/android/moz.configure
 echo '' >>moz.build
 echo 'DIRS += ["ironfox"]' >>moz.build
 
