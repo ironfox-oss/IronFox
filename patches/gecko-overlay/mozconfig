@@ -37,6 +37,9 @@ export MOZ_APP_REMOTINGNAME='{IRONFOX_APP_NAME}'
 ## Configure allowed Gradle maven repositories
 export GRADLE_MAVEN_REPOSITORIES='file://{HOME}/.m2/repository/','https://plugins.gradle.org/m2/','https://maven.google.com/'
 
+## Configure Gradle
+export GRADLE_FLAGS='-Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache'
+
 ## Disable android:debuggable
 ac_add_options --disable-android-debuggable
 
