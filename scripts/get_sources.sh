@@ -211,7 +211,8 @@ fi
 
 # Clone application-services
 echo "Cloning application-services..."
-git clone --branch "$APPSERVICES_VERSION" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
+clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDIR" "${APPSERVICES_VERSION}"
+# git clone --branch "$APPSERVICES_VERSION" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
 
 # Clone Firefox
 echo "Cloning Firefox..."
