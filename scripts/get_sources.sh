@@ -176,8 +176,8 @@ clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_VERSI
 
 # Download Phoenix
 echo "Downloading Phoenix..."
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix.js" "$PATCHDIR/preferences/phoenix.js"
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/000-phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix-extended.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
 
 # Get WebAssembly SDK
 if [[ -n ${FDROID_BUILD+x} ]]; then

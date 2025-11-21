@@ -3,4 +3,5 @@ DIRS += [
     "about",
     "dumps",
     "locales",
+    "prefs",
 ]
