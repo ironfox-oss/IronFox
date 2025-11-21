@@ -553,6 +553,8 @@ $SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"
 apply_overlay "$patches/a-s-overlay/"
 
 ## local.properties
+$SED -i "s|{android_components}|$android_components|" local.properties
+$SED -i "s|{glean}|$glean|" local.properties
 $SED -i "s|{PLATFORM}|$PLATFORM|" local.properties
 $SED -i "s|{PLATFORM_ARCHITECTURE}|$PLATFORM_ARCHITECTURE|" local.properties
 $SED -i "s|{rusttarget}|$rusttarget|" local.properties
@@ -1076,6 +1078,8 @@ else
 fi
 
 ## local.properties
+$SED -i "s|{android_components}|$android_components|" local.properties
+$SED -i "s|{glean}|$glean|" local.properties
 $SED -i "s|{mozilla_release}|$mozilla_release|" local.properties
 
 ## mozconfig

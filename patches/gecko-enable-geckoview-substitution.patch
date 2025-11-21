@@ -1,0 +1,41 @@
+diff --git a/build.gradle b/build.gradle
+index abdec4ded1..45867834ae 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -232,7 +232,7 @@ def getVersionNumber() {
+     def parts = appVersion.split('\\.')
+     def version = parts[0] + "." + parts[1] + "." + getBuildId()
+     def substs = project.ext.mozconfig.substs
+-    if (!substs.MOZILLA_OFFICIAL && !substs.MOZ_ANDROID_FAT_AAR_ARCHITECTURES) {
++    if (!substs.MOZ_ANDROID_FAT_AAR_ARCHITECTURES) {
+         // Use -SNAPSHOT versions locally to enable the local GeckoView substitution flow.
+         version += "-SNAPSHOT"
+     }
+diff --git a/mobile/android/gradle/with_gecko_binaries.gradle b/mobile/android/gradle/with_gecko_binaries.gradle
+index 74aa160449..e86c3223ef 100644
+--- a/mobile/android/gradle/with_gecko_binaries.gradle
++++ b/mobile/android/gradle/with_gecko_binaries.gradle
+@@ -24,7 +24,7 @@ ext.configureVariantWithGeckoBinaries = { variant ->
+         // the moz.build system and should never be re-entrant in this way.
+         def assetGenTask = tasks.findByName("generate${variant.name.capitalize()}Assets")
+         def jniLibFoldersTask = tasks.findByName("merge${variant.name.capitalize()}JniLibFolders")
+-        if (!mozconfig.substs.MOZILLA_OFFICIAL && !mozconfig.substs.ENABLE_MOZSEARCH_PLUGIN) {
++        if (!mozconfig.substs.ENABLE_MOZSEARCH_PLUGIN) {
+             assetGenTask.dependsOn rootProject.machStagePackage
+             jniLibFoldersTask.dependsOn rootProject.machStagePackage
+         }
+diff --git a/substitute-local-geckoview.gradle b/substitute-local-geckoview.gradle
+index 8e38fa104b..d3b3fee659 100644
+--- a/substitute-local-geckoview.gradle
++++ b/substitute-local-geckoview.gradle
+@@ -127,6 +127,10 @@ configurations.all { config ->
+         'geckoview-beta-arm64-v8a',
+         'geckoview-beta-x86',
+         'geckoview-beta-x86_64',
++        'geckoview',
++        'geckoview-arm64v8a',
++        'geckoview-armeabi-v7a',
++        'geckoview-x86_64',
+     ]
+ 
+     def geckoviewOmniModules = [
