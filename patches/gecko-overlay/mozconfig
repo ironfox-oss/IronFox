@@ -33,6 +33,8 @@ ac_add_options --with-distribution-id='org.ironfoxoss'
 export MOZ_APP_BASENAME='{IRONFOX_BASE_NAME}'
 export MOZ_APP_NAME='{IRONFOX_APP_NAME}'
 export MOZ_APP_REMOTINGNAME='{IRONFOX_APP_NAME}'
+export MOZ_SOURCE_REPO='https://gitlab.com/ironfox-oss/IronFox/-'
+export MOZ_SOURCE_CHANGESET='{CURRENT_REVISION}'
 
 ## Configure allowed Gradle maven repositories
 export GRADLE_MAVEN_REPOSITORIES='file://{HOME}/.m2/repository/','https://plugins.gradle.org/m2/','https://maven.google.com/'

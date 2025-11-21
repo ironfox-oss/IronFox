@@ -606,6 +606,10 @@ else
     $SED -i -e 's/Fennec/IronFox Nightly/g; s/Firefox/IronFox Nightly/g' build/moz.configure/init.configure
 fi
 
+# Use `commit` instead of `rev` for source URL
+## (ex. displayed at `about:buildconfig`)
+$SED -i 's|/rev/|/commit/|' build/variables.py
+
 $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/global\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
 $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
@@ -1099,3 +1103,6 @@ $SED -i "s|{PHOENIX_VERSION}|$PHOENIX_VERSION|" ironfox/prefs/002-ironfox.js
 
 popd
 
+# Set current build revision
+## (ex. displayed at `about:buildconfig`)
+$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/mozconfig"
