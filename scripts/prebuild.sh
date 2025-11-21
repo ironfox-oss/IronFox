@@ -1038,15 +1038,9 @@ $SED -i \
     -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.boolean"|' \
     mobile/android/app/geckoview-prefs.js
 
-{
-    cat "$patches/preferences/phoenix.js"
-    cat "$patches/preferences/phoenix-extended.js"
-    cat "$patches/preferences/ironfox.js"
-} >>mobile/android/app/geckoview-prefs.js
-
-{
-    cat "$patches/preferences/pdf.js"
-} >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
+echo '' >>mobile/android/app/geckoview-prefs.js
+echo '#include ../../../ironfox/prefs/002-ironfox.js' >>mobile/android/app/geckoview-prefs.js
+echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDefaultPrefs.js
 
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
@@ -1097,11 +1091,11 @@ $SED -i "s|{target}|$target|" mozconfig
 $SED -i "s|{wasi_install}|$wasi_install|" mozconfig
 
 # prefs
-$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" mobile/android/app/geckoview-prefs.js
-$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" mobile/android/app/geckoview-prefs.js
-$SED -i "s|{IRONFOX_UBO_ASSETS_URL}|$IRONFOX_UBO_ASSETS_URL|" mobile/android/app/geckoview-prefs.js
-$SED -i "s|{IRONFOX_VERSION}|$IRONFOX_VERSION|" mobile/android/app/geckoview-prefs.js
-$SED -i "s|{PHOENIX_VERSION}|$PHOENIX_VERSION|" mobile/android/app/geckoview-prefs.js
+$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_UBO_ASSETS_URL}|$IRONFOX_UBO_ASSETS_URL|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_VERSION}|$IRONFOX_VERSION|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{PHOENIX_VERSION}|$PHOENIX_VERSION|" ironfox/prefs/002-ironfox.js
 
 popd
 
