@@ -611,11 +611,9 @@ $SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution
 
 # about:policies
 $SED -i -e 's/browser.jar/geckoview.jar/g' browser/components/enterprisepolicies/jar.mn
-mkdir -vp mobile/locales/en-US/browser/policies
-cp -vf browser/locales/en-US/browser/aboutPolicies.ftl mobile/locales/en-US/browser/
-cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl mobile/locales/en-US/browser/policies/
-echo '' >>mobile/locales/moz.build
-echo 'JAR_MANIFESTS += ["jar.mn"]' >>mobile/locales/moz.build
+mkdir -vp ironfox/locales/en-US/browser/policies
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/locales/en-US/browser/policies/
 echo '' >>mobile/shared/chrome/geckoview/jar.mn
 echo '% content browser %content/browser/' >>mobile/shared/chrome/geckoview/jar.mn
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
