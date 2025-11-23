@@ -118,7 +118,7 @@ popd
 # shellcheck disable=SC2154
 pushd "$glean"
 export TARGET_CFLAGS=-DNDEBUG
-gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
+gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
 # shellcheck disable=SC2154
