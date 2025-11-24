@@ -145,25 +145,25 @@ MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 export MOZ_CHROME_MULTILOCALE
 
 echo "Running gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
-gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
+gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
 popd
 
 # shellcheck disable=SC2154
 pushd "$android_components"
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
 # otherwise automatically triggered publication of A-S will fail
-gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :components:concept-fetch:publishToMavenLocal
+gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :components:concept-fetch:publishToMavenLocal
 # Enable the auto-publication workflow now that concept-fetch is published
 echo "## Enable the auto-publication workflow for Application Services" >>"$mozilla_release/local.properties"
 echo "autoPublish.application-services.dir=$application_services" >>"$mozilla_release/local.properties"
-gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache publishToMavenLocal
+gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
 # shellcheck disable=SC2154
 pushd "$fenix"
 if [[ "$build_type" == "apk" ]]; then
-    gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:assembleRelease
+    gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:assembleRelease
 elif [[ "$build_type" == "bundle" ]]; then
-    gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:bundleRelease -Paab
+    gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:bundleRelease -Paab
 fi
 popd
