@@ -231,9 +231,6 @@ ac_add_options --without-pocket-api-keyfile
 ac_add_options --enable-android-subproject='fenix'
 ac_add_options --enable-application='mobile/android'
 
-## Target platform
-ac_add_options --target='{target}'
-
 ## Target release
 ac_add_options --enable-release
 ac_add_options --enable-update-channel='release'

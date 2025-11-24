@@ -1050,6 +1050,12 @@ echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDe
 apply_overlay "$patches/gecko-overlay/"
 
 {
+    if [[ -n "${target}" ]]; then
+        echo "## Target platform"
+        echo "ac_add_options --target='$target'"
+        echo ""
+    fi
+
     if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
         echo "## Enable Safe Browsing"
         echo "ac_add_options --with-google-safebrowsing-api-keyfile='${SB_GAPI_KEY_FILE}'"
