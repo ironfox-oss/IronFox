@@ -5,6 +5,7 @@ from commands.base import BaseConfig
 from commands.build import BuildConfig, BuildType
 from common.paths import Paths
 from common.locales import IRONFOX_LOCALES
+from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 from execution.find_replace import on_line_text, on_lines
 from execution.run import run_cmd
@@ -133,7 +134,7 @@ def build_application_services(
             name="Build A-S",
             commands=[
                 f"{config.exec_sh} ./libs/verify-android-environment.sh",
-                f"{paths.gradle_exec} :tooling-nimbus-gradle:publishToMavenLocal",
+                f"{paths.gradle_exec} -Plocal=true publishToMavenLocal",
             ],
             cwd=paths.application_services_dir,
             env=env,
@@ -215,6 +216,12 @@ def build_android_components(
                 f"{paths.gradle_exec} publishToMavenLocal",
             ],
             cwd=paths.android_components_dir,
+            env={
+                # Disable verbose logging for this task
+                # Setting org.gradle.logging.level=info makes
+                # the configuration phase to run indefinitely for some reason
+                "GRADLE_OPTS": "-Dorg.gradle.logging.level=lifecycle"
+            }
         ),
     ]
 
@@ -233,6 +240,6 @@ def build_fenix(
         d.run_cmds(
             name="Build Fenix",
             commands=[f"{paths.gradle_exec} {task}"],
-            cwd=paths.firefox_dir,
+            cwd=paths.fenix_dir,
         )
     ]
