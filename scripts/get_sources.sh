@@ -6,8 +6,11 @@ source "$(dirname $0)/versions.sh"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     PLATFORM=macos
+    # Ensure we use GNU tar on macOS
+    TAR=gtar
 else
     PLATFORM=linux
+    TAR=tar
 fi
 
 clone_repo() {
@@ -94,13 +97,13 @@ extract_rmtoplevel() {
             unzip -q "$archive_path" -d "$temp_dir"
             ;;
         *.tar.gz)
-            tar xzf "$archive_path" -C "$temp_dir"
+            $TAR xzf "$archive_path" -C "$temp_dir"
             ;;
         *.tar.xz)
-            tar xJf "$archive_path" -C "$temp_dir"
+            $TAR xJf "$archive_path" -C "$temp_dir"
             ;;
         *.tar.zst)
-            tar --zstd -xvf "$archive_path" -C "$temp_dir"
+            $TAR --zstd -xvf "$archive_path" -C "$temp_dir"
             ;;
         *)
             echo "Unsupported archive format: $archive_path"
