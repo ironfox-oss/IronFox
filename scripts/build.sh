@@ -111,6 +111,7 @@ popd
 # shellcheck disable=SC2154
 pushd "$glean"
 export TARGET_CFLAGS=-DNDEBUG
+gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
 gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 

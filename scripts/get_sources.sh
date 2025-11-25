@@ -203,18 +203,15 @@ else
 fi
 
 # Get Tor's no-op UniFFi binding generator
-if [[ "$PLATFORM" == "macos" ]]; then
-    # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
-    ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
-    echo "macOS: Doing nothing..."
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    echo "Cloning uniffi-bindgen..."
+    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_VERSION"
+elif [[ "$PLATFORM" == "macos" ]]; then
+    echo "Downloading prebuilt uniffi-bindgen..."
+    download_and_extract "uniffi" "https://github.com/celenityy/uniffi-rs/releases/download/$UNIFFI_REVISION/uniffi-rs-$UNIFFI_REVISION-osx.tar.xz"
 else
-    if [[ -n ${FDROID_BUILD+x} ]]; then
-        echo "Cloning uniffi-bindgen..."
-        clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_VERSION"
-    else
-        echo "Downloading prebuilt uniffi-bindgen..."
-        download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
-    fi
+    echo "Downloading prebuilt uniffi-bindgen..."
+    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
 fi
 
 # Clone application-services
