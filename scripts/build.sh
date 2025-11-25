@@ -24,13 +24,6 @@ fi
 
 set -euo pipefail
 
-# Set platform
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    PLATFORM=macos
-else
-    PLATFORM=linux
-fi
-
 build_type="$1"
 
 if [ "$build_type" != "apk" ] && [ "$build_type" != "bundle" ]; then
@@ -68,8 +61,8 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     # shellcheck disable=SC2154
     llvmtarget=$(cat "$builddir/targets_to_build")
     echo "building llvm for $llvmtarget"
-    cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang-16 \
-        -DCMAKE_CXX_COMPILER=clang++-16 -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
+    cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang-20 \
+        -DCMAKE_CXX_COMPILER=clang++-20 -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
         -DLLVM_USE_LINKER=lld -DLLVM_BINUTILS_INCDIR=/usr/include -DLLVM_ENABLE_PLUGINS=FORCE_ON \
         -DLLVM_DEFAULT_TARGET_TRIPLE="x86_64-unknown-linux-gnu"
     cmake --build build -j"$(nproc)"

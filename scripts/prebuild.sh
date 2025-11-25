@@ -569,6 +569,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
+    $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk-pthread.cmake
 
     popd
 
