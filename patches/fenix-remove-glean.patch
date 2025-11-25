@@ -308,10 +308,10 @@ index 7d375ea30f..1b74892ebb 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-index efcf8963de..9fa8fc7909 100644
+index 14f85cc900..979e3548b6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-@@ -256,11 +256,11 @@ class BrowserToolbarSearchMiddleware(
+@@ -252,11 +252,11 @@ class BrowserToolbarSearchMiddleware(
                          )
                          browserStore.dispatch(EngagementFinished(abandoned = false))
                      }

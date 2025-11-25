@@ -37,10 +37,10 @@ index 7b81c01e71..fa4dba3ed0 100644
      "geckoview",
  ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 2bfec5537e..fccc30c217 100644
+index bb451a2795..010d73bb37 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -506,7 +506,7 @@ let InstallSources = null;
+@@ -510,7 +510,7 @@ let InstallSources = null;
  class JSONPoliciesProvider {
    constructor() {
      this._policies = null;
@@ -49,7 +49,7 @@ index 2bfec5537e..fccc30c217 100644
    }
  
    get hasPolicies() {
-@@ -613,6 +613,910 @@ class JSONPoliciesProvider {
+@@ -617,6 +617,910 @@ class JSONPoliciesProvider {
        }
      }
    }
