@@ -34,6 +34,13 @@ patches:
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
+  - file: "a-s-remove-mac.patch"
+    name: "Remove MAC"
+    description: "Removes the Mozilla Ads Client (MAC)."
+    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted advertising."
+    category: "Mozilla"
+
   - file: "a-s-noop-nimbus.patch"
     name: "No-op Nimbus"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Firefox for Android."

@@ -548,6 +548,10 @@ $SED -i -e 's|("main", "regions"),|// ("main", "regions"),|g' components/remote_
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
 $SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
 
+# Remove the Mozilla Ad Client library
+$SED -i 's|"components/ads-client"|# "components/ads-client"|g' Cargo.toml
+$SED -i 's|ads-client|# ads-client|g' megazords/full/Cargo.toml
+
 # Apply Application Services overlay
 apply_overlay "$patches/a-s-overlay/"
 
