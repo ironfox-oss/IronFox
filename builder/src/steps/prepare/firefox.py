@@ -195,7 +195,7 @@ DIRS += ["ironfox"]
             path="mobile/android/geckoview/build.gradle",
             replacements=[
                 # Fix v125 aar output not including native libraries
-                regex(r"singleVariant('debug')", r"singleVariant('release')"),
+                regex(r"singleVariant\('debug'\)", r"singleVariant('release')"),
                 
                 # Replace Google Play FIDO dependency with microG in geckoview build
                 literal(
