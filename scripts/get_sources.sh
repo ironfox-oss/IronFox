@@ -195,9 +195,12 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     rm -rf "$WASISDKDIR/src/llvm-project"
     echo "Cloning llvm..."
     clone_repo "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "llvmorg-$LLVM_VERSION"
+elif [[ "$PLATFORM" == "macos" ]]; then
+    echo "Downloading prebuilt wasi-sdk.."
+    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_OSX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 else
     echo "Downloading prebuilt wasi-sdk..."
-    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_LINUX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 fi
 
 # Get Tor's no-op UniFFi binding generator
@@ -206,10 +209,10 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_VERSION"
 elif [[ "$PLATFORM" == "macos" ]]; then
     echo "Downloading prebuilt uniffi-bindgen..."
-    download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+    download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_OSX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 else
     echo "Downloading prebuilt uniffi-bindgen..."
-    download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
+    download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_LINUX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 fi
 
 # Clone application-services
