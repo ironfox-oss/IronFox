@@ -22,6 +22,19 @@ index ed1e132e9..351b22d10 100644
    autofill:
      path: components/autofill/android
      artifactId: autofill
+diff --git a/build.gradle b/build.gradle
+index 215f323..0194e8c 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -185,7 +185,7 @@ if (useDownloadedLibs) {
+ // because doing so seems pointless, not for any security reason)
+ ext.extraCargoBuildArguments = []
+ 
+-if (System.getenv("CI")) {
++if (false) {
+     ext.extraCargoBuildArguments = ["--locked"]
+ }
+ 
 diff --git a/megazords/fenix-dylib/megazord_stub.c b/megazords/fenix-dylib/megazord_stub.c
 index b5111ef..18c3f35 100644
 --- a/megazords/fenix-dylib/megazord_stub.c
