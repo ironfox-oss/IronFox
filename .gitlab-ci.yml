@@ -57,7 +57,7 @@ update-fdroid-repo:
       when: never
     - if: $CI_COMMIT_TAG
   tags:
-    - saas-linux-medium-amd64
+    - saas-linux-2xlarge-amd64
   variables:
     FDROID_REPO_PATH: ironfox-oss/fdroid
     FDROID_REPO_BRANCH: dev
@@ -88,6 +88,8 @@ update-site-repo:
       - scripts/glean-patches.yaml
       - scripts/patches.yaml
       - scripts/ci-update-site.sh
+  tags:
+    - saas-linux-2xlarge-amd64
   variables:
     TARGET_REPO_PATH: ironfox-oss/ironfoxoss.org
     TARGET_REPO_BRANCH: dev
@@ -129,6 +131,8 @@ build-docker:
         - .gitlab-ci.yml
         - scripts/setup-android-sdk.sh
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+  tags:
+    - saas-linux-2xlarge-amd64
 
 build-apk:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
@@ -138,7 +142,7 @@ build-apk:
     - job: "build-docker"
       optional: true
   tags:
-    - saas-linux-xlarge-amd64
+    - saas-linux-2xlarge-amd64
   parallel:
     matrix:
       - BUILD_VARIANT: ["arm", "arm64", "x86_64"]
@@ -182,7 +186,7 @@ build-bundle:
       artifacts: true
       optional: false
   tags:
-    - saas-linux-xlarge-amd64
+    - saas-linux-2xlarge-amd64
   variables:
     BUILD_VARIANT: "bundle"
     <<: *build_variables
@@ -231,6 +235,8 @@ prepare-release:
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH && $CI_COMMIT_MESSAGE =~ /\[skip-release\]/
       when: never
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+  tags:
+    - saas-linux-2xlarge-amd64
   variables:
     <<: *build_variables
   before_script:
@@ -259,6 +265,8 @@ publish-release:
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH && $CI_COMMIT_MESSAGE =~ /\[skip-release\]/
       when: never
     - if: $CI_COMMIT_BRANCH == $PRODUCTION_BRANCH
+  tags:
+    - saas-linux-2xlarge-amd64
   variables:
     <<: *build_variables
   script:
