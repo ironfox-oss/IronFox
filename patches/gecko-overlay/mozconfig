@@ -40,7 +40,7 @@ export MOZ_SOURCE_CHANGESET='{CURRENT_REVISION}'
 export GRADLE_MAVEN_REPOSITORIES='file://{HOME}/.m2/repository/','https://plugins.gradle.org/m2/','https://maven.google.com/'
 
 ## Configure Gradle
-#export GRADLE_FLAGS='-Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache'
+export GRADLE_FLAGS='-Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache'
 
 ## Disable android:debuggable
 ac_add_options --disable-android-debuggable
