@@ -19,7 +19,7 @@ index 0069f9bc29..db9f297c3e 100644
  [plugins]
  detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index f9711dc715..1421a44a87 100644
+index ef4a29a39f..2f3e3a92a2 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
 @@ -602,6 +602,7 @@ projects:
@@ -30,7 +30,7 @@ index f9711dc715..1421a44a87 100644
    components:feature-addons:
      description: A feature that provides for managing add-ons.
      path: components/feature/addons
-@@ -2418,3 +2419,13 @@ projects:
+@@ -2427,3 +2428,13 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons

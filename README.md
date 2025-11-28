@@ -191,7 +191,8 @@ brew install \
     cmake \
     gawk \
     git \
-    gsed \
+    gnu-sed \
+    gnu-tar \
     m4 \
     make \
     nasm \

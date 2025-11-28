@@ -53,23 +53,6 @@
     },
     {
       "attachment": {
-        "filename": "leta.ico",
-        "hash": "289e7b283afa98a55448c2977f5cff7b9b0f67c6a4177483d00ba89ee24a1fbf",
-        "location": "",
-        "mimetype": "image/x-icon",
-        "size": 15086
-      },
-      "engineIdentifiers": [
-        "leta-brave",
-        "leta-google"
-      ],
-      "id": "28e347e4-0188-48e4-8d45-45618c985b53",
-      "imageSize": 48,
-      "last_modified": 1744118264845,
-      "schema": 1743687735700
-    },
-    {
-      "attachment": {
         "filename": "startpage.png",
         "hash": "500d1cc2122cfd807392fb0fede7d64b7cee2d998a4ccbe22716736a6752e399",
         "location": "",

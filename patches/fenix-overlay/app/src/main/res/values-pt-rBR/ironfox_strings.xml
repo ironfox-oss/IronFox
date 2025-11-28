@@ -76,7 +76,7 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Desativa a simulação de fuso horário para certos sites por padrão com o fim de reduzir sua quebra - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Ativar substituições de WebGL do IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Quando o WebGL está desativado, reativa ele para alguns sites para reduzir quebra - Ao alterar esta configuração, seu navegador será reiniciado</string>
-    <string name="preference_webgl_disabled" translatable="false">Desativar WebGL</string>
+    <string name="preference_webgl_disabled">Desativar WebGL</string>
     <string name="preference_media_autoplay_title">Reprodução automática de mídia</string>
     <string name="preference_media_autoplay_description">Controle como o IronFox bloqueia a reprodução automática de mídia.</string>
     <string name="preference_autoplay_policy_transient">Transitória (Padrão)</string>

@@ -1,18 +1,29 @@
 
+#include 000-phoenix.js
+#include 001-phoenix-extended.js
+
 // Melding the Phoenix into a fox, with a strong coat of Iron…
 
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
+// NOTE: Values surrounded in curly brackets ({}) are filled in by`prebuild.sh`
+/// IRONFOX_BASE_NAME = {IRONFOX_BASE_NAME}
+/// IRONFOX_CHANNEL = {IRONFOX_CHANNEL}
+/// IRONFOX_VERSION = {IRONFOX_VERSION}
+/// PHOENIX_VERSION = {PHOENIX_VERSION}
+
 /// Branding
 pref("app.releaseNotesURL", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.releaseNotesURL.prompt", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
-pref("app.support.vendor", "IronFox: IRONFOX_VERSION | Phoenix - Extended: PHOENIX_VERSION", locked);
+pref("app.support.vendor", "{IRONFOX_BASE_NAME}: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}", locked);
 pref("app.update.url.details", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.update.url.manual", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.vendorURL", "https://ironfoxoss.org/", locked);
-pref("browser.ironfox.version", "IRONFOX_VERSION", locked);
+pref("browser.ironfox.channel", "{IRONFOX_CHANNEL}", locked);
+pref("browser.ironfox.version", "{IRONFOX_VERSION}", locked);
 
 /// Configure uBlock Origin
+pref("browser.ironfox.uBO.assetsBootstrapLocation", "{IRONFOX_UBO_ASSETS_URL}");
 pref("browser.ironfox.uBO.autoCommentFilterTemplate", "{{url}}");
 pref("browser.ironfox.uBO.autoUpdateDelayAfterLaunch", "10");
 pref("browser.ironfox.uBO.disableWebAssembly", "true");

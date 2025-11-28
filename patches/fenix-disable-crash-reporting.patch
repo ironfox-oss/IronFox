@@ -129,10 +129,10 @@ index bd75990cd8..7f0303631a 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-index efcf8963de..7e93d1e715 100644
+index 14f85cc900..a44dfc3b3a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-@@ -242,14 +242,14 @@ class BrowserToolbarSearchMiddleware(
+@@ -238,14 +238,14 @@ class BrowserToolbarSearchMiddleware(
                  val navController = environment?.navController ?: return
  
                  when (action.text) {

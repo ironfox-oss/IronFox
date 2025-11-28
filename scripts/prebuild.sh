@@ -90,6 +90,11 @@ if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
     fi
 fi
 
+if [[ -z "$IRONFOX_UBO_ASSETS_URL" ]]; then
+    echo "\$IRONFOX_UBO_ASSETS_URL is not set! Aborting..."
+    exit 1
+fi
+
 # Set platform
 if [[ "$OSTYPE" == "darwin"* ]]; then
     PLATFORM=darwin
@@ -177,11 +182,6 @@ $SED -i \
     -e "s/Config.releaseVersionName(project)/'${IRONFOX_VERSION}'/" \
     app/build.gradle
 
-# Set flag for 'official' builds to ensure we're not enabling debug/dev settings
-# https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
-# We also set "MOZILLA_OFFICIAL" for Gecko below
-echo "official=true" >>local.properties
-
 # Disable crash reporting
 $SED -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
@@ -205,8 +205,6 @@ $SED -i 's|https://services.addons.mozilla.org||g' app/build.gradle
 $SED -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeature = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
 # No-op Glean
-## https://searchfox.org/mozilla-central/rev/31123021/mobile/android/fenix/app/build.gradle#443
-echo 'glean.custom.server.url="data;"' >>local.properties
 $SED -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
 $SED -i -e 's|send_if_empty: .*|send_if_empty: false|g' app/pings.yaml
 
@@ -392,16 +390,11 @@ esac
 $SED -i -e "s/include \".*\"/include $abi/" app/build.gradle
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
-# Enable the auto-publication workflow
-# shellcheck disable=SC2154
-echo "autoPublish.application-services.dir=$application_services" >>local.properties
-
-# Disable FUS Service or we'll get errors like:
-# Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
-echo "kotlin.internal.collectFUSMetrics=false" >> local.properties
-
 # Apply Fenix overlay
 apply_overlay "$patches/fenix-overlay/"
+
+# Enable the auto-publication workflow for Application Services
+$SED -i "s|{application_services}|$application_services|" local.properties
 
 popd
 
@@ -414,8 +407,6 @@ popd
 
 # shellcheck disable=SC2154
 pushd "$glean"
-
-echo "rust.targets=$PLATFORM-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
 
 # Apply patches
 glean_apply_patches
@@ -449,21 +440,25 @@ rm -vf glean-core/android/metrics.yaml
 $SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Use Tor's no-op UniFFi binding generator
-if [[ "$PLATFORM" == "darwin" ]]; then
-    # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
-    ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
-    echo "macOS: Doing nothing..."
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    $SED -i "s|{uniffi}|$uniffi/target/release|" glean-core/android/build.gradle
 else
-    patch -p1 --no-backup-if-mismatch < "$patches/glean-noop-uniffi.patch"
-    if [[ -n ${FDROID_BUILD+x} ]]; then
-        $SED -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/target/release/uniffi-bindgen'|g" glean-core/android/build.gradle
-    else
-        $SED -i -e "s|commandLine 'cargo', 'uniffi-bindgen'|commandLine '$uniffi/uniffi-bindgen'|g" glean-core/android/build.gradle
-    fi
+    $SED -i "s|{uniffi}|$uniffi|" glean-core/android/build.gradle
+fi
+
+if [[ "$PLATFORM" == "darwin" ]]; then
+    $SED -i "s|{libxul_dir}|aarch64-linux-android/release|" glean-core/android/build.gradle
+else
+    $SED -i "s|{libxul_dir}|release|" glean-core/android/build.gradle
 fi
 
 # Apply Glean overlay
 apply_overlay "$patches/glean-overlay/"
+
+## local.properties
+$SED -i "s|{PLATFORM}|$PLATFORM|" local.properties
+$SED -i "s|{PLATFORM_ARCHITECTURE}|$PLATFORM_ARCHITECTURE|" local.properties
+$SED -i "s|{rusttarget}|$rusttarget|" local.properties
 
 popd
 
@@ -524,7 +519,6 @@ $SED -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.tom
 # Disable debug
 $SED -i -e 's|debug = .*|debug = false|g' Cargo.toml
 
-echo "rust.targets=$PLATFORM-$PLATFORM_ARCHITECTURE,$rusttarget" >>local.properties
 $SED -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 $SED -i -e '/content {/,/}/d' build.gradle
 
@@ -554,8 +548,19 @@ $SED -i -e 's|("main", "regions"),|// ("main", "regions"),|g' components/remote_
 rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
 $SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
 
+# Remove the Mozilla Ads Client library
+$SED -i 's|"components/ads-client"|# "components/ads-client"|g' Cargo.toml
+$SED -i 's|ads-client|# ads-client|g' megazords/full/Cargo.toml
+
 # Apply Application Services overlay
 apply_overlay "$patches/a-s-overlay/"
+
+## local.properties
+$SED -i "s|{android_components}|$android_components|" local.properties
+$SED -i "s|{glean}|$glean|" local.properties
+$SED -i "s|{PLATFORM}|$PLATFORM|" local.properties
+$SED -i "s|{PLATFORM_ARCHITECTURE}|$PLATFORM_ARCHITECTURE|" local.properties
+$SED -i "s|{rusttarget}|$rusttarget|" local.properties
 
 popd
 
@@ -567,6 +572,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
+    $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk-pthread.cmake
 
     popd
 
@@ -594,7 +600,7 @@ apply_patches
 # Let it be IronFox (part 2...)
 $SED -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
 echo '' >>mobile/android/moz.configure
-echo 'include("ironfox.configure")' >>mobile/android/moz.configure
+echo 'include("../../ironfox/ironfox.configure")' >>mobile/android/moz.configure
 echo '' >>moz.build
 echo 'DIRS += ["ironfox"]' >>moz.build
 
@@ -604,6 +610,10 @@ else
     $SED -i -e 's/Fennec/IronFox Nightly/g; s/Firefox/IronFox Nightly/g' build/moz.configure/init.configure
 fi
 
+# Use `commit` instead of `rev` for source URL
+## (ex. displayed at `about:buildconfig`)
+$SED -i 's|/rev/|/commit/|' build/variables.py
+
 $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/global\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
 $SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
@@ -611,11 +621,9 @@ $SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution
 
 # about:policies
 $SED -i -e 's/browser.jar/geckoview.jar/g' browser/components/enterprisepolicies/jar.mn
-mkdir -vp mobile/locales/en-US/browser/policies
-cp -vf browser/locales/en-US/browser/aboutPolicies.ftl mobile/locales/en-US/browser/
-cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl mobile/locales/en-US/browser/policies/
-echo '' >>mobile/locales/moz.build
-echo 'JAR_MANIFESTS += ["jar.mn"]' >>mobile/locales/moz.build
+mkdir -vp ironfox/locales/en-US/browser/policies
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/locales/en-US/browser/policies/
 echo '' >>mobile/shared/chrome/geckoview/jar.mn
 echo '% content browser %content/browser/' >>mobile/shared/chrome/geckoview/jar.mn
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
@@ -636,9 +644,6 @@ $SED -i \
 $SED -i \
     -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
     mobile/android/gradle.py
-
-# Ensure we're using our mozconfig
-echo "mozilla-central.mozconfig=$mozilla_release/mozconfig" >>local.properties
 
 # Break the dependency on older Rust
 $SED -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" Cargo.toml
@@ -1018,150 +1023,6 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     localize_maven
     popd
 fi
-{
-    echo 'ac_add_options --disable-address-sanitizer-reporter'
-    echo 'ac_add_options --disable-android-debuggable'
-    echo 'ac_add_options --disable-artifact-builds'
-    echo 'ac_add_options --disable-backgroundtasks'
-    echo 'ac_add_options --disable-callgrind'
-    echo 'ac_add_options --disable-crashreporter'
-    echo 'ac_add_options --disable-debug'
-    echo 'ac_add_options --disable-debug-js-modules'
-    echo 'ac_add_options --disable-debug-symbols'
-    echo 'ac_add_options --disable-default-browser-agent'
-    echo 'ac_add_options --disable-dtrace'
-    echo 'ac_add_options --disable-dump-painting'
-    echo 'ac_add_options --disable-execution-tracing'
-    echo 'ac_add_options --disable-extensions-webidl-bindings'
-    echo 'ac_add_options --disable-ffmpeg'
-    echo 'ac_add_options --disable-gecko-profiler'
-    echo 'ac_add_options --disable-geckodriver'
-    echo 'ac_add_options --disable-gtest-in-build'
-    echo 'ac_add_options --disable-instruments'
-    echo 'ac_add_options --disable-jitdump'
-    echo 'ac_add_options --disable-js-shell'
-    echo 'ac_add_options --disable-layout-debugger'
-    echo 'ac_add_options --disable-logrefcnt'
-    echo 'ac_add_options --disable-negotiateauth'
-    echo 'ac_add_options --disable-nodejs'
-    echo 'ac_add_options --disable-parental-controls'
-    echo 'ac_add_options --disable-phc'
-    echo 'ac_add_options --disable-pref-extensions'
-    echo 'ac_add_options --disable-profiling'
-    echo 'ac_add_options --disable-real-time-tracing'
-    echo 'ac_add_options --disable-reflow-perf'
-    echo 'ac_add_options --disable-rust-debug'
-    echo 'ac_add_options --disable-rust-tests'
-    echo 'ac_add_options --disable-simulator'
-    echo 'ac_add_options --disable-spidermonkey-telemetry'
-    echo 'ac_add_options --disable-system-extension-dirs'
-    echo 'ac_add_options --disable-system-policies'
-    echo 'ac_add_options --disable-tests'
-    echo 'ac_add_options --disable-uniffi-fixtures'
-    echo 'ac_add_options --disable-unverified-updates'
-    echo 'ac_add_options --disable-updater'
-    echo 'ac_add_options --disable-vtune'
-    echo 'ac_add_options --disable-wasm-codegen-debug'
-    echo 'ac_add_options --disable-webdriver'
-    echo 'ac_add_options --disable-webrender-debugger'
-    echo 'ac_add_options --disable-webspeechtestbackend'
-    echo 'ac_add_options --disable-wmf'
-    echo 'ac_add_options --enable-android-subproject=fenix'
-    echo 'ac_add_options --enable-application=mobile/android'
-    echo 'ac_add_options --enable-disk-remnant-avoidance'
-    echo 'ac_add_options --enable-geckoview-lite'
-    echo 'ac_add_options --enable-hardening'
-    echo 'ac_add_options --enable-install-strip'
-    echo 'ac_add_options --enable-isolated-process'
-    echo 'ac_add_options --enable-minify=properties'
-    echo 'ac_add_options --enable-mobile-optimize'
-    echo 'ac_add_options --enable-optimize'
-    echo 'ac_add_options --enable-proxy-bypass-protection'
-    echo 'ac_add_options --enable-release'
-    echo 'ac_add_options --enable-replace-malloc'
-    echo 'ac_add_options --enable-rust-simd'
-    echo 'ac_add_options --enable-strip'
-    echo 'ac_add_options --enable-update-channel=release'
-    echo 'ac_add_options --enable-wasm-branch-hinting'
-    echo 'ac_add_options --enable-wasm-memory-control'
-    
-    if [[ "$IRONFOX_RELEASE" == 1 ]]; then
-        echo 'ac_add_options --with-app-basename=IronFox'
-        echo 'ac_add_options --with-app-name=ironfox'
-        echo 'ac_add_options --with-branding=ironfox/branding/ironfox'
-    else
-        echo 'ac_add_options --with-app-basename="IronFox Nightly"'
-        echo 'ac_add_options --with-app-name=ironfox-nightly'
-        echo 'ac_add_options --with-branding=ironfox/branding/ironfox-nightly'
-    fi
-
-    echo 'ac_add_options --with-crashreporter-url="data;"'
-    echo 'ac_add_options --with-distribution-id=org.ironfoxoss'
-    echo "ac_add_options --with-java-bin-path=\"$JAVA_HOME/bin\""
-
-    if [[ -n "${target}" ]]; then
-        echo "ac_add_options --target=$target"
-    fi
-
-    echo "ac_add_options --with-android-ndk=\"$ANDROID_NDK\""
-    echo "ac_add_options --with-android-sdk=\"$ANDROID_HOME\""
-    echo "ac_add_options --with-gradle=$(command -v gradle)"
-    echo "ac_add_options --with-libclang-path=\"$libclang\""
-    echo "ac_add_options --with-wasi-sysroot=\"$wasi_install/share/wasi-sysroot\""
-    echo 'ac_add_options --without-adjust-sdk-keyfile'
-    echo 'ac_add_options --without-android-googlevr-sdk'
-    echo 'ac_add_options --without-bing-api-keyfile'
-    echo 'ac_add_options --without-google-location-service-api-keyfile'
-    echo 'ac_add_options --without-mozilla-api-keyfile'
-    echo 'ac_add_options --without-leanplum-sdk-keyfile'
-    echo 'ac_add_options --without-pocket-api-keyfile'
-
-    if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
-        echo "ac_add_options --with-google-safebrowsing-api-keyfile=${SB_GAPI_KEY_FILE}"
-    fi
-
-    echo "ac_add_options WASM_CC=\"$wasi_install/bin/clang\""
-    echo "ac_add_options WASM_CXX=\"$wasi_install/bin/clang++\""
-    echo "ac_add_options CC=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang\""
-    echo "ac_add_options CXX=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/clang++\""
-    echo "ac_add_options STRIP=\"$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/bin/llvm-strip\""
-    echo 'mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj'
-    echo "export ANDROID_BUNDLETOOL_PATH=\"$BUILDDIR/bundletool.jar\""
-    echo "export GRADLE_MAVEN_REPOSITORIES=\"file://$HOME/.m2/repository/\",\"https://plugins.gradle.org/m2/\",\"https://maven.google.com/\""
-    echo 'export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1'
-
-    if [[ "$IRONFOX_RELEASE" == 1 ]]; then
-        echo 'export MOZ_APP_BASENAME=IronFox'
-        echo 'export MOZ_APP_NAME=ironfox'
-        echo 'export MOZ_APP_REMOTINGNAME=ironfox'
-    else
-        echo 'export MOZ_APP_BASENAME="IronFox Nightly"'
-        echo 'export MOZ_APP_NAME=ironfox-nightly'
-        echo 'export MOZ_APP_REMOTINGNAME=ironfox-nightly'
-    fi
-
-    echo 'export MOZ_ARTIFACT_BUILDS='
-    echo 'export MOZ_CALLGRIND='
-    echo 'export MOZ_CRASHREPORTER='
-    echo 'export MOZ_CRASHREPORTER_URL="data;"'
-    echo 'export MOZ_DEBUG_FLAGS='
-    echo 'export MOZ_EXECUTION_TRACING='
-    echo 'export MOZ_INCLUDE_SOURCE_INFO=1'
-    echo 'export MOZ_INSTRUMENTS='
-    echo 'export MOZ_LTO=1'
-    echo 'export MOZ_PACKAGE_JSSHELL='
-    echo 'export MOZ_PGO=1'
-    echo 'export MOZ_PHC='
-    echo 'export MOZ_PROFILING='
-    echo 'export MOZ_REQUIRE_SIGNING='
-    echo 'export MOZ_RUST_SIMD=1'
-    echo 'export MOZ_SECURITY_HARDENING=1'
-    echo 'export MOZ_TELEMETRY_REPORTING='
-    echo 'export MOZ_VTUNE='
-    echo 'export MOZILLA_OFFICIAL=1'
-    echo 'export NODEJS='
-    echo 'export RUSTC_OPT_LEVEL=2'
-} >>mozconfig
 
 # Fail on use of prebuilt binary
 $SED -i 's|https://|hxxps://|' mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
@@ -1185,25 +1046,73 @@ $SED -i \
     -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.boolean"|' \
     mobile/android/app/geckoview-prefs.js
 
-{
-    cat "$patches/preferences/phoenix.js"
-    cat "$patches/preferences/phoenix-extended.js"
-    cat "$patches/preferences/ironfox.js"
-
-    if [[ -n ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
-        # Set uBlock Origin to use our custom/enhanced config by default
-        echo "pref(\"browser.ironfox.uBO.assetsBootstrapLocation\", \"${IRONFOX_UBO_ASSETS_URL}\");"
-    fi
-} >>mobile/android/app/geckoview-prefs.js
-
-{
-    cat "$patches/preferences/pdf.js"
-} >>toolkit/components/pdfjs/PdfJsOverridePrefs.js
-
-$SED -i "s|IRONFOX_VERSION|$IRONFOX_VERSION|" mobile/android/app/geckoview-prefs.js
-$SED -i "s|PHOENIX_VERSION|$PHOENIX_VERSION|" mobile/android/app/geckoview-prefs.js
+echo '' >>mobile/android/app/geckoview-prefs.js
+echo '#include ../../../ironfox/prefs/002-ironfox.js' >>mobile/android/app/geckoview-prefs.js
+echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDefaultPrefs.js
 
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
 
+{
+    if [[ -n "${target}" ]]; then
+        echo "## Target platform"
+        echo "ac_add_options --target='$target'"
+        echo ""
+    fi
+
+    if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
+        echo "## Enable Safe Browsing"
+        echo "ac_add_options --with-google-safebrowsing-api-keyfile='${SB_GAPI_KEY_FILE}'"
+    else
+        echo "## Disable Safe Browsing"
+        echo "### (SB_GAPI_KEY_FILE was undefined...)"
+        echo "ac_add_options --without-google-safebrowsing-api-keyfile"
+    fi
+
+    echo ""
+
+} >>mozconfig
+
+# Set variables for environment-specific arguments
+
+if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+    IRONFOX_APP_NAME='ironfox'
+    IRONFOX_BASE_NAME='IronFox'
+    IRONFOX_CHANNEL='release'
+else
+    IRONFOX_APP_NAME='ironfox-nightly'
+    IRONFOX_BASE_NAME='IronFox Nightly'
+    IRONFOX_CHANNEL='nightly'
+fi
+
+## local.properties
+$SED -i "s|{android_components}|$android_components|" local.properties
+$SED -i "s|{glean}|$glean|" local.properties
+$SED -i "s|{mozilla_release}|$mozilla_release|" local.properties
+
+## mozconfig
+$SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" mozconfig
+$SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" mozconfig
+$SED -i "s|{builddir}|$builddir|" mozconfig
+$SED -i "s|{GRADLE_PATH}|$(command -v gradle)|" mozconfig
+$SED -i "s|{HOME}|$HOME|" mozconfig
+$SED -i "s|{IRONFOX_APP_NAME}|$IRONFOX_APP_NAME|" mozconfig
+$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" mozconfig
+$SED -i "s|{JAVA_HOME}|$JAVA_HOME|" mozconfig
+$SED -i "s|{libclang}|$libclang|" mozconfig
+$SED -i "s|{PLATFORM}|$PLATFORM|" mozconfig
+$SED -i "s|{target}|$target|" mozconfig
+$SED -i "s|{wasi_install}|$wasi_install|" mozconfig
+
+# prefs
+$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_UBO_ASSETS_URL}|$IRONFOX_UBO_ASSETS_URL|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_VERSION}|$IRONFOX_VERSION|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{PHOENIX_VERSION}|$PHOENIX_VERSION|" ironfox/prefs/002-ironfox.js
+
 popd
+
+# Set current build revision
+## (ex. displayed at `about:buildconfig`)
+$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/mozconfig"

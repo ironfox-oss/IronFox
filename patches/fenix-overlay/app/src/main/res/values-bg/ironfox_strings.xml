@@ -70,7 +70,7 @@
     <string name="onboarding_state_installing_ublock">Инсталиране на uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Възникна грешка при инсталирането на uBlock Origin: %1$s</string>
     <string name="onboarding_action_retry">Опитай отново</string>
-    <string name="preference_webgl_disabled" translatable="false">Деактивиране на WebGL</string>
+    <string name="preference_webgl_disabled">Деактивиране на WebGL</string>
     <string name="preference_media_autoplay_title">Автоматично възпроизвеждане на медийно съдържание</string>
     <string name="preference_media_autoplay_description">Контролирайте как IronFox блокира автоматичното възпроизвеждане на медийни файлове.</string>
     <string name="preference_autoplay_policy_sticky">Лепкаво</string>

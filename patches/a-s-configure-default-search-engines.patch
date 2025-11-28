@@ -1,8 +1,8 @@
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
-index f3e54d3..f0d6786 100644
+index 316e5ce..fcc1564 100644
 --- a/components/remote_settings/src/client.rs
 +++ b/components/remote_settings/src/client.rs
-@@ -111,77 +111,12 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -111,77 +111,11 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
              "world-buffered",
          ],
          ("main", "search-config-icons") => [
@@ -78,7 +78,6 @@ index f3e54d3..f0d6786 100644
 -            "fe75ce3f-1545-400c-b28c-ad771054e69f",
 -            "fed4f021-ff3e-942a-010e-afa43fda2136",
 +            "7cd086c7-43f6-42fe-a240-17deeeef034b",
-+            "28e347e4-0188-48e4-8d45-45618c985b53",
 +            "b71f7782-aaa7-40de-9407-9fd505059b61",
 +            "be7ba9bc-d68f-4ba3-ad3b-4fc0aaea5f3c",
          ]

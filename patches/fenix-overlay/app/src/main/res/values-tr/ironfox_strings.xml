@@ -70,7 +70,7 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Zaman dilini sahtelemesini bazı webs sayfalarında bozulmaları azaltmak için devre dışı bırakır - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">IronFox\'tan WebGL devre dışı bırakılmasını etkinleştir</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">WebGL devre dışı bırakıldığında bazı web sayfalarında bozulmaları azaltmak için etkinleştirir - Bu ayarı değiştirmek tarayıcınızı yeniden başlatacaktır</string>
-    <string name="preference_webgl_disabled" translatable="false">WebGL\'i devre dışı bırak</string>
+    <string name="preference_webgl_disabled">WebGL\'i devre dışı bırak</string>
     <string name="preference_media_autoplay_title">Medya otomatik oynatma</string>
     <string name="preference_media_autoplay_description">Ironfox\'un medya otomatik oynatmasını nasıl engellediğini kontrol et.</string>
     <string name="preference_autoplay_policy_sticky">Yapışkan</string>

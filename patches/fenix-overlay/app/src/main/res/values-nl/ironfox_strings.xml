@@ -70,7 +70,7 @@
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Aanpassingen van IronFox voor het spoofen van de tijdzone inschakelen</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Aanpassingen van IronFox voor WebGL inschakelen</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Schakelt WebGL in voor bepaalde websites om problemen te voorkomen, ook wanneer WebGL globaal is uitgeschakeld - Na wijziging zal de browser opnieuw opstarten</string>
-    <string name="preference_webgl_disabled" translatable="false">WebGL uitschakelen</string>
+    <string name="preference_webgl_disabled">WebGL uitschakelen</string>
     <string name="preference_media_autoplay_title">Automatisch afspelen</string>
     <string name="preference_media_autoplay_description">Bepaal wanneer IronFox het automatisch afspelen van media toestaat.</string>
     <string name="preference_autoplay_policy_transient">Toestaan na snelle interactie met pagina (standaard)</string>

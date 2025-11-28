@@ -70,7 +70,7 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Desactiva las excepciones de simulación de zona horaria para ciertos sitios web por defecto, con el fin de reducir roturas – Cambiar esta configuración reiniciará el navegador</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Habilitar excepciones de WebGL de IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Cuando WebGL está deshabilitado, se vuelve a habilitar por defecto para ciertos sitios web con el fin de reducir errores – Cambiar esta configuración reiniciará el navegador</string>
-    <string name="preference_webgl_disabled" translatable="false">Deshabilitar WebGL</string>
+    <string name="preference_webgl_disabled">Deshabilitar WebGL</string>
     <string name="preference_media_autoplay_title">Reproducción automática de medios</string>
     <string name="preference_media_autoplay_description">Controla cómo IronFox bloquea la reproducción automática de medios.</string>
     <string name="preference_autoplay_policy_sticky">Fijo</string>

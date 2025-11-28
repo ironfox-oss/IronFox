@@ -24,13 +24,6 @@ fi
 
 set -euo pipefail
 
-# Set platform
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    PLATFORM=macos
-else
-    PLATFORM=linux
-fi
-
 build_type="$1"
 
 if [ "$build_type" != "apk" ] && [ "$build_type" != "bundle" ]; then
@@ -68,8 +61,8 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     # shellcheck disable=SC2154
     llvmtarget=$(cat "$builddir/targets_to_build")
     echo "building llvm for $llvmtarget"
-    cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang-16 \
-        -DCMAKE_CXX_COMPILER=clang++-16 -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
+    cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang-20 \
+        -DCMAKE_CXX_COMPILER=clang++-20 -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
         -DLLVM_USE_LINKER=lld -DLLVM_BINUTILS_INCDIR=/usr/include -DLLVM_ENABLE_PLUGINS=FORCE_ON \
         -DLLVM_DEFAULT_TARGET_TRIPLE="x86_64-unknown-linux-gnu"
     cmake --build build -j"$(nproc)"
@@ -107,7 +100,7 @@ pushd "$gmscore"
 if ! [[ -n ${FDROID_BUILD+x} ]]; then
     export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
 fi
-gradle -x javaDocReleaseGeneration \
+gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache -x javaDocReleaseGeneration \
     :play-services-ads-identifier:publishToMavenLocal \
     :play-services-base:publishToMavenLocal \
     :play-services-basement:publishToMavenLocal \
@@ -118,7 +111,8 @@ popd
 # shellcheck disable=SC2154
 pushd "$glean"
 export TARGET_CFLAGS=-DNDEBUG
-gradle publishToMavenLocal
+gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
+gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
 # shellcheck disable=SC2154
@@ -127,7 +121,7 @@ pushd "$application_services"
 # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
 # skips building the libraries as they are expected to be already downloaded in a CI environment
 # However, we want build those libraries always, so we set CI='' before invoking the script
-CI='' bash -c './libs/verify-android-environment.sh && gradle :tooling-nimbus-gradle:publishToMavenLocal'
+CI='' bash -c './libs/verify-android-environment.sh && gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :tooling-nimbus-gradle:publishToMavenLocal'
 popd
 
 # shellcheck disable=SC2154
@@ -144,25 +138,26 @@ echo "Running ./mach package-multi-locale..."
 MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 export MOZ_CHROME_MULTILOCALE
 
-echo "Running gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
-gradle -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
+echo "Running gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
+gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
 popd
 
 # shellcheck disable=SC2154
 pushd "$android_components"
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
 # otherwise automatically triggered publication of A-S will fail
-gradle :components:concept-fetch:publishToMavenLocal
+gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :components:concept-fetch:publishToMavenLocal
 # Enable the auto-publication workflow now that concept-fetch is published
-echo "autoPublish.application-services.dir=$application_services" >>local.properties
-gradle publishToMavenLocal
+echo "## Enable the auto-publication workflow for Application Services" >>"$mozilla_release/local.properties"
+echo "autoPublish.application-services.dir=$application_services" >>"$mozilla_release/local.properties"
+gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
 # shellcheck disable=SC2154
 pushd "$fenix"
 if [[ "$build_type" == "apk" ]]; then
-    gradle :app:assembleRelease
+    gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:assembleRelease
 elif [[ "$build_type" == "bundle" ]]; then
-    gradle :app:bundleRelease -Paab
+    gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:bundleRelease -Paab
 fi
 popd

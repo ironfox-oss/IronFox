@@ -70,7 +70,7 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">По умолчанию отключает подмену часового пояса на некоторых сайтах, чтобы избежать проблем с их работой - Изменение этой настройки перезапустит браузер</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Включить переопределения WebGL, созданные IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">По умолчанию включает WebGL на некоторых сайтах, даже если он отключён для всего браузера, чтобы избежать проблем с их работой - Изменение этой настройки перезапустит браузер</string>
-    <string name="preference_webgl_disabled" translatable="false">Отключить WebGL</string>
+    <string name="preference_webgl_disabled">Отключить WebGL</string>
     <string name="preference_media_autoplay_title">Автовоспроизведение медиа</string>
     <string name="preference_media_autoplay_description">Настройте, как IronFox будет блокировать автовоспроизведение медиа.</string>
     <string name="preference_autoplay_policy_sticky">Запоминать выбор</string>
