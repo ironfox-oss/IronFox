@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index f9711dc715..b2cfa79049 100644
+index ef4a29a39f..4003949f55 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1547,28 +1547,28 @@ projects:
+@@ -1554,28 +1554,28 @@ projects:
      - components:support-webextensions
      - components:tooling-lint
      - components:ui-icons
@@ -53,7 +53,7 @@ index f9711dc715..b2cfa79049 100644
    components:feature-webnotifications:
      description: Feature component for Web Notifications.
      path: components/feature/webnotifications
-@@ -1636,20 +1636,20 @@ projects:
+@@ -1644,20 +1644,20 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint
@@ -88,7 +88,7 @@ index f9711dc715..b2cfa79049 100644
    components:lib-dataprotect:
      description: A component using AndroidKeyStore to protect user data.
      path: components/lib/dataprotect
-@@ -1696,17 +1696,17 @@ projects:
+@@ -1704,17 +1704,17 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -117,7 +117,7 @@ index f9711dc715..b2cfa79049 100644
    components:lib-state:
      description: A library for maintaining application state.
      path: components/lib/state
-@@ -2042,22 +2042,22 @@ projects:
+@@ -2050,22 +2050,22 @@ projects:
      - components:support-test-libstate
      - components:support-utils
      - components:tooling-lint
@@ -156,7 +156,7 @@ index f9711dc715..b2cfa79049 100644
    components:service-location:
      description: A library for providing location-based services.
      path: components/service/location
-@@ -2072,24 +2072,24 @@ projects:
+@@ -2080,24 +2080,24 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint

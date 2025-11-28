@@ -70,13 +70,6 @@ patches:
     effect: "Ensures successful compilation of the browser."
     category: "Build System"
 
-  - file: "gecko-unbreak-wasi-sdk-20-clang.patch"
-    name: "Fix WASI SDK 20 clang Build Error"
-    description: "Fixes an upstream issue that prevents gecko from building with WASI SDK 20: https://bugzilla.mozilla.org/show_bug.cgi?id=1994063."
-    reason: "Required for builds with WASI SDK 20."
-    effect: "Ensures successful compilation of the browser."
-    category: "Build System"
-
   - file: "a-c-allow-build-date-override.patch"
     name: "Allow overriding the build date"
     description: "Allows devs to override the build date."
@@ -350,8 +343,6 @@ patches:
         - AdGuard
         - AdGuard (Unfiltered)
         - Cloudflare (Malware Protection)
-        - DNS0
-        - DNS0 (ZERO)
         - DNS4EU (Ad Blocking)
         - DNS4EU (Protective)
         - DNS4EU (Unfiltered)

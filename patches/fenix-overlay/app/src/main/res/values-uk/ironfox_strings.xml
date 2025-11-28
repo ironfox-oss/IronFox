@@ -70,7 +70,7 @@
     <string name="onboarding_state_installing_ublock">Встановлення uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Під час встановлення uBlock Origin сталася помилка: %1$s</string>
     <string name="onboarding_action_retry">Повторити спробу</string>
-    <string name="preference_webgl_disabled" translatable="false">Вимкнути WebGL</string>
+    <string name="preference_webgl_disabled">Вимкнути WebGL</string>
     <string name="preference_media_autoplay_title">Автоматичне відтворення медіафайлів</string>
     <string name="preference_media_autoplay_description">Керуйте тим, як IronFox блокує автоматичне відтворення медіафайлів.</string>
     <string name="preference_autoplay_policy_sticky">Липкий</string>

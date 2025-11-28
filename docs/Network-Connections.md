@@ -58,8 +58,6 @@ Note that disabling add-on updates is **NOT** recommended.
 - **AdGuard (Unfiltered)** - `https://unfiltered.adguard-dns.com/dns-query` - *[Privacy policy](https://adguard.com/privacy.html)*
 - **Cloudflare** - `https://mozilla.cloudflare-dns.com/dns-query` - *[Privacy policy](https://developers.cloudflare.com/1.1.1.1/privacy/cloudflare-resolver-firefox/)*
 - **Cloudflare (Malware Protection)** - `https://security.cloudflare-dns.com/dns-query` - *[Privacy policy](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/)*
-- **DNS0** - `https://dns0.eu` - *[Privacy policy](https://www.dns0.eu/privacy)*
-- **DNS0 (ZERO)** - `https://zero.dns0.eu` - *[Privacy policy](https://www.dns0.eu/privacy)*
 - **DNS4EU (Ad Blocking)** - `https://noads.joindns4.eu/dns-query` - *[Privacy policy](https://www.joindns4.eu/privacy-policy)*
 - **DNS4EU (Protective)** - `https://protective.joindns4.eu/dns-query` - *[Privacy policy](https://www.joindns4.eu/privacy-policy)*
 - **DNS4EU (Unfiltered)** - `https://unfiltered.joindns4.eu/dns-query` - *[Privacy policy](https://www.joindns4.eu/privacy-policy)*

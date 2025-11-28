@@ -58,6 +58,10 @@
       "firstPartyDomain": "jerseymikes.com"
     },
     {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "jspaint.app"
+    },
+    {
       "overrides": "-ScreenRect",
       "firstPartyDomain": "letterboxd.com"
     },
@@ -76,6 +80,10 @@
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "photopea.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "piskelapp.com"
     },
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",

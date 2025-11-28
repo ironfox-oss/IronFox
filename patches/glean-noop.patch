@@ -1,3 +1,16 @@
+diff --git a/glean-core/android/build.gradle b/glean-core/android/build.gradle
+index d2d114a..7a5bff0 100644
+--- a/glean-core/android/build.gradle
++++ b/glean-core/android/build.gradle
+@@ -199,7 +199,7 @@ def generateUniffiBindings = tasks.register("generateUniffiBindings") {
+     doFirst {
+         exec {
+             workingDir project.rootDir
+-            commandLine 'cargo', 'uniffi-bindgen', 'generate', '--no-format', "${project.projectDir}/${udlFilePath}", '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get()
++            commandLine '{uniffi}/uniffi-bindgen', 'generate', '--no-format', "${project.projectDir}/${udlFilePath}", '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get(), '--config', "${project.projectDir}/../uniffi.toml", '--lib-file', "${project.rootDir}/target/{libxul_dir}/libxul.so", '--crate', 'glean_core'
+         }
+     }
+     outputs.dir UNIFFI_OUT_DIR
 diff --git a/glean-core/android/proguard-rules-consumer.pro b/glean-core/android/proguard-rules-consumer.pro
 index 0ca6fc7..e365179 100644
 --- a/glean-core/android/proguard-rules-consumer.pro

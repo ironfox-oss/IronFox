@@ -70,7 +70,7 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Ve výchozím nastavení zakáže u některých stránek maskování časového pásma pro snížení jejich nefunkčnosti. Změna tohoto nastavení restartuje váš prohlížeč</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Povolit přepsání WebGL z projektu IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Pokud je WebGL zakázán, tato funkce jej povolí na určitých webových stránkách pro snížení nefunkčnosti stránek. Změna tohoto nastavení restartuje váš prohlížeč</string>
-    <string name="preference_webgl_disabled" translatable="false">Zakázat WebGL</string>
+    <string name="preference_webgl_disabled">Zakázat WebGL</string>
     <string name="preference_media_autoplay_title">Automatické přehrávání médií</string>
     <string name="preference_media_autoplay_description">Ovládání funkce blokování automatického přehrávání médií prohlížeče IronFox.</string>
     <string name="preference_autoplay_policy_sticky">Připnutý</string>

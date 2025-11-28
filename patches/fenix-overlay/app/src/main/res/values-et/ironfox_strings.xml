@@ -71,7 +71,7 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Vältimaks veebisaitide mittetoimimist, ära kasuta ajavööndi hämamist IronFoxi tiimi koostatud loendi alusel. Eeldab brauseri uuesti käivitamist</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Lõdvenda sinu täpsema tuvastamise vastaseid meetmeid WebGL-i lubamise kontekstis, mille on koostanud IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Kui WebGL on lülitatud välja, siis vältimaks veebisaitide mittetoimimist, luba mõnedes valitud saitides WebGL-i kasutamist IronFoxi koostatud loendi alusel. Eeldab sinu veebibrauseri uuesti käivitamist</string>
-    <string name="preference_webgl_disabled" translatable="false">Lülita WebGL välja</string>
+    <string name="preference_webgl_disabled">Lülita WebGL välja</string>
     <string name="preference_media_autoplay_title">Meediafailide automaatne esitamine</string>
     <string name="preference_media_autoplay_description">Halda meediafailide automaatse esitamise viisi IronFoxis.</string>
     <string name="preference_autoplay_policy_sticky">Kleepuv</string>

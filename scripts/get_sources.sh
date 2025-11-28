@@ -6,8 +6,13 @@ source "$(dirname $0)/versions.sh"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     PLATFORM=macos
+    PREBUILT_PLATFORM=osx
+    # Ensure we use GNU tar on macOS
+    TAR=gtar
 else
     PLATFORM=linux
+    PREBUILT_PLATFORM=linux
+    TAR=tar
 fi
 
 clone_repo() {
@@ -94,13 +99,13 @@ extract_rmtoplevel() {
             unzip -q "$archive_path" -d "$temp_dir"
             ;;
         *.tar.gz)
-            tar xzf "$archive_path" -C "$temp_dir"
+            $TAR xzf "$archive_path" -C "$temp_dir"
             ;;
         *.tar.xz)
-            tar xJf "$archive_path" -C "$temp_dir"
+            $TAR xJf "$archive_path" -C "$temp_dir"
             ;;
         *.tar.zst)
-            tar --zstd -xvf "$archive_path" -C "$temp_dir"
+            $TAR --zstd -xvf "$archive_path" -C "$temp_dir"
             ;;
         *)
             echo "Unsupported archive format: $archive_path"
@@ -176,41 +181,43 @@ clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_VERSI
 
 # Download Phoenix
 echo "Downloading Phoenix..."
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix.js" "$PATCHDIR/preferences/phoenix.js"
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix-extended.js" "$PATCHDIR/preferences/phoenix-extended.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/000-phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix-extended.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
 
 # Get WebAssembly SDK
 if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
-    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_VERSION"
+    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_BRANCH"
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
+
+    # We need to use a newer clang here, because A: Mozilla dropped support for using below 17, and B: it's just good practice
+    ## I'm using 20.1.8 specifically because it's listed in mozilla-central: https://searchfox.org/firefox-main/rev/ac83682a/taskcluster/kinds/fetch/toolchains.yml#392
+    rm -rf "$WASISDKDIR/src/llvm-project"
+    echo "Cloning llvm..."
+    clone_repo "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "llvmorg-$LLVM_VERSION"
 elif [[ "$PLATFORM" == "macos" ]]; then
-    echo "Downloading prebuilt wasi-sdk..."
-    download "https://github.com/celenityy/wasi-sdk/releases/download/$WASI_VERSION/$WASI_VERSION-firefox-osx.tar.xz" "$BUILDDIR/wasi-sdk.tar.xz"
-    mkdir -vp "$WASISDKDIR"
-    tar xJf "$BUILDDIR/wasi-sdk.tar.xz" -C "$WASISDKDIR"
+    echo "Downloading prebuilt wasi-sdk.."
+    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_OSX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 else
     echo "Downloading prebuilt wasi-sdk..."
-    download_and_extract "wasi-sdk" "https://github.com/itsaky/ironfox/releases/download/$WASI_VERSION/$WASI_VERSION-firefox.tar.xz"
+    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_LINUX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 fi
 
 # Get Tor's no-op UniFFi binding generator
-if [[ "$PLATFORM" == "macos" ]]; then
-    # Do nothing here, unfortunately this doesn't appear to work on macOS ATM
-    ## We don't ship or build releases from macOS; and regardless, we still stub Glean's Kotlin code through our glean-overlay, disable it entirely, etc - so, while this isn't ideal, it's not the end of the world - the biggest implication here is probably just extra space
-    echo "macOS: Doing nothing..."
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    echo "Cloning uniffi-bindgen..."
+    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_VERSION"
+elif [[ "$PLATFORM" == "macos" ]]; then
+    echo "Downloading prebuilt uniffi-bindgen..."
+    download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_OSX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 else
-    if [[ -n ${FDROID_BUILD+x} ]]; then
-        echo "Cloning uniffi-bindgen..."
-        clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_VERSION"
-    else
-        echo "Downloading prebuilt uniffi-bindgen..."
-        download_and_extract "uniffi" "https://tb-build-06.torproject.org/~tb-builder/tor-browser-build/out/uniffi-rs/uniffi-rs-$UNIFFI_REVISION.tar.zst"
-    fi
+    echo "Downloading prebuilt uniffi-bindgen..."
+    download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_LINUX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 fi
 
 # Clone application-services
 echo "Cloning application-services..."
+#clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDIR" "${APPSERVICES_VERSION}"
 git clone --branch "$APPSERVICES_VERSION" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
 
 # Clone Firefox

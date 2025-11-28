@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-index 028be832d6..47175dcf47 100644
+index 028be832d6..9d78b81c07 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-@@ -37,17 +37,77 @@ internal class DefaultDohSettingsProvider(
+@@ -37,17 +37,67 @@ internal class DefaultDohSettingsProvider(
  
      private val cloudflare = Provider.BuiltIn(
          url = cloudflareUri,
@@ -37,16 +37,6 @@ index 028be832d6..47175dcf47 100644
 +        name = "Cloudflare (Malware Protection) 🇺🇸",
 +        default = dohDefaultProviderUrl == cloudflareMalwareUri,
 +    )
-+    private val dns0Standard = Provider.BuiltIn(
-+        url = dns0StandardUri,
-+        name = "DNS0 🇫🇷",
-+        default = dohDefaultProviderUrl == dns0StandardUri,
-+    )
-+    private val dns0Zero = Provider.BuiltIn(
-+        url = dns0ZeroUri,
-+        name = "DNS0 (ZERO) 🇫🇷",
-+        default = dohDefaultProviderUrl == dns0ZeroUri,
-+    )
 +    private val dns4EuAdBlocking = Provider.BuiltIn(
 +        url = dns4EuAdBlockingUri,
 +        name = "DNS4EU (Ad Blocking) 🇨🇿",
@@ -80,11 +70,11 @@ index 028be832d6..47175dcf47 100644
      private val providerUrl = settings.dohProviderUrl
      private val custom = Provider.Custom(
 -        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri) {
-+        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri && providerUrl != quad9Uri && providerUrl != adGuardStandardUri && providerUrl != adGuardUnfilteredUri && providerUrl != cloudflareMalwareUri && providerUrl != dns0StandardUri && providerUrl != dns0ZeroUri && providerUrl != dns4EuAdBlockingUri && providerUrl != dns4EuProtectiveUri && providerUrl != dns4EuUnfilteredUri && providerUrl != mullvadBaseUri && providerUrl != mullvadUnfilteredUri && providerUrl != wikimediaUri) {
++        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri && providerUrl != quad9Uri && providerUrl != adGuardStandardUri && providerUrl != adGuardUnfilteredUri && providerUrl != cloudflareMalwareUri && providerUrl != dns4EuAdBlockingUri && providerUrl != dns4EuProtectiveUri && providerUrl != dns4EuUnfilteredUri && providerUrl != mullvadBaseUri && providerUrl != mullvadUnfilteredUri && providerUrl != wikimediaUri) {
              providerUrl
          } else {
              ""
-@@ -55,8 +115,20 @@ internal class DefaultDohSettingsProvider(
+@@ -55,8 +105,18 @@ internal class DefaultDohSettingsProvider(
      )
  
      override fun getDefaultProviders(): List<Provider> = listOf(
@@ -93,8 +83,6 @@ index 028be832d6..47175dcf47 100644
 +        adGuardUnfiltered,
          cloudflare,
 +        cloudflareMalware,
-+        dns0Standard,
-+        dns0Zero,
 +        dns4EuAdBlocking,
 +        dns4EuProtective,
 +        dns4EuUnfiltered,
@@ -105,7 +93,7 @@ index 028be832d6..47175dcf47 100644
          custom,
      )
  
-@@ -79,6 +151,18 @@ internal class DefaultDohSettingsProvider(
+@@ -79,6 +139,16 @@ internal class DefaultDohSettingsProvider(
                  when (settings.dohProviderUrl) {
                      cloudflareUri -> cloudflare
                      nextDnsUri -> nextDns
@@ -113,8 +101,6 @@ index 028be832d6..47175dcf47 100644
 +                    adGuardStandardUri -> adGuardStandard
 +                    adGuardUnfilteredUri -> adGuardUnfiltered
 +                    cloudflareMalwareUri -> cloudflareMalware
-+                    dns0StandardUri -> dns0Standard
-+                    dns0ZeroUri -> dns0Zero
 +                    dns4EuAdBlockingUri -> dns4EuAdBlocking
 +                    dns4EuProtectiveUri -> dns4EuProtective
 +                    dns4EuUnfilteredUri -> dns4EuUnfiltered
@@ -124,7 +110,7 @@ index 028be832d6..47175dcf47 100644
                      "" -> getDefaultProviders().first()
                      else -> custom
                  }
-@@ -122,5 +206,41 @@ internal class DefaultDohSettingsProvider(
+@@ -122,5 +192,35 @@ internal class DefaultDohSettingsProvider(
  
          @VisibleForTesting
          val nextDnsUri = "https://firefox.dns.nextdns.io/"
@@ -140,12 +126,6 @@ index 028be832d6..47175dcf47 100644
 +
 +        @VisibleForTesting
 +        val cloudflareMalwareUri = "https://security.cloudflare-dns.com/dns-query"
-+
-+        @VisibleForTesting
-+        val dns0StandardUri = "https://dns0.eu"
-+
-+        @VisibleForTesting
-+        val dns0ZeroUri = "https://zero.dns0.eu"
 +
 +        @VisibleForTesting
 +        val dns4EuAdBlockingUri = "https://noads.joindns4.eu/dns-query"

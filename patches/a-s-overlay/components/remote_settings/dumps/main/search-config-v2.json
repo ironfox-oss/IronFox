@@ -329,74 +329,6 @@
     {
       "base": {
         "aliases": [
-          "letabrave",
-          "letab"
-        ],
-        "classification": "general",
-        "name": "Mullvad Leta (Brave)",
-        "urls": {
-          "search": {
-            "base": "https://leta.mullvad.net/",
-            "params": [
-              {
-                "name": "engine",
-                "value": "brave"
-              }
-            ],
-            "searchTermParamName": "q"
-          }
-        }
-      },
-      "id": "737176c9-0202-42b1-b77a-fefffb777b94",
-      "identifier": "leta-brave",
-      "last_modified": 1718719100285,
-      "recordType": "engine",
-      "schema": 1718698362015,
-      "variants": [
-        {
-          "environment": {
-            "allRegionsAndLocales": true
-          }
-        }
-      ]
-    },
-    {
-      "base": {
-        "aliases": [
-          "letagoogle",
-          "letag"
-        ],
-        "classification": "general",
-        "name": "Mullvad Leta (Google)",
-        "urls": {
-          "search": {
-            "base": "https://leta.mullvad.net/",
-            "params": [
-              {
-                "name": "engine",
-                "value": "google"
-              }
-            ],
-            "searchTermParamName": "q"
-          }
-        }
-      },
-      "id": "12de41bc-a533-4cbb-9d5b-40ecf419748d",
-      "identifier": "leta-google",
-      "last_modified": 1718719100285,
-      "recordType": "engine",
-      "schema": 1718698362015,
-      "variants": [
-        {
-          "environment": {
-            "allRegionsAndLocales": true
-          }
-        }
-      ]
-    },
-    {
-      "base": {
-        "aliases": [
           "startpage",
           "sp"
         ],
@@ -4067,8 +3999,6 @@
             "ddglite",
             "marginalia",
             "mojeek",
-            "leta-brave",
-            "leta-google",
             "startpage",
             "startpage-eu",
             "wikipedia*",
