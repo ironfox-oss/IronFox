@@ -138,11 +138,19 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "mapple.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "mathplayzone.com"
     },
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "minecraft.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "neal.fun"
     },
     {
       "overrides": "-DisableWebGL",
