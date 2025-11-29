@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!-- Media autoplay -->
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category_no_icon_style"
+        android:selectable="false"
+        android:title="@string/preference_media_autoplay_title"
+        app:iconSpaceReserved="false">
+        <androidx.preference.Preference
+            android:key="@string/pref_key_media_autoplay_description"
+            android:title=""
+            android:summary="@string/preference_media_autoplay_description"
+            android:selectable="false"
+            app:allowDividerAbove="false"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should use the sticky media autoplay blocking policy -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_autoplay_policy_sticky"
+            android:title="@string/preference_autoplay_policy_sticky" />
+
+        <!-- Whether we should use the transient media autoplay blocking policy -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_autoplay_policy_transient"
+            android:title="@string/preference_autoplay_policy_transient" />
+
+        <!-- Whether we should use the click-to-play media autoplay blocking policy -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_autoplay_policy_click_to_play"
+            android:title="@string/preference_autoplay_policy_click_to_play" />
+    </androidx.preference.PreferenceCategory>
+
+    <!-- Preferred website appearance -->
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category_no_icon_style"
+        android:selectable="false"
+        android:title="@string/preference_website_appearance_title"
+        app:iconSpaceReserved="false">
+        <androidx.preference.Preference
+            android:key="@string/pref_key_website_appearance_description"
+            android:title=""
+            android:summary="@string/preference_website_appearance_description"
+            android:selectable="false"
+            app:allowDividerAbove="false"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should set CSS prefers-color-scheme to light -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_prefers_light_color_scheme"
+            android:title="@string/preference_prefers_light_color_scheme" />
+
+        <!-- Whether we should set CSS prefers-color-scheme to dark -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_prefers_dark_color_scheme"
+            android:title="@string/preference_prefers_dark_color_scheme" />
+
+        <!-- Whether we should set CSS prefers-color-scheme to follow the browser's theme -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_prefers_browser_color_scheme"
+            android:title="@string/preference_prefers_browser_color_scheme" />
+    </androidx.preference.PreferenceCategory>
+
+    <!-- Privacy and Security -->
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category_no_icon_style"
+        android:selectable="false"
+        android:title="@string/if_preferences_privacy_security"
+        app:iconSpaceReserved="false">
+
+        <!-- Whether we should disable WebGL -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_webgl_disabled"
+            android:title="@string/preference_webgl_disabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable Accessibility Services -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_accessibility_enabled"
+            android:title="@string/preference_accessibility_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable JavaScript -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_javascript_enabled"
+            android:title="@string/preference_javascript_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable our WebGL overrides -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:dependency="@string/pref_key_webgl_disabled"
+            android:key="@string/pref_key_fpp_overrides_ironfox_webgl_enabled"
+            android:summary="@string/preference_fpp_overrides_ironfox_webgl_summary"
+            android:title="@string/preference_fpp_overrides_ironfox_webgl_enabled"
+            app:iconSpaceReserved="false" />
+    </androidx.preference.PreferenceCategory>
+
+    <!-- Privacy -->
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category_no_icon_style"
+        android:selectable="false"
+        android:title="@string/if_preferences_privacy"
+        app:iconSpaceReserved="false">
+
+        <!-- Cross-origin referer policy -->
+        <androidx.preference.Preference
+            android:key="@string/pref_key_referer_policy"
+            android:title="@string/preference_referer_policy"
+            android:summary="@string/preference_referer_policy_summary"
+            app:allowDividerAbove="false"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should always send cross-origin referers -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_referer_policy_always"
+            android:title="@string/preference_referer_policy_always" />
+
+        <!-- Whether we should only send cross-origin referers when base domains match -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_referer_policy_base_domains_match"
+            android:title="@string/preference_referer_policy_base_domains_match" />
+
+        <!-- Whether we should disable cross-origin referers -->
+        <org.mozilla.fenix.settings.RadioButtonPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_referer_policy_hosts_match"
+            android:title="@string/preference_referer_policy_hosts_match" />
+
+        <!-- Whether we should enable disk cache -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_cache_enabled"
+            android:title="@string/preference_cache_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable our FPP overrides -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_fpp_overrides_ironfox_enabled"
+            android:summary="@string/preference_fpp_overrides_ironfox_summary"
+            android:title="@string/preference_fpp_overrides_ironfox_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable Mozilla's FPP overrides -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_fpp_overrides_mozilla_enabled"
+            android:summary="@string/preference_fpp_overrides_mozilla_summary"
+            android:title="@string/preference_fpp_overrides_mozilla_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable our timezone spoofing overrides -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:dependency="@string/pref_key_spoof_timezone"
+            android:key="@string/pref_key_fpp_overrides_ironfox_timezone_enabled"
+            android:summary="@string/preference_fpp_overrides_ironfox_timezone_summary"
+            android:title="@string/preference_fpp_overrides_ironfox_timezone_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should spoof the user's locale to en-US -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_spoof_english"
+            android:summary="@string/tor_spoof_english_summary"
+            android:title="@string/tor_spoof_english"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should spoof the user's timezone to UTC-0 -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_spoof_timezone"
+            android:summary="@string/spoof_timezone_summary"
+            android:title="@string/spoof_timezone"
+            app:iconSpaceReserved="false" />
+    </androidx.preference.PreferenceCategory>
+
+    <!-- Security -->
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category_no_icon_style"
+        android:selectable="false"
+        android:title="@string/if_preferences_security"
+        app:iconSpaceReserved="false">
+
+        <!-- Whether we should allow the installation of add-ons -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_xpinstall_enabled"
+            android:summary="@string/restart_required_summary"
+            android:title="@string/preference_xpinstall_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable JavaScript Just-in-time Compilation (JIT) -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/pref_key_javascript_enabled"
+            android:key="@string/pref_key_jit_enabled"
+            android:summary="@string/preference_jit_enabled_summary"
+            android:title="@string/preference_jit_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable JavaScript Just-in-time Compilation (JIT) for extensions -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/pref_key_javascript_enabled"
+            android:key="@string/pref_key_jit_trusted_principals_enabled"
+            android:summary="@string/preference_jit_trusted_principals_enabled_summary"
+            android:title="@string/preference_jit_trusted_principals_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable printing capabilities -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_print_enabled"
+            android:title="@string/preference_print_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable Safe Browsing -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_safe_browsing_enabled"
+            android:summary="@string/preference_safe_browsing_enabled_summary"
+            app:iconSpaceReserved="false"
+            android:title="@string/preference_safe_browsing_enabled" />
+
+        <!-- Whether we should enable Scalar Vector Graphics (SVG) -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_svg_enabled"
+            android:summary="@string/restart_required_summary"
+            android:title="@string/preference_svg_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable WebAssembly (WASM) -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:dependency="@string/pref_key_javascript_enabled"
+            android:key="@string/pref_key_wasm_enabled"
+            android:title="@string/preference_wasm_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable WebRTC globally -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_webrtc_enabled"
+            android:title="@string/preference_webrtc_enabled"
+            app:iconSpaceReserved="false" />
+    </androidx.preference.PreferenceCategory>
+
+    <!-- Miscellaneous -->
+    <androidx.preference.PreferenceCategory
+        android:layout="@layout/preference_category_no_icon_style"
+        android:selectable="false"
+        android:title="@string/if_preferences_misc"
+        app:iconSpaceReserved="false">
+
+        <!-- Whether we should enable collections -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_collections_enabled"
+            android:title="@string/preference_collections_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable Firefox Translations -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_translations_enabled"
+            android:summary="@string/restart_required_summary"
+            android:title="@string/preference_translations_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should enable IPv6 network connectivity -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/pref_key_ipv6_enabled"
+            android:title="@string/preference_ipv6_enabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should disable PDF.js -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_pdfjs_disabled"
+            android:title="@string/preference_pdfjs_disabled"
+            app:iconSpaceReserved="false" />
+
+        <!-- Whether we should use UnifiedPush to deliver push notifications -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_use_unifiedpush"
+            android:summary="@string/restart_required_summary"
+            android:title="@string/preferences_unifiedpush"
+            app:iconSpaceReserved="false" />
+    </androidx.preference.PreferenceCategory>
+
+    <!-- Secret settings -->
+    <androidx.preference.PreferenceCategory
+        android:key="@string/pref_key_if_secret"
+        android:layout="@layout/preference_category_no_icon_style"
+        android:selectable="false"
+        android:title="@string/if_preferences_secret">
+
+    <!-- Whether we should enable UnifiedPush -->
+    <androidx.preference.SwitchPreference
+        android:defaultValue="true"
+        android:key="@string/pref_key_enable_unifiedpush"
+        android:title="@string/preferences_debug_settings_unifiedpush"
+        app:iconSpaceReserved="false" />
+
+    <!-- Whether we should enable Encrypted Media Extensions (EME) -->
+    <androidx.preference.SwitchPreference
+        android:defaultValue="false"
+        android:key="@string/pref_key_eme_enabled"
+        android:title="@string/preferences_debug_settings_eme_enabled"
+        android:summary="@string/unsupported_summary"
+        app:iconSpaceReserved="false" />
+
+    <!-- Whether we should enable the Google Widevine CDM -->
+    <androidx.preference.SwitchPreference
+        android:defaultValue="false"
+        android:dependency="@string/pref_key_eme_enabled"
+        android:key="@string/pref_key_widevine_enabled"
+        android:title="@string/preferences_debug_settings_widevine_enabled"
+        android:summary="@string/unsupported_summary"
+        app:iconSpaceReserved="false" />
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
