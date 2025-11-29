@@ -2,7 +2,7 @@
 ironfox.jar:
 % content ironfox %content/ironfox/ contentaccessible=yes
 
-    content/ironfox/attribution.css              (attribution.css)
-    content/ironfox/attribution.html             (attribution.html)
-    content/ironfox/ironfox.css                  (ironfox.css)
-    content/ironfox/ironfox.html                 (ironfox.html)
+    content/ironfox/attribution.css              (attribution/attribution.css)
+    content/ironfox/attribution.html             (attribution/attribution.html)
+    content/ironfox/ironfox.css                  (ironfox/ironfox.css)
+    content/ironfox/ironfox.html                 (ironfox/ironfox.html)

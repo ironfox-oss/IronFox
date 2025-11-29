@@ -1,0 +1,9 @@
+
+DIRS += [
+    "locales",
+    "robots",
+]
+
+JAR_MANIFESTS += [
+    "jar.mn",
+]

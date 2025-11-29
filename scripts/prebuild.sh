@@ -614,23 +614,28 @@ fi
 ## (ex. displayed at `about:buildconfig`)
 $SED -i 's|/rev/|/commit/|' build/variables.py
 
-$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/ironfox\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
-$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/ironfox\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
-$SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
-$SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution')" docshell/build/components.conf
-
+# about: pages
+echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/browser@JAREXT@' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/browser.manifest' >>mobile/android/installer/package-manifest.in
 echo '' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox@JAREXT@' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox.manifest' >>mobile/android/installer/package-manifest.in
 
 # about:policies
-mkdir -vp ironfox/enterprisepolicies/locales/en-US/browser/policies
-cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/enterprisepolicies/locales/en-US/browser/
-cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/enterprisepolicies/locales/en-US/browser/policies/
-echo '' >>mobile/android/installer/package-manifest.in
-echo '@BINPATH@/chrome/browser@JAREXT@' >>mobile/android/installer/package-manifest.in
-echo '@BINPATH@/chrome/browser.manifest' >>mobile/android/installer/package-manifest.in
-$SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
+mkdir -vp ironfox/about/browser/locales/en-US/browser/policies
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/about/browser/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/about/browser/locales/en-US/browser/policies/
+
+# about:robots
+mkdir -vp ironfox/about/robots/content
+cp -vf browser/base/content/aboutRobots.css ironfox/about/robots/content/
+cp -vf browser/base/content/aboutRobots.js ironfox/about/robots/content/
+cp -vf browser/base/content/aboutRobots.xhtml ironfox/about/robots/content/
+cp -vf browser/base/content/aboutRobots-icon.png ironfox/about/robots/content/
+cp -vf browser/base/content/robot.ico ironfox/about/robots/content/
+cp -vf browser/base/content/static-robot.png ironfox/about/robots/content/
+cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/about/browser/locales/en-US/browser/
 
 # Ensure we're building for release
 $SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
