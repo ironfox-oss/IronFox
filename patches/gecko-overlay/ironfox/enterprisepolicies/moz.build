@@ -1,0 +1,12 @@
+
+DIRS += [
+    "../../browser/components/enterprisepolicies",
+    "locales",
+]
+
+JAR_MANIFESTS += [
+    "jar.mn",
+]
+
+Library("browsercomps")
+FINAL_LIBRARY = "xul"

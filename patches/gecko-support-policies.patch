@@ -1,15 +1,3 @@
-diff --git a/browser/components/enterprisepolicies/moz.build b/browser/components/enterprisepolicies/moz.build
-index 047108084b..ff45016d77 100644
---- a/browser/components/enterprisepolicies/moz.build
-+++ b/browser/components/enterprisepolicies/moz.build
-@@ -20,6 +20,6 @@ EXTRA_JS_MODULES.policies += [
-     "Policies.sys.mjs",
- ]
- 
--FINAL_LIBRARY = "browsercomps"
-+FINAL_LIBRARY = "xul"
- 
- JAR_MANIFESTS += ["jar.mn"]
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
 index 625640eef4..db7ffb1ba6 100644
 --- a/docshell/base/nsAboutRedirector.cpp
@@ -25,17 +13,6 @@ index 625640eef4..db7ffb1ba6 100644
  static const int kRedirTotal = std::size(kRedirMap);
  
  NS_IMETHODIMP
-diff --git a/mobile/android/components/moz.build b/mobile/android/components/moz.build
-index 7b81c01e71..fa4dba3ed0 100644
---- a/mobile/android/components/moz.build
-+++ b/mobile/android/components/moz.build
-@@ -8,5 +8,6 @@ with Files("**"):
-     BUG_COMPONENT = ("GeckoView", "General")
- 
- DIRS += [
-+    "enterprisepolicies",
-     "geckoview",
- ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 index bb451a2795..010d73bb37 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs

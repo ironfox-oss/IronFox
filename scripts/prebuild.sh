@@ -620,16 +620,13 @@ $SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" 
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution')" docshell/build/components.conf
 
 # about:policies
-$SED -i -e 's/browser.jar/geckoview.jar/g' browser/components/enterprisepolicies/jar.mn
-mkdir -vp ironfox/locales/en-US/browser/policies
-cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/locales/en-US/browser/
-cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/locales/en-US/browser/policies/
-echo '' >>mobile/shared/chrome/geckoview/jar.mn
-echo '% content browser %content/browser/' >>mobile/shared/chrome/geckoview/jar.mn
+mkdir -vp ironfox/enterprisepolicies/locales/en-US/browser/policies
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/enterprisepolicies/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/enterprisepolicies/locales/en-US/browser/policies/
+echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/browser@JAREXT@' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/browser.manifest' >>mobile/android/installer/package-manifest.in
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
-
-# Copy policy definitions/schema/etc. from Firefox for Desktop
-cp -vrf browser/components/enterprisepolicies mobile/android/components
 
 # Ensure we're building for release
 $SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
