@@ -614,10 +614,14 @@ fi
 ## (ex. displayed at `about:buildconfig`)
 $SED -i 's|/rev/|/commit/|' build/variables.py
 
-$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/global\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
-$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
+$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/ironfox\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
+$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/ironfox\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
 $SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution')" docshell/build/components.conf
+
+echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/ironfox@JAREXT@' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/ironfox.manifest' >>mobile/android/installer/package-manifest.in
 
 # about:policies
 mkdir -vp ironfox/enterprisepolicies/locales/en-US/browser/policies
