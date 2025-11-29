@@ -317,7 +317,12 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
         /**
          * Indicates whether or not we should enable JavaScript Just-in-time Compilation (JIT)
          * Default: false
-         * Gecko preference(s) impacted: javascript.options.baselinejit, javascript.options.ion, javascript.options.jithints, javascript.options.native_regexp, and javascript.options.wasm_optimizingjit
+         * Gecko preference(s) impacted:
+         *  javascript.options.baselinejit,
+         *  javascript.options.ion,
+         *  javascript.options.jithints,
+         *  javascript.options.native_regexp,
+         *  javascript.options.wasm_optimizingjit
          */
         val javascriptJitEnabledPreference = requirePreference<SwitchPreference>(
             R.string.pref_key_jit_enabled,
