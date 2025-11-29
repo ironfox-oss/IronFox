@@ -628,13 +628,13 @@ cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/about/browser/loc
 cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/about/browser/locales/en-US/browser/policies/
 
 # about:robots
-mkdir -vp ironfox/about/robots/content
-cp -vf browser/base/content/aboutRobots.css ironfox/about/robots/content/
-cp -vf browser/base/content/aboutRobots.js ironfox/about/robots/content/
-cp -vf browser/base/content/aboutRobots.xhtml ironfox/about/robots/content/
-cp -vf browser/base/content/aboutRobots-icon.png ironfox/about/robots/content/
-cp -vf browser/base/content/robot.ico ironfox/about/robots/content/
-cp -vf browser/base/content/static-robot.png ironfox/about/robots/content/
+mkdir -vp ironfox/about/browser/robots/content
+cp -vf browser/base/content/aboutRobots.css ironfox/about/browser/robots/content/
+cp -vf browser/base/content/aboutRobots.js ironfox/about/browser/robots/content/
+cp -vf browser/base/content/aboutRobots.xhtml ironfox/about/browser/robots/content/
+cp -vf browser/base/content/aboutRobots-icon.png ironfox/about/browser/robots/content/
+cp -vf browser/base/content/robot.ico ironfox/about/browser/robots/content/
+cp -vf browser/base/content/static-robot.png ironfox/about/browser/robots/content/
 cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/about/browser/locales/en-US/browser/
 
 # Ensure we're building for release
