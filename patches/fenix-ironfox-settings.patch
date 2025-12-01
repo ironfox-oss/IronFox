@@ -1,51 +1,20 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 2be5597f36..22ffd0bdfb 100644
+index 2be5597f36..1b3866a281 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -195,6 +195,38 @@ class Core(
-             bannedPorts = FxNimbus.features.networkingBannedPorts.value().bannedPortList,
-             lnaBlockingEnabled = context.settings().isLnaBlockingEnabled,
-             crliteChannel = FxNimbus.features.pki.value().crliteChannel,
-+            accessibilityEnabled = context.settings().accessibilityEnabled,
-+            addressAutofillEnabled = context.settings().shouldAutofillAddressDetails,
-+            autoplayBlockingPolicy = context.settings().getAutoplayBlockingPolicy(),
-+            cacheEnabled = context.settings().cacheEnabled,
-+            cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails,
-+            emeEnabled = context.settings().emeEnabled,
-+            fppOverridesIronFoxEnabled = context.settings().fppOverridesIronFoxEnabled,
-+            fppOverridesIronFoxTimezoneEnabled = context.settings().fppOverridesIronFoxTimezoneEnabled,
-+            fppOverridesIronFoxWebGLEnabled = context.settings().fppOverridesIronFoxWebGLEnabled,
-+            fppOverridesMozillaEnabled = context.settings().fppOverridesMozillaEnabled,
-+            ipv6Enabled = context.settings().ipv6Enabled,
-+            javascriptEnabled = context.settings().javascriptEnabled,
-+            javascriptJitBaselineEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitHintsEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitIonEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitIonWasmEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitNativeRegexpEnabled = context.settings().javascriptJitEnabled,
-+            javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled,
-+            passwordManagerEnabled = context.settings().shouldPromptToSaveLogins,
-+            pdfjsDisabled = context.settings().pdfjsDisabled,
-+            printEnabled = context.settings().printEnabled,
-+            refererXOriginPolicy = context.settings().getRefererXOriginPolicy(),
-+            spoofEnglish = context.settings().spoofEnglish,
-+            spoofTimezone = context.settings().spoofTimezone,
-+            svgEnabled = context.settings().svgEnabled,
-+            translationsEnabled = context.settings().translationsEnabled,
-+            translationsSupported = context.settings().translationsEnabled,
-+            wasmEnabled = context.settings().wasmEnabled,
-+            webglDisabled = context.settings().webglDisabled,
-+            webrtcEnabled = context.settings().webrtcEnabled,
-+            widevineEnabled = context.settings().widevineEnabled,
-+            xpinstallEnabled = context.settings().xpinstallEnabled,
-         )
+@@ -136,6 +136,7 @@ import org.mozilla.geckoview.GeckoRuntime
+ import java.util.UUID
+ import java.util.concurrent.TimeUnit
+ import mozilla.components.service.pocket.mars.api.Placement as MarsSpocsPlacement
++import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
  
-         // Apply fingerprinting protection overrides if the feature is enabled in Nimbus
-@@ -228,6 +260,7 @@ class Core(
+ /**
+  * Component group for all core browser functionality.
+@@ -228,6 +229,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
-+            GeckoProvider.setupSafeBrowsing(it, context.settings().safeBrowsingEnabled)
++            GeckoSettingsBridge.setIronFoxPrefs(context, it)
              WebCompatFeature.install(it)
          }
      }
@@ -82,19 +51,10 @@ index e1a67a6da4..a98b4656aa 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..f27ee6b414 100644
+index 1c7b0fce0d..78eb5d9698 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -75,6 +75,8 @@ import org.mozilla.fenix.wallpapers.Wallpaper
- import java.security.InvalidParameterException
- import java.util.UUID
- import java.util.concurrent.TimeUnit.MILLISECONDS
-+import mozilla.components.concept.engine.Engine.AutoplayBlockingPolicy
-+import mozilla.components.concept.engine.Engine.RefererXOriginPolicy
- 
- private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
- 
-@@ -2736,4 +2738,198 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2736,4 +2736,169 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -259,39 +219,10 @@ index 1c7b0fce0d..f27ee6b414 100644
 +        default = true,
 +    )
 +
-+    var widevineEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_widevine_enabled),
-+        default = false,
-+    )
-+
 +    var xpinstallEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_xpinstall_enabled),
 +        default = false,
 +    )
-+
-+    fun getAutoplayBlockingPolicy(): AutoplayBlockingPolicy {
-+        return if (autoplayBlockingSticky) {
-+            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_STICKY
-+        } else if (autoplayBlockingTransient) {
-+            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT
-+        } else if (autoplayBlockingClickToPlay) {
-+            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_CLICKTOPLAY
-+        } else {
-+            AutoplayBlockingPolicy.AUTOPLAY_BLOCKING_TRANSIENT
-+        }
-+    }
-+
-+    fun getRefererXOriginPolicy(): RefererXOriginPolicy {
-+        return if (refererXOriginAlways) {
-+            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
-+        } else if (refererXOriginBaseDomainsMatch) {
-+            RefererXOriginPolicy.REFERER_XORIGIN_IF_BASE_DOMAINS_MATCH
-+        } else if (refererXOriginHostsMatch) {
-+            RefererXOriginPolicy.REFERER_XORIGIN_IF_HOSTS_MATCH
-+        } else {
-+            RefererXOriginPolicy.REFERER_XORIGIN_ALWAYS
-+        }
-+    }
  }
 diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 index a4fd0897fa..634f9c1b8c 100644

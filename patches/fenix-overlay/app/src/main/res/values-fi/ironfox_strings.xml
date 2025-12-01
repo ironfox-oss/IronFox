@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Lähetä viittausdata kun verkkotunnuksen perusosa täsmää</string>
     <string name="preference_referer_policy_hosts_match">Älä lähetä viittausdataa</string>
     <string name="preference_cache_enabled">Ota käyttöön levyn välimuisti</string>
-    <string name="preferences_debug_settings_eme_enabled">Ota käyttöön Salatut medialaajennokset (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Ota käyttöön Widewine CDM</string>
     <string name="preference_ipv6_enabled">Ota käyttöön IPv6 verkkoyhteys</string>
     <string name="preference_javascript_enabled">Ota käyttöön JavaScript</string>
     <string name="preference_jit_enabled">Ota käyttöön JavaScript Just-in-time kääntäminen (JIT)</string>

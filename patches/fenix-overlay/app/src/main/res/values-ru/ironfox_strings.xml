@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Отправлять междоменные рефереры при совпадении базовых доменов</string>
     <string name="preference_referer_policy_hosts_match">Не отправлять междоменные рефереры</string>
     <string name="preference_cache_enabled">Включить кэш диска</string>
-    <string name="preferences_debug_settings_eme_enabled">Включить поддержку зашифрованного контента (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Включить Widevine CDM</string>
     <string name="preference_ipv6_enabled">Включить поддержку IPv6</string>
     <string name="preference_javascript_enabled">Включить JavaScript</string>
     <string name="preference_jit_enabled">Включить JavaScript Just-in-time Compilation (JIT)</string>

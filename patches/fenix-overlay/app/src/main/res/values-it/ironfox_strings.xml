@@ -11,8 +11,6 @@
     <string name="preference_accessibility_enabled">Servizi di accessibilità</string>
     <string name="preference_collections_enabled">Collezioni</string>
     <string name="preference_cache_enabled">Abilita cache nel disco</string>
-    <string name="preferences_debug_settings_eme_enabled">Abilita Encrypted Media Extensions (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Abilita Widevine CDM</string>
     <string name="preference_translations_enabled">Abilita le traduzioni di Firefox</string>
     <string name="preference_fpp_overrides_ironfox_enabled">Abilita l\'override di Ironfox sulla protezione da fingerprinting</string>
     <string name="preference_fpp_overrides_ironfox_summary">Allenta di default la protezione da fingerprinting per alcuni siti web utilizzando una lista di IronFox - Cambiando questa impostazioni il tuo browser si riavvierà</string>

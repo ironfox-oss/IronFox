@@ -615,6 +615,20 @@ patches:
     effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
     category: "User Experience"
 
+  - file: "fenix-control-autofill-gecko.patch"
+    name: "Control Gecko Autofill From UI Settings"
+    description: "If autofill is enabled/disabled from the browser's UI settings, this patch also enables/disables support for it within Gecko."
+    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that autofill functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI settings."
+    effect: "Users can fully disable address/credit card autofill functionality from the UI."
+    category: "User Experience"
+
+  - file: "fenix-control-password-mgr-gecko.patch"
+    name: "Control Gecko Password Manager From UI Settings"
+    description: "If the password manager is enabled/disabled from the browser's UI settings, this patch also enables/disables support for it within Gecko."
+    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that password manager functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI setting."
+    effect: "Users can fully disable password manager functionality from the UI."
+    category: "User Experience"
+
   # User Interface
   - file: "fenix-ironfox-branding.patch"
     name: "IronFox Branding"
@@ -680,25 +694,9 @@ patches:
     effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
     category: "User Interface"
 
-  - file: "a-c-ironfox-settings.patch"
-    name: "IronFox Settings (Android Components)"
-    description: "Adds support to Mozilla's Android Components for IronFox-specific UI settings to control various functionality."
-    reason: |
-      To allow users to easily control their browsing experience.
-    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
-    category: "User Interface"
-
   - file: "fenix-ironfox-settings.patch"
     name: "IronFox Settings (Fenix)"
     description: "Adds support to Fenix (Firefox for Android) for IronFox-specific UI settings to control various functionality."
-    reason: |
-      To allow users to easily control their browsing experience.
-    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
-    category: "User Interface"
-
-  - file: "geckoview-ironfox-settings.patch"
-    name: "IronFox Settings (GeckoView)"
-    description: "Adds support to GeckoView for IronFox-specific UI settings to control various functionality."
     reason: |
       To allow users to easily control their browsing experience.
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
@@ -719,39 +717,18 @@ patches:
     effect: "Users are provided with a cleaner, focused browsing experience."
     category: "User Interface"
 
+  - file: "fenix-hide-eme.patch"
+    name: "Hide Encrypted Media Extensions (EME) UI Elements"
+    description: "Hides UI for the EME site permision, due to it being not supported or recommended by IronFox."
+    reason: "To hide the UI for DRM-controlled content (EME) by default, unless the user enables EME from the about:config, at their own risk."
+    effect: "The UI/site permission for DRM-controlled content (EME) is hidden by default, but is re-enabled if EME is enabled from the about:config."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-accessibility-services.patch"
     name: "IronFox Settings (Fenix) - Accessibility services"
     description: "Provides support for a UI toggle to enable/disable accessibility services."
     reason: "To disable accessibility services by default (due to privacy and security concerns), while still allowing users who need it to re-enable it if desired."
     effect: "Integration with accessibility services are disabled by default, but users can re-enable it from the UI."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-eme.patch"
-    name: "IronFox Settings Support (Fenix) - EME"
-    description: "Provides support for a HIDDEN, NOT recommended, NOT supported UI toggle to enable/disable EME."
-    reason: "To hide the UI for DRM-controlled content (EME) by default, while still allowing users to enable it and control the site permission if desired."
-    effect: "The UI for DRM-controlled content (EME) is hidden by default, while users can re-enable EME with the UI/site permission at their own risk if desired."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-password-mgr-autofill.patch"
-    name: "IronFox Settings Support (Fenix) - Password Manager and Address/Credit Card Autofill"
-    description: "Modifies the UI settings to enable/disable the built-in password manager and address/credit card autofill to also disable the functionality within Gecko."
-    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that the password manager and autofill functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI setting."
-    effect: "Users can fully disable the built-in password manager and address/credit card autofill functionality fromt he UI."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-preferred-website-appearance.patch"
-    name: "IronFox Settings Support (Fenix) - Preferred website appearance"
-    description: "Provides support for UI settings to configure the preferred website appearance, independently of the browser theme."
-    reason: "To allow users to configure the preferred website appearance, independently of the browser theme."
-    effect: "Users can configure their preferred website appearance, independently of the browser theme."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-safe-browsing.patch"
-    name: "IronFox Settings Support (Fenix) - Safe Browsing"
-    description: "Provides support for a UI toggle to enable/disable Safe Browsing."
-    reason: "To allow users to enable/disable Safe Browsing, directly from the UI."
-    effect: "Users can enable or disable Safe Browsing from the UI."
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-translations.patch"

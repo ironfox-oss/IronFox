@@ -16,14 +16,12 @@
     <string name="preference_referer_policy_base_domains_match">Надсилати перехресні посилання при збігові базових доменів</string>
     <string name="preference_referer_policy_hosts_match">Не відправляти міждоменні реферери</string>
     <string name="preference_cache_enabled">Увімкнути кеш диска</string>
-    <string name="preferences_debug_settings_eme_enabled">Увімкнути підтримку зашифрованого медіаконтенту (EME)</string>
     <string name="preference_safe_browsing_enabled_description">Наразі функція «Безпечний перегляд» в IronFox надається Google. IronFox періодично оновлюватиме свою базу даних для захисту користувачів від новітніх загроз. При виявленні потенційно небезпечного сайту IronFox може надіслати в Google частковий хеш його URL-адреси. Зверніть увагу, що IronFox проксує ці з\'єднання, щоб ваша публічна IP-адреса не була пов\'язана з цими запитами.</string>
     <string name="preference_safe_browsing_enabled_summary">Забезпечує захист у режимі реального часу від небезпечних веб-сайтів, шкідливого програмного забезпечення та спроб фішингу. Зміна цього параметра призведе до перезапуску браузера</string>
     <string name="tor_spoof_english_title">Підмінити мову на en-US</string>
     <string name="tor_spoof_english_caption">Покращте свою конфіденційність, маскуючи мовні налаштування вашого пристрою.</string>
     <string name="tor_spoof_english_description">Запитувати англійські (en-US) версії веб-сторінок. Це зробить ваш браузер менш унікальним, посилюючи захист від технік відбитків пальців, які ідентифікують користувачів на основі їхніх мовних уподобань.</string>
     <string name="tor_spoof_english">Запитувати веб-сторінки англійською мовою</string>
-    <string name="preferences_debug_settings_widevine_enabled">Увімкнути Widevine CDM</string>
     <string name="preference_translations_enabled">Увімкнути переклади Firefox</string>
     <string name="preference_fpp_overrides_ironfox_enabled">Увімкнути заміну захисту відбитків пальців від IronFox</string>
     <string name="preference_fpp_overrides_ironfox_summary">Послаблює захист відбитків пальців для певних веб-сайтів за замовчуванням, щоб зменшити пошкодження, використовуючи список від IronFox - Зміна цього налаштування перезапустить ваш браузер</string>

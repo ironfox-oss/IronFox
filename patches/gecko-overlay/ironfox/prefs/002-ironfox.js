@@ -80,10 +80,6 @@ pref("notification.prompt.testing", false); // [HIDDEN] [DEFAULT]
 pref("browser.ironfox.services.settings.allowedCollections", "blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-data-leak-blocker-domains,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/ml-inference-options,main/ml-inference-request-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/public-suffix-list,main/query-stripping,main/remote-permissions,main/third-party-cookie-blocking-exempt-urls,main/tracking-protection-lists,main/translations-identification-models,main/translations-models,main/translations-models-v2,main/translations-wasm,main/translations-wasm-v2,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,main/webcompat-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");
 pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironfox-fingerprinting-protection-overrides-harden,main/ironfox-fingerprinting-protection-overrides-unbreak,main/ironfox-fingerprinting-protection-overrides-unbreak-timezone,main/ironfox-fingerprinting-protection-overrides-unbreak-webgl,blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-data-leak-blocker-domains,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/moz-essential-domain-fallbacks,main/ml-inference-options,main/ml-inference-request-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/public-suffix-list,main/query-stripping,main/remote-permissions,main/third-party-cookie-blocking-exempt-urls,main/tracking-protection-lists,main/translations-identification-models,main/translations-models,main/translations-models-v2,main/translations-wasm,main/translations-wasm-v2,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,main/webcompat-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");
 
-/// Set light/dark mode to match system
-// We still enable light mode by default, just via a patch for Fenix's UI settings instead
-pref("layout.css.prefers-color-scheme.content-override", 2, locked); // [DEFAULT]
-
 /// Annotate locked prefs controlled by UI settings
 pref("accessibility.force_disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("accessibility.force_disabled.1.NOTE", "'Enable accessibility services'", locked);
@@ -145,12 +141,10 @@ pref("javascript.options.wasm.0.NOTE", "Locked in favor of the UI setting:", loc
 pref("javascript.options.wasm.1.NOTE", "'Enable WebAssembly (WASM)'", locked);
 pref("javascript.options.wasm_optimizingjit.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("javascript.options.wasm_optimizingjit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("layout.css.prefers-color-scheme.content-override.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("layout.css.prefers-color-scheme.content-override.1.NOTE", "'Preferred website appearance'", locked);
 pref("media.autoplay.blocking_policy.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("media.autoplay.blocking_policy.1.NOTE", "'Media autoplay'", locked);
-pref("media.eme.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("media.eme.enabled.1.NOTE", "'Enable Encrypted Media Extensions (EME)'", locked);
-pref("media.mediadrm-widevinecdm.visible.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("media.mediadrm-widevinecdm.visible.1.NOTE", "'Enable Widevine CDM'", locked);
 pref("media.peerconnection.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("media.peerconnection.enabled.1.NOTE", "'Enable Widevine CDM'", locked);
 pref("network.dns.disableIPv6.0.NOTE", "Locked in favor of the UI setting:", locked);

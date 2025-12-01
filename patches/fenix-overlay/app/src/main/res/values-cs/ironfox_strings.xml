@@ -16,8 +16,6 @@
     <string name="preference_referer_policy_base_domains_match">Posílat referery při shodě domén</string>
     <string name="preference_referer_policy_hosts_match">Zakázat referery z jiných domén</string>
     <string name="preference_cache_enabled">Povolit diskovou mezipaměť</string>
-    <string name="preferences_debug_settings_eme_enabled">Povolit Encrypted Media Extensions (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Povolit Widevine CDM</string>
     <string name="preference_translations_enabled">Povolit funkci Firefox Translations</string>
     <string name="preference_ipv6_enabled">Povolit připojení k síti IPv6</string>
     <string name="preference_javascript_enabled">Povolit JavaScript</string>

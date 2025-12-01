@@ -13,7 +13,6 @@
     <string name="onboarding_state_installing_ublock">Instalowanie uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Wystąpił błąd podczas instalacji uBlock Origin: %1$s</string>
     <string name="onboarding_action_retry">Spróbuj ponownie</string>
-    <string name="preferences_debug_settings_widevine_enabled">Włącz Widevine CDM</string>
     <string name="preference_jit_enabled">Włącz kompilację JavaScript Just-in-time (JIT)</string>
     <string name="preference_jit_enabled_caption">Popraw wydajność JavaScript, poprzez włączenie JIT. (Niezalecane dla większości użytkowników)</string>
     <string name="preference_jit_enabled_description">Kosztem bezpieczeństwa możesz włączyć JIT, aby poprawić wydajność stron internetowych. Zalecane tylko dla użytkowników z mniej wydajnymi urządzeniami.</string>
@@ -48,7 +47,6 @@
     <string name="onboarding_install_ublock_caption">Blokuj reklamy, elementy śledzące i złośliwe oprogramowanie, aby przeglądanie było bezpieczniejsze i wygodniejsze.</string>
     <string name="tor_spoof_english_title">Zamień język na en-US</string>
     <string name="preference_cache_enabled">Włącz pamięć podręczną dysku</string>
-    <string name="preferences_debug_settings_eme_enabled">Włącz rozszerzenia zaszyfrowanych mediów (EME)</string>
     <string name="preference_ipv6_enabled">Włącz połączenie sieciowe przez IPv6</string>
     <string name="preference_referer_policy">Zasady zapytań między domenami</string>
     <string name="preference_referer_policy_summary">Skonfiguruj zachowanie zapytań między domenami</string>

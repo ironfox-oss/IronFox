@@ -14,8 +14,8 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import kotlin.system.exitProcess
-import mozilla.components.concept.engine.EngineSession
 import mozilla.components.ui.widgets.withCenterAlignedButtons
+import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.components.Push
 import org.mozilla.fenix.ext.components
@@ -53,12 +53,15 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_webgl_disabled,
         )
 
-        webglDisabledPreference.setOnPreferenceChangeListener { preference, webglDisabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        webglDisabledPreference.isChecked = IronFoxPreferences.isWebGLDisabled(requireContext())
+        webglDisabledPreference.setOnPreferenceChangeListener<Boolean> { preference, webglDisabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.webglDisabled = webglDisabled as Boolean
-            components.core.engine.settings.webglDisabled = webglDisabled
+            IronFoxPreferences.setWebGLDisabled(context, webglDisabled)
+            GeckoSettingsBridge.setWebGLDisabled(context, engine)
+
+            requireComponents.useCases.sessionUseCases.reload.invoke()
 
             true
         }
@@ -72,12 +75,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_accessibility_enabled,
         )
 
+        accessibilityEnabledPreference.isChecked = IronFoxPreferences.isAccessibilityEnabled(requireContext())
         accessibilityEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, accessibilityEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.accessibilityEnabled = accessibilityEnabled
-            components.core.engine.settings.accessibilityEnabled = accessibilityEnabled
+            IronFoxPreferences.setAccessibilityEnabled(context, accessibilityEnabled)
+            GeckoSettingsBridge.setAccessibilityEnabled(context, engine)
 
             true
         }
@@ -91,12 +95,15 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_javascript_enabled,
         )
 
-        javascriptEnabledPreference.setOnPreferenceChangeListener { preference, javascriptEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        javascriptEnabledPreference.isChecked = IronFoxPreferences.isJavaScriptEnabled(requireContext())
+        javascriptEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, javascriptEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.javascriptEnabled = javascriptEnabled as Boolean
-            components.core.engine.settings.javascriptEnabled = javascriptEnabled
+            IronFoxPreferences.setJavaScriptEnabled(context, javascriptEnabled)
+            GeckoSettingsBridge.setJavaScriptEnabled(context, engine)
+
+            requireComponents.useCases.sessionUseCases.reload.invoke()
 
             true
         }
@@ -110,12 +117,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_fpp_overrides_ironfox_webgl_enabled,
         )
 
-        fppOverridesIronFoxWebGLEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxWebGLEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        fppOverridesIronFoxWebGLEnabledPreference.isChecked = IronFoxPreferences.isFPPOverridesIronFoxWebGLEnabled(requireContext())
+        fppOverridesIronFoxWebGLEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, fppOverridesIronFoxWebGLEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.fppOverridesIronFoxWebGLEnabled = fppOverridesIronFoxWebGLEnabled as Boolean
-            components.core.engine.settings.fppOverridesIronFoxWebGLEnabled = fppOverridesIronFoxWebGLEnabled
+            IronFoxPreferences.setFPPOverridesIronFoxWebGLEnabled(context, fppOverridesIronFoxWebGLEnabled)
+            GeckoSettingsBridge.setFPPOverridesIronFoxWebGLEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -142,12 +150,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_cache_enabled,
         )
 
-        cacheEnabledPreference.setOnPreferenceChangeListener { preference, cacheEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        cacheEnabledPreference.isChecked = IronFoxPreferences.isCacheEnabled(requireContext())
+        cacheEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, cacheEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.cacheEnabled = cacheEnabled as Boolean
-            components.core.engine.settings.cacheEnabled = cacheEnabled
+            IronFoxPreferences.setCacheEnabled(context, cacheEnabled)
+            GeckoSettingsBridge.setCacheEnabled(context, engine)
 
             true
         }
@@ -161,12 +170,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_fpp_overrides_ironfox_enabled,
         )
 
-        fppOverridesIronFoxEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        fppOverridesIronFoxEnabledPreference.isChecked = IronFoxPreferences.isFPPOverridesIronFoxEnabled(requireContext())
+        fppOverridesIronFoxEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, fppOverridesIronFoxEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.fppOverridesIronFoxEnabled = fppOverridesIronFoxEnabled as Boolean
-            components.core.engine.settings.fppOverridesIronFoxEnabled = fppOverridesIronFoxEnabled
+            IronFoxPreferences.setFPPOverridesIronFoxEnabled(context, fppOverridesIronFoxEnabled)
+            GeckoSettingsBridge.setFPPOverridesIronFoxEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -191,12 +201,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_fpp_overrides_mozilla_enabled,
         )
 
-        fppOverridesMozillaEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesMozillaEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        fppOverridesMozillaEnabledPreference.isChecked = IronFoxPreferences.isFPPOverridesMozillaEnabled(requireContext())
+        fppOverridesMozillaEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, fppOverridesMozillaEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.fppOverridesMozillaEnabled = fppOverridesMozillaEnabled as Boolean
-            components.core.engine.settings.fppOverridesMozillaEnabled = fppOverridesMozillaEnabled
+            IronFoxPreferences.setFPPOverridesMozillaEnabled(context, fppOverridesMozillaEnabled)
+            GeckoSettingsBridge.setFPPOverridesMozillaEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -221,12 +232,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_fpp_overrides_ironfox_timezone_enabled,
         )
 
-        fppOverridesIronFoxTimezoneEnabledPreference.setOnPreferenceChangeListener { preference, fppOverridesIronFoxTimezoneEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        fppOverridesIronFoxTimezoneEnabledPreference.isChecked = IronFoxPreferences.isFPPOverridesIronFoxTimezoneEnabled(requireContext())
+        fppOverridesIronFoxTimezoneEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, fppOverridesIronFoxTimezoneEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.fppOverridesIronFoxTimezoneEnabled = fppOverridesIronFoxTimezoneEnabled as Boolean
-            components.core.engine.settings.fppOverridesIronFoxTimezoneEnabled = fppOverridesIronFoxTimezoneEnabled
+            IronFoxPreferences.setFPPOverridesIronFoxTimezoneEnabled(context, fppOverridesIronFoxTimezoneEnabled)
+            GeckoSettingsBridge.setFPPOverridesIronFoxTimezoneEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -251,13 +263,15 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_spoof_english,
         )
 
-        spoofEnglishPreference.isChecked = IronFoxPreferences.isLocaleSpoofingEnabled(requireContext())
-        spoofEnglishPreference.setOnPreferenceChangeListener { preference, spoofEnglish ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        spoofEnglishPreference.isChecked = IronFoxPreferences.isSpoofEnglishEnabled(requireContext())
+        spoofEnglishPreference.setOnPreferenceChangeListener<Boolean> { preference, spoofEnglish ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.spoofEnglish = spoofEnglish as Boolean
-            components.core.engine.settings.spoofEnglish = spoofEnglish
+            IronFoxPreferences.setSpoofEnglishEnabled(context, spoofEnglish)
+            GeckoSettingsBridge.setSpoofEnglishEnabled(context, engine)
+
+            requireComponents.useCases.sessionUseCases.reload.invoke()
 
             true
         }
@@ -271,12 +285,15 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_spoof_timezone,
         )
 
-        spoofTimezonePreference.setOnPreferenceChangeListener { preference, spoofTimezone ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        spoofTimezonePreference.isChecked = IronFoxPreferences.isSpoofTimezoneEnabled(requireContext())
+        spoofTimezonePreference.setOnPreferenceChangeListener<Boolean> { preference, spoofTimezone ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.spoofTimezone = spoofTimezone as Boolean
-            components.core.engine.settings.spoofTimezone = spoofTimezone
+            IronFoxPreferences.setSpoofTimezoneEnabled(context, spoofTimezone)
+            GeckoSettingsBridge.setSpoofTimezoneEnabled(context, engine)
+
+            requireComponents.useCases.sessionUseCases.reload.invoke()
 
             true
         }
@@ -293,12 +310,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_xpinstall_enabled,
         )
 
+        xpinstallEnabledPreference.isChecked = IronFoxPreferences.isXPInstallEnabled(requireContext())
         xpinstallEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, xpinstallEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.xpinstallEnabled = xpinstallEnabled
-            components.core.engine.settings.xpinstallEnabled = xpinstallEnabled
+            IronFoxPreferences.setXPInstallEnabled(context, xpinstallEnabled)
+            GeckoSettingsBridge.setXPInstallEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -328,17 +346,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_jit_enabled,
         )
 
-        javascriptJitEnabledPreference.isChecked = IronFoxPreferences.isJavascriptJitEnabled(requireContext())
-        javascriptJitEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        javascriptJitEnabledPreference.isChecked = IronFoxPreferences.isJITEnabled(requireContext())
+        javascriptJitEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, javascriptJitEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.javascriptJitEnabled = javascriptJitEnabled as Boolean
-            components.core.engine.settings.javascriptJitBaselineEnabled = javascriptJitEnabled
-            components.core.engine.settings.javascriptJitHintsEnabled = javascriptJitEnabled
-            components.core.engine.settings.javascriptJitIonEnabled = javascriptJitEnabled
-            components.core.engine.settings.javascriptJitIonWasmEnabled = javascriptJitEnabled
-            components.core.engine.settings.javascriptJitNativeRegexpEnabled = javascriptJitEnabled
+            IronFoxPreferences.setJITEnabled(context, javascriptJitEnabled)
+            GeckoSettingsBridge.setJITEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -363,12 +377,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_jit_trusted_principals_enabled,
         )
 
-        javascriptJitTrustedPrincipalsEnabledPreference.setOnPreferenceChangeListener { preference, javascriptJitTrustedPrincipalsEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        javascriptJitTrustedPrincipalsEnabledPreference.isChecked = IronFoxPreferences.isJITTrustedPrincipalsEnabled(requireContext())
+        javascriptJitTrustedPrincipalsEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, javascriptJitTrustedPrincipalsEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitTrustedPrincipalsEnabled as Boolean
-            components.core.engine.settings.javascriptJitTrustedPrincipalsEnabled = javascriptJitTrustedPrincipalsEnabled
+            IronFoxPreferences.setJITTrustedPrincipalsEnabled(context, javascriptJitTrustedPrincipalsEnabled)
+            GeckoSettingsBridge.setJITTrustedPrincipalsEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -393,12 +408,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_print_enabled,
         )
 
-        printEnabledPreference.setOnPreferenceChangeListener { preference, printEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        printEnabledPreference.isChecked = IronFoxPreferences.isPrintEnabled(requireContext())
+        printEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, printEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.printEnabled = printEnabled as Boolean
-            components.core.engine.settings.printEnabled = printEnabled
+            IronFoxPreferences.setPrintEnabled(context, printEnabled)
+            GeckoSettingsBridge.setPrintEnabled(context, engine)
 
             true
         }
@@ -414,18 +430,11 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
 
         safeBrowsingEnabledPreference.isChecked = IronFoxPreferences.isSafeBrowsingEnabled(requireContext())
         safeBrowsingEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, safeBrowsingEnabled ->
-            val engineSettings = requireContext().components.core.engine.settings
-            val settings = preference.context.settings()
-            val components = preference.context.components
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.safeBrowsingEnabled = safeBrowsingEnabled
-
-            if (settings.safeBrowsingEnabled) {
-                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.RECOMMENDED)
-            } else {
-                engineSettings.safeBrowsingPolicy = arrayOf(EngineSession.SafeBrowsingPolicy.NONE)
-            }
-            requireContext().components.useCases.sessionUseCases.reload()
+            IronFoxPreferences.setSafeBrowsingEnabled(context, safeBrowsingEnabled)
+            GeckoSettingsBridge.setSafeBrowsingEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -450,12 +459,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_svg_enabled,
         )
 
-        svgEnabledPreference.setOnPreferenceChangeListener { preference, svgEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        svgEnabledPreference.isChecked = IronFoxPreferences.isSVGEnabled(requireContext())
+        svgEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, svgEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.svgEnabled = svgEnabled as Boolean
-            components.core.engine.settings.svgEnabled = svgEnabled
+            IronFoxPreferences.setSVGEnabled(context, svgEnabled)
+            GeckoSettingsBridge.setSVGEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -480,12 +490,15 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_wasm_enabled,
         )
 
-        wasmEnabledPreference.setOnPreferenceChangeListener { preference, wasmEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        wasmEnabledPreference.isChecked = IronFoxPreferences.isWASMEnabled(requireContext())
+        wasmEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, wasmEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.wasmEnabled = wasmEnabled as Boolean
-            components.core.engine.settings.wasmEnabled = wasmEnabled
+            IronFoxPreferences.setWASMEnabled(context, wasmEnabled)
+            GeckoSettingsBridge.setWASMEnabled(context, engine)
+
+            requireComponents.useCases.sessionUseCases.reload.invoke()
 
             true
         }
@@ -499,12 +512,15 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_webrtc_enabled,
         )
 
-        webrtcEnabledPreference.setOnPreferenceChangeListener { preference, webrtcEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        webrtcEnabledPreference.isChecked = IronFoxPreferences.isWebRTCEnabled(requireContext())
+        webrtcEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, webrtcEnabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.webrtcEnabled = webrtcEnabled as Boolean
-            components.core.engine.settings.webrtcEnabled = webrtcEnabled
+            IronFoxPreferences.setWebRTCEnabled(context, webrtcEnabled)
+            GeckoSettingsBridge.setWebRTCEnabled(context, engine)
+
+            requireComponents.useCases.sessionUseCases.reload.invoke()
 
             true
         }
@@ -520,10 +536,11 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_collections_enabled,
         )
 
+        collectionsEnabledPreference.isChecked = IronFoxPreferences.isCollectionsEnabled(requireContext())
         collectionsEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, collectionsEnabled ->
-            val settings = preference.context.settings()
+            val context = requireContext()
 
-            settings.collections = collectionsEnabled
+            IronFoxPreferences.setCollectionsEnabled(context, collectionsEnabled)
 
             true
         }
@@ -537,14 +554,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_translations_enabled,
         )
 
+        translationsEnabledPreference.isChecked = IronFoxPreferences.isTranslationsEnabled(requireContext())
         translationsEnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, translationsEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.translationsEnabled = translationsEnabled
-            
-            components.core.engine.settings.translationsEnabled = translationsEnabled
-            components.core.engine.settings.translationsSupported = translationsEnabled
+            IronFoxPreferences.setTranslationsEnabled(context, translationsEnabled)
+            GeckoSettingsBridge.setTranslationsEnabled(context, engine)
 
             Toast.makeText(
                 context,
@@ -569,17 +585,19 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_ipv6_enabled,
         )
 
+        ipv6EnabledPreference.isChecked = IronFoxPreferences.isIPv6Enabled(requireContext())
         ipv6EnabledPreference.setOnPreferenceChangeListener<Boolean> { preference, ipv6Enabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.ipv6Enabled = ipv6Enabled
-            
-            components.core.engine.settings.ipv6Enabled = ipv6Enabled
+            IronFoxPreferences.setIPv6Enabled(context, ipv6Enabled)
+            GeckoSettingsBridge.setIPv6Enabled(context, engine)
+
+            requireComponents.useCases.sessionUseCases.reload.invoke()
 
             true
         }
-        
+ 
         /**
          * Indicates whether or not we should disable PDF.js
          * Default: false
@@ -589,12 +607,13 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_pdfjs_disabled,
         )
 
-        pdfjsDisabledPreference.setOnPreferenceChangeListener { preference, pdfjsDisabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
+        pdfjsDisabledPreference.isChecked = IronFoxPreferences.isPDFjsDisabled(requireContext())
+        pdfjsDisabledPreference.setOnPreferenceChangeListener<Boolean> { preference, pdfjsDisabled ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
 
-            settings.pdfjsDisabled = pdfjsDisabled as Boolean
-            components.core.engine.settings.pdfjsDisabled = pdfjsDisabled
+            IronFoxPreferences.setPDFjsDisabled(context, pdfjsDisabled)
+            GeckoSettingsBridge.setPDFjsDisabled(context, engine)
 
             true
         }
@@ -610,46 +629,11 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             R.string.pref_key_enable_unifiedpush,
         )
 
-        enableUnifiedPushPreference.setOnPreferenceChangeListener { preference, enableUnifiedPush ->
-            val settings = preference.context.settings()
-            settings.enableUnifiedPush = enableUnifiedPush as Boolean
-            true
-        }
+        enableUnifiedPushPreference.isChecked = IronFoxPreferences.isUnifiedPushEnabled(requireContext())
+        enableUnifiedPushPreference.setOnPreferenceChangeListener<Boolean> { preference, enableUnifiedPush ->
+            val context = requireContext()
 
-        /**
-         * Indicates whether or not we should enable Encrypted Media Extensions (EME)
-         * Default: false
-         * Gecko preference(s) impacted: media.eme.enabled
-         */
-        val emeEnabledPreference = requirePreference<SwitchPreference>(
-            R.string.pref_key_eme_enabled,
-        )
-
-        emeEnabledPreference.setOnPreferenceChangeListener { preference, emeEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
-
-            settings.emeEnabled = emeEnabled as Boolean
-            components.core.engine.settings.emeEnabled = emeEnabled
-
-            true
-        }
-
-        /**
-         * Indicates whether or not we should enable the Google Widevine CDM
-         * Default: false
-         * Gecko preference(s) impacted: media.mediadrm-widevinecdm.visible
-         */
-        val widevineEnabledPreference = requirePreference<SwitchPreference>(
-            R.string.pref_key_widevine_enabled,
-        )
-
-        widevineEnabledPreference.setOnPreferenceChangeListener { preference, widevineEnabled ->
-            val settings = preference.context.settings()
-            val components = preference.context.components
-
-            settings.widevineEnabled = widevineEnabled as Boolean
-            components.core.engine.settings.widevineEnabled = widevineEnabled
+            IronFoxPreferences.setUnifiedPushEnabled(context, enableUnifiedPush)
 
             true
         }
@@ -659,9 +643,6 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.ironfox_preferences, rootKey)
         with(requireContext().settings()) {
             findPreference<SwitchPreference>(
-                getPreferenceKey(R.string.pref_key_eme_enabled),
-            )?.isVisible = showSecretDebugMenuThisSession
-            findPreference<SwitchPreference>(
                 getPreferenceKey(R.string.pref_key_enable_unifiedpush),
             )?.isVisible = showSecretDebugMenuThisSession
             findPreference<PreferenceCategory>(
@@ -670,12 +651,9 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             findPreference<SwitchPreference>(
                 getPreferenceKey(R.string.pref_key_use_unifiedpush),
             )?.apply {
-                isVisible = enableUnifiedPush
-                isChecked = useUnifiedPush
+                isVisible = IronFoxPreferences.isUnifiedPushEnabled(requireContext())
+                isChecked = IronFoxPreferences.shouldUseUnifiedPush(requireContext())
             }
-            findPreference<SwitchPreference>(
-                getPreferenceKey(R.string.pref_key_widevine_enabled),
-            )?.isVisible = showSecretDebugMenuThisSession
         }
         setupAutoplayBlockingPolicy()
         setupCrossOriginRefererPolicy()
@@ -729,7 +707,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     private fun bindAutoplayBlockingSticky() {
         radioAutoplayBlockingSticky = requirePreference(R.string.pref_key_autoplay_policy_sticky)
         radioAutoplayBlockingSticky.onClickListener {
-            updateEngineAutoplayBlockingPolicy()
+            updateGeckoAutoplayBlockingPolicy()
         }
     }
 
@@ -741,7 +719,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     private fun bindAutoplayBlockingTransient() {
         radioAutoplayBlockingTransient = requirePreference(R.string.pref_key_autoplay_policy_transient)
         radioAutoplayBlockingTransient.onClickListener {
-            updateEngineAutoplayBlockingPolicy()
+            updateGeckoAutoplayBlockingPolicy()
         }
     }
 
@@ -753,7 +731,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     private fun bindAutoplayBlockingClickToPlay() {
         radioAutoplayBlockingClickToPlay = requirePreference(R.string.pref_key_autoplay_policy_click_to_play)
         radioAutoplayBlockingClickToPlay.onClickListener {
-            updateEngineAutoplayBlockingPolicy()
+            updateGeckoAutoplayBlockingPolicy()
         }
     }
 
@@ -765,7 +743,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     private fun bindRefererXOriginAlways() {
         radioRefererXOriginAlways = requirePreference(R.string.pref_key_referer_policy_always)
         radioRefererXOriginAlways.onClickListener {
-            updateEngineRefererXOriginPolicy()
+            updateGeckoRefererXOriginPolicy()
         }
     }
 
@@ -777,7 +755,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     private fun bindRefererXOriginBaseDomainsMatch() {
         radioRefererXOriginBaseDomainsMatch = requirePreference(R.string.pref_key_referer_policy_base_domains_match)
         radioRefererXOriginBaseDomainsMatch.onClickListener {
-            updateEngineRefererXOriginPolicy()
+            updateGeckoRefererXOriginPolicy()
         }
     }
 
@@ -789,14 +767,14 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     private fun bindRefererXOriginHostsMatch() {
         radioRefererXOriginHostsMatch = requirePreference(R.string.pref_key_referer_policy_hosts_match)
         radioRefererXOriginHostsMatch.onClickListener {
-            updateEngineRefererXOriginPolicy()
+            updateGeckoRefererXOriginPolicy()
         }
     }
 
     /**
     * Indicates whether or not we should set CSS prefers-color-scheme to follow the browser's theme
     * Default: false
-    * Gecko preference(s) impacted: N/A
+    * Gecko preference(s) impacted: layout.css.prefers-color-scheme.content-override (2)
     */
     private fun bindPrefersBrowserColorScheme() {
         radioPrefersBrowserColorScheme = requirePreference(R.string.pref_key_prefers_browser_color_scheme)
@@ -808,7 +786,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     /**
     * Indicates whether or not we should set CSS prefers-color-scheme to dark
     * Default: false
-    * Gecko preference(s) impacted: N/A
+    * Gecko preference(s) impacted: layout.css.prefers-color-scheme.content-override (0)
     */
     private fun bindPrefersDarkColorScheme() {
         radioPrefersDarkColorScheme = requirePreference(R.string.pref_key_prefers_dark_color_scheme)
@@ -820,7 +798,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     /**
     * Indicates whether or not we should set CSS prefers-color-scheme to light
     * Default: true
-    * Gecko preference(s) impacted: N/A
+    * Gecko preference(s) impacted: layout.css.prefers-color-scheme.content-override (1)
     */
     private fun bindPrefersLightColorScheme() {
         radioPrefersLightColorScheme = requirePreference(R.string.pref_key_prefers_light_color_scheme)
@@ -830,20 +808,28 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun setNewColorScheme() {
-        with(requireComponents.core) {
-            engine.settings.preferredColorScheme = getPreferredColorScheme()
-        }
+        val context = requireContext()
+        val engine = requireComponents.core.engine
+
+        GeckoSettingsBridge.setPreferredWebsiteAppearance(context, engine)
+
         requireComponents.useCases.sessionUseCases.reload.invoke()
     }
 
-    private fun updateEngineAutoplayBlockingPolicy() {
-        requireContext().components.core.engine.settings.autoplayBlockingPolicy =
-            requireContext().settings().getAutoplayBlockingPolicy()
+    private fun updateGeckoAutoplayBlockingPolicy() {
+        val context = requireContext()
+        val engine = requireComponents.core.engine
+
+        GeckoSettingsBridge.setAutoplayBlockingPolicy(context, engine)
+
+        requireComponents.useCases.sessionUseCases.reload.invoke()
     }
 
-    private fun updateEngineRefererXOriginPolicy() {
-        requireContext().components.core.engine.settings.refererXOriginPolicy =
-            requireContext().settings().getRefererXOriginPolicy()
+    private fun updateGeckoRefererXOriginPolicy() {
+        val context = requireContext()
+        val engine = requireComponents.core.engine
+
+        GeckoSettingsBridge.setRefererXOriginPolicy(context, engine)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -880,10 +866,10 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
                     }
                     create().withCenterAlignedButtons()
                 }
-                if (context.settings().useUnifiedPush) {
+                if (IronFoxPreferences.shouldUseUnifiedPush(requireContext())) {
                     requireComponents.push.switchToUnifiedPush(context) { success ->
                         if (!success) {
-                            context.settings().useUnifiedPush = false
+                            IronFoxPreferences.setUseUnifiedPush(requireContext(), false)
                         } else {
                             alert.show()
                         }

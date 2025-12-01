@@ -308,7 +308,7 @@ private suspend fun applyPreference(
     when (option.preferenceType) {
         IfPreferenceType.DEFAULT -> {}
         IfPreferenceType.JS_JIT -> {
-            IronFoxPreferences.setJavascriptJitEnabled(
+            IronFoxPreferences.setJITEnabled(
                 context,
                 state.jitEnabled,
             )
@@ -322,7 +322,7 @@ private suspend fun applyPreference(
         }
 
         IfPreferenceType.SPOOF_ENGLISH -> {
-            IronFoxPreferences.setLocaleSpoofingEnabled(
+            IronFoxPreferences.setSpoofEnglishEnabled(
                 context,
                 state.spoofEnglish,
             )

@@ -318,23 +318,6 @@
         android:key="@string/pref_key_enable_unifiedpush"
         android:title="@string/preferences_debug_settings_unifiedpush"
         app:iconSpaceReserved="false" />
-
-    <!-- Whether we should enable Encrypted Media Extensions (EME) -->
-    <androidx.preference.SwitchPreference
-        android:defaultValue="false"
-        android:key="@string/pref_key_eme_enabled"
-        android:title="@string/preferences_debug_settings_eme_enabled"
-        android:summary="@string/unsupported_summary"
-        app:iconSpaceReserved="false" />
-
-    <!-- Whether we should enable the Google Widevine CDM -->
-    <androidx.preference.SwitchPreference
-        android:defaultValue="false"
-        android:dependency="@string/pref_key_eme_enabled"
-        android:key="@string/pref_key_widevine_enabled"
-        android:title="@string/preferences_debug_settings_widevine_enabled"
-        android:summary="@string/unsupported_summary"
-        app:iconSpaceReserved="false" />
     </androidx.preference.PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

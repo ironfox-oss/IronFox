@@ -936,6 +936,8 @@ $SED -i -e 's|ic_onboarding_sync|fox_alert_crash_dark|' mobile/android/fenix/app
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
 $SED -i \
+    -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.provider."|"z99.ignore.string."|' \
     -e 's|"cookiebanners.service.detectOnly"|"z99.ignore.boolean"|' \
     -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.boolean"|' \
@@ -983,6 +985,7 @@ $SED -i \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.integer"|' \
     -e 's|"formhelper.autozoom"|"z99.ignore.boolean"|' \
     -e 's|"general.aboutConfig.enable"|"z99.ignore.boolean"|' \
+    -e 's|"javascript.enabled"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.boolean"|' \
     -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.boolean"|' \

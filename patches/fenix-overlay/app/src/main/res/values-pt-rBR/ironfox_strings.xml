@@ -18,8 +18,6 @@
     <string name="preference_referer_policy_base_domains_match">Apenas enviar referenciador entre origens quando o domínio base é igual</string>
     <string name="preference_referer_policy_hosts_match">Desativar referenciadores entre origens</string>
     <string name="preference_cache_enabled">Ativar cache em disco</string>
-    <string name="preferences_debug_settings_eme_enabled">Ativar Extensões de Mídia Criptografada (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Ativar Widevine CDM</string>
     <string name="preference_ipv6_enabled">Ativar conectividade de rede IPv6</string>
     <string name="preference_jit_enabled_caption">Melhore o desempenho do JavaScript ativando o JIT. (Não é recomendado para a maioria dos usuários)</string>
     <string name="preference_jit_enabled_description">Em troca de segurança, você pode ativar o JIT para melhorar o desempenho dos sites. Só é recomendado para usuários com dispositivos fracos.</string>

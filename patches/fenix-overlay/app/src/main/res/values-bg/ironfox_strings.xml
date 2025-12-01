@@ -14,8 +14,6 @@
     <string name="preference_referer_policy_base_domains_match">Изпращане на препратки от друг произход, когато базовите домейни съвпадат</string>
     <string name="preference_referer_policy_hosts_match">Деактивиране на препращащи устройства от друг произход</string>
     <string name="preference_cache_enabled">Активиране на кеш на диска</string>
-    <string name="preferences_debug_settings_eme_enabled">Активиране на разширения за криптирана медия (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Активиране на Widevine CDM</string>
     <string name="preference_ipv6_enabled">Активиране на IPv6 мрежова свързаност</string>
     <string name="preference_javascript_enabled">Активиране на JavaScript</string>
     <string name="preference_jit_enabled">Активиране на JavaScript компилация навреме (JIT)</string>

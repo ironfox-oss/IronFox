@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Versturen wanneer het hoofddomein overeenkomt</string>
     <string name="preference_referer_policy_hosts_match">Uitschakelen</string>
     <string name="preference_cache_enabled">Schijfcache inschakelen</string>
-    <string name="preferences_debug_settings_eme_enabled">Encrypted Media Extensions (EME) inschakelen</string>
-    <string name="preferences_debug_settings_widevine_enabled">Widevine CDM inschakelen</string>
     <string name="preference_ipv6_enabled">IPv6-netwerkconnectiviteit inschakelen</string>
     <string name="preference_javascript_enabled">JavaScript inschakelen</string>
     <string name="preference_jit_enabled">JavaScript Just-in-time Compilation (JIT) inschakelen</string>
