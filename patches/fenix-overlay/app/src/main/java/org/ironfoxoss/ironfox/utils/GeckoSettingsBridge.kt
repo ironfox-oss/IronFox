@@ -313,7 +313,7 @@ object GeckoSettingsBridge {
     }
 
     fun clearIronFoxPrefs(engine: Engine) {
-        // These are prefs that needed to be reset for different reasons
+        // These are prefs that need to be reset for different reasons
 
         // Remote Debugging: We want to reset this (to false) on launch for release builds for privacy and security reasons
         val remoteDebuggingGeckoPref = "devtools.debugger.remote-enabled"
