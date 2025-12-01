@@ -1,0 +1,9 @@
+
+. "$topsrcdir/ironfox/mozconfigs/branding/common.mozconfig"
+
+ac_add_options --with-app-basename='IronFox Nightly'
+ac_add_options --with-app-name='ironfox-nightly'
+ac_add_options --with-branding='ironfox/branding/ironfox-nightly'
+export MOZ_APP_BASENAME='IronFox Nightly'
+export MOZ_APP_NAME='ironfox-nightly'
+export MOZ_APP_REMOTINGNAME='ironfox-nightly'

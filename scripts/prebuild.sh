@@ -356,28 +356,28 @@ case "$1" in
 arm)
     # APK for armeabi-v7a
     abi='"armeabi-v7a"'
-    target=arm-linux-androideabi
+    geckotarget=arm
     llvmtarget="ARM"
     rusttarget=arm
     ;;
 x86_64)
     # APK for x86_64
     abi='"x86_64"'
-    target=x86_64-linux-android
+    geckotarget=x86_64
     llvmtarget="X86_64"
     rusttarget=x86_64
     ;;
 arm64)
     # APK for arm64-v8a
     abi='"arm64-v8a"'
-    target=aarch64-linux-android
+    geckotarget=arm64
     llvmtarget="AArch64"
     rusttarget=arm64
     ;;
 bundle)
     # AAB for both armeabi-v7a and arm64-v8a
     abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
-    target=''
+    geckotarget=bundle
     llvmtarget="AArch64;ARM;X86_64"
     rusttarget='arm64,arm,x86_64'
     ;;
@@ -1057,14 +1057,9 @@ echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDe
 apply_overlay "$patches/gecko-overlay/"
 
 {
-    if [[ -n "${target}" ]]; then
-        echo "## Target platform"
-        echo "ac_add_options --target='$target'"
-        echo ""
-    fi
-
     if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
         echo "## Enable Safe Browsing"
+        echo "### SB_GAPI_KEY_FILE = $SB_GAPI_KEY_FILE"
         echo "ac_add_options --with-google-safebrowsing-api-keyfile='${SB_GAPI_KEY_FILE}'"
     else
         echo "## Disable Safe Browsing"
@@ -1082,15 +1077,12 @@ if [[ "$IRONFOX_RELEASE" != 1 ]]; then
     $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/GeckoSettingsBridge.kt
 fi
 
-
 # Set variables for environment-specific arguments
 
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
-    IRONFOX_APP_NAME='ironfox'
     IRONFOX_BASE_NAME='IronFox'
     IRONFOX_CHANNEL='release'
 else
-    IRONFOX_APP_NAME='ironfox-nightly'
     IRONFOX_BASE_NAME='IronFox Nightly'
     IRONFOX_CHANNEL='nightly'
 fi
@@ -1101,18 +1093,18 @@ $SED -i "s|{glean}|$glean|" local.properties
 $SED -i "s|{mozilla_release}|$mozilla_release|" local.properties
 
 ## mozconfig
-$SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" mozconfig
-$SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" mozconfig
-$SED -i "s|{builddir}|$builddir|" mozconfig
-$SED -i "s|{GRADLE_PATH}|$(command -v gradle)|" mozconfig
-$SED -i "s|{HOME}|$HOME|" mozconfig
-$SED -i "s|{IRONFOX_APP_NAME}|$IRONFOX_APP_NAME|" mozconfig
-$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" mozconfig
-$SED -i "s|{JAVA_HOME}|$JAVA_HOME|" mozconfig
-$SED -i "s|{libclang}|$libclang|" mozconfig
-$SED -i "s|{PLATFORM}|$PLATFORM|" mozconfig
-$SED -i "s|{target}|$target|" mozconfig
-$SED -i "s|{wasi_install}|$wasi_install|" mozconfig
+$SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{builddir}|$builddir|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{GRADLE_PATH}|$(command -v gradle)|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{HOME}|$HOME|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{JAVA_HOME}|$JAVA_HOME|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{libclang}|$libclang|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{PLATFORM}|$PLATFORM|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{wasi_install}|$wasi_install|" ironfox/mozconfigs/env.mozconfig
+
+$SED -i "s|{geckotarget}|$geckotarget|" mozconfig
+$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" mozconfig
 
 # prefs
 $SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" ironfox/prefs/002-ironfox.js
@@ -1125,4 +1117,4 @@ popd
 
 # Set current build revision
 ## (ex. displayed at `about:buildconfig`)
-$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/mozconfig"
+$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/ironfox/mozconfigs/branding/env.mozconfig"
