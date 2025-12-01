@@ -293,7 +293,7 @@ object GeckoSettingsBridge {
 
     fun setAddressAutofillEnabled(context: Context, engine: Engine) {
         val addressAutofillEnabled = context.settings().shouldAutofillAddressDetails as Boolean
-        val addressAutofillGeckoPref = "extensions.formautofill.creditCards.enabled"
+        val addressAutofillGeckoPref = "extensions.formautofill.addresses.enabled"
         setUserPref(engine, addressAutofillGeckoPref, addressAutofillEnabled)
         setDefaultPref(engine, addressAutofillGeckoPref, addressAutofillEnabled)
     }
