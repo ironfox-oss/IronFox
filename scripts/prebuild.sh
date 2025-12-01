@@ -1085,7 +1085,7 @@ apply_overlay "$patches/gecko-overlay/"
 # On nightlies, allow remote debugging to be enabled persistently
 ## (It's still disabled by default though)
 if [[ "$IRONFOX_RELEASE" != 1 ]]; then
-    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/fenix/app/src/main/java/org/ironfoxoss/utils/GeckoSettingsBridge.kt
+    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/GeckoSettingsBridge.kt
 fi
 
 
