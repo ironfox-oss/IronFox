@@ -1085,6 +1085,13 @@ $SED -i -e 's|"app.support.vendor"|"z99.ignore.string"|' ironfox/prefs/001-phoen
 
 } >>mozconfig
 
+# On nightlies, allow remote debugging to be enabled persistently
+## (It's still disabled by default though)
+if [[ "$IRONFOX_RELEASE" != 1 ]]; then
+    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/fenix/app/src/main/java/org/ironfoxoss/utils/GeckoSettingsBridge.kt
+fi
+
+
 # Set variables for environment-specific arguments
 
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
