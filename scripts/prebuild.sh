@@ -972,6 +972,7 @@ $SED -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
     -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
+    -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \
     -e 's|"dom.ipc.processCount"|"z99.ignore.integer"|' \
@@ -1009,13 +1010,6 @@ $SED -i \
     -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-
-if [[ "$IRONFOX_RELEASE" != 1 ]]; then
-    # On nightlies, allow remote debugging to be enabled persistently
-    ## (It's still disabled by default though)
-    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-    $SED -i -e 's|clearUserPref("devtools.debugger.remote-enabled")|clearUserPref("z99.ignore.boolean")|' mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-fi
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
@@ -1081,6 +1075,13 @@ apply_overlay "$patches/gecko-overlay/"
     echo ""
 
 } >>mozconfig
+
+# On nightlies, allow remote debugging to be enabled persistently
+## (It's still disabled by default though)
+if [[ "$IRONFOX_RELEASE" != 1 ]]; then
+    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/fenix/app/src/main/java/org/ironfoxoss/utils/GeckoSettingsBridge.kt
+fi
+
 
 # Set variables for environment-specific arguments
 
