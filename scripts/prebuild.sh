@@ -661,12 +661,6 @@ $SED -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
 $SED -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
 $SED -i -e 's|debug = .*|debug = false|g' gfx/wr/Cargo.toml
 
-# Remove the `NETWORK_ACCESS_STATE` permission (Fenix)
-$SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/fenix/app/src/main/AndroidManifest.xml
-
-# Remove the `NETWORK_ACCESS_STATE` permission (GeckoView)
-$SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/geckoview/src/main/AndroidManifest.xml
-
 # Disable Normandy (Experimentation)
 $SED -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
 

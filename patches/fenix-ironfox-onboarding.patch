@@ -117,10 +117,10 @@ index 971df3dc5b..93e1182454 100644
 +      install-ublock:
 +        description: Whether to install uBlock Origin.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index bd75990cd8..f7d6a7ed2d 100644
+index 53190b359c..11dd04263a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -292,6 +292,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -271,6 +271,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
          setupLeakCanary()
          if (components.fenixOnboarding.userHasBeenOnboarded()) {

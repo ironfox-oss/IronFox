@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..ab8fa3c4aa 100644
+index 35d4c5a9c0..dcbed035a5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1423,7 +1423,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1444,7 +1444,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      val shouldShowSearchSuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions),
@@ -11,7 +11,7 @@ index 1c7b0fce0d..ab8fa3c4aa 100644
      )
  
      val shouldAutocompleteInAwesomebar by booleanPreference(
-@@ -1467,7 +1467,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1480,7 +1480,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var showSearchSuggestionsInPrivateOnboardingFinished by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions_in_private_onboarding),
@@ -21,7 +21,7 @@ index 1c7b0fce0d..ab8fa3c4aa 100644
  
      fun incrementVisitedInstallableCount() = pwaInstallableVisitCount.increment()
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
-index f7ca109331..f9820e2f98 100644
+index 84f47aa47e..fffc63c44c 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 @@ -27,7 +27,7 @@

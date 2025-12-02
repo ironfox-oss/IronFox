@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 2be5597f36..1b3866a281 100644
+index 2079fc1ba3..e13b2427d4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -136,6 +136,7 @@ import org.mozilla.geckoview.GeckoRuntime
@@ -10,7 +10,7 @@ index 2be5597f36..1b3866a281 100644
  
  /**
   * Component group for all core browser functionality.
-@@ -228,6 +229,7 @@ class Core(
+@@ -234,6 +235,7 @@ class Core(
              defaultSettings,
              geckoRuntime,
          ).also {
@@ -19,10 +19,10 @@ index 2be5597f36..1b3866a281 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index e1a67a6da4..a98b4656aa 100644
+index d0e61a00fc..9fab5ae117 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -591,6 +591,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -596,6 +596,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
          setupHomepagePreference(settings)
          setupTrackingProtectionPreference(settings)
          setupDnsOverHttpsPreference(settings)
@@ -30,7 +30,7 @@ index e1a67a6da4..a98b4656aa 100644
      }
  
      /**
-@@ -789,6 +790,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -794,6 +795,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
              }
      }
  
@@ -51,10 +51,10 @@ index e1a67a6da4..a98b4656aa 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..8cfbbf9cfa 100644
+index 35d4c5a9c0..868e5b73da 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2736,4 +2736,174 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2743,4 +2743,174 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -230,10 +230,10 @@ index 1c7b0fce0d..8cfbbf9cfa 100644
 +    )
  }
 diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
-index a4fd0897fa..634f9c1b8c 100644
+index 77c0a5cae4..510e4ca0fb 100644
 --- a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 +++ b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
-@@ -676,6 +676,13 @@
+@@ -692,6 +692,13 @@
              app:exitAnim="@anim/slide_out_left"
              app:popEnterAnim="@anim/slide_in_left"
              app:popExitAnim="@anim/slide_out_right" />
@@ -247,10 +247,10 @@ index a4fd0897fa..634f9c1b8c 100644
          <action
              android:id="@+id/action_settingsFragment_to_trackingProtectionFragment"
              app:destination="@id/trackingProtectionFragment"
-@@ -947,6 +954,10 @@
-         android:id="@+id/sponsoredStoriesSettings"
-         android:name="org.mozilla.fenix.settings.SponsoredStoriesSettingsFragment"
-         android:label="@string/preferences_debug_settings_custom_sponsored_stories_parameters" />
+@@ -1020,6 +1027,10 @@
+             app:argType="string"
+             app:nullable="true" />
+     </fragment>
 +    <fragment
 +        android:id="@+id/ironFoxSettingsFragment"
 +        android:name="org.mozilla.fenix.settings.IronFoxSettingsFragment"
@@ -259,7 +259,7 @@ index a4fd0897fa..634f9c1b8c 100644
          android:id="@+id/trackingProtectionFragment"
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 5058f40c0b..a040bb1643 100644
+index 159944ab7d..7251d2f761 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 @@ -198,10 +198,22 @@

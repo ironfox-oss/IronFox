@@ -1,8 +1,8 @@
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index d712949cee..8f37ba74ef 100644
+index 104433aee5..48796b555a 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
-@@ -1818,8 +1818,8 @@ export var Policies = {
+@@ -1819,8 +1819,8 @@ export var Policies = {
          addAllowDenyPermissions("install", param.Allow, null);
        }
        if ("Default" in param) {
@@ -35,7 +35,7 @@ index bb451a2795..edf5829bd4 100644
            case "blocked":
              return false;
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-index f4f56d171e..72934d062f 100644
+index e15b03c0f6..e6f4dec478 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 @@ -4482,7 +4482,7 @@ export var XPIInstall = {

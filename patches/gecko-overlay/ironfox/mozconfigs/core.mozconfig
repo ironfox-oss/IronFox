@@ -121,7 +121,9 @@ export NODEJS=
 
 ## Enable isolated content process support
 ac_add_options --enable-isolated-process
+ac_add_options --enable-isolated-zygote-process
 export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1
+export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_WITH_ZYGOTE=1
 
 ## Enable misc. security hardening
 ac_add_options --enable-hardening

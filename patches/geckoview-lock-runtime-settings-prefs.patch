@@ -38,10 +38,10 @@ index a795b36e6a..a679b4632d 100644
  
          default:
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 6f369bae3c..d4f3ce978c 100644
+index 566c3a6330..8d378ff36a 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-@@ -330,7 +330,13 @@ export class GeckoViewStartup {
+@@ -335,7 +335,13 @@ export class GeckoViewStartup {
        }
        case "GeckoView:ResetUserPrefs": {
          for (const name of aData.names) {
@@ -56,7 +56,7 @@ index 6f369bae3c..d4f3ce978c 100644
          }
          break;
        }
-@@ -340,13 +346,19 @@ export class GeckoViewStartup {
+@@ -345,13 +351,19 @@ export class GeckoViewStartup {
            try {
              switch (typeof value) {
                case "string":

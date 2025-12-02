@@ -594,13 +594,6 @@ patches:
     effect: "Users are provided with a cleaner, faster, and more focused browser homepage."
     category: "User Experience"
 
-  - file: "fenix-enable-shortcut-suggestions-by-default.patch"
-    name: "Enable Shortcut Suggestions by default"
-    description: "Enables URL bar suggestions for local shortcuts by default."
-    reason: "Provides users with quicker/easier access to shortcuts."
-    effect: "Users are provided with an improved browsing experience."
-    category: "User Experience"
-
   - file: "fenix-hide-remove-and-pb-for-builtin-addons.patch"
     name: "Hide the 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
     description: "Hide the no-op 'Remove' and 'Run in private browsing' toggles for built-in add-ons."

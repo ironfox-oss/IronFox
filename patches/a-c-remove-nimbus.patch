@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/build.gradle b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
-index 8b57d01c4f..29053b3844 100644
+index 8b57d01c4f..ec63e44a8e 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 +++ b/mobile/android/android-components/components/browser/engine-gecko/build.gradle
 @@ -21,7 +21,7 @@ buildscript {
@@ -29,7 +29,7 @@ index 8b57d01c4f..29053b3844 100644
  apply from: '../../../common-config.gradle'
  apply from: '../../../publish.gradle'
 -nimbus {
-+/*nimbus {
++/* nimbus {
      // The path to the Nimbus feature manifest file
      manifestFile = "geckoview.fml.yaml"
  
@@ -38,7 +38,7 @@ index 8b57d01c4f..29053b3844 100644
      applicationServicesDir = gradle.hasProperty('localProperties.autoPublish.application-services.dir')
              ? gradle.getProperty('localProperties.autoPublish.application-services.dir') : null
 -}
-+}*/
++} */
  ext.configurePublish(config.componentsGroupId, project.name, project.ext.description)
  
  // Non-official versions are like "61.0a1", where "a1" is the milestone.

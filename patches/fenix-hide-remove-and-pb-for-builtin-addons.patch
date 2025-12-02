@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
-index dbb3d349e9..7b2111449e 100644
+index dbb3d349e9..295087f161 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 @@ -293,6 +293,11 @@ class InstalledAddonDetailsFragment : Fragment() {
@@ -14,7 +14,7 @@ index dbb3d349e9..7b2111449e 100644
          if (addon.incognito == Addon.Incognito.NOT_ALLOWED) {
              switch.isChecked = false
              switch.isEnabled = false
-@@ -393,6 +398,11 @@ class InstalledAddonDetailsFragment : Fragment() {
+@@ -393,6 +398,10 @@ class InstalledAddonDetailsFragment : Fragment() {
      }
  
      private fun bindRemoveButton() {
@@ -22,7 +22,6 @@ index dbb3d349e9..7b2111449e 100644
 +            binding.removeAddOn.isVisible = false
 +            return
 +        }
-+
          binding.removeAddOn.setOnClickListener {
              setAllInteractiveViewsClickable(binding, false)
              requireContext().components.addonManager.uninstallAddon(

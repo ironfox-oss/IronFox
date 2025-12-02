@@ -1,15 +1,16 @@
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 2f0e243bfa..9992d4f1dc 100644
+index 63398b2c71..1674b913c3 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -488,11 +488,11 @@
+@@ -488,12 +488,12 @@
              </intent-filter>
          </activity-alias>
  
 -        <activity
-+        <!-- <activity
++       <!-- <activity
              android:name=".startupCrash.StartupCrashActivity"
              android:exported="false"
+             android:process=":StartupCrashActivityProcess"
              >
 -        </activity>
 +        </activity> -->
@@ -64,10 +65,10 @@ index 1e17f81bda..a5b7e6c84e 100644
                  is DebugDrawerAction.DrawerOpened, DebugDrawerAction.DrawerClosed -> Unit // no-op
              }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index bd75990cd8..7f0303631a 100644
+index 53190b359c..9f0defb030 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -531,18 +531,18 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -510,14 +510,14 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
  
      private fun setupCrashReporting() {
@@ -76,21 +77,25 @@ index bd75990cd8..7f0303631a 100644
              .analytics
              .crashReporter
 -            .install(this, ::handleCaughtException)
-+            .install(this, ::handleCaughtException)*/
++            .install(this, ::handleCaughtException) */
      }
  
      private fun handleCaughtException() {
--        if (isMainProcess() && !components.performance.visualCompletenessQueue.isReady()) {
-+/*        if (isMainProcess() && !components.performance.visualCompletenessQueue.isReady()) {
-             CoroutineScope(IO).launch {
-                 StartupCrashCanary.build(applicationContext).createCanary()
-             }
+-        if (
++/*        if (
+             isMainProcess() &&
+             Config.channel.isNightlyOrDebug &&
+             !components.performance.visualCompletenessQueue.isReady()
+@@ -526,7 +526,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+ 
+             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+             applicationContext.startActivity(intent)
 -        }
-+        }*/
++        } */
      }
  
      protected open fun initializeNimbus() {
-@@ -571,7 +571,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -555,7 +555,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      private fun beginSetupMegazord() {
          // Rust components must be initialized at the very beginning, before any other Rust call, ...
          AppServicesInitializer.init(
@@ -141,10 +146,10 @@ index b57cdc1bf5..163f38cbd7 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 40212e28e9..9790be1da4 100644
+index 3c071edf51..172f1e3af9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -279,7 +279,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -246,7 +246,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_use_new_crash_reporter).apply {
@@ -153,7 +158,7 @@ index 40212e28e9..9790be1da4 100644
              isChecked = context.settings().useNewCrashReporterDialog
              onPreferenceChangeListener =
                  Preference.OnPreferenceChangeListener { _, newValue ->
-@@ -347,7 +347,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
+@@ -314,7 +314,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_crash_pull_never_show_again).apply {
@@ -163,10 +168,10 @@ index 40212e28e9..9790be1da4 100644
              onPreferenceChangeListener = SharedPreferenceUpdater()
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..9c6bf88590 100644
+index 35d4c5a9c0..10b92d81fa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -518,7 +518,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -538,7 +538,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
@@ -175,7 +180,7 @@ index 1c7b0fce0d..9c6bf88590 100644
      )
  
      val isRemoteDebuggingEnabled by booleanPreference(
-@@ -881,7 +881,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -907,7 +907,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var crashPullNeverShowAgain: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),

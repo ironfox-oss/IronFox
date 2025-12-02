@@ -1,8 +1,8 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 625640eef4..7be745948e 100644
+index 49779b7cc7..27c4b796ff 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -111,8 +111,8 @@ static const RedirEntry kRedirMap[] = {
+@@ -110,8 +110,8 @@ static const RedirEntry kRedirMap[] = {
       nsIAboutModule::IS_SECURE_CHROME_UI},
  #else
      {"config", "chrome://geckoview/content/config.xhtml",

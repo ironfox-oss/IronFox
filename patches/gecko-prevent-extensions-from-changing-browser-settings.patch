@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/extensions/parent/ext-browserSettings.js b/toolkit/components/extensions/parent/ext-browserSettings.js
-index 7b292f76b8..fcd040e44f 100644
+index 51dbf35890..389071b71a 100644
 --- a/toolkit/components/extensions/parent/ext-browserSettings.js
 +++ b/toolkit/components/extensions/parent/ext-browserSettings.js
 @@ -25,6 +25,7 @@ const PERM_DENY_ACTION = Services.perms.DENY_ACTION;
@@ -142,6 +142,14 @@ index 7b292f76b8..fcd040e44f 100644
  ExtensionPreferencesManager.addSetting("zoomSiteSpecific", {
    permission: "browserSettings",
    prefNames: ["browser.zoom.siteSpecific"],
++  readOnly: true,
+ 
+   setCallback(value) {
+     return { [this.prefNames[0]]: value };
+@@ -337,6 +355,7 @@ ExtensionPreferencesManager.addSetting("zoomSiteSpecific", {
+ ExtensionPreferencesManager.addSetting("verticalTabs", {
+   permission: "browserSettings",
+   prefNames: ["sidebar.verticalTabs"],
 +  readOnly: true,
  
    setCallback(value) {

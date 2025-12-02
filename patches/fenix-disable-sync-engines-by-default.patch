@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
-index 590285305b..3efae229ef 100644
+index 40f4d92eed..3c947fc1b9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
-@@ -336,28 +336,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
+@@ -351,28 +351,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
          val syncEnginesStatus = SyncEnginesStorage(requireContext()).getStatus()
          requirePreference<CheckBoxPreference>(R.string.pref_key_sync_bookmarks).apply {
              isEnabled = syncEnginesStatus.containsKey(SyncEngine.Bookmarks)
@@ -38,14 +38,14 @@ index 590285305b..3efae229ef 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..f9d97b3301 100644
+index 35d4c5a9c0..6edaaa6f5f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1919,7 +1919,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1933,7 +1933,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var isAddressSyncEnabled by featureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_address_sync),
--        default = FxNimbus.features.addressSync.value().enabled,
+-        default = true,
 +        default = false,
          featureFlag = isAddressFeatureEnabled(appContext),
      )

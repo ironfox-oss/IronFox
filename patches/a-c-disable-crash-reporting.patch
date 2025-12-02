@@ -21,7 +21,7 @@ index 4832f0356a..d7cea215d7 100644
          }
      }
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-index 810eb70491..f11b2767f1 100644
+index 810eb70491..f18605e924 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 @@ -157,8 +157,8 @@ class CrashReporter internal constructor(
@@ -40,7 +40,7 @@ index 810eb70491..f11b2767f1 100644
          Thread.setDefaultUncaughtExceptionHandler(handler)
  
 -        return this
-+        return this*/
++        return this */
      }
  
      /**

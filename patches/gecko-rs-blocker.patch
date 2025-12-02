@@ -1,5 +1,5 @@
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
-index 98c72c71a4..bca10097a4 100644
+index 06ff1ea91e..8d8ad2ab97 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
 @@ -212,6 +212,11 @@ class AttachmentDownloader extends Downloader {
@@ -41,7 +41,7 @@ index 98c72c71a4..bca10097a4 100644
      const result = await lazy.RemoteSettingsWorker.importJSONDump(
        this.bucketName,
 diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
-index cbdf07bcda..cc2b12afdf 100644
+index 8cd4afc313..6acd6a7c51 100644
 --- a/services/settings/Utils.sys.mjs
 +++ b/services/settings/Utils.sys.mjs
 @@ -75,6 +75,18 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURLOverride", () => {
@@ -63,7 +63,7 @@ index cbdf07bcda..cc2b12afdf 100644
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "gServerURL",
-@@ -205,6 +217,75 @@ export var Utils = {
+@@ -209,6 +221,75 @@ export var Utils = {
      return false;
    },
  
@@ -139,7 +139,7 @@ index cbdf07bcda..cc2b12afdf 100644
    /**
     * A wrapper around `ServiceRequest` that behaves like `fetch()`.
     *
-@@ -483,7 +564,9 @@ export var Utils = {
+@@ -487,7 +568,9 @@ export var Utils = {
      }
  
      return {

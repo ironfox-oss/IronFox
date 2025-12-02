@@ -1,5 +1,5 @@
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
-index f3e54d3..ed3ae22 100644
+index 316e5ce..07ab0d0 100644
 --- a/components/remote_settings/src/client.rs
 +++ b/components/remote_settings/src/client.rs
 @@ -193,6 +193,11 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
