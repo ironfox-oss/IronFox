@@ -63,7 +63,6 @@ ac_add_options --disable-callgrind
 ac_add_options --disable-debug
 ac_add_options --disable-debug-js-modules
 ac_add_options --disable-debug-symbols
-ac_add_options --disable-dtrace
 ac_add_options --disable-dump-painting
 ac_add_options --disable-execution-tracing
 ac_add_options --disable-extensions-webidl-bindings
