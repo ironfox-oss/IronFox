@@ -63,13 +63,6 @@ patches:
     category: "Accessibility"
 
   # Build System
-  - file: "gecko-fix-125-compile.patch"
-    name: "Fix v125 Compile Error"
-    description: "Fixes a compilation issue introduced in Firefox v125."
-    reason: "Addresses technical bug in the build process."
-    effect: "Ensures successful compilation of the browser."
-    category: "Build System"
-
   - file: "a-c-allow-build-date-override.patch"
     name: "Allow overriding the build date"
     description: "Allows devs to override the build date."
