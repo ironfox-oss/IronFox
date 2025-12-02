@@ -51,10 +51,10 @@ index e1a67a6da4..a98b4656aa 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..78eb5d9698 100644
+index 1c7b0fce0d..8cfbbf9cfa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2736,4 +2736,169 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2736,4 +2736,174 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
@@ -112,6 +112,11 @@ index 1c7b0fce0d..78eb5d9698 100644
 +    var fppOverridesMozillaEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_mozilla_enabled),
 +        default = true,
++    )
++
++    var ironFoxOnboardingCompleted by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_if_onboarding_completed),
++        default = false,
 +    )
 +
 +    var ipv6Enabled by booleanPreference(

@@ -14,7 +14,7 @@ index 625640eef4..b0599cddba 100644
      {"url-classifier", "chrome://global/content/aboutUrlClassifier.xhtml",
       nsIAboutModule::ALLOW_SCRIPT},
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 06f1d0a26e..baad9bd12c 100644
+index 06f1d0a26e..8fe3c2dd89 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
 @@ -40,7 +40,7 @@ if defined('MOZ_CRASHREPORTER'):
@@ -22,7 +22,7 @@ index 06f1d0a26e..baad9bd12c 100644
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
      about_pages.append('profiles')
 -if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
-+if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != '0':
++if defined('IRONFOX'):
      about_pages.append('translations')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
      about_pages.append('crashcontentjava')

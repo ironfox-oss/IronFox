@@ -5,6 +5,9 @@
     <string name="pref_key_if_preferences" translatable="false">pref_key_if_preferences</string>
     <string name="pref_key_if_secret" translatable="false">pref_key_if_secret</string>
 
+    <!-- IronFox onboarding -->
+    <string name="pref_key_if_onboarding_completed" translatable="false">pref_key_if_onboarding_completed</string>
+
     <!-- Accessibility services -->
     <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
 

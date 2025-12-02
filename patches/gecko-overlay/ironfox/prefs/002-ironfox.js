@@ -7,20 +7,35 @@
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
 // NOTE: Values surrounded in curly brackets ({}) are filled in by`prebuild.sh`
-/// IRONFOX_BASE_NAME = {IRONFOX_BASE_NAME}
-/// IRONFOX_CHANNEL = {IRONFOX_CHANNEL}
 /// IRONFOX_VERSION = {IRONFOX_VERSION}
+/// IRONFOX_UBO_ASSETS_URL = {IRONFOX_UBO_ASSETS_URL}
 /// PHOENIX_VERSION = {PHOENIX_VERSION}
 
 /// Branding
 pref("app.releaseNotesURL", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.releaseNotesURL.prompt", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
-pref("app.support.vendor", "{IRONFOX_BASE_NAME}: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}", locked);
 pref("app.update.url.details", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.update.url.manual", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.vendorURL", "https://ironfoxoss.org/", locked);
-pref("browser.ironfox.channel", "{IRONFOX_CHANNEL}", locked);
+pref("browser.ironfox.isIronFox", true, locked);
 pref("browser.ironfox.version", "{IRONFOX_VERSION}", locked);
+
+#ifdef IRONFOX_RELEASE
+    pref("app.support.vendor", "IronFox: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}", locked);
+    pref("browser.ironfox.channel", "release", locked);
+    pref("browser.ironfox.isRelease", true, locked);
+#else
+    pref("app.support.vendor", "IronFox Nightly: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}", locked);
+    pref("browser.ironfox.channel", "nightly", locked);
+    pref("browser.ironfox.isRelease", false, locked);
+#endif
+
+/// Once the onboarding is completed, this pref is set to true
+// On IronFox's onboarding, we want to allow the installation of uBlock Origin (if certain strict criteria is met - 
+// see gecko-ironfox-settings-support-xpinstall.patch) without needing to also enable the installation of add-ons
+// After onboarding though, we don't want this to be the case - so we can use this pref to only allow the
+// installation during the onboarding
+pref("browser.ironfox.onboardingCompleted", false);
 
 /// Configure uBlock Origin
 pref("browser.ironfox.uBO.assetsBootstrapLocation", "{IRONFOX_UBO_ASSETS_URL}");

@@ -1071,19 +1071,11 @@ apply_overlay "$patches/gecko-overlay/"
 
 } >>mozconfig
 
-# On nightlies, allow remote debugging to be enabled persistently
-## (It's still disabled by default though)
-if [[ "$IRONFOX_RELEASE" != 1 ]]; then
-    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/fenix/app/src/main/java/org/ironfoxoss/ironfox/utils/GeckoSettingsBridge.kt
-fi
-
 # Set variables for environment-specific arguments
 
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
-    IRONFOX_BASE_NAME='IronFox'
     IRONFOX_CHANNEL='release'
 else
-    IRONFOX_BASE_NAME='IronFox Nightly'
     IRONFOX_CHANNEL='nightly'
 fi
 
@@ -1107,8 +1099,6 @@ $SED -i "s|{geckotarget}|$geckotarget|" mozconfig
 $SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" mozconfig
 
 # prefs
-$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" ironfox/prefs/002-ironfox.js
-$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" ironfox/prefs/002-ironfox.js
 $SED -i "s|{IRONFOX_UBO_ASSETS_URL}|$IRONFOX_UBO_ASSETS_URL|" ironfox/prefs/002-ironfox.js
 $SED -i "s|{IRONFOX_VERSION}|$IRONFOX_VERSION|" ironfox/prefs/002-ironfox.js
 $SED -i "s|{PHOENIX_VERSION}|$PHOENIX_VERSION|" ironfox/prefs/002-ironfox.js

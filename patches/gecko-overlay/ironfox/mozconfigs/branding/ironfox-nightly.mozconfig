@@ -1,6 +1,7 @@
 
 . "$topsrcdir/ironfox/mozconfigs/branding/common.mozconfig"
 
+ac_add_options --disable-ironfox-release
 ac_add_options --with-app-basename='IronFox Nightly'
 ac_add_options --with-app-name='ironfox-nightly'
 ac_add_options --with-branding='ironfox/branding/ironfox-nightly'

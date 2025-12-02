@@ -14,15 +14,15 @@ index d712949cee..8f37ba74ef 100644
            setAndLockPref(
              "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index 2bfec5537e..9267d8e24a 100644
+index bb451a2795..edf5829bd4 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -411,11 +411,14 @@ EnterprisePoliciesManager.prototype = {
+@@ -415,11 +415,14 @@ EnterprisePoliciesManager.prototype = {
  
    mayInstallAddon(addon) {
      // See https://dev.chromium.org/administrators/policy-list-3/extension-settings-full
 -    if (!ExtensionSettings) {
-+    if (addon.id === "uBlock0@raymondhill.net" && addon.type === "extension" && addon.isWebExtension && addon.sourceURI === "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi" && addon.name === "uBlock Origin" && addon.isCorrectlySigned && addon.providesUpdatesSecurely && addon.isCompatible && addon.isPlatformCompatible && addon.blocklistState === 0) {
++    if (!Services.prefs.getBoolPref("browser.ironfox.onboardingCompleted", false) && addon.id === "uBlock0@raymondhill.net" && addon.type === "extension" && addon.isWebExtension && addon.sourceURI === "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi" && addon.name === "uBlock Origin" && addon.isCorrectlySigned && addon.providesUpdatesSecurely && addon.isCompatible && addon.isPlatformCompatible && addon.blocklistState === 0) {
        return true;
      }
 +    if (!addon.inDatabase && !Services.prefs.getBoolPref("xpinstall.enabled", false)) {

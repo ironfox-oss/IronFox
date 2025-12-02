@@ -48,6 +48,7 @@ object GeckoSettingsBridge {
         setAddressAutofillEnabled(context, engine)
         setCardAutofillEnabled(context, engine)
         setPasswordManagerEnabled(context, engine)
+        setIronFoxOnboardingCompleted(context, engine)
         clearIronFoxPrefs(engine)
 
         // We don't support EME, but, if a user enables it from the about:config, we need to expose the permision UI for it
@@ -63,6 +64,13 @@ object GeckoSettingsBridge {
                 IronFoxPreferences.setEMEEnabled(context, false)
             }
         )
+    }
+
+    fun setIronFoxOnboardingCompleted(context: Context, engine: Engine) {
+        val ironFoxOnboardingCompleted = context.settings().ironFoxOnboardingCompleted as Boolean
+        val ironFoxOnboardingCompletedGeckoPref = "browser.ironfox.onboardingCompleted"
+        setUserPref(engine, ironFoxOnboardingCompletedGeckoPref, ironFoxOnboardingCompleted)
+        setDefaultPref(engine, ironFoxOnboardingCompletedGeckoPref, ironFoxOnboardingCompleted)
     }
 
     fun setWebGLDisabled(context: Context, engine: Engine) {
@@ -317,13 +325,28 @@ object GeckoSettingsBridge {
 
         // Remote Debugging: We want to reset this (to false) on launch for release builds for privacy and security reasons
         val remoteDebuggingGeckoPref = "devtools.debugger.remote-enabled"
+        
+        // Determine if we are on Nightly or Release...
+        val ironFoxReleaseGeckoPref = "browser.ironfox.isRelease"
+        @OptIn(ExperimentalAndroidComponentsApi::class)
+        engine.getBrowserPref(
+            ironFoxReleaseGeckoPref,
+            onSuccess = { ironFoxReleasePref ->
+                if (ironFoxReleasePref.value as Boolean == true) {
+                    clearPref(engine, remoteDebuggingGeckoPref)
+                }
+            },
+            onError = { throwable ->
+                // If this fails for some reason, to be safe, reset it anyways
+                clearPref(engine, remoteDebuggingGeckoPref)
+            }
+        )
 
         // These are old Safe Browsing prefs that we no longer use
         // Them being around in the present results in console errors, so we reset them
         val legacySafeBrowsingLastUpdateGeckoPref = "browser.safebrowsing.provider.ironfox.lastupdatetime"
         val legacySafeBrowsingNextUpdateGeckoPref = "browser.safebrowsing.provider.ironfox.nextupdatetime"
 
-        clearPref(engine, remoteDebuggingGeckoPref)
         clearPref(engine, legacySafeBrowsingLastUpdateGeckoPref)
         clearPref(engine, legacySafeBrowsingNextUpdateGeckoPref)
     }

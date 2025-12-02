@@ -923,7 +923,7 @@ index bb451a2795..010d73bb37 100644
  
  class WindowsGPOPoliciesProvider {
 diff --git a/toolkit/components/enterprisepolicies/moz.build b/toolkit/components/enterprisepolicies/moz.build
-index 4fcb377c80..c4baf0c41a 100644
+index 4fcb377c80..539080df94 100644
 --- a/toolkit/components/enterprisepolicies/moz.build
 +++ b/toolkit/components/enterprisepolicies/moz.build
 @@ -15,7 +15,7 @@ XPIDL_MODULE = "enterprisepolicies"
@@ -931,7 +931,7 @@ index 4fcb377c80..c4baf0c41a 100644
  TEST_DIRS += ["tests"]
  
 -if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
-+if CONFIG["MOZ_WIDGET_TOOLKIT"] != "0":
++if CONFIG["IRONFOX"]:
      EXTRA_JS_MODULES += [
          "EnterprisePolicies.sys.mjs",
          "EnterprisePoliciesContent.sys.mjs",
