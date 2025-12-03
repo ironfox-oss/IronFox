@@ -248,6 +248,7 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/home/middleware/HomeTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/PocketMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/messaging/state/MessagingMiddleware.kt

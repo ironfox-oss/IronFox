@@ -5,7 +5,6 @@ package org.mozilla.fenix.components
 import android.content.Context
 import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.support.utils.RunWhenReadyQueue
-import org.ironfoxoss.ironfox.NoopCrashService
 import org.mozilla.fenix.crashes.CrashFactCollector
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.perf.lazyMonitored
@@ -18,7 +17,7 @@ class Analytics(
     val crashReporter: CrashReporter by lazyMonitored {
         CrashReporter(
             context = context,
-            services = listOf(NoopCrashService()),
+            services = listOf(),
             telemetryServices = listOf(),
             shouldPrompt = CrashReporter.Prompt.ALWAYS,
             promptConfiguration = CrashReporter.PromptConfiguration(

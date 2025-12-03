@@ -100,8 +100,6 @@ IronFox also removes Mozilla's [Glean](https://github.com/mozilla/glean) *(telem
 
 For Firefox for Android itself, while it's untenable to fully remove all references to the Glean library, we do remove the [Glean *`service`*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md) library, and we stub the Glean library itself at build-time and break/neuter all of its functionality. Note that certain naive apps *(ex. `App Manager`, `Exodus`, and `Tracker Control`)* do not take this into account, and incorrectly claim that IronFox has `tracking` libraries *(referring to the `Glean` library)*. Keep in mind that these same apps claim that [Google Chrome has no tracking](https://reports.exodus-privacy.eu.org/en/reports/com.android.chrome/latest/), and even claim that [Tor Browser contains trackers](https://reports.exodus-privacy.eu.org/en/reports/org.torproject.torbrowser/latest/).
 
-`App Manager` specifically also claims that IronFox includes a `Mozilla Crashreport` tracking library, though this is incorrect; you can find the specific [class it's referencing here](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/CrashReporterService.kt), and see for yourself that this is simply an interface, which doesn't include any actual data collection or `tracking`.
-
 ## Does IronFox depend on Google Play Services?
 
 **No**, IronFox does not depend on Google Play Services for any functionality.
