@@ -171,7 +171,7 @@ index 63398b2c71..a6383d8aac 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index ce5e4868cc..3df17fcf01 100644
+index ce5e4868cc..b9cea32386 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
@@ -205,8 +205,14 @@ index ce5e4868cc..3df17fcf01 100644
  import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
  import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
  import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
-@@ -57,10 +57,10 @@ import org.mozilla.fenix.home.PocketMiddleware
- import org.mozilla.fenix.home.SettingsBackedPocketSettings
+@@ -53,15 +53,15 @@ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.filterState
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.ext.sort
+-import org.mozilla.fenix.home.PocketMiddleware
+-import org.mozilla.fenix.home.SettingsBackedPocketSettings
++// import org.mozilla.fenix.home.PocketMiddleware
++// import org.mozilla.fenix.home.SettingsBackedPocketSettings
  import org.mozilla.fenix.home.blocklist.BlocklistHandler
  import org.mozilla.fenix.home.blocklist.BlocklistMiddleware
 -import org.mozilla.fenix.home.middleware.HomeTelemetryMiddleware
@@ -214,10 +220,21 @@ index ce5e4868cc..3df17fcf01 100644
  import org.mozilla.fenix.home.setup.store.DefaultSetupChecklistRepository
  import org.mozilla.fenix.home.setup.store.SetupChecklistPreferencesMiddleware
 -import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
+-import org.mozilla.fenix.messaging.state.MessagingMiddleware
 +// import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
- import org.mozilla.fenix.messaging.state.MessagingMiddleware
++// import org.mozilla.fenix.messaging.state.MessagingMiddleware
  import org.mozilla.fenix.nimbus.FxNimbus
  import org.mozilla.fenix.onboarding.FenixOnboarding
+ import org.mozilla.fenix.perf.AppLinkIntentLaunchTypeProvider
+@@ -70,7 +70,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
+ import org.mozilla.fenix.perf.StartupStateProvider
+ import org.mozilla.fenix.perf.StrictModeManager
+ import org.mozilla.fenix.perf.lazyMonitored
+-import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
++// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
+ import org.mozilla.fenix.settings.settingssearch.DefaultFenixSettingsIndexer
+ import org.mozilla.fenix.termsofuse.TermsOfUseManager
+ import org.mozilla.fenix.utils.Settings
 @@ -201,7 +201,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
@@ -236,15 +253,15 @@ index ce5e4868cc..3df17fcf01 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-@@ -278,7 +278,7 @@ class Components(private val context: Context) {
-                     controller = nimbus.messaging,
-                     settings = settings,
-                 ),
--                MetricsMiddleware(
-+/*                MetricsMiddleware(
-                     metrics = analytics.metrics,
-                     nimbusEventStore = nimbus.events,
-                 ),
+@@ -268,7 +268,7 @@ class Components(private val context: Context) {
+                 ProfileMarkerMiddleware(markerName = "AppStore", profiler = core.engine.profiler),
+                 LogMiddleware(tag = "AppStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
+                 BlocklistMiddleware(blocklistHandler),
+-                PocketMiddleware(
++/*                PocketMiddleware(
+                     lazyMonitored { core.pocketStoriesService },
+                     context.pocketStoriesSelectedCategoriesDataStore,
+                     SettingsBackedPocketSettings(settings),
 @@ -289,9 +289,9 @@ class Components(private val context: Context) {
                          currentTimeInMillis = { System.currentTimeMillis() },
                      ),
@@ -253,11 +270,17 @@ index ce5e4868cc..3df17fcf01 100644
 +                HomeTelemetryMiddleware(), */
                  SetupChecklistPreferencesMiddleware(DefaultSetupChecklistRepository(context)),
 -                SetupChecklistTelemetryMiddleware(),
-+//                SetupChecklistTelemetryMiddleware(),
++/*                SetupChecklistTelemetryMiddleware(),
                  ReviewPromptMiddleware(
                      isReviewPromptFeatureEnabled = { settings.customReviewPromptFeatureEnabled },
                      isTelemetryEnabled = { settings.isTelemetryEnabled },
-@@ -304,7 +304,7 @@ class Components(private val context: Context) {
+@@ -299,12 +299,12 @@ class Components(private val context: Context) {
+                     nimbusEventStore = nimbus.events,
+                 ).also {
+                     settings.migrateLastReviewPromptTimePrefIfNeeded(nimbus.events)
+-                },
++                }, */
+                 AppVisualCompletenessMiddleware(performance.visualCompletenessQueue),
              ),
          ).also {
              it.dispatch(AppAction.SetupChecklistAction.Init)

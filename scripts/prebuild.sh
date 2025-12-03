@@ -245,8 +245,11 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/home/PocketMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/messaging/state/MessagingMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/ReviewPromptMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/telemetry/TelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
@@ -551,6 +554,15 @@ $SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"
 # Remove the Mozilla Ads Client library
 $SED -i 's|"components/ads-client"|# "components/ads-client"|g' Cargo.toml
 $SED -i 's|ads-client|# ads-client|g' megazords/full/Cargo.toml
+
+# Remove the Crash Reporter test library
+$SED -i 's|"components/crashtest"|# "components/crashtest"|g' Cargo.toml
+$SED -i 's|crashtest|# crashtest|g' megazords/full/Cargo.toml
+
+# Remove the Rust Error support library
+## Used for telemetry/error reporting, depends on Glean
+$SED -i 's|"components/support/error|# "components/support/error|g' Cargo.toml
+$SED -i 's|error-support|# error-support|g' megazords/full/Cargo.toml
 
 # Apply Application Services overlay
 apply_overlay "$patches/a-s-overlay/"

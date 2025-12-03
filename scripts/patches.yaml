@@ -170,6 +170,13 @@ patches:
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
+  - file: "a-c-remove-error-support.patch"
+    name: "Remove Error Support (Android Components)"
+    description: "Removes the Rust 'Error Support' library."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Prevents unwanted data collection of users."
+    category: "Mozilla"
+
   - file: "fenix-remove-glean.patch"
     name: "Remove Glean (Fenix)"
     description: "Removes the Glean SDK from Firefox for Android."
