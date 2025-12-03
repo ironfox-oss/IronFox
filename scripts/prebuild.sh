@@ -247,6 +247,10 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/CrashFactCollector.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/CrashReportingAppMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/NimbusExperimentDataProvider.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/ReleaseRuntimeTagProvider.kt
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/middleware/HomeTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/PocketMiddleware.kt
@@ -259,6 +263,7 @@ rm -vf app/src/*/java/org/mozilla/fenix/telemetry/TelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
+rm -vrf app/src/*/java/org/mozilla/fenix/startupCrash
 
 # Let it be IronFox
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then

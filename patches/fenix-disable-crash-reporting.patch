@@ -17,6 +17,33 @@ index 63398b2c71..1674b913c3 100644
  
          <activity
              android:name=".HomeActivity"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
+index 9e7bfe3909..8c03fe9d4e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
+@@ -28,7 +28,7 @@ import mozilla.components.compose.base.annotation.FlexibleWindowLightDarkPreview
+ import mozilla.components.compose.base.button.FilledButton
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.components.components
+-import org.mozilla.fenix.startupCrash.StartupCrashActivity
++// import org.mozilla.fenix.startupCrash.StartupCrashActivity
+ import org.mozilla.fenix.theme.FirefoxTheme
+ import org.mozilla.fenix.utils.Settings
+ 
+@@ -90,10 +90,10 @@ internal fun CrashTools(
+             text = stringResource(R.string.crash_debug_show_startup_crash_screen),
+             modifier = Modifier.fillMaxWidth(),
+             onClick = {
+-                val intent = Intent(appContext, StartupCrashActivity::class.java)
++//                val intent = Intent(appContext, StartupCrashActivity::class.java)
+ 
+-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+-                appContext.startActivity(intent)
++//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++//                appContext.startActivity(intent)
+                 Process.killProcess(Process.myPid())
+             },
+         )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 index e53b2e6ad2..4665880a98 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
@@ -65,9 +92,18 @@ index 1e17f81bda..a5b7e6c84e 100644
                  is DebugDrawerAction.DrawerOpened, DebugDrawerAction.DrawerClosed -> Unit // no-op
              }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 53190b359c..9f0defb030 100644
+index 53190b359c..a35c2a6f05 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -111,7 +111,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
+ import org.mozilla.fenix.session.VisibilityLifecycleCallback
+ import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
+ import org.mozilla.fenix.settings.doh.DohSettingsProvider
+-import org.mozilla.fenix.startupCrash.StartupCrashActivity
++// import org.mozilla.fenix.startupCrash.StartupCrashActivity
+ import org.mozilla.fenix.utils.Settings
+ import org.mozilla.fenix.utils.isLargeScreenSize
+ import org.mozilla.fenix.wallpapers.Wallpaper
 @@ -510,14 +510,14 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
  

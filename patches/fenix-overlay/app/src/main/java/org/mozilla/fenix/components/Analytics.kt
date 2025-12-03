@@ -5,8 +5,6 @@ package org.mozilla.fenix.components
 import android.content.Context
 import mozilla.components.lib.crash.CrashReporter
 import mozilla.components.support.utils.RunWhenReadyQueue
-import org.mozilla.fenix.crashes.CrashFactCollector
-import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.perf.lazyMonitored
 
 class Analytics(
@@ -29,10 +27,6 @@ class Analytics(
             useLegacyReporting = false,
             runtimeTagProviders = listOf(),
         )
-    }
-
-    val crashFactCollector: CrashFactCollector by lazyMonitored {
-        CrashFactCollector(crashReporter)
     }
 }
 
