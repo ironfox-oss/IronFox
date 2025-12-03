@@ -651,6 +651,13 @@ patches:
     effect: "Cleaner interface so that users can focus on where they want to go now, instead of where they went in the past."
     category: "User Interface"
 
+  - file: "fenix-disable-unified-trust-panel-by-default.patch"
+    name: "Disable Unified Trust Panel"
+    description: "Disables the new Unified Trust Panel by default."
+    reason: "The new Unified Trust Panel prevents users from being able to set per-site exceptions for the built-in cookie banner blocker."
+    effect: "Users can set per-site exceptions for the built-in cookie banner blocker."
+    category: "User Interface"
+
   - file: "gecko-expose-hidden-aboutsupport-settings.patch"
     name: "Expose hidden settings at `about:support`"
     description: "Enables advanced options at `about:support`."
