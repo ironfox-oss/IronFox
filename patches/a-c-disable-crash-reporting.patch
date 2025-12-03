@@ -186,6 +186,20 @@ index 810eb70491..6729254da7 100644
      }
  
      enum class Prompt {
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt
+index 8c4943f230..7ef2293767 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt
+@@ -60,7 +60,7 @@ internal fun CrashWithReports.toCrash(reporter: CrashReporter) = DisplayableCras
+ 
+ internal fun ReportEntity.toReport(reporter: CrashReporter): DisplayableCrash.Report {
+     val service = reporter.getCrashReporterServiceById(serviceId)
+-    val name = service?.name ?: serviceId
+-    val url = service?.createCrashReportUrl(reportId)
++    val name = ""
++    val url = ""
+     return DisplayableCrash.Report(name, url)
+ }
 diff --git a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
 index 93ec365f24..4c7e01d3e9 100644
 --- a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
