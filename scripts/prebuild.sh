@@ -193,6 +193,9 @@ $SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/bu
 $SED -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 $SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
+# Enable Mozilla's new redesign for Private Browsing mode
+$SED -i -e 's|PRIVATE_BROWSING_MODE_REDESIGN = .*|PRIVATE_BROWSING_MODE_REDESIGN = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Ensure onboarding is always enabled
 $SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
