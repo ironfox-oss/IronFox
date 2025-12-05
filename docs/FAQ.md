@@ -42,7 +42,7 @@ For those who do use F-Droid to install and update IronFox, we would recommend u
 
 ## How can I download Nightly builds?
 
-IronFox Nightly builds are builds of IronFox that are automatically generated from our GitLab CI. These builds are bleeding edge, and contain the latest changes as we add them. **These builds can be installed alongside your main/existing IronFox install**.
+IronFox `Nightly` builds are builds of IronFox that are automatically generated from our GitLab CI. These builds are bleeding edge, and contain the latest changes as we add them. **These builds can be installed alongside your main/existing IronFox install**. For more details on the differences between IronFox `Release` and `Nightly` builds, you can see [our comparison page here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/NightlyVsRelease.md).
 
 When reporting an issue, we'll likely direct you to install and attempt to reproduce the issue on the latest Nightly build, to ensure that we haven't already fixed the problem.
 
