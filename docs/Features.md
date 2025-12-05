@@ -62,7 +62,7 @@ IronFox **additionally**:
 - Enables [Google Safe Browsing](https://support.mozilla.org/kb/how-does-phishing-and-malware-protection-work) by default, with [a proxy](https://gitlab.com/ironfox-oss/safebrowsing-proxy) to protect the privacy of users, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable Safe Browsing` in settings
 - Enables [HTTPS-Only Mode](https://support.mozilla.org/kb/https-only-prefs) by default
 - Expands the [list of domains](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning#Currently-pinned_Sites) supported by Firefox's [Strict Certificate Pinning](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning)
-- Hardens the browser's built-in PDF Viewer *(PDF.js)*, with changes inspired by [GrapheneOS's PDF Viewer](https://github.com/GrapheneOS/PdfViewer)
+- [Hardens the browser's built-in PDF Viewer *(PDF.js)*](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-harden-pdfjs.patch), with changes inspired by [GrapheneOS's PDF Viewer](https://github.com/GrapheneOS/PdfViewer)
 - Hides the toggle to enable/disable [Remote Debugging](https://firefox-source-docs.mozilla.org/devtools/backend/protocol.html) from settings, and resets the preference per-session if configured via other means
 
 ## Enhancements
