@@ -49,7 +49,7 @@ object GeckoSettingsBridge {
         setCardAutofillEnabled(context, engine)
         setPasswordManagerEnabled(context, engine)
         setIronFoxOnboardingCompleted(context, engine)
-        clearIronFoxPrefs(engine)
+        clearIronFoxPrefs(context, engine)
 
         // We don't support EME, but, if a user enables it from the about:config, we need to expose the permision UI for it
         // If we don't, and a user enables it, Gecko will just allow every site unconditionally to use EME...
@@ -67,21 +67,21 @@ object GeckoSettingsBridge {
     }
 
     fun setIronFoxOnboardingCompleted(context: Context, engine: Engine) {
-        val ironFoxOnboardingCompleted = context.settings().ironFoxOnboardingCompleted as Boolean
+        val ironFoxOnboardingCompleted = IronFoxPreferences.isIronFoxOnboardingCompleted(context)
         val ironFoxOnboardingCompletedGeckoPref = "browser.ironfox.onboardingCompleted"
         setUserPref(engine, ironFoxOnboardingCompletedGeckoPref, ironFoxOnboardingCompleted)
         setDefaultPref(engine, ironFoxOnboardingCompletedGeckoPref, ironFoxOnboardingCompleted)
     }
 
     fun setWebGLDisabled(context: Context, engine: Engine) {
-        val webglDisabled = context.settings().webglDisabled as Boolean
+        val webglDisabled = IronFoxPreferences.isWebGLDisabled(context)
         val webglGeckoPref = "webgl.disabled"
         setUserPref(engine, webglGeckoPref, webglDisabled)
         setDefaultPref(engine, webglGeckoPref, webglDisabled)
     }
 
     fun setAccessibilityEnabled(context: Context, engine: Engine) {
-        val accessibilityEnabled = context.settings().accessibilityEnabled as Boolean
+        val accessibilityEnabled = IronFoxPreferences.isAccessibilityEnabled(context)
         val accessibilityGeckoPref = "accessibility.force_disabled"
         if (accessibilityEnabled) {
             setUserPref(engine, accessibilityGeckoPref, 0)
@@ -93,49 +93,49 @@ object GeckoSettingsBridge {
     }
 
     fun setJavaScriptEnabled(context: Context, engine: Engine) {
-        val javascriptEnabled = context.settings().javascriptEnabled as Boolean
+        val javascriptEnabled = IronFoxPreferences.isJavaScriptEnabled(context)
         val javascriptGeckoPref = "javascript.enabled"
         setUserPref(engine, javascriptGeckoPref, javascriptEnabled)
         setDefaultPref(engine, javascriptGeckoPref, javascriptEnabled)
     }
 
     fun setFPPOverridesIronFoxWebGLEnabled(context: Context, engine: Engine) {
-        val fppOverridesIronFoxWebGLEnabled = context.settings().fppOverridesIronFoxWebGLEnabled as Boolean
+        val fppOverridesIronFoxWebGLEnabled = IronFoxPreferences.isFPPOverridesIronFoxWebGLEnabled(context)
         val fppOverridesIronFoxWebGLGeckoPref = "browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled"
         setUserPref(engine, fppOverridesIronFoxWebGLGeckoPref, fppOverridesIronFoxWebGLEnabled)
         setDefaultPref(engine, fppOverridesIronFoxWebGLGeckoPref, fppOverridesIronFoxWebGLEnabled)
     }
 
     fun setCacheEnabled(context: Context, engine: Engine) {
-        val cacheEnabled = context.settings().cacheEnabled as Boolean
+        val cacheEnabled = IronFoxPreferences.isCacheEnabled(context)
         val cacheEnabledGeckoPref = "browser.cache.disk.enable"
         setUserPref(engine, cacheEnabledGeckoPref, cacheEnabled)
         setDefaultPref(engine, cacheEnabledGeckoPref, cacheEnabled)
     }
 
     fun setFPPOverridesIronFoxEnabled(context: Context, engine: Engine) {
-        val fppOverridesIronFoxEnabled = context.settings().fppOverridesIronFoxEnabled as Boolean
+        val fppOverridesIronFoxEnabled = IronFoxPreferences.isFPPOverridesIronFoxEnabled(context)
         val fppOverridesIronFoxGeckoPref = "browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled"
         setUserPref(engine, fppOverridesIronFoxGeckoPref, fppOverridesIronFoxEnabled)
         setDefaultPref(engine, fppOverridesIronFoxGeckoPref, fppOverridesIronFoxEnabled)
     }
 
     fun setFPPOverridesMozillaEnabled(context: Context, engine: Engine) {
-        val fppOverridesMozillaEnabled = context.settings().fppOverridesMozillaEnabled as Boolean
+        val fppOverridesMozillaEnabled = IronFoxPreferences.isFPPOverridesMozillaEnabled(context)
         val fppOverridesMozillaGeckoPref = "privacy.fingerprintingProtection.remoteOverrides.enabled"
         setUserPref(engine, fppOverridesMozillaGeckoPref, fppOverridesMozillaEnabled)
         setDefaultPref(engine, fppOverridesMozillaGeckoPref, fppOverridesMozillaEnabled)
     }
 
     fun setFPPOverridesIronFoxTimezoneEnabled(context: Context, engine: Engine) {
-        val fppOverridesIronFoxTimezoneEnabled = context.settings().fppOverridesIronFoxTimezoneEnabled as Boolean
+        val fppOverridesIronFoxTimezoneEnabled = IronFoxPreferences.isFPPOverridesIronFoxTimezoneEnabled(context)
         val fppOverridesIronFoxTimezoneGeckoPref = "browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled"
         setUserPref(engine, fppOverridesIronFoxTimezoneGeckoPref, fppOverridesIronFoxTimezoneEnabled)
         setDefaultPref(engine, fppOverridesIronFoxTimezoneGeckoPref, fppOverridesIronFoxTimezoneEnabled)
     }
 
     fun setSpoofEnglishEnabled(context: Context, engine: Engine) {
-        val spoofEnglish = context.settings().spoofEnglish as Boolean
+        val spoofEnglish = IronFoxPreferences.isSpoofEnglishEnabled(context)
         val spoofEnglishGeckoPref = "privacy.spoof_english"
         if (spoofEnglish) {
             setUserPref(engine, spoofEnglishGeckoPref, 2)
@@ -147,21 +147,21 @@ object GeckoSettingsBridge {
     }
 
     fun setSpoofTimezoneEnabled(context: Context, engine: Engine) {
-        val spoofTimezone = context.settings().spoofTimezone as Boolean
+        val spoofTimezone = IronFoxPreferences.isSpoofTimezoneEnabled(context)
         val spoofTimezoneGeckoPref = "browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled"
         setUserPref(engine, spoofTimezoneGeckoPref, spoofTimezone)
         setDefaultPref(engine, spoofTimezoneGeckoPref, spoofTimezone)
     }
 
     fun setXPInstallEnabled(context: Context, engine: Engine) {
-        val xpinstallEnabled = context.settings().xpinstallEnabled as Boolean
+        val xpinstallEnabled = IronFoxPreferences.isXPInstallEnabled(context)
         val xpinstallGeckoPref = "xpinstall.enabled"
         setUserPref(engine, xpinstallGeckoPref, xpinstallEnabled)
         setDefaultPref(engine, xpinstallGeckoPref, xpinstallEnabled)
     }
 
     fun setJITEnabled(context: Context, engine: Engine) {
-        val javascriptJitEnabled = context.settings().javascriptJitEnabled as Boolean
+        val javascriptJitEnabled = IronFoxPreferences.isJITEnabled(context)
         val jitBaselineGeckoPref = "javascript.options.baselinejit"
         val jitIonGeckoPref = "javascript.options.ion"
         val jitHintsGeckoPref = "javascript.options.jithints"
@@ -180,21 +180,21 @@ object GeckoSettingsBridge {
     }
 
     fun setJITTrustedPrincipalsEnabled(context: Context, engine: Engine) {
-        val javascriptJitTrustedPrincipalsEnabled = context.settings().javascriptJitTrustedPrincipalsEnabled as Boolean
+        val javascriptJitTrustedPrincipalsEnabled = IronFoxPreferences.isJITTrustedPrincipalsEnabled(context)
         val jitTrustedPrincipalsGeckoPref = "javascript.options.jit_trustedprincipals"
         setUserPref(engine, jitTrustedPrincipalsGeckoPref, javascriptJitTrustedPrincipalsEnabled)
         setDefaultPref(engine, jitTrustedPrincipalsGeckoPref, javascriptJitTrustedPrincipalsEnabled)
     }
 
     fun setPrintEnabled(context: Context, engine: Engine) {
-        val printEnabled = context.settings().printEnabled as Boolean
+        val printEnabled = IronFoxPreferences.isPrintEnabled(context)
         val printGeckoPref = "print.enabled"
         setUserPref(engine, printGeckoPref, printEnabled)
         setDefaultPref(engine, printGeckoPref, printEnabled)
     }
 
     fun setSafeBrowsingEnabled(context: Context, engine: Engine) {
-        val safeBrowsingEnabled = context.settings().safeBrowsingEnabled as Boolean
+        val safeBrowsingEnabled = IronFoxPreferences.isSafeBrowsingEnabled(context)
         val safeBrowsingMalwareGeckoPref = "browser.safebrowsing.malware.enabled"
         val safeBrowsingPhishingGeckoPref = "browser.safebrowsing.phishing.enabled"
         setUserPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
@@ -204,28 +204,28 @@ object GeckoSettingsBridge {
     }
 
     fun setSVGEnabled(context: Context, engine: Engine) {
-        val svgEnabled = context.settings().svgEnabled as Boolean
+        val svgEnabled = IronFoxPreferences.isSVGEnabled(context)
         val svgGeckoPref = "svg.disabled"
         setUserPref(engine, svgGeckoPref, !svgEnabled)
         setDefaultPref(engine, svgGeckoPref, !svgEnabled)
     }
 
     fun setWASMEnabled(context: Context, engine: Engine) {
-        val wasmEnabled = context.settings().wasmEnabled as Boolean
+        val wasmEnabled = IronFoxPreferences.isWASMEnabled(context)
         val wasmGeckoPref = "javascript.options.wasm"
         setUserPref(engine, wasmGeckoPref, wasmEnabled)
         setDefaultPref(engine, wasmGeckoPref, wasmEnabled)
     }
 
     fun setWebRTCEnabled(context: Context, engine: Engine) {
-        val webrtcEnabled = context.settings().webrtcEnabled as Boolean
+        val webrtcEnabled = IronFoxPreferences.isWebRTCEnabled(context)
         val webrtcGeckoPref = "media.peerconnection.enabled"
         setUserPref(engine, webrtcGeckoPref, webrtcEnabled)
         setDefaultPref(engine, webrtcGeckoPref, webrtcEnabled)
     }
 
     fun setTranslationsEnabled(context: Context, engine: Engine) {
-        val translationsEnabled = context.settings().translationsEnabled as Boolean
+        val translationsEnabled = IronFoxPreferences.isTranslationsEnabled(context)
         val translationsEnabledGeckoPref = "browser.translations.enable"
         val translationsSupportedGeckoPref = "browser.translations.simulateUnsupportedEngine"
         setUserPref(engine, translationsEnabledGeckoPref, translationsEnabled)
@@ -235,14 +235,14 @@ object GeckoSettingsBridge {
     }
 
     fun setIPv6Enabled(context: Context, engine: Engine) {
-        val ipv6Enabled = context.settings().ipv6Enabled as Boolean
+        val ipv6Enabled = IronFoxPreferences.isIPv6Enabled(context)
         val ipv6GeckoPref = "network.dns.disableIPv6"
         setUserPref(engine, ipv6GeckoPref, !ipv6Enabled)
         setDefaultPref(engine, ipv6GeckoPref, !ipv6Enabled)
     }
 
     fun setPDFjsDisabled(context: Context, engine: Engine) {
-        val pdfjsDisabled = context.settings().pdfjsDisabled as Boolean
+        val pdfjsDisabled = IronFoxPreferences.isPDFjsDisabled(context)
         val pdfjsGeckoPref = "pdfjs.disabled"
         setUserPref(engine, pdfjsGeckoPref, pdfjsDisabled)
         setDefaultPref(engine, pdfjsGeckoPref, pdfjsDisabled)
@@ -320,27 +320,15 @@ object GeckoSettingsBridge {
         setDefaultPref(engine, passwordManagerGeckoPref, passwordManagerEnabled)
     }
 
-    fun clearIronFoxPrefs(engine: Engine) {
+    fun clearIronFoxPrefs(context: Context, engine: Engine) {
         // These are prefs that need to be reset for different reasons
 
         // Remote Debugging: We want to reset this (to false) on launch for release builds for privacy and security reasons
         val remoteDebuggingGeckoPref = "devtools.debugger.remote-enabled"
-        
-        // Determine if we are on Nightly or Release...
-        val ironFoxReleaseGeckoPref = "browser.ironfox.isRelease"
-        @OptIn(ExperimentalAndroidComponentsApi::class)
-        engine.getBrowserPref(
-            ironFoxReleaseGeckoPref,
-            onSuccess = { ironFoxReleasePref ->
-                if (ironFoxReleasePref.value as Boolean == true) {
-                    clearPref(engine, remoteDebuggingGeckoPref)
-                }
-            },
-            onError = { throwable ->
-                // If this fails for some reason, to be safe, reset it anyways
-                clearPref(engine, remoteDebuggingGeckoPref)
-            }
-        )
+
+        if (context.packageName != "org.ironfoxoss.ironfox.nightly") {
+            clearPref(engine, remoteDebuggingGeckoPref)
+        }
 
         // These are old Safe Browsing prefs that we no longer use
         // Them being around in the present results in console errors, so we reset them

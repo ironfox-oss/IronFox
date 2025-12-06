@@ -556,4 +556,28 @@ object IronFoxPreferences {
     fun isEMEEnabled(
         context: Context
     ): Boolean = context.settings().emeEnabled
+
+    /**
+     * Set whether the onboarding has been completed
+     *
+     * @param context The application context
+     * @param isCompleted Whether the onboarding has been completed
+     */
+    fun setIronFoxOnboardingCompleted(
+        context: Context,
+        isCompleted: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironFoxOnboardingCompleted = isCompleted
+    }
+
+    /**
+     * Check if the onboarding has been completed
+     *
+     * @param context The application context
+     */
+    fun isIronFoxOnboardingCompleted(
+        context: Context
+    ): Boolean = context.settings().ironFoxOnboardingCompleted
 }
