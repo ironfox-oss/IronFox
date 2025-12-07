@@ -94,6 +94,30 @@ object IronFoxPreferences {
     ): Boolean = context.settings().fppOverridesIronFoxWebGLEnabled
 
     /**
+     * Set whether to always use private browsing mode
+     *
+     * @param context The application context
+     * @param isEnabled Whether to always use private browsing mode
+     */
+    fun setAlwaysUsePrivateBrowsing(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.alwaysUsePrivateBrowsing = isEnabled
+        settings.openLinksInAPrivateTab = isEnabled
+        settings.showHomepageHeader = !isEnabled
+    }
+
+    /**
+     * Check if we shold always use private browsing mode
+     */
+    fun isAlwaysUsePrivateBrowsing(
+        context: Context
+    ): Boolean = context.settings().alwaysUsePrivateBrowsing
+
+    /**
      * Set whether to enable disk cache
      *
      * @param context The application context

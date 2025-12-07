@@ -24,6 +24,7 @@ import org.mozilla.fenix.ext.requireComponents
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.ext.showToolbar
 import org.mozilla.fenix.R
+import org.mozilla.fenix.settings.requirePreference
 import org.mozilla.fenix.utils.view.addToRadioGroup
 
 @Suppress("TooManyFunctions")
@@ -140,6 +141,37 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
         }
 
         /*** Privacy ***/
+
+        /**
+         * Indicates whether or not we should always use private browsing
+         * Default: false
+         * Gecko preference(s) impacted: browser.privatebrowsing.autostart
+         */
+        val alwaysUsePrivateBrowsingPreference = requirePreference<SwitchPreference>(
+            R.string.pref_key_always_use_private_browsing,
+        )
+
+        alwaysUsePrivateBrowsingPreference.isChecked = IronFoxPreferences.isAlwaysUsePrivateBrowsing(requireContext())
+        alwaysUsePrivateBrowsingPreference.setOnPreferenceChangeListener<Boolean> { preference, alwaysUsePrivateBrowsing ->
+            val context = requireContext()
+            val engine = requireComponents.core.engine
+
+            IronFoxPreferences.setAlwaysUsePrivateBrowsing(context, alwaysUsePrivateBrowsing)
+            GeckoSettingsBridge.setAlwaysUsePrivateBrowsing(context, engine)
+
+            Toast.makeText(
+                context,
+                getString(R.string.quit_application),
+                Toast.LENGTH_LONG,
+            ).show()
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    exitProcess(0)
+                },
+                DEFAULT_EXIT_DELAY,
+            )
+            true
+        }
 
         /**
          * Indicates whether or not we should enable disk cache

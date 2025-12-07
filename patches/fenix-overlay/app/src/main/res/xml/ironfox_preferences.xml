@@ -139,6 +139,14 @@
             android:key="@string/pref_key_referer_policy_hosts_match"
             android:title="@string/preference_referer_policy_hosts_match" />
 
+        <!-- Whether we should enable always use private browsing mode -->
+        <androidx.preference.SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_key_always_use_private_browsing"
+            android:summary="@string/restart_required_summary"
+            android:title="@string/preference_always_use_private_browsing"
+            app:iconSpaceReserved="false" />
+
         <!-- Whether we should enable disk cache -->
         <androidx.preference.SwitchPreference
             android:defaultValue="false"

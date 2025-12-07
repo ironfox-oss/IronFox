@@ -25,6 +25,7 @@ object GeckoSettingsBridge {
         setAccessibilityEnabled(context, engine)
         setJavaScriptEnabled(context, engine)
         setFPPOverridesIronFoxWebGLEnabled(context, engine)
+        setAlwaysUsePrivateBrowsing(context, engine)
         setCacheEnabled(context, engine)
         setFPPOverridesIronFoxEnabled(context, engine)
         setFPPOverridesMozillaEnabled(context, engine)
@@ -104,6 +105,13 @@ object GeckoSettingsBridge {
         val fppOverridesIronFoxWebGLGeckoPref = "browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled"
         setUserPref(engine, fppOverridesIronFoxWebGLGeckoPref, fppOverridesIronFoxWebGLEnabled)
         setDefaultPref(engine, fppOverridesIronFoxWebGLGeckoPref, fppOverridesIronFoxWebGLEnabled)
+    }
+
+    fun setAlwaysUsePrivateBrowsing(context: Context, engine: Engine) {
+        val alwaysUsePrivateBrowsing = IronFoxPreferences.isAlwaysUsePrivateBrowsing(context)
+        val alwaysUsePrivateBrowsingGeckoPref = "browser.privatebrowsing.autostart"
+        setUserPref(engine, alwaysUsePrivateBrowsingGeckoPref, alwaysUsePrivateBrowsing)
+        setDefaultPref(engine, alwaysUsePrivateBrowsingGeckoPref, alwaysUsePrivateBrowsing)
     }
 
     fun setCacheEnabled(context: Context, engine: Engine) {

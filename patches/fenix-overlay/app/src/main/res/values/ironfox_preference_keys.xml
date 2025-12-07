@@ -11,6 +11,9 @@
     <!-- Accessibility services -->
     <string name="pref_key_accessibility_enabled" translatable="false">pref_key_accessibility_enabled</string>
 
+    <!-- Always use private browsing mode -->
+    <string name="pref_key_always_use_private_browsing" translatable="false">pref_key_always_use_private_browsing</string>
+
     <!-- Collections -->
     <string name="pref_key_collections_enabled" translatable="false">pref_key_collections_enabled</string>
 

@@ -19,6 +19,9 @@
     <!-- Accessibility services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
 
+    <!-- Always use private browsing mode -->
+    <string name="preference_always_use_private_browsing">Always use private browsing mode</string>
+
     <!-- Collections -->
     <string name="preference_collections_enabled">Enable collections</string>
 
