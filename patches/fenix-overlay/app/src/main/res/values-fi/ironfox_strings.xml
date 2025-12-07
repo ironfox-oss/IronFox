@@ -53,4 +53,5 @@
     <string name="onboarding_state_installing_ublock">Asennetaan uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">uBlock Originin asennuksessa tapahtui virhe: %1$s</string>
     <string name="onboarding_action_retry">Yritä uudelleen</string>
+    <string name="preference_translations_enabled">Laita Firefox käännökset päälle</string>
 </resources>

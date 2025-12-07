@@ -47,4 +47,14 @@
     <string name="preference_wasm_enabled">Abilita WebAssembly (WASM)</string>
     <string name="preference_webgl_disabled">Disabilita WebGL</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Abilita l\'override WebGL di IronFox</string>
+    <string name="onboarding_if_preferences_description">Personalizza IronFox a tuo piacimento</string>
+    <string name="onboarding_install_ublock_title">Installa uBlock Origin</string>
+    <string name="spoof_timezone">Camuffa il fuso orario in UTC-0</string>
+    <string name="preference_autoplay_policy_click_to_play">Click-to-play</string>
+    <string name="onboarding_if_preference_doh_caption">Aumenta la sicurezza del tuo browser con il DNS-over-HTTPS per una maggiore privacy e sicurezza.</string>
+    <string name="onboarding_if_preferences_title">Personalizza IronFox</string>
+    <string name="preference_webrtc_enabled">Abilita WebRTC</string>
+    <string name="tor_spoof_english_title">Camuffa la lingua in en-US</string>
+    <string name="preference_xpinstall_enabled">Abilita l\'installazione di add-ons</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">L\'installazione di add-ons è attualmente disabilitata. Se lo si desidera, al costo della sicurezza, puoi abilitarlo andando su Impostazioni -&gt; IronFox -&gt; Impostazioni di IronFox -&gt; Sicurezza -&gt; Abilita l\'installazione di add-ons.</string>
 </resources>

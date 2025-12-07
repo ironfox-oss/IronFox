@@ -80,4 +80,5 @@
     <string name="preference_autoplay_policy_transient">Transitória (Padrão)</string>
     <string name="preference_autoplay_policy_click_to_play">Clicar para reproduzir</string>
     <string name="preference_autoplay_policy_sticky">Adesivo</string>
+    <string name="preference_always_use_private_browsing">Sempre usar o modo de navegação privativa</string>
 </resources>

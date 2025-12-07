@@ -53,4 +53,15 @@
     <string name="preference_referer_policy_hosts_match">Wyłącz żądania między domenami</string>
     <string name="preference_referer_policy_always">Zawsze przesyłaj zapytania między domenami</string>
     <string name="preference_referer_policy_base_domains_match">Przesyłaj zapytania między domenami, gdy domeny bazowe są takie same</string>
+    <string name="spoof_timezone">Symuluj strefę czasową UTC-0</string>
+    <string name="preference_autoplay_policy_click_to_play">Kliknij, aby odtworzyć</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Włącz nadpisywanie WebGL przez IronFox</string>
+    <string name="preference_media_autoplay_description">Kontroluj jak IronFox blokuje autoodtwarzanie multimediów.</string>
+    <string name="preference_webgl_disabled">Wyłącz WebGL</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Włącza JIT dla rozszerzeń, gdy jest on globalnie wyłączony - Zmiana tego ustawienia spowoduje ponowne uruchomienie przeglądarki</string>
+    <string name="preference_media_autoplay_title">Autoodtwarzanie multimediów</string>
+    <string name="preference_collections_enabled">Włącz kolekcje</string>
+    <string name="preference_jit_trusted_principals_enabled">Włącz kompilację Just-in-time (JIT) JavaScript dla rozszerzeń</string>
+    <string name="spoof_timezone_summary">Po włączeniu wzmacnia ochronę przed zbieraniem odcisków palców</string>
+    <string name="preference_translations_enabled">Włącz Firefox Translations</string>
 </resources>
