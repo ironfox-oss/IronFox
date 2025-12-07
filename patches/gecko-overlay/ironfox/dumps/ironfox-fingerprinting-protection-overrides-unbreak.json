@@ -79,6 +79,10 @@
     },
     {
       "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+      "firstPartyDomain": "namemc.com"
+    },
+    {
+      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
       "firstPartyDomain": "nperf.com"
     },
     {

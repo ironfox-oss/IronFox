@@ -150,6 +150,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "namemc.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "neal.fun"
     },
     {
