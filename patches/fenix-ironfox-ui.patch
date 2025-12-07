@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index b5cd2868a6..9fbbe6bca1 100644
+index b5cd2868a6..9e116a0a70 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 @@ -439,9 +439,9 @@ open class DefaultToolbarMenu(
@@ -14,22 +14,33 @@ index b5cd2868a6..9fbbe6bca1 100644
                  BrowserMenuDivider(),
                  findInPageItem,
                  translationsItem.apply { visible = ::shouldShowTranslations },
-@@ -454,8 +454,8 @@ open class DefaultToolbarMenu(
+@@ -453,9 +453,9 @@ open class DefaultToolbarMenu(
+                 BrowserMenuDivider(),
                  addToHomeScreenItem.apply { visible = ::canAddToHomescreen },
                  addAppToHomeScreenItem.apply { visible = ::canAddAppToHomescreen },
-                 if (shouldShowTopSites) addRemoveTopSitesItem else null,
+-                if (shouldShowTopSites) addRemoveTopSitesItem else null,
 -                saveToCollectionItem,
 -                if (FxNimbus.features.print.value().browserPrintEnabled &&
-+                if (context.settings().collections) saveToCollectionItem else null,
++                if (shouldShowTopSites && !context.settings().alwaysUsePrivateBrowsing) addRemoveTopSitesItem else null,
++                if (context.settings().collections && !context.settings().alwaysUsePrivateBrowsing) saveToCollectionItem else null,
 +                if (context.settings().printEnabled &&
                      !context.isAndroidAutomotiveAvailable()
                  ) {
                      printPageItem
+@@ -464,7 +464,7 @@ open class DefaultToolbarMenu(
+                 },
+                 BrowserMenuDivider(),
+                 settingsItem,
+-                if (shouldDeleteDataOnQuit) deleteDataOnQuit else null,
++                deleteDataOnQuit,
+                 if (shouldUseBottomToolbar) BrowserMenuDivider() else null,
+                 if (shouldUseBottomToolbar) menuToolbar else null,
+             )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-index 849660153d..6c6722c499 100644
+index 849660153d..60a57c6b77 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-@@ -206,10 +206,10 @@ class HomeMenu(
+@@ -206,17 +206,17 @@ class HomeMenu(
              bookmarksItem,
              historyItem,
              downloadsItem,
@@ -43,3 +54,12 @@ index 849660153d..6c6722c499 100644
              BrowserMenuDivider(),
              BrowserMenuDivider(),
              whatsNewItem,
+             helpItem,
+-            customizeHomeItem,
++            if (!settings.alwaysUsePrivateBrowsing) customizeHomeItem else null,
+             settingsItem,
+-            if (settings.shouldDeleteBrowsingDataOnQuit) quitItem else null,
++            quitItem,
+         ).also { items ->
+             items.getHighlight()?.let { onHighlightPresent(it) }
+         }

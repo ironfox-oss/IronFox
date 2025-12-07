@@ -51,16 +51,21 @@ index d0e61a00fc..9fab5ae117 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..868e5b73da 100644
+index 35d4c5a9c0..68df988179 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2743,4 +2743,174 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2743,4 +2743,179 @@ class Settings(private val appContext: Context) : PreferencesHolder {
          val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
          return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
      }
 +
 +    var accessibilityEnabled by booleanPreference(
 +        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
++        default = false,
++    )
++
++    var alwaysUsePrivateBrowsing by booleanPreference(
++        appContext.getPreferenceKey(R.string.pref_key_always_use_private_browsing),
 +        default = false,
 +    )
 +

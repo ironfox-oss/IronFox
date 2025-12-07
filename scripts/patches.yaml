@@ -731,6 +731,13 @@ patches:
     effect: "Integration with accessibility services are disabled by default, but users can re-enable it from the UI."
     category: "User Interface"
 
+  - file: "fenix-ironfox-settings-support-pb-always.patch"
+    name: "IronFox Settings Support (Fenix) - Always Use Private Browsing"
+    description: "Provides support for a UI toggle to always use private browsing mode."
+    reason: "To allow users to always use private browsing mode if desired."
+    effect: "Users can force the browser to always use private browsing mode, directly from the UI."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-translations.patch"
     name: "IronFox Settings Support (Fenix) - Firefox Translations"
     description: "Provides support for a UI toggle to enable/disable Firefox Translations."
