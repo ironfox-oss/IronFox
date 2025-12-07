@@ -12,6 +12,7 @@
 	- [Why does IronFox crash on GrapheneOS?](#why-does-ironfox-crash-on-grapheneos)
 	- [Can I use FIDO/U2F/Passkeys?](#can-i-use-fidou2fpasskeys)
 	- [Can I receive push notifications?](#can-i-receive-push-notifications)
+	- [Can I use a custom server for Firefox Sync?](#can-i-use-a-custom-server-for-firefox-sync)
 	- [Why are certain preferences locked?](#why-are-certain-preferences-locked)
 	- [Why isn't Resist Fingerprinting (RFP) enabled?](#why-isnt-resist-fingerprinting-rfp-enabled)
 	- [Why can't I install add-ons/extensions?](#why-cant-i-install-add-onsextensions)
@@ -135,6 +136,12 @@ After setting up your distributor, you can enable support for UnifiedPush by sel
 **NOTE**: By default, IronFox blocks prompts from websites to enable web notifications. If you'd like to receive notifications from websites, you can re-enable notifications prompts by navigating to `Privacy and security` -> `Site settings` -> `Permissions` -> `Notification` in settings, and selecting `Ask to allow`.
 
 **NOTE**: To receive notifications while IronFox is in the background, [**GrapheneOS** users might unfortunately need to disable the `Dynamic code loading via storage` exploit protection for IronFox](https://gitlab.com/ironfox-oss/IronFox/-/issues/124). You can do this by navigating to IronFox's `App info` *(You can get there by holding IronFox's app icon and selecting `App info`, or by navigating to `Settings` -> `Apps`, and finding + selecting `IronFox`), navigating to `Exploit protection` -> `Dynamic code loading via storage`, and selecting `Allowed`)*.
+
+## Can I use a custom server for Firefox Sync?
+
+Yes. The steps that apply to standard Firefox for Android also apply to IronFox. For details, see [Mozilla's support article here](https://support.mozilla.org/kb/how-set-firefox-sync-firefox-android#w_connect-to-a-self-hosted-mozilla-account-server).
+
+Additionally, to change the endpoint used by sync for add-ons, from [`about:config`](about:config), you can set the value of `webextensions.storage.sync.serverURL` to your desired endpoint.
 
 ## Why are certain preferences locked?
 
