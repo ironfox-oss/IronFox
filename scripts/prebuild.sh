@@ -589,7 +589,7 @@ popd
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+    patch -p1 --no-backup-if-mismatch <"$builddir/wasi-sdk.patch"
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
