@@ -203,7 +203,6 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
 
     # We need to use a newer clang here, because A: Mozilla dropped support for using below 17, and B: it's just good practice
-    ## I'm using 20.1.8 specifically because it's listed in mozilla-central: https://searchfox.org/firefox-main/rev/ac83682a/taskcluster/kinds/fetch/toolchains.yml#392
     rm -rf "$WASISDKDIR/src/llvm-project"
     echo "Cloning llvm..."
     clone_repo "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "$LLVM_COMMIT"
