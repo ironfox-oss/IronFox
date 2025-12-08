@@ -18,44 +18,6 @@ fi
 clone_repo() {
     url="$1"
     path="$2"
-    tag="$3"
-
-    if [[ "$url" == "" ]]; then
-        echo "URL missing for clone"
-        exit 1
-    fi
-
-    if [[ "$path" == "" ]]; then
-        echo "Path is required for cloning '$url'"
-        exit 1
-    fi
-
-    if [[ "$tag" == "" ]]; then
-        echo "Tag name is required for cloning '$url'"
-        exit 1
-    fi
-
-    if [[ -f "$path" ]]; then
-        echo "'$path' exists and is not a directory"
-        exit 1
-    fi
-
-    if [[ -d "$path" ]]; then
-        echo "'$path' already exists"
-        read -p "Do you want to re-clone this repository? [y/N] " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
-            return 0
-        fi
-    fi
-
-    echo "Cloning $url::$tag"
-    git clone --branch "$tag" --depth=1 "$url" "$path"
-}
-
-clone_repo_by_revision() {
-    url="$1"
-    path="$2"
     revision="$3"
 
     if [[ "$url" == "" ]]; then
@@ -211,21 +173,21 @@ echo "'bundletool' is set up at $BUILDDIR/bundletool"
 
 # Clone Glean
 echo "Cloning Glean..."
-clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_VERSION"
+clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_COMMIT"
 
 # Clone MicroG
 echo "Cloning microG..."
-clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_VERSION"
+clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_COMMIT"
 
 # Download Phoenix
 echo "Downloading Phoenix..."
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/000-phoenix.js"
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix-extended.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_COMMIT/android/phoenix.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/000-phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_COMMIT/android/phoenix-extended.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
 
 # Get Tor's no-op UniFFi binding generator
 if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning uniffi-bindgen..."
-    clone_repo_by_revision "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_COMMIT"
+    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_COMMIT"
 elif [[ "$PLATFORM" == "macos" ]]; then
     echo "Downloading prebuilt uniffi-bindgen..."
     download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_OSX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
@@ -237,14 +199,14 @@ fi
 # Get WebAssembly SDK
 if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning wasi-sdk..."
-    clone_repo_by_revision "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_COMMIT"
+    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_COMMIT"
     (cd "$WASISDKDIR" && git submodule update --init --depth=64)
 
     # We need to use a newer clang here, because A: Mozilla dropped support for using below 17, and B: it's just good practice
     ## I'm using 20.1.8 specifically because it's listed in mozilla-central: https://searchfox.org/firefox-main/rev/ac83682a/taskcluster/kinds/fetch/toolchains.yml#392
     rm -rf "$WASISDKDIR/src/llvm-project"
     echo "Cloning llvm..."
-    clone_repo_by_revision "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "$LLVM_COMMIT"
+    clone_repo "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "$LLVM_COMMIT"
 
     # We also clone Firefox directly, but, this is to ensure that the WASI patch we're using always matches exactly what we're
     ## using at https://gitlab.com/ironfox-oss/prebuilds
@@ -260,12 +222,11 @@ fi
 
 # Clone application-services
 echo "Cloning application-services..."
-clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDIR" "${APPSERVICES_VERSION}"
-#git clone --branch "$APPSERVICES_VERSION" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
+clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDIR" "$APPSERVICES_COMMIT"
 
 # Clone Firefox
 echo "Cloning Firefox..."
-clone_repo_by_revision "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "$FIREFOX_COMMIT"
+clone_repo "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "$FIREFOX_COMMIT"
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."
