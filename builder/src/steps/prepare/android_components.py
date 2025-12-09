@@ -103,6 +103,14 @@ def prepare_android_components(
             ],
         ),
         
+        # Pin SNAPSHOT version so that we always use locally published A-S
+        *_process_file(
+            path="plugins/dependencies/src/main/java/ApplicationServices.kt",
+            replacements=[
+                regex(r'(val\s+VERSION\s+=).*', r'\1 "0.0.1-SNAPSHOT-true"')
+            ]
+        ),
+
         # No-op AMO collections/recommendations
         *_process_file(
             path="components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt",
@@ -122,7 +130,7 @@ def prepare_android_components(
                 regex(r"enabled: Boolean = .*", r"enabled: Boolean = false,"),
                 regex(r"shouldPrompt: Prompt = .*", r"shouldPrompt: Prompt = Prompt.ALWAYS,"),
                 regex(r"useLegacyReporting: Boolean = .*", r"useLegacyReporting: Boolean = false,"),
-                regex(r"var enabled: Boolean = false,", r"var enabled: Boolean = enabled,"),
+                regex(r"var enabled: Boolean = false,", r"var enabled: Boolean = enabled"),
             ],
         ),
 

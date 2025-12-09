@@ -239,7 +239,7 @@ def build_fenix(
     return [
         d.run_cmds(
             name="Build Fenix",
-            commands=[f"{paths.gradle_exec} {task}"],
+            commands=[f"{paths.gradle_exec} {task} -Plocal=true"],
             cwd=paths.fenix_dir,
         )
     ]

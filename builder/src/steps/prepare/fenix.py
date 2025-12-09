@@ -609,7 +609,7 @@ def _android_manifest_xml_replacements():
             
             # Wrap the preinstall permission in an HTML comment
             line_affix(
-                r'<uses-permission\s+android:name="com.adjust.preinstall.READ_PERMISSION"\s*/>',
+                r'^\s*<uses-permission\s+android:name="com.adjust.preinstall.READ_PERMISSION"\s*/>',
                 prefix="<!-- ",
                 suffix=" -->",
             ),

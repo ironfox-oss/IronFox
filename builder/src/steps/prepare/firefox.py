@@ -164,7 +164,6 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
             target=paths.firefox_dir / "mobile/locales/moz.build",
             contents=lambda: b'''
 JAR_MANIFESTS += ["jar.mn"]
-DIRS += ["ironfox"]
             ''',
             append=True,
         ),
