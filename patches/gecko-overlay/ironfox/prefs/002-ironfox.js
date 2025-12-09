@@ -101,6 +101,45 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 pref("network.protocol-handler.expose.bankid", true); // [HIDDEN]
 pref("network.protocol-handler.external.bankid", true); // [HIDDEN]
 
+/// Define initial prefs for our UI settings
+// This ensures that Gecko preferences for our custom UI settings are always defined
+// They should be defined anyways by GeckoSettingsBridge (and many are also set by Phoenix)
+// but, we can still define them here to be safe (if anything, as a fall-back)
+pref("accessibility.force_disabled", 1);
+pref("browser.cache.disk.enable", false);
+pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false);
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true);
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true);
+pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", true);
+pref("browser.privatebrowsing.autostart", false);
+pref("browser.safebrowsing.malware.enabled", true);
+pref("browser.safebrowsing.phishing.enabled", true);
+pref("browser.translations.enable", true);
+pref("browser.translations.simulateUnsupportedEngine", false);
+pref("extensions.formautofill.addresses.enabled", false);
+pref("extensions.formautofill.creditCards.enabled", false);
+pref("javascript.enabled", true);
+pref("javascript.options.baselinejit", false);
+pref("javascript.options.ion", false);
+pref("javascript.options.jit_trustedprincipals", false);
+pref("javascript.options.jithints", false);
+pref("javascript.options.native_regexp", false);
+pref("javascript.options.wasm", true);
+pref("javascript.options.wasm_optimizingjit", false);
+pref("layout.css.prefers-color-scheme.content-override", 1);
+pref("media.autoplay.blocking_policy", 1);
+pref("media.peerconnection.enabled", true);
+pref("network.dns.disableIPv6", false);
+pref("network.http.referer.XOriginPolicy", 0);
+pref("pdfjs.disabled", false);
+pref("print.enabled", true);
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true);
+pref("privacy.spoof_english", 2);
+pref("signon.rememberSignons", false);
+pref("svg.disabled", false);
+pref("webgl.disabled", true);
+pref("xpinstall.enabled", false);
+
 /// Annotate locked prefs controlled by UI settings
 pref("accessibility.force_disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("accessibility.force_disabled.1.NOTE", "'Enable accessibility services'", locked);
