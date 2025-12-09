@@ -4,7 +4,7 @@
 # Sources
 
 ## Firefox
-### This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_BUILD1
+### This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_RELEASE
 FIREFOX_COMMIT="1bff8c2701b6fc4df104208f4e5b80e330426a55"
 ### This commit corresponds to the latest commit for the WASI SDK patch specifically
 ### (ex. https://github.com/mozilla-firefox/firefox/blob/1a033a9748a551fc2d100cb6266a1e751effc5df/taskcluster/scripts/misc/wasi-sdk.patch)
