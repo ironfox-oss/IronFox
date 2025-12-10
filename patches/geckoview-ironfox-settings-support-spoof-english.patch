@@ -1,5 +1,5 @@
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 6f369bae3c..9685d2430d 100644
+index 566c3a6330..3f2016b6a8 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 @@ -12,6 +12,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -10,12 +10,12 @@ index 6f369bae3c..9685d2430d 100644
  });
  
  const { debug, warn } = GeckoViewUtils.initLogging("Startup");
-@@ -363,6 +364,10 @@ export class GeckoViewStartup {
+@@ -368,6 +369,10 @@ export class GeckoViewStartup {
          if (aData.requestedLocales) {
            Services.locale.requestedLocales = aData.requestedLocales;
          }
 +        lazy.RFPHelper._handleSpoofEnglishChanged();
-+        if (Services.prefs.getIntPref("privacy.spoof_english", 0) === 2) {
++        if (Services.prefs.getIntPref("privacy.spoof_english", 2) === 2) {
 +          break;
 +        }
          const pls = Cc["@mozilla.org/pref-localizedstring;1"].createInstance(

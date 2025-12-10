@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 7c5c3ec0bd..6ac5d708c0 100644
+index f14c64e3f1..252b1a4356 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -390,7 +390,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -391,7 +391,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                          ?.requestedTranslationPair?.toLanguage
                      val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
                      val isWebCompatReporterSupported =
@@ -25,10 +25,10 @@ index b5cd2868a6..e865699356 100644
      // End of predicates //
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index bd75990cd8..c07ea6775e 100644
+index 53190b359c..0f3265d652 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -48,7 +48,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
+@@ -49,7 +49,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
  import mozilla.components.feature.syncedtabs.commands.GlobalSyncedTabsCommandsProvider
  import mozilla.components.feature.top.sites.TopSitesFrecencyConfig
  import mozilla.components.feature.top.sites.TopSitesProviderConfig
@@ -37,7 +37,7 @@ index bd75990cd8..c07ea6775e 100644
  import mozilla.components.lib.crash.CrashReporter
  import mozilla.components.service.fxa.manager.SyncEnginesStorage
  import mozilla.components.service.sync.logins.LoginsApiException
-@@ -717,10 +717,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -700,10 +700,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      // This is added here because we need gecko to load the extension first.
                      //
                      // TODO: Bug 1953359 - remove the code below in the next release.
@@ -46,7 +46,7 @@ index bd75990cd8..c07ea6775e 100644
                          logger.debug("Attempting to uninstall the WebCompat Reporter extension")
                          WebCompatReporterFeature.uninstall(components.core.engine)
 -                    }
-+                    }*/
++                    } */
                  },
                  onUpdatePermissionRequest = components.addonUpdater::onUpdatePermissionRequest,
              )

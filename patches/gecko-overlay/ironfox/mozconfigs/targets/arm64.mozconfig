@@ -1,0 +1,2 @@
+
+ac_add_options --target='aarch64-linux-android'

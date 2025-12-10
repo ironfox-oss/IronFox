@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# for reference: https://searchfox.org/firefox-main/source/python/mozboot/mozboot/android.py
+
 PLATFORM_VERSION="36"
 BUILDTOOLS_VERSION="36.0.0"
-NDK_REVISION="28.2.13676358"
+NDK_REVISION="29.0.14206865"
 SDK_REVISION="13114758"
 
 if [[ "${ANDROID_HOME+x}" == "" ]]; then

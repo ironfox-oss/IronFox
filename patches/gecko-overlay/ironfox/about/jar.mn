@@ -1,6 +1,7 @@
 
-toolkit.jar:
-    content/global/attribution.css              (attribution.css)
-    content/global/attribution.html             (attribution.html)
-    content/global/ironfox.css                  (ironfox.css)
-    content/global/ironfox.html                 (ironfox.html)
+ironfox.jar:
+% content ironfox %content/ironfox/ contentaccessible=yes
+    content/ironfox/attribution.css              (attribution/attribution.css)
+    content/ironfox/attribution.html             (attribution/attribution.html)
+    content/ironfox/ironfox.css                  (ironfox/ironfox.css)
+    content/ironfox/ironfox.html                 (ironfox/ironfox.html)

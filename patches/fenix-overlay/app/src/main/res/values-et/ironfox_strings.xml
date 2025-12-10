@@ -27,8 +27,6 @@
     <string name="onboarding_if_preferences_title">Kohanda IronFoxi</string>
     <string name="onboarding_if_preferences_description">Kohanada IronFoxi vastavalt oma eelistustele</string>
     <string name="onboarding_if_preference_doh_caption">Paranda oma veebisirvimise privaatsust ja turvalisust kasutades nimelahendust üle HTTPS-i (DOH ehk DNS-over-HTTPS).</string>
-    <string name="preferences_debug_settings_widevine_enabled">Kasuta Widevine\'i CDM-i</string>
-    <string name="preferences_debug_settings_eme_enabled">Kasuta krüptitud meedialaiendusi (Encrypted Media Extensions ehk EME)</string>
     <string name="preference_jit_enabled">Kasuta JavaScripti dünaamilist kompileerimist (Just-in-time Compilation ehk JIT)</string>
     <string name="preference_jit_enabled_caption">Paranda JavaScripti jõudlust dünaamilise kompileerimise abil. (pole soovitatav kõikidele kasutajatele)</string>
     <string name="preference_jit_enabled_description">Turvalisuse arvel saad dünaamilise kompileerimisega parandada veebisaitide jõudlust. Soovitatav vaid lihtsamate ja väiksema jõudlusega nutiseadmete puhul.</string>
@@ -77,4 +75,5 @@
     <string name="preference_autoplay_policy_sticky">Kleepuv</string>
     <string name="preference_autoplay_policy_transient">Põgus (vaikimisi)</string>
     <string name="preference_autoplay_policy_click_to_play">Esitamine eeldab klõpsimist</string>
+    <string name="preference_always_use_private_browsing">Kasuta alati privaatset režiimi</string>
 </resources>

@@ -8,24 +8,24 @@ This list is not exhaustive...
 
 ## Privacy
 
-- Blocks websites from accessing geolocation by default
+- Blocks websites from prompting to access geolocation by default
 - Clears browsing history on exit by default
 - Clears cache on exit by default
 - Clears download history on exit by default
 - Clears open tabs on exit by default
 - Disables autofill/autocompletion of URLs by default
 - Disables disk cache by default, and adds a toggle to control it, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Enable disk cache` in settings
-- Disables network connectivity monitoring, and removes the `ACCESS_NETWORK_STATE` permission
+- Disables network connectivity monitoring and removes the `ACCESS_NETWORK_STATE` permission
 - Disables search suggestions by default
 - Disables trending search suggestions by default
 - Enables [disk remnant avoidance](https://searchfox.org/mozilla-central/rev/ac81a39d/toolkit/moz.configure#3014) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L495)
 - Enables [DNS over HTTPS *(DoH)*](https://support.mozilla.org/kb/dns-over-https) with [Max Protection](https://support.mozilla.org/kb/dns-over-https#w_max-protection) *(without fallback)* by default, via [Quad9](https://quad9.net/)
 - Enables Firefox's built-in [Cookie Banner Reduction](https://support.mozilla.org/kb/cookie-banner-reduction) by default, and exposes the toggle to enable/disable it for private browsing, located at `Privacy and security` -> `Cookie Banner Blocker in private browsing` in settings
 - Enables [Global Privacy Control](https://globalprivacycontrol.org/) by default, and hides the UI to prevent users from easily/unnecessarily making themselves more fingerprintable
-- Enables [proxy bypass protection](https://searchfox.org/mozilla-central/rev/ac81a39d/toolkit/moz.configure#1919) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L501)
+- Enables [proxy bypass protection](https://searchfox.org/firefox-main/rev/9a44e01d/toolkit/moz.configure#1920) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L141)
 - Enables [Strict Enhanced Tracking Protection *(ETP Strict)*](https://support.mozilla.org/kb/enhanced-tracking-protection-firefox-desktop#w_strict-enhanced-tracking-protection)
 - Includes a default, local set of homepage wallpapers, instead of downloading them from a server remotely
-- Installs [uBlock Origin](https://addons.mozilla.org/firefox/addon/ublock-origin) by default, and configures it to provide stronger protection out of the box
+- Installs [uBlock Origin](https://addons.mozilla.org/addon/uBlock0@raymondhill.net) by default, and configures it to provide stronger protection out of the box
 - Prevents the browser from fetching favicons for homepage shortcuts/pins on launch, without prior user interaction
 - Stubs the [Beacon API *(`navigator.sendBeacon`)*](https://developer.mozilla.org/docs/Web/API/Beacon_API)
 
@@ -49,29 +49,29 @@ IronFox **additionally**:
 - Disables [accessibility services](https://developer.android.com/guide/topics/ui/accessibility/service) by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Privacy and security` -> `Enable accessibility services` in settings
 - Disables autofill of [form data](https://wiki.mozilla.org/Firefox/Features/Form_Autofill) and [log-in credentials](https://support.mozilla.org/kb/autofill-logins-firefox) by default
 - Disables the browser's [built-in password manager](https://support.mozilla.org/kb/manage-your-logins-firefox-password-manager) by default
-- Disables Firefox's built-in list of domains used to autocomplete URLs, to [prevent suggesting squatted domains that serve ads and malware](https://bugzilla.mozilla.org/show_bug.cgi?id=1842106#c0) to users
-- Disables the [Gecko Profiler](https://firefox-source-docs.mozilla.org/tools/profiler/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L465)
-- Disables [HTTP Live Streaming *(HLS)*](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/29859) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/2609477a278f7e4a3681e5979b354d6063249edd/patches/gecko-overlay/mobile/android/ironfox.configure#L7)
+- Disables the [Gecko Profiler](https://firefox-source-docs.mozilla.org/tools/profiler/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L47)
+- Disables [HTTP Live Streaming *(HLS)*](https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/29859) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/11f70eb9e176c59eb85fe7090a8086d5c00a04c9/patches/gecko-overlay/ironfox/ironfox.configure#L8)
 - Disables installation of add-ons by default, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Allow installation of add-ons` in settings
 - Disables [JavaScript Just-in-time Compilation *(JIT)*](https://microsoftedge.github.io/edgevr/posts/Super-Duper-Secure-Mode/) by default, and adds a toggle to enable/disable it, located at  `IronFox` -> `IronFox settings` -> `Security` -> `Enable JavaScript Just-in-time Compilation (JIT)` in settings
-- Disables [Parental Controls](https://searchfox.org/mozilla-central/source/toolkit/components/parentalcontrols/nsIParentalControlsService.idl) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L473)
-- Disables `SSLKEYLOGGING` at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/a3c9025e044b780adf43e14bc5dbc213d6119ce9/patches/disable-sslkeylogging.patch) *([1](https://bugzilla.mozilla.org/show_bug.cgi?id=1183318), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1915224))*
-- Disables support for [GSS-API negotiate authentication](https://htmlpreview.github.io/?https://github.com/mdn/archived-content/blob/main/files/en-us/mozilla/integrated_authentication/raw.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L471)
-- Disables support for [WebDriver remote protocols](https://firefox-source-docs.mozilla.org/remote/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L490)
+- Disables [Parental Controls](https://searchfox.org/firefox-main/source/toolkit/components/parentalcontrols/nsIParentalControlsService.idl) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L97)
+- Disables `SSLKEYLOGGING` at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/f9a0a07793125d4e989414113a60e9a8379dcd81/scripts/prebuild.sh#L688) *([1](https://bugzilla.mozilla.org/show_bug.cgi?id=1183318), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1915224))*
+- Disables support for [GSS-API negotiate authentication](https://htmlpreview.github.io/?https://github.com/mdn/archived-content/blob/main/files/en-us/mozilla/integrated_authentication/raw.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L50)
+- Disables support for [WebDriver remote protocols](https://firefox-source-docs.mozilla.org/remote/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L86)
 - Enables the use of encrypted storage *([via Android's Keystore system](https://developer.android.com/privacy-and-security/keystore))* for Firefox account state
 - Enables [Fission](https://wiki.mozilla.org/Project_Fission) *(basic per-site process isolation)* by default
 - Enables [Google Safe Browsing](https://support.mozilla.org/kb/how-does-phishing-and-malware-protection-work) by default, with [a proxy](https://gitlab.com/ironfox-oss/safebrowsing-proxy) to protect the privacy of users, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable Safe Browsing` in settings
 - Enables [HTTPS-Only Mode](https://support.mozilla.org/kb/https-only-prefs) by default
 - Expands the [list of domains](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning#Currently-pinned_Sites) supported by Firefox's [Strict Certificate Pinning](https://wiki.mozilla.org/SecurityEngineering/Public_Key_Pinning)
-- Hardens the browser's built-in PDF Viewer *(PDF.js)*, with changes inspired by [GrapheneOS's PDF Viewer](https://github.com/GrapheneOS/PdfViewer)
+- [Hardens the browser's built-in PDF Viewer *(PDF.js)*](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-harden-pdfjs.patch), with changes inspired by [GrapheneOS's PDF Viewer](https://github.com/GrapheneOS/PdfViewer)
 - Hides the toggle to enable/disable [Remote Debugging](https://firefox-source-docs.mozilla.org/devtools/backend/protocol.html) from settings, and resets the preference per-session if configured via other means
 
 ## Enhancements
 
-- Adds an [internal list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/services/settings/dumps/main/ironfox-fingerprinting-protection-overrides.json) to configure specific fingerprinting protections on a per-site basis, to reduce breakage and harden protection as needed *(This, as well as Mozilla's override list that serves a similar purpose, can be disabled if desired, by setting `privacy.fingerprintingProtection.remoteOverrides.enabled` to `false` in your `about:config`)*
+- Adds an [internal list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/ironfox/dumps/ironfox-fingerprinting-protection-overrides-unbreak.json) to relax specific fingerprinting protections on a per-site basis *(to reduce breakage)*, and adds a toggle to enable/disable it if desired, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Enable fingerprinting protection overrides from IronFox` in settings
 - Adds an option to configure [the behavior of cross-origin referers](https://wiki.mozilla.org/Security/Referrer), located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Cross-origin referer policy` in settings
 - Adds a toggle to enable/disable IPv6 network connectivity, located at `IronFox` -> `IronFox settings` -> `Miscellaneous` -> `Enable IPv6 network connectivity` in settings
 - Adds a toggle to enable/disable JavaScript, located at `IronFox` -> `IronFox settings` -> `Privacy and security` -> `Enable JavaScript` in settings
+- Adds a toggle to enable/disable Mozilla's list of fingerprinting protection overrides to reduce breakage, located at `IronFox` -> `IronFox settings` -> `Privacy` -> `Enable fingerprinting protection overrides from Mozilla` in settings
 - Adds a toggle to enable/disable [Scalable Vector Graphics *(SVG)*](https://blog.mozilla.org/security/2016/11/30/fixing-an-svg-animation-vulnerability/), located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable Scalable Vector Graphics (SVG)` in settings
 - Adds a toggle to enable/disable the [tab bar](https://connect.mozilla.org/t5/discussions/tab-strip-for-firefox-android-now-available-in-firefox-nightly/m-p/60145), located at `General` -> `Customize` -> `Tab bar display` in settings
 - Adds a toggle to enable/disable [WebAssembly *(WASM)*](https://spectrum.ieee.org/more-worries-over-the-security-of-web-assembly), located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable WebAssembly (WASM)` in settings
@@ -86,7 +86,9 @@ IronFox **additionally**:
 - Disables the display of recently visited websites on the homepage by default
 - Disables history search suggestions by default
 - Disables recent search suggestions by default
-- Enables the `about:config`, and exposes it at `about:about`
+- Enables [`about:config`](about:config) and displays it at [`about:about`](about:about)
+- Enables [`about:inference`](about:inference)
+- Enables [`about:translations`](about:translations) and displays it at [`about:about`](about:about)
 - Expands the list of built-in DNS over HTTPS *(DoH)* resolvers to include [AdGuard](https://adguard-dns.io/public-dns.html), [AdGuard (Unfiltered)](https://adguard-dns.io/public-dns.html), [Cloudflare (Malware Protection)](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families), [DNS4EU (Ad Blocking)](https://www.joindns4.eu/for-public), [DNS4EU (Protective)](https://www.joindns4.eu/for-public), [DNS4EU (Unfiltered)](https://www.joindns4.eu/for-public), [Mullvad (Base)](https://mullvad.net/help/dns-over-https-and-dns-over-tls), [Mullvad (Unfiltered)](https://mullvad.net/help/dns-over-https-and-dns-over-tls), [Quad9](https://quad9.net/service/service-addresses-and-features/), and [Wikimedia](https://meta.wikimedia.org/wiki/Wikimedia_DNS)
 - Exposes the secret setting to enable the composable toolbar
 - Exposes the secret setting to enable the homepage search bar
@@ -98,7 +100,7 @@ IronFox **additionally**:
 - Hides the `Passwords` drop-down menu item if the browser's password manager is disabled
 - Hides the `Sync and save data` drop-down menu item if Firefox Sync isn't signed in
 - Prevents Firefox from adding random recently visited sites to shortcuts/pins on the homepage
-- Prevents Firefox from hardcoding and resetting [various preferences](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L362) on start, to allow users to configure them from the `about:config` if desired
+- Prevents Firefox from hardcoding and resetting [various preferences](https://gitlab.com/ironfox-oss/IronFox/-/blob/f9a0a07793125d4e989414113a60e9a8379dcd81/scripts/prebuild.sh#L952) on start, to allow users to configure them *(from [`about:config`](about:config))* if desired
 - Removes privacy-invasive search engines *(Baidu, Bing, Cốc Cốc, Ecosia, Google, Qwant, Reddit, Seznam, Yahoo, YouTube)*, and adds various privacy-respecting search engines *([DuckDuckGo (HTML)](https://html.duckduckgo.com/html/), [DuckDuckGo (Lite)](https://lite.duckduckgo.com/lite/), [DuckDuckGo (No AI)](https://noai.duckduckgo.com/), [Marginalia](https://marginalia-search.com/),[Mojeek](https://www.mojeek.com/), [Startpage](https://www.startpage.com/), and [Startpage (EU)](https://eu.startpage.com/))* by default, as well as the option to use no search engine at all
 - Removes the search widget onboarding page
 - Removes the unnecessary/unwanted `Customize homepage` button from the homepage
@@ -120,8 +122,8 @@ IronFox **additionally**:
 - Adds support for installing add-ons without the privileged `mozAddonManager` API, and disables the `mozAddonManager` API by default, to allow uBlock Origin to run on `addons.mozilla.org`, to prevent exposing a list of the user's installed add-ons to Mozilla, and to reduce attack surface *([1](https://bugzilla.mozilla.org/show_bug.cgi?id=1952390#c4), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1384330))*
 - Disables [contextual feature recommendations](https://firefox-source-docs.mozilla.org/browser/components/asrouter/docs/contextual-feature-recommendation.html), and unwanted promotional content
 - Disables [Contile](https://mozilla-services.github.io/contile/) *(Sponsored tiles)*
-- Disables crash reporting for Fenix *(Firefox for Android)* at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/a99ec7fe9353f4a450c8e41a295cdab4a59331a2/patches/fenix-disable-crash-reporting.patch#L161)
-- Disables crash reporting for Gecko at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L455)
+- Disables crash reporting for Fenix *(Firefox for Android)* at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/f9a0a07793125d4e989414113a60e9a8379dcd81/scripts/prebuild.sh#L185)
+- Disables crash reporting for Gecko at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L33)
 - Disables feedback surveys *(Microsurveys)*
 - Disables fetching featured collections/recommendations and extension icons from AMO *(`services.addons.mozilla.org`)*
 - Disables [Firefox Suggest](https://blog.mozilla.org/products/firefox/firefox-news/firefox-suggest/) by default
@@ -131,9 +133,9 @@ IronFox **additionally**:
 - Disables Pocket integration
 - Disables prompts encouraging users to set the browser as the system default
 - Disables remote configuration of search engines from Mozilla
-- Disables telemetry and data collection for Fenix *(Firefox for Android)* at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/a99ec7fe9353f4a450c8e41a295cdab4a59331a2/patches/fenix-disable-telemetry.patch#L29)
-- Disables telemetry and data collection for Gecko at build-time *([1](https://gitlab.com/ironfox-oss/IronFox/-/blob/70038ef6d4de4ebcf86c5c972465c272426a5b8f/patches/gecko-disable-telemetry.patch#L29), [2](https://gitlab.com/ironfox-oss/IronFox/-/blob/6eb1f610d036636908e1a2f0508847671994b345/scripts/prebuild.sh#L538))*
-- Disables the ["Sent from Firefox" footer/link sharing feature](https://searchfox.org/mozilla-release/rev/34c2c305/mobile/android/fenix/app/nimbus.fml.yaml#307)
+- Disables telemetry and data collection for Fenix *(Firefox for Android)* at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/f9a0a07793125d4e989414113a60e9a8379dcd81/scripts/prebuild.sh#L191)
+- Disables telemetry and data collection for Gecko at build-time *([1](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L33), [2](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/ironfox.configure#L16))*
+- Disables the ["Sent from Firefox" footer/link sharing feature](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/fenix-disable-link-sharing.patch)
 - Disables [Studies](https://support.mozilla.org/kb/how-opt-out-studies-firefox-android) and experimentation
 - Disables [submission of crash reports](https://support.mozilla.org/kb/how-send-crash-report-firefox-android) to Mozilla
 - Disables [submission of technical and interaction data](https://support.mozilla.org/kb/technical-and-interaction-data) to Mozilla

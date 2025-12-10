@@ -1,0 +1,12 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
+index da8fa9afaa7f8..b9986c14447c1 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
+@@ -86,7 +86,7 @@ class AccountUiView(
+             preferenceSignIn.isVisible = true
+             preferenceFirefoxAccount.isVisible = false
+             preferenceFirefoxAccountAuthError.isVisible = false
+-            accountPreferenceCategory.isVisible = false
++            accountPreferenceCategory.isVisible = true
+         }
+     }

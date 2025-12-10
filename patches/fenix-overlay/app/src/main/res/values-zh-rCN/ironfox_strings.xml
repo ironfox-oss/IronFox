@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">在基础域名匹配时发送跨域引用</string>
     <string name="preference_referer_policy_hosts_match">禁用跨域引用</string>
     <string name="preference_cache_enabled">启用硬盘缓存</string>
-    <string name="preferences_debug_settings_eme_enabled">启用加密媒体扩展 (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">启用 Widevine 内容加密模块</string>
     <string name="preference_ipv6_enabled">启用 IPv6 网络连接</string>
     <string name="preference_javascript_enabled">启用 JavaScript</string>
     <string name="preference_jit_enabled">启用 JavaScript 即时编译(JIT)</string>

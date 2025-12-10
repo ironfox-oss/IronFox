@@ -63,13 +63,6 @@ patches:
     category: "Accessibility"
 
   # Build System
-  - file: "gecko-fix-125-compile.patch"
-    name: "Fix v125 Compile Error"
-    description: "Fixes a compilation issue introduced in Firefox v125."
-    reason: "Addresses technical bug in the build process."
-    effect: "Ensures successful compilation of the browser."
-    category: "Build System"
-
   - file: "a-c-allow-build-date-override.patch"
     name: "Allow overriding the build date"
     description: "Allows devs to override the build date."
@@ -175,6 +168,13 @@ patches:
     description: "Removes the Glean SDK from Mozilla's Android Components."
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
     effect: "Prevents unwanted collection and transmission of telemetry data."
+    category: "Mozilla"
+
+  - file: "a-c-remove-error-support.patch"
+    name: "Remove Error Support (Android Components)"
+    description: "Removes the Rust 'Error Support' library."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Prevents unwanted data collection of users."
     category: "Mozilla"
 
   - file: "fenix-remove-glean.patch"
@@ -329,6 +329,20 @@ patches:
     description: "Configures Firefox's implementation of GeckoView (GeckoProvider)"
     reason: "Disables integration with crash reporting and experimentation (Nimbus)."
     effect: "Prevents unwanted collection and transmission of crash reports, and ensures user configurations remain consistent and are controlled locally."
+    category: "Mozilla"
+
+  - file: "fenix-remove-sync-promo-bookmarks.patch"
+    name: "Remove Firefox Sync Bookmark Promotion"
+    description: "Removes Mozilla's promotion to enable Sync at the bookmarks fragment."
+    reason: "To prevent unwanted nags/promotional suggestions from interrupting user workflows."
+    effect: "Improves user experience by removing an unwanted Sync promotion."
+    category: "Mozilla"
+
+  - file: "fenix-remove-sync-promo-settings.patch"
+    name: "Remove Firefox Sync Settings Promotion"
+    description: "Removes Mozilla's promotional banner to enable Sync at the top of the settings fragment."
+    reason: "To prevent unwanted nags/promotional suggestions from interrupting user workflows."
+    effect: "Improves user experience by removing an unwanted Sync promotion."
     category: "Mozilla"
 
   # Privacy
@@ -594,13 +608,6 @@ patches:
     effect: "Users are provided with a cleaner, faster, and more focused browser homepage."
     category: "User Experience"
 
-  - file: "fenix-enable-shortcut-suggestions-by-default.patch"
-    name: "Enable Shortcut Suggestions by default"
-    description: "Enables URL bar suggestions for local shortcuts by default."
-    reason: "Provides users with quicker/easier access to shortcuts."
-    effect: "Users are provided with an improved browsing experience."
-    category: "User Experience"
-
   - file: "fenix-hide-remove-and-pb-for-builtin-addons.patch"
     name: "Hide the 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
     description: "Hide the no-op 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
@@ -613,6 +620,20 @@ patches:
     description: "Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix (Firefox for Android)'s UI settings."
     reason: "To avoid bugs/unexpected behavior from UI settings not matching with related Gecko preferences, and to prevent from users from attempting to change these preferences directly from `about:config` (as doing so simply results in the pref resetting on the next browser launch)."
     effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
+    category: "User Experience"
+
+  - file: "fenix-control-autofill-gecko.patch"
+    name: "Control Gecko Autofill From UI Settings"
+    description: "If autofill is enabled/disabled from the browser's UI settings, this patch also enables/disables support for it within Gecko."
+    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that autofill functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI settings."
+    effect: "Users can fully disable address/credit card autofill functionality from the UI."
+    category: "User Experience"
+
+  - file: "fenix-control-password-mgr-gecko.patch"
+    name: "Control Gecko Password Manager From UI Settings"
+    description: "If the password manager is enabled/disabled from the browser's UI settings, this patch also enables/disables support for it within Gecko."
+    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that password manager functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI setting."
+    effect: "Users can fully disable password manager functionality from the UI."
     category: "User Experience"
 
   # User Interface
@@ -642,6 +663,13 @@ patches:
     description: "Disables recent and historical search suggestions by default."
     reason: "To provide users with a cleaner, focused URL bar and browsing experience."
     effect: "Cleaner interface so that users can focus on where they want to go now, instead of where they went in the past."
+    category: "User Interface"
+
+  - file: "fenix-disable-unified-trust-panel-by-default.patch"
+    name: "Disable Unified Trust Panel"
+    description: "Disables the new Unified Trust Panel by default."
+    reason: "The new Unified Trust Panel prevents users from being able to set per-site exceptions for the built-in cookie banner blocker."
+    effect: "Users can set per-site exceptions for the built-in cookie banner blocker."
     category: "User Interface"
 
   - file: "gecko-expose-hidden-aboutsupport-settings.patch"
@@ -680,25 +708,9 @@ patches:
     effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
     category: "User Interface"
 
-  - file: "a-c-ironfox-settings.patch"
-    name: "IronFox Settings (Android Components)"
-    description: "Adds support to Mozilla's Android Components for IronFox-specific UI settings to control various functionality."
-    reason: |
-      To allow users to easily control their browsing experience.
-    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
-    category: "User Interface"
-
   - file: "fenix-ironfox-settings.patch"
     name: "IronFox Settings (Fenix)"
     description: "Adds support to Fenix (Firefox for Android) for IronFox-specific UI settings to control various functionality."
-    reason: |
-      To allow users to easily control their browsing experience.
-    effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
-    category: "User Interface"
-
-  - file: "geckoview-ironfox-settings.patch"
-    name: "IronFox Settings (GeckoView)"
-    description: "Adds support to GeckoView for IronFox-specific UI settings to control various functionality."
     reason: |
       To allow users to easily control their browsing experience.
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
@@ -719,6 +731,13 @@ patches:
     effect: "Users are provided with a cleaner, focused browsing experience."
     category: "User Interface"
 
+  - file: "fenix-hide-eme.patch"
+    name: "Hide Encrypted Media Extensions (EME) UI Elements"
+    description: "Hides UI for the EME site permision, due to it being not supported or recommended by IronFox."
+    reason: "To hide the UI for DRM-controlled content (EME) by default, unless the user enables EME from the about:config, at their own risk."
+    effect: "The UI/site permission for DRM-controlled content (EME) is hidden by default, but is re-enabled if EME is enabled from the about:config."
+    category: "User Interface"
+
   - file: "fenix-ironfox-settings-support-accessibility-services.patch"
     name: "IronFox Settings (Fenix) - Accessibility services"
     description: "Provides support for a UI toggle to enable/disable accessibility services."
@@ -726,32 +745,11 @@ patches:
     effect: "Integration with accessibility services are disabled by default, but users can re-enable it from the UI."
     category: "User Interface"
 
-  - file: "fenix-ironfox-settings-support-eme.patch"
-    name: "IronFox Settings Support (Fenix) - EME"
-    description: "Provides support for a HIDDEN, NOT recommended, NOT supported UI toggle to enable/disable EME."
-    reason: "To hide the UI for DRM-controlled content (EME) by default, while still allowing users to enable it and control the site permission if desired."
-    effect: "The UI for DRM-controlled content (EME) is hidden by default, while users can re-enable EME with the UI/site permission at their own risk if desired."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-password-mgr-autofill.patch"
-    name: "IronFox Settings Support (Fenix) - Password Manager and Address/Credit Card Autofill"
-    description: "Modifies the UI settings to enable/disable the built-in password manager and address/credit card autofill to also disable the functionality within Gecko."
-    reason: "Helps ensure that Gecko preferences/behavior is in sync with Fenix settings/behavior, improves UX, performance, and provides additional attack surface reduction, by ensuring that the password manager and autofill functionality is fully disabled within Gecko when it's disabled by the corresponding Fenix UI setting."
-    effect: "Users can fully disable the built-in password manager and address/credit card autofill functionality fromt he UI."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-preferred-website-appearance.patch"
-    name: "IronFox Settings Support (Fenix) - Preferred website appearance"
-    description: "Provides support for UI settings to configure the preferred website appearance, independently of the browser theme."
-    reason: "To allow users to configure the preferred website appearance, independently of the browser theme."
-    effect: "Users can configure their preferred website appearance, independently of the browser theme."
-    category: "User Interface"
-
-  - file: "fenix-ironfox-settings-support-safe-browsing.patch"
-    name: "IronFox Settings Support (Fenix) - Safe Browsing"
-    description: "Provides support for a UI toggle to enable/disable Safe Browsing."
-    reason: "To allow users to enable/disable Safe Browsing, directly from the UI."
-    effect: "Users can enable or disable Safe Browsing from the UI."
+  - file: "fenix-ironfox-settings-support-pb-always.patch"
+    name: "IronFox Settings Support (Fenix) - Always Use Private Browsing"
+    description: "Provides support for a UI toggle to always use private browsing mode."
+    reason: "To allow users to always use private browsing mode if desired."
+    effect: "Users can force the browser to always use private browsing mode, directly from the UI."
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-translations.patch"

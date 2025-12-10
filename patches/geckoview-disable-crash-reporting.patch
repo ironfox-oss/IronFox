@@ -20,10 +20,10 @@ index d0c8bde278..ed0cc42222 100644
  
  </manifest>
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-index a26169b0d6..1332eda566 100644
+index 216633b326..75c988d22a 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-@@ -52,7 +52,7 @@ import org.mozilla.gecko.GeckoScreenOrientation.ScreenOrientation;
+@@ -51,7 +51,7 @@ import org.mozilla.gecko.GeckoScreenOrientation.ScreenOrientation;
  import org.mozilla.gecko.GeckoSystemStateListener;
  import org.mozilla.gecko.GeckoThread;
  import org.mozilla.gecko.annotation.WrapForJNI;
@@ -32,7 +32,7 @@ index a26169b0d6..1332eda566 100644
  import org.mozilla.gecko.process.MemoryController;
  import org.mozilla.gecko.util.BundleEventListener;
  import org.mozilla.gecko.util.DebugConfig;
-@@ -427,7 +427,7 @@ public final class GeckoRuntime implements Parcelable {
+@@ -421,7 +421,7 @@ public final class GeckoRuntime implements Parcelable {
    }
  
    private int[] startCrashHelper() {
@@ -41,12 +41,12 @@ index a26169b0d6..1332eda566 100644
      final CrashHelper.Pipes pipes = CrashHelper.createCrashHelperPipes(context);
  
      if (pipes == null) {
-@@ -447,9 +447,9 @@ public final class GeckoRuntime implements Parcelable {
+@@ -441,9 +441,9 @@ public final class GeckoRuntime implements Parcelable {
            Context.BIND_AUTO_CREATE);
      } catch (final ClassNotFoundException e) {
        Log.w(LOGTAG, "Couldn't find the crash helper class");
 -    }
-+    }*/
++    } */
  
 -    return new int[] {pipes.mBreakpadClient.detachFd(), pipes.mClient.detachFd()};
 +    return new int[] {-1, -1};

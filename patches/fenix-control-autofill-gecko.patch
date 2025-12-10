@@ -1,0 +1,40 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
+index 92c9c372d4..71823e99d6 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/autofill/AutofillSettingFragment.kt
+@@ -43,6 +43,7 @@ import org.mozilla.fenix.settings.biometric.BiometricPromptPreferenceFragment
+ import org.mozilla.fenix.settings.requirePreference
+ import com.google.android.material.R as materialR
+ import mozilla.components.ui.icons.R as iconsR
++import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
+ 
+ /**
+  * Autofill settings fragment displays a list of settings related to autofilling, adding and
+@@ -108,7 +109,12 @@ class AutofillSettingFragment : BiometricPromptPreferenceFragment() {
+     internal fun updateSaveAndAutofillCardsSwitch() {
+         requirePreference<SwitchPreference>(R.string.pref_key_credit_cards_save_and_autofill_cards).apply {
+             isChecked = context.settings().shouldAutofillCreditCardDetails
+-            onPreferenceChangeListener = SharedPreferenceUpdater()
++            onPreferenceChangeListener = object : SharedPreferenceUpdater() {
++                override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
++                    GeckoSettingsBridge.setCardAutofillEnabled(context, requireComponents.core.engine)
++                    return super.onPreferenceChange(preference, newValue)
++                }
++            }
+         }
+     }
+ 
+@@ -118,7 +124,12 @@ class AutofillSettingFragment : BiometricPromptPreferenceFragment() {
+     internal fun updateSaveAndAutofillAddressesSwitch() {
+         requirePreference<SwitchPreference>(R.string.pref_key_addresses_save_and_autofill_addresses).apply {
+             isChecked = context.settings().shouldAutofillAddressDetails
+-            onPreferenceChangeListener = SharedPreferenceUpdater()
++            onPreferenceChangeListener = object : SharedPreferenceUpdater() {
++                override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
++                    GeckoSettingsBridge.setAddressAutofillEnabled(context, requireComponents.core.engine)
++                    return super.onPreferenceChange(preference, newValue)
++                }
++            }
+         }
+     }
+ 

@@ -2,7 +2,6 @@
 
 package org.mozilla.fenix.components.metrics
 
-import androidx.annotation.VisibleForTesting
 import mozilla.components.browser.state.search.SearchEngine
 import org.mozilla.experiments.nimbus.NimbusEventStore
 
@@ -51,11 +50,9 @@ object MetricsUtils {
     private fun BookmarkAction.Source.label() = name.lowercase()
 
     @Suppress("FunctionOnlyReturningConstant")
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun getHashingSalt(): String = "org.mozilla.fenix-salt"
 
     @Suppress("TooGenericExceptionCaught")
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun getAdvertisingID(retrieveAdvertisingIdInfo: () -> String?): String? = null
 
     suspend fun getHashedIdentifier(

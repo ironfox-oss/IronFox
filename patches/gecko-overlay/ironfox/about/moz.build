@@ -1,4 +1,16 @@
 
+DIRS += [
+    "browser",
+]
+
 JAR_MANIFESTS += [
     "jar.mn",
+]
+
+EXTRA_JS_MODULES += [
+    "IronFoxAboutPages.sys.mjs",
+]
+
+XPCOM_MANIFESTS += [
+    "components.conf",
 ]

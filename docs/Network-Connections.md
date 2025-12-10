@@ -20,9 +20,9 @@ If you install add-ons from outside of the AMO *(`addons.mozilla.org`)*, you may
 
 **How often the connection occurs**: Hourly *(`extensions.update.interval`)*.
 
-**Control**: You can disable add-on updates globally by setting `extensions.update.enabled` to `false` in your [`about:config`](about:config).
+**Control**: You can disable add-on updates globally by setting `extensions.update.enabled` to `false` at [`about:config`](about:config).
 
-You can also disable updates for individual add-ons by setting `extensions.{GUID}.update.enabled` to `false` in your [`about:config`](about:config), replacing `{GUID}` with the ID of your desired add-on *(IDs of your installed extensions can be found at [`about:support`](about:support))*. **For example**: if I wanted to disable updates for uBlock Origin, I would set `extensions.uBlock0@raymondhill.net.update.enabled` to `false`.
+You can also disable updates for individual add-ons by setting `extensions.{GUID}.update.enabled` to `false` at [`about:config`](about:config), replacing `{GUID}` with the ID of your desired add-on *(IDs of your installed extensions can be found at [`about:support`](about:support))*. **For example**: if I wanted to disable updates for uBlock Origin, I would set `extensions.uBlock0@raymondhill.net.update.enabled` to `false`.
 
 Note that disabling add-on updates is **NOT** recommended.
 
@@ -38,7 +38,7 @@ Note that disabling add-on updates is **NOT** recommended.
 
 **How often the connection occurs**: Every browser launch, and periodically after.
 
-**Control**: This request can be disabled by appending `,content-signature-2.cdn.mozilla.net` to the value of `network.dns.localDomains` in your [`about:config`](about:config) *(or by blocking `content-signature-2.cdn.mozilla.net` on the network level)*; though it is **NOT** recommended to disable or block this connection.
+**Control**: This request can be disabled by appending `,content-signature-2.cdn.mozilla.net` to the value of `network.dns.localDomains` at [`about:config`](about:config) *(or by blocking `content-signature-2.cdn.mozilla.net` on the network level)*; though it is **NOT** recommended to disable or block this connection.
 
 ### [DNS over HTTPS](https://wikipedia.org/wiki/DNS_over_HTTPS)
 
@@ -96,7 +96,7 @@ You can also set DNS over HTTPS to use your system's DNS resolver, by selecting 
 
 **How often the connection occurs**: Every browser launch, and periodically after.
 
-**Control**: You can disable this functionality by setting the following preferences in your [`about:config`](about:config):
+**Control**: You can disable this functionality by setting the following preferences at [`about:config`](about:config):
 
 - `dom.push.connection.enabled` -> `false`
 - `dom.push.userAgentID` -> ` `
@@ -122,9 +122,9 @@ Note that disabling this feature is **NOT** recommended.
 
 **How often the connection occurs**: Hourly *(`services.settings.poll_interval`)*.
 
-**Control**: This functionality can be disabled globally by setting `browser.ironfox.services.settings.allowedCollections` to ` ` in your [`about:config`](about:config), though it is **NOT** recommended to disable this feature.
+**Control**: This functionality can be disabled globally by setting `browser.ironfox.services.settings.allowedCollections` to ` ` at [`about:config`](about:config), though it is **NOT** recommended to disable this feature.
 
-You can also disable certain individual parts of this functionality if desired by setting the following preferences in your [`about:config`](about:config):
+You can also disable certain individual parts of this functionality if desired by setting the following preferences at [`about:config`](about:config):
 
 - **[Add-on blocklists](https://support.mozilla.org/kb/add-ons-cause-issues-are-on-blocklist)**: `extensions.blocklist.enabled` -> `false`
 - **[CRLite](https://blog.mozilla.org/security/2020/01/09/crlite-part-1-all-web-pki-revocations-compressed/) filters**: `security.remote_settings.crlite_filters.enabled` -> `false`
@@ -163,7 +163,7 @@ Note that disabling this functionality is **NOT** recommended.
 
 **How often the connection occurs**: Hourly.
 
-**Control**: You can disable this functionality by setting `extensions.systemAddon.update.enabled` to `false` in your [`about:config`](about:config); though this is **NOT** recommended.
+**Control**: You can disable this functionality by setting `extensions.systemAddon.update.enabled` to `false` at [`about:config`](about:config); though this is **NOT** recommended.
 
 ### uBlock Origin
 
@@ -210,6 +210,6 @@ The following are **optional**, **non-standard** connections that IronFox might 
 
 **How often the connection occurs**: When/if you grant a website permission to access your location **and** if your system's geolocation provider is unavailable.
 
-**Control**: You can simply choose not to grant websites permission to access your location, **or** you can disable the network geolocation provider entirely by setting `geo.provider.network.url` to ` ` in your [`about:config`](about:config); though doing so may cause issues with geolocation if your system's geolocation provider is unavailable.
+**Control**: You can simply choose not to grant websites permission to access your location, **or** you can disable the network geolocation provider entirely by setting `geo.provider.network.url` to ` ` at [`about:config`](about:config); though doing so may cause issues with geolocation if your system's geolocation provider is unavailable.
 
-You can also change the network geolocation provider if desired by setting the value of `geo.provider.network.url` to your preferred URL in the [`about:config`](about:config).
+Alternatively, you can change the network geolocation provider if desired by setting the value of `geo.provider.network.url` to your preferred URL at [`about:config`](about:config).

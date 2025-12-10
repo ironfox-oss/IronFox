@@ -9,8 +9,6 @@
     <string name="if_preferences_secret">Geheime Einstellungen</string>
     <string name="if_preferences_security">Sicherheit</string>
     <string name="preference_cache_enabled">Festplattenpuffer aktivieren</string>
-    <string name="preferences_debug_settings_eme_enabled">Verschlüsselte Medienerweiterungen (EME) aktivieren</string>
-    <string name="preferences_debug_settings_widevine_enabled">Widevine CDM aktivieren</string>
     <string name="preference_ipv6_enabled">IPv6-Netzwerkverbindungen aktivieren</string>
     <string name="preference_javascript_enabled">JavaScript aktivieren</string>
     <string name="preference_jit_enabled">JavaScript Just-in-time-Kompilierung (JIT) aktivieren</string>

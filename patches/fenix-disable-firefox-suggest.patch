@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index bd75990cd8..5033776e23 100644
+index 53190b359c..78081d3dbe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -398,7 +398,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -377,7 +377,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                          // new search suggestions. The worker requires us to have called
                          // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
                          // scheduling these tasks. When disabled we stop the periodic work.
@@ -11,7 +11,7 @@ index bd75990cd8..5033776e23 100644
                              components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
                          } else {
                              components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
-@@ -487,7 +487,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -466,7 +466,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          queueStorageMaintenance()
          queueNimbusFetchInForeground()
          queueDownloadWallpapers()
@@ -21,10 +21,10 @@ index bd75990cd8..5033776e23 100644
          }
          queueCollectProcessExitInfo()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
-index b3e7086b89..ba7fbb3c7e 100644
+index 4115feeb4c..bfe0e3bcab 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
-@@ -81,7 +81,7 @@ class SearchSuggestionsProvidersBuilder(
+@@ -78,7 +78,7 @@ class SearchSuggestionsProvidersBuilder(
                  components.core.icons,
                  engineForSpeculativeConnects,
                  showEditSuggestion = false,
@@ -33,7 +33,7 @@ index b3e7086b89..ba7fbb3c7e 100644
              )
  
          defaultCombinedHistoryProvider =
-@@ -93,7 +93,7 @@ class SearchSuggestionsProvidersBuilder(
+@@ -90,7 +90,7 @@ class SearchSuggestionsProvidersBuilder(
                  engine = engineForSpeculativeConnects,
                  maxNumberOfSuggestions = METADATA_SUGGESTION_LIMIT,
                  showEditSuggestion = false,
@@ -42,7 +42,7 @@ index b3e7086b89..ba7fbb3c7e 100644
              )
  
          val searchBitmap = suggestionIconProvider.getSearchIconBitmap()
-@@ -319,7 +319,7 @@ class SearchSuggestionsProvidersBuilder(
+@@ -301,7 +301,7 @@ class SearchSuggestionsProvidersBuilder(
                      engine = engineForSpeculativeConnects,
                      maxNumberOfSuggestions = METADATA_SUGGESTION_LIMIT,
                      showEditSuggestion = false,
@@ -51,7 +51,7 @@ index b3e7086b89..ba7fbb3c7e 100644
                      resultsUriFilter = filter::shouldIncludeUri,
                  )
              } else {
-@@ -334,7 +334,7 @@ class SearchSuggestionsProvidersBuilder(
+@@ -316,7 +316,7 @@ class SearchSuggestionsProvidersBuilder(
                      engine = engineForSpeculativeConnects,
                      maxNumberOfSuggestions = METADATA_SUGGESTION_LIMIT,
                      showEditSuggestion = false,
@@ -60,7 +60,7 @@ index b3e7086b89..ba7fbb3c7e 100644
                      resultsUriFilter = filter::shouldIncludeUri,
                  )
              } else {
-@@ -446,7 +446,7 @@ class SearchSuggestionsProvidersBuilder(
+@@ -428,7 +428,7 @@ class SearchSuggestionsProvidersBuilder(
                  suggestionIconProvider.getMobileIconDrawable(),
                  suggestionIconProvider.getTabletIconDrawable(),
              ),
@@ -69,7 +69,7 @@ index b3e7086b89..ba7fbb3c7e 100644
              resultsUrlFilter = filter?.let { it::shouldIncludeUrl },
          )
      }
-@@ -468,7 +468,7 @@ class SearchSuggestionsProvidersBuilder(
+@@ -450,7 +450,7 @@ class SearchSuggestionsProvidersBuilder(
              components.core.icons,
              suggestionIconProvider.getLocalTabIconDrawable(),
              excludeSelectedSession = !includeSelectedTab,
@@ -78,7 +78,7 @@ index b3e7086b89..ba7fbb3c7e 100644
              switchToTabDescription = suggestionsStringsProvider.getSwitchToTabDescriptionString(),
              resultsUriFilter = filter?.let { it::shouldIncludeUri },
          )
-@@ -492,7 +492,7 @@ class SearchSuggestionsProvidersBuilder(
+@@ -474,7 +474,7 @@ class SearchSuggestionsProvidersBuilder(
              indicatorIcon = suggestionIconProvider.getBookmarkIconDrawable(),
              engine = engineForSpeculativeConnects,
              showEditSuggestion = false,
@@ -88,7 +88,7 @@ index b3e7086b89..ba7fbb3c7e 100644
          )
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
-index ce4b42ef4a..d5f03c9e2a 100644
+index c0fb12426e..dd229dcd18 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/search/SearchEngineFragment.kt
 @@ -39,7 +39,7 @@ class SearchEngineFragment : PreferenceFragmentCompat() {
@@ -101,10 +101,10 @@ index ce4b42ef4a..d5f03c9e2a 100644
          requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..021b680f2e 100644
+index 35d4c5a9c0..5baa4620a9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2358,7 +2358,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2348,7 +2348,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var enableFxSuggest by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
@@ -113,7 +113,7 @@ index 1c7b0fce0d..021b680f2e 100644
          featureFlag = FeatureFlags.FX_SUGGEST,
      )
  
-@@ -2383,7 +2383,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2373,7 +2373,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var showSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
          default = { enableFxSuggest },
@@ -122,7 +122,7 @@ index 1c7b0fce0d..021b680f2e 100644
      )
  
      /**
-@@ -2393,7 +2393,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2383,7 +2383,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showNonSponsoredSuggestions by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),

@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Enviar referers de origen cruzado cuando los dominios base coincidan</string>
     <string name="preference_referer_policy_hosts_match">Deshabilitar referers de origen cruzado</string>
     <string name="preference_cache_enabled">Habilitar caché en disco</string>
-    <string name="preferences_debug_settings_eme_enabled">Habilitar Extensiones de Medios Encriptados (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Habilitar Widevine CDM</string>
     <string name="preference_ipv6_enabled">Habilitar conectividad de red IPv6</string>
     <string name="preference_javascript_enabled">Habilitar JavaScript</string>
     <string name="preference_jit_enabled">Habilitar la compilación JavaScript Just-in-time (JIT)</string>

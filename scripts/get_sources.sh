@@ -18,7 +18,7 @@ fi
 clone_repo() {
     url="$1"
     path="$2"
-    tag="$3"
+    revision="$3"
 
     if [[ "$url" == "" ]]; then
         echo "URL missing for clone"
@@ -30,8 +30,8 @@ clone_repo() {
         exit 1
     fi
 
-    if [[ "$tag" == "" ]]; then
-        echo "Tag name is required for cloning '$url'"
+    if [[ "$revision" == "" ]]; then
+        echo "Revision is required for cloning '$url'"
         exit 1
     fi
 
@@ -49,8 +49,8 @@ clone_repo() {
         fi
     fi
 
-    echo "Cloning $url::$tag"
-    git clone --branch "$tag" --depth=1 "$url" "$path"
+    echo "Cloning $url::$revision"
+    git clone --revision="$revision" --depth=1 "$url" "$path"
 }
 
 download() {
@@ -173,40 +173,21 @@ echo "'bundletool' is set up at $BUILDDIR/bundletool"
 
 # Clone Glean
 echo "Cloning Glean..."
-clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_VERSION"
+clone_repo "https://github.com/mozilla/glean.git" "$GLEANDIR" "$GLEAN_COMMIT"
 
 # Clone MicroG
 echo "Cloning microG..."
-clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_VERSION"
+clone_repo "https://github.com/microg/GmsCore.git" "$GMSCOREDIR" "$GMSCORE_COMMIT"
 
 # Download Phoenix
 echo "Downloading Phoenix..."
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/000-phoenix.js"
-download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_VERSION/android/phoenix-extended.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
-
-# Get WebAssembly SDK
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    echo "Cloning wasi-sdk..."
-    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_BRANCH"
-    (cd "$WASISDKDIR" && git submodule update --init --depth=64)
-
-    # We need to use a newer clang here, because A: Mozilla dropped support for using below 17, and B: it's just good practice
-    ## I'm using 20.1.8 specifically because it's listed in mozilla-central: https://searchfox.org/firefox-main/rev/ac83682a/taskcluster/kinds/fetch/toolchains.yml#392
-    rm -rf "$WASISDKDIR/src/llvm-project"
-    echo "Cloning llvm..."
-    clone_repo "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "llvmorg-$LLVM_VERSION"
-elif [[ "$PLATFORM" == "macos" ]]; then
-    echo "Downloading prebuilt wasi-sdk.."
-    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_OSX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
-else
-    echo "Downloading prebuilt wasi-sdk..."
-    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_LINUX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
-fi
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_COMMIT/android/phoenix.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/000-phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_COMMIT/android/phoenix-extended.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
 
 # Get Tor's no-op UniFFi binding generator
 if [[ -n ${FDROID_BUILD+x} ]]; then
     echo "Cloning uniffi-bindgen..."
-    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_VERSION"
+    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_COMMIT"
 elif [[ "$PLATFORM" == "macos" ]]; then
     echo "Downloading prebuilt uniffi-bindgen..."
     download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_OSX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
@@ -215,14 +196,36 @@ else
     download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_LINUX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
 fi
 
+# Get WebAssembly SDK
+if [[ -n ${FDROID_BUILD+x} ]]; then
+    echo "Cloning wasi-sdk..."
+    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_COMMIT"
+    (cd "$WASISDKDIR" && git submodule update --init --depth=64)
+
+    # We need to use a newer clang here, because A: Mozilla dropped support for using below 17, and B: it's just good practice
+    rm -rf "$WASISDKDIR/src/llvm-project"
+    echo "Cloning llvm..."
+    clone_repo "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "$LLVM_COMMIT"
+
+    # We also clone Firefox directly, but, this is to ensure that the WASI patch we're using always matches exactly what we're
+    ## using at https://gitlab.com/ironfox-oss/prebuilds
+    echo "Downloading Firefox's WASI patch..."
+    download "https://github.com/mozilla-firefox/firefox/raw/$FIREFOX_WASI_COMMIT/taskcluster/scripts/misc/wasi-sdk.patch" "$BUILDDIR/wasi-sdk.patch"
+elif [[ "$PLATFORM" == "macos" ]]; then
+    echo "Downloading prebuilt wasi-sdk.."
+    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_OSX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+else
+    echo "Downloading prebuilt wasi-sdk..."
+    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_LINUX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+fi
+
 # Clone application-services
 echo "Cloning application-services..."
-#clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDIR" "${APPSERVICES_VERSION}"
-git clone --branch "$APPSERVICES_VERSION" --depth=1 https://github.com/mozilla/application-services.git "$APPSERVICESDIR"
+clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDIR" "$APPSERVICES_COMMIT"
 
 # Clone Firefox
 echo "Cloning Firefox..."
-clone_repo "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "${FIREFOX_RELEASE_TAG}"
+clone_repo "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "$FIREFOX_COMMIT"
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."

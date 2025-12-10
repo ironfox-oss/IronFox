@@ -21,9 +21,59 @@ index 4832f0356a..d7cea215d7 100644
          }
      }
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-index 810eb70491..f11b2767f1 100644
+index 810eb70491..6729254da7 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
+@@ -27,10 +27,10 @@ import mozilla.components.lib.crash.db.toReportEntity
+ import mozilla.components.lib.crash.handler.ExceptionHandler
+ import mozilla.components.lib.crash.notification.CrashNotification
+ import mozilla.components.lib.crash.prompt.CrashPrompt
+-import mozilla.components.lib.crash.service.CrashReporterService
+-import mozilla.components.lib.crash.service.CrashTelemetryService
+-import mozilla.components.lib.crash.service.SendCrashReportService
+-import mozilla.components.lib.crash.service.SendCrashTelemetryService
++// import mozilla.components.lib.crash.service.CrashReporterService
++// import mozilla.components.lib.crash.service.CrashTelemetryService
++// import mozilla.components.lib.crash.service.SendCrashReportService
++// import mozilla.components.lib.crash.service.SendCrashTelemetryService
+ import mozilla.components.support.base.log.logger.Logger
+ 
+ /**
+@@ -94,8 +94,8 @@ private const val START_OF_144_NIGHTLY_TIMESTAMP = 1755475200000L
+  * @param useLegacyReporting Enable/Disable handling crash reporting through a notification or system dialog.
+  */
+ class CrashReporter internal constructor(
+-    private val services: List<CrashReporterService> = emptyList(),
+-    private val telemetryServices: List<CrashTelemetryService> = emptyList(),
++    private val services: List<Any> = emptyList(),
++    private val telemetryServices: List<Any> = emptyList(),
+     private val shouldPrompt: Prompt = Prompt.NEVER,
+     enabled: Boolean = true,
+     internal val promptConfiguration: PromptConfiguration = PromptConfiguration(),
+@@ -109,8 +109,8 @@ class CrashReporter internal constructor(
+ 
+     constructor(
+         context: Context,
+-        services: List<CrashReporterService> = emptyList(),
+-        telemetryServices: List<CrashTelemetryService> = emptyList(),
++        services: List<Any> = emptyList(),
++        telemetryServices: List<Any> = emptyList(),
+         shouldPrompt: Prompt = Prompt.NEVER,
+         enabled: Boolean = true,
+         promptConfiguration: PromptConfiguration = PromptConfiguration(),
+@@ -146,9 +146,9 @@ class CrashReporter internal constructor(
+         get() = runtimeTagProviders.fold(emptyMap()) { acc, provider -> acc + provider() }
+ 
+     init {
+-        require(services.isNotEmpty() || telemetryServices.isNotEmpty()) {
+-            "No crash reporter services defined"
+-        }
++//        require(services.isNotEmpty() || telemetryServices.isNotEmpty()) {
++//            "No crash reporter services defined"
++//        }
+     }
+ 
+     /**
 @@ -157,8 +157,8 @@ class CrashReporter internal constructor(
      fun install(
          applicationContext: Context,
@@ -40,10 +90,116 @@ index 810eb70491..f11b2767f1 100644
          Thread.setDefaultUncaughtExceptionHandler(handler)
  
 -        return this
-+        return this*/
++        return this */
      }
  
      /**
+@@ -216,7 +216,7 @@ class CrashReporter internal constructor(
+      */
+     fun submitReport(crash: Crash, then: () -> Unit = {}): Job {
+         return scope.launch {
+-            services.forEach { service ->
++/*            services.forEach { service ->
+                 val reportId = when (crash) {
+                     is Crash.NativeCodeCrash -> service.report(crash)
+                     is Crash.UncaughtExceptionCrash -> service.report(crash)
+@@ -234,7 +234,7 @@ class CrashReporter internal constructor(
+             logger.info("Crash report submitted to ${services.size} services")
+             withContext(Dispatchers.Main) {
+                 then()
+-            }
++            } */
+         }
+     }
+ 
+@@ -243,7 +243,7 @@ class CrashReporter internal constructor(
+      */
+     fun submitCrashTelemetry(crash: Crash, then: () -> Unit = {}): Job {
+         return scope.launch {
+-            telemetryServices.forEach { telemetryService ->
++/*            telemetryServices.forEach { telemetryService ->
+                 when (crash) {
+                     is Crash.NativeCodeCrash -> telemetryService.record(crash)
+                     is Crash.UncaughtExceptionCrash -> telemetryService.record(crash)
+@@ -253,7 +253,7 @@ class CrashReporter internal constructor(
+             logger.info("Crash report submitted to ${telemetryServices.size} telemetry services")
+             withContext(Dispatchers.Main) {
+                 then()
+-            }
++            } */
+         }
+     }
+ 
+@@ -265,16 +265,16 @@ class CrashReporter internal constructor(
+          * if stacktrace is empty, replace throwable with UnexpectedlyMissingStacktrace exception so
+          * we can figure out which module is submitting caught exception reports without a stacktrace.
+          */
+-        var reportThrowable = throwable
++/*        var reportThrowable = throwable
+         if (throwable.stackTrace.isEmpty()) {
+             reportThrowable = CrashReporterException.UnexpectedlyMissingStacktrace("Missing Stacktrace", throwable)
+         }
+ 
+-        logger.info("Caught Exception report submitted to ${services.size} services")
++        logger.info("Caught Exception report submitted to ${services.size} services") */
+         return scope.launch {
+-            services.forEach {
++/*            services.forEach {
+                 it.report(reportThrowable, crashBreadcrumbsCopy())
+-            }
++            } */
+         }
+     }
+ 
+@@ -288,7 +288,7 @@ class CrashReporter internal constructor(
+      * ```
+      */
+     override fun recordCrashBreadcrumb(breadcrumb: Breadcrumb) {
+-        crashBreadcrumbs.add(breadcrumb)
++//        crashBreadcrumbs.add(breadcrumb)
+     }
+ 
+     /**
+@@ -383,12 +383,12 @@ class CrashReporter internal constructor(
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal fun sendCrashReport(context: Context, crash: Crash) {
+-        ContextCompat.startForegroundService(context, SendCrashReportService.createReportIntent(context, crash))
++//        ContextCompat.startForegroundService(context, SendCrashReportService.createReportIntent(context, crash))
+     }
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal fun sendCrashTelemetry(context: Context, crash: Crash) {
+-        ContextCompat.startForegroundService(context, SendCrashTelemetryService.createReportIntent(context, crash))
++//        ContextCompat.startForegroundService(context, SendCrashTelemetryService.createReportIntent(context, crash))
+     }
+ 
+     @VisibleForTesting
+@@ -411,8 +411,8 @@ class CrashReporter internal constructor(
+         }
+     }
+ 
+-    internal fun getCrashReporterServiceById(id: String): CrashReporterService? {
+-        return services.firstOrNull { it.id == id }
++    internal fun getCrashReporterServiceById(id: String) {
++//        return services.firstOrNull { it.id == id }
+     }
+ 
+     enum class Prompt {
+diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt
+index 8c4943f230..7ef2293767 100644
+--- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt
++++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/ui/DisplayableCrash.kt
+@@ -60,7 +60,7 @@ internal fun CrashWithReports.toCrash(reporter: CrashReporter) = DisplayableCras
+ 
+ internal fun ReportEntity.toReport(reporter: CrashReporter): DisplayableCrash.Report {
+     val service = reporter.getCrashReporterServiceById(serviceId)
+-    val name = service?.name ?: serviceId
+-    val url = service?.createCrashReportUrl(reportId)
++    val name = ""
++    val url = ""
+     return DisplayableCrash.Report(name, url)
+ }
 diff --git a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt b/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt
 index 93ec365f24..4c7e01d3e9 100644
 --- a/mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/AppServicesInitializer.kt

@@ -12,6 +12,7 @@
 	- [Why does IronFox crash on GrapheneOS?](#why-does-ironfox-crash-on-grapheneos)
 	- [Can I use FIDO/U2F/Passkeys?](#can-i-use-fidou2fpasskeys)
 	- [Can I receive push notifications?](#can-i-receive-push-notifications)
+	- [Can I use a custom server for Firefox Sync?](#can-i-use-a-custom-server-for-firefox-sync)
 	- [Why are certain preferences locked?](#why-are-certain-preferences-locked)
 	- [Why isn't Resist Fingerprinting (RFP) enabled?](#why-isnt-resist-fingerprinting-rfp-enabled)
 	- [Why can't I install add-ons/extensions?](#why-cant-i-install-add-onsextensions)
@@ -42,7 +43,7 @@ For those who do use F-Droid to install and update IronFox, we would recommend u
 
 ## How can I download Nightly builds?
 
-IronFox Nightly builds are builds of IronFox that are automatically generated from our GitLab CI. These builds are bleeding edge, and contain the latest changes as we add them. **These builds can be installed alongside your main/existing IronFox install**.
+IronFox `Nightly` builds are builds of IronFox that are automatically generated from our GitLab CI. These builds are bleeding edge, and contain the latest changes as we add them. **These builds can be installed alongside your main/existing IronFox install**. For more details on the differences between IronFox `Release` and `Nightly` builds, you can see [our comparison page here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/NightlyVsRelease.md).
 
 When reporting an issue, we'll likely direct you to install and attempt to reproduce the issue on the latest Nightly build, to ensure that we haven't already fixed the problem.
 
@@ -100,8 +101,6 @@ IronFox also removes Mozilla's [Glean](https://github.com/mozilla/glean) *(telem
 
 For Firefox for Android itself, while it's untenable to fully remove all references to the Glean library, we do remove the [Glean *`service`*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md) library, and we stub the Glean library itself at build-time and break/neuter all of its functionality. Note that certain naive apps *(ex. `App Manager`, `Exodus`, and `Tracker Control`)* do not take this into account, and incorrectly claim that IronFox has `tracking` libraries *(referring to the `Glean` library)*. Keep in mind that these same apps claim that [Google Chrome has no tracking](https://reports.exodus-privacy.eu.org/en/reports/com.android.chrome/latest/), and even claim that [Tor Browser contains trackers](https://reports.exodus-privacy.eu.org/en/reports/org.torproject.torbrowser/latest/).
 
-`App Manager` specifically also claims that IronFox includes a `Mozilla Crashreport` tracking library, though this is incorrect; you can find the specific [class it's referencing here](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/CrashReporterService.kt), and see for yourself that this is simply an interface, which doesn't include any actual data collection or `tracking`.
-
 ## Does IronFox depend on Google Play Services?
 
 **No**, IronFox does not depend on Google Play Services for any functionality.
@@ -138,6 +137,12 @@ After setting up your distributor, you can enable support for UnifiedPush by sel
 
 **NOTE**: To receive notifications while IronFox is in the background, [**GrapheneOS** users might unfortunately need to disable the `Dynamic code loading via storage` exploit protection for IronFox](https://gitlab.com/ironfox-oss/IronFox/-/issues/124). You can do this by navigating to IronFox's `App info` *(You can get there by holding IronFox's app icon and selecting `App info`, or by navigating to `Settings` -> `Apps`, and finding + selecting `IronFox`), navigating to `Exploit protection` -> `Dynamic code loading via storage`, and selecting `Allowed`)*.
 
+## Can I use a custom server for Firefox Sync?
+
+Yes. The steps that apply to standard Firefox for Android also apply to IronFox. For details, see [Mozilla's support article here](https://support.mozilla.org/kb/how-set-firefox-sync-firefox-android#w_connect-to-a-self-hosted-mozilla-account-server).
+
+Additionally, to change the endpoint used by sync for add-ons, from [`about:config`](about:config), you can set the value of `webextensions.storage.sync.serverURL` to your desired endpoint.
+
 ## Why are certain preferences locked?
 
 Due to the nature of Fenix *(Firefox for Android)*'s design, Gecko preferences don't quite work the same as they do on Firefox for Desktop/how you may expect.
@@ -148,13 +153,13 @@ For Fenix, this is **not** the case. Gecko is implemented through [the separate 
 
 What this means for users is that while Fenix's UI frontend/UI settings *can*, and often *do*, modify Gecko preferences: this only goes that one way. Gecko preferences are limited to controlling the behavior of the underlying browser engine itself, and they can't directly modify Fenix's behavior like they would on Desktop.
 
-This can be problematic, as it means that Fenix settings can get out of sync with Gecko preferences. For example, from Fenix's UI settings, a user could leave the `Cookie Banner Blocker in private browsing` toggle enabled, while setting the `cookiebanners.service.mode.privateBrowsing` pref from `about:config` to `0` *(Disabled)*. As you might imagine, the Fenix setting and Gecko preference not matching like this can lead to unexpected behavior and bugs/glitches.
+This can be problematic, as it means that Fenix settings can get out of sync with Gecko preferences. For example, from Fenix's UI settings, a user could leave the `Cookie Banner Blocker in private browsing` toggle enabled, while setting the `cookiebanners.service.mode.privateBrowsing` pref from [`about:config`](about:config) to `0` *(Disabled)*. As you might imagine, the Fenix setting and Gecko preference not matching like this can lead to unexpected behavior and bugs/glitches.
 
-Another concern is that Gecko preferences controlled by Fenix settings like this are also *reset* on every browser launch. Back to the previous example: A user might set the `cookiebanners.service.mode.privateBrowsing` pref to `0` from `about:config`, and it might look like it works to disable the feature *(like it does on ex. Firefox for Desktop)*. However, unbeknownst to them, if they left the `Cookie Banner Blocker in private browsing` UI setting enabled, the pref would simply reset back to `1` *(Enabled)* the next time they launch the browser, and the feature would remain enabled *(despite them wishing to disable it)*.
+Another concern is that Gecko preferences controlled by Fenix settings like this are also *reset* on every browser launch. Back to the previous example: A user might set the `cookiebanners.service.mode.privateBrowsing` pref to `0` from [`about:config`](about:config), and it might look like it works to disable the feature *(like it does on ex. Firefox for Desktop)*. However, unbeknownst to them, if they left the `Cookie Banner Blocker in private browsing` UI setting enabled, the pref would simply reset back to `1` *(Enabled)* the next time they launch the browser, and the feature would remain enabled *(despite them wishing to disable it)*.
 
-It's actually in large part due to these reasons that Mozilla disables access to `about:config` on standard Firefox releases. Of course, we disagree with Mozilla's approach here, and believe that preventing access to the `about:config` is an unacceptable compromise for user freedom and control.
+It's actually in large part due to these reasons that Mozilla disables access to [`about:config`](about:config) on standard Firefox releases. Of course, we disagree with Mozilla's approach here, and believe that preventing access to [`about:config`](about:config) is an unacceptable compromise for user freedom and control.
 
-So, to mitigate the concerns detailed above, Gecko preferences controlled by UI settings will appear locked in `about:config`. **The preferences can still be modified by users**, but this ensures that the prefs are only set by their proper, corresponding UI toggle(s), and it ensures that the Gecko preferences always remain in sync with the frontend/Fenix's settings.
+So, to mitigate the concerns detailed above, Gecko preferences controlled by UI settings will appear locked in [`about:config`](about:config). **The preferences can still be modified by users**, but this ensures that the prefs are only set by their proper, corresponding UI toggle(s), and it ensures that the Gecko preferences always remain in sync with the frontend/Fenix's settings.
 
 ## Why isn't Resist Fingerprinting (RFP) enabled?
 
@@ -202,7 +207,7 @@ IronFox does not support [Encrypted Media Extensions *(EME)*](https://wikipedia.
 
 Unfortunately, certain streaming services *(such as the examples listed above)* arbitrarily prevent IronFox users *(as well as users of other privacy and security-focused projects)* from accessing content, by requiring EME for media playback. **When you encounter an issue due to this, please report this to the website's operator**! Please also [file an issue](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml), so that we can track/document impacted services.
 
-**At your own risk**, **at the cost of privacy and security**, you can re-enable support for EME with a **not supported**, **not recommended** hidden setting, by navigating to `Settings` -> `About` -> `About IronFox`, tapping the `IronFox` logo 7 times until you see a message stating `Debug menu enabled`, navigating to `Settings` -> `IronFox` -> `IronFox settings` -> `Secret settings`, and selecting the `Enable Encrypted Media Extensions (EME)` option. To play content, you will likely also need to enable the `Enable Widevine CDM` option from the same screen, which enables Google's Widevine Content Decryption Module *(CDM)*, provided by Android's [`MediaDrm` API](https://developer.android.com/reference/android/media/MediaDrm).
+**At your own risk**, **at the cost of privacy and security**, you can re-enable support for EME with a **not supported**, **not recommended** Gecko preference, by navigating to [`about:config`](about:config), setting `media.eme.enabled` to `true`, and restarting your browser. To play content, you will likely also need to set `media.mediadrm-widevinecdm.visible` to `true`, which enables Google's Widevine Content Decryption Module *(CDM)*, provided by Android's [`MediaDrm` API](https://developer.android.com/reference/android/media/MediaDrm).
 
 ## Why are websites displayed in light mode?
 

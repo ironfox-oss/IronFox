@@ -1,41 +1,3 @@
-diff --git a/browser/components/enterprisepolicies/moz.build b/browser/components/enterprisepolicies/moz.build
-index 047108084b..ff45016d77 100644
---- a/browser/components/enterprisepolicies/moz.build
-+++ b/browser/components/enterprisepolicies/moz.build
-@@ -20,6 +20,6 @@ EXTRA_JS_MODULES.policies += [
-     "Policies.sys.mjs",
- ]
- 
--FINAL_LIBRARY = "browsercomps"
-+FINAL_LIBRARY = "xul"
- 
- JAR_MANIFESTS += ["jar.mn"]
-diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 625640eef4..db7ffb1ba6 100644
---- a/docshell/base/nsAboutRedirector.cpp
-+++ b/docshell/base/nsAboutRedirector.cpp
-@@ -240,7 +240,9 @@ static const RedirEntry kRedirMap[] = {
-          nsIAboutModule::URI_MUST_LOAD_IN_CHILD},
- #endif
-     {"crashgpu", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
--    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT}};
-+    {"crashextensions", "about:blank", nsIAboutModule::HIDE_FROM_ABOUTABOUT},
-+    {"policies", "chrome://browser/content/policies/aboutPolicies.html",
-+     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI}};
- static const int kRedirTotal = std::size(kRedirMap);
- 
- NS_IMETHODIMP
-diff --git a/mobile/android/components/moz.build b/mobile/android/components/moz.build
-index 7b81c01e71..fa4dba3ed0 100644
---- a/mobile/android/components/moz.build
-+++ b/mobile/android/components/moz.build
-@@ -8,5 +8,6 @@ with Files("**"):
-     BUG_COMPONENT = ("GeckoView", "General")
- 
- DIRS += [
-+    "enterprisepolicies",
-     "geckoview",
- ]
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 index bb451a2795..010d73bb37 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
@@ -961,7 +923,7 @@ index bb451a2795..010d73bb37 100644
  
  class WindowsGPOPoliciesProvider {
 diff --git a/toolkit/components/enterprisepolicies/moz.build b/toolkit/components/enterprisepolicies/moz.build
-index 4fcb377c80..c4baf0c41a 100644
+index 4fcb377c80..539080df94 100644
 --- a/toolkit/components/enterprisepolicies/moz.build
 +++ b/toolkit/components/enterprisepolicies/moz.build
 @@ -15,7 +15,7 @@ XPIDL_MODULE = "enterprisepolicies"
@@ -969,7 +931,7 @@ index 4fcb377c80..c4baf0c41a 100644
  TEST_DIRS += ["tests"]
  
 -if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
-+if CONFIG["MOZ_WIDGET_TOOLKIT"] != "0":
++if CONFIG["IRONFOX"]:
      EXTRA_JS_MODULES += [
          "EnterprisePolicies.sys.mjs",
          "EnterprisePoliciesContent.sys.mjs",

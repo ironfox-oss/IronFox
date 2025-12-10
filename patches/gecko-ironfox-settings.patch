@@ -1,8 +1,8 @@
 diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-index 9120558ff9..c10e22751e 100644
+index 06b199e06f..a9123a00a7 100644
 --- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
 +++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-@@ -361,6 +361,14 @@ bool nsRFPService::IsRFPEnabledFor(
+@@ -354,6 +354,14 @@ bool nsRFPService::IsRFPEnabledFor(
      return aOverriddenFingerprintingSettings.ref().contains(aTarget);
    }
  

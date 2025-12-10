@@ -1,8 +1,8 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 625640eef4..b0599cddba 100644
+index 49779b7cc7..db5bffe836 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -219,8 +219,8 @@ static const RedirEntry kRedirMap[] = {
+@@ -223,8 +223,8 @@ static const RedirEntry kRedirMap[] = {
       nsIAboutModule::ALLOW_SCRIPT |
           nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
           nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
@@ -14,23 +14,23 @@ index 625640eef4..b0599cddba 100644
      {"url-classifier", "chrome://global/content/aboutUrlClassifier.xhtml",
       nsIAboutModule::ALLOW_SCRIPT},
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 06f1d0a26e..baad9bd12c 100644
+index 5c1543ab80..29eb4a27cf 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
-@@ -40,7 +40,7 @@ if defined('MOZ_CRASHREPORTER'):
+@@ -41,7 +41,7 @@ if defined('MOZ_CRASHREPORTER'):
      about_pages.append('crashes')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
      about_pages.append('profiles')
 -if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
-+if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != '0':
++if defined('IRONFOX'):
      about_pages.append('translations')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
      about_pages.append('crashcontentjava')
 diff --git a/toolkit/modules/ActorManagerParent.sys.mjs b/toolkit/modules/ActorManagerParent.sys.mjs
-index 4211e30738..3ab4f2f3eb 100644
+index dc976a7e8b..0ec25692cf 100644
 --- a/toolkit/modules/ActorManagerParent.sys.mjs
 +++ b/toolkit/modules/ActorManagerParent.sys.mjs
-@@ -730,7 +730,7 @@ if (AppConstants.platform != "android") {
+@@ -752,7 +752,7 @@ if (AppConstants.platform != "android") {
      messageManagerGroups: ["browsers"],
      allFrames: true,
    };

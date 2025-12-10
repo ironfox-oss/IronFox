@@ -7,20 +7,35 @@
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
 // NOTE: Values surrounded in curly brackets ({}) are filled in by`prebuild.sh`
-/// IRONFOX_BASE_NAME = {IRONFOX_BASE_NAME}
-/// IRONFOX_CHANNEL = {IRONFOX_CHANNEL}
 /// IRONFOX_VERSION = {IRONFOX_VERSION}
+/// IRONFOX_UBO_ASSETS_URL = {IRONFOX_UBO_ASSETS_URL}
 /// PHOENIX_VERSION = {PHOENIX_VERSION}
 
 /// Branding
 pref("app.releaseNotesURL", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.releaseNotesURL.prompt", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
-pref("app.support.vendor", "{IRONFOX_BASE_NAME}: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}", locked);
 pref("app.update.url.details", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.update.url.manual", "https://gitlab.com/ironfox-oss/IronFox/-/releases", locked);
 pref("app.vendorURL", "https://ironfoxoss.org/", locked);
-pref("browser.ironfox.channel", "{IRONFOX_CHANNEL}", locked);
+pref("browser.ironfox.isIronFox", true, locked);
 pref("browser.ironfox.version", "{IRONFOX_VERSION}", locked);
+
+#ifdef IRONFOX_RELEASE
+    pref("app.support.vendor", "IronFox: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}", locked);
+    pref("browser.ironfox.channel", "release", locked);
+    pref("browser.ironfox.isRelease", true, locked);
+#else
+    pref("app.support.vendor", "IronFox Nightly: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}", locked);
+    pref("browser.ironfox.channel", "nightly", locked);
+    pref("browser.ironfox.isRelease", false, locked);
+#endif
+
+/// Once the onboarding is completed, this pref is set to true
+// On IronFox's onboarding, we want to allow the installation of uBlock Origin (if certain strict criteria is met - 
+// see gecko-ironfox-settings-support-xpinstall.patch) without needing to also enable the installation of add-ons
+// After onboarding though, we don't want this to be the case - so we can use this pref to only allow the
+// installation during the onboarding
+pref("browser.ironfox.onboardingCompleted", false);
 
 /// Configure uBlock Origin
 pref("browser.ironfox.uBO.assetsBootstrapLocation", "{IRONFOX_UBO_ASSETS_URL}");
@@ -80,9 +95,50 @@ pref("notification.prompt.testing", false); // [HIDDEN] [DEFAULT]
 pref("browser.ironfox.services.settings.allowedCollections", "blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-data-leak-blocker-domains,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/ml-inference-options,main/ml-inference-request-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/public-suffix-list,main/query-stripping,main/remote-permissions,main/third-party-cookie-blocking-exempt-urls,main/tracking-protection-lists,main/translations-identification-models,main/translations-models,main/translations-models-v2,main/translations-wasm,main/translations-wasm-v2,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,main/webcompat-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");
 pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironfox-fingerprinting-protection-overrides-harden,main/ironfox-fingerprinting-protection-overrides-unbreak,main/ironfox-fingerprinting-protection-overrides-unbreak-timezone,main/ironfox-fingerprinting-protection-overrides-unbreak-webgl,blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-data-leak-blocker-domains,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/moz-essential-domain-fallbacks,main/ml-inference-options,main/ml-inference-request-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/public-suffix-list,main/query-stripping,main/remote-permissions,main/third-party-cookie-blocking-exempt-urls,main/tracking-protection-lists,main/translations-identification-models,main/translations-models,main/translations-models-v2,main/translations-wasm,main/translations-wasm-v2,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,main/webcompat-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");
 
-/// Set light/dark mode to match system
-// We still enable light mode by default, just via a patch for Fenix's UI settings instead
-pref("layout.css.prefers-color-scheme.content-override", 2, locked); // [DEFAULT]
+/// Unbreak BankID authentication
+// We only need this temporarily, fixed for next Phoenix release upstream
+// https://gitlab.com/ironfox-oss/IronFox/-/issues/213
+pref("network.protocol-handler.expose.bankid", true); // [HIDDEN]
+pref("network.protocol-handler.external.bankid", true); // [HIDDEN]
+
+/// Define initial prefs for our UI settings
+// This ensures that Gecko preferences for our custom UI settings are always defined
+// They should be defined anyways by GeckoSettingsBridge (and many are also set by Phoenix)
+// but, we can still define them here to be safe (if anything, as a fall-back)
+pref("accessibility.force_disabled", 1);
+pref("browser.cache.disk.enable", false);
+pref("browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", false);
+pref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true);
+pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true);
+pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", true);
+pref("browser.privatebrowsing.autostart", false);
+pref("browser.safebrowsing.malware.enabled", true);
+pref("browser.safebrowsing.phishing.enabled", true);
+pref("browser.translations.enable", true);
+pref("browser.translations.simulateUnsupportedEngine", false);
+pref("extensions.formautofill.addresses.enabled", false);
+pref("extensions.formautofill.creditCards.enabled", false);
+pref("javascript.enabled", true);
+pref("javascript.options.baselinejit", false);
+pref("javascript.options.ion", false);
+pref("javascript.options.jit_trustedprincipals", false);
+pref("javascript.options.jithints", false);
+pref("javascript.options.native_regexp", false);
+pref("javascript.options.wasm", true);
+pref("javascript.options.wasm_optimizingjit", false);
+pref("layout.css.prefers-color-scheme.content-override", 1);
+pref("media.autoplay.blocking_policy", 1);
+pref("media.peerconnection.enabled", true);
+pref("network.dns.disableIPv6", false);
+pref("network.http.referer.XOriginPolicy", 0);
+pref("pdfjs.disabled", false);
+pref("print.enabled", true);
+pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true);
+pref("privacy.spoof_english", 2);
+pref("signon.rememberSignons", false);
+pref("svg.disabled", false);
+pref("webgl.disabled", true);
+pref("xpinstall.enabled", false);
 
 /// Annotate locked prefs controlled by UI settings
 pref("accessibility.force_disabled.0.NOTE", "Locked in favor of the UI setting:", locked);
@@ -97,6 +153,8 @@ pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.
 pref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled.1.NOTE", "'Enable timezone spoofing overrides from IronFox'", locked);
 pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled.1.NOTE", "'Enable WebGL overrides from IronFox'", locked);
+pref("browser.privatebrowsing.autostart.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("browser.privatebrowsing.autostart.1.NOTE", "'Always use private browsing mode'", locked);
 pref("browser.safebrowsing.malware.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("browser.safebrowsing.malware.enabled.1.NOTE", "'Enable Safe Browsing'", locked);
 pref("browser.safebrowsing.phishing.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
@@ -145,12 +203,10 @@ pref("javascript.options.wasm.0.NOTE", "Locked in favor of the UI setting:", loc
 pref("javascript.options.wasm.1.NOTE", "'Enable WebAssembly (WASM)'", locked);
 pref("javascript.options.wasm_optimizingjit.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("javascript.options.wasm_optimizingjit.1.NOTE", "'Enable JavaScript Just-in-time Compilation (JIT)'", locked);
+pref("layout.css.prefers-color-scheme.content-override.0.NOTE", "Locked in favor of the UI setting:", locked);
+pref("layout.css.prefers-color-scheme.content-override.1.NOTE", "'Preferred website appearance'", locked);
 pref("media.autoplay.blocking_policy.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("media.autoplay.blocking_policy.1.NOTE", "'Media autoplay'", locked);
-pref("media.eme.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("media.eme.enabled.1.NOTE", "'Enable Encrypted Media Extensions (EME)'", locked);
-pref("media.mediadrm-widevinecdm.visible.0.NOTE", "Locked in favor of the UI setting:", locked);
-pref("media.mediadrm-widevinecdm.visible.1.NOTE", "'Enable Widevine CDM'", locked);
 pref("media.peerconnection.enabled.0.NOTE", "Locked in favor of the UI setting:", locked);
 pref("media.peerconnection.enabled.1.NOTE", "'Enable Widevine CDM'", locked);
 pref("network.dns.disableIPv6.0.NOTE", "Locked in favor of the UI setting:", locked);

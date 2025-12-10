@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">आधार डोमेन के मेल खाने पर क्रॉस-ओरिजिन रेफ़रर्स भेजें</string>
     <string name="preference_referer_policy_hosts_match">क्रॉस-ओरिजिन रेफ़रर्स अक्षम करें</string>
     <string name="preference_cache_enabled">डिस्क कैश सक्षम करें</string>
-    <string name="preferences_debug_settings_eme_enabled">एन्क्रिप्टेड मीडिया एक्सटेंशन (ईएमई) सक्षम करें</string>
-    <string name="preferences_debug_settings_widevine_enabled">वाइडवाइन सीडीएम सक्षम करें</string>
     <string name="preference_ipv6_enabled">IPv6 नेटवर्क कनेक्टिविटी सक्षम करें</string>
     <string name="preference_javascript_enabled">जावास्क्रिप्ट सक्षम करें</string>
     <string name="preference_jit_enabled">जावास्क्रिप्ट जस्ट-इन-टाइम संकलन (JIT) सक्षम करें</string>

@@ -193,6 +193,9 @@ $SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/bu
 $SED -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 $SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
+# Enable Mozilla's new redesign for Private Browsing mode
+$SED -i -e 's|PRIVATE_BROWSING_MODE_REDESIGN = .*|PRIVATE_BROWSING_MODE_REDESIGN = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Ensure onboarding is always enabled
 $SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
 
@@ -244,14 +247,23 @@ rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
 rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/CrashFactCollector.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/CrashReportingAppMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/NimbusExperimentDataProvider.kt
+rm -vf app/src/*/java/org/mozilla/fenix/crashes/ReleaseRuntimeTagProvider.kt
 rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/home/middleware/HomeTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/home/PocketMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/messaging/state/MessagingMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
+rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/ReviewPromptMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/telemetry/TelemetryMiddleware.kt
 rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
 rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
 rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
+rm -vrf app/src/*/java/org/mozilla/fenix/startupCrash
 
 # Let it be IronFox
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
@@ -356,28 +368,28 @@ case "$1" in
 arm)
     # APK for armeabi-v7a
     abi='"armeabi-v7a"'
-    target=arm-linux-androideabi
+    geckotarget=arm
     llvmtarget="ARM"
     rusttarget=arm
     ;;
 x86_64)
     # APK for x86_64
     abi='"x86_64"'
-    target=x86_64-linux-android
+    geckotarget=x86_64
     llvmtarget="X86_64"
     rusttarget=x86_64
     ;;
 arm64)
     # APK for arm64-v8a
     abi='"arm64-v8a"'
-    target=aarch64-linux-android
+    geckotarget=arm64
     llvmtarget="AArch64"
     rusttarget=arm64
     ;;
 bundle)
     # AAB for both armeabi-v7a and arm64-v8a
     abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
-    target=''
+    geckotarget=bundle
     llvmtarget="AArch64;ARM;X86_64"
     rusttarget='arm64,arm,x86_64'
     ;;
@@ -552,6 +564,15 @@ $SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"
 $SED -i 's|"components/ads-client"|# "components/ads-client"|g' Cargo.toml
 $SED -i 's|ads-client|# ads-client|g' megazords/full/Cargo.toml
 
+# Remove the Crash Reporter test library
+$SED -i 's|"components/crashtest"|# "components/crashtest"|g' Cargo.toml
+$SED -i 's|crashtest|# crashtest|g' megazords/full/Cargo.toml
+
+# Remove the Rust Error support library
+## Used for telemetry/error reporting, depends on Glean
+$SED -i 's|"components/support/error|# "components/support/error|g' Cargo.toml
+$SED -i 's|error-support|# error-support|g' megazords/full/Cargo.toml
+
 # Apply Application Services overlay
 apply_overlay "$patches/a-s-overlay/"
 
@@ -568,7 +589,7 @@ popd
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch <"$mozilla_release/taskcluster/scripts/misc/wasi-sdk.patch"
+    patch -p1 --no-backup-if-mismatch <"$builddir/wasi-sdk.patch"
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
@@ -614,22 +635,28 @@ fi
 ## (ex. displayed at `about:buildconfig`)
 $SED -i 's|/rev/|/commit/|' build/variables.py
 
-$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"ironfox", "chrome:\/\/global\/content\/ironfox.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
-$SED -i '/{"about", "chrome:\/\/global\/content\/aboutAbout.html", 0},/a \    {"attribution", "chrome:\/\/global\/content\/attribution.html",\n     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},' docshell/base/nsAboutRedirector.cpp
-$SED -i "/about_pages.append('inference')/a \    about_pages.append('ironfox')" docshell/build/components.conf
-$SED -i "/about_pages.append('inference')/a \    about_pages.append('attribution')" docshell/build/components.conf
+# about: pages
+echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/browser@JAREXT@' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/browser.manifest' >>mobile/android/installer/package-manifest.in
+echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/ironfox@JAREXT@' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/chrome/ironfox.manifest' >>mobile/android/installer/package-manifest.in
 
 # about:policies
-$SED -i -e 's/browser.jar/geckoview.jar/g' browser/components/enterprisepolicies/jar.mn
-mkdir -vp ironfox/locales/en-US/browser/policies
-cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/locales/en-US/browser/
-cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/locales/en-US/browser/policies/
-echo '' >>mobile/shared/chrome/geckoview/jar.mn
-echo '% content browser %content/browser/' >>mobile/shared/chrome/geckoview/jar.mn
-$SED -i "/about_pages.append('inference')/a \    about_pages.append('policies')" docshell/build/components.conf
+mkdir -vp ironfox/about/browser/locales/en-US/browser/policies
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/about/browser/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/about/browser/locales/en-US/browser/policies/
 
-# Copy policy definitions/schema/etc. from Firefox for Desktop
-cp -vrf browser/components/enterprisepolicies mobile/android/components
+# about:robots
+mkdir -vp ironfox/about/browser/robots
+cp -vf browser/base/content/aboutRobots.css ironfox/about/browser/robots/
+cp -vf browser/base/content/aboutRobots.js ironfox/about/browser/robots/
+cp -vf browser/base/content/aboutRobots.xhtml ironfox/about/browser/robots/
+cp -vf browser/base/content/aboutRobots-icon.png ironfox/about/browser/robots/
+cp -vf browser/base/content/robot.ico ironfox/about/browser/robots/
+cp -vf browser/base/content/static-robot.png ironfox/about/browser/robots/
+cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/about/browser/locales/en-US/browser/
 
 # Ensure we're building for release
 $SED -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure
@@ -654,12 +681,6 @@ $SED -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" in
 $SED -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
 $SED -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
 $SED -i -e 's|debug = .*|debug = false|g' gfx/wr/Cargo.toml
-
-# Remove the `NETWORK_ACCESS_STATE` permission (Fenix)
-$SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/fenix/app/src/main/AndroidManifest.xml
-
-# Remove the `NETWORK_ACCESS_STATE` permission (GeckoView)
-$SED -i -e 's|<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>|<!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->|' mobile/android/geckoview/src/main/AndroidManifest.xml
 
 # Disable Normandy (Experimentation)
 $SED -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
@@ -693,6 +714,9 @@ echo ']' >>services/settings/dumps/main/moz.build
 
 # Remove unused about:telemetry assets
 rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js toolkit/content/aboutTelemetry.xhtml
+
+# Remove the Clear Key CDM
+$SED -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' mobile/android/installer/package-manifest.in
 
 # No-op AMO collections/recommendations
 $SED -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
@@ -930,6 +954,8 @@ $SED -i -e 's|ic_onboarding_sync|fox_alert_crash_dark|' mobile/android/fenix/app
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
 $SED -i \
+    -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.provider."|"z99.ignore.string."|' \
     -e 's|"cookiebanners.service.detectOnly"|"z99.ignore.boolean"|' \
     -e 's|"cookiebanners.service.enableGlobalRules"|"z99.ignore.boolean"|' \
@@ -964,6 +990,7 @@ $SED -i \
     -e 's|"apz.allow_double_tap_zooming"|"z99.ignore.boolean"|' \
     -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
+    -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \
     -e 's|"dom.ipc.processCount"|"z99.ignore.integer"|' \
@@ -977,6 +1004,7 @@ $SED -i \
     -e 's|"fission.webContentIsolationStrategy"|"z99.ignore.integer"|' \
     -e 's|"formhelper.autozoom"|"z99.ignore.boolean"|' \
     -e 's|"general.aboutConfig.enable"|"z99.ignore.boolean"|' \
+    -e 's|"javascript.enabled"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.mem.gc_parallel_marking"|"z99.ignore.boolean"|' \
     -e 's|"javascript.options.use_fdlibm_for_sin_cos_tan"|"z99.ignore.boolean"|' \
     -e 's|"network.android_doh.autoselect_enabled"|"z99.ignore.boolean"|' \
@@ -1000,13 +1028,6 @@ $SED -i \
     -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-
-if [[ "$IRONFOX_RELEASE" != 1 ]]; then
-    # On nightlies, allow remote debugging to be enabled persistently
-    ## (It's still disabled by default though)
-    $SED -i -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
-    $SED -i -e 's|clearUserPref("devtools.debugger.remote-enabled")|clearUserPref("z99.ignore.boolean")|' mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-fi
 
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
@@ -1053,15 +1074,15 @@ echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDe
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
 
-{
-    if [[ -n "${target}" ]]; then
-        echo "## Target platform"
-        echo "ac_add_options --target='$target'"
-        echo ""
-    fi
+# Because `app.support.vendor` is locked, we need to unset it in Phoenix's pref files
+# for our value (at 002-ironfox.js) takes effect
+$SED -i -e 's|"app.support.vendor"|"z99.ignore.string"|' ironfox/prefs/000-phoenix.js
+$SED -i -e 's|"app.support.vendor"|"z99.ignore.string"|' ironfox/prefs/001-phoenix-extended.js
 
+{
     if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
         echo "## Enable Safe Browsing"
+        echo "### SB_GAPI_KEY_FILE = $SB_GAPI_KEY_FILE"
         echo "ac_add_options --with-google-safebrowsing-api-keyfile='${SB_GAPI_KEY_FILE}'"
     else
         echo "## Disable Safe Browsing"
@@ -1076,12 +1097,8 @@ apply_overlay "$patches/gecko-overlay/"
 # Set variables for environment-specific arguments
 
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
-    IRONFOX_APP_NAME='ironfox'
-    IRONFOX_BASE_NAME='IronFox'
     IRONFOX_CHANNEL='release'
 else
-    IRONFOX_APP_NAME='ironfox-nightly'
-    IRONFOX_BASE_NAME='IronFox Nightly'
     IRONFOX_CHANNEL='nightly'
 fi
 
@@ -1091,22 +1108,20 @@ $SED -i "s|{glean}|$glean|" local.properties
 $SED -i "s|{mozilla_release}|$mozilla_release|" local.properties
 
 ## mozconfig
-$SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" mozconfig
-$SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" mozconfig
-$SED -i "s|{builddir}|$builddir|" mozconfig
-$SED -i "s|{GRADLE_PATH}|$(command -v gradle)|" mozconfig
-$SED -i "s|{HOME}|$HOME|" mozconfig
-$SED -i "s|{IRONFOX_APP_NAME}|$IRONFOX_APP_NAME|" mozconfig
-$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" mozconfig
-$SED -i "s|{JAVA_HOME}|$JAVA_HOME|" mozconfig
-$SED -i "s|{libclang}|$libclang|" mozconfig
-$SED -i "s|{PLATFORM}|$PLATFORM|" mozconfig
-$SED -i "s|{target}|$target|" mozconfig
-$SED -i "s|{wasi_install}|$wasi_install|" mozconfig
+$SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{builddir}|$builddir|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{GRADLE_PATH}|$(command -v gradle)|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{HOME}|$HOME|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{JAVA_HOME}|$JAVA_HOME|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{libclang}|$libclang|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{PLATFORM}|$PLATFORM|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{wasi_install}|$wasi_install|" ironfox/mozconfigs/env.mozconfig
+
+$SED -i "s|{geckotarget}|$geckotarget|" mozconfig
+$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" mozconfig
 
 # prefs
-$SED -i "s|{IRONFOX_BASE_NAME}|$IRONFOX_BASE_NAME|" ironfox/prefs/002-ironfox.js
-$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" ironfox/prefs/002-ironfox.js
 $SED -i "s|{IRONFOX_UBO_ASSETS_URL}|$IRONFOX_UBO_ASSETS_URL|" ironfox/prefs/002-ironfox.js
 $SED -i "s|{IRONFOX_VERSION}|$IRONFOX_VERSION|" ironfox/prefs/002-ironfox.js
 $SED -i "s|{PHOENIX_VERSION}|$PHOENIX_VERSION|" ironfox/prefs/002-ironfox.js
@@ -1115,4 +1130,4 @@ popd
 
 # Set current build revision
 ## (ex. displayed at `about:buildconfig`)
-$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/mozconfig"
+$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/ironfox/mozconfigs/branding/env.mozconfig"

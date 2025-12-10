@@ -1,8 +1,8 @@
 diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-index 266f2a2e1f..437ef2f414 100644
+index 308af83d7d..eaf2b8370a 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 +++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-@@ -30,7 +30,7 @@ const CRASHREPORTER_ENABLED =
+@@ -35,7 +35,7 @@ const CRASHREPORTER_ENABLED =
    AppConstants.MOZ_CRASHREPORTER && AppConstants.MOZ_APP_NAME !== "thunderbird";
  
  const IS_MAIN_PROCESS =
@@ -12,7 +12,7 @@ index 266f2a2e1f..437ef2f414 100644
  const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
  const STUDIES_OPT_OUT_PREF = "app.shield.optoutstudies.enabled";
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-index d37ccfd130..d9886c7c94 100644
+index 8b89b1b52d..0738becffd 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 +++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 @@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
@@ -24,7 +24,7 @@ index d37ccfd130..d9886c7c94 100644
  
  export const UnenrollmentCause = {
    fromCheckRecipeResult(result) {
-@@ -165,7 +165,7 @@ export class ExperimentManager {
+@@ -183,7 +183,7 @@ export class ExperimentManager {
          return new Date();
        },
      };
@@ -33,12 +33,12 @@ index d37ccfd130..d9886c7c94 100644
        enumerable: true,
        get: async () => {
          await this.store.ready();
-@@ -215,7 +215,7 @@ export class ExperimentManager {
+@@ -233,7 +233,7 @@ export class ExperimentManager {
            return acc;
          }, {});
        },
 -    });
-+    });*/
++    }); */
      return context;
    }
  

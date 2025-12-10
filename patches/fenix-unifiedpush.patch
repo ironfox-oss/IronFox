@@ -11,10 +11,10 @@ index 1753bcbd86..6cb5632fe9 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index af2ddca5a6..8bdcdc0a61 100644
+index 237d28a560..b9a0cb7eda 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -743,6 +743,7 @@ dependencies {
+@@ -744,6 +744,7 @@ dependencies {
      androidTestUtil libs.androidx.test.orchestrator
  
      lintChecks project(':components:tooling-lint')
@@ -23,10 +23,10 @@ index af2ddca5a6..8bdcdc0a61 100644
  
  protobuf {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index bd75990cd8..12f6bd31f0 100644
+index 53190b359c..115d160315 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -37,7 +37,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
+@@ -38,7 +38,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
  import mozilla.components.concept.base.crash.Breadcrumb
  import mozilla.components.concept.engine.webextension.WebExtension
  import mozilla.components.concept.engine.webextension.isUnsupported
@@ -35,7 +35,7 @@ index bd75990cd8..12f6bd31f0 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -518,7 +518,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -497,7 +497,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.

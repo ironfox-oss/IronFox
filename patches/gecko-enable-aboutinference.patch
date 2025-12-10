@@ -1,52 +1,52 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 625640eef4..b47c7570ec 100644
+index 49779b7cc7..de21c928fa 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -137,7 +137,7 @@ static const RedirEntry kRedirMap[] = {
+@@ -136,7 +136,7 @@ static const RedirEntry kRedirMap[] = {
       nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
           nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
           nsIAboutModule::HIDE_FROM_ABOUTABOUT},
 -#if defined(NIGHTLY_BUILD)
-+#if !defined(NIGHTLY_BUILD)
++#if defined(IRONFOX)
      {"inference", "chrome://global/content/aboutInference.html",
       nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
  #endif
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 06f1d0a26e..fee6c36527 100644
+index 5c1543ab80..3f64553499 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
-@@ -52,7 +52,7 @@ if not defined('MOZ_GLEAN_ANDROID'):
+@@ -53,7 +53,7 @@ if not defined('MOZ_GLEAN_ANDROID'):
      about_pages.append('glean')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android' and buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'windows':
      about_pages.append('webauthn')
 -if defined('NIGHTLY_BUILD'):
-+if not defined('NIGHTLY_BUILD'):
++if defined('IRONFOX'):
      about_pages.append('inference')
  
  Headers = ['/docshell/build/nsDocShellModule.h']
 diff --git a/toolkit/components/moz.build b/toolkit/components/moz.build
-index 89be70ba12..f97e2c79a8 100644
+index ae3dc77bea..c7f21708e8 100644
 --- a/toolkit/components/moz.build
 +++ b/toolkit/components/moz.build
-@@ -146,7 +146,7 @@ if CONFIG["MOZ_BACKGROUNDTASKS"]:
+@@ -147,7 +147,7 @@ if CONFIG["MOZ_BACKGROUNDTASKS"]:
  if CONFIG["MOZ_UNIFFI_FIXTURES"]:
      DIRS += ["uniffi-bindgen-gecko-js/tests"]
  
 -if CONFIG["NIGHTLY_BUILD"]:
-+if not CONFIG["NIGHTLY_BUILD"]:
++if CONFIG["IRONFOX"]:
      DIRS += ["aboutinference"]
  
  UNIFIED_SOURCES += [
 diff --git a/toolkit/locales/jar.mn b/toolkit/locales/jar.mn
-index 207e007d2e..0536d725ef 100644
+index c789b8726f..d31cc1ae96 100644
 --- a/toolkit/locales/jar.mn
 +++ b/toolkit/locales/jar.mn
-@@ -11,7 +11,7 @@
+@@ -12,7 +12,7 @@
  #ifdef MOZ_LAYOUT_DEBUGGER
    layoutdebug/layoutdebug.ftl                      (../../layout/tools/layout-debug/ui/content/layoutdebug.ftl)
  #endif
 -#if defined(NIGHTLY_BUILD)
-+#if !defined(NIGHTLY_BUILD)
++#if defined(IRONFOX)
    preview/aboutInference.ftl                       (../components/aboutinference/content/aboutInference.ftl)
  #endif
  

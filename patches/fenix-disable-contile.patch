@@ -1,20 +1,20 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
-index 191a4187a5..b79de304d4 100644
+index 579db37cf7..e2869c0a37 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
-@@ -53,6 +53,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat() {
+@@ -78,6 +78,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat() {
          }
  
          requirePreference<CheckBoxPreference>(R.string.pref_key_enable_contile).apply {
 +            isVisible = false
-             isChecked = context.settings().showContileFeature
-             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
-                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+             isChecked = fenixSettings.showContileFeature
+             onPreferenceChangeListener = createMetricPreferenceChangeListener("contile")
+         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..08f925b36c 100644
+index 35d4c5a9c0..c139530def 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2056,7 +2056,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2064,7 +2064,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -23,7 +23,7 @@ index 1c7b0fce0d..08f925b36c 100644
      )
  
      /**
-@@ -2697,7 +2697,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2696,7 +2696,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      var suppressSponsoredTopSitesEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_suppress_sponsored_tiles),
          featureFlag = true,

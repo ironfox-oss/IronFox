@@ -3,7 +3,6 @@
 package org.mozilla.fenix.distributions
 
 import android.content.Context
-import androidx.annotation.VisibleForTesting
 
 class DistributionIdManager(
     private val context: Context,
@@ -19,7 +18,6 @@ class DistributionIdManager(
 
     fun isPartnershipDistribution(): Boolean = false
 
-    @VisibleForTesting
     internal enum class Distribution(val id: String) {
         DEFAULT(id = "Mozilla"),
         ;

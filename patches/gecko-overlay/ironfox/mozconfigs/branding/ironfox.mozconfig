@@ -1,0 +1,10 @@
+
+. "$topsrcdir/ironfox/mozconfigs/branding/common.mozconfig"
+
+ac_add_options --enable-ironfox-release
+ac_add_options --with-app-basename='IronFox'
+ac_add_options --with-app-name='ironfox'
+ac_add_options --with-branding='ironfox/branding/ironfox'
+export MOZ_APP_BASENAME='IronFox'
+export MOZ_APP_NAME='ironfox'
+export MOZ_APP_REMOTINGNAME='ironfox'

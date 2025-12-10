@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Çapraz-kaynaklı yönlendiricileri alan adları uyuşunca gönder</string>
     <string name="preference_referer_policy_hosts_match">Çapraz-kaynaklı yönlendiricileri devre dışı bırak</string>
     <string name="preference_cache_enabled">Disk önbelleğini etkinleştir</string>
-    <string name="preferences_debug_settings_eme_enabled">Şifrelenmiş Medya Eklentileri\'ni (EME) etkinleştir</string>
-    <string name="preferences_debug_settings_widevine_enabled">Widevine CDM\'i etkinleştir</string>
     <string name="preference_ipv6_enabled">IPv6 ağ bağlantısını etkinleştir</string>
     <string name="preference_javascript_enabled">JavaScript\'i etkinleştir</string>
     <string name="preference_jit_enabled">JavaScript Just-in-time Dermelesi\'ni (JIT) etkinleştir</string>
@@ -76,4 +74,5 @@
     <string name="preference_autoplay_policy_sticky">Yapışkan</string>
     <string name="preference_autoplay_policy_transient">Geçici (Varsayılan)</string>
     <string name="preference_autoplay_policy_click_to_play">Oynatmak için tıkla</string>
+    <string name="preference_always_use_private_browsing">Her zaman gizli tarama modunu kullan</string>
 </resources>

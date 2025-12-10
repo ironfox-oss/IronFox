@@ -1,5 +1,5 @@
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-index f4f56d171e..2363c434e5 100644
+index e15b03c0f6..dffb8a7e62 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 @@ -873,13 +873,13 @@ function getSignedStatus(aRv, aCert, aAddonID) {
@@ -14,7 +14,7 @@ index f4f56d171e..2363c434e5 100644
        if (aCert.organizationalUnit == "Mozilla Extensions") {
          return AddonManager.SIGNEDSTATE_PRIVILEGED;
 -      }
-+      }*/
++      } */
  
        return /preliminary/i.test(aCert.organizationalUnit)
          ? AddonManager.SIGNEDSTATE_PRELIMINARY

@@ -28,7 +28,7 @@ index 1753bcbd86..07aedf78c7 100644
      - components:service-pocket
      - components:service-sync-autofill
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index af2ddca5a6..66c233fece 100644
+index 237d28a560..32bfc0c3c6 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
 @@ -610,13 +610,13 @@ dependencies {
@@ -107,7 +107,7 @@ index 39a6df6fb6..2002dfacf6 100644
 --keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 +#-keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 2f0e243bfa..1a93793850 100644
+index 63398b2c71..a6383d8aac 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -119,7 +119,7 @@ index 2f0e243bfa..1a93793850 100644
  
      <application
          android:name=".FenixApplication"
-@@ -770,13 +770,13 @@
+@@ -751,13 +751,13 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
@@ -135,7 +135,7 @@ index 2f0e243bfa..1a93793850 100644
  
          <service
              android:name=".perf.ProfilerService"
-@@ -790,7 +790,7 @@
+@@ -771,7 +771,7 @@
              </intent-filter>
          </service>
  
@@ -144,7 +144,7 @@ index 2f0e243bfa..1a93793850 100644
              android:name="firebase_messaging_auto_init_enabled"
              android:value="true" />
          <meta-data
-@@ -798,7 +798,7 @@
+@@ -779,7 +779,7 @@
              android:value="false" />
          <meta-data
              android:name="firebase_analytics_collection_deactivated"
@@ -153,7 +153,7 @@ index 2f0e243bfa..1a93793850 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
-@@ -813,14 +813,14 @@
+@@ -794,14 +794,14 @@
  
          <!-- For adjust pre-installs -->
          <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
@@ -171,7 +171,7 @@ index 2f0e243bfa..1a93793850 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 5c75c14625..b31acafecf 100644
+index ce5e4868cc..b9cea32386 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
@@ -205,8 +205,14 @@ index 5c75c14625..b31acafecf 100644
  import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
  import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
  import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
-@@ -57,10 +57,10 @@ import org.mozilla.fenix.home.PocketMiddleware
- import org.mozilla.fenix.home.SettingsBackedPocketSettings
+@@ -53,15 +53,15 @@ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.filterState
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.ext.sort
+-import org.mozilla.fenix.home.PocketMiddleware
+-import org.mozilla.fenix.home.SettingsBackedPocketSettings
++// import org.mozilla.fenix.home.PocketMiddleware
++// import org.mozilla.fenix.home.SettingsBackedPocketSettings
  import org.mozilla.fenix.home.blocklist.BlocklistHandler
  import org.mozilla.fenix.home.blocklist.BlocklistMiddleware
 -import org.mozilla.fenix.home.middleware.HomeTelemetryMiddleware
@@ -214,11 +220,22 @@ index 5c75c14625..b31acafecf 100644
  import org.mozilla.fenix.home.setup.store.DefaultSetupChecklistRepository
  import org.mozilla.fenix.home.setup.store.SetupChecklistPreferencesMiddleware
 -import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
+-import org.mozilla.fenix.messaging.state.MessagingMiddleware
 +// import org.mozilla.fenix.home.setup.store.SetupChecklistTelemetryMiddleware
- import org.mozilla.fenix.messaging.state.MessagingMiddleware
++// import org.mozilla.fenix.messaging.state.MessagingMiddleware
  import org.mozilla.fenix.nimbus.FxNimbus
  import org.mozilla.fenix.onboarding.FenixOnboarding
-@@ -200,7 +200,7 @@ class Components(private val context: Context) {
+ import org.mozilla.fenix.perf.AppLinkIntentLaunchTypeProvider
+@@ -70,7 +70,7 @@ import org.mozilla.fenix.perf.StartupActivityLog
+ import org.mozilla.fenix.perf.StartupStateProvider
+ import org.mozilla.fenix.perf.StrictModeManager
+ import org.mozilla.fenix.perf.lazyMonitored
+-import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
++// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
+ import org.mozilla.fenix.settings.settingssearch.DefaultFenixSettingsIndexer
+ import org.mozilla.fenix.termsofuse.TermsOfUseManager
+ import org.mozilla.fenix.utils.Settings
+@@ -201,7 +201,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
      val performance by lazyMonitored { PerformanceComponent() }
@@ -227,7 +244,7 @@ index 5c75c14625..b31acafecf 100644
      val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
  
      val strictMode by lazyMonitored {
-@@ -215,7 +215,7 @@ class Components(private val context: Context) {
+@@ -216,7 +216,7 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -236,28 +253,34 @@ index 5c75c14625..b31acafecf 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-@@ -277,7 +277,7 @@ class Components(private val context: Context) {
-                     controller = nimbus.messaging,
-                     settings = settings,
-                 ),
--                MetricsMiddleware(
-+/*                MetricsMiddleware(
-                     metrics = analytics.metrics,
-                     nimbusEventStore = nimbus.events,
-                 ),
-@@ -288,9 +288,9 @@ class Components(private val context: Context) {
+@@ -268,7 +268,7 @@ class Components(private val context: Context) {
+                 ProfileMarkerMiddleware(markerName = "AppStore", profiler = core.engine.profiler),
+                 LogMiddleware(tag = "AppStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
+                 BlocklistMiddleware(blocklistHandler),
+-                PocketMiddleware(
++/*                PocketMiddleware(
+                     lazyMonitored { core.pocketStoriesService },
+                     context.pocketStoriesSelectedCategoriesDataStore,
+                     SettingsBackedPocketSettings(settings),
+@@ -289,9 +289,9 @@ class Components(private val context: Context) {
                          currentTimeInMillis = { System.currentTimeMillis() },
                      ),
                  ),
 -                HomeTelemetryMiddleware(),
-+                HomeTelemetryMiddleware(),*/
++                HomeTelemetryMiddleware(), */
                  SetupChecklistPreferencesMiddleware(DefaultSetupChecklistRepository(context)),
 -                SetupChecklistTelemetryMiddleware(),
-+//                SetupChecklistTelemetryMiddleware(),
++/*                SetupChecklistTelemetryMiddleware(),
                  ReviewPromptMiddleware(
                      isReviewPromptFeatureEnabled = { settings.customReviewPromptFeatureEnabled },
                      isTelemetryEnabled = { settings.isTelemetryEnabled },
-@@ -303,7 +303,7 @@ class Components(private val context: Context) {
+@@ -299,12 +299,12 @@ class Components(private val context: Context) {
+                     nimbusEventStore = nimbus.events,
+                 ).also {
+                     settings.migrateLastReviewPromptTimePrefIfNeeded(nimbus.events)
+-                },
++                }, */
+                 AppVisualCompletenessMiddleware(performance.visualCompletenessQueue),
              ),
          ).also {
              it.dispatch(AppAction.SetupChecklistAction.Init)
@@ -289,10 +312,10 @@ index 67a0d72da3..503c40facd 100644
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index e1a67a6da4..722f2fcac5 100644
+index d0e61a00fc..97f6dc8eef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -487,7 +487,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -492,7 +492,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
  
              // About preferences
              resources.getString(R.string.pref_key_rate) -> {
@@ -302,10 +325,10 @@ index e1a67a6da4..722f2fcac5 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 1c7b0fce0d..6252365e30 100644
+index 35d4c5a9c0..11dd01176b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -316,7 +316,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -329,7 +329,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var customReviewPromptFeatureEnabled by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_custom_review_prompt_enabled),
@@ -314,7 +337,7 @@ index 1c7b0fce0d..6252365e30 100644
          default = { FxNimbus.features.customReviewPrompt.value().enabled },
      )
  
-@@ -2112,7 +2112,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2120,7 +2120,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
@@ -323,23 +346,6 @@ index 1c7b0fce0d..6252365e30 100644
      )
  
      var shouldUseComposableToolbar by lazyFeatureFlagPreference(
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 5058f40c0b..0c0a575f53 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -206,10 +206,10 @@
-         android:title="@string/preferences_category_about"
-         app:iconSpaceReserved="false"
-         android:layout="@layout/preference_category_no_icon_style">
--        <androidx.preference.Preference
-+        <!-- <androidx.preference.Preference
-             android:key="@string/pref_key_rate"
-             app:iconSpaceReserved="false"
--            android:title="@string/preferences_rate" />
-+            android:title="@string/preferences_rate" /> -->
- 
-         <androidx.preference.Preference
-             android:key="@string/pref_key_about"
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
 index 0000000000..4d5fd8153d

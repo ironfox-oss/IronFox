@@ -1,5 +1,5 @@
 diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-index 20d615e..ddaa6e1 100644
+index 20d615e..70b41a0 100644
 --- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
 +++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
 @@ -159,12 +159,12 @@ enum class KeyRegenerationEventReason {
@@ -7,13 +7,13 @@ index 20d615e..ddaa6e1 100644
  fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
      // Avoid the deprecation warning when calling  `record()` without the optional EventExtras param
 -    @Suppress("DEPRECATION")
-+/*   @Suppress("DEPRECATION")
++/*    @Suppress("DEPRECATION")
      when (reason) {
          KeyRegenerationEventReason.Lost -> LoginsStoreMetrics.keyRegeneratedLost.record()
          KeyRegenerationEventReason.Corrupt -> LoginsStoreMetrics.keyRegeneratedCorrupt.record()
          KeyRegenerationEventReason.Other -> LoginsStoreMetrics.keyRegeneratedOther.record()
 -    }
-+    }*/
++    } */
  }
  
  /**
@@ -41,10 +41,10 @@ index 20d615e..ddaa6e1 100644
              throw e
          }
 -    }
-+    }*/
++    } */
  }
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index f77d82a..40bcadd 100644
+index 98019e4..5705af9 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 @@ -26,10 +26,10 @@ import kotlinx.coroutines.runBlocking
@@ -75,7 +75,7 @@ index f77d82a..40bcadd 100644
                      ),
                  )
 -            }
-+            }*/
++            } */
          }
  
          override fun recordFeatureActivation(event: FeatureExposureExtraDef) {
@@ -87,7 +87,7 @@ index f77d82a..40bcadd 100644
                      featureId = event.featureId,
                  ),
 -            )
-+            )*/
++            ) */
          }
  
          override fun recordFeatureExposure(event: FeatureExposureExtraDef) {
@@ -99,7 +99,7 @@ index f77d82a..40bcadd 100644
                      featureId = event.featureId,
                  ),
 -            )
-+            )*/
++            ) */
          }
  
          override fun recordMalformedFeatureConfig(event: MalformedFeatureConfigExtraDef) {
@@ -112,11 +112,11 @@ index f77d82a..40bcadd 100644
                      partId = event.part,
                  ),
 -            )
-+            )*/
++            ) */
          }
      }
  
-@@ -221,11 +221,11 @@ open class Nimbus(
+@@ -212,11 +212,11 @@ open class Nimbus(
          try {
              nimbusClient.getFeatureConfigVariables(featureId)?.let { JSONObject(it) }
          } catch (e: NimbusException.DatabaseNotReady) {
@@ -126,11 +126,11 @@ index f77d82a..40bcadd 100644
                      featureId = featureId,
                  ),
 -            )
-+            )*/
++            ) */
              null
          } catch (e: Throwable) {
              reportError("getFeatureConfigVariablesJson", e)
-@@ -301,9 +301,9 @@ open class Nimbus(
+@@ -292,9 +292,9 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun fetchExperimentsOnThisThread() = withCatchAll("fetchExperiments") {
          try {
@@ -143,7 +143,7 @@ index f77d82a..40bcadd 100644
              updateObserver {
                  it.onExperimentsFetched()
              }
-@@ -338,7 +338,7 @@ open class Nimbus(
+@@ -329,7 +329,7 @@ open class Nimbus(
              val time = measureTimeMillis {
                  events = nimbusClient.applyPendingExperiments()
              }
@@ -152,7 +152,7 @@ index f77d82a..40bcadd 100644
              recordExperimentTelemetryEvents(events!!)
              // Get the experiments to record in telemetry
              postEnrolmentCalculation()
-@@ -534,19 +534,19 @@ open class Nimbus(
+@@ -514,19 +514,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
@@ -165,7 +165,7 @@ index f77d82a..40bcadd 100644
                  experiment.branchSlug,
              )
 -        }
-+        }*/
++        } */
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -175,17 +175,17 @@ index f77d82a..40bcadd 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -594,7 +594,7 @@ open class Nimbus(
+@@ -574,7 +574,7 @@ open class Nimbus(
                      )
                  }
              }
 -        }
-+        }*/
++        } */
      }
  
      // The exposure event should be recorded when the expected treatment (or no-treatment, such as
 diff --git a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
-index 7d69d6a..f73c2a0 100644
+index 7d69d6a..11732fa 100644
 --- a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 +++ b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 @@ -349,7 +349,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,
@@ -202,7 +202,7 @@ index 7d69d6a..f73c2a0 100644
              pruneMetrics
          }
 -        PlacesManagerMetrics.dbSizeAfterMaintenance.accumulateSamples(listOf(pruneMetrics.dbSizeAfter.toLong() / 1024))
-+        PlacesManagerMetrics.dbSizeAfterMaintenance.accumulateSamples(listOf(pruneMetrics.dbSizeAfter.toLong() / 1024))*/
++        PlacesManagerMetrics.dbSizeAfterMaintenance.accumulateSamples(listOf(pruneMetrics.dbSizeAfter.toLong() / 1024)) */
      }
  
      override fun deleteEverything() {
@@ -230,6 +230,6 @@ index 7d69d6a..f73c2a0 100644
              }
              throw e
 -        }
-+        }*/
++        } */
      }
  }

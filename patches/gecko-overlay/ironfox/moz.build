@@ -2,6 +2,6 @@
 DIRS += [
     "about",
     "dumps",
-    "locales",
+    "enterprisepolicies",
     "prefs",
 ]
