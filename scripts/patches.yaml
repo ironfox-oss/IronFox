@@ -331,6 +331,20 @@ patches:
     effect: "Prevents unwanted collection and transmission of crash reports, and ensures user configurations remain consistent and are controlled locally."
     category: "Mozilla"
 
+  - file: "fenix-remove-sync-promo-bookmarks.patch"
+    name: "Remove Firefox Sync Bookmark Promotion"
+    description: "Removes Mozilla's promotion to enable Sync at the bookmarks fragment."
+    reason: "To prevent unwanted nags/promotional suggestions from interrupting user workflows."
+    effect: "Improves user experience by removing an unwanted Sync promotion."
+    category: "Mozilla"
+
+  - file: "fenix-remove-sync-promo-settings.patch"
+    name: "Remove Firefox Sync Settings Promotion"
+    description: "Removes Mozilla's promotional banner to enable Sync at the top of the settings fragment."
+    reason: "To prevent unwanted nags/promotional suggestions from interrupting user workflows."
+    effect: "Improves user experience by removing an unwanted Sync promotion."
+    category: "Mozilla"
+
   # Privacy
   - file: "fenix-configure-doh.patch"
     name: "Configure DNS over HTTPS"
