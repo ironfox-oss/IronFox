@@ -269,10 +269,49 @@ index 77c0a5cae4..510e4ca0fb 100644
          android:id="@+id/trackingProtectionFragment"
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 159944ab7d..7251d2f761 100644
+index 159944ab7d383..9b0085e93cc51 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -198,10 +198,22 @@
+@@ -6,12 +6,12 @@
+ <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto">
+ 
+-    <androidx.preference.Preference
++    <!-- <androidx.preference.Preference
+         android:key="@string/pref_key_sign_in"
+         android:layout="@layout/sign_in_preference"
+         android:summary="@string/preferences_sign_in_description"
+         android:title="@string/preferences_sign_in"
+-        app:allowDividerBelow="false" />
++        app:allowDividerBelow="false" /> -->
+ 
+     <androidx.preference.PreferenceCategory
+         android:key="@string/pref_key_account_category"
+@@ -19,6 +19,10 @@
+         app:isPreferenceVisible="false"
+         android:layout="@layout/preference_category_no_icon_style">
+ 
++        <org.mozilla.fenix.settings.account.AccountPreference
++            android:icon="@drawable/ic_account"
++            android:key="@string/pref_key_sign_in" />
++
+         <org.mozilla.fenix.settings.account.AccountPreference
+             android:icon="@drawable/ic_account"
+             android:key="@string/pref_key_account" />
+@@ -141,10 +145,10 @@
+             app:iconSpaceReserved="false"
+             android:title="@string/preferences_notifications" />
+ 
+-        <androidx.preference.Preference
++        <!-- <androidx.preference.Preference
+             android:key="@string/pref_key_data_choices"
+             app:iconSpaceReserved="false"
+-            android:title="@string/preferences_data_collection" />
++            android:title="@string/preferences_data_collection" /> -->
+ 
+     </androidx.preference.PreferenceCategory>
+ 
+@@ -198,18 +202,30 @@
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
@@ -295,3 +334,13 @@ index 159944ab7d..7251d2f761 100644
      <androidx.preference.PreferenceCategory
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
+         android:layout="@layout/preference_category_no_icon_style">
+-        <androidx.preference.Preference
++        <!-- <androidx.preference.Preference
+             android:key="@string/pref_key_rate"
+             app:iconSpaceReserved="false"
+-            android:title="@string/preferences_rate" />
++            android:title="@string/preferences_rate" /> -->
+ 
+         <androidx.preference.Preference
+             android:key="@string/pref_key_about"

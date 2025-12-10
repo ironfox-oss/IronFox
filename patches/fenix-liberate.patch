@@ -346,23 +346,6 @@ index 35d4c5a9c0..11dd01176b 100644
      )
  
      var shouldUseComposableToolbar by lazyFeatureFlagPreference(
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 159944ab7d..e3f48b979f 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -206,10 +206,10 @@
-         android:title="@string/preferences_category_about"
-         app:iconSpaceReserved="false"
-         android:layout="@layout/preference_category_no_icon_style">
--        <androidx.preference.Preference
-+        <!-- <androidx.preference.Preference
-             android:key="@string/pref_key_rate"
-             app:iconSpaceReserved="false"
--            android:title="@string/preferences_rate" />
-+            android:title="@string/preferences_rate" /> -->
- 
-         <androidx.preference.Preference
-             android:key="@string/pref_key_about"
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
 index 0000000000..4d5fd8153d

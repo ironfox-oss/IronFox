@@ -10,33 +10,3 @@ index da8fa9afaa7f8..b9986c14447c1 100644
 +            accountPreferenceCategory.isVisible = true
          }
      }
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 159944ab7d383..6501e9a20b8bf 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -6,12 +6,12 @@
- <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:app="http://schemas.android.com/apk/res-auto">
- 
--    <androidx.preference.Preference
-+    <!-- <androidx.preference.Preference
-         android:key="@string/pref_key_sign_in"
-         android:layout="@layout/sign_in_preference"
-         android:summary="@string/preferences_sign_in_description"
-         android:title="@string/preferences_sign_in"
--        app:allowDividerBelow="false" />
-+        app:allowDividerBelow="false" /> -->
- 
-     <androidx.preference.PreferenceCategory
-         android:key="@string/pref_key_account_category"
-@@ -19,6 +19,10 @@
-         app:isPreferenceVisible="false"
-         android:layout="@layout/preference_category_no_icon_style">
- 
-+        <org.mozilla.fenix.settings.account.AccountPreference
-+            android:icon="@drawable/ic_account"
-+            android:key="@string/pref_key_sign_in" />
-+
-         <org.mozilla.fenix.settings.account.AccountPreference
-             android:icon="@drawable/ic_account"
-             android:key="@string/pref_key_account" />

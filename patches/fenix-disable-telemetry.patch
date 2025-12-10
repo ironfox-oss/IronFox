@@ -168,20 +168,3 @@ index 35d4c5a9c0..ef13396077 100644
      )
  
      var isMarketingTelemetryEnabled by booleanPreference(
-diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 159944ab7d..478a8668d6 100644
---- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-+++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-@@ -141,10 +141,10 @@
-             app:iconSpaceReserved="false"
-             android:title="@string/preferences_notifications" />
- 
--        <androidx.preference.Preference
-+        <!-- <androidx.preference.Preference
-             android:key="@string/pref_key_data_choices"
-             app:iconSpaceReserved="false"
--            android:title="@string/preferences_data_collection" />
-+            android:title="@string/preferences_data_collection" /> -->
- 
-     </androidx.preference.PreferenceCategory>
- 
