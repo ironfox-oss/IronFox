@@ -74,4 +74,5 @@
     <string name="preference_autoplay_policy_transient">Toestaan na snelle interactie met pagina (standaard)</string>
     <string name="preference_autoplay_policy_sticky">Toestaan na interactie met pagina</string>
     <string name="preference_autoplay_policy_click_to_play">Klik om af te spelen</string>
+    <string name="preference_always_use_private_browsing">Altijd privénavigatie gebruiken</string>
 </resources>
