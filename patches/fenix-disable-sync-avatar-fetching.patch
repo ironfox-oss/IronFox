@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
-index 558141f7b2..864d5d51ea 100644
+index 288150bc63..a977f4ecde 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/header/MozillaAccountMenuItem.kt
-@@ -183,7 +183,7 @@ private fun AvatarIcon(
+@@ -187,7 +187,7 @@ private fun AvatarIcon(
      } else if (accountState is AuthenticationProblem) {
          WarningAvatarIcon()
      } else {
@@ -11,12 +11,12 @@ index 558141f7b2..864d5d51ea 100644
  
          if (avatarUrl != null) {
              Image(
-@@ -195,9 +195,9 @@ private fun AvatarIcon(
+@@ -199,9 +199,9 @@ private fun AvatarIcon(
                  placeholder = { FallbackAvatarIcon() },
                  fallback = { FallbackAvatarIcon() },
              )
 -        } else {
-+        } else {*/
++        } else { */
              FallbackAvatarIcon()
 -        }
 +//        }
@@ -24,7 +24,7 @@ index 558141f7b2..864d5d51ea 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
-index da8fa9afaa..6e1e5cc588 100644
+index da8fa9afaa..be8b28ff70 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountUiView.kt
 @@ -51,16 +51,16 @@ class AccountUiView(
@@ -39,7 +39,7 @@ index da8fa9afaa..6e1e5cc588 100644
                      preferenceFirefoxAccount.icon = roundedAvatarDrawable ?: genericAvatar(context)
                  }
 -            } else {
-+            } else {*/
++            } else { */
                  avatarJob = null
                  preferenceFirefoxAccount.icon = genericAvatar(context)
 -            }

@@ -19,6 +19,9 @@
     <!-- Accessibility services -->
     <string name="preference_accessibility_enabled">Enable accessibility services</string>
 
+    <!-- Always use private browsing mode -->
+    <string name="preference_always_use_private_browsing">Always use private browsing mode</string>
+
     <!-- Collections -->
     <string name="preference_collections_enabled">Enable collections</string>
 
@@ -31,10 +34,6 @@
 
     <!-- Disk cache -->
     <string name="preference_cache_enabled">Enable disk cache</string>
-
-    <!-- EME -->
-    <string name="preferences_debug_settings_eme_enabled">Enable Encrypted Media Extensions (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Enable Widevine CDM</string>
 
     <!-- Firefox Translations -->
     <string name="preference_translations_enabled">Enable Firefox Translations</string>

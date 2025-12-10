@@ -1,8 +1,8 @@
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
-index 021dd4497e..a75c926688 100644
+index a80a784ff1..d9057f8fa5 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
-@@ -745,7 +745,7 @@ public class GeckoThread extends Thread {
+@@ -751,7 +751,7 @@ public class GeckoThread extends Thread {
      // bother checking here if Gecko is actually loaded or not.
      // Speculative connection depends on proxy settings,
      // so the earliest it can happen is after profile is ready.

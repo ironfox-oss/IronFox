@@ -1,26 +1,31 @@
 diff --git a/toolkit/modules/Troubleshoot.sys.mjs b/toolkit/modules/Troubleshoot.sys.mjs
-index c6e46f5248..43d4d8afa5 100644
+index 3709150138..478de2453a 100644
 --- a/toolkit/modules/Troubleshoot.sys.mjs
 +++ b/toolkit/modules/Troubleshoot.sys.mjs
-@@ -37,6 +37,7 @@ const PREFS_FOR_DISPLAY = [
+@@ -37,7 +37,10 @@ const PREFS_FOR_DISPLAY = [
    "browser.download.useDownloadDir",
    "browser.fixup.",
    "browser.history_expire_",
 +  "browser.ironfox.",
    "browser.link.open_newwindow",
++  "browser.ml.",
++  "browser.phoenix.",
    "browser.places.",
    "browser.privatebrowsing.",
-@@ -55,6 +56,7 @@ const PREFS_FOR_DISPLAY = [
-   "browser.startup.page",
+   "browser.search.context.loadInBackground",
+@@ -56,6 +59,7 @@ const PREFS_FOR_DISPLAY = [
    "browser.tabs.",
+   "browser.theme.",
    "browser.toolbars.",
 +  "browser.translations.",
    "browser.urlbar.",
    "browser.zoom.",
    "doh-rollout.",
-@@ -66,11 +68,13 @@ const PREFS_FOR_DISPLAY = [
+@@ -66,12 +70,15 @@ const PREFS_FOR_DISPLAY = [
+   "extensions.formautofill.",
    "extensions.lastAppVersion",
    "extensions.manifestV3.enabled",
++  "extensions.ml.",
    "extensions.quarantinedDomains.enabled",
 +  "extensions.update.",
    "extensions.InstallTrigger.enabled",
@@ -32,11 +37,12 @@ index c6e46f5248..43d4d8afa5 100644
    "gfx.",
    "html5.",
    "identity.fxaccounts.enabled",
-@@ -85,10 +89,11 @@ const PREFS_FOR_DISPLAY = [
+@@ -86,10 +93,12 @@ const PREFS_FOR_DISPLAY = [
    "media.",
    "mousewheel.",
    "network.",
 -  "permissions.default.image",
++  "pdfjs.",
 +  "permissions.",
    "places.",
    "plugin.",
@@ -45,15 +51,15 @@ index c6e46f5248..43d4d8afa5 100644
    "privacy.",
    "security.",
    "services.sync.declinedEngines",
-@@ -111,6 +116,7 @@ const PREFS_FOR_DISPLAY = [
+@@ -112,6 +121,7 @@ const PREFS_FOR_DISPLAY = [
    "widget.use-xdg-desktop-portal.mime-handler",
    "widget.gtk.overlay-scrollbars.enabled",
    "widget.wayland",
-+  "xpinstall."
++  "xpinstall.",
  ];
  
  // The list of prefs we don't display, unlike the list of prefs for display,
-@@ -122,6 +128,7 @@ const PREF_REGEXES_NOT_TO_DISPLAY = [
+@@ -123,6 +133,7 @@ const PREF_REGEXES_NOT_TO_DISPLAY = [
    /^media[.]webrtc[.]debug[.]log_file/,
    /^print[.].*print_to_filename$/,
    /^network[.]proxy[.]/,

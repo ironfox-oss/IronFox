@@ -1,0 +1,187 @@
+# IronFox core mozconfig
+
+## Allow installation of unsigned add-ons
+### We still disable installation of unsigned add-ons by default, and we don't recommend installing them
+### But this allows users to enable it and install unsigned extensions anyways if desired, at their own risk
+export MOZ_REQUIRE_SIGNING=
+
+## Allow replacing the malloc implementation
+ac_add_options --enable-replace-malloc
+
+## Configure Gradle
+export GRADLE_FLAGS='-Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache'
+
+## Disable android:debuggable
+ac_add_options --disable-android-debuggable
+
+## Disable artifact builds
+ac_add_options --disable-artifact-builds
+export MOZ_ARTIFACT_BUILDS=
+
+## Disable ASan crash reporting
+ac_add_options --disable-address-sanitizer-reporter
+
+## Disable autoconfig functionality
+ac_add_options --disable-pref-extensions
+
+## Disable auxiliary file persistence
+ac_add_options --enable-disk-remnant-avoidance
+
+## Disable background tasks
+ac_add_options --disable-backgroundtasks
+
+## Disable crash reporting
+ac_add_options --disable-crashreporter
+ac_add_options --with-crashreporter-url='data;'
+export MOZ_CRASHREPORTER=
+export MOZ_CRASHREPORTER_URL='data;'
+
+## Disable the default browser agent
+### This is a service used for telemetry
+### Windows-specific, but doesn't hurt to set here
+ac_add_options --disable-default-browser-agent
+
+## Disable FFmpeg
+ac_add_options --disable-ffmpeg
+
+## Disable the Gecko Profiler
+ac_add_options --disable-gecko-profiler
+
+## Disable GSS-API/negotiate authentication
+### Possibly investigate adding a pref for this instead of disabling at build-time
+ac_add_options --disable-negotiateauth
+
+## Disable installation of extensions from system directories
+ac_add_options --disable-system-extension-dirs
+
+## Disable the JavaScript shell
+ac_add_options --disable-js-shell
+export MOZ_PACKAGE_JSSHELL=
+
+## Disable misc. debugging/development/test features
+ac_add_options --disable-callgrind
+ac_add_options --disable-debug
+ac_add_options --disable-debug-js-modules
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-dump-painting
+ac_add_options --disable-execution-tracing
+ac_add_options --disable-extensions-webidl-bindings
+ac_add_options --disable-geckodriver
+ac_add_options --disable-gtest-in-build
+ac_add_options --disable-instruments
+ac_add_options --disable-jitdump
+ac_add_options --disable-layout-debugger
+ac_add_options --disable-logrefcnt
+ac_add_options --disable-phc
+ac_add_options --disable-profiling
+ac_add_options --disable-real-time-tracing
+ac_add_options --disable-reflow-perf
+ac_add_options --disable-rust-debug
+ac_add_options --disable-rust-tests
+ac_add_options --disable-simulator
+ac_add_options --disable-tests
+ac_add_options --disable-uniffi-fixtures
+ac_add_options --disable-vtune
+ac_add_options --disable-wasm-codegen-debug
+ac_add_options --disable-webdriver
+ac_add_options --disable-webrender-debugger
+ac_add_options --disable-webspeechtestbackend
+export MOZ_CALLGRIND=
+export MOZ_DEBUG_FLAGS=
+export MOZ_EXECUTION_TRACING=
+export MOZ_INSTRUMENTS=
+export MOZ_PHC=
+export MOZ_PROFILING=
+export MOZ_VTUNE=
+
+## Disable parental controls
+ac_add_options --disable-parental-controls
+
+## Disable SpiderMonkey performance telemetry
+ac_add_options --disable-spidermonkey-telemetry
+
+## Disable system policies
+ac_add_options --disable-system-policies
+
+## Disable telemetry
+export MOZ_TELEMETRY_REPORTING=
+
+## Disable the updater
+ac_add_options --disable-unverified-updates
+ac_add_options --disable-updater
+
+## Disable Windows Media Foundation support
+### Windows-specific, but doesn't hurt to set here
+ac_add_options --disable-wmf
+
+## Do not require Node.js for builds
+ac_add_options --disable-nodejs
+export NODEJS=
+
+## Enable isolated content process support
+ac_add_options --enable-isolated-process
+ac_add_options --enable-isolated-zygote-process
+export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1
+export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_WITH_ZYGOTE=1
+
+## Enable misc. security hardening
+ac_add_options --enable-hardening
+export MOZ_SECURITY_HARDENING=1
+
+## Enable performance optimizations
+ac_add_options --enable-mobile-optimize
+ac_add_options --enable-optimize
+ac_add_options --enable-rust-simd
+ac_add_options --enable-wasm-branch-hinting
+export MOZ_LTO=1
+export MOZ_PGO=1
+export MOZ_RUST_SIMD=1
+export RUSTC_OPT_LEVEL=2
+
+## Enable proxy bypass protection
+ac_add_options --enable-proxy-bypass-protection
+
+## Enable stripping/minification
+ac_add_options --enable-install-strip
+ac_add_options --enable-minify='properties'
+ac_add_options --enable-strip
+
+## Enable WebAssembly Memory Control support
+ac_add_options --enable-wasm-memory-control
+
+## Include source info
+## Displayed at ex. `about:buildconfig`
+export MOZ_INCLUDE_SOURCE_INFO=1
+
+## Set the destination object directory
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
+
+# Set flag for "official" builds
+## Ensures we're not enabling functionality/settings meant for debugging/development
+## https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
+export MOZILLA_OFFICIAL=1
+
+# Skip checks for unwanted/unused API keys
+ac_add_options --without-adjust-sdk-keyfile
+ac_add_options --without-android-googlevr-sdk
+ac_add_options --without-bing-api-keyfile
+ac_add_options --without-google-location-service-api-keyfile
+ac_add_options --without-mozilla-api-keyfile
+ac_add_options --without-leanplum-sdk-keyfile
+ac_add_options --without-pocket-api-keyfile
+
+## Target Fenix
+ac_add_options --enable-android-subproject='fenix'
+ac_add_options --enable-application='mobile/android'
+
+## Target release
+ac_add_options --enable-release
+ac_add_options --enable-update-channel='release'
+
+## Use GeckoView Lite
+### This is the standard variant of GeckoView used by embedders
+### But, by default, Fenix uses a modified "omni" variant that includes Glean
+### We don't want Glean, so this is preferable for us
+ac_add_options --enable-geckoview-lite
+
+. "$topsrcdir/ironfox/mozconfigs/env.mozconfig"

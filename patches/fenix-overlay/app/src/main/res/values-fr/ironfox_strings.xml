@@ -15,8 +15,6 @@
     <string name="preference_referer_policy_base_domains_match">Envoyer le referer inter-origines si les domaines de base correspondent</string>
     <string name="preference_referer_policy_hosts_match">Désactiver les referers inter-origines</string>
     <string name="preference_cache_enabled">Activer le cache sur disque</string>
-    <string name="preferences_debug_settings_eme_enabled">Activer Encrypted Media Extensions (EME)</string>
-    <string name="preferences_debug_settings_widevine_enabled">Activer Widevine CDM</string>
     <string name="preference_ipv6_enabled">Activer la connectivité réseau IPv6</string>
     <string name="preference_javascript_enabled">Activer JavaScript</string>
     <string name="preference_jit_enabled">Activer la compilation Just-in-time (JIT) de JavaScript</string>

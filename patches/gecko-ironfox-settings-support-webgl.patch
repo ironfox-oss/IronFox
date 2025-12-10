@@ -1,5 +1,5 @@
 diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
-index 6f6f38acbc..d0f4b16c22 100644
+index 5710633acd..9be06eec54 100644
 --- a/dom/canvas/ClientWebGLContext.cpp
 +++ b/dom/canvas/ClientWebGLContext.cpp
 @@ -880,6 +880,10 @@ bool ClientWebGLContext::CreateHostContext(const uvec2& requestedSize) {
@@ -27,15 +27,14 @@ index d672c003c1..0e7205f1a0 100644
      // TODO: When we have software webgl support we should use that instead.
      disabled |= gfxPlatform::InSafeMode();
 diff --git a/toolkit/components/resistfingerprinting/RFPTargets.inc b/toolkit/components/resistfingerprinting/RFPTargets.inc
-index 62062e9ae4..478db44f89 100644
+index 5cf1bb419a..104ab8f941 100644
 --- a/toolkit/components/resistfingerprinting/RFPTargets.inc
 +++ b/toolkit/components/resistfingerprinting/RFPTargets.inc
-@@ -108,7 +108,7 @@ ITEM_VALUE(MaxTouchPointsCollapse,      73)
+@@ -108,6 +108,7 @@ ITEM_VALUE(MaxTouchPointsCollapse,      73)
  ITEM_VALUE(NavigatorHWConcurrencyTiered,74)
  ITEM_VALUE(WebGLRandomization,          75)
  ITEM_VALUE(EfficientCanvasRandomization, 76)
--
 +ITEM_VALUE(DisableWebGL,77)
  
- /*
-  * In certain cases, we precompute the value of ShouldRFP for e.g. a Document.
+ // !!! Adding a new target? Rename PointerId and repurpose it.
+ 

@@ -1,0 +1,118 @@
+diff --git a/.buildconfig-android.yml b/.buildconfig-android.yml
+index ed1e132..9c0f4ef 100644
+--- a/.buildconfig-android.yml
++++ b/.buildconfig-android.yml
+@@ -1,12 +1,12 @@
+ groupId: org.mozilla.appservices
+ projects:
+-  ads-client:
+-    path: components/ads-client/android
+-    artifactId: ads-client
+-    publications:
+-    - name: ads-client
+-      type: aar
+-    description: for fetching ads via UAPI
++#  ads-client:
++#    path: components/ads-client/android
++#    artifactId: ads-client
++#    publications:
++#    - name: ads-client
++#      type: aar
++#    description: for fetching ads via UAPI
+   autofill:
+     path: components/autofill/android
+     artifactId: autofill
+@@ -14,20 +14,20 @@ projects:
+     - name: autofill
+       type: aar
+     description: Addresses and Credit Cards autofill.
+-  crashtest:
+-    path: components/crashtest/android
+-    artifactId: crashtest
+-    publications:
+-    - name: crashtest
+-      type: aar
+-    description: Helper APIs to trigger an application crash.
+-  errorsupport:
+-    path: components/support/error/android
+-    artifactId: errorsupport
+-    publications:
+-    - name: errorsupport
+-      type: aar
+-    description: Application services error handling
++#  crashtest:
++#    path: components/crashtest/android
++#    artifactId: crashtest
++#    publications:
++#    - name: crashtest
++#      type: aar
++#    description: Helper APIs to trigger an application crash.
++#  errorsupport:
++#    path: components/support/error/android
++#    artifactId: errorsupport
++#    publications:
++#    - name: errorsupport
++#      type: aar
++#    description: Application services error handling
+   fxaclient:
+     path: components/fxa-client/android
+     artifactId: fxaclient
+diff --git a/build.gradle b/build.gradle
+index 215f323..0194e8c 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -185,7 +185,7 @@ if (useDownloadedLibs) {
+ // because doing so seems pointless, not for any security reason)
+ ext.extraCargoBuildArguments = []
+ 
+-if (System.getenv("CI")) {
++if (false) {
+     ext.extraCargoBuildArguments = ["--locked"]
+ }
+ 
+diff --git a/megazords/fenix-dylib/megazord_stub.c b/megazords/fenix-dylib/megazord_stub.c
+index b5111ef..bf512fb 100644
+--- a/megazords/fenix-dylib/megazord_stub.c
++++ b/megazords/fenix-dylib/megazord_stub.c
+@@ -10,9 +10,9 @@
+ // but here we are.
+ // To get the symbols from our static lib we need to refer to a symbol from each crate within it.
+ // This is an arbitrary choice - any symbol will do, but we chose these because every uniffi crate has it.
+-extern int MOZ_EXPORT ffi_ads_client_uniffi_contract_version();
++// extern int MOZ_EXPORT ffi_ads_client_uniffi_contract_version();
+ extern int MOZ_EXPORT ffi_autofill_uniffi_contract_version();
+-extern int MOZ_EXPORT ffi_crashtest_uniffi_contract_version();
++// extern int MOZ_EXPORT ffi_crashtest_uniffi_contract_version();
+ extern int MOZ_EXPORT ffi_fxa_client_uniffi_contract_version();
+ extern int MOZ_EXPORT ffi_init_rust_components_uniffi_contract_version();
+ extern int MOZ_EXPORT ffi_logins_uniffi_contract_version();
+@@ -38,9 +38,9 @@ extern int MOZ_EXPORT ffi_tabs_uniffi_contract_version();
+ extern int MOZ_EXPORT uniffi_search_checksum_constructor_searchengineselector_new();
+ 
+ void _local_megazord_dummy_symbol() {
+-    ffi_ads_client_uniffi_contract_version();
++//    ffi_ads_client_uniffi_contract_version();
+     ffi_autofill_uniffi_contract_version();
+-    ffi_crashtest_uniffi_contract_version();
++//    ffi_crashtest_uniffi_contract_version();
+     ffi_fxa_client_uniffi_contract_version();
+     ffi_init_rust_components_uniffi_contract_version();
+     ffi_logins_uniffi_contract_version();
+diff --git a/megazords/full/src/lib.rs b/megazords/full/src/lib.rs
+index 62b1910..37912d8 100644
+--- a/megazords/full/src/lib.rs
++++ b/megazords/full/src/lib.rs
+@@ -9,10 +9,10 @@ use std::ffi::CString;
+ use std::os::raw::c_char;
+ 
+ // NOTE if you add or remove crates below here, please make a corresponding change in ../fenix-dylib/megazord_stub.c
+-pub use ads_client;
++// pub use ads_client;
+ pub use autofill;
+-pub use crashtest;
+-pub use error_support;
++// pub use crashtest;
++// pub use error_support;
+ pub use fxa_client;
+ pub use init_rust_components;
+ pub use logins;

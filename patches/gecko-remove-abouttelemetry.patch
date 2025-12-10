@@ -1,8 +1,8 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 625640eef4..7622f81a26 100644
+index 49779b7cc7..c89ac931d6 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -211,9 +211,9 @@ static const RedirEntry kRedirMap[] = {
+@@ -215,9 +215,9 @@ static const RedirEntry kRedirMap[] = {
  #  endif
           nsIAboutModule::ALLOW_SCRIPT},
  #endif
@@ -11,15 +11,15 @@ index 625640eef4..7622f81a26 100644
 -#ifndef MOZ_WIDGET_ANDROID
 +//    {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
 +//     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
-+#ifdef MOZ_WIDGET_ANDROID
++#ifdef IRONFOX
      {"translations",
       "chrome://global/content/translations/about-translations.html",
       nsIAboutModule::ALLOW_SCRIPT |
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 06f1d0a26e..bb0326a360 100644
+index 5c1543ab80..1f58b56300 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
-@@ -29,7 +29,7 @@ about_pages = [
+@@ -30,7 +30,7 @@ about_pages = [
      'serviceworkers',
      'srcdoc',
      'support',
@@ -29,10 +29,10 @@ index 06f1d0a26e..bb0326a360 100644
      'webrtc',
  ]
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index 75c1c06efe..835ff83cc7 100644
+index 4793f2cd87..65d861889f 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
-@@ -39,9 +39,9 @@ toolkit.jar:
+@@ -42,9 +42,9 @@ toolkit.jar:
     content/global/aboutGlean.html
     content/global/aboutGlean.css
  #endif

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
-index 0575b11666..136724e3cd 100644
+index 0575b11666..49b888dc33 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 @@ -83,7 +83,7 @@ class AddonManager(
@@ -25,7 +25,7 @@ index 0575b11666..136724e3cd 100644
                  // Do not throw when we fail to fetch the featured add-ons since there can be installed add-ons.
                  logger.warn("Failed to get the featured add-ons", throwable)
 -            }
-+            }*/
++            } */
  
              // Build a list of installed extensions that are not built-in extensions.
              val installedAddons = installedExtensions

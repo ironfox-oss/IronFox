@@ -50,7 +50,7 @@ stages:
   - release
 
 update-fdroid-repo:
-  image: fedora:42
+  image: fedora:43
   stage: build_fdroid
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -76,7 +76,7 @@ update-fdroid-repo:
     - bash -x scripts/ci-update-fdroid.sh
 
 update-site-repo:
-  image: fedora:42
+  image: fedora:43
   stage: build_site
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"

@@ -3,6 +3,7 @@
 // See '019 PDF.js' in Phoenix for more details
 
 pref("pdfjs.altTextLearnMoreUrl", "https://support.mozilla.org/kb/pdf-alt-text");
+pref("pdfjs.commentLearnMoreUrl", "https://support.mozilla.org/kb/view-pdf-files-firefox-or-choose-another-viewer#w_add-a-comment-to-a-pdf");
 pref("pdfjs.disableFontFace", true);
 pref("pdfjs.disableRange", true);
 pref("pdfjs.disableStream", true);

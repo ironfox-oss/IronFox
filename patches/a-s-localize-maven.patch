@@ -1,8 +1,8 @@
 diff --git a/settings.gradle b/settings.gradle
-index 096879b..a5bdd1b 100644
+index 04bd9e9..fbba69c 100644
 --- a/settings.gradle
 +++ b/settings.gradle
-@@ -28,14 +28,7 @@ buildscript {
+@@ -31,14 +31,7 @@ buildscript {
          gradle.ext.mozconfig = gradle.root.mozconfig
  
          repositories {

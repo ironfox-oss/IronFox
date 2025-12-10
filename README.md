@@ -141,7 +141,7 @@ You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the defau
 </details>
 
 <details>
-<summary>When building on Fedora 42</summary>
+<summary>When building on Fedora 42/43</summary>
 
 ```sh
 sudo dnf install -y \
@@ -263,7 +263,7 @@ Once the packages have been installed successfully, follow the instructions to s
   export PATH=$JAVA_HOME/bin:$PATH
   ```
 
-  For instance, on **Fedora 42**, the default location of JDK 17 is `/usr/lib/jvm/temurin-17-jdk`:
+  For instance, on **Fedora 42/43**, the default location of JDK 17 is `/usr/lib/jvm/temurin-17-jdk`:
 
   ```sh
   export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
