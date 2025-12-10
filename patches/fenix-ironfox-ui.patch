@@ -1,3 +1,193 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
+index fc0d4947d8..5d1fa0d1ac 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
+@@ -160,6 +160,8 @@ fun MainMenu(
+     showBanner: Boolean,
+     isDownloadHighlighted: Boolean,
+     webExtensionMenuCount: Int,
++    isPasswordManagerEnabled: Boolean,
++    isSyncActive: Boolean,
+     onMoreMenuClick: () -> Unit,
+     onCustomizeReaderViewMenuClick: () -> Unit,
+     onMozillaAccountButtonClick: () -> Unit,
+@@ -307,6 +309,7 @@ fun MainMenu(
+ 
+         LibraryMenuGroup(
+             isDownloadHighlighted = isDownloadHighlighted,
++            isPasswordManagerEnabled = isPasswordManagerEnabled,
+             onBookmarksMenuClick = onBookmarksMenuClick,
+             onHistoryMenuClick = onHistoryMenuClick,
+             onDownloadsMenuClick = onDownloadsMenuClick,
+@@ -314,12 +317,14 @@ fun MainMenu(
+         )
+ 
+         MenuGroup {
+-            MozillaAccountMenuItem(
+-                account = account,
+-                accountState = accountState,
+-                isPrivate = isPrivate,
+-                onClick = onMozillaAccountButtonClick,
+-            )
++            if (isSyncActive) {
++                MozillaAccountMenuItem(
++                    account = account,
++                    accountState = accountState,
++                    isPrivate = isPrivate,
++                    onClick = onMozillaAccountButtonClick,
++                )
++            }
+ 
+             MenuItem(
+                 label = stringResource(id = R.string.browser_menu_settings),
+@@ -648,6 +653,7 @@ private fun MoreMenuButtonGroup(
+ @Composable
+ private fun LibraryMenuGroup(
+     isDownloadHighlighted: Boolean = false,
++    isPasswordManagerEnabled: Boolean = false,
+     onBookmarksMenuClick: () -> Unit,
+     onHistoryMenuClick: () -> Unit,
+     onDownloadsMenuClick: () -> Unit,
+@@ -720,16 +726,18 @@ private fun LibraryMenuGroup(
+ 
+         Spacer(Modifier.width(spacerWidth))
+ 
+-        LibraryMenuItem(
+-            modifier = Modifier
+-                .weight(1f)
+-                .fillMaxHeight(),
+-            iconRes = iconsR.drawable.mozac_ic_login_24,
+-            labelRes = R.string.browser_menu_passwords,
+-            shape = rightShape,
+-            index = 3,
+-            onClick = onPasswordsMenuClick,
+-        )
++        if (isPasswordManagerEnabled) {
++            LibraryMenuItem(
++                modifier = Modifier
++                    .weight(1f)
++                    .fillMaxHeight(),
++                iconRes = iconsR.drawable.mozac_ic_login_24,
++                labelRes = R.string.browser_menu_passwords,
++                shape = rightShape,
++                index = 3,
++                onClick = onPasswordsMenuClick,
++            )
++        }
+     }
+ }
+ 
+@@ -967,6 +975,8 @@ private fun MenuDialogPreview() {
+                 showBanner = true,
+                 isDownloadHighlighted = true,
+                 webExtensionMenuCount = 1,
++                isPasswordManagerEnabled = false,
++                isSyncActive = false,
+                 onMoreMenuClick = {},
+                 onCustomizeReaderViewMenuClick = {},
+                 onMozillaAccountButtonClick = {},
+@@ -1031,6 +1041,8 @@ private fun MenuDialogPrivatePreview(
+                 showBanner = true,
+                 isDownloadHighlighted = true,
+                 webExtensionMenuCount = 0,
++                isPasswordManagerEnabled = false,
++                isSyncActive = false,
+                 onMoreMenuClick = {},
+                 onCustomizeReaderViewMenuClick = {},
+                 onMozillaAccountButtonClick = {},
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
+index 786460024d..f1c08c511b 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
+@@ -37,6 +37,8 @@ internal fun MoreSettingsSubmenu(
+     translationInfo: TranslationInfo,
+     showShortcuts: Boolean,
+     isAndroidAutomotiveAvailable: Boolean,
++    areCollectionsDisabled: Boolean,
++    isPrintDisabled: Boolean,
+     onWebCompatReporterClick: () -> Unit,
+     onShortcutsMenuClick: () -> Unit,
+     onAddToHomeScreenMenuClick: () -> Unit,
+@@ -83,11 +85,13 @@ internal fun MoreSettingsSubmenu(
+             )
+         }
+ 
+-        MenuItem(
+-            label = stringResource(id = R.string.browser_menu_save_to_collection_2),
+-            beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_collection_24),
+-            onClick = onSaveToCollectionMenuClick,
+-        )
++        if (!areCollectionsDisabled) {
++            MenuItem(
++                label = stringResource(id = R.string.browser_menu_save_to_collection_2),
++                beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_collection_24),
++                onClick = onSaveToCollectionMenuClick,
++            )
++        }
+ 
+         if (hasExternalApp) {
+             MenuItem(
+@@ -114,7 +118,7 @@ internal fun MoreSettingsSubmenu(
+             beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_save_file_24),
+             onClick = onSaveAsPDFMenuClick,
+         )
+-        if (!isAndroidAutomotiveAvailable) {
++        if (!isPrintDisabled && !isAndroidAutomotiveAvailable) {
+             MenuItem(
+                 label = stringResource(id = R.string.browser_menu_print_2),
+                 beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_print_24),
+@@ -207,6 +211,8 @@ private fun MoreSettingsSubmenuPreview() {
+                     ),
+                     showShortcuts = true,
+                     isAndroidAutomotiveAvailable = false,
++                    areCollectionsDisabled = false,
++                    isPrintDisabled = false,
+                     onWebCompatReporterClick = {},
+                     onShortcutsMenuClick = {},
+                     onAddToHomeScreenMenuClick = {},
+@@ -249,6 +255,8 @@ private fun MoreSettingsSubmenuPrivatePreview() {
+                     ),
+                     showShortcuts = true,
+                     isAndroidAutomotiveAvailable = false,
++                    areCollectionsDisabled = false,
++                    isPrintDisabled = false,
+                     onWebCompatReporterClick = {},
+                     onShortcutsMenuClick = {},
+                     onAddToHomeScreenMenuClick = {},
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+index f14c64e3f1..fa79396c25 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+@@ -559,7 +559,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                     accessPoint = args.accesspoint,
+                                     account = account,
+                                     accountState = accountState,
+-                                    showQuitMenu = settings.shouldDeleteBrowsingDataOnQuit,
++                                    showQuitMenu = true,
+                                     isBottomToolbar = settings.shouldUseBottomToolbar,
+                                     isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
+                                     isSiteLoading = isSiteLoading,
+@@ -579,6 +579,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                     showBanner = shouldShowMenuBanner && !defaultBrowser,
+                                     isDownloadHighlighted = isDownloadHighlighted,
+                                     webExtensionMenuCount = webExtensionsCount,
++                                    isPasswordManagerEnabled = settings.shouldPromptToSaveLogins,
++                                    isSyncActive = settings.signedInFxaAccount,
+                                     allWebExtensionsDisabled = allWebExtensionsDisabled,
+                                     onMozillaAccountButtonClick = {
+                                         store.dispatch(
+@@ -677,8 +679,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                                             isWebCompatReporterSupported = isWebCompatReporterSupported,
+                                             isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
+                                             translationInfo = translationInfo,
+-                                            showShortcuts = settings.showTopSitesFeature,
++                                            showShortcuts = settings.showTopSitesFeature && !settings.alwaysUsePrivateBrowsing,
+                                             isAndroidAutomotiveAvailable = context.isAndroidAutomotiveAvailable(),
++                                            areCollectionsDisabled = !settings.collections,
++                                            isPrintDisabled = !settings.printEnabled,
+                                             onWebCompatReporterClick = {
+                                                 store.dispatch(MenuAction.Navigate.WebCompatReporter)
+                                             },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 index b5cd2868a6..9e116a0a70 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
