@@ -1113,7 +1113,7 @@ $SED -i "s|{mozilla_release}|$mozilla_release|" local.properties
 ## mozconfig
 $SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{builddir}|$builddir|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{bundletool}|$bundletool|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{GRADLE_PATH}|$gradle|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{HOME}|$HOME|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{JAVA_HOME}|$JAVA_HOME|" ironfox/mozconfigs/env.mozconfig
