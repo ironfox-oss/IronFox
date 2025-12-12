@@ -48,6 +48,9 @@ BUNDLETOOL_VERSION="1.18.2"
 ## cbindgen
 CBINDGEN_VERSION="0.29.2"
 
+## Gradle (F-Droid)
+GRADLE_COMMIT="468f31c261d97808eb8bf24540a3286308f26e7f"
+
 ## LLVM
 ### This commit corresponds to https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.7
 LLVM_COMMIT="292dc2b86f66e39f4b85ec8b185fd8b60f5213ce"
@@ -82,6 +85,7 @@ BUNDLETOOLDIR="$EXTERNALDIR/bundletool"
 FENIX="$GECKODIR/mobile/android/fenix"
 GLEANDIR="$EXTERNALDIR/glean"
 GMSCOREDIR="$EXTERNALDIR/gmscore"
+GRADLEDIR="$EXTERNALDIR/gradle"
 UNIFFIDIR="$EXTERNALDIR/uniffi"
 WASIPATCHDIR="$EXTERNALDIR/wasi-patch"
 WASISDKDIR="$EXTERNALDIR/wasi-sdk"

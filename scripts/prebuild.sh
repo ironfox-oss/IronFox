@@ -1,6 +1,9 @@
 #!/bin/bash
 #
-#    Fennec build scripts
+#    IronFox build scripts
+#    Copyright (C) 2024-2025  Akash Yadav, celenity
+#
+#    Originally based on: Fennec (Mull) build scripts
 #    Copyright (C) 2020-2024  Matías Zúñiga, Andrew Nayenko, Tavi
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -22,12 +25,17 @@ set -e
 # Include version info
 source "$rootdir/scripts/versions.sh"
 
+if [[ "$env_source" != "true" ]]; then
+    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
+    exit 1
+fi
+
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -exec python3 "$rootdir/scripts/localize_maven.py" {} \;
     # Make gradlew scripts call our Gradle wrapper
     find ./* -name gradlew -type f | while read -r gradlew; do
-        echo -e '#!/bin/sh\ngradle "$@"' >"$gradlew"
+        echo -e "#!/bin/sh\n$gradle \""'$@'"\"" >"$gradlew"
         chmod 755 "$gradlew"
     done
 }
@@ -51,12 +59,6 @@ fi
 if [[ -n ${FDROID_BUILD+x} ]]; then
     source "$(dirname "$0")/setup-android-sdk.sh"
     source "$(dirname "$0")/env_fdroid.sh"
-fi
-
-# shellcheck disable=SC2154
-if [[ "$env_source" != "true" ]]; then
-    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
-    exit 1
 fi
 
 if [ ! -d "$ANDROID_HOME" ]; then
@@ -1112,7 +1114,7 @@ $SED -i "s|{mozilla_release}|$mozilla_release|" local.properties
 $SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{builddir}|$builddir|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{GRADLE_PATH}|$(command -v gradle)|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{GRADLE_PATH}|$gradle|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{HOME}|$HOME|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{JAVA_HOME}|$JAVA_HOME|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{libclang}|$libclang|" ironfox/mozconfigs/env.mozconfig

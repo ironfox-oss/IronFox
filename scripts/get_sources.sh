@@ -153,10 +153,8 @@ download_and_extract() {
     echo
 }
 
-if ! [[ -f "$BUNDLETOOLDIR/bundletool.jar" ]]; then
-    echo "Downloading bundletool..."
-    download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "$BUNDLETOOLDIR/bundletool.jar"
-fi
+echo "Downloading Bundletool..."
+download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "$BUNDLETOOLDIR/bundletool.jar"
 
 if ! [[ -f "$BUNDLETOOLDIR/bundletool" ]]; then
     echo "Creating bundletool script..."
@@ -167,7 +165,21 @@ if ! [[ -f "$BUNDLETOOLDIR/bundletool" ]]; then
     chmod +x "$BUNDLETOOLDIR/bundletool"
 fi
 
-echo "'bundletool' is set up at $BUNDLETOOLDIR/bundletool"
+echo "Bundletool is set up at $BUNDLETOOLDIR/bundletool"
+
+echo "Downloading F-Droid's Gradle script..."
+download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/$GRADLE_COMMIT/gradlew.py" "$GRADLEDIR/gradlew.py"
+
+if ! [[ -f "$GRADLEDIR/gradle" ]]; then
+    echo "Creating Gradle script..."
+    {
+        echo '#!/bin/bash'
+        echo "exec python3 $GRADLEDIR/gradlew.py \"\$@\""
+    } > "$GRADLEDIR/gradle"
+    chmod +x "$GRADLEDIR/gradle"
+fi
+
+echo "Gradle is set up at $GRADLEDIR/gradle"
 
 # Clone Glean
 echo "Cloning Glean..."
@@ -238,6 +250,7 @@ export glean="$GLEANDIR"
 export fenix="$FENIX"
 export mozilla_release="$GECKODIR"
 export gmscore="$GMSCOREDIR"
+export gradle="$GRADLEDIR/gradle"
 export uniffi="$UNIFFIDIR"
 export wasi="$WASISDKDIR"
 export wasi_patch="$WASIPATCHDIR"

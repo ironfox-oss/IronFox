@@ -37,12 +37,6 @@ RUN bash -x /tmp/setup-android-sdk.sh && \
     echo "export ANDROID_HOME=$ANDROID_HOME" >> $ENVDOCKER && \
     echo "export ANDROID_SDK_ROOT=\$ANDROID_HOME" >> $ENVDOCKER
 
-# Set up gradle from F-Droid
-RUN mkdir -p /root/bin
-ADD https://gitlab.com/fdroid/gradlew-fdroid/-/raw/f1ff9690936cec83cde22bb9ee15a569198a264a/gradlew-fdroid /root/bin/gradle
-RUN chmod +x "/root/bin/gradle" && \
-    echo "export PATH=\$PATH:/root/bin" >> $ENVDOCKER
-
 # Set up Python virtual environment
 RUN python3.9 -m venv /root/env
 

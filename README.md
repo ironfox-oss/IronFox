@@ -217,16 +217,6 @@ export PATH="$PATH:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/V
 
 Once the packages have been installed successfully, follow the instructions to set up the build environment:
 
-- Setup F-Droid's `gradle` script to be available in your `PATH`:
-
-  ```sh
-  mkdir -vp $HOME/bin
-  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/f1ff9690936cec83cde22bb9ee15a569198a264a/gradlew-fdroid -O "$HOME/bin/gradle"
-  chmod +x "$HOME/bin/gradle"
-
-  export PATH=$HOME/bin:$PATH
-  ```
-
 - Disable Gradle Daemons and configuration cache:
 
   ```sh
