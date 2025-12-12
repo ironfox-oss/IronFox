@@ -34,6 +34,11 @@ export DISABLE_TELEMETRY=1
 export MACHRC="$patches/machrc"
 export MOZCONFIG="$mozilla_release/mozconfig"
 
+# Android SDK
+export ANDROID_HOME="$android_sdk_dir"
+export ANDROID_NDK="$android_ndk_dir"
+export ANDROID_SDK_ROOT="$android_sdk_dir"
+
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 

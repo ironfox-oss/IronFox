@@ -42,6 +42,13 @@ WASI_VERSION="20"
 
 # Tools
 
+## Android SDK
+### for reference: https://searchfox.org/firefox-main/source/python/mozboot/mozboot/android.py
+ANDROID_BUILDTOOLS_VERSION="36.0.0"
+ANDROID_NDK_REVISION="29.0.14206865"
+ANDROID_PLATFORM_VERSION="36"
+ANDROID_SDK_REVISION="13114758"
+
 ## Bundletool
 BUNDLETOOL_VERSION="1.18.2"
 
@@ -75,13 +82,14 @@ WASI_OSX_IRONFOX_REVISION="2"
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_SH="$ROOTDIR/scripts/env_local.sh"
 EXTERNALDIR="$ROOTDIR/external"
-TMPDIR="$EXTERNALDIR/tmp"
 BUILDDIR="$ROOTDIR/build"
 PATCHDIR="$ROOTDIR/patches"
-GECKODIR="$EXTERNALDIR/gecko"
-ANDROID_COMPONENTS="$GECKODIR/mobile/android/android-components"
+TMPDIR="$EXTERNALDIR/tmp"
+ANDROIDSDKDIR="$EXTERNALDIR/android-sdk"
 APPSERVICESDIR="$EXTERNALDIR/application-services"
 BUNDLETOOLDIR="$EXTERNALDIR/bundletool"
+GECKODIR="$EXTERNALDIR/gecko"
+ANDROID_COMPONENTS="$GECKODIR/mobile/android/android-components"
 FENIX="$GECKODIR/mobile/android/fenix"
 GLEANDIR="$EXTERNALDIR/glean"
 GMSCOREDIR="$EXTERNALDIR/gmscore"

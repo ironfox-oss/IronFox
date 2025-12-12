@@ -5,11 +5,13 @@ set -euo pipefail
 source "$(dirname $0)/versions.sh"
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    ANDROID_SDK_PLATFORM=mac
     PLATFORM=macos
     PREBUILT_PLATFORM=osx
     # Ensure we use GNU tar on macOS
     TAR=gtar
 else
+    ANDROID_SDK_PLATFORM=linux
     PLATFORM=linux
     PREBUILT_PLATFORM=linux
     TAR=tar
@@ -153,6 +155,19 @@ download_and_extract() {
     echo
 }
 
+echo "Downloading the Android SDK..."
+download_and_extract "android-cmdline-tools" "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip"
+mkdir -vp "$ANDROIDSDKDIR/cmdline-tools"
+mv -v "$ROOTDIR/external/android-cmdline-tools" "$ANDROIDSDKDIR/cmdline-tools/latest"
+
+# Accept Android SDK licenses
+SDK_MANAGER="$ANDROIDSDKDIR/cmdline-tools/latest/bin/sdkmanager"
+{ yes || true; } | $SDK_MANAGER --sdk_root="$ANDROIDSDKDIR" --licenses
+
+$SDK_MANAGER "build-tools;$ANDROID_BUILDTOOLS_VERSION"
+$SDK_MANAGER "platforms;android-$ANDROID_PLATFORM_VERSION"
+$SDK_MANAGER "ndk;$ANDROID_NDK_REVISION"
+
 echo "Downloading Bundletool..."
 download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "$BUNDLETOOLDIR/bundletool.jar"
 
@@ -240,17 +255,19 @@ clone_repo "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "$FIREFO
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."
 cat > "$ENV_SH" << EOF
+export builddir="$BUILDDIR"
 export patches="$PATCHDIR"
 export rootdir="$ROOTDIR"
-export builddir="$BUILDDIR"
 export android_components="$ANDROID_COMPONENTS"
+export android_ndk_dir="$ANDROIDSDKDIR/ndk/$ANDROID_NDK_REVISION"
+export android_sdk_dir="$ANDROIDSDKDIR"
 export application_services="$APPSERVICESDIR"
 export bundletool="$BUNDLETOOLDIR"
-export glean="$GLEANDIR"
 export fenix="$FENIX"
-export mozilla_release="$GECKODIR"
+export glean="$GLEANDIR"
 export gmscore="$GMSCOREDIR"
 export gradle="$GRADLEDIR/gradle"
+export mozilla_release="$GECKODIR"
 export uniffi="$UNIFFIDIR"
 export wasi="$WASISDKDIR"
 export wasi_patch="$WASIPATCHDIR"
