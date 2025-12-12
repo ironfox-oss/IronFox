@@ -112,8 +112,12 @@ else
     PLATFORM_ARCHITECTURE=x86-64
 fi
 
-# Create build directory
-mkdir -vp "$rootdir/build"
+# Create build directories
+mkdir -vp "$builddir/.cargo"
+mkdir -vp "$builddir/.gradle"
+
+## Copy gradle properties
+cp -vf "$patches/gradle.properties" "$builddir/.gradle/"
 
 # Check patch files
 source "$rootdir/scripts/patches.sh"

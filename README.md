@@ -217,14 +217,6 @@ export PATH="$PATH:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/V
 
 Once the packages have been installed successfully, follow the instructions to set up the build environment:
 
-- Disable Gradle Daemons and configuration cache:
-
-  ```sh
-  mkdir -vp ~/.gradle
-  echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-  echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
-  ```
-
 - Create a new Python 3.9 virtual environment, then activate it:
 
   ```sh

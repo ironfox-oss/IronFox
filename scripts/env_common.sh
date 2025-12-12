@@ -56,13 +56,8 @@ mkdir -vp "$AAR_ARTIFACTS"
 
 export env_source="true"
 
-if [[ -z ${CARGO_HOME+x} ]]; then
-    export CARGO_HOME=$HOME/.cargo
-fi
-
-if [[ -z ${GRADLE_USER_HOME+x} ]]; then
-    export GRADLE_USER_HOME=$HOME/.gradle
-fi
+export CARGO_HOME="$builddir/.cargo"
+export GRADLE_USER_HOME="$builddir/.gradle"
 
 if [[ -z ${IRONFOX_RELEASE+x} ]]; then
     # Default to a "nightly" dev build
