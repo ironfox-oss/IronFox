@@ -400,6 +400,7 @@ bundle)
 esac
 
 $SED -i -e "s/include \".*\"/include $abi/" app/build.gradle
+mkdir -vp "$builddir"
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
 # Apply Fenix overlay
@@ -589,7 +590,7 @@ popd
 # shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch <"$builddir/wasi-sdk.patch"
+    patch -p1 --no-backup-if-mismatch <"$wasi_patch/wasi-sdk.patch"
 
     # Break the dependency on older cmake
     $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake

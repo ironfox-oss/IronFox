@@ -84,7 +84,7 @@ download() {
 extract_rmtoplevel() {
     local archive_path="$1"
     local to_name="$2"
-    local extract_to="${ROOTDIR}/$to_name"
+    local extract_to="${ROOTDIR}/external/$to_name"
 
     if ! [[ -f "$archive_path" ]]; then
         echo "Archive '$archive_path' does not exist!"
@@ -139,7 +139,7 @@ download_and_extract() {
         extension=".zip"
     fi
 
-    local repo_archive="${BUILDDIR}/${repo_name}${extension}"
+    local repo_archive="$TMPDIR/${repo_name}${extension}"
 
     download "$url" "$repo_archive"
 
@@ -153,23 +153,21 @@ download_and_extract() {
     echo
 }
 
-mkdir -vp "$BUILDDIR"
-
-if ! [[ -f "$BUILDDIR/bundletool.jar" ]]; then
+if ! [[ -f "$BUNDLETOOLDIR/bundletool.jar" ]]; then
     echo "Downloading bundletool..."
-    download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "$BUILDDIR/bundletool.jar"
+    download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "$BUNDLETOOLDIR/bundletool.jar"
 fi
 
-if ! [[ -f "$BUILDDIR/bundletool" ]]; then
+if ! [[ -f "$BUNDLETOOLDIR/bundletool" ]]; then
     echo "Creating bundletool script..."
     {
         echo '#!/bin/bash'
-        echo "exec java -jar ${BUILDDIR}/bundletool.jar \"\$@\""
-    } > "$BUILDDIR/bundletool"
-    chmod +x "$BUILDDIR/bundletool"
+        echo "exec java -jar ${BUNDLETOOLDIR}/bundletool.jar \"\$@\""
+    } > "$BUNDLETOOLDIR/bundletool"
+    chmod +x "$BUNDLETOOLDIR/bundletool"
 fi
 
-echo "'bundletool' is set up at $BUILDDIR/bundletool"
+echo "'bundletool' is set up at $BUNDLETOOLDIR/bundletool"
 
 # Clone Glean
 echo "Cloning Glean..."
@@ -210,7 +208,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     # We also clone Firefox directly, but, this is to ensure that the WASI patch we're using always matches exactly what we're
     ## using at https://gitlab.com/ironfox-oss/prebuilds
     echo "Downloading Firefox's WASI patch..."
-    download "https://github.com/mozilla-firefox/firefox/raw/$FIREFOX_WASI_COMMIT/taskcluster/scripts/misc/wasi-sdk.patch" "$BUILDDIR/wasi-sdk.patch"
+    download "https://github.com/mozilla-firefox/firefox/raw/$FIREFOX_WASI_COMMIT/taskcluster/scripts/misc/wasi-sdk.patch" "$WASIPATCHDIR/wasi-sdk.patch"
 elif [[ "$PLATFORM" == "macos" ]]; then
     echo "Downloading prebuilt wasi-sdk.."
     download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_OSX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
@@ -230,18 +228,19 @@ clone_repo "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "$FIREFO
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."
 cat > "$ENV_SH" << EOF
-export patches=${PATCHDIR}
-export rootdir=${ROOTDIR}
-export builddir="${BUILDDIR}"
-export android_components=${ANDROID_COMPONENTS}
-export application_services=${APPSERVICESDIR}
-export bundletool=${BUNDLETOOLDIR}
-export glean=${GLEANDIR}
-export fenix=${FENIX}
-export mozilla_release=${GECKODIR}
-export gmscore=${GMSCOREDIR}
-export uniffi=${UNIFFIDIR}
-export wasi=${WASISDKDIR}
+export patches="$PATCHDIR"
+export rootdir="$ROOTDIR"
+export builddir="$BUILDDIR"
+export android_components="$ANDROID_COMPONENTS"
+export application_services="$APPSERVICESDIR"
+export bundletool="$BUNDLETOOLDIR"
+export glean="$GLEANDIR"
+export fenix="$FENIX"
+export mozilla_release="$GECKODIR"
+export gmscore="$GMSCOREDIR"
+export uniffi="$UNIFFIDIR"
+export wasi="$WASISDKDIR"
+export wasi_patch="$WASIPATCHDIR"
 
 source "\$rootdir/scripts/env_common.sh"
 EOF

@@ -1,15 +1,10 @@
 __pycache__
 
-/env
-/build
-/gecko
-/glean
-/application-services
-/gmscore
-/wasi-sdk
-/scripts/env_local.sh
 .DS_Store
+/build
+/env
+/external
 /patches/gecko-overlay/ironfox/prefs/000-phoenix.js
 /patches/gecko-overlay/ironfox/prefs/001-phoenix-extended.js
-/uniffi
+/scripts/env_local.sh
 /wip
