@@ -146,13 +146,13 @@ elif [[ -f "/etc/os-release" ]]; then
         echo "Apologies, your Linux distribution is currently not supported."
         echo "If you think this is a mistake, please let us know!"
         echo "https://gitlab.com/ironfox-oss/IronFox/-/issues"
-        echo "Otherwise, please try again on a system running Fedora, macOS, or Ubuntu."
+        echo "Otherwise, please try again on a system running the latest version of Fedora, macOS, or Ubuntu."
         exit 1
     fi
 else
     echo "Apologies, your operating system is currently not supported."
     echo "If you think this is a mistake, please let us know!"
     echo "https://gitlab.com/ironfox-oss/IronFox/-/issues"
-    echo "Otherwise, please try again on a system running Fedora, macOS, or Ubuntu."
+    echo "Otherwise, please try again on a system running the latest version of Fedora, macOS, or Ubuntu."
     exit 1
 fi
