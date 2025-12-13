@@ -155,6 +155,15 @@ download_and_extract() {
     echo
 }
 
+if [[ -z ${JAVA_HOME+x} ]]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        export JAVA_HOME="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
+    else
+        export JAVA_HOME="/usr/lib/jvm/temurin-17-jdk"
+    fi
+    export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
 echo "Downloading the Android SDK..."
 download_and_extract "android-cmdline-tools" "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip"
 mkdir -vp "$ANDROIDSDKDIR/cmdline-tools"
