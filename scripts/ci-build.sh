@@ -64,6 +64,7 @@ export IF_BUILD_DATE="$CI_PIPELINE_CREATED_AT"
 
 # Build
 bash -x scripts/build.sh "$BUILD_TYPE"
+source "$(realpath $(dirname "$0"))/env_local.sh"
 
 if [[ "$BUILD_TYPE" == "apk" ]]; then
     # Create GeckoView AAR archives
