@@ -412,7 +412,9 @@ $SED -i -e "s/include \".*\"/include $abi/" app/build.gradle
 mkdir -vp "$builddir"
 echo "$llvmtarget" >"$builddir/targets_to_build"
 
-$SED -i "s|{target_abi}|$abi|" "$rootdir/scripts/env_local.sh"
+if [[ "$geckotarget" != "bundle" ]]; then
+    $SED -i "s|{target_abi}|$abi|" "$rootdir/scripts/env_local.sh"
+fi
 
 # Apply Fenix overlay
 apply_overlay "$patches/fenix-overlay/"
