@@ -22,13 +22,10 @@
 
 set -e
 
+source "$(dirname $0)/env_local.sh"
+
 # Include version info
 source "$rootdir/scripts/versions.sh"
-
-if [[ "$env_source" != "true" ]]; then
-    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
-    exit 1
-fi
 
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()

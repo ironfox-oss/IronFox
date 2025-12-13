@@ -51,9 +51,6 @@ source "/opt/env_docker.sh"
 # Get sources
 bash -x ./scripts/get_sources.sh
 
-# Update environment variables for this build
-source "scripts/env_local.sh"
-
 # Prepare sources
 bash -x ./scripts/prebuild.sh "$BUILD_VARIANT"
 
