@@ -1076,7 +1076,7 @@ echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDe
 apply_overlay "$patches/gecko-overlay/"
 
 # Because `app.support.vendor` is locked, we need to unset it in Phoenix's pref files
-# for our value (at 002-ironfox.js) takes effect
+# for our value (at 002-ironfox.js) to take effect
 $SED -i -e 's|"app.support.vendor"|"z99.ignore.string"|' ironfox/prefs/000-phoenix.js
 $SED -i -e 's|"app.support.vendor"|"z99.ignore.string"|' ironfox/prefs/001-phoenix-extended.js
 
