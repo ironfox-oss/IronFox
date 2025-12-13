@@ -1,7 +1,7 @@
 FROM fedora:43
 
 # Ensure we're up to date
-RUN dnf update --refresh
+RUN dnf update -y --refresh
 
 # Add + enable the Adoptium Working Group's repository
 RUN dnf install -y adoptium-temurin-java-repository && \
