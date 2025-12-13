@@ -2,7 +2,6 @@ __pycache__
 
 .DS_Store
 /build
-/env
 /external
 /patches/gecko-overlay/ironfox/prefs/000-phoenix.js
 /patches/gecko-overlay/ironfox/prefs/001-phoenix-extended.js

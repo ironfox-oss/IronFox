@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # Caution: Should not be sourced directly!
 # Use 'env_local.sh' or 'env_fdroid.sh' instead.
