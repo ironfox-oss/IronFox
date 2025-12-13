@@ -41,6 +41,7 @@ fi
 
 source "$(dirname $0)/env_local.sh"
 source "$CARGO_HOME/env"
+source "$PIP_ENV/bin/activate"
 
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle

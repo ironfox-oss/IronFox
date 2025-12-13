@@ -164,6 +164,16 @@ rustup target add i686-linux-android
 rustup target add x86_64-linux-android
 cargo install --vers "$CBINDGEN_VERSION" cbindgen
 
+# Set-up pip
+python3.9 -m venv "$PIP_ENV"
+source "$PIP_ENV/bin/activate"
+pip install --upgrade pip
+pip install requests
+
+if [[ "$PLATFORM" == "darwin" ]]; then
+    pip install gyp-next
+fi
+
 # Fenix
 pushd "$fenix"
 

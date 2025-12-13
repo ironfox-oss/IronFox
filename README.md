@@ -207,57 +207,9 @@ brew install \
     zlib
 ```
 
-You should also ensure that `python3.9` is available in your `PATH`:
-
-```sh
-export PATH="$PATH:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin"
-```
-
 </details>
 
-Once the packages have been installed successfully, follow the instructions to set up the build environment:
-
-- Create a new Python 3.9 virtual environment, then activate it:
-
-  ```sh
-  python3.9 -m venv env
-  source env/bin/activate
-  ```
-
-- After creating your Python 3.9 virtual environment, install `requests`:
-
-    ```sh
-    pip install requests
-    ```
-
-- On **macOS**, after creating your Python 3.9 virtual environment, you will also need to install `gyp-next`:
-
-    ```sh
-    pip install gyp-next
-    ```
-
-- Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running:
-
-  **Don't forget to replace `/path/to/jdk-17` below with the actual path of your JDK 17 installation!**
-
-  ```sh
-  export JAVA_HOME=/path/to/jdk-17
-  export PATH=$JAVA_HOME/bin:$PATH
-  ```
-
-  For instance, on **Fedora 42/43**, the default location of JDK 17 is `/usr/lib/jvm/temurin-17-jdk`:
-
-  ```sh
-  export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
-  export PATH=$JAVA_HOME/bin:$PATH
-  ```
-
-  On **macOS**, the default location of JDK 17 is `/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home`:
-
-  ```sh
-  export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
-  export PATH=$JAVA_HOME/bin:$PATH
-  ```
+Once the packages have been installed successfully, follow the instructions below to set up the build environment.
 
 ### Get & patch sources
 

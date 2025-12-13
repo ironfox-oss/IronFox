@@ -45,17 +45,11 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     echo "Preparing to build IronFox (Release)..."
 fi
 
-# Setup environment variables. See Dockerfile.
-source "/opt/env_docker.sh"
-
 # Get sources
 bash -x ./scripts/get_sources.sh
 
 # Prepare sources
 bash -x ./scripts/prebuild.sh "$BUILD_VARIANT"
-
-# Install requests
-pip install requests
 
 # If we're building an APK set, the following environment variables are required
 if [[ "$BUILD_TYPE" == "bundle" ]]; then

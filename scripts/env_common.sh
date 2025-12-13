@@ -39,6 +39,30 @@ export ANDROID_HOME="$android_sdk_dir"
 export ANDROID_NDK="$android_ndk_dir"
 export ANDROID_SDK_ROOT="$android_sdk_dir"
 
+# Cargo
+export CARGO_HOME="$builddir/.cargo"
+
+# Gradle
+export GRADLE_USER_HOME="$builddir/.gradle"
+
+# Python
+export PIP_ENV="$builddir/pyenv"
+
+# For macOS, ensure that Python 3.9 is in PATH
+if [[ "$PLATFORM" == "darwin" ]]; then
+    export PATH="$PATH:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin"
+fi
+
+# Java
+if [[ -z ${JAVA_HOME+x} ]]; then
+    if [[ "$PLATFORM" == "darwin" ]]; then
+        export JAVA_HOME="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
+    else
+        export JAVA_HOME="/usr/lib/jvm/temurin-17-jdk"
+    fi
+    export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
 IRONFOX_LOCALES=$(<"$patches/locales")
 export IRONFOX_LOCALES
 
@@ -54,11 +78,6 @@ mkdir -vp "$APK_ARTIFACTS"
 mkdir -vp "$APKS_ARTIFACTS"
 mkdir -vp "$AAR_ARTIFACTS"
 
-export env_source="true"
-
-export CARGO_HOME="$builddir/.cargo"
-export GRADLE_USER_HOME="$builddir/.gradle"
-
 if [[ -z ${IRONFOX_RELEASE+x} ]]; then
     # Default to a "nightly" dev build
     export IRONFOX_RELEASE=0
@@ -68,7 +87,6 @@ fi
 
 if [[ -z ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
     # Default to development assets
-    # shellcheck disable=SC2059
     IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.dev.json"
     export IRONFOX_UBO_ASSETS_URL
 
