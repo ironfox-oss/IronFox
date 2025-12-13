@@ -281,5 +281,7 @@ export uniffi="$UNIFFIDIR"
 export wasi="$WASISDKDIR"
 export wasi_patch="$WASIPATCHDIR"
 
+export target_abi={target_abi}
+
 source "\$rootdir/scripts/env_common.sh"
 EOF

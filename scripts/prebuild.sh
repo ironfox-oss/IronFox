@@ -111,6 +111,7 @@ fi
 # Create build directories
 mkdir -vp "$builddir/.cargo"
 mkdir -vp "$builddir/.gradle"
+mkdir -vp "$builddir/outputs"
 
 ## Copy gradle properties
 cp -vf "$patches/gradle.properties" "$builddir/.gradle/"
@@ -411,6 +412,8 @@ esac
 $SED -i -e "s/include \".*\"/include $abi/" app/build.gradle
 mkdir -vp "$builddir"
 echo "$llvmtarget" >"$builddir/targets_to_build"
+
+$SED -i "s|{target_abi}|$abi|" "$rootdir/scripts/env_local.sh"
 
 # Apply Fenix overlay
 apply_overlay "$patches/fenix-overlay/"
