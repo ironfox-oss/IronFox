@@ -66,7 +66,7 @@ elif [[ -f "/etc/os-release" ]]; then
     # ATM, we support Fedora and Ubuntu
     if [[ "$ID" == "fedora" ]]; then
         # Ensure we're up to date
-        sudo dnf update --refresh || error_fn
+        sudo dnf update -y --refresh || error_fn
         echo
 
         # Add + enable the Adoptium Working Group's repository
