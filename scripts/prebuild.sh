@@ -57,7 +57,6 @@ if [ -z "$1" ]; then
 fi
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
-    source "$(dirname "$0")/setup-android-sdk.sh"
     source "$(dirname "$0")/env_fdroid.sh"
 fi
 
@@ -158,7 +157,7 @@ else
 fi
 echo "...libclang dir set to ${libclang}"
 
-# shellcheck disable=SC1090,SC1091
+# Set-up cargo
 source "$CARGO_HOME/env"
 rustup default "$RUST_VERSION"
 rustup target add thumbv7neon-linux-androideabi
@@ -169,7 +168,6 @@ rustup target add x86_64-linux-android
 cargo install --vers "$CBINDGEN_VERSION" cbindgen
 
 # Fenix
-# shellcheck disable=SC2154
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
@@ -192,26 +190,25 @@ $SED -i \
 $SED -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
 # Disable Pocket "Discover More Stories"
-$SED -i -e 's|DISCOVER_MORE_STORIES = .*|DISCOVER_MORE_STORIES = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|DISCOVER_MORE_STORIES = .*|DISCOVER_MORE_STORIES = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Disable telemetry
 $SED -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
 $SED -i -e '/TELEMETRY/s/true/false/' app/build.gradle
-$SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Enable Mozilla's new redesign for Private Browsing mode
-$SED -i -e 's|PRIVATE_BROWSING_MODE_REDESIGN = .*|PRIVATE_BROWSING_MODE_REDESIGN = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|PRIVATE_BROWSING_MODE_REDESIGN = .*|PRIVATE_BROWSING_MODE_REDESIGN = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure onboarding is always enabled
-$SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # No-op AMO collections/recommendations
 $SED -i -e 's|"AMO_COLLECTION_NAME", "\\".*\\""|"AMO_COLLECTION_NAME", "\\"\\""|g' app/build.gradle
 $SED -i 's|Extensions-for-Android||g' app/build.gradle
 $SED -i -e 's|"AMO_COLLECTION_USER", "\\".*\\""|"AMO_COLLECTION_USER", "\\"\\""|g' app/build.gradle
 $SED -i -e 's|"AMO_SERVER_URL", "\\".*\\""|"AMO_SERVER_URL", "\\"\\""|g' app/build.gradle
-$SED -i 's|https://services.addons.mozilla.org||g' app/build.gradle
-$SED -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeature = false|g' app/src/*/java/org/mozilla/fenix/FeatureFlags.kt
+$SED -i -e 's|customExtensionCollectionFeature = .*|customExtensionCollectionFeature = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # No-op Glean
 $SED -i -e 's|include_client_id: .*|include_client_id: false|g' app/pings.yaml
@@ -238,38 +235,38 @@ $SED -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app
 $SED -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
 $SED -i -e 's|WebCompatReporterTelemetryMiddleware(|// WebCompatReporterTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
 
-rm -vf app/src/*/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/Event.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricController.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsService.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
-rm -vf app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/crashes/CrashFactCollector.kt
-rm -vf app/src/*/java/org/mozilla/fenix/crashes/CrashReportingAppMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/crashes/NimbusExperimentDataProvider.kt
-rm -vf app/src/*/java/org/mozilla/fenix/crashes/ReleaseRuntimeTagProvider.kt
-rm -vf app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/home/middleware/HomeTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/home/PocketMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/messaging/state/MessagingMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/reviewprompt/ReviewPromptMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/telemetry/TelemetryMiddleware.kt
-rm -vf app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
-rm -vrf app/src/*/java/org/mozilla/fenix/components/metrics/fonts
-rm -vrf app/src/*/java/org/mozilla/fenix/settings/datachoices
-rm -vrf app/src/*/java/org/mozilla/fenix/startupCrash
+rm -vf app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/ActivationPing.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/Event.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/FirstSessionPing.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/GrowthDataWorker.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/InstallReferrerMetricsService.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/MarketingAttributionService.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/MetricController.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/MetricsMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/MetricsService.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt
+rm -vf app/src/main/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/crashes/CrashFactCollector.kt
+rm -vf app/src/main/java/org/mozilla/fenix/crashes/CrashReportingAppMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/crashes/NimbusExperimentDataProvider.kt
+rm -vf app/src/main/java/org/mozilla/fenix/crashes/ReleaseRuntimeTagProvider.kt
+rm -vf app/src/main/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/home/middleware/HomeTelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/home/PocketMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/messaging/state/MessagingMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/reviewprompt/ReviewPromptMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/telemetry/TelemetryMiddleware.kt
+rm -vf app/src/main/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt
+rm -vrf app/src/main/java/org/mozilla/fenix/components/metrics/fonts
+rm -vrf app/src/main/java/org/mozilla/fenix/settings/datachoices
+rm -vrf app/src/main/java/org/mozilla/fenix/startupCrash
 
 # Let it be IronFox
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
@@ -360,7 +357,7 @@ $SED -i \
     app/src/main/java/org/mozilla/fenix/compose/list/ListItem.kt
 
 # Remove default built-in search engines
-rm -vrf app/src/*/assets/searchplugins/*
+rm -vrf app/src/main/assets/searchplugins/*
 
 # Create wallpaper directories
 mkdir -vp app/src/main/assets/wallpapers/algae
@@ -489,19 +486,19 @@ popd
 pushd "$android_components"
 
 # Remove default built-in search engines
-rm -vrf components/feature/search/src/*/assets/searchplugins/*
+rm -vrf components/feature/search/src/main/assets/searchplugins/*
 
 # Nuke the "Mozilla Android Components - Ads Telemetry" and "Mozilla Android Components - Search Telemetry" extensions
 ## We don't install these with fenix-disable-telemetry.patch - so no need to keep the files around...
-rm -vrf components/feature/search/src/*/assets/extensions/ads
-rm -vrf components/feature/search/src/*/assets/extensions/search
+rm -vrf components/feature/search/src/main/assets/extensions/ads
+rm -vrf components/feature/search/src/main/assets/extensions/search
 
-# We can also remove the directories/libraries themselves as well
-rm -vf components/feature/search/src/*/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt
-rm -vrf components/feature/search/src/*/java/mozilla/components/feature/search/telemetry
+## We can also remove the directories/libraries themselves as well
+rm -vf components/feature/search/src/main/java/mozilla/components/feature/search/middleware/AdsTelemetryMiddleware.kt
+rm -vrf components/feature/search/src/main/java/mozilla/components/feature/search/telemetry
 
 # Remove the 'search telemetry' config
-rm -vf components/feature/search/src/*/assets/search/search_telemetry_v2.json
+rm -vf components/feature/search/src/main/assets/search/search_telemetry_v2.json
 
 # Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
 ## We don't build or use these sample libraries at all anyways, so instead of patching these files, I don't see a reason why we shouldn't just delete them. 
@@ -556,15 +553,15 @@ $SED -i -e 's/EXPERIMENT_COLLECTION_NAME = ".*"/EXPERIMENT_COLLECTION_NAME = ""/
 $SED -i 's|nimbus-mobile-experiments||g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 
 # Remove default built-in search engines
-rm -vrf components/remote_settings/dumps/*/attachments/search-config-icons/*
+rm -vrf components/remote_settings/dumps/main/attachments/search-config-icons/*
 
 # Remove the 'regions' configs
-rm -vf components/remote_settings/dumps/*/regions.json
-rm -vrf components/remote_settings/dumps/*/attachments/regions
+rm -vf components/remote_settings/dumps/main/regions.json
+rm -vrf components/remote_settings/dumps/main/attachments/regions
 $SED -i -e 's|("main", "regions"),|// ("main", "regions"),|g' components/remote_settings/src/client.rs
 
 # Remove the 'search telemetry' config
-rm -vf components/remote_settings/dumps/*/search-telemetry-v2.json
+rm -vf components/remote_settings/dumps/main/search-telemetry-v2.json
 $SED -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' components/remote_settings/src/client.rs
 
 # Remove the Mozilla Ads Client library
@@ -726,11 +723,10 @@ rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js tool
 $SED -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' mobile/android/installer/package-manifest.in
 
 # No-op AMO collections/recommendations
-$SED -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-$SED -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-$SED -i -e 's/DEFAULT_COLLECTION_USER = ".*"/DEFAULT_COLLECTION_USER = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-$SED -i -e 's/DEFAULT_SERVER_URL = ".*"/DEFAULT_SERVER_URL = ""/' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
-$SED -i 's|https://services.addons.mozilla.org||g' mobile/android/android-components/components/feature/addons/src/*/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i -e 's/DEFAULT_COLLECTION_USER = ".*"/DEFAULT_COLLECTION_USER = ""/' mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
+$SED -i -e 's/DEFAULT_SERVER_URL = ".*"/DEFAULT_SERVER_URL = ""/' mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
 
 # Remove unnecessary crash reporting components
 rm -vrf mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/rusterrors
@@ -756,8 +752,8 @@ rm -vf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/TopSitesRef
 
 # No-op GeoIP/Region service
 ## https://searchfox.org/mozilla-release/source/toolkit/modules/docs/Region.rst
-$SED -i -e 's/GEOIP_SERVICE_URL = ".*"/GEOIP_SERVICE_URL = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
-$SED -i -e 's/USER_AGENT = ".*/USER_AGENT = ""/' mobile/android/android-components/components/service/location/src/*/java/mozilla/components/service/location/MozillaLocationService.kt
+$SED -i -e 's/GEOIP_SERVICE_URL = ".*"/GEOIP_SERVICE_URL = ""/' mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
+$SED -i -e 's/USER_AGENT = ".*/USER_AGENT = ""/' mobile/android/android-components/components/service/location/src/main/java/mozilla/components/service/location/MozillaLocationService.kt
 
 # No-op Normandy (Experimentation)
 $SED -i -e 's/REMOTE_SETTINGS_COLLECTION = ".*"/REMOTE_SETTINGS_COLLECTION = ""/' toolkit/components/normandy/lib/RecipeRunner.sys.mjs
@@ -792,8 +788,6 @@ $SED -i 's|search-telemetry-v2||g' mobile/android/fenix/app/src/*/java/org/mozil
 $SED -i -e '/enable_internal_pings:/s/true/false/' toolkit/components/glean/src/init/mod.rs
 $SED -i -e '/upload_enabled =/s/true/false/' toolkit/components/glean/src/init/mod.rs
 $SED -i -e '/use_core_mps:/s/true/false/' toolkit/components/glean/src/init/mod.rs
-$SED -i 's|localhost||g' toolkit/components/telemetry/pings/BackgroundTask_pingsender.sys.mjs
-$SED -i 's|localhost||g' toolkit/components/telemetry/pingsender/pingsender.cpp
 $SED -i -e 's/usageDeletionRequest.setEnabled(.*)/usageDeletionRequest.setEnabled(false)/' toolkit/components/telemetry/app/UsageReporting.sys.mjs
 $SED -i -e 's|useTelemetry = .*|useTelemetry = false;|g' toolkit/components/telemetry/core/Telemetry.cpp
 $SED -i '/# This must remain last./i gkrust_features += ["glean_disable_upload"]\n' toolkit/library/rust/gkrust-features.mozbuild
