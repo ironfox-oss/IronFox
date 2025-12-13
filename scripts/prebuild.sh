@@ -355,7 +355,6 @@ rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml
 rm -vf app/src/release/res/mipmap-*/ic_launcher.webp
 rm -vf app/src/release/res/values/colors.xml
 rm -vf app/src/main/res/values-v24/styles.xml
-$SED -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
 $SED -i -e '/SplashScreen/,+5d' app/src/main/res/values-v27/styles.xml
 mkdir -vp app/src/release/res/mipmap-anydpi-v26
 $SED -i \
@@ -640,6 +639,9 @@ if [[ "$IRONFOX_RELEASE" == 1 ]]; then
 else
     $SED -i -e 's/Fennec/IronFox Nightly/g; s/Firefox/IronFox Nightly/g' build/moz.configure/init.configure
 fi
+
+# Replace proprietary artwork
+$SED -i -e '/android:roundIcon/d' mobile/android/fenix/app/src/main/AndroidManifest.xml
 
 # Use `commit` instead of `rev` for source URL
 ## (ex. displayed at `about:buildconfig`)
