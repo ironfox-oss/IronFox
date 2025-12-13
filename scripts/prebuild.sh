@@ -139,9 +139,8 @@ if ! check_patches; then
 fi
 popd
 
+# Set-up Rust
 if [[ -n ${FDROID_BUILD+x} ]]; then
-    # Set up Rust
-    # shellcheck disable=SC2154
     "$rustup"/rustup-init.sh -y --no-update-default-toolchain
 else
     curl --doh-cert-status --no-insecure --no-proxy-insecure --no-sessionid --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --proto -all,https --proto-default https --proto-redir -all,https --show-error -sSf https://sh.rustup.rs | sh -s -- -y --no-update-default-toolchain
@@ -428,7 +427,6 @@ popd
 # We currently remove Glean fully from Android Components (See `a-c-remove-glean.patch`) and Application Services (see `a-s-remove-glean.patch`). Unfortunately, it's currently untenable to remove Glean in its entirety from Fenix (though we do remove Mozilla's `Glean Service` library/implementation). So, our approach is to stub Glean for Fenix, which we can do thanks to Tor's no-op UniFFi binding generator, as well as our `fenix-remove-glean.patch` patch, and the commands below.
 ## https://gitlab.torproject.org/tpo/applications/tor-browser-build/-/tree/main/projects/glean
 
-# shellcheck disable=SC2154
 pushd "$glean"
 
 # Apply patches
@@ -489,7 +487,6 @@ popd
 # Android Components
 #
 
-# shellcheck disable=SC2154
 pushd "$android_components"
 
 # Remove default built-in search engines
@@ -597,7 +594,6 @@ $SED -i "s|{rusttarget}|$rusttarget|" local.properties
 popd
 
 # WASI SDK
-# shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$wasi"
     patch -p1 --no-backup-if-mismatch <"$wasi_patch/wasi-sdk.patch"
@@ -1037,7 +1033,6 @@ $SED -i \
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
-# shellcheck disable=SC2154
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py

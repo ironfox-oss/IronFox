@@ -50,14 +50,12 @@ source "$PIP_ENV/bin/activate"
 if [[ -n ${FDROID_BUILD+x} ]]; then
 
     # Build LLVM
-    # shellcheck disable=SC2154
     pushd "$llvm"
 
     pushd "$bundletool"
     $gradle assemble
     popd
 
-    # shellcheck disable=SC2154
     llvmtarget=$(cat "$builddir/targets_to_build")
     echo "building llvm for $llvmtarget"
     cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang-20 \
@@ -71,7 +69,6 @@ fi
 
 if [[ -n ${FDROID_BUILD+x} ]]; then
     # Build WASI SDK
-    # shellcheck disable=SC2154
     pushd "$wasi"
 
     mkdir -vp build/install/wasi
@@ -94,7 +91,6 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
 fi
 
 # Build microG libraries
-# shellcheck disable=SC2154
 pushd "$gmscore"
 if ! [[ -n ${FDROID_BUILD+x} ]]; then
     export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
@@ -107,14 +103,14 @@ $gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-bu
     :play-services-tasks:publishToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Glean
 pushd "$glean"
 export TARGET_CFLAGS=-DNDEBUG
 $gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
 $gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Application Services
 pushd "$application_services"
 
 # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
@@ -123,10 +119,9 @@ pushd "$application_services"
 CI='' bash -c "./libs/verify-android-environment.sh && $gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :tooling-nimbus-gradle:publishToMavenLocal"
 popd
 
-# shellcheck disable=SC2154
+# Gecko (Firefox)
 pushd "$mozilla_release"
 
-# shellcheck disable=SC2086
 echo "Running ./mach build..."
 ./mach build
 echo "Running ./mach package..."
@@ -141,7 +136,7 @@ echo "Running $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-bui
 $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Android Components
 pushd "$android_components"
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
 # otherwise automatically triggered publication of A-S will fail
@@ -152,7 +147,7 @@ echo "autoPublish.application-services.dir=$application_services" >>"$mozilla_re
 $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Fenix
 pushd "$fenix"
 if [[ "$build_type" == "apk" ]]; then
     $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:assembleRelease

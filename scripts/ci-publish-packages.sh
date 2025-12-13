@@ -12,7 +12,6 @@ export GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages
 upload_to_package_registry() {
     local file="$1"
     local package_name="$2"
-    # shellcheck disable=SC2155
     local file_name="$(basename "$file")"
     curl --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" \
         --upload-file "$file" \
