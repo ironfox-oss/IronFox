@@ -110,110 +110,52 @@ Then, you need to [set up the source files](#get--patch-sources).
 
 ### Build without Docker
 
-You need to install a few packages on your machine to be able to build IronFox.
-Follow the below instructions based on the OS you're using.
+**NOTE**: Currently, builds on the latest versions of **`Fedora`**, **`macOS`**, and **`Ubuntu`** systems are supported. YMMV for other operating systems/environments.
 
-<details>
-<summary>When building on Ubuntu</summary>
+**NOTE**: **`macOS`** users must install [Homebrew](https://brew.sh/) *(if is not already installed)* before following the steps below.
 
-```sh
-sudo apt update
-sudo apt install -y make \
-        cmake \
-        clang-18 \
-        gyp \
-        nasm \
-        ninja-build \
-        patch \
-        perl \
-        tar \
-        unzip \
-        wget \
-        xz-utils \
-        yq \
-        zlib1g-dev
-```
+First, if you haven't already installed it, you'll want to install `git` for your platform of choice:
 
-Apart from the above packages, you need to install Python 3.9. You can use [PPA from the `deadsnakes` team](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa).
-
-You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the default JDK.
-
-</details>
-
-<details>
-<summary>When building on Fedora 42/43</summary>
+**`Fedora`**:
 
 ```sh
-sudo dnf install -y \
-    cmake \
-    clang \
-    gawk \
-    git \
-    gyp \
-    m4 \
-    make \
-    nasm \
-    ninja-build \
-    patch \
-    perl \
-    python3.9 \
-    shasum \
-    wget \
-    xz \
-    yq \
-    zlib-devel
+sudo dnf install git
 ```
 
-You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the default JDK. These can be installed from [The Adoptium Working Group's repository](https://adoptium.net/installation/linux/#_centosrhelfedora_instructions).
-
-To add The Adoptium Working Group's repository, you'll want to install Fedora's `adoptium-temurin-java-repository` package and enable the repository:
+**`macOS`**:
 
 ```sh
-sudo dnf install -y adoptium-temurin-java-repository
-sudo dnf config-manager setopt adoptium-temurin-java-repository.enabled=1
-sudo dnf makecache
+brew install git
 ```
 
-Now, to install JDK 8 and 17:
+**`Ubuntu`**:
 
 ```sh
-sudo dnf install -y temurin-8-jdk temurin-17-jdk
+sudo apt install git
 ```
 
-</details>
-<summary>When building on macOS</summary>
+After you've successfully installed `git`, the first thing you'll need to do is clone IronFox's source repository:
 
-**NOTE**: [Homebrew](https://brew.sh/) is recommended for installation/management of dependencies on macOS.
+*(`--depth=1` is specified below to reduce the size of the cloned repository, it can be removed if preferred)*
 
 ```sh
-/usr/bin/xcode-select --install
-brew install \
-    cmake \
-    gawk \
-    git \
-    gnu-sed \
-    gnu-tar \
-    m4 \
-    make \
-    nasm \
-    ninja \
-    node \
-    perl \
-    python@3.9 \
-    temurin@17 \
-    wget \
-    xz \
-    yq \
-    zlib
+git clone --depth=1 git@gitlab.com:ironfox-oss/IronFox.git IronFox
 ```
 
-</details>
+You should now navigate to the root of IronFox's source directory, and run the `bootstrap` script:
 
-Once the packages have been installed successfully, follow the instructions below to set up the build environment.
+*(The `bootstrap` script will set-up and install dependencies required to build IronFox on your system)*
 
-### Get & patch sources
+```sh
+cd IronFox
+./scripts/bootstrap.sh
+```
 
-Next, you need to download the source files to build. The `scripts/get_sources.sh` file can be used to download/clone the source files.
+#### Get sources
+
+Still from the root of IronFox's source directory, you should now run the `get_sources` script to download the external sources required for building IronFox:
+
+**NOTE**: If you need to fetch sources for a different version of a dependency than the version IronFox is currently using, you'll need to modify `scripts/versions.sh` **BEFORE** running the `get_sources` script.
 
 _This may take some time depending on your network speed..._
 
@@ -221,9 +163,9 @@ _This may take some time depending on your network speed..._
 ./scripts/get_sources.sh
 ```
 
-If you need to fetch sources for a different version of Firefox than the one IronFox is currently based on, you'll have to modify the script directly.
+#### Preparing sources
 
-Next, you need to patch the files with:
+You now need to patch/prepare your newly downloaded sources with the `prebuild` script:
 
 _This must be run once after getting your sources._
 
@@ -245,12 +187,18 @@ Where `<build-variant>` specifies the variant to build, and is **one** of the fo
 >
 > See [task kinds](https://firefox-source-docs.mozilla.org/taskcluster/kinds.html#build-fat-aar) and [ci-build.sh](./scripts/ci-build.sh) for more details.
 
-### Build
+#### Build
 
 Finally, you can start the build process with:
 
 ```sh
 ./scripts/build.sh apk
+```
+
+**NOTE**: If you'd like to build a **bundle**, you should instead use:
+
+```sh
+./scripts/build.sh bundle
 ```
 
 ## Translation
