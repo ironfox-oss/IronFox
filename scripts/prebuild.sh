@@ -168,7 +168,6 @@ cargo install --vers "$CBINDGEN_VERSION" cbindgen
 python3.9 -m venv "$PIP_ENV"
 source "$PIP_ENV/bin/activate"
 pip install --upgrade pip
-pip install requests
 
 if [[ "$PLATFORM" == "darwin" ]]; then
     pip install gyp-next

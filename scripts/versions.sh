@@ -65,7 +65,7 @@ CBINDGEN_VERSION="0.29.2"
 
 ## Gradle (F-Droid)
 ### https://gitlab.com/fdroid/gradlew-fdroid
-GRADLE_COMMIT="468f31c261d97808eb8bf24540a3286308f26e7f"
+GRADLE_COMMIT="e55f371891e02a45ee65d18cabc81aaf665c96d0"
 
 ## LLVM
 ### https://github.com/llvm/llvm-project
