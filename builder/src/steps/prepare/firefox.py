@@ -1,8 +1,10 @@
 import os
 from pathlib import Path
+import subprocess
 from typing import List
 from commands.prepare import PrepareConfig
 from common.paths import Paths
+from common.utils import current_platform
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
@@ -70,7 +72,8 @@ def prepare_firefox(
         _mkdirs(f"{paths.android_home}/emulator"),
         _mkdirs(f"{paths.user_home}/.mozbuild/android-device/avd"),
         
-        _mkdirs("mobile/locales/en-US/browser/policies"),
+        _mkdirs("ironfox/about/browser/locales/en-US/browser/policies"),
+        _mkdirs("ironfox/about/browser/robots"),
         
         # Remove unused telemetry assets
         *_rm("toolkit/content/aboutTelemetry.css"),
@@ -80,16 +83,6 @@ def prepare_firefox(
         # Remove DoH rollout local dumps
         *_rm("services/settings/static-dumps/main/doh-config.json"),
         *_rm("services/settings/static-dumps/main/doh-providers.json"),
-        
-        d.write_file(
-            name="Write local.properties",
-            target=paths.firefox_dir / "local.properties",
-            contents=lambda: f'''
-
-mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
-            '''.encode(),
-            append=True,
-        ),
         
         *_process_file(
             path="mobile/android/moz.configure",
@@ -105,7 +98,7 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
         d.write_file(
             name="Include ironfox.configure in moz.configure",
             target=paths.firefox_dir / "mobile/android/moz.configure",
-            contents=lambda: b'\ninclude("ironfox.configure")',
+            contents=lambda: b'\ninclude("../../ironfox/ironfox.configure")',
             append=True,
         ),
         
@@ -118,68 +111,53 @@ mozilla-central.mozconfig={paths.firefox_dir}/mozconfig
             ]
         ),
         
-        # Insert about pages entries adjacent to the aboutAbout entry
+        # Use `commit` instead of `rev` for source URL
+        ## (ex. displayed at `about:buildconfig`)
         *_process_file(
-            path="docshell/base/nsAboutRedirector.cpp",
+            path="build/variables.py",
             replacements=[
-                regex(
-                    r'(\{"about", "chrome://global/content/aboutAbout.html", 0\},)',
-                    r'\1\n {"ironfox", "chrome://global/content/ironfox.html",\n nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},',
-                ),
-                regex(
-                    r'(\{"about", "chrome://global/content/aboutAbout.html", 0\},)',
-                    r'\1\n {"attribution", "chrome://global/content/attribution.html",\n nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},',
-                ),
-            ],
-        ),
-        *_process_file(
-            path="docshell/build/components.conf",
-            replacements=[
-                regex(r"(about_pages.append\('inference'\))", r"\1\nabout_pages.append('ironfox')"),
-                regex(r"(about_pages.append\('inference'\))", r"\1\nabout_pages.append('attribution')"),
-                regex(r"(about_pages.append\('inference'\))", r"\1\nabout_pages.append('policies')"),
+                literal("/rev/", "/commit/")
             ],
         ),
         
-        # about:policies
-        *_process_file(
-            path="browser/components/enterprisepolicies/jar.mn",
-            replacements=[
-                literal("browser.jar", "geckoview.jar"),
-            ]
-        ),
+        # about: pages
         d.copy(
-            name="Copy aboutPolicies.ftl",
             source=paths.firefox_dir / "browser/locales/en-US/browser/aboutPolicies.ftl",
-            target=paths.firefox_dir / "mobile/locales/en-US/browser/aboutPolicies.ftl",
+            target=paths.firefox_dir / "ironfox/about/browser/locales/en-US/browser/aboutPolicies.ftl",
         ),
         d.copy(
-            name="Copy policies-descriptions.ftl",
             source=paths.firefox_dir / "browser/locales/en-US/browser/policies/policies-descriptions.ftl",
-            target=paths.firefox_dir / "mobile/locales/en-US/browser/policies/policies-descriptions.ftl",
-            overwrite=True,
+            target=paths.firefox_dir / "ironfox/about/browser/locales/en-US/browser/policies/policies-descriptions.ftl",
         ),
         d.write_file(
-            name="Update moz.build to include jar.mn in JAR_MANIFESTS",
-            target=paths.firefox_dir / "mobile/locales/moz.build",
-            contents=lambda: b'''
-JAR_MANIFESTS += ["jar.mn"]
-            ''',
+            name="write package-manifest.in for about: pages",
+            target=paths.firefox_dir / "mobile/android/installer/package-manifest.in",
             append=True,
-        ),
-        d.write_file(
-            name="Update GeckoView jar.mn",
-            target=paths.firefox_dir / "mobile/shared/chrome/geckoview/jar.mn",
-            contents=lambda: b'\n% content browser %content/browser/',
-            append=True,
+            contents=lambda: b"""
+            
+            @BINPATH@/chrome/browser@JAREXT@
+            @BINPATH@/chrome/browser.manifest
+            
+            @BINPATH@/chrome/ironfox@JAREXT@
+            @BINPATH@/chrome/ironfox.manifest
+            """
         ),
         
-        # Copy policy definitions/schema/etc. from Firefox for Desktop
-        d.copy_dir_contents(
-            name="Copy policy definitions/schema from Firefox for Desktop",
-            source_dir=paths.firefox_dir / "browser/components/enterprisepolicies",
-            target_dir=paths.firefox_dir / "mobile/android/components/enterprisepolicies",
-            recursive=True,
+        # about:robots
+        d.copy(source=paths.firefox_dir / "browser/base/content/aboutRobots.css", target=paths.firefox_dir/ "ironfox/about/browser/robots/aboutRobots.css"),
+        d.copy(source=paths.firefox_dir / "browser/base/content/aboutRobots.js", target=paths.firefox_dir/ "ironfox/about/browser/robots/aboutRobots.js"),
+        d.copy(source=paths.firefox_dir / "browser/base/content/aboutRobots.xhtml", target=paths.firefox_dir/ "ironfox/about/browser/robots/aboutRobots.xhtml"),
+        d.copy(source=paths.firefox_dir / "browser/base/content/aboutRobots-icon.png", target=paths.firefox_dir/ "ironfox/about/browser/robots/aboutRobots-icon.png"),
+        d.copy(source=paths.firefox_dir / "browser/base/content/robot.ico", target=paths.firefox_dir / "ironfox/about/browser/robots/robot.ico"),
+        d.copy(source=paths.firefox_dir / "browser/base/content/static-robot.png", target=paths.firefox_dir / "ironfox/about/browser/robots/static-robot.png"),
+        d.copy(source=paths.firefox_dir / "browser/locales/en-US/browser/aboutRobots.ftl", target=paths.firefox_dir / "ironfox/about/browser/locales/en-US/browser/aboutRobots.ftl"),
+        
+        # Remove the Clear Key CDM
+        *_process_file(
+            path="mobile/android/installer/package-manifest.in",
+            replacements=[
+                eol_comment_line(r'@BINPATH@/@DLL_PREFIX@clearkey', comment_token=";")
+            ]
         ),
         
         # Ensure we're building for release
@@ -237,14 +215,6 @@ JAR_MANIFESTS += ["jar.mn"]
             path="gfx/wr/Cargo.toml",
             replacements=[
                 regex(r'debug = .*', r'debug = false')
-            ]
-        ),
-        
-        # Remove the `NETWORK_ACCESS_STATE` permission (GeckoView)
-        *_process_file(
-            path="mobile/android/geckoview/src/main/AndroidManifest.xml",
-            replacements=[
-                literal('<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>', "")
             ]
         ),
         
@@ -470,6 +440,7 @@ FINAL_TARGET_FILES.defaults.settings.main += [
                 line_affix("play-review", prefix="#"),
                 line_affix("play-services", prefix="#"),
                 line_affix("sentry", prefix="#"),
+                literal("UNIFIEDPUSH_VERSION", Versions.UNIFIEDPUSH_VERSION)
             ],
         ),
 
@@ -488,6 +459,10 @@ FINAL_TARGET_FILES.defaults.settings.main += [
         *_process_file(
             path="mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java",
             replacements=[
+                regex(r'"browser\.safebrowsing\.malware\.enabled"',
+                      r'"z99.ignore.boolean"'),
+                regex(r'"browser\.safebrowsing\.phishing\.enabled"',
+                      r'"z99.ignore.boolean"'),
                 regex(r'"browser\.safebrowsing\.provider\."',
                       r'"z99.ignore.string."'),
                 regex(r'"cookiebanners\.service\.detectOnly"',
@@ -554,6 +529,7 @@ FINAL_TARGET_FILES.defaults.settings.main += [
                 regex(r'"apz\.allow_double_tap_zooming"', r'"z99.ignore.boolean"'),
                 regex(r'"browser\.crashReports\.requestedNeverShowAgain"', r'"z99.ignore.boolean"'),
                 regex(r'"browser\.display\.use_document_fonts"', r'"z99.ignore.integer"'),
+                regex(r'"devtools\.debugger\.remote-enabled"', r'"z99.ignore.boolean"'),
                 regex(r'"docshell\.shistory\.sameDocumentNavigationOverridesLoadType"', r'"z99.ignore.boolean"'),
                 regex(r'"docshell\.shistory\.sameDocumentNavigationOverridesLoadType\.forceDisable"', r'"z99.ignore.string"'),
                 regex(r'"dom\.ipc\.processCount"', r'"z99.ignore.integer"'),
@@ -567,6 +543,7 @@ FINAL_TARGET_FILES.defaults.settings.main += [
                 regex(r'"fission\.webContentIsolationStrategy"', r'"z99.ignore.integer"'),
                 regex(r'"formhelper\.autozoom"', r'"z99.ignore.boolean"'),
                 regex(r'"general\.aboutConfig\.enable"', r'"z99.ignore.boolean"'),
+                regex(r'"javascript\.enabled"', r'"z99.ignore.boolean"'),
                 regex(r'"javascript\.options\.mem\.gc_parallel_marking"', r'"z99.ignore.boolean"'),
                 regex(r'"javascript\.options\.use_fdlibm_for_sin_cos_tan"', r'"z99.ignore.boolean"'),
                 regex(r'"network\.android_doh\.autoselect_enabled"', r'"z99.ignore.boolean"'),
@@ -589,18 +566,7 @@ FINAL_TARGET_FILES.defaults.settings.main += [
                 regex(r'"security\.tls\.enable_kyber"', r'"z99.ignore.boolean"'),
                 regex(r'"toolkit\.telemetry\.user_characteristics_ping\.current_version"', r'"z99.ignore.integer"'),
                 regex(r'"webgl\.msaa-samples"', r'"z99.ignore.integer"'),
-                
-                # On nightlies, allow remote debugging to be enabled persistently
-                *([regex(r'"devtools\.debugger\.remote-enabled"', r'"z99.ignore.boolean"')] if config.app_config.nightly else []),
             ],
-        ),
-        
-        # On nightlies, allow remote debugging to be enabled persistently
-        *_process_file(
-            path="mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs",
-            replacements= [
-                literal('clearUserPref("devtools.debugger.remote-enabled")', 'clearUserPref("z99.ignore.boolean")')
-            ] if config.app_config.nightly else []
         ),
         
         # Fail on use of prebuilt binary (use hxxps)
@@ -653,28 +619,14 @@ FINAL_TARGET_FILES.defaults.settings.main += [
             ]
         ),
         
-        # Apply overlay
-        d.overlay(
-            name="Apply Firefox overlay",
-            source_dir=paths.patches_dir / "gecko-overlay",
-            target_dir=paths.firefox_dir,
-        ),
-
-        # Write mozconfig
-        d.write_file(
-            name="Write mozconfig",
-            target=paths.mozconfig_file,
-            overwrite=True,
-            append=False,
-            contents=lambda: mozconfig(config, paths).encode()
-        ),
-        
         # Write geckoview-prefs.js
         d.write_file(
             name="Write geckoview-prefs.js",
             target=paths.firefox_dir / "mobile/android/app/geckoview-prefs.js",
             append=True,
-            contents=lambda: prefs(config, paths).encode(),
+            contents=lambda: b"""
+            #include ../../../ironfox/prefs/002-ironfox.js
+            """,
         ),
         
         # Write PdfJsOverridePrefs.js
@@ -682,176 +634,101 @@ FINAL_TARGET_FILES.defaults.settings.main += [
             name="Write PdfJsOverridePrefs.js",
             target=paths.firefox_dir / "toolkit/components/pdfjs/PdfJsOverridePrefs.js",
             append=True,
-            contents=lambda: pdfjs(paths).encode(),
+            contents=lambda: b"""
+            #include ../../../ironfox/prefs/pdf.js
+            """,
         ),
+        
+        # Apply overlay
+        d.overlay(
+            name="Apply Firefox overlay",
+            source_dir=paths.patches_dir / "gecko-overlay",
+            target_dir=paths.firefox_dir,
+        ),
+        
+        # Because `app.support.vendor` is locked, we need to unset it in Phoenix's pref files
+        # for our value (at 002-ironfox.js) takes effect
+        *_process_file(
+            path="ironfox/prefs/*-phoenix*.js",
+            replacements=[
+                literal('"app.support.vendor"', '"z99.ignore.string"')
+            ]
+        ),
+        
+        
+        # Update mozconfig to include SB GAPI config
+        d.write_file(
+            name="Update mozconfig",
+            target=paths.firefox_dir / "mozconfig",
+            append=True,
+            contents=lambda: f"""
+            
+            {'''
+            
+            ## Enable Safe Browsing
+            ### SB_GAPI_KEY_FILE = $SB_GAPI_KEY_FILE
+            ac_add_options --with-google-safebrowsing-api-keyfile='{str(config.sb_gapi_file)}'
+            
+            ''' if config.sb_gapi_file.exists()
+            
+            else '''
+            
+            ## Disable Safe Browsing
+            ### (SB_GAPI_KEY_FILE was undefined...)
+            ac_add_options --without-google-safebrowsing-api-keyfile
+            
+            '''}
+            
+            """.encode()
+        ),
+        
+        
+        *_process_file(
+            path="local.properties",
+            replacements=[
+                literal("{android_components}", str(paths.android_components_dir)),
+                literal("{glean}", str(paths.glean_dir)),
+                literal("{mozilla_release}", str(paths.firefox_dir)),
+            ]
+        ),
+        
+        *_process_file(
+            path="ironfox/mozconfigs/env.mozconfig",
+            replacements=[
+                literal("{ANDROID_HOME}", str(paths.android_home)),
+                literal("{ANDROID_NDK}", str(paths.ndk_home)),
+                literal("{builddir}", str(paths.build_dir)),
+                literal("{GRADLE_PATH}", str(paths.gradle_exec)),
+                literal("{HOME}", str(paths.user_home)),
+                literal("{JAVA_HOME}", str(paths.java_home)),
+                literal("{libclang}", str(paths.libclang_dir)),
+                literal("{PLATFORM}", current_platform().lower()),
+                literal("{wasi_install}", str(paths.wasi_sdk_dir)),
+            ]
+        ),
+        
+        *_process_file(
+            path="mozconfig",
+            replacements=[
+                literal("{geckotarget}", config.target),
+                literal("{IRONFOX_CHANNEL}", config.app_config.channel.id),
+            ]
+        ),
+        
+        *_process_file(
+            path="ironfox/prefs/002-ironfox.js",
+            replacements=[
+                literal("{IRONFOX_UBO_ASSETS_URL}", config.ubo_assets),
+                literal("{IRONFOX_VERSION}", Versions.IRONFOX_VERSION),
+                literal("{PHOENIX_VERSION}", Versions.PHOENIX_TAG),
+            ]
+        ),
+        
+        *_process_file(
+            path="ironfox/mozconfigs/branding/env.mozconfig",
+            replacements=[
+                literal("{CURRENT_REVISION}", str(subprocess.check_output(["git", "log", "-1", "--format='%H'"], cwd=paths.root_dir)))
+            ]
+        )
         # fmt:on
     ]
-
-
-def prefs(config: PrepareConfig, paths: Paths) -> str:
-    files = [
-        "phoenix.js",
-        "phoenix-extended.js",
-        "ironfox.js",
-    ]
-
-    contents = read_contents(
-        list(map(lambda f: paths.patches_dir / "preferences" / f, files))
-    )
-
-    if len(config.ubo_assets.strip()) != 0:
-        contents += os.linesep
-        contents += f'pref("browser.ironfox.uBO.assetsBootstrapLocation", "{config.ubo_assets}");'
-
-    return contents
-
-
-def pdfjs(paths: Paths) -> str:
-    files = ["pdf.js"]
-    return read_contents(
-        list(map(lambda f: paths.patches_dir / "preferences" / f, files))
-    )
-
-
-def read_contents(paths: List[Path]) -> str:
-    contents = ""
-    for path in paths:
-        contents += os.linesep
-        contents += path.read_text()
-
-    return contents
-
-
-def mozconfig(config: PrepareConfig, paths: Paths) -> str:
-    app = config.app_config
-    app_name = app.app_name.lower().replace(" ", "-")
-    branding_path = f"ironfox/branding/{app_name}"
-
-    wasi_install = paths.wasi_sdk_dir
-
-    return f"""
-ac_add_options --disable-address-sanitizer-reporter
-ac_add_options --disable-android-debuggable
-ac_add_options --disable-artifact-builds
-ac_add_options --disable-backgroundtasks
-ac_add_options --disable-callgrind
-ac_add_options --disable-crashreporter
-ac_add_options --disable-debug
-ac_add_options --disable-debug-js-modules
-ac_add_options --disable-debug-symbols
-ac_add_options --disable-default-browser-agent
-ac_add_options --disable-dtrace
-ac_add_options --disable-dump-painting
-ac_add_options --disable-execution-tracing
-ac_add_options --disable-extensions-webidl-bindings
-ac_add_options --disable-ffmpeg
-ac_add_options --disable-gecko-profiler
-ac_add_options --disable-geckodriver
-ac_add_options --disable-gtest-in-build
-ac_add_options --disable-instruments
-ac_add_options --disable-jitdump
-ac_add_options --disable-js-shell
-ac_add_options --disable-layout-debugger
-ac_add_options --disable-logrefcnt
-ac_add_options --disable-negotiateauth
-ac_add_options --disable-nodejs
-ac_add_options --disable-parental-controls
-ac_add_options --disable-phc
-ac_add_options --disable-pref-extensions
-ac_add_options --disable-profiling
-ac_add_options --disable-real-time-tracing
-ac_add_options --disable-reflow-perf
-ac_add_options --disable-rust-debug
-ac_add_options --disable-rust-tests
-ac_add_options --disable-simulator
-ac_add_options --disable-spidermonkey-telemetry
-ac_add_options --disable-system-extension-dirs
-ac_add_options --disable-system-policies
-ac_add_options --disable-tests
-ac_add_options --disable-uniffi-fixtures
-ac_add_options --disable-unverified-updates
-ac_add_options --disable-updater
-ac_add_options --disable-vtune
-ac_add_options --disable-wasm-codegen-debug
-ac_add_options --disable-webdriver
-ac_add_options --disable-webrender-debugger
-ac_add_options --disable-webspeechtestbackend
-ac_add_options --disable-wmf
-ac_add_options --enable-android-subproject=fenix
-ac_add_options --enable-application=mobile/android
-ac_add_options --enable-disk-remnant-avoidance
-ac_add_options --enable-geckoview-lite
-ac_add_options --enable-hardening
-ac_add_options --enable-install-strip
-ac_add_options --enable-isolated-process
-ac_add_options --enable-minify=properties
-ac_add_options --enable-mobile-optimize
-ac_add_options --enable-optimize
-ac_add_options --enable-proxy-bypass-protection
-ac_add_options --enable-release
-ac_add_options --enable-replace-malloc
-ac_add_options --enable-rust-simd
-ac_add_options --enable-strip
-ac_add_options --enable-update-channel=release
-ac_add_options --enable-wasm-branch-hinting
-ac_add_options --enable-wasm-memory-control
-
-ac_add_options --with-app-basename='{app.app_name}'
-ac_add_options --with-app-name='{app_name}'
-ac_add_options --with-branding='{branding_path}'
-
-ac_add_options --with-crashreporter-url='data;'
-ac_add_options --with-distribution-id='{app.app_id_base}'
-ac_add_options --with-java-bin-path='{paths.java_home / "bin"}'
-ac_add_options --target='{config.target}'
-ac_add_options --with-android-ndk='{paths.ndk_home}'
-ac_add_options --with-android-sdk='{paths.android_home}'
-ac_add_options --with-gradle='{paths.gradle_exec}'
-ac_add_options --with-libclang-path='{paths.libclang_dir}'
-ac_add_options --with-wasi-sysroot='{wasi_install / "share/wasi-sysroot"}'
-ac_add_options --without-adjust-sdk-keyfile
-ac_add_options --without-android-googlevr-sdk
-ac_add_options --without-bing-api-keyfile
-ac_add_options --without-google-location-service-api-keyfile
-ac_add_options --without-mozilla-api-keyfile
-ac_add_options --without-leanplum-sdk-keyfile
-ac_add_options --without-pocket-api-keyfile
-
-{f"ac_add_options --with-google-safebrowsing-api-keyfile='{config.sb_gapi_file}'" if config.sb_gapi_file.is_file() else ""}
-
-ac_add_options WASM_CC='{wasi_install / "bin/clang"}'
-ac_add_options WASM_CXX='{wasi_install / "bin/clang++"}'
-ac_add_options CC='{paths.ndk_toolchain_dir / "bin/clang"}'
-ac_add_options CXX='{paths.ndk_toolchain_dir / "bin/clang++"}'
-ac_add_options STRIP='{paths.ndk_toolchain_dir / "bin/llvm-strip"}'
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
-export ANDROID_BUNDLETOOL_PATH='{paths.build_dir}/bundletool.jar'
-export GRADLE_MAVEN_REPOSITORIES='file://{paths.user_home / ".m2/repository"}','https://plugins.gradle.org/m2/','https://maven.google.com/'
-export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1
-
-export MOZ_APP_BASENAME='{app.app_name}'
-export MOZ_APP_NAME='{app_name}'
-export MOZ_APP_REMOTINGNAME='{app_name}'
-
-export MOZ_ARTIFACT_BUILDS=
-export MOZ_CALLGRIND=
-export MOZ_CRASHREPORTER=
-export MOZ_CRASHREPORTER_URL='data;'
-export MOZ_DEBUG_FLAGS=
-export MOZ_EXECUTION_TRACING=
-export MOZ_INCLUDE_SOURCE_INFO=1
-export MOZ_INSTRUMENTS=
-export MOZ_LTO=1
-export MOZ_PACKAGE_JSSHELL=
-export MOZ_PGO=1
-export MOZ_PHC=
-export MOZ_PROFILING=
-export MOZ_REQUIRE_SIGNING=
-export MOZ_RUST_SIMD=1
-export MOZ_SECURITY_HARDENING=1
-export MOZ_TELEMETRY_REPORTING=
-export MOZ_VTUNE=
-export MOZILLA_OFFICIAL=1
-export NODEJS=
-export RUSTC_OPT_LEVEL=2
-"""

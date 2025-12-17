@@ -13,7 +13,13 @@ from click.core import Context
 from functools import wraps
 from pathlib import Path
 
-from commands.base import DEFAULT_APP_CONFIG, AppConfig, BaseCommand, BaseConfig
+from commands.base import (
+    DEFAULT_APP_CONFIG,
+    AppConfig,
+    BaseCommand,
+    BaseConfig,
+    BuildChannel,
+)
 from commands.build import BuildCommand
 from commands.prepare import PrepareCommand
 from commands.setup import SetupCommand
@@ -193,7 +199,7 @@ async def setup(base_config: BaseConfig, clone_depth: int):
     "--nightly",
     help="Whether to build a nightly build. Defaults to false.",
     is_flag=True,
-    default=DEFAULT_APP_CONFIG.nightly,
+    default=DEFAULT_APP_CONFIG.channel == BuildChannel.Nightly,
 )
 @click.argument(
     "build_variant",
@@ -225,7 +231,7 @@ async def prepare(
         app_id_base=app_id_base,
         app_id=app_id,
         browser_name=browser_name,
-        nightly=nightly,
+        channel=BuildChannel.Nightly if nightly else BuildChannel.Release,
     )
 
     cmd = PrepareCommand(

@@ -58,26 +58,6 @@ def prepare_fenix(
     return [
         # fmt:off
         
-        d.write_file(
-            name="Set official=true in local.properties",
-            target=paths.fenix_dir / "local.properties",
-            append=True,
-            contents=lambda: f"""
-# Make if official
-official=true
-
-# No-op Glean
-glean.custom.server.url="data;"
-
-# Enable the auto-publication workflow
-autoPublish.application-services.dir={paths.application_services_dir}
-
-# Disable FUS Service or we'll get errors like:
-# Exception while loading configuration for :app: Could not load the value of field `__buildFusService__` of task `:app:compileFenixReleaseKotlin` of type `org.jetbrains.kotlin.gradle.tasks.KotlinCompile`.
-kotlin.internal.collectFUSMetrics=false
-""".encode(),
-        ),
-        
         # ---- FILE SYSTEM OPERATIONS ----
         
         # Telemetry
@@ -96,13 +76,22 @@ kotlin.internal.collectFUSMetrics=false
         *_rm("app/src/*/java/org/mozilla/fenix/components/metrics/MetricsStorage.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/components/metrics/MozillaProductDetector.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/components/toolbar/BrowserToolbarTelemetryMiddleware.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/crashes/CrashFactCollector.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/crashes/CrashReportingAppMiddleware.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/crashes/NimbusExperimentDataProvider.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/crashes/ReleaseRuntimeTagProvider.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/downloads/listscreen/middleware/DownloadTelemetryMiddleware.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/home/middleware/HomeTelemetryMiddleware.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/home/PocketMiddleware.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/home/toolbar/BrowserToolbarTelemetryMiddleware.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/messaging/state/MessagingMiddleware.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptTelemetryMiddleware.kt"),
+        *_rm("app/src/*/java/org/mozilla/fenix/reviewprompt/ReviewPromptMiddleware.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/tabstray/TabsTrayTelemetryMiddleware.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/webcompat/middleware/WebCompatReporterTelemetryMiddleware.kt"),
         *_rm("app/src/*/java/org/mozilla/fenix/components/metrics/fonts", recursive=True),
         *_rm("app/src/*/java/org/mozilla/fenix/settings/datachoices", recursive=True),
+        *_rm("app/src/*/java/org/mozilla/fenix/startupCrash", recursive=True),
         *_rm("app/src/*/java/org/mozilla/fenix/telemetry", recursive=True),
         *_rm("app/src/main/java/org/mozilla/fenix/home/TopSitesRefresher.kt"),
         
@@ -461,6 +450,14 @@ kotlin.internal.collectFUSMetrics=false
             name="Apply Fenix overlays",
             source_dir=paths.patches_dir / "fenix-overlay",
             target_dir=paths.fenix_dir,
+        ),
+        
+        # Apply modifications on overlaid files
+        *_process_file(
+            path="local.properties",
+            replacements=[
+                literal("{application_services}", str(paths.application_services_dir))
+            ]
         )
         # fmt:on
     ]
@@ -574,6 +571,9 @@ def _feature_flags_kt_replacements():
             
             # Show live downloads in progress
             regex(r"showLiveDownloads = .*", "showLiveDownloads = true"),
+            
+            # Enable Mozilla's new redesign for Private Browsing Mode
+            regex(r'(PRIVATE_BROWSING_MODE_REDESIGN\s+=\s+).*', r'\1 true'),
             
             # Disable "custom review pre-prompts"
             regex(
@@ -779,7 +779,9 @@ def _components_kt_replacements():
             # Remove telemetry
             eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics"),
             eol_comment_line(r"^\s*import com\.google\.android\.play\.core\.review"),
-            eol_comment_text(r"MetricsMiddleware\(",),
+            eol_comment_text(
+                r"MetricsMiddleware\(",
+            ),
             eol_comment_text(r"manager = ReviewManagerFactory"),
             regex(
                 r"val push by lazyMonitored \{ Push\(context, analytics\.crashReporter\) \}",
@@ -794,9 +796,15 @@ def _core_kt_replacements():
         path="app/src/main/java/org/mozilla/fenix/components/Core.kt",
         replacements=[
             # Remove telemetry
-            eol_comment_line(r"^\s*import mozilla\.components\.feature\.search\.middleware\.AdsTelemetryMiddleware"),
-            eol_comment_line(r"^\s*import mozilla\.components\.feature\.search\.telemetry"),
-            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.telemetry",),
+            eol_comment_line(
+                r"^\s*import mozilla\.components\.feature\.search\.middleware\.AdsTelemetryMiddleware"
+            ),
+            eol_comment_line(
+                r"^\s*import mozilla\.components\.feature\.search\.telemetry"
+            ),
+            eol_comment_line(
+                r"^\s*import org\.mozilla\.fenix\.telemetry",
+            ),
             eol_comment_text(r"AdsTelemetryMiddleware"),
             eol_comment_text(r"TelemetryMiddleware\(context.*\)"),
             eol_comment_text(r"TelemetryMiddleware\(context.*\)"),
@@ -809,17 +817,35 @@ def _fenix_application_kt_replacements():
     return _process_file(
         path="app/src/main/java/org/mozilla/fenix/FenixApplication.kt",
         replacements=[
-            eol_comment_line(r"^\s*import androidx\.core\.app\.NotificationManagerCompat"),
-            eol_comment_line(r"^\s*import mozilla\.components\.support\.base\.ext\.areNotificationsEnabledSafe"),
-            eol_comment_line(r"^\s*import mozilla\.components\.support\.base\.ext\.isNotificationChannelEnabled"),
-            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.components\.metrics",),
-            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.onboarding\.MARKETING_CHANNEL_ID"),
-            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.perf\.ApplicationExitInfoMetrics"),
-            eol_comment_line(r"^\s*import org\.mozilla\.fenix\.perf\.StorageStatsMetrics"),
-            eol_comment_text(r"ApplicationExitInfoMetrics\.",),
+            eol_comment_line(
+                r"^\s*import androidx\.core\.app\.NotificationManagerCompat"
+            ),
+            eol_comment_line(
+                r"^\s*import mozilla\.components\.support\.base\.ext\.areNotificationsEnabledSafe"
+            ),
+            eol_comment_line(
+                r"^\s*import mozilla\.components\.support\.base\.ext\.isNotificationChannelEnabled"
+            ),
+            eol_comment_line(
+                r"^\s*import org\.mozilla\.fenix\.components\.metrics",
+            ),
+            eol_comment_line(
+                r"^\s*import org\.mozilla\.fenix\.onboarding\.MARKETING_CHANNEL_ID"
+            ),
+            eol_comment_line(
+                r"^\s*import org\.mozilla\.fenix\.perf\.ApplicationExitInfoMetrics"
+            ),
+            eol_comment_line(
+                r"^\s*import org\.mozilla\.fenix\.perf\.StorageStatsMetrics"
+            ),
+            eol_comment_text(
+                r"ApplicationExitInfoMetrics\.",
+            ),
             eol_comment_text(r"PerfStartup\."),
             eol_comment_text(r"StorageStatsMetrics\."),
-            eol_comment_text(r"components\.analytics\.metricsStorage",),
+            eol_comment_text(
+                r"components\.analytics\.metricsStorage",
+            ),
             eol_comment_text(r"StorageStatsMetrics\."),
             eol_comment_text(r"ApplicationExitInfoMetrics\."),
         ],

@@ -1,11 +1,11 @@
 from typing import List
 from commands.prepare import PrepareConfig
 from common.paths import Paths
-from common.utils import host_target
+from common.utils import current_machine, current_platform, host_target
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 
-from execution.find_replace import line_affix, on_line_text, regex
+from execution.find_replace import line_affix, literal, on_line_text, regex
 from execution.types import ReplacementAction
 
 
@@ -41,16 +41,6 @@ def prepare_glean(
 
     return [
         # fmt:off
-        
-        d.write_file(
-            name="Write local.properties",
-            target=paths.glean_dir / "local.properties",
-            contents=lambda: f'''
-rust.targets={host_target()},{config.rusttarget}
-            '''.encode(),
-            append=True,
-        ),
-        
         # Apply patches
         d.patch(
             name="Apply Glean patches",
@@ -159,6 +149,16 @@ rust.targets={host_target()},{config.rusttarget}
             name="Apply Glean overlay",
             source_dir=paths.patches_dir / "glean-overlay",
             target_dir=paths.glean_dir,
-        )
+        ),
+        
+        # Apply modifications on overlaid files
+        *_process_file(
+            path="local.properties",
+            replacements=[
+                literal("{PLATFORM}", current_platform().lower()),
+                literal("{PLATFORM_ARCHITECTURE}", current_machine().replace('_', '-')),
+                literal("{rusttarget}", config.rusttarget),
+            ]
+        ),
         # fmt:on
     ]

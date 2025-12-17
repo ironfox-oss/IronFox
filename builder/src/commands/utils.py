@@ -59,7 +59,7 @@ def dump_config(
                 ("Base App ID", app.app_id_base),
                 ("App ID", app.app_id),
                 ("Package name", app.package_name),
-                ("Is nightly build", app.nightly),
+                ("Channel", app.channel.name),
                 ("Build variant", prepare_config.build_variant),
                 ("SB GAPI file", prepare_config.sb_gapi_file),
                 ("uBO Assets URL", prepare_config.ubo_assets),

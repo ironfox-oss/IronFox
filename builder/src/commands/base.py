@@ -30,6 +30,21 @@ from common.paths import Paths
 logger = logging.getLogger("BaseConfig")
 
 
+class BuildChannel(Enum):
+    def __new__(cls, *args, **kwds):
+        value = len(cls.__members__) + 1
+        obj = object.__new__(cls)
+        obj._value_ = value
+        return obj
+
+    def __init__(self, id: str):
+        super().__init__()
+        self.id = id
+
+    Release = "release"
+    Nightly = "nightly"
+
+
 class AppConfig:
     def __init__(
         self,
@@ -38,9 +53,9 @@ class AppConfig:
         vendor: str = "IronFox OSS",
         app_id_base: str = "org.ironfoxoss",
         app_id: str = "ironfox",
-        nightly: bool = False,
+        channel: BuildChannel = BuildChannel.Release,
     ):
-        if nightly:
+        if channel == BuildChannel.Nightly:
             app_name += " Nightly"
             app_id += ".nightly"
 
@@ -50,7 +65,7 @@ class AppConfig:
         self.app_id_base = app_id_base
         self.app_id = app_id
         self.package_name = f"{app_id_base}.{app_id}"
-        self.nightly = nightly
+        self.channel = channel
 
 
 DEFAULT_APP_CONFIG = AppConfig()
@@ -125,9 +140,17 @@ class BaseConfig:
             gradle_exec=gradle_exec.resolve(),
         )
 
+        _gradle_opts = {
+            "-Dhttps.protocols=TLSv1.3",
+            "-Dorg.gradle.logging.level=lifecycle",
+            "-Dorg.gradle.configuration-cache=false",
+            "--no-build-cache",
+            "--no-configuration-cache",
+        }
+
         _opt_vars = {}
         if self.verbose:
-            _opt_vars["GRADLE_OPTS"] = "-Dorg.gradle.logging.level=info"
+            _opt_vars["GRADLE_OPTS"] = " ".join(_gradle_opts)
 
         self.env = BuildEnvironment(paths=self.paths, env=_opt_vars)
 

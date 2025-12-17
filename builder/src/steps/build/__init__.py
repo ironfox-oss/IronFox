@@ -231,15 +231,24 @@ def build_fenix(
     config: BuildConfig,
     paths: Paths,
 ) -> List[TaskDefinition]:
+    _gradle_args = [
+        "-Plocal=true",
+        "-Pofficial=true"
+    ]
+    
+    if config.build_type == BuildType.BUNDLE:
+        _gradle_args += "-Paab"
+    
     task = (
         f":app:assembleRelease"
         if config.build_type == BuildType.APK
-        else ":app:bundleRelease -Paab"
+        else ":app:bundleRelease"
     )
+    
     return [
         d.run_cmds(
             name="Build Fenix",
-            commands=[f"{paths.gradle_exec} {task} -Plocal=true"],
+            commands=[f"{paths.gradle_exec} {' '.join(_gradle_args)} {task}"],
             cwd=paths.fenix_dir,
         )
     ]

@@ -37,7 +37,7 @@ async def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         name="Clone microG",
         repo_url="https://github.com/microg/GmsCore",
         clone_to=paths.gmscore_dir,
-        branch=Versions.GMSCORE_TAG,
+        branch=Versions.GMSCORE_VERSION,
         depth=config.clone_depth,
     )
 
@@ -45,7 +45,7 @@ async def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
         name="Clone application-services",
         repo_url="https://github.com/mozilla/application-services",
         clone_to=paths.application_services_dir,
-        branch=Versions.APPSERVICES_BRANCH,
+        branch=Versions.APPSERVICES_VERSION,
         depth=config.clone_depth,
     )
 
@@ -58,12 +58,12 @@ async def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
     )
 
     if is_linux():
-        wasi_archive = f"{Versions.WASI_TAG}-firefox-linux.tar.xz"
+        wasi_archive = f"{Versions.WASI_BRANCH}-firefox-linux.tar.xz"
         wasi_checksum = (
             "d008e2559bc230bb384bcb02fe229d3137af0ccfad58391efe0ec797992c9f0c"
         )
     elif is_macos():
-        wasi_archive = f"{Versions.WASI_TAG}-firefox-osx.tar.xz"
+        wasi_archive = f"{Versions.WASI_BRANCH}-firefox-osx.tar.xz"
         wasi_checksum = (
             "6c46f13458fe702272aa73bc06bf266091e6fe199da3793e1670c556f7937409"
         )
@@ -72,7 +72,7 @@ async def get_definition(config: SetupConfig, paths: Paths) -> BuildDefinition:
 
     download_wasi = d.download(
         name="Download pre-built Wasi SDK sysroot",
-        url=f"https://github.com/ironfox-oss/IronFox/releases/download/{Versions.WASI_TAG}/{wasi_archive}",
+        url=f"https://github.com/ironfox-oss/IronFox/releases/download/{Versions.WASI_BRANCH}/{wasi_archive}",
         destination=paths.build_dir / wasi_archive,
         sha256=wasi_checksum,
     ).then(

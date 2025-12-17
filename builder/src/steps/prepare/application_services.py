@@ -2,7 +2,7 @@ import os
 from typing import List
 from commands.prepare import PrepareConfig
 from common.paths import Paths
-from common.utils import host_target
+from common.utils import current_machine, current_platform, host_target
 from common.versions import Versions
 from execution.definition import BuildDefinition, TaskDefinition
 from execution.find_replace import (
@@ -82,11 +82,40 @@ def prepare_application_services(
             ]
         ),
         
-        # Disable debug
         *_process_file(
             path="Cargo.toml",
             replacements=[
-                regex(r"debug = .*", 'debug = false')
+                
+                # Fail on use of remote resources
+                literal("https://", 'hxxps://'),
+                
+                # Disable debug
+                regex(r"debug = .*", 'debug = false'),
+                
+                # Remove Mozilla Ads Client library
+                eol_comment_line(r'"components/ads-client"', comment_token="#"),
+                
+                # Remove Mozilla Crash Reporter test library
+                eol_comment_line(r'"components/crashtest"', comment_token="#"),
+                
+                # Remove the Rust Error support library
+                ## Used for telemetry/error reporting, depends on Glean
+                eol_comment_line(r'"components/support/error"', comment_token="#"),
+            ]
+        ),
+        
+        *_process_file(
+            path="megazords/full/Cargo.toml",
+            replacements=[
+                # Remove Mozilla Ads Client library
+                eol_comment_line(r'ads-client', comment_token="#"),
+                
+                # Remove Mozilla Crash Reporter test library
+                eol_comment_line(r'crashtest', comment_token="#"),
+                
+                # Remove the Rust Error support library
+                ## Used for telemetry/error reporting, depends on Glean
+                eol_comment_line(r'error-support', comment_token="#"),
             ]
         ),
         
@@ -137,15 +166,6 @@ def prepare_application_services(
             replacements=[
                 regex(r'^    mavenLocal\s*\n.*\n?', r''),
             ],
-        ),
-
-        
-        # Fail on use of pre-built binary
-        *_process_file(
-            path="Cargo.toml",
-            replacements=[
-                literal("https://", 'hxxps://')
-            ]
         ),
         
         # No-op Nimbus (Experimentation)
@@ -219,6 +239,18 @@ def prepare_application_services(
             name="Apply application-services overlay",
             source_dir=paths.patches_dir / "a-s-overlay",
             target_dir=paths.application_services_dir,
-        )
+        ),
+        
+        # Apply modifications on overlaid files
+        *_process_file(
+            path="local.properties",
+            replacements=[
+                literal("{android_components}", str(paths.android_components_dir)),
+                literal("{glean}", str(paths.glean_dir)),
+                literal("{PLATFORM}", current_platform().lower()),
+                literal("{PLATFORM_ARCHITECTURE}", current_machine().replace('_', '-')),
+                literal("{rusttarget}", config.rusttarget),
+            ]
+        ),
         # fmt:on
     ]

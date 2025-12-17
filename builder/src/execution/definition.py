@@ -5,6 +5,7 @@ from __future__ import annotations
 import cmd
 import itertools
 import logging
+import os
 import subprocess
 
 import commands.base
@@ -13,7 +14,7 @@ from abc import abstractmethod
 from pathlib import Path
 from common.utils import resolve_glob
 from rich.progress import Progress
-from typing import Callable, List, TypeVar, Type, Union
+from typing import Callable, List, Optional, TypeVar, Type, Union
 from threading import Lock
 
 from .types import CommandType, ReplacementAction, RunTaskCmd
@@ -538,9 +539,9 @@ class BuildDefinition:
 
     def copy(
         self,
-        name: str,
         source: Path,
         target: Path,
+        name: Optional[str] = None,
         recursive: bool = False,
         overwrite: bool = False,
     ) -> TaskDefinition:
@@ -558,6 +559,9 @@ class BuildDefinition:
         """
 
         from execution.files import CopyTask
+
+        if not name:
+            name = f"Copy {os.path.basename(source)}"
 
         return self.create_task(
             CopyTask,
