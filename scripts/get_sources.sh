@@ -141,7 +141,7 @@ download_and_extract() {
         extension=".zip"
     fi
 
-    local repo_archive="$TMPDIR/${repo_name}${extension}"
+    local repo_archive="$DOWNLOADSDIR/${repo_name}${extension}"
 
     download "$url" "$repo_archive"
 
