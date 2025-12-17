@@ -42,6 +42,7 @@ export ANDROID_SDK_ROOT="$android_sdk_dir"
 export CARGO_HOME="$builddir/.cargo"
 
 # Gradle
+export CACHEDIR="$builddir/gradle/cache"
 export GRADLE_USER_HOME="$builddir/.gradle"
 
 # Python

@@ -111,6 +111,7 @@ fi
 # Create build directories
 mkdir -vp "$builddir/.cargo"
 mkdir -vp "$builddir/.gradle"
+mkdir -vp "$builddir/gradle/cache"
 mkdir -vp "$builddir/outputs"
 
 ## Copy gradle properties
