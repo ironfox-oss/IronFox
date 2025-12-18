@@ -43,6 +43,11 @@ source "$(dirname $0)/env_local.sh"
 source "$CARGO_HOME/env"
 source "$PIP_ENV/bin/activate"
 
+# If variables are defined with a custom `env_override.sh`, let's use those
+if [[ -f "$(dirname $0)/env_override.sh" ]]; then
+    source "$(dirname $0)/env_override.sh"
+fi
+
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle
 # plugins (Glean).
@@ -67,34 +72,16 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     popd
 fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    # Build WASI SDK
-    pushd "$wasi"
-
-    mkdir -vp build/install/wasi
-    touch build/compiler-rt.BUILT # fool the build system
-    $MAKE_LIB \
-        PREFIX=/wasi \
-        build/wasi-libc.BUILT \
-        build/libcxx.BUILT \
-        -j"$($NPROC_LIB)"
-    popd
-fi
-
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    # Build uniffi-bindgen
-    pushd "$uniffi"
-
-    cargo build --release
-
+if [[ "$NO_PREBUILDS" == "1" ]]; then
+    # Build our prebuilds
+    pushd "$prebuilds"
+    bash "$prebuilds/scripts/build.sh"
     popd
 fi
 
 # Build microG libraries
 pushd "$gmscore"
-if ! [[ -n ${FDROID_BUILD+x} ]]; then
-    export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
-fi
+export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
 $gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache -x javaDocReleaseGeneration \
     :play-services-ads-identifier:publishToMavenLocal \
     :play-services-base:publishToMavenLocal \
@@ -129,8 +116,7 @@ echo "Running ./mach package..."
 echo "Running ./mach package-multi-locale..."
 ./mach package-multi-locale --locales ${IRONFOX_LOCALES}
 
-MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
-export MOZ_CHROME_MULTILOCALE
+export MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 
 echo "Running $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
 $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal

@@ -4,6 +4,11 @@ set -euo pipefail
 
 source "$(dirname $0)/versions.sh"
 
+# If variables are defined with a custom `env_override.sh`, let's use those
+if [[ -f "$(dirname $0)/env_override.sh" ]]; then
+    source "$(dirname $0)/env_override.sh"
+fi
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
     ANDROID_SDK_PLATFORM=mac
     PLATFORM=macos
@@ -218,41 +223,6 @@ echo "Downloading Phoenix..."
 download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_COMMIT/android/phoenix.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/000-phoenix.js"
 download "https://gitlab.com/celenityy/Phoenix/-/raw/$PHOENIX_COMMIT/android/phoenix-extended.js" "$PATCHDIR/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
 
-# Get Tor's no-op UniFFi binding generator
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    echo "Cloning uniffi-bindgen..."
-    clone_repo "https://gitlab.torproject.org/tpo/applications/uniffi-rs.git" "$UNIFFIDIR" "$UNIFFI_COMMIT"
-elif [[ "$PLATFORM" == "macos" ]]; then
-    echo "Downloading prebuilt uniffi-bindgen..."
-    download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_OSX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
-else
-    echo "Downloading prebuilt uniffi-bindgen..."
-    download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_LINUX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
-fi
-
-# Get WebAssembly SDK
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    echo "Cloning wasi-sdk..."
-    clone_repo "https://github.com/WebAssembly/wasi-sdk.git" "$WASISDKDIR" "$WASI_COMMIT"
-    (cd "$WASISDKDIR" && git submodule update --init --depth=64)
-
-    # We need to use a newer clang here, because A: Mozilla dropped support for using below 17, and B: it's just good practice
-    rm -rf "$WASISDKDIR/src/llvm-project"
-    echo "Cloning llvm..."
-    clone_repo "https://github.com/llvm/llvm-project.git" "$WASISDKDIR/src/llvm-project" "$LLVM_COMMIT"
-
-    # We also clone Firefox directly, but, this is to ensure that the WASI patch we're using always matches exactly what we're
-    ## using at https://gitlab.com/ironfox-oss/prebuilds
-    echo "Downloading Firefox's WASI patch..."
-    download "https://github.com/mozilla-firefox/firefox/raw/$FIREFOX_WASI_COMMIT/taskcluster/scripts/misc/wasi-sdk.patch" "$WASIPATCHDIR/wasi-sdk.patch"
-elif [[ "$PLATFORM" == "macos" ]]; then
-    echo "Downloading prebuilt wasi-sdk.."
-    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_OSX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
-else
-    echo "Downloading prebuilt wasi-sdk..."
-    download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_LINUX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
-fi
-
 # Clone application-services
 echo "Cloning application-services..."
 clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDIR" "$APPSERVICES_COMMIT"
@@ -260,6 +230,36 @@ clone_repo "https://github.com/mozilla/application-services.git" "$APPSERVICESDI
 # Clone Firefox
 echo "Cloning Firefox..."
 clone_repo "https://github.com/mozilla-firefox/firefox.git" "$GECKODIR" "$FIREFOX_COMMIT"
+
+# Prebuilds
+if [[ "$NO_PREBUILDS" == "1" ]]; then
+    echo "Cloning the prebuilds build repository..."
+    clone_repo "https://gitlab.com/ironfox-oss/prebuilds.git" "$PREBUILDSDIR" "$PREBUILDS_COMMIT"
+
+    pushd "$PREBUILDSDIR"
+    echo "Downloading prebuild sources..."
+    bash "$PREBUILDSDIR/scripts/get_sources.sh"
+    popd
+
+    UNIFFIDIR="$PREBUILDSDIR/build/outputs/uniffi-rs/uniffi-rs"
+    WASISDKDIR="$PREBUILDSDIR/build/outputs/wasi-sdk/wasi"
+else
+    # Get Tor's no-op UniFFi binding generator
+    echo "Downloading prebuilt uniffi-bindgen..."
+    if [[ "$PLATFORM" == "macos" ]]; then
+        download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_OSX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+    else
+        download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$UNIFFI_LINUX_IRONFOX_COMMIT/uniffi-bindgen/$UNIFFI_VERSION/$PREBUILT_PLATFORM/uniffi-bindgen-$UNIFFI_VERSION-$UNIFFI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+    fi
+
+    # Get WebAssembly SDK
+    echo "Downloading prebuilt wasi-sdk..."
+    if [[ "$PLATFORM" == "macos" ]]; then
+        download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_OSX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_OSX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+    else
+        download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/$WASI_LINUX_IRONFOX_COMMIT/wasi-sdk/$WASI_VERSION/$PREBUILT_PLATFORM/wasi-sdk-$WASI_VERSION-$WASI_LINUX_IRONFOX_REVISION-$PREBUILT_PLATFORM.tar.xz"
+    fi
+fi
 
 # Write env_local.sh
 echo "Writing ${ENV_SH}..."
@@ -277,9 +277,9 @@ export glean="$GLEANDIR"
 export gmscore="$GMSCOREDIR"
 export gradle="$GRADLEDIR/gradle"
 export mozilla_release="$GECKODIR"
+export prebuilds="$PREBUILDSDIR"
 export uniffi="$UNIFFIDIR"
 export wasi="$WASISDKDIR"
-export wasi_patch="$WASIPATCHDIR"
 
 export target_abi={target_abi}
 

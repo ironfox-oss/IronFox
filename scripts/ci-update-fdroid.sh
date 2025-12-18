@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script is used to update the F-Droid
+# Script is used to update the F-Droid repository
 # This script is expected to be run in a CI environment
 # DO NOT execute this manually!
 

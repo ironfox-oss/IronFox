@@ -27,6 +27,11 @@ source "$(dirname $0)/env_local.sh"
 # Include version info
 source "$rootdir/scripts/versions.sh"
 
+# If variables are defined with a custom `env_override.sh`, let's use those
+if [[ -f "$(dirname $0)/env_override.sh" ]]; then
+    source "$(dirname $0)/env_override.sh"
+fi
+
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -exec python3 "$rootdir/scripts/localize_maven.py" {} \;
@@ -170,7 +175,9 @@ if [[ "$PLATFORM" == "darwin" ]]; then
     pip install gyp-next
 fi
 
+#
 # Fenix
+#
 pushd "$fenix"
 
 # Set up the app ID, version name and version code
@@ -593,22 +600,6 @@ $SED -i "s|{rusttarget}|$rusttarget|" local.properties
 
 popd
 
-# WASI SDK
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    pushd "$wasi"
-    patch -p1 --no-backup-if-mismatch <"$wasi_patch/wasi-sdk.patch"
-
-    # Break the dependency on older cmake
-    $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk.cmake
-    $SED -i -e 's|cmake_minimum_required(VERSION .*)|cmake_minimum_required(VERSION 3.5.0)|g' wasi-sdk-pthread.cmake
-
-    popd
-
-    export wasi_install=$wasi/build/install/wasi
-else
-    export wasi_install=$wasi
-fi
-
 # uniffi-bindgen
 if [[ -n ${FDROID_BUILD+x} ]]; then
     pushd "$uniffi"
@@ -619,7 +610,9 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     popd
 fi
 
+#
 # Gecko
+#
 pushd "$mozilla_release"
 
 # Apply patches
@@ -1122,7 +1115,7 @@ $SED -i "s|{HOME}|$HOME|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{JAVA_HOME}|$JAVA_HOME|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{libclang}|$libclang|" ironfox/mozconfigs/env.mozconfig
 $SED -i "s|{PLATFORM}|$PLATFORM|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{wasi_install}|$wasi_install|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{wasi}|$wasi|" ironfox/mozconfigs/env.mozconfig
 
 $SED -i "s|{geckotarget}|$geckotarget|" mozconfig
 $SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" mozconfig
@@ -1137,3 +1130,13 @@ popd
 # Set current build revision
 ## (ex. displayed at `about:buildconfig`)
 $SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/ironfox/mozconfigs/branding/env.mozconfig"
+
+#
+# Prebuilds
+#
+if [[ "$NO_PREBUILDS" == "1" ]]; then
+    pushd "$prebuilds"
+    echo "Preparing the prebuild build repository..."
+    bash "$prebuilds/scripts/prebuild.sh"
+    popd
+fi

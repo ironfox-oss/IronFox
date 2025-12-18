@@ -5,9 +5,6 @@
 ### https://github.com/mozilla-firefox/firefox
 ### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_RELEASE)
 FIREFOX_COMMIT="1bff8c2701b6fc4df104208f4e5b80e330426a55"
-### This commit corresponds to the latest commit for the WASI SDK patch specifically
-### (ex. https://github.com/mozilla-firefox/firefox/blob/1a033a9748a551fc2d100cb6266a1e751effc5df/taskcluster/scripts/misc/wasi-sdk.patch)
-FIREFOX_WASI_COMMIT="1a033a9748a551fc2d100cb6266a1e751effc5df"
 FIREFOX_VERSION="146.0"
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
@@ -67,11 +64,6 @@ CBINDGEN_VERSION="0.29.2"
 ### https://gitlab.com/fdroid/gradlew-fdroid
 GRADLE_COMMIT="e55f371891e02a45ee65d18cabc81aaf665c96d0"
 
-## LLVM
-### https://github.com/llvm/llvm-project
-### (This commit corresponds to https://github.com/llvm/llvm-project/releases/tag/llvmorg-21.1.7)
-LLVM_COMMIT="292dc2b86f66e39f4b85ec8b185fd8b60f5213ce"
-
 ## Rust
 ### https://releases.rs/
 RUST_MAJOR_VERSION="1.92"
@@ -81,6 +73,7 @@ RUST_VERSION="${RUST_MAJOR_VERSION}.0"
 
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
+PREBUILDS_COMMIT="99e7b9dc73ee4e899204a18a29c47a9b52c00947"
 UNIFFI_LINUX_IRONFOX_COMMIT="3f26e5e5078ff6c8b8be42d9b0df274cf75cad8d"
 UNIFFI_LINUX_IRONFOX_REVISION="3"
 UNIFFI_OSX_IRONFOX_COMMIT="ec829cd1df6cf08618e0c7a3594776a9cc6a90e3"
@@ -106,8 +99,8 @@ FENIX="$GECKODIR/mobile/android/fenix"
 GLEANDIR="$EXTERNALDIR/glean"
 GMSCOREDIR="$EXTERNALDIR/gmscore"
 GRADLEDIR="$EXTERNALDIR/gradle"
+PREBUILDSDIR="$EXTERNALDIR/prebuilds"
 UNIFFIDIR="$EXTERNALDIR/uniffi"
-WASIPATCHDIR="$EXTERNALDIR/wasi-patch"
 WASISDKDIR="$EXTERNALDIR/wasi-sdk"
 
 # Use GNU Sed on macOS instead of the built-in sed, due to differences in syntax

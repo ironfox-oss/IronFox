@@ -20,6 +20,7 @@ __pycache__/
 
 # Script containing environment variables for local builds
 /scripts/env_local.sh
+/scripts/env_override.sh
 
 # WIP
 /wip/
