@@ -3,7 +3,7 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_1_BUILD1)
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_1_RELEASE)
 FIREFOX_COMMIT="ff72bafa1aa0efac8b27fcd5b7ff0a91ba1a33a1"
 FIREFOX_VERSION="146.0.1"
 
