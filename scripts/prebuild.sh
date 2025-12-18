@@ -935,6 +935,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher_round.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
 $SED -i -e 's|R.drawable.microsurvey_success|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
+$SED -i -e 's|R.drawable.ic_onboarding_search_widget|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/widget/SetSearchWidgetMainImage.kt
 $SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
 $SED -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 $SED -i -e 's|ic_onboarding_search_widget|fox_alert_crash_dark|' mobile/android/fenix/app/onboarding.fml.yaml

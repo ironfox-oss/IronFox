@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/onboarding.fml.yaml b/mobile/android/fenix/app/onboarding.fml.yaml
-index 971df3dc5b..93e1182454 100644
+index 6c70a63988de..5ce76e4151a4 100644
 --- a/mobile/android/fenix/app/onboarding.fml.yaml
 +++ b/mobile/android/fenix/app/onboarding.fml.yaml
-@@ -120,6 +120,43 @@ features:
+@@ -124,6 +124,43 @@ features:
                    body-line-one-text: onboarding_marketing_learn_more
                    body-line-one-link-text: onboarding_marketing_learn_more
                    body-line-two-text: onboarding_marketing_opt_out_checkbox
@@ -46,20 +46,19 @@ index 971df3dc5b..93e1182454 100644
      defaults:
        - channel: developer
          value:
-@@ -318,6 +355,12 @@ objects:
+@@ -448,6 +485,11 @@ objects:
+         description: >
            An optional marketing data for the onboarding card.
          default: null
- 
 +      if-preferences-data:
 +        type: List<IfPreferencesData>
 +        description: >
 +          A list of preferences for the IronFox preferences onboarding card.
 +        default: [ ]
-+
+ 
    CustomizationToolbarData:
      description: An object to describe the placement of the toolbar.
-     fields:
-@@ -416,6 +459,27 @@ objects:
+@@ -559,6 +601,26 @@ objects:
          description: The text for line two of the body.
          default: ""
  
@@ -81,13 +80,12 @@ index 971df3dc5b..93e1182454 100644
 +      switch-type:
 +        type: IfOnboardingPreferenceType
 +        description: The type of preference.
-+        # This should never be defaulted
 +        default: default
 +
  enums:
  
    OnboardingCardType:
-@@ -437,6 +501,10 @@ enums:
+@@ -580,6 +642,10 @@ enums:
          description: Page to display the terms of services.
        marketing-data:
          description: Allows user to opt out of marketing data collection.
@@ -98,7 +96,7 @@ index 971df3dc5b..93e1182454 100644
  
    ToolbarType:
      description: An enum to describe a toolbar placement option.
-@@ -455,3 +523,17 @@ enums:
+@@ -598,3 +664,17 @@ enums:
          description: Sets the theme to light mode.
        theme-dark:
          description: Sets the theme to dark mode.
@@ -129,10 +127,10 @@ index 53190b359c..11dd04263a 100644
                  logger = logger,
                  analytics = components.analytics,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 3b7336c90f..70ca7c8388 100644
+index 1318bb114a35..907d9bab737b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -62,6 +62,7 @@ import org.mozilla.fenix.settings.SupportUtils
+@@ -64,6 +64,7 @@ import org.mozilla.fenix.settings.SupportUtils
  import org.mozilla.fenix.theme.FirefoxTheme
  import org.mozilla.fenix.utils.canShowAddSearchWidgetPrompt
  import org.mozilla.fenix.utils.maybeShowAddSearchWidgetPrompt
@@ -140,21 +138,20 @@ index 3b7336c90f..70ca7c8388 100644
  
  /**
   * Fragment displaying the onboarding flow.
-@@ -444,6 +445,9 @@ class OnboardingFragment : Fragment() {
+@@ -467,6 +468,8 @@ class OnboardingFragment : Fragment() {
          requireComponents.fenixOnboarding.finish()
  
          val settings = requireContext().settings()
 +        settings.ironFoxOnboardingCompleted = true
 +        GeckoSettingsBridge.setIronFoxPrefs(requireContext(), requireComponents.core.engine)
-+
          viewLifecycleOwner.lifecycleScope.launch {
              initializeGlean(
                  requireContext().applicationContext,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
-index ed98060904..0ff50c5aec 100644
+index f1d714d1f5c3..17bc78876ffa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
-@@ -215,6 +215,12 @@ fun OnboardingScreenRedesign(
+@@ -259,6 +259,12 @@ fun OnboardingScreenRedesign(
              onMarketingDataContinueClick(allowMarketingDataCollection)
              scrollToNextPageOrDismiss()
          },
@@ -167,16 +164,16 @@ index ed98060904..0ff50c5aec 100644
          onboardingStore = onboardingStore,
      )
  }
-@@ -259,6 +265,8 @@ private fun OnboardingContent(
+@@ -305,6 +311,8 @@ private fun OnboardingContent(
      onMarketingOptInToggle: (optIn: Boolean) -> Unit,
      onMarketingDataLearnMoreClick: () -> Unit,
      onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
 +    onIfPreferenceDohButtonClick: () -> Unit,
 +    onIfPreferencesButtonClick: () -> Unit,
  ) {
-     val nestedScrollConnection = remember { DisableForwardSwipeNestedScrollConnection(pagerState) }
- 
-@@ -305,6 +313,8 @@ private fun OnboardingContent(
+     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+         val boxWithConstraintsScope = this
+@@ -357,6 +365,8 @@ private fun OnboardingContent(
                      onAddFirefoxWidgetSkipClick = onSkipFirefoxWidgetClick,
                      onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
                      onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
@@ -185,19 +182,19 @@ index ed98060904..0ff50c5aec 100644
                  )
  
                  OnboardingPageForType(
-@@ -383,6 +393,8 @@ private fun OnboardingPageForType(
+@@ -460,6 +470,8 @@ private fun OnboardingPageForType(
+ 
          // no-ops
-         OnboardingPageUiData.Type.NOTIFICATION_PERMISSION,
          OnboardingPageUiData.Type.THEME_SELECTION,
 +        OnboardingPageUiData.Type.IF_PREFERENCE_DOH,
 +        OnboardingPageUiData.Type.IF_PREFERENCES,
              -> {
              logger.error("Unsupported page type: $type used for onboarding redesign.")
          }
-@@ -449,6 +461,8 @@ private fun OnboardingScreenPreview() {
-             onMarketingDataLearnMoreClick = {},
-             onMarketingOptInToggle = {},
+@@ -579,6 +591,8 @@ private fun OnboardingScreenPreview() {
              onMarketingDataContinueClick = {},
+             onNotificationPermissionButtonClick = {},
+             onNotificationPermissionSkipClick = {},
 +            onIfPreferenceDohButtonClick = {},
 +            onIfPreferencesButtonClick = {},
          )
@@ -368,10 +365,10 @@ index 6625e28ee5..f8aa6816d7 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-index 0d6edf875f..8e9d7dae4e 100644
+index e58fc13feb45..e70259b67722 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-@@ -219,6 +219,12 @@ fun OnboardingScreen(
+@@ -216,6 +216,12 @@ fun OnboardingScreen(
              onMarketingDataContinueClick(allowMarketingDataCollection)
              scrollToNextPageOrDismiss()
          },
@@ -384,7 +381,7 @@ index 0d6edf875f..8e9d7dae4e 100644
          onboardingStore = onboardingStore,
      )
  }
-@@ -266,6 +272,8 @@ private fun OnboardingContent(
+@@ -263,6 +269,8 @@ private fun OnboardingContent(
      onMarketingOptInToggle: (optIn: Boolean) -> Unit,
      onMarketingDataLearnMoreClick: () -> Unit,
      onMarketingDataContinueClick: (allowMarketingDataCollection: Boolean) -> Unit,
@@ -393,7 +390,7 @@ index 0d6edf875f..8e9d7dae4e 100644
  ) {
      val nestedScrollConnection = remember { DisableForwardSwipeNestedScrollConnection(pagerState) }
  
-@@ -297,6 +305,8 @@ private fun OnboardingContent(
+@@ -294,6 +302,8 @@ private fun OnboardingContent(
                  onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
                  onCustomizeThemeClick = onCustomizeThemeButtonClick,
                  onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
@@ -402,7 +399,7 @@ index 0d6edf875f..8e9d7dae4e 100644
              )
              OnboardingPageForType(
                  type = pageUiState.type,
-@@ -387,6 +397,14 @@ private fun OnboardingPageForType(
+@@ -383,6 +393,14 @@ private fun OnboardingPageForType(
              state,
              termsOfServiceEventHandler,
          )
@@ -417,7 +414,7 @@ index 0d6edf875f..8e9d7dae4e 100644
      }
  }
  
-@@ -436,6 +454,8 @@ private fun OnboardingScreenPreview() {
+@@ -432,6 +450,8 @@ private fun OnboardingScreenPreview() {
              onMarketingDataLearnMoreClick = {},
              onMarketingOptInToggle = {},
              onMarketingDataContinueClick = {},

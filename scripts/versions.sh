@@ -3,9 +3,9 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_RELEASE)
-FIREFOX_COMMIT="1bff8c2701b6fc4df104208f4e5b80e330426a55"
-FIREFOX_VERSION="146.0"
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_1_BUILD1)
+FIREFOX_COMMIT="ff72bafa1aa0efac8b27fcd5b7ff0a91ba1a33a1"
+FIREFOX_VERSION="146.0.1"
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
