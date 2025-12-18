@@ -142,11 +142,7 @@ fi
 popd
 
 # Set-up Rust
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    "$rustup"/rustup-init.sh -y --no-modify-path --no-update-default-toolchain
-else
-    curl --doh-cert-status --no-insecure --no-proxy-insecure --no-sessionid --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --proto -all,https --proto-default https --proto-redir -all,https --show-error -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain
-fi
+curl --doh-cert-status --no-insecure --no-proxy-insecure --no-sessionid --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --proto -all,https --proto-default https --proto-redir -all,https --show-error -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain
 
 if [[ "$PLATFORM" == "darwin" ]]; then
     libclang="$ANDROID_NDK/toolchains/llvm/prebuilt/$PLATFORM-x86_64/lib"
