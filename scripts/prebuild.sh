@@ -98,6 +98,11 @@ if [[ -z "$IRONFOX_UBO_ASSETS_URL" ]]; then
     exit 1
 fi
 
+if [[ -z "$NO_PREBUILDS" ]]; then
+    # Do not use prebuilds by default
+    NO_PREBUILDS=0
+fi
+
 # Set platform
 if [[ "$OSTYPE" == "darwin"* ]]; then
     PLATFORM=darwin
@@ -468,11 +473,7 @@ rm -vf glean-core/android/metrics.yaml
 $SED -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Use Tor's no-op UniFFi binding generator
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    $SED -i "s|{uniffi}|$uniffi/target/release|" glean-core/android/build.gradle
-else
-    $SED -i "s|{uniffi}|$uniffi|" glean-core/android/build.gradle
-fi
+$SED -i "s|{uniffi}|$uniffi|" glean-core/android/build.gradle
 
 if [[ "$PLATFORM" == "darwin" ]]; then
     $SED -i "s|{libxul_dir}|aarch64-linux-android/release|" glean-core/android/build.gradle
@@ -599,16 +600,6 @@ $SED -i "s|{PLATFORM_ARCHITECTURE}|$PLATFORM_ARCHITECTURE|" local.properties
 $SED -i "s|{rusttarget}|$rusttarget|" local.properties
 
 popd
-
-# uniffi-bindgen
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    pushd "$uniffi"
-
-    # Break the dependency on older Rust
-    $SED -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
-
-    popd
-fi
 
 #
 # Gecko
@@ -1134,6 +1125,7 @@ $SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozill
 #
 # Prebuilds
 #
+
 if [[ "$NO_PREBUILDS" == "1" ]]; then
     pushd "$prebuilds"
     echo "Preparing the prebuild build repository..."
