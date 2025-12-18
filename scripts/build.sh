@@ -25,7 +25,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-set -euo pipefail
+set -eo pipefail
 
 build_type="$1"
 
