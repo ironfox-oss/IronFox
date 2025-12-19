@@ -101,6 +101,11 @@ pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironf
 pref("network.protocol-handler.expose.bankid", true); // [HIDDEN]
 pref("network.protocol-handler.external.bankid", true); // [HIDDEN]
 
+/// Unbreak Obtainium app installation
+// We only need this temporarily, fixed for next Phoenix release upstream
+pref("network.protocol-handler.expose.obtainium", true); // [HIDDEN]
+pref("network.protocol-handler.external.obtainium", true); // [HIDDEN]
+
 /// Define initial prefs for our UI settings
 // This ensures that Gecko preferences for our custom UI settings are always defined
 // They should be defined anyways by GeckoSettingsBridge (and many are also set by Phoenix)

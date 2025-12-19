@@ -1,2 +1,2 @@
 
-# Currently empty :(
+export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='armeabi-v7a,arm64-v8a,x86_64'

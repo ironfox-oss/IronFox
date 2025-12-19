@@ -74,4 +74,5 @@
     <string name="preference_autoplay_policy_sticky">Лепкаво</string>
     <string name="preference_autoplay_policy_transient">Преходно (По подразбиране)</string>
     <string name="preference_autoplay_policy_click_to_play">Кликни за възпроизвеждане</string>
+    <string name="preference_always_use_private_browsing">Винаги използвайте режим на частно сърфиране</string>
 </resources>

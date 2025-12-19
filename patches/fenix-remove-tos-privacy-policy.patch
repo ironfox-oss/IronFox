@@ -1,17 +1,17 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt
-index de41d50564..b786835445 100644
+index acb9500553e6..690524d47029 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/TermsOfServiceOnboardingPageRedesign.kt
-@@ -131,7 +131,7 @@ private fun Subheaders(termsOfService: OnboardingTermsOfService) {
+@@ -135,7 +135,7 @@ private fun Subheaders(termsOfService: OnboardingTermsOfService) {
  @Composable
  private fun SubHeaderText(text: String) {
      Text(
 -        text = text,
 +        text = "",
          style = FirefoxTheme.typography.body2.copy(
-             color = FirefoxTheme.colors.textSecondary,
+             color = MaterialTheme.colorScheme.secondary,
              textAlign = TextAlign.Center,
-@@ -147,9 +147,9 @@ private fun BodyText(
+@@ -151,9 +151,9 @@ private fun BodyText(
      with(termsOfService) {
          Column(modifier = Modifier.padding(horizontal = 8.dp)) {
              val bodyOneLinkState = LinkTextState(
@@ -23,7 +23,7 @@ index de41d50564..b786835445 100644
              )
              BodyLinkText(
                  lineOneText.updateFirstPlaceholder(lineOneLinkText),
-@@ -157,9 +157,9 @@ private fun BodyText(
+@@ -161,9 +161,9 @@ private fun BodyText(
              )
  
              val bodyTwoLinkState = LinkTextState(
@@ -35,7 +35,7 @@ index de41d50564..b786835445 100644
              )
              BodyLinkText(
                  lineTwoText.updateFirstPlaceholder(lineTwoLinkText),
-@@ -167,9 +167,9 @@ private fun BodyText(
+@@ -171,9 +171,9 @@ private fun BodyText(
              )
  
              val bodyThreeLinkState = LinkTextState(
@@ -47,7 +47,7 @@ index de41d50564..b786835445 100644
              )
              BodyLinkText(
                  lineThreeText.updateFirstPlaceholder(lineThreeLinkText),
-@@ -190,7 +190,7 @@ private fun BodyLinkText(
+@@ -194,7 +194,7 @@ private fun BodyLinkText(
      )
  
      LinkText(
@@ -55,7 +55,7 @@ index de41d50564..b786835445 100644
 +        text = "",
          linkTextStates = listOf(linkState),
          style = style,
-         shouldApplyAccessibleSize = true,
+         linkTextDecoration = TextDecoration.Underline,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 index 795fcd7b7e..1b4d2eef78 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt

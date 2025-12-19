@@ -1,11 +1,6 @@
 #!/bin/bash
 
-source "$rootdir/scripts/versions.sh"
-
-if [[ "$env_source" != "true" ]]; then
-    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
-    return 1
-fi
+set -euo pipefail
 
 function deglean() {
     local dir="$1"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="restart_required_summary">Das Ändern dieser Einstellung wird Ihren Browser neu starten</string>
-    <string name="unsupported_summary">Diese Einstellung ist NICHT empfohlen oder unterstützt. Bitte vorsichtig vorgehen.</string>
+    <string name="restart_required_summary">Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="unsupported_summary">Diese Einstellung wird NICHT empfohlen und nicht unterstützt. Bitte vorsichtig vorgehen.</string>
     <string name="if_preferences">IronFox-Einstellungen</string>
     <string name="if_preferences_misc">Verschiedenes</string>
     <string name="if_preferences_privacy">Datenschutz</string>
@@ -13,14 +13,14 @@
     <string name="preference_javascript_enabled">JavaScript aktivieren</string>
     <string name="preference_jit_enabled">JavaScript Just-in-time-Kompilierung (JIT) aktivieren</string>
     <string name="preference_accessibility_enabled">Barrierefreiheitsdienste aktivieren</string>
-    <string name="preference_referer_policy">Cross-Origin-Referer-Richtlinie</string>
-    <string name="preference_referer_policy_summary">Konfigurieren Sie das Verhalten von Cross-Origin-Referern</string>
-    <string name="preference_referer_policy_always">Immer Cross-Origin-Referer senden (Standard)</string>
-    <string name="preference_referer_policy_base_domains_match">Cross-Origin-Referer senden, wenn die Basisdomänen übereinstimmen</string>
-    <string name="preference_referer_policy_hosts_match">Cross-Origin-Referer deaktivieren</string>
+    <string name="preference_referer_policy">Cross-Origin-Referrer-Richtlinie</string>
+    <string name="preference_referer_policy_summary">Konfigurieren Sie das Verhalten von Cross-Origin-Referrern</string>
+    <string name="preference_referer_policy_always">Immer Cross-Origin-Referrer senden (Standard)</string>
+    <string name="preference_referer_policy_base_domains_match">Cross-Origin-Referrer senden, wenn die Basisdomänen übereinstimmen</string>
+    <string name="preference_referer_policy_hosts_match">Cross-Origin-Referrer deaktivieren</string>
     <string name="preference_jit_enabled_caption">Verbessern Sie die JavaScript-Leistung, indem Sie JIT aktivieren. (Für die meisten Benutzer nicht empfohlen)</string>
     <string name="preference_jit_enabled_description">Auf Kosten der Sicherheit können Sie JIT aktivieren, um die Leistung von Websites zu verbessern. Nur für Benutzer mit weniger leistungsstarken Geräten empfohlen.</string>
-    <string name="preference_jit_enabled_summary">Wenn diese Option deaktiviert ist, kann die Leistung bei komplexen Webseiten beeinträchtigt sein. Durch Ändern dieser Einstellung wird Ihr Browser neu gestartet</string>
+    <string name="preference_jit_enabled_summary">Wenn diese Option deaktiviert ist, kann die Leistung bei komplexen Webseiten beeinträchtigt sein. Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="preference_pdfjs_disabled">PDF-Dateien extern öffnen</string>
     <string name="preference_website_appearance_title">Bevorzugte Darstellung der Website</string>
     <string name="preference_website_appearance_description">Einige Websites passen ihr Farbschema an Ihre Präferenzen an. Wählen Sie das Farbschema, das Sie für diese Websites verwenden möchten. Beachten Sie, dass andere Optionen als „Hell“ das Fingerprinting erleichtern können, da Ihr Browser dadurch einzigartiger erscheint.</string>
@@ -31,7 +31,7 @@
     <string name="preference_safe_browsing_enabled">Sicheres Surfen aktivieren</string>
     <string name="preference_safe_browsing_enabled_caption">Erhalten Sie Echtzeitschutz vor gefährlichen Websites, Malware und Phishing-Versuchen.</string>
     <string name="preference_safe_browsing_enabled_description">Die Safe Browsing-Funktion von IronFox wird derzeit von Google bereitgestellt. IronFox aktualisiert die Datenbank regelmäßig, um sicherzustellen, dass Benutzer vor den neuesten Bedrohungen geschützt sind. Bei einer potenziellen Übereinstimmung übermittelt IronFox möglicherweise einen Teil-Hash der verdächtigen URL an Google. Beachten Sie, dass IronFox diese Verbindungen über einen Proxy leitet, um zu verhindern, dass Ihre öffentliche IP-Adresse mit diesen Anfragen in Verbindung gebracht wird.</string>
-    <string name="preference_safe_browsing_enabled_summary">Bietet Echtzeitschutz vor gefährlichen Websites, Malware und Phishing-Versuchen – Wenn Sie diese Einstellung ändern, wird Ihr Browser neu gestartet</string>
+    <string name="preference_safe_browsing_enabled_summary">Bietet Echtzeitschutz vor gefährlichen Websites, Malware und Phishing-Versuchen. Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="tor_spoof_english_title">Sprache auf en-US umstellen</string>
     <string name="tor_spoof_english_caption">Verbessern Sie Ihre Privatsphäre, indem Sie die Spracheinstellungen Ihres Geräts maskieren.</string>
     <string name="tor_spoof_english_description">Fordern Sie englische (en-US) Versionen von Webseiten an. Dadurch erscheint Ihr Browser weniger einzigartig, was den Schutz vor Fingerprinting-Techniken stärkt, die Nutzer anhand ihrer Spracheinstellungen identifizieren.</string>
@@ -40,7 +40,7 @@
     <string name="preference_svg_enabled">Skalierbare Vektorgrafiken (SVG) aktivieren</string>
     <string name="preferences_debug_settings_unifiedpush">UnifiedPush aktivieren</string>
     <string name="preferences_unifiedpush">UnifiedPush verwenden</string>
-    <string name="toast_change_unifiedpush_done">Einstellung für UnifiedPush geändert. Beende die Anwendung, um die Änderungen zu übernehmen…</string>
+    <string name="toast_change_unifiedpush_done">Einstellung für UnifiedPush geändert. Anwendung wird beendet, um die Änderungen zu übernehmen…</string>
     <string name="preference_wasm_enabled">WebAssembly (WASM) aktivieren</string>
     <string name="preference_webrtc_enabled">WebRTC aktivieren</string>
     <string name="preference_xpinstall_enabled">Installation von Add-ons zulassen</string>
@@ -50,28 +50,29 @@
     <string name="onboarding_install_ublock_title">uBlock Origin installieren</string>
     <string name="onboarding_install_ublock_caption">Blockieren Sie Werbung, Tracker und Malware für ein sichereres und saubereres Surferlebnis.</string>
     <string name="onboarding_install_ublock_description">uBlock Origin verbessert Ihre Privatsphäre und Sicherheit, indem es unerwünschte Inhalte blockiert. IronFox verwendet eine benutzerdefinierte uBlock Origin-Konfiguration mit kuratierten Filterlisten für optimalen Schutz und optimale Leistung.</string>
-    <string name="onboarding_state_installing_ublock">Installiere uBlock Origin…</string>
+    <string name="onboarding_state_installing_ublock">Installieren von uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Bei der Installation von uBlock Origin ist ein Fehler aufgetreten: %1$s</string>
     <string name="onboarding_action_retry">Wiederholen</string>
     <string name="preference_collections_enabled">Sammlungen aktivieren</string>
     <string name="preference_translations_enabled">Firefox-Übersetzungen aktivieren</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">Die Installation von Add-ons ist derzeit deaktiviert. Falls gewünscht, können Sie die Installation auf Kosten der Sicherheit aktivieren, indem Sie zu Einstellungen -&gt; IronFox -&gt; IronFox-Einstellungen -&gt; Sicherheit -&gt; Installation von Add-ons zulassen navigieren.</string>
     <string name="preference_jit_trusted_principals_enabled">JavaScript Just-in-time-Kompilierung (JIT) für Erweiterungen aktivieren</string>
-    <string name="preference_jit_trusted_principals_enabled_summary">Aktiviert JIT für Erweiterungen, wenn JIT ansonsten global deaktiviert ist - Das Ändern dieser Einstellung startet den Browser neu</string>
-    <string name="preference_fpp_overrides_ironfox_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von IronFox), um Probleme zu vermeiden - Das Ändern dieser Einstellung startet den Browser neu</string>
-    <string name="preference_fpp_overrides_mozilla_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von Mozilla), um Probleme zu vermeiden - Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Aktiviert JIT für Erweiterungen, wenn JIT ansonsten global deaktiviert ist. Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von IronFox), um Probleme zu vermeiden. Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Schwächt standardmäßig Fingerabdruck-Schutz für gelistete Webseiten (Liste von Mozilla), um Probleme zu vermeiden. Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="spoof_timezone_summary">Wenn aktiviert, verstärkt es den Schutz vor Fingerprinting</string>
     <string name="spoof_timezone">Zeitzone auf UTC-0 fälschen</string>
     <string name="preference_webgl_disabled">WebGL deaktivieren</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_summary">Re-aktiviert WebGL für bestimmte Webseiten standardmäßig, auch wenn WebGL global deaktiviert ist, um Fehler zu reduzieren - Das ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Wenn WebGL deaktiviert ist, wird WebGL für bestimmte Websites standardmäßig wieder aktiviert, um Fehler zu reduzieren. Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="preference_fpp_overrides_ironfox_enabled">Fingerprintschutz-Überschreibungen von IronFox aktivieren</string>
     <string name="preference_fpp_overrides_mozilla_enabled">Fingerprintschutz-Überschreibungen von Mozilla aktivieren</string>
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Zeitzonenfälschungs-Überschreibungen von IronFox aktivieren</string>
-    <string name="preference_fpp_overrides_ironfox_timezone_summary">Deaktiviert standardmäßig das Zeitzonen-Fälschen für bestimmte Websites, um Fehler zu reduzieren -Das Ändern dieser Einstellung startet den Browser neu</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Deaktiviert standardmäßig das Zeitzonen-Fälschen für bestimmte Websites, um Fehler zu reduzieren. Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">WebGL-Überschreibungen von IronFox aktivieren</string>
     <string name="preference_media_autoplay_title">Automatische Medienwiedergabe</string>
     <string name="preference_media_autoplay_description">Steuern Sie, wie IronFox die automatische Wiedergabe von Medien blockiert.</string>
     <string name="preference_autoplay_policy_sticky">Angeheftet</string>
     <string name="preference_autoplay_policy_transient">Transient (Standard)</string>
     <string name="preference_autoplay_policy_click_to_play">Zum Abspielen anklicken</string>
+    <string name="preference_always_use_private_browsing">Immer den privaten Modus verwenden</string>
 </resources>
