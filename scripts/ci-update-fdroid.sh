@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script is used to update the F-Droid
+# Script is used to update the F-Droid repository
 # This script is expected to be run in a CI environment
 # DO NOT execute this manually!
 
@@ -22,7 +22,6 @@ curl --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" \
     curl -L --header "PRIVATE-TOKEN: $GITLAB_CI_API_TOKEN" "$url" -o "$REPO_DIR_PATH/$name"
 done
 
-# shellcheck disable=SC2046
 IFS=":" read -r vercode vername <<< "$("$CI_PROJECT_DIR"/scripts/get_latest_version.py $(ls "$REPO_DIR_PATH"/*.apk))"
 
 META_FILE_PATH="$META_DIR_PATH/$META_FILE_NAME"

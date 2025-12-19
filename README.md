@@ -110,188 +110,52 @@ Then, you need to [set up the source files](#get--patch-sources).
 
 ### Build without Docker
 
-You need to install a few packages on your machine to be able to build IronFox.
-Follow the below instructions based on the OS you're using.
+**NOTE**: Currently, builds on the latest versions of **`Fedora`**, **`macOS`**, and **`Ubuntu`** systems are supported. YMMV for other operating systems/environments.
 
-<details>
-<summary>When building on Ubuntu</summary>
+**NOTE**: **`macOS`** users must install [Homebrew](https://brew.sh/) *(if is not already installed)* before following the steps below.
 
-```sh
-sudo apt update
-sudo apt install -y make \
-        cmake \
-        clang-18 \
-        gyp \
-        nasm \
-        ninja-build \
-        patch \
-        perl \
-        tar \
-        unzip \
-        wget \
-        xz-utils \
-        yq \
-        zlib1g-dev
-```
+First, if you haven't already installed it, you'll want to install `git` for your platform of choice:
 
-Apart from the above packages, you need to install Python 3.9. You can use [PPA from the `deadsnakes` team](https://launchpad.net/%7Edeadsnakes/+archive/ubuntu/ppa).
-
-You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the default JDK.
-
-</details>
-
-<details>
-<summary>When building on Fedora 42/43</summary>
+**`Fedora`**:
 
 ```sh
-sudo dnf install -y \
-    cmake \
-    clang \
-    gawk \
-    git \
-    gyp \
-    m4 \
-    make \
-    nasm \
-    ninja-build \
-    patch \
-    perl \
-    python3.9 \
-    shasum \
-    wget \
-    xz \
-    yq \
-    zlib-devel
+sudo dnf install git
 ```
 
-You will also need to install JDK 8 **AND** JDK 17, with JDK 17 set as the default JDK. These can be installed from [The Adoptium Working Group's repository](https://adoptium.net/installation/linux/#_centosrhelfedora_instructions).
-
-To add The Adoptium Working Group's repository, you'll want to install Fedora's `adoptium-temurin-java-repository` package and enable the repository:
+**`macOS`**:
 
 ```sh
-sudo dnf install -y adoptium-temurin-java-repository
-sudo dnf config-manager setopt adoptium-temurin-java-repository.enabled=1
-sudo dnf makecache
+brew install git
 ```
 
-Now, to install JDK 8 and 17:
+**`Ubuntu`**:
 
 ```sh
-sudo dnf install -y temurin-8-jdk temurin-17-jdk
+sudo apt install git
 ```
 
-</details>
-<summary>When building on macOS</summary>
+After you've successfully installed `git`, the first thing you'll need to do is clone IronFox's source repository:
 
-**NOTE**: [Homebrew](https://brew.sh/) is recommended for installation/management of dependencies on macOS.
+*(`--depth=1` is specified below to reduce the size of the cloned repository, it can be removed if preferred)*
 
 ```sh
-/usr/bin/xcode-select --install
-brew install \
-    cmake \
-    gawk \
-    git \
-    gnu-sed \
-    gnu-tar \
-    m4 \
-    make \
-    nasm \
-    ninja \
-    node \
-    perl \
-    python@3.9 \
-    temurin@17 \
-    wget \
-    xz \
-    yq \
-    zlib
+git clone --depth=1 git@gitlab.com:ironfox-oss/IronFox.git IronFox
 ```
 
-You should also ensure that `python3.9` is available in your `PATH`:
+You should now navigate to the root of IronFox's source directory, and run the `bootstrap` script:
+
+*(The `bootstrap` script will set-up and install dependencies required to build IronFox on your system)*
 
 ```sh
-export PATH="$PATH:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin"
+cd IronFox
+./scripts/bootstrap.sh
 ```
 
-</details>
+#### Get sources
 
-Once the packages have been installed successfully, follow the instructions to set up the build environment:
+Still from the root of IronFox's source directory, you should now run the `get_sources` script to download the external sources required for building IronFox:
 
-- Setup F-Droid's `gradle` script to be available in your `PATH`:
-
-  ```sh
-  mkdir -vp $HOME/bin
-  wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose https://gitlab.com/fdroid/gradlew-fdroid/-/raw/f1ff9690936cec83cde22bb9ee15a569198a264a/gradlew-fdroid -O "$HOME/bin/gradle"
-  chmod +x "$HOME/bin/gradle"
-
-  export PATH=$HOME/bin:$PATH
-  ```
-
-- Disable Gradle Daemons and configuration cache:
-
-  ```sh
-  mkdir -vp ~/.gradle
-  echo "org.gradle.daemon=false" >> ~/.gradle/gradle.properties
-  echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
-  ```
-
-- Create a new Python 3.9 virtual environment, then activate it:
-
-  ```sh
-  python3.9 -m venv env
-  source env/bin/activate
-  ```
-
-- After creating your Python 3.9 virtual environment, install `requests`:
-
-    ```sh
-    pip install requests
-    ```
-
-- On **macOS**, after creating your Python 3.9 virtual environment, you will also need to install `gyp-next`:
-
-    ```sh
-    pip install gyp-next
-    ```
-
-- Ensure JDK 17 is the default JDK. You can check the current JDK version by running `java --version` in the terminal. Otherwise, you can temporarily set JDK 17 as the default by running:
-
-  **Don't forget to replace `/path/to/jdk-17` below with the actual path of your JDK 17 installation!**
-
-  ```sh
-  export JAVA_HOME=/path/to/jdk-17
-  export PATH=$JAVA_HOME/bin:$PATH
-  ```
-
-  For instance, on **Fedora 42/43**, the default location of JDK 17 is `/usr/lib/jvm/temurin-17-jdk`:
-
-  ```sh
-  export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
-  export PATH=$JAVA_HOME/bin:$PATH
-  ```
-
-  On **macOS**, the default location of JDK 17 is `/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home`:
-
-  ```sh
-  export JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home
-  export PATH=$JAVA_HOME/bin:$PATH
-  ```
-
-- Ensure that the `ANDROID_HOME` variable points to a valid Android SDK installation (default location is `$HOME/android-sdk`). Otherwise, you can execute the following to install and set up the SDK:
-
-  ```sh
-  source scripts/setup-android-sdk.sh
-  ```
-
-  - **NOTE**: On **macOS**, you **MUST** ensure that the `ANDROID_HOME` variable is defined before running `setup-android-sdk.sh`. For example, if I want to use the default location _(`$HOME/android-sdk`)_ for my Android SDK, I would use:
-
-    ```sh
-    export ANDROID_HOME=/Users/user/android-sdk
-    ```
-
-### Get & patch sources
-
-Next, you need to download the source files to build. The `scripts/get_sources.sh` file can be used to download/clone the source files.
+**NOTE**: If you need to fetch sources for a different version of a dependency than the version IronFox is currently using, you'll need to modify `scripts/versions.sh` **BEFORE** running the `get_sources` script.
 
 _This may take some time depending on your network speed..._
 
@@ -299,16 +163,9 @@ _This may take some time depending on your network speed..._
 ./scripts/get_sources.sh
 ```
 
-If you need to fetch sources for a different version of Firefox than the one IronFox is currently based on, you'll have to modify the script directly.
+#### Preparing sources
 
-Once the source files are downloaded and extracted, you need to source the
-`scripts/env_local.sh` script _(generated by `get_sources.sh`)_ to set up the required environment variables:
-
-```sh
-source scripts/env_local.sh
-```
-
-Next, you need to patch the files with:
+You now need to patch/prepare your newly downloaded sources with the `prebuild` script:
 
 _This must be run once after getting your sources._
 
@@ -330,12 +187,18 @@ Where `<build-variant>` specifies the variant to build, and is **one** of the fo
 >
 > See [task kinds](https://firefox-source-docs.mozilla.org/taskcluster/kinds.html#build-fat-aar) and [ci-build.sh](./scripts/ci-build.sh) for more details.
 
-### Build
+#### Build
 
 Finally, you can start the build process with:
 
 ```sh
 ./scripts/build.sh apk
+```
+
+**NOTE**: If you'd like to build a **bundle**, you should instead use:
+
+```sh
+./scripts/build.sh bundle
 ```
 
 ## Translation

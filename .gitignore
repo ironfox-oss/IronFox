@@ -1,15 +1,26 @@
-__pycache__
+# Generated Python cache
+__pycache__/
 
-/env
-/build
-/gecko
-/glean
-/application-services
-/gmscore
-/wasi-sdk
-/scripts/env_local.sh
+# File containing directory attributes for the containing folder on Mac
 .DS_Store
+
+# Python venv dirs
+/env/
+/venv/
+
+# Build directory - stuff we download/generate goes here
+/build/
+
+# External repositories
+/external/
+
+# Phoenix configurations - downloaded
 /patches/gecko-overlay/ironfox/prefs/000-phoenix.js
 /patches/gecko-overlay/ironfox/prefs/001-phoenix-extended.js
-/uniffi
-/wip
+
+# Script containing environment variables for local builds
+/scripts/env_local.sh
+/scripts/env_override.sh
+
+# WIP
+/wip/

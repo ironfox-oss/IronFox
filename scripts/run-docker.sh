@@ -132,7 +132,7 @@ execute_in_container() {
     
     if [[ ${#cmd[@]} -eq 0 ]]; then
         echo "Starting interactive shell in container '$CONTAINER_NAME'..."
-        docker exec -it "$CONTAINER_NAME" /opt/entrypoint.sh /bin/bash -c "export PS1='$PROMPT' && /bin/bash"
+        docker exec -it "$CONTAINER_NAME" /bin/bash -c "export PS1='$PROMPT' && /bin/bash"
     else
         echo "Executing command in container '$CONTAINER_NAME': ${cmd[*]}"
         docker exec -it "$CONTAINER_NAME" "${cmd[@]}"

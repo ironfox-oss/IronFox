@@ -1,12 +1,5 @@
 #!/bin/bash
 
-if [[ "$env_source" != "true" ]]; then
-    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
-    return 1
-fi
-
-source "$rootdir/scripts/versions.sh"
-
 RED="\033[0;31m"
 GREEN="\033[0;32m"
 NC="\033[0m"
@@ -14,7 +7,7 @@ NC="\033[0m"
 declare -a PATCH_FILES
 declare -a AS_PATCH_FILES
 declare -a GLEAN_PATCH_FILES
-# shellcheck disable=SC2207
+
 PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/patches.yaml))
 AS_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/a-s-patches.yaml))
 GLEAN_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/glean-patches.yaml))

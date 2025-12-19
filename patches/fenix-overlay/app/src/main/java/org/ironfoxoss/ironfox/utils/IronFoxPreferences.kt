@@ -118,7 +118,7 @@ object IronFoxPreferences {
     }
 
     /**
-     * Check if we shold always use private browsing mode
+     * Check if we should always use private browsing mode
      */
     fun isAlwaysUsePrivateBrowsing(
         context: Context

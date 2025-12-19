@@ -1,6 +1,9 @@
 #!/bin/bash
 #
-#    Fennec build scripts
+#    IronFox build scripts
+#    Copyright (C) 2024-2025  Akash Yadav, celenity
+#
+#    Originally based on: Fennec (Mull) build scripts
 #    Copyright (C) 2020-2024  Matías Zúñiga, Andrew Nayenko, Tavi
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -22,7 +25,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-set -euo pipefail
+set -eo pipefail
 
 build_type="$1"
 
@@ -36,13 +39,14 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     source "$(dirname "$0")/env_fdroid.sh"
 fi
 
-# shellcheck disable=SC2154
-if [[ "$env_source" != "true" ]]; then
-    echo "Use 'source scripts/env_local.sh' before calling prebuild or build"
-    exit 1
-fi
-
+source "$(dirname $0)/env_local.sh"
 source "$CARGO_HOME/env"
+source "$PIP_ENV/bin/activate"
+
+# If variables are defined with a custom `env_override.sh`, let's use those
+if [[ -f "$(dirname $0)/env_override.sh" ]]; then
+    source "$(dirname $0)/env_override.sh"
+fi
 
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle
@@ -51,14 +55,12 @@ source "$CARGO_HOME/env"
 if [[ -n ${FDROID_BUILD+x} ]]; then
 
     # Build LLVM
-    # shellcheck disable=SC2154
     pushd "$llvm"
 
     pushd "$bundletool"
-    gradle assemble
+    $gradle assemble
     popd
 
-    # shellcheck disable=SC2154
     llvmtarget=$(cat "$builddir/targets_to_build")
     echo "building llvm for $llvmtarget"
     cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang-20 \
@@ -70,37 +72,17 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
     popd
 fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    # Build WASI SDK
-    # shellcheck disable=SC2154
-    pushd "$wasi"
-
-    mkdir -vp build/install/wasi
-    touch build/compiler-rt.BUILT # fool the build system
-    $MAKE_LIB \
-        PREFIX=/wasi \
-        build/wasi-libc.BUILT \
-        build/libcxx.BUILT \
-        -j"$($NPROC_LIB)"
-    popd
-fi
-
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    # Build uniffi-bindgen
-    pushd "$uniffi"
-
-    cargo build --release
-
+if [[ "$NO_PREBUILDS" == "1" ]]; then
+    # Build our prebuilds
+    pushd "$prebuilds"
+    bash "$prebuilds/scripts/build.sh"
     popd
 fi
 
 # Build microG libraries
-# shellcheck disable=SC2154
 pushd "$gmscore"
-if ! [[ -n ${FDROID_BUILD+x} ]]; then
-    export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
-fi
-gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache -x javaDocReleaseGeneration \
+export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
+$gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache -x javaDocReleaseGeneration \
     :play-services-ads-identifier:publishToMavenLocal \
     :play-services-base:publishToMavenLocal \
     :play-services-basement:publishToMavenLocal \
@@ -108,26 +90,25 @@ gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-bui
     :play-services-tasks:publishToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Glean
 pushd "$glean"
 export TARGET_CFLAGS=-DNDEBUG
-gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
-gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
+$gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
+$gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Application Services
 pushd "$application_services"
 
 # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
 # skips building the libraries as they are expected to be already downloaded in a CI environment
 # However, we want build those libraries always, so we set CI='' before invoking the script
-CI='' bash -c './libs/verify-android-environment.sh && gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :tooling-nimbus-gradle:publishToMavenLocal'
+CI='' bash -c "./libs/verify-android-environment.sh && $gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :tooling-nimbus-gradle:publishToMavenLocal"
 popd
 
-# shellcheck disable=SC2154
+# Gecko (Firefox)
 pushd "$mozilla_release"
 
-# shellcheck disable=SC2086
 echo "Running ./mach build..."
 ./mach build
 echo "Running ./mach package..."
@@ -135,29 +116,33 @@ echo "Running ./mach package..."
 echo "Running ./mach package-multi-locale..."
 ./mach package-multi-locale --locales ${IRONFOX_LOCALES}
 
-MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
-export MOZ_CHROME_MULTILOCALE
+export MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 
-echo "Running gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
-gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
+echo "Running $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
+$gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Android Components
 pushd "$android_components"
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
 # otherwise automatically triggered publication of A-S will fail
-gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :components:concept-fetch:publishToMavenLocal
+$gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :components:concept-fetch:publishToMavenLocal
 # Enable the auto-publication workflow now that concept-fetch is published
 echo "## Enable the auto-publication workflow for Application Services" >>"$mozilla_release/local.properties"
 echo "autoPublish.application-services.dir=$application_services" >>"$mozilla_release/local.properties"
-gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache publishToMavenLocal
+$gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
-# shellcheck disable=SC2154
+# Fenix
 pushd "$fenix"
 if [[ "$build_type" == "apk" ]]; then
-    gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:assembleRelease
+    $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:assembleRelease
+    if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+        cp -v "$mozilla_release/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${target_abi}-release-unsigned.apk" "$builddir/outputs/ironfox-release-${target_abi}-unsigned.apk"
+    else
+        cp -v "$mozilla_release/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${target_abi}-release-unsigned.apk" "$builddir/outputs/ironfox-nightly-${target_abi}-unsigned.apk"
+    fi
 elif [[ "$build_type" == "bundle" ]]; then
-    gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:bundleRelease -Paab
+    $gradle -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:bundleRelease -Paab
 fi
 popd

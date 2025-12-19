@@ -1,0 +1,12 @@
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index 63398b2c715a6..2db97a3444390 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -64,6 +64,7 @@
+         android:theme="@style/NormalTheme"
+         android:usesCleartextTraffic="true"
+         android:enableOnBackInvokedCallback="@bool/enableOnBackInvokedCallback"
++        android:memtagMode="async"
+         tools:ignore="UnusedAttribute">
+ 
+         <profileable
