@@ -16,28 +16,56 @@ object IronFoxAddons {
         downloadUrl = "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi"
     )
 
-    fun isUBlockOrigin(addon: Addon) = addon.id == UBLOCK_ORIGIN.id
+    /**
+     * Determine whether an add-on is uBlock Origin
+     * 
+     * @param addon The add-on we should check
+     */
+    fun isUBlockOrigin(addon: Addon): Boolean {
+        if (addon.id == UBLOCK_ORIGIN.id && addon.downloadUrl == UBLOCK_ORIGIN.downloadUrl) {
+            return true
+        } else {
+            return false
+        }
+    }
 
+    /**
+     * Install an add-on
+     * 
+     * @param components Application components
+     * @param addon The add-on we should install
+     * @param checkUBlock Whether we should check if the add-on is uBlock Origin
+     */
     suspend fun installAddon(
         components: Components,
         addon: Addon,
+        checkUBlock: Boolean,
     ): Result<Addon> = withContext(Dispatchers.IO) {
         runCatching {
             val addonManager = components.addonManager
             val addons = addonManager.getAddons(waitForPendingActions = false)
-            if (addons.none { it.id == addon.id && it.isInstalled() }) {
-                logger.warn("Installing addon: '${addon.id}'")
+
+            fun verifyUBlock(): Boolean {
+                if (checkUBlock) {
+                    return isUBlockOrigin(addon)
+                } else {
+                    return true
+                }
+            }
+
+            if (addons.none { it.id == addon.id && it.isInstalled() } && verifyUBlock()) {
+                logger.warn("Installing add-on: '${addon.id}'")
                 val deferred = withContext(Dispatchers.Main) {
                     val deferred = CompletableDeferred<Addon>()
                     addonManager.installAddon(
                         url = addon.downloadUrl,
                         installationMethod = InstallationMethod.MANAGER,
                         onSuccess = { result ->
-                            logger.info("Addon '${addon.id}' installed.")
+                            logger.info("Add-on: '${addon.id}' installed.")
                             deferred.complete(result)
                         },
                         onError = { err ->
-                            logger.error("Failed to install addon with id '${addon.id}'", err)
+                            logger.error("Failed to install add-on: '${addon.id}'", err)
                             deferred.completeExceptionally(err)
                         }
                     )

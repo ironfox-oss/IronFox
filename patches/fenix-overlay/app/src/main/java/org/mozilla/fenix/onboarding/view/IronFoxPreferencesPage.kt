@@ -354,7 +354,7 @@ private suspend fun installUBlockOrigin(
     }
 
     val components = context.components
-    val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN)
+    val result = IronFoxAddons.installAddon(components, IronFoxAddons.UBLOCK_ORIGIN, true)
     if (result.isFailure) {
         logger.error("Failed to install uBlock Origin", result.exceptionOrNull())
         onContentStateChange(
