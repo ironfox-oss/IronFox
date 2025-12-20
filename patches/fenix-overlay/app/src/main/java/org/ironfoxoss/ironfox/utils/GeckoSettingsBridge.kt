@@ -9,6 +9,7 @@ import mozilla.components.concept.engine.preferences.BrowserPreference
 import mozilla.components.ExperimentalAndroidComponentsApi
 import mozilla.components.concept.engine.Engine
 import org.ironfoxoss.ironfox.utils.GeckoSettingsDictionary
+import org.ironfoxoss.ironfox.utils.IronFoxConstants
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.ext.settings
 
@@ -336,7 +337,7 @@ object GeckoSettingsBridge {
         // Remote Debugging: We want to reset this (to false) on launch for release builds for privacy and security reasons
         val remoteDebuggingGeckoPref = GeckoSettingsDictionary.remoteDebugging
 
-        if (context.packageName != "org.ironfoxoss.ironfox.nightly") {
+        if (IronFoxConstants.isRelease(context)) {
             clearPref(engine, remoteDebuggingGeckoPref)
         }
 
