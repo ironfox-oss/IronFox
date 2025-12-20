@@ -22,6 +22,8 @@ object IronFoxPreferences {
 
     /**
      * Check if WebGL is disabled
+     *
+     * @param context The application context
      */
     fun isWebGLDisabled(
         context: Context
@@ -44,6 +46,8 @@ object IronFoxPreferences {
 
     /**
      * Check if support for Accessibility Services is enabled
+     *
+     * @param context The application context
      */
     fun isAccessibilityEnabled(
         context: Context
@@ -66,6 +70,8 @@ object IronFoxPreferences {
 
     /**
      * Check if JavaScript is enabled
+     *
+     * @param context The application context
      */
     fun isJavaScriptEnabled(
         context: Context
@@ -88,6 +94,8 @@ object IronFoxPreferences {
 
     /**
      * Check if our WebGL overrides are enabled
+     *
+     * @param context The application context
      */
     fun isFPPOverridesIronFoxWebGLEnabled(
         context: Context
@@ -119,6 +127,8 @@ object IronFoxPreferences {
 
     /**
      * Check if we should always use private browsing mode
+     *
+     * @param context The application context
      */
     fun isAlwaysUsePrivateBrowsing(
         context: Context
@@ -141,6 +151,8 @@ object IronFoxPreferences {
 
     /**
      * Check if disk cache is enabled
+     *
+     * @param context The application context
      */
     fun isCacheEnabled(
         context: Context
@@ -163,6 +175,8 @@ object IronFoxPreferences {
 
     /**
      * Check if our fingerprinting protection overrides are enabled
+     *
+     * @param context The application context
      */
     fun isFPPOverridesIronFoxEnabled(
         context: Context
@@ -185,6 +199,8 @@ object IronFoxPreferences {
 
     /**
      * Check if Mozilla's fingerprinting protection overrides are enabled
+     *
+     * @param context The application context
      */
     fun isFPPOverridesMozillaEnabled(
         context: Context
@@ -207,6 +223,8 @@ object IronFoxPreferences {
 
     /**
      * Check if our timezone spoofing overrides are enabled
+     *
+     * @param context The application context
      */
     fun isFPPOverridesIronFoxTimezoneEnabled(
         context: Context
@@ -229,6 +247,8 @@ object IronFoxPreferences {
 
     /**
      * Check if locale spoofing is enabled
+     *
+     * @param context The application context
      */
     fun isSpoofEnglishEnabled(
         context: Context,
@@ -251,6 +271,8 @@ object IronFoxPreferences {
 
     /**
      * Check if timezone spoofing is enabled
+     *
+     * @param context The application context
      */
     fun isSpoofTimezoneEnabled(
         context: Context,
@@ -273,6 +295,8 @@ object IronFoxPreferences {
 
     /**
      * Check if add-on installation is enabled
+     *
+     * @param context The application context
      */
     fun isXPInstallEnabled(
         context: Context,
@@ -295,6 +319,8 @@ object IronFoxPreferences {
 
     /**
      * Check if JavaScript Just-in-time compilation (JIT) is enabled
+     *
+     * @param context The application context
      */
     fun isJITEnabled(
         context: Context
@@ -319,6 +345,8 @@ object IronFoxPreferences {
     /**
      * Check if JavaScript Just-in-time compilation (JIT) for extensions is enabled
      * (if JIT is otherwise disabled globally)
+     *
+     * @param context The application context
      */
     fun isJITTrustedPrincipalsEnabled(
         context: Context
@@ -341,6 +369,8 @@ object IronFoxPreferences {
 
     /**
      * Check if printing capabilities are enabled
+     *
+     * @param context The application context
      */
     fun isPrintEnabled(
         context: Context,
@@ -363,6 +393,8 @@ object IronFoxPreferences {
 
     /**
      * Check if Safe Browsing is enabled
+     *
+     * @param context The application context
      */
     fun isSafeBrowsingEnabled(
         context: Context
@@ -385,6 +417,8 @@ object IronFoxPreferences {
 
     /**
      * Check if Scalar Vector Graphics (SVG) is enabled
+     *
+     * @param context The application context
      */
     fun isSVGEnabled(
         context: Context
@@ -407,6 +441,8 @@ object IronFoxPreferences {
 
     /**
      * Check if WebAssembly (WASM) is enabled
+     *
+     * @param context The application context
      */
     fun isWASMEnabled(
         context: Context
@@ -429,6 +465,8 @@ object IronFoxPreferences {
 
     /**
      * Check if WebRTC is enabled globally
+     *
+     * @param context The application context
      */
     fun isWebRTCEnabled(
         context: Context
@@ -451,6 +489,8 @@ object IronFoxPreferences {
 
     /**
      * Check if collections are enabled
+     *
+     * @param context The application context
      */
     fun isCollectionsEnabled(
         context: Context
@@ -473,6 +513,8 @@ object IronFoxPreferences {
 
     /**
      * Check if Firefox Translations is enabled
+     *
+     * @param context The application context
      */
     fun isTranslationsEnabled(
         context: Context
@@ -495,6 +537,8 @@ object IronFoxPreferences {
 
     /**
      * Check if IPv6 network connectivity is enabled
+     *
+     * @param context The application context
      */
     fun isIPv6Enabled(
         context: Context
@@ -517,6 +561,8 @@ object IronFoxPreferences {
 
     /**
      * Check if PDF.js is disabled
+     *
+     * @param context The application context
      */
     fun isPDFjsDisabled(
         context: Context
@@ -539,6 +585,8 @@ object IronFoxPreferences {
 
     /**
      * Check if support for UnifiedPush is enabled
+     *
+     * @param context The application context
      */
     fun isUnifiedPushEnabled(
         context: Context
@@ -561,6 +609,8 @@ object IronFoxPreferences {
 
     /**
      * Check if we should use UnifiedPush to deliver push notifications
+     *
+     * @param context The application context
      */
     fun shouldUseUnifiedPush(
         context: Context
@@ -583,6 +633,8 @@ object IronFoxPreferences {
 
     /**
      * Check if Encrypted Media Extensions (EME) is enabled
+     *
+     * @param context The application context
      */
     fun isEMEEnabled(
         context: Context
