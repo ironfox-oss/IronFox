@@ -52,7 +52,8 @@ object GeckoSettingsBridge {
         setIronFoxOnboardingCompleted(context, engine)
         clearIronFoxPrefs(context, engine)
 
-        // We don't support EME, but, if a user enables it from the about:config, we need to expose the permision UI for it
+        // We don't support EME, but, if a user enables it from the about:config,
+        // we need to expose the permision UI for it.
         // If we don't, and a user enables it, Gecko will just allow every site unconditionally to use EME...
         val emeGeckoPref = "media.eme.enabled"
         @OptIn(ExperimentalAndroidComponentsApi::class)
