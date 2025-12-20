@@ -11,10 +11,40 @@ import org.mozilla.fenix.components.Components
 object IronFoxAddons {
     private val logger = Logger("IronFoxAddons")
 
+    val FXA_WEBCHANNEL = Addon(
+        id = "fxa@mozac.org"
+    )
+    
+    val ICONS = Addon(
+        id = "icons@mozac.org"
+    )
+
+    val READERVIEW = Addon(
+        id = "readerview@mozac.org"
+    )
+
+    val WEBCOMPAT = Addon(
+        id = "webcompat@mozilla.org"
+    )
+
     val UBLOCK_ORIGIN = Addon(
         id = "uBlock0@raymondhill.net",
         downloadUrl = "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi"
     )
+
+    /**
+     * Determine whether an add-on is built-in
+     * 
+     * @param addon The add-on we should check
+     */
+    fun isBuiltIn(addon: Addon): Boolean {
+        if (addon.id == FXA_WEBCHANNEL.id || addon.id == ICONS.id || addon.id == READERVIEW.id ||
+        addon.id == WEBCOMPAT.id) {
+            return true
+        } else {
+            return false
+        }
+    }
 
     /**
      * Determine whether an add-on is uBlock Origin
