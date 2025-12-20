@@ -345,6 +345,13 @@ patches:
     effect: "Improves user experience by removing an unwanted Sync promotion."
     category: "Mozilla"
 
+  - file: "gecko-remove-url-tracking-params.patch"
+    name: "Remove URL Tracking Parameters"
+    description: "Prevents the browser from appending URL tracking parameters to Mozilla support links."
+    reason: "To improve privacy."
+    effect: "Improves privacy by removing unnecessary URL tracking parameters from Mozilla support links."
+    category: "Mozilla"
+
   # Privacy
   - file: "fenix-configure-doh.patch"
     name: "Configure DNS over HTTPS"
