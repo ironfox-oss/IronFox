@@ -1,3 +1,21 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
+index 3519c51aa3cf4..cfffa7cfa5006 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
+@@ -178,10 +178,10 @@ class HomeMenuView(
+                     HomeFragmentDirections.actionGlobalBrowser(),
+                 )
+                 fenixBrowserUseCases.loadUrlOrSearch(
+-                    searchTermOrURL = SupportUtils.getSumoURLForTopic(
+-                        context = context,
++                    searchTermOrURL = SupportUtils.ANDROID_SUPPORT_SUMO_URL,
++/*                        context = context,
+                         topic = SupportUtils.SumoTopic.HELP,
+-                    ),
++                    ), */
+                     newTab = true,
+                     private = homeActivity.browsingModeManager.mode.isPrivate,
+                 )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
 index fbd12fc813..a67c104033 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt

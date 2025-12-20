@@ -341,7 +341,9 @@ $SED -i -e 's|GOOGLE_US_URL = ".*"|GOOGLE_US_URL = ""|g' app/src/main/java/org/m
 $SED -i -e 's|GOOGLE_XX_URL = ".*"|GOOGLE_XX_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 $SED -i -e 's|RATE_APP_URL = ".*"|RATE_APP_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
+$SED -i -e 's|ANDROID_SUPPORT_SUMO_URL = ".*"|ANDROID_SUPPORT_SUMO_URL = "https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 $SED -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i 's|mzl.la/AndroidSupport|https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 $SED -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
 # Fenix uses reflection to create a instance of profile based on the text of
