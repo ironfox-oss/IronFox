@@ -8,7 +8,9 @@ This list is not exhaustive...
 
 ## Privacy
 
+- Blocks websites from prompting to access external apps and services by default
 - Blocks websites from prompting to access geolocation by default
+- Blocks websites from prompting to access the local network by default
 - Clears browsing history on exit by default
 - Clears cache on exit by default
 - Clears download history on exit by default
@@ -24,6 +26,7 @@ This list is not exhaustive...
 - Enables [Global Privacy Control](https://globalprivacycontrol.org/) by default, and hides the UI to prevent users from easily/unnecessarily making themselves more fingerprintable
 - Enables [proxy bypass protection](https://searchfox.org/firefox-main/rev/9a44e01d/toolkit/moz.configure#1920) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L141)
 - Enables [Strict Enhanced Tracking Protection *(ETP Strict)*](https://support.mozilla.org/kb/enhanced-tracking-protection-firefox-desktop#w_strict-enhanced-tracking-protection)
+- Enables support for [Local Network Access Restrictions](https://wicg.github.io/local-network-access/) by default
 - Includes a default, local set of homepage wallpapers, instead of downloading them from a server remotely
 - Installs [uBlock Origin](https://addons.mozilla.org/addon/uBlock0@raymondhill.net) by default, and configures it to provide stronger protection out of the box
 - Prevents the browser from fetching favicons for homepage shortcuts/pins on launch, without prior user interaction
@@ -57,6 +60,7 @@ IronFox **additionally**:
 - Disables `SSLKEYLOGGING` at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/f9a0a07793125d4e989414113a60e9a8379dcd81/scripts/prebuild.sh#L688) *([1](https://bugzilla.mozilla.org/show_bug.cgi?id=1183318), [2](https://bugzilla.mozilla.org/show_bug.cgi?id=1915224))*
 - Disables support for [GSS-API negotiate authentication](https://htmlpreview.github.io/?https://github.com/mdn/archived-content/blob/main/files/en-us/mozilla/integrated_authentication/raw.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L50)
 - Disables support for [WebDriver remote protocols](https://firefox-source-docs.mozilla.org/remote/index.html) at [build-time](https://gitlab.com/ironfox-oss/IronFox/-/blob/39919c0bd085ba86c3a92647a2aebd8aeb1d79b1/patches/gecko-overlay/ironfox/mozconfigs/core.mozconfig#L86)
+- Enables memory tagging *(via [Android's Arm Memory Tagging Extension](https://developer.android.com/ndk/guides/arm-mte))* for supported devices
 - Enables the use of encrypted storage *([via Android's Keystore system](https://developer.android.com/privacy-and-security/keystore))* for Firefox account state
 - Enables [Fission](https://wiki.mozilla.org/Project_Fission) *(basic per-site process isolation)* by default
 - Enables [Google Safe Browsing](https://support.mozilla.org/kb/how-does-phishing-and-malware-protection-work) by default, with [a proxy](https://gitlab.com/ironfox-oss/safebrowsing-proxy) to protect the privacy of users, and adds a toggle to enable/disable it, located at `IronFox` -> `IronFox settings` -> `Security` -> `Enable Safe Browsing` in settings
