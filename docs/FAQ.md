@@ -154,7 +154,7 @@ Currently, the following extensions are included by default:
 - [`Mozilla Android Components - Browser Icons` *(`icons@mozac.org`)*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/browser/icons/src/main/assets/extensions/browser-icons)
 	- Provides support for the display of favicons *(ex. for websites pinned to the homepage)*
 - [`Mozilla Android Components - Firefox Accounts WebChannel` *(`fxa@mozac.org`)*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/feature/accounts/src/main/assets/extensions/fxawebchannel)
-	- Provides support for Firefox Sync
+	- Provides support for Firefox Sync authentication
 - [`Mozilla Android Components - ReaderView` *(`readerview@mozac.org`)*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/feature/readerview/src/main/assets/extensions/readerview)
 	- Provides support for reader mode
 - [`Web Compatibility Interventions` *(`webcompat@mozilla.org`)*](https://searchfox.org/firefox-main/source/browser/extensions/webcompat)
