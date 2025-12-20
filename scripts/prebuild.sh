@@ -284,67 +284,63 @@ rm -vrf app/src/main/java/org/mozilla/fenix/settings/datachoices
 rm -vrf app/src/main/java/org/mozilla/fenix/startupCrash
 
 # Let it be IronFox
-if [[ "$IRONFOX_RELEASE" == 1 ]]; then
-    $SED -i \
-    -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
-    -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
-    -e 's/Agree and continue/Continue/' \
+$SED -i \
     -e 's/Address bar - Firefox Suggest/Address bar/' \
-    -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
-    -e '/about_content/s/Mozilla/IronFox OSS/' \
-    -e 's/IronFox Suggest/Firefox Suggest/' \
-    -e 's/Learn more about Firefox Suggest/Learn more about search suggestions/' \
-    -e 's/Suggestions from %1$s/Suggestions from Mozilla/' \
-    -e 's/Notifications for tabs received from other IronFox devices/Notifications for tabs received from other devices/' \
-    -e 's/To send a tab, sign in to IronFox/To send a tab, sign in to a Firefox-based web browser/' \
-    -e 's/On your computer open IronFox and/On your computer, open a Firefox-based web browser, and/' \
+    -e 's/Agree and continue/Continue/' \
     -e 's/Fast and secure web browsing/The private, secure, user first web browser for Android./' \
-    -e 's/Sync is on/Firefox Sync is on/' \
-    -e 's/No account?/No Firefox account?/' \
-    -e 's/to sync IronFox/to sync your browsing data/' \
-    -e 's/%s will stop syncing with your account/%s will stop syncing with your Firefox account/' \
-    -e 's/%1$s decides when to use secure DNS to protect your privacy/IronFox will use your system’s DNS resolver/' \
+    -e 's/Google Search/Google search/' \
+    -e 's/Learn more about Firefox Suggest/Learn more about search suggestions/' \
+    -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
+    -e 's/Notifications for tabs received from other Firefox devices/Notifications for tabs received from other devices/' \
+    -e 's/Securely send tabs between your devices and discover other privacy features in Firefox/IronFox can remind you when private tabs are open and show you the progress of file downloads/' \
+    -e 's/Suggestions from %1$s/Suggestions from Mozilla/' \
     -e 's/Use your default DNS resolver if there is a problem with the secure DNS provider/Use your default DNS resolver/' \
     -e 's/You control when to use secure DNS and choose your provider/IronFox will use secure DNS with your chosen provider by default, but might fallback to your system’s DNS resolver if secure DNS is unavailable/' \
+    -e 's/You don’t have any tabs open in Firefox on your other devices/You don’t have any tabs open on your other devices/' \
+    -e '/about_content/s/Mozilla/IronFox OSS/' \
     -e '/preference_doh_off_summary/s/Use your default DNS resolver/Never use secure DNS, even if supported by your system’s DNS resolver/' \
-    -e 's/Learn more about sync/Learn more about Firefox Sync/' \
     -e 's/search?client=firefox&amp;q=%s/search?q=%s/' \
-    -e 's/You don’t have any tabs open in IronFox on your other devices/You don’t have any tabs open on your other devices/' \
-    -e 's/Google Search/Google search/' \
+    -e 's/to sync Firefox/to sync your browsing data/' \
+    -e 's/%1$s decides when to use secure DNS to protect your privacy/IronFox will use your system’s DNS resolver/' \
+    app/src/*/res/values*/*strings.xml
+
+# Replace instances of "Firefox" with "IronFox" or "IronFox Nightly"
+## Also ensure that Firefox Suggest isn't incorrectly labeled as "IronFox Suggest",
+## because Firefox Suggest suggestions are provided by Mozilla, not us, and
+## ensure text states to sign-in to a "Firefox-based web browser" instead of "IronFox" on desktop
+if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+    $SED -i \
+    -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
+    -e 's/IronFox Suggest/Firefox Suggest/' \
+    -e 's/On your computer open IronFox and/On your computer, open a Firefox-based web browser, and/' \
+    -e 's/To send a tab, sign in to IronFox/To send a tab, sign in to a Firefox-based web browser/' \
     app/src/*/res/values*/*strings.xml
 else
     $SED -i \
-    -e 's/Notifications help you stay safer with Firefox/Enable notifications/' \
-    -e 's/Securely send tabs between your devices and discover other privacy features in Firefox./IronFox can remind you when private tabs are open and show you the progress of file downloads./' \
-    -e 's/Agree and continue/Continue/' \
-    -e 's/Address bar - Firefox Suggest/Address bar/' \
     -e 's/Firefox Daylight/IronFox Nightly/; s/Firefox Fenix/IronFox Nightly/; s/Mozilla Firefox/IronFox Nightly/; s/Firefox/IronFox Nightly/g' \
-    -e '/about_content/s/Mozilla/IronFox OSS/' \
     -e 's/IronFox Nightly Suggest/Firefox Suggest/' \
-    -e 's/Learn more about Firefox Suggest/Learn more about search suggestions/' \
-    -e 's/Suggestions from %1$s/Suggestions from Mozilla/' \
-    -e 's/Notifications for tabs received from other IronFox devices/Notifications for tabs received from other devices/' \
-    -e 's/To send a tab, sign in to IronFox Nightly/To send a tab, sign in to a Firefox-based web browser/' \
     -e 's/On your computer open IronFox Nightly and/On your computer, open a Firefox-based web browser, and/' \
-    -e 's/Fast and secure web browsing/The private, secure, user first web browser for Android./' \
-    -e 's/Sync is on/Firefox Sync is on/' \
-    -e 's/No account?/No Firefox account?/' \
-    -e 's/to sync IronFox Nightly/to sync your browsing data/' \
-    -e 's/%s will stop syncing with your account/%s will stop syncing with your Firefox account/' \
-    -e 's/%1$s decides when to use secure DNS to protect your privacy/IronFox will use your system’s DNS resolver/' \
-    -e 's/Use your default DNS resolver if there is a problem with the secure DNS provider/Use your default DNS resolver/' \
-    -e 's/You control when to use secure DNS and choose your provider/IronFox will use secure DNS with your chosen provider by default, but might fallback to your system’s DNS resolver if secure DNS is unavailable/' \
-    -e '/preference_doh_off_summary/s/Use your default DNS resolver/Never use secure DNS, even if supported by your system’s DNS resolver/' \
-    -e 's/Learn more about sync/Learn more about Firefox Sync/' \
-    -e 's/search?client=firefox&amp;q=%s/search?q=%s/' \
-    -e 's/You don’t have any tabs open in IronFox Nightly on your other devices/You don’t have any tabs open on your other devices/' \
-    -e 's/Google Search/Google search/' \
+    -e 's/To send a tab, sign in to IronFox Nightly/To send a tab, sign in to a Firefox-based web browser/' \
     app/src/*/res/values*/*strings.xml
 fi
 
-$SED -i -e 's/GOOGLE_URL = ".*"/GOOGLE_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-$SED -i -e 's/GOOGLE_US_URL = ".*"/GOOGLE_US_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-$SED -i -e 's/GOOGLE_XX_URL = ".*"/GOOGLE_XX_URL = ""/' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+# Refer to "account" as "Firefox account" and "Sync" as "Firefox Sync"
+## This makes it clear that these are third-party services, not operated by us
+## (We need to set these last to ensure that "Firefox" here is not replaced with
+##  "IronFox" or "IronFox Nightly")
+$SED -i \
+    -e 's/Learn more about sync/Learn more about Firefox Sync/' \
+    -e 's/No account?/No Firefox account?/' \
+    -e 's/Sync is on/Firefox Sync is on/' \
+    -e 's/%s will stop syncing with your account/%s will stop syncing with your Firefox account/' \
+    app/src/*/res/values*/*strings.xml
+
+$SED -i -e 's|FENIX_PLAY_STORE_URL = ".*"|FENIX_PLAY_STORE_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's|GOOGLE_URL = ".*"|GOOGLE_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's|GOOGLE_US_URL = ".*"|GOOGLE_US_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's|GOOGLE_XX_URL = ".*"|GOOGLE_XX_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+$SED -i -e 's|RATE_APP_URL = ".*"|RATE_APP_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+
 $SED -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 $SED -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
