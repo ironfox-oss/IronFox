@@ -1,12 +1,12 @@
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-index be8a66d479..f842cab839 100644
+index be8a66d479829..6808db5b501b0 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
 @@ -295,6 +295,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
              technicalAndInteraction.isChecked = true
          }
  
-+        if (addon.id == "uBlock0@raymondhill.net") {
++        if (addon.id == "uBlock0@raymondhill.net" && addon.downloadUrl == "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi") {
 +            allowedInPrivateBrowsing.isChecked = true
 +        }
 +
