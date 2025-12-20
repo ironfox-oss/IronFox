@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..f60dde35d6 100644
+index 35d4c5a9c0a4f..d7ec539165ad1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -1384,7 +1384,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -7,7 +7,7 @@ index 35d4c5a9c0..f60dde35d6 100644
                  for (service in activeServices) {
                      if (service.capabilities.and(CAPABILITY_CAN_PERFORM_GESTURES) == 1) {
 -                        return true
-+                        return accessibilityEnabled
++                        return ironfox.accessibilityEnabled
                      }
                  }
              }
@@ -16,7 +16,7 @@ index 35d4c5a9c0..f60dde35d6 100644
              val accessibilityManager =
                  appContext.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager
 -            return accessibilityManager?.isTouchExplorationEnabled ?: false
-+            return accessibilityEnabled && (accessibilityManager?.isTouchExplorationEnabled ?: false)
++            return ironfox.accessibilityEnabled && (accessibilityManager?.isTouchExplorationEnabled ?: false)
          }
  
      val accessibilityServicesEnabled: Boolean

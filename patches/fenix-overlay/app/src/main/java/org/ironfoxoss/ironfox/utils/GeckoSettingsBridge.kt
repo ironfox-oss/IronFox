@@ -260,8 +260,8 @@ object GeckoSettingsBridge {
     }
 
     fun setAutoplayBlockingPolicy(context: Context, engine: Engine) {
-        val autoplayBlockingClickToPlay = context.settings().autoplayBlockingClickToPlay as Boolean
-        val autoplayBlockingSticky = context.settings().autoplayBlockingSticky as Boolean
+        val autoplayBlockingClickToPlay = context.settings().ironfox.autoplayBlockingClickToPlay as Boolean
+        val autoplayBlockingSticky = context.settings().ironfox.autoplayBlockingSticky as Boolean
         val autoplayBlockingPolicyGeckoPref = GeckoSettingsDictionary.autoplayPolicy
 
         if (autoplayBlockingClickToPlay) {
@@ -277,8 +277,8 @@ object GeckoSettingsBridge {
     }
 
     fun setPreferredWebsiteAppearance(context: Context, engine: Engine) {
-        val prefersBrowserColorScheme = context.settings().prefersBrowserColorScheme as Boolean
-        val prefersDarkColorScheme = context.settings().prefersDarkColorScheme as Boolean
+        val prefersBrowserColorScheme = context.settings().ironfox.prefersBrowserColorScheme as Boolean
+        val prefersDarkColorScheme = context.settings().ironfox.prefersDarkColorScheme as Boolean
         val preferredWebsiteAppearanceGeckoPref = GeckoSettingsDictionary.websiteAppearance
 
         if (prefersBrowserColorScheme) {
@@ -294,8 +294,8 @@ object GeckoSettingsBridge {
     }
 
     fun setRefererXOriginPolicy(context: Context, engine: Engine) {
-        val refererXOriginBaseDomainsMatch = context.settings().refererXOriginBaseDomainsMatch as Boolean
-        val refererXOriginHostsMatch = context.settings().refererXOriginHostsMatch as Boolean
+        val refererXOriginBaseDomainsMatch = context.settings().ironfox.refererXOriginBaseDomainsMatch as Boolean
+        val refererXOriginHostsMatch = context.settings().ironfox.refererXOriginHostsMatch as Boolean
         val refererXOriginPolicyGeckoPref = GeckoSettingsDictionary.refererXOriginPolicy
 
         if (refererXOriginHostsMatch) {

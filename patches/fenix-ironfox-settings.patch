@@ -51,194 +51,27 @@ index d0e61a00fc..9fab5ae117 100644
          if (profilerStatus) {
              findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..c918b18661 100644
+index 35d4c5a9c0a4f..0445244f0158d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2743,4 +2743,184 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         val cleanupPreferenceKey = appContext.getString(R.string.pref_key_downloads_clean_up_files_automatically)
-         return sharedPreferences.getBoolean(cleanupPreferenceKey, false)
+@@ -79,6 +79,8 @@ import org.mozilla.fenix.wallpapers.Wallpaper
+ import java.security.InvalidParameterException
+ import java.util.UUID
+ import java.util.concurrent.TimeUnit.MILLISECONDS
++import org.ironfoxoss.ironfox.utils.IronFoxSettings
++import org.mozilla.fenix.perf.lazyMonitored
+ 
+ private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
+ 
+@@ -167,6 +169,8 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+         private const val CLOUDFLARE_URI = "https://mozilla.cloudflare-dns.com/dns-query"
      }
+ 
++    val ironfox by lazyMonitored { IronFoxSettings(appContext) }
 +
-+    var accessibilityEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_accessibility_enabled),
-+        default = false,
-+    )
-+
-+    var alwaysUsePrivateBrowsing by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_always_use_private_browsing),
-+        default = false,
-+    )
-+
-+    var autoplayBlockingClickToPlay by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_autoplay_policy_click_to_play),
-+        default = false,
-+    )
-+
-+    var autoplayBlockingSticky by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_autoplay_policy_sticky),
-+        default = false,
-+    )
-+
-+    var autoplayBlockingTransient by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_autoplay_policy_transient),
-+        default = true,
-+    )
-+
-+    var cacheEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_cache_enabled),
-+        default = false,
-+    )
-+
-+    var emeEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_eme_enabled),
-+        default = false,
-+    )
-+
-+    var enableUnifiedPush by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_enable_unifiedpush),
-+        default = true,
-+    )
-+
-+    var fppOverridesIronFoxEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_enabled),
-+        default = true,
-+    )
-+
-+    var fppOverridesIronFoxTimezoneEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_timezone_enabled),
-+        default = true,
-+    )
-+
-+    var fppOverridesIronFoxWebGLEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_ironfox_webgl_enabled),
-+        default = true,
-+    )
-+
-+    var fppOverridesMozillaEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_fpp_overrides_mozilla_enabled),
-+        default = true,
-+    )
-+
-+    var ironFoxOnboardingCompleted by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_if_onboarding_completed),
-+        default = false,
-+    )
-+
-+    var ipv6Enabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_ipv6_enabled),
-+        default = true,
-+    )
-+
-+    var javascriptEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_javascript_enabled),
-+        default = true,
-+    )
-+
-+    var javascriptJitEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_jit_enabled),
-+        default = false,
-+    )
-+
-+    var javascriptJitTrustedPrincipalsEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_jit_trusted_principals_enabled),
-+        default = false,
-+    )
-+
-+    var pdfjsDisabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_pdfjs_disabled),
-+        default = false,
-+    )
-+
-+    var prefersBrowserColorScheme by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_prefers_browser_color_scheme),
-+        default = false,
-+    )
-+
-+    var prefersDarkColorScheme by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_prefers_dark_color_scheme),
-+        default = false,
-+    )
-+
-+    var prefersLightColorScheme by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_prefers_light_color_scheme),
-+        default = true,
-+    )
-+
-+    var printEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_print_enabled),
-+        default = true,
-+    )
-+
-+    var openLinksInAPrivateTabCachedValue by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_open_links_in_a_private_tab_cached_value),
-+        default = false,
-+    )
-+
-+    var refererXOriginAlways by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_always),
-+        default = true,
-+    )
-+
-+    var refererXOriginBaseDomainsMatch by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_base_domains_match),
-+        default = false,
-+    )
-+
-+    var refererXOriginHostsMatch by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_referer_policy_hosts_match),
-+        default = false,
-+    )
-+
-+    var safeBrowsingEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_safe_browsing_enabled),
-+        default = true,
-+    )
-+
-+    var spoofEnglish by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_spoof_english),
-+        default = true,
-+    )
-+
-+    var spoofTimezone by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_spoof_timezone),
-+        default = false,
-+    )
-+
-+    var svgEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_svg_enabled),
-+        default = true,
-+    )
-+
-+    var translationsEnabled by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_translations_enabled),
-+        default = true,
-+    )
-+
-+    var useUnifiedPush by booleanPreference(
-+        key = appContext.getPreferenceKey(R.string.pref_key_use_unifiedpush),
-+        default = false,
-+    )
-+
-+    var wasmEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_wasm_enabled),
-+        default = true,
-+    )
-+
-+    var webglDisabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_webgl_disabled),
-+        default = true,
-+    )
-+
-+    var webrtcEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_webrtc_enabled),
-+        default = true,
-+    )
-+
-+    var xpinstallEnabled by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_xpinstall_enabled),
-+        default = false,
-+    )
- }
+     private val logger = Logger("Settings")
+ 
+     @VisibleForTesting
 diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 index 77c0a5cae4..510e4ca0fb 100644
 --- a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml

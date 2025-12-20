@@ -60,7 +60,7 @@ index 68190994b3..2b59856daf 100644
          }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index f99ef999cf..10b8f0b500 100644
+index f99ef999cfa7a..5c446e8ba84f0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 @@ -8,31 +8,89 @@ import android.content.Context
@@ -97,7 +97,7 @@ index f99ef999cf..10b8f0b500 100644
 +
 +    val feature: Pusher?
 +        get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
-+            if (settings.useUnifiedPush) {
++            if (settings.ironfox.useUnifiedPush) {
 +                unifiedPushFeature.also { feature ->
 +                    if (feature.isAvailable(context)) {
 +                        logger.info("Using UnifiedPush")
@@ -117,7 +117,7 @@ index f99ef999cf..10b8f0b500 100644
 +                            notificationId = notificationId,
 +                            notification = notification
 +                        )
-+                        settings.useUnifiedPush = false
++                        settings.ironfox.useUnifiedPush = false
 +                    }
 +                }
 +            } else {

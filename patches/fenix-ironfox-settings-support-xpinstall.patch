@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
-index 69b25294b6..d2c41b182b 100644
+index 69b25294b63e9..387a69d829dce 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/extension/WebExtensionPromptFeature.kt
 @@ -199,10 +199,12 @@ class WebExtensionPromptFeature(
@@ -7,10 +7,10 @@ index 69b25294b6..d2c41b182b 100644
                  // Message = Failed to install $addonName
                  title = ""
 -                if (addonName.isNotEmpty()) {
-+                if (context.components.settings.xpinstallEnabled && addonName.isNotEmpty()) {
++                if (context.components.settings.ironfox.xpinstallEnabled && addonName.isNotEmpty()) {
                      context.getString(addonsR.string.mozac_feature_addons_failed_to_install, addonName)
 -                } else {
-+                } else if (context.components.settings.xpinstallEnabled) {
++                } else if (context.components.settings.ironfox.xpinstallEnabled) {
                      context.getString(addonsR.string.mozac_feature_addons_extension_failed_to_install)
 +                } else {
 +                    context.getString(R.string.extension_failed_to_install_xpinstall_disabled_error)
@@ -18,7 +18,7 @@ index 69b25294b6..d2c41b182b 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index d0e61a00fc..fb9855b5fa 100644
+index d0e61a00fc43e..484f2199b8951 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -769,7 +769,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
@@ -26,7 +26,7 @@ index d0e61a00fc..fb9855b5fa 100644
      internal fun setupInstallAddonFromFilePreference(settings: Settings) {
          with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
 -            isVisible = settings.showSecretDebugMenuThisSession
-+            isVisible = settings.xpinstallEnabled && settings.showSecretDebugMenuThisSession
++            isVisible = settings.ironfox.xpinstallEnabled && settings.showSecretDebugMenuThisSession
          }
      }
  

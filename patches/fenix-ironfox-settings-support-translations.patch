@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
-index 7cf3be8c7b..14a621d100 100644
+index ec3c88ea9961e..c97d048e42d98 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/browser/BrowserFragment.kt
 @@ -203,7 +203,7 @@ class BrowserFragment : BaseBrowserFragment(), UserInteractionHandler {
@@ -7,7 +7,7 @@ index 7cf3be8c7b..14a621d100 100644
      private fun initTranslationsAction(context: Context, view: View) {
          if (
 -            !FxNimbus.features.translations.value().mainFlowToolbarEnabled
-+            !requireContext().settings().translationsEnabled
++            !requireContext().settings().ironfox.translationsEnabled
          ) {
              return
          }
@@ -16,7 +16,7 @@ index 7cf3be8c7b..14a621d100 100644
          )
  
 -        if (FxNimbus.features.translations.value().mainFlowToolbarEnabled) {
-+        if (requireContext().settings().translationsEnabled) {
++        if (requireContext().settings().ironfox.translationsEnabled) {
              translationsBinding.set(
                  feature = TranslationsBinding(
                      browserStore = rootView.context.components.core.store,

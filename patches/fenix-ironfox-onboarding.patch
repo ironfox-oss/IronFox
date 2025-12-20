@@ -115,19 +115,19 @@ index 6c70a63988de..5ce76e4151a4 100644
 +      install-ublock:
 +        description: Whether to install uBlock Origin.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 53190b359c..11dd04263a 100644
+index 53190b359cb43..1255e3f9be06a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -271,6 +271,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
          setupLeakCanary()
          if (components.fenixOnboarding.userHasBeenOnboarded()) {
-+            settings().ironFoxOnboardingCompleted = true
++            settings().ironfox.ironFoxOnboardingCompleted = true
              startMetricsIfEnabled(
                  logger = logger,
                  analytics = components.analytics,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 1318bb114a35..907d9bab737b 100644
+index 1318bb114a357..9c4b64e5b9228 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -64,6 +64,7 @@ import org.mozilla.fenix.settings.SupportUtils
@@ -142,7 +142,7 @@ index 1318bb114a35..907d9bab737b 100644
          requireComponents.fenixOnboarding.finish()
  
          val settings = requireContext().settings()
-+        settings.ironFoxOnboardingCompleted = true
++        settings.ironfox.ironFoxOnboardingCompleted = true
 +        GeckoSettingsBridge.setIronFoxPrefs(requireContext(), requireComponents.core.engine)
          viewLifecycleOwner.lifecycleScope.launch {
              initializeGlean(

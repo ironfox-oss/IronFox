@@ -874,7 +874,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
             */
             resources.getString(R.string.pref_key_use_unifiedpush) -> {
                 val context = requireActivity()
-                context.settings().apply { useUnifiedPush = !useUnifiedPush }
+                context.settings().apply { ironfox.useUnifiedPush = !ironfox.useUnifiedPush }
                 val alert = AlertDialog.Builder(context).apply {
                     setTitle(context.getString(R.string.preferences_unifiedpush))
                     setMessage(context.getString(R.string.quit_application))

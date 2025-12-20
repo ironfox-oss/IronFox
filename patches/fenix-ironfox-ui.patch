@@ -155,7 +155,7 @@ index 786460024d..f1c08c511b 100644
                      onShortcutsMenuClick = {},
                      onAddToHomeScreenMenuClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index f14c64e3f1..fa79396c25 100644
+index f14c64e3f11ad..05323054b46da 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 @@ -559,7 +559,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
@@ -181,15 +181,15 @@ index f14c64e3f1..fa79396c25 100644
                                              isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
                                              translationInfo = translationInfo,
 -                                            showShortcuts = settings.showTopSitesFeature,
-+                                            showShortcuts = settings.showTopSitesFeature && !settings.alwaysUsePrivateBrowsing,
++                                            showShortcuts = settings.showTopSitesFeature && !settings.ironfox.alwaysUsePrivateBrowsing,
                                              isAndroidAutomotiveAvailable = context.isAndroidAutomotiveAvailable(),
 +                                            areCollectionsDisabled = !settings.collections,
-+                                            isPrintDisabled = !settings.printEnabled,
++                                            isPrintDisabled = !settings.ironfox.printEnabled,
                                              onWebCompatReporterClick = {
                                                  store.dispatch(MenuAction.Navigate.WebCompatReporter)
                                              },
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index b5cd2868a6..9e116a0a70 100644
+index b5cd2868a6eb5..c01f495c0128a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 @@ -439,9 +439,9 @@ open class DefaultToolbarMenu(
@@ -211,9 +211,9 @@ index b5cd2868a6..9e116a0a70 100644
 -                if (shouldShowTopSites) addRemoveTopSitesItem else null,
 -                saveToCollectionItem,
 -                if (FxNimbus.features.print.value().browserPrintEnabled &&
-+                if (shouldShowTopSites && !context.settings().alwaysUsePrivateBrowsing) addRemoveTopSitesItem else null,
-+                if (context.settings().collections && !context.settings().alwaysUsePrivateBrowsing) saveToCollectionItem else null,
-+                if (context.settings().printEnabled &&
++                if (shouldShowTopSites && !context.settings().ironfox.alwaysUsePrivateBrowsing) addRemoveTopSitesItem else null,
++                if (context.settings().collections && !context.settings().ironfox.alwaysUsePrivateBrowsing) saveToCollectionItem else null,
++                if (context.settings().ironfox.printEnabled &&
                      !context.isAndroidAutomotiveAvailable()
                  ) {
                      printPageItem
@@ -227,7 +227,7 @@ index b5cd2868a6..9e116a0a70 100644
                  if (shouldUseBottomToolbar) menuToolbar else null,
              )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-index 849660153d..60a57c6b77 100644
+index 849660153d6e7..8e86d72a39451 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 @@ -206,17 +206,17 @@ class HomeMenu(
@@ -246,7 +246,7 @@ index 849660153d..60a57c6b77 100644
              whatsNewItem,
              helpItem,
 -            customizeHomeItem,
-+            if (!settings.alwaysUsePrivateBrowsing) customizeHomeItem else null,
++            if (!settings.ironfox.alwaysUsePrivateBrowsing) customizeHomeItem else null,
              settingsItem,
 -            if (settings.shouldDeleteBrowsingDataOnQuit) quitItem else null,
 +            quitItem,

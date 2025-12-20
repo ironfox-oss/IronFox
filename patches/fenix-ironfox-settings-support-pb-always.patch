@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index b5cd2868a6..f2e135d4ec 100644
+index b5cd2868a6eb5..05ac00c3a8f1b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 @@ -180,7 +180,7 @@ open class DefaultToolbarMenu(
@@ -7,24 +7,24 @@ index b5cd2868a6..f2e135d4ec 100644
      fun shouldShowOpenInRegularTab(): Boolean = selectedSession?.let { session ->
          // This feature is gated behind Nightly for the time being.
 -        Config.channel.isNightlyOrDebug &&
-+        !context.settings().alwaysUsePrivateBrowsing &&
++        !context.settings().ironfox.alwaysUsePrivateBrowsing &&
              // This feature is explicitly for users opening links in private tabs.
              context.settings().openLinksInAPrivateTab &&
              // and is only visible in private tabs.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
-index f0868c1821..50532aac0b 100644
+index f0868c18215da..8d65dbd28d5d6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 @@ -71,6 +71,7 @@ class PrivateBrowsingFragment : PreferenceFragmentCompat() {
          requirePreference<SwitchPreference>(R.string.pref_key_open_links_in_a_private_tab).apply {
              onPreferenceChangeListener = SharedPreferenceUpdater()
              isChecked = context.settings().openLinksInAPrivateTab
-+            isVisible = !context.settings().alwaysUsePrivateBrowsing
++            isVisible = !context.settings().ironfox.alwaysUsePrivateBrowsing
          }
  
          requirePreference<SwitchPreference>(R.string.pref_key_allow_screenshots_in_private_mode).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..4ba8277f1c 100644
+index 35d4c5a9c0a4f..4e9e91c854cea 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -1292,7 +1292,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -32,7 +32,7 @@ index 35d4c5a9c0..4ba8277f1c 100644
              )
  
 -            return if (lastKnownModeWasPrivate) {
-+            return if (alwaysUsePrivateBrowsing || lastKnownModeWasPrivate) {
++            return if (ironfox.alwaysUsePrivateBrowsing || lastKnownModeWasPrivate) {
                  BrowsingMode.Private
              } else {
                  BrowsingMode.Normal
