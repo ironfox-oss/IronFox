@@ -652,7 +652,14 @@ patches:
 
   # User Interface
   - file: "fenix-ironfox-branding.patch"
-    name: "IronFox Branding"
+    name: "IronFox Branding (Fenix)"
+    description: "Modifies the branding to IronFox."
+    reason: "Creates distinct brand identity for the fork."
+    effect: "Users can identify the fork as IronFox instead of Firefox."
+    category: "User Interface"
+
+  - file: "gecko-ironfox-branding.patch"
+    name: "IronFox Branding (Gecko)"
     description: "Modifies the branding to IronFox."
     reason: "Creates distinct brand identity for the fork."
     effect: "Users can identify the fork as IronFox instead of Firefox."
