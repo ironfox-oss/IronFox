@@ -13,7 +13,9 @@
 	- [Can I use FIDO/U2F/Passkeys?](#can-i-use-fidou2fpasskeys)
 	- [Can I receive push notifications?](#can-i-receive-push-notifications)
 	- [Can I use a custom server for Firefox Sync?](#can-i-use-a-custom-server-for-firefox-sync)
+	- [Why does IronFox include built-in extensions?](#why-does-ironfox-include-built-in-extensions)
 	- [Why are certain preferences locked?](#why-are-certain-preferences-locked)
+	- [Will IronFox support "Generative AI"?](#will-ironfox-support-generative-ai)
 	- [Why isn't Resist Fingerprinting (RFP) enabled?](#why-isnt-resist-fingerprinting-rfp-enabled)
 	- [Why can't I install add-ons/extensions?](#why-cant-i-install-add-onsextensions)
 	- [What add-ons/extensions should I install?](#what-add-onsextensions-should-i-install)
@@ -143,6 +145,21 @@ Yes. The steps that apply to standard Firefox for Android also apply to IronFox.
 
 Additionally, to change the endpoint used by sync for add-ons, from [`about:config`](about:config), you can set the value of `webextensions.storage.sync.serverURL` to your desired endpoint.
 
+## Why does IronFox include built-in extensions?
+
+By default, Firefox for Android includes built-in extensions to support certain functionality. These extensions are usually hidden from users, but IronFox displays them and allows users to enable/disable them if desired. This increases transparency, as it allows users to see what extensions are installed and why, it improves control, and it allows users to decrease attack surface and potentially improve performance if desired by disabling unused/unwanted extensions.
+
+Currently, the following extensions are included by default:
+
+- [`Mozilla Android Components - Browser Icons` *(`icons@mozac.org`)*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/browser/icons/src/main/assets/extensions/browser-icons)
+	- Provides support for the display of favicons *(ex. for websites pinned to the homepage)*
+- [`Mozilla Android Components - Firefox Accounts WebChannel` *(`fxa@mozac.org`)*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/feature/accounts/src/main/assets/extensions/fxawebchannel)
+	- Provides support for Firefox Sync
+- [`Mozilla Android Components - ReaderView` *(`readerview@mozac.org`)*](https://searchfox.org/firefox-main/source/mobile/android/android-components/components/feature/readerview/src/main/assets/extensions/readerview)
+	- Provides support for reader mode
+- [`Web Compatibility Interventions` *(`webcompat@mozilla.org`)*](https://searchfox.org/firefox-main/source/browser/extensions/webcompat)
+	- Provides support for web compatibility fixes from Mozilla *([`about:compat](about:compat))*
+
 ## Why are certain preferences locked?
 
 Due to the nature of Fenix *(Firefox for Android)*'s design, Gecko preferences don't quite work the same as they do on Firefox for Desktop/how you may expect.
@@ -160,6 +177,14 @@ Another concern is that Gecko preferences controlled by Fenix settings like this
 It's actually in large part due to these reasons that Mozilla disables access to [`about:config`](about:config) on standard Firefox releases. Of course, we disagree with Mozilla's approach here, and believe that preventing access to [`about:config`](about:config) is an unacceptable compromise for user freedom and control.
 
 So, to mitigate the concerns detailed above, Gecko preferences controlled by UI settings will appear locked in [`about:config`](about:config). **The preferences can still be modified by users**, but this ensures that the prefs are only set by their proper, corresponding UI toggle(s), and it ensures that the Gecko preferences always remain in sync with the frontend/Fenix's settings.
+
+## Will IronFox support "Generative AI"?
+
+**No**, we have no intention of providing support for "Generative AI" features, as we believe they go against our values and provide a worse browsing experience for users.
+
+Thankfully, Mozilla's "Generative AI" features haven't yet made their way to Android. But, if/when they are implemented, we will disable or remove them as applicable.
+
+We are disappointed by Mozilla's focus in this area, and would rather see them focus on [what we feel are more important matters](#arent-firefox-based-browsers-less-secure-than-chromium).
 
 ## Why isn't Resist Fingerprinting (RFP) enabled?
 
