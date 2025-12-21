@@ -260,8 +260,8 @@ object GeckoSettingsBridge {
     }
 
     fun setAutoplayBlockingPolicy(context: Context, engine: Engine) {
-        val autoplayBlockingClickToPlay = context.settings().ironfox.autoplayBlockingClickToPlay as Boolean
-        val autoplayBlockingSticky = context.settings().ironfox.autoplayBlockingSticky as Boolean
+        val autoplayBlockingClickToPlay = IronFoxPreferences.isAutoplayBlockingClickToPlay(context)
+        val autoplayBlockingSticky = IronFoxPreferences.isAutoplayBlockingSticky(context)
         val autoplayBlockingPolicyGeckoPref = GeckoSettingsDictionary.autoplayPolicy
 
         if (autoplayBlockingClickToPlay) {
@@ -277,8 +277,8 @@ object GeckoSettingsBridge {
     }
 
     fun setPreferredWebsiteAppearance(context: Context, engine: Engine) {
-        val prefersBrowserColorScheme = context.settings().ironfox.prefersBrowserColorScheme as Boolean
-        val prefersDarkColorScheme = context.settings().ironfox.prefersDarkColorScheme as Boolean
+        val prefersBrowserColorScheme = IronFoxPreferences.isPrefersBrowserColorScheme(context)
+        val prefersDarkColorScheme = IronFoxPreferences.isPrefersDarkColorScheme(context)
         val preferredWebsiteAppearanceGeckoPref = GeckoSettingsDictionary.websiteAppearance
 
         if (prefersBrowserColorScheme) {
@@ -294,8 +294,8 @@ object GeckoSettingsBridge {
     }
 
     fun setRefererXOriginPolicy(context: Context, engine: Engine) {
-        val refererXOriginBaseDomainsMatch = context.settings().ironfox.refererXOriginBaseDomainsMatch as Boolean
-        val refererXOriginHostsMatch = context.settings().ironfox.refererXOriginHostsMatch as Boolean
+        val refererXOriginBaseDomainsMatch = IronFoxPreferences.isRefererXOriginBaseDomainsMatch(context)
+        val refererXOriginHostsMatch = IronFoxPreferences.isRefererXOriginHostsMatch(context)
         val refererXOriginPolicyGeckoPref = GeckoSettingsDictionary.refererXOriginPolicy
 
         if (refererXOriginHostsMatch) {
@@ -337,7 +337,7 @@ object GeckoSettingsBridge {
         // Remote Debugging: We want to reset this (to false) on launch for release builds for privacy and security reasons
         val remoteDebuggingGeckoPref = GeckoSettingsDictionary.remoteDebugging
 
-        if (IronFoxConstants.isRelease(context)) {
+        if (!IronFoxConstants.isNightly(context)) {
             clearPref(engine, remoteDebuggingGeckoPref)
         }
 

@@ -663,4 +663,220 @@ object IronFoxPreferences {
     fun isIronFoxOnboardingCompleted(
         context: Context
     ): Boolean = context.settings().ironfox.ironFoxOnboardingCompleted
+
+    /**
+     * Set whether we should use the sticky media autoplay blocking policy
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should use the sticky media autoplay blocking policy
+     */
+    fun setAutoplayBlockingSticky(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.autoplayBlockingSticky = isEnabled
+    }
+
+    /**
+     * Check if we are using the sticky media autoplay blocking policy
+     *
+     * @param context The application context
+     */
+    fun isAutoplayBlockingSticky(
+        context: Context
+    ): Boolean = context.settings().ironfox.autoplayBlockingSticky
+
+    /**
+     * Set whether we should use the transient media autoplay blocking policy
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should use the transient media autoplay blocking policy
+     */
+    fun setAutoplayBlockingTransient(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.autoplayBlockingTransient = isEnabled
+    }
+
+    /**
+     * Check if we are using the transient media autoplay blocking policy
+     *
+     * @param context The application context
+     */
+    fun isAutoplayBlockingTransient(
+        context: Context
+    ): Boolean = context.settings().ironfox.autoplayBlockingTransient
+
+    /**
+     * Set whether we should use the click-to-play media autoplay blocking policy
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should use the click-to-play media autoplay blocking policy
+     */
+    fun setAutoplayBlockingClickToPlay(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.autoplayBlockingClickToPlay = isEnabled
+    }
+
+    /**
+     * Check if we are using the click-to-play media autoplay blocking policy
+     *
+     * @param context The application context
+     */
+    fun isAutoplayBlockingClickToPlay(
+        context: Context
+    ): Boolean = context.settings().ironfox.autoplayBlockingClickToPlay
+
+    /**
+     * Set whether we should always send cross-origin referers
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should always send cross-origin referers
+     */
+    fun setRefererXOriginAlways(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.refererXOriginAlways = isEnabled
+    }
+
+    /**
+     * Check if we should always send cross-origin referers
+     *
+     * @param context The application context
+     */
+    fun isRefererXOriginAlways(
+        context: Context
+    ): Boolean = context.settings().ironfox.refererXOriginAlways
+
+    /**
+     * Set whether we should only send cross-origin referers when base domains match
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should only send cross-origin referers when base domains match
+     */
+    fun setRefererXOriginBaseDomainsMatch(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.refererXOriginBaseDomainsMatch = isEnabled
+    }
+
+    /**
+     * Check if we should only send cross-origin referers when base domains match
+     *
+     * @param context The application context
+     */
+    fun isRefererXOriginBaseDomainsMatch(
+        context: Context
+    ): Boolean = context.settings().ironfox.refererXOriginBaseDomainsMatch
+
+    /**
+     * Set whether we should disable cross-origin referers
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should disable cross-origin referers
+     */
+    fun setRefererXOriginHostsMatch(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.refererXOriginHostsMatch = isEnabled
+    }
+
+    /**
+     * Check if cross-origin referers are disabled
+     *
+     * @param context The application context
+     */
+    fun isRefererXOriginHostsMatch(
+        context: Context
+    ): Boolean = context.settings().ironfox.refererXOriginHostsMatch
+
+    /**
+     * Set whether we should set the preferred color scheme for websites to follow the browser/system
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should prefer the browser/system's color scheme
+     */
+    fun setPrefersBrowserColorScheme(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.prefersBrowserColorScheme = isEnabled
+    }
+
+    /**
+     * Check if the preferred color scheme for websites is set to follow the browser/system
+     *
+     * @param context The application context
+     */
+    fun isPrefersBrowserColorScheme(
+        context: Context
+    ): Boolean = context.settings().ironfox.prefersBrowserColorScheme
+
+    /**
+     * Set whether we should set the preferred color scheme for websites to dark
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should prefer dark
+     */
+    fun setPrefersDarkColorScheme(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.prefersDarkColorScheme = isEnabled
+    }
+
+    /**
+     * Check if the preferred color scheme for websites is set to dark
+     *
+     * @param context The application context
+     */
+    fun isPrefersDarkColorScheme(
+        context: Context
+    ): Boolean = context.settings().ironfox.prefersDarkColorScheme
+
+    /**
+     * Set whether we should set the preferred color scheme for websites to light
+     *
+     * @param context The application context
+     * @param isEnabled Whether we should prefer light
+     */
+    fun setPrefersLightColorScheme(
+        context: Context,
+        isEnabled: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.prefersLightColorScheme = isEnabled
+    }
+
+    /**
+     * Check if the preferred color scheme for websites is set to light
+     *
+     * @param context The application context
+     */
+    fun isPrefersLightColorScheme(
+        context: Context
+    ): Boolean = context.settings().ironfox.prefersLightColorScheme
 }
