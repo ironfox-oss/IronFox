@@ -378,6 +378,10 @@ mkdir -vp app/src/main/assets/wallpapers/dark-dune
 mkdir -vp app/src/main/assets/wallpapers/dune
 mkdir -vp app/src/main/assets/wallpapers/firey-red
 
+# Display proper name and description for wallpaper collection
+$SED -i -e 's|R.string.wallpaper_artist_series_title|R.string.wallpaper_collection_fennec|' app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
+$SED -i -e 's|R.string.wallpaper_artist_series_description_with_learn_more|R.string.wallpaper_collection_fennec_description|' app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
+
 # Set up target parameters
 case "$1" in
 arm)
