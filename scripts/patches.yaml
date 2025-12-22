@@ -737,6 +737,14 @@ patches:
     effect: "Users can conveniently enable/disable these features as needed to meet their needs, without needing to dig into advanced settings or the `about:config`."
     category: "User Interface"
 
+  - file: "fenix-ironfox-settings-search.patch"
+    name: "IronFox Settings Search"
+    description: "Allows users to search for IronFox-specific UI settings."
+    reason: |
+      To allow users to easily find IronFox UI settings, like they can with standard UI settings.
+    effect: "Users can easily find and configure IronFox UI settings as desired."
+    category: "User Interface"
+
   - file: "gecko-ironfox-settings.patch"
     name: "IronFox Settings (Gecko)"
     description: "Adds support to Gecko for IronFox-specific preferences/UI settings to control various functionality."

@@ -1,0 +1,27 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
+index f8ca2b5076eef0..fa30f9b595d3a0 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
+@@ -332,6 +332,7 @@ class DefaultFenixSettingsIndexer(private val context: Context) : SettingsIndexe
+             PreferenceFileInformation.TabsPreferences,
+             PreferenceFileInformation.TrackingProtectionPreferences,
+             PreferenceFileInformation.SaveLoginsPreferences,
++            PreferenceFileInformation.IronFoxPreferences,
+         )
+     }
+ }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/PreferenceFileInformation.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/PreferenceFileInformation.kt
+index a2321f05f70ad7..f847dd0fec8c9e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/PreferenceFileInformation.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/PreferenceFileInformation.kt
+@@ -135,4 +135,10 @@ sealed class PreferenceFileInformation(
+         topBreadcrumbResourceId = R.string.preferences_passwords_save_logins_2,
+         fragmentId = R.id.savedLogins,
+     )
++
++    object IronFoxPreferences : PreferenceFileInformation(
++        xmlResourceId = R.xml.ironfox_preferences,
++        topBreadcrumbResourceId = R.string.if_preferences,
++        fragmentId = R.id.ironFoxSettingsFragment,
++    )
+ }
