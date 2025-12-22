@@ -1,6 +1,7 @@
 
 DIRS += [
     "about",
+    "components",
     "dumps",
     "enterprisepolicies",
     "prefs",
