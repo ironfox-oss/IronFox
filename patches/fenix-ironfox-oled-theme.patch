@@ -1,61 +1,58 @@
 diff --git a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt b/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
-index 4f08bd5ea3..70ae01e667 100644
+index 4f08bd5ea3e5..149a33a15fc7 100644
 --- a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
 +++ b/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
-@@ -808,6 +808,17 @@ val darkColorPalette = AcornColors(
-     surfaceDimVariant = PhotonColors.DarkGrey80,
+@@ -911,7 +911,7 @@ val privateColorPalette = darkColorPalette.copy(
  )
  
-+val oledColorPalette = darkColorPalette.copy(
-+    layer1 = PhotonColors.Black,
-+    layer2 = PhotonColors.DarkGrey90,
-+    layer3 = PhotonColors.DarkGrey80,
-+    layer4Start = PhotonColors.Black,
-+    layer4Center = PhotonColors.Black,
-+    layer4End = PhotonColors.Black,
-+    actionTertiary = PhotonColors.DarkGrey80,
-+    borderPrimary = PhotonColors.DarkGrey70,
-+)
-+
- val lightColorPalette = AcornColors(
-     layer1 = PhotonColors.LightGrey10,
-     layer2 = PhotonColors.White,
-@@ -1001,6 +1012,8 @@ fun acornDarkColorScheme(): ColorScheme = darkColorPalette.toM3ColorScheme(
-     surfaceContainerLowest = PhotonColors.DarkGrey80,
- )
- 
-+fun acornOledColorScheme(): ColorScheme = acornDarkColorScheme().copy()
-+
- /**
-  * Returns a light Material color scheme mapped from Acorn.
-  */
+ @Suppress("LongParameterList")
+-private fun AcornColors.toM3ColorScheme(
++fun AcornColors.toM3ColorScheme(
+     primary: Color,
+     primaryContainer: Color,
+     inversePrimary: Color,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 55ba069afd..0aae104b10 100644
+index 55ba069afd43..7bd2999dc48d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -616,7 +616,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -69,6 +69,7 @@ import mozilla.components.support.rusthttp.RustHttpConfig
+ import mozilla.components.support.utils.BrowsersCache
+ import mozilla.components.support.utils.logElapsedTime
+ import mozilla.components.support.webextensions.WebExtensionSupport
++import org.ironfoxoss.ironfox.utils.IronFoxPreferences
+ // import mozilla.telemetry.glean.Glean
+ import org.mozilla.fenix.GleanMetrics.Addons
+ import org.mozilla.fenix.GleanMetrics.Addresses
+@@ -616,7 +617,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      AppCompatDelegate.MODE_NIGHT_NO,
                  )
              }
 -            settings.shouldUseDarkTheme -> {
-+            settings.shouldUseDarkTheme || settings.shouldUseOledTheme -> {
++            settings.shouldUseDarkTheme || IronFoxPreferences.shouldUseOledTheme(this) -> {
                  AppCompatDelegate.setDefaultNightMode(
                      AppCompatDelegate.MODE_NIGHT_YES,
                  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cb28dc38cd..30586678e6 100644
+index cb28dc38cd76..7ab5731f6a20 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -153,6 +153,12 @@ class Core(
+@@ -137,6 +137,7 @@ import java.util.UUID
+ import java.util.concurrent.TimeUnit
+ import mozilla.components.service.pocket.mars.api.Placement as MarsSpocsPlacement
+ import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
++import org.ironfoxoss.ironfox.utils.IronFoxPreferences
+ 
+ /**
+  * Component group for all core browser functionality.
+@@ -153,6 +154,11 @@ class Core(
       * configuration (see build variants).
       */
      val engine: Engine by lazyMonitored {
-+        val clearColor = ContextCompat.getColor(context, if (context.settings().shouldUseOledTheme) {
++        val clearColor = ContextCompat.getColor(context, if (IronFoxPreferences.shouldUseOledTheme(context)) {
 +            R.color.fx_mobile_layer_color_1_oled
 +        } else {
 +            R.color.fx_mobile_layer_color_1
 +        })
-+        
          val defaultSettings = DefaultSettings(
              requestInterceptor = requestInterceptor,
              remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled,
@@ -76,7 +73,7 @@ index cb28dc38cd..30586678e6 100644
              dohSettingsMode = context.settings().getDohSettingsMode(),
              dohProviderUrl = context.settings().dohProviderUrl,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
-index c678b1928b..9c9fef76b6 100644
+index c678b1928b6a..9c9fef76b60b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
 @@ -29,6 +29,7 @@ import org.json.JSONException
@@ -97,7 +94,7 @@ index c678b1928b..9c9fef76b6 100644
              ),
          )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
-index 23d7f4c26a..318b685a05 100644
+index 23d7f4c26a5f..b31bc8e67366 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
 @@ -37,6 +37,7 @@ import org.mozilla.fenix.utils.view.addToRadioGroup
@@ -138,78 +135,50 @@ index 23d7f4c26a..318b685a05 100644
      private fun bindDarkTheme() {
          radioDarkTheme = requirePreference(R.string.pref_key_dark_theme)
          radioDarkTheme.onClickListener {
-@@ -155,8 +165,10 @@ class CustomizationFragment : PreferenceFragmentCompat() {
+@@ -155,8 +165,9 @@ class CustomizationFragment : PreferenceFragmentCompat() {
      }
  
      private fun setNewTheme(mode: Int) {
 -        if (AppCompatDelegate.getDefaultNightMode() == mode) return
--        AppCompatDelegate.setDefaultNightMode(mode)
 +        if (AppCompatDelegate.getDefaultNightMode() != mode) {
-+            AppCompatDelegate.setDefaultNightMode(mode)
+             AppCompatDelegate.setDefaultNightMode(mode)
 +        }
-+        
          activity?.recreate()
          with(requireComponents.core) {
              engine.settings.preferredColorScheme = getPreferredColorScheme()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
-index 2c737e026e..29df2b06b3 100644
+index 2c737e026e40..835e3e6c81ec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
-@@ -14,11 +14,13 @@ import mozilla.components.compose.base.theme.AcornTheme
- import mozilla.components.compose.base.theme.AcornTypography
- import mozilla.components.compose.base.theme.acornDarkColorScheme
- import mozilla.components.compose.base.theme.acornLightColorScheme
-+import mozilla.components.compose.base.theme.acornOledColorScheme
- import mozilla.components.compose.base.theme.acornPrivateColorScheme
- import mozilla.components.compose.base.theme.darkColorPalette
- import mozilla.components.compose.base.theme.layout.AcornLayout
- import mozilla.components.compose.base.theme.layout.AcornWindowSize
+@@ -21,6 +21,7 @@ import mozilla.components.compose.base.theme.layout.AcornWindowSize
  import mozilla.components.compose.base.theme.lightColorPalette
-+import mozilla.components.compose.base.theme.oledColorPalette
  import mozilla.components.compose.base.theme.privateColorPalette
  import mozilla.components.compose.base.utils.inComposePreview
++import org.ironfoxoss.ironfox.utils.maybeApplyOledColors
  import org.mozilla.fenix.ext.settings
-@@ -37,12 +39,14 @@ fun FirefoxTheme(
+ 
+ /**
+@@ -36,13 +37,13 @@ fun FirefoxTheme(
+ ) {
      val colors: AcornColors = when (theme) {
          Theme.Light -> lightColorPalette
-         Theme.Dark -> darkColorPalette
-+        Theme.Oled -> oledColorPalette
+-        Theme.Dark -> darkColorPalette
++        Theme.Dark -> darkColorPalette.maybeApplyOledColors(LocalContext.current)
          Theme.Private -> privateColorPalette
      }
  
      val colorScheme: ColorScheme = when (theme) {
          Theme.Light -> acornLightColorScheme()
-         Theme.Dark -> acornDarkColorScheme()
-+        Theme.Oled -> acornOledColorScheme()
+-        Theme.Dark -> acornDarkColorScheme()
++        Theme.Dark -> acornDarkColorScheme().maybeApplyOledColors(LocalContext.current)
          Theme.Private -> acornPrivateColorScheme()
      }
  
-@@ -59,6 +63,7 @@ fun FirefoxTheme(
- enum class Theme {
-     Light,
-     Dark,
-+    Oled,
-     Private,
-     ;
- 
-@@ -79,7 +84,11 @@ enum class Theme {
-             ) {
-                 Private
-             } else if (isSystemInDarkTheme()) {
--                Dark
-+                if (LocalContext.current.settings().shouldUseOledTheme) {
-+                    Oled
-+                } else {
-+                    Dark
-+                }
-             } else {
-                 Light
-             }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
-index d6a7782e1a..14a5e3f001 100644
+index d6a7782e1a6c..3d47b7936709 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
-@@ -11,10 +11,13 @@ import android.content.res.Configuration
+@@ -11,15 +11,19 @@ import android.content.res.Configuration
  import android.util.TypedValue
  import android.view.Window
  import androidx.annotation.AnyRes
@@ -223,11 +192,13 @@ index d6a7782e1a..14a5e3f001 100644
  import mozilla.components.support.ktx.android.content.getColorFromAttr
  import mozilla.components.support.ktx.android.content.getStatusBarColor
  import mozilla.components.support.ktx.android.view.createWindowInsetsController
-@@ -24,9 +27,11 @@ import org.mozilla.fenix.HomeActivity
+ import mozilla.components.support.ktx.android.view.setNavigationBarColorCompat
+ import mozilla.components.support.ktx.android.view.setStatusBarColorCompat
++import org.ironfoxoss.ironfox.utils.IronFoxPreferences
+ import org.mozilla.fenix.HomeActivity
  import org.mozilla.fenix.R
  import org.mozilla.fenix.browser.browsingmode.BrowsingMode
- import org.mozilla.fenix.customtabs.ExternalAppBrowserActivity
-+import org.mozilla.fenix.ext.settings
+@@ -27,6 +31,7 @@ import org.mozilla.fenix.customtabs.ExternalAppBrowserActivity
  
  abstract class ThemeManager {
  
@@ -240,7 +211,7 @@ index d6a7782e1a..14a5e3f001 100644
      @get:StyleRes
      val currentThemeResource get() = when (currentTheme) {
 -        BrowsingMode.Normal -> R.style.NormalTheme
-+        BrowsingMode.Normal -> if (activity.settings().shouldUseOledTheme) {
++        BrowsingMode.Normal -> if (IronFoxPreferences.shouldUseOledTheme(activity)) {
 +            R.style.IronFox_OLEDTheme
 +        } else {
 +            R.style.NormalTheme
@@ -270,24 +241,8 @@ index d6a7782e1a..14a5e3f001 100644
  ) : ThemeManager() {
      override var currentTheme: BrowsingMode = currentTheme
          set(value) {
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index aec4180603..c35f487733 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -717,6 +717,11 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-         default = false,
-     )
- 
-+    var shouldUseOledTheme by booleanPreference(
-+        appContext.getPreferenceKey(R.string.pref_key_oled_theme),
-+        default = false,
-+    )
-+
-     var shouldUseAutoSize by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_accessibility_auto_size),
-         default = true,
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background.xml b/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background.xml
-index ea99799d42..80ed1401b8 100644
+index ea99799d426e..80ed1401b84e 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background.xml
 +++ b/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background.xml
 @@ -6,7 +6,7 @@
@@ -300,7 +255,7 @@ index ea99799d42..80ed1401b8 100644
  </item>
  <item android:bottom="-2dp" android:left="-2dp" android:right="-2dp">
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_no_divider.xml b/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_no_divider.xml
-index 5a2c61c89d..4bc14e53bd 100644
+index 5a2c61c89d87..4bc14e53bd75 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_no_divider.xml
 +++ b/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_no_divider.xml
 @@ -5,7 +5,7 @@
@@ -313,7 +268,7 @@ index 5a2c61c89d..4bc14e53bd 100644
  </item>
  </layer-list>
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_top.xml b/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_top.xml
-index 11e8ca17bb..f8e805ca2a 100644
+index 11e8ca17bb1a..f8e805ca2a35 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_top.xml
 +++ b/mobile/android/fenix/app/src/main/res/drawable/home_bottom_bar_background_top.xml
 @@ -6,7 +6,7 @@
@@ -326,7 +281,7 @@ index 11e8ca17bb..f8e805ca2a 100644
  </item>
  <item android:top="-2dp" android:left="-2dp" android:right="-2dp">
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/recent_apps_background.xml b/mobile/android/fenix/app/src/main/res/drawable/recent_apps_background.xml
-index 8149bfee3c..9f8677e08c 100644
+index 8149bfee3c4c..9f8677e08c90 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/recent_apps_background.xml
 +++ b/mobile/android/fenix/app/src/main/res/drawable/recent_apps_background.xml
 @@ -3,6 +3,6 @@
@@ -338,7 +293,7 @@ index 8149bfee3c..9f8677e08c 100644
      <corners android:radius="@dimen/share_recent_apps_background_radius"/>
  </shape>
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml b/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml
-index 4cd3c13437..bc8547a8ad 100644
+index 4cd3c134377d..bc8547a8adc8 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml
 +++ b/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml
 @@ -4,6 +4,6 @@
@@ -350,7 +305,7 @@ index 4cd3c13437..bc8547a8ad 100644
      <corners android:radius="@dimen/tab_corner_radius"/>
  </shape>
 diff --git a/mobile/android/fenix/app/src/main/res/drawable/toolbar_background_no_divider.xml b/mobile/android/fenix/app/src/main/res/drawable/toolbar_background_no_divider.xml
-index eb23393ffb..92983b9058 100644
+index eb23393ffb39..92983b905835 100644
 --- a/mobile/android/fenix/app/src/main/res/drawable/toolbar_background_no_divider.xml
 +++ b/mobile/android/fenix/app/src/main/res/drawable/toolbar_background_no_divider.xml
 @@ -4,5 +4,5 @@
@@ -361,7 +316,7 @@ index eb23393ffb..92983b9058 100644
 +    <solid android:color="?attr/layer1" />
  </shape>
 diff --git a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml b/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
-index 70ebd5efb2..99734eb5ad 100644
+index 70ebd5efb29c..99734eb5ad30 100644
 --- a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
 +++ b/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
 @@ -51,6 +51,6 @@
@@ -373,7 +328,7 @@ index 70ebd5efb2..99734eb5ad 100644
      </style>
  </resources>
 diff --git a/mobile/android/fenix/app/src/main/res/values/styles.xml b/mobile/android/fenix/app/src/main/res/values/styles.xml
-index 43f5deb1c9..416c54fb31 100644
+index 43f5deb1c940..416c54fb3164 100644
 --- a/mobile/android/fenix/app/src/main/res/values/styles.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/styles.xml
 @@ -112,6 +112,7 @@
@@ -403,7 +358,7 @@ index 43f5deb1c9..416c54fb31 100644
  
      <style name="TabTrayDialogStyle" parent="TabTrayDialogStyleBase" />
 diff --git a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
-index 6f05cd5ec6..260311a647 100644
+index 6f05cd5ec6e7..260311a64721 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
 @@ -28,6 +28,11 @@
