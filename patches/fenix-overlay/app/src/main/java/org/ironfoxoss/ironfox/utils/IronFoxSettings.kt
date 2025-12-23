@@ -111,6 +111,11 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
         default = false,
     )
 
+	var shouldUseOledTheme by booleanPreference(
+		context.getPreferenceKey(R.string.pref_key_oled_theme),
+		default = false,
+	)
+
     var prefersBrowserColorScheme by booleanPreference(
         context.getPreferenceKey(R.string.pref_key_prefers_browser_color_scheme),
         default = false,
