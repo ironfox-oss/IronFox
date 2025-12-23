@@ -1,3 +1,28 @@
+From b52c1221cf001dc7443dbfe9492e5d92abe9e334 Mon Sep 17 00:00:00 2001
+From: Akash Yadav <itsaky01@gmail.com>
+Date: Tue, 23 Dec 2025 13:43:01 +0530
+Subject: [PATCH] fix: IronFox OLED theme support
+
+Signed-off-by: Akash Yadav <itsaky01@gmail.com>
+---
+ .../compose/base/theme/AcornColors.kt         |  2 +-
+ .../org/mozilla/fenix/FenixApplication.kt     |  3 ++-
+ .../java/org/mozilla/fenix/components/Core.kt | 15 +++++++++++----
+ .../customtabs/FennecWebAppIntentProcessor.kt |  3 ++-
+ .../fenix/settings/CustomizationFragment.kt   | 15 +++++++++++++--
+ .../org/mozilla/fenix/theme/FirefoxTheme.kt   |  5 +++--
+ .../org/mozilla/fenix/theme/ThemeManager.kt   | 19 +++++++++++++++++--
+ .../drawable/home_bottom_bar_background.xml   |  2 +-
+ .../home_bottom_bar_background_no_divider.xml |  2 +-
+ .../home_bottom_bar_background_top.xml        |  2 +-
+ .../res/drawable/recent_apps_background.xml   |  2 +-
+ .../rounded_search_widget_background.xml      |  2 +-
+ .../toolbar_background_no_divider.xml         |  2 +-
+ .../app/src/main/res/values-v27/styles.xml    |  2 +-
+ .../fenix/app/src/main/res/values/styles.xml  |  5 +++--
+ .../res/xml/customization_preferences.xml     |  5 +++++
+ 16 files changed, 64 insertions(+), 22 deletions(-)
+
 diff --git a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt b/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
 index 4f08bd5ea3e5..149a33a15fc7 100644
 --- a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
@@ -33,7 +58,7 @@ index 55ba069afd43..7bd2999dc48d 100644
                      AppCompatDelegate.MODE_NIGHT_YES,
                  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index cb28dc38cd76..7ab5731f6a20 100644
+index dcbe4cd26776..bbc49aa115f6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -137,6 +137,7 @@ import java.util.UUID
@@ -140,8 +165,9 @@ index 23d7f4c26a5f..b31bc8e67366 100644
  
      private fun setNewTheme(mode: Int) {
 -        if (AppCompatDelegate.getDefaultNightMode() == mode) return
+-        AppCompatDelegate.setDefaultNightMode(mode)
 +        if (AppCompatDelegate.getDefaultNightMode() != mode) {
-             AppCompatDelegate.setDefaultNightMode(mode)
++            AppCompatDelegate.setDefaultNightMode(mode)
 +        }
          activity?.recreate()
          with(requireComponents.core) {
@@ -316,10 +342,10 @@ index eb23393ffb39..92983b905835 100644
 +    <solid android:color="?attr/layer1" />
  </shape>
 diff --git a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml b/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
-index 70ebd5efb29c..99734eb5ad30 100644
+index 4e0eddedc9f4..bab5fa460ee9 100644
 --- a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
 +++ b/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
-@@ -51,6 +51,6 @@
+@@ -57,6 +57,6 @@
      <style name="TabTrayDialogStyle" parent="TabTrayDialogStyleBase">
          <item name="android:navigationBarDividerColor">@android:color/transparent</item>
          <item name="android:windowLightNavigationBar">@bool/theme_is_light</item>
@@ -373,3 +399,6 @@ index 6f05cd5ec6e7..260311a64721 100644
          <org.mozilla.fenix.settings.RadioButtonPreference
              android:defaultValue="false"
              android:key="@string/pref_key_auto_battery_theme"
+-- 
+2.52.0
+
