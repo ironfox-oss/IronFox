@@ -50,35 +50,30 @@ index 53190b359cb43e..37c0aed3830ec6 100644
                      AppCompatDelegate.MODE_NIGHT_YES,
                  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 2079fc1ba31f8e..142611ceaa8faa 100644
+index 2079fc1ba3..0fc88d1d52 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -152,6 +152,11 @@ class Core(
       * configuration (see build variants).
       */
      val engine: Engine by lazyMonitored {
-+        val clearColor = ContextCompat.getColor(context, if (context.settings().ironfox.shouldUseOledTheme) {
++        val clearColor = if (context.settings().ironfox.shouldUseOledTheme) {
 +            R.color.fx_mobile_layer_color_1_oled
 +        } else {
 +            R.color.fx_mobile_layer_color_1
-+        })
++        }
          val defaultSettings = DefaultSettings(
              requestInterceptor = requestInterceptor,
              remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled,
-@@ -165,10 +170,10 @@ class Core(
-             forceUserScalableContent = context.settings().forceEnableZoom,
-             loginAutofillEnabled = context.settings().shouldAutofillLogins,
+@@ -167,7 +172,7 @@ class Core(
              enterpriseRootsEnabled = context.settings().allowThirdPartyRootCerts,
--            clearColor = ContextCompat.getColor(
--                context,
-+            clearColor = clearColor,
-+/*                context,
-                 R.color.fx_mobile_layer_color_1,
--            ),
-+            ), */
+             clearColor = ContextCompat.getColor(
+                 context,
+-                R.color.fx_mobile_layer_color_1,
++                clearColor,
+             ),
              httpsOnlyMode = context.settings().getHttpsOnlyMode(),
              dohSettingsMode = context.settings().getDohSettingsMode(),
-             dohProviderUrl = context.settings().dohProviderUrl,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
 index c678b1928b6a..9c9fef76b60b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
