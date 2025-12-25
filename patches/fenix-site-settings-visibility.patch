@@ -1,0 +1,20 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
+index d435dae1f279f..3fbabfe6ebbc5 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SiteSettingsFragment.kt
+@@ -25,6 +25,7 @@ import org.mozilla.fenix.ext.showToolbar
+ import org.mozilla.fenix.settings.PhoneFeature
+ import org.mozilla.fenix.settings.requirePreference
+ import com.google.android.material.R as materialR
++import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
+ 
+ /**
+  * Screen for managing settings related to site permissions and content defaults.
+@@ -53,6 +54,7 @@ class SiteSettingsFragment : PreferenceFragmentCompat() {
+     private fun setupPreferences() {
+         bindCategoryPhoneFeatures()
+         bindExceptions()
++        FenixSettingsVisibilityManager.SiteSettingsFragment(requireContext(), this)
+     }
+ 
+     private fun bindDesktopMode() {

@@ -58,6 +58,19 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
+     * Control the visibility of settings at the site settings fragment
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    fun SiteSettingsFragment(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        hideEme(context, prefFragment)
+    }
+
+    /**
      * Control the visibility of settings at the tracking protection fragment
      *
      * @param context The application context
@@ -368,6 +381,21 @@ object FenixSettingsVisibilityManager {
     ) {
         val remoteSearchConfigurationKey = context.getPreferenceKey(FenixSettingsDictionary.useRemoteSearchConfiguration)
         hidePreference(remoteSearchConfigurationKey, prefFragment)
+    }
+
+    /**
+     * Hide the EME site setting
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun hideEme(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val emeSiteSettingKey = context.getPreferenceKey(FenixSettingsDictionary.emeSiteSetting)
+        val emeSiteSettingPreference = prefFragment.findPreference<Preference>(emeSiteSettingKey)
+        emeSiteSettingPreference?.isVisible = IronFoxPreferences.isEMEEnabled(context)
     }
 
     /**

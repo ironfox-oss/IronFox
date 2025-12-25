@@ -558,13 +558,6 @@ patches:
     category: "Security"
 
   # User Control
-  - file: "fenix-expose-secret-settings.patch"
-    name: "Expose Secret Settings"
-    description: "Allows users to enable 'secret' settings if desired."
-    reason: "To provide access to hidden configuration options."
-    effect: "Advanced users can access experimental or hidden features."
-    category: "User Control"
-
   - file: "gecko-enable-aboutinference.patch"
     name: "Enable `about:inference`"
     description: "Enables the `about:inference` page."
@@ -745,11 +738,25 @@ patches:
     effect: "Users are provided with a cleaner, focused browsing experience."
     category: "User Interface"
 
-  - file: "fenix-hide-eme.patch"
-    name: "Hide Encrypted Media Extensions (EME) UI Elements"
-    description: "Hides UI for the EME site permision, due to it being not supported or recommended by IronFox."
-    reason: "To hide the UI for DRM-controlled content (EME) by default, unless the user enables EME from the about:config, at their own risk."
-    effect: "The UI/site permission for DRM-controlled content (EME) is hidden by default, but is re-enabled if EME is enabled from the about:config."
+  - file: "fenix-secret-settings-visibility.patch"
+    name: "Secret Settings Visibility"
+    description: "Provides support for enabling or disabling the display of UI settings within the Secret Settings Fragment."
+    reason: "To hide unwanted settings and display wanted ones."
+    effect: "Unwanted UI settings are hidden, and settings that we do want to display are revealed."
+    category: "User Interface"
+
+  - file: "fenix-site-settings-visibility.patch"
+    name: "Site Settings Visibility"
+    description: "Provides support for enabling or disabling the display of UI settings within the Site Settings Fragment."
+    reason: "To hide unwanted settings and display wanted ones."
+    effect: "Unwanted UI settings are hidden, and settings that we do want to display are revealed."
+    category: "User Interface"
+
+  - file: "fenix-tracking-protection-settings-visibility.patch"
+    name: "Tracking Protection Settings Visibility"
+    description: "Provides support for enabling or disabling the display of UI settings within the Tracking Protection Fragment."
+    reason: "To hide unwanted settings and display wanted ones."
+    effect: "Unwanted UI settings are hidden, and settings that we do want to display are revealed."
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-accessibility-services.patch"
