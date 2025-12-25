@@ -17,13 +17,14 @@ index 3519c51aa3cf4..cfffa7cfa5006 100644
                      private = homeActivity.browsingModeManager.mode.isPrivate,
                  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-index fbd12fc813..a67c104033 100644
+index fbd12fc813a3..3d0e6f9f5753 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-@@ -67,10 +67,15 @@ class MarketingPageRemovalSupport(
+@@ -67,10 +67,20 @@ class MarketingPageRemovalSupport(
  
  internal fun MutableList<OnboardingPageUiData>.removeIfPageNotReached(index: Int) {
      val marketingIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.MARKETING_DATA }
++    val searchWidgetIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.ADD_SEARCH_WIDGET }
 +    val syncIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.SYNC_SIGN_IN }
  
      if (index < marketingIndex) {
@@ -32,6 +33,10 @@ index fbd12fc813..a67c104033 100644
 +
 +    if (index < syncIndex) {
 +        removeAt(syncIndex)
++    }
++
++    if (index < searchWidgetIndex) {
++        removeAt(searchWidgetIndex)
 +    }
  }
  
@@ -63,16 +68,3 @@ index b45fdee550..ee60e9cab8 100644
              AboutPageItem(
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 3b7336c90f..52c5551ae6 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -85,7 +85,7 @@ class OnboardingFragment : Fragment() {
-             pagesToDisplay(
-                 showDefaultBrowserPage = isNotDefaultBrowser(this) && !isDefaultBrowserPromptSupported(),
-                 showNotificationPage = canShowNotificationPage(),
--                showAddWidgetPage = canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(activity)),
-+                showAddWidgetPage = false,
-             ).toMutableList()
-         }
-     }
