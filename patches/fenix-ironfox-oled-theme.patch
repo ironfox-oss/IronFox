@@ -37,43 +37,27 @@ index 4f08bd5ea3e5..149a33a15fc7 100644
      primaryContainer: Color,
      inversePrimary: Color,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 55ba069afd43..7bd2999dc48d 100644
+index 53190b359cb43e..37c0aed3830ec6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -69,6 +69,7 @@ import mozilla.components.support.rusthttp.RustHttpConfig
- import mozilla.components.support.utils.BrowsersCache
- import mozilla.components.support.utils.logElapsedTime
- import mozilla.components.support.webextensions.WebExtensionSupport
-+import org.ironfoxoss.ironfox.utils.IronFoxPreferences
- // import mozilla.telemetry.glean.Glean
- import org.mozilla.fenix.GleanMetrics.Addons
- import org.mozilla.fenix.GleanMetrics.Addresses
-@@ -616,7 +617,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -615,7 +615,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      AppCompatDelegate.MODE_NIGHT_NO,
                  )
              }
 -            settings.shouldUseDarkTheme -> {
-+            settings.shouldUseDarkTheme || IronFoxPreferences.shouldUseOledTheme(this) -> {
++            settings.shouldUseDarkTheme || settings.ironfox.shouldUseOledTheme -> {
                  AppCompatDelegate.setDefaultNightMode(
                      AppCompatDelegate.MODE_NIGHT_YES,
                  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index dcbe4cd26776..bbc49aa115f6 100644
+index 2079fc1ba31f8e..142611ceaa8faa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -137,6 +137,7 @@ import java.util.UUID
- import java.util.concurrent.TimeUnit
- import mozilla.components.service.pocket.mars.api.Placement as MarsSpocsPlacement
- import org.ironfoxoss.ironfox.utils.GeckoSettingsBridge
-+import org.ironfoxoss.ironfox.utils.IronFoxPreferences
- 
- /**
-  * Component group for all core browser functionality.
-@@ -153,6 +154,11 @@ class Core(
+@@ -152,6 +152,11 @@ class Core(
       * configuration (see build variants).
       */
      val engine: Engine by lazyMonitored {
-+        val clearColor = ContextCompat.getColor(context, if (IronFoxPreferences.shouldUseOledTheme(context)) {
++        val clearColor = ContextCompat.getColor(context, if (context.settings().ironfox.shouldUseOledTheme) {
 +            R.color.fx_mobile_layer_color_1_oled
 +        } else {
 +            R.color.fx_mobile_layer_color_1
@@ -81,19 +65,17 @@ index dcbe4cd26776..bbc49aa115f6 100644
          val defaultSettings = DefaultSettings(
              requestInterceptor = requestInterceptor,
              remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled,
-@@ -166,10 +172,11 @@ class Core(
+@@ -165,10 +170,10 @@ class Core(
              forceUserScalableContent = context.settings().forceEnableZoom,
              loginAutofillEnabled = context.settings().shouldAutofillLogins,
              enterpriseRootsEnabled = context.settings().allowThirdPartyRootCerts,
 -            clearColor = ContextCompat.getColor(
 -                context,
--                R.color.fx_mobile_layer_color_1,
--            ),
-+//            clearColor = ContextCompat.getColor(
-+//                context,
-+//                R.color.fx_mobile_layer_color_1,
-+//            ),
 +            clearColor = clearColor,
++/*                context,
+                 R.color.fx_mobile_layer_color_1,
+-            ),
++            ), */
              httpsOnlyMode = context.settings().getHttpsOnlyMode(),
              dohSettingsMode = context.settings().getDohSettingsMode(),
              dohProviderUrl = context.settings().dohProviderUrl,

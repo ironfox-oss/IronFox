@@ -149,5 +149,5 @@
     <string name="onboarding_action_retry">Retry</string>
 
     <!-- OLED Theme -->
-    <string name="preference_oled_theme">OLED</string>
+    <string name="preference_oled_theme" translatable="false">OLED</string>
 </resources>
