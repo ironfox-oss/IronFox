@@ -815,3 +815,10 @@ patches:
     reason: "To allow users to benefit from extra fingerprinting protection by spoof their locale to English."
     effect: "Users can spoof their preferred locale to English, and can benefit from stronger fingerprinting protection as a result."
     category: "User Interface"
+
+  - file: "fenix-ironfox-oled-theme.patch"
+    name: "OLED Theme"
+    description: "Adds support in Fenix for true OLED black theme"
+    reason: "To provide users with the option to reduce battery consumption and eye strain on OLED displays by using true black theme."
+    effect: "Users can toggle a UI option for an OLED-optimized dark theme, which helps improve visual comfort and power efficiency on OLED screens."
+    category: "User Interface"

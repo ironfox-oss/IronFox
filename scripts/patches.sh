@@ -4,6 +4,9 @@ RED="\033[0;31m"
 GREEN="\033[0;32m"
 NC="\033[0m"
 
+declare -a PATCH_CMD
+PATCH_CMD=(patch -p1 -f --fuzz=3 --no-backup-if-mismatch)
+
 declare -a PATCH_FILES
 declare -a AS_PATCH_FILES
 declare -a GLEAN_PATCH_FILES
@@ -20,7 +23,7 @@ check_patch() {
         return 1
     fi
 
-    if ! patch -p1 -f --dry-run <"$patch"; then
+    if ! "${PATCH_CMD[@]}" --dry-run <"$patch"; then
         printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
         echo "Incompatible patch: '$patch'"
         return 1
@@ -85,7 +88,7 @@ apply_patch() {
     name="$1"
     echo "Applying patch: $name"
     check_patch "$name" || return 1
-    patch -p1 --no-backup-if-mismatch <"$patches/$name"
+    "${PATCH_CMD[@]}" <"$patches/$name"
     return $?
 }
 

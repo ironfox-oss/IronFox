@@ -808,6 +808,26 @@ object IronFoxPreferences {
         context: Context
     ): Boolean = context.settings().ironfox.refererXOriginHostsMatch
 
+	/**
+	 * Set whether we should use the OLED theme
+	 *
+	 * @param context The application context
+	 * @param isEnabled Whether we should use the OLED theme.
+	 */
+	fun setShouldUseOledTheme(context: Context, isEnabled: Boolean) {
+        val settings = context.settings()
+        settings.ironfox.shouldUseOledTheme = isEnabled
+    }
+
+	/**
+	 * Check if we should use the OLED theme
+	 *
+	 * @param context The application context.
+	 */
+	fun shouldUseOledTheme(context: Context): Boolean {
+		return context.settings().ironfox.shouldUseOledTheme
+    }
+
     /**
      * Set whether we should set the preferred color scheme for websites to follow the browser/system
      *
