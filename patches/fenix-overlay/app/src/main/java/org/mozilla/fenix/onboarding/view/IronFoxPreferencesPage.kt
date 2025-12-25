@@ -47,9 +47,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mozilla.components.compose.base.button.FilledButton
 import mozilla.components.support.base.log.logger.Logger
+import org.ironfoxoss.ironfox.utils.FenixStringsDictionary
 import org.ironfoxoss.ironfox.utils.IronFoxAddons
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
-import org.mozilla.fenix.R
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Configuration
 import org.mozilla.fenix.onboarding.view.IfPreferencesContentState.Error
@@ -238,7 +238,7 @@ fun IronFoxPreferencesOnboardingPage(
                         text = if (preferenceOptions.lastIndex == currentPreferenceIndex) {
                             primaryButton.text
                         } else {
-                            stringResource(R.string.onboarding_save_and_continue_button)
+                            stringResource(FenixStringsDictionary.onboardingSaveAndContinue)
                         },
                         modifier = Modifier
                             .width(width = FirefoxTheme.layout.size.maxWidth.small)
@@ -345,7 +345,7 @@ private suspend fun installUBlockOrigin(
 ) {
     onContentStateChange(
         Progress(
-            context.getString(R.string.onboarding_state_installing_ublock),
+            context.getString(FenixStringsDictionary.onboardingInstallingUBlock),
         ),
     )
 
@@ -360,7 +360,7 @@ private suspend fun installUBlockOrigin(
         onContentStateChange(
             Error(
                 context.getString(
-                    R.string.onboarding_state_installing_ublock_error,
+                    FenixStringsDictionary.onboardingInstallingUBlockError,
                     result.exceptionOrNull()?.message ?: "Unknown error",
                 ),
             ),
@@ -449,7 +449,7 @@ private fun IronFoxPreferencesError(
         )
 
         FilledButton(
-            text = stringResource(R.string.onboarding_action_retry),
+            text = stringResource(FenixStringsDictionary.onboardingActionRetry),
             modifier = Modifier
                 .width(width = FirefoxTheme.layout.size.maxWidth.small),
             onClick = onRetry,

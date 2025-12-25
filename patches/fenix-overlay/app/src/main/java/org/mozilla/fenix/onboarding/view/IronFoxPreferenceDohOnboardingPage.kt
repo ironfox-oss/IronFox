@@ -47,7 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import mozilla.components.compose.base.button.FilledButton
-import org.mozilla.fenix.R
+import org.ironfoxoss.ironfox.utils.FenixStringsDictionary
 import org.mozilla.fenix.ext.components
 import org.mozilla.fenix.ext.settings
 import org.mozilla.fenix.settings.doh.CustomProviderErrorState
@@ -184,12 +184,12 @@ fun IronFoxPreferenceDohOnboardingPage(
                 val captionText = when (contentState) {
                     IfPreferenceDohContentState.ModeSelection -> stringResource(
                         when (dohSettingsState.selectedProtectionLevel) {
-                            ProtectionLevel.Default -> R.string.preference_doh_default_protection_summary
-                            ProtectionLevel.Increased -> R.string.preference_doh_increased_protection_summary
-                            ProtectionLevel.Max -> R.string.preference_doh_max_protection_summary
-                            ProtectionLevel.Off -> R.string.onboarding_if_preference_doh_off_summary
+                            ProtectionLevel.Default -> FenixStringsDictionary.dohDefaultSummary
+                            ProtectionLevel.Increased -> FenixStringsDictionary.dohIncreasedSummary
+                            ProtectionLevel.Max -> FenixStringsDictionary.dohMaxSummary
+                            ProtectionLevel.Off -> FenixStringsDictionary.dohOffSummary
                         },
-                        stringResource(R.string.app_name),
+                        stringResource(FenixStringsDictionary.appName),
                     )
 
                     IfPreferenceDohContentState.ProviderSelection ->
@@ -353,10 +353,10 @@ private fun ModeSelectionRadioButton(
         Text(
             text = stringResource(
                 when (level) {
-                    ProtectionLevel.Default -> R.string.preference_doh_default_protection
-                    ProtectionLevel.Increased -> R.string.preference_doh_increased_protection
-                    ProtectionLevel.Max -> R.string.preference_doh_max_protection
-                    ProtectionLevel.Off -> R.string.onboarding_if_preference_doh_off_summary
+                    ProtectionLevel.Default -> FenixStringsDictionary.dohDefaultPreference
+                    ProtectionLevel.Increased -> FenixStringsDictionary.dohIncreasedPreference
+                    ProtectionLevel.Max -> FenixStringsDictionary.dohMaxPreference
+                    ProtectionLevel.Off -> FenixStringsDictionary.dohOffSummary
                 },
             ),
             style = FirefoxTheme.typography.body1,
@@ -394,7 +394,7 @@ private fun ColumnScope.IronFoxPreferenceDoHProviderSelection(
         { provider ->
             when (provider) {
                 is Provider.BuiltIn -> provider.name
-                is Provider.Custom -> stringResource(R.string.preference_doh_provider_custom)
+                is Provider.Custom -> stringResource(FenixStringsDictionary.dohCustomPreference)
             }
         }
     }
@@ -414,7 +414,7 @@ private fun ColumnScope.IronFoxPreferenceDoHProviderSelection(
                 readOnly = true,
                 label = {
                     Text(
-                        text = stringResource(R.string.preference_doh_choose_provider),
+                        text = stringResource(FenixStringsDictionary.dohChooseProviderPreference),
                         modifier = Modifier.padding(top = 14.dp)
                     )
                 },
