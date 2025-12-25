@@ -17,16 +17,3 @@ index 69b25294b63e9..387a69d829dce 100644
                  }
              }
  
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index d0e61a00fc43e..484f2199b8951 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -769,7 +769,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
-     @VisibleForTesting
-     internal fun setupInstallAddonFromFilePreference(settings: Settings) {
-         with(requirePreference<Preference>(R.string.pref_key_install_local_addon)) {
--            isVisible = settings.showSecretDebugMenuThisSession
-+            isVisible = settings.ironfox.xpinstallEnabled && settings.showSecretDebugMenuThisSession
-         }
-     }
- 

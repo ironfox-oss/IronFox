@@ -1,16 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 3c071edf51..a814245c25 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -188,7 +188,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_enable_lna_blocking_enabled).apply {
--            isVisible = Config.channel.isNightlyOrDebug
-+            isVisible = true
-             isChecked = context.settings().isLnaBlockingEnabled
-             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
-                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 35d4c5a9c0..a7ade78800 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

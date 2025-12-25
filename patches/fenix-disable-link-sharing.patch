@@ -1,16 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index d0e61a00fc..eea87c9117 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -776,7 +776,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
-     @VisibleForTesting
-     internal fun setLinkSharingPreference() {
-         with(requirePreference<Preference>(R.string.pref_key_link_sharing)) {
--            isVisible = FxNimbus.features.sentFromFirefox.value().enabled
-+            isVisible = false
-         }
-     }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 35d4c5a9c0..02c78277bc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

@@ -181,28 +181,6 @@ index b57cdc1bf5..163f38cbd7 100644
              "about:addons" -> {
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 3c071edf51..172f1e3af9 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -246,7 +246,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_use_new_crash_reporter).apply {
--            isVisible = true
-+            isVisible = false
-             isChecked = context.settings().useNewCrashReporterDialog
-             onPreferenceChangeListener =
-                 Preference.OnPreferenceChangeListener { _, newValue ->
-@@ -314,7 +314,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_crash_pull_never_show_again).apply {
--            isVisible = true
-+            isVisible = false
-             isChecked = context.settings().crashPullNeverShowAgain
-             onPreferenceChangeListener = SharedPreferenceUpdater()
-         }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 35d4c5a9c0..10b92d81fa 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

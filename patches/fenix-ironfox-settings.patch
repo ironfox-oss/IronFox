@@ -19,22 +19,24 @@ index 2079fc1ba3..e13b2427d4 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index d0e61a00fc..9fab5ae117 100644
+index d0e61a00fc43e..986ee98a0fc72 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -596,6 +596,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -71,6 +71,7 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
+ import org.mozilla.fenix.utils.Settings
+ import kotlin.system.exitProcess
+ import org.mozilla.fenix.GleanMetrics.Settings as SettingsMetrics
++import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
+ 
+ @Suppress("LargeClass", "TooManyFunctions")
+ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -596,6 +597,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
          setupHomepagePreference(settings)
          setupTrackingProtectionPreference(settings)
          setupDnsOverHttpsPreference(settings)
 +        setupIronFoxPreferences()
-     }
- 
-     /**
-@@ -794,6 +795,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
-             }
-     }
- 
-+    @VisibleForTesting
++    }
++
 +    internal fun setupIronFoxPreferences() {
 +        requirePreference<Preference>(R.string.pref_key_if_preferences).apply {
 +            setOnPreferenceClickListener {
@@ -45,11 +47,10 @@ index d0e61a00fc..9fab5ae117 100644
 +                true
 +            }
 +        }
-+    }
-+
-     private fun updateProfilerUI(profilerStatus: Boolean) {
-         if (profilerStatus) {
-             findPreference<Preference>(getPreferenceKey(R.string.pref_key_start_profiler))?.title =
++        FenixSettingsVisibilityManager.SettingsFragment(requireContext(), this)
+     }
+ 
+     /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 35d4c5a9c0a4f..0445244f0158d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
@@ -102,7 +103,7 @@ index 77c0a5cae4..510e4ca0fb 100644
          android:id="@+id/trackingProtectionFragment"
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 159944ab7d383..9b0085e93cc51 100644
+index 159944ab7d38..54bcd69b30b0 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 @@ -6,12 +6,12 @@
@@ -131,20 +132,7 @@ index 159944ab7d383..9b0085e93cc51 100644
          <org.mozilla.fenix.settings.account.AccountPreference
              android:icon="@drawable/ic_account"
              android:key="@string/pref_key_account" />
-@@ -141,10 +145,10 @@
-             app:iconSpaceReserved="false"
-             android:title="@string/preferences_notifications" />
- 
--        <androidx.preference.Preference
-+        <!-- <androidx.preference.Preference
-             android:key="@string/pref_key_data_choices"
-             app:iconSpaceReserved="false"
--            android:title="@string/preferences_data_collection" />
-+            android:title="@string/preferences_data_collection" /> -->
- 
-     </androidx.preference.PreferenceCategory>
- 
-@@ -198,18 +202,30 @@
+@@ -198,10 +202,22 @@
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
@@ -167,13 +155,3 @@ index 159944ab7d383..9b0085e93cc51 100644
      <androidx.preference.PreferenceCategory
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
-         android:layout="@layout/preference_category_no_icon_style">
--        <androidx.preference.Preference
-+        <!-- <androidx.preference.Preference
-             android:key="@string/pref_key_rate"
-             app:iconSpaceReserved="false"
--            android:title="@string/preferences_rate" />
-+            android:title="@string/preferences_rate" /> -->
- 
-         <androidx.preference.Preference
-             android:key="@string/pref_key_about"

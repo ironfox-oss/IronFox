@@ -721,14 +721,6 @@ patches:
     effect: "Like on Desktop, users can access `about:translations` to translate text directly, without needing the text to be on an external webpage."
     category: "User Interface"
 
-  - file: "fenix-hide-gpc.patch"
-    name: "Hide Global Privacy Control (GPC) UI"
-    description: "Hides the UI setting for Global Privacy Control."
-    reason: |
-      To prevent users from easily/unnecessarily disabling GPC, as its status can aid fingerprinting, thus harming privacy.
-    effect: "GPC is still enabled by default and can be controlled by advanced users from the about:config, this just helps clean up the UI and prevents unsuspecting users from doing more harm than good."
-    category: "User Interface"
-
   - file: "fenix-ironfox-settings.patch"
     name: "IronFox Settings (Fenix)"
     description: "Adds support to Fenix (Firefox for Android) for IronFox-specific UI settings to control various functionality."

@@ -899,4 +899,13 @@ object IronFoxPreferences {
     fun isPrefersLightColorScheme(
         context: Context
     ): Boolean = context.settings().ironfox.prefersLightColorScheme
+
+    /**
+     * Check if debug settings are enabled
+     *
+     * @param context The application context
+     */
+    fun shouldShowSecretDebugMenuThisSession(
+        context: Context
+    ): Boolean = context.settings().showSecretDebugMenuThisSession
 }
