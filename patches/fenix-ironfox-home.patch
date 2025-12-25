@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..ee3b099ee8 100644
+index 35d4c5a9c0a4..ebfb7ff3bb2b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -181,7 +181,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
@@ -29,7 +29,7 @@ index 35d4c5a9c0..ee3b099ee8 100644
          featureFlag = true,
      )
  
-@@ -239,14 +239,16 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -239,8 +239,10 @@ class Settings(private val appContext: Context) : PreferencesHolder {
      /**
       * Indicates whether or not the "Collections" section should be shown on the home screen.
       */
@@ -42,13 +42,6 @@ index 35d4c5a9c0..ee3b099ee8 100644
  
      /**
       * Indicates whether or not the Firefox Japan Guide default site should be shown.
-      */
-     val showFirefoxJpGuideDefaultSite: Boolean
--        get() = FxNimbus.features.firefoxJpGuideDefaultSite.value().enabled
-+        get() = false
- 
-     /**
-      * Indicates whether or not the homepage header should be shown.
 @@ -526,7 +528,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
  
      var showCollectionsPlaceholderOnHome by booleanPreference(
@@ -58,12 +51,3 @@ index 35d4c5a9c0..ee3b099ee8 100644
      )
  
      val isCrashReportingEnabled: Boolean
-@@ -1454,7 +1456,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
- 
-     var defaultTopSitesAdded by booleanPreference(
-         appContext.getPreferenceKey(R.string.default_top_sites_added),
--        default = false,
-+        default = true,
-     )
- 
-     var shouldShowSearchSuggestionsInPrivate by booleanPreference(
