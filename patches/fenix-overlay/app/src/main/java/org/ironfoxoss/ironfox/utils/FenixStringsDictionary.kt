@@ -25,4 +25,5 @@ object FenixStringsDictionary {
     val quitApplication = R.string.quit_application
     val unifiedPushModified = R.string.toast_change_unifiedpush_done
     val unifiedPushPreference = R.string.preferences_unifiedpush
+    val wallpapersJson = R.raw.wallpapers
 }

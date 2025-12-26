@@ -908,4 +908,244 @@ object IronFoxPreferences {
     fun shouldShowSecretDebugMenuThisSession(
         context: Context
     ): Boolean = context.settings().showSecretDebugMenuThisSession
+
+    /**
+     * Set whether we have copied the Algae wallpaper
+     *
+     * @param context The application context
+     * @param copied Whether we have copied the Algae wallpaper
+     */
+    fun setWallpaperAlgaeCopied(
+        context: Context,
+        copied: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperAlgaeCopied = copied
+    }
+
+    /**
+     * Check if we have copied the Algae wallpaper
+     *
+     * @param context The application context
+     */
+    fun wallpaperAlgaeCopied(
+        context: Context
+    ): Boolean = context.settings().ironfox.wallpaperAlgaeCopied
+
+    /**
+     * Set the version of the Algae wallpaper that we installed
+     *
+     * @param context The application context
+     * @param version The version of the Algae wallpaper
+     */
+    fun setWallpaperAlgaeInstalledVersion(
+        context: Context,
+        version: Int,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperAlgaeVersionInstalled = version
+    }
+
+    /**
+     * Get the installed version of the Algae wallpaper
+     *
+     * @param context The application context
+     */
+    fun getWallpaperAlgaeInstalledVersion(
+        context: Context
+    ): Int = context.settings().ironfox.wallpaperAlgaeVersionInstalled
+
+    /**
+     * Set whether we have copied the Colorful Bubbles wallpaper
+     *
+     * @param context The application context
+     * @param copied Whether we have copied the Colorful Bubbles wallpaper
+     */
+    fun setWallpaperColorfulBubblesCopied(
+        context: Context,
+        copied: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperColorfulBubblesCopied = copied
+    }
+
+    /**
+     * Check if we have copied the Colorful Bubbles wallpaper
+     *
+     * @param context The application context
+     */
+    fun wallpaperColorfulBubblesCopied(
+        context: Context
+    ): Boolean = context.settings().ironfox.wallpaperColorfulBubblesCopied
+
+    /**
+     * Set the version of the Colorful Bubbles wallpaper that we installed
+     *
+     * @param context The application context
+     * @param version The version of the Colorful Bubbles wallpaper
+     */
+    fun setWallpaperColorfulBubblesInstalledVersion(
+        context: Context,
+        version: Int,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperColorfulBubblesVersionInstalled = version
+    }
+
+    /**
+     * Get the installed version of the Colorful Bubbles wallpaper
+     *
+     * @param context The application context
+     */
+    fun getWallpaperColorfulBubblesInstalledVersion(
+        context: Context
+    ): Int = context.settings().ironfox.wallpaperColorfulBubblesVersionInstalled
+
+    /**
+     * Set whether we have copied the Dark Dune wallpaper
+     *
+     * @param context The application context
+     * @param copied Whether we have copied the Dark Dune wallpaper
+     */
+    fun setWallpaperDarkDuneCopied(
+        context: Context,
+        copied: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperDarkDuneCopied = copied
+    }
+
+    /**
+     * Check if we have copied the Dark Dune wallpaper
+     *
+     * @param context The application context
+     */
+    fun wallpaperDarkDuneCopied(
+        context: Context
+    ): Boolean = context.settings().ironfox.wallpaperDarkDuneCopied
+
+    /**
+     * Set the version of the Dark Dune wallpaper that we installed
+     *
+     * @param context The application context
+     * @param version The version of the Dark Dune wallpaper
+     */
+    fun setWallpaperDarkDuneInstalledVersion(
+        context: Context,
+        version: Int,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperDarkDuneVersionInstalled = version
+    }
+
+    /**
+     * Get the installed version of the Dark Dune wallpaper
+     *
+     * @param context The application context
+     */
+    fun getWallpaperDarkDuneInstalledVersion(
+        context: Context
+    ): Int = context.settings().ironfox.wallpaperDarkDuneVersionInstalled
+
+    /**
+     * Set whether we have copied the Dune wallpaper
+     *
+     * @param context The application context
+     * @param copied Whether we have copied the Dune wallpaper
+     */
+    fun setWallpaperDuneCopied(
+        context: Context,
+        copied: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperDuneCopied = copied
+    }
+
+    /**
+     * Check if we have copied the Dune wallpaper
+     *
+     * @param context The application context
+     */
+    fun wallpaperDuneCopied(
+        context: Context
+    ): Boolean = context.settings().ironfox.wallpaperDuneCopied
+
+    /**
+     * Set the version of the Dune wallpaper that we installed
+     *
+     * @param context The application context
+     * @param version The version of the Dune wallpaper
+     */
+    fun setWallpaperDuneInstalledVersion(
+        context: Context,
+        version: Int,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperDuneVersionInstalled = version
+    }
+
+    /**
+     * Get the installed version of the Dune wallpaper
+     *
+     * @param context The application context
+     */
+    fun getWallpaperDuneInstalledVersion(
+        context: Context
+    ): Int = context.settings().ironfox.wallpaperDuneVersionInstalled
+
+    /**
+     * Set whether we have copied the Firey Red wallpaper
+     *
+     * @param context The application context
+     * @param copied Whether we have copied the Firey Red wallpaper
+     */
+    fun setWallpaperFireyRedCopied(
+        context: Context,
+        copied: Boolean,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperFireyRedCopied = copied
+    }
+
+    /**
+     * Check if we have copied the Firey Red wallpaper
+     *
+     * @param context The application context
+     */
+    fun wallpaperFireyRedCopied(
+        context: Context
+    ): Boolean = context.settings().ironfox.wallpaperFireyRedCopied
+
+    /**
+     * Set the version of the Firey Red wallpaper that we installed
+     *
+     * @param context The application context
+     * @param version The version of the Firey Red wallpaper
+     */
+    fun setWallpaperFireyRedInstalledVersion(
+        context: Context,
+        version: Int,
+    ) {
+        val settings = context.settings()
+
+        settings.ironfox.wallpaperFireyRedVersionInstalled = version
+    }
+
+    /**
+     * Get the installed version of the Firey Red wallpaper
+     *
+     * @param context The application context
+     */
+    fun getWallpaperFireyRedInstalledVersion(
+        context: Context
+    ): Int = context.settings().ironfox.wallpaperFireyRedVersionInstalled
 }
