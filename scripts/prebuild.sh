@@ -1069,49 +1069,50 @@ apply_overlay "$patches/gecko-overlay/"
 
 # Set variables for environment-specific arguments
 
-if [[ "$IRONFOX_RELEASE" == 1 ]]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     IRONFOX_CHANNEL='release'
 else
     IRONFOX_CHANNEL='nightly'
 fi
 
 ## local.properties
-$SED -i "s|{android_components}|$android_components|" local.properties
-$SED -i "s|{glean}|$glean|" local.properties
-$SED -i "s|{mozilla_release}|$mozilla_release|" local.properties
+$SED -i "s|{android_components}|${android_components}|" local.properties
+$SED -i "s|{glean}|${glean}|" local.properties
+$SED -i "s|{mozilla_release}|${mozilla_release}|" local.properties
 
 ## mozconfig
-$SED -i "s|{ANDROID_HOME}|$ANDROID_HOME|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{ANDROID_NDK}|$ANDROID_NDK|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{bundletool}|$bundletool|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{GRADLE_PATH}|$gradle|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{HOME}|$HOME|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{JAVA_HOME}|$JAVA_HOME|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{libclang}|$libclang|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{PLATFORM}|$PLATFORM|" ironfox/mozconfigs/env.mozconfig
-$SED -i "s|{wasi}|$wasi|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{ANDROID_HOME}|${ANDROID_HOME}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{ANDROID_NDK}|${ANDROID_NDK}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{bundletool}|${bundletool}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{CARGO_HOME}|${CARGO_HOME}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{GRADLE_PATH}|${gradle}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{HOME}|${HOME}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{JAVA_HOME}|${JAVA_HOME}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{libclang}|${libclang}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{PLATFORM}|${PLATFORM}|" ironfox/mozconfigs/env.mozconfig
+$SED -i "s|{wasi}|${wasi}|" ironfox/mozconfigs/env.mozconfig
 
-$SED -i "s|{geckotarget}|$geckotarget|" mozconfig
-$SED -i "s|{IRONFOX_CHANNEL}|$IRONFOX_CHANNEL|" mozconfig
+$SED -i "s|{geckotarget}|${geckotarget}|" mozconfig
+$SED -i "s|{IRONFOX_CHANNEL}|${IRONFOX_CHANNEL}|" mozconfig
 
 # prefs
-$SED -i "s|{IRONFOX_UBO_ASSETS_URL}|$IRONFOX_UBO_ASSETS_URL|" ironfox/prefs/002-ironfox.js
-$SED -i "s|{IRONFOX_VERSION}|$IRONFOX_VERSION|" ironfox/prefs/002-ironfox.js
-$SED -i "s|{PHOENIX_VERSION}|$PHOENIX_VERSION|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_UBO_ASSETS_URL}|${IRONFOX_UBO_ASSETS_URL}|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" ironfox/prefs/002-ironfox.js
+$SED -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" ironfox/prefs/002-ironfox.js
 
 popd
 
 # Set current build revision
 ## (ex. displayed at `about:buildconfig`)
-$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "$mozilla_release/ironfox/mozconfigs/branding/env.mozconfig"
+$SED -i "s|{CURRENT_REVISION}|$(git log -1 --format="%H" | tail -n 1)|" "${mozilla_release}/ironfox/mozconfigs/branding/env.mozconfig"
 
 #
 # Prebuilds
 #
 
-if [[ "$NO_PREBUILDS" == "1" ]]; then
-    pushd "$prebuilds"
+if [[ "${NO_PREBUILDS}" == "1" ]]; then
+    pushd "${prebuilds}"
     echo "Preparing the prebuild build repository..."
-    bash "$prebuilds/scripts/prebuild.sh"
+    bash "${prebuilds}/scripts/prebuild.sh"
     popd
 fi
