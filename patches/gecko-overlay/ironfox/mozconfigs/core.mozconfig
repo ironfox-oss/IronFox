@@ -143,7 +143,7 @@ ac_add_options --enable-wasm-branch-hinting
 export MOZ_LTO=1
 export MOZ_PGO=1
 export MOZ_RUST_SIMD=1
-export RUSTC_OPT_LEVEL=2
+export RUSTC_OPT_LEVEL=3
 
 ## Enable proxy bypass protection
 ac_add_options --enable-proxy-bypass-protection
