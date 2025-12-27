@@ -149,6 +149,7 @@ ac_add_options --enable-proxy-bypass-protection
 ac_add_options --enable-install-strip
 ac_add_options --enable-minify='properties'
 ac_add_options --enable-strip
+export STRIP_FLAGS="--strip-debug --strip-unneeded"
 
 ## Enable WebAssembly Memory Control support
 ac_add_options --enable-wasm-memory-control
