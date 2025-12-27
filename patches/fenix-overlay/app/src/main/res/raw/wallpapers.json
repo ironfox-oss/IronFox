@@ -1,6 +1,56 @@
 {
-    "last-updated-date": "2025-12-22",
+    "last-updated-date": "2025-12-26",
     "collections": [
+        {
+            "id": "classic-firefox",
+            "heading": "Classic IronFox",
+            "description": "Wallpapers from IronFox.",
+            "available-locales": null,
+            "availability-range": null,
+            "learn-more-url": "https://gitlab.com/ironfox-oss/IronFox",
+            "wallpapers": [
+                {
+                    "id": "black",
+                    "text-color": "FFFFFF",
+                    "card-color": "FFFFFF",
+                    "card-color-light": "FFFFFF",
+                    "card-color-dark": "1D2D32",
+                    "logo-text-color": "FFFFFF"
+                },
+                {
+                    "id": "deep-blue",
+                    "text-color": "FBFBFE",
+                    "card-color": "15141A",
+                    "card-color-light": "E3F8F9",
+                    "card-color-dark": "1D2D32",
+                    "logo-text-color": "FBFBFE"
+                },
+                {
+                    "id": "pink",
+                    "text-color": "000000",
+                    "card-color": "15141A",
+                    "card-color-light": "E3F8F9",
+                    "card-color-dark": "1D2D32",
+                    "logo-text-color": "000000"
+                },
+                {
+                    "id": "red",
+                    "text-color": "FBFBFE",
+                    "card-color": "15141A",
+                    "card-color-light": "E3F8F9",
+                    "card-color-dark": "1D2D32",
+                    "logo-text-color": "FBFBFE"
+                },
+                {
+                    "id": "white",
+                    "text-color": "000000",
+                    "card-color": "FFFFFF",
+                    "card-color-light": "FFFFFF",
+                    "card-color-dark": "1D2D32",
+                    "logo-text-color": "000000"
+                }
+            ]
+        },
         {
             "id": "fennec-fdroid",
             "heading": "Fennec F-Droid",

@@ -1,126 +1,5 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt
-index 5f0f76aa62967..5c63b7710b0cc 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/LegacyWallpaperMigration.kt
-@@ -15,6 +15,12 @@ import org.mozilla.fenix.wallpapers.Wallpaper.Companion.CERULEAN
- import org.mozilla.fenix.wallpapers.Wallpaper.Companion.SUNRISE
- import java.io.File
- import java.io.IOException
-+import android.content.Context
-+import android.content.res.AssetManager
-+import java.io.FileOutputStream
-+import java.io.InputStream
-+import org.ironfoxoss.ironfox.utils.IronFoxWallpaperDictionary
-+import org.ironfoxoss.ironfox.utils.IronFoxWallpaperUtils
- 
- /**
-  * Manages the migration of legacy wallpapers to the new paths
-@@ -24,10 +30,17 @@ import java.io.IOException
-  * @param downloadWallpaper Function used to download assets for legacy drawable wallpapers.
-  */
- class LegacyWallpaperMigration(
-+    private val assetManager: AssetManager,
-+    private val context: Context,
-     private val storageRootDirectory: File,
-     private val settings: Settings,
-     private val downloadWallpaper: suspend (Wallpaper) -> Wallpaper.ImageFileState,
- ) {
-+    suspend fun initWallpapers() = withContext(Dispatchers.IO) {
-+        IronFoxWallpaperDictionary.WALLPAPER_NAMES.forEach { 
-+            migrateLegacyWallpaper(it) 
-+        }
-+    }
-     /**
-      * Migrate the legacy wallpaper to the new path and delete the remaining legacy files.
-      *
-@@ -51,13 +64,27 @@ class LegacyWallpaperMigration(
-                 return@withContext wallpaperName
-             }
-         }
-+        if (!IronFoxWallpaperUtils.shouldCopyWallpaper(context, wallpaperName)) {
-+            return@withContext wallpaperName
-+        }
-         val legacyPortraitFile =
--            File(storageRootDirectory, "wallpapers/portrait/light/$wallpaperName.png")
-+            "wallpapers/$wallpaperName/portrait.png"
-         val legacyLandscapeFile =
--            File(storageRootDirectory, "wallpapers/landscape/light/$wallpaperName.png")
-+            "wallpapers/$wallpaperName/landscape.png"
-+        val assetThumbnailPath = "wallpapers/$wallpaperName/thumbnail.png"
-+
-+        val assetFilesExist = try {
-+            assetManager.open(assetThumbnailPath)
-+            assetManager.open(legacyPortraitFile)
-+            assetManager.open(legacyLandscapeFile)
-+            true
-+        } catch (e: IOException) {
-+            false
-+        }
-+
-         // If any of portrait or landscape files of the wallpaper are missing, then we shouldn't
-         // migrate it
--        if (!legacyLandscapeFile.exists() || !legacyPortraitFile.exists()) {
-+        if (!assetFilesExist) {
-             return@withContext wallpaperName
-         }
-         // The V2 name for the "beach-vibe" wallpaper is "beach-vibes".
-@@ -69,29 +96,35 @@ class LegacyWallpaperMigration(
-         // Directory where the legacy wallpaper files should be migrated
-         val targetDirectory = "wallpapers/" + migratedWallpaperName.lowercase()
- 
-+        val targetDir = File(storageRootDirectory, targetDirectory)
-+
-+        if (!targetDir.exists()) {
-+            targetDir.mkdirs()
-+        }
-+
-         try {
-             // Use the portrait file as thumbnail
--            legacyPortraitFile.copyTo(
-+            copyAssetToFile(assetThumbnailPath,
-                 File(
-                     storageRootDirectory,
-                     "$targetDirectory/thumbnail.png",
-                 ),
-             )
-             // Copy the portrait file
--            legacyPortraitFile.copyTo(
-+            copyAssetToFile(legacyPortraitFile,
-                 File(
-                     storageRootDirectory,
-                     "$targetDirectory/portrait.png",
-                 ),
-             )
-             // Copy the landscape file
--            legacyLandscapeFile.copyTo(
-+            copyAssetToFile(legacyLandscapeFile,
-                 File(
-                     storageRootDirectory,
-                     "$targetDirectory/landscape.png",
-                 ),
-             )
--
-+            IronFoxWallpaperUtils.wallpapersCopied(context, wallpaperName)
-             // If an expired Turning Red wallpaper is successfully migrated
-             if (wallpaperName == TURNING_RED_MEI_WALLPAPER_NAME || wallpaperName == TURNING_RED_PANDA_WALLPAPER_NAME) {
-                 settings.currentWallpaperTextColor = TURNING_RED_WALLPAPER_TEXT_COLOR.toHexColor()
-@@ -108,6 +141,14 @@ class LegacyWallpaperMigration(
-         return@withContext migratedWallpaperName
-     }
- 
-+    internal fun copyAssetToFile(assetPath: String, outFile: File) {
-+        assetManager.open(assetPath).use { inputStream: InputStream ->
-+            FileOutputStream(outFile).use { outputStream ->
-+                inputStream.copyTo(outputStream)
-+            }
-+        }
-+    }
-+
-     /**
-      * Helper function used to migrate a legacy wallpaper's card colors that previously did not exist.
-      */
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
-index ab7ba29ba34c8..727aea682dab8 100644
+index ab7ba29ba34c8..fb741fd18556a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpaperMetadataFetcher.kt
 @@ -6,15 +6,17 @@ package org.mozilla.fenix.wallpapers
@@ -129,12 +8,12 @@ index ab7ba29ba34c8..727aea682dab8 100644
  import kotlinx.coroutines.withContext
 -import mozilla.components.concept.fetch.Client
 -import mozilla.components.concept.fetch.Request
-+//import mozilla.components.concept.fetch.Client
-+//import mozilla.components.concept.fetch.Request
++// import mozilla.components.concept.fetch.Client
++// import mozilla.components.concept.fetch.Request
  import org.json.JSONArray
  import org.json.JSONObject
 -import org.mozilla.fenix.BuildConfig
-+//import org.mozilla.fenix.BuildConfig
++// import org.mozilla.fenix.BuildConfig
  import org.mozilla.fenix.utils.toHexColor
  import java.text.SimpleDateFormat
  import java.util.Date
@@ -175,26 +54,89 @@ index ab7ba29ba34c8..727aea682dab8 100644
  
      private fun JSONObject.parseAsWallpapers(): List<Wallpaper> =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-index 2a696cacea3c7..3c61247f78d55 100644
+index 2a696cacea3c7..f0abea26830fd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-@@ -45,8 +45,10 @@ class WallpapersUseCases(
+@@ -18,6 +18,8 @@ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.utils.Settings
+ import java.io.File
+ import java.util.Date
++import android.content.res.Resources
++import org.ironfoxoss.ironfox.utils.IronFoxWallpaperUtils
+ 
+ /**
+  * Contains use cases related to the wallpaper feature.
+@@ -45,7 +47,7 @@ class WallpapersUseCases(
      // Use case for initializing wallpaper feature. Should usually be called early
      // in the app's lifetime to ensure that any potential long-running tasks can complete quickly.
      val initialize: InitializeWallpapersUseCase by lazy {
 -        val metadataFetcher = WallpaperMetadataFetcher(client)
 +        val metadataFetcher = WallpaperMetadataFetcher(context.resources)
          val migrationHelper = LegacyWallpaperMigration(
-+            assetManager = context.assets,
-+            context = context,
              storageRootDirectory = storageRootDirectory,
              settings = context.settings(),
-             selectWallpaper::invoke,
-@@ -122,6 +124,7 @@ class WallpapersUseCases(
-         private val currentLocale: String,
-     ) : InitializeWallpapersUseCase {
-         override suspend fun invoke() {
-+            migrationHelper.initWallpapers()
-             val currentWallpaperName = if (settings.shouldMigrateLegacyWallpaper) {
-                 val migratedWallpaperName =
-                     migrationHelper.migrateLegacyWallpaper(settings.currentWallpaperName)
+@@ -65,12 +67,12 @@ class WallpapersUseCases(
+     // Use case for loading specific wallpaper bitmaps.
+     val loadBitmap: LoadBitmapUseCase by lazy {
+         DefaultLoadBitmapUseCase(
+-            getFilesDir = { context.filesDir },
++            resources = context.resources
+         )
+     }
+ 
+     val loadThumbnail: LoadThumbnailUseCase by lazy {
+-        DefaultLoadThumbnailUseCase(storageRootDirectory)
++        DefaultLoadThumbnailUseCase(resources = context.resources)
+     }
+ 
+     // Use case for selecting a new wallpaper.
+@@ -188,7 +190,7 @@ class WallpapersUseCases(
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+     internal class DefaultLoadBitmapUseCase(
+-        private val getFilesDir: suspend () -> File,
++        private val resources: Resources
+     ) : LoadBitmapUseCase {
+         override suspend fun invoke(wallpaper: Wallpaper, orientation: Int): Bitmap? =
+             loadWallpaperFromDisk(wallpaper, orientation)
+@@ -198,10 +200,10 @@ class WallpapersUseCases(
+             wallpaper: Wallpaper,
+             orientation: Int,
+         ): Bitmap? = Result.runCatching {
+-            val path = wallpaper.getLocalPathFromContext(orientation)
++            val drawableRes = if (wallpaper.name !== Wallpaper.DEFAULT) IronFoxWallpaperUtils.getWallpaperDrawable(wallpaper.name, orientation) else return@runCatching null
+             withContext(Dispatchers.IO) {
+-                val file = File(getFilesDir(), path)
+-                BitmapFactory.decodeStream(file.inputStream())
++                // val file = File(getFilesDir(), path)
++                BitmapFactory.decodeResource(resources, drawableRes)
+             }
+         }.getOrNull()
+ 
+@@ -232,13 +234,13 @@ class WallpapersUseCases(
+     }
+ 
+     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+-    internal class DefaultLoadThumbnailUseCase(private val filesDir: File) : LoadThumbnailUseCase {
++    internal class DefaultLoadThumbnailUseCase(private val resources: Resources) : LoadThumbnailUseCase {
+         override suspend fun invoke(wallpaper: Wallpaper): Bitmap? = withContext(Dispatchers.IO) {
+             Result.runCatching {
+-                val path = Wallpaper.getLocalPath(wallpaper.name, Wallpaper.ImageType.Thumbnail)
++                val drawableRes = if (wallpaper.name !== Wallpaper.DEFAULT) IronFoxWallpaperUtils.getWallpaperDrawableThumbnail(wallpaper.name) else return@runCatching null
+                 withContext(Dispatchers.IO) {
+-                    val file = File(filesDir, path)
+-                    BitmapFactory.decodeStream(file.inputStream())
++                    // val file = File(filesDir, path)
++                    BitmapFactory.decodeResource(resources, drawableRes)
+                 }
+             }.getOrNull()
+         }
+@@ -269,7 +271,7 @@ class WallpapersUseCases(
+          * @param wallpaper The selected wallpaper.
+          */
+         override suspend fun invoke(wallpaper: Wallpaper): Wallpaper.ImageFileState {
+-            return if (wallpaper == Wallpaper.Default || fileManager.wallpaperImagesExist(wallpaper)) {
++            return if (true) {
+                 selectWallpaper(wallpaper)
+                 dispatchDownloadState(wallpaper, Wallpaper.ImageFileState.Downloaded)
+                 Wallpaper.ImageFileState.Downloaded

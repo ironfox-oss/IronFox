@@ -187,56 +187,6 @@ class IronFoxSettings(private val context: Context) : PreferencesHolder {
         default = false,
     )
 
-    var wallpaperAlgaeCopied by booleanPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperAlgaeCopied),
-        default = false,
-    )
-
-    var wallpaperAlgaeVersionInstalled by intPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperAlgaeVersionInstalled),
-        default = 0,
-    )
-
-    var wallpaperColorfulBubblesCopied by booleanPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperColorfulBubblesCopied),
-        default = false,
-    )
-
-    var wallpaperColorfulBubblesVersionInstalled by intPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperColorfulBubblesVersionInstalled),
-        default = 0,
-    )
-
-    var wallpaperDarkDuneCopied by booleanPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperDarkDuneCopied),
-        default = false,
-    )
-
-    var wallpaperDarkDuneVersionInstalled by intPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperDarkDuneVersionInstalled),
-        default = 0,
-    )
-
-    var wallpaperDuneCopied by booleanPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperDuneCopied),
-        default = false,
-    )
-
-    var wallpaperDuneVersionInstalled by intPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperDuneVersionInstalled),
-        default = 0,
-    )
-
-    var wallpaperFireyRedCopied by booleanPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperFireyRedCopied),
-        default = false,
-    )
-
-    var wallpaperFireyRedVersionInstalled by intPreference(
-        key = context.getPreferenceKey(FenixSettingsDictionary.wallpaperFireyRedVersionInstalled),
-        default = 0,
-    )
-
     var wasmEnabled by booleanPreference(
         key = context.getPreferenceKey(FenixSettingsDictionary.wasmEnabled),
         default = true,

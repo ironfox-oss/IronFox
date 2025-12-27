@@ -83,18 +83,6 @@
     <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
     <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
 
-    <!-- Wallpapers -->
-    <string name="pref_key_wallpaper_algae_copied" translatable="false">pref_key_wallpaper_algae_copied</string>
-    <string name="pref_key_wallpaper_algae_version_installed" translatable="false">pref_key_wallpaper_algae_version_installed</string>
-    <string name="pref_key_wallpaper_colorful_bubbles_copied" translatable="false">pref_key_wallpaper_colorful_bubbles_copied</string>
-    <string name="pref_key_wallpaper_colorful_bubbles_version_installed" translatable="false">pref_key_wallpaper_colorful_bubbles_version_installed</string>
-    <string name="pref_key_wallpaper_dark_dune_copied" translatable="false">pref_key_wallpaper_dark_dune_copied</string>
-    <string name="pref_key_wallpaper_dark_dune_version_installed" translatable="false">pref_key_wallpaper_dark_dune_version_installed</string>
-    <string name="pref_key_wallpaper_dune_copied" translatable="false">pref_key_wallpaper_dune_copied</string>
-    <string name="pref_key_wallpaper_dune_version_installed" translatable="false">pref_key_wallpaper_dune_version_installed</string>
-    <string name="pref_key_wallpaper_firey_red_copied" translatable="false">pref_key_wallpaper_firey_red_copied</string>
-    <string name="pref_key_wallpaper_firey_red_version_installed" translatable="false">pref_key_wallpaper_firey_red_version_installed</string>
-
    <!-- WebAssembly -->
     <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
 

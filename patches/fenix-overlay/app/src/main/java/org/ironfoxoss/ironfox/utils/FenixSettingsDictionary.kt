@@ -73,16 +73,6 @@ object FenixSettingsDictionary {
     val useStandardTrackingProtection = R.string.pref_key_tracking_protection_standard_option
     val useStrictTrackingProtection = R.string.pref_key_tracking_protection_strict_default
     val useUnifiedPush = R.string.pref_key_use_unifiedpush
-    val wallpaperAlgaeCopied = R.string.pref_key_wallpaper_algae_copied
-    val wallpaperAlgaeVersionInstalled = R.string.pref_key_wallpaper_algae_version_installed
-    val wallpaperColorfulBubblesCopied = R.string.pref_key_wallpaper_colorful_bubbles_copied
-    val wallpaperColorfulBubblesVersionInstalled = R.string.pref_key_wallpaper_colorful_bubbles_version_installed
-    val wallpaperDarkDuneCopied = R.string.pref_key_wallpaper_dark_dune_copied
-    val wallpaperDarkDuneVersionInstalled = R.string.pref_key_wallpaper_dark_dune_version_installed
-    val wallpaperDuneCopied = R.string.pref_key_wallpaper_dune_copied
-    val wallpaperDuneVersionInstalled = R.string.pref_key_wallpaper_dune_version_installed
-    val wallpaperFireyRedCopied = R.string.pref_key_wallpaper_firey_red_copied
-    val wallpaperFireyRedVersionInstalled = R.string.pref_key_wallpaper_firey_red_version_installed
     val wasmEnabled = R.string.pref_key_wasm_enabled
     val webglDisabled = R.string.pref_key_webgl_disabled
     val webrtcEnabled = R.string.pref_key_webrtc_enabled
