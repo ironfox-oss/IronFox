@@ -8,6 +8,9 @@ export MOZ_REQUIRE_SIGNING=
 ## Allow replacing the malloc implementation
 ac_add_options --enable-replace-malloc
 
+## Automatically clobber if necessary
+mk_add_options AUTOCLOBBER=1
+
 ## Configure Gradle
 export GRADLE_FLAGS='-Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache'
 
