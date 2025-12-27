@@ -1067,21 +1067,6 @@ echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDe
 # Apply Gecko overlay
 apply_overlay "$patches/gecko-overlay/"
 
-{
-    if [[ -n ${SB_GAPI_KEY_FILE+x} ]]; then
-        echo "## Enable Safe Browsing"
-        echo "### SB_GAPI_KEY_FILE = $SB_GAPI_KEY_FILE"
-        echo "ac_add_options --with-google-safebrowsing-api-keyfile='${SB_GAPI_KEY_FILE}'"
-    else
-        echo "## Disable Safe Browsing"
-        echo "### (SB_GAPI_KEY_FILE was undefined...)"
-        echo "ac_add_options --without-google-safebrowsing-api-keyfile"
-    fi
-
-    echo ""
-
-} >>mozconfig
-
 # Set variables for environment-specific arguments
 
 if [[ "$IRONFOX_RELEASE" == 1 ]]; then
