@@ -92,7 +92,7 @@ popd
 
 # Glean
 pushd "$glean"
-export TARGET_CFLAGS=-DNDEBUG
+export TARGET_CFLAGS='-DNDEBUG'
 $gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
 $gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
