@@ -90,26 +90,26 @@ SDK_REVISION="13114758"
 
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ENV_SH="$ROOTDIR/scripts/env_local.sh"
-EXTERNALDIR="$ROOTDIR/external"
-BUILDDIR="$ROOTDIR/build"
-DOWNLOADSDIR="$EXTERNALDIR/downloads"
-PATCHDIR="$ROOTDIR/patches"
-ANDROIDSDKDIR="$EXTERNALDIR/android-sdk"
-APPSERVICESDIR="$EXTERNALDIR/application-services"
-BUNDLETOOLDIR="$EXTERNALDIR/bundletool"
-GECKODIR="$EXTERNALDIR/gecko"
-ANDROID_COMPONENTS="$GECKODIR/mobile/android/android-components"
-FENIX="$GECKODIR/mobile/android/fenix"
-GLEANDIR="$EXTERNALDIR/glean"
-GMSCOREDIR="$EXTERNALDIR/gmscore"
-GRADLEDIR="$EXTERNALDIR/gradle"
-PREBUILDSDIR="$EXTERNALDIR/prebuilds"
-UNIFFIDIR="$EXTERNALDIR/uniffi"
-WASISDKDIR="$EXTERNALDIR/wasi-sdk"
+ENV_SH="${ROOTDIR}/scripts/env_local.sh"
+EXTERNALDIR="${ROOTDIR}/external"
+BUILDDIR="${ROOTDIR}/build"
+DOWNLOADSDIR="${EXTERNALDIR}/downloads"
+PATCHDIR="${ROOTDIR}/patches"
+ANDROIDSDKDIR="${EXTERNALDIR}/android-sdk"
+APPSERVICESDIR="${EXTERNALDIR}/application-services"
+BUNDLETOOLDIR="${EXTERNALDIR}/bundletool"
+GECKODIR="${EXTERNALDIR}/gecko"
+ANDROID_COMPONENTS="${GECKODIR}/mobile/android/android-components"
+FENIX="${GECKODIR}/mobile/android/fenix"
+GLEANDIR="${EXTERNALDIR}/glean"
+GMSCOREDIR="${EXTERNALDIR}/gmscore"
+GRADLEDIR="${EXTERNALDIR}/gradle"
+PREBUILDSDIR="${EXTERNALDIR}/prebuilds"
+UNIFFIDIR="${EXTERNALDIR}/uniffi"
+WASISDKDIR="${EXTERNALDIR}/wasi-sdk"
 
 # Use GNU Sed on macOS instead of the built-in sed, due to differences in syntax
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "${OSTYPE}" == "darwin"* ]]; then
     SED=gsed
 else
     SED=sed
