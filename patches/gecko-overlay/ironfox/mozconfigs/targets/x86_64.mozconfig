@@ -1,7 +1,9 @@
 
 ac_add_options --target='x86_64-linux-android'
 
-# Enable performance optimizations for WebAssembly
+# Enable performance optimizations
 ac_add_options --enable-wasm-avx
 ac_add_options --enable-wasm-relaxed-simd
 ac_add_options --enable-wasm-simd
+export RUSTDOCFLAGS="${RUSTDOCFLAGS} -Ctarget-feature=+avx"
+export RUSTFLAGS="${RUSTFLAGS} -Ctarget-feature=+avx"

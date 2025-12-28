@@ -91,10 +91,10 @@ $gradle -Dhttps.protocols=TLSv1.3 -Dorg.gradle.configuration-cache=false --no-bu
 popd
 
 # Glean
-pushd "$glean"
-export TARGET_CFLAGS='-DNDEBUG'
-$gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
-$gradle -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
+pushd "${glean}"
+export TARGET_CFLAGS='-DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv'
+"${gradle}" -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache :glean-native:publishToMavenLocal
+"${gradle}" -Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache publishToMavenLocal
 popd
 
 # Application Services
