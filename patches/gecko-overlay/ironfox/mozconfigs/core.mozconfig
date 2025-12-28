@@ -133,6 +133,7 @@ export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_WITH_ZYGOTE=1
 
 ## Enable misc. security hardening
 ac_add_options --enable-hardening
+ac_add_options --enable-stl-hardening
 export MOZ_SECURITY_HARDENING=1
 
 ## Enable performance optimizations
