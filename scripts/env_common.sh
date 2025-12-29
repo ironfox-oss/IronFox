@@ -3,26 +3,26 @@
 # Use 'env_local.sh' or 'env_fdroid.sh' instead.
 
 if [[ "${OSTYPE}" == "darwin"* ]]; then
-    PLATFORM=darwin
+    PLATFORM='darwin'
 else
-    PLATFORM=linux
+    PLATFORM='linux'
 fi
 
 # Set architecture
 PLATFORM_ARCH=$(uname -m)
-if [[ "${PLATFORM_ARCH}" == "arm64" ]]; then
-    PLATFORM_ARCHITECTURE=aarch64
+if [[ "${PLATFORM_ARCH}" == 'arm64' ]]; then
+    PLATFORM_ARCHITECTURE='aarch64'
 else
-    PLATFORM_ARCHITECTURE=x86-64
+    PLATFORM_ARCHITECTURE='x86-64'
 fi
 
 # Set locations for GNU make + nproc
-if [[ "${PLATFORM}" == "darwin" ]]; then
-    export MAKE_LIB="gmake"
-    export NPROC_LIB="sysctl -n hw.logicalcpu"
+if [[ "${PLATFORM}" == 'darwin' ]]; then
+    export MAKE_LIB='gmake'
+    export NPROC_LIB='sysctl -n hw.logicalcpu'
 else
-    export MAKE_LIB="make"
-    export NPROC_LIB="nproc"
+    export MAKE_LIB='make'
+    export NPROC_LIB='nproc'
 fi
 
 # Configure Mach
@@ -37,6 +37,8 @@ export MOZCONFIG="${mozilla_release}/mozconfig"
 # Android SDK
 export ANDROID_HOME="${android_sdk_dir}"
 export ANDROID_NDK="${android_ndk_dir}"
+export ANDROID_NDK_HOME="${android_ndk_dir}"
+export ANDROID_NDK_ROOT="${android_ndk_dir}"
 export ANDROID_SDK_ROOT="${android_sdk_dir}"
 
 # Cargo
@@ -50,16 +52,16 @@ export GRADLE_USER_HOME="${builddir}/.gradle"
 export PIP_ENV="${builddir}/pyenv"
 
 # For macOS, ensure that Python 3.9 is in PATH
-if [[ "${PLATFORM}" == "darwin" ]]; then
+if [[ "${PLATFORM}" == 'darwin' ]]; then
     export PATH="${PATH}:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin"
 fi
 
 # Java
 if [[ -z ${JAVA_HOME+x} ]]; then
-    if [[ "${PLATFORM}" == "darwin" ]]; then
-        export JAVA_HOME="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
+    if [[ "${PLATFORM}" == 'darwin' ]]; then
+        export JAVA_HOME='/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home'
     else
-        export JAVA_HOME="/usr/lib/jvm/temurin-17-jdk"
+        export JAVA_HOME='/usr/lib/jvm/temurin-17-jdk'
     fi
     export PATH="${JAVA_HOME}/bin:${PATH}"
 fi
@@ -85,9 +87,25 @@ if [[ -z ${IRONFOX_RELEASE+x} ]]; then
     echo "Preparing to build IronFox Nightly..."
 fi
 
+# Set release channel
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+    export IRONFOX_CHANNEL='release'
+else
+    export IRONFOX_CHANNEL='nightly'
+fi
+
 if [[ -z ${IRONFOX_UBO_ASSETS_URL+x} ]]; then
     # Default to development assets
     export IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.dev.json"
 
     echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
+fi
+
+# Set target ABI
+if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]]; then
+    export IRONFOX_TARGET_ABI='"armeabi-v7a"'
+else if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
+    export IRONFOX_TARGET_ABI='"arm64-v8a"'
+else if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
+    export IRONFOX_TARGET_ABI='"x86_64"'
 fi

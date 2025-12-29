@@ -2,3 +2,6 @@
 . "$topsrcdir/ironfox/mozconfigs/core.mozconfig"
 . "$topsrcdir/ironfox/mozconfigs/branding/ironfox-nightly.mozconfig"
 . "$topsrcdir/ironfox/mozconfigs/targets/arm64.mozconfig"
+
+## Set the destination object (output) directory
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj/ironfox-nightly-arm64

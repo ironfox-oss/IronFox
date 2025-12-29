@@ -12,15 +12,12 @@ source "$(realpath $(dirname "$0"))/versions.sh"
 case "${BUILD_VARIANT}" in
 arm)
     BUILD_TYPE='apk'
-    BUILD_ABI='armeabi-v7a'
     ;;
 x86_64)
     BUILD_TYPE='apk'
-    BUILD_ABI='x86_64'
     ;;
 arm64)
     BUILD_TYPE='apk'
-    BUILD_ABI='arm64-v8a'
     ;;
 bundle)
     BUILD_TYPE='bundle'
@@ -71,13 +68,13 @@ if [[ "${BUILD_TYPE}" == "apk" ]]; then
     mkdir -vp geckoview-aar
     mv maven geckoview-aar/geckoview
     popd
-    pushd "${mozilla_release}/obj/gradle/geckoview-aar"
-    zip -r -FS "${AAR_ARTIFACTS}/geckoview-${BUILD_ABI}.zip" *
+    pushd "${mozilla_release}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/geckoview-aar"
+    zip -r -FS "${AAR_ARTIFACTS}/geckoview-${IRONFOX_TARGET_ABI}.zip" *
     popd
 
     # Sign APK
-    APK_IN="${mozilla_release}/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${BUILD_ABI}-release-unsigned.apk"
-    APK_OUT="${APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${BUILD_ABI}.apk"
+    APK_IN="${builddir}/outputs/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}-unsigned.apk"
+    APK_OUT="${APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI}.apk"
     "${ANDROID_HOME}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
       --ks="${KEYSTORE}" \
       --ks-pass="pass:${KEYSTORE_PASS}" \
@@ -89,7 +86,7 @@ fi
 
 if [[ "${BUILD_TYPE}" == "bundle" ]]; then
     # Build signed APK set
-    AAB_IN="$(ls "${mozilla_release}"/obj/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
+    AAB_IN="$(ls "${mozilla_release}"/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="${APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
     "${bundletool}"/bundletool build-apks \
         --bundle="${AAB_IN}" \

@@ -137,11 +137,7 @@ popd
 pushd "${fenix}"
 if [[ "${build_type}" == "apk" ]]; then
     "${gradle}" -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:assembleRelease
-    if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        cp -v "${mozilla_release}/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${target_abi}-release-unsigned.apk" "${builddir}/outputs/ironfox-release-${target_abi}-unsigned.apk"
-    else
-        cp -v "${mozilla_release}/obj/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${target_abi}-release-unsigned.apk" "${builddir}/outputs/ironfox-nightly-${target_abi}-unsigned.apk"
-    fi
+    cp -v "${mozilla_release}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${builddir}/outputs/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}-unsigned.apk"
 elif [[ "${build_type}" == "bundle" ]]; then
     "${gradle}" -Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache :app:bundleRelease -Paab
 fi

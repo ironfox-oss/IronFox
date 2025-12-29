@@ -281,7 +281,7 @@ export prebuilds="${PREBUILDSDIR}"
 export uniffi="${UNIFFIDIR}"
 export wasi="${WASISDKDIR}"
 
-export target_abi={target_abi}
+export IRONFOX_TARGET_ARCH={IRONFOX_TARGET_ARCH}
 
 source "\${rootdir}/scripts/env_common.sh"
 EOF

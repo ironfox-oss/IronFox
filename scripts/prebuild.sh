@@ -423,7 +423,7 @@ esac
 echo "${llvmtarget}" >"${builddir}/targets_to_build"
 
 if [[ "${geckotarget}" != "bundle" ]]; then
-    "${SED}" -i "s|{target_abi}|${abi}|" "${rootdir}/scripts/env_local.sh"
+    "${SED}" -i "s|{IRONFOX_TARGET_ARCH}|${geckotarget}|" "${rootdir}/scripts/env_local.sh"
 fi
 
 # Apply Fenix overlay
@@ -1068,12 +1068,6 @@ echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDe
 apply_overlay "${patches}/gecko-overlay/"
 
 # Set variables for environment-specific arguments
-
-if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-    IRONFOX_CHANNEL='release'
-else
-    IRONFOX_CHANNEL='nightly'
-fi
 
 ## local.properties
 "${SED}" -i "s|{android_components}|${android_components}|" local.properties

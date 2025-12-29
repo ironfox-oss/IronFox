@@ -178,9 +178,6 @@ export LDFLAGS="${LDFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protect
 export RUSTDOCFLAGS="${RUSTDOCFLAGS} -Cdebug-assertions=false -Copt-level=3 -Crelro-level=full"
 export RUSTFLAGS="${RUSTFLAGS} -Cdebug-assertions=false -Copt-level=3 -Crelro-level=full"
 
-## Set the destination object (output) directory
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
-
 ## Set flag for "official" builds
 ### Ensures we're not enabling functionality/settings meant for debugging/development
 ### https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
