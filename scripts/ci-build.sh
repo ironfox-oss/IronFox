@@ -64,7 +64,7 @@ bash -x scripts/build.sh "${BUILD_TYPE}"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
     # Create GeckoView AAR archives
-    pushd "${mozilla_release}/obj/gradle"
+    pushd "${mozilla_release}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle"
     mkdir -vp geckoview-aar
     mv maven geckoview-aar/geckoview
     popd
