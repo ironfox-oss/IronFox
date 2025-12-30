@@ -5,8 +5,8 @@ set -eo pipefail
 source "$(dirname $0)/versions.sh"
 
 # If variables are defined with a custom `env_override.sh`, let's use those
-if [[ -f "$(dirname $0)/env_override.sh" ]]; then
-    source "$(dirname $0)/env_override.sh"
+if [[ -f "${ROOTDIR}/env_override.sh" ]]; then
+    source "${ROOTDIR}/env_override.sh"
 fi
 
 if [[ "${OSTYPE}" == "darwin"* ]]; then

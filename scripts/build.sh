@@ -43,9 +43,12 @@ source "$(dirname $0)/env_local.sh"
 source "${IRONFOX_CARGO_HOME}/env"
 source "${IRONFOX_PIP_ENV}/bin/activate"
 
+# Include version info
+source "${rootdir}/scripts/versions.sh"
+
 # If variables are defined with a custom `env_override.sh`, let's use those
-if [[ -f "$(dirname $0)/env_override.sh" ]]; then
-    source "$(dirname $0)/env_override.sh"
+if [[ -f "${rootdir}/env_override.sh" ]]; then
+    source "${rootdir}/env_override.sh"
 fi
 
 # Prepare build environment...
@@ -58,7 +61,7 @@ fi
 if [[ -f "${IRONFOX_AS}/local.properties" ]]; then
     rm -f "${IRONFOX_AS}/local.properties"
 fi
-cp -f "${patches}/a-s-overlay/local.properties" "${IRONFOX_AS}/local.properties"
+cp -f "${patches}/build/application-services/local.properties" "${IRONFOX_AS}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_AC}|${IRONFOX_AC}|" "${IRONFOX_AS}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN}|${IRONFOX_GLEAN}|" "${IRONFOX_AS}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|" "${IRONFOX_AS}/local.properties"
@@ -69,14 +72,14 @@ cp -f "${patches}/a-s-overlay/local.properties" "${IRONFOX_AS}/local.properties"
 if [[ -f "${IRONFOX_FENIX}/local.properties" ]]; then
     rm -f "${IRONFOX_FENIX}/local.properties"
 fi
-cp -f "${patches}/fenix-overlay/local.properties" "${IRONFOX_FENIX}/local.properties"
+cp -f "${patches}/build/fenix/local.properties" "${IRONFOX_FENIX}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_AS}|${IRONFOX_AS}|" "${IRONFOX_FENIX}/local.properties"
 
 ### Gecko
 if [[ -f "${IRONFOX_GECKO}/local.properties" ]]; then
     rm -f "${IRONFOX_GECKO}/local.properties"
 fi
-cp -f "${patches}/gecko-overlay/local.properties" "${IRONFOX_GECKO}/local.properties"
+cp -f "${patches}/build/gecko/local.properties" "${IRONFOX_GECKO}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_AC}|${IRONFOX_AC}|" "${IRONFOX_GECKO}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN}|${IRONFOX_GLEAN}|" "${IRONFOX_GECKO}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_GECKO}|${IRONFOX_GECKO}|" "${IRONFOX_GECKO}/local.properties"
@@ -85,7 +88,7 @@ cp -f "${patches}/gecko-overlay/local.properties" "${IRONFOX_GECKO}/local.proper
 if [[ -f "${IRONFOX_GLEAN}/local.properties" ]]; then
     rm -f "${IRONFOX_GLEAN}/local.properties"
 fi
-cp -f "${patches}/glean-overlay/local.properties" "${IRONFOX_GLEAN}/local.properties"
+cp -f "${patches}/build/glean/local.properties" "${IRONFOX_GLEAN}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|" "${IRONFOX_GLEAN}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM_ARCH}|${IRONFOX_PLATFORM_ARCH}|" "${IRONFOX_GLEAN}/local.properties"
 "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|" "${IRONFOX_GLEAN}/local.properties"
@@ -101,14 +104,17 @@ cp -f "${builddir}/tmp/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/
 if [[ -f "${builddir}/targets_to_build" ]]; then
     rm -f "${builddir}/targets_to_build"
 fi
-cp -f "${patches}/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${builddir}/targets_to_build"
+cp -f "${patches}/build/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${builddir}/targets_to_build"
 
-## Set our uBo assets location
+## Set our Gecko prefs
 if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js" ]]; then
     rm -f "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
 fi
-cp -f "${builddir}/tmp/gecko/002-ironfox.js" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+
+cp -f "${patches}/build/gecko/002-ironfox.js" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
 "${IRONFOX_SED}" -i "s|{IRONFOX_UBO_ASSETS_URL}|${IRONFOX_UBO_ASSETS_URL}|" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
 
 ## Configure release channel
 

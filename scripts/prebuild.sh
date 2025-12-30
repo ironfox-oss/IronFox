@@ -28,8 +28,8 @@ source "$(dirname $0)/env_local.sh"
 source "${rootdir}/scripts/versions.sh"
 
 # If variables are defined with a custom `env_override.sh`, let's use those
-if [[ -f "$(dirname $0)/env_override.sh" ]]; then
-    source "$(dirname $0)/env_override.sh"
+if [[ -f "${rootdir}/env_override.sh" ]]; then
+    source "${rootdir}/env_override.sh"
 fi
 
 function localize_maven {
@@ -110,7 +110,6 @@ mkdir -vp "${IRONFOX_GRADLE_HOME}"
 mkdir -vp "${IRONFOX_MOZBUILD}"
 mkdir -vp "${IRONFOX_OUTPUTS}"
 mkdir -vp "${builddir}/tmp/fenix"
-mkdir -vp "${builddir}/tmp/gecko"
 mkdir -vp "${builddir}/tmp/glean"
 
 ## Copy gradle properties
@@ -1022,10 +1021,6 @@ echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDe
 # Apply Gecko overlay
 apply_overlay "${patches}/gecko-overlay/"
 
-# Set variables for prefs
-"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" ironfox/prefs/002-ironfox.js
-"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" ironfox/prefs/002-ironfox.js
-
 ## The following are for the build script, so that it can update the environment variables if needed
 ### (ex. if the user changes them)
 
@@ -1038,11 +1033,6 @@ if [[ -f "${builddir}/tmp/fenix/shortcuts.xml" ]]; then
     rm -f "${builddir}/tmp/fenix/shortcuts.xml"
 fi
 cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${builddir}/tmp/fenix/shortcuts.xml"
-
-if [[ -f "${builddir}/tmp/gecko/002-ironfox.js" ]]; then
-    rm -f "${builddir}/tmp/gecko/002-ironfox.js"
-fi
-cp -f ironfox/prefs/002-ironfox.js "${builddir}/tmp/gecko/002-ironfox.js"
 
 popd
 
