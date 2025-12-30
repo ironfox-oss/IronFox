@@ -64,18 +64,18 @@ bash -x scripts/build.sh "${BUILD_TYPE}"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
     # Create GeckoView AAR archives
-    pushd "${mozilla_release}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle"
+    pushd "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle"
     mkdir -vp geckoview-aar
     mv maven geckoview-aar/geckoview
     popd
-    pushd "${mozilla_release}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/geckoview-aar"
+    pushd "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/geckoview-aar"
     zip -r -FS "${AAR_ARTIFACTS}/geckoview-${IRONFOX_TARGET_ABI}.zip" *
     popd
 
     # Sign APK
-    APK_IN="${builddir}/outputs/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}-unsigned.apk"
+    APK_IN="${IRONFOX_OUTPUTS}/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}-unsigned.apk"
     APK_OUT="${APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI}.apk"
-    "${ANDROID_HOME}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
+    "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
       --ks="${KEYSTORE}" \
       --ks-pass="pass:${KEYSTORE_PASS}" \
       --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
@@ -86,9 +86,9 @@ fi
 
 if [[ "${BUILD_TYPE}" == "bundle" ]]; then
     # Build signed APK set
-    AAB_IN="$(ls "${mozilla_release}"/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
+    AAB_IN="$(ls "${IRONFOX_GECKO}"/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="${APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
-    "${bundletool}"/bundletool build-apks \
+    "${IRONFOX_BUNDLETOOL}"/bundletool build-apks \
         --bundle="${AAB_IN}" \
         --output="${APKS_OUT}" \
         --ks="${KEYSTORE}" \

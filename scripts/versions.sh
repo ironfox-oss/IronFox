@@ -93,6 +93,7 @@ ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENV_SH="${ROOTDIR}/scripts/env_local.sh"
 EXTERNALDIR="${ROOTDIR}/external"
 BUILDDIR="${ROOTDIR}/build"
+OUTPUTSDIR="${BUILDDIR}/outputs"
 DOWNLOADSDIR="${EXTERNALDIR}/downloads"
 PATCHDIR="${ROOTDIR}/patches"
 ANDROIDSDKDIR="${EXTERNALDIR}/android-sdk"
@@ -107,10 +108,3 @@ GRADLEDIR="${EXTERNALDIR}/gradle"
 PREBUILDSDIR="${EXTERNALDIR}/prebuilds"
 UNIFFIDIR="${EXTERNALDIR}/uniffi"
 WASISDKDIR="${EXTERNALDIR}/wasi-sdk"
-
-# Use GNU Sed on macOS instead of the built-in sed, due to differences in syntax
-if [[ "${OSTYPE}" == "darwin"* ]]; then
-    SED=gsed
-else
-    SED=sed
-fi

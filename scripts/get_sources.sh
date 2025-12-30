@@ -265,6 +265,7 @@ fi
 echo "Writing ${ENV_SH}..."
 cat > "${ENV_SH}" << EOF
 export builddir="${BUILDDIR}"
+export outputsdir="${OUTPUTSDIR}"
 export patches="${PATCHDIR}"
 export rootdir="${ROOTDIR}"
 export android_components="${ANDROID_COMPONENTS}"

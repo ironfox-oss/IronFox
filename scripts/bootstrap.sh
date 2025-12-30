@@ -4,6 +4,8 @@
 
 set -euo pipefail
 
+source "$(dirname $0)/env_local.sh"
+
 error_fn() {
 	echo
 	echo -e "\033[31mSomething went wrong! The script failed.\033[0m"
@@ -14,7 +16,7 @@ error_fn() {
 
 # Install dependencies
 echo "Installing dependencies..."
-if [[ "${OSTYPE}" == "darwin"* ]]; then
+if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
     # Ensure Homebrew is installed
     if [[ -z "${HOMEBREW_PREFIX}" ]]; then
         echo "Homebrew is not installed! Aborting..."

@@ -1,7 +1,7 @@
 .build_setup_steps: &build_setup_steps
   before_script:
-    - mkdir -p "${GRADLE_USER_HOME}"
-    - mkdir -p "${CARGO_HOME}"
+    - mkdir -p "${IRONFOX_GRADLE_HOME}"
+    - mkdir -p "${IRONFOX_CARGO_HOME}"
     - mkdir -p /opt/IronFox
     - echo "${SB_GAPI_KEY}" > "${SB_GAPI_KEY_FILE}"
     - |
@@ -36,8 +36,8 @@ variables: &build_variables
   PRODUCTION_BRANCH: main
   SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
   KEYSTORE: /opt/IronFox/signing-key.jks
-  GRADLE_USER_HOME: "${CI_PROJECT_DIR}/.cache/gradle"
-  CARGO_HOME: "${CI_PROJECT_DIR}/.cache/cargo"
+  IRONFOX_GRADLE_HOME: "${CI_PROJECT_DIR}/.cache/gradle"
+  IRONFOX_CARGO_HOME: "${CI_PROJECT_DIR}/.cache/cargo"
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"

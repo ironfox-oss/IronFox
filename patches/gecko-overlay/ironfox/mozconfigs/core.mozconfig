@@ -10,9 +10,7 @@ ac_add_options --enable-replace-malloc
 
 ## Automatically clobber if necessary
 mk_add_options AUTOCLOBBER=1
-
-## Configure Gradle
-export GRADLE_FLAGS='-Dorg.gradle.configuration-cache=false -Pofficial --no-build-cache --no-configuration-cache'
+export AUTOCLOBBER=1
 
 ## Disable android:debuggable
 ac_add_options --disable-android-debuggable
@@ -165,18 +163,6 @@ export MOZ_APP_UA_NAME='Firefox'
 ## Include source info
 ### Displayed at ex. `about:buildconfig`
 export MOZ_INCLUDE_SOURCE_INFO=1
-
-## Set compiler (toolchain) flags
-export CFLAGS="${CFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export CPPFLAGS="${CPPFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export CXXFLAGS="${CXXFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export HOST_CFLAGS="${HOST_CFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export HOST_CPPFLAGS="${HOST_CPPFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export HOST_CXXFLAGS="${HOST_CXXFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export HOST_LDFLAGS="${HOST_LDFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export LDFLAGS="${LDFLAGS} -DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv"
-export RUSTDOCFLAGS="${RUSTDOCFLAGS} -Cdebug-assertions=false -Copt-level=3 -Crelro-level=full"
-export RUSTFLAGS="${RUSTFLAGS} -Cdebug-assertions=false -Copt-level=3 -Crelro-level=full"
 
 ## Set flag for "official" builds
 ### Ensures we're not enabling functionality/settings meant for debugging/development

@@ -5,3 +5,5 @@
 
 ## Set the destination object (output) directory
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj/ironfox-nightly-x86_64
+mk_add_options OBJDIR=@TOPSRCDIR@/obj/ironfox-nightly-x86_64
+export MOZ_OBJDIR="$topsrcdir/obj/ironfox-nightly-x86_64"

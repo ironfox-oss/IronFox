@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$(dirname $0)/env_local.sh"
+
 RED="\033[0;31m"
 GREEN="\033[0;32m"
 NC="\033[0m"
@@ -144,8 +146,8 @@ slugify() {
     local input="$1"
     echo "${input}" |                  \
         tr '[:upper:]' '[:lower:]' | \
-        "${SED}" -E 's/[^a-z0-9]+/-/g' |  \
-        "${SED}" -E 's/^-+|-+$//g'
+        "${IRONFOX_SED}" -E 's/[^a-z0-9]+/-/g' |  \
+        "${IRONFOX_SED}" -E 's/^-+|-+$//g'
 }
 
 # Function to rebase a single patch file atomically
