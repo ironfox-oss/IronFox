@@ -104,8 +104,10 @@ fi
 # Set target ABI
 if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]]; then
     export IRONFOX_TARGET_ABI='"armeabi-v7a"'
-else if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
+fi
+if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
     export IRONFOX_TARGET_ABI='"arm64-v8a"'
-else if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
+fi
+if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
     export IRONFOX_TARGET_ABI='"x86_64"'
 fi
