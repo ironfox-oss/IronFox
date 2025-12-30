@@ -70,6 +70,13 @@ patches:
     effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
     category: "Build System"
 
+  - file: "gecko-ensure-builds-reflect-changes.patch"
+    name: "Ensure builds always reflect our (latest) changes"
+    description: "Ensures that builds of GeckoView binaries always reflect our (latest) changes."
+    reason: "To ensure that our GeckoView binaries are always packaged as intended."
+    effect: "Ensures that our GeckoView binaries are always packaged as intended."
+    category: "Build System"
+
   - file: "gecko-remove-example-dependencies.patch"
     name: "Remove Unwanted Example/Sample Dependencies"
     description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."
