@@ -185,7 +185,69 @@ fi
 if [[ -z ${IRONFOX_CARGO_HOME+x} ]]; then
     export IRONFOX_CARGO_HOME="${builddir}/.cargo"
 fi
+export CARGO="${IRONFOX_CARGO_HOME}/bin/cargo"
 export CARGO_HOME="${IRONFOX_CARGO_HOME}"
+export CARGO_INSTALL_ROOT="${IRONFOX_CARGO_HOME}"
+export RUSTC="${IRONFOX_CARGO_HOME}/bin/rustc"
+export RUSTDOC="${IRONFOX_CARGO_HOME}/bin/rustdoc"
+export PATH="${IRONFOX_CARGO_HOME}/bin:${PATH}"
+
+# Disable debug
+export CARGO_PROFILE_DEV_DEBUG=false
+export CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=false
+export CARGO_PROFILE_RELEASE_DEBUG=false
+export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS=false
+
+### Disable HTTP debugging
+export CARGO_HTTP_DEBUG=false
+
+### Display progress bars
+if [[ -z ${IRONFOX_CARGO_PROGRESS_BAR+x} ]]; then
+    export IRONFOX_CARGO_PROGRESS_BAR='always'
+fi
+export CARGO_TERM_PROGRESS_WHEN="${IRONFOX_CARGO_PROGRESS_BAR}"
+export CARGO_TERM_PROGRESS_WIDTH=80
+
+### Enable certificate revocation checks
+export CARGO_HTTP_CHECK_REVOKE=true
+
+### Enable colored output
+if [[ -z ${IRONFOX_CARGO_COLORED_OUTPUT+x} ]]; then
+    export IRONFOX_CARGO_COLORED_OUTPUT='always'
+fi
+export CARGO_TERM_COLOR="${IRONFOX_CARGO_COLORED_OUTPUT}"
+
+### Enable overflow checks
+export CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true
+export CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS=true
+
+### Enable performance optimizations
+export CARGO_PROFILE_DEV_LTO=true
+export CARGO_PROFILE_DEV_OPT_LEVEL=3
+export CARGO_PROFILE_RELEASE_LTO=true
+export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+
+### Strip debug info
+export CARGO_PROFILE_DEV_STRIP='debuginfo'
+export CARGO_PROFILE_RELEASE_STRIP='debuginfo'
+
+## rustup
+if [[ -z ${IRONFOX_RUSTUP_HOME+x} ]]; then
+    export IRONFOX_RUSTUP_HOME="${builddir}/.rustup"
+fi
+export RUSTUP_HOME="${IRONFOX_RUSTUP_HOME}"
+
+### Display progress bars
+if [[ -z ${IRONFOX_RUSTUP_PROGRESS_BAR+x} ]]; then
+    export IRONFOX_RUSTUP_PROGRESS_BAR='always'
+fi
+export RUSTUP_TERM_PROGRESS_WHEN="${IRONFOX_RUSTUP_PROGRESS_BAR}"
+
+### Enable colored output
+if [[ -z ${IRONFOX_RUSTUP_COLORED_OUTPUT+x} ]]; then
+    export IRONFOX_RUSTUP_COLORED_OUTPUT='always'
+fi
+export RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
 
 # uniffi-bindgen
 if [[ -z ${IRONFOX_UNIFFI+x} ]]; then
@@ -215,7 +277,7 @@ fi
 export TARGET_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
 
 # Gradle flags
-IRONFOX_GRADLE_FLAGS_DEFAULT='-Dorg.gradle.configuration-cache=false --no-build-cache --no-configuration-cache'
+IRONFOX_GRADLE_FLAGS_DEFAULT='-Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon'
 if [[ -z ${IRONFOX_GRADLE_FLAGS+x} ]]; then
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"
 else
@@ -223,12 +285,14 @@ else
 fi
 
 # Rust flags
-IRONFOX_RUST_FLAGS_DEFAULT='-Cdebug-assertions=false -Copt-level=3 -Crelro-level=full'
+IRONFOX_RUST_FLAGS_DEFAULT='-Cdebug-assertions=false -Copt-level=3 -Cstrip=debuginfo'
 if [[ -z ${IRONFOX_RUST_FLAGS+x} ]]; then
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT}"
 else
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT} ${IRONFOX_RUST_FLAGS}"
 fi
+export CARGO_BUILD_RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
+export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
 
 export ARTIFACTS="${rootdir}/artifacts"
 export APK_ARTIFACTS=${ARTIFACTS}/apk

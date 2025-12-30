@@ -112,11 +112,11 @@ mkdir -vp "${IRONFOX_OUTPUTS}"
 mkdir -vp "${builddir}/tmp/fenix"
 mkdir -vp "${builddir}/tmp/glean"
 
-## Copy gradle properties
-cp -vf "${patches}/gradle.properties" "${IRONFOX_GRADLE_HOME}/"
-
 ## Copy machrc
 cp -vf "${patches}/machrc" "${IRONFOX_MOZBUILD}/machrc"
+
+## Copy Rust (cargo) config
+cp -vf "${patches}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
 
 # Check patch files
 source "${rootdir}/scripts/patches.sh"
@@ -143,10 +143,11 @@ fi
 popd
 
 # Set-up Rust
-curl ${IRONFOX_CURL_FLAGS} -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain
+curl ${IRONFOX_CURL_FLAGS} -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain --profile=minimal
 
 # Set-up cargo
 source "${IRONFOX_CARGO_HOME}/env"
+rustup set profile minimal
 rustup default "${RUST_VERSION}"
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
@@ -421,6 +422,13 @@ localize_maven
 "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/build/Cargo.toml
 "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" glean-core/rlb/Cargo.toml
 
+# Disable debug
+"${IRONFOX_SED}" -i -e "s|debug = .*|debug = false|g" Cargo.toml
+
+# Enable performance optimizations
+"${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g" Cargo.toml
+"${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" Cargo.toml
+
 # No-op Glean
 "${IRONFOX_SED}" -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
 "${IRONFOX_SED}" -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
@@ -515,6 +523,10 @@ a-s_apply_patches
 
 # Disable debug
 "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' Cargo.toml
+
+# Enable performance optimizations
+"${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g" Cargo.toml
+"${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" Cargo.toml
 
 "${IRONFOX_SED}" -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 "${IRONFOX_SED}" -i -e '/content {/,/}/d' build.gradle
@@ -631,6 +643,14 @@ cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/about/browser/local
 "${IRONFOX_SED}" -i -e 's|debug-assertions = .*|debug-assertions = false|g' Cargo.toml
 "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' gfx/harfbuzz/src/rust/Cargo.toml
 "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' gfx/wr/Cargo.toml
+
+# Enable overflow checks
+"${IRONFOX_SED}" -i -e 's|overflow-checks = .*|overflow-checks = true|g' gfx/harfbuzz/src/rust/Cargo.toml
+
+# Enable performance optimizations
+"${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g" Cargo.toml
+"${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" Cargo.toml
+"${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" gfx/wr/Cargo.toml
 
 # Disable Normandy (Experimentation)
 "${IRONFOX_SED}" -i -e 's|"MOZ_NORMANDY", .*)|"MOZ_NORMANDY", False)|g' mobile/android/moz.configure
