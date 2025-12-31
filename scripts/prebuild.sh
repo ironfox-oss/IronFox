@@ -154,7 +154,7 @@ rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
 rustup target add i686-linux-android
 rustup target add x86_64-linux-android
-cargo install --vers "${CBINDGEN_VERSION}" cbindgen
+cargo install --force --vers "${CBINDGEN_VERSION}" cbindgen
 
 # Set-up pip
 python3.9 -m venv "${IRONFOX_PIP_ENV}"
@@ -1053,6 +1053,22 @@ if [[ -f "${builddir}/tmp/fenix/shortcuts.xml" ]]; then
     rm -f "${builddir}/tmp/fenix/shortcuts.xml"
 fi
 cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${builddir}/tmp/fenix/shortcuts.xml"
+
+popd
+
+#
+# microG
+#
+
+# Bump Android SDK and build tools
+pushd "${IRONFOX_GMSCORE}"
+"${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${ANDROID_BUILDTOOLS_VERSION}'|g" build.gradle
+"${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = ${ANDROID_PLATFORM_VERSION}|g" build.gradle
+"${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${ANDROID_PLATFORM_VERSION}|g" build.gradle
+
+# Bump minimum Android SDK
+## (This matches what we're using for the browser itself, as well as Mozilla's various components/dependencies)
+"${IRONFOX_SED}" -i -e 's|ext.androidMinSdk = .*|ext.androidMinSdk = 26|g' build.gradle
 
 popd
 
