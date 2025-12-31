@@ -42,10 +42,10 @@ fi
 # Get sources
 bash -x ./scripts/get_sources.sh
 
-source "$(realpath $(dirname "$0"))/env_local.sh"
-
 # Prepare sources
 bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
+
+source "$(realpath $(dirname "$0"))/env_local.sh"
 
 # If we're building an APK set, the following environment variables are required
 if [[ "${BUILD_TYPE}" == "bundle" ]]; then
