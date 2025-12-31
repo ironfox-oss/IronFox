@@ -275,6 +275,7 @@ else
     export IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS_DEFAULT} ${IRONFOX_COMPILER_FLAGS}"
 fi
 export TARGET_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export TARGET_CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
 
 # Gradle flags
 IRONFOX_GRADLE_FLAGS_DEFAULT='-Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon'
@@ -285,7 +286,7 @@ else
 fi
 
 # Rust flags
-IRONFOX_RUST_FLAGS_DEFAULT='-Cdebug-assertions=false -Copt-level=3 -Cstrip=debuginfo'
+IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo -O'
 if [[ -z ${IRONFOX_RUST_FLAGS+x} ]]; then
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT}"
 else
