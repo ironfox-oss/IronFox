@@ -39,6 +39,7 @@ if [[ -z ${IRONFOX_ANDROID_SDK+x} ]]; then
 fi
 export ANDROID_HOME="${IRONFOX_ANDROID_SDK}"
 export ANDROID_SDK_ROOT="${IRONFOX_ANDROID_SDK}"
+export PATH="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin:${PATH}"
 
 # Application Services
 if [[ -z ${IRONFOX_AS+x} ]]; then
@@ -129,6 +130,12 @@ if [[ -z ${IRONFOX_LIBCLANG+x} ]]; then
         export IRONFOX_LIBCLANG="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/lib"
     fi
 fi
+
+# llvm-profdata
+if [[ -z ${IRONFOX_LLVM_PROFDATA+x} ]]; then
+    export IRONFOX_LLVM_PROFDATA="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/bin/llvm-profdata"
+fi
+export LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA}"
 
 # Mach
 ## https://firefox-source-docs.mozilla.org/mach/usage.html#user-settings

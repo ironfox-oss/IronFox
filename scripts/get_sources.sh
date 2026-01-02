@@ -179,8 +179,8 @@ SDK_MANAGER="${ANDROIDSDKDIR}/cmdline-tools/latest/bin/sdkmanager"
 { yes || true; } | $SDK_MANAGER --sdk_root="${ANDROIDSDKDIR}" --licenses
 
 $SDK_MANAGER "build-tools;${ANDROID_BUILDTOOLS_VERSION}"
-$SDK_MANAGER "platforms;android-${ANDROID_PLATFORM_VERSION}"
 $SDK_MANAGER "ndk;${ANDROID_NDK_REVISION}"
+$SDK_MANAGER "platforms;android-${ANDROID_PLATFORM_VERSION}"
 
 echo "Downloading Bundletool..."
 download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "${BUNDLETOOLDIR}/bundletool.jar"
