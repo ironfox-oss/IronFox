@@ -228,7 +228,7 @@ popd
 pushd "${IRONFOX_FENIX}"
 if [[ "${build_type}" == "apk" ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:assembleRelease
-    cp -v "${mozilla_release}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}-unsigned.apk"
+    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}-unsigned.apk"
 elif [[ "${build_type}" == "bundle" ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:bundleRelease -Paab
 fi
