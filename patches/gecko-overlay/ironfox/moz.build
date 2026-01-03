@@ -4,5 +4,6 @@ DIRS += [
     "components",
     "dumps",
     "enterprisepolicies",
+    "locales",
     "prefs",
 ]

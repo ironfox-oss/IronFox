@@ -67,6 +67,11 @@ if [[ -z ${IRONFOX_LOCALES+x} ]]; then
     export IRONFOX_LOCALES=$(<"${patches}/locales")
 fi
 
+# Gecko l10n
+if [[ -z ${IRONFOX_L10N_CENTRAL+x} ]]; then
+    export IRONFOX_L10N_CENTRAL="${l10n_central}"
+fi
+
 # Glean
 if [[ -z ${IRONFOX_GLEAN+x} ]]; then
     export IRONFOX_GLEAN="${glean}"

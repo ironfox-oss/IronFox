@@ -606,9 +606,9 @@ echo '@BINPATH@/chrome/ironfox@JAREXT@' >>mobile/android/installer/package-manif
 echo '@BINPATH@/chrome/ironfox.manifest' >>mobile/android/installer/package-manifest.in
 
 # about:policies
-mkdir -vp ironfox/about/browser/locales/en-US/browser/policies
-cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/about/browser/locales/en-US/browser/
-cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/about/browser/locales/en-US/browser/policies/
+mkdir -vp ironfox/locales/en-US/browser/policies
+cp -vf browser/locales/en-US/browser/aboutPolicies.ftl ironfox/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/policies/policies-descriptions.ftl ironfox/locales/en-US/browser/policies/
 
 # about:robots
 mkdir -vp ironfox/about/browser/robots
@@ -618,7 +618,7 @@ cp -vf browser/base/content/aboutRobots.xhtml ironfox/about/browser/robots/
 cp -vf browser/base/content/aboutRobots-icon.png ironfox/about/browser/robots/
 cp -vf browser/base/content/robot.ico ironfox/about/browser/robots/
 cp -vf browser/base/content/static-robot.png ironfox/about/browser/robots/
-cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/about/browser/locales/en-US/browser/
+cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/locales/en-US/browser/
 
 # Ensure we're building for release
 "${IRONFOX_SED}" -i -e 's/variant=variant(.*)/variant=variant("release")/' mobile/android/gradle.configure

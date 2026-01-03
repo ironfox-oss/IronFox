@@ -14,6 +14,12 @@ IRONFOX_VERSION="${FIREFOX_VERSION}"
 APPSERVICES_COMMIT='9d0f44b0a67b05556a5e1672875395665eb51754'
 APPSERVICES_VERSION='v146.0.2'
 
+## firefox-l10n
+### https://github.com/mozilla-l10n/firefox-l10n
+### NOTE: This repo is updated several times a day...
+### so I think best approach here will be for us to just update it alongside new releases
+L10N_COMMIT='9a11f12854b3d0fa4a094ed4005f2a8df916e6d3'
+
 ## Glean
 ### https://github.com/mozilla/glean
 GLEAN_COMMIT='19729353fa93916067c155b9e293c00836a6948a'
@@ -100,6 +106,7 @@ FENIX="${GECKODIR}/mobile/android/fenix"
 GLEANDIR="${EXTERNALDIR}/glean"
 GMSCOREDIR="${EXTERNALDIR}/gmscore"
 GRADLEDIR="${EXTERNALDIR}/gradle"
+L10NDIR="${EXTERNALDIR}/l10n-central"
 PREBUILDSDIR="${EXTERNALDIR}/prebuilds"
 UNIFFIDIR="${EXTERNALDIR}/uniffi"
 WASISDKDIR="${EXTERNALDIR}/wasi-sdk"

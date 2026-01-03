@@ -227,6 +227,10 @@ download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/p
 echo "Cloning application-services..."
 clone_repo "https://github.com/mozilla/application-services.git" "${APPSERVICESDIR}" "${APPSERVICES_COMMIT}"
 
+# Clone firefox-l10n
+echo "Cloning firefox-l10n..."
+clone_repo "https://github.com/mozilla-l10n/firefox-l10n.git" "${L10NDIR}" "${L10N_COMMIT}"
+
 # Clone Firefox
 echo "Cloning Firefox..."
 clone_repo "https://github.com/mozilla-firefox/firefox.git" "${GECKODIR}" "${FIREFOX_COMMIT}"
@@ -277,6 +281,7 @@ export fenix="${FENIX}"
 export glean="${GLEANDIR}"
 export gmscore="${GMSCOREDIR}"
 export gradle="${GRADLEDIR}/gradle"
+export l10n_central="${L10NDIR}"
 export mozilla_release="${GECKODIR}"
 export prebuilds="${PREBUILDSDIR}"
 export uniffi="${UNIFFIDIR}"
