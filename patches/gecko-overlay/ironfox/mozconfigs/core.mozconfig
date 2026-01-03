@@ -180,6 +180,7 @@ ac_add_options --without-pocket-api-keyfile
 
 ## Target Android
 ac_add_options --enable-application='mobile/android'
+ac_add_options --enable-default-toolkit='cairo-android'
 ac_add_options --enable-project='mobile/android'
 export MOZ_BUILD_APP='mobile/android'
 
