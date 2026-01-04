@@ -45,7 +45,7 @@ For those who do use F-Droid to install and update IronFox, we would recommend u
 
 ## How can I download Nightly builds?
 
-IronFox `Nightly` builds are builds of IronFox that are automatically generated from our GitLab CI. These builds are bleeding edge, and contain the latest changes as we add them. **These builds can be installed alongside your main/existing IronFox install**. For more details on the differences between IronFox `Release` and `Nightly` builds, you can see [our comparison page here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/NightlyVsRelease.md).
+IronFox `Nightly` builds are builds of IronFox that are automatically generated from our GitLab CI. These builds are bleeding edge, and contain the latest changes as we add them. **These builds can be installed alongside your main/existing IronFox install**. For more details on the differences between IronFox `Release` and `Nightly` builds, you can see [our comparison page here](./NightlyVsRelease.md).
 
 When reporting an issue, we'll likely direct you to install and attempt to reproduce the issue on the latest Nightly build, to ensure that we haven't already fixed the problem.
 
@@ -61,7 +61,7 @@ When reporting an issue, we'll likely direct you to install and attempt to repro
 
 ## Aren't Firefox-based browsers less secure than Chromium?
 
-**Yes**. While we do as much as possible to improve the situation, IronFox is unfortunately also impacted by some of Firefox's fundamental issues. For more details, please see [our `Limitations` page](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Limitations.md#security).
+**Yes**. While we do as much as possible to improve the situation, IronFox is unfortunately also impacted by some of Firefox's fundamental issues. For more details, please see [our `Limitations` page](./Limitations.md#security).
 
 Depending on your threat model, it may be preferable to use a Chromium-based browser, such as [Vanadium](https://grapheneos.org/features#vanadium) on GrapheneOS, or [Cromite](https://github.com/uazo/cromite).
 
@@ -73,7 +73,7 @@ It should be noted that there is a difference between something being *less* sec
 
 **To be clear**: As noted above, Firefox-based web browsers are objectively less secure than their Chromium counterparts. We are **not** trying to discredit Firefox's legitimate issues in this area.
 
-**However**, *especially due to [the hardening that IronFox provides](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Features.md)*, assuming that users keep the browser up to date and follow other good privacy and security practices, we believe that IronFox is secure *enough* for most users and threat models.
+**However**, *especially due to [the hardening that IronFox provides](./Features.md)*, assuming that users keep the browser up to date and follow other good privacy and security practices, we believe that IronFox is secure *enough* for most users and threat models.
 
 While we do as much as we can to improve Firefox's security, we also feel that IronFox's primary strengths are in other areas. Notably, when compared to most Chromium browsers, IronFox offers users with stronger *privacy*, superior content blocking *([uBlock Origin](https://addons.mozilla.org/addon/ublock-origin/))*, more freedom, more customization, and more control *(ex. `about:config`)* over their browsing experience. IronFox also supports other important features missing from many of these browsers, such as extensions and end-to-end encrypted browser sync.
 
@@ -111,7 +111,7 @@ Due to our use of the [microG](https://github.com/microg/GmsCore/wiki) FIDO libr
 
 ## Why is Google Safe Browsing supported and enabled by default?
 
-Please see [our `Safe Browsing` page here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Safe-Browsing.md).
+Please see [our `Safe Browsing` page here](./Safe-Browsing.md).
 
 ## Why does IronFox crash on GrapheneOS?
 
@@ -194,7 +194,7 @@ Unfortunately, due to it's design and intended use case, some of RFP's behavior 
 
 Thankfully, for Firefox, Mozilla has recently developed [Suspected Fingerprinters Protection *(FPP)*](https://support.mozilla.org/kb/firefox-protection-against-fingerprinting#w_suspected-fingerprinters). **FPP** is far more flexible than RFP, as it allows users to enable or disable specific protections as needed, globally or on a per-site basis.
 
-Due to RFP's issues, we enable **FPP** instead. Additionally, as Mozilla's default protections for FPP are currently very limited, we use our own [hardened configuration](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/toolkit/components/resistfingerprinting/RFPTargetsDefault.inc) for it. Our hardened configuration is designed to match RFP, but with exceptions to avoid certain behaviors that are known to cause issues and undesired behavior for users. You can see our [`Features` page](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/Features.md#fingerprinting) for more details.
+Due to RFP's issues, we enable **FPP** instead. Additionally, as Mozilla's default protections for FPP are currently very limited, we use our own [hardened configuration](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/toolkit/components/resistfingerprinting/RFPTargetsDefault.inc) for it. Our hardened configuration is designed to match RFP, but with exceptions to avoid certain behaviors that are known to cause issues and undesired behavior for users. You can see our [`Features` page](./Features.md#fingerprinting) for more details.
 
 We also include [a list](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/patches/gecko-overlay/mobile/android/branding/ironfox/dumps/ironfox-fingerprinting-protection-overrides-unbreak.json) of default overrides to fix breakage or harden protection on a per-site basis. If desired, you can disable our default overrides with the `Enable fingerprinting protection overrides from IronFox` toggle, located under `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`. Similarly, you can disable Mozilla's default overrides that serve a similar purpose with the `Enable fingerprinting protection overrides from Mozilla` toggle, located under `Settings` -> `IronFox` -> `IronFox settings` -> `Privacy`.
 
