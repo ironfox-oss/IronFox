@@ -499,6 +499,17 @@ patches:
     effect: "Users can safely disable PDF.js if preferred, without compromising their privacy."
     category: "Privacy"
 
+  - file: "gecko-prevent-exposing-name-and-vendor-to-extensions.patch"
+    name: "Prevent exposing the browser name and vendor to extensions"
+    description: |
+      Prevents exposing the browser name and vendor to extensions via getBrowserInfo
+      (https://developer.mozilla.org/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getBrowserInfo).
+    reason: | 
+      Improves privacy by preventing extensions from determining whether a user is on IronFox,
+      and improves compatibility with certain older extensions (ex. https://codeberg.org/librewolf/issues/issues/2492).
+    effect: "Extensions work as expected, and users are protected against added fingerprinting opportunities."
+    category: "Privacy"
+
   - file: "a-c-disable-unsolicited-favicon-fetching.patch"
     name: "Disable unsolicited favicon fetching"
     description: "Prevents Firefox from automatically fetching favicons for websites pinned to the browser homepage."
