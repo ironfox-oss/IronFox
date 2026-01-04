@@ -6,10 +6,11 @@ This directory is meant to serve as the temporary home for resources and informa
 
 ___
 
-- [Limitations](./docs/Limitations.md)
-    - [Fingerprinting](./docs/Limitations.md#fingerprinting)
-    - [Security](./docs/Limitations.md#security)
-- [Frequently Asked Questions](./docs/FAQ.md)
-- [Features](./docs/Features.md)
-- [Safe Browsing](./docs/Safe-Browsing.md)
-- [Network Connections](./docs/Network-Connections.md)
+- [Limitations](./Limitations.md)
+    - [Fingerprinting](./Limitations.md#fingerprinting)
+    - [Security](./Limitations.md#security)
+- [Frequently Asked Questions](./FAQ.md)
+- [Features](./Features.md)
+- [Safe Browsing](./Safe-Browsing.md)
+- [Network Connections](./Network-Connections.md)
+- [IronFox `Nightly` vs. IronFox `Release`](./NightlyVsRelease.md)
