@@ -1,4 +1,5 @@
 
+ac_add_options --disable-android-bundle
 ac_add_options --target='aarch64-linux-android'
 
 # Enable performance optimizations for WebAssembly
