@@ -183,6 +183,10 @@ if [[ -z ${IRONFOX_PREBUILDS+x} ]]; then
     export IRONFOX_PREBUILDS="${prebuilds}"
 fi
 
+# Python (Glean)
+export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
+export GLEAN_PYTHON="$(which python)"
+
 # Python (pip)
 if [[ -z ${IRONFOX_PIP_ENV+x} ]]; then
     export IRONFOX_PIP_ENV="${builddir}/pyenv"

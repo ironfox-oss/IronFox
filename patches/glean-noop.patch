@@ -36,6 +36,21 @@ index 0ca6fc7..e365179 100644
  # they use won't be there, hence the warning. It's safe to suppress these.
 --dontwarn mozilla.telemetry.glean.testing.**
 +#-dontwarn mozilla.telemetry.glean.testing.**
+diff --git a/glean-core/android-native/build.gradle b/glean-core/android-native/build.gradle
+index 53716d52..fd14f2dd 100644
+--- a/glean-core/android-native/build.gradle
++++ b/glean-core/android-native/build.gradle
+@@ -26,6 +26,10 @@ android {
+         targetSdkVersion rootProject.ext.build['targetSdkVersion']
+     }
+ 
++    buildFeatures {
++        buildConfig = false
++    }
++
+     buildTypes {
+         debug {
+             // Export our rules in debug, as a consumer might still enable proguard/r8
 diff --git a/glean-core/android-native/proguard-rules-consumer.pro b/glean-core/android-native/proguard-rules-consumer.pro
 index 53519d424..855cad12e 100644
 --- a/glean-core/android-native/proguard-rules-consumer.pro

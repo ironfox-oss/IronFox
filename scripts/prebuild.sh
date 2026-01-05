@@ -105,6 +105,7 @@ fi
 
 # Create build directories
 mkdir -vp "${IRONFOX_CARGO_HOME}"
+mkdir -vp "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0"
 mkdir -vp "${IRONFOX_GRADLE_CACHE}"
 mkdir -vp "${IRONFOX_GRADLE_HOME}"
 mkdir -vp "${IRONFOX_MOZBUILD}"
@@ -158,8 +159,19 @@ cargo install --force --vers "${CBINDGEN_VERSION}" cbindgen
 
 # Set-up pip
 python3.9 -m venv "${IRONFOX_PIP_ENV}"
+
+## Set symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
+if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/pythonenv" ]]; then
+    ln -s "${IRONFOX_PIP_ENV}" "${IRONFOX_GLEAN_PIP_ENV}/pythonenv"
+fi
+
+if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3" ]]; then
+    ln -s "${IRONFOX_PIP_ENV}" "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3"
+fi
+
 source "${IRONFOX_PIP_ENV}/bin/activate"
 pip install --upgrade pip
+pip install glean-parser
 
 if [[ "${IRONFOX_PLATFORM}" == "darwin" ]]; then
     pip install gyp-next
@@ -431,6 +443,7 @@ localize_maven
 
 # No-op Glean
 "${IRONFOX_SED}" -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
+"${IRONFOX_SED}" -i -e '/minifyEnabled/s/false/true/' glean-core/android-native/build.gradle
 "${IRONFOX_SED}" -i -e 's/DEFAULT_TELEMETRY_ENDPOINT = ".*"/DEFAULT_TELEMETRY_ENDPOINT = ""/' glean-core/python/glean/config.py
 "${IRONFOX_SED}" -i -e '/enable_internal_pings:/s/true/false/' glean-core/python/glean/config.py
 "${IRONFOX_SED}" -i -e "s|DEFAULT_GLEAN_ENDPOINT: .*|DEFAULT_GLEAN_ENDPOINT: \&\str = \"\";|g" glean-core/rlb/src/configuration.rs
@@ -489,17 +502,29 @@ rm -vrf components/feature/search/src/main/java/mozilla/components/feature/searc
 # Remove the 'search telemetry' config
 rm -vf components/feature/search/src/main/assets/search/search_telemetry_v2.json
 
-# Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
+# Remove unused/unwanted sample libraries
+## Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
 ## We don't build or use these sample libraries at all anyways, so instead of patching these files, I don't see a reason why we shouldn't just delete them. 
-rm -vf samples/browser/build.gradle
-rm -vf samples/crash/build.gradle
-rm -vf samples/glean/build.gradle
-rm -vf samples/glean/samples-glean-library/build.gradle
+rm -rvf samples/browser
+rm -rvf samples/crash
 
 # Remove Nimbus
 rm -vf components/browser/engine-gecko/geckoview.fml.yaml
 rm -vrf components/browser/engine-gecko/src/main/java/mozilla/components/experiment
 "${IRONFOX_SED}" -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' components/service/nimbus/proguard-rules-consumer.pro
+"${IRONFOX_SED}" -i -e '/buildConfig/s/true/false/' components/service/nimbus/build.gradle
+
+# Remove MARS
+rm -vrf components/service/mars
+
+# Remove Sentry
+rm -vrf components/lib/crash-sentry
+
+# Remove Web Compat Reporter
+rm -vrf components/feature/webcompat-reporter
+
+# Crash library
+"${IRONFOX_SED}" -i -e '/buildConfig/s/true/false/' components/lib/crash/build.gradle
 
 # Apply a-c overlay
 apply_overlay "${patches}/a-c-overlay/"
@@ -698,7 +723,6 @@ rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js tool
 rm -vrf mobile/android/android-components/components/support/appservices/src/main/java/mozilla/components/support/rusterrors
 
 "${IRONFOX_SED}" -i -e 's|enabled: Boolean = .*|enabled: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-"${IRONFOX_SED}" -i -e 's|sendCaughtExceptions: Boolean = .*|sendCaughtExceptions: Boolean = false,|g' mobile/android/android-components/components/lib/crash-sentry/src/*/java/mozilla/components/lib/crash/sentry/SentryService.kt
 "${IRONFOX_SED}" -i -e 's|shouldPrompt: Prompt = .*|shouldPrompt: Prompt = Prompt.ALWAYS,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 "${IRONFOX_SED}" -i -e 's|useLegacyReporting: Boolean = .*|useLegacyReporting: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 "${IRONFOX_SED}" -i -e 's|var enabled: Boolean = false,|var enabled: Boolean = enabled|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt

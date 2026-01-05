@@ -1,3 +1,62 @@
+diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
+index 3ab033ea9404..0168e76780b7 100644
+--- a/mobile/android/fenix/app/nimbus.fml.yaml
++++ b/mobile/android/fenix/app/nimbus.fml.yaml
+@@ -239,30 +239,30 @@ features:
+         type: Boolean
+         default: false
+ 
+-  glean:
+-    description: "A feature that provides server-side configurations for Glean metrics (aka Server Knobs)."
+-    allow-coenrollment: true
+-    variables:
+-      gleanMetricConfiguration:
+-        description: Configuration for Glean Server Knobs
+-        type: GleanServerKnobsConfiguration
+-        default: {}
+-      enable-event-timestamps:
+-        description: "Enables precise event timestamps for Glean events"
+-        type: Boolean
+-        default: true
+-      delay-ping-lifetime-io:
+-        description: "Glean will delay io for ping lifetime metrics"
+-        type: Boolean
+-        default: true
+-      ping-lifetime-threshold:
+-        description: "Write count threshold when to auto-flush"
+-        type: Int
+-        default: 1000
+-      ping-lifetime-max-time:
+-        description: "After what time to auto-flush"
+-        type: Int
+-        default: 2000
++#  glean:
++#    description: "A feature that provides server-side configurations for Glean metrics (aka Server Knobs)."
++#    allow-coenrollment: true
++#    variables:
++#      gleanMetricConfiguration:
++#        description: Configuration for Glean Server Knobs
++#        type: GleanServerKnobsConfiguration
++#        default: {}
++#      enable-event-timestamps:
++#        description: "Enables precise event timestamps for Glean events"
++#        type: Boolean
++#        default: true
++#      delay-ping-lifetime-io:
++#        description: "Glean will delay io for ping lifetime metrics"
++#        type: Boolean
++#        default: true
++#      ping-lifetime-threshold:
++#        description: "Write count threshold when to auto-flush"
++#        type: Int
++#        default: 1000
++#      ping-lifetime-max-time:
++#        description: "After what time to auto-flush"
++#        type: Int
++#        default: 2000
+ 
+   splash-screen:
+     description: "A feature that extends splash screen duration, allowing additional data fetching time for the app's initial run."
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt
 index 73c188ca8d..51438f62eb 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/gleandebugtools/GleanDebugToolsFragment.kt
