@@ -358,3 +358,16 @@ if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
     export IRONFOX_TARGET_ABI='"arm64-v8a", "armeabi-v7a", "x86_64"'
     export IRONFOX_TARGET_RUST='arm64,arm,x86_64'
 fi
+
+# Set locations for our GeckoView AAR archives
+if [[ -z ${IRONFOX_GECKOVIEW_AAR_ARM+x} ]]; then
+    export IRONFOX_GECKOVIEW_AAR_ARM="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
+fi
+
+if [[ -z ${IRONFOX_GECKOVIEW_AAR_ARM64+x} ]]; then
+    export IRONFOX_GECKOVIEW_AAR_ARM64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
+fi
+
+if [[ -z ${IRONFOX_GECKOVIEW_AAR_X86_64+x} ]]; then
+    export IRONFOX_GECKOVIEW_AAR_X86_64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
+fi

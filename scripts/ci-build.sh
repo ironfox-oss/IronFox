@@ -47,13 +47,6 @@ bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
 
 source "$(realpath $(dirname "$0"))/env_local.sh"
 
-# If we're building an APK set, the following environment variables are required
-if [[ "${BUILD_TYPE}" == "bundle" ]]; then
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
-    export MOZ_ANDROID_FAT_AAR_X86_64="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
-fi
-
 # Set the build date to the date of commmit to ensure that the
 # MOZ_BUILDID is consistent across CI build jobs
 export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
@@ -64,12 +57,8 @@ bash -x scripts/build.sh "${BUILD_TYPE}"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
     # Create GeckoView AAR archives
-    pushd "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle"
-    mkdir -vp geckoview-aar
-    mv maven geckoview-aar/geckoview
-    popd
-    pushd "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/geckoview-aar"
-    zip -r -FS "${AAR_ARTIFACTS}/geckoview-${IRONFOX_TARGET_ABI}.zip" *
+    pushd "${IRONFOX_GECKO}"
+    MOZ_AUTOMATION=1 ./mach android archive-geckoview
     popd
 
     # Sign APK
