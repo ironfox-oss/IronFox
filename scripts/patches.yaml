@@ -170,21 +170,21 @@ patches:
     effect: "Prevents unwanted collection and transmission of crash reports."
     category: "Mozilla"
 
-  - file: "a-c-remove-glean.patch"
+  - file: "a-c-liberate-glean.patch"
     name: "Remove Glean (Android Components)"
     description: "Removes the Glean SDK from Mozilla's Android Components."
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
-  - file: "a-c-remove-error-support.patch"
+  - file: "a-c-liberate-error-support.patch"
     name: "Remove Error Support (Android Components)"
     description: "Removes the Rust 'Error Support' library."
     reason: "To remove unwanted libraries, and dependencies on related services."
     effect: "Prevents unwanted data collection of users."
     category: "Mozilla"
 
-  - file: "fenix-remove-glean.patch"
+  - file: "fenix-liberate-glean.patch"
     name: "Remove Glean (Fenix)"
     description: "Removes the Glean SDK from Firefox for Android."
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
@@ -205,7 +205,7 @@ patches:
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Mozilla"
 
-  - file: "a-c-remove-nimbus.patch"
+  - file: "a-c-liberate-nimbus.patch"
     name: "Disable Nimbus Experimentation (Android Components)"
     description: "Removes the Nimbus library/service from Android Components."
     reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
@@ -261,7 +261,7 @@ patches:
     effect: "Cleaner interface without promotional content or third-party integrations."
     category: "Mozilla"
 
-  - file: "fenix-liberate-support-mars.patch"
+  - file: "fenix-liberate-mars.patch"
     name: "Remove MARS (Fenix)"
     description: "Removes the Mozilla Ad Routing Service (MARS) from Firefox for Android."
     reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
@@ -303,7 +303,7 @@ patches:
     effect: "Users have improved privacy, security, and control over their extensions."
     category: "Mozilla"
 
-  - file: "fenix-liberate-support-webcompat-reporter.patch"
+  - file: "fenix-liberate-webcompat-reporter.patch"
     name: "Remove Web Compatibility Reporter (Fenix)"
     description: "Removes the Web Compatibility Reporter from Firefox for Android."
     reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
@@ -360,13 +360,10 @@ patches:
     category: "Mozilla"
 
   # Privacy
-  - file: "fenix-configure-doh.patch"
-    name: "Configure DNS over HTTPS"
+  - file: "fenix-add-doh-providers.patch"
+    name: "Add DNS over HTTPS Providers"
     description: |
-      Strengthens the default protection level of DNS over HTTPS, and adds additional DNS providers.
-
-      Currently, the following DNS providers have been added :
-
+      Adds the following DoH providers to the browser's built-in list:
         - Quad9
         - AdGuard
         - AdGuard (Unfiltered)
@@ -377,10 +374,15 @@ patches:
         - Mullvad (Base)
         - Mullvad (Unfiltered)
         - Wikimedia
+    reason: "To add support for multiple secure DNS providers in the UI settings."
+    effect: "Adds a selection of carefully selected DoH providers for the users to choose from."
+    category: "Privacy"
 
-      Quad9 is used by default.
-    reason: "To harden DoH out of the box, and to add support for multiple secure DNS providers in the UI settings."
-    effect: "Improves DNS privacy and security by strengthening DoH's default protection level, and adds a selection of carefully selected DoH providers for the users to choose from."
+  - file: "fenix-enable-doh-via-quad9-by-default.patch"
+    name: "Enable DNS over HTTPS (via Quad9) by default"
+    description: "Enables DNS over HTTPS without fallback by default, and sets Quad9 as the default provider."
+    reason: "To harden DoH out of the box."
+    effect: "Improves DNS privacy and security by strengthening DoH's default protection level."
     category: "Privacy"
 
   - file: "fenix-disable-autocomplete-by-default.patch"
@@ -492,13 +494,6 @@ patches:
     effect: "Users are protected against tracking, and benefit from added attack surface reduction, without causing breakage and having to deal with the usual side effects that appear when the Beacon API is disabled."
     category: "Privacy"
 
-  - file: "gecko-prevent-pdfjs-fingerprinting.patch"
-    name: "Prevent fingerprinting based on whether PDF.js is enabled/disabled"
-    description: "Prevents aiding fingerprinting when Firefox's internal PDF viewer (PDF.js) is disabled."
-    reason: "To allow users to disable PDF.js if preferred (ex. in favor of an external viewer, like GrapheneOS's: https://github.com/GrapheneOS/PdfViewer), without increasing fingerprintability."
-    effect: "Users can safely disable PDF.js if preferred, without compromising their privacy."
-    category: "Privacy"
-
   - file: "gecko-prevent-exposing-name-and-vendor-to-extensions.patch"
     name: "Prevent exposing the browser name and vendor to extensions"
     description: |
@@ -590,6 +585,13 @@ patches:
     effect: "Users are provided with more control over their browsing experience, and can further improve their security if desired."
     category: "User Control"
 
+  - file: "fenix-display-extensions-in-custom-tabs-menu-by-default.patch"
+    name: "Display extensions in the custom tabs menu by default"
+    description: "Displays the status of extensions in the menu for custom tabs."
+    reason: "To improve freedom/control for users, by allowing them to see the status of extensions at any time, even when running with a custom tab."
+    effect: "Users are provided with more control over their browsing experience."
+    category: "User Interface"
+
   # User Experience
   - file: "fenix-default-site-permissions.patch"
     name: "Default Site Permissions"
@@ -676,13 +678,6 @@ patches:
     effect: "Users have a clean new tab page without predetermined site suggestions or other content."
     category: "User Interface"
 
-  - file: "fenix-enable-app-icon-selection.patch"
-    name: "Enable App Icon Selection"
-    description: "Enables the app icon selection feature."
-    reason: "Allows users to personalize their IronFox, by choosing from a selection of built-in app icons."
-    effect: "Users have more control over their web browser, and more ways to customize it to their liking."
-    category: "User Interface"
-
   - file: "fenix-disable-history-and-recent-search-suggestions-by-default.patch"
     name: "Disable Historical and Recent Search Suggestions"
     description: "Disables recent and historical search suggestions by default."
@@ -711,11 +706,11 @@ patches:
     effect: "Users can easily see if they have modified these important preferences."
     category: "User Interface"
 
-  - file: "gecko-expose-aboutconfig.patch"
-    name: "Expose `about:config`"
-    description: "Exposes `about:config` at `about:about`, alongside other internal `about:` pages."
-    reason: "To provide users with easier access to advanced configuration options."
-    effect: "Users can access `about:config` easier to customize advanced Firefox settings not available in the regular settings menu."
+  - file: "gecko-expose-about-pages.patch"
+    name: "Expose `about:` pages"
+    description: "Exposes `about:config` and `about:translations` at `about:about`, alongside other internal `about:` pages."
+    reason: "To provide users with easier access to advanced configuration options and local translations."
+    effect: "Users can access `about:config` easier to customize advanced Firefox settings not available in the regular settings menu, and can access `about:translations` easier for local translations."
     category: "User Interface"
 
   - file: "gecko-enable-abouttranslations.patch"
@@ -826,9 +821,16 @@ patches:
     effect: "Users can spoof their preferred locale to English, and can benefit from stronger fingerprinting protection as a result."
     category: "User Interface"
 
+  - file: "a-c-ironfox-oled-theme.patch"
+    name: "OLED Theme (Android Components)"
+    description: "Adds support for true OLED black theme to Mozilla's Android Components"
+    reason: "To provide users with the option to reduce battery consumption and eye strain on OLED displays by using true black theme."
+    effect: "Users can toggle a UI option for an OLED-optimized dark theme, which helps improve visual comfort and power efficiency on OLED screens."
+    category: "User Interface"
+
   - file: "fenix-ironfox-oled-theme.patch"
-    name: "OLED Theme"
-    description: "Adds support in Fenix for true OLED black theme"
+    name: "OLED Theme (Fenix)"
+    description: "Adds support for true OLED black theme to Fenix"
     reason: "To provide users with the option to reduce battery consumption and eye strain on OLED displays by using true black theme."
     effect: "Users can toggle a UI option for an OLED-optimized dark theme, which helps improve visual comfort and power efficiency on OLED screens."
     category: "User Interface"

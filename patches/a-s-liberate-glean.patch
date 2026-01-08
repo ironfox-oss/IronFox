@@ -1,56 +1,11 @@
-diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-index 20d615e..70b41a0 100644
---- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-+++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-@@ -159,12 +159,12 @@ enum class KeyRegenerationEventReason {
- 
- fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
-     // Avoid the deprecation warning when calling  `record()` without the optional EventExtras param
--    @Suppress("DEPRECATION")
-+/*    @Suppress("DEPRECATION")
-     when (reason) {
-         KeyRegenerationEventReason.Lost -> LoginsStoreMetrics.keyRegeneratedLost.record()
-         KeyRegenerationEventReason.Corrupt -> LoginsStoreMetrics.keyRegeneratedCorrupt.record()
-         KeyRegenerationEventReason.Other -> LoginsStoreMetrics.keyRegeneratedOther.record()
--    }
-+    } */
- }
- 
- /**
-@@ -177,14 +177,14 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
-  * This is a convenience wrapper to measure the two in one shot.
-  */
- class LoginsStoreCounterMetrics(
--    val count: CounterMetricType,
--    val errCount: LabeledMetricType<CounterMetricType>,
-+//    val count: CounterMetricType,
-+//    val errCount: LabeledMetricType<CounterMetricType>,
- ) {
-     inline fun <U> measure(callback: () -> U): U {
--        return measureIgnoring({ false }, callback)
-+        return callback()
-     }
- 
--    @Suppress("ComplexMethod", "TooGenericExceptionCaught")
-+/*    @Suppress("ComplexMethod", "TooGenericExceptionCaught")
-     inline fun <U> measureIgnoring(
-         shouldIgnore: (Exception) -> Boolean,
-         callback: () -> U,
-@@ -215,5 +215,5 @@ class LoginsStoreCounterMetrics(
-             }
-             throw e
-         }
--    }
-+    } */
- }
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 98019e4..5705af9 100644
+index 0fed3ef9a..5b5dbace6 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -26,10 +26,10 @@ import kotlinx.coroutines.runBlocking
+@@ -25,10 +25,10 @@ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.runBlocking
  import kotlinx.coroutines.withContext
- import mozilla.appservices.remotesettings.RemoteSettingsConfig
- import mozilla.appservices.remotesettings.RemoteSettingsServer
+ import mozilla.appservices.remotesettings.RemoteSettingsService
 -import mozilla.telemetry.glean.Glean
 +// import mozilla.telemetry.glean.Glean
  import org.json.JSONObject
@@ -61,7 +16,7 @@ index 98019e4..5705af9 100644
  import org.mozilla.experiments.nimbus.internal.AppContext
  import org.mozilla.experiments.nimbus.internal.AvailableExperiment
  import org.mozilla.experiments.nimbus.internal.EnrolledExperiment
-@@ -93,7 +93,7 @@ open class Nimbus(
+@@ -92,7 +92,7 @@ open class Nimbus(
  
      private val metricsHandler = object : MetricsHandler {
          override fun recordEnrollmentStatuses(enrollmentStatusExtras: List<EnrollmentStatusExtraDef>) {
@@ -70,7 +25,7 @@ index 98019e4..5705af9 100644
                  NimbusEvents.enrollmentStatus.record(
                      NimbusEvents.EnrollmentStatusExtra(
                          branch = extra.branch,
-@@ -104,38 +104,38 @@ open class Nimbus(
+@@ -103,38 +103,38 @@ open class Nimbus(
                          conflictSlug = extra.conflictSlug,
                      ),
                  )
@@ -116,7 +71,7 @@ index 98019e4..5705af9 100644
          }
      }
  
-@@ -212,11 +212,11 @@ open class Nimbus(
+@@ -207,11 +207,11 @@ open class Nimbus(
          try {
              nimbusClient.getFeatureConfigVariables(featureId)?.let { JSONObject(it) }
          } catch (e: NimbusException.DatabaseNotReady) {
@@ -130,7 +85,7 @@ index 98019e4..5705af9 100644
              null
          } catch (e: Throwable) {
              reportError("getFeatureConfigVariablesJson", e)
-@@ -292,9 +292,9 @@ open class Nimbus(
+@@ -287,9 +287,9 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun fetchExperimentsOnThisThread() = withCatchAll("fetchExperiments") {
          try {
@@ -143,7 +98,7 @@ index 98019e4..5705af9 100644
              updateObserver {
                  it.onExperimentsFetched()
              }
-@@ -329,7 +329,7 @@ open class Nimbus(
+@@ -324,7 +324,7 @@ open class Nimbus(
              val time = measureTimeMillis {
                  events = nimbusClient.applyPendingExperiments()
              }
@@ -152,7 +107,7 @@ index 98019e4..5705af9 100644
              recordExperimentTelemetryEvents(events!!)
              // Get the experiments to record in telemetry
              postEnrolmentCalculation()
-@@ -514,19 +514,19 @@ open class Nimbus(
+@@ -509,19 +509,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
@@ -175,7 +130,7 @@ index 98019e4..5705af9 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -574,7 +574,7 @@ open class Nimbus(
+@@ -569,7 +569,7 @@ open class Nimbus(
                      )
                  }
              }
@@ -184,8 +139,118 @@ index 98019e4..5705af9 100644
      }
  
      // The exposure event should be recorded when the expected treatment (or no-treatment, such as
+diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
+index 20d615e4f..9f746a668 100644
+--- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
++++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
+@@ -13,9 +13,9 @@ package mozilla.appservices.logins
+  * on version updates.
+  */
+ 
+-import mozilla.telemetry.glean.private.CounterMetricType
++/* import mozilla.telemetry.glean.private.CounterMetricType
+ import mozilla.telemetry.glean.private.LabeledMetricType
+-import org.mozilla.appservices.logins.GleanMetrics.LoginsStore as LoginsStoreMetrics
++import org.mozilla.appservices.logins.GleanMetrics.LoginsStore as LoginsStoreMetrics */
+ 
+ /**
+  * An artifact of the uniffi conversion - a thin-ish wrapper around a
+@@ -129,27 +129,27 @@ class DatabaseLoginsStorage(dbPath: String, keyManager: KeyManager) : AutoClosea
+ 
+     private val readQueryCounters: LoginsStoreCounterMetrics by lazy {
+         LoginsStoreCounterMetrics(
+-            LoginsStoreMetrics.readQueryCount,
+-            LoginsStoreMetrics.readQueryErrorCount,
++//            LoginsStoreMetrics.readQueryCount,
++//            LoginsStoreMetrics.readQueryErrorCount,
+         )
+     }
+ 
+     private val writeQueryCounters: LoginsStoreCounterMetrics by lazy {
+         LoginsStoreCounterMetrics(
+-            LoginsStoreMetrics.writeQueryCount,
+-            LoginsStoreMetrics.writeQueryErrorCount,
++//            LoginsStoreMetrics.writeQueryCount,
++//            LoginsStoreMetrics.writeQueryErrorCount,
+         )
+     }
+ 
+     @Throws(LoginsApiException::class)
+     fun deleteUndecryptableLoginsAndRecordMetrics() {
+-        val result = store.deleteUndecryptableRecordsForRemoteReplacement()
++/*        val result = store.deleteUndecryptableRecordsForRemoteReplacement()
+         if (result.localDeleted > 0u) {
+             LoginsStoreMetrics.localUndecryptableDeleted.add(result.localDeleted.toInt())
+         }
+         if (result.mirrorDeleted > 0u) {
+             LoginsStoreMetrics.mirrorUndecryptableDeleted.add(result.mirrorDeleted.toInt())
+-        }
++        } */
+     }
+ }
+ 
+@@ -159,12 +159,12 @@ enum class KeyRegenerationEventReason {
+ 
+ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
+     // Avoid the deprecation warning when calling  `record()` without the optional EventExtras param
+-    @Suppress("DEPRECATION")
++/*    @Suppress("DEPRECATION")
+     when (reason) {
+         KeyRegenerationEventReason.Lost -> LoginsStoreMetrics.keyRegeneratedLost.record()
+         KeyRegenerationEventReason.Corrupt -> LoginsStoreMetrics.keyRegeneratedCorrupt.record()
+         KeyRegenerationEventReason.Other -> LoginsStoreMetrics.keyRegeneratedOther.record()
+-    }
++    } */
+ }
+ 
+ /**
+@@ -177,8 +177,8 @@ fun recordKeyRegenerationEvent(reason: KeyRegenerationEventReason) {
+  * This is a convenience wrapper to measure the two in one shot.
+  */
+ class LoginsStoreCounterMetrics(
+-    val count: CounterMetricType,
+-    val errCount: LabeledMetricType<CounterMetricType>,
++//    val count: CounterMetricType,
++//    val errCount: LabeledMetricType<CounterMetricType>,
+ ) {
+     inline fun <U> measure(callback: () -> U): U {
+         return measureIgnoring({ false }, callback)
+@@ -189,7 +189,7 @@ class LoginsStoreCounterMetrics(
+         shouldIgnore: (Exception) -> Boolean,
+         callback: () -> U,
+     ): U {
+-        count.add()
++ //       count.add()
+         try {
+             return callback()
+         } catch (e: Exception) {
+@@ -198,19 +198,19 @@ class LoginsStoreCounterMetrics(
+             }
+             when (e) {
+                 is LoginsApiException.NoSuchRecord -> {
+-                    errCount["no_such_record"].add()
++                    // no-op
+                 }
+                 is LoginsApiException.Interrupted -> {
+-                    errCount["interrupted"].add()
++                    // no-op
+                 }
+                 is LoginsApiException.InvalidRecord -> {
+-                    errCount["invalid_record"].add()
++                    // no-op
+                 }
+                 is LoginsApiException -> {
+-                    errCount["storage_error"].add()
++                    // no-op
+                 }
+                 else -> {
+-                    errCount["__other__"].add()
++                    // no-op
+                 }
+             }
+             throw e
 diff --git a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
-index 7d69d6a..11732fa 100644
+index 7d69d6aaa..11732fa5b 100644
 --- a/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 +++ b/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt
 @@ -349,7 +349,7 @@ class PlacesWriterConnection internal constructor(conn: UniffiPlacesConnection,

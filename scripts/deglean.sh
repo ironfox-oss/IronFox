@@ -145,7 +145,6 @@ rm -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/
 
 # Remove Glean classes (Application Services)
 "${IRONFOX_SED}" -i 's|FxaClientMetrics|// FxaClientMetrics|g' "${IRONFOX_AS}/components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt"
-"${IRONFOX_SED}" -i 's|LoginsStoreMetrics|// LoginsStoreMetrics|g' "${IRONFOX_AS}/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt"
 "${IRONFOX_SED}" -i 's|NimbusEvents.isReady|// NimbusEvents.isReady|g' "${IRONFOX_AS}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt"
 "${IRONFOX_SED}" -i 's|PlacesManagerMetrics|// PlacesManagerMetrics|g' "${IRONFOX_AS}/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt"
 

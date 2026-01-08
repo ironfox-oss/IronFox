@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
-index 40f4d92eed..3c947fc1b9 100644
+index 76ab6e5b0072..5ae6093e034d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
-@@ -351,28 +351,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
+@@ -363,28 +363,28 @@ class AccountSettingsFragment : PreferenceFragmentCompat() {
          val syncEnginesStatus = SyncEnginesStorage(requireContext()).getStatus()
          requirePreference<CheckBoxPreference>(R.string.pref_key_sync_bookmarks).apply {
              isEnabled = syncEnginesStatus.containsKey(SyncEngine.Bookmarks)
@@ -38,10 +38,10 @@ index 40f4d92eed..3c947fc1b9 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..6edaaa6f5f 100644
+index 276ad8cf1df1..560e999eaa4d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1933,7 +1933,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1988,7 +1988,7 @@ class Settings(
       */
      var isAddressSyncEnabled by featureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_address_sync),
@@ -51,7 +51,7 @@ index 35d4c5a9c0..6edaaa6f5f 100644
      )
  
 diff --git a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
-index 300331efb5..f1cbf8ea99 100644
+index 300331efb528..f1cbf8ea995b 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/account_settings_preferences.xml
 @@ -29,38 +29,38 @@

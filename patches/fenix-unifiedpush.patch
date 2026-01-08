@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 1753bcbd86..6cb5632fe9 100644
+index 1753bcbd86ff..6cb5632fe911 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -93,6 +93,7 @@ projects:
@@ -11,10 +11,10 @@ index 1753bcbd86..6cb5632fe9 100644
  - apks:
    - abi: arm64-v8a
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 237d28a560..b9a0cb7eda 100644
+index d6f8ce2a2bd6..d2396e50a61a 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -744,6 +744,7 @@ dependencies {
+@@ -751,6 +751,7 @@ dependencies {
      androidTestUtil libs.androidx.test.orchestrator
  
      lintChecks project(':components:tooling-lint')
@@ -23,7 +23,7 @@ index 237d28a560..b9a0cb7eda 100644
  
  protobuf {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 53190b359c..115d160315 100644
+index da46df8f5cd7..f286ad8362b2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -38,7 +38,7 @@ import mozilla.components.browser.storage.sync.GlobalPlacesDependencyProvider
@@ -35,7 +35,7 @@ index 53190b359c..115d160315 100644
  import mozilla.components.concept.storage.FrecencyThresholdOption
  import mozilla.components.feature.addons.migration.DefaultSupportedAddonsChecker
  import mozilla.components.feature.addons.update.GlobalAddonDependencyProvider
-@@ -497,7 +497,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -500,7 +500,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
              logger.info("AutoPushFeature is configured, initializing it...")
  
              // Install the AutoPush singleton to receive messages.
@@ -45,10 +45,10 @@ index 53190b359c..115d160315 100644
              WebPushEngineIntegration(components.core.engine, it).start()
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 68190994b3..2b59856daf 100644
+index 6ed5a8715f84..d410ddf7af46 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-@@ -226,8 +226,8 @@ class BackgroundServices(
+@@ -224,8 +224,8 @@ class BackgroundServices(
          accountManager.register(AccountManagerReadyObserver(accountManagerAvailableQueue))
  
          // Enable push if it's configured.
@@ -60,20 +60,15 @@ index 68190994b3..2b59856daf 100644
          }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-index f99ef999cfa7a..5c446e8ba84f0 100644
+index f99ef999cfa7..8c0bf5a1ee81 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Push.kt
-@@ -8,31 +8,89 @@ import android.content.Context
+@@ -8,8 +8,16 @@ import android.content.Context
  import androidx.core.net.toUri
  import mozilla.components.feature.push.AutoPushFeature
  import mozilla.components.feature.push.Protocol
 -import mozilla.components.feature.push.PushConfig
 -import mozilla.components.lib.crash.CrashReporter
- import mozilla.components.support.base.log.logger.Logger
- import org.mozilla.fenix.R
- import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.perf.lazyMonitored
- import org.mozilla.fenix.push.FirebasePushService
 +import android.app.Activity
 +import android.os.StrictMode
 +import mozilla.components.concept.push.Pusher
@@ -84,8 +79,10 @@ index f99ef999cfa7a..5c446e8ba84f0 100644
 +import org.mozilla.fenix.ext.components
 +import org.mozilla.fenix.perf.StrictModeManager
 +import org.mozilla.fenix.utils.Settings
- 
- /**
+ import mozilla.components.support.base.log.logger.Logger
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.ext.settings
+@@ -20,19 +28,63 @@ import org.mozilla.fenix.push.FirebasePushService
   * Component group for push services. These components use services that strongly depend on
   * push messaging (e.g. WebPush, SendTab).
   */
@@ -94,7 +91,6 @@ index f99ef999cfa7a..5c446e8ba84f0 100644
 -        pushConfig?.let { config ->
 +class Push(val context: Context, val settings: Settings = context.settings(), val strictMode: StrictModeManager = context.components.strictMode, val notificationsDelegate: NotificationsDelegate = context.components.notificationsDelegate, val iAutoPushFeature: AutoPushFeature? = null, val iUnifiedPushFeature: UnifiedPushFeature? = null) {
 +    private val logger = Logger("Push")
-+
 +    val feature: Pusher?
 +        get() = strictMode.allowViolation(StrictMode::allowThreadDiskReads) {
 +            if (settings.ironfox.useUnifiedPush) {
@@ -111,8 +107,7 @@ index f99ef999cfa7a..5c446e8ba84f0 100644
 +                                    "the feature is disabled for the moment."
 +                        )
 +                        val notificationId = UnifiedPushNotification.getNotificationId(context)
-+                        val notification =
-+                            UnifiedPushNotification.createMissingServiceNotification(context)
++                        val notification = UnifiedPushNotification.createMissingServiceNotification(context)
 +                        notificationsDelegate.notify(
 +                            notificationId = notificationId,
 +                            notification = notification
@@ -127,7 +122,6 @@ index f99ef999cfa7a..5c446e8ba84f0 100644
 +                }
 +            }
 +        }
-+
 +    private val autoPushFeature by lazyMonitored {
 +        iAutoPushFeature
 +            ?: autoPushConfig?.let { config ->
@@ -140,7 +134,7 @@ index f99ef999cfa7a..5c446e8ba84f0 100644
              )
          }
      }
- 
+-
 -    private val pushConfig: PushConfig? by lazyMonitored {
 +    private val unifiedPushFeature by lazyMonitored {
 +        iUnifiedPushFeature
@@ -149,20 +143,21 @@ index f99ef999cfa7a..5c446e8ba84f0 100644
 +            disableRateLimit = true,
 +        )
 +    }
-+
 +    private fun Pusher.migrateFrom(old: Pusher) {
 +        old.forEachScopes { scope, vapid ->
 +            this.subscribe(scope, vapid)
 +        }
 +        old.shutdown()
 +    }
-+
 +    private val autoPushConfig: AutoPushConfig? by lazyMonitored {
          val logger = Logger("PushConfig")
          val projectIdKey = context.getString(R.string.pref_key_push_project_id)
          val resId = context.resources.getIdentifier(projectIdKey, "string", context.packageName)
-@@ -43,12 +101,12 @@ class Push(val context: Context, crashReporter: CrashReporter) {
- 
+@@ -40,15 +92,14 @@ class Push(val context: Context, crashReporter: CrashReporter) {
+             logger.warn("No firebase configuration found; cannot support push service.")
+             return@lazyMonitored null
+         }
+-
          logger.debug("Creating push configuration for autopush.")
          val projectId = context.resources.getString(resId)
 -        val serverOverride = context.settings().overridePushServer
@@ -177,41 +172,36 @@ index f99ef999cfa7a..5c446e8ba84f0 100644
                  projectId,
                  serverHost = uri.getHost() ?: "",
                  protocol = if (uri.getScheme() == "http") {
-@@ -61,5 +119,13 @@ class Push(val context: Context, crashReporter: CrashReporter) {
+@@ -60,6 +111,11 @@ class Push(val context: Context, crashReporter: CrashReporter) {
+             )
          }
      }
- 
+-
 -    private val pushService by lazyMonitored { FirebasePushService() }
 +    private val firebasePushService by lazyMonitored { FirebasePushService() }
-+
 +    fun switchToUnifiedPush(activity: Activity, callback: (Boolean) -> Unit) {
 +        unifiedPushFeature.useDefaultDistributor(activity, callback)
 +    }
-+
 +    fun switchToAutoPush(context: Context) {
 +        unifiedPushFeature.removeCurrentDistributor(context)
 +    }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
-index f25cf4442e..090d1c7982 100644
+index f25cf4442ef1..05bd0de2be9b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/PushFxaIntegration.kt
-@@ -13,12 +13,13 @@ import mozilla.components.concept.sync.AuthType
+@@ -13,8 +13,9 @@ import mozilla.components.concept.sync.AuthType
  import mozilla.components.concept.sync.OAuthAccount
  import mozilla.components.feature.accounts.push.FxaPushSupportFeature
  import mozilla.components.feature.accounts.push.SendTabFeature
 -import mozilla.components.feature.push.AutoPushFeature
 -import mozilla.components.feature.push.PushScope
- import mozilla.components.service.fxa.manager.FxaAccountManager
- import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
- import org.mozilla.fenix.components.BackgroundServices
- import org.mozilla.fenix.components.Push
 +import mozilla.components.concept.push.PushObserver
 +import mozilla.components.concept.push.PushScope
 +import mozilla.components.concept.push.Pusher
- 
- /**
-  * A lazy initializer for FxaAccountManager if it isn't already initialized.
+ import mozilla.components.service.fxa.manager.FxaAccountManager
+ import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
+ import org.mozilla.fenix.components.BackgroundServices
 @@ -54,7 +55,7 @@ import org.mozilla.fenix.components.Push
   * assurances, and most importantly, maintainable.
   */
@@ -233,25 +223,25 @@ index f25cf4442e..090d1c7982 100644
          // Ignore empty push messages.
          val rawBytes = message ?: return
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
-index 5980161e96..3fde1ab08d 100644
+index 5980161e96b6..733b43b21a6e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/push/WebPushEngineIntegration.kt
-@@ -12,23 +12,25 @@ import mozilla.components.concept.engine.Engine
+@@ -12,9 +12,11 @@ import mozilla.components.concept.engine.Engine
  import mozilla.components.concept.engine.webpush.WebPushDelegate
  import mozilla.components.concept.engine.webpush.WebPushHandler
  import mozilla.components.concept.engine.webpush.WebPushSubscription
 -import mozilla.components.feature.push.AutoPushFeature
 -import mozilla.components.feature.push.AutoPushSubscription
 -import mozilla.components.feature.push.PushScope
- import mozilla.components.support.base.log.logger.Logger
 +import mozilla.components.concept.push.PushObserver
 +import mozilla.components.concept.push.PushScope
 +import mozilla.components.concept.push.PushSubscription
 +import mozilla.components.concept.push.PushSubscriptionProcessor
 +import mozilla.components.concept.push.Pusher
+ import mozilla.components.support.base.log.logger.Logger
  
  /**
-  * Engine integration with the push feature to enable WebPush support.
+@@ -22,13 +24,13 @@ import mozilla.components.support.base.log.logger.Logger
   */
  class WebPushEngineIntegration(
      private val engine: Engine,

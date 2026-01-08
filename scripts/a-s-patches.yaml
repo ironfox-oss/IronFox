@@ -41,14 +41,14 @@ patches:
     category: "Dependency"
 
   # Mozilla
-  - file: "a-s-remove-glean.patch"
+  - file: "a-s-liberate-glean.patch"
     name: "Remove Glean"
     description: "Removes the Glean SDK."
     reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
-  - file: "a-s-remove-error-support.patch"
+  - file: "a-s-liberate-error-support.patch"
     name: "Remove Error Support"
     description: "Removes the Rust 'Error Support' library."
     reason: "To remove unwanted libraries, and dependencies on related services."

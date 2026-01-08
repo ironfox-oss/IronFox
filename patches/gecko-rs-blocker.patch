@@ -1,5 +1,5 @@
 diff --git a/services/settings/RemoteSettingsClient.sys.mjs b/services/settings/RemoteSettingsClient.sys.mjs
-index 06ff1ea91e..8d8ad2ab97 100644
+index 8321c6cc97aea..d2e19db0698d7 100644
 --- a/services/settings/RemoteSettingsClient.sys.mjs
 +++ b/services/settings/RemoteSettingsClient.sys.mjs
 @@ -212,6 +212,11 @@ class AttachmentDownloader extends Downloader {
@@ -14,18 +14,18 @@ index 06ff1ea91e..8d8ad2ab97 100644
      await lazy.UptakeTelemetry.report(
        TELEMETRY_COMPONENT,
        lazy.UptakeTelemetry.STATUS.DOWNLOAD_START,
-@@ -653,6 +658,10 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -652,7 +657,9 @@ export class RemoteSettingsClient extends EventEmitter {
+       lazy.console.debug(`${this.identifier} Skip sync() due to tests.`);
        return;
      }
- 
+-
 +    if (!lazy.Utils.isCollectionAllowed(this.bucketName, this.collectionName)) {
 +      return;
 +    }
-+
      // We want to know which timestamp we are expected to obtain in order to leverage
      // cache busting. We don't provide ETag because we don't want a 304.
      const { changes } = await lazy.Utils.fetchLatestChanges(
-@@ -1040,6 +1049,14 @@ export class RemoteSettingsClient extends EventEmitter {
+@@ -1041,6 +1048,14 @@ export class RemoteSettingsClient extends EventEmitter {
     * Import the JSON files from services/settings/dump into the local DB.
     */
    async _importJSONDump() {
@@ -41,32 +41,32 @@ index 06ff1ea91e..8d8ad2ab97 100644
      const result = await lazy.RemoteSettingsWorker.importJSONDump(
        this.bucketName,
 diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
-index 8cd4afc313..6acd6a7c51 100644
+index b6b61710c0c5f..fc6bc60d22ad2 100644
 --- a/services/settings/Utils.sys.mjs
 +++ b/services/settings/Utils.sys.mjs
-@@ -75,6 +75,18 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURLOverride", () => {
+@@ -74,7 +74,16 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURLOverride", () => {
+ 
    return false;
  });
- 
+-
 +ChromeUtils.defineLazyGetter(lazy, "allowedCollections", () =>
 +  Services.prefs
 +    .getStringPref("browser.ironfox.services.settings.allowedCollections", "")
 +    .split(",")
 +);
-+
 +ChromeUtils.defineLazyGetter(lazy, "allowedCollectionsFromDump", () =>
 +  Services.prefs
 +    .getStringPref("browser.ironfox.services.settings.allowedCollectionsFromDump", "")
 +    .split(",")
 +);
-+
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "gServerURL",
-@@ -209,6 +221,75 @@ export var Utils = {
+@@ -209,7 +218,72 @@ export var Utils = {
+     }
      return false;
    },
- 
+-
 +  /**
 +   * Internal code to determine whether the bucket and collection are allowed to
 +   * be loaded by the remote settings client for a given list of allowed
@@ -84,7 +84,6 @@ index 8cd4afc313..6acd6a7c51 100644
 +      allowedCollections.includes("*")
 +    );
 +  },
-+
 +  /**
 +   * Determines whether the bucket and collection are allowed to be loaded by the
 +   * remote settings client.
@@ -107,7 +106,6 @@ index 8cd4afc313..6acd6a7c51 100644
 +    );
 +    return false;
 +  },
-+
 +  /**
 +   * Determines whether the bucket and collection are allowed to be loaded from
 +   * an in-tree remote settings dump.
@@ -135,11 +133,10 @@ index 8cd4afc313..6acd6a7c51 100644
 +    );
 +    return false;
 +  },
-+
    /**
     * A wrapper around `ServiceRequest` that behaves like `fetch()`.
     *
-@@ -487,7 +568,9 @@ export var Utils = {
+@@ -489,7 +563,9 @@ export var Utils = {
      }
  
      return {

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/webextension/GeckoWebExtension.kt b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/webextension/GeckoWebExtension.kt
-index d7deea0907..d0fdbef095 100644
+index d7deea0907fe..d0fdbef0957d 100644
 --- a/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/webextension/GeckoWebExtension.kt
 +++ b/mobile/android/android-components/components/browser/engine-gecko/src/main/java/mozilla/components/browser/engine/gecko/webextension/GeckoWebExtension.kt
 @@ -395,7 +395,7 @@ class GeckoWebExtension(

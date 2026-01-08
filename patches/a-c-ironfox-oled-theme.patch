@@ -1,0 +1,13 @@
+diff --git a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt b/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
+index 282f9615cf12..80415b166121 100644
+--- a/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
++++ b/mobile/android/android-components/components/compose/base/src/main/java/mozilla/components/compose/base/theme/AcornColors.kt
+@@ -525,7 +525,7 @@ val privateColorPalette = darkColorPalette.copy(
+ )
+ 
+ @Suppress("LongParameterList")
+-private fun AcornColors.toM3ColorScheme(
++fun AcornColors.toM3ColorScheme(
+     primary: Color,
+     primaryContainer: Color,
+     inversePrimary: Color,

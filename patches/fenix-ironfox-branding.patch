@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
-index 3519c51aa3cf4..cfffa7cfa5006 100644
+index 772fef311c0e..f94d1731b606 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
-@@ -178,10 +178,10 @@ class HomeMenuView(
+@@ -181,10 +181,10 @@ class HomeMenuView(
                      HomeFragmentDirections.actionGlobalBrowser(),
                  )
                  fenixBrowserUseCases.loadUrlOrSearch(
@@ -42,10 +42,10 @@ index fbd12fc813a3..3d0e6f9f5753 100644
  
  internal fun SharedPreferences.flowScopedBooleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index b45fdee550..ee60e9cab8 100644
+index 4743fffb0411..ee48ed284bf6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-@@ -206,11 +206,11 @@ class AboutFragment(
+@@ -208,11 +208,11 @@ class AboutFragment(
              AboutPageItem(
                  AboutItem.ExternalLink(
                      SUPPORT,
@@ -59,7 +59,7 @@ index b45fdee550..ee60e9cab8 100644
                  AboutItem.Crashes,
                  getString(R.string.about_crashes),
              ),
-@@ -227,7 +227,7 @@ class AboutFragment(
+@@ -229,7 +229,7 @@ class AboutFragment(
                      SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
                  ),
                  getString(R.string.about_know_your_rights),

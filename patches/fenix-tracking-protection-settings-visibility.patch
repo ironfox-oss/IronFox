@@ -1,16 +1,17 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
-index cd4ad113098b..828bc8b21559 100644
+index 1183971659f3..ec4655ae87ae 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/TrackingProtectionFragment.kt
-@@ -26,6 +26,7 @@ import org.mozilla.fenix.ext.settings
- import org.mozilla.fenix.ext.showToolbar
- import org.mozilla.fenix.trackingprotection.TrackingProtectionMode
- import org.mozilla.fenix.utils.view.addToRadioGroup
+@@ -19,7 +19,7 @@ import androidx.preference.PreferenceFragmentCompat
+ import androidx.preference.SwitchPreference
+ import com.google.android.material.dialog.MaterialAlertDialogBuilder
+ import org.mozilla.fenix.BrowserDirection
+-import org.mozilla.fenix.GleanMetrics.TrackingProtection
 +import org.ironfoxoss.ironfox.utils.FenixSettingsVisibilityManager
- 
- /**
-  * Displays the toggle for tracking protection, options for tracking protection policy and a button
-@@ -91,6 +92,7 @@ class TrackingProtectionFragment : PreferenceFragmentCompat() {
+ import org.mozilla.fenix.HomeActivity
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.ext.components
+@@ -99,6 +99,7 @@ class TrackingProtectionFragment : PreferenceFragmentCompat() {
          addToRadioGroup(radioStrict, radioStandard, radioCustom)
          updateStrictOptionsVisibility()
          updateCustomOptionsVisibility()

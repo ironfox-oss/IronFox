@@ -9,7 +9,7 @@ import org.mozilla.fenix.perf.lazyMonitored
 
 class Analytics(
     private val context: Context,
-    private val nimbusComponents: NimbusComponents,
+    private val nimbusComponents: Any?,
     private val runWhenReadyQueue: RunWhenReadyQueue,
 ) {
     val crashReporter: CrashReporter by lazyMonitored {
@@ -28,8 +28,6 @@ class Analytics(
             runtimeTagProviders = listOf(),
         )
     }
+
+    val metrics = {}
 }
-
-private fun isSentryEnabled() = false
-
-private fun getSentryProjectUrl(): String? = null

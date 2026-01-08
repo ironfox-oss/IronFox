@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="IronFox.OLEDTheme" parent="NormalTheme">
-        <item name="layer1">@color/fx_mobile_layer_color_1_oled</item>
-        <item name="layer2">@color/fx_mobile_layer_color_2_oled</item>
-        <item name="android:windowBackground">?attr/layer1</item>
+        <item name="colorSurface">@color/fx_mobile_surface_oled</item>
+        <item name="layer2">@color/fx_mobile_surface_2_oled</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
         <item name="actionSecondary">@color/fx_mobile_action_color_secondary_oled</item>
-        <item name="toolbarStartGradient">?attr/layer1</item>
-        <item name="toolbarCenterGradient">?attr/layer1</item>
-        <item name="toolbarEndGradient">?attr/layer1</item>
-        <item name="homeBackground">?attr/layer1</item>
+        <item name="toolbarStartGradient">?attr/colorSurface</item>
+        <item name="toolbarCenterGradient">?attr/colorSurface</item>
+        <item name="toolbarEndGradient">?attr/colorSurface</item>
         <item name="mozac_widget_favicon_background_color">?attr/layer2</item>
     </style>
 </resources>

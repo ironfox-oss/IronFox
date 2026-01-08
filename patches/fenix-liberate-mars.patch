@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 2079fc1ba3..3944a152ee 100644
+index 5cc1da059f7d..e98f90b899d1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 @@ -84,12 +84,12 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
@@ -17,7 +17,7 @@ index 2079fc1ba3..3944a152ee 100644
  import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
  import mozilla.components.service.pocket.PocketStoriesConfig
  import mozilla.components.service.pocket.PocketStoriesRequestConfig
-@@ -586,7 +586,7 @@ class Core(
+@@ -589,7 +589,7 @@ class Core(
      }
      val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
  
@@ -26,7 +26,7 @@ index 2079fc1ba3..3944a152ee 100644
          MarsTopSitesProvider(
              context = context,
              client = client,
-@@ -615,13 +615,13 @@ class Core(
+@@ -618,13 +618,13 @@ class Core(
              provider = marsTopSitesProvider,
              frequency = Frequency(3, TimeUnit.HOURS),
          )
@@ -43,7 +43,7 @@ index 2079fc1ba3..3944a152ee 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index 2ac60c1123..6422593404 100644
+index 78ea4a42c618..3a020a097e62 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 @@ -125,7 +125,7 @@ import org.mozilla.fenix.ext.setNavigationIcon
@@ -55,7 +55,7 @@ index 2ac60c1123..6422593404 100644
  import org.mozilla.fenix.home.intent.AssistIntentProcessor
  import org.mozilla.fenix.home.intent.CrashReporterIntentProcessor
  import org.mozilla.fenix.home.intent.HomeDeepLinkIntentProcessor
-@@ -538,12 +538,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -540,12 +540,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              aboutHomeBinding,
              crashReporterBinding,
              defaultTopSitesBinding,
@@ -70,7 +70,7 @@ index 2ac60c1123..6422593404 100644
              downloadSnackbar,
              privateBrowsingLockFeature,
              externalAppLinkStatusBinding,
-@@ -574,7 +574,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -576,7 +576,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          )
  
          if (settings().showContileFeature) {
@@ -79,7 +79,7 @@ index 2ac60c1123..6422593404 100644
          }
  
          if (!settings().hiddenEnginesRestored) {
-@@ -841,7 +841,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -844,7 +844,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              ),
          )
  

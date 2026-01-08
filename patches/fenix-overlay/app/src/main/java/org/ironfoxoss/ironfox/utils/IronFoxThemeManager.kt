@@ -9,12 +9,8 @@ import mozilla.components.compose.base.theme.toM3ColorScheme
 import mozilla.components.ui.colors.PhotonColors
 
 val oledColorPalette = darkColorPalette.copy(
-	layer1 = PhotonColors.Black,
 	layer2 = PhotonColors.DarkGrey90,
 	layer3 = PhotonColors.DarkGrey80,
-	layer4Start = PhotonColors.Black,
-	layer4Center = PhotonColors.Black,
-	layer4End = PhotonColors.Black,
 	actionTertiary = PhotonColors.DarkGrey80,
 	borderPrimary = PhotonColors.DarkGrey70,
 )

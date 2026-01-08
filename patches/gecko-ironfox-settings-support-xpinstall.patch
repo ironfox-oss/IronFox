@@ -1,8 +1,8 @@
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index 104433aee5..48796b555a 100644
+index afd6d7b6fb49..e53487d34557 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
-@@ -1819,8 +1819,8 @@ export var Policies = {
+@@ -1826,8 +1826,8 @@ export var Policies = {
          addAllowDenyPermissions("install", param.Allow, null);
        }
        if ("Default" in param) {
@@ -14,7 +14,7 @@ index 104433aee5..48796b555a 100644
            setAndLockPref(
              "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index bb451a2795..edf5829bd4 100644
+index bb451a279599d..edf5829bd4b21 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -415,11 +415,14 @@ EnterprisePoliciesManager.prototype = {
@@ -35,7 +35,7 @@ index bb451a2795..edf5829bd4 100644
            case "blocked":
              return false;
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-index e15b03c0f6..e6f4dec478 100644
+index 358fcce396431..48dd5b7bc4176 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 @@ -4482,7 +4482,7 @@ export var XPIInstall = {

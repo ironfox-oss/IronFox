@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index bb451a279599da..5eb8e609952ebd 100644
+index bb451a279599d..5eb8e609952eb 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -147,6 +147,10 @@ EnterprisePoliciesManager.prototype = {
@@ -14,7 +14,7 @@ index bb451a279599da..5eb8e609952ebd 100644
      if (AppConstants.platform == "win" && AppConstants.MOZ_SYSTEM_POLICIES) {
        platformProvider = new WindowsGPOPoliciesProvider();
 diff --git a/toolkit/components/enterprisepolicies/moz.build b/toolkit/components/enterprisepolicies/moz.build
-index 4fcb377c80..539080df94 100644
+index 4fcb377c80145..539080df94edd 100644
 --- a/toolkit/components/enterprisepolicies/moz.build
 +++ b/toolkit/components/enterprisepolicies/moz.build
 @@ -15,7 +15,7 @@ XPIDL_MODULE = "enterprisepolicies"

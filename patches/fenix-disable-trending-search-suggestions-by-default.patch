@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..02a67075ee 100644
+index 276ad8cf1df1..efdd62f5f2d9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1467,7 +1467,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1518,7 +1518,7 @@ class Settings(
       */
      internal var trendingSearchSuggestionsEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_trending_search_suggestions),
@@ -12,7 +12,7 @@ index 35d4c5a9c0..02a67075ee 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
-index 84f47aa47e..35d76df61b 100644
+index 84f47aa47e78..35d76df61bf2 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/search_settings_preferences.xml
 @@ -38,7 +38,7 @@

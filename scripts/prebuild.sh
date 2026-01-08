@@ -193,6 +193,9 @@ pushd "${IRONFOX_FENIX}"
 # Disable crash reporting
 "${IRONFOX_SED}" -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
+# Disable the Mozilla Ads Client
+"${IRONFOX_SED}" -i -e 's|MOZILLA_ADS_CLIENT_ENABLED = .*|MOZILLA_ADS_CLIENT_ENABLED = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Disable Pocket "Discover More Stories"
 "${IRONFOX_SED}" -i -e 's|DISCOVER_MORE_STORIES = .*|DISCOVER_MORE_STORIES = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
@@ -200,9 +203,6 @@ pushd "${IRONFOX_FENIX}"
 "${IRONFOX_SED}" -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
 "${IRONFOX_SED}" -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 "${IRONFOX_SED}" -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-
-# Enable Mozilla's new redesign for Private Browsing mode
-"${IRONFOX_SED}" -i -e 's|PRIVATE_BROWSING_MODE_REDESIGN = .*|PRIVATE_BROWSING_MODE_REDESIGN = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure onboarding is always enabled
 "${IRONFOX_SED}" -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
@@ -334,16 +334,6 @@ fi
 "${IRONFOX_SED}" -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 "${IRONFOX_SED}" -i 's|mzl.la/AndroidSupport|https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 "${IRONFOX_SED}" -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-
-# Fenix uses reflection to create a instance of profile based on the text of
-# the label, see
-# app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt#185
-"${IRONFOX_SED}" -i \
-    -e '/Firefox(.*, .*)/s/Firefox/IronFox/' \
-    -e 's/firefox_threads/ironfox_threads/' \
-    -e 's/firefox_features/ironfox_features/' \
-    app/src/main/java/org/mozilla/fenix/perf/ProfilerUtils.kt
-"${IRONFOX_SED}" -i -e 's/ProfilerSettings.Firefox/ProfilerSettings.IronFox/' app/src/main/java/org/mozilla/fenix/perf/ProfilerStartDialogFragment.kt
 
 # Replace proprietary artwork
 rm -vf app/src/release/res/drawable/ic_launcher_foreground.xml

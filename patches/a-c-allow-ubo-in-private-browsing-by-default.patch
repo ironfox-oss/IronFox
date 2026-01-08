@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-index be8a66d479829..6808db5b501b0 100644
+index b40a8825fd94..db7309fc6b7c 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/ui/PermissionsDialogFragment.kt
-@@ -295,6 +295,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
+@@ -296,6 +296,10 @@ class PermissionsDialogFragment : AddonDialogFragment() {
              technicalAndInteraction.isChecked = true
          }
  

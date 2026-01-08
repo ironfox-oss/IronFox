@@ -1,7 +1,6 @@
 package org.mozilla.fenix.onboarding.view
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,71 +35,71 @@ fun TermsOfServiceOnboardingPage(
     pageState: OnboardingPageState,
     eventHandler: Any?,
 ) {
-    BoxWithConstraints(
-        modifier = Modifier
-            .background(FirefoxTheme.colors.layer1)
-            .padding(horizontal = 16.dp),
-    ) {
-        val boxWithConstraintsScope = this
-
-        // Base
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
+    Surface {
+        BoxWithConstraints(
+            modifier = Modifier.padding(horizontal = 16.dp),
         ) {
-            Spacer(Modifier)
+            val boxWithConstraintsScope = this
 
-            with(pageState) {
-                // Main content group
-                Column(
-                    modifier = Modifier
-                        .padding(vertical = 32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Image(
-                        painter = painterResource(id = imageRes),
-                        contentDescription = null,
+            // Base
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Spacer(Modifier)
+
+                with(pageState) {
+                    // Main content group
+                    Column(
                         modifier = Modifier
-                            .heightIn(max = imageHeight(boxWithConstraintsScope))
-                            .height(167.dp)
-                            .width(161.dp),
-                    )
+                            .padding(vertical = 32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Image(
+                            painter = painterResource(id = imageRes),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .heightIn(max = imageHeight(boxWithConstraintsScope))
+                                .height(167.dp)
+                                .width(161.dp),
+                        )
 
-                    Spacer(Modifier.height(24.dp))
+                        Spacer(Modifier.height(24.dp))
 
-                    Text(
-                        text = title,
-                        color = FirefoxTheme.colors.textPrimary,
-                        textAlign = TextAlign.Center,
-                        style = FirefoxTheme.typography.headline5,
-                    )
+                        Text(
+                            text = title,
+                            color = FirefoxTheme.colors.textPrimary,
+                            textAlign = TextAlign.Center,
+                            style = FirefoxTheme.typography.headline5,
+                        )
 
-                    Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(8.dp))
 
-                    Text(
-                        text = description,
-                        color = FirefoxTheme.colors.textSecondary,
-                        textAlign = TextAlign.Center,
-                        style = FirefoxTheme.typography.subtitle1,
-                    )
-                }
+                        Text(
+                            text = description,
+                            color = FirefoxTheme.colors.textSecondary,
+                            textAlign = TextAlign.Center,
+                            style = FirefoxTheme.typography.subtitle1,
+                        )
+                    }
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(bottom = 24.dp),
-                ) {
-                    Spacer(Modifier.height(24.dp))
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(bottom = 24.dp),
+                    ) {
+                        Spacer(Modifier.height(24.dp))
 
-                    FilledButton(
-                        text = primaryButton.text,
-                        modifier = Modifier
+                        FilledButton(
+                            text = primaryButton.text,
+                            modifier = Modifier
                             .width(width = FirefoxTheme.layout.size.maxWidth.small),
-                        onClick = primaryButton.onClick,
-                    )
+                            onClick = primaryButton.onClick,
+                        )
+                    }
                 }
             }
         }

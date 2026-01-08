@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
-index cda12afb97..3362877617 100644
+index cda12afb975d..8a0aab04a2a9 100644
 --- a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
 +++ b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
 @@ -53,6 +53,10 @@ const PREF_GRANULAR_OVERRIDES_BASELINE =
@@ -13,7 +13,7 @@ index cda12afb97..3362877617 100644
  
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
-@@ -112,7 +116,26 @@ export class FingerprintingWebCompatService {
+@@ -112,7 +116,21 @@ export class FingerprintingWebCompatService {
      this.#remoteOverrides = new Set();
      this.#granularOverrides = new Set();
  
@@ -21,27 +21,22 @@ index cda12afb97..3362877617 100644
 +    if (lazy.remoteOverridesEnabled) {
 +      this.#rs = lazy.RemoteSettings(COLLECTION_NAME);
 +    }
-+
 +    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.hardenOverrides.enabled", true)) {
 +      this.#rs = lazy.RemoteSettings(IF_HARDEN_COLLECTION_NAME);
 +    }
-+
 +    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true)) {
 +      this.#rs = lazy.RemoteSettings(IF_UNBREAK_COLLECTION_NAME);
 +    }
-+
 +    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true)) {
 +      this.#rs = lazy.RemoteSettings(IF_UNBREAK_TIMEZONE_COLLECTION_NAME);
 +    }
-+
 +    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", true)) {
 +      this.#rs = lazy.RemoteSettings(IF_UNBREAK_WEBGL_COLLECTION_NAME);
 +    }
-+
      this.#validator = new lazy.JsonSchema.Validator(SCHEMA);
    }
  
-@@ -216,8 +239,8 @@ export class FingerprintingWebCompatService {
+@@ -216,8 +234,8 @@ export class FingerprintingWebCompatService {
      lazy.logConsole.debug("onUpdateEntries", { entries });
  
      if (!lazy.remoteOverridesEnabled) {

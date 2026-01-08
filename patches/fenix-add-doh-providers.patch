@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
-index 028be832d6..9d78b81c07 100644
+index 028be832d6d7..f7d690127753 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
 @@ -37,17 +37,67 @@ internal class DefaultDohSettingsProvider(
@@ -81,8 +81,8 @@ index 028be832d6..9d78b81c07 100644
 +        quad9,
 +        adGuardStandard,
 +        adGuardUnfiltered,
-         cloudflare,
 +        cloudflareMalware,
+         cloudflare,
 +        dns4EuAdBlocking,
 +        dns4EuProtective,
 +        dns4EuUnfiltered,
@@ -110,61 +110,19 @@ index 028be832d6..9d78b81c07 100644
                      "" -> getDefaultProviders().first()
                      else -> custom
                  }
-@@ -122,5 +192,35 @@ internal class DefaultDohSettingsProvider(
+@@ -122,5 +192,15 @@ internal class DefaultDohSettingsProvider(
  
          @VisibleForTesting
          val nextDnsUri = "https://firefox.dns.nextdns.io/"
-+
-+        @VisibleForTesting
 +        val quad9Uri = "https://dns.quad9.net/dns-query"
-+
-+        @VisibleForTesting
 +        val adGuardStandardUri = "https://dns.adguard-dns.com/dns-query"
-+
-+        @VisibleForTesting
 +        val adGuardUnfilteredUri = "https://unfiltered.adguard-dns.com/dns-query"
-+
-+        @VisibleForTesting
 +        val cloudflareMalwareUri = "https://security.cloudflare-dns.com/dns-query"
-+
-+        @VisibleForTesting
 +        val dns4EuAdBlockingUri = "https://noads.joindns4.eu/dns-query"
-+
-+        @VisibleForTesting
 +        val dns4EuProtectiveUri = "https://protective.joindns4.eu/dns-query"
-+
-+        @VisibleForTesting
 +        val dns4EuUnfilteredUri = "https://unfiltered.joindns4.eu/dns-query"
-+
-+        @VisibleForTesting
 +        val mullvadBaseUri = "https://base.dns.mullvad.net/dns-query"
-+
-+        @VisibleForTesting
 +        val mullvadUnfilteredUri = "https://dns.mullvad.net/dns-query"
-+
-+        @VisibleForTesting
 +        val wikimediaUri = "https://wikimedia-dns.org/dns-query"
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..af87c1d633 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2596,7 +2596,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     private var trrMode by intPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_doh_settings_mode),
--        default = DOH_SETTINGS_DEFAULT,
-+        default = DOH_SETTINGS_MAX,
-     )
- 
-     /**
-@@ -2614,7 +2614,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-      */
-     val dohDefaultProviderUrl by stringPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_doh_default_provider_uri),
--        default = CLOUDFLARE_URI,
-+        default = "https://dns.quad9.net/dns-query",
-     )
- 
-     /**

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +21,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -104,149 +105,150 @@ private val logger = Logger("IronFoxOnboardingPreferences")
 fun IronFoxPreferencesOnboardingPage(
     pageState: OnboardingPageState,
 ) {
-    BoxWithConstraints {
-        val boxWithConstraintsScope = this
-        Column(
-            modifier = Modifier
-                .background(FirefoxTheme.colors.layer1)
-                .padding(horizontal = 16.dp, vertical = 24.dp)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+    Surface {
+        BoxWithConstraints {
+            val boxWithConstraintsScope = this
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 24.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
 
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            with(pageState) {
-                Spacer(Modifier)
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                with(pageState) {
+                    Spacer(Modifier)
 
-                Image(
-                    painter = painterResource(id = imageRes),
-                    contentDescription = "",
-                    modifier = Modifier.height(mainImageHeight(boxWithConstraintsScope)),
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                val preferenceOptions = remember { ifPreferenceOptions!! }
-                var currentPreferenceIndex by remember { mutableIntStateOf(0) }
-
-                var contentState by remember {
-                    mutableStateOf<IfPreferencesContentState>(
-                        Configuration(currentPreferenceIndex),
+                    Image(
+                        painter = painterResource(id = imageRes),
+                        contentDescription = "",
+                        modifier = Modifier.height(mainImageHeight(boxWithConstraintsScope)),
                     )
-                }
 
-                var switchStates by remember {
-                    mutableStateOf(IfPreferencesSwitchStates())
-                }
+                    Spacer(Modifier.height(16.dp))
 
-                val context = LocalContext.current
-                val onContentStateChange = remember {
-                    { newState: IfPreferencesContentState ->
-                        contentState = newState
+                    val preferenceOptions = remember { ifPreferenceOptions!! }
+                    var currentPreferenceIndex by remember { mutableIntStateOf(0) }
+
+                    var contentState by remember {
+                        mutableStateOf<IfPreferencesContentState>(
+                            Configuration(currentPreferenceIndex),
+                        )
                     }
-                }
 
-                val applyPreference: suspend (IfPreferenceOption) -> Unit =
-                    remember(context, switchStates, primaryButton, onContentStateChange) {
-                        { option ->
-                            applyPreference(
-                                context,
-                                option,
-                                switchStates,
-                                onContentStateChange,
-                            )
+                    var switchStates by remember {
+                        mutableStateOf(IfPreferencesSwitchStates())
+                    }
+
+                    val context = LocalContext.current
+                    val onContentStateChange = remember {
+                        { newState: IfPreferencesContentState ->
+                            contentState = newState
                         }
                     }
 
-                val applyAction: () -> Unit = remember(
-                    applyPreference,
-                    preferenceOptions,
-                    currentPreferenceIndex,
-                    onContentStateChange,
-                    primaryButton,
-                ) {
-                    {
-                        CoroutineScope(Dispatchers.Default).launch {
-                            applyPreference(preferenceOptions[currentPreferenceIndex])
-                            if (currentPreferenceIndex < preferenceOptions.lastIndex) {
-                                onContentStateChange(Configuration(++currentPreferenceIndex))
-                            } else {
-                                withContext(Dispatchers.Main) {
-                                    primaryButton.onClick()
+                    val applyPreference: suspend (IfPreferenceOption) -> Unit =
+                        remember(context, switchStates, primaryButton, onContentStateChange) {
+                            { option ->
+                                applyPreference(
+                                    context,
+                                    option,
+                                    switchStates,
+                                    onContentStateChange,
+                             )
+                            }
+                        }
+
+                    val applyAction: () -> Unit = remember(
+                        applyPreference,
+                        preferenceOptions,
+                        currentPreferenceIndex,
+                        onContentStateChange,
+                        primaryButton,
+                    ) {
+                        {
+                            CoroutineScope(Dispatchers.Default).launch {
+                                applyPreference(preferenceOptions[currentPreferenceIndex])
+                                if (currentPreferenceIndex < preferenceOptions.lastIndex) {
+                                    onContentStateChange(Configuration(++currentPreferenceIndex))
+                                } else {
+                                    withContext(Dispatchers.Main) {
+                                        primaryButton.onClick()
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                BackHandler(currentPreferenceIndex > 0) {
-                    onContentStateChange(Configuration(--currentPreferenceIndex))
-                }
+                    BackHandler(currentPreferenceIndex > 0) {
+                        onContentStateChange(Configuration(--currentPreferenceIndex))
+                    }
 
-                (contentState as? Configuration?)?.also { configuration ->
-                    Text(
-                        text = title,
-                        color = FirefoxTheme.colors.textPrimary,
-                        textAlign = TextAlign.Center,
-                        style = FirefoxTheme.typography.headline5,
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        text = preferenceOptions[configuration.optionIndex].caption,
-                        color = FirefoxTheme.colors.textPrimary,
-                        textAlign = TextAlign.Center,
-                        style = FirefoxTheme.typography.body2,
-                    )
-                }
-
-                Spacer(Modifier.height(32.dp))
-
-                AnimatedContent(
-                    targetState = contentState,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                ) { currentState ->
-                    when (currentState) {
-                        is Configuration -> IronFoxPreferenceConfiguration(
-                            option = preferenceOptions[currentState.optionIndex],
-                            modifier = Modifier.fillMaxSize(),
-                            state = switchStates,
-                            onUpdateSwitchStates = { newSwitchStates ->
-                                switchStates = newSwitchStates
-                            },
+                    (contentState as? Configuration?)?.also { configuration ->
+                        Text(
+                            text = title,
+                            color = FirefoxTheme.colors.textPrimary,
+                            textAlign = TextAlign.Center,
+                            style = FirefoxTheme.typography.headline5,
                         )
 
-                        is Progress -> IronFoxPreferencesProgress(
-                            state = currentState,
-                        )
+                        Spacer(Modifier.height(8.dp))
 
-                        is Error -> IronFoxPreferencesError(
-                            state = currentState,
-                            onRetry = applyAction,
+                        Text(
+                            text = preferenceOptions[configuration.optionIndex].caption,
+                            color = FirefoxTheme.colors.textPrimary,
+                            textAlign = TextAlign.Center,
+                            style = FirefoxTheme.typography.body2,
                         )
                     }
-                }
 
-                if (contentState is Configuration) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(Modifier.height(32.dp))
 
-                    FilledButton(
-                        text = if (preferenceOptions.lastIndex == currentPreferenceIndex) {
-                            primaryButton.text
-                        } else {
-                            stringResource(FenixStringsDictionary.onboardingSaveAndContinue)
-                        },
+                    AnimatedContent(
+                        targetState = contentState,
                         modifier = Modifier
-                            .width(width = FirefoxTheme.layout.size.maxWidth.small)
-                            .semantics {
-                                testTag = title + "onboarding_card.positive_button"
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    ) { currentState ->
+                        when (currentState) {
+                            is Configuration -> IronFoxPreferenceConfiguration(
+                                option = preferenceOptions[currentState.optionIndex],
+                                modifier = Modifier.fillMaxSize(),
+                                state = switchStates,
+                                onUpdateSwitchStates = { newSwitchStates ->
+                                    switchStates = newSwitchStates
+                                },
+                            )
+
+                            is Progress -> IronFoxPreferencesProgress(
+                                state = currentState,
+                            )
+
+                            is Error -> IronFoxPreferencesError(
+                                state = currentState,
+                                onRetry = applyAction,
+                            )
+                        }
+                    }
+
+                    if (contentState is Configuration) {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        FilledButton(
+                            text = if (preferenceOptions.lastIndex == currentPreferenceIndex) {
+                                primaryButton.text
+                            } else {
+                                stringResource(FenixStringsDictionary.onboardingSaveAndContinue)
                             },
-                        onClick = applyAction,
-                    )
+                            modifier = Modifier
+                                .width(width = FirefoxTheme.layout.size.maxWidth.small)
+                                .semantics {
+                                    testTag = title + "onboarding_card.positive_button"
+                                },
+                            onClick = applyAction,
+                        )
+                    }
                 }
             }
         }

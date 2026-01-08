@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 63398b2c71..1674b913c3 100644
+index 63398b2c715a..dfe67f464347 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -488,12 +488,12 @@
@@ -7,7 +7,7 @@ index 63398b2c71..1674b913c3 100644
          </activity-alias>
  
 -        <activity
-+       <!-- <activity
++        <!-- <activity
              android:name=".startupCrash.StartupCrashActivity"
              android:exported="false"
              android:process=":StartupCrashActivityProcess"
@@ -18,37 +18,37 @@ index 63398b2c71..1674b913c3 100644
          <activity
              android:name=".HomeActivity"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
-index 9e7bfe3909..8c03fe9d4e 100644
+index b1b4409c48c8..ce2a87cea097 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
-@@ -28,7 +28,7 @@ import mozilla.components.compose.base.annotation.FlexibleWindowLightDarkPreview
+@@ -31,7 +31,7 @@ import mozilla.components.compose.base.annotation.FlexibleWindowLightDarkPreview
  import mozilla.components.compose.base.button.FilledButton
  import org.mozilla.fenix.R
  import org.mozilla.fenix.components.components
 -import org.mozilla.fenix.startupCrash.StartupCrashActivity
 +// import org.mozilla.fenix.startupCrash.StartupCrashActivity
  import org.mozilla.fenix.theme.FirefoxTheme
+ import org.mozilla.fenix.theme.Theme
  import org.mozilla.fenix.utils.Settings
+@@ -96,10 +96,10 @@ internal fun CrashTools(
+                 text = stringResource(R.string.crash_debug_show_startup_crash_screen),
+                 modifier = Modifier.fillMaxWidth(),
+                 onClick = {
+-                    val intent = Intent(appContext, StartupCrashActivity::class.java)
++//                    val intent = Intent(appContext, StartupCrashActivity::class.java)
  
-@@ -90,10 +90,10 @@ internal fun CrashTools(
-             text = stringResource(R.string.crash_debug_show_startup_crash_screen),
-             modifier = Modifier.fillMaxWidth(),
-             onClick = {
--                val intent = Intent(appContext, StartupCrashActivity::class.java)
-+//                val intent = Intent(appContext, StartupCrashActivity::class.java)
- 
--                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
--                appContext.startActivity(intent)
-+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-+//                appContext.startActivity(intent)
-                 Process.killProcess(Process.myPid())
-             },
-         )
+-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+-                    appContext.startActivity(intent)
++//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++//                    appContext.startActivity(intent)
+                     Process.killProcess(Process.myPid())
+                 },
+             )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index e53b2e6ad2..4665880a98 100644
+index b55e0e05dcbb..e4d8405be9d1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-@@ -70,10 +70,10 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+@@ -78,10 +78,10 @@ enum class DebugDrawerRoute(
          route = "addons_debug_tools",
          title = R.string.debug_drawer_addons_tools_title,
      ),
@@ -61,7 +61,7 @@ index e53b2e6ad2..4665880a98 100644
      ;
  
      companion object {
-@@ -189,14 +189,14 @@ enum class DebugDrawerRoute(val route: String, @param:StringRes val title: Int)
+@@ -211,14 +211,14 @@ enum class DebugDrawerRoute(
                          }
                      }
  
@@ -79,10 +79,10 @@ index e53b2e6ad2..4665880a98 100644
  
                  DebugDrawerDestination(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-index 1e17f81bda..a5b7e6c84e 100644
+index 6ee469a2b5c2..d3c3e040d50e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-@@ -50,7 +50,7 @@ class DebugDrawerNavigationMiddleware(
+@@ -54,7 +54,7 @@ class DebugDrawerNavigationMiddleware(
                  is DebugDrawerAction.NavigateTo.AddonsDebugTools ->
                      navController.navigate(route = DebugDrawerRoute.AddonsDebugTools.route)
                  is DebugDrawerAction.NavigateTo.CrashDebugTools ->
@@ -92,10 +92,10 @@ index 1e17f81bda..a5b7e6c84e 100644
                  is DebugDrawerAction.DrawerOpened, DebugDrawerAction.DrawerClosed -> Unit // no-op
              }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 53190b359c..a35c2a6f05 100644
+index da46df8f5cd7..4ce6f4de49d5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -111,7 +111,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
+@@ -112,7 +112,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
  import org.mozilla.fenix.session.VisibilityLifecycleCallback
  import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
  import org.mozilla.fenix.settings.doh.DohSettingsProvider
@@ -104,7 +104,7 @@ index 53190b359c..a35c2a6f05 100644
  import org.mozilla.fenix.utils.Settings
  import org.mozilla.fenix.utils.isLargeScreenSize
  import org.mozilla.fenix.wallpapers.Wallpaper
-@@ -510,14 +510,14 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -513,14 +513,14 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      }
  
      private fun setupCrashReporting() {
@@ -122,7 +122,7 @@ index 53190b359c..a35c2a6f05 100644
              isMainProcess() &&
              Config.channel.isNightlyOrDebug &&
              !components.performance.visualCompletenessQueue.isReady()
-@@ -526,7 +526,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -529,7 +529,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
              intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
              applicationContext.startActivity(intent)
@@ -131,7 +131,7 @@ index 53190b359c..a35c2a6f05 100644
      }
  
      protected open fun initializeNimbus() {
-@@ -555,7 +555,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -558,7 +558,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
      private fun beginSetupMegazord() {
          // Rust components must be initialized at the very beginning, before any other Rust call, ...
          AppServicesInitializer.init(
@@ -141,11 +141,11 @@ index 53190b359c..a35c2a6f05 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-index 14f85cc900..a44dfc3b3a 100644
+index 61bd0979b753..15ce7a485aef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-@@ -238,14 +238,14 @@ class BrowserToolbarSearchMiddleware(
-                 val navController = environment?.navController ?: return
+@@ -234,14 +234,14 @@ class BrowserToolbarSearchMiddleware(
+                 }
  
                  when (action.text) {
 -                    "about:crashes" -> {
@@ -162,10 +162,10 @@ index 14f85cc900..a44dfc3b3a 100644
                          navController.navigate(
                              NavGraphDirections.actionGlobalAddonsManagementFragment(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-index b57cdc1bf5..163f38cbd7 100644
+index e597abe8ca10..a84c839972be 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-@@ -84,13 +84,13 @@ class SearchDialogController(
+@@ -85,13 +85,13 @@ class SearchDialogController(
          }
  
          when (url) {
@@ -182,10 +182,10 @@ index b57cdc1bf5..163f38cbd7 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..10b92d81fa 100644
+index 276ad8cf1df1..456bbc28c81c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -538,7 +538,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -562,7 +562,7 @@ class Settings(
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
@@ -194,7 +194,7 @@ index 35d4c5a9c0..10b92d81fa 100644
      )
  
      val isRemoteDebuggingEnabled by booleanPreference(
-@@ -907,7 +907,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -949,7 +949,7 @@ class Settings(
       */
      var crashPullNeverShowAgain: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),

@@ -1,16 +1,16 @@
 diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
-index ed368f9563..111e205390 100644
+index 341d91eafc60..c43ec7764cf0 100644
 --- a/gradle/libs.versions.toml
 +++ b/gradle/libs.versions.toml
-@@ -102,6 +102,7 @@ okhttp = "4.12.0"
+@@ -103,6 +103,7 @@ okhttp = "4.12.0"
  okio = "3.15.0"
- sentry = "8.24.0"
- zxing = "3.5.3"
+ sentry = "8.27.1"
+ zxing = "3.5.4"
 +unifiedpush = "UNIFIEDPUSH_VERSION"
  
  [libraries]
  # AGP
-@@ -270,6 +271,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
+@@ -274,6 +275,7 @@ okhttp-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconne
  okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
  sentry = { group = "io.sentry", name = "sentry-android", version.ref = "sentry" }
  zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
@@ -19,21 +19,14 @@ index ed368f9563..111e205390 100644
  [plugins]
  detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 200b84de37..60429fcffa 100644
+index 9a16eea8e262..3c92326d58cc 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -602,6 +602,7 @@ projects:
+@@ -603,6 +603,17 @@ projects:
      - components:support-utils
      - components:tooling-lint
      - components:ui-icons
 +    - components:feature-unifiedpush
-   components:feature-addons:
-     description: A feature that provides for managing add-ons.
-     path: components/feature/addons
-@@ -2437,3 +2438,13 @@ projects:
-     - components:tooling-lint
-     - components:ui-colors
-     - components:ui-icons
 +  components:feature-unifiedpush:
 +    description: Feature that implements push notifications with UnifiedPush.
 +    path: components/feature/unifiedpush
@@ -44,6 +37,9 @@ index 200b84de37..60429fcffa 100644
 +    - components:support-base
 +    - components:support-test
 +    - components:tooling-lint
+   components:feature-addons:
+     description: A feature that provides for managing add-ons.
+     path: components/feature/addons
 diff --git a/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt b/mobile/android/android-components/components/concept/push/src/main/java/mozilla/components/concept/push/PushObserver.kt
 new file mode 100644
 index 000000000000..85e18ea0d9f0
@@ -229,43 +225,36 @@ index 000000000000..802364f0a9ab
 +    abstract val disableRateLimit: Boolean
 +}
 diff --git a/mobile/android/android-components/components/feature/accounts-push/build.gradle b/mobile/android/android-components/components/feature/accounts-push/build.gradle
-index ed3026775c..8d50f4791e 100644
+index 619c8026064d..072ae49adc23 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/build.gradle
 +++ b/mobile/android/android-components/components/feature/accounts-push/build.gradle
-@@ -50,6 +50,7 @@ dependencies {
-     testRuntimeOnly libs.junit.vintage
-     testImplementation libs.kotlinx.coroutines.test
-     testImplementation libs.robolectric
-+    implementation project(':components:feature-unifiedpush')
+@@ -13,6 +13,7 @@ android {
  }
  
- apply from: '../../../android-lint.gradle'
+ dependencies {
++    implementation project(':components:feature-unifiedpush')
+     implementation project(':components:browser-state')
+     implementation project(':components:concept-push')
+     implementation project(':components:feature-push')
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
-index 7992e782db..f5ead8686e 100644
+index 7992e782db94..7899f674b2e0 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/FxaPushSupportFeature.kt
-@@ -25,9 +25,6 @@ import mozilla.components.concept.sync.DevicePushSubscription
+@@ -25,9 +25,11 @@ import mozilla.components.concept.sync.DevicePushSubscription
  import mozilla.components.concept.sync.OAuthAccount
  import mozilla.components.feature.accounts.push.VerificationDelegate.Companion.PERIODIC_INTERVAL_MILLISECONDS
  import mozilla.components.feature.accounts.push.cache.PushScopeProperty
 -import mozilla.components.feature.push.AutoPushFeature
 -import mozilla.components.feature.push.AutoPushSubscription
 -import mozilla.components.feature.push.PushScope
- import mozilla.components.service.fxa.manager.FxaAccountManager
- import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
- import mozilla.components.support.base.log.logger.Logger
-@@ -35,6 +32,11 @@ import mozilla.components.support.base.utils.SharedPreferencesCache
- import org.json.JSONObject
- import kotlin.coroutines.CoroutineContext
- import mozilla.components.concept.sync.AccountObserver as SyncAccountObserver
 +import mozilla.components.concept.push.PushObserver
 +import mozilla.components.concept.push.PushScope
 +import mozilla.components.concept.push.PushSubscription
 +import mozilla.components.concept.push.PushSubscriptionProcessor
 +import mozilla.components.concept.push.Pusher
- 
- internal const val PREFERENCE_NAME = "mozac_feature_accounts_push"
- internal const val PREF_LAST_VERIFIED = "last_verified_push_subscription"
+ import mozilla.components.service.fxa.manager.FxaAccountManager
+ import mozilla.components.service.fxa.manager.ext.withConstellationIfExists
+ import mozilla.components.support.base.log.logger.Logger
 @@ -58,7 +60,7 @@ internal const val PREF_FXA_SCOPE = "fxa_push_scope"
  class FxaPushSupportFeature(
      private val context: Context,
@@ -357,7 +346,7 @@ index 7992e782db..f5ead8686e 100644
      publicKey = this.publicKey,
      authKey = this.authKey,
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt
-index cd58a69246..dc35a50c10 100644
+index cd58a6924607..dc35a50c105d 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/PushScopeProperty.kt
 @@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
@@ -370,7 +359,7 @@ index cd58a69246..dc35a50c10 100644
  
  /**
 diff --git a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
-index 30e4030888..532382a2fb 100644
+index 30e403088831..532382a2fbbb 100644
 --- a/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
 +++ b/mobile/android/android-components/components/feature/accounts-push/src/main/java/mozilla/components/feature/accounts/push/cache/ScopeProperty.kt
 @@ -4,7 +4,7 @@
@@ -383,7 +372,7 @@ index 30e4030888..532382a2fb 100644
  /**
   * A [ScopeProperty] implementation generates and holds the [PushScope].
 diff --git a/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt b/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
-index e4bf8170af..d2a3248c36 100644
+index e4bf8170af35..1bfc58c6c94e 100644
 --- a/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
 +++ b/mobile/android/android-components/components/feature/push/src/main/java/mozilla/components/feature/push/AutoPushFeature.kt
 @@ -27,15 +27,17 @@ import mozilla.components.concept.push.PushError
@@ -392,14 +381,14 @@ index e4bf8170af..d2a3248c36 100644
  import mozilla.components.support.base.log.logger.Logger
 -import mozilla.components.support.base.observer.Observable
 -import mozilla.components.support.base.observer.ObserverRegistry
- import mozilla.components.support.base.utils.NamedThreadFactory
- import java.io.File
- import java.util.concurrent.Executors
- import kotlin.coroutines.CoroutineContext
 +import mozilla.components.concept.push.AppServerKey
 +import mozilla.components.concept.push.PushScope
 +import mozilla.components.concept.push.PushSubscription
 +import mozilla.components.concept.push.Pusher
+ import mozilla.components.support.base.utils.NamedThreadFactory
+ import java.io.File
+ import java.util.concurrent.Executors
+ import kotlin.coroutines.CoroutineContext
  
 -typealias PushScope = String
 -typealias AppServerKey = String
@@ -437,7 +426,7 @@ index e4bf8170af..d2a3248c36 100644
      /**
       * Starts the push feature and initialization work needed. Also starts the [PushService] to ensure new messages
       * come through.
-@@ -139,10 +148,27 @@ class AutoPushFeature(
+@@ -139,10 +148,26 @@ class AutoPushFeature(
       */
      override fun shutdown() {
          withConnection {
@@ -451,8 +440,7 @@ index e4bf8170af..d2a3248c36 100644
  
 +    override fun forEachScopes(block: (PushScope, String?) -> Unit) {
 +        // TODO: uncomment once https://github.com/mozilla/application-services/pull/6671 is merged
-+        /*
-+        val currentConnection = connection
++/*        val currentConnection = connection
 +        currentConnection ?: run {
 +            logger.warn("No current connection")
 +         }
@@ -460,13 +448,13 @@ index e4bf8170af..d2a3248c36 100644
 +            currentConnection?.listSubscriptionReq()?.forEach {
 +                block(it.scope, it.appServerKey)
 +            }
-+        }*/
++        } */
 +    }
 +
      /**
       * New registration tokens are received and sent to the AutoPush server which also performs subscriptions for
       * each push type and notifies the subscribers.
-@@ -187,11 +213,11 @@ class AutoPushFeature(
+@@ -187,11 +212,11 @@ class AutoPushFeature(
       * @param onSubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
       * @param onSubscribe The callback invoked when a subscription for the [scope] is created.
       */
@@ -483,7 +471,7 @@ index e4bf8170af..d2a3248c36 100644
      ) {
          withConnection(errorBlock = { exception -> onSubscribeError(exception) }) {
              val sub = it.subscribe(scope, appServerKey ?: "")
-@@ -206,10 +232,10 @@ class AutoPushFeature(
+@@ -206,10 +231,10 @@ class AutoPushFeature(
       * @param onUnsubscribeError The callback invoked with an [Exception] if the call does not successfully complete.
       * @param onUnsubscribe The callback invoked when a subscription for the [scope] is removed.
       */
@@ -498,7 +486,7 @@ index e4bf8170af..d2a3248c36 100644
      ) {
          withConnection(errorBlock = { exception -> onUnsubscribeError(exception) }) {
              onUnsubscribe(it.unsubscribe(scope))
-@@ -224,10 +250,10 @@ class AutoPushFeature(
+@@ -224,10 +249,10 @@ class AutoPushFeature(
       * @param block The callback invoked when a subscription for the [scope] is found, otherwise null. Note: this will
       * not execute on the calls thread.
       */
@@ -513,7 +501,7 @@ index e4bf8170af..d2a3248c36 100644
      ) {
          withConnection {
              block(it.getSubscription(scope)?.toPushSubscription(scope, appServerKey))
-@@ -289,18 +315,18 @@ class AutoPushFeature(
+@@ -289,18 +314,18 @@ class AutoPushFeature(
      /**
       * Observers that want to receive updates for new subscriptions and messages.
       */
@@ -536,28 +524,23 @@ index e4bf8170af..d2a3248c36 100644
  
      private fun exceptionHandler(onError: (PushError) -> Unit) = CoroutineExceptionHandler { _, e ->
          when (e) {
-@@ -352,13 +378,13 @@ enum class Protocol {
+@@ -352,13 +377,13 @@ enum class Protocol {
  /**
   * The subscription information from AutoPush that can be used to send push messages to other devices.
   */
 -data class AutoPushSubscription(
--    val scope: PushScope,
--    val endpoint: String,
--    val publicKey: String,
--    val authKey: String,
--    val appServerKey: String?,
++/* data class AutoPushSubscription(
+     val scope: PushScope,
+     val endpoint: String,
+     val publicKey: String,
+     val authKey: String,
+     val appServerKey: String?,
 -)
-+// data class AutoPushSubscription(
-+//    val scope: PushScope,
-+//    val endpoint: String,
-+//    val publicKey: String,
-+//    val authKey: String,
-+//    val appServerKey: String?,
-+// )
++) */
  
  /**
   * Configuration object for initializing the Push Manager with an AutoPush server.
-@@ -369,7 +395,7 @@ data class AutoPushSubscription(
+@@ -369,7 +394,7 @@ data class AutoPushSubscription(
   * @param serviceType The push services that the AutoPush server supports.
   * @param disableRateLimit A flag to disable our rate-limit logic. This is useful when debugging.
   */
@@ -566,7 +549,7 @@ index e4bf8170af..d2a3248c36 100644
      val senderId: String,
      val serverHost: String = "updates.push.services.mozilla.com",
      val protocol: Protocol = Protocol.HTTPS,
-@@ -402,8 +428,8 @@ private fun Protocol.toRustHttpProtocol(): PushHttpProtocol {
+@@ -402,8 +427,8 @@ private fun Protocol.toRustHttpProtocol(): PushHttpProtocol {
  fun SubscriptionResponse.toPushSubscription(
      scope: String,
      appServerKey: AppServerKey? = null,
@@ -649,7 +632,7 @@ index 000000000000..c492a3879873
 +
 diff --git a/mobile/android/android-components/components/feature/unifiedpush/build.gradle b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 new file mode 100644
-index 0000000000..80b2c95cea
+index 000000000000..a8f29142a909
 --- /dev/null
 +++ b/mobile/android/android-components/components/feature/unifiedpush/build.gradle
 @@ -0,0 +1,52 @@
@@ -663,7 +646,7 @@ index 0000000000..80b2c95cea
 +android {
 +    defaultConfig {
 +        minSdkVersion config.minSdkVersion
-+        compileSdk config.compileSdkVersion
++        compileSdk { version = release(config.compileSdkMajorVersion) { minorApiLevel = config.compileSdkMinorVersion } }
 +        targetSdkVersion config.targetSdkVersion
 +    }
 +

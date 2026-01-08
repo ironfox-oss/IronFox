@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/support/appservices/build.gradle b/mobile/android/android-components/components/support/appservices/build.gradle
-index d9af2a9b78..b525b51fd3 100644
+index d9af2a9b78e8..b525b51fd39e 100644
 --- a/mobile/android/android-components/components/support/appservices/build.gradle
 +++ b/mobile/android/android-components/components/support/appservices/build.gradle
 @@ -13,7 +13,7 @@ dependencies {

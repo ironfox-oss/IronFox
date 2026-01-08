@@ -1,8 +1,8 @@
 diff --git a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs b/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
-index 9df297a8afdc6..eb8fbac27c1ec 100644
+index 170dc9cab28d6..320ab9c5bcbe2 100644
 --- a/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
 +++ b/toolkit/content/widgets/moz-support-link/moz-support-link.mjs
-@@ -102,9 +102,9 @@ export default class MozSupportLink extends HTMLAnchorElement {
+@@ -103,9 +103,9 @@ export default class MozSupportLink extends HTMLAnchorElement {
    #setHref() {
      let supportPage = this.getAttribute("support-page") ?? "";
      let base = MozSupportLink.SUPPORT_URL + supportPage;
@@ -15,7 +15,7 @@ index 9df297a8afdc6..eb8fbac27c1ec 100644
    }
  }
  customElements.define("moz-support-link", MozSupportLink, { extends: "a" });
-@@ -120,7 +120,7 @@ customElements.define("moz-support-link", MozSupportLink, { extends: "a" });
+@@ -121,7 +121,7 @@ customElements.define("moz-support-link", MozSupportLink, { extends: "a" });
   *          Otherwise the url in unmodified form.
   */
  export function formatUTMParams(contentAttribute, url) {

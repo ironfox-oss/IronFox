@@ -1,46 +1,33 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index f0c863c8dc..16eb70e2a9 100644
+index 608743374401..ba57e0b67bc8 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
-@@ -183,6 +183,34 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
+@@ -182,14 +182,62 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
+ /* USERTrust RSA Certification Authority */
  static const char kUSERTrust_RSA_Certification_AuthorityFingerprint[] =
    "x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=";
- 
+-
 +/* Amazon Root CA 1 */
-+static const char kAmazon_Root_CA_1Fingerprint[] =
-+  "++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI=";
-+
++static const char kAmazon_Root_CA_1Fingerprint[] = "++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI=";
 +/* Amazon Root CA 2 */
-+static const char kAmazon_Root_CA_2Fingerprint[] =
-+  "f0KW/FtqTjs108NpYj42SrGvOB2PpxIVM8nWxjPqJGE=";
-+
++static const char kAmazon_Root_CA_2Fingerprint[] = "f0KW/FtqTjs108NpYj42SrGvOB2PpxIVM8nWxjPqJGE=";
 +/* Amazon Root CA 3 */
-+static const char kAmazon_Root_CA_3Fingerprint[] =
-+  "NqvDJlas/GRcYbcWE8S/IceH9cq77kg0jVhZeAPXq8k=";
-+
++static const char kAmazon_Root_CA_3Fingerprint[] = "NqvDJlas/GRcYbcWE8S/IceH9cq77kg0jVhZeAPXq8k=";
 +/* Amazon Root CA 4 */
-+static const char kAmazon_Root_CA_4Fingerprint[] =
-+  "9+ze1cZgR9KO1kZrVDxA4HQ6voHRCSVNz4RdTCx4U8U=";
-+
++static const char kAmazon_Root_CA_4Fingerprint[] = "9+ze1cZgR9KO1kZrVDxA4HQ6voHRCSVNz4RdTCx4U8U=";
 +/* GlobalSign Root E46 */
-+static const char kGlobalSign_Root_E46Fingerprint[] =
-+  "4EoCLOMvTM8sf2BGKHuCijKpCfXnUUR/g/0scfb9gXM=";
-+
++static const char kGlobalSign_Root_E46Fingerprint[] = "4EoCLOMvTM8sf2BGKHuCijKpCfXnUUR/g/0scfb9gXM=";
 +/* GlobalSign Root R46 */
-+static const char kGlobalSign_Root_R46Fingerprint[] =
-+  "rn+WLLnmp9v3uDP7GPqbcaiRdd+UnCMrap73yz3yu/w=";
-+
++static const char kGlobalSign_Root_R46Fingerprint[] = "rn+WLLnmp9v3uDP7GPqbcaiRdd+UnCMrap73yz3yu/w=";
 +/* ISRG Root X2 */
-+static const char kISRG_Root_X2Fingerprint[] =
-+  "diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=";
-+
++static const char kISRG_Root_X2Fingerprint[] = "diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=";
  /* Pinsets are each an ordered list by the actual value of the fingerprint */
  struct StaticFingerprints {
    // See bug 1338873 about making these fields const.
-@@ -279,6 +307,45 @@ static const StaticFingerprints kPinset_google = {
-   kPinset_google_Data
+   size_t size;
+   const char* const* data;
  };
- 
+-
 +static const char* const kPinset_ironfox_Data[] = {
 +  kGlobalSign_Root_CAFingerprint,
 +  kGTS_Root_R4Fingerprint,
@@ -50,7 +37,6 @@ index f0c863c8dc..16eb70e2a9 100644
 +  sizeof(kPinset_ironfox_Data) / sizeof(const char*),
 +  kPinset_ironfox_Data
 +};
-+
 +/* Taken from https://github.com/brave/brave-core/blob/master/chromium_src/net/tools/transport_security_state_generator/input_file_parsers.cc */
 +static const char* const kPinset_brave_Data[] = {
 +  kAmazon_Root_CA_1Fingerprint,
@@ -71,7 +57,6 @@ index f0c863c8dc..16eb70e2a9 100644
 +  sizeof(kPinset_brave_Data) / sizeof(const char*),
 +  kPinset_brave_Data
 +};
-+
 +static const char* const kPinset_celenity_Data[] = {
 +  kISRG_Root_X1Fingerprint,
 +};
@@ -79,11 +64,10 @@ index f0c863c8dc..16eb70e2a9 100644
 +  sizeof(kPinset_celenity_Data) / sizeof(const char*),
 +  kPinset_celenity_Data
 +};
-+
- /* Domainlist */
- struct TransportSecurityPreload {
-   // See bug 1338873 about making these fields const.
-@@ -303,8 +370,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+ /* PreloadedHPKPins.json pinsets */
+ static const char* const kPinset_google_root_pems_Data[] = {
+   kCOMODO_ECC_Certification_AuthorityFingerprint,
+@@ -303,8 +351,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "apis.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "appengine.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "appspot.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -94,16 +78,7 @@ index f0c863c8dc..16eb70e2a9 100644
    { "blogger.com", true, false, false, -1, &kPinset_google_root_pems },
    { "blogspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "bugs.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
-@@ -337,7 +404,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "datastudio.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "developer.android.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "dl.google.com", true, false, false, -1, &kPinset_google_root_pems },
--  { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
-+//  { "dns.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "docs.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "domains.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "doubleclick.net", true, false, false, -1, &kPinset_google_root_pems },
-@@ -348,7 +415,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -348,7 +396,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "exclude-subdomains.pinning.example.com", false, false, false, -1, &kPinset_mozilla_test },
    { "fi.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "firebaseio.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -112,7 +87,7 @@ index f0c863c8dc..16eb70e2a9 100644
    { "g.co", false, false, false, -1, &kPinset_google_root_pems },
    { "g4w.co", true, false, false, -1, &kPinset_google_root_pems },
    { "ggpht.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -640,7 +707,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -640,7 +688,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "sync.services.mozilla.com", true, false, true, 13, &kPinset_mozilla_services },
    { "talk.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "talkgadget.google.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -121,7 +96,7 @@ index f0c863c8dc..16eb70e2a9 100644
    { "test-mode.pinning.example.com", true, true, false, -1, &kPinset_mozilla_test },
    { "testpilot.firefox.com", false, false, true, 9, &kPinset_mozilla_services },
    { "translate.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -675,9 +742,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -675,9 +723,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "youtube-nocookie.com", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -215,12 +190,12 @@ index f0c863c8dc..16eb70e2a9 100644
  };
  
 -// Pinning Preload List Length = 383;
-+// Pinning Preload List Length = 472;
++// Pinning Preload List Length = 473;
  
  static const int32_t kUnknownId = -1;
  
 diff --git a/security/manager/tools/PreloadedHPKPins.json b/security/manager/tools/PreloadedHPKPins.json
-index e5c10e2975..63722cda85 100644
+index e5c10e2975ce..63722cda85e4 100644
 --- a/security/manager/tools/PreloadedHPKPins.json
 +++ b/security/manager/tools/PreloadedHPKPins.json
 @@ -127,13 +127,13 @@

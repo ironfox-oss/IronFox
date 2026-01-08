@@ -26,6 +26,7 @@ object FenixSettingsVisibilityManager {
         hideLinkSharing(context, prefFragment)
         hideLocalAddonInstall(context, prefFragment)
         hideNimbusExperiments(context, prefFragment)
+        hideProfiler(context, prefFragment)
         hideRate(context, prefFragment)
         hideRemoteDebugging(context, prefFragment)
     }
@@ -42,16 +43,21 @@ object FenixSettingsVisibilityManager {
     ) {
         displayAddressSync(context, prefFragment)
         displayAppZygote(context, prefFragment)
+        displayCustomTabExtensions(context, prefFragment)
         displayEnableHomepageAsNewTab(context, prefFragment)
         displayEnableMenuRedesign(context, prefFragment)
         displayIsolatedProcess(context, prefFragment)
         displayLnaBlocking(context, prefFragment)
-        displayPrivateBrowsingRedesign(context, prefFragment)
+        displayLnaFeature(context, prefFragment)
+        displayLnaTrackerBlocking(context, prefFragment)
+        displayNewDynamicToolbarBehaviour(context, prefFragment)
         displayRelayFeature(context, prefFragment)
         displaySettingsSearch(context, prefFragment)
         displayToolbarCustomization(context, prefFragment)
         hideCrashPullNeverShow(context, prefFragment)
+        hideDiscoverMoreStories(context, prefFragment)
         hideMicrosurveyFeature(context, prefFragment)
+        hideMozillaAdsClient(context, prefFragment)
         hideNewCrashReporterDialog(context, prefFragment)
         hideNimbusPreview(context, prefFragment)
         hideRemoteSearchConfiguration(context, prefFragment)
@@ -145,6 +151,22 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
+     * Hide the option to start the Profiler
+     * (This doesn't work and causes a crash when selected, due to us
+     * disabling the Gecko Profiler at build-time)
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun hideProfiler(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val profilerKey = context.getPreferenceKey(FenixSettingsDictionary.profiler)
+        hidePreference(profilerKey, prefFragment)
+    }
+
+    /**
      * Hide the app rating option
      *
      * @param context The application context
@@ -202,6 +224,20 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
+     * Display the setting to show the status of extensions in the menu for custom tabs
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayCustomTabExtensions(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val customTabExtensionsKey = context.getPreferenceKey(FenixSettingsDictionary.shouldShowCustomTabExtensions)
+        displayPreference(customTabExtensionsKey, prefFragment)
+    }
+
+    /**
      * Display the setting to toggle the homepage as a new tab
      *
      * @param context The application context
@@ -244,7 +280,7 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
-     * Display the setting to enable local network access restrictions
+     * Display the setting to enforce local network access restrictions
      *
      * @param context The application context
      * @param prefFragment The preference fragment from where the preference should be displayed
@@ -258,17 +294,45 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
-     * Display the setting to toggle the private browsing mode redesign
+     * Display the setting to enable local network access restrictions
      *
      * @param context The application context
      * @param prefFragment The preference fragment from where the preference should be displayed
      */
-    internal fun displayPrivateBrowsingRedesign(
+    internal fun displayLnaFeature(
         context: Context,
         prefFragment: PreferenceFragmentCompat
     ) {
-        val privateBrowsingRedesignKey = context.getPreferenceKey(FenixSettingsDictionary.enablePrivateBrowsingModeRedesign)
-        displayPreference(privateBrowsingRedesignKey, prefFragment)
+        val lnaFeatureKey = context.getPreferenceKey(FenixSettingsDictionary.isLnaFeatureEnabled)
+        displayPreference(lnaFeatureKey, prefFragment)
+    }
+
+    /**
+     * Display the setting to enforce local network access restrictions for known tracking resources
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayLnaTrackerBlocking(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val lnaTrackerBlockingKey = context.getPreferenceKey(FenixSettingsDictionary.isLnaTrackerBlockingEnabled)
+        displayPreference(lnaTrackerBlockingKey, prefFragment)
+    }
+
+     /**
+     * Display the setting to toggle the new dynamic toolbar behaviour
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayNewDynamicToolbarBehaviour(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val newDynamicToolbarBehaviourKey = context.getPreferenceKey(FenixSettingsDictionary.useNewDynamicToolbarBehaviour)
+        displayPreference(newDynamicToolbarBehaviourKey, prefFragment)
     }
 
     /**
@@ -328,6 +392,20 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
+     * Hide the setting to toggle Pocket "Discover more stories"
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun hideDiscoverMoreStories(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val discoverMoreStoriesKey = context.getPreferenceKey(FenixSettingsDictionary.enableDiscoverMoreStories)
+        hidePreference(discoverMoreStoriesKey, prefFragment)
+    }
+
+    /**
      * Hide the setting to toggle microsurveys
      *
      * @param context The application context
@@ -339,6 +417,20 @@ object FenixSettingsVisibilityManager {
     ) {
         val microsurveyFeatureKey = context.getPreferenceKey(FenixSettingsDictionary.microsurveyFeatureEnabled)
         hidePreference(microsurveyFeatureKey, prefFragment)
+    }
+
+    /**
+     * Hide the setting to enable the Mozilla Ads Client
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun hideMozillaAdsClient(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val mozillaAdsClientKey = context.getPreferenceKey(FenixSettingsDictionary.enableMozillaAdsClient)
+        hidePreference(mozillaAdsClientKey, prefFragment)
     }
 
     /**

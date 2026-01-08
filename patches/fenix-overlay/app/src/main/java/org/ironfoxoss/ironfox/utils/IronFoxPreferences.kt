@@ -812,7 +812,7 @@ object IronFoxPreferences {
 	 * Set whether we should use the OLED theme
 	 *
 	 * @param context The application context
-	 * @param isEnabled Whether we should use the OLED theme.
+	 * @param isEnabled Whether we should use the OLED theme
 	 */
 	fun setShouldUseOledTheme(context: Context, isEnabled: Boolean) {
         val settings = context.settings()
@@ -822,7 +822,7 @@ object IronFoxPreferences {
 	/**
 	 * Check if we should use the OLED theme
 	 *
-	 * @param context The application context.
+	 * @param context The application context
 	 */
 	fun shouldUseOledTheme(context: Context): Boolean {
 		return context.settings().ironfox.shouldUseOledTheme

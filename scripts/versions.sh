@@ -3,27 +3,27 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_1_RELEASE)
-FIREFOX_COMMIT='ff72bafa1aa0efac8b27fcd5b7ff0a91ba1a33a1'
-FIREFOX_VERSION='146.0.1'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_BUILD1)
+FIREFOX_COMMIT='6debc48f4ded8d92c58fb9a2f4f6008df18d919c'
+FIREFOX_VERSION='147.0'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
 ### https://github.com/mozilla/application-services
-APPSERVICES_COMMIT='9d0f44b0a67b05556a5e1672875395665eb51754'
-APPSERVICES_VERSION='v146.0.2'
+APPSERVICES_COMMIT='2d12f39543bb9ecb2410b63a092912b811e9fb4d'
+APPSERVICES_VERSION='v147.0'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='9a11f12854b3d0fa4a094ed4005f2a8df916e6d3'
+L10N_COMMIT='6e5131fc12881b4989a5423084d93bb10342840c'
 
 ## Glean
 ### https://github.com/mozilla/glean
-GLEAN_COMMIT='19729353fa93916067c155b9e293c00836a6948a'
-GLEAN_VERSION='v66.1.2'
+GLEAN_COMMIT='e95d7e50678aaa678b9556f4b8b98cdadc0f1c07'
+GLEAN_VERSION='v66.2.0'
 
 ## microG
 ### https://github.com/microg/GmsCore
@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush
 ### https://codeberg.org/UnifiedPush/android-connector
-UNIFIEDPUSH_VERSION='3.1.2'
+UNIFIEDPUSH_VERSION='3.2.0'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
@@ -53,9 +53,9 @@ WASI_VERSION='20'
 
 ## Android SDK
 ### (for reference: https://searchfox.org/firefox-main/source/python/mozboot/mozboot/android.py)
-ANDROID_BUILDTOOLS_VERSION='36.0.0'
-ANDROID_NDK_REVISION='29.0.14206865'
-ANDROID_PLATFORM_VERSION='36'
+ANDROID_BUILDTOOLS_VERSION='36.1.0'
+ANDROID_NDK_REVISION='29.0.14206865' # r29
+ANDROID_PLATFORM_VERSION='36.1'
 ANDROID_SDK_REVISION='13114758'
 
 ## Bundletool

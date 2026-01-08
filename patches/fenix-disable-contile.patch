@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
-index 579db37cf7..e2869c0a37 100644
+index 579db37cf75a..e2869c0a37e3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/HomeSettingsFragment.kt
 @@ -78,6 +78,7 @@ class HomeSettingsFragment : PreferenceFragmentCompat() {
@@ -11,10 +11,10 @@ index 579db37cf7..e2869c0a37 100644
              onPreferenceChangeListener = createMetricPreferenceChangeListener("contile")
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..c139530def 100644
+index 276ad8cf1df1..6b26a97ad3d4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2064,7 +2064,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2131,7 +2131,7 @@ class Settings(
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -23,7 +23,7 @@ index 35d4c5a9c0..c139530def 100644
      )
  
      /**
-@@ -2696,7 +2696,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2787,7 +2787,7 @@ class Settings(
      var suppressSponsoredTopSitesEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_suppress_sponsored_tiles),
          featureFlag = true,
