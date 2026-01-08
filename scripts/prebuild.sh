@@ -1080,14 +1080,14 @@ pushd "${IRONFOX_GMSCORE}"
 "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${ANDROID_BUILDTOOLS_VERSION}'|g" build.gradle
 
 # Bump Android compile SDK
-"${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = '${ANDROID_SDK_TARGET}'|g" build.gradle
+"${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = ${ANDROID_SDK_TARGET}|g" build.gradle
 
 # Bump Android minimum SDK
 ## (This matches what we're using for the browser itself, as well as Mozilla's various components/dependencies)
 "${IRONFOX_SED}" -i -e 's|ext.androidMinSdk = .*|ext.androidMinSdk = 26|g' build.gradle
 
 # Bump Android target SDK
-"${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = '${ANDROID_SDK_TARGET}'|g" build.gradle
+"${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${ANDROID_SDK_TARGET}|g" build.gradle
 
 popd
 
