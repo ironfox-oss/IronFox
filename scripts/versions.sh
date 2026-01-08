@@ -59,7 +59,7 @@ ANDROID_PLATFORM_VERSION='36.1'
 ANDROID_SDK_REVISION='13114758'
 
 ### This is used for ex. setting microG's compile SDK and target SDK version
-ANDROID_SDK='36'
+ANDROID_SDK_TARGET='36'
 
 ## Bundletool
 ### https://github.com/google/bundletool
