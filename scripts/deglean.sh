@@ -153,7 +153,9 @@ rm -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/
 "${IRONFOX_SED}" -i 's|ErrorPage.visited|// ErrorPage.visited|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
 
 "${IRONFOX_SED}" -i -e 's|import mozilla.telemetry|// import mozilla.telemetry|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
-"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.Awesomebar|// import org.mozilla.fenix.GleanMetrics.Awesomebar|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.Events|// import org.mozilla.fenix.GleanMetrics.Events|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.VoiceSearch|// import org.mozilla.fenix.GleanMetrics.VoiceSearch|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
 "${IRONFOX_SED}" -i 's|Awesomebar.clipboardSuggestionClicked|// Awesomebar.clipboardSuggestionClicked|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
 "${IRONFOX_SED}" -i 's|Events.browserToolbarQrScanCompleted|// Events.browserToolbarQrScanCompleted|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
 "${IRONFOX_SED}" -i 's|VoiceSearch.tapped|// VoiceSearch.tapped|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
