@@ -141,6 +141,12 @@ if ! check_patches; then
     echo "Patch validation failed. Please check the patch files and try again."
     exit 1
 fi
+
+# For UnifiedPush-AC
+if ! up_ac_check_patches; then
+    echo "Patch validation failed. Please check the patch files and try again."
+    exit 1
+fi
 popd
 
 # Set-up Rust
@@ -403,6 +409,9 @@ esac
 # Apply Fenix overlay
 apply_overlay "${patches}/fenix-overlay/"
 
+# Apply UnifiedPush-AC overlay (for Fenix)
+apply_overlay "${IRONFOX_UP_AC}/fenix-overlay/"
+
 popd
 
 #
@@ -597,6 +606,9 @@ pushd "${IRONFOX_GECKO}"
 
 # Apply patches
 apply_patches
+
+## For UnifiedPush-AC
+up_ac_apply_patches
 
 # Let it be IronFox (part 2...)
 "${IRONFOX_SED}" -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
@@ -823,9 +835,6 @@ rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozi
 
 # Replace Google Play FIDO with microG
 "${IRONFOX_SED}" -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
-
-# UnifiedPush
-"${IRONFOX_SED}" -i "s|UNIFIEDPUSH_VERSION|${UNIFIEDPUSH_VERSION}|" gradle/libs.versions.toml
 
 # Remove Glean
 source "${rootdir}/scripts/deglean.sh"

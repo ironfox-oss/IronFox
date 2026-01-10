@@ -17,6 +17,19 @@ index 63398b2c715a..dfe67f464347 100644
  
          <activity
              android:name=".HomeActivity"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+index 6ed5a8715f84..db4e444c7319 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
+@@ -225,7 +225,7 @@ class BackgroundServices(
+ 
+         // Enable push if it's configured.
+         push.feature?.let { autoPushFeature ->
+-            FxaPushSupportFeature(context, accountManager, autoPushFeature, crashReporter)
++            FxaPushSupportFeature(context, accountManager, autoPushFeature)
+                 .initialize()
+         }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
 index b1b4409c48c8..ce2a87cea097 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt

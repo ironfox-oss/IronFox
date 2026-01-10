@@ -106,20 +106,6 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
-  - file: "a-c-unifiedpush.patch"
-    name: "UnifiedPush (Android Components)"
-    description: "Adds support for UnifiedPush to Mozilla's Android Components."
-    reason: "To allow users to receive notifications without the use of a proprietary Google service."
-    effect: "Improves usability for users, by allowing them to receive push notifications if desired, and improves freedom, by allowing users to decide which push server/implementation they would like to use."
-    category: "Dependency"
-
-  - file: "fenix-unifiedpush.patch"
-    name: "UnifiedPush (Fenix)"
-    description: "Adds support for UnifiedPush to Firefox for Android."
-    reason: "To allow users to receive notifications without the use of a proprietary Google service."
-    effect: "Improves usability for users, by allowing them to receive push notifications if desired, and improves freedom, by allowing users to decide which push server/implementation they would like to use."
-    category: "Dependency"
-
   - file: "geckoview-prioritize-cred-manager-over-gms.patch"
     name: "Prioritize Credential Manager over microG/GMS"
     description: "Prioritizes the use of Android's standard Credential Manager API, instead of first attempting to use microG/Google Play Services (if they're installed by the user)."

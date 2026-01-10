@@ -40,9 +40,9 @@ PHOENIX_VERSION='2025.12.23.1'
 UNIFFI_COMMIT='9f392cbaa07aaf83160e94ece2a32d3e9fef22e4'
 UNIFFI_VERSION='0.29.0'
 
-## UnifiedPush
-### https://codeberg.org/UnifiedPush/android-connector
-UNIFIEDPUSH_VERSION='3.2.0'
+## UnifiedPush-AC
+### https://gitlab.com/ironfox-oss/unifiedpush-ac
+UNIFIEDPUSHAC_COMMIT='fbd32fa2b61ca7c6eea77f8f8cfaa436b72c5b61'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
@@ -110,6 +110,7 @@ GLEANDIR="${EXTERNALDIR}/glean"
 GMSCOREDIR="${EXTERNALDIR}/gmscore"
 GRADLEDIR="${EXTERNALDIR}/gradle"
 L10NDIR="${EXTERNALDIR}/l10n-central"
+UNIFIEDPUSHACDIR="${EXTERNALDIR}/unifiedpush-ac"
 PREBUILDSDIR="${EXTERNALDIR}/prebuilds"
 UNIFFIDIR="${EXTERNALDIR}/uniffi"
 WASISDKDIR="${EXTERNALDIR}/wasi-sdk"

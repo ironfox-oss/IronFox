@@ -12,13 +12,30 @@ PATCH_CMD=(patch -p1 -f --fuzz=3 --no-backup-if-mismatch)
 declare -a PATCH_FILES
 declare -a AS_PATCH_FILES
 declare -a GLEAN_PATCH_FILES
+declare -a UP_AC_PATCH_FILES
 
 PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/patches.yaml))
 AS_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/a-s-patches.yaml))
 GLEAN_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/glean-patches.yaml))
+UP_AC_PATCH_FILES=($(yq '.patches[].file' "${IRONFOX_UP_AC}"/patches/patches.yaml))
 
 check_patch() {
     patch="${patches}/$1"
+    if ! [[ -f "${patch}" ]]; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "'${patch}' does not exist or is not a file"
+        return 1
+    fi
+
+    if ! "${PATCH_CMD[@]}" --dry-run <"${patch}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Incompatible patch: '${patch}'"
+        return 1
+    fi
+}
+
+up_ac_check_patch() {
+    patch="${IRONFOX_UP_AC}/patches/$1"
     if ! [[ -f "${patch}" ]]; then
         printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "'${patch}' does not exist or is not a file"
@@ -56,6 +73,14 @@ glean_check_patches() {
     done
 }
 
+up_ac_check_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
+        if ! up_ac_check_patch "${patch}"; then
+            return 1
+        fi
+    done
+}
+
 test_patches() {
     for patch in "${PATCH_FILES[@]}"; do
         if ! check_patch "${patch}" >/dev/null 2>&1; then
@@ -86,11 +111,29 @@ glean_test_patches() {
     done
 }
 
+up_ac_test_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
+        if ! up_ac_check_patch "${patch}" >/dev/null 2>&1; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        else
+            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "${patch}")"
+        fi
+    done
+}
+
 apply_patch() {
     name="$1"
     echo "Applying patch: ${name}"
     check_patch "${name}" || return 1
     "${PATCH_CMD[@]}" <"${patches}/${name}"
+    return $?
+}
+
+up_ac_apply_patch() {
+    name="$1"
+    echo "Applying patch: ${name}"
+    up_ac_check_patch "${name}" || return 1
+    "${PATCH_CMD[@]}" <"${IRONFOX_UP_AC}/patches/${name}"
     return $?
 }
 
@@ -124,6 +167,16 @@ glean_apply_patches() {
     done
 }
 
+up_ac_apply_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
+        if ! up_ac_apply_patch "${patch}"; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+            echo "Failed to apply ${patch}"
+            return 1
+        fi
+    done
+}
+
 list_patches() {
     for patch in "${PATCH_FILES[@]}"; do
         echo "${patch}"
@@ -138,6 +191,12 @@ a-s_list_patches() {
 
 glean_list_patches() {
     for patch in "${GLEAN_PATCH_FILES[@]}"; do
+        echo "${patch}"
+    done
+}
+
+up_ac_list_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
         echo "${patch}"
     done
 }

@@ -100,6 +100,13 @@ fi
 cp -f "${builddir}/tmp/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
 "${IRONFOX_SED}" -i "s|{IRONFOX_UNIFFI}|${IRONFOX_UNIFFI}|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
 
+### unifiedpush-ac
+if [[ -f "${IRONFOX_UP_AC}/local.properties" ]]; then
+    rm -f "${IRONFOX_UP_AC}/local.properties"
+fi
+cp -f "${patches}/build/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties"
+"${IRONFOX_SED}" -i "s|{IRONFOX_AS}|${IRONFOX_AS}|" "${IRONFOX_UP_AC}/local.properties"
+
 ## Set LLVM build targets
 if [[ -f "${builddir}/targets_to_build" ]]; then
     rm -f "${builddir}/targets_to_build"
@@ -215,10 +222,25 @@ popd
 
 # Android Components
 pushd "${IRONFOX_AC}"
+
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
-# otherwise automatically triggered publication of A-S will fail
+# otherwise automatically triggered publication of A-S and publications of unifiedpush-ac will fail
 "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:concept-fetch:publishToMavenLocal
-# Enable the auto-publication workflow now that concept-fetch is published
+
+# unifiedpush-ac also needs concept-base (dependency of support-base), support-base and ui-icons
+"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:concept-base:publishToMavenLocal
+"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:support-base:publishToMavenLocal
+"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:ui-icons:publishToMavenLocal
+popd
+
+# unifiedpush-ac
+pushd "${IRONFOX_UP_AC}"
+"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" publishToMavenLocal
+popd
+
+# Android Components (Part 2...)
+pushd "${IRONFOX_AC}"
+# Now, enable the auto-publication workflow
 echo "## Enable the auto-publication workflow for Application Services" >>"${IRONFOX_GECKO}/local.properties"
 echo "autoPublish.application-services.dir=${IRONFOX_AS}" >>"${IRONFOX_GECKO}/local.properties"
 "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial publishToMavenLocal

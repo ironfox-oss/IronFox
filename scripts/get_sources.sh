@@ -218,6 +218,10 @@ clone_repo "https://github.com/mozilla/glean.git" "${GLEANDIR}" "${GLEAN_COMMIT}
 echo "Cloning microG..."
 clone_repo "https://github.com/microg/GmsCore.git" "${GMSCOREDIR}" "${GMSCORE_COMMIT}"
 
+# Clone unifiedpush-ac
+echo "Cloning unifiedpush-ac..."
+clone_repo "https://gitlab.com/ironfox-oss/unifiedpush-ac.git" "${UNIFIEDPUSHACDIR}" "${UNIFIEDPUSHAC_COMMIT}"
+
 # Download Phoenix
 echo "Downloading Phoenix..."
 download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/phoenix.js" "${PATCHDIR}/gecko-overlay/ironfox/prefs/000-phoenix.js"
@@ -285,6 +289,7 @@ export l10n_central="${L10NDIR}"
 export mozilla_release="${GECKODIR}"
 export prebuilds="${PREBUILDSDIR}"
 export uniffi="${UNIFFIDIR}"
+export unifiedpush_ac="${UNIFIEDPUSHACDIR}"
 export wasi="${WASISDKDIR}"
 
 export IRONFOX_TARGET_ARCH={IRONFOX_TARGET_ARCH}

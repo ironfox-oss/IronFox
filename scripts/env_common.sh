@@ -270,6 +270,12 @@ if [[ -z ${IRONFOX_UNIFFI+x} ]]; then
     export IRONFOX_UNIFFI="${uniffi}"
 fi
 
+# unifiedpush-ac
+if [[ -z ${IRONFOX_UP_AC+x} ]]; then
+    export IRONFOX_UP_AC="${unifiedpush_ac}"
+fi
+export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
+
 # WASI SDK
 if [[ -z ${IRONFOX_WASI+x} ]]; then
     export IRONFOX_WASI="${wasi}"
