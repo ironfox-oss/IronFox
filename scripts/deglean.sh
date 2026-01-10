@@ -148,5 +148,15 @@ rm -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/
 "${IRONFOX_SED}" -i 's|NimbusEvents.isReady|// NimbusEvents.isReady|g' "${IRONFOX_AS}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt"
 "${IRONFOX_SED}" -i 's|PlacesManagerMetrics|// PlacesManagerMetrics|g' "${IRONFOX_AS}/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt"
 
+# Remove Glean classes (Fenix)
+"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+"${IRONFOX_SED}" -i 's|ErrorPage.visited|// ErrorPage.visited|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+
+"${IRONFOX_SED}" -i -e 's|import mozilla.telemetry|// import mozilla.telemetry|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+"${IRONFOX_SED}" -i 's|Awesomebar.clipboardSuggestionClicked|// Awesomebar.clipboardSuggestionClicked|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+"${IRONFOX_SED}" -i 's|Events.browserToolbarQrScanCompleted|// Events.browserToolbarQrScanCompleted|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+"${IRONFOX_SED}" -i 's|VoiceSearch.tapped|// VoiceSearch.tapped|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+
 # Remove Glean classes (Gecko)
 "${IRONFOX_SED}" -i -e 's|Metrics|// Metrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt"
