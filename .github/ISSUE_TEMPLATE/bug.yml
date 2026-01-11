@@ -10,11 +10,11 @@ body:
       options:
         - label: I confirm that this issue occurs on the **latest release** of IronFox. You can check what the latest version is [on the `Releases` page](https://gitlab.com/ironfox-oss/IronFox/-/releases).
           required: true
-        - label: I confirm that this issue occurs on the latest **Nightly** release of IronFox. You can find steps on how to find and install the latest Nightly release [here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md#how-can-i-download-nightly-builds).
+        - label: I confirm that this issue occurs on the latest **Nightly** release of IronFox. You can find steps on how to find and install the latest Nightly release [here](https://ironfoxoss.org/docs/faq/#how-can-i-download-nightly-builds).
           required: true
         - label: I confirm that this issue has **NOT** already been reported on [the GitLab issue tracker](https://gitlab.com/ironfox-oss/IronFox/-/issues) **and/or** [the Codeberg issue tracker](https://codeberg.org/ironfox-oss/IronFox/issues).
           required: true
-        - label: I confirm that this issue is **NOT** already covered on [the `FAQ` page](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md).
+        - label: I confirm that this issue is **NOT** already covered on [the `FAQ` page](https://ironfoxoss.org/docs/faq/).
           required: true
         - label: I confirm that this issue is **NOT** related to a website breakage or compatibility issue that is not IronFox-specific (Such issues MUST be reported to [the Phoenix issue tracker](https://codeberg.org/celenity/Phoenix/issues/new?template=.github%2fISSUE_TEMPLATE%2fweb-compat.yml) instead).
           required: true

@@ -336,9 +336,9 @@ fi
 "${IRONFOX_SED}" -i -e 's|GOOGLE_XX_URL = ".*"|GOOGLE_XX_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 "${IRONFOX_SED}" -i -e 's|RATE_APP_URL = ".*"|RATE_APP_URL = ""|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
-"${IRONFOX_SED}" -i -e 's|ANDROID_SUPPORT_SUMO_URL = ".*"|ANDROID_SUPPORT_SUMO_URL = "https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+"${IRONFOX_SED}" -i -e 's|ANDROID_SUPPORT_SUMO_URL = ".*"|ANDROID_SUPPORT_SUMO_URL = "https://ironfoxoss.org/docs/faq/"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 "${IRONFOX_SED}" -i -e 's|WHATS_NEW_URL = ".*"|WHATS_NEW_URL = "https://gitlab.com/ironfox-oss/IronFox/-/releases"|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-"${IRONFOX_SED}" -i 's|mzl.la/AndroidSupport|https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
+"${IRONFOX_SED}" -i 's|mzl.la/AndroidSupport|https://ironfoxoss.org/docs/faq/|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 "${IRONFOX_SED}" -i 's|https://www.mozilla.org/firefox/android/notes|https://gitlab.com/ironfox-oss/IronFox/-/releases|g' app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
 
 # Replace proprietary artwork
