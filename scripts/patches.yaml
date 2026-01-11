@@ -549,6 +549,13 @@ patches:
     effect: "Protects users against unauthorized access/compromise to sensitive data."
     category: "Security"
 
+  - file: "fenix-enable-isolated-process.patch"
+    name: "Enable Isolated Content Processes"
+    description: "Enables content process isolation by default."
+    reason: "To improve security for users, by providing stronger protection against various attacks."
+    effect: "Provides users with enhanced isolation."
+    category: "Security"
+
   - file: "fenix-enable-memory-tagging.patch"
     name: "Enable Memory Tagging"
     description: "Enables memory tagging (via Android's Arm Memory Tagging Extension: https://developer.android.com/ndk/guides/arm-mte)."
