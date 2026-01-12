@@ -79,6 +79,29 @@ pref("media.geckoview.autoplay.request", true, locked); // [DEFAULT]
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
 
+/// Media decoding
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1981478
+// https://phabricator.services.mozilla.com/D260149
+// Required for media playback on certain sites (ex. rumble.com, x.com) when isolated content processes
+// are enabled: https://bugzilla.mozilla.org/show_bug.cgi?id=1810736
+// We only need these temporarily: added to Phoenix for next release
+pref("media.android-media-codec.enabled", false);
+pref("media.android-media-codec.preferred", false);
+pref("media.ffmpeg.encoder.enabled", true);
+pref("media.ffvpx-hw.enabled", true);
+pref("media.gmp.decoder.enabled", false);
+pref("media.gmp.decoder.multithreaded", true);
+pref("media.gmp.encoder.multithreaded", true);
+pref("media.rdd-ffmpeg.enabled", true);
+pref("media.rdd-ffvpx.enabled", true);
+pref("media.rdd-opus.enabled", true);
+pref("media.rdd-process.enabled", true);
+pref("media.rdd-vorbis.enabled", true);
+pref("media.rdd-vpx.enabled", true);
+pref("media.rdd-wav.enabled", true);
+pref("media.use-remote-encoder.audio", true);
+pref("media.use-remote-encoder.video", true);
+
 /// Re-enable geolocation permission prompts in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
 pref("geo.prompt.testing", false); // [HIDDEN] [DEFAULT]
