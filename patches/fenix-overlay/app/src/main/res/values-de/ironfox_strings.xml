@@ -46,7 +46,7 @@
     <string name="preference_xpinstall_enabled">Installation von Add-ons zulassen</string>
     <string name="onboarding_if_preferences_title">IronFox anpassen</string>
     <string name="onboarding_if_preferences_description">Passen Sie IronFox nach Ihren Wünschen an</string>
-    <string name="onboarding_if_preference_doh_caption">Sichern Sie Ihr Surfen mit DNS-over-HTTPS für mehr Privatsphäre und Sicherheit.</string>
+    <string name="onboarding_if_preference_doh_caption">Sichern Sie Ihr Surfen mit DNS über HTTPS für mehr Privatsphäre und Sicherheit.</string>
     <string name="onboarding_install_ublock_title">uBlock Origin installieren</string>
     <string name="onboarding_install_ublock_caption">Blockieren Sie Werbung, Tracker und Malware für ein sichereres und saubereres Surferlebnis.</string>
     <string name="onboarding_install_ublock_description">uBlock Origin verbessert Ihre Privatsphäre und Sicherheit, indem es unerwünschte Inhalte blockiert. IronFox verwendet eine benutzerdefinierte uBlock Origin-Konfiguration mit kuratierten Filterlisten für optimalen Schutz und optimale Leistung.</string>
@@ -75,4 +75,5 @@
     <string name="preference_autoplay_policy_transient">Transient (Standard)</string>
     <string name="preference_autoplay_policy_click_to_play">Zum Abspielen anklicken</string>
     <string name="preference_always_use_private_browsing">Immer den privaten Modus verwenden</string>
+    <string name="wallpaper_collection_fennec_description">Hintergrundbilder von Fennec F-Droid. %s</string>
 </resources>

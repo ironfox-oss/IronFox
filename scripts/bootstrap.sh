@@ -4,6 +4,8 @@
 
 set -euo pipefail
 
+source "$(dirname $0)/env_local.sh"
+
 error_fn() {
 	echo
 	echo -e "\033[31mSomething went wrong! The script failed.\033[0m"
@@ -14,9 +16,9 @@ error_fn() {
 
 # Install dependencies
 echo "Installing dependencies..."
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
     # Ensure Homebrew is installed
-    if [[ -z "$HOMEBREW_PREFIX" ]]; then
+    if [[ -z "${HOMEBREW_PREFIX}" ]]; then
         echo "Homebrew is not installed! Aborting..."
         echo "Please install Homebrew and try again..."
         echo "https://brew.sh/"
@@ -64,7 +66,7 @@ elif [[ -f "/etc/os-release" ]]; then
     echo
 
     # ATM, we support Fedora and Ubuntu
-    if [[ "$ID" == "fedora" ]]; then
+    if [[ "${ID}" == "fedora" ]]; then
         # Ensure we're up to date
         sudo dnf update -y --refresh || error_fn
         echo
@@ -100,7 +102,7 @@ elif [[ -f "/etc/os-release" ]]; then
             zlib-devel || error_fn
         echo
 
-    elif [[ "$ID" == "ubuntu" ]]; then
+    elif [[ "${ID}" == "ubuntu" ]]; then
         # Ensure we're up to date
         sudo apt update || error_fn
         echo

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java
-index dcd5d39ad9..b1791288f1 100644
+index dcd5d39ad9a3b..b1791288f1759 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/RuntimeSettings.java
 @@ -106,7 +106,7 @@ public abstract class RuntimeSettings implements Parcelable {
@@ -12,7 +12,7 @@ index dcd5d39ad9..b1791288f1 100644
        set(newValue);
        commit();
 diff --git a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
-index a795b36e6a..a679b4632d 100644
+index a795b36e6a8f8..a679b4632d61a 100644
 --- a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
 @@ -131,15 +131,21 @@ export const GeckoViewPreferences = {
@@ -38,7 +38,7 @@ index a795b36e6a..a679b4632d 100644
  
          default:
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 566c3a6330..8d378ff36a 100644
+index 566c3a63306fc..8d378ff36ac62 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 @@ -335,7 +335,13 @@ export class GeckoViewStartup {

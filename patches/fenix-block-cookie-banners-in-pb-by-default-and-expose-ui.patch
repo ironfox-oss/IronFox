@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/ProtectionsView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/ProtectionsView.kt
-index 31eea9b8a4..3700c94c4a 100644
+index 1f81493c9f9e..be163913a0ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/ProtectionsView.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/quicksettings/protections/ProtectionsView.kt
-@@ -63,7 +63,7 @@ class ProtectionsView(
+@@ -64,7 +64,7 @@ class ProtectionsView(
          bindCookieBannerProtection(state.cookieBannerUIMode)
          binding.trackingProtectionSwitch.isVisible = settings.shouldUseTrackingProtection
          val isPrivateSession = state.tab?.content?.private == true
@@ -12,10 +12,10 @@ index 31eea9b8a4..3700c94c4a 100644
  
          binding.trackingProtectionDetails.setOnClickListener {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..f1685e1663 100644
+index 276ad8cf1df1..ba232242bbb8 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1033,13 +1033,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1075,13 +1075,13 @@ class Settings(
      )
  
      val shouldUseCookieBannerPrivateModeDefaultValue: Boolean

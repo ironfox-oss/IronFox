@@ -20,12 +20,12 @@
     <string name="preference_jit_enabled">Activer la compilation Just-in-time (JIT) de JavaScript</string>
     <string name="preference_jit_enabled_caption">Améliorer les performances de JavaScript en activant JIT. (Non recommandé pour la plupart des utilisateurs)</string>
     <string name="preference_jit_enabled_description">Au détriment de la sécurité, vous pouvez activer JIT pour améliorer les performances des sites web. Recommandé uniquement pour les utilisateurs disposant d’appareils d’entrée de gamme.</string>
-    <string name="preference_jit_enabled_summary">Désactiver cette option peut réduire les performances sur les pages web complexes - ce changement redémarrera votre navigateur.</string>
+    <string name="preference_jit_enabled_summary">Désactiver cette option peut réduire les performances sur les pages web complexes - ce changement redémarrera votre navigateur</string>
     <string name="preference_pdfjs_disabled">Ouvrir les fichiers PDF avec une application externe</string>
     <string name="preference_website_appearance_title">Apparence de site web préférée</string>
     <string name="preference_website_appearance_description">Certains sites web adaptent leur jeu de couleurs en fonction de vos préférences. Choisissez le jeu de couleurs que vous souhaitez utiliser pour ces sites. Notez que les options autres que Clair peuvent faciliter l’empreinte numérique, en rendant votre navigateur plus unique.</string>
     <string name="preference_prefers_browser_color_scheme">Suivre le thème du navigateur</string>
-    <string name="preference_prefers_light_color_scheme">Clair</string>
+    <string name="preference_prefers_light_color_scheme">Clair (par défaut)</string>
     <string name="preference_prefers_dark_color_scheme">Sombre</string>
     <string name="preference_print_enabled">Activer les fonctionnalités d’impression</string>
     <string name="preference_safe_browsing_enabled">Activer la navigation sécurisée</string>
@@ -68,4 +68,12 @@
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Désactive l\'usurpation de fuseau horaire pour certains sites Web par défaut afin de réduire les risques de panne. La modification de ce paramètre redémarrera votre navigateur</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">Permettre de substituer WebGL depuis IronFox</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Active WebGL pour certains sites web par défaut lorsque WebGL est autrement désactivé globalement pour réduire les casses - Changer ce paramètre redémarrera votre navigateur</string>
+    <string name="preference_always_use_private_browsing">Toujours utiliser le mode de navigation privée</string>
+    <string name="preference_media_autoplay_title">Lecture automatique des medias</string>
+    <string name="preference_media_autoplay_description">Contrôler comment IronFox bloque la lecture automatique des médias.</string>
+    <string name="preference_autoplay_policy_transient">Transitoire (par défaut)</string>
+    <string name="preference_autoplay_policy_click_to_play">Cliquer pour lancer</string>
+    <string name="preference_webgl_disabled">Désactiver WebGL</string>
+    <string name="wallpaper_collection_fennec_description">Fonds d\'écrans venants de Fennec F-Droid.%s</string>
+    <string name="preference_autoplay_policy_sticky">Collant</string>
 </resources>

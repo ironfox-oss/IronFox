@@ -1,5 +1,5 @@
 diff --git a/toolkit/content/aboutSupport.js b/toolkit/content/aboutSupport.js
-index fb4fbac6ac..0d300fd2c8 100644
+index fb4fbac6ac59..0d300fd2c8b7 100644
 --- a/toolkit/content/aboutSupport.js
 +++ b/toolkit/content/aboutSupport.js
 @@ -551,7 +551,7 @@ var snapshotFormatters = {
@@ -21,7 +21,7 @@ index fb4fbac6ac..0d300fd2c8 100644
      ) {
        let gpuDeviceResetButton = $.new("button");
 diff --git a/toolkit/content/aboutSupport.xhtml b/toolkit/content/aboutSupport.xhtml
-index 021e6a3267..e324c3ce1e 100644
+index 021e6a326703..e324c3ce1e49 100644
 --- a/toolkit/content/aboutSupport.xhtml
 +++ b/toolkit/content/aboutSupport.xhtml
 @@ -43,8 +43,8 @@

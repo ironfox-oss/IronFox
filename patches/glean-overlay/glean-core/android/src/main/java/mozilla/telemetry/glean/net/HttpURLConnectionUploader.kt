@@ -2,9 +2,6 @@
 
 package mozilla.telemetry.glean.net
 
-import androidx.annotation.VisibleForTesting
-import java.net.HttpURLConnection
-
 class HttpURLConnectionUploader : PingUploader {
     companion object {
         const val DEFAULT_CONNECTION_TIMEOUT = 0
@@ -15,10 +12,9 @@ class HttpURLConnectionUploader : PingUploader {
 
     internal fun removeCookies(submissionUrl: String) {}
 
-    internal fun doUpload(connection: HttpURLConnection, data: ByteArray): Int = 200
+    internal fun doUpload(connection: Any?, data: ByteArray): Int = 200
 
-    @VisibleForTesting
-    internal fun openConnection(url: String): HttpURLConnection {
-        return "" as HttpURLConnection
+    internal fun openConnection(url: String): Any? {
+        return ""
     }
 }

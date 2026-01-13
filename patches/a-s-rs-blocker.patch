@@ -1,12 +1,12 @@
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
-index 316e5ce..07ab0d0 100644
+index 84a720d3e..47cc9527b 100644
 --- a/components/remote_settings/src/client.rs
 +++ b/components/remote_settings/src/client.rs
-@@ -193,6 +193,11 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -199,6 +199,11 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
          jexl_filter: JexlFilter,
          api_client: C,
      ) -> Self {
-+        let collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") {
++        let collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") || collection_name == String::from("translations-models") || collection_name == String::from("translations-wasm") {
 +            collection_name
 +        } else {
 +            String::from("")
@@ -14,12 +14,12 @@ index 316e5ce..07ab0d0 100644
          Self {
              collection_name,
              inner: Mutex::new(RemoteSettingsClientInner {
-@@ -667,11 +672,19 @@ impl Client {
+@@ -673,11 +678,19 @@ impl Client {
              ))?,
          };
  
-+        let collection_name = if config.collection_name == String::from("quicksuggest-other") {
-+            String::from("quicksuggest-other")
++        let collection_name = if config.collection_name == String::from("quicksuggest-other") ||  config.collection_name == String::from("translations-models") ||  config.collection_name == String::from("translations-wasm") {
++            config.collection_name
 +        } else {
 +            Err(Error::ConfigError(
 +                "Download attempt to RS collection was blocked.".into(),
@@ -36,15 +36,15 @@ index 316e5ce..07ab0d0 100644
  
          Ok(Self {
 diff --git a/components/remote_settings/src/service.rs b/components/remote_settings/src/service.rs
-index d5cc558..7ad51d7 100644
+index b19942604..f378f7897 100644
 --- a/components/remote_settings/src/service.rs
 +++ b/components/remote_settings/src/service.rs
-@@ -63,17 +63,24 @@ impl RemoteSettingsService {
+@@ -64,17 +64,24 @@ impl RemoteSettingsService {
  
      pub fn make_client(&self, collection_name: String) -> Arc<RemoteSettingsClient> {
          let mut inner = self.inner.lock();
 +
-+        let overridden_collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") {
++        let overridden_collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") || collection_name == String::from("translations-models") || collection_name == String::from("translations-wasm") {
 +            collection_name
 +        } else {
 +            String::from("")
@@ -66,12 +66,12 @@ index d5cc558..7ad51d7 100644
              inner.app_context.clone(),
              storage,
          ));
-@@ -107,7 +114,7 @@ impl RemoteSettingsService {
+@@ -108,7 +115,7 @@ impl RemoteSettingsService {
                      }
                  }
              }
 -            if synced_collections.insert(collection_name.to_string()) {
-+            if collection_name == String::from("quicksuggest-other") && synced_collections.insert(collection_name.to_string()) {
++            if (collection_name == String::from("quicksuggest-other") || collection_name == String::from("translations-models") || collection_name == String::from("translations-wasm")) && synced_collections.insert(collection_name.to_string()) {
                  trace!("syncing collection: {collection_name}");
                  client.sync()?;
              }

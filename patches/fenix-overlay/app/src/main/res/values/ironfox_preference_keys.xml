@@ -83,7 +83,7 @@
     <string name="pref_key_enable_unifiedpush" translatable="false">pref_key_enable_unifiedpush</string>
     <string name="pref_key_use_unifiedpush" translatable="false">pref_key_use_unifiedpush</string>
 
-    <!-- WebAssembly -->
+   <!-- WebAssembly -->
     <string name="pref_key_wasm_enabled" translatable="false">pref_key_wasm_enabled</string>
 
     <!-- WebGL -->
@@ -95,4 +95,7 @@
 
     <!-- XPInstall -->
     <string name="pref_key_xpinstall_enabled" translatable="false">pref_key_xpinstall_enabled</string>
+
+    <!-- OLED Theme -->
+    <string name="pref_key_oled_theme" translatable="false">pref_key_oled_theme</string>
 </resources>

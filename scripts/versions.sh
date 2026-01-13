@@ -3,109 +3,114 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_146_0_1_RELEASE)
-FIREFOX_COMMIT="ff72bafa1aa0efac8b27fcd5b7ff0a91ba1a33a1"
-FIREFOX_VERSION="146.0.1"
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_RELEASE)
+FIREFOX_COMMIT='6debc48f4ded8d92c58fb9a2f4f6008df18d919c'
+FIREFOX_VERSION='147.0'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
 ### https://github.com/mozilla/application-services
-APPSERVICES_COMMIT="9d0f44b0a67b05556a5e1672875395665eb51754"
-APPSERVICES_VERSION="v146.0.2"
+APPSERVICES_COMMIT='2d12f39543bb9ecb2410b63a092912b811e9fb4d'
+APPSERVICES_VERSION='v147.0'
+
+## firefox-l10n
+### https://github.com/mozilla-l10n/firefox-l10n
+### NOTE: This repo is updated several times a day...
+### so I think best approach here will be for us to just update it alongside new releases
+L10N_COMMIT='3c33d81b560c62819fd333b5228025efa411db60'
 
 ## Glean
 ### https://github.com/mozilla/glean
-GLEAN_COMMIT="19729353fa93916067c155b9e293c00836a6948a"
-GLEAN_VERSION="v66.1.2"
+GLEAN_COMMIT='e95d7e50678aaa678b9556f4b8b98cdadc0f1c07'
+GLEAN_VERSION='v66.2.0'
 
 ## microG
 ### https://github.com/microg/GmsCore
-GMSCORE_COMMIT="34048e6a47914ef38cb65654cde4b67d9b28f3b5"
-GMSCORE_VERSION="v0.3.11.250932"
+GMSCORE_COMMIT='34048e6a47914ef38cb65654cde4b67d9b28f3b5'
+GMSCORE_VERSION='v0.3.11.250932'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
-PHOENIX_COMMIT="5b5375277a9596d66b7d38f03fb7d6729831a072"
-PHOENIX_VERSION="2025.11.27.1"
+PHOENIX_COMMIT='f09568c8a71af4fe42dd43c6f711c67daf605f1e'
+PHOENIX_VERSION='2025.12.23.1'
 
 ## uniffi-rs (Tor)
 ### https://gitlab.torproject.org/tpo/applications/uniffi-rs
-UNIFFI_COMMIT="9f392cbaa07aaf83160e94ece2a32d3e9fef22e4"
-UNIFFI_VERSION="0.29.0"
+UNIFFI_COMMIT='9f392cbaa07aaf83160e94ece2a32d3e9fef22e4'
+UNIFFI_VERSION='0.29.0'
 
-## UnifiedPush
-### https://codeberg.org/UnifiedPush/android-connector
-UNIFIEDPUSH_VERSION="3.1.2"
+## UnifiedPush-AC
+### https://gitlab.com/ironfox-oss/unifiedpush-ac
+UNIFIEDPUSHAC_COMMIT='8fb654f5d1c989225b431d399a0734bf982771e6'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
-WASI_COMMIT="935fe1acd2fcd7ea4aed2d5ee4527482862b6344"
-WASI_VERSION="20"
+WASI_COMMIT='935fe1acd2fcd7ea4aed2d5ee4527482862b6344'
+WASI_VERSION='20'
 
 # Tools
 
 ## Android SDK
 ### (for reference: https://searchfox.org/firefox-main/source/python/mozboot/mozboot/android.py)
-ANDROID_BUILDTOOLS_VERSION="36.0.0"
-ANDROID_NDK_REVISION="29.0.14206865"
-ANDROID_PLATFORM_VERSION="36"
-ANDROID_SDK_REVISION="13114758"
+ANDROID_BUILDTOOLS_VERSION='36.1.0'
+ANDROID_NDK_REVISION='29.0.14206865' # r29
+ANDROID_PLATFORM_VERSION='36.1'
+ANDROID_SDK_REVISION='13114758'
+
+### This is used for ex. setting microG's compile SDK and target SDK version
+ANDROID_SDK_TARGET='36'
 
 ## Bundletool
 ### https://github.com/google/bundletool
-BUNDLETOOL_VERSION="1.18.3"
+BUNDLETOOL_VERSION='1.18.3'
 
 ## cbindgen
 ### https://docs.rs/crate/cbindgen/latest
-CBINDGEN_VERSION="0.29.2"
+CBINDGEN_VERSION='0.29.2'
 
 ## Gradle (F-Droid)
 ### https://gitlab.com/fdroid/gradlew-fdroid
-GRADLE_COMMIT="e55f371891e02a45ee65d18cabc81aaf665c96d0"
+GRADLE_COMMIT='e55f371891e02a45ee65d18cabc81aaf665c96d0'
 
 ## Rust
 ### https://releases.rs/
-RUST_MAJOR_VERSION="1.92"
+RUST_MAJOR_VERSION='1.92'
 RUST_VERSION="${RUST_MAJOR_VERSION}.0"
-#RUST_MAJOR_VERSION="1.91.1"
+#RUST_MAJOR_VERSION='1.91.1'
 #RUST_VERSION="${RUST_MAJOR_VERSION}"
 
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
-PREBUILDS_COMMIT="99e7b9dc73ee4e899204a18a29c47a9b52c00947"
-UNIFFI_LINUX_IRONFOX_COMMIT="3f26e5e5078ff6c8b8be42d9b0df274cf75cad8d"
-UNIFFI_LINUX_IRONFOX_REVISION="3"
-UNIFFI_OSX_IRONFOX_COMMIT="ec829cd1df6cf08618e0c7a3594776a9cc6a90e3"
-UNIFFI_OSX_IRONFOX_REVISION="3"
-WASI_LINUX_IRONFOX_COMMIT="6a1e702c91d18666944676aa7568dff7540f1c84"
-WASI_LINUX_IRONFOX_REVISION="3"
-WASI_OSX_IRONFOX_COMMIT="c0e40b4c08752fc1335ef6e8247e4c840ed4bef4"
-WASI_OSX_IRONFOX_REVISION="2"
+PREBUILDS_COMMIT='99e7b9dc73ee4e899204a18a29c47a9b52c00947'
+UNIFFI_LINUX_IRONFOX_COMMIT='3f26e5e5078ff6c8b8be42d9b0df274cf75cad8d'
+UNIFFI_LINUX_IRONFOX_REVISION='3'
+UNIFFI_OSX_IRONFOX_COMMIT='ec829cd1df6cf08618e0c7a3594776a9cc6a90e3'
+UNIFFI_OSX_IRONFOX_REVISION='3'
+WASI_LINUX_IRONFOX_COMMIT='6a1e702c91d18666944676aa7568dff7540f1c84'
+WASI_LINUX_IRONFOX_REVISION='3'
+WASI_OSX_IRONFOX_COMMIT='c0e40b4c08752fc1335ef6e8247e4c840ed4bef4'
+WASI_OSX_IRONFOX_REVISION='2'
 
 # Configuration
 ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ENV_SH="$ROOTDIR/scripts/env_local.sh"
-EXTERNALDIR="$ROOTDIR/external"
-BUILDDIR="$ROOTDIR/build"
-DOWNLOADSDIR="$EXTERNALDIR/downloads"
-PATCHDIR="$ROOTDIR/patches"
-ANDROIDSDKDIR="$EXTERNALDIR/android-sdk"
-APPSERVICESDIR="$EXTERNALDIR/application-services"
-BUNDLETOOLDIR="$EXTERNALDIR/bundletool"
-GECKODIR="$EXTERNALDIR/gecko"
-ANDROID_COMPONENTS="$GECKODIR/mobile/android/android-components"
-FENIX="$GECKODIR/mobile/android/fenix"
-GLEANDIR="$EXTERNALDIR/glean"
-GMSCOREDIR="$EXTERNALDIR/gmscore"
-GRADLEDIR="$EXTERNALDIR/gradle"
-PREBUILDSDIR="$EXTERNALDIR/prebuilds"
-UNIFFIDIR="$EXTERNALDIR/uniffi"
-WASISDKDIR="$EXTERNALDIR/wasi-sdk"
-
-# Use GNU Sed on macOS instead of the built-in sed, due to differences in syntax
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    SED=gsed
-else
-    SED=sed
-fi
+ENV_SH="${ROOTDIR}/scripts/env_local.sh"
+EXTERNALDIR="${ROOTDIR}/external"
+BUILDDIR="${ROOTDIR}/build"
+OUTPUTSDIR="${BUILDDIR}/outputs"
+DOWNLOADSDIR="${EXTERNALDIR}/downloads"
+PATCHDIR="${ROOTDIR}/patches"
+ANDROIDSDKDIR="${EXTERNALDIR}/android-sdk"
+APPSERVICESDIR="${EXTERNALDIR}/application-services"
+BUNDLETOOLDIR="${EXTERNALDIR}/bundletool"
+GECKODIR="${EXTERNALDIR}/gecko"
+ANDROID_COMPONENTS="${GECKODIR}/mobile/android/android-components"
+FENIX="${GECKODIR}/mobile/android/fenix"
+GLEANDIR="${EXTERNALDIR}/glean"
+GMSCOREDIR="${EXTERNALDIR}/gmscore"
+GRADLEDIR="${EXTERNALDIR}/gradle"
+L10NDIR="${EXTERNALDIR}/l10n-central"
+UNIFIEDPUSHACDIR="${EXTERNALDIR}/unifiedpush-ac"
+PREBUILDSDIR="${EXTERNALDIR}/prebuilds"
+UNIFFIDIR="${EXTERNALDIR}/uniffi"
+WASISDKDIR="${EXTERNALDIR}/wasi-sdk"

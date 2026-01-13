@@ -75,4 +75,5 @@
     <string name="preference_autoplay_policy_transient">Geçici (Varsayılan)</string>
     <string name="preference_autoplay_policy_click_to_play">Oynatmak için tıkla</string>
     <string name="preference_always_use_private_browsing">Her zaman gizli tarama modunu kullan</string>
+    <string name="wallpaper_collection_fennec_description">Fennec F-Droid\'den arka planlar. %s</string>
 </resources>

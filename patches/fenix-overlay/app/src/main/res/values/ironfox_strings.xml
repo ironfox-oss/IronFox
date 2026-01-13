@@ -109,6 +109,10 @@
     <!-- Toast shown after confirming the UnifiedPush configuration -->
     <string name="toast_change_unifiedpush_done">UnifiedPush setting modified. Quitting the application to apply changes…</string>
 
+    <!-- Wallpapers -->
+    <string name="wallpaper_collection_fennec" translatable="false">Fennec F-Droid</string>
+    <string name="wallpaper_collection_fennec_description">Wallpapers from Fennec F-Droid. %s</string>
+
     <!-- WebAssembly -->
     <string name="preference_wasm_enabled">Enable WebAssembly (WASM)</string>
 
@@ -143,4 +147,7 @@
 
     <!-- Onboarding - Actions -->
     <string name="onboarding_action_retry">Retry</string>
+
+    <!-- OLED Theme -->
+    <string name="preference_oled_theme" translatable="false">OLED</string>
 </resources>

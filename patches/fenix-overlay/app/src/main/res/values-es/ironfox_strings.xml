@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="restart_required_summary">Cambiar esta configuración reiniciará el navegador</string>
-    <string name="unsupported_summary">Esta configuración NO es recomendada ni soportada. Proceda con precaución.</string>
+    <string name="restart_required_summary">Cambiar este ajuste reiniciará el navegador</string>
+    <string name="unsupported_summary">Este ajuste NO es recomendado ni soportado. Proceda con precaución.</string>
     <string name="if_preferences">Ajustes de IronFox</string>
     <string name="if_preferences_misc">Misceláneos</string>
     <string name="if_preferences_privacy">Privacidad</string>
@@ -74,4 +74,6 @@
     <string name="preference_autoplay_policy_sticky">Fijo</string>
     <string name="preference_autoplay_policy_transient">Transitorio (Predeterminado)</string>
     <string name="preference_autoplay_policy_click_to_play">Clic-para-reproducir</string>
+    <string name="preference_always_use_private_browsing">Usar siempre el modo de navegación privada</string>
+    <string name="wallpaper_collection_fennec_description">Wallpaper proveniente de Fennec F-Driod. %s</string>
 </resources>

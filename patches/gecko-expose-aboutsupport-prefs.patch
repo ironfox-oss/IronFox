@@ -1,5 +1,5 @@
 diff --git a/toolkit/modules/Troubleshoot.sys.mjs b/toolkit/modules/Troubleshoot.sys.mjs
-index 3709150138..478de2453a 100644
+index 370915013815..478de2453a45 100644
 --- a/toolkit/modules/Troubleshoot.sys.mjs
 +++ b/toolkit/modules/Troubleshoot.sys.mjs
 @@ -37,7 +37,10 @@ const PREFS_FOR_DISPLAY = [

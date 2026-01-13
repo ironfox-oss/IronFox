@@ -1,5 +1,5 @@
 diff --git a/mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt b/mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
-index 3763da85ad..ebcb11af85 100644
+index 3763da85adb5..ebcb11af8588 100644
 --- a/mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
 +++ b/mobile/android/android-components/components/browser/icons/src/main/java/mozilla/components/browser/icons/preparer/TippyTopIconPreparer.kt
 @@ -60,7 +60,7 @@ class TippyTopIconPreparer(

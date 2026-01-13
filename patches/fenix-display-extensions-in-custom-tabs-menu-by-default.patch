@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 276ad8cf1df19..5a3b2e4327234 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2328,7 +2328,7 @@ class Settings(
+      */
+     var shouldShowCustomTabExtensions by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_should_show_custom_tab_extensions),
+-        default = false,
++        default = true,
+     )
+ 
+     /**

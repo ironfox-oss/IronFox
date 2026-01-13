@@ -1,0 +1,128 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
+index 028be832d6d7..f7d690127753 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/DohSettingsProvider.kt
+@@ -37,17 +37,67 @@ internal class DefaultDohSettingsProvider(
+ 
+     private val cloudflare = Provider.BuiltIn(
+         url = cloudflareUri,
+-        name = "Cloudflare",
+-        default = dohDefaultProviderUrl.isBlank() || dohDefaultProviderUrl == cloudflareUri,
++        name = "Cloudflare 🇺🇸",
++        default = dohDefaultProviderUrl == cloudflareUri,
+     )
+     private val nextDns = Provider.BuiltIn(
+         url = nextDnsUri,
+-        name = "NextDNS",
++        name = "NextDNS 🇺🇸",
+         default = dohDefaultProviderUrl == nextDnsUri,
+     )
++    private val quad9 = Provider.BuiltIn(
++        url = quad9Uri,
++        name = "Quad9 🇨🇭",
++        default = dohDefaultProviderUrl.isNullOrBlank() || dohDefaultProviderUrl == quad9Uri,
++    )
++    private val adGuardStandard = Provider.BuiltIn(
++        url = adGuardStandardUri,
++        name = "AdGuard 🇨🇾",
++        default = dohDefaultProviderUrl == adGuardStandardUri,
++    )
++    private val adGuardUnfiltered = Provider.BuiltIn(
++        url = adGuardUnfilteredUri,
++        name = "AdGuard (Unfiltered) 🇨🇾",
++        default = dohDefaultProviderUrl == adGuardUnfilteredUri,
++    )
++    private val cloudflareMalware = Provider.BuiltIn(
++        url = cloudflareMalwareUri,
++        name = "Cloudflare (Malware Protection) 🇺🇸",
++        default = dohDefaultProviderUrl == cloudflareMalwareUri,
++    )
++    private val dns4EuAdBlocking = Provider.BuiltIn(
++        url = dns4EuAdBlockingUri,
++        name = "DNS4EU (Ad Blocking) 🇨🇿",
++        default = dohDefaultProviderUrl == dns4EuAdBlockingUri,
++    )
++    private val dns4EuProtective = Provider.BuiltIn(
++        url = dns4EuProtectiveUri,
++        name = "DNS4EU (Protective) 🇨🇿",
++        default = dohDefaultProviderUrl == dns4EuProtectiveUri,
++    )
++    private val dns4EuUnfiltered = Provider.BuiltIn(
++        url = dns4EuUnfilteredUri,
++        name = "DNS4EU (Unfiltered) 🇨🇿",
++        default = dohDefaultProviderUrl == dns4EuUnfilteredUri,
++    )
++    private val mullvadBase = Provider.BuiltIn(
++        url = mullvadBaseUri,
++        name = "Mullvad (Base) 🇸🇪",
++        default = dohDefaultProviderUrl == mullvadBaseUri,
++    )
++    private val mullvadUnfiltered = Provider.BuiltIn(
++        url = mullvadUnfilteredUri,
++        name = "Mullvad (Unfiltered) 🇸🇪",
++        default = dohDefaultProviderUrl == mullvadUnfilteredUri,
++    )
++    private val wikimedia = Provider.BuiltIn(
++        url = wikimediaUri,
++        name = "Wikimedia 🇺🇸",
++        default = dohDefaultProviderUrl == wikimediaUri,
++    )
+     private val providerUrl = settings.dohProviderUrl
+     private val custom = Provider.Custom(
+-        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri) {
++        url = if (providerUrl != cloudflareUri && providerUrl != nextDnsUri && providerUrl != quad9Uri && providerUrl != adGuardStandardUri && providerUrl != adGuardUnfilteredUri && providerUrl != cloudflareMalwareUri && providerUrl != dns4EuAdBlockingUri && providerUrl != dns4EuProtectiveUri && providerUrl != dns4EuUnfilteredUri && providerUrl != mullvadBaseUri && providerUrl != mullvadUnfilteredUri && providerUrl != wikimediaUri) {
+             providerUrl
+         } else {
+             ""
+@@ -55,8 +105,18 @@ internal class DefaultDohSettingsProvider(
+     )
+ 
+     override fun getDefaultProviders(): List<Provider> = listOf(
++        quad9,
++        adGuardStandard,
++        adGuardUnfiltered,
++        cloudflareMalware,
+         cloudflare,
++        dns4EuAdBlocking,
++        dns4EuProtective,
++        dns4EuUnfiltered,
++        mullvadBase,
++        mullvadUnfiltered,
+         nextDns,
++        wikimedia,
+         custom,
+     )
+ 
+@@ -79,6 +139,16 @@ internal class DefaultDohSettingsProvider(
+                 when (settings.dohProviderUrl) {
+                     cloudflareUri -> cloudflare
+                     nextDnsUri -> nextDns
++                    quad9Uri -> quad9
++                    adGuardStandardUri -> adGuardStandard
++                    adGuardUnfilteredUri -> adGuardUnfiltered
++                    cloudflareMalwareUri -> cloudflareMalware
++                    dns4EuAdBlockingUri -> dns4EuAdBlocking
++                    dns4EuProtectiveUri -> dns4EuProtective
++                    dns4EuUnfilteredUri -> dns4EuUnfiltered
++                    mullvadBaseUri -> mullvadBase
++                    mullvadUnfilteredUri -> mullvadUnfiltered
++                    wikimediaUri -> wikimedia
+                     "" -> getDefaultProviders().first()
+                     else -> custom
+                 }
+@@ -122,5 +192,15 @@ internal class DefaultDohSettingsProvider(
+ 
+         @VisibleForTesting
+         val nextDnsUri = "https://firefox.dns.nextdns.io/"
++        val quad9Uri = "https://dns.quad9.net/dns-query"
++        val adGuardStandardUri = "https://dns.adguard-dns.com/dns-query"
++        val adGuardUnfilteredUri = "https://unfiltered.adguard-dns.com/dns-query"
++        val cloudflareMalwareUri = "https://security.cloudflare-dns.com/dns-query"
++        val dns4EuAdBlockingUri = "https://noads.joindns4.eu/dns-query"
++        val dns4EuProtectiveUri = "https://protective.joindns4.eu/dns-query"
++        val dns4EuUnfilteredUri = "https://unfiltered.joindns4.eu/dns-query"
++        val mullvadBaseUri = "https://base.dns.mullvad.net/dns-query"
++        val mullvadUnfilteredUri = "https://dns.mullvad.net/dns-query"
++        val wikimediaUri = "https://wikimedia-dns.org/dns-query"
+     }
+ }

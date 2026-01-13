@@ -1,5 +1,5 @@
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-index e15b03c0f6..dffb8a7e62 100644
+index 358fcce396431..ddd8dc656b774 100644
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
 @@ -873,13 +873,13 @@ function getSignedStatus(aRv, aCert, aAddonID) {

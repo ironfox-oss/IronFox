@@ -3,14 +3,12 @@
 package mozilla.telemetry.glean.scheduler
 
 import android.content.Context
-import androidx.annotation.VisibleForTesting
 import androidx.work.Constraints
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 internal fun buildConstraints(): Constraints = Constraints.Builder()
     .build()
 

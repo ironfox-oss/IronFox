@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-index 6012a322b8..48e6a97eff 100644
+index 6012a322b8fb..48e6a97eff24 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
 @@ -168,7 +168,11 @@ enum class PhoneFeature(val androidPermissionsList: Array<String>) : Parcelable
@@ -16,10 +16,10 @@ index 6012a322b8..48e6a97eff 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..a579c36436 100644
+index 276ad8cf1df1..0c7c7daddb03 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1593,7 +1593,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1644,7 +1644,7 @@ class Settings(
       * either [AUTOPLAY_ALLOW_ALL] or [AUTOPLAY_BLOCK_ALL]. Because of this, we are forced to save
       * the user selected setting as well.
       */
@@ -28,7 +28,7 @@ index 35d4c5a9c0..a579c36436 100644
  
      private fun getSitePermissionsPhoneFeatureAutoplayAction(
          feature: PhoneFeature,
-@@ -1612,9 +1612,9 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1663,9 +1663,9 @@ class Settings(
  
      fun getSitePermissionsCustomSettingsRules(): SitePermissionsRules {
          return SitePermissionsRules(
@@ -40,7 +40,7 @@ index 35d4c5a9c0..a579c36436 100644
              camera = getSitePermissionsPhoneFeatureAction(PhoneFeature.CAMERA),
              autoplayAudible = getSitePermissionsPhoneFeatureAutoplayAction(
                  feature = PhoneFeature.AUTOPLAY_AUDIBLE,
-@@ -1622,13 +1622,13 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1673,13 +1673,13 @@ class Settings(
              ),
              autoplayInaudible = getSitePermissionsPhoneFeatureAutoplayAction(
                  feature = PhoneFeature.AUTOPLAY_INAUDIBLE,

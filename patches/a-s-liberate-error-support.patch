@@ -1,0 +1,35 @@
+diff --git a/components/init_rust_components/android/build.gradle b/components/init_rust_components/android/build.gradle
+index c74832968..8cdde766c 100644
+--- a/components/init_rust_components/android/build.gradle
++++ b/components/init_rust_components/android/build.gradle
+@@ -10,7 +10,7 @@ android {
+ }
+ 
+ dependencies {
+-    implementation project(':errorsupport')
++//    implementation project(':errorsupport')
+ }
+ 
+ ext.configureUniFFIBindgen("init_rust_components")
+diff --git a/components/init_rust_components/android/src/main/java/mozilla/appservices/RustComponentsInitializer.kt b/components/init_rust_components/android/src/main/java/mozilla/appservices/RustComponentsInitializer.kt
+index 045af0cd5..07abf4fff 100644
+--- a/components/init_rust_components/android/src/main/java/mozilla/appservices/RustComponentsInitializer.kt
++++ b/components/init_rust_components/android/src/main/java/mozilla/appservices/RustComponentsInitializer.kt
+@@ -4,7 +4,7 @@
+ 
+ package mozilla.appservices
+ 
+-import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
++// import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
+ import mozilla.appservices.init_rust_components.initialize
+ import org.mozilla.appservices.init_rust_components.BuildConfig
+ 
+@@ -14,7 +14,7 @@ object RustComponentsInitializer {
+         // Rust components must be initialized at the very beginning, before any other Rust call, ...
+         initialize()
+ 
+-        RustComponentsErrorTelemetry.register()
++//        RustComponentsErrorTelemetry.register()
+ 
+         // This code was originally in the `Megazord.init` that was moved here to have the initialize
+         // done in this particular sequence without needing to have the embedder have to do it within

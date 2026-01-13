@@ -1,35 +1,57 @@
 #!/bin/bash
 
+source "$(dirname $0)/env_local.sh"
+
 RED="\033[0;31m"
 GREEN="\033[0;32m"
 NC="\033[0m"
 
+declare -a PATCH_CMD
+PATCH_CMD=(patch -p1 -f --fuzz=3 --no-backup-if-mismatch)
+
 declare -a PATCH_FILES
 declare -a AS_PATCH_FILES
 declare -a GLEAN_PATCH_FILES
+declare -a UP_AC_PATCH_FILES
 
 PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/patches.yaml))
 AS_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/a-s-patches.yaml))
 GLEAN_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/glean-patches.yaml))
+UP_AC_PATCH_FILES=($(yq '.patches[].file' "${IRONFOX_UP_AC}"/patches/patches.yaml))
 
 check_patch() {
-    patch="$patches/$1"
-    if ! [[ -f "$patch" ]]; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "'$patch' does not exist or is not a file"
+    patch="${patches}/$1"
+    if ! [[ -f "${patch}" ]]; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "'${patch}' does not exist or is not a file"
         return 1
     fi
 
-    if ! patch -p1 -f --dry-run <"$patch"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Incompatible patch: '$patch'"
+    if ! "${PATCH_CMD[@]}" --dry-run <"${patch}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Incompatible patch: '${patch}'"
+        return 1
+    fi
+}
+
+up_ac_check_patch() {
+    patch="${IRONFOX_UP_AC}/patches/$1"
+    if ! [[ -f "${patch}" ]]; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "'${patch}' does not exist or is not a file"
+        return 1
+    fi
+
+    if ! "${PATCH_CMD[@]}" --dry-run <"${patch}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Incompatible patch: '${patch}'"
         return 1
     fi
 }
 
 check_patches() {
     for patch in "${PATCH_FILES[@]}"; do
-        if ! check_patch "$patch"; then
+        if ! check_patch "${patch}"; then
             return 1
         fi
     done
@@ -37,7 +59,7 @@ check_patches() {
 
 a-s_check_patches() {
     for patch in "${AS_PATCH_FILES[@]}"; do
-        if ! check_patch "$patch"; then
+        if ! check_patch "${patch}"; then
             return 1
         fi
     done
@@ -45,7 +67,15 @@ a-s_check_patches() {
 
 glean_check_patches() {
     for patch in "${GLEAN_PATCH_FILES[@]}"; do
-        if ! check_patch "$patch"; then
+        if ! check_patch "${patch}"; then
+            return 1
+        fi
+    done
+}
+
+up_ac_check_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
+        if ! up_ac_check_patch "${patch}"; then
             return 1
         fi
     done
@@ -53,47 +83,65 @@ glean_check_patches() {
 
 test_patches() {
     for patch in "${PATCH_FILES[@]}"; do
-        if ! check_patch "$patch" >/dev/null 2>&1; then
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+        if ! check_patch "${patch}" >/dev/null 2>&1; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         else
-            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "$patch")"
+            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "${patch}")"
         fi
     done
 }
 
 a-s_test_patches() {
     for patch in "${AS_PATCH_FILES[@]}"; do
-        if ! check_patch "$patch" >/dev/null 2>&1; then
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+        if ! check_patch "${patch}" >/dev/null 2>&1; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         else
-            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "$patch")"
+            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "${patch}")"
         fi
     done
 }
 
 glean_test_patches() {
     for patch in "${GLEAN_PATCH_FILES[@]}"; do
-        if ! check_patch "$patch" >/dev/null 2>&1; then
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+        if ! check_patch "${patch}" >/dev/null 2>&1; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         else
-            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "$patch")"
+            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "${patch}")"
+        fi
+    done
+}
+
+up_ac_test_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
+        if ! up_ac_check_patch "${patch}" >/dev/null 2>&1; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        else
+            printf "${GREEN}✓ %-45s: OK${NC}\n" "$(basename "${patch}")"
         fi
     done
 }
 
 apply_patch() {
     name="$1"
-    echo "Applying patch: $name"
-    check_patch "$name" || return 1
-    patch -p1 --no-backup-if-mismatch <"$patches/$name"
+    echo "Applying patch: ${name}"
+    check_patch "${name}" || return 1
+    "${PATCH_CMD[@]}" <"${patches}/${name}"
+    return $?
+}
+
+up_ac_apply_patch() {
+    name="$1"
+    echo "Applying patch: ${name}"
+    up_ac_check_patch "${name}" || return 1
+    "${PATCH_CMD[@]}" <"${IRONFOX_UP_AC}/patches/${name}"
     return $?
 }
 
 apply_patches() {
     for patch in "${PATCH_FILES[@]}"; do
-        if ! apply_patch "$patch"; then
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-            echo "Failed to apply $patch"
+        if ! apply_patch "${patch}"; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+            echo "Failed to apply ${patch}"
             return 1
         fi
     done
@@ -101,9 +149,9 @@ apply_patches() {
 
 a-s_apply_patches() {
     for patch in "${AS_PATCH_FILES[@]}"; do
-        if ! apply_patch "$patch"; then
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-            echo "Failed to apply $patch"
+        if ! apply_patch "${patch}"; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+            echo "Failed to apply ${patch}"
             return 1
         fi
     done
@@ -111,9 +159,19 @@ a-s_apply_patches() {
 
 glean_apply_patches() {
     for patch in "${GLEAN_PATCH_FILES[@]}"; do
-        if ! apply_patch "$patch"; then
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-            echo "Failed to apply $patch"
+        if ! apply_patch "${patch}"; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+            echo "Failed to apply ${patch}"
+            return 1
+        fi
+    done
+}
+
+up_ac_apply_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
+        if ! up_ac_apply_patch "${patch}"; then
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+            echo "Failed to apply ${patch}"
             return 1
         fi
     done
@@ -121,28 +179,34 @@ glean_apply_patches() {
 
 list_patches() {
     for patch in "${PATCH_FILES[@]}"; do
-        echo "$patch"
+        echo "${patch}"
     done
 }
 
 a-s_list_patches() {
     for patch in "${AS_PATCH_FILES[@]}"; do
-        echo "$patch"
+        echo "${patch}"
     done
 }
 
 glean_list_patches() {
     for patch in "${GLEAN_PATCH_FILES[@]}"; do
-        echo "$patch"
+        echo "${patch}"
+    done
+}
+
+up_ac_list_patches() {
+    for patch in "${UP_AC_PATCH_FILES[@]}"; do
+        echo "${patch}"
     done
 }
 
 slugify() {
     local input="$1"
-    echo "$input" |                  \
+    echo "${input}" |                  \
         tr '[:upper:]' '[:lower:]' | \
-        "$SED" -E 's/[^a-z0-9]+/-/g' |  \
-        "$SED" -E 's/^-+|-+$//g'
+        "${IRONFOX_SED}" -E 's/[^a-z0-9]+/-/g' |  \
+        "${IRONFOX_SED}" -E 's/^-+|-+$//g'
 }
 
 # Function to rebase a single patch file atomically
@@ -153,16 +217,16 @@ rebase_patch() {
     local patch_file="$3"
 
     # Validate inputs
-    if [[ -z "$compatible_tag" || -z "$target_tag" || -z "$patch_file" ]]; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+    if [[ -z "${compatible_tag}" || -z "${target_tag}" || -z "${patch_file}" ]]; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "Missing required parameters" >&2
         echo "Usage: rebase_patch <compatible_tag> <target_tag> <patch_file_path>" >&2
         return 1
     fi
 
-    if [[ ! -f "$patch_file" ]]; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Patch file '$patch_file' does not exist" >&2
+    if [[ ! -f "${patch_file}" ]]; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Patch file '${patch_file}' does not exist" >&2
         return 1
     fi
 
@@ -174,7 +238,7 @@ rebase_patch() {
     original_stash_count=$(git stash list | wc -l)
 
     local patch_name
-    patch_name=$(basename "$patch_file" .patch)
+    patch_name=$(basename "${patch_file}" .patch)
 
     local branch_name="rebase-${patch_name}"
 
@@ -190,17 +254,17 @@ rebase_patch() {
         fi
 
         # Switch back to original branch if it exists
-        if [[ -n "$original_branch" && "$original_branch" != "HEAD" ]]; then
-            git checkout "$original_branch" 2>/dev/null
+        if [[ -n "${original_branch}" && "${original_branch}" != "HEAD" ]]; then
+            git checkout "${original_branch}" 2>/dev/null
         fi
 
         # Delete the temporary branch if it was created
-        git branch -D "$branch_name" 2>/dev/null
+        git branch -D "${branch_name}" 2>/dev/null
 
         # Restore stashed changes if any were created
         local current_stash_count
         current_stash_count=$(git stash list | wc -l)
-        if [[ $current_stash_count -gt $original_stash_count ]]; then
+        if [[ "${current_stash_count}" -gt "${original_stash_count}" ]]; then
             git stash pop 2>/dev/null
         fi
 
@@ -211,57 +275,57 @@ rebase_patch() {
     if ! git diff-index --quiet HEAD --; then
         echo "Stashing uncommitted changes..."
         if ! git stash push -m "Temporary stash for patch rebase"; then
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
             echo "Failed to stash changes" >&2
             return 1
         fi
     fi
 
     # Check if tags exist
-    if ! git rev-parse --verify "$compatible_tag" >/dev/null 2>&1; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Compatible tag '$compatible_tag' does not exist" >&2
+    if ! git rev-parse --verify "${compatible_tag}" >/dev/null 2>&1; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Compatible tag '${compatible_tag}' does not exist" >&2
         cleanup_and_rollback
         return 1
     fi
 
-    if ! git rev-parse --verify "$target_tag" >/dev/null 2>&1; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Target tag '$target_tag' does not exist" >&2
+    if ! git rev-parse --verify "${target_tag}" >/dev/null 2>&1; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Target tag '${target_tag}' does not exist" >&2
         cleanup_and_rollback
         return 1
     fi
 
     # Checkout the compatible tag
-    echo "Checking out compatible tag '$compatible_tag'..."
-    if ! git checkout "$compatible_tag"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Failed to checkout compatible tag '$compatible_tag'" >&2
+    echo "Checking out compatible tag '${compatible_tag}'..."
+    if ! git checkout "${compatible_tag}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Failed to checkout compatible tag '${compatible_tag}'" >&2
         cleanup_and_rollback
         return 1
     fi
 
     # Create and switch to new branch
-    echo "Creating branch '$branch_name'..."
-    if ! git checkout -b "$branch_name"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Failed to create branch '$branch_name'" >&2
+    echo "Creating branch '${branch_name}'..."
+    if ! git checkout -b "${branch_name}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Failed to create branch '${branch_name}'" >&2
         cleanup_and_rollback
         return 1
     fi
 
     # Apply the patch
-    echo "Applying patch '$patch_file'..."
-    if ! git apply "$patch_file"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Failed to apply '$patch_file'" >&2
+    echo "Applying patch '${patch_file}'..."
+    if ! git apply "${patch_file}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Failed to apply '${patch_file}'" >&2
         cleanup_and_rollback
         return 1
     fi
 
     # Stage all changes
     if ! git add .; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "Failed to stage changes" >&2
         cleanup_and_rollback
         return 1
@@ -269,20 +333,20 @@ rebase_patch() {
 
     # Commit the changes
     local commit_message
-    commit_message="Apply patch $(basename "$patch_file") - rebased to $target_tag"
+    commit_message="Apply patch $(basename "${patch_file}") - rebased to ${target_tag}"
     echo "Committing changes..."
-    if ! git commit -m "$commit_message"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+    if ! git commit -m "${commit_message}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "Failed to commit changes" >&2
         cleanup_and_rollback
         return 1
     fi
 
     # Rebase to target tag
-    echo "Rebasing to target tag '$target_tag'..."
+    echo "Rebasing to target tag '${target_tag}'..."
     if ! git rebase "$target_tag"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-        echo "Failed to rebase to target tag '$target_tag'" >&2
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+        echo "Failed to rebase to target tag '${target_tag}'" >&2
         cleanup_and_rollback
         return 1
     fi
@@ -291,42 +355,42 @@ rebase_patch() {
     echo "Updating patch file..."
     local temp_patch
     temp_patch=$(mktemp)
-    if ! git format-patch -1 --stdout >"$temp_patch"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+    if ! git format-patch -1 --stdout >"${temp_patch}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patc}h")"
         echo "Failed to generate new patch" >&2
-        rm -f "$temp_patch"
+        rm -f "${temp_patch}"
         cleanup_and_rollback
         return 1
     fi
 
     # Atomically replace the original patch file
-    if ! mv "$temp_patch" "$patch_file"; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+    if ! mv "${temp_patch}" "${patch_file}"; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "Failed to update patch file" >&2
-        rm -f "$temp_patch"
+        rm -f "${temp_patch}"
         cleanup_and_rollback
         return 1
     fi
 
     # Cleanup: switch back to original branch and delete temporary branch
-    if [[ -n "$original_branch" && "$original_branch" != "HEAD" ]]; then
-        git checkout "$original_branch"
+    if [[ -n "${original_branch}" && "${original_branch}" != "HEAD" ]]; then
+        git checkout "${original_branch}"
     else
-        git checkout "$target_tag"
+        git checkout "${target_tag}"
     fi
 
-    git branch -D "$branch_name"
+    git branch -D "${branch_name}"
 
     # Restore stashed changes if any
     local current_stash_count
     current_stash_count=$(git stash list | wc -l)
-    if [[ $current_stash_count -gt $original_stash_count ]]; then
+    if [[ "${current_stash_count}" -gt "${original_stash_count}" ]]; then
         echo "Restoring stashed changes..."
         git stash pop
     fi
 
-    printf "${GREEN}✓ %-45s: SUCCESS${NC}\n" "$(basename "$patch")"
-    echo "Rebased patch '$patch_file' from '$compatible_tag' to '$target_tag'"
+    printf "${GREEN}✓ %-45s: SUCCESS${NC}\n" "$(basename "${patch}")"
+    echo "Rebased patch '${patch_file}' from '${compatible_tag}' to '${target_tag}'"
     return 0
 }
 
@@ -337,8 +401,8 @@ rebase_patches() {
     local target_tag="$2"
 
     # Validate inputs
-    if [[ -z "$compatible_tag" || -z "$target_tag" ]]; then
-        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
+    if [[ -z "${compatible_tag}" || -z "${target_tag}" ]]; then
+        printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "Missing required parameters" >&2
         echo "Usage: rebase_patches <compatible_tag> <target_tag>" >&2
         return 1
@@ -349,19 +413,19 @@ rebase_patches() {
     local failed_patches=()
 
     echo "Starting batch rebase of ${#PATCH_FILES[@]} patch files..."
-    echo "Compatible tag: $compatible_tag"
-    echo "Target tag: $target_tag"
+    echo "Compatible tag: ${compatible_tag}"
+    echo "Target tag: ${target_tag}"
     echo "----------------------------------------"
 
     for patch_file in "${PATCH_FILES[@]}"; do
-        echo "Processing: $patch_file"
+        echo "Processing: ${patch_file}"
 
-        if rebase_patch "$compatible_tag" "$target_tag" "$patch_file"; then
-            printf "${GREEN}✓ %-45s: SUCCESS${NC}\n" "$(basename "$patch")"
+        if rebase_patch "${compatible_tag}" "${target_tag}" "${patch_file}"; then
+            printf "${GREEN}✓ %-45s: SUCCESS${NC}\n" "$(basename "${patch}")"
             ((success_count++))
         else
-            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "$patch")"
-            failed_patches+=("$patch_file")
+            printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
+            failed_patches+=("${patch_file}")
             ((failure_count++))
         fi
         echo "----------------------------------------"
@@ -369,13 +433,13 @@ rebase_patches() {
 
     # Summary
     echo "Batch rebase completed:"
-    echo "  Successful: $success_count"
-    echo "  Failed: $failure_count"
+    echo "  Successful: ${success_count}"
+    echo "  Failed: ${failure_count}"
 
-    if [[ $failure_count -gt 0 ]]; then
+    if [[ "${failure_count}" -gt 0 ]]; then
         echo "Failed patches:"
         for failed_patch in "${failed_patches[@]}"; do
-            echo "  - $failed_patch"
+            echo "  - ${failed_patch}"
         done
         return 1
     fi

@@ -1,27 +1,23 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
-index dbb3d349e9..295087f161 100644
+index dbb3d349e94b..1da80345c565 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/addons/InstalledAddonDetailsFragment.kt
-@@ -293,6 +293,11 @@ class InstalledAddonDetailsFragment : Fragment() {
-         val switch = providePrivateBrowsingSwitch()
-         switch.isVisible = addon.isEnabled()
+@@ -34,6 +34,7 @@ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.runIfFragmentIsAttached
+ import org.mozilla.fenix.ext.showToolbar
+ import mozilla.components.feature.addons.R as addonsR
++import org.ironfoxoss.ironfox.utils.IronFoxAddons
  
-+        if (addon.id == "fxa@mozac.org" || addon.id == "icons@mozac.org" || addon.id == "readerview@mozac.org" || addon.id == "webcompat@mozilla.org") {
-+            switch.isVisible = false
-+            return
+ /**
+  * An activity to show the details of a installed add-on.
+@@ -155,6 +156,10 @@ class InstalledAddonDetailsFragment : Fragment() {
+         bindAllowInPrivateBrowsingSwitch()
+         bindRemoveButton()
+         bindReportButton()
++        if (IronFoxAddons.isBuiltIn(addon)) {
++             providePrivateBrowsingSwitch().isVisible = false
++             binding.removeAddOn.isVisible = false
 +        }
-+
-         if (addon.incognito == Addon.Incognito.NOT_ALLOWED) {
-             switch.isChecked = false
-             switch.isEnabled = false
-@@ -393,6 +398,10 @@ class InstalledAddonDetailsFragment : Fragment() {
-     }
- 
-     private fun bindRemoveButton() {
-+        if (addon.id == "fxa@mozac.org" || addon.id == "icons@mozac.org" || addon.id == "readerview@mozac.org" || addon.id == "webcompat@mozilla.org") {
-+            binding.removeAddOn.isVisible = false
-+            return
-+        }
-         binding.removeAddOn.setOnClickListener {
-             setAllInteractiveViewsClickable(binding, false)
-             requireContext().components.addonManager.uninstallAddon(
+         context?.let {
+             val messageBarWarningView =
+                 binding.root.findViewById<View>(addonsR.id.add_on_messagebar_warning)

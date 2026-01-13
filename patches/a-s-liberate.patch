@@ -1,5 +1,5 @@
 diff --git a/.buildconfig-android.yml b/.buildconfig-android.yml
-index ed1e132..9c0f4ef 100644
+index ed1e132e9..9c0f4ef3d 100644
 --- a/.buildconfig-android.yml
 +++ b/.buildconfig-android.yml
 @@ -1,12 +1,12 @@
@@ -58,7 +58,7 @@ index ed1e132..9c0f4ef 100644
      path: components/fxa-client/android
      artifactId: fxaclient
 diff --git a/build.gradle b/build.gradle
-index 215f323..0194e8c 100644
+index 215f3234a..0194e8c34 100644
 --- a/build.gradle
 +++ b/build.gradle
 @@ -185,7 +185,7 @@ if (useDownloadedLibs) {
@@ -71,7 +71,7 @@ index 215f323..0194e8c 100644
  }
  
 diff --git a/megazords/fenix-dylib/megazord_stub.c b/megazords/fenix-dylib/megazord_stub.c
-index b5111ef..bf512fb 100644
+index b5111efde..bf512fb45 100644
 --- a/megazords/fenix-dylib/megazord_stub.c
 +++ b/megazords/fenix-dylib/megazord_stub.c
 @@ -10,9 +10,9 @@
@@ -99,7 +99,7 @@ index b5111ef..bf512fb 100644
      ffi_init_rust_components_uniffi_contract_version();
      ffi_logins_uniffi_contract_version();
 diff --git a/megazords/full/src/lib.rs b/megazords/full/src/lib.rs
-index 62b1910..37912d8 100644
+index 62b191072..37912d82a 100644
 --- a/megazords/full/src/lib.rs
 +++ b/megazords/full/src/lib.rs
 @@ -9,10 +9,10 @@ use std::ffi::CString;
