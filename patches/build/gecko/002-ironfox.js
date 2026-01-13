@@ -46,6 +46,19 @@ pref("browser.ironfox.uBO.filterAuthorMode", "true");
 pref("browser.ironfox.uBO.uiPopupConfig", "+logger");
 pref("browser.ironfox.uBO.updateAssetBypassBrowserCache", "true");
 
+/// Configure Safe Browsing
+// Mozilla used to define these values at `all.js`, but seem to have unfortunately stopped doing so
+// Instead, for Android, these are usually set by GeckoView's `ContentBlocking.java`
+// We don't want to set them with that mechanism though, as it prevents users from being able to override those
+// prefs - so we need to set them here
+pref("browser.safebrowsing.provider.google.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
+pref("browser.safebrowsing.provider.google.pver", "2.2");
+pref("browser.safebrowsing.provider.google4.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
+pref("browser.safebrowsing.provider.google4.lists", "goog-badbinurl-proto,goog-downloadwhite-proto,goog-phish-proto,googpub-phish-proto,goog-malware-proto,goog-unwanted-proto,goog-harmful-proto");
+pref("browser.safebrowsing.provider.google4.pver", "4");
+pref("browser.safebrowsing.provider.google5.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
+pref("browser.safebrowsing.provider.google5.lists", "goog-badbinurl-proto,goog-downloadwhite-proto,goog-phish-proto,googpub-phish-proto,goog-malware-proto,goog-unwanted-proto,goog-harmful-proto");
+
 /// Clear FPP global overrides
 // We're hardening FPP internally with our own `RFPTargetsDefault.inc` file instead of setting them here, which makes it far easier for users to add their own overrides if desired (by using this preference).
 pref("privacy.fingerprintingProtection.overrides", ""); // [DEFAULT]
