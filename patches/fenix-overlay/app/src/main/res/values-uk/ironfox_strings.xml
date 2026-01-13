@@ -75,4 +75,5 @@
     <string name="preference_autoplay_policy_transient">Перехідний (за замовчуванням)</string>
     <string name="preference_autoplay_policy_click_to_play">Відтворення за натисканням</string>
     <string name="preference_always_use_private_browsing">Завжди використовувати режим анонімного перегляду</string>
+    <string name="wallpaper_collection_fennec_description">Шпалери від Fennec F-Droid. %s</string>
 </resources>

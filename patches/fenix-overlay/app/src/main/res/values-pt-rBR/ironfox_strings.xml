@@ -81,4 +81,5 @@
     <string name="preference_autoplay_policy_click_to_play">Clicar para reproduzir</string>
     <string name="preference_autoplay_policy_sticky">Adesivo</string>
     <string name="preference_always_use_private_browsing">Sempre usar o modo de navegação privativa</string>
+    <string name="wallpaper_collection_fennec_description">Papéis de parede do Fennec F-Droid. %s</string>
 </resources>
