@@ -3,8 +3,6 @@
 package mozilla.telemetry.glean.debug
 
 import android.app.Activity
-import android.content.ComponentName
-import android.os.Bundle
 
 class GleanDebugActivity : Activity() {
     companion object {
@@ -19,7 +17,5 @@ class GleanDebugActivity : Activity() {
         const val NEXT_ACTIVITY_TO_RUN = "startNext"
     }
 
-    private fun isActivityExported(targetActivity: ComponentName): Boolean = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {}
+    private fun isActivityExported(targetActivity: Any?): Boolean = false
 }

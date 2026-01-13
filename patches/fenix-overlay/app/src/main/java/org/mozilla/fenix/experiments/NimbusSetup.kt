@@ -8,7 +8,9 @@ import mozilla.components.service.nimbus.NimbusAppInfo
 import mozilla.components.service.nimbus.NimbusBuilder
 import org.json.JSONObject
 
-fun createNimbus(context: Context, urlString: String?): NimbusApi {
+fun createNimbus(context: Context, urlString: String?, remoteSettingsService: Any?): NimbusApi {
+    val serverSettings = null
+
     val appInfo = NimbusAppInfo(
         appName = "",
         channel = "",
@@ -20,13 +22,12 @@ fun createNimbus(context: Context, urlString: String?): NimbusApi {
         errorReporter = context::reportError
         initialExperiments = null
         timeoutLoadingExperiment = 200L
-        usePreviewCollection = false
         sharedPreferences = null
         isFirstRun = true
         featureManifest = null
         onFetchCallback = {}
         recordedContext = null
-    }.build(appInfo)
+    }.build(appInfo, serverSettings)
 }
 
 private fun Context.reportError(message: String, e: Throwable) {}

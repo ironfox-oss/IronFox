@@ -1,0 +1,90 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+index 5cc1da059f7d..e98f90b899d1 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
+@@ -84,12 +84,12 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
+ import mozilla.components.service.digitalassetlinks.local.StatementRelationChecker
+ import mozilla.components.service.location.LocationService
+ import mozilla.components.service.location.MozillaLocationService
+-import mozilla.components.service.mars.MarsTopSitesProvider
++/* import mozilla.components.service.mars.MarsTopSitesProvider
+ import mozilla.components.service.mars.MarsTopSitesRequestConfig
+ import mozilla.components.service.mars.NEW_TAB_TILE_1_PLACEMENT_KEY
+ import mozilla.components.service.mars.NEW_TAB_TILE_2_PLACEMENT_KEY
+ import mozilla.components.service.mars.Placement
+-import mozilla.components.service.mars.contile.ContileTopSitesUpdater
++import mozilla.components.service.mars.contile.ContileTopSitesUpdater */
+ import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
+ import mozilla.components.service.pocket.PocketStoriesConfig
+ import mozilla.components.service.pocket.PocketStoriesRequestConfig
+@@ -589,7 +589,7 @@ class Core(
+     }
+     val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
+ 
+-    val marsTopSitesProvider by lazyMonitored {
++/*    val marsTopSitesProvider by lazyMonitored {
+         MarsTopSitesProvider(
+             context = context,
+             client = client,
+@@ -618,13 +618,13 @@ class Core(
+             provider = marsTopSitesProvider,
+             frequency = Frequency(3, TimeUnit.HOURS),
+         )
+-    }
++    } */
+ 
+     val topSitesStorage by lazyMonitored {
+         DefaultTopSitesStorage(
+             pinnedSitesStorage = pinnedSiteStorage,
+             historyStorage = historyStorage,
+-            topSitesProvider = marsTopSitesProvider,
++            topSitesProvider = null,
+         )
+     }
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+index 78ea4a42c618..3a020a097e62 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
+@@ -125,7 +125,7 @@ import org.mozilla.fenix.ext.setNavigationIcon
+ import org.mozilla.fenix.ext.settings
+ import org.mozilla.fenix.extension.WebExtensionPromptFeature
+ import org.mozilla.fenix.home.HomeFragment
+-import org.mozilla.fenix.home.TopSitesRefresher
++// import org.mozilla.fenix.home.TopSitesRefresher
+ import org.mozilla.fenix.home.intent.AssistIntentProcessor
+ import org.mozilla.fenix.home.intent.CrashReporterIntentProcessor
+ import org.mozilla.fenix.home.intent.HomeDeepLinkIntentProcessor
+@@ -540,12 +540,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+             aboutHomeBinding,
+             crashReporterBinding,
+             defaultTopSitesBinding,
+-            TopSitesRefresher(
++/*            TopSitesRefresher(
+                 settings = settings(),
+                 topSitesProvider = components.core.marsTopSitesProvider,
+                 startupPathProvider = startupPathProvider,
+                 visualCompletenessQueue = components.performance.visualCompletenessQueue,
+-            ),
++            ), */
+             downloadSnackbar,
+             privateBrowsingLockFeature,
+             externalAppLinkStatusBinding,
+@@ -576,7 +576,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+         )
+ 
+         if (settings().showContileFeature) {
+-            components.core.contileTopSitesUpdater.startPeriodicWork()
++//            components.core.contileTopSitesUpdater.startPeriodicWork()
+         }
+ 
+         if (!settings().hiddenEnginesRestored) {
+@@ -844,7 +844,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+             ),
+         )
+ 
+-        components.core.contileTopSitesUpdater.stopPeriodicWork()
++//        components.core.contileTopSitesUpdater.stopPeriodicWork()
+         components.core.pocketStoriesService.stopPeriodicSponsoredStoriesRefresh()
+         components.core.pocketStoriesService.stopPeriodicContentRecommendationsRefresh()
+         components.core.pocketStoriesService.stopPeriodicSponsoredContentsRefresh()

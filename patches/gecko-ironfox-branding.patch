@@ -1,0 +1,13 @@
+diff --git a/toolkit/content/aboutSupport.js b/toolkit/content/aboutSupport.js
+index fb4fbac6ac59..7a2425d69fe5 100644
+--- a/toolkit/content/aboutSupport.js
++++ b/toolkit/content/aboutSupport.js
+@@ -108,7 +108,7 @@ var snapshotFormatters = {
+       "XREExeF",
+       Ci.nsIFile
+     ).path;
+-    $("supportLink").href = data.supportURL;
++    $("supportLink").href = "https://ironfoxoss.org/docs/faq/";
+     let version = AppConstants.MOZ_APP_VERSION_DISPLAY;
+     if (data.vendor) {
+       version += " (" + data.vendor + ")";

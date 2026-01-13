@@ -1,7 +1,9 @@
 
 DIRS += [
     "about",
+    "components",
     "dumps",
     "enterprisepolicies",
+    "locales",
     "prefs",
 ]

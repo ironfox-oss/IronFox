@@ -1,23 +1,23 @@
 diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
-index 11578f425f..a7f82da079 100644
+index 11578f425f7c..68f29fff7470 100644
 --- a/dom/canvas/ClientWebGLContext.cpp
 +++ b/dom/canvas/ClientWebGLContext.cpp
-@@ -880,6 +880,10 @@ bool ClientWebGLContext::CreateHostContext(const uvec2& requestedSize) {
+@@ -879,7 +879,9 @@ bool ClientWebGLContext::CreateHostContext(const uvec2& requestedSize) {
+         .size = requestedSize,
          .options = options,
      };
- 
+-
 +    if (ShouldResistFingerprinting(RFPTarget::DisableWebGL)) {
 +      return Err("WebGL is currently disabled.");
 +    }
-+
      // -
  
      auto useOop = IsWebglOutOfProcessEnabled();
 diff --git a/dom/canvas/WebGLContext.cpp b/dom/canvas/WebGLContext.cpp
-index d672c003c1..0e7205f1a0 100644
+index 05608061f239..bb136cf2cc36 100644
 --- a/dom/canvas/WebGLContext.cpp
 +++ b/dom/canvas/WebGLContext.cpp
-@@ -533,7 +533,7 @@ RefPtr<WebGLContext> WebGLContext::Create(HostWebGLContext* host,
+@@ -532,7 +532,7 @@ RefPtr<WebGLContext> WebGLContext::Create(HostWebGLContext* host,
    ScopedGfxFeatureReporter reporter("WebGL", forceEnabled);
  
    auto res = [&]() -> Result<RefPtr<WebGLContext>, std::string> {
@@ -27,10 +27,10 @@ index d672c003c1..0e7205f1a0 100644
      // TODO: When we have software webgl support we should use that instead.
      disabled |= gfxPlatform::InSafeMode();
 diff --git a/toolkit/components/resistfingerprinting/RFPTargets.inc b/toolkit/components/resistfingerprinting/RFPTargets.inc
-index 5cf1bb419a..104ab8f941 100644
+index 540313664e..21c4668b9a 100644
 --- a/toolkit/components/resistfingerprinting/RFPTargets.inc
 +++ b/toolkit/components/resistfingerprinting/RFPTargets.inc
-@@ -108,6 +108,7 @@ ITEM_VALUE(MaxTouchPointsCollapse,      73)
+@@ -109,6 +109,7 @@ ITEM_VALUE(MaxTouchPointsCollapse,      73)
  ITEM_VALUE(NavigatorHWConcurrencyTiered,74)
  ITEM_VALUE(WebGLRandomization,          75)
  ITEM_VALUE(EfficientCanvasRandomization, 76)

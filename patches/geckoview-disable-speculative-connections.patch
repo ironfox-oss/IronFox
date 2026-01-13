@@ -1,5 +1,5 @@
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
-index a80a784ff1..d9057f8fa5 100644
+index a80a784ff1659..d9057f8fa57f0 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/gecko/GeckoThread.java
 @@ -751,7 +751,7 @@ public class GeckoThread extends Thread {

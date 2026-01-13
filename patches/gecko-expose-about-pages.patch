@@ -1,0 +1,13 @@
+diff --git a/toolkit/modules/AboutPagesUtils.sys.mjs b/toolkit/modules/AboutPagesUtils.sys.mjs
+index 2b2ee3c95626..4f8542fc2c1f 100644
+--- a/toolkit/modules/AboutPagesUtils.sys.mjs
++++ b/toolkit/modules/AboutPagesUtils.sys.mjs
+@@ -19,7 +19,7 @@ ChromeUtils.defineLazyGetter(AboutPagesUtils, "visibleAboutUrls", () => {
+       const am = Cc[cid].getService(Ci.nsIAboutModule);
+       const uri = Services.io.newURI(`about:${aboutType}`);
+       const flags = am.getURIFlags(uri);
+-      if (!(flags & Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT)) {
++      if (aboutType == "config" || aboutType == "translations" || !(flags & Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT)) {
+         urls.push(`about:${aboutType}`);
+       }
+     } catch (e) {

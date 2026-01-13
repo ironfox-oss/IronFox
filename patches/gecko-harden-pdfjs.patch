@@ -1,20 +1,20 @@
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.html b/toolkit/components/pdfjs/content/web/viewer-geckoview.html
-index 5e0a113820..e89114242e 100644
+index 18b76e27db3a..82529a4127b5 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.html
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.html
 @@ -23,6 +23,7 @@ See https://github.com/adobe-type-tools/cmap-resources
  <html dir="ltr" mozdisallowselectionprint>
    <head>
-     <meta charset="utf-8">
+     <meta charset="utf-8" />
 +    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; form-action 'none'; connect-src 'self'; img-src blob: 'self'; script-src 'self'; style-src 'self'; base-uri 'none'" />
-     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
      <title>PDF.js viewer</title>
  
 diff --git a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-index 29e503a004..4247f8ef08 100644
+index ab4f5545674d..6ac957cc7bc5 100644
 --- a/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
 +++ b/toolkit/components/pdfjs/content/web/viewer-geckoview.mjs
-@@ -10653,13 +10653,24 @@ const PDFViewerApplication = {
+@@ -10719,13 +10719,24 @@ const PDFViewerApplication = {
      }
      const workerParams = AppOptions.getAll(OptionKind.WORKER);
      Object.assign(GlobalWorkerOptions, workerParams);

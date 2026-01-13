@@ -2,21 +2,21 @@
 
 package org.mozilla.fenix.distributions
 
-import android.content.Context
-
 class DistributionIdManager(
-    private val context: Context,
-    private val browserStoreProvider: DistributionBrowserStoreProvider,
-    private val distributionProviderChecker: DistributionProviderChecker,
-    private val legacyDistributionProviderChecker: DistributionProviderChecker,
-    private val distributionSettings: DistributionSettings,
+    private val packageManager: Any?,
+    private val browserStoreProvider: Any?,
+    private val distributionProviderChecker: Any?,
+    private val distributionSettings: Any?,
+    private val metricController: Any?,
     private val appPreinstalledOnVivoDevice: () -> Boolean = { false },
     private val isDtTelefonicaInstalled: () -> Boolean = { false },
     private val isDtUsaInstalled: () -> Boolean = { false },
 ) {
     fun getDistributionId(): String = "Mozilla"
-
+    fun updateDistributionIdFromUtmParams(utmParams: Any?) {}
+    fun shouldSkipMarketingConsentScreen(): Boolean = true
     fun isPartnershipDistribution(): Boolean = false
+    fun startAdjustIfSkippingConsentScreen() {}
 
     internal enum class Distribution(val id: String) {
         DEFAULT(id = "Mozilla"),

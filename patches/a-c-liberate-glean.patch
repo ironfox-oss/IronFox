@@ -1,0 +1,27 @@
+diff --git a/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt b/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
+index 7bb7ba269643..da28b1842c7a 100644
+--- a/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
++++ b/mobile/android/android-components/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt
+@@ -116,18 +116,18 @@ open class NimbusMessagingController(
+     }
+ 
+     private fun sendClickedMessageTelemetry(messageId: String, uuid: String?) {
+-        GleanMessaging.messageClicked.record(
++/*        GleanMessaging.messageClicked.record(
+             GleanMessaging.MessageClickedExtra(messageKey = messageId, actionUuid = uuid),
+-        )
++        ) */
+     }
+ 
+     private fun sendMicrosurveyCompletedTelemetry(messageId: String, answer: String) {
+-        Microsurvey.submitButtonTapped.record(
++/*        Microsurvey.submitButtonTapped.record(
+             Microsurvey.SubmitButtonTappedExtra(
+                 surveyId = messageId,
+                 userSelection = answer,
+             ),
+-        )
++        ) */
+     }
+ 
+     private fun convertActionIntoDeepLinkSchemeUri(action: String): Uri =

@@ -1,5 +1,5 @@
 diff --git a/settings.gradle b/settings.gradle
-index 23a74d7..2736fd1 100644
+index 23a74d7e..2736fd17 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -38,7 +38,7 @@ def setupProject(name, projectProps) {

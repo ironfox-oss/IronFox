@@ -1,5 +1,5 @@
 diff --git a/settings.gradle b/settings.gradle
-index 04bd9e9..fbba69c 100644
+index 04bd9e969..fbba69c16 100644
 --- a/settings.gradle
 +++ b/settings.gradle
 @@ -31,14 +31,7 @@ buildscript {
@@ -19,7 +19,7 @@ index 04bd9e9..fbba69c 100644
      }
  }
 diff --git a/tools/nimbus-gradle-plugin/settings.gradle b/tools/nimbus-gradle-plugin/settings.gradle
-index 7d907f0..8679108 100644
+index 7d907f057..8679108f7 100644
 --- a/tools/nimbus-gradle-plugin/settings.gradle
 +++ b/tools/nimbus-gradle-plugin/settings.gradle
 @@ -21,14 +21,7 @@ buildscript {

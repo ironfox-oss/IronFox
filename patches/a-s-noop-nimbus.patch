@@ -1,8 +1,8 @@
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 98019e4..59145cb 100644
+index 0fed3ef9a..8ed7cc724 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -141,23 +141,23 @@ open class Nimbus(
+@@ -140,23 +140,23 @@ open class Nimbus(
  
      private val nimbusClient: NimbusClientInterface
  
@@ -32,7 +32,7 @@ index 98019e4..59145cb 100644
  
      init {
          NullVariables.instance.setContext(context)
-@@ -284,9 +284,9 @@ open class Nimbus(
+@@ -279,9 +279,9 @@ open class Nimbus(
          }
      }
  
@@ -46,7 +46,7 @@ index 98019e4..59145cb 100644
      @WorkerThread
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
-index 451490b..c0aa8f1 100644
+index 451490b20..c0aa8f1e2 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt
 @@ -203,7 +203,7 @@ interface NimbusInterface : FeaturesInterface, NimbusMessagingInterface, NimbusE
@@ -68,7 +68,7 @@ index 451490b..c0aa8f1 100644
  
      override val events: NimbusEventStore
 diff --git a/proguard-rules-consumer-jna.pro b/proguard-rules-consumer-jna.pro
-index 2a3934c..71f82ed 100644
+index 2a3934c83..71f82ed17 100644
 --- a/proguard-rules-consumer-jna.pro
 +++ b/proguard-rules-consumer-jna.pro
 @@ -11,5 +11,5 @@

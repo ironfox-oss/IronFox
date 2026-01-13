@@ -1,18 +1,18 @@
 diff --git a/glean-core/android-native/build.gradle b/glean-core/android-native/build.gradle
-index 53716d5..4665d78 100644
+index 53716d52..51737231 100644
 --- a/glean-core/android-native/build.gradle
 +++ b/glean-core/android-native/build.gradle
-@@ -43,6 +43,13 @@ android {
+@@ -42,7 +42,12 @@ android {
+             initWith release
          }
      }
- 
+-
 +    packagingOptions {
 +        exclude 'lib/arm64-v8a/libxul.so'
 +        exclude 'lib/armeabi-v7a/libxul.so'
 +        exclude 'lib/x86/libxul.so'
 +        exclude 'lib/x86_64/libxul.so'
 +    }
-+
      // Uncomment to include debug symbols in native library builds.
      // packagingOptions { doNotStrip "**/*.so" }
  }

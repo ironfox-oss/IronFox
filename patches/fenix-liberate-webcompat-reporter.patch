@@ -1,0 +1,52 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+index 95ded141876d..64c928f69685 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
+@@ -415,7 +415,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+                         ?.requestedTranslationPair?.toLanguage
+                     val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
+                     val isWebCompatReporterSupported =
+-                        FxNimbus.features.menuRedesign.value().reportSiteIssue
++                        false
+ 
+                     val isDesktopMode by store.observeAsState(initialValue = false) { state ->
+                         state.isDesktopMode
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
+index b5cd2868a6eb..e8656993563e 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
+@@ -217,7 +217,7 @@ open class DefaultToolbarMenu(
+         val url = store.state.selectedTab?.content?.url
+         val isAboutUrl = url?.isAboutUrl() ?: false
+         val isContentUrl = url?.isContentUrl() ?: false
+-        return !isAboutUrl && !isContentUrl
++        return false
+     }
+     // End of predicates //
+ 
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index da46df8f5cd7..9639bfb576b7 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -49,7 +49,7 @@ import mozilla.components.feature.search.ext.waitForSelectedOrDefaultSearchEngin
+ import mozilla.components.feature.syncedtabs.commands.GlobalSyncedTabsCommandsProvider
+ import mozilla.components.feature.top.sites.TopSitesFrecencyConfig
+ import mozilla.components.feature.top.sites.TopSitesProviderConfig
+-import mozilla.components.feature.webcompat.reporter.WebCompatReporterFeature
++// import mozilla.components.feature.webcompat.reporter.WebCompatReporterFeature
+ import mozilla.components.lib.crash.CrashReporter
+ import mozilla.components.service.fxa.manager.SyncEnginesStorage
+ import mozilla.components.service.sync.logins.LoginsApiException
+@@ -703,10 +703,10 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+                     // This is added here because we need gecko to load the extension first.
+                     //
+                     // TODO: Bug 1953359 - remove the code below in the next release.
+-                    if (Config.channel.isNightlyOrDebug || Config.channel.isBeta) {
++/*                    if (Config.channel.isNightlyOrDebug || Config.channel.isBeta) {
+                         logger.debug("Attempting to uninstall the WebCompat Reporter extension")
+                         WebCompatReporterFeature.uninstall(components.core.engine)
+-                    }
++                    } */
+                 },
+                 onUpdatePermissionRequest = components.addonUpdater::onUpdatePermissionRequest,
+             )

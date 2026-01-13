@@ -1,5 +1,5 @@
 diff --git a/toolkit/modules/PermissionsUtils.sys.mjs b/toolkit/modules/PermissionsUtils.sys.mjs
-index 593cf97b04..21a2b1aa53 100644
+index 593cf97b046c4..62f91585304e7 100644
 --- a/toolkit/modules/PermissionsUtils.sys.mjs
 +++ b/toolkit/modules/PermissionsUtils.sys.mjs
 @@ -46,7 +46,7 @@ function importPrefBranch(aPrefBranch, aPermission, aAction) {
@@ -16,19 +16,18 @@ index 593cf97b04..21a2b1aa53 100644
  
      // Ensure we only import this pref branch once.
 -    if (gImportedPrefBranches.has(aPrefBranch)) {
--      return;
++/*    if (gImportedPrefBranches.has(aPrefBranch)) {
+       return;
 -    }
-+//    if (gImportedPrefBranches.has(aPrefBranch)) {
-+//      return;
-+//    }
++    } */
  
      importPrefBranch(
        aPrefBranch + "whitelist.add",
 diff --git a/toolkit/mozapps/extensions/AddonManager.sys.mjs b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-index 3562dfc61f..d7157b8582 100644
+index 4fe6aaa127d12..e166515c880a3 100644
 --- a/toolkit/mozapps/extensions/AddonManager.sys.mjs
 +++ b/toolkit/mozapps/extensions/AddonManager.sys.mjs
-@@ -97,6 +97,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
+@@ -104,6 +104,8 @@ ChromeUtils.defineESModuleGetters(lazy, {
      "resource://gre/modules/addons/siteperms-addon-utils.sys.mjs",
    isPrincipalInSitePermissionsBlocklist:
      "resource://gre/modules/addons/siteperms-addon-utils.sys.mjs",
@@ -37,10 +36,11 @@ index 3562dfc61f..d7157b8582 100644
  });
  
  XPCOMUtils.defineLazyPreferenceGetter(
-@@ -2382,6 +2384,22 @@ var AddonManagerInternal = {
+@@ -2417,7 +2419,21 @@ var AddonManagerInternal = {
+ 
      return promiseInstall;
    },
- 
+-
 +  async installGeckoViewWebExtension(extensionUri) {
 +    const installId = Services.uuid.generateUUID().toString();
 +    let { extension } = await lazy.GeckoViewWebExtension.installWebExtension(
@@ -56,27 +56,24 @@ index 3562dfc61f..d7157b8582 100644
 +        console.error("Failed to install the extension: extension is null.");
 +    }
 +  },
-+
    /**
     * Starts installation of an AddonInstall notifying the registered
     * web install listener of a blocked or started install.
-@@ -2554,6 +2572,11 @@ var AddonManagerInternal = {
+@@ -2590,6 +2606,9 @@ var AddonManagerInternal = {
        );
  
        if (installAllowed) {
-+        if (AppConstants.platform == "android") {
-+          aInstall.cancel();
-+          this.installGeckoViewWebExtension(aInstall.sourceURI);
-+          return;
-+        }
++        aInstall.cancel();
++        this.installGeckoViewWebExtension(aInstall.sourceURI);
++        return;
          startInstall("AMO");
        } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
          // Block without prompt
 diff --git a/toolkit/mozapps/extensions/components.conf b/toolkit/mozapps/extensions/components.conf
-index d30fdfec20..d43c612fe4 100644
+index 20d433329de61..1a6658d7f5457 100644
 --- a/toolkit/mozapps/extensions/components.conf
 +++ b/toolkit/mozapps/extensions/components.conf
-@@ -28,7 +28,7 @@ Classes = [
+@@ -35,7 +35,7 @@ Classes = [
      },
  ]
  
@@ -86,7 +83,7 @@ index d30fdfec20..d43c612fe4 100644
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',
 diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-index be40900f37..bf33bf4596 100644
+index f156a92bec1f7..58fc9bc36d7ac 100644
 --- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 @@ -2275,6 +2275,7 @@ export const XPIDatabase = {

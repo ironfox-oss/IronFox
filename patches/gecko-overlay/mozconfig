@@ -1,10 +1,5 @@
 # IronFox mozconfig...
 
-# NOTE: Values surrounded in curly brackets ({}) are filled in by `prebuild.sh`
-## Currently, this includes:
-## geckotarget = {geckotarget}
-## IRONFOX_CHANNEL = {IRONFOX_CHANNEL}
-
-. "$topsrcdir/ironfox/mozconfigs/ironfox-{IRONFOX_CHANNEL}-{geckotarget}.mozconfig"
+. "$topsrcdir/ironfox/mozconfigs/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}.mozconfig"
 
 # Any desired overrides can be added below:

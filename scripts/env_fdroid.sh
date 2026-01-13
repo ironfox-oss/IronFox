@@ -18,22 +18,22 @@
 #
 
 export rootdir=$(dirname $(dirname "$(realpath "$0")"))
-export builddir="$rootdir/build"
-export patches="$rootdir/patches"
+export builddir="${rootdir}/build"
+export patches="${rootdir}/patches"
 
-export FDROID_SRCLIB=$(realpath "$rootdir/../srclib")
+export FDROID_SRCLIB=$(realpath "${rootdir}/../srclib")
 
-export android_components="$FDROID_SRCLIB/MozFennec/mobile/android/android-components"
-export application_services="$FDROID_SRCLIB/MozAppServices"
-export bundletool="$FDROID_SRCLIB/bundletool"
-export glean="$FDROID_SRCLIB/MozGlean"
-export fenix="$FDROID_SRCLIB/MozFennec/mobile/android/fenix"
-export mozilla_release="$FDROID_SRCLIB/MozFennec"
-export rustup="$FDROID_SRCLIB/rustup"
-export wasi="$FDROID_SRCLIB/wasi-sdk"
-export gmscore="$FDROID_SRCLIB/gmscore"
-export llvm="$FDROID_SRCLIB/llvm"
-export llvm_android="$FDROID_SRCLIB/llvm_android"
-export toolchain_utils="$FDROID_SRCLIB/toolchain-utils"
+export android_components="${FDROID_SRCLIB}/MozFennec/mobile/android/android-components"
+export application_services="${FDROID_SRCLIB}/MozAppServices"
+export bundletool="${FDROID_SRCLIB}/bundletool"
+export glean="${FDROID_SRCLIB}/MozGlean"
+export fenix="${FDROID_SRCLIB}/MozFennec/mobile/android/fenix"
+export mozilla_release="${FDROID_SRCLIB}/MozFennec"
+export rustup="${FDROID_SRCLIB}/rustup"
+export wasi="${FDROID_SRCLIB}/wasi-sdk"
+export gmscore="${FDROID_SRCLIB}/gmscore"
+export llvm="${FDROID_SRCLIB}/llvm"
+export llvm_android="${FDROID_SRCLIB}/llvm_android"
+export toolchain_utils="${FDROID_SRCLIB}/toolchain-utils"
 
-source "\$rootdir/scripts/env_common.sh"
+source "\${rootdir}/scripts/env_common.sh"

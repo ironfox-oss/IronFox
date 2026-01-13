@@ -1,11 +1,30 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
+index 772fef311c0e..f94d1731b606 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenuView.kt
+@@ -181,10 +181,10 @@ class HomeMenuView(
+                     HomeFragmentDirections.actionGlobalBrowser(),
+                 )
+                 fenixBrowserUseCases.loadUrlOrSearch(
+-                    searchTermOrURL = SupportUtils.getSumoURLForTopic(
+-                        context = context,
++                    searchTermOrURL = SupportUtils.ANDROID_SUPPORT_SUMO_URL,
++/*                        context = context,
+                         topic = SupportUtils.SumoTopic.HELP,
+-                    ),
++                    ), */
+                     newTab = true,
+                     private = homeActivity.browsingModeManager.mode.isPrivate,
+                 )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-index fbd12fc813..a67c104033 100644
+index fbd12fc813a3..3d0e6f9f5753 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/MarketingPageRemovalSupport.kt
-@@ -67,10 +67,15 @@ class MarketingPageRemovalSupport(
+@@ -67,10 +67,20 @@ class MarketingPageRemovalSupport(
  
  internal fun MutableList<OnboardingPageUiData>.removeIfPageNotReached(index: Int) {
      val marketingIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.MARKETING_DATA }
++    val searchWidgetIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.ADD_SEARCH_WIDGET }
 +    val syncIndex = indexOfFirst { it.type == OnboardingPageUiData.Type.SYNC_SIGN_IN }
  
      if (index < marketingIndex) {
@@ -15,14 +34,18 @@ index fbd12fc813..a67c104033 100644
 +    if (index < syncIndex) {
 +        removeAt(syncIndex)
 +    }
++
++    if (index < searchWidgetIndex) {
++        removeAt(searchWidgetIndex)
++    }
  }
  
  internal fun SharedPreferences.flowScopedBooleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index b45fdee550..ee60e9cab8 100644
+index 4743fffb0411..ee48ed284bf6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-@@ -206,11 +206,11 @@ class AboutFragment(
+@@ -208,11 +208,11 @@ class AboutFragment(
              AboutPageItem(
                  AboutItem.ExternalLink(
                      SUPPORT,
@@ -36,7 +59,7 @@ index b45fdee550..ee60e9cab8 100644
                  AboutItem.Crashes,
                  getString(R.string.about_crashes),
              ),
-@@ -227,7 +227,7 @@ class AboutFragment(
+@@ -229,7 +229,7 @@ class AboutFragment(
                      SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
                  ),
                  getString(R.string.about_know_your_rights),
@@ -45,16 +68,3 @@ index b45fdee550..ee60e9cab8 100644
              AboutPageItem(
                  AboutItem.ExternalLink(LICENSING_INFO, ABOUT_LICENSE_URL),
                  getString(R.string.about_licensing_information),
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 3b7336c90f..52c5551ae6 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -85,7 +85,7 @@ class OnboardingFragment : Fragment() {
-             pagesToDisplay(
-                 showDefaultBrowserPage = isNotDefaultBrowser(this) && !isDefaultBrowserPromptSupported(),
-                 showNotificationPage = canShowNotificationPage(),
--                showAddWidgetPage = canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(activity)),
-+                showAddWidgetPage = false,
-             ).toMutableList()
-         }
-     }

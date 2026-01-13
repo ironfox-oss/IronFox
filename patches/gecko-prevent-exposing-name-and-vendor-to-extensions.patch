@@ -1,0 +1,15 @@
+diff --git a/toolkit/components/extensions/parent/ext-runtime.js b/toolkit/components/extensions/parent/ext-runtime.js
+index 0d7a3e505b6bd..946650ec6f124 100644
+--- a/toolkit/components/extensions/parent/ext-runtime.js
++++ b/toolkit/components/extensions/parent/ext-runtime.js
+@@ -332,8 +332,8 @@ this.runtime = class extends ExtensionAPIPersistent {
+         },
+ 
+         getBrowserInfo: function () {
+-          const { name, vendor, version, appBuildID } = Services.appinfo;
+-          const info = { name, vendor, version, buildID: appBuildID };
++          const { version, appBuildID } = Services.appinfo;
++          const info = { name: "Firefox", vendor: "Mozilla", version, buildID: appBuildID };
+           return Promise.resolve(info);
+         },
+ 

@@ -2,7 +2,6 @@
 
 package mozilla.telemetry.glean
 
-import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -11,7 +10,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 internal object Dispatchers {
     class WaitableCoroutineScope(private val coroutineScope: CoroutineScope) {
-        @VisibleForTesting(otherwise = VisibleForTesting.NONE)
         fun setTestingMode(enabled: Boolean) {}
 
         internal fun executeTask(block: suspend CoroutineScope.() -> Unit): Job? = null

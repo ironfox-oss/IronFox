@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 63398b2c71..8d5644cf2d 100644
+index 63398b2c715a..8d5644cf2dd5 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -7,7 +7,7 @@
@@ -12,7 +12,7 @@ index 63398b2c71..8d5644cf2d 100644
      <!-- Allows for storing and retrieving screenshots -->
      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
-index 6012a322b8..cf6269c911 100644
+index 6012a322b8fb..cf6269c911ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PhoneFeature.kt
 @@ -18,7 +18,7 @@ import mozilla.components.support.ktx.android.content.isPermissionGranted
@@ -34,7 +34,7 @@ index 6012a322b8..cf6269c911 100644
                          AUTOPLAY_BLOCK_ALL -> R.string.preference_option_autoplay_blocked3
                          else -> R.string.preference_option_autoplay_blocked3
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
-index a82e8f0616..0a36a99e18 100644
+index a82e8f061672..0a36a99e1814 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/sitepermissions/SitePermissionsManagePhoneFeatureFragment.kt
 @@ -120,6 +120,7 @@ class SitePermissionsManagePhoneFeatureFragment : Fragment() {

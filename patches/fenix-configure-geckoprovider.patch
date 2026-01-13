@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
-index 12df284334..86c86b8be7 100644
+index 0bca79f30c33..30c1f9b40278 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/gecko/GeckoProvider.kt
 @@ -7,14 +7,14 @@ package org.mozilla.fenix.gecko
@@ -13,11 +13,10 @@ index 12df284334..86c86b8be7 100644
  import mozilla.components.concept.storage.CreditCardsAddressesStorage
  import mozilla.components.concept.storage.LoginsStorage
 -import mozilla.components.experiment.NimbusExperimentDelegate
--import mozilla.components.lib.crash.handler.CrashHandlerService
++/* import mozilla.components.experiment.NimbusExperimentDelegate
+ import mozilla.components.lib.crash.handler.CrashHandlerService
 -import mozilla.components.lib.crash.store.CrashAction
-+// import mozilla.components.experiment.NimbusExperimentDelegate
-+// import mozilla.components.lib.crash.handler.CrashHandlerService
-+// import mozilla.components.lib.crash.store.CrashAction
++import mozilla.components.lib.crash.store.CrashAction */
  import mozilla.components.service.sync.autofill.GeckoCreditCardsAddressesStorageDelegate
  import mozilla.components.service.sync.logins.GeckoLoginStorageDelegate
  import org.mozilla.fenix.Config

@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 1753bcbd86..07aedf78c7 100644
+index 1753bcbd86ff..07aedf78c7e9 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -59,19 +59,19 @@ projects:
@@ -28,10 +28,10 @@ index 1753bcbd86..07aedf78c7 100644
      - components:service-pocket
      - components:service-sync-autofill
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index 237d28a560..32bfc0c3c6 100644
+index d6f8ce2a2bd6..e70be804a1a5 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -610,13 +610,13 @@ dependencies {
+@@ -613,13 +613,13 @@ dependencies {
      implementation project(':components:feature-top-sites')
      implementation project(':components:feature-webauthn')
      implementation project(':components:feature-webcompat')
@@ -48,7 +48,7 @@ index 237d28a560..32bfc0c3c6 100644
      implementation project(':components:service-nimbus')
      implementation project(':components:service-pocket')
      implementation project(':components:service-sync-autofill')
-@@ -635,14 +635,14 @@ dependencies {
+@@ -638,14 +638,14 @@ dependencies {
      implementation project(':components:ui-tabcounter')
      implementation project(':components:ui-widgets')
      implementation project(':components:lib-crash')
@@ -66,7 +66,7 @@ index 237d28a560..32bfc0c3c6 100644
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -688,15 +688,15 @@ dependencies {
+@@ -693,15 +693,15 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -76,11 +76,10 @@ index 237d28a560..32bfc0c3c6 100644
      implementation libs.kotlinx.serialization.json
      implementation libs.mozilla.glean
 -    implementation libs.play.review
--    implementation libs.play.review.ktx
++/*    implementation libs.play.review
+     implementation libs.play.review.ktx
 -    implementation libs.play.services.ads.id
-+//    implementation libs.play.review
-+//    implementation libs.play.review.ktx
-+//    implementation libs.play.services.ads.id
++    implementation libs.play.services.ads.id */
      implementation libs.protobuf.javalite
 -    implementation libs.sentry
 +//    implementation libs.sentry
@@ -88,7 +87,7 @@ index 237d28a560..32bfc0c3c6 100644
      debugImplementation libs.androidx.compose.ui.tooling
      debugImplementation libs.leakcanary
 diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
-index 39a6df6fb6..2002dfacf6 100644
+index 39a6df6fb62e..b4208f9c266d 100644
 --- a/mobile/android/fenix/app/proguard-rules.pro
 +++ b/mobile/android/fenix/app/proguard-rules.pro
 @@ -9,7 +9,7 @@
@@ -96,7 +95,7 @@ index 39a6df6fb6..2002dfacf6 100644
  # file gets deserialized into a DebugConfig object, which is why we need to keep this class
  # and its members.
 --keep class org.mozilla.gecko.util.DebugConfig { *; }
-+#-keep class org.mozilla.gecko.util.DebugConfig { *; }
++# -keep class org.mozilla.gecko.util.DebugConfig { *; }
  
  ####################################################################################################
  # Remove debug logs from release builds
@@ -105,9 +104,9 @@ index 39a6df6fb6..2002dfacf6 100644
  
  # Keep code generated from Glean Metrics
 --keep class org.mozilla.fenix.GleanMetrics.** {  *; }
-+#-keep class org.mozilla.fenix.GleanMetrics.** {  *; }
++# -keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 63398b2c71..a6383d8aac 100644
+index 63398b2c715a..a6383d8aacac 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -171,7 +170,7 @@ index 63398b2c71..a6383d8aac 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index ce5e4868cc..b9cea32386 100644
+index a32764c2ea45..52d9fa0ddc06 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
@@ -192,16 +191,15 @@ index ce5e4868cc..b9cea32386 100644
  import mozilla.components.lib.publicsuffixlist.PublicSuffixList
  import mozilla.components.support.base.android.DefaultProcessInfoProvider
  import mozilla.components.support.base.android.NotificationsDelegate
-@@ -39,9 +39,9 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -40,9 +40,9 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.appstate.AppState
  import org.mozilla.fenix.components.appstate.setup.checklist.SetupChecklistState
  import org.mozilla.fenix.components.appstate.setup.checklist.getSetupChecklistCollection
 -import org.mozilla.fenix.components.metrics.MetricsMiddleware
--import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
++/* import org.mozilla.fenix.components.metrics.MetricsMiddleware
+ import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
 -import org.mozilla.fenix.crashes.SettingsCrashReportCache
-+// import org.mozilla.fenix.components.metrics.MetricsMiddleware
-+// import org.mozilla.fenix.crashes.CrashReportingAppMiddleware
-+// import org.mozilla.fenix.crashes.SettingsCrashReportCache
++import org.mozilla.fenix.crashes.SettingsCrashReportCache */
  import org.mozilla.fenix.datastore.pocketStoriesSelectedCategoriesDataStore
  import org.mozilla.fenix.distributions.DefaultDistributionBrowserStoreProvider
  import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
@@ -234,8 +232,8 @@ index ce5e4868cc..b9cea32386 100644
 +// import org.mozilla.fenix.reviewprompt.ReviewPromptMiddleware
  import org.mozilla.fenix.settings.settingssearch.DefaultFenixSettingsIndexer
  import org.mozilla.fenix.termsofuse.TermsOfUseManager
- import org.mozilla.fenix.utils.Settings
-@@ -201,7 +201,7 @@ class Components(private val context: Context) {
+ import org.mozilla.fenix.termsofuse.store.DefaultTermsOfUsePromptRepository
+@@ -221,7 +221,7 @@ class Components(private val context: Context) {
      val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
      val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
      val performance by lazyMonitored { PerformanceComponent() }
@@ -244,7 +242,7 @@ index ce5e4868cc..b9cea32386 100644
      val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
  
      val strictMode by lazyMonitored {
-@@ -216,7 +216,7 @@ class Components(private val context: Context) {
+@@ -236,7 +236,7 @@ class Components(private val context: Context) {
  
      val playStoreReviewPromptController by lazyMonitored {
          PlayStoreReviewPromptController(
@@ -253,7 +251,7 @@ index ce5e4868cc..b9cea32386 100644
              numberOfAppLaunches = { settings.numberOfAppLaunches },
          )
      }
-@@ -268,7 +268,7 @@ class Components(private val context: Context) {
+@@ -288,7 +288,7 @@ class Components(private val context: Context) {
                  ProfileMarkerMiddleware(markerName = "AppStore", profiler = core.engine.profiler),
                  LogMiddleware(tag = "AppStore", shouldIncludeDetailedData = { Config.channel.isDebug }),
                  BlocklistMiddleware(blocklistHandler),
@@ -262,7 +260,7 @@ index ce5e4868cc..b9cea32386 100644
                      lazyMonitored { core.pocketStoriesService },
                      context.pocketStoriesSelectedCategoriesDataStore,
                      SettingsBackedPocketSettings(settings),
-@@ -289,9 +289,9 @@ class Components(private val context: Context) {
+@@ -309,9 +309,9 @@ class Components(private val context: Context) {
                          currentTimeInMillis = { System.currentTimeMillis() },
                      ),
                  ),
@@ -274,7 +272,7 @@ index ce5e4868cc..b9cea32386 100644
                  ReviewPromptMiddleware(
                      isReviewPromptFeatureEnabled = { settings.customReviewPromptFeatureEnabled },
                      isTelemetryEnabled = { settings.isTelemetryEnabled },
-@@ -299,12 +299,12 @@ class Components(private val context: Context) {
+@@ -319,12 +319,12 @@ class Components(private val context: Context) {
                      nimbusEventStore = nimbus.events,
                  ).also {
                      settings.migrateLastReviewPromptTimePrefIfNeeded(nimbus.events)
@@ -290,19 +288,19 @@ index ce5e4868cc..b9cea32386 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt
-index 67a0d72da3..503c40facd 100644
+index fc8f2e51ff1e..94135bbc5d85 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretDebugSettingsFragment.kt
-@@ -25,7 +25,7 @@ import mozilla.components.browser.state.search.RegionState
+@@ -27,7 +27,7 @@ import mozilla.components.compose.base.button.FilledButton
  import mozilla.components.lib.state.ext.observeAsState
  import org.mozilla.fenix.R
  import org.mozilla.fenix.components.components
 -import org.mozilla.fenix.components.metrics.MarketingAttributionService
 +// import org.mozilla.fenix.components.metrics.MarketingAttributionService
  import org.mozilla.fenix.distributions.DefaultDistributionProviderChecker
- import org.mozilla.fenix.distributions.LegacyDistributionProviderChecker
  import org.mozilla.fenix.ext.showToolbar
-@@ -67,7 +67,7 @@ private fun SecretDebugSettingsScreen() {
+ import org.mozilla.fenix.theme.FirefoxTheme
+@@ -69,7 +69,7 @@ private fun SecretDebugSettingsScreen() {
      val playInstallReferrer: String by remember {
          mutableStateOf(
              """
@@ -312,10 +310,10 @@ index 67a0d72da3..503c40facd 100644
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index d0e61a00fc..97f6dc8eef 100644
+index 0c73973e0468..7b619be4ab78 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -492,7 +492,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -494,7 +494,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
  
              // About preferences
              resources.getString(R.string.pref_key_rate) -> {
@@ -325,10 +323,10 @@ index d0e61a00fc..97f6dc8eef 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..11dd01176b 100644
+index 276ad8cf1df1..814c6dbf58f1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -329,7 +329,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -354,7 +354,7 @@ class Settings(
       */
      var customReviewPromptFeatureEnabled by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_custom_review_prompt_enabled),
@@ -337,7 +335,7 @@ index 35d4c5a9c0..11dd01176b 100644
          default = { FxNimbus.features.customReviewPrompt.value().enabled },
      )
  
-@@ -2120,7 +2120,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -2187,7 +2187,7 @@ class Settings(
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

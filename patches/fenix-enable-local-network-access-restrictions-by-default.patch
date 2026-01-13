@@ -1,23 +1,28 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-index 3c071edf51..a814245c25 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SecretSettingsFragment.kt
-@@ -188,7 +188,7 @@ class SecretSettingsFragment : PreferenceFragmentCompat() {
-         }
- 
-         requirePreference<SwitchPreference>(R.string.pref_key_enable_lna_blocking_enabled).apply {
--            isVisible = Config.channel.isNightlyOrDebug
-+            isVisible = true
-             isChecked = context.settings().isLnaBlockingEnabled
-             onPreferenceChangeListener = object : SharedPreferenceUpdater() {
-                 override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..a7ade78800 100644
+index 276ad8cf1df1..30dca2598ce6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -844,7 +844,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -864,7 +864,7 @@ class Settings(
      var isLnaBlockingEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
+         featureFlag = true,
+-        default = { FxNimbus.features.lnaBlocking.value().blocking },
++        default = { true },
+     )
+ 
+     /**
+@@ -873,7 +873,7 @@ class Settings(
+     var isLnaTrackerBlockingEnabled by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_tracker_blocking_enabled),
+         featureFlag = true,
+-        default = { FxNimbus.features.lnaBlocking.value().blockTrackers },
++        default = { true },
+     )
+ 
+     /**
+@@ -886,7 +886,7 @@ class Settings(
+     var isLnaFeatureEnabled by lazyFeatureFlagPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_feature_enabled),
          featureFlag = true,
 -        default = { FxNimbus.features.lnaBlocking.value().enabled },
 +        default = { true },

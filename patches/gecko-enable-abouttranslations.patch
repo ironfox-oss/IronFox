@@ -1,20 +1,5 @@
-diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 49779b7cc7..db5bffe836 100644
---- a/docshell/base/nsAboutRedirector.cpp
-+++ b/docshell/base/nsAboutRedirector.cpp
-@@ -223,8 +223,8 @@ static const RedirEntry kRedirMap[] = {
-      nsIAboutModule::ALLOW_SCRIPT |
-          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-          nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
--         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
--         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
-+         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
-+//         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
- #endif
-     {"url-classifier", "chrome://global/content/aboutUrlClassifier.xhtml",
-      nsIAboutModule::ALLOW_SCRIPT},
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 5c1543ab80..29eb4a27cf 100644
+index 5c1543ab806f..29eb4a27cf2f 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
 @@ -41,7 +41,7 @@ if defined('MOZ_CRASHREPORTER'):
@@ -27,7 +12,7 @@ index 5c1543ab80..29eb4a27cf 100644
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
      about_pages.append('crashcontentjava')
 diff --git a/toolkit/modules/ActorManagerParent.sys.mjs b/toolkit/modules/ActorManagerParent.sys.mjs
-index dc976a7e8b..0ec25692cf 100644
+index dc976a7e8b11..0ec25692cff3 100644
 --- a/toolkit/modules/ActorManagerParent.sys.mjs
 +++ b/toolkit/modules/ActorManagerParent.sys.mjs
 @@ -752,7 +752,7 @@ if (AppConstants.platform != "android") {

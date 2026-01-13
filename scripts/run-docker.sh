@@ -5,13 +5,13 @@
 set -euo pipefail
 
 script="$(realpath "$0")"
-script_dir="$(dirname "$script")"
-root_dir="$(dirname "$script_dir")"
+script_dir="$(dirname "${script}")"
+root_dir="$(dirname "${script_dir}")"
 
 # Configuration
 IMAGE_NAME="ironfox-builder"
 CONTAINER_NAME="ironfox-builder"
-DOCKERFILE_PATH="$root_dir/Dockerfile"
+DOCKERFILE_PATH="${root_dir}/Dockerfile"
 PROMPT='\[\033[1;36m\]🐳\[\033[0m\] \[\033[1;34m\]\u@ironfox\[\033[0m\]:\[\033[1;33m\]\w\[\033[0m\]\$ '
 
 # Initialize variables
@@ -79,51 +79,51 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [[ "$PARSE_COMMAND" == true ]]; then
+if [[ "${PARSE_COMMAND}" == true ]]; then
     COMMAND_ARGS=("$@")
 fi
 
 image_exists() {
-    docker image inspect "$IMAGE_NAME" >/dev/null 2>&1
+    docker image inspect "${IMAGE_NAME}" >/dev/null 2>&1
 }
 
 container_exists() {
-    docker container inspect "$CONTAINER_NAME" >/dev/null 2>&1
+    docker container inspect "${CONTAINER_NAME}" >/dev/null 2>&1
 }
 
 container_running() {
-    [[ "$(docker container inspect -f '{{.State.Running}}' "$CONTAINER_NAME" 2>/dev/null)" == "true" ]]
+    [[ "$(docker container inspect -f '{{.State.Running}}' "${CONTAINER_NAME}" 2>/dev/null)" == "true" ]]
 }
 
 build_image() {
-    echo "Building Docker image '$IMAGE_NAME'..."
-    if [[ ! -f "$DOCKERFILE_PATH" ]]; then
-        echo "Error: Dockerfile not found at $DOCKERFILE_PATH"
+    echo "Building Docker image '${IMAGE_NAME}'..."
+    if [[ ! -f "${DOCKERFILE_PATH}" ]]; then
+        echo "Error: Dockerfile not found at ${DOCKERFILE_PATH}"
         exit 1
     fi
-    docker build -t "$IMAGE_NAME" -f "$DOCKERFILE_PATH" .
-    echo "Docker image '$IMAGE_NAME' built successfully."
+    docker build -t "${IMAGE_NAME}" -f "${DOCKERFILE_PATH}" .
+    echo "Docker image '${IMAGE_NAME}' built successfully."
 }
 
 create_container() {
-    echo "Creating container '$CONTAINER_NAME'..."
+    echo "Creating container '${CONTAINER_NAME}'..."
     
     local docker_cmd=(
         "docker" "run" "-d" "-it"
-        "--name" "$CONTAINER_NAME"
-        "-v" "$root_dir:/app"
+        "--name" "${CONTAINER_NAME}"
+        "-v" "${root_dir}:/app"
         "${MOUNT_ARGS[@]}"
-        "$IMAGE_NAME"
+        "${IMAGE_NAME}"
     )
     
     "${docker_cmd[@]}"
-    echo "Container '$CONTAINER_NAME' created successfully."
+    echo "Container '${CONTAINER_NAME}' created successfully."
 }
 
 start_container() {
     if ! container_running; then
-        echo "Starting container '$CONTAINER_NAME'..."
-        docker start "$CONTAINER_NAME"
+        echo "Starting container '${CONTAINER_NAME}'..."
+        docker start "${CONTAINER_NAME}"
     fi
 }
 
@@ -131,11 +131,11 @@ execute_in_container() {
     local cmd=("$@")
     
     if [[ ${#cmd[@]} -eq 0 ]]; then
-        echo "Starting interactive shell in container '$CONTAINER_NAME'..."
-        docker exec -it "$CONTAINER_NAME" /bin/bash -c "export PS1='$PROMPT' && /bin/bash"
+        echo "Starting interactive shell in container '${CONTAINER_NAME}'..."
+        docker exec -it "${CONTAINER_NAME}" /bin/bash -c "export PS1='${PROMPT}' && /bin/bash"
     else
-        echo "Executing command in container '$CONTAINER_NAME': ${cmd[*]}"
-        docker exec -it "$CONTAINER_NAME" "${cmd[@]}"
+        echo "Executing command in container '${CONTAINER_NAME}': ${cmd[*]}"
+        docker exec -it "${CONTAINER_NAME}" "${cmd[@]}"
     fi
 }
 
@@ -146,13 +146,13 @@ main() {
     if ! image_exists; then
         build_image
     else
-        echo "Docker image '$IMAGE_NAME' already exists."
+        echo "Docker image '${IMAGE_NAME}' already exists."
     fi
     
     if ! container_exists; then
         create_container
     else
-        echo "Container '$CONTAINER_NAME' already exists."
+        echo "Container '${CONTAINER_NAME}' already exists."
     fi
     
     start_container

@@ -76,4 +76,5 @@
     <string name="preference_autoplay_policy_transient">Põgus (vaikimisi)</string>
     <string name="preference_autoplay_policy_click_to_play">Esitamine eeldab klõpsimist</string>
     <string name="preference_always_use_private_browsing">Kasuta alati privaatset režiimi</string>
+    <string name="wallpaper_collection_fennec_description">Fennec F-Droidi taustapildid. %s</string>
 </resources>

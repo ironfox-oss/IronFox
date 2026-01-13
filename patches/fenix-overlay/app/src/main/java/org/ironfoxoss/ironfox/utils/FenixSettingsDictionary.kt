@@ -1,0 +1,87 @@
+package org.ironfoxoss.ironfox.utils
+
+import org.mozilla.fenix.R
+
+// Dictionary for storing/mapping Fenix preference keys
+
+object FenixSettingsDictionary {
+    val accessibilityEnabled = R.string.pref_key_accessibility_enabled
+    val alwaysUsePrivateBrowsing = R.string.pref_key_always_use_private_browsing
+    val autoplayBlockingClickToPlay = R.string.pref_key_autoplay_policy_click_to_play
+    val autoplayBlockingSticky = R.string.pref_key_autoplay_policy_sticky
+    val autoplayBlockingTransient = R.string.pref_key_autoplay_policy_transient
+    val cacheEnabled = R.string.pref_key_cache_enabled
+    val collections = R.string.pref_key_collections_enabled
+    val crashPullNeverShowAgain = R.string.pref_key_crash_pull_never_show_again
+    val dataChoices = R.string.pref_key_data_choices
+    val emeEnabled = R.string.pref_key_eme_enabled
+    val emeSiteSetting = R.string.pref_key_browser_feature_media_key_system_access
+    val enableDiscoverMoreStories = R.string.pref_key_enable_discover_more_stories
+    val enableHomepageAsNewTab = R.string.pref_key_enable_homepage_as_new_tab
+    val enableMenuRedesign = R.string.pref_key_enable_menu_redesign
+    val enableMozillaAdsClient = R.string.pref_key_enable_mozilla_ads_client
+    val enableUnifiedPush = R.string.pref_key_enable_unifiedpush
+    val fppOverridesIronFoxEnabled = R.string.pref_key_fpp_overrides_ironfox_enabled
+    val fppOverridesIronFoxTimezoneEnabled = R.string.pref_key_fpp_overrides_ironfox_timezone_enabled
+    val fppOverridesIronFoxWebGLEnabled = R.string.pref_key_fpp_overrides_ironfox_webgl_enabled
+    val fppOverridesMozillaEnabled = R.string.pref_key_fpp_overrides_mozilla_enabled
+    val ipv6Enabled = R.string.pref_key_ipv6_enabled
+    val ironFoxOnboardingCompleted = R.string.pref_key_if_onboarding_completed
+    val ironfoxPreferences = R.string.pref_key_if_preferences
+    val ironfoxSecretSettings = R.string.pref_key_if_secret
+    val isAddressSyncEnabled = R.string.pref_key_enable_address_sync
+    val isAppZygoteEnabled = R.string.pref_key_enable_app_zygote_process
+    val isIsolatedProcessEnabled = R.string.pref_key_enable_isolated_process
+    val isLnaBlockingEnabled = R.string.pref_key_enable_lna_blocking_enabled
+    val isLnaFeatureEnabled = R.string.pref_key_enable_lna_feature_enabled
+    val isLnaTrackerBlockingEnabled = R.string.pref_key_enable_lna_tracker_blocking_enabled
+    val isRelayFeatureEnabled = R.string.pref_key_enable_relay_email_masks
+    val isRemoteDebuggingEnabled = R.string.pref_key_remote_debugging
+    val isSettingsSearchEnabled = R.string.pref_key_allow_settings_search
+    val localAddonInstall = R.string.pref_key_install_local_addon
+    val javascriptEnabled = R.string.pref_key_javascript_enabled
+    val javascriptJitEnabled = R.string.pref_key_jit_enabled
+    val javascriptJitTrustedPrincipalsEnabled = R.string.pref_key_jit_trusted_principals_enabled
+    val microsurveyFeatureEnabled = R.string.pref_key_microsurvey_feature_enabled
+    val nimbusExperiments = R.string.pref_key_nimbus_experiments
+    val nimbusUsePreview = R.string.pref_key_nimbus_use_preview
+    val openLinksInAPrivateTab = R.string.pref_key_open_links_in_a_private_tab
+    val openLinksInAPrivateTabCachedValue = R.string.pref_key_open_links_in_a_private_tab_cached_value
+    val pdfjsDisabled = R.string.pref_key_pdfjs_disabled
+    val prefersBrowserColorScheme = R.string.pref_key_prefers_browser_color_scheme
+    val prefersDarkColorScheme = R.string.pref_key_prefers_dark_color_scheme
+    val prefersLightColorScheme = R.string.pref_key_prefers_light_color_scheme
+    val printEnabled = R.string.pref_key_print_enabled
+    val profiler = R.string.pref_key_start_profiler
+    val rate = R.string.pref_key_rate
+    val refererXOriginAlways = R.string.pref_key_referer_policy_always
+    val refererXOriginBaseDomainsMatch = R.string.pref_key_referer_policy_base_domains_match
+    val refererXOriginHostsMatch = R.string.pref_key_referer_policy_hosts_match
+    val safeBrowsingEnabled = R.string.pref_key_safe_browsing_enabled
+    val showContileFeature = R.string.pref_key_enable_contile
+    val showSponsoredSuggestions = R.string.pref_key_show_sponsored_suggestions
+    val shouldAutofillAddressDetails = R.string.pref_key_addresses_save_and_autofill_addresses
+    val shouldAutofillCreditCardDetails = R.string.pref_key_credit_cards_save_and_autofill_cards
+    val shouldEnableGlobalPrivacyControl = R.string.pref_key_privacy_enable_global_privacy_control
+    val shouldPromptToSaveLogins = R.string.pref_key_save_logins
+    val shouldShowCustomTabExtensions = R.string.pref_key_should_show_custom_tab_extensions
+    val shouldShowToolbarCustomization = R.string.pref_key_enable_toolbar_customization
+    val shouldUseOledTheme = R.string.pref_key_oled_theme
+    val shouldUseTrackingProtection = R.string.pref_key_tracking_protection
+    val spoofEnglish = R.string.pref_key_spoof_english
+    val spoofTimezone = R.string.pref_key_spoof_timezone
+    val svgEnabled = R.string.pref_key_svg_enabled
+    val translationsEnabled = R.string.pref_key_translations_enabled
+    val useNewCrashReporterDialog = R.string.pref_key_use_new_crash_reporter
+    val useRemoteSearchConfiguration = R.string.pref_key_use_remote_search_configuration
+    val useCustomTrackingProtection = R.string.pref_key_tracking_protection_custom_option
+    val useNewDynamicToolbarBehaviour = R.string.pref_key_use_scroll_data_for_dynamic_toolbar
+    val useStandardTrackingProtection = R.string.pref_key_tracking_protection_standard_option
+    val useStrictTrackingProtection = R.string.pref_key_tracking_protection_strict_default
+    val useUnifiedPush = R.string.pref_key_use_unifiedpush
+    val wasmEnabled = R.string.pref_key_wasm_enabled
+    val webglDisabled = R.string.pref_key_webgl_disabled
+    val webrtcEnabled = R.string.pref_key_webrtc_enabled
+    val whatsappLinkSharingEnabled = R.string.pref_key_link_sharing
+    val xpinstallEnabled = R.string.pref_key_xpinstall_enabled
+}

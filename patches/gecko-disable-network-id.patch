@@ -1,5 +1,5 @@
 diff --git a/netwerk/system/android/nsAndroidNetworkLinkService.cpp b/netwerk/system/android/nsAndroidNetworkLinkService.cpp
-index 309115e34d..c0b84cd109 100644
+index 309115e34d4b..592eda3584fc 100644
 --- a/netwerk/system/android/nsAndroidNetworkLinkService.cpp
 +++ b/netwerk/system/android/nsAndroidNetworkLinkService.cpp
 @@ -126,11 +126,11 @@ nsAndroidNetworkLinkService::GetLinkType(uint32_t* aLinkType) {
@@ -7,11 +7,10 @@ index 309115e34d..c0b84cd109 100644
  NS_IMETHODIMP
  nsAndroidNetworkLinkService::GetNetworkID(nsACString& aNetworkID) {
 -  if (!mNetlinkSvc) {
--    return NS_ERROR_NOT_AVAILABLE;
++/*  if (!mNetlinkSvc) {
+     return NS_ERROR_NOT_AVAILABLE;
 -  }
-+//  if (!mNetlinkSvc) {
-+//    return NS_ERROR_NOT_AVAILABLE;
-+//  }
++  } */
  
 -  mNetlinkSvc->GetNetworkID(aNetworkID);
 +  aNetworkID.Truncate();
@@ -19,10 +18,10 @@ index 309115e34d..c0b84cd109 100644
  }
  
 diff --git a/netwerk/system/netlink/NetlinkService.cpp b/netwerk/system/netlink/NetlinkService.cpp
-index 52ecd01738..e383e61411 100644
+index 8941427b3a19..e7981c87b476 100644
 --- a/netwerk/system/netlink/NetlinkService.cpp
 +++ b/netwerk/system/netlink/NetlinkService.cpp
-@@ -1885,8 +1885,8 @@ void NetlinkService::CalculateNetworkID() {
+@@ -1884,8 +1884,8 @@ void NetlinkService::CalculateNetworkID() {
  }
  
  void NetlinkService::GetNetworkID(nsACString& aNetworkID) {

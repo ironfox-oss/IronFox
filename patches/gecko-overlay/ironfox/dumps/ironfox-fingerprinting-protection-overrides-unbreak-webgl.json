@@ -98,6 +98,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "gamesfashionarchive.net"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "google.com"
     },
     {

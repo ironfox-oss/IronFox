@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/nimbus/ExperimentAPI.sys.mjs b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
-index 308af83d7d..eaf2b8370a 100644
+index 02e864c59250..3f490e270943 100644
 --- a/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 +++ b/toolkit/components/nimbus/ExperimentAPI.sys.mjs
 @@ -35,7 +35,7 @@ const CRASHREPORTER_ENABLED =
@@ -12,11 +12,11 @@ index 308af83d7d..eaf2b8370a 100644
  const UPLOAD_ENABLED_PREF = "datareporting.healthreport.uploadEnabled";
  const STUDIES_OPT_OUT_PREF = "app.shield.optoutstudies.enabled";
 diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-index 8b89b1b52d..0738becffd 100644
+index f7c6421ebcd7..949543a1f979 100644
 --- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
 +++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
-@@ -32,7 +32,7 @@ ChromeUtils.defineLazyGetter(lazy, "log", () => {
- /** @typedef {import("./PrefFlipsFeature.sys.mjs").PrefBranch} PrefBranch */
+@@ -78,7 +78,7 @@ const CannotEnrollFeatureReason = Object.freeze({
+  */
  
  const IS_MAIN_PROCESS =
 -  Services.appinfo.processType === Services.appinfo.PROCESS_TYPE_DEFAULT;
@@ -24,7 +24,7 @@ index 8b89b1b52d..0738becffd 100644
  
  export const UnenrollmentCause = {
    fromCheckRecipeResult(result) {
-@@ -183,7 +183,7 @@ export class ExperimentManager {
+@@ -236,7 +236,7 @@ export class ExperimentManager {
          return new Date();
        },
      };
@@ -33,7 +33,7 @@ index 8b89b1b52d..0738becffd 100644
        enumerable: true,
        get: async () => {
          await this.store.ready();
-@@ -233,7 +233,7 @@ export class ExperimentManager {
+@@ -286,7 +286,7 @@ export class ExperimentManager {
            return acc;
          }, {});
        },

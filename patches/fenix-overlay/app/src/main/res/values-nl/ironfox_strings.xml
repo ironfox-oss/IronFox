@@ -75,4 +75,5 @@
     <string name="preference_autoplay_policy_sticky">Toestaan na interactie met pagina</string>
     <string name="preference_autoplay_policy_click_to_play">Klik om af te spelen</string>
     <string name="preference_always_use_private_browsing">Altijd privénavigatie gebruiken</string>
+    <string name="wallpaper_collection_fennec_description">Achtergronden van Fennec F-Droid. %s</string>
 </resources>

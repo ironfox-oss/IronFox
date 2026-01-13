@@ -74,4 +74,6 @@
     <string name="preference_autoplay_policy_click_to_play">点击播放</string>
     <string name="preference_autoplay_policy_sticky">与页面互动后允许</string>
     <string name="preference_autoplay_policy_transient">允许在与页面快速交互后使用（默认值）</string>
+    <string name="preference_always_use_private_browsing">始终使用隐私浏览模式</string>
+    <string name="wallpaper_collection_fennec_description">来自 Fennec F-Droid 的壁纸。%s</string>
 </resources>

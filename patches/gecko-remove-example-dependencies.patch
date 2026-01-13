@@ -1,5 +1,5 @@
 diff --git a/mobile/android/gradle.configure b/mobile/android/gradle.configure
-index d04eb85ad0..701953a1f5 100644
+index d04eb85ad054c..701953a1f5b47 100644
 --- a/mobile/android/gradle.configure
 +++ b/mobile/android/gradle.configure
 @@ -377,19 +377,19 @@ def gradle_android_archive_geckoview_tasks(build_config):

@@ -26,9 +26,9 @@ After completing each step, modify the corresponding [ ] box to [x].
 -->
 
 - [ ] I confirm that this issue occurs on the **latest release** of IronFox. You can check what the latest version is on the `Releases` page *([https://gitlab.com/ironfox-oss/IronFox/-/releases](https://gitlab.com/ironfox-oss/IronFox/-/releases))*.
-- [ ] I confirm that this issue occurs on the latest **Nightly** release of IronFox. You can find steps on how to find and install the latest Nightly release [here](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md#how-can-i-download-nightly-builds).
+- [ ] I confirm that this issue occurs on the latest **Nightly** release of IronFox. You can find steps on how to find and install the latest Nightly release [here](https://ironfoxoss.org/docs/faq/#how-can-i-download-nightly-builds).
 - [ ] I confirm that this issue has **NOT** already been reported on the GitLab issue tracker *([https://gitlab.com/ironfox-oss/IronFox/-/issues](https://gitlab.com/ironfox-oss/IronFox/-/issues))* **and/or** the Codeberg issue tracker *([https://codeberg.org/ironfox-oss/IronFox/issues](https://codeberg.org/ironfox-oss/IronFox/issues))*.
-- [ ] I confirm that this issue is **NOT** already covered on the `FAQ` page *([https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md](https://gitlab.com/ironfox-oss/IronFox/-/blob/dev/docs/FAQ.md))*.
+- [ ] I confirm that this issue is **NOT** already covered on the `FAQ` page *([https://ironfoxoss.org/docs/faq/](https://ironfoxoss.org/docs/faq/))*.
 - [ ] I confirm that this issue is **NOT** related to a website breakage or compatibility issue as described above.
 - [ ] I confirm that this issue does **NOT** occur on the latest release of Mozilla Firefox. You can find the latest `APK`s here: [https://ftp.mozilla.org/pub/fenix/releases/](https://ftp.mozilla.org/pub/fenix/releases/).
 - [ ] I confirm that this issue does **NOT** occur on the latest release of Mozilla Firefox **Nightly**. You can find the latest `APK`s here: [https://ftp.mozilla.org/pub/fenix/nightly/](https://ftp.mozilla.org/pub/fenix/nightly/).

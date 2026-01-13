@@ -1,18 +1,18 @@
 diff --git a/glean-core/android/build.gradle b/glean-core/android/build.gradle
-index d2d114a..7a5bff0 100644
+index b1d4b8cd..acd4fb44 100644
 --- a/glean-core/android/build.gradle
 +++ b/glean-core/android/build.gradle
-@@ -199,7 +199,7 @@ def generateUniffiBindings = tasks.register("generateUniffiBindings") {
-     doFirst {
+@@ -207,7 +207,7 @@ def generateUniffiBindings = tasks.register("generateUniffiBindings") {
+ 
          exec {
              workingDir project.rootDir
--            commandLine 'cargo', 'uniffi-bindgen', 'generate', '--no-format', "${project.projectDir}/${udlFilePath}", '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get()
-+            commandLine '{uniffi}/uniffi-bindgen', 'generate', '--no-format', "${project.projectDir}/${udlFilePath}", '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get(), '--config', "${project.projectDir}/../uniffi.toml", '--lib-file', "${project.rootDir}/target/{libxul_dir}/libxul.so", '--crate', 'glean_core'
+-            commandLine 'cargo', 'uniffi-bindgen', 'generate', '--no-format', '--library', libraryPath, '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get()
++            commandLine '{IRONFOX_UNIFFI}/uniffi-bindgen', 'generate', '--no-format', "${project.projectDir}/../src/glean.udl", '--language', 'kotlin', '--out-dir', UNIFFI_OUT_DIR.get(), '--config', "${project.projectDir}/../uniffi.toml", '--lib-file', "${project.rootDir}/target/{libxul_dir}/libxul.so", '--crate', 'glean_core'
          }
      }
-     outputs.dir UNIFFI_OUT_DIR
+ 
 diff --git a/glean-core/android/proguard-rules-consumer.pro b/glean-core/android/proguard-rules-consumer.pro
-index 0ca6fc7..e365179 100644
+index 0ca6fc73..821d45ce 100644
 --- a/glean-core/android/proguard-rules-consumer.pro
 +++ b/glean-core/android/proguard-rules-consumer.pro
 @@ -2,15 +2,15 @@
@@ -22,22 +22,37 @@ index 0ca6fc7..e365179 100644
 --dontwarn java.awt.*
 --keep class com.sun.jna.* { *; }
 --keepclassmembers class * extends com.sun.jna.* { public *; }
-+#-dontwarn java.awt.*
-+#-keep class com.sun.jna.* { *; }
-+#-keepclassmembers class * extends com.sun.jna.* { public *; }
++# -dontwarn java.awt.*
++# -keep class com.sun.jna.* { *; }
++# -keepclassmembers class * extends com.sun.jna.* { public *; }
  
  # Glean specific rules
 --keep class mozilla.telemetry.** { *; }
-+#-keep class mozilla.telemetry.** { *; }
++# -keep class mozilla.telemetry.** { *; }
  
  # The Glean SDK ships with classes used for tests as well. They are disabled
  # and not directly usable in production code: they throw if used there. They
  # can be used in tests just fine but, outside of tests, the test dependency
  # they use won't be there, hence the warning. It's safe to suppress these.
 --dontwarn mozilla.telemetry.glean.testing.**
-+#-dontwarn mozilla.telemetry.glean.testing.**
++# -dontwarn mozilla.telemetry.glean.testing.**
+diff --git a/glean-core/android-native/build.gradle b/glean-core/android-native/build.gradle
+index 53716d52..c64f37bb 100644
+--- a/glean-core/android-native/build.gradle
++++ b/glean-core/android-native/build.gradle
+@@ -25,7 +25,9 @@ android {
+         minSdkVersion rootProject.ext.build['minSdkVersion']
+         targetSdkVersion rootProject.ext.build['targetSdkVersion']
+     }
+-
++    buildFeatures {
++        buildConfig = false
++    }
+     buildTypes {
+         debug {
+             // Export our rules in debug, as a consumer might still enable proguard/r8
 diff --git a/glean-core/android-native/proguard-rules-consumer.pro b/glean-core/android-native/proguard-rules-consumer.pro
-index 53519d424..855cad12e 100644
+index 53519d42..77b9ccb0 100644
 --- a/glean-core/android-native/proguard-rules-consumer.pro
 +++ b/glean-core/android-native/proguard-rules-consumer.pro
 @@ -2,6 +2,6 @@
@@ -47,6 +62,6 @@ index 53519d424..855cad12e 100644
 --dontwarn java.awt.*
 --keep class com.sun.jna.* { *; }
 --keepclassmembers class * extends com.sun.jna.* { public *; }
-+#-dontwarn java.awt.*
-+#-keep class com.sun.jna.* { *; }
-+#-keepclassmembers class * extends com.sun.jna.* { public *; }
++# -dontwarn java.awt.*
++# -keep class com.sun.jna.* { *; }
++# -keepclassmembers class * extends com.sun.jna.* { public *; }

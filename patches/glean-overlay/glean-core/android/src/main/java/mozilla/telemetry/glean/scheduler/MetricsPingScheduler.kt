@@ -4,9 +4,6 @@ package mozilla.telemetry.glean.scheduler
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.annotation.VisibleForTesting
-import mozilla.telemetry.glean.BuildInfo
-import mozilla.telemetry.glean.GleanMetrics.Pings
 import java.util.Calendar
 import java.util.Date
 import java.util.Timer
@@ -15,7 +12,7 @@ import java.util.TimerTask
 @Suppress("TooManyFunctions")
 internal class MetricsPingScheduler(
     private val applicationContext: Context,
-    private val buildInfo: BuildInfo,
+    private val buildInfo: Any?,
     migratedLastSentDate: String? = null,
 ) {
     internal val sharedPreferences: SharedPreferences by lazy {
@@ -34,30 +31,25 @@ internal class MetricsPingScheduler(
 
     internal fun safeDateToString(date: Date): String = ""
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun schedulePingCollection(
         now: Calendar,
         sendTheNextCalendarDay: Boolean,
-        reason: Pings.metricsReasonCodes,
+        reason: Any?,
     ) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun isDifferentVersion(): Boolean = false
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun getMillisecondsUntilDueTime(
         sendTheNextCalendarDay: Boolean,
         now: Calendar,
         dueHourOfTheDay: Int = DUE_HOUR_OF_THE_DAY,
     ): Long = 0L
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun isAfterDueTime(
         now: Calendar,
         dueHourOfTheDay: Int = DUE_HOUR_OF_THE_DAY,
     ): Boolean = false
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun getDueTimeForToday(now: Calendar, dueHourOfTheDay: Int): Calendar {
         val dueTime = now.clone() as Calendar
         dueTime.set(Calendar.HOUR_OF_DAY, 0)
@@ -69,24 +61,20 @@ internal class MetricsPingScheduler(
 
     fun schedule(): Boolean = false
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal fun collectPingAndReschedule(now: Calendar, startupPing: Boolean, reason: Pings.metricsReasonCodes) {}
+    internal fun collectPingAndReschedule(now: Calendar, startupPing: Boolean, reason: Any?) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun getLastCollectedDate(): Date? = null
 
     fun cancel() {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun updateSentDate(date: String) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal fun getCalendarInstance(): Calendar = Calendar.getInstance()
 }
 
 internal class MetricsPingTimer(
     val scheduler: MetricsPingScheduler,
-    val reason: Pings.metricsReasonCodes,
+    val reason: Any?,
 ) : TimerTask() {
     override fun run() {}
 }

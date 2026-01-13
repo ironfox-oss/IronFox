@@ -2,41 +2,31 @@
 
 package mozilla.telemetry.glean
 
-import android.content.Context
-import androidx.annotation.VisibleForTesting
-import mozilla.telemetry.glean.config.Configuration
-import mozilla.telemetry.glean.net.BaseUploader
-import mozilla.telemetry.glean.scheduler.GleanLifecycleObserver
-import mozilla.telemetry.glean.scheduler.MetricsPingScheduler
-import java.io.File
-import java.util.Calendar
-
 typealias GleanTimerId = mozilla.telemetry.glean.internal.TimerId
 
-data class BuildInfo(val versionCode: String, val versionName: String, val buildDate: Calendar)
+data class BuildInfo(val versionCode: String, val versionName: String, val buildDate: Any?)
 
 @Suppress("TooManyFunctions")
 open class GleanInternalAPI internal constructor() {
     internal var initialized: Boolean = false
 
-    internal lateinit var configuration: Configuration
+    internal lateinit var configuration: Any
 
-    internal lateinit var httpClient: BaseUploader
+    internal lateinit var httpClient: Any
 
-    internal lateinit var applicationContext: Context
+    internal lateinit var applicationContext: Any
 
-    internal val gleanLifecycleObserver by lazy { GleanLifecycleObserver() }
+    internal val gleanLifecycleObserver by lazy {}
 
-    private lateinit var gleanDataDir: File
+    private lateinit var gleanDataDir: Any
 
     internal var testingMode: Boolean = false
         private set
 
-    internal var metricsPingScheduler: MetricsPingScheduler? = null
+    internal var metricsPingScheduler: Any? = null
 
     internal val afterInitQueue: MutableList<() -> Unit> = mutableListOf()
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     internal var isMainProcess: Boolean? = null
 
     internal var isSendingToTestEndpoint: Boolean = false
@@ -45,12 +35,11 @@ open class GleanInternalAPI internal constructor() {
 
     internal var isCustomDataPath: Boolean = false
 
-    @JvmOverloads
     @Synchronized
     fun initialize(
-        applicationContext: Context,
+        applicationContext: Any?,
         uploadEnabled: Boolean,
-        configuration: Configuration = Configuration(),
+        configuration: Any?,
         buildInfo: BuildInfo,
     ) {
         return
@@ -73,24 +62,19 @@ open class GleanInternalAPI internal constructor() {
 
     fun setExperimentInactive(experimentId: String) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun testIsExperimentActive(experimentId: String): Boolean = false
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun testGetExperimentData(experimentId: String) {}
 
     fun setExperimentationId(experimentationId: String) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun testGetExperimentationId(): String = ""
 
     fun registerEventListener(tag: String) {}
 
     fun unregisterEventListener(tag: String) {}
 
-    internal fun getClientInfo(configuration: Configuration, buildInfo: BuildInfo) {}
-
-    internal fun getDataDir(): File = File("")
+    internal fun getClientInfo(configuration: Any?, buildInfo: BuildInfo) {}
 
     internal fun handleForegroundEvent() {}
 
@@ -114,42 +98,33 @@ open class GleanInternalAPI internal constructor() {
 
     fun getLogPings(): Boolean = false
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun enableTestingMode() {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun setTestingMode(enabled: Boolean) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     internal fun setDirtyFlag(flag: Boolean) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun resetGlean(
-        context: Context,
-        config: Configuration,
+        context: Any?,
+        config: Any?,
         clearStores: Boolean,
         uploadEnabled: Boolean = false,
     ) {}
 
     internal fun afterInitialize(block: () -> Unit) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun testSetLocalEndpoint(port: Int) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun testDestroyGleanHandle(clearStores: Boolean = false, dataPath: String? = null) {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    internal fun isMainProcess(context: Context): Boolean = false
+    internal fun isMainProcess(context: Any?): Boolean = false
 
     fun updateAttribution() {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun testGetAttribution() {}
 
     fun updateDistribution() {}
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun testGetDistribution() {}
 }
 

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..ef7a924f5a 100644
+index 276ad8cf1df1..e044a8ef9656 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1003,7 +1003,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1045,7 +1045,7 @@ class Settings(
  
      var shouldUseHttpsOnly by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_https_only),

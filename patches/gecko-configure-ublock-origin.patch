@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/extensions/NativeManifests.sys.mjs b/toolkit/components/extensions/NativeManifests.sys.mjs
-index 5c9cee1b70..a591196f51 100644
+index 5c9cee1b700d..a591196f51e7 100644
 --- a/toolkit/components/extensions/NativeManifests.sys.mjs
 +++ b/toolkit/components/extensions/NativeManifests.sys.mjs
 @@ -35,7 +35,7 @@ export var NativeManifests = {
@@ -12,7 +12,7 @@ index 5c9cee1b70..a591196f51 100644
            Services.dirsvc.get("XREUserNativeManifests", Ci.nsIFile).path,
            Services.dirsvc.get("XRESysNativeManifests", Ci.nsIFile).path,
 diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
-index 0d6109c250..b5fcd53a34 100644
+index 0d6109c25019..b5fcd53a34b1 100644
 --- a/toolkit/components/extensions/parent/ext-storage.js
 +++ b/toolkit/components/extensions/parent/ext-storage.js
 @@ -411,6 +411,46 @@ this.storage = class extends ExtensionAPIPersistent {

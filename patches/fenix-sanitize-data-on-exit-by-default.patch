@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 35d4c5a9c0..96d9cdd85d 100644
+index 276ad8cf1df1..2eeb1757b0f0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1313,7 +1313,7 @@ class Settings(private val appContext: Context) : PreferencesHolder {
+@@ -1336,7 +1336,7 @@ class Settings(
  
      var shouldDeleteBrowsingDataOnQuit by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_browsing_data_on_quit),
@@ -11,10 +11,10 @@ index 35d4c5a9c0..96d9cdd85d 100644
      )
  
      var deleteOpenTabs by booleanPreference(
-@@ -1404,8 +1404,17 @@ class Settings(private val appContext: Context) : PreferencesHolder {
-             return touchExplorationIsEnabled || switchServiceIsEnabled
-         }
- 
+@@ -1433,8 +1433,17 @@ class Settings(
+      * @param type The [DeleteBrowsingDataOnQuitType] to check.
+      * @return `true` if the data type is set to be deleted on quit, `false` otherwise.
+      */
 -    fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean =
 -        preferences.getBoolean(type.getPreferenceKey(appContext), false)
 +    fun getDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType): Boolean {
@@ -29,10 +29,10 @@ index 35d4c5a9c0..96d9cdd85d 100644
 +        return preferences.getBoolean(type.getPreferenceKey(appContext), defaultValue)
 +    }
  
-     fun setDeleteDataOnQuit(type: DeleteBrowsingDataOnQuitType, value: Boolean) {
-         preferences.edit { putBoolean(type.getPreferenceKey(appContext), value) }
+     /**
+      * Sets whether a specific type of browsing data should be deleted on quit.
 diff --git a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
-index a5cc8cabb6..f38c9f61c4 100644
+index a5cc8cabb689..f38c9f61c4f2 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/delete_browsing_data_quit_preferences.xml
 @@ -5,7 +5,7 @@

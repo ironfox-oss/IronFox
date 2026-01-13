@@ -115,22 +115,22 @@ index 6c70a63988de..5ce76e4151a4 100644
 +      install-ublock:
 +        description: Whether to install uBlock Origin.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 53190b359c..11dd04263a 100644
+index da46df8f5cd7..78720869ea3b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -271,6 +271,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -272,6 +272,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
          setupLeakCanary()
          if (components.fenixOnboarding.userHasBeenOnboarded()) {
-+            settings().ironFoxOnboardingCompleted = true
++            settings().ironfox.ironFoxOnboardingCompleted = true
              startMetricsIfEnabled(
                  logger = logger,
                  analytics = components.analytics,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 1318bb114a35..907d9bab737b 100644
+index 7ccbf4d7c2c6..833a3cc2ac59 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -64,6 +64,7 @@ import org.mozilla.fenix.settings.SupportUtils
+@@ -65,6 +65,7 @@ import org.mozilla.fenix.settings.SupportUtils
  import org.mozilla.fenix.theme.FirefoxTheme
  import org.mozilla.fenix.utils.canShowAddSearchWidgetPrompt
  import org.mozilla.fenix.utils.maybeShowAddSearchWidgetPrompt
@@ -138,11 +138,11 @@ index 1318bb114a35..907d9bab737b 100644
  
  /**
   * Fragment displaying the onboarding flow.
-@@ -467,6 +468,8 @@ class OnboardingFragment : Fragment() {
+@@ -469,6 +470,8 @@ class OnboardingFragment : Fragment() {
          requireComponents.fenixOnboarding.finish()
  
          val settings = requireContext().settings()
-+        settings.ironFoxOnboardingCompleted = true
++        settings.ironfox.ironFoxOnboardingCompleted = true
 +        GeckoSettingsBridge.setIronFoxPrefs(requireContext(), requireComponents.core.engine)
          viewLifecycleOwner.lifecycleScope.launch {
              initializeGlean(
@@ -201,22 +201,16 @@ index f1d714d1f5c3..17bc78876ffa 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index 795fcd7b7e..b6fd72c0dd 100644
+index ba8f67c8749c..0aca722a8919 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-@@ -6,12 +6,15 @@ package org.mozilla.fenix.onboarding.view
- 
- import org.mozilla.fenix.nimbus.CustomizationThemeData
- import org.mozilla.fenix.nimbus.CustomizationToolbarData
-+import org.mozilla.fenix.nimbus.IfOnboardingPreferenceType
-+import org.mozilla.fenix.nimbus.IfPreferencesData
- import org.mozilla.fenix.nimbus.MarketingData
- import org.mozilla.fenix.nimbus.OnboardingCardData
- import org.mozilla.fenix.nimbus.OnboardingCardType
+@@ -12,6 +12,9 @@ import org.mozilla.fenix.nimbus.OnboardingCardType
  import org.mozilla.fenix.nimbus.TermsOfServiceData
  import org.mozilla.fenix.nimbus.ThemeType
  import org.mozilla.fenix.nimbus.ToolbarType
 +import java.lang.UnsupportedOperationException
++import org.mozilla.fenix.nimbus.IfOnboardingPreferenceType
++import org.mozilla.fenix.nimbus.IfPreferencesData
  
  /**
   * Returns a list of all the required Nimbus 'cards' that have been converted to [OnboardingPageUiData].
@@ -224,7 +218,7 @@ index 795fcd7b7e..b6fd72c0dd 100644
          ?.toOnboardingThemeOptions(),
      termsOfService = extraData?.termOfServiceData?.toOnboardingTermsOfService(),
      marketingData = extraData?.marketingData?.toOnboardingMarketingData(),
-+    ifPreferencesData = extraData?.ifPreferencesData?.toOnboardingIfPreferenceOptions()
++    ifPreferencesData = extraData?.ifPreferencesData?.toOnboardingIfPreferenceOptions(),
  )
  
  private fun OnboardingCardType.toPageUiDataType() = when (this) {
@@ -237,7 +231,7 @@ index 795fcd7b7e..b6fd72c0dd 100644
  }
  
  private fun List<CustomizationToolbarData>.toOnboardingToolbarOptions() = map { it.toOnboardingCustomizeToolbar() }
-@@ -177,6 +183,25 @@ private fun ThemeType.toThemeOptionType() = when (this) {
+@@ -180,6 +186,25 @@ private fun ThemeType.toThemeOptionType() = when (this) {
      ThemeType.THEME_SYSTEM -> ThemeOptionType.THEME_SYSTEM
  }
  
@@ -263,16 +257,16 @@ index 795fcd7b7e..b6fd72c0dd 100644
  /**
   * Mapper to convert [OnboardingPageUiData] to [OnboardingPageState] that is a param for
   * [OnboardingPage] composable.
-@@ -195,6 +220,8 @@ internal fun mapToOnboardingPageState(
+@@ -198,6 +223,8 @@ internal fun mapToOnboardingPageState(
      onCustomizeToolbarButtonClick: () -> Unit,
-     onCustomizeThemeClick: () -> Unit,
+     onCustomizeThemeClick: () -> Unit = {},
      onTermsOfServiceButtonClick: () -> Unit,
 +    onIfPreferenceDohButtonClick: () -> Unit,
 +    onIfPreferencesButtonClick: () -> Unit,
      onMarketingDataContinueClick: () -> Unit = {},
  ): OnboardingPageState = when (onboardingPageUiData.type) {
      OnboardingPageUiData.Type.DEFAULT_BROWSER -> createOnboardingPageState(
-@@ -244,6 +271,18 @@ internal fun mapToOnboardingPageState(
+@@ -247,6 +274,18 @@ internal fun mapToOnboardingPageState(
          onPositiveButtonClick = onMarketingDataContinueClick,
          onNegativeButtonClick = {}, // No negative button option for marketing data.
      )
@@ -291,14 +285,14 @@ index 795fcd7b7e..b6fd72c0dd 100644
  }
  
  private fun createOnboardingPageState(
-@@ -263,4 +302,5 @@ private fun createOnboardingPageState(
+@@ -266,4 +305,5 @@ private fun createOnboardingPageState(
      toolbarOptions = onboardingPageUiData.toolbarOptions,
      termsOfService = onboardingPageUiData.termsOfService,
      marketingData = onboardingPageUiData.marketingData,
-+    ifPreferenceOptions = onboardingPageUiData.ifPreferencesData
++    ifPreferenceOptions = onboardingPageUiData.ifPreferencesData,
  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
-index ff09ecbc5d..57751aa3c8 100644
+index b63828cda096..48a076c0e4ff 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageState.kt
 @@ -6,6 +6,7 @@ package org.mozilla.fenix.onboarding.view
@@ -340,7 +334,7 @@ index ff09ecbc5d..57751aa3c8 100644
   * Model containing data for the terms of service page during onboarding.
   */
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
-index 6625e28ee5..f8aa6816d7 100644
+index 6625e28ee5c9..f8aa6816d77a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingPageUiData.kt
 @@ -22,6 +22,7 @@ data class OnboardingPageUiData(
@@ -365,7 +359,7 @@ index 6625e28ee5..f8aa6816d7 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
-index e58fc13feb45..e70259b67722 100644
+index fed7228980eb..3cc54caeeea3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 @@ -216,6 +216,12 @@ fun OnboardingScreen(
@@ -391,15 +385,15 @@ index e58fc13feb45..e70259b67722 100644
      val nestedScrollConnection = remember { DisableForwardSwipeNestedScrollConnection(pagerState) }
  
 @@ -294,6 +302,8 @@ private fun OnboardingContent(
-                 onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
-                 onCustomizeThemeClick = onCustomizeThemeButtonClick,
-                 onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
-+                onIfPreferenceDohButtonClick = onIfPreferenceDohButtonClick,
-+                onIfPreferencesButtonClick = onIfPreferencesButtonClick,
-             )
-             OnboardingPageForType(
-                 type = pageUiState.type,
-@@ -383,6 +393,14 @@ private fun OnboardingPageForType(
+                     onCustomizeToolbarButtonClick = onCustomizeToolbarButtonClick,
+                     onCustomizeThemeClick = onCustomizeThemeButtonClick,
+                     onTermsOfServiceButtonClick = onAgreeAndConfirmTermsOfService,
++                    onIfPreferenceDohButtonClick = onIfPreferenceDohButtonClick,
++                    onIfPreferencesButtonClick = onIfPreferencesButtonClick,
+                 )
+                 OnboardingPageForType(
+                     type = pageUiState.type,
+@@ -384,6 +394,14 @@ private fun OnboardingPageForType(
              state,
              termsOfServiceEventHandler,
          )
@@ -414,7 +408,7 @@ index e58fc13feb45..e70259b67722 100644
      }
  }
  
-@@ -432,6 +450,8 @@ private fun OnboardingScreenPreview() {
+@@ -433,6 +451,8 @@ private fun OnboardingScreenPreview() {
              onMarketingDataLearnMoreClick = {},
              onMarketingOptInToggle = {},
              onMarketingDataContinueClick = {},
@@ -424,15 +418,15 @@ index e58fc13feb45..e70259b67722 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-index 262d763533..aea26e1a2a 100644
+index 3ff22c3732ee..7fd599518040 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/doh/root/DohSettingsScreen.kt
-@@ -441,7 +441,7 @@ private fun buildProviderMenuItems(
+@@ -436,7 +436,7 @@ private fun buildProviderMenuItems(
  }
  
  @Composable
 -private fun AlertDialogAddCustomProvider(
 +internal fun AlertDialogAddCustomProvider(
+     customProviderUrl: String,
      customProviderErrorState: CustomProviderErrorState,
      onCustomCancelClicked: () -> Unit,
-     onCustomAddClicked: (String) -> Unit,

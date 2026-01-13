@@ -18,9 +18,9 @@ __pycache__/
 /patches/gecko-overlay/ironfox/prefs/000-phoenix.js
 /patches/gecko-overlay/ironfox/prefs/001-phoenix-extended.js
 
-# Script containing environment variables for local builds
+# Environment variables for local builds
+/env_override.sh
 /scripts/env_local.sh
-/scripts/env_override.sh
 
 # WIP
 /wip/

@@ -1,2 +1,7 @@
 
+ac_add_options --disable-android-bundle
 ac_add_options --target='aarch64-linux-android'
+
+# Enable performance optimizations for WebAssembly
+ac_add_options --enable-wasm-relaxed-simd
+ac_add_options --enable-wasm-simd

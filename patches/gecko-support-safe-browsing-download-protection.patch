@@ -1,0 +1,13 @@
+diff --git a/toolkit/components/url-classifier/nsUrlClassifierUtils.cpp b/toolkit/components/url-classifier/nsUrlClassifierUtils.cpp
+index 67239752a6aa..03d0c42ef193 100644
+--- a/toolkit/components/url-classifier/nsUrlClassifierUtils.cpp
++++ b/toolkit/components/url-classifier/nsUrlClassifierUtils.cpp
+@@ -181,7 +181,7 @@ static bool IsAllowedOnCurrentPlatform(uint32_t aThreatType) {
+     case CSD_DOWNLOAD_WHITELIST:
+       // Bug 1392204 - 'goog-downloadwhite-proto' and 'goog-badbinurl-proto'
+       // are not available on android.
+-      return ANDROID_PLATFORM != platform;
++      return true;
+   }
+   // We allow every threat type not listed in the switch cases.
+   return true;
