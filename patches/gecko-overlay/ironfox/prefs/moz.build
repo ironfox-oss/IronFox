@@ -1,4 +1,12 @@
 
-JS_PREFERENCE_PP_FILES += [
-    "002-ironfox.js",
-]
+if not CONFIG["MOZ_ANDROID_FAT_AAR_ARCHITECTURES"]:
+    FINAL_TARGET_PP_FILES.defaults.pref[CONFIG["ANDROID_CPU_ARCH"]] += [
+        "002-ironfox.js",
+    ]
+else:
+    for arch in CONFIG["MOZ_ANDROID_FAT_AAR_ARCHITECTURES"]:
+        FINAL_TARGET_FILES.defaults.pref[arch] += [
+            "!/dist/fat-aar/output/defaults/pref/{arch}/002-ironfox.js".format(
+                arch=arch
+            ),
+        ]
