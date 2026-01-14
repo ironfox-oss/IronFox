@@ -218,18 +218,6 @@ index 300af36b9c64..2c43680577a1 100644
  ) : ThemeManager() {
      override var currentTheme: BrowsingMode = currentTheme
          set(value) {
-diff --git a/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml b/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml
-index 5ff34141cdb7..7cdea8233d53 100644
---- a/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml
-+++ b/mobile/android/fenix/app/src/main/res/drawable/rounded_search_widget_background.xml
-@@ -6,6 +6,6 @@
- <shape xmlns:android="http://schemas.android.com/apk/res/android">
-     <!-- Use @color instead of ?attr since the search widget will not be able to retrieve
-          the attribute value. -->
--    <solid android:color="@color/fx_mobile_surface" />
-+    <solid android:color="?attr/colorSurface" />
-     <corners android:radius="@dimen/tab_corner_radius"/>
- </shape>
 diff --git a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml b/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
 index 239e96b563af..196d099f90ab 100644
 --- a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
