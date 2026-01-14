@@ -106,6 +106,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "gryphline.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "gsi.go.jp"
     },
     {
