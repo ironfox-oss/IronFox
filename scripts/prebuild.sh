@@ -1051,6 +1051,7 @@ mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
 "${IRONFOX_SED}" -i \
     -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.features.harmfuladdon.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.boolean"|' \
