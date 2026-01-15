@@ -16,16 +16,6 @@ pref("app.vendorURL", "https://ironfoxoss.org/", locked);
 pref("browser.ironfox.isIronFox", true, locked);
 pref("browser.ironfox.version", "{IRONFOX_VERSION}", locked);
 
-#ifdef IRONFOX_RELEASE
-    pref("app.support.vendor", "IronFox: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}");
-    pref("browser.ironfox.channel", "release", locked);
-    pref("browser.ironfox.isRelease", true, locked);
-#else
-    pref("app.support.vendor", "IronFox Nightly: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}");
-    pref("browser.ironfox.channel", "nightly", locked);
-    pref("browser.ironfox.isRelease", false, locked);
-#endif
-
 /// Once the onboarding is completed, this pref is set to true
 // On IronFox's onboarding, we want to allow the installation of uBlock Origin (if certain strict criteria is met - 
 // see gecko-ironfox-settings-support-xpinstall.patch) without needing to also enable the installation of add-ons
