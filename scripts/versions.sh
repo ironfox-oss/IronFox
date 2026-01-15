@@ -7,7 +7,7 @@
 FIREFOX_COMMIT='6debc48f4ded8d92c58fb9a2f4f6008df18d919c'
 FIREFOX_VERSION='147.0'
 
-IRONFOX_VERSION="${FIREFOX_VERSION}"
+IRONFOX_VERSION="${FIREFOX_VERSION}.0.1"
 
 ## Application Services
 ### https://github.com/mozilla/application-services
@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v147.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='17731a5d5acba146e0d6e079ba8ab4e6724e6691'
+L10N_COMMIT='9d848a260e5d8c7ada11f2a207829ab9a0f30751'
 
 ## Glean
 ### https://github.com/mozilla/glean
