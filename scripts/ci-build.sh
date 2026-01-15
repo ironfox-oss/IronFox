@@ -70,9 +70,9 @@ if [[ "${BUILD_TYPE}" == "apk" ]]; then
 
     if [[ "${BUILD_VARIANT}" == 'arm' ]]; then
         cp -vf "${IRONFOX_GECKOVIEW_AAR_ARM}" "${IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT}"
-    else if [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
+    elif [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
         cp -vf "${IRONFOX_GECKOVIEW_AAR_ARM64}" "${IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT}"
-    else if [[ "${BUILD_VARIANT}" == 'x86_64' ]]; then
+    elif [[ "${BUILD_VARIANT}" == 'x86_64' ]]; then
         cp -vf "${IRONFOX_GECKOVIEW_AAR_X86_64}" "${IRONFOX_GECKOVIEW_AAR_X86_64_ARTIFACT}"
     fi
 
