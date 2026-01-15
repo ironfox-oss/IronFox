@@ -218,20 +218,8 @@ index 300af36b9c64..2c43680577a1 100644
  ) : ThemeManager() {
      override var currentTheme: BrowsingMode = currentTheme
          set(value) {
-diff --git a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml b/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
-index 239e96b563af..196d099f90ab 100644
---- a/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
-+++ b/mobile/android/fenix/app/src/main/res/values-v27/styles.xml
-@@ -57,6 +57,6 @@
-     <style name="TabTrayDialogStyle" parent="TabTrayDialogStyleBase">
-         <item name="android:navigationBarDividerColor">@android:color/transparent</item>
-         <item name="android:windowLightNavigationBar">@bool/theme_is_light</item>
--        <item name="android:navigationBarColor">@color/fx_mobile_surface</item>
-+        <item name="android:navigationBarColor">?attr/colorSurface</item>
-     </style>
- </resources>
 diff --git a/mobile/android/fenix/app/src/main/res/values/styles.xml b/mobile/android/fenix/app/src/main/res/values/styles.xml
-index 87349322e6ab..6c85343ab234 100644
+index 87349322e6ab..c58d4d71feaa 100644
 --- a/mobile/android/fenix/app/src/main/res/values/styles.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/styles.xml
 @@ -109,6 +109,7 @@
@@ -242,24 +230,6 @@ index 87349322e6ab..6c85343ab234 100644
          <!-- Primary button in a disabled state -->
          <item name="actionPrimaryDisabled">@color/fx_mobile_action_color_primary_disabled</item>
          <!-- Selected chip -->
-@@ -532,7 +533,7 @@
-         <item name="android:layout_height">48dp</item>
-         <item name="android:textStyle">bold</item>
-         <item name="android:textAllCaps">false</item>
--        <item name="backgroundTint">@color/fx_mobile_action_color_secondary</item>
-+        <item name="backgroundTint">?attr/actionSecondary</item>
-         <item name="android:textColor">@color/fx_mobile_text_color_action_secondary</item>
-         <item name="rippleColor">?attr/textSecondary</item>
-         <item name="android:letterSpacing">0</item>
-@@ -821,7 +822,7 @@
-     <!-- Tab Tray does not present a private theme, so it needs to be separate from other bottom sheet styles -->
-     <style name="TabTrayDialogStyleBase" parent="BottomSheetBase">
-         <item name="bottomSheetStyle">@style/BottomSheetModal</item>
--        <item name="android:colorBackground">@color/fx_mobile_surface</item>
-+        <item name="android:colorBackground">?attr/colorSurface</item>
-     </style>
- 
-     <style name="TabTrayDialogStyle" parent="TabTrayDialogStyleBase" />
 diff --git a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
 index 313053c48c62..619cb8e8e997 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
