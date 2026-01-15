@@ -300,6 +300,17 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
 
             requireComponents.useCases.sessionUseCases.reload.invoke()
 
+            Toast.makeText(
+                context,
+                getString(FenixStringsDictionary.quitApplication),
+                Toast.LENGTH_LONG,
+            ).show()
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    exitProcess(0)
+                },
+                DEFAULT_EXIT_DELAY,
+            )
             true
         }
 

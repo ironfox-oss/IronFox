@@ -164,7 +164,7 @@ pref("network.http.referer.XOriginPolicy", 0);
 pref("pdfjs.disabled", false);
 pref("print.enabled", true);
 pref("privacy.fingerprintingProtection.remoteOverrides.enabled", true);
-pref("privacy.spoof_english", 2);
+pref("privacy.spoof_english", 0); // We enable locale spoofing by default, but this has to be set to 0 initially to ensure its state is properly reflected
 pref("signon.rememberSignons", false);
 pref("svg.disabled", false);
 pref("webgl.disabled", true);
