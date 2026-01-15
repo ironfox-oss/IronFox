@@ -47,6 +47,13 @@ bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
 
 source "$(realpath $(dirname "$0"))/env_local.sh"
 
+if [[ "$BUILD_TYPE" == "bundle" ]]; then
+    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64}"
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM}"
+    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GECKOVIEW_AAR_X86_64}"
+fi
+
 # Set the build date to the date of commmit to ensure that the
 # MOZ_BUILDID is consistent across CI build jobs
 export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
