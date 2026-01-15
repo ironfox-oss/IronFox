@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v147.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='3c33d81b560c62819fd333b5228025efa411db60'
+L10N_COMMIT='17731a5d5acba146e0d6e079ba8ab4e6724e6691'
 
 ## Glean
 ### https://github.com/mozilla/glean
@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-UNIFIEDPUSHAC_COMMIT='8fb654f5d1c989225b431d399a0734bf982771e6'
+UNIFIEDPUSHAC_COMMIT='88599e427ba781f21a15f9be4e7e1f94236e5239'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
