@@ -1057,8 +1057,9 @@ mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
     -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.boolean"|' \
     mobile/android/app/geckoview-prefs.js
 
+# Gecko prefs
 echo '' >>mobile/android/app/geckoview-prefs.js
-echo '#include ../../../ironfox/prefs/002-ironfox.js' >>mobile/android/app/geckoview-prefs.js
+echo '#include ironfox.js' >>mobile/android/app/geckoview-prefs.js
 echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDefaultPrefs.js
 
 # Apply Gecko overlay

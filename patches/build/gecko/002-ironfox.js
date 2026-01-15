@@ -1,7 +1,3 @@
-
-#include 000-phoenix.js
-#include 001-phoenix-extended.js
-
 // Melding the Phoenix into a fox, with a strong coat of Iron…
 
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
