@@ -1,3 +1,18 @@
+diff --git a/mobile/android/app/moz.build b/mobile/android/app/moz.build
+index c7c6d5bcb1892..2d34ce4306d33 100644
+--- a/mobile/android/app/moz.build
++++ b/mobile/android/app/moz.build
+@@ -16,6 +16,10 @@ for var in ("MOZ_UPDATER", "MOZ_APP_UA_NAME", "TARGET_CPU"):
+ if CONFIG["MOZ_PKG_SPECIAL"]:
+     DEFINES["MOZ_PKG_SPECIAL"] = CONFIG["MOZ_PKG_SPECIAL"]
+ 
++JS_PREFERENCE_PP_FILES += [
++    "ironfox.js",
++]
++
+ if not CONFIG["MOZ_ANDROID_FAT_AAR_ARCHITECTURES"]:
+     # Equivalent to JS_PREFERENCE_PP_FILES[CONFIG['ANDROID_CPU_ARCH']],
+     # which isn't supported out of the box.
 diff --git a/toolkit/content/aboutSupport.js b/toolkit/content/aboutSupport.js
 index fb4fbac6ac59..7a2425d69fe5 100644
 --- a/toolkit/content/aboutSupport.js
