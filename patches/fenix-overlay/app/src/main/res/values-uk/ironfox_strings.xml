@@ -44,7 +44,7 @@
     <string name="preference_print_enabled">Увімкнути можливості друку</string>
     <string name="preference_safe_browsing_enabled">Увімкнути безпечний перегляд</string>
     <string name="preference_safe_browsing_enabled_caption">Отримайте захист у режимі реального часу від небезпечних веб-сайтів, шкідливого програмного забезпечення та спроб фішингу.</string>
-    <string name="tor_spoof_english_summary">Коли ввімкнено, посилює захист відбитків пальців</string>
+    <string name="tor_spoof_english_summary">Якщо ввімкнено, посилює захист відбитків пальців. Зміна цього налаштування перезапустить браузер</string>
     <string name="spoof_timezone">Підробка часового поясу на UTC-0</string>
     <string name="spoof_timezone_summary">Коли ввімкнено, посилює захист відбитків пальців</string>
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Увімкнути заміну підробки часового поясу від IronFox</string>

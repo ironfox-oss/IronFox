@@ -1051,14 +1051,25 @@ mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
 "${IRONFOX_SED}" -i \
     -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.boolean"|' \
+    -e 's|"browser.safebrowsing.features.harmfuladdon.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.boolean"|' \
     mobile/android/app/geckoview-prefs.js
 
-echo '' >>mobile/android/app/geckoview-prefs.js
-echo '#include ../../../ironfox/prefs/002-ironfox.js' >>mobile/android/app/geckoview-prefs.js
+# Gecko prefs
+{
+    cat "${patches}/gecko-overlay/ironfox/prefs/000-phoenix.js"
+    cat "${patches}/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
+    cat "${patches}/build/gecko/002-ironfox.js"
+    cat "${patches}/build/gecko/003-ironfox-${IRONFOX_CHANNEL}.js"
+} >>mobile/android/app/geckoview-prefs.js
+
+"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" mobile/android/app/geckoview-prefs.js
+"${IRONFOX_SED}" -i "s|{IRONFOX_UBO_ASSETS_URL}|${IRONFOX_UBO_ASSETS_URL}|" mobile/android/app/geckoview-prefs.js
+"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" mobile/android/app/geckoview-prefs.js
+
 echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDefaultPrefs.js
 
 # Apply Gecko overlay
