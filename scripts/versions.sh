@@ -27,8 +27,8 @@ GLEAN_VERSION='v66.2.0'
 
 ## microG
 ### https://github.com/microg/GmsCore
-GMSCORE_COMMIT='34048e6a47914ef38cb65654cde4b67d9b28f3b5'
-GMSCORE_VERSION='v0.3.11.250932'
+GMSCORE_COMMIT='cbb8dcfbe8e6155ef6e2276636a94f902041485f'
+GMSCORE_VERSION='v0.3.12.250932'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
