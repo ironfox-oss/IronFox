@@ -36,7 +36,7 @@
     <string name="tor_spoof_english_caption">Повысьте конфиденциальность, скрыв языковые настройки вашего устройства.</string>
     <string name="tor_spoof_english_description">Запрашивать английские (en-US) версии веб-страниц. Это делает ваш браузер менее уникальным, усиливая защиту от методов фингерпринтинга, которые идентифицируют пользователей по их языковым предпочтениям.</string>
     <string name="tor_spoof_english">Запрашивать веб-страницы на английском языке</string>
-    <string name="tor_spoof_english_summary">Включенная опция усиливает защиту от фингерпринтинга</string>
+    <string name="tor_spoof_english_summary">Включение этой опции усиливает защиту от фингерпринтинга - Изменение этой опции приведет к перезагрузке браузера</string>
     <string name="preference_svg_enabled">Включить поддержку SVG</string>
     <string name="preferences_debug_settings_unifiedpush">Включить UnifiedPush</string>
     <string name="preferences_unifiedpush">Использовать UnifiedPush</string>
