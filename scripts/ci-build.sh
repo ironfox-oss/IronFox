@@ -42,10 +42,10 @@ fi
 # Get sources
 bash -x ./scripts/get_sources.sh
 
-source "$(realpath $(dirname "$0"))/env_local.sh"
-
 # Prepare sources
 bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
+
+source "$(realpath $(dirname "$0"))/env_local.sh"
 
 if [[ "$BUILD_TYPE" == "bundle" ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
