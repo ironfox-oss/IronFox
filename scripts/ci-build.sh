@@ -47,6 +47,13 @@ bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
 
 source "$(realpath $(dirname "$0"))/env_local.sh"
 
+if [[ "$BUILD_TYPE" == "bundle" ]]; then
+    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT}"
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT}"
+    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GECKOVIEW_AAR_X86_64_ARTIFACT}"
+fi
+
 # Set the build date to the date of commmit to ensure that the
 # MOZ_BUILDID is consistent across CI build jobs
 export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
@@ -56,9 +63,19 @@ export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
 bash -x scripts/build.sh "${BUILD_TYPE}"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
-    # Create GeckoView AAR archives
     pushd "${IRONFOX_GECKO}"
+
+    # Create GeckoView AAR archives
     MOZ_AUTOMATION=1 ./mach android archive-geckoview
+
+    if [[ "${BUILD_VARIANT}" == 'arm' ]]; then
+        cp -vf "${IRONFOX_GECKOVIEW_AAR_ARM}" "${IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT}"
+    elif [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
+        cp -vf "${IRONFOX_GECKOVIEW_AAR_ARM64}" "${IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT}"
+    elif [[ "${BUILD_VARIANT}" == 'x86_64' ]]; then
+        cp -vf "${IRONFOX_GECKOVIEW_AAR_X86_64}" "${IRONFOX_GECKOVIEW_AAR_X86_64_ARTIFACT}"
+    fi
+
     popd
 
     # Sign APK

@@ -41,32 +41,30 @@ index 8321c6cc97aea..d2e19db0698d7 100644
      const result = await lazy.RemoteSettingsWorker.importJSONDump(
        this.bucketName,
 diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
-index b6b61710c0c5f..fc6bc60d22ad2 100644
+index b6b61710c0c5..4e80b86f6126 100644
 --- a/services/settings/Utils.sys.mjs
 +++ b/services/settings/Utils.sys.mjs
-@@ -74,7 +74,16 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURLOverride", () => {
- 
+@@ -75,6 +75,16 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURLOverride", () => {
    return false;
  });
--
+ 
 +ChromeUtils.defineLazyGetter(lazy, "allowedCollections", () =>
 +  Services.prefs
-+    .getStringPref("browser.ironfox.services.settings.allowedCollections", "")
++    .getStringPref("browser.ironfox.services.settings.allowedCollections")
 +    .split(",")
 +);
 +ChromeUtils.defineLazyGetter(lazy, "allowedCollectionsFromDump", () =>
 +  Services.prefs
-+    .getStringPref("browser.ironfox.services.settings.allowedCollectionsFromDump", "")
++    .getStringPref("browser.ironfox.services.settings.allowedCollectionsFromDump")
 +    .split(",")
 +);
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "gServerURL",
-@@ -209,7 +218,72 @@ export var Utils = {
-     }
+@@ -210,6 +220,72 @@ export var Utils = {
      return false;
    },
--
+ 
 +  /**
 +   * Internal code to determine whether the bucket and collection are allowed to
 +   * be loaded by the remote settings client for a given list of allowed
@@ -136,7 +134,7 @@ index b6b61710c0c5f..fc6bc60d22ad2 100644
    /**
     * A wrapper around `ServiceRequest` that behaves like `fetch()`.
     *
-@@ -489,7 +563,9 @@ export var Utils = {
+@@ -489,7 +565,9 @@ export var Utils = {
      }
  
      return {

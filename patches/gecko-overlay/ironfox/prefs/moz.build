@@ -1,4 +1,0 @@
-
-JS_PREFERENCE_PP_FILES += [
-    "002-ironfox.js",
-]

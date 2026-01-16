@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
-index cda12afb975d..8a0aab04a2a9 100644
+index cda12afb975d..0525369255a4 100644
 --- a/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
 +++ b/toolkit/components/resistfingerprinting/FingerprintingWebCompatService.sys.mjs
 @@ -53,6 +53,10 @@ const PREF_GRANULAR_OVERRIDES_BASELINE =
@@ -21,16 +21,16 @@ index cda12afb975d..8a0aab04a2a9 100644
 +    if (lazy.remoteOverridesEnabled) {
 +      this.#rs = lazy.RemoteSettings(COLLECTION_NAME);
 +    }
-+    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.hardenOverrides.enabled", true)) {
++    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.hardenOverrides.enabled")) {
 +      this.#rs = lazy.RemoteSettings(IF_HARDEN_COLLECTION_NAME);
 +    }
-+    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", true)) {
++    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled")) {
 +      this.#rs = lazy.RemoteSettings(IF_UNBREAK_COLLECTION_NAME);
 +    }
-+    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", true)) {
++    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled")) {
 +      this.#rs = lazy.RemoteSettings(IF_UNBREAK_TIMEZONE_COLLECTION_NAME);
 +    }
-+    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", true)) {
++    if (Services.prefs.getBoolPref("browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled")) {
 +      this.#rs = lazy.RemoteSettings(IF_UNBREAK_WEBGL_COLLECTION_NAME);
 +    }
      this.#validator = new lazy.JsonSchema.Validator(SCHEMA);

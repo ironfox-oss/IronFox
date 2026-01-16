@@ -807,13 +807,6 @@ patches:
     effect: "Users can receive a prompt when add-on installation is disabled from the UI, and the installation of add-ons can be better controlled/fully disabled from policies."
     category: "User Interface"
 
-  - file: "geckoview-ironfox-settings-support-spoof-english.patch"
-    name: "IronFox Settings Support (GeckoView) - Spoof English"
-    description: "Provides support to GeckoView for a UI toggle to spoof the locale to English (en-US)."
-    reason: "To allow users to benefit from extra fingerprinting protection by spoof their locale to English."
-    effect: "Users can spoof their preferred locale to English, and can benefit from stronger fingerprinting protection as a result."
-    category: "User Interface"
-
   - file: "a-c-ironfox-oled-theme.patch"
     name: "OLED Theme (Android Components)"
     description: "Adds support for true OLED black theme to Mozilla's Android Components"

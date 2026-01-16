@@ -5,5 +5,4 @@ DIRS += [
     "dumps",
     "enterprisepolicies",
     "locales",
-    "prefs",
 ]

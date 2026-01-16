@@ -12,10 +12,18 @@ index dcd5d39ad9a3b..b1791288f1759 100644
        set(newValue);
        commit();
 diff --git a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
-index a795b36e6a8f8..a679b4632d61a 100644
+index a795b36e6a8f8..4990f3c2e06ba 100644
 --- a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
-@@ -131,15 +131,21 @@ export const GeckoViewPreferences = {
+@@ -7,6 +7,7 @@ import { GeckoViewUtils } from "resource://gre/modules/GeckoViewUtils.sys.mjs";
+ const lazy = {};
+ ChromeUtils.defineESModuleGetters(lazy, {
+   EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
++  RFPHelper: "resource://gre/modules/RFPHelper.sys.mjs",
+ });
+ 
+ const { PREF_STRING, PREF_BOOL, PREF_INT } = Ci.nsIPrefBranch;
+@@ -131,15 +132,24 @@ export const GeckoViewPreferences = {
      try {
        switch (type) {
          case PREF_STRING:
@@ -34,6 +42,9 @@ index a795b36e6a8f8..a679b4632d61a 100644
 +          Services.prefs.unlockPref(pref);
            branch.setIntPref(pref, value);
 +          Services.prefs.lockPref(pref);
++          if (pref === "privacy.spoof_english") {
++            lazy.RFPHelper._handleSpoofEnglishChanged();
++          }
            return true;
  
          default:

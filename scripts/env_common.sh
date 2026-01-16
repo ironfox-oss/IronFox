@@ -369,11 +369,14 @@ fi
 if [[ -z ${IRONFOX_GECKOVIEW_AAR_ARM+x} ]]; then
     export IRONFOX_GECKOVIEW_AAR_ARM="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
 fi
+export IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
 
 if [[ -z ${IRONFOX_GECKOVIEW_AAR_ARM64+x} ]]; then
     export IRONFOX_GECKOVIEW_AAR_ARM64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
 fi
+export IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
 
 if [[ -z ${IRONFOX_GECKOVIEW_AAR_X86_64+x} ]]; then
     export IRONFOX_GECKOVIEW_AAR_X86_64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
 fi
+export IRONFOX_GECKOVIEW_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"

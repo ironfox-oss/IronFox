@@ -1,12 +1,11 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 608743374401..ba57e0b67bc8 100644
+index 6087433744016..13bcdd5788092 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
-@@ -182,14 +182,62 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
- /* USERTrust RSA Certification Authority */
+@@ -183,6 +183,28 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
  static const char kUSERTrust_RSA_Certification_AuthorityFingerprint[] =
    "x4QzPSC810K5/cMjb05Qm4k3Bw5zBn4lTdO/nEW/Td4=";
--
+ 
 +/* Amazon Root CA 1 */
 +static const char kAmazon_Root_CA_1Fingerprint[] = "++MBgDH5WGvL9Bcn5Be30cRcL0f5O+NyoXuWtQdX1aI=";
 +/* Amazon Root CA 2 */
@@ -15,19 +14,27 @@ index 608743374401..ba57e0b67bc8 100644
 +static const char kAmazon_Root_CA_3Fingerprint[] = "NqvDJlas/GRcYbcWE8S/IceH9cq77kg0jVhZeAPXq8k=";
 +/* Amazon Root CA 4 */
 +static const char kAmazon_Root_CA_4Fingerprint[] = "9+ze1cZgR9KO1kZrVDxA4HQ6voHRCSVNz4RdTCx4U8U=";
++/* ECDSA secp256r1 backup */
++static const char kECDSA_secp256r1_backupFingerprint[] = "plxMUkaUYKzH2Pqc3qQA3lmLOf+CEuWFm0eQyws2ffM=";
++/* ECDSA secp384r1 backup */
++static const char kECDSA_secp384r1_backupFingerprint[] = "2P1xn0w4b0/Lp7cjEaKemkpZrJ7riBBZCapnsQNR/PA=";
 +/* GlobalSign Root E46 */
 +static const char kGlobalSign_Root_E46Fingerprint[] = "4EoCLOMvTM8sf2BGKHuCijKpCfXnUUR/g/0scfb9gXM=";
 +/* GlobalSign Root R46 */
 +static const char kGlobalSign_Root_R46Fingerprint[] = "rn+WLLnmp9v3uDP7GPqbcaiRdd+UnCMrap73yz3yu/w=";
 +/* ISRG Root X2 */
 +static const char kISRG_Root_X2Fingerprint[] = "diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=";
++/* ISRG Root YE */
++static const char kISRG_Root_YEFingerprint[] = "sCkq5UWXjg+7mKu9lMhhYF5bGLsy7VI/UNW3tccdR7w=";
++/* ISRG Root YR */
++static const char kISRG_Root_YRFingerprint[] = "fk6IOKit1ild5647BH06ujSIq5XbCgqlbYl6ANhhi88=";
  /* Pinsets are each an ordered list by the actual value of the fingerprint */
  struct StaticFingerprints {
    // See bug 1338873 about making these fields const.
-   size_t size;
+@@ -190,6 +212,55 @@ struct StaticFingerprints {
    const char* const* data;
  };
--
+ 
 +static const char* const kPinset_ironfox_Data[] = {
 +  kGlobalSign_Root_CAFingerprint,
 +  kGTS_Root_R4Fingerprint,
@@ -64,10 +71,23 @@ index 608743374401..ba57e0b67bc8 100644
 +  sizeof(kPinset_celenity_Data) / sizeof(const char*),
 +  kPinset_celenity_Data
 +};
++/* Taken from https://github.com/search?q=org%3AGrapheneOS+network_security_config.xml&type=code*/
++static const char* const kPinset_grapheneos_Data[] = {
++  kISRG_Root_X1Fingerprint,
++  kISRG_Root_X2Fingerprint,
++  kISRG_Root_YEFingerprint,
++  kISRG_Root_YRFingerprint,
++  kECDSA_secp256r1_backupFingerprint,
++  kECDSA_secp384r1_backupFingerprint,
++};
++static const StaticFingerprints kPinset_grapheneos = {
++  sizeof(kPinset_grapheneos_Data) / sizeof(const char*),
++  kPinset_grapheneos_Data
++};
  /* PreloadedHPKPins.json pinsets */
  static const char* const kPinset_google_root_pems_Data[] = {
    kCOMODO_ECC_Certification_AuthorityFingerprint,
-@@ -303,8 +351,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -303,8 +374,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "apis.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "appengine.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "appspot.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -78,7 +98,7 @@ index 608743374401..ba57e0b67bc8 100644
    { "blogger.com", true, false, false, -1, &kPinset_google_root_pems },
    { "blogspot.com", true, false, false, -1, &kPinset_google_root_pems },
    { "bugs.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
-@@ -348,7 +396,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -348,7 +419,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "exclude-subdomains.pinning.example.com", false, false, false, -1, &kPinset_mozilla_test },
    { "fi.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "firebaseio.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -87,7 +107,7 @@ index 608743374401..ba57e0b67bc8 100644
    { "g.co", false, false, false, -1, &kPinset_google_root_pems },
    { "g4w.co", true, false, false, -1, &kPinset_google_root_pems },
    { "ggpht.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -640,7 +688,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -640,7 +711,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "sync.services.mozilla.com", true, false, true, 13, &kPinset_mozilla_services },
    { "talk.google.com", true, false, false, -1, &kPinset_google_root_pems },
    { "talkgadget.google.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -96,7 +116,7 @@ index 608743374401..ba57e0b67bc8 100644
    { "test-mode.pinning.example.com", true, true, false, -1, &kPinset_mozilla_test },
    { "testpilot.firefox.com", false, false, true, 9, &kPinset_mozilla_services },
    { "translate.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -675,9 +723,96 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
+@@ -675,9 +746,105 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "youtube-nocookie.com", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
    { "ytimg.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -113,6 +133,10 @@ index 608743374401..ba57e0b67bc8 100644
 +  { "api.rewards.bravesoftware.com", true, false, false, -1, &kPinset_brave },
 +  { "apple.celenity.dev", true, false, false, -1, &kPinset_celenity },
 +  { "apple-hardening.celenity.dev", true, false, false, -1, &kPinset_celenity },
++  { "apps.grapheneos.org", true, false, false, -1, &kPinset_grapheneos },
++  { "assets.celenity.dev", true, false, false, -1, &kPinset_celenity },
++  { "assets.ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
++  { "attestation.app", true, false, false, -1, &kPinset_grapheneos },
 +  { "badblock.celenity.dev", true, false, false, -1, &kPinset_celenity },
 +  { "bb.celenity.dev", true, false, false, -1, &kPinset_celenity },
 +  { "brave-core-ext.s3.brave.com", true, false, false, -1, &kPinset_brave },
@@ -141,6 +165,8 @@ index 608743374401..ba57e0b67bc8 100644
 +  { "grant.rewards.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "grant.rewards.brave.software", true, false, false, -1, &kPinset_brave },
 +  { "grant.rewards.bravesoftware.com", true, false, false, -1, &kPinset_brave },
++  { "grapheneos.org", true, false, false, -1, &kPinset_grapheneos },
++  { "gs-loc.apple.grapheneos.org", true, false, false, -1, &kPinset_grapheneos },
 +  { "imgs.search.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "ironfoxoss.org", true, false, false, -1, &kPinset_ironfox },
 +  { "mainnet-beta-solana.brave.com", true, false, false, -1, &kPinset_brave },
@@ -149,6 +175,8 @@ index 608743374401..ba57e0b67bc8 100644
 +  { "mta-sts.celenity.dev", true, false, false, -1, &kPinset_celenity },
 +  { "mywallet.ads.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "mywallet.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
++  { "ohttp.ads.brave.com", true, false, false, -1, &kPinset_brave },
++  { "ohttp.ads.bravesoftware.com", true, false, false, -1, &kPinset_brave },
 +  { "patterns.wdp.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "payment.rewards.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "payment.rewards.brave.software", true, false, false, -1, &kPinset_brave },
@@ -159,6 +187,7 @@ index 608743374401..ba57e0b67bc8 100644
 +  { "publishers.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "quorum.wdp.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "redirector.brave.com", true, false, false, -1, &kPinset_brave },
++  { "releases.grapheneos.org", true, false, false, -1, &kPinset_grapheneos },
 +  { "rewards.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "safebrowsing.brave.com", true, false, false, -1, &kPinset_brave },
 +  { "safebrowsing2.brave.com", true, false, false, -1, &kPinset_brave },
@@ -190,7 +219,7 @@ index 608743374401..ba57e0b67bc8 100644
  };
  
 -// Pinning Preload List Length = 383;
-+// Pinning Preload List Length = 473;
++// Pinning Preload List Length = 482;
  
  static const int32_t kUnknownId = -1;
  
