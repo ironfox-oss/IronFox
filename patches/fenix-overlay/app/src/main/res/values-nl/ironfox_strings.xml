@@ -36,7 +36,7 @@
     <string name="tor_spoof_english_caption">Verbeter de privacy door de taalinstellingen van het apparaat te maskeren.</string>
     <string name="tor_spoof_english_description">Vraag Engelse (en-US) versies van webpagina\'s op. Hierdoor lijkt de browser minder uniek, waardoor de bescherming tegen fingerprinting-technieken die gebruikers identificeren op basis van hun taalvoorkeuren, beter werkt.</string>
     <string name="tor_spoof_english">Engelse versies van webpagina\'s opvragen</string>
-    <string name="tor_spoof_english_summary">Verbetert de bescherming tegen fingerprinting</string>
+    <string name="tor_spoof_english_summary">Verbetert de bescherming tegen fingerprinting - Na wijziging zal de browser opnieuw opstarten</string>
     <string name="preference_svg_enabled">Scalable Vector Graphics (SVG) inschakelen</string>
     <string name="preferences_debug_settings_unifiedpush">UnifiedPush inschakelen</string>
     <string name="preferences_unifiedpush">UnifiedPush gebruiken</string>

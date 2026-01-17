@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:moz="http://mozac.org/tools">
     <!-- Spoof locale to English -->
-    <string name="tor_spoof_english">Solicitar versões em Inglês das páginas para melhor proteção contra fingerprinting</string>
+    <string name="tor_spoof_english">Solicitar versões em Inglês das páginas</string>
     <!-- Warn users that the browser will restart -->
     <string name="restart_required_summary">Ao alterar esta configuração, o seu navegador será reiniciado</string>
     <!-- Accessibility Services -->
@@ -12,7 +12,7 @@
     <string name="preference_javascript_enabled">Ativar JavaScript</string>
     <string name="preference_jit_enabled">Ativar compilação Just-In-Time do JavaScript (JIT)</string>
     <string name="preference_wasm_enabled">Ativar WebAssembly (WASM)</string>
-    <string name="unsupported_summary">Esta configuração não é recomendada ou suportada. Prossiga com cautela.</string>
+    <string name="unsupported_summary">Esta configuração NÃO é recomendada ou suportada. Prossiga com cautela.</string>
     <string name="preference_referer_policy">Política de referenciador entre origens</string>
     <string name="preference_referer_policy_always">Sempre enviar referenciador entre origens (Padrão)</string>
     <string name="preference_referer_policy_base_domains_match">Apenas enviar referenciador entre origens quando o domínio base é igual</string>
@@ -20,32 +20,32 @@
     <string name="preference_cache_enabled">Ativar cache em disco</string>
     <string name="preference_ipv6_enabled">Ativar conectividade de rede IPv6</string>
     <string name="preference_jit_enabled_caption">Melhore o desempenho do JavaScript ativando o JIT. (Não é recomendado para a maioria dos usuários)</string>
-    <string name="preference_jit_enabled_description">Em troca de segurança, você pode ativar o JIT para melhorar o desempenho dos sites. Só é recomendado para usuários com dispositivos fracos.</string>
+    <string name="preference_jit_enabled_description">A custos da segurança, você pode ativar o JIT para melhorar o desempenho dos sites. Recomendado apenas para usuários com dispositivos fracos.</string>
     <string name="preference_pdfjs_disabled">Abrir arquivos PDF externamente</string>
-    <string name="preference_website_appearance_title">Aparência dos sites</string>
-    <string name="preference_website_appearance_description">Alguns sites adaptam seu esquema de cores dependendo nas suas preferências. Escolha qual esquema de cores você gostaria de usar nestes sites. Observe que opções que não sejam o Claro podem ajudar no fingerprinting e podem fazer com que seu navegador apareça mais único.</string>
-    <string name="preference_prefers_browser_color_scheme">Seguir o tema do navegador</string>
+    <string name="preference_website_appearance_title">Preferência da aparência dos sites</string>
+    <string name="preference_website_appearance_description">Alguns sites adaptam seu esquema de cores dependendo nas suas preferências. Escolha qual esquema de cores você gostaria de usar nestes sites. Fique ciente que opções que não sejam o Claro podem ajudar no fingerprinting e podem fazer com que seu navegador apareça mais único.</string>
+    <string name="preference_prefers_browser_color_scheme">Seguir tema do navegador</string>
     <string name="preference_prefers_light_color_scheme">Claro (Padrão)</string>
     <string name="preference_prefers_dark_color_scheme">Escuro</string>
     <string name="preference_safe_browsing_enabled_caption">Receba proteção em tempo real contra sites perigosos, vírus, e tentativas de phishing.</string>
-    <string name="preference_safe_browsing_enabled_description">A funcionalidade de Safe Browsing do IronFox depende do Google no momento. O IronFox irá atualizar o banco de dados periodicamente para garantir que os usuários estão protegidos contra as mais recentes ameaças, e ao encontrar uma possível correspondência, o IronFox pode enviar uma hash parcial do URL suspeito ao Google. Observe que o IronFox adiciona uma proxy nestas conexões, para prevenir que seu endereço público de IP seja associado com essas solicitações.</string>
+    <string name="preference_safe_browsing_enabled_description">A funcionalidade de Safe Browsing do IronFox depende do Google no momento. O IronFox irá atualizar o banco de dados periodicamente para garantir que os usuários estão protegidos contra as mais recentes ameaças, e ao encontrar uma possível correspondência, o IronFox pode enviar uma hash parcial do URL suspeito ao Google. Fique ciente que o IronFox adiciona uma proxy nestas conexões, para prevenir que seu endereço público de IP seja associado com essas solicitações.</string>
     <string name="tor_spoof_english_title">Simular o idioma como Inglês</string>
     <string name="tor_spoof_english_caption">Melhore sua privacidade mascarando o idioma do seu dispositivo.</string>
     <string name="tor_spoof_english_description">Solicitar versões em Inglês (en-US) das páginas. Isto pode ajudar seu navegador a ficar menos único, o que melhora sua proteção contra técnicas de fingerprinting que identificam usuários baseado nas suas configurações de idioma.</string>
-    <string name="preference_svg_enabled">Ativar Scalable Vector Graphics (SVG)</string>
+    <string name="preference_svg_enabled">Ativar Gráficos Vetoriais Escaláveis (SVG)</string>
     <string name="preferences_unifiedpush">Usar UnifiedPush</string>
     <string name="toast_change_unifiedpush_done">Configuração do UnifiedPush alterada. Fechando o aplicativo para aplicar as alterações…</string>
     <string name="preference_webrtc_enabled">Ativar WebRTC</string>
     <string name="preference_xpinstall_enabled">Permitir instalação de extensões</string>
-    <string name="onboarding_if_preferences_title">Customize o IronFox</string>
-    <string name="onboarding_if_preferences_description">Customize o IronFox do jeito que você gosta</string>
+    <string name="onboarding_if_preferences_title">Personalize o IronFox</string>
+    <string name="onboarding_if_preferences_description">Personalize o IronFox do jeito que você gosta</string>
     <string name="onboarding_if_preference_doh_caption">Melhore a segurança da sua navegação com o DNS sobre HTTPS.</string>
-    <string name="onboarding_install_ublock_title">Instalar o uBlock Origin</string>
-    <string name="onboarding_install_ublock_caption">Bloqueie anúncios, rastreadores, e vírus, para uma experiência de navegação mais limpa e segura.</string>
-    <string name="onboarding_install_ublock_description">O uBlock Origin melhora sua privacidade e segurança bloqueando conteúdo indesejado. O IronFox utiliza uma configuração customizada do uBlock Origin com listas de filtros selecionadas para proteção e desempenho deais.</string>
+    <string name="onboarding_install_ublock_title">Instalar uBlock Origin</string>
+    <string name="onboarding_install_ublock_caption">Bloqueie anúncios, rastreadores, e malware, para uma experiência de navegação mais limpa e segura.</string>
+    <string name="onboarding_install_ublock_description">O uBlock Origin melhora sua privacidade e segurança bloqueando conteúdo indesejado. O IronFox utiliza uma configuração customizada do uBlock Origin com listas de filtros selecionadas para proteção e desempenho ideais.</string>
     <string name="onboarding_state_installing_ublock">Instalando o uBlock Origin…</string>
     <string name="onboarding_state_installing_ublock_error">Ocorreu um erro ao instalar o uBlock Origin: %1$s</string>
-    <string name="onboarding_action_retry">Tentar novamente</string>
+    <string name="onboarding_action_retry">Repetir</string>
     <string name="if_title" translatable="false">IronFox</string>
     <string name="if_preferences">Configurações do IronFox</string>
     <string name="if_preferences_misc">Outras</string>
@@ -57,22 +57,22 @@
     <string name="preference_jit_enabled_summary">Ao desativar, o desempenho pode ser reduzido em páginas complexas - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preference_print_enabled">Ativar capacidades de impressão</string>
     <string name="preference_safe_browsing_enabled_summary">Fornece proteção em tempo real contra sites perigosos, malware, e tentativas de phising - Ao alterar essa configuração, seu navegador será reiniciado</string>
-    <string name="tor_spoof_english_summary">Ao ativar, a proteção contra fingerprinting fica melhor</string>
+    <string name="tor_spoof_english_summary">Ao ativar, a proteção contra fingerprinting fica melhor - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preferences_debug_settings_unifiedpush">Ativar UnifiedPush</string>
     <string name="preference_translations_enabled">Ativar Traduções do Firefox</string>
     <string name="preference_collections_enabled">Ativar coleções</string>
-    <string name="extension_failed_to_install_xpinstall_disabled_error">A instalação de extensões está desativada no momento. Se desejar, em troca de segurança, você pode ativá-la indo até às Configurações -&gt; IronFox -&gt; Configurações do IronFox -&gt; Segurança -&gt; Permitir instalação de extensões.</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">A instalação de extensões está desativada no momento. Se desejar, aos custos da segurança, você pode ativá-la indo até as Configurações -&gt; IronFox -&gt; Configurações do IronFox -&gt; Segurança -&gt; Permitir instalação de extensões.</string>
     <string name="preference_jit_trusted_principals_enabled">Ativar a compilação Just-In-Time do JavaScript para extensões</string>
     <string name="preference_jit_trusted_principals_enabled_summary">Quando o JIT está desativado, reativa o JIT para as extensões - Ao alterar esta configuração, seu navegador será reiniciado</string>
-    <string name="preference_fpp_overrides_ironfox_enabled">Ativar substituições de proteção contra fingerprinting do IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Ativar sobreposições do IronFox para proteção contra fingerprinting</string>
     <string name="preference_fpp_overrides_ironfox_summary">Relaxa as proteções contra fingerprinting para certos sites com o fim de reduzir sua quebra, usando uma lista do IronFox - Ao alterar esta configuração, seu navegador será reiniciado</string>
-    <string name="preference_fpp_overrides_mozilla_enabled">Ativar substituições de proteção contra fingerprinting da Mozilla</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Ativar sobreposições da Mozilla para proteção contra fingerprinting</string>
     <string name="preference_fpp_overrides_mozilla_summary">Relaxa as proteções contra fingerprinting para certos sites com o fim de reduzir sua quebra, usando uma lista da Mozilla - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="spoof_timezone">Simular fuso horário como UTC-0</string>
     <string name="spoof_timezone_summary">Ao ativar, a proteção contra fingerprinting fica melhor</string>
-    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Ativar substituições de simulação de fuso horário do IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Ativar sobreposições do IronFox para simulação de fuso horário</string>
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Desativa a simulação de fuso horário para certos sites por padrão com o fim de reduzir sua quebra - Ao alterar esta configuração, seu navegador será reiniciado</string>
-    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Ativar substituições de WebGL do IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Ativar sobreposições do IronFox para WebGL</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Quando o WebGL está desativado, reativa ele para alguns sites para reduzir quebra - Ao alterar esta configuração, seu navegador será reiniciado</string>
     <string name="preference_webgl_disabled">Desativar WebGL</string>
     <string name="preference_media_autoplay_title">Reprodução automática de mídia</string>
@@ -81,5 +81,5 @@
     <string name="preference_autoplay_policy_click_to_play">Clicar para reproduzir</string>
     <string name="preference_autoplay_policy_sticky">Adesivo</string>
     <string name="preference_always_use_private_browsing">Sempre usar o modo de navegação privativa</string>
-    <string name="wallpaper_collection_fennec_description">Papéis de parede do Fennec F-Droid. %s</string>
+    <string name="wallpaper_collection_fennec_description">Planos de fundo do Fennec F-Droid. %s</string>
 </resources>

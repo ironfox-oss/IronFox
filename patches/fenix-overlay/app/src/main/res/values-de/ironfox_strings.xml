@@ -36,7 +36,7 @@
     <string name="tor_spoof_english_caption">Verbessern Sie Ihre Privatsphäre, indem Sie die Spracheinstellungen Ihres Geräts maskieren.</string>
     <string name="tor_spoof_english_description">Fordern Sie englische (en-US) Versionen von Webseiten an. Dadurch erscheint Ihr Browser weniger einzigartig, was den Schutz vor Fingerprinting-Techniken stärkt, die Nutzer anhand ihrer Spracheinstellungen identifizieren.</string>
     <string name="tor_spoof_english">Englische Versionen von Webseiten anfordern</string>
-    <string name="tor_spoof_english_summary">Wenn aktiviert, verstärkt es den Schutz vor Fingerprinting</string>
+    <string name="tor_spoof_english_summary">Wenn aktiviert, verstärkt es den Schutz vor Fingerprinting. Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="preference_svg_enabled">Skalierbare Vektorgrafiken (SVG) aktivieren</string>
     <string name="preferences_debug_settings_unifiedpush">UnifiedPush aktivieren</string>
     <string name="preferences_unifiedpush">UnifiedPush verwenden</string>

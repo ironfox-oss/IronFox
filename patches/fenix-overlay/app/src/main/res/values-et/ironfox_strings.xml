@@ -46,7 +46,7 @@
     <string name="tor_spoof_english_title">Häma keeleks en-US</string>
     <string name="tor_spoof_english_caption">Varjates seadme keeli saad parandada oma privaatsust.</string>
     <string name="preference_svg_enabled">Kasuta SVG vektorgraafikat</string>
-    <string name="tor_spoof_english_summary">Kui see valik on kasutusel, siis parandab see kaitset sinu täpsema tuvastamise vastu</string>
+    <string name="tor_spoof_english_summary">Kui see valik on kasutusel, siis parandab see kaitset sinu täpsema tuvastamise vastu - selle seadistuse muutmine eeldab brauseri uuesti käivitamist</string>
     <string name="tor_spoof_english">Küsi veebisaite inglisekeelsetena</string>
     <string name="tor_spoof_english_description">Küsi veebisaite Ameerika inglisekeelsetena (en-US). Sellisel puhul on sinu brauser vähem unikaalne ning aitab täpsema tuvastamise vastu, mis põhineb kasutajate keele-eelistustel.</string>
     <string name="preference_website_appearance_description">Mõned veebisaidid kohendavad oma värvivalikut sinu eelistuste alusel. Vali kujundus, mida sa sel puhul sooviksid kasutada. Aga palun arvesta et kõik muud valikud peale heleda kujunduse aitavad sind täpsemalt tuvastada ning sellega vähendavad privaatsust.</string>

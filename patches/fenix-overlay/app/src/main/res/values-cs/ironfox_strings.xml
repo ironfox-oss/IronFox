@@ -38,7 +38,7 @@
     <string name="tor_spoof_english_caption">Zvyšte své soukromí zamaskováním nastavení jazyka vašeho zařízení.</string>
     <string name="tor_spoof_english_description">Požadovat anglické (en-US) verze webových stránek. Díky tomu bude váš prohlížeč vypadat méně unikátně, což zvýší ochranu proti technikám vytváření otisku, které identifikují uživatele v závislosti na jejich předvolbách jazyka.</string>
     <string name="tor_spoof_english">Požadovat anglické verze webových stránek</string>
-    <string name="tor_spoof_english_summary">Pokud je povoleno, zvýší ochranu před vytvářením otisků</string>
+    <string name="tor_spoof_english_summary">Pokud je povoleno, zvýší ochranu před vytvářením otisků. Změna tohoto nastavení restartuje váš prohlížeč</string>
     <string name="preference_svg_enabled">Povoliit škálovatelnou vektorovou grafiku (SVG)</string>
     <string name="preferences_debug_settings_unifiedpush">Povolit službu UnifiedPush</string>
     <string name="preferences_unifiedpush">Použít službu UnifiedPush</string>
