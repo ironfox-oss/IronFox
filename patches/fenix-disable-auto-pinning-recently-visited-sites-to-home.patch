@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index d6573a6e6fad..57ad63b1ff70 100644
+index 39b7918425..da68e4e49a 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -694,7 +694,7 @@ features:
+@@ -698,7 +698,7 @@ features:
          description: >
            Whether or not to hide frecent top sites on the homepage.
          type: Boolean

@@ -33,7 +33,7 @@
     <string name="tor_spoof_english_title">Dili en-US\'e sahtele</string>
     <string name="tor_spoof_english_caption">Cihazınızın dil ayarlarını saklayarak gizliliğinizi arttırın.</string>
     <string name="tor_spoof_english">Web sayfalarının Ingilizce sürümünü talep et</string>
-    <string name="tor_spoof_english_summary">Etkinleştirildiğinde, parmak izi korumasını güçlendirir</string>
+    <string name="tor_spoof_english_summary">Etkinleştirildiğinde, parmak izi korumasını güçlendirir - Bu ayarı değiştirmek tarayıcıyı yeniden başlatacaktır.</string>
     <string name="preference_svg_enabled">Ölçeklenebilir Vektör Grafiklerini (SVG) etkinleştir</string>
     <string name="preferences_unifiedpush">UnifiedPush\'u kullan</string>
     <string name="toast_change_unifiedpush_done">UnifiedPush ayarları değistirildi. Uygulamayı kapatmak değişiklikleri uygular…</string>

@@ -3,11 +3,11 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_RELEASE)
-FIREFOX_COMMIT='6debc48f4ded8d92c58fb9a2f4f6008df18d919c'
-FIREFOX_VERSION='147.0'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_1_RELEASE)
+FIREFOX_COMMIT='4eb5a4f7e5a3bea3de2e2bfc541e1bc122731518'
+FIREFOX_VERSION='147.0.1'
 
-IRONFOX_VERSION="${FIREFOX_VERSION}.0.1"
+IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
 ### https://github.com/mozilla/application-services
@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v147.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='9d848a260e5d8c7ada11f2a207829ab9a0f30751'
+L10N_COMMIT='3f2e9e1197b245f8a1817884eefacd6d45025216'
 
 ## Glean
 ### https://github.com/mozilla/glean
@@ -27,8 +27,8 @@ GLEAN_VERSION='v66.2.0'
 
 ## microG
 ### https://github.com/microg/GmsCore
-GMSCORE_COMMIT='34048e6a47914ef38cb65654cde4b67d9b28f3b5'
-GMSCORE_VERSION='v0.3.11.250932'
+GMSCORE_COMMIT='cbb8dcfbe8e6155ef6e2276636a94f902041485f'
+GMSCORE_VERSION='v0.3.12.250932'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-UNIFIEDPUSHAC_COMMIT='88599e427ba781f21a15f9be4e7e1f94236e5239'
+UNIFIEDPUSHAC_COMMIT='2fc2a497cb801d30ac16a9b674785a31a748ff47'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk

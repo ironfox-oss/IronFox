@@ -44,7 +44,7 @@
     <string name="tor_spoof_english_caption">Подобрете поверителността си, като скриете езиковите настройки на устройството си.</string>
     <string name="tor_spoof_english_description">Заявете английски (en-US) версии на уеб страници. Това помага на браузъра ви да изглежда по-малко уникален, като по този начин засилва защитата срещу техники за снемане на пръстови отпечатъци, които идентифицират потребителите въз основа на техните езикови предпочитания.</string>
     <string name="tor_spoof_english">Заявка за английски версии на уеб страници</string>
-    <string name="tor_spoof_english_summary">Когато е активирано, засилва защитата от пръстови отпечатъци</string>
+    <string name="tor_spoof_english_summary">Когато е активирано, засилва защитата от пръстови отпечатъци - Промяната на тази настройка ще рестартира браузъра ви</string>
     <string name="spoof_timezone">Подправяне на часовата зона с UTC-0</string>
     <string name="spoof_timezone_summary">Когато е активирано, засилва защитата от пръстови отпечатъци</string>
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Активиране на отменяния на подправянето на часови зони от IronFox</string>
