@@ -179,7 +179,7 @@ source "${IRONFOX_PIP_ENV}/bin/activate"
 pip install --upgrade pip
 pip install glean-parser
 
-if [[ "${IRONFOX_PLATFORM}" == "darwin" ]]; then
+if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
     pip install gyp-next
 fi
 
@@ -463,7 +463,7 @@ rm -vf glean-core/android/metrics.yaml
 "${IRONFOX_SED}" -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Set libxul location (for use with Tor's no-op UniFFi binding generator)
-if [[ "${IRONFOX_PLATFORM}" == "darwin" ]]; then
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     "${IRONFOX_SED}" -i "s|{libxul_dir}|aarch64-linux-android/release|" glean-core/android/build.gradle
 else
     "${IRONFOX_SED}" -i "s|{libxul_dir}|release|" glean-core/android/build.gradle
