@@ -322,10 +322,6 @@ export APK_ARTIFACTS=${ARTIFACTS}/apk
 export APKS_ARTIFACTS=${ARTIFACTS}/apks
 export AAR_ARTIFACTS=${ARTIFACTS}/aar
 
-mkdir -vp "${APK_ARTIFACTS}"
-mkdir -vp "${APKS_ARTIFACTS}"
-mkdir -vp "${AAR_ARTIFACTS}"
-
 if [[ -z ${IRONFOX_RELEASE+x} ]]; then
     # Default to a "nightly" dev build
     export IRONFOX_RELEASE=0

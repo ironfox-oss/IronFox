@@ -7,7 +7,13 @@ set -eu
 set -o pipefail
 set -o xtrace
 
-source "$(realpath $(dirname "$0"))/versions.sh"
+echo_red_text() {
+	echo -e "\033[31m$1\033[0m"
+}
+
+echo_green_text() {
+	echo -e "\033[32m$1\033[0m"
+}
 
 case "${BUILD_VARIANT}" in
 arm)
@@ -23,7 +29,7 @@ bundle)
     BUILD_TYPE='bundle'
     ;;
 *)
-    echo "Unknown build variant: '${BUILD_VARIANT}'." >&2
+    echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
     exit 1
     ;;
 esac
@@ -39,15 +45,20 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     echo "Preparing to build IronFox (Release)..."
 fi
 
+# Set-up our environment
+source "$(realpath $(dirname "$0"))/env_local.sh"
+
+mkdir -vp "${APK_ARTIFACTS}"
+mkdir -vp "${APKS_ARTIFACTS}"
+mkdir -vp "${AAR_ARTIFACTS}"
+
 # Get sources
 bash -x ./scripts/get_sources.sh
 
 # Prepare sources
 bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
 
-source "$(realpath $(dirname "$0"))/env_local.sh"
-
-if [[ "$BUILD_TYPE" == "bundle" ]]; then
+if [[ "${BUILD_TYPE}" == 'bundle' ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
     export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT}"
     export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT}"
@@ -61,6 +72,9 @@ export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
 
 # Build
 bash -x scripts/build.sh "${BUILD_TYPE}"
+
+# Include version info
+source "$(realpath $(dirname "$0"))/versions.sh"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
     pushd "${IRONFOX_GECKO}"
