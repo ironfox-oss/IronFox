@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #    IronFox build scripts
-#    Copyright (C) 2024-2025  Akash Yadav, celenity
+#    Copyright (C) 2024-2026  Akash Yadav, celenity
 #
 #    Originally based on: Fennec (Mull) build scripts
 #    Copyright (C) 2020-2024  Matías Zúñiga, Andrew Nayenko, Tavi
