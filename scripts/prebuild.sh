@@ -195,10 +195,7 @@ fi
 source "${IRONFOX_PIP_ENV}/bin/activate"
 pip install --upgrade pip
 pip install glean-parser
-
-if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
-    pip install gyp-next
-fi
+pip install gyp-next
 
 #
 # Fenix

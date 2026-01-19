@@ -136,7 +136,6 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
         clang \
         gawk \
         git \
-        gyp \
         m4 \
         make \
         nasm \
@@ -180,7 +179,6 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
         clang-18 \
         git \
         gpg \
-        gyp \
         make \
         nasm \
         ninja-build \
