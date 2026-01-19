@@ -10,16 +10,16 @@ if [[ -f "${ROOTDIR}/env_override.sh" ]]; then
 fi
 
 if [[ "${OSTYPE}" == "darwin"* ]]; then
-    ANDROID_SDK_PLATFORM=mac
-    PLATFORM=macos
-    PREBUILT_PLATFORM=osx
+    ANDROID_SDK_PLATFORM='mac'
+    PLATFORM='macos'
+    PREBUILT_PLATFORM='osx'
     # Ensure we use GNU tar on macOS
-    TAR=gtar
+    TAR='gtar'
 else
-    ANDROID_SDK_PLATFORM=linux
-    PLATFORM=linux
-    PREBUILT_PLATFORM=linux
-    TAR=tar
+    ANDROID_SDK_PLATFORM='linux'
+    PLATFORM='linux'
+    PREBUILT_PLATFORM='linux'
+    TAR='tar'
 fi
 
 clone_repo() {
@@ -106,13 +106,13 @@ extract_rmtoplevel() {
             unzip -q "${archive_path}" -d "${temp_dir}"
             ;;
         *.tar.gz)
-            $TAR xzf "$archive_path" -C "${temp_dir}"
+            "${TAR}" xzf "$archive_path" -C "${temp_dir}"
             ;;
         *.tar.xz)
-            $TAR xJf "$archive_path" -C "${temp_dir}"
+            "${TAR}" xJf "$archive_path" -C "${temp_dir}"
             ;;
         *.tar.zst)
-            $TAR --zstd -xvf "${archive_path}" -C "${temp_dir}"
+            "${TAR}" --zstd -xvf "${archive_path}" -C "${temp_dir}"
             ;;
         *)
             echo "Unsupported archive format: ${archive_path}"

@@ -108,7 +108,7 @@ if [[ "${BUILD_TYPE}" == "bundle" ]]; then
     # Build signed APK set
     AAB_IN="$(ls "${IRONFOX_GECKO}"/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="${APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
-    "${IRONFOX_BUNDLETOOL}"/bundletool build-apks \
+    "${IRONFOX_BUNDLETOOL}" build-apks \
         --bundle="${AAB_IN}" \
         --output="${APKS_OUT}" \
         --ks="${KEYSTORE}" \

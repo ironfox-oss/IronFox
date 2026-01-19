@@ -147,7 +147,7 @@ if [[ -n "${FDROID_BUILD+x}" ]]; then
     # Build LLVM
     pushd "${llvm}"
 
-    pushd "${IRONFOX_BUNDLETOOL}"
+    pushd "${IRONFOX_BUNDLETOOL_DIR}"
     "${IRONFOX_GRADLE}" assemble
     popd
 
@@ -202,9 +202,9 @@ echo "Running ./mach build..."
 echo "Running ./mach package..."
 ./mach package
 echo "Running ./mach package-multi-locale..."
-./mach package-multi-locale --locales ${IRONFOX_LOCALES}
+./mach package-multi-locale --locales ${IRONFOX_GECKO_LOCALES}
 
-export MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
+export MOZ_CHROME_MULTILOCALE="${IRONFOX_GECKO_LOCALES}"
 
 echo "Running '${IRONFOX_GRADLE}' '${IRONFOX_GRADLE_FLAGS}' -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
 "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal

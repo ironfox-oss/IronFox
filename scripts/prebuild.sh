@@ -22,6 +22,15 @@
 
 set -e
 
+echo_red_text() {
+	echo -e "\033[31m$1\033[0m"
+}
+
+echo_green_text() {
+	echo -e "\033[32m$1\033[0m"
+}
+
+# Set-up our environment
 source "$(dirname $0)/env_local.sh"
 
 # Include version info
@@ -53,55 +62,58 @@ function apply_overlay() {
     done
 }
 
-if [ -z "$1" ]; then
-    echo "Usage: $0 arm|arm64|x86_64|bundle" >&1
+if [ -z "${1+x}" ]; then
+    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD+x}" ]]; then
     source "$(dirname "$0")/env_fdroid.sh"
 fi
 
 if [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
-    echo "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
+    echo_red_text "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
     exit 1
 fi
 
 if [ ! -d "${IRONFOX_ANDROID_NDK}" ]; then
-    echo "\$IRONFOX_ANDROID_NDK($IRONFOX_ANDROID_NDK) does not exist."
+    echo_red_text "\$IRONFOX_ANDROID_NDK($IRONFOX_ANDROID_NDK) does not exist."
     exit 1
 fi
 
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
 [ "${JAVA_VER}" -ge 15 ] || {
-    echo "Java 17 or newer must be set as default JDK"
+    echo_red_text "Java 17 or newer must be set as default JDK"
     exit 1
 }
 
 if [[ -z "${FIREFOX_VERSION}" ]]; then
-    echo "\$FIREFOX_VERSION is not set! Aborting..."
+    echo_red_text "\$FIREFOX_VERSION is not set! Aborting..."
+    exit 1
+fi
+
+if [[ -z "${IRONFOX_VERSION}" ]]; then
+    echo_red_text "\$IRONFOX_VERSION is not set! Aborting..."
     exit 1
 fi
 
 if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
-    echo "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
+    echo_red_text "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
     read -p "Do you want to continue [y/N] " -n 1 -r
     echo ""
     if ! [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "Aborting..."
+        echo_red_text "Aborting..."
         exit 1
     fi
 fi
 
 if [[ -z "${IRONFOX_UBO_ASSETS_URL}" ]]; then
-    echo "\$IRONFOX_UBO_ASSETS_URL is not set! Aborting..."
+    echo_red_text "\$IRONFOX_UBO_ASSETS_URL is not set! Aborting..."
     exit 1
 fi
 
-if [[ -z "${NO_PREBUILDS}" ]]; then
-    # Do not use prebuilds by default
-    NO_PREBUILDS=0
-fi
+echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL}"
+echo_green_text "uBlock Origin Assets URL: ${IRONFOX_UBO_ASSETS_URL}"
 
 # Create build directories
 mkdir -vp "${IRONFOX_CARGO_HOME}"
@@ -113,8 +125,10 @@ mkdir -vp "${IRONFOX_OUTPUTS}"
 mkdir -vp "${builddir}/tmp/fenix"
 mkdir -vp "${builddir}/tmp/glean"
 
-## Copy machrc
-cp -vf "${patches}/machrc" "${IRONFOX_MOZBUILD}/machrc"
+## Symlink machrc
+if [[ ! -f "${patches}/machrc" ]]; then
+    ln -s "${patches}/machrc" "${IRONFOX_MOZBUILD}/machrc"
+fi
 
 ## Copy Rust (cargo) config
 cp -vf "${patches}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
@@ -164,6 +178,9 @@ rustup target add x86_64-linux-android
 cargo install --force --vers "${CBINDGEN_VERSION}" cbindgen
 
 # Set-up pip
+if [[ -d "${IRONFOX_PIP_ENV}" ]]; then
+    rm -rf "${IRONFOX_PIP_ENV}"
+fi
 python3.9 -m venv "${IRONFOX_PIP_ENV}"
 
 ## Set symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
@@ -1020,7 +1037,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD+x}" ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/IRONFOX_PLATFORM/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
     LLVM_SVN='530567'
@@ -1030,7 +1047,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
         --src_path "${llvm}"
 
     # Bundletool
-    pushd "${bundletool}"
+    pushd "${IRONFOX_BUNDLETOOL_DIR}"
     localize_maven
     popd
 fi
@@ -1115,9 +1132,9 @@ popd
 # Prebuilds
 #
 
-if [[ "${NO_PREBUILDS}" == 1 ]]; then
+if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
     pushd "${prebuilds}"
     echo "Preparing the prebuild build repository..."
-    bash "${prebuilds}/scripts/prebuild.sh"
+    bash -x "${prebuilds}/scripts/prebuild.sh"
     popd
 fi

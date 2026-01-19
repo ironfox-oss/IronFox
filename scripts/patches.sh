@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -euo pipefail
+
+# Set-up our environment
 source "$(dirname $0)/env_local.sh"
 
 RED="\033[0;31m"
