@@ -34,7 +34,7 @@ echo_green_text "Detected operating system: ${IRONFOX_OS}"
 ## (Both use Homebrew)
 if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
     # Ensure Homebrew is installed
-    if [[ -z "${HOMEBREW_PREFIX}" ]]; then
+    if [[ -z "${HOMEBREW_PREFIX+x}" ]]; then
         echo_red_text "Homebrew is not installed! Aborting..."
         echo_red_text "Please install Homebrew and try again..."
         echo_green_text "https://brew.sh/"
