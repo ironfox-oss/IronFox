@@ -27,17 +27,12 @@ IRONFOX_ANDROID_SDK_DEFAULT="${android_sdk_dir}"
 if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]]; then
     export IRONFOX_ANDROID_SDK="${IRONFOX_ANDROID_SDK_DEFAULT}"
 fi
-export ANDROID_HOME="${IRONFOX_ANDROID_SDK}"
-export ANDROID_SDK_ROOT="${IRONFOX_ANDROID_SDK}"
-export PATH="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin:${PATH}"
 
 # Android NDK
 IRONFOX_ANDROID_NDK_DEFAULT="${android_ndk_dir}"
 if [[ -z "${IRONFOX_ANDROID_NDK+x}" ]]; then
     export IRONFOX_ANDROID_NDK="${IRONFOX_ANDROID_NDK_DEFAULT}"
 fi
-export ANDROID_NDK_HOME="${IRONFOX_ANDROID_NDK}"
-export ANDROID_NDK_ROOT="${IRONFOX_ANDROID_NDK}"
 
 # Application Services
 IRONFOX_AS_DEFAULT="${application_services}"
@@ -84,7 +79,6 @@ IRONFOX_MOZBUILD_DEFAULT="${builddir}/.mozbuild"
 if [[ -z "${IRONFOX_MOZBUILD+x}" ]]; then
     export IRONFOX_MOZBUILD="${IRONFOX_MOZBUILD_DEFAULT}"
 fi
-export MOZBUILD_STATE_PATH="${IRONFOX_MOZBUILD}"
 
 # Glean
 IRONFOX_GLEAN_DEFAULT="${glean}"
@@ -133,14 +127,12 @@ IRONFOX_GRADLE_CACHE_DEFAULT="${builddir}/gradle/cache"
 if [[ -z "${IRONFOX_GRADLE_CACHE+x}" ]]; then
     export IRONFOX_GRADLE_CACHE="${IRONFOX_GRADLE_CACHE_DEFAULT}"
 fi
-export CACHEDIR="${IRONFOX_GRADLE_CACHE}"
 
 ## Gradle home
 IRONFOX_GRADLE_HOME_DEFAULT="${builddir}/.gradle"
 if [[ -z "${IRONFOX_GRADLE_HOME+x}" ]]; then
     export IRONFOX_GRADLE_HOME="${IRONFOX_GRADLE_HOME_DEFAULT}"
 fi
-export GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
 
 # Home
 ## (ex. used by our mozconfigs for setting the local Maven repo)
@@ -157,8 +149,6 @@ fi
 if [[ -z "${IRONFOX_JAVA_HOME+x}" ]]; then
     export IRONFOX_JAVA_HOME="${IRONFOX_JAVA_HOME_DEFAULT}"
 fi
-export JAVA_HOME="${IRONFOX_JAVA_HOME}"
-export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
 
 # libclang
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -175,22 +165,12 @@ IRONFOX_LLVM_PROFDATA_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/$
 if [[ -z "${IRONFOX_LLVM_PROFDATA+x}" ]]; then
     export IRONFOX_LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA_DEFAULT}"
 fi
-export LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA}"
-
-# Mach
-## https://firefox-source-docs.mozilla.org/mach/usage.html#user-settings
-## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#95
-## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#284
-export DISABLE_TELEMETRY=1
-export MACHRC="${patches}/machrc"
-export MOZCONFIG="${mozilla_release}/mozconfig"
 
 # microG
 IRONFOX_GMSCORE_DEFAULT="${gmscore}"
 if [[ -z "${IRONFOX_GMSCORE+x}" ]]; then
     export IRONFOX_GMSCORE="${IRONFOX_GMSCORE_DEFAULT}"
 fi
-export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
 
 # nproc
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -207,8 +187,6 @@ IRONFOX_NSS_DIR_DEFAULT="${IRONFOX_AS}/libs/desktop/${IRONFOX_PLATFORM}-${IRONFO
 if [[ -z "${IRONFOX_NSS_DIR+x}" ]]; then
     export IRONFOX_NSS_DIR="${IRONFOX_NSS_DIR_DEFAULT}"
 fi
-export NSS_DIR="${IRONFOX_NSS_DIR}"
-export NSS_STATIC=1
 
 # IronFox prebuilds
 IRONFOX_PREBUILDS_DEFAULT="${IRONFOX_EXTERNAL}/prebuilds"
@@ -218,7 +196,6 @@ fi
 
 # Python (Glean)
 export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
-export GLEAN_PYTHON="$(which python)"
 
 # Python (pip)
 IRONFOX_PIP_ENV_DEFAULT="${builddir}/pyenv"
@@ -236,74 +213,36 @@ IRONFOX_CARGO_HOME_DEFAULT="${builddir}/.cargo"
 if [[ -z "${IRONFOX_CARGO_HOME+x}" ]]; then
     export IRONFOX_CARGO_HOME="${IRONFOX_CARGO_HOME_DEFAULT}"
 fi
-export CARGO="${IRONFOX_CARGO_HOME}/bin/cargo"
-export CARGO_HOME="${IRONFOX_CARGO_HOME}"
-export CARGO_INSTALL_ROOT="${IRONFOX_CARGO_HOME}"
-export RUSTC="${IRONFOX_CARGO_HOME}/bin/rustc"
-export RUSTDOC="${IRONFOX_CARGO_HOME}/bin/rustdoc"
-export PATH="${IRONFOX_CARGO_HOME}/bin:${PATH}"
-
-## Disable debug
-export CARGO_PROFILE_DEV_DEBUG=false
-export CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=false
-export CARGO_PROFILE_RELEASE_DEBUG=false
-export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS=false
-
-## Disable HTTP debugging
-export CARGO_HTTP_DEBUG=false
 
 ## Display progress bars
 IRONFOX_CARGO_PROGRESS_BAR_DEFAULT='always'
 if [[ -z "${IRONFOX_CARGO_PROGRESS_BAR+x}" ]]; then
     export IRONFOX_CARGO_PROGRESS_BAR="${IRONFOX_CARGO_PROGRESS_BAR_DEFAULT}"
 fi
-export CARGO_TERM_PROGRESS_WHEN="${IRONFOX_CARGO_PROGRESS_BAR}"
-export CARGO_TERM_PROGRESS_WIDTH=80
-
-## Enable certificate revocation checks
-export CARGO_HTTP_CHECK_REVOKE=true
 
 ## Enable colored output
 IRONFOX_CARGO_COLORED_OUTPUT_DEFAULT='always'
 if [[ -z "${IRONFOX_CARGO_COLORED_OUTPUT+x}" ]]; then
     export IRONFOX_CARGO_COLORED_OUTPUT="${IRONFOX_CARGO_COLORED_OUTPUT_DEFAULT}"
 fi
-export CARGO_TERM_COLOR="${IRONFOX_CARGO_COLORED_OUTPUT}"
-
-## Enable overflow checks
-export CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true
-export CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS=true
-
-## Enable performance optimizations
-export CARGO_PROFILE_DEV_LTO=true
-export CARGO_PROFILE_DEV_OPT_LEVEL=3
-export CARGO_PROFILE_RELEASE_LTO=true
-export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
-
-## Strip debug info
-export CARGO_PROFILE_DEV_STRIP='debuginfo'
-export CARGO_PROFILE_RELEASE_STRIP='debuginfo'
 
 # rustup
 IRONFOX_RUSTUP_HOME_DEFAULT="${builddir}/.rustup"
 if [[ -z "${IRONFOX_RUSTUP_HOME+x}" ]]; then
     export IRONFOX_RUSTUP_HOME="${IRONFOX_RUSTUP_HOME_DEFAULT}"
 fi
-export RUSTUP_HOME="${IRONFOX_RUSTUP_HOME}"
 
 ## Display progress bars
 IRONFOX_RUSTUP_PROGRESS_BAR_DEFAULT='always'
 if [[ -z "${IRONFOX_RUSTUP_PROGRESS_BAR+x}" ]]; then
     export IRONFOX_RUSTUP_PROGRESS_BAR="${IRONFOX_RUSTUP_PROGRESS_BAR_DEFAULT}"
 fi
-export RUSTUP_TERM_PROGRESS_WHEN="${IRONFOX_RUSTUP_PROGRESS_BAR}"
 
 ## Enable colored output
 IRONFOX_RUSTUP_COLORED_OUTPUT_DEFAULT='always'
 if [[ -z "${IRONFOX_RUSTUP_COLORED_OUTPUT+x}" ]]; then
     export IRONFOX_RUSTUP_COLORED_OUTPUT="${IRONFOX_RUSTUP_COLORED_OUTPUT_DEFAULT}"
 fi
-export RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
 
 # uniffi-bindgen
 IRONFOX_UNIFFI_DEFAULT="${uniffi}"
@@ -316,7 +255,6 @@ IRONFOX_UP_AC_DEFAULT="${unifiedpush_ac}"
 if [[ -z "${IRONFOX_UP_AC+x}" ]]; then
     export IRONFOX_UP_AC="${IRONFOX_UP_AC_DEFAULT}"
 fi
-export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
 
 # WASI SDK
 IRONFOX_WASI_DEFAULT="${wasi}"
@@ -340,8 +278,6 @@ elif [[ "${IRONFOX_COMPILER_FLAGS_OVERRIDE}" == 1 ]]; then
 else
     export IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS_DEFAULT} ${IRONFOX_COMPILER_FLAGS}"
 fi
-export TARGET_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export TARGET_CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
 
 # If curl flags are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
@@ -393,8 +329,6 @@ elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
 else
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT} ${IRONFOX_RUST_FLAGS}"
 fi
-export CARGO_BUILD_RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
-export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
 
 export ARTIFACTS="${rootdir}/artifacts"
 export APK_ARTIFACTS="${ARTIFACTS}/apk"
@@ -405,8 +339,6 @@ export AAR_ARTIFACTS="${ARTIFACTS}/aar"
 IRONFOX_RELEASE_DEFAULT=0
 if [[ -z ${IRONFOX_RELEASE+x} ]]; then
     export IRONFOX_RELEASE="${IRONFOX_RELEASE_DEFAULT}"
-
-    echo "Preparing to build IronFox Nightly..."
 fi
 
 # Set release channel
@@ -462,3 +394,7 @@ if [[ -z "${IRONFOX_GECKOVIEW_AAR_X86_64+x}" ]]; then
     export IRONFOX_GECKOVIEW_AAR_X86_64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
 fi
 export IRONFOX_GECKOVIEW_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
+
+# Set our external environment variables
+IRONFOX_ENV_EXTERNAL="${rootdir}/scripts/env_external.sh"
+source "${IRONFOX_ENV_EXTERNAL}"
