@@ -66,7 +66,8 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
             make \
             temurin@17 \
             wget \
-            xz || error_fn
+            xz \
+            zlib || error_fn
         echo
     fi
     
@@ -78,12 +79,12 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         node \
         perl \
         python@3.9 \
-        yq \
-        zlib || error_fn
+        yq || error_fn
     echo
 
     # For secureblue, we also need to install our JDKs,
-    ## which we unfortunately can't just get from Homebrew like we do on OS X
+    ## which we unfortunately can't just get from Homebrew like we do for OS X
+    ## We also need clang and zlib-devel
     if [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         # Ensure we're up to date
         /usr/bin/rpm-ostree refresh-md --force || error_fn
@@ -91,7 +92,13 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         /usr/bin/ujust update-system || error_fn
         echo
 
-        # Add + enable the Adoptium Working Group's repository
+        # Install clang and zlib-devel
+        /usr/bin/rpm-ostree install \
+            clang \
+            zlib-devel || error_fn
+        echo
+
+        # Now, add + enable the Adoptium Working Group's repository
         /usr/bin/run0 /usr/bin/curl ${IRONFOX_CURL_FLAGS} --output-dir "/etc/yum.repos.d/" --remote-name https://src.fedoraproject.org/rpms/adoptium-temurin-java-repository/raw/6a468beba6d45d2b29e729196a8dbb12e96e3c33/f/adoptium-temurin-java-repository.repo || error_fn
         echo
         /usr/bin/run0 /usr/bin/chmod 644 /etc/yum.repos.d/adoptium-temurin-java-repository.repo || error_fn
@@ -101,14 +108,14 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         /usr/bin/rpm-ostree refresh-md --force || error_fn
         echo
 
-        # Now, install our JDKs
+        # Install our JDKs
         /usr/bin/rpm-ostree install \
             temurin-8-jdk \
             temurin-17-jdk || error_fn
         echo
 
         # We now unfortunately have to restart the system :/
-        echo_red_text "To apply the JDK installations, your system will now reboot."
+        echo_red_text "To apply the clang, JDK, and zlib installations, your system will now reboot."
         /usr/bin/sleep 5 || error_fn
         echo
         echo_green_text "Press enter to continue."
@@ -198,6 +205,6 @@ else
     echo_red_text "Apologies, your operating system is currently not supported."
     echo_red_text "If you think this is a mistake, please let us know!"
     echo_green_text "https://gitlab.com/ironfox-oss/IronFox/-/issues"
-    echo_red_text "Otherwise, please try again on a system running the latest version of Fedora, macOS, or Ubuntu."
+    echo_red_text "Otherwise, please try again on a system running the latest version of Fedora, macOS, secureblue, or Ubuntu."
     exit 1
 fi
