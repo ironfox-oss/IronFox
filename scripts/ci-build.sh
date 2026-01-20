@@ -45,15 +45,16 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     echo "Preparing to build IronFox (Release)..."
 fi
 
-mkdir -vp "${APK_ARTIFACTS}"
-mkdir -vp "${APKS_ARTIFACTS}"
-mkdir -vp "${AAR_ARTIFACTS}"
-
 # Get sources
 bash -x ./scripts/get_sources.sh
 
 # Set-up our environment
 source "$(realpath $(dirname "$0"))/env_local.sh"
+
+# Create artifact directories
+mkdir -vp "${APK_ARTIFACTS}"
+mkdir -vp "${APKS_ARTIFACTS}"
+mkdir -vp "${AAR_ARTIFACTS}"
 
 # Prepare sources
 bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
