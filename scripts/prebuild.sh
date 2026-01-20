@@ -412,7 +412,14 @@ bundle)
 esac
 
 "${IRONFOX_SED}" -i -e "s/include \".*\"/include ${abi}/" app/build.gradle
-echo "${geckotarget}" >>"${IRONFOX_BUILD}/target"
+
+# Write env_target.sh
+echo "Writing ${IRONFOX_ENV_TARGET}..."
+cat > "${IRONFOX_ENV_TARGET}" << EOF
+export IRONFOX_TARGET_ARCH="${geckotarget}"
+
+source "\${IRONFOX_ENV_TARGET_HELPERS}"
+EOF
 
 # Apply Fenix overlay
 apply_overlay "${IRONFOX_FENIX_OVERLAY}/"

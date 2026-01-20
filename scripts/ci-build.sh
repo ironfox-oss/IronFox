@@ -75,6 +75,9 @@ bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_TYPE}"
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
+# Configure our build target
+source "${IRONFOX_ENV_TARGET}"
+
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
     pushd "${IRONFOX_GECKO}"
 

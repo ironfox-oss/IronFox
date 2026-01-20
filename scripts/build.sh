@@ -47,6 +47,9 @@ fi
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 
+# Configure our build target
+source "${IRONFOX_ENV_TARGET}"
+
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     source "${IRONFOX_ENV_FDROID}"
 fi

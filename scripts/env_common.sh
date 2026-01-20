@@ -22,6 +22,10 @@ export IRONFOX_SCRIPTS="${IRONFOX_ROOT}/scripts"
 IRONFOX_ENV_DEFAULTS="${IRONFOX_SCRIPTS}/env_defaults.sh"
 export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 
+## For build target configuration
+export IRONFOX_ENV_TARGET="${IRONFOX_SCRIPTS}/env_target.sh"
+export IRONFOX_ENV_TARGET_HELPERS="${IRONFOX_SCRIPTS}/env_target_helpers.sh"
+
 # Build directory
 export IRONFOX_BUILD="${IRONFOX_ROOT}/build"
 
@@ -431,32 +435,6 @@ fi
 IRONFOX_NO_PREBUILDS_DEFAULT=0
 if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
     export IRONFOX_NO_PREBUILDS="${IRONFOX_NO_PREBUILDS_DEFAULT}"
-fi
-
-# Set target Architecture + ABI
-if [[ -f "${IRONFOX_BUILD}/target" ]]; then
-    IRONFOX_TARGET_ARCH_INIT=$(<"${IRONFOX_BUILD}/target")
-else
-    # This should never be used in practice
-    IRONFOX_TARGET_ARCH_INIT='unknown'
-fi
-
-if [[ "$IRONFOX_TARGET_ARCH_INIT+x" == 'arm64'* ]]; then
-    export IRONFOX_TARGET_ARCH='arm64'
-    export IRONFOX_TARGET_ABI='arm64-v8a'
-    export IRONFOX_TARGET_RUST='arm64'
-elif [[ "$IRONFOX_TARGET_ARCH_INIT+x" == 'arm'* ]]; then
-    export IRONFOX_TARGET_ARCH='arm'
-    export IRONFOX_TARGET_ABI='armeabi-v7a'
-    export IRONFOX_TARGET_RUST='arm'
-elif [[ "$IRONFOX_TARGET_ARCH_INIT+x" == 'x86_64'* ]]; then
-    export IRONFOX_TARGET_ARCH='x86_64'
-    export IRONFOX_TARGET_ABI='x86_64'
-    export IRONFOX_TARGET_RUST='x86_64'
-elif [[ "$IRONFOX_TARGET_ARCH_INIT+x" == 'bundle'* ]]; then
-    export IRONFOX_TARGET_ARCH='bundle'
-    export IRONFOX_TARGET_ABI='"arm64-v8a", "armeabi-v7a", "x86_64"'
-    export IRONFOX_TARGET_RUST='arm64,arm,x86_64'
 fi
 
 # Set locations for our GeckoView AAR archives
