@@ -52,6 +52,11 @@ export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
 # mozbuild
 export MOZBUILD_STATE_PATH="${IRONFOX_MOZBUILD}"
 
+# No-op Taskcluster
+## This should help ensure we don't fetch Mozilla artifacts/prebuilds
+export TASKCLUSTER_PROXY_URL='https://noop.invalid'
+export TASKCLUSTER_ROOT_URL='https://noop.invalid'
+
 # NSS
 export NSS_DIR="${IRONFOX_NSS_DIR}"
 export NSS_STATIC=1
@@ -60,11 +65,11 @@ export NSS_STATIC=1
 export GLEAN_PYTHON="$(which python)"
 
 # Rust (cargo)
-export CARGO="${IRONFOX_CARGO_HOME}/bin/cargo"
+export CARGO="${IRONFOX_CARGO}"
 export CARGO_HOME="${IRONFOX_CARGO_HOME}"
 export CARGO_INSTALL_ROOT="${IRONFOX_CARGO_HOME}"
-export RUSTC="${IRONFOX_CARGO_HOME}/bin/rustc"
-export RUSTDOC="${IRONFOX_CARGO_HOME}/bin/rustdoc"
+export RUSTC="${IRONFOX_RUSTC}"
+export RUSTDOC="${IRONFOX_RUSTDOC}"
 export PATH="${IRONFOX_CARGO_HOME}/bin:${PATH}"
 
 ## Disable debug
