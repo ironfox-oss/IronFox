@@ -14,6 +14,7 @@ object GeckoSettingsDictionary {
     val fppOverridesIFUnbreak = "browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled"
     val fppOverridesIFWebGL = "browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled"
     val fppOverridesMozUnbreak = "privacy.fingerprintingProtection.remoteOverrides.enabled"
+    val gleanAddonPingLastUpdate = "app.update.lastUpdateTime.glean-addons-daily"
     val ipv6Disabled = "network.dns.disableIPv6"
     val javascriptEnabled = "javascript.enabled"
     val jitBaseline = "javascript.options.baselinejit"

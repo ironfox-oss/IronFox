@@ -101,6 +101,13 @@ pref("media.rdd-wav.enabled", true);
 pref("media.use-remote-encoder.audio", true);
 pref("media.use-remote-encoder.video", true);
 
+/// Disable the Glean add-on ping scheduler
+// We only need these temporarily: added to Phoenix for next release
+pref("extensions.gleanPingAddons.daily.interval", 2147483647, locked); // [HIDDEN]
+pref("extensions.gleanPingAddons.updated.delay", 2147483647, locked); // [HIDDEN]
+pref("extensions.gleanPingAddons.updated.idleTimeout", 2147483647, locked); // [HIDDEN]
+pref("extensions.gleanPingAddons.updated.testing", false, locked); // [HIDDEN] [DEFAULT]
+
 /// Re-enable geolocation permission prompts in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
 pref("geo.prompt.testing", false); // [HIDDEN] [DEFAULT]

@@ -727,6 +727,9 @@ echo ']' >>services/settings/dumps/main/moz.build
 # Remove unused about:telemetry assets
 rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js toolkit/content/aboutTelemetry.xhtml
 
+# Prevent registration of the Glean add-on ping scheduler
+"${IRONFOX_SED}" -i 's|category update-timer amGleanDaily|# category update-timer amGleanDaily|' toolkit/mozapps/extensions/extensions.manifest
+
 # Remove the Clear Key CDM
 "${IRONFOX_SED}" -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' mobile/android/installer/package-manifest.in
 

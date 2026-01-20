@@ -341,6 +341,10 @@ object GeckoSettingsBridge {
             clearPref(engine, remoteDebuggingGeckoPref)
         }
 
+        // Deregister the Glean add-on ping scheduler
+        val gleanAddonPingLastUpdateGeckoPref = GeckoSettingsDictionary.gleanAddonPingLastUpdate
+        clearPref(engine, gleanAddonPingLastUpdateGeckoPref)
+
         // These are old Safe Browsing prefs that we no longer use
         // Them being around in the present results in console errors, so we reset them
         val legacySafeBrowsingLastUpdateGeckoPref = GeckoSettingsDictionary.sbIFOldLastUpdate
