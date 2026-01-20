@@ -431,10 +431,7 @@ if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
 fi
 
 # Set target Architecture + ABI
-if [[ -f "${IRONFOX_BUILD}/target" ]]; then
-    IRONFOX_TARGET_ARCH_INIT=$(<"${IRONFOX_BUILD}/target")
-fi
-
+IRONFOX_TARGET_ARCH_INIT=$(<"${IRONFOX_BUILD}/target")
 if [[ "$IRONFOX_TARGET_ARCH_INIT+x" == 'arm64'* ]]; then
     export IRONFOX_TARGET_ARCH='arm64'
     export IRONFOX_TARGET_ABI='arm64-v8a'
