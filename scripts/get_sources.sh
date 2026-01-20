@@ -1,25 +1,22 @@
 #!/bin/bash
 
-set -eo pipefail
+set -euo pipefail
 
-source "$(dirname $0)/versions.sh"
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
-# If variables are defined with a custom `env_override.sh`, let's use those
-if [[ -f "${ROOTDIR}/env_override.sh" ]]; then
-    source "${ROOTDIR}/env_override.sh"
-fi
+# Include version info
+source "${IRONFOX_VERSIONS}"
 
-if [[ "${OSTYPE}" == "darwin"* ]]; then
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     ANDROID_SDK_PLATFORM='mac'
     PLATFORM='macos'
     PREBUILT_PLATFORM='osx'
-    # Ensure we use GNU tar on macOS
-    TAR='gtar'
 else
     ANDROID_SDK_PLATFORM='linux'
     PLATFORM='linux'
     PREBUILT_PLATFORM='linux'
-    TAR='tar'
 fi
 
 clone_repo() {
@@ -84,14 +81,14 @@ download() {
     mkdir -vp "$(dirname "${filepath}")"
 
     echo "Downloading ${url}"
-    wget --https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose "${url}" -O "${filepath}"
+    wget ${IRONFOX_WGET_FLAGS} "${url}" -O "${filepath}"
 }
 
 # Extract zip removing top level directory
 extract_rmtoplevel() {
     local archive_path="$1"
     local to_name="$2"
-    local extract_to="${ROOTDIR}/external/${to_name}"
+    local extract_to="${IRONFOX_EXTERNAL}/${to_name}"
 
     if ! [[ -f "${archive_path}" ]]; then
         echo "Archive '${archive_path}' does not exist!"
@@ -106,13 +103,13 @@ extract_rmtoplevel() {
             unzip -q "${archive_path}" -d "${temp_dir}"
             ;;
         *.tar.gz)
-            "${TAR}" xzf "$archive_path" -C "${temp_dir}"
+            "${IRONFOX_TAR}" xzf "$archive_path" -C "${temp_dir}"
             ;;
         *.tar.xz)
-            "${TAR}" xJf "$archive_path" -C "${temp_dir}"
+            "${IRONFOX_TAR}" xJf "$archive_path" -C "${temp_dir}"
             ;;
         *.tar.zst)
-            "${TAR}" --zstd -xvf "${archive_path}" -C "${temp_dir}"
+            "${IRONFOX_TAR}" --zstd -xvf "${archive_path}" -C "${temp_dir}"
             ;;
         *)
             echo "Unsupported archive format: ${archive_path}"
@@ -146,7 +143,7 @@ download_and_extract() {
         extension=".zip"
     fi
 
-    local repo_archive="${DOWNLOADSDIR}/${repo_name}${extension}"
+    local repo_archive="${IRONFOX_DOWNLOADS}/${repo_name}${extension}"
 
     download "${url}" "${repo_archive}"
 
@@ -160,101 +157,91 @@ download_and_extract() {
     echo
 }
 
-if [[ -z ${JAVA_HOME+x} ]]; then
-    if [[ "${OSTYPE}" == "darwin"* ]]; then
-        export JAVA_HOME="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
-    else
-        export JAVA_HOME="/usr/lib/jvm/temurin-17-jdk"
-    fi
-    export PATH="${JAVA_HOME}/bin:${PATH}"
-fi
-
 echo "Downloading the Android SDK..."
 download_and_extract "android-cmdline-tools" "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip"
-mkdir -vp "${ANDROIDSDKDIR}/cmdline-tools"
-mv -v "${ROOTDIR}/external/android-cmdline-tools" "${ANDROIDSDKDIR}/cmdline-tools/latest"
+mkdir -vp "${IRONFOX_ANDROID_SDK}/cmdline-tools"
+mv -v "${IRONFOX_EXTERNAL}/android-cmdline-tools" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest"
 
 # Accept Android SDK licenses
-SDK_MANAGER="${ANDROIDSDKDIR}/cmdline-tools/latest/bin/sdkmanager"
-{ yes || true; } | $SDK_MANAGER --sdk_root="${ANDROIDSDKDIR}" --licenses
+{ yes || true; } | ${IRONFOX_ANDROID_SDKMANAGER} --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
 
-$SDK_MANAGER "build-tools;${ANDROID_BUILDTOOLS_VERSION}"
-$SDK_MANAGER "ndk;${ANDROID_NDK_REVISION}"
-$SDK_MANAGER "platforms;android-${ANDROID_PLATFORM_VERSION}"
+${IRONFOX_ANDROID_SDKMANAGER} "build-tools;${ANDROID_BUILDTOOLS_VERSION}"
+${IRONFOX_ANDROID_SDKMANAGER} "ndk;${ANDROID_NDK_REVISION}"
+${IRONFOX_ANDROID_SDKMANAGER} "platforms;android-${ANDROID_PLATFORM_VERSION}"
 
 echo "Downloading Bundletool..."
-download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "${BUNDLETOOLDIR}/bundletool.jar"
+download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "${IRONFOX_BUNDLETOOL_JAR}"
 
-if ! [[ -f "${BUNDLETOOLDIR}/bundletool" ]]; then
+if ! [[ -f "${IRONFOX_BUNDLETOOL}" ]]; then
     echo "Creating bundletool script..."
     {
         echo '#!/bin/bash'
-        echo "exec java -jar ${BUNDLETOOLDIR}/bundletool.jar \"\$@\""
-    } > "${BUNDLETOOLDIR}/bundletool"
-    chmod +x "${BUNDLETOOLDIR}/bundletool"
+        echo "exec java -jar ${IRONFOX_BUNDLETOOL_JAR} \"\$@\""
+    } > "${IRONFOX_BUNDLETOOL}"
+    chmod +x "${IRONFOX_BUNDLETOOL}"
 fi
 
-echo "Bundletool is set up at ${BUNDLETOOLDIR}/bundletool"
+echo "Bundletool is set-up at ${IRONFOX_BUNDLETOOL}"
 
 echo "Downloading F-Droid's Gradle script..."
-download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${GRADLEDIR}/gradlew.py"
+download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${IRONFOX_GRADLE_DIR}/gradlew.py"
 
-if ! [[ -f "${GRADLEDIR}/gradle" ]]; then
+if ! [[ -f "${IRONFOX_GRADLE}" ]]; then
     echo "Creating Gradle script..."
     {
         echo '#!/bin/bash'
-        echo "exec python3 ${GRADLEDIR}/gradlew.py \"\$@\""
-    } > "${GRADLEDIR}/gradle"
-    chmod +x "${GRADLEDIR}/gradle"
+        echo "exec python3 ${IRONFOX_GRADLE_DIR}/gradlew.py \"\$@\""
+    } > "${IRONFOX_GRADLE}"
+    chmod +x "${IRONFOX_GRADLE}"
 fi
 
-echo "Gradle is set up at ${GRADLEDIR}/gradle"
+echo "Gradle is set-up at ${IRONFOX_GRADLE}"
 
 # Clone Glean
 echo "Cloning Glean..."
-clone_repo "https://github.com/mozilla/glean.git" "${GLEANDIR}" "${GLEAN_COMMIT}"
+clone_repo "https://github.com/mozilla/glean.git" "${IRONFOX_GLEAN}" "${GLEAN_COMMIT}"
 
 # Clone MicroG
 echo "Cloning microG..."
-clone_repo "https://github.com/microg/GmsCore.git" "${GMSCOREDIR}" "${GMSCORE_COMMIT}"
+clone_repo "https://github.com/microg/GmsCore.git" "${IRONFOX_GMSCORE}" "${GMSCORE_COMMIT}"
 
 # Clone unifiedpush-ac
 echo "Cloning unifiedpush-ac..."
-clone_repo "https://gitlab.com/ironfox-oss/unifiedpush-ac.git" "${UNIFIEDPUSHACDIR}" "${UNIFIEDPUSHAC_COMMIT}"
+clone_repo "https://gitlab.com/ironfox-oss/unifiedpush-ac.git" "${IRONFOX_UP_AC}" "${UNIFIEDPUSHAC_COMMIT}"
 
 # Download Phoenix
 echo "Downloading Phoenix..."
-download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/phoenix.js" "${PATCHDIR}/gecko-overlay/ironfox/prefs/000-phoenix.js"
-download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/phoenix-extended.js" "${PATCHDIR}/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/phoenix.js" "${IRONFOX_GECKO_OVERLAY}/ironfox/prefs/000-phoenix.js"
+download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/phoenix-extended.js" "${IRONFOX_GECKO_OVERLAY}/ironfox/prefs/001-phoenix-extended.js"
 
 # Clone application-services
 echo "Cloning application-services..."
-clone_repo "https://github.com/mozilla/application-services.git" "${APPSERVICESDIR}" "${APPSERVICES_COMMIT}"
+clone_repo "https://github.com/mozilla/application-services.git" "${IRONFOX_AS}" "${APPSERVICES_COMMIT}"
 
 # Clone firefox-l10n
 echo "Cloning firefox-l10n..."
-clone_repo "https://github.com/mozilla-l10n/firefox-l10n.git" "${L10NDIR}" "${L10N_COMMIT}"
+clone_repo "https://github.com/mozilla-l10n/firefox-l10n.git" "${IRONFOX_L10N_CENTRAL}" "${L10N_COMMIT}"
 
 # Clone Firefox
 echo "Cloning Firefox..."
-clone_repo "https://github.com/mozilla-firefox/firefox.git" "${GECKODIR}" "${FIREFOX_COMMIT}"
+clone_repo "https://github.com/mozilla-firefox/firefox.git" "${IRONFOX_GECKO}" "${FIREFOX_COMMIT}"
 
 # Prebuilds
-if [[ "${NO_PREBUILDS}" == "1" ]]; then
+if [[ "${IRONFOX_NO_PREBUILDS}" == "1" ]]; then
     echo "Cloning the prebuilds build repository..."
-    clone_repo "https://gitlab.com/ironfox-oss/prebuilds.git" "${PREBUILDSDIR}" "${PREBUILDS_COMMIT}"
+    clone_repo "https://gitlab.com/ironfox-oss/prebuilds.git" "${IRONFOX_PREBUILDS}" "${PREBUILDS_COMMIT}"
 
-    pushd "${PREBUILDSDIR}"
+    pushd "${IRONFOX_PREBUILDS}"
     echo "Downloading prebuild sources..."
-    bash "${PREBUILDSDIR}/scripts/get_sources.sh"
+    bash "${IRONFOX_PREBUILDS}/scripts/get_sources.sh"
     popd
 
-    UNIFFIDIR="${PREBUILDSDIR}/build/outputs/uniffi-rs/uniffi-rs"
-    WASISDKDIR="${PREBUILDSDIR}/build/outputs/wasi-sdk/wasi"
+    UNIFFIDIR="${IRONFOX_PREBUILDS}/build/outputs/uniffi-rs/uniffi-rs"
+    WASISDKDIR="${IRONFOX_PREBUILDS}/build/outputs/wasi-sdk/wasi"
 else
     # Get Tor's no-op UniFFi binding generator
     echo "Downloading prebuilt uniffi-bindgen..."
-    if [[ "${PLATFORM}" == "macos" ]]; then
+    if [[ "${IRONFOX_OS}" == 'osx' ]]; then
         download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
     else
         download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
@@ -262,37 +249,9 @@ else
 
     # Get WebAssembly SDK
     echo "Downloading prebuilt wasi-sdk..."
-    if [[ "${PLATFORM}" == "macos" ]]; then
+    if [[ "${IRONFOX_OS}" == 'osx' ]]; then
         download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
     else
         download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
     fi
 fi
-
-# Write env_local.sh
-echo "Writing ${ENV_SH}..."
-cat > "${ENV_SH}" << EOF
-export builddir="${BUILDDIR}"
-export outputsdir="${OUTPUTSDIR}"
-export patches="${PATCHDIR}"
-export rootdir="${ROOTDIR}"
-export android_components="${ANDROID_COMPONENTS}"
-export android_ndk_dir="${ANDROIDSDKDIR}/ndk/${ANDROID_NDK_REVISION}"
-export android_sdk_dir="${ANDROIDSDKDIR}"
-export application_services="${APPSERVICESDIR}"
-export bundletool="${BUNDLETOOLDIR}"
-export fenix="${FENIX}"
-export glean="${GLEANDIR}"
-export gmscore="${GMSCOREDIR}"
-export gradle="${GRADLEDIR}/gradle"
-export l10n_central="${L10NDIR}"
-export mozilla_release="${GECKODIR}"
-export prebuilds="${PREBUILDSDIR}"
-export uniffi="${UNIFFIDIR}"
-export unifiedpush_ac="${UNIFIEDPUSHACDIR}"
-export wasi="${WASISDKDIR}"
-
-export IRONFOX_TARGET_ARCH={IRONFOX_TARGET_ARCH}
-
-source "\${rootdir}/scripts/env_common.sh"
-EOF

@@ -13,7 +13,8 @@ echo_green_text() {
 }
 
 # Set-up our environment
-source "$(dirname $0)/env_local.sh"
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 # Get our platform, OS, and architecture
 source "${IRONFOX_ENV_HELPERS}"

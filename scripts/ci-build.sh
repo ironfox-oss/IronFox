@@ -38,26 +38,24 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     # Set uBO assets to production variant
     export IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.${PRODUCTION_BRANCH}.json"
 
-    echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
-
     # Target release
     export IRONFOX_RELEASE=1
-    echo "Preparing to build IronFox (Release)..."
 fi
 
-# Get sources
-bash -x ./scripts/get_sources.sh
-
 # Set-up our environment
-source "$(realpath $(dirname "$0"))/env_local.sh"
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 # Create artifact directories
 mkdir -vp "${APK_ARTIFACTS}"
 mkdir -vp "${APKS_ARTIFACTS}"
 mkdir -vp "${AAR_ARTIFACTS}"
 
+# Get sources
+bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
+
 # Prepare sources
-bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
+bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" "${BUILD_VARIANT}"
 
 if [[ "${BUILD_TYPE}" == 'bundle' ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
@@ -72,10 +70,10 @@ export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
 export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
 
 # Build
-bash -x scripts/build.sh "${BUILD_TYPE}"
+bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_TYPE}"
 
 # Include version info
-source "$(realpath $(dirname "$0"))/versions.sh"
+source "${IRONFOX_VERSIONS}"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
     pushd "${IRONFOX_GECKO}"
