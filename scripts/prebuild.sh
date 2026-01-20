@@ -125,10 +125,8 @@ mkdir -vp "${IRONFOX_OUTPUTS}"
 mkdir -vp "${builddir}/tmp/fenix"
 mkdir -vp "${builddir}/tmp/glean"
 
-## Symlink machrc
-if [[ ! -f "${patches}/machrc" ]]; then
-    ln -s "${patches}/machrc" "${IRONFOX_MOZBUILD}/machrc"
-fi
+## Copy machrc config
+cp -vf "${patches}/machrc" "${IRONFOX_MOZBUILD}/machrc"
 
 ## Copy Rust (cargo) config
 cp -vf "${patches}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
