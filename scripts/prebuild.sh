@@ -1077,17 +1077,10 @@ mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
     mobile/android/app/geckoview-prefs.js
 
 # Gecko prefs
-{
-    cat "${IRONFOX_GECKO_OVERLAY}/ironfox/prefs/000-phoenix.js"
-    cat "${IRONFOX_GECKO_OVERLAY}/ironfox/prefs/001-phoenix-extended.js"
-    cat "${IRONFOX_PATCHES}/build/gecko/002-ironfox.js"
-    cat "${IRONFOX_PATCHES}/build/gecko/003-ironfox-${IRONFOX_CHANNEL}.js"
-} >>mobile/android/app/geckoview-prefs.js
+echo '' >>mobile/android/app/geckoview-prefs.js
+echo '#include ../../../ironfox/prefs/ironfox.js' >>mobile/android/app/geckoview-prefs.js
 
-"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" mobile/android/app/geckoview-prefs.js
-"${IRONFOX_SED}" -i "s|{IRONFOX_UBO_ASSETS_URL}|${IRONFOX_UBO_ASSETS_URL}|" mobile/android/app/geckoview-prefs.js
-"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" mobile/android/app/geckoview-prefs.js
-
+## for PDF.js
 echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDefaultPrefs.js
 
 # Apply Gecko overlay

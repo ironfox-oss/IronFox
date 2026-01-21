@@ -123,6 +123,16 @@ if [[ -f "${IRONFOX_BUILD}/targets_to_build" ]]; then
 fi
 cp -f "${IRONFOX_PATCHES}/build/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${IRONFOX_BUILD}/targets_to_build"
 
+## Set our Gecko prefs
+if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js" ]]; then
+    rm -f "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+fi
+
+cp -f "${IRONFOX_PATCHES}/build/gecko/002-ironfox.js" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+"${IRONFOX_SED}" -i "s|{IRONFOX_UBO_ASSETS_URL}|${IRONFOX_UBO_ASSETS_URL}|" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/002-ironfox.js"
+
 ## Configure release channel
 
 ### Fenix

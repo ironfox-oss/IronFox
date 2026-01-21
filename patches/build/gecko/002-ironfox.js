@@ -2,7 +2,7 @@
 
 // This is home to IronFox-specific preferences. This will primarily be used for overriding undesired preferences from Phoenix; but it can also be used for ex. branding.
 
-// NOTE: Values surrounded in curly brackets ({}) are filled in by`prebuild.sh`
+// NOTE: Values surrounded in curly brackets ({}) are filled in by`build.sh`
 /// IRONFOX_VERSION = {IRONFOX_VERSION}
 /// IRONFOX_UBO_ASSETS_URL = {IRONFOX_UBO_ASSETS_URL}
 /// PHOENIX_VERSION = {PHOENIX_VERSION}
@@ -15,6 +15,16 @@ pref("app.update.url.manual", "https://gitlab.com/ironfox-oss/IronFox/-/releases
 pref("app.vendorURL", "https://ironfoxoss.org/", locked);
 pref("browser.ironfox.isIronFox", true, locked);
 pref("browser.ironfox.version", "{IRONFOX_VERSION}", locked);
+
+#ifdef IRONFOX_RELEASE
+    pref("app.support.vendor", "IronFox: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}");
+    pref("browser.ironfox.channel", "release", locked);
+    pref("browser.ironfox.isRelease", true, locked);
+#else
+    pref("app.support.vendor", "IronFox Nightly: {IRONFOX_VERSION} | Phoenix - Extended: {PHOENIX_VERSION}");
+    pref("browser.ironfox.channel", "nightly", locked);
+    pref("browser.ironfox.isRelease", false, locked);
+#endif
 
 /// Once the onboarding is completed, this pref is set to true
 // On IronFox's onboarding, we want to allow the installation of uBlock Origin (if certain strict criteria is met - 
