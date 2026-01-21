@@ -32,8 +32,8 @@ GMSCORE_VERSION='v0.3.12.250932'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
-PHOENIX_COMMIT='f09568c8a71af4fe42dd43c6f711c67daf605f1e'
-PHOENIX_VERSION='2025.12.23.1'
+PHOENIX_COMMIT='964d320422c481ef5ff31c1a1ae0301e4e1c36e2'
+PHOENIX_VERSION='2026.01.21.1'
 
 ## uniffi-rs (Tor)
 ### https://gitlab.torproject.org/tpo/applications/uniffi-rs

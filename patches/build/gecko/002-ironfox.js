@@ -88,36 +88,6 @@ pref("media.geckoview.autoplay.request", true, locked); // [DEFAULT]
 /// Ensure EME is always/only controlled by the UI/permission prompt
 pref("media.eme.require-app-approval", true, locked); // [DEFAULT]
 
-/// Media decoding
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1981478
-// https://phabricator.services.mozilla.com/D260149
-// Required for media playback on certain sites (ex. rumble.com, x.com) when isolated content processes
-// are enabled: https://bugzilla.mozilla.org/show_bug.cgi?id=1810736
-// We only need these temporarily: added to Phoenix for next release
-pref("media.android-media-codec.enabled", false);
-pref("media.android-media-codec.preferred", false);
-pref("media.ffmpeg.encoder.enabled", true);
-pref("media.ffvpx-hw.enabled", true);
-pref("media.gmp.decoder.enabled", false);
-pref("media.gmp.decoder.multithreaded", true);
-pref("media.gmp.encoder.multithreaded", true);
-pref("media.rdd-ffmpeg.enabled", true);
-pref("media.rdd-ffvpx.enabled", true);
-pref("media.rdd-opus.enabled", true);
-pref("media.rdd-process.enabled", true);
-pref("media.rdd-vorbis.enabled", true);
-pref("media.rdd-vpx.enabled", true);
-pref("media.rdd-wav.enabled", true);
-pref("media.use-remote-encoder.audio", true);
-pref("media.use-remote-encoder.video", true);
-
-/// Disable the Glean add-on ping scheduler
-// We only need these temporarily: added to Phoenix for next release
-pref("extensions.gleanPingAddons.daily.interval", 2147483647, locked); // [HIDDEN]
-pref("extensions.gleanPingAddons.updated.delay", 2147483647, locked); // [HIDDEN]
-pref("extensions.gleanPingAddons.updated.idleTimeout", 2147483647, locked); // [HIDDEN]
-pref("extensions.gleanPingAddons.updated.testing", false, locked); // [HIDDEN] [DEFAULT]
-
 /// Re-enable geolocation permission prompts in GeckoView
 // We still block this by default, just via a patch for Fenix's UI settings instead
 pref("geo.prompt.testing", false); // [HIDDEN] [DEFAULT]
@@ -133,10 +103,6 @@ pref("notification.prompt.testing", false); // [HIDDEN] [DEFAULT]
 /// Restrict Remote Settings
 pref("browser.ironfox.services.settings.allowedCollections", "blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-data-leak-blocker-domains,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/ml-inference-options,main/ml-inference-request-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/public-suffix-list,main/query-stripping,main/remote-permissions,main/third-party-cookie-blocking-exempt-urls,main/tracking-protection-lists,main/translations-identification-models,main/translations-models,main/translations-models-v2,main/translations-wasm,main/translations-wasm-v2,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,main/webcompat-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");
 pref("browser.ironfox.services.settings.allowedCollectionsFromDump", "main/ironfox-fingerprinting-protection-overrides-harden,main/ironfox-fingerprinting-protection-overrides-unbreak,main/ironfox-fingerprinting-protection-overrides-unbreak-timezone,main/ironfox-fingerprinting-protection-overrides-unbreak-webgl,blocklists/addons,blocklists/addons-bloomfilters,blocklists/gfx,blocklists/plugins,main/addons-data-leak-blocker-domains,main/anti-tracking-url-decoration,main/bounce-tracking-protection-exceptions,main/cookie-banner-rules-list,main/fingerprinting-protection-overrides,main/hijack-blocklists,main/moz-essential-domain-fallbacks,main/ml-inference-options,main/ml-inference-request-options,main/ml-model-allow-deny-list,main/ml-onnx-runtime,main/partitioning-exempt-urls,main/password-recipes,main/public-suffix-list,main/query-stripping,main/remote-permissions,main/third-party-cookie-blocking-exempt-urls,main/tracking-protection-lists,main/translations-identification-models,main/translations-models,main/translations-models-v2,main/translations-wasm,main/translations-wasm-v2,main/url-classifier-exceptions,main/url-classifier-skip-urls,main/url-parser-default-unknown-schemes-interventions,main/webcompat-interventions,security-state/cert-revocations,security-state/ct-logs,security-state/intermediates,security-state/onecrl");
-
-/// Proxy Safe Browsing remote download protection
-//// (We only need this temporarily - added to Phoenix for next release...)
-pref("browser.safebrowsing.downloads.remote.url", "https://safebrowsing.ironfoxoss.org/safebrowsing/clientreport/download?key=%GOOGLE_SAFEBROWSING_API_KEY%");
 
 /// Define initial prefs for our UI settings
 // This ensures that Gecko preferences for our custom UI settings are always defined
