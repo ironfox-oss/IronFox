@@ -1,0 +1,4 @@
+
+FINAL_TARGET_FILES.defaults += [
+    "policies.json",
+]

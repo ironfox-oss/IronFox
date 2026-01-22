@@ -646,6 +646,8 @@ echo '@BINPATH@/chrome/browser.manifest' >>mobile/android/installer/package-mani
 echo '' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox@JAREXT@' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox.manifest' >>mobile/android/installer/package-manifest.in
+echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/defaults/policies.json' >>mobile/android/installer/package-manifest.in
 
 # about:policies
 mkdir -vp ironfox/locales/en-US/browser/policies

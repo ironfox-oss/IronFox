@@ -1,18 +1,40 @@
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index bb451a279599d..5eb8e609952eb 100644
+index bb451a279599d..ecaaf717da955 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -147,6 +147,10 @@ EnterprisePoliciesManager.prototype = {
-   },
+@@ -584,16 +584,29 @@ class JSONPoliciesProvider {
+     return configFile;
+   }
  
-   _chooseProvider() {
-+    const { IronFoxPoliciesProvider } = ChromeUtils.importESModule(
-+      "resource://gre/modules/IronFoxPoliciesProvider.sys.mjs"
++  _getPolicies() {
++    const { NetUtil } = ChromeUtils.importESModule(
++      "resource://gre/modules/NetUtil.sys.mjs"
 +    );
-+    return new IronFoxPoliciesProvider();
-     let platformProvider = null;
-     if (AppConstants.platform == "win" && AppConstants.MOZ_SYSTEM_POLICIES) {
-       platformProvider = new WindowsGPOPoliciesProvider();
++    let uri = NetUtil.newURI("resource://gre/defaults/policies.json", "UTF-8");
++    let channel = NetUtil.newChannel({uri: uri, loadUsingSystemPrincipal: true, securityFlags: Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_SEC_CONTEXT_IS_NULL, contentPolicyType: Ci.nsIContentPolicy.TYPE_OTHER});
++    let file = channel.open();
++    let count = file.available();
++    let data = NetUtil.readInputStreamToString(file, count, {charset: "UTF-8"});
++    file.close();
++    return data;
++  }
++
+   _readData() {
+-    let configFile = this._getConfigurationFile();
++    let configFile = true;
+     if (!configFile) {
+       // Do nothing, _policies will remain null
+       return;
+     }
+     try {
+-      let data = Cu.readUTF8File(configFile);
++      let data = this._getPolicies();
+       if (data) {
+-        lazy.log.debug(`policies.json path = ${configFile.path}`);
++        lazy.log.debug(`policies.json path = resource://gre/defaults/policies.json`);
+         lazy.log.debug(`policies.json content = ${data}`);
+         this._policies = JSON.parse(data).policies;
+ 
 diff --git a/toolkit/components/enterprisepolicies/moz.build b/toolkit/components/enterprisepolicies/moz.build
 index 4fcb377c80145..539080df94edd 100644
 --- a/toolkit/components/enterprisepolicies/moz.build
