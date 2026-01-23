@@ -103,13 +103,7 @@ if [[ -z "${SB_GAPI_KEY_FILE+x}" ]]; then
     fi
 fi
 
-if [[ -z "${IRONFOX_UBO_ASSETS_URL}" ]]; then
-    echo_red_text "\$IRONFOX_UBO_ASSETS_URL is not set! Aborting..."
-    exit 1
-fi
-
 echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL}"
-echo_green_text "uBlock Origin Assets URL: ${IRONFOX_UBO_ASSETS_URL}"
 
 # Create build directories
 mkdir -vp "${IRONFOX_CARGO_HOME}"

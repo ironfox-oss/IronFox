@@ -424,12 +424,6 @@ else
     export IRONFOX_CHANNEL='nightly'
 fi
 
-# uBlock Origin assets URL
-IRONFOX_UBO_ASSETS_URL_DEFAULT='https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.dev.json'
-if [[ -z "${IRONFOX_UBO_ASSETS_URL+x}" ]]; then
-    export IRONFOX_UBO_ASSETS_URL="${IRONFOX_UBO_ASSETS_URL_DEFAULT}"
-fi
-
 # Whether we should use our prebuilt libraries (Default)
 ## (This is currently uniffi-bindgen and WASI SDK for us)
 IRONFOX_NO_PREBUILDS_DEFAULT=0

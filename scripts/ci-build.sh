@@ -35,9 +35,6 @@ bundle)
 esac
 
 if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
-    # Set uBO assets to production variant
-    export IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.${PRODUCTION_BRANCH}.json"
-
     # Target release
     export IRONFOX_RELEASE=1
 fi
