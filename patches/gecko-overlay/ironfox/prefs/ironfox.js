@@ -2,4 +2,4 @@
 
 #include 000-phoenix.js
 #include 001-phoenix-extended.js
-#include 002-ironfox.js
+#include 002-ironfox-bootstrap.js

@@ -22,9 +22,6 @@ export MOZ_ARTIFACT_BUILDS=
 ## Disable ASan crash reporting
 ac_add_options --disable-address-sanitizer-reporter
 
-## Disable autoconfig functionality
-ac_add_options --disable-pref-extensions
-
 ## Disable auxiliary file persistence
 ac_add_options --enable-disk-remnant-avoidance
 
@@ -122,6 +119,10 @@ ac_add_options --disable-wmf
 ## Do not require Node.js for builds
 ac_add_options --disable-nodejs
 export NODEJS=
+
+## Enable AutoConfig
+### https://support.mozilla.org/kb/customizing-firefox-using-autoconfig
+ac_add_options --enable-pref-extensions
 
 ## Enable isolated content process support
 ac_add_options --enable-isolated-process

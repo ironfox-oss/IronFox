@@ -647,6 +647,7 @@ echo '' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox@JAREXT@' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox.manifest' >>mobile/android/installer/package-manifest.in
 echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/defaults/autoconfig/ironfox.cfg' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/defaults/policies.json' >>mobile/android/installer/package-manifest.in
 
 # about:policies
@@ -1081,9 +1082,6 @@ mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
 # Gecko prefs
 echo '' >>mobile/android/app/geckoview-prefs.js
 echo '#include ../../../ironfox/prefs/ironfox.js' >>mobile/android/app/geckoview-prefs.js
-
-## for PDF.js
-echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDefaultPrefs.js
 
 # Apply Gecko overlay
 apply_overlay "${IRONFOX_GECKO_OVERLAY}/"
