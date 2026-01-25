@@ -66,7 +66,6 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
             m4 \
             make \
             temurin@17 \
-            wget \
             xz \
             zlib || error_fn
         echo
@@ -154,7 +153,6 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
         shasum \
         temurin-8-jdk \
         temurin-17-jdk \
-        wget \
         xz \
         yq \
         zlib-devel || error_fn
@@ -197,7 +195,6 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
         temurin-8-jdk \
         temurin-17-jdk \
         unzip \
-        wget \
         xz-utils \
         yq \
         zlib1g-dev || error_fn

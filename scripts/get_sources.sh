@@ -48,7 +48,10 @@ clone_repo() {
         echo "'${path}' already exists"
         read -p "Do you want to re-clone this repository? [y/N] " -n 1 -r
         echo
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
+        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+            echo "Removing ${path}..."
+            rm -rf "${path}"
+        else
             return 0
         fi
     fi
@@ -70,7 +73,7 @@ download() {
         echo "${filepath} already exists."
         read -p "Do you want to re-download? [y/N] " -n 1 -r
         echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
             echo "Removing ${filepath}..."
             rm -f "${filepath}"
         else
@@ -81,7 +84,7 @@ download() {
     mkdir -vp "$(dirname "${filepath}")"
 
     echo "Downloading ${url}"
-    wget ${IRONFOX_WGET_FLAGS} "${url}" -O "${filepath}"
+    curl ${IRONFOX_CURL_FLAGS} -sSL "${url}" -o "${filepath}"
 }
 
 # Extract zip removing top level directory
@@ -103,10 +106,10 @@ extract_rmtoplevel() {
             unzip -q "${archive_path}" -d "${temp_dir}"
             ;;
         *.tar.gz)
-            "${IRONFOX_TAR}" xzf "$archive_path" -C "${temp_dir}"
+            "${IRONFOX_TAR}" xzf "${archive_path}" -C "${temp_dir}"
             ;;
         *.tar.xz)
-            "${IRONFOX_TAR}" xJf "$archive_path" -C "${temp_dir}"
+            "${IRONFOX_TAR}" xJf "${archive_path}" -C "${temp_dir}"
             ;;
         *.tar.zst)
             "${IRONFOX_TAR}" --zstd -xvf "${archive_path}" -C "${temp_dir}"

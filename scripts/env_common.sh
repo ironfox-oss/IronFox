@@ -389,23 +389,6 @@ else
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT} ${IRONFOX_RUST_FLAGS}"
 fi
 
-# If wget flags are added, this determines whether they should be appended to our default flags (default),
-## or if they should override them entirely
-IRONFOX_WGET_FLAGS_OVERRIDE_DEFAULT=0
-if [[ -z "${IRONFOX_WGET_FLAGS_OVERRIDE+x}" ]]; then
-    export IRONFOX_WGET_FLAGS_OVERRIDE="${IRONFOX_WGET_FLAGS_OVERRIDE_DEFAULT}"
-fi
-
-# wget flags
-IRONFOX_WGET_FLAGS_DEFAULT='--https-only --no-cache --secure-protocol=TLSv1_3 --show-progress --verbose'
-if [[ -z "${IRONFOX_WGET_FLAGS+x}" ]]; then
-    export IRONFOX_WGET_FLAGS="${IRONFOX_WGET_FLAGS_DEFAULT}"
-elif [[ "${IRONFOX_WGET_FLAGS_OVERRIDE}" == 1 ]]; then
-    export IRONFOX_WGET_FLAGS="${IRONFOX_WGET_FLAGS}"
-else
-    export IRONFOX_WGET_FLAGS="${IRONFOX_WGET_FLAGS_DEFAULT} ${IRONFOX_WGET_FLAGS}"
-fi
-
 export ARTIFACTS="${IRONFOX_ROOT}/artifacts"
 export APK_ARTIFACTS="${ARTIFACTS}/apk"
 export APKS_ARTIFACTS="${ARTIFACTS}/apks"
