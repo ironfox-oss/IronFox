@@ -3,7 +3,7 @@
 ## This is used for converting IronFox-specific environment variables to ones used in external projects.
 
 ## CAUTION: Do NOT source this directly!
-## Source 'env_local.sh' instead.
+## Source 'env.sh' instead.
 
 ## CAUTION: Do NOT try to configure any of these environment variables directly!
 ## Use the IronFox equivalent variables (at `env_common.sh`) instead.
