@@ -346,7 +346,7 @@ if [[ -z "${IRONFOX_CURL_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # curl flags
-IRONFOX_CURL_FLAGS_DEFAULT='--doh-cert-status --no-insecure --no-proxy-insecure --no-sessionid --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --proto -all,https --proto-default https --proto-redir -all,https --show-error'
+IRONFOX_CURL_FLAGS_DEFAULT='-q --disable --no-netrc -j -e "" -i -A "" -S --clobber --create-dirs --delegation "none" --disallow-username-in-url --doh-cert-status --ftp-create-dirs --ftp-ssl-control --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-proxy-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ntlm --no-proxy-ssl-allow-beast --no-proxy-ssl-auto-client-cert --no-sessionid --no-skip-existing --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-tls-earlydata --no-xattr --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --referer "" --remove-on-error --show-error --show-headers --ssl-reqd --trace-time --user-agent "" --verbose'
 if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]]; then
     export IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_CURL_FLAGS_OVERRIDE}" == 1 ]]; then
