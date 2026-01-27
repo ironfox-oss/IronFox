@@ -102,6 +102,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "getmonero.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "google.com"
     },
     {
