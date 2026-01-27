@@ -32,11 +32,11 @@
     <string name="preference_safe_browsing_enabled_caption">Obtén protección en tiempo real contra sitios web peligrosos, malware e intentos de phishing.</string>
     <string name="preference_safe_browsing_enabled_description">La funcionalidad de Navegación Segura de IronFox es actualmente proporcionada por Google. IronFox actualizará periódicamente la base de datos para garantizar que los usuarios estén protegidos contra las amenazas más recientes, y al encontrar una coincidencia potencial, IronFox podría enviar un hash parcial de la URL sospechosa a Google. Ten en cuenta que IronFox actúa como intermediario en estas conexiones, para evitar que tu dirección IP pública se asocie con estas solicitudes.</string>
     <string name="preference_safe_browsing_enabled_summary">Proporciona protección en tiempo real contra sitios web peligrosos, malware e intentos de phishing - Cambiar esta configuración reiniciará el navegador</string>
-    <string name="tor_spoof_english_title">Suplantar idioma a en-US</string>
+    <string name="tor_spoof_english_title">Simular idioma a en-US</string>
     <string name="tor_spoof_english_caption">Mejora tu privacidad al enmascarar la configuración de idioma de tu dispositivo.</string>
     <string name="tor_spoof_english_description">Solicita versiones en Inglés (en-US) de las páginas web. Esto ayuda a que tu navegador parezca menos único, fortaleciendo la protección contra técnicas de fingerprinting que identifican a los usuarios según sus preferencias de idioma.</string>
     <string name="tor_spoof_english">Solicita versiones en Inglés de las páginas web</string>
-    <string name="tor_spoof_english_summary">Cuando está habilitado, fortalece la protección contra el fingerprinting</string>
+    <string name="tor_spoof_english_summary">Cuando está habilitado, fortalece la protección contra el fingerprinting - Cambiar este ajuste reiniciará el navegador</string>
     <string name="preference_svg_enabled">Habilitar Gráficos Vectoriales Escalables (SVG)</string>
     <string name="preferences_debug_settings_unifiedpush">Habilitar UnifiedPush</string>
     <string name="preferences_unifiedpush">Usar UnifiedPush</string>
@@ -74,6 +74,6 @@
     <string name="preference_autoplay_policy_sticky">Fijo</string>
     <string name="preference_autoplay_policy_transient">Transitorio (Predeterminado)</string>
     <string name="preference_autoplay_policy_click_to_play">Clic-para-reproducir</string>
-    <string name="preference_always_use_private_browsing">Usar siempre el modo de navegación privada</string>
+    <string name="preference_always_use_private_browsing">Usar siempre modo de navegación privada</string>
     <string name="wallpaper_collection_fennec_description">Wallpaper proveniente de Fennec F-Driod. %s</string>
 </resources>

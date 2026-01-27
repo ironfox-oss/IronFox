@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #    IronFox build scripts
-#    Copyright (C) 2024-2025  Akash Yadav, celenity
+#    Copyright (C) 2024-2026  Akash Yadav, celenity
 #
 #    Originally based on: Fennec (Mull) build scripts
 #    Copyright (C) 2020-2024  Matías Zúñiga, Andrew Nayenko, Tavi
@@ -20,24 +20,29 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-set -e
+set -euo pipefail
 
-source "$(dirname $0)/env_local.sh"
+echo_red_text() {
+	echo -e "\033[31m$1\033[0m"
+}
+
+echo_green_text() {
+	echo -e "\033[32m$1\033[0m"
+}
+
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 # Include version info
-source "${rootdir}/scripts/versions.sh"
-
-# If variables are defined with a custom `env_override.sh`, let's use those
-if [[ -f "${rootdir}/env_override.sh" ]]; then
-    source "${rootdir}/env_override.sh"
-fi
+source "${IRONFOX_VERSIONS}"
 
 function localize_maven {
     # Replace custom Maven repositories with mavenLocal()
-    find ./* -name '*.gradle' -type f -exec python3 "${rootdir}/scripts/localize_maven.py" {} \;
+    find ./* -name '*.gradle' -type f -exec python3 "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
     # Make gradlew scripts call our Gradle wrapper
     find ./* -name gradlew -type f | while read -r gradlew; do
-        echo -e "#!/bin/sh\n${gradle} \""'$@'"\"" >"${gradlew}"
+        echo -e "#!/bin/sh\n${IRONFOX_GRADLE} \""'$@'"\"" >"${gradlew}"
         chmod 755 "${gradlew}"
     done
 }
@@ -53,55 +58,52 @@ function apply_overlay() {
     done
 }
 
-if [ -z "$1" ]; then
-    echo "Usage: $0 arm|arm64|x86_64|bundle" >&1
+if [ -z "${1+x}" ]; then
+    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
-    source "$(dirname "$0")/env_fdroid.sh"
+if [[ -n "${FDROID_BUILD+x}" ]]; then
+    source "${IRONFOX_ENV_FDROID}"
 fi
 
 if [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
-    echo "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
+    echo_red_text "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
     exit 1
 fi
 
 if [ ! -d "${IRONFOX_ANDROID_NDK}" ]; then
-    echo "\$IRONFOX_ANDROID_NDK($IRONFOX_ANDROID_NDK) does not exist."
+    echo_red_text "\$IRONFOX_ANDROID_NDK($IRONFOX_ANDROID_NDK) does not exist."
     exit 1
 fi
 
 JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
 [ "${JAVA_VER}" -ge 15 ] || {
-    echo "Java 17 or newer must be set as default JDK"
+    echo_red_text "Java 17 or newer must be set as default JDK"
     exit 1
 }
 
 if [[ -z "${FIREFOX_VERSION}" ]]; then
-    echo "\$FIREFOX_VERSION is not set! Aborting..."
+    echo_red_text "\$FIREFOX_VERSION is not set! Aborting..."
     exit 1
 fi
 
-if [[ -z "${SB_GAPI_KEY_FILE}" ]]; then
-    echo "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
+if [[ -z "${IRONFOX_VERSION}" ]]; then
+    echo_red_text "\$IRONFOX_VERSION is not set! Aborting..."
+    exit 1
+fi
+
+if [[ -z "${SB_GAPI_KEY_FILE+x}" ]]; then
+    echo_red_text "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
     read -p "Do you want to continue [y/N] " -n 1 -r
     echo ""
     if ! [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "Aborting..."
+        echo_red_text "Aborting..."
         exit 1
     fi
 fi
 
-if [[ -z "${IRONFOX_UBO_ASSETS_URL}" ]]; then
-    echo "\$IRONFOX_UBO_ASSETS_URL is not set! Aborting..."
-    exit 1
-fi
-
-if [[ -z "${NO_PREBUILDS}" ]]; then
-    # Do not use prebuilds by default
-    NO_PREBUILDS=0
-fi
+echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL}"
 
 # Create build directories
 mkdir -vp "${IRONFOX_CARGO_HOME}"
@@ -110,17 +112,17 @@ mkdir -vp "${IRONFOX_GRADLE_CACHE}"
 mkdir -vp "${IRONFOX_GRADLE_HOME}"
 mkdir -vp "${IRONFOX_MOZBUILD}"
 mkdir -vp "${IRONFOX_OUTPUTS}"
-mkdir -vp "${builddir}/tmp/fenix"
-mkdir -vp "${builddir}/tmp/glean"
+mkdir -vp "${IRONFOX_BUILD}/tmp/fenix"
+mkdir -vp "${IRONFOX_BUILD}/tmp/glean"
 
-## Copy machrc
-cp -vf "${patches}/machrc" "${IRONFOX_MOZBUILD}/machrc"
+## Copy machrc config
+cp -vf "${IRONFOX_PATCHES}/machrc" "${IRONFOX_MOZBUILD}/machrc"
 
 ## Copy Rust (cargo) config
-cp -vf "${patches}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
+cp -vf "${IRONFOX_PATCHES}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
 
 # Check patch files
-source "${rootdir}/scripts/patches.sh"
+source "${IRONFOX_SCRIPTS}/patches.sh"
 
 pushd "${IRONFOX_AS}"
 if ! a-s_check_patches; then
@@ -153,7 +155,7 @@ popd
 curl ${IRONFOX_CURL_FLAGS} -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain --profile=minimal
 
 # Set-up cargo
-source "${IRONFOX_CARGO_HOME}/env"
+source "${IRONFOX_CARGO_ENV}"
 rustup set profile minimal
 rustup default "${RUST_VERSION}"
 rustup target add thumbv7neon-linux-androideabi
@@ -164,24 +166,24 @@ rustup target add x86_64-linux-android
 cargo install --force --vers "${CBINDGEN_VERSION}" cbindgen
 
 # Set-up pip
-python3.9 -m venv "${IRONFOX_PIP_ENV}"
+if [[ -d "${IRONFOX_PIP_DIR}" ]]; then
+    rm -rf "${IRONFOX_PIP_DIR}"
+fi
+python3.9 -m venv "${IRONFOX_PIP_DIR}"
 
 ## Set symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
 if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/pythonenv" ]]; then
-    ln -s "${IRONFOX_PIP_ENV}" "${IRONFOX_GLEAN_PIP_ENV}/pythonenv"
+    ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/pythonenv"
 fi
 
 if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3" ]]; then
-    ln -s "${IRONFOX_PIP_ENV}" "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3"
+    ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3"
 fi
 
-source "${IRONFOX_PIP_ENV}/bin/activate"
+source "${IRONFOX_PIP_ENV}"
 pip install --upgrade pip
 pip install glean-parser
-
-if [[ "${IRONFOX_PLATFORM}" == "darwin" ]]; then
-    pip install gyp-next
-fi
+pip install gyp-next
 
 #
 # Fenix
@@ -404,10 +406,17 @@ bundle)
 esac
 
 "${IRONFOX_SED}" -i -e "s/include \".*\"/include ${abi}/" app/build.gradle
-"${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_ARCH}|${geckotarget}|" "${rootdir}/scripts/env_local.sh"
+
+# Write env_target.sh
+echo "Writing ${IRONFOX_ENV_TARGET}..."
+cat > "${IRONFOX_ENV_TARGET}" << EOF
+export IRONFOX_TARGET_ARCH="${geckotarget}"
+
+source "\${IRONFOX_ENV_TARGET_HELPERS}"
+EOF
 
 # Apply Fenix overlay
-apply_overlay "${patches}/fenix-overlay/"
+apply_overlay "${IRONFOX_FENIX_OVERLAY}/"
 
 # Apply UnifiedPush-AC overlay (for Fenix)
 apply_overlay "${IRONFOX_UP_AC}/fenix-overlay/"
@@ -463,20 +472,20 @@ rm -vf glean-core/android/metrics.yaml
 "${IRONFOX_SED}" -i -e 's|ext.cargoProfile = .*|ext.cargoProfile = "release"|g' build.gradle
 
 # Set libxul location (for use with Tor's no-op UniFFi binding generator)
-if [[ "${IRONFOX_PLATFORM}" == "darwin" ]]; then
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     "${IRONFOX_SED}" -i "s|{libxul_dir}|aarch64-linux-android/release|" glean-core/android/build.gradle
 else
     "${IRONFOX_SED}" -i "s|{libxul_dir}|release|" glean-core/android/build.gradle
 fi
 
 # Apply Glean overlay
-apply_overlay "${patches}/glean-overlay/"
+apply_overlay "${IRONFOX_GLEAN_OVERLAY}/"
 
 ## This is so the build script can set the uniffi path if needed (ex. if the user changes it)
-if [[ -f "${builddir}/tmp/glean/build.gradle" ]]; then
-    rm -f "${builddir}/tmp/glean/build.gradle"
+if [[ -f "${IRONFOX_BUILD}/tmp/glean/build.gradle" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/glean/build.gradle"
 fi
-cp -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" "${builddir}/tmp/glean/build.gradle"
+cp -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" "${IRONFOX_BUILD}/tmp/glean/build.gradle"
 
 popd
 
@@ -484,7 +493,7 @@ popd
 # Android Components
 #
 
-pushd "${android_components}"
+pushd "${IRONFOX_AC}"
 
 # Remove default built-in search engines
 rm -vrf components/feature/search/src/main/assets/searchplugins/*
@@ -526,7 +535,7 @@ rm -vrf components/feature/webcompat-reporter
 "${IRONFOX_SED}" -i -e '/buildConfig/s/true/false/' components/lib/crash/build.gradle
 
 # Apply a-c overlay
-apply_overlay "${patches}/a-c-overlay/"
+apply_overlay "${IRONFOX_AC_OVERLAY}/"
 
 popd
 
@@ -595,7 +604,7 @@ rm -vf components/remote_settings/dumps/main/search-telemetry-v2.json
 "${IRONFOX_SED}" -i 's|error-support|# error-support|g' megazords/full/Cargo.toml
 
 # Apply Application Services overlay
-apply_overlay "$patches/a-s-overlay/"
+apply_overlay "${IRONFOX_AS_OVERLAY}/"
 
 popd
 
@@ -631,6 +640,9 @@ echo '@BINPATH@/chrome/browser.manifest' >>mobile/android/installer/package-mani
 echo '' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox@JAREXT@' >>mobile/android/installer/package-manifest.in
 echo '@BINPATH@/chrome/ironfox.manifest' >>mobile/android/installer/package-manifest.in
+echo '' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/defaults/autoconfig/ironfox.cfg' >>mobile/android/installer/package-manifest.in
+echo '@BINPATH@/defaults/policies.json' >>mobile/android/installer/package-manifest.in
 
 # about:policies
 mkdir -vp ironfox/locales/en-US/browser/policies
@@ -711,6 +723,9 @@ echo ']' >>services/settings/dumps/main/moz.build
 
 # Remove unused about:telemetry assets
 rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js toolkit/content/aboutTelemetry.xhtml
+
+# Prevent registration of the Glean add-on ping scheduler
+"${IRONFOX_SED}" -i 's|category update-timer amGleanDaily|# category update-timer amGleanDaily|' toolkit/mozapps/extensions/extensions.manifest
 
 # Remove the Clear Key CDM
 "${IRONFOX_SED}" -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' mobile/android/installer/package-manifest.in
@@ -837,10 +852,10 @@ rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozi
 "${IRONFOX_SED}" -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
 
 # Remove Glean
-source "${rootdir}/scripts/deglean.sh"
+source "${IRONFOX_SCRIPTS}/deglean.sh"
 
 # Nuke undesired Mozilla endpoints
-source "${rootdir}/scripts/noop_mozilla_endpoints.sh"
+source "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh"
 
 # Remove unused media
 ## Based on Tor Browser: https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/264dc7cd915e75ba9db3a27e09253acffe3f2311
@@ -1020,7 +1035,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
     -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
     mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java
 
-if [[ -n ${FDROID_BUILD+x} ]]; then
+if [[ -n "${FDROID_BUILD+x}" ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/IRONFOX_PLATFORM/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
     LLVM_SVN='530567'
@@ -1030,7 +1045,7 @@ if [[ -n ${FDROID_BUILD+x} ]]; then
         --src_path "${llvm}"
 
     # Bundletool
-    pushd "${bundletool}"
+    pushd "${IRONFOX_BUNDLETOOL_DIR}"
     localize_maven
     popd
 fi
@@ -1059,34 +1074,24 @@ mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
     mobile/android/app/geckoview-prefs.js
 
 # Gecko prefs
-{
-    cat "${patches}/gecko-overlay/ironfox/prefs/000-phoenix.js"
-    cat "${patches}/gecko-overlay/ironfox/prefs/001-phoenix-extended.js"
-    cat "${patches}/build/gecko/002-ironfox.js"
-    cat "${patches}/build/gecko/003-ironfox-${IRONFOX_CHANNEL}.js"
-} >>mobile/android/app/geckoview-prefs.js
-
-"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" mobile/android/app/geckoview-prefs.js
-"${IRONFOX_SED}" -i "s|{IRONFOX_UBO_ASSETS_URL}|${IRONFOX_UBO_ASSETS_URL}|" mobile/android/app/geckoview-prefs.js
-"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" mobile/android/app/geckoview-prefs.js
-
-echo '#include ../../../ironfox/prefs/pdf.js' >>toolkit/components/pdfjs/PdfJsDefaultPrefs.js
+echo '' >>mobile/android/app/geckoview-prefs.js
+echo '#include ../../../ironfox/prefs/ironfox.js' >>mobile/android/app/geckoview-prefs.js
 
 # Apply Gecko overlay
-apply_overlay "${patches}/gecko-overlay/"
+apply_overlay "${IRONFOX_GECKO_OVERLAY}/"
 
 ## The following are for the build script, so that it can update the environment variables if needed
 ### (ex. if the user changes them)
 
-if [[ -f "${builddir}/tmp/fenix/build.gradle" ]]; then
-    rm -f "${builddir}/tmp/fenix/build.gradle"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle"
 fi
-cp -f "${IRONFOX_FENIX}/app/build.gradle" "${builddir}/tmp/fenix/build.gradle"
+cp -f "${IRONFOX_FENIX}/app/build.gradle" "${IRONFOX_BUILD}/tmp/fenix/build.gradle"
 
-if [[ -f "${builddir}/tmp/fenix/shortcuts.xml" ]]; then
-    rm -f "${builddir}/tmp/fenix/shortcuts.xml"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
 fi
-cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${builddir}/tmp/fenix/shortcuts.xml"
+cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
 
 popd
 
@@ -1115,9 +1120,9 @@ popd
 # Prebuilds
 #
 
-if [[ "${NO_PREBUILDS}" == 1 ]]; then
-    pushd "${prebuilds}"
+if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
+    pushd "${IRONFOX_PREBUILDS}"
     echo "Preparing the prebuild build repository..."
-    bash "${prebuilds}/scripts/prebuild.sh"
+    bash -x "${IRONFOX_PREBUILDS}/scripts/prebuild.sh"
     popd
 fi

@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source "$(dirname $0)/env_local.sh"
+set -euo pipefail
+
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 RED="\033[0;31m"
 GREEN="\033[0;32m"
@@ -20,7 +24,7 @@ GLEAN_PATCH_FILES=($(yq '.patches[].file' "$(dirname "$0")"/glean-patches.yaml))
 UP_AC_PATCH_FILES=($(yq '.patches[].file' "${IRONFOX_UP_AC}"/patches/patches.yaml))
 
 check_patch() {
-    patch="${patches}/$1"
+    patch="${IRONFOX_PATCHES}/$1"
     if ! [[ -f "${patch}" ]]; then
         printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "'${patch}' does not exist or is not a file"
@@ -125,7 +129,7 @@ apply_patch() {
     name="$1"
     echo "Applying patch: ${name}"
     check_patch "${name}" || return 1
-    "${PATCH_CMD[@]}" <"${patches}/${name}"
+    "${PATCH_CMD[@]}" <"${IRONFOX_PATCHES}/${name}"
     return $?
 }
 

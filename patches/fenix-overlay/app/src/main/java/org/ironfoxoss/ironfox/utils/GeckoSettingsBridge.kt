@@ -9,7 +9,6 @@ import mozilla.components.concept.engine.preferences.BrowserPreference
 import mozilla.components.ExperimentalAndroidComponentsApi
 import mozilla.components.concept.engine.Engine
 import org.ironfoxoss.ironfox.utils.GeckoSettingsDictionary
-import org.ironfoxoss.ironfox.utils.IronFoxConstants
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.ext.settings
 
@@ -52,7 +51,6 @@ object GeckoSettingsBridge {
         setCardAutofillEnabled(context, engine)
         setPasswordManagerEnabled(context, engine)
         setIronFoxOnboardingCompleted(context, engine)
-        clearIronFoxPrefs(context, engine)
 
         // We don't support EME, but, if a user enables it from the about:config,
         // we need to expose the permision UI for it.
@@ -330,26 +328,6 @@ object GeckoSettingsBridge {
         setUserPref(engine, passwordManagerGeckoPref, passwordManagerEnabled)
         setDefaultPref(engine, passwordManagerGeckoPref, passwordManagerEnabled)
     }
-
-    fun clearIronFoxPrefs(context: Context, engine: Engine) {
-        // These are prefs that need to be reset for different reasons
-
-        // Remote Debugging: We want to reset this (to false) on launch for release builds for privacy and security reasons
-        val remoteDebuggingGeckoPref = GeckoSettingsDictionary.remoteDebugging
-
-        if (!IronFoxConstants.isNightly(context)) {
-            clearPref(engine, remoteDebuggingGeckoPref)
-        }
-
-        // These are old Safe Browsing prefs that we no longer use
-        // Them being around in the present results in console errors, so we reset them
-        val legacySafeBrowsingLastUpdateGeckoPref = GeckoSettingsDictionary.sbIFOldLastUpdate
-        val legacySafeBrowsingNextUpdateGeckoPref = GeckoSettingsDictionary.sbIFOldNextUpdate
-
-        clearPref(engine, legacySafeBrowsingLastUpdateGeckoPref)
-        clearPref(engine, legacySafeBrowsingNextUpdateGeckoPref)
-    }
-
 }
 
 /**

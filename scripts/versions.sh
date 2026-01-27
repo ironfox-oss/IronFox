@@ -3,9 +3,9 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_1_RELEASE)
-FIREFOX_COMMIT='4eb5a4f7e5a3bea3de2e2bfc541e1bc122731518'
-FIREFOX_VERSION='147.0.1'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_2_RELEASE)
+FIREFOX_COMMIT='9fc08b8a32cec38350ce7aed268edd4dea28e6d1'
+FIREFOX_VERSION='147.0.2'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v147.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='3f2e9e1197b245f8a1817884eefacd6d45025216'
+L10N_COMMIT='a3620ad68847cff83ebedaed974a7597ed79f1a4'
 
 ## Glean
 ### https://github.com/mozilla/glean
@@ -32,8 +32,8 @@ GMSCORE_VERSION='v0.3.12.250932'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
-PHOENIX_COMMIT='f09568c8a71af4fe42dd43c6f711c67daf605f1e'
-PHOENIX_VERSION='2025.12.23.1'
+PHOENIX_COMMIT='964d320422c481ef5ff31c1a1ae0301e4e1c36e2'
+PHOENIX_VERSION='2026.01.21.1'
 
 ## uniffi-rs (Tor)
 ### https://gitlab.torproject.org/tpo/applications/uniffi-rs
@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-UNIFIEDPUSHAC_COMMIT='2fc2a497cb801d30ac16a9b674785a31a748ff47'
+UNIFIEDPUSHAC_COMMIT='c2558fc87bdce300e4aba9d26c99bd714fa08106'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
@@ -75,42 +75,19 @@ GRADLE_COMMIT='e55f371891e02a45ee65d18cabc81aaf665c96d0'
 
 ## Rust
 ### https://releases.rs/
-RUST_MAJOR_VERSION='1.92'
+RUST_MAJOR_VERSION='1.93'
 RUST_VERSION="${RUST_MAJOR_VERSION}.0"
 #RUST_MAJOR_VERSION='1.91.1'
 #RUST_VERSION="${RUST_MAJOR_VERSION}"
 
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
-PREBUILDS_COMMIT='99e7b9dc73ee4e899204a18a29c47a9b52c00947'
-UNIFFI_LINUX_IRONFOX_COMMIT='3f26e5e5078ff6c8b8be42d9b0df274cf75cad8d'
-UNIFFI_LINUX_IRONFOX_REVISION='3'
-UNIFFI_OSX_IRONFOX_COMMIT='ec829cd1df6cf08618e0c7a3594776a9cc6a90e3'
-UNIFFI_OSX_IRONFOX_REVISION='3'
-WASI_LINUX_IRONFOX_COMMIT='6a1e702c91d18666944676aa7568dff7540f1c84'
-WASI_LINUX_IRONFOX_REVISION='3'
-WASI_OSX_IRONFOX_COMMIT='c0e40b4c08752fc1335ef6e8247e4c840ed4bef4'
-WASI_OSX_IRONFOX_REVISION='2'
-
-# Configuration
-ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ENV_SH="${ROOTDIR}/scripts/env_local.sh"
-EXTERNALDIR="${ROOTDIR}/external"
-BUILDDIR="${ROOTDIR}/build"
-OUTPUTSDIR="${BUILDDIR}/outputs"
-DOWNLOADSDIR="${EXTERNALDIR}/downloads"
-PATCHDIR="${ROOTDIR}/patches"
-ANDROIDSDKDIR="${EXTERNALDIR}/android-sdk"
-APPSERVICESDIR="${EXTERNALDIR}/application-services"
-BUNDLETOOLDIR="${EXTERNALDIR}/bundletool"
-GECKODIR="${EXTERNALDIR}/gecko"
-ANDROID_COMPONENTS="${GECKODIR}/mobile/android/android-components"
-FENIX="${GECKODIR}/mobile/android/fenix"
-GLEANDIR="${EXTERNALDIR}/glean"
-GMSCOREDIR="${EXTERNALDIR}/gmscore"
-GRADLEDIR="${EXTERNALDIR}/gradle"
-L10NDIR="${EXTERNALDIR}/l10n-central"
-UNIFIEDPUSHACDIR="${EXTERNALDIR}/unifiedpush-ac"
-PREBUILDSDIR="${EXTERNALDIR}/prebuilds"
-UNIFFIDIR="${EXTERNALDIR}/uniffi"
-WASISDKDIR="${EXTERNALDIR}/wasi-sdk"
+PREBUILDS_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
+UNIFFI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
+UNIFFI_LINUX_IRONFOX_REVISION='4'
+UNIFFI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'
+UNIFFI_OSX_IRONFOX_REVISION='4'
+WASI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
+WASI_LINUX_IRONFOX_REVISION='4'
+WASI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'
+WASI_OSX_IRONFOX_REVISION='3'

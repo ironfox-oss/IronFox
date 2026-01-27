@@ -2,6 +2,14 @@
 
 set -euo pipefail
 
+echo_red_text() {
+	echo -e "\033[31m$1\033[0m"
+}
+
+echo_green_text() {
+	echo -e "\033[32m$1\033[0m"
+}
+
 function deglean() {
     local dir="$1"
     local gradle_files=$(find "${dir}" -type f -name "*.gradle")
@@ -11,7 +19,7 @@ function deglean() {
     if [ -n "${gradle_files}" ]; then
         for file in $gradle_files; do
             local modified=false
-            python3 "${rootdir}/scripts/deglean.py" "${file}"
+            python3 "${IRONFOX_SCRIPTS}/deglean.py" "${file}"
 
             if grep -q 'apply plugin.*glean' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*apply plugin:.*glean.*)$/\/\/ \1/' "${file}"
@@ -39,11 +47,11 @@ function deglean() {
             fi
 
             if [ "${modified}" = true ]; then
-                echo "De-gleaned ${file}."
+                echo_red_text "De-gleaned ${file}."
             fi
         done
     else
-        echo "No *.gradle files found in ${dir}."
+        echo_green_text "No *.gradle files found in ${dir}."
     fi
 
     if [ -n "${kt_files}" ]; then
@@ -61,20 +69,20 @@ function deglean() {
             fi
 
             if [ "${modified}" = true ]; then
-                echo "De-gleaned ${file}."
+                echo_red_text "De-gleaned ${file}."
             fi
         done
     else
-        echo "No *.kt files found in ${dir}."
+        echo_green_text "No *.kt files found in ${dir}."
     fi
 
     if [ -n "${yaml_files}" ]; then
         for yaml_file in $yaml_files; do
             rm -vf "${yaml_file}"
-            echo "De-gleaned ${yaml_file}."
+            echo_red_text "De-gleaned ${yaml_file}."
         done
     else
-        echo "No metrics.yaml or pings.yaml files found in ${dir}."
+        echo_green_text "No metrics.yaml or pings.yaml files found in ${dir}."
     fi
 }
 
@@ -97,11 +105,11 @@ function deglean_fenix() {
             fi
 
             if [ "${modified}" = true ]; then
-                echo "De-gleaned ${file}."
+                echo_red_text "De-gleaned ${file}."
             fi
         done
     else
-        echo "No *.gradle files found in ${dir}."
+        echo_green_text "No *.gradle files found in ${dir}."
     fi
 }
 

@@ -1,4 +1,0 @@
-
-EXTRA_JS_MODULES += [
-    "IronFoxPoliciesProvider.sys.mjs",
-]
