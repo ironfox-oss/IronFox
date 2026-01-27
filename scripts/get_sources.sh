@@ -204,7 +204,7 @@ echo "Gradle is set-up at ${IRONFOX_GRADLE}"
 echo "Cloning Glean..."
 clone_repo "https://github.com/mozilla/glean.git" "${IRONFOX_GLEAN}" "${GLEAN_COMMIT}"
 
-# Clone MicroG
+# Clone microG
 echo "Cloning microG..."
 clone_repo "https://github.com/microg/GmsCore.git" "${IRONFOX_GMSCORE}" "${GMSCORE_COMMIT}"
 
