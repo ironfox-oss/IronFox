@@ -90,7 +90,7 @@ Then, you need to [set up the source files](#get--patch-sources).
 
 ### Build without Docker
 
-**NOTE**: Currently, builds on the latest versions of **`Fedora`**, **`macOS`**, and **`Ubuntu`** systems are supported. YMMV for other operating systems/environments.
+**NOTE**: Currently, builds on the latest versions of **`Fedora`**, **`macOS`**, **`secureblue`**, and **`Ubuntu`** systems are supported. YMMV for other operating systems/environments.
 
 **NOTE**: **`macOS`** users must install [Homebrew](https://brew.sh/) *(if is not already installed)* before following the steps below.
 
@@ -107,6 +107,10 @@ sudo dnf install git
 ```sh
 brew install git
 ```
+
+**`secureblue`**:
+
+`git` is already installed on secureblue by default, so nothing to do here.
 
 **`Ubuntu`**:
 

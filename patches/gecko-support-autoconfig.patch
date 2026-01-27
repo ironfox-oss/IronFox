@@ -1,0 +1,35 @@
+diff --git a/extensions/pref/autoconfig/src/nsReadConfig.cpp b/extensions/pref/autoconfig/src/nsReadConfig.cpp
+index 73da0a726d53..7cbcc7740ffe 100644
+--- a/extensions/pref/autoconfig/src/nsReadConfig.cpp
++++ b/extensions/pref/autoconfig/src/nsReadConfig.cpp
+@@ -246,7 +246,7 @@ nsresult nsReadConfig::openAndEvaluateJSFile(const char* aFileName,
+   nsresult rv;
+ 
+   nsCOMPtr<nsIInputStream> inStr;
+-  if (isBinDir) {
++  if (false) {
+     nsCOMPtr<nsIFile> jsFile;
+ #if defined(MOZ_WIDGET_GTK)
+     if (!mozilla::widget::IsRunningUnderFlatpakOrSnap()) {
+diff --git a/extensions/pref/autoconfig/src/prefcalls.js b/extensions/pref/autoconfig/src/prefcalls.js
+index fcd0554e9598..71bf90dc473e 100644
+--- a/extensions/pref/autoconfig/src/prefcalls.js
++++ b/extensions/pref/autoconfig/src/prefcalls.js
+@@ -196,7 +196,17 @@ function getenv(name) {
+   return undefined;
+ }
+ 
++function setEnv(name, value) {
++  try {
++    return Services.env.set(name, value);
++  } catch (e) {
++    displayError("getEnvironment", e);
++  }
++  return undefined;
++}
++
+ var APIs = {
++  setEnv,
+   pref,
+   defaultPref,
+   lockPref,

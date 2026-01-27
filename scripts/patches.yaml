@@ -91,6 +91,13 @@ patches:
     effect: "Allows users to take advantage of additional customizations, and helps to provide a superior browsing experience."
     category: "Build System"
 
+  - file: "gecko-support-autoconfig.patch"
+    name: "Support AutoConfig"
+    description: "Adds support for Firefox's AutoConfig functionality to GeckoView, and leverages it for advanced configuration."
+    reason: "Allows for additional control/configuration of the browsing behavior."
+    effect: "Allows users to take advantage of additional customizations, and helps to provide a superior browsing experience."
+    category: "Build System"
+
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Remove Unwanted Libraries (Android Components)"

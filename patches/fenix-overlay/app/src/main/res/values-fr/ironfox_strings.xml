@@ -36,7 +36,7 @@
     <string name="tor_spoof_english_caption">Améliorer votre confidentialité en masquant les paramètres de langue de votre appareil.</string>
     <string name="tor_spoof_english_description">Demande les versions en anglais (en-US) des pages web pour rendre le navigateur moins unique et améliorer la protection contre l’empreinte numérique basée sur les préférences linguistiques.</string>
     <string name="tor_spoof_english">Demande les versions en anglais des pages web</string>
-    <string name="tor_spoof_english_summary">Renforce la protection contre l’empreinte numérique lorsqu’activé</string>
+    <string name="tor_spoof_english_summary">Lorsque activé, renforce la protection contre le recueil d\'empreintes numériques - Modifier ce réglage redémarrera votre navigateur</string>
     <string name="preference_svg_enabled">Activer Scalable Vector Graphics (SVG)</string>
     <string name="preferences_debug_settings_unifiedpush">Activer UnifiedPush</string>
     <string name="preferences_unifiedpush">Utiliser UnifiedPush</string>

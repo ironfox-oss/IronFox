@@ -14,7 +14,6 @@ RUN dnf install -y \
     clang \
     gawk \
     git \
-    gyp \
     m4 \
     make \
     nasm \
@@ -25,7 +24,6 @@ RUN dnf install -y \
     shasum \
     temurin-8-jdk \
     temurin-17-jdk \
-    wget \
     xz \
     yq \
     zlib-devel

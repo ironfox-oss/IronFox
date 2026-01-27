@@ -7,7 +7,13 @@ set -eu
 set -o pipefail
 set -o xtrace
 
-source "$(realpath $(dirname "$0"))/versions.sh"
+echo_red_text() {
+	echo -e "\033[31m$1\033[0m"
+}
+
+echo_green_text() {
+	echo -e "\033[32m$1\033[0m"
+}
 
 case "${BUILD_VARIANT}" in
 arm)
@@ -23,31 +29,32 @@ bundle)
     BUILD_TYPE='bundle'
     ;;
 *)
-    echo "Unknown build variant: '${BUILD_VARIANT}'." >&2
+    echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
     exit 1
     ;;
 esac
 
 if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
-    # Set uBO assets to production variant
-    export IRONFOX_UBO_ASSETS_URL="https://gitlab.com/ironfox-oss/assets/-/raw/main/uBlock/assets.${PRODUCTION_BRANCH}.json"
-
-    echo "Using uBO Assets: ${IRONFOX_UBO_ASSETS_URL}"
-
     # Target release
     export IRONFOX_RELEASE=1
-    echo "Preparing to build IronFox (Release)..."
 fi
 
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
+
+# Create artifact directories
+mkdir -vp "${APK_ARTIFACTS}"
+mkdir -vp "${APKS_ARTIFACTS}"
+mkdir -vp "${AAR_ARTIFACTS}"
+
 # Get sources
-bash -x ./scripts/get_sources.sh
+bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
 
 # Prepare sources
-bash -x ./scripts/prebuild.sh "${BUILD_VARIANT}"
+bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" "${BUILD_VARIANT}"
 
-source "$(realpath $(dirname "$0"))/env_local.sh"
-
-if [[ "$BUILD_TYPE" == "bundle" ]]; then
+if [[ "${BUILD_TYPE}" == 'bundle' ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
     export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT}"
     export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT}"
@@ -60,7 +67,13 @@ export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
 export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
 
 # Build
-bash -x scripts/build.sh "${BUILD_TYPE}"
+bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_TYPE}"
+
+# Include version info
+source "${IRONFOX_VERSIONS}"
+
+# Configure our build target
+source "${IRONFOX_ENV_TARGET}"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
     pushd "${IRONFOX_GECKO}"
@@ -94,7 +107,7 @@ if [[ "${BUILD_TYPE}" == "bundle" ]]; then
     # Build signed APK set
     AAB_IN="$(ls "${IRONFOX_GECKO}"/obj/ironfox-${IRONFOX_CHANNEL}-${BUILD_VARIANT}/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)"
     APKS_OUT="${APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
-    "${IRONFOX_BUNDLETOOL}"/bundletool build-apks \
+    "${IRONFOX_BUNDLETOOL}" build-apks \
         --bundle="${AAB_IN}" \
         --output="${APKS_OUT}" \
         --ks="${KEYSTORE}" \
