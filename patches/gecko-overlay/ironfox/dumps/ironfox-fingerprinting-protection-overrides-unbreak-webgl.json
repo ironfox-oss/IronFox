@@ -203,6 +203,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "roblox.com"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "roll20.net"
     },
     {
