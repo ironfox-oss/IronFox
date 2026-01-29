@@ -206,9 +206,9 @@ fi
 
 # libclang
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK_DEFAULT}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/lib"
+    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/lib"
 else
-    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK_DEFAULT}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/lib"
+    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/lib"
 fi
 if [[ -z "${IRONFOX_LIBCLANG+x}" ]]; then
     export IRONFOX_LIBCLANG="${IRONFOX_LIBCLANG_DEFAULT}"
@@ -380,7 +380,7 @@ if [[ -z "${IRONFOX_RUST_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # Rust flags
-IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo -O'
+IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Cincremental=false -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Csave-temps=false -Cstrip=debuginfo -O'
 if [[ -z "${IRONFOX_RUST_FLAGS+x}" ]]; then
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
@@ -403,8 +403,10 @@ fi
 # Set release channel
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     export IRONFOX_CHANNEL='release'
+    export IRONFOX_CHANNEL_PRETTY='Release'
 else
     export IRONFOX_CHANNEL='nightly'
+    export IRONFOX_CHANNEL_PRETTY='Nightly'
 fi
 
 # Whether we should use our prebuilt libraries (Default)
@@ -415,20 +417,20 @@ if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
 fi
 
 # Set locations for our GeckoView AAR archives
-if [[ -z "${IRONFOX_GECKOVIEW_AAR_ARM+x}" ]]; then
-    export IRONFOX_GECKOVIEW_AAR_ARM="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
+if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
+    export IRONFOX_GV_AAR_ARM="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
 fi
-export IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
+export IRONFOX_GV_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
 
-if [[ -z "${IRONFOX_GECKOVIEW_AAR_ARM64+x}" ]]; then
-    export IRONFOX_GECKOVIEW_AAR_ARM64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
+if [[ -z "${IRONFOX_GV_AAR_ARM64+x}" ]]; then
+    export IRONFOX_GV_AAR_ARM64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
 fi
-export IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+export IRONFOX_GV_AAR_ARM64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
 
-if [[ -z "${IRONFOX_GECKOVIEW_AAR_X86_64+x}" ]]; then
-    export IRONFOX_GECKOVIEW_AAR_X86_64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
+if [[ -z "${IRONFOX_GV_AAR_X86_64+x}" ]]; then
+    export IRONFOX_GV_AAR_X86_64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
 fi
-export IRONFOX_GECKOVIEW_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
+export IRONFOX_GV_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
 
 # Set our external environment variables
 IRONFOX_ENV_EXTERNAL="${IRONFOX_SCRIPTS}/env_external.sh"

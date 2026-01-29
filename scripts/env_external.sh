@@ -64,13 +64,26 @@ export NSS_STATIC=1
 # Python (Glean)
 export GLEAN_PYTHON="$(which python)"
 
+# Python (rust-android-gradle)
+## https://github.com/mozilla/rust-android-gradle?tab=readme-ov-file#specifying-paths-to-sub-commands-python-cargo-and-rustc
+export RUST_ANDROID_GRADLE_PYTHON_COMMAND="$(which python)"
+
 # Rust (cargo)
 export CARGO="${IRONFOX_CARGO}"
 export CARGO_HOME="${IRONFOX_CARGO_HOME}"
 export CARGO_INSTALL_ROOT="${IRONFOX_CARGO_HOME}"
+export RUST_ANDROID_GRADLE_CARGO_COMMAND="${IRONFOX_CARGO}"
+export RUST_ANDROID_GRADLE_RUSTC_COMMAND="${IRONFOX_RUSTC}"
 export RUSTC="${IRONFOX_RUSTC}"
 export RUSTDOC="${IRONFOX_RUSTDOC}"
 export PATH="${IRONFOX_CARGO_HOME}/bin:${PATH}"
+
+## Always clean old files
+### https://doc.rust-lang.org/cargo/reference/config.html#cacheauto-clean-frequency
+export CARGO_CACHE_AUTO_CLEAN_FREQUENCY='always'
+
+## Disable caching compiler version information
+export CARGO_CACHE_RUSTC_INFO=0
 
 ## Disable debug
 export CARGO_PROFILE_DEV_DEBUG=false
@@ -80,6 +93,10 @@ export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS=false
 
 ## Disable HTTP debugging
 export CARGO_HTTP_DEBUG=false
+
+## Disable incremental compilation
+### https://doc.rust-lang.org/cargo/reference/profiles.html#incremental
+export CARGO_INCREMENTAL=0
 
 ## Display progress bars
 export CARGO_TERM_PROGRESS_WHEN="${IRONFOX_CARGO_PROGRESS_BAR}"
@@ -91,6 +108,10 @@ export CARGO_HTTP_CHECK_REVOKE=true
 ## Enable colored output
 export CARGO_TERM_COLOR="${IRONFOX_CARGO_COLORED_OUTPUT}"
 
+## Enable HTTP2 multiplexing
+### https://doc.rust-lang.org/cargo/reference/config.html#httpmultiplexing
+export CARGO_HTTP_MULTIPLEXING=true
+
 ## Enable overflow checks
 export CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true
 export CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS=true
@@ -100,6 +121,10 @@ export CARGO_PROFILE_DEV_LTO=true
 export CARGO_PROFILE_DEV_OPT_LEVEL=3
 export CARGO_PROFILE_RELEASE_LTO=true
 export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+
+## Remove user agent
+### https://doc.rust-lang.org/cargo/reference/config.html#httpuser-agent
+export CARGO_HTTP_USER_AGENT=''
 
 ## Strip debug info
 export CARGO_PROFILE_DEV_STRIP='debuginfo'
