@@ -129,10 +129,9 @@ if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" ]]; then
 fi
 
 cp -f "${IRONFOX_PATCHES}/build/gecko/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
-"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
 "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
 
-## Configure release channel
+## Configure ABI + release channel
 
 ### Fenix
 if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
@@ -140,6 +139,8 @@ if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
 fi
 
 cp -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
+
+"${IRONFOX_SED}" -i -e "s/include \".*\"/include ${IRONFOX_TARGET_ABI}/" "${IRONFOX_FENIX}/app/build.gradle"
 
 if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
     rm -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
@@ -156,7 +157,7 @@ else
 fi
 
 # Begin the build...
-echo_green_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL} (${IRONFOX_TARGET_ARCH})"
+echo_green_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
 
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle
@@ -185,7 +186,7 @@ fi
 if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
     # Build our prebuilt libraries from source
     pushd "${IRONFOX_PREBUILDS}"
-    bash "${IRONFOX_PREBUILDS}/scripts/build.sh"
+    bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh"
     popd
 fi
 

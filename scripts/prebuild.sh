@@ -103,7 +103,7 @@ if [[ -z "${SB_GAPI_KEY_FILE+x}" ]]; then
     fi
 fi
 
-echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL}"
+echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY}"
 
 # Create build directories
 mkdir -vp "${IRONFOX_CARGO_HOME}"
@@ -371,33 +371,21 @@ mkdir -vp app/src/main/assets/wallpapers/firey-red
 
 # Set up target parameters
 case "$1" in
-arm)
-    # APK for armeabi-v7a
-    abi='"armeabi-v7a"'
-    geckotarget='arm'
-    llvmtarget='ARM'
-    rusttarget='arm'
-    ;;
 arm64)
     # APK for arm64-v8a
-    abi='"arm64-v8a"'
-    geckotarget='arm64'
-    llvmtarget='AArch64'
-    rusttarget='arm64'
+    IRONFOX_TARGET_ARCH='arm64'
+    ;;
+arm)
+    # APK for armeabi-v7a
+    IRONFOX_TARGET_ARCH='arm'
     ;;
 x86_64)
     # APK for x86_64
-    abi='"x86_64"'
-    geckotarget='x86_64'
-    llvmtarget='X86_64'
-    rusttarget='x86_64'
+    IRONFOX_TARGET_ARCH='x86_64'
     ;;
 bundle)
-    # AAB for both armeabi-v7a and arm64-v8a
-    abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
-    geckotarget='bundle'
-    llvmtarget='AArch64;ARM;X86_64'
-    rusttarget='arm64,arm,x86_64'
+    # AAB for arm64-v8a, armeabi-v7a, and x86_64
+    IRONFOX_TARGET_ARCH='bundle'
     ;;
 *)
     echo "Unknown build variant: '$1'" >&2
@@ -405,12 +393,10 @@ bundle)
     ;;
 esac
 
-"${IRONFOX_SED}" -i -e "s/include \".*\"/include ${abi}/" app/build.gradle
-
 # Write env_target.sh
 echo "Writing ${IRONFOX_ENV_TARGET}..."
 cat > "${IRONFOX_ENV_TARGET}" << EOF
-export IRONFOX_TARGET_ARCH="${geckotarget}"
+export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
 source "\${IRONFOX_ENV_TARGET_HELPERS}"
 EOF
@@ -744,6 +730,7 @@ rm -vrf mobile/android/android-components/components/support/appservices/src/mai
 "${IRONFOX_SED}" -i -e 's|useLegacyReporting: Boolean = .*|useLegacyReporting: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 "${IRONFOX_SED}" -i -e 's|var enabled: Boolean = false,|var enabled: Boolean = enabled|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 
+# No-op RemoteSettingsCrashPull
 "${IRONFOX_SED}" -i 's|crash-reports-ondemand||g' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 "${IRONFOX_SED}" -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 
