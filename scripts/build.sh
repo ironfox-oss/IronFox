@@ -229,6 +229,20 @@ export MOZ_CHROME_MULTILOCALE="${IRONFOX_GECKO_LOCALES}"
 
 echo_green_text "Running '${IRONFOX_GRADLE}' '${IRONFOX_GRADLE_FLAGS}' -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
 "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
+
+if [ "${IRONFOX_TARGET_ARCH_MOZ}" != "bundle" ]; then
+    # Create GeckoView AAR archives
+    MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
+    unset MOZ_AUTOMATION
+    if [[ "${IRONFOX_TARGET_ARCH_MOZ}" == 'arm' ]]; then
+        cp -vf "${IRONFOX_GV_AAR_ARM}" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
+    elif [[ "${IRONFOX_TARGET_ARCH_MOZ}" == 'arm64' ]]; then
+        cp -vf "${IRONFOX_GV_AAR_ARM64}" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
+    elif [[ "${IRONFOX_TARGET_ARCH_MOZ}" == 'x86_64' ]]; then
+        cp -vf "${IRONFOX_GV_AAR_X86_64}" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
+    fi
+fi
+
 popd
 
 # Android Components
@@ -261,8 +275,9 @@ popd
 pushd "${IRONFOX_FENIX}"
 if [[ "${build_type}" == "apk" ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:assembleRelease
-    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}-unsigned.apk"
+    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
 elif [[ "${build_type}" == "bundle" ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:bundleRelease -Paab
+    cp -vr "$(ls "${IRONFOX_GECKO}"/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)" "${IRONFOX_OUTPUTS_AAB}/"
 fi
 popd
