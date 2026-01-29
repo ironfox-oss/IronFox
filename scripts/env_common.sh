@@ -139,6 +139,16 @@ fi
 ## Glean overlay
 export IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
 
+# GNU date
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    IRONFOX_DATE_DEFAULT='gdate'
+else
+    IRONFOX_DATE_DEFAULT='date'
+fi
+if [[ -z "${IRONFOX_DATE+x}" ]]; then
+    export IRONFOX_DATE="${IRONFOX_DATE_DEFAULT}"
+fi
+
 # GNU make
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     IRONFOX_MAKE_DEFAULT='gmake'
@@ -417,18 +427,25 @@ if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
 fi
 
 # Set locations for our GeckoView AAR archives
+
+## Where our GeckoView ARM AAR archive is located within mozilla-central
+IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
-    export IRONFOX_GV_AAR_ARM="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
+    export IRONFOX_GV_AAR_ARM="${IRONFOX_GV_AAR_ARM_DEFAULT}"
 fi
 export IRONFOX_GV_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
 
+## Where our GeckoView ARM64 AAR archive is located within mozilla-central
+IRONFOX_GV_AAR_ARM64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_ARM64+x}" ]]; then
-    export IRONFOX_GV_AAR_ARM64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
+    export IRONFOX_GV_AAR_ARM64="${IRONFOX_GV_AAR_ARM64_DEFAULT}"
 fi
 export IRONFOX_GV_AAR_ARM64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
 
+## Where our GeckoView x86_64 AAR archive is located within mozilla-central
+IRONFOX_GV_AAR_X86_64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_X86_64+x}" ]]; then
-    export IRONFOX_GV_AAR_X86_64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
+    export IRONFOX_GV_AAR_X86_64="${IRONFOX_GV_AAR_X86_64_DEFAULT}"
 fi
 export IRONFOX_GV_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
 
