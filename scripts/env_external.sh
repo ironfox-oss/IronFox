@@ -78,13 +78,6 @@ export RUSTC="${IRONFOX_RUSTC}"
 export RUSTDOC="${IRONFOX_RUSTDOC}"
 export PATH="${IRONFOX_CARGO_HOME}/bin:${PATH}"
 
-## Always clean old files
-### https://doc.rust-lang.org/cargo/reference/config.html#cacheauto-clean-frequency
-export CARGO_CACHE_AUTO_CLEAN_FREQUENCY='always'
-
-## Disable caching compiler version information
-export CARGO_CACHE_RUSTC_INFO=0
-
 ## Disable debug
 export CARGO_PROFILE_DEV_DEBUG=false
 export CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=false
@@ -93,10 +86,6 @@ export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS=false
 
 ## Disable HTTP debugging
 export CARGO_HTTP_DEBUG=false
-
-## Disable incremental compilation
-### https://doc.rust-lang.org/cargo/reference/profiles.html#incremental
-export CARGO_INCREMENTAL=0
 
 ## Display progress bars
 export CARGO_TERM_PROGRESS_WHEN="${IRONFOX_CARGO_PROGRESS_BAR}"
@@ -107,10 +96,6 @@ export CARGO_HTTP_CHECK_REVOKE=true
 
 ## Enable colored output
 export CARGO_TERM_COLOR="${IRONFOX_CARGO_COLORED_OUTPUT}"
-
-## Enable HTTP2 multiplexing
-### https://doc.rust-lang.org/cargo/reference/config.html#httpmultiplexing
-export CARGO_HTTP_MULTIPLEXING=true
 
 ## Enable overflow checks
 export CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true
