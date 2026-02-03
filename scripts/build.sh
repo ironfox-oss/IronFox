@@ -290,6 +290,9 @@ popd
 # Android Components
 pushd "${IRONFOX_AC}"
 
+# Ensure the CI env variable is not set here - otherwise this will cause build failure in Application Services, thanks to us removing MARS and friends
+unset CI
+
 # Publish concept-fetch (required by A-S) with auto-publication disabled,
 # otherwise automatically triggered publication of A-S and publications of unifiedpush-ac will fail
 "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:concept-fetch:publishToMavenLocal
@@ -307,9 +310,6 @@ popd
 
 # Android Components (Part 2...)
 pushd "${IRONFOX_AC}"
-
-# Ensure the CI env variable is not set here - otherwise this will cause build failure in Application Services, thanks to us removing MARS and friends
-unset CI
 
 # Now, enable the auto-publication workflow
 echo "## Enable the auto-publication workflow for Application Services" >>"${IRONFOX_GECKO}/local.properties"
