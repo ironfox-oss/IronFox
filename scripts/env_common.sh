@@ -26,6 +26,9 @@ export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 export IRONFOX_ENV_TARGET="${IRONFOX_SCRIPTS}/env_target.sh"
 export IRONFOX_ENV_TARGET_HELPERS="${IRONFOX_SCRIPTS}/env_target_helpers.sh"
 
+# For build environment configuration
+export IRONFOX_ENV_BUILD="${IRONFOX_SCRIPTS}/env_build.sh"
+
 # Build directory
 export IRONFOX_BUILD="${IRONFOX_ROOT}/build"
 
@@ -60,8 +63,8 @@ export IRONFOX_OUTPUTS_AAB="${IRONFOX_OUTPUTS}/aab"
 export IRONFOX_OUTPUTS_AAR="${IRONFOX_OUTPUTS}/aar"
 export IRONFOX_OUTPUTS_APK="${IRONFOX_OUTPUTS}/apk"
 export IRONFOX_OUTPUTS_APKS="${IRONFOX_OUTPUTS}/apks"
-export IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.zip"
 export IRONFOX_OUTPUTS_GV_AAR_ARM64="${IRONFOX_OUTPUTS_AAR}/geckoview-arm64-v8a.zip"
+export IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.zip"
 export IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
 export IRONFOX_OUTPUTS_LOGS="${IRONFOX_OUTPUTS}/logs"
 
@@ -412,8 +415,8 @@ export ARTIFACTS="${IRONFOX_ROOT}/artifacts"
 export APK_ARTIFACTS="${ARTIFACTS}/apk"
 export APKS_ARTIFACTS="${ARTIFACTS}/apks"
 export AAR_ARTIFACTS="${ARTIFACTS}/aar"
-export IRONFOX_GV_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
 export IRONFOX_GV_AAR_ARM64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+export IRONFOX_GV_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
 export IRONFOX_GV_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
 
 # Whether we're building IronFox for release or Nightly/CI (Default)
@@ -440,16 +443,16 @@ fi
 
 # Set locations for our GeckoView AAR archives
 
-## Where our GeckoView ARM AAR archive is located within mozilla-central
-IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
-if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
-    export IRONFOX_GV_AAR_ARM="${IRONFOX_GV_AAR_ARM_DEFAULT}"
-fi
-
 ## Where our GeckoView ARM64 AAR archive is located within mozilla-central
 IRONFOX_GV_AAR_ARM64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_ARM64+x}" ]]; then
     export IRONFOX_GV_AAR_ARM64="${IRONFOX_GV_AAR_ARM64_DEFAULT}"
+fi
+
+## Where our GeckoView ARM AAR archive is located within mozilla-central
+IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
+if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
+    export IRONFOX_GV_AAR_ARM="${IRONFOX_GV_AAR_ARM_DEFAULT}"
 fi
 
 ## Where our GeckoView x86_64 AAR archive is located within mozilla-central

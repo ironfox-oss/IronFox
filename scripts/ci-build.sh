@@ -54,18 +54,6 @@ bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
 # Prepare sources
 bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" "${BUILD_VARIANT}"
 
-if [[ "${BUILD_TYPE}" == 'bundle' ]]; then
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
-fi
-
-# Set the build date to the date of commmit to ensure that the
-# MOZ_BUILDID is consistent across CI build jobs
-export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
-export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
-
 # Build
 bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_TYPE}"
 
@@ -87,7 +75,7 @@ if [[ "${BUILD_TYPE}" == "apk" ]]; then
     fi
 
     # Sign APK
-    APK_IN="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
+    APK_IN="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
     APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI}.apk"
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
       --ks="${KEYSTORE}" \
@@ -99,8 +87,20 @@ if [[ "${BUILD_TYPE}" == "apk" ]]; then
 fi
 
 if [[ "${BUILD_TYPE}" == "bundle" ]]; then
+
+    # Sign universal APK
+    APK_IN="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-universal-unsigned.apk"
+    APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-universal.apk"
+    "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
+      --ks="${KEYSTORE}" \
+      --ks-pass="pass:${KEYSTORE_PASS}" \
+      --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
+      --key-pass="pass:${KEYSTORE_KEY_PASS}" \
+      --out="${APK_OUT}" \
+      "${APK_IN}"
+
     # Build signed APK set
-    AAB_IN="$(ls "${IRONFOX_OUTPUTS_AAB}"/*.aab)"
+    AAB_IN="${IRONFOX_OUTPUTS_AAB}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}.aab"
     APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
     "${IRONFOX_BUNDLETOOL}" build-apks \
         --bundle="${AAB_IN}" \
