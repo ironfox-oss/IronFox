@@ -5,7 +5,12 @@
 
 set -eu
 
-source "$(realpath $(dirname "$0"))/versions.sh"
+# Set-up our environment
+bash -x "$(realpath $(dirname "$0"))/env.sh"
+source "$(realpath $(dirname "$0"))/env.sh"
+
+# Include version info
+source "${IRONFOX_VERSIONS}"
 
 export GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
 
@@ -18,16 +23,11 @@ upload_to_package_registry() {
         "${GENERIC_PACKAGES_URL}/${package_name}/${IRONFOX_VERSION}/${file_name}"
 }
 
-export ARTIFACTS="${CI_PROJECT_DIR}/artifacts"
-export APK_ARTIFACTS="${ARTIFACTS}/apk"
-export APKS_ARTIFACTS="${ARTIFACTS}/apks"
-export BUILD_DIR="${CI_PROJECT_DIR}/build"
+mkdir -vp "${IRONFOX_BUILD}"
 
-mkdir -vp "${BUILD_DIR}"
-
-RELEASE_NOTES_FILE="${BUILD_DIR}/release-notes.md"
-CHECKSUMS_FILE="${BUILD_DIR}/asset-checksums.txt"
-RELEASE_FILE="${BUILD_DIR}/release.yml"
+RELEASE_NOTES_FILE="${IRONFOX_BUILD}/release-notes.md"
+CHECKSUMS_FILE="${IRONFOX_BUILD}/asset-checksums.txt"
+RELEASE_FILE="${IRONFOX_BUILD}/release.yml"
 
 echo -n "" > "${RELEASE_NOTES_FILE}"
 echo -n "" > "${CHECKSUMS_FILE}"
@@ -44,12 +44,12 @@ upload_asset() {
 }
 
 # Upload packages to package registry
-for apk in "${APK_ARTIFACTS}"/*.apk; do
+for apk in "${IRONFOX_OUTPUTS_APK}"/*.apk; do
     package_name="apk"
     upload_asset "${package_name}" "${apk}"
 
 done
-for apks in "${APKS_ARTIFACTS}"/*.apks; do
+for apks in "${IRONFOX_OUTPUTS_APKS}"/*.apks; do
     package_name="apkset"
     upload_asset "${package_name}" "${apks}"
 done

@@ -43,11 +43,6 @@ fi
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 
-# Create artifact directories
-mkdir -vp "${APK_ARTIFACTS}"
-mkdir -vp "${APKS_ARTIFACTS}"
-mkdir -vp "${AAR_ARTIFACTS}"
-
 # Get sources
 bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
 
@@ -64,16 +59,6 @@ source "${IRONFOX_VERSIONS}"
 source "${IRONFOX_ENV_TARGET}"
 
 if [[ "${BUILD_TYPE}" == "apk" ]]; then
-
-    # Copy GeckoView AAR archives
-    if [[ "${BUILD_VARIANT}" == 'arm' ]]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_GV_AAR_ARM_ARTIFACT}"
-    elif [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM64}" "${IRONFOX_GV_AAR_ARM64_ARTIFACT}"
-    elif [[ "${BUILD_VARIANT}" == 'x86_64' ]]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_X86_64}" "${IRONFOX_GV_AAR_X86_64_ARTIFACT}"
-    fi
-
     # Sign APK
     APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
     APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI}.apk"
@@ -87,7 +72,6 @@ if [[ "${BUILD_TYPE}" == "apk" ]]; then
 fi
 
 if [[ "${BUILD_TYPE}" == "bundle" ]]; then
-
     # Sign universal APK
     APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
     APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-universal.apk"
