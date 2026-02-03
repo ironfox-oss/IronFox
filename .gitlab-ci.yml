@@ -177,7 +177,7 @@ build-apk:
 build-bundle:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
-  timeout: 2h
+  timeout: 4h
   needs:
     - job: "build-docker"
       optional: true
