@@ -24,10 +24,10 @@ index b600bf6b3d43..86fc25c15b52 100644
  
          requirePreference<SwitchPreference>(R.string.pref_key_allow_screenshots_in_private_mode).apply {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..e04f6a3e949d 100644
+index c7db941b0f7e..d8a1c1078722 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1315,7 +1315,7 @@ class Settings(
+@@ -1323,7 +1323,7 @@ class Settings(
                  false,
              )
  

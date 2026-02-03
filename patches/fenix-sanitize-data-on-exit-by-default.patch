@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..2eeb1757b0f0 100644
+index c7db941b0f7e..87323023bcda 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1336,7 +1336,7 @@ class Settings(
+@@ -1344,7 +1344,7 @@ class Settings(
  
      var shouldDeleteBrowsingDataOnQuit by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_delete_browsing_data_on_quit),
@@ -11,7 +11,7 @@ index 276ad8cf1df1..2eeb1757b0f0 100644
      )
  
      var deleteOpenTabs by booleanPreference(
-@@ -1433,8 +1433,17 @@ class Settings(
+@@ -1441,8 +1441,17 @@ class Settings(
       * @param type The [DeleteBrowsingDataOnQuitType] to check.
       * @return `true` if the data type is set to be deleted on quit, `false` otherwise.
       */

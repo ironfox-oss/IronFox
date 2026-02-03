@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..bf92fbfde864 100644
+index c7db941b0f7e..254fb016d831 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -364,7 +364,7 @@ class Settings(
@@ -29,7 +29,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      var defaultSearchEngineName by stringPreference(
-@@ -932,7 +932,7 @@ class Settings(
+@@ -940,7 +940,7 @@ class Settings(
       */
      var showFirstTimeTranslation: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
@@ -38,7 +38,16 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      /**
-@@ -1141,7 +1141,7 @@ class Settings(
+@@ -1126,7 +1126,7 @@ class Settings(
+ 
+     var reEngagementNotificationShown by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
+-        default = false,
++        default = true,
+     )
+ 
+     /**
+@@ -1149,7 +1149,7 @@ class Settings(
      var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
          default = { FxNimbus.features.reEngagementNotification.value().enabled },
@@ -47,7 +56,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      /**
-@@ -1228,7 +1228,7 @@ class Settings(
+@@ -1236,7 +1236,7 @@ class Settings(
       */
      var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
@@ -56,7 +65,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
          default = { shouldShowCookieBannerUI },
      )
  
-@@ -1239,7 +1239,7 @@ class Settings(
+@@ -1247,7 +1247,7 @@ class Settings(
  
      var hasShownTabSwipeCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
@@ -65,7 +74,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-@@ -1565,12 +1565,12 @@ class Settings(
+@@ -1573,12 +1573,12 @@ class Settings(
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
@@ -80,7 +89,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      val shouldShowOpenInAppCfr: Boolean
-@@ -1578,17 +1578,17 @@ class Settings(
+@@ -1586,17 +1586,17 @@ class Settings(
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
@@ -101,7 +110,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      /**
-@@ -1596,7 +1596,7 @@ class Settings(
+@@ -1604,7 +1604,7 @@ class Settings(
       */
      var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
@@ -110,7 +119,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      /**
-@@ -2234,7 +2234,7 @@ class Settings(
+@@ -2242,7 +2242,7 @@ class Settings(
       */
      var hasSeenBrowserToolbarCFR by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_toolbar_cfr),
@@ -119,7 +128,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      /**
-@@ -2446,7 +2446,7 @@ class Settings(
+@@ -2454,7 +2454,7 @@ class Settings(
       */
      var isFirstTimeEngagingWithSignup: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
@@ -128,7 +137,7 @@ index 276ad8cf1df1..bf92fbfde864 100644
      )
  
      /**
-@@ -2799,7 +2799,7 @@ class Settings(
+@@ -2807,7 +2807,7 @@ class Settings(
              FxNimbus.features.setupChecklist.value().enabled &&
                      canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
          },

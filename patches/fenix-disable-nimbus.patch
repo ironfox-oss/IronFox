@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 39b7918425..5fac689c2a 100644
+index 7c040fb83605..a1b3fabeba71 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
 @@ -13,15 +13,15 @@ includes:
@@ -131,7 +131,7 @@ index 0c73973e0468..16713a16226e 100644
  
          val showSearch = requireContext().settings().isSettingsSearchEnabled &&
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..aaabf86ae31c 100644
+index c7db941b0f7e..f7bf9080a981 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -393,7 +393,7 @@ class Settings(

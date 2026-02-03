@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..ab47ff06c117 100644
+index c7db941b0f7e..07dac929d8b5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -746,7 +746,7 @@ class Settings(
+@@ -754,7 +754,7 @@ class Settings(
  
      val shouldShowHistorySuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_search_browsing_history),
@@ -11,7 +11,7 @@ index 276ad8cf1df1..ab47ff06c117 100644
      )
  
      val shouldShowBookmarkSuggestions by booleanPreference(
-@@ -1526,7 +1526,7 @@ class Settings(
+@@ -1534,7 +1534,7 @@ class Settings(
       */
      internal var shouldShowRecentSearchSuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_recent_search_suggestions),
