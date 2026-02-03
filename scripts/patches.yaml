@@ -512,6 +512,14 @@ patches:
     effect: "Users are provided with a more private and secure browsing experience."
     category: "Privacy"
 
+  - file: "gecko-fix-canvas-randomization.patch"
+    name: "Fix Canvas Randomization"
+    description: |
+      Backports a fix for an upstream bug that prevents Canvas randomization from working for getImageData and WebGL image hash: https://bugzilla.mozilla.org/show_bug.cgi?id=2013976
+    reason: "To protect against fingerprinting by ensuring that canvas data is fully randomized."
+    effect: "Users are provided with fingerprinting protection that works as expected."
+    category: "Privacy"
+
   # Security
   - file: "gecko-certificate-pinning.patch"
     name: "Certificate Pinning"
