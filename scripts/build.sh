@@ -307,6 +307,7 @@ popd
 
 # Android Components (Part 2...)
 pushd "${IRONFOX_AC}"
+
 # Now, enable the auto-publication workflow
 echo "## Enable the auto-publication workflow for Application Services" >>"${IRONFOX_GECKO}/local.properties"
 echo "autoPublish.application-services.dir=${IRONFOX_AS}" >>"${IRONFOX_GECKO}/local.properties"
@@ -349,7 +350,7 @@ function build_fenix() {
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:assembleRelease
 
     if [ "${build_type}" != "bundle" ]; then
-        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH_MOZ}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
+        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH_MOZ}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
     fi
 }
 
@@ -401,10 +402,10 @@ if [[ "${build_type}" == "bundle" ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:bundleRelease -Paab
 
     # Copy AAB output
-    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/app-fenix-release.aab" "${IRONFOX_OUTPUTS_AAB}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}.aab"
+    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/app-fenix-release.aab" "${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
 
     # Copy universal APK
-    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-universal-unsigned.apk"
+    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
 else
     build_fenix
 fi

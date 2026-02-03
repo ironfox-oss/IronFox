@@ -75,7 +75,7 @@ if [[ "${BUILD_TYPE}" == "apk" ]]; then
     fi
 
     # Sign APK
-    APK_IN="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
+    APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
     APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI}.apk"
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
       --ks="${KEYSTORE}" \
@@ -89,7 +89,7 @@ fi
 if [[ "${BUILD_TYPE}" == "bundle" ]]; then
 
     # Sign universal APK
-    APK_IN="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-universal-unsigned.apk"
+    APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
     APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-universal.apk"
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
       --ks="${KEYSTORE}" \
@@ -100,7 +100,7 @@ if [[ "${BUILD_TYPE}" == "bundle" ]]; then
       "${APK_IN}"
 
     # Build signed APK set
-    AAB_IN="${IRONFOX_OUTPUTS_AAB}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}.aab"
+    AAB_IN="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
     APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
     "${IRONFOX_BUNDLETOOL}" build-apks \
         --bundle="${AAB_IN}" \
