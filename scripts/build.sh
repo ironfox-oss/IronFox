@@ -308,6 +308,9 @@ popd
 # Android Components (Part 2...)
 pushd "${IRONFOX_AC}"
 
+# Ensure the CI env variable is not set here - otherwise this will cause build failure in Application Services, thanks to us removing MARS and friends
+unset CI
+
 # Now, enable the auto-publication workflow
 echo "## Enable the auto-publication workflow for Application Services" >>"${IRONFOX_GECKO}/local.properties"
 echo "autoPublish.application-services.dir=${IRONFOX_AS}" >>"${IRONFOX_GECKO}/local.properties"
