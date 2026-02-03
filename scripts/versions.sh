@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-UNIFIEDPUSHAC_COMMIT='c2558fc87bdce300e4aba9d26c99bd714fa08106'
+UNIFIEDPUSHAC_COMMIT='6794240412190535fc2791fbb87fef7bb4c9c0b7'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
