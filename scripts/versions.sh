@@ -3,7 +3,7 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_3_BUILD1)
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_3_RELEASE)
 FIREFOX_COMMIT='cd3b8173f16a0d8d2ef764a8840ef20209ad4d9f'
 FIREFOX_VERSION='147.0.3'
 
@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v147.0.1'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='ecdfdca74a53222f4937e831829de0ab6e1ee5f8'
+L10N_COMMIT='c476a531734e1f30560d7505c27cf386dca6240f'
 
 ## Glean
 ### https://github.com/mozilla/glean
