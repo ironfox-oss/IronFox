@@ -136,7 +136,7 @@ build-docker:
 build-ironfox:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
-  timeout: 8h
+  timeout: 9h
   needs:
     - job: "build-docker"
       optional: true
