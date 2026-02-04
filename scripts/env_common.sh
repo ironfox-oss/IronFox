@@ -23,8 +23,7 @@ IRONFOX_ENV_DEFAULTS="${IRONFOX_SCRIPTS}/env_defaults.sh"
 export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 
 ## For build target configuration
-export IRONFOX_ENV_TARGET="${IRONFOX_SCRIPTS}/env_target.sh"
-export IRONFOX_ENV_TARGET_HELPERS="${IRONFOX_SCRIPTS}/env_target_helpers.sh"
+export IRONFOX_ENV_TARGET="${IRONFOX_SCRIPTS}/env_target_helpers.sh"
 
 # For build environment configuration
 export IRONFOX_ENV_BUILD="${IRONFOX_SCRIPTS}/env_build.sh"
@@ -432,6 +431,28 @@ IRONFOX_NO_PREBUILDS_DEFAULT=0
 if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
     export IRONFOX_NO_PREBUILDS="${IRONFOX_NO_PREBUILDS_DEFAULT}"
 fi
+
+# Build target constants
+
+## ARM64 constants
+export IRONFOX_TARGET_ABI_ARM64='arm64-v8a'
+IRONFOX_TARGET_PRETTY_ARM64='ARM64'
+IRONFOX_TARGET_RUST_ARM64='arm64'
+
+## ARM constants
+export IRONFOX_TARGET_ABI_ARM='armeabi-v7a'
+IRONFOX_TARGET_PRETTY_ARM='ARM'
+IRONFOX_TARGET_RUST_ARM='arm'
+
+## x86_64 constants
+export IRONFOX_TARGET_ABI_X86_64='x86_64'
+IRONFOX_TARGET_PRETTY_X86_64='x86_64'
+IRONFOX_TARGET_RUST_X86_64='x86_64'
+
+## Bundle constants
+export IRONFOX_TARGET_ABI_BUNDLE='arm64-v8a", "armeabi-v7a", "x86_64'
+IRONFOX_TARGET_PRETTY_BUNDLE='Bundle'
+IRONFOX_TARGET_RUST_BUNDLE='arm64,arm,x86_64'
 
 # Set locations for our GeckoView AAR archives
 

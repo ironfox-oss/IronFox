@@ -47,7 +47,6 @@ upload_asset() {
 for apk in "${IRONFOX_OUTPUTS_APK}"/*.apk; do
     package_name="apk"
     upload_asset "${package_name}" "${apk}"
-
 done
 for apks in "${IRONFOX_OUTPUTS_APKS}"/*.apks; do
     package_name="apkset"

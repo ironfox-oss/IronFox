@@ -15,25 +15,6 @@ echo_green_text() {
 	echo -e "\033[32m$1\033[0m"
 }
 
-case "${BUILD_VARIANT}" in
-arm)
-    BUILD_TYPE='apk'
-    ;;
-x86_64)
-    BUILD_TYPE='apk'
-    ;;
-arm64)
-    BUILD_TYPE='apk'
-    ;;
-bundle)
-    BUILD_TYPE='bundle'
-    ;;
-*)
-    echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
-    exit 1
-    ;;
-esac
-
 if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     # Target release
     export IRONFOX_RELEASE=1
@@ -47,50 +28,51 @@ source $(dirname $0)/env.sh
 bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
 
 # Prepare sources
-bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" "${BUILD_VARIANT}"
+bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
 # Build
-bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_TYPE}"
+## Using 'bundle' here builds everything
+bash -x "${IRONFOX_SCRIPTS}/build.sh" 'bundle'
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-# Configure our build target
-source "${IRONFOX_ENV_TARGET}"
+function sign_apk() {
+    abi="$1"
 
-if [[ "${BUILD_TYPE}" == "apk" ]]; then
-    # Sign APK
-    APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
-    APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI}.apk"
+    echo_green_text "Signing IronFox (${abi})..."
+
+    APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${abi}-unsigned.apk"
+    APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${abi}.apk"
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
-      --ks="${KEYSTORE}" \
-      --ks-pass="pass:${KEYSTORE_PASS}" \
-      --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
-      --key-pass="pass:${KEYSTORE_KEY_PASS}" \
-      --out="${APK_OUT}" \
-      "${APK_IN}"
-fi
-
-if [[ "${BUILD_TYPE}" == "bundle" ]]; then
-    # Sign universal APK
-    APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
-    APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-universal.apk"
-    "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
-      --ks="${KEYSTORE}" \
-      --ks-pass="pass:${KEYSTORE_PASS}" \
-      --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
-      --key-pass="pass:${KEYSTORE_KEY_PASS}" \
-      --out="${APK_OUT}" \
-      "${APK_IN}"
-
-    # Build signed APK set
-    AAB_IN="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
-    APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
-    "${IRONFOX_BUNDLETOOL}" build-apks \
-        --bundle="${AAB_IN}" \
-        --output="${APKS_OUT}" \
         --ks="${KEYSTORE}" \
         --ks-pass="pass:${KEYSTORE_PASS}" \
         --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
-        --key-pass="pass:${KEYSTORE_KEY_PASS}"
-fi
+        --key-pass="pass:${KEYSTORE_KEY_PASS}" \
+        --out="${APK_OUT}" \
+        "${APK_IN}"
+}
+
+# Sign ARM64 APK
+sign_apk "${IRONFOX_TARGET_ABI_ARM64}"
+
+# Sign ARM APK
+sign_apk "${IRONFOX_TARGET_ABI_ARM}"
+
+# Sign x86_64 APK
+sign_apk "${IRONFOX_TARGET_ABI_X86_64}"
+
+# Sign universal APK
+sign_apk 'universal'
+
+# Build signed APK set
+echo_green_text "Creating IronFox bundle..."
+AAB_IN="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
+APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
+"${IRONFOX_BUNDLETOOL}" build-apks \
+    --bundle="${AAB_IN}" \
+    --output="${APKS_OUT}" \
+    --ks="${KEYSTORE}" \
+    --ks-pass="pass:${KEYSTORE_PASS}" \
+    --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
+    --key-pass="pass:${KEYSTORE_KEY_PASS}"
