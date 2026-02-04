@@ -143,6 +143,7 @@ build-ironfox:
   tags:
     - saas-linux-2xlarge-amd64
   variables:
+    RUNNER_SCRIPT_TIMEOUT: 8h
     <<: *build_variables
   <<: *build_setup_steps
   script:
