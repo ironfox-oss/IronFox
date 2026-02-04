@@ -146,6 +146,7 @@ build-apk:
     matrix:
       - BUILD_VARIANT: ["arm", "arm64", "x86_64"]
   variables:
+    RUNNER_SCRIPT_TIMEOUT: 8h
     <<: *build_variables
   <<: *build_setup_steps
   script:
