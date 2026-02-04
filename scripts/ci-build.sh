@@ -43,7 +43,7 @@ function sign_apk() {
     echo_green_text "Signing IronFox (${abi})..."
 
     APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${abi}-unsigned.apk"
-    APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${abi}.apk"
+    APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${abi}.apk"
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
         --ks="${KEYSTORE}" \
         --ks-pass="pass:${KEYSTORE_PASS}" \

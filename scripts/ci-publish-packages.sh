@@ -44,14 +44,15 @@ upload_asset() {
 }
 
 # Upload packages to package registry
-for apk in "${IRONFOX_OUTPUTS_APK}"/*.apk; do
-    package_name="apk"
-    upload_asset "${package_name}" "${apk}"
-done
-for apks in "${IRONFOX_OUTPUTS_APKS}"/*.apks; do
-    package_name="apkset"
-    upload_asset "${package_name}" "${apks}"
-done
+
+## APK files
+upload_asset 'apk' "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI_ARM64}.apk"
+upload_asset 'apk' "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI_ARM}.apk"
+upload_asset 'apk' "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI_X86_64}.apk"
+upload_asset 'apk' "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-universal.apk"
+
+## Bundle (APKS file)
+upload_asset 'apkset' "${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
 
 {
     changelog_file="${CI_PROJECT_DIR}/changelogs/${IRONFOX_VERSION}.md"
