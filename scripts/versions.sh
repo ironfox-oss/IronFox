@@ -11,8 +11,8 @@ IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
 ### https://github.com/mozilla/application-services
-APPSERVICES_COMMIT='2d12f39543bb9ecb2410b63a092912b811e9fb4d'
-APPSERVICES_VERSION='v147.0'
+APPSERVICES_COMMIT='602d2d443957ea8d2e489eb0ffb54d4edf65a31b'
+APPSERVICES_VERSION='v147.0.1'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
