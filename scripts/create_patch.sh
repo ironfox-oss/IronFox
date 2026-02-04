@@ -38,8 +38,7 @@ case ${PROJECT} in
 		;;
 
 	"gecko" | "Gecko" | "GECKO" | "firefox" | "Firefox" | "FIREFOX" | "mozilla-central" | "mozilla-release" | 2)
-		# pushd "${IRONFOX_GECKO}"
-        pushd '/Users/user/Projects/celenity/gecko'
+		pushd "${IRONFOX_GECKO}"
         PROJECT='gecko'
 		;;
 
