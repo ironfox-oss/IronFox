@@ -13,19 +13,6 @@ index 11578f425f7c..68f29fff7470 100644
      // -
  
      auto useOop = IsWebglOutOfProcessEnabled();
-diff --git a/dom/canvas/WebGLContext.cpp b/dom/canvas/WebGLContext.cpp
-index 05608061f239..bb136cf2cc36 100644
---- a/dom/canvas/WebGLContext.cpp
-+++ b/dom/canvas/WebGLContext.cpp
-@@ -532,7 +532,7 @@ RefPtr<WebGLContext> WebGLContext::Create(HostWebGLContext* host,
-   ScopedGfxFeatureReporter reporter("WebGL", forceEnabled);
- 
-   auto res = [&]() -> Result<RefPtr<WebGLContext>, std::string> {
--    bool disabled = StaticPrefs::webgl_disabled();
-+    bool disabled = false;
- 
-     // TODO: When we have software webgl support we should use that instead.
-     disabled |= gfxPlatform::InSafeMode();
 diff --git a/toolkit/components/resistfingerprinting/RFPTargets.inc b/toolkit/components/resistfingerprinting/RFPTargets.inc
 index 540313664e..21c4668b9a 100644
 --- a/toolkit/components/resistfingerprinting/RFPTargets.inc

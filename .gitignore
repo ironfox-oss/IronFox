@@ -20,8 +20,9 @@ __pycache__/
 
 # Environment variables for local builds
 /env_override.sh
-/scripts/env_target.sh
+/scripts/env_build.sh
 /scripts/env_local.sh
+/scripts/env_target.sh
 
 # WIP
 /wip/

@@ -11,10 +11,10 @@ index 579db37cf75a..e2869c0a37e3 100644
              onPreferenceChangeListener = createMetricPreferenceChangeListener("contile")
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..6b26a97ad3d4 100644
+index c7db941b0f7e..14de29cdd6a1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2131,7 +2131,7 @@ class Settings(
+@@ -2139,7 +2139,7 @@ class Settings(
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),
@@ -23,7 +23,7 @@ index 276ad8cf1df1..6b26a97ad3d4 100644
      )
  
      /**
-@@ -2787,7 +2787,7 @@ class Settings(
+@@ -2795,7 +2795,7 @@ class Settings(
      var suppressSponsoredTopSitesEnabled by lazyFeatureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_suppress_sponsored_tiles),
          featureFlag = true,

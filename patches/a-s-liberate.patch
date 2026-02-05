@@ -57,19 +57,6 @@ index ed1e132e9..9c0f4ef3d 100644
    fxaclient:
      path: components/fxa-client/android
      artifactId: fxaclient
-diff --git a/build.gradle b/build.gradle
-index 215f3234a..0194e8c34 100644
---- a/build.gradle
-+++ b/build.gradle
-@@ -185,7 +185,7 @@ if (useDownloadedLibs) {
- // because doing so seems pointless, not for any security reason)
- ext.extraCargoBuildArguments = []
- 
--if (System.getenv("CI")) {
-+if (false) {
-     ext.extraCargoBuildArguments = ["--locked"]
- }
- 
 diff --git a/megazords/fenix-dylib/megazord_stub.c b/megazords/fenix-dylib/megazord_stub.c
 index b5111efde..bf512fb45 100644
 --- a/megazords/fenix-dylib/megazord_stub.c

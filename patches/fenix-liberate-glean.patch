@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 39b7918425..902c45bd82 100644
+index 7c040fb83605..67060ad96bdb 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
 @@ -174,30 +174,30 @@ features:
@@ -57,6 +57,45 @@ index 39b7918425..902c45bd82 100644
  
    splash-screen:
      description: "A feature that extends splash screen duration, allowing additional data fetching time for the app's initial run."
+@@ -985,22 +985,22 @@ features:
+           enabled: true
+ 
+ types:
+-  objects:
+-    GleanServerKnobsConfiguration:
+-      description: A configuration object for Glean server knobs.
+-      fields:
+-        metrics_enabled:
+-          description: A map of metric base-identifiers to booleans representing the state of the 'enabled' flag for that metric.
+-          type: Map<String, Boolean>
+-          default: {}
+-        pings_enabled:
+-          description: A map of ping names to booleans representing the state of the 'enabled' flag for that ping.
+-          type: Map<String, Boolean>
+-          default: {}
+-        event_threshold:
+-          description: The threshold of events that will be buffered before an events ping is collected and submitted.
+-          type: Option<Int>
+-          default: null
++#  objects:
++#    GleanServerKnobsConfiguration:
++#      description: A configuration object for Glean server knobs.
++#      fields:
++#        metrics_enabled:
++#          description: A map of metric base-identifiers to booleans representing the state of the 'enabled' flag for that metric.
++#          type: Map<String, Boolean>
++#          default: {}
++#        pings_enabled:
++#          description: A map of ping names to booleans representing the state of the 'enabled' flag for that ping.
++#          type: Map<String, Boolean>
++#          default: {}
++#        event_threshold:
++#          description: The threshold of events that will be buffered before an events ping is collected and submitted.
++#          type: Option<Int>
++#          default: null
+ 
+   enums:
+     HomeScreenSection:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 index 6ed5a8715f84..b03f73dc9042 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
@@ -652,7 +691,7 @@ index 1183971659f3..9b07908b1db1 100644
  
          radio.onInfoClickListener {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..1f2bfc3028f6 100644
+index c7db941b0f7e..f00d0df575a0 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -40,7 +40,7 @@ import org.mozilla.experiments.nimbus.NimbusEventStore

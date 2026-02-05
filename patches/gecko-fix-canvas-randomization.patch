@@ -1,0 +1,44 @@
+diff --git a/dom/canvas/CanvasRenderingContext2D.cpp b/dom/canvas/CanvasRenderingContext2D.cpp
+index ee186c2b9a2b..46e8ec897cdc 100644
+--- a/dom/canvas/CanvasRenderingContext2D.cpp
++++ b/dom/canvas/CanvasRenderingContext2D.cpp
+@@ -6554,7 +6554,7 @@ nsresult CanvasRenderingContext2D::GetImageDataArray(
+   //
+   // Note that we don't need to clone if we will use the place holder because
+   // the place holder doesn't use actual image data.
+-  if (extractionBehavior == CanvasUtils::ImageExtraction::Randomize) {
++  if (extractionBehavior == CanvasUtils::ImageExtraction::Randomize || extractionBehavior == CanvasUtils::ImageExtraction::EfficientRandomize) {
+     if (readback) {
+       readback = CreateDataSourceSurfaceByCloning(readback);
+     }
+@@ -6572,7 +6572,7 @@ nsresult CanvasRenderingContext2D::GetImageDataArray(
+       // service) after we call JS_GetUint8ClampedArrayData, we will
+       // pre-generate the randomness required for GeneratePlaceholderCanvasData.
+       randomData = TryToGenerateRandomDataForPlaceholderCanvasData();
+-    } else if (extractionBehavior == CanvasUtils::ImageExtraction::Randomize) {
++    } else if (extractionBehavior == CanvasUtils::ImageExtraction::Randomize || extractionBehavior == CanvasUtils::ImageExtraction::EfficientRandomize) {
+       // Apply the random noises if canvan randomization is enabled. We don't
+       // need to calculate random noises if we are going to use the place
+       // holder.
+diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
+index 11578f425f7c..d62409ff80b1 100644
+--- a/dom/canvas/ClientWebGLContext.cpp
++++ b/dom/canvas/ClientWebGLContext.cpp
+@@ -3598,7 +3598,7 @@ void ClientWebGLContext::GetBufferSubData(GLenum target, GLintptr srcByteOffset,
+       if (extraction == CanvasUtils::ImageExtraction::Placeholder) {
+         dom::GeneratePlaceholderCanvasData(destView->size_bytes(),
+                                            destView->Elements());
+-      } else if (extraction == CanvasUtils::ImageExtraction::Randomize) {
++      } else if (extraction == CanvasUtils::ImageExtraction::Randomize || extraction == CanvasUtils::ImageExtraction::EfficientRandomize) {
+         // We have no idea what's in the buffer. So, we randomize it as if each
+         // elemSize bytes is a single element.
+         uint8_t elementsPerGroup = 1,
+@@ -5354,7 +5354,7 @@ void ClientWebGLContext::ReadPixels(GLint x, GLint y, GLsizei width,
+ 
+       if (extraction == CanvasUtils::ImageExtraction::Placeholder) {
+         dom::GeneratePlaceholderCanvasData(range->size(), range->Elements());
+-      } else if (extraction == CanvasUtils::ImageExtraction::Randomize) {
++      } else if (extraction == CanvasUtils::ImageExtraction::Randomize || extraction == CanvasUtils::ImageExtraction::EfficientRandomize) {
+         const auto pii = webgl::PackingInfoInfo::For(desc.pi);
+         // DoReadPixels() requres pii to be Some().
+         MOZ_ASSERT(pii.isSome());

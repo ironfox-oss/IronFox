@@ -38,10 +38,10 @@ index 76ab6e5b0072..5ae6093e034d 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..560e999eaa4d 100644
+index c7db941b0f7e..7f2f6394157d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1988,7 +1988,7 @@ class Settings(
+@@ -1996,7 +1996,7 @@ class Settings(
       */
      var isAddressSyncEnabled by featureFlagPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_address_sync),

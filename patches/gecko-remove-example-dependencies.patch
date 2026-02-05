@@ -1,20 +1,12 @@
 diff --git a/mobile/android/gradle.configure b/mobile/android/gradle.configure
-index d04eb85ad054c..701953a1f5b47 100644
+index d04eb85ad054..38ea01e788f5 100644
 --- a/mobile/android/gradle.configure
 +++ b/mobile/android/gradle.configure
-@@ -377,19 +377,19 @@ def gradle_android_archive_geckoview_tasks(build_config):
+@@ -377,19 +377,22 @@ def gradle_android_archive_geckoview_tasks(build_config):
          "geckoview:assemble{geckoview.variant.name}".format(
              geckoview=build_config.geckoview
          ),
 -        "geckoview:assemble{geckoview.variant.name}AndroidTest".format(
--            geckoview=build_config.geckoview
--        ),
--        "messaging_example:assemble{geckoview_example.variant.name}".format(
--            geckoview_example=build_config.geckoview_example
--        ),
--        "port_messaging_example:assemble{geckoview_example.variant.name}".format(
--            geckoview_example=build_config.geckoview_example
--        ),
 +#        "geckoview:assemble{geckoview.variant.name}AndroidTest".format(
 +#            geckoview=build_config.geckoview
 +#        ),
@@ -24,7 +16,17 @@ index d04eb85ad054c..701953a1f5b47 100644
 +#        "port_messaging_example:assemble{geckoview_example.variant.name}".format(
 +#            geckoview_example=build_config.geckoview_example
 +#        ),
-         "geckoview:publish{geckoview.variant.name}PublicationToMavenRepository".format(
++        "geckoview:publish{geckoview.variant.name}PublicationToMavenRepository".format(
+             geckoview=build_config.geckoview
+         ),
+-        "messaging_example:assemble{geckoview_example.variant.name}".format(
+-            geckoview_example=build_config.geckoview_example
+-        ),
+-        "port_messaging_example:assemble{geckoview_example.variant.name}".format(
+-            geckoview_example=build_config.geckoview_example
+-        ),
+-        "geckoview:publish{geckoview.variant.name}PublicationToMavenRepository".format(
++        "geckoview:publish{geckoview.variant.name}PublicationToMavenLocal".format(
              geckoview=build_config.geckoview
          ),
 -        "exoplayer2:publishDebugPublicationToMavenRepository",

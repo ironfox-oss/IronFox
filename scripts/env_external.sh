@@ -1,4 +1,4 @@
-# IronFox common environment variables
+# IronFox external environment variables
 
 ## This is used for converting IronFox-specific environment variables to ones used in external projects.
 

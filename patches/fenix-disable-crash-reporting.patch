@@ -195,7 +195,7 @@ index e597abe8ca10..a84c839972be 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..456bbc28c81c 100644
+index c7db941b0f7e..8fbcaa83ae85 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -562,7 +562,7 @@ class Settings(
@@ -207,7 +207,7 @@ index 276ad8cf1df1..456bbc28c81c 100644
      )
  
      val isRemoteDebuggingEnabled by booleanPreference(
-@@ -949,7 +949,7 @@ class Settings(
+@@ -957,7 +957,7 @@ class Settings(
       */
      var crashPullNeverShowAgain: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),

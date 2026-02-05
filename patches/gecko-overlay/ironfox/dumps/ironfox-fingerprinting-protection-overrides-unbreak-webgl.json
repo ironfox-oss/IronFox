@@ -102,6 +102,10 @@
     },
     {
       "overrides": "-DisableWebGL",
+      "firstPartyDomain": "getmonero.org"
+    },
+    {
+      "overrides": "-DisableWebGL",
       "firstPartyDomain": "google.com"
     },
     {
@@ -196,6 +200,10 @@
     {
       "overrides": "-DisableWebGL",
       "firstPartyDomain": "radio.garden"
+    },
+    {
+      "overrides": "-DisableWebGL",
+      "firstPartyDomain": "roblox.com"
     },
     {
       "overrides": "-DisableWebGL",

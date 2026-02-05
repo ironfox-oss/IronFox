@@ -49,7 +49,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
         /**
          * Indicates whether or not we should disable WebGL
          * Default: true
-         * Gecko preference(s) impacted: webgl.disabled
+         * Gecko preference(s) impacted: browser.ironfox.webgl.disabled
          */
         val webglDisabledPreference = requirePreference<SwitchPreference>(FenixSettingsDictionary.webglDisabled)
 
@@ -224,7 +224,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
         /**
          * Indicates whether or not we should enable Mozilla's fingerprinting protection overrides
          * Default: true
-         * Gecko preference(s) impacted: privacy.fingerprintingProtection.remoteOverrides.enabled
+         * Gecko preference(s) impacted: browser.ironfox.fingerprintingProtection.mozillaOverrides.enabled
          */
         val fppOverridesMozillaEnabledPreference = requirePreference<SwitchPreference>(
             FenixSettingsDictionary.fppOverridesMozillaEnabled
@@ -339,7 +339,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
         /**
          * Indicates whether or not we should allow the installation of add-ons
          * Default: false
-         * Gecko preference(s) impacted: xpinstall.enabled
+         * Gecko preference(s) impacted: browser.ironfox.xpinstall.enabled
          * (This also sets the InstallAddonsPermission policy (https://mozilla.github.io/policy-templates/#installaddonspermission), which is why we need to restart)
          */
         val xpinstallEnabledPreference = requirePreference<SwitchPreference>(

@@ -54,7 +54,7 @@ index 0c73973e0468..d7062d27887d 100644
       * For >=Q -> Use new RoleManager API to show in-app browser switching dialog.
       * For <Q && >=N -> Navigate user to Android Default Apps Settings.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..5519c2614264 100644
+index c7db941b0f7e..e148fd339278 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -76,6 +76,8 @@ import org.mozilla.fenix.wallpapers.Wallpaper

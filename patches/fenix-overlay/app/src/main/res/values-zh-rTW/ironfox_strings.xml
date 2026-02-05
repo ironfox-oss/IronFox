@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="restart_required_summary">修改此設定需要重啟瀏覽器</string>
+    <string name="unsupported_summary">我們不建議/不支援更改這些設定，如需更改請三思。</string>
+    <string name="if_preferences">IronFox 設定</string>
+    <string name="if_preferences_misc">其他</string>
+    <string name="if_preferences_privacy">隱私</string>
+    <string name="if_preferences_privacy_security">隱私與安全</string>
+    <string name="if_preferences_secret">私密設定</string>
+    <string name="if_preferences_security">安全性</string>
+    <string name="preference_accessibility_enabled">無障礙服務</string>
+    <string name="preference_always_use_private_browsing">始終使用隱私瀏覽模式</string>
+</resources>

@@ -154,7 +154,15 @@ You now need to patch/prepare your newly downloaded sources with the `prebuild` 
 _This must be run once after getting your sources._
 
 ```sh
-./scripts/prebuild.sh <build-variant>
+./scripts/prebuild.sh
+```
+
+#### Build
+
+Finally, you can start the build process with:
+
+```sh
+./scripts/build.sh <build-variant>
 ```
 
 Where `<build-variant>` specifies the variant to build, and is **one** of the following:
@@ -162,28 +170,9 @@ Where `<build-variant>` specifies the variant to build, and is **one** of the fo
 - `arm` - 32-bit ARM (`armeabi-v7a`)
 - `arm64` - 64-bit ARM (`arm64-v8a`)
 - `x86_64` - 64-bit x86
-- `bundle` - Android App Bundle (AAB) with all supported ABIs.
+- `bundle` - Android App Bundle (AAB) with all supported ABIs
 
-> [!IMPORTANT]
-> If you want to build the `bundle` variant locally, you need to build the ABI-specific
-> variants first, get the generated AAR file for GeckoView and then configure
-> `MOZ_ANDROID_FAT_AAR*` environment variables with the path to the generate AAR files.
->
-> See [task kinds](https://firefox-source-docs.mozilla.org/taskcluster/kinds.html#build-fat-aar) and [ci-build.sh](./scripts/ci-build.sh) for more details.
-
-#### Build
-
-Finally, you can start the build process with:
-
-```sh
-./scripts/build.sh apk
-```
-
-**NOTE**: If you'd like to build a **bundle**, you should instead use:
-
-```sh
-./scripts/build.sh bundle
-```
+In addition to the `AAB`, the `bundle` target also produces APKs for each architecture *(`arm`, `arm64`, and `x86_64`)*, as well as a universal APK containing all architectures.
 
 ## Translation
 
@@ -197,9 +186,9 @@ Changes to patches are licensed according to the header in the files this patch 
 
 [Phoenix](https://phoenix.celenity.dev/) is licensed under the [GNU General Public License v3.0 or later](https://spdx.org/licenses/GPL-3.0-or-later.html) _(`GPL-3.0-or-later`)_ where applicable. See [`COPYING`](https://phoenix.celenity.dev/COPYING.txt).
 
-`a-c-liberate.patch`, `a-c-localize-maven.patch`, `a-s-localize-maven.patch`, `fenix-liberate.patch`, `gecko-localize-maven.patch`, and `microg-unbreak-fido.patch` are adapted from [Fennec F-Droid](https://gitlab.com/relan/fennecbuild). See [`COPYING`](https://gitlab.com/relan/fennecbuild/-/blob/master/COPYING).
+`a-c-liberate.patch`, `a-s-localize-maven.patch`, and `fenix-liberate.patch` are adapted from [Fennec F-Droid](https://gitlab.com/relan/fennecbuild). See [`COPYING`](https://gitlab.com/relan/fennecbuild/-/blob/master/COPYING).
 
-`gecko-custom-ublock-origin-assets.patch`, `gecko-prevent-exposing-name-and-vendor-to-extensions.patch`, and `gecko-rs-blocker.patch` are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
+`gecko-configure-ublock-origin.patch`, `gecko-prevent-exposing-name-and-vendor-to-extensions.patch`, and `gecko-rs-blocker.patch` are adapted from [LibreWolf](https://librewolf.net/). See [LibreWolf License and Disclaimers](https://librewolf.net/license-disclaimers/).
 
 `fenix-disable-network-connectivity-monitoring.patch`, `gecko-disable-network-id.patch`, `geckoview-ironfox-settings-support-spoof-english.patch`, and `glean-noop.patch` are adapted from the [Tor Project](https://www.torproject.org/). See [`LICENSE`](https://gitlab.torproject.org/tpo/core/tor/-/raw/HEAD/LICENSE).
 
