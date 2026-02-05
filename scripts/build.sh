@@ -32,7 +32,15 @@ echo_green_text() {
 }
 
 if [ -z "${1+x}" ]; then
-    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
+    echo_red_text "Usage: $0 apk|bundle" >&1
+    exit 1
+fi
+
+build_type="$1"
+
+if [ "${build_type}" != "apk" ] && [ "${build_type}" != "bundle" ]; then
+    echo_red_text "Unknown build type: '${build_type}'" >&1
+    echo_red_text "Usage: $0 apk|bundle" >&1
     exit 1
 fi
 
@@ -40,49 +48,8 @@ fi
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 
-# Set up target parameters
-## (For now, we need to export IRONFOX_TARGET_ABI, as it's used by ci-build.sh)
-case "$1" in
-arm64)
-    # arm64-v8a
-    export IRONFOX_TARGET_ARCH='arm64'
-    export IRONFOX_TARGET_ABI="${IRONFOX_TARGET_ABI_ARM64}"
-    IRONFOX_TARGET_PRETTY="${IRONFOX_TARGET_PRETTY_ARM64}"
-    IRONFOX_TARGET_RUST="${IRONFOX_TARGET_RUST_ARM64}"
-    ;;
-arm)
-    # armeabi-v7a
-    export IRONFOX_TARGET_ARCH='arm'
-    export IRONFOX_TARGET_ABI="${IRONFOX_TARGET_ABI_ARM}"
-    IRONFOX_TARGET_PRETTY="${IRONFOX_TARGET_PRETTY_ARM}"
-    IRONFOX_TARGET_RUST="${IRONFOX_TARGET_RUST_ARM}"
-    ;;
-x86_64)
-    # x86_64
-    export IRONFOX_TARGET_ARCH='x86_64'
-    export IRONFOX_TARGET_ABI="${IRONFOX_TARGET_ABI_X86_64}"
-    IRONFOX_TARGET_PRETTY="${IRONFOX_TARGET_PRETTY_X86_64}"
-    IRONFOX_TARGET_RUST="${IRONFOX_TARGET_RUST_X86_64}"
-    ;;
-bundle)
-    # arm64-v8a, armeabi-v7a, and x86_64
-    export IRONFOX_TARGET_ARCH='bundle'
-    export IRONFOX_TARGET_ABI="${IRONFOX_TARGET_ABI_BUNDLE}"
-    IRONFOX_TARGET_PRETTY="${IRONFOX_TARGET_PRETTY_BUNDLE}"
-    IRONFOX_TARGET_RUST="${IRONFOX_TARGET_RUST_BUNDLE}"
-    ;;
-*)
-    echo_red_text "Unknown build variant: '$1'" >&2
-    exit 1
-    ;;
-esac
-
-# IRONFOX_TARGET_ARCH_CURRENT specifies the *current* build target, while IRONFOX_TARGET_ARCH specifies the *final* build target
-## This distinction is necessary for bundle builds - where we have to build each architecture
-export IRONFOX_TARGET_ARCH_CURRENT="${IRONFOX_TARGET_ARCH}"
-
-# Same logic as above, except for target ABI
-IRONFOX_TARGET_ABI_CURRENT="${IRONFOX_TARGET_ABI}"
+# Configure our build target
+source "${IRONFOX_ENV_TARGET}"
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     source "${IRONFOX_ENV_FDROID}"
@@ -163,11 +130,18 @@ if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" ]]; then
 fi
 
 cp -f "${IRONFOX_PATCHES}/build/gecko/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
+"${IRONFOX_SED}" -i "s|{PHOENIX_VERSION}|${PHOENIX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
 "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
 
 ## Configure release channel
 
 ### Fenix
+if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
+    rm -f "${IRONFOX_FENIX}/app/build.gradle"
+fi
+
+cp -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
+
 if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
     rm -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
 fi
@@ -183,7 +157,7 @@ else
 fi
 
 # Begin the build...
-echo_green_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
+echo_green_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL} (${IRONFOX_TARGET_ARCH})"
 
 # We publish the artifacts into a local Maven repository instead of using the
 # auto-publication workflow because the latter does not work for Gradle
@@ -212,7 +186,7 @@ fi
 if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
     # Build our prebuilt libraries from source
     pushd "${IRONFOX_PREBUILDS}"
-    bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh"
+    bash "${IRONFOX_PREBUILDS}/scripts/build.sh"
     popd
 fi
 
@@ -244,82 +218,17 @@ popd
 # Gecko (Firefox)
 pushd "${IRONFOX_GECKO}"
 
-function build_gecko() {
-    unset MOZ_CHROME_MULTILOCALE
+echo_green_text "Running ${IRONFOX_MACH} build..."
+"${IRONFOX_MACH}" build
+echo_green_text "Running ${IRONFOX_MACH} package..."
+"${IRONFOX_MACH}" package
+echo_green_text "Running ${IRONFOX_MACH} package-multi-locale..."
+"${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_GECKO_LOCALES}
 
-    echo_green_text "Running ${IRONFOX_MACH} configure..."
-    "${IRONFOX_MACH}" configure
-    echo_green_text "Running ${IRONFOX_MACH} clobber..."
-    "${IRONFOX_MACH}" clobber
-    echo_green_text "Running ${IRONFOX_MACH} build..."
-    "${IRONFOX_MACH}" build
-    echo_green_text "Running ${IRONFOX_MACH} package..."
-    "${IRONFOX_MACH}" package
-    echo_green_text "Running ${IRONFOX_MACH} package-multi-locale..."
-    "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_GECKO_LOCALES}
+export MOZ_CHROME_MULTILOCALE="${IRONFOX_GECKO_LOCALES}"
 
-    export MOZ_CHROME_MULTILOCALE="${IRONFOX_GECKO_LOCALES}"
-
-    echo_green_text "Running '${IRONFOX_GRADLE}' '${IRONFOX_GRADLE_FLAGS}' -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
-
-    if [ "${IRONFOX_TARGET_ARCH_CURRENT}" != 'bundle' ]; then
-        # Create GeckoView AAR archives
-        MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
-        unset MOZ_AUTOMATION
-        if [[ "${IRONFOX_TARGET_ARCH_CURRENT}" == 'arm' ]]; then
-            cp -vf "${IRONFOX_GV_AAR_ARM}" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-        elif [[ "${IRONFOX_TARGET_ARCH_CURRENT}" == 'arm64' ]]; then
-            cp -vf "${IRONFOX_GV_AAR_ARM64}" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-        elif [[ "${IRONFOX_TARGET_ARCH_CURRENT}" == 'x86_64' ]]; then
-            cp -vf "${IRONFOX_GV_AAR_X86_64}" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
-        fi
-    fi
-}
-
-if [ "${IRONFOX_TARGET_ARCH}" == "bundle" ]; then
-    unset IF_BUILD_DATE
-    unset IRONFOX_TARGET_ARCH_CURRENT
-    unset MOZ_BUILD_DATE
-
-    # Write env_build.sh (for setting build date)
-    if [[ -f "${IRONFOX_ENV_BUILD}" ]]; then
-        rm "${IRONFOX_ENV_BUILD}"
-    fi
-    BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
-    echo "Writing ${IRONFOX_ENV_BUILD}..."
-    cat > "${IRONFOX_ENV_BUILD}" << EOF
-    export IF_BUILD_DATE="${BUILD_DATE}"
-EOF
-
-    # Set build date (to ensure MOZ_BUILDID is consistent across all builds)
-    source "${IRONFOX_ENV_BUILD}"
-    export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
-
-    # 1. Build ARM64
-    export IRONFOX_TARGET_ARCH_CURRENT='arm64'
-    build_gecko
-
-    # 2. Build ARM
-    export IRONFOX_TARGET_ARCH_CURRENT='arm'
-    build_gecko
-
-    # 3. Build x86_64
-    export IRONFOX_TARGET_ARCH_CURRENT='x86_64'
-    build_gecko
-
-    # 4. Finally, build our bundle
-    export IRONFOX_TARGET_ARCH_CURRENT='bundle'
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
-    build_gecko
-    "${IRONFOX_MACH}" build android-fat-aar-artifact
-else
-    build_gecko
-fi
-
+echo_green_text "Running '${IRONFOX_GRADLE}' '${IRONFOX_GRADLE_FLAGS}' -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
+"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
 popd
 
 # Android Components
@@ -350,96 +259,18 @@ pushd "${IRONFOX_AC}"
 echo "## Enable the auto-publication workflow for Application Services" >>"${IRONFOX_GECKO}/local.properties"
 echo "autoPublish.application-services.dir=${IRONFOX_AS}" >>"${IRONFOX_GECKO}/local.properties"
 
-function build_ac() {
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial publishToMavenLocal
-}
-
-if [ "${IRONFOX_TARGET_ARCH}" == "bundle" ]; then
-    unset IRONFOX_TARGET_ARCH_CURRENT
-    unset MOZ_ANDROID_FAT_AAR_ARCHITECTURES
-
-    # 1. Build ARM64
-    export IRONFOX_TARGET_ARCH_CURRENT='arm64'
-    build_ac
-
-    # 2. Build ARM
-    export IRONFOX_TARGET_ARCH_CURRENT='arm'
-    build_ac
-
-    # 3. Build x86_64
-    export IRONFOX_TARGET_ARCH_CURRENT='x86_64'
-    build_ac
-
-    # 4. Finally, build our bundle
-    export IRONFOX_TARGET_ARCH_CURRENT='bundle'
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    build_ac
-else
-    build_ac
-fi
+"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial publishToMavenLocal
 
 popd
 
 # Fenix
 pushd "${IRONFOX_FENIX}"
 
-function build_fenix() {
-    if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
-        rm -f "${IRONFOX_FENIX}/app/build.gradle"
-    fi
-
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
-
-    "${IRONFOX_SED}" -i -e "s/include \".*\"/include \"${IRONFOX_TARGET_ABI_CURRENT}\"/" "${IRONFOX_FENIX}/app/build.gradle"
-
-    if [ "${IRONFOX_TARGET_ARCH_CURRENT}" != "bundle" ]; then
-        # Universal APKs make no sense under other circumstances, as we're otherwise only building the specific target architecture
-        # We only build all architectures for bundle builds
-        "${IRONFOX_SED}" -i -e '/universalApk/s/true/false/' "${IRONFOX_FENIX}/app/build.gradle"
-    fi
-
-    "${IRONFOX_MACH}" configure
+if [[ "${build_type}" == "apk" ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:assembleRelease
-
-    if [ "${IRONFOX_TARGET_ARCH_CURRENT}" != "bundle" ]; then
-        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH_CURRENT}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI_CURRENT}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI_CURRENT}-unsigned.apk"
-    fi
-}
-
-if [[ "${IRONFOX_TARGET_ARCH}" == "bundle" ]]; then
-    unset IRONFOX_TARGET_ABI_CURRENT
-    unset IRONFOX_TARGET_ARCH_CURRENT
-    unset MOZ_ANDROID_FAT_AAR_ARCHITECTURES
-
-    # 1. Build ARM64
-    export IRONFOX_TARGET_ARCH_CURRENT='arm64'
-    IRONFOX_TARGET_ABI_CURRENT="${IRONFOX_TARGET_ABI_ARM64}"
-    build_fenix
-
-    # 2. Build ARM
-    export IRONFOX_TARGET_ARCH_CURRENT='arm'
-    IRONFOX_TARGET_ABI_CURRENT="${IRONFOX_TARGET_ABI_ARM}"
-    build_fenix
-
-    # 3. Build x86_64
-    export IRONFOX_TARGET_ARCH_CURRENT='x86_64'
-    IRONFOX_TARGET_ABI_CURRENT="${IRONFOX_TARGET_ABI_X86_64}"
-    build_fenix
-
-    # 4. Finally, build our bundle
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    export IRONFOX_TARGET_ARCH_CURRENT='bundle'
-    IRONFOX_TARGET_ABI_CURRENT="${IRONFOX_TARGET_ABI_BUNDLE}"
-    build_fenix
+    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}-unsigned.apk"
+elif [[ "${build_type}" == "bundle" ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:bundleRelease -Paab
-
-    # Copy AAB output
-    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/app-fenix-release.aab" "${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
-
-    # Copy universal APK
-    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
-else
-    build_fenix
 fi
 
 popd

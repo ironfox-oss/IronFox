@@ -23,10 +23,8 @@ IRONFOX_ENV_DEFAULTS="${IRONFOX_SCRIPTS}/env_defaults.sh"
 export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 
 ## For build target configuration
-export IRONFOX_ENV_TARGET="${IRONFOX_SCRIPTS}/env_target_helpers.sh"
-
-# For build environment configuration
-export IRONFOX_ENV_BUILD="${IRONFOX_SCRIPTS}/env_build.sh"
+export IRONFOX_ENV_TARGET="${IRONFOX_SCRIPTS}/env_target.sh"
+export IRONFOX_ENV_TARGET_HELPERS="${IRONFOX_SCRIPTS}/env_target_helpers.sh"
 
 # Build directory
 export IRONFOX_BUILD="${IRONFOX_ROOT}/build"
@@ -57,34 +55,6 @@ IRONFOX_OUTPUTS_DEFAULT="${IRONFOX_BUILD}/outputs"
 if [[ -z "${IRONFOX_OUTPUTS+x}" ]]; then
     export IRONFOX_OUTPUTS="${IRONFOX_OUTPUTS_DEFAULT}"
 fi
-
-export IRONFOX_OUTPUTS_AAB="${IRONFOX_OUTPUTS}/aab"
-export IRONFOX_OUTPUTS_AAR="${IRONFOX_OUTPUTS}/aar"
-export IRONFOX_OUTPUTS_APK="${IRONFOX_OUTPUTS}/apk"
-export IRONFOX_OUTPUTS_APKS="${IRONFOX_OUTPUTS}/apks"
-export IRONFOX_OUTPUTS_GV_AAR_ARM64="${IRONFOX_OUTPUTS_AAR}/geckoview-arm64-v8a.zip"
-export IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.zip"
-export IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
-export IRONFOX_OUTPUTS_LOGS="${IRONFOX_OUTPUTS}/logs"
-
-# Artifacts directory
-## (This directory is used by CI for uploading our desired output files to GitLab)
-IRONFOX_ARTIFACTS_DEFAULT="${IRONFOX_BUILD}/artifacts"
-if [[ -z "${IRONFOX_ARTIFACTS+x}" ]]; then
-    export IRONFOX_ARTIFACTS="${IRONFOX_ARTIFACTS_DEFAULT}"
-fi
-
-## APK artifacts
-export IRONFOX_ARTIFACTS_APK="${IRONFOX_ARTIFACTS}/apk"
-
-## APKS artifacts
-export IRONFOX_ARTIFACTS_APKS="${IRONFOX_ARTIFACTS}/apks"
-
-## GeckoView AAR artifacts
-export IRONFOX_ARTIFACTS_AAR="${IRONFOX_ARTIFACTS}/aar"
-
-## Logs
-export IRONFOX_ARTIFACTS_LOGS="${IRONFOX_ARTIFACTS}/logs"
 
 # Android SDK
 IRONFOX_ANDROID_SDK_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk"
@@ -169,16 +139,6 @@ fi
 ## Glean overlay
 export IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
 
-# GNU date
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    IRONFOX_DATE_DEFAULT='gdate'
-else
-    IRONFOX_DATE_DEFAULT='date'
-fi
-if [[ -z "${IRONFOX_DATE+x}" ]]; then
-    export IRONFOX_DATE="${IRONFOX_DATE_DEFAULT}"
-fi
-
 # GNU make
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     IRONFOX_MAKE_DEFAULT='gmake'
@@ -246,9 +206,9 @@ fi
 
 # libclang
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/lib"
+    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK_DEFAULT}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/lib"
 else
-    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/lib"
+    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK_DEFAULT}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/lib"
 fi
 if [[ -z "${IRONFOX_LIBCLANG+x}" ]]; then
     export IRONFOX_LIBCLANG="${IRONFOX_LIBCLANG_DEFAULT}"
@@ -429,6 +389,11 @@ else
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT} ${IRONFOX_RUST_FLAGS}"
 fi
 
+export ARTIFACTS="${IRONFOX_ROOT}/artifacts"
+export APK_ARTIFACTS="${ARTIFACTS}/apk"
+export APKS_ARTIFACTS="${ARTIFACTS}/apks"
+export AAR_ARTIFACTS="${ARTIFACTS}/aar"
+
 # Whether we're building IronFox for release or Nightly/CI (Default)
 IRONFOX_RELEASE_DEFAULT=0
 if [[ -z "${IRONFOX_RELEASE+x}" ]]; then
@@ -438,10 +403,8 @@ fi
 # Set release channel
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     export IRONFOX_CHANNEL='release'
-    export IRONFOX_CHANNEL_PRETTY='Release'
 else
     export IRONFOX_CHANNEL='nightly'
-    export IRONFOX_CHANNEL_PRETTY='Nightly'
 fi
 
 # Whether we should use our prebuilt libraries (Default)
@@ -451,47 +414,21 @@ if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
     export IRONFOX_NO_PREBUILDS="${IRONFOX_NO_PREBUILDS_DEFAULT}"
 fi
 
-# Build target constants
-
-## ARM64 constants
-export IRONFOX_TARGET_ABI_ARM64='arm64-v8a'
-IRONFOX_TARGET_PRETTY_ARM64='ARM64'
-IRONFOX_TARGET_RUST_ARM64='arm64'
-
-## ARM constants
-export IRONFOX_TARGET_ABI_ARM='armeabi-v7a'
-IRONFOX_TARGET_PRETTY_ARM='ARM'
-IRONFOX_TARGET_RUST_ARM='arm'
-
-## x86_64 constants
-export IRONFOX_TARGET_ABI_X86_64='x86_64'
-IRONFOX_TARGET_PRETTY_X86_64='x86_64'
-IRONFOX_TARGET_RUST_X86_64='x86_64'
-
-## Bundle constants
-export IRONFOX_TARGET_ABI_BUNDLE='arm64-v8a", "armeabi-v7a", "x86_64'
-IRONFOX_TARGET_PRETTY_BUNDLE='Bundle'
-IRONFOX_TARGET_RUST_BUNDLE='arm64,arm,x86_64'
-
 # Set locations for our GeckoView AAR archives
-
-## Where our GeckoView ARM64 AAR archive is located within mozilla-central
-IRONFOX_GV_AAR_ARM64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
-if [[ -z "${IRONFOX_GV_AAR_ARM64+x}" ]]; then
-    export IRONFOX_GV_AAR_ARM64="${IRONFOX_GV_AAR_ARM64_DEFAULT}"
+if [[ -z "${IRONFOX_GECKOVIEW_AAR_ARM+x}" ]]; then
+    export IRONFOX_GECKOVIEW_AAR_ARM="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
 fi
+export IRONFOX_GECKOVIEW_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
 
-## Where our GeckoView ARM AAR archive is located within mozilla-central
-IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
-if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
-    export IRONFOX_GV_AAR_ARM="${IRONFOX_GV_AAR_ARM_DEFAULT}"
+if [[ -z "${IRONFOX_GECKOVIEW_AAR_ARM64+x}" ]]; then
+    export IRONFOX_GECKOVIEW_AAR_ARM64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
 fi
+export IRONFOX_GECKOVIEW_AAR_ARM64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
 
-## Where our GeckoView x86_64 AAR archive is located within mozilla-central
-IRONFOX_GV_AAR_X86_64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
-if [[ -z "${IRONFOX_GV_AAR_X86_64+x}" ]]; then
-    export IRONFOX_GV_AAR_X86_64="${IRONFOX_GV_AAR_X86_64_DEFAULT}"
+if [[ -z "${IRONFOX_GECKOVIEW_AAR_X86_64+x}" ]]; then
+    export IRONFOX_GECKOVIEW_AAR_X86_64="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
 fi
+export IRONFOX_GECKOVIEW_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
 
 # Set our external environment variables
 IRONFOX_ENV_EXTERNAL="${IRONFOX_SCRIPTS}/env_external.sh"

@@ -59,6 +59,11 @@ function apply_overlay() {
     done
 }
 
+if [ -z "${1+x}" ]; then
+    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
+    exit 1
+fi
+
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     source "${IRONFOX_ENV_FDROID}"
 fi
@@ -99,7 +104,7 @@ if [[ -z "${SB_GAPI_KEY_FILE+x}" ]]; then
     fi
 fi
 
-echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY}"
+echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL}"
 
 # Create build directories
 mkdir -vp "${IRONFOX_CARGO_HOME}"
@@ -107,11 +112,7 @@ mkdir -vp "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0"
 mkdir -vp "${IRONFOX_GRADLE_CACHE}"
 mkdir -vp "${IRONFOX_GRADLE_HOME}"
 mkdir -vp "${IRONFOX_MOZBUILD}"
-mkdir -vp "${IRONFOX_OUTPUTS_AAB}"
-mkdir -vp "${IRONFOX_OUTPUTS_AAR}"
-mkdir -vp "${IRONFOX_OUTPUTS_APK}"
-mkdir -vp "${IRONFOX_OUTPUTS_APKS}"
-mkdir -vp "${IRONFOX_OUTPUTS_LOGS}"
+mkdir -vp "${IRONFOX_OUTPUTS}"
 mkdir -vp "${IRONFOX_BUILD}/tmp/fenix"
 mkdir -vp "${IRONFOX_BUILD}/tmp/glean"
 
@@ -368,6 +369,52 @@ mkdir -vp app/src/main/assets/wallpapers/firey-red
 # Display proper name and description for wallpaper collection
 "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_title|R.string.wallpaper_collection_fennec|' app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
 "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_description_with_learn_more|R.string.wallpaper_collection_fennec_description|' app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
+
+# Set up target parameters
+case "$1" in
+arm)
+    # APK for armeabi-v7a
+    abi='"armeabi-v7a"'
+    geckotarget='arm'
+    llvmtarget='ARM'
+    rusttarget='arm'
+    ;;
+arm64)
+    # APK for arm64-v8a
+    abi='"arm64-v8a"'
+    geckotarget='arm64'
+    llvmtarget='AArch64'
+    rusttarget='arm64'
+    ;;
+x86_64)
+    # APK for x86_64
+    abi='"x86_64"'
+    geckotarget='x86_64'
+    llvmtarget='X86_64'
+    rusttarget='x86_64'
+    ;;
+bundle)
+    # AAB for both armeabi-v7a and arm64-v8a
+    abi='"arm64-v8a", "armeabi-v7a", "x86_64"'
+    geckotarget='bundle'
+    llvmtarget='AArch64;ARM;X86_64'
+    rusttarget='arm64,arm,x86_64'
+    ;;
+*)
+    echo "Unknown build variant: '$1'" >&2
+    exit 1
+    ;;
+esac
+
+"${IRONFOX_SED}" -i -e "s/include \".*\"/include ${abi}/" app/build.gradle
+
+# Write env_target.sh
+echo "Writing ${IRONFOX_ENV_TARGET}..."
+cat > "${IRONFOX_ENV_TARGET}" << EOF
+export IRONFOX_TARGET_ARCH="${geckotarget}"
+
+source "\${IRONFOX_ENV_TARGET_HELPERS}"
+EOF
 
 # Apply Fenix overlay
 apply_overlay "${IRONFOX_FENIX_OVERLAY}/"
