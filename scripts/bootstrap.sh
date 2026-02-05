@@ -59,6 +59,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
 
         # Install OS X dependencies
         brew install \
+            coreutils \
             gawk \
             git \
             gnu-sed \

@@ -16,10 +16,10 @@ index 6012a322b8fb..48e6a97eff24 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..0c7c7daddb03 100644
+index c7db941b0f7e..63dc22bfca6d 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1644,7 +1644,7 @@ class Settings(
+@@ -1652,7 +1652,7 @@ class Settings(
       * either [AUTOPLAY_ALLOW_ALL] or [AUTOPLAY_BLOCK_ALL]. Because of this, we are forced to save
       * the user selected setting as well.
       */
@@ -28,7 +28,7 @@ index 276ad8cf1df1..0c7c7daddb03 100644
  
      private fun getSitePermissionsPhoneFeatureAutoplayAction(
          feature: PhoneFeature,
-@@ -1663,9 +1663,9 @@ class Settings(
+@@ -1671,9 +1671,9 @@ class Settings(
  
      fun getSitePermissionsCustomSettingsRules(): SitePermissionsRules {
          return SitePermissionsRules(
@@ -40,7 +40,7 @@ index 276ad8cf1df1..0c7c7daddb03 100644
              camera = getSitePermissionsPhoneFeatureAction(PhoneFeature.CAMERA),
              autoplayAudible = getSitePermissionsPhoneFeatureAutoplayAction(
                  feature = PhoneFeature.AUTOPLAY_AUDIBLE,
-@@ -1673,13 +1673,13 @@ class Settings(
+@@ -1681,13 +1681,13 @@ class Settings(
              ),
              autoplayInaudible = getSitePermissionsPhoneFeatureAutoplayAction(
                  feature = PhoneFeature.AUTOPLAY_INAUDIBLE,

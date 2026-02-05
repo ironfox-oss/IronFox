@@ -1,5 +1,5 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..bf41788cf14e 100644
+index c7db941b0f7e..c2175a061a04 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -368,7 +368,7 @@ class Settings(

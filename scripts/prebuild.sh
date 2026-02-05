@@ -22,6 +22,7 @@
 
 set -euo pipefail
 
+# Functions
 echo_red_text() {
 	echo -e "\033[31m$1\033[0m"
 }
@@ -97,7 +98,7 @@ if [[ -z "${SB_GAPI_KEY_FILE+x}" ]]; then
     echo_red_text "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
     read -p "Do you want to continue [y/N] " -n 1 -r
     echo ""
-    if ! [[ $REPLY =~ ^[Yy]$ ]]; then
+    if ! [[ "${REPLY}" =~ ^[Yy]$ ]]; then
         echo_red_text "Aborting..."
         exit 1
     fi
@@ -744,6 +745,7 @@ rm -vrf mobile/android/android-components/components/support/appservices/src/mai
 "${IRONFOX_SED}" -i -e 's|useLegacyReporting: Boolean = .*|useLegacyReporting: Boolean = false,|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 "${IRONFOX_SED}" -i -e 's|var enabled: Boolean = false,|var enabled: Boolean = enabled|g' mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 
+# No-op RemoteSettingsCrashPull
 "${IRONFOX_SED}" -i 's|crash-reports-ondemand||g' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 "${IRONFOX_SED}" -i -e 's/REMOTE_SETTINGS_CRASH_COLLECTION = ".*"/REMOTE_SETTINGS_CRASH_COLLECTION = ""/' toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs
 

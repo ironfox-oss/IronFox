@@ -57,4 +57,5 @@
     <string name="tor_spoof_english_title">Camuffa la lingua in en-US</string>
     <string name="preference_xpinstall_enabled">Abilita l\'installazione di add-ons</string>
     <string name="extension_failed_to_install_xpinstall_disabled_error">L\'installazione di add-ons è attualmente disabilitata. Se lo si desidera, al costo della sicurezza, puoi abilitarlo andando su Impostazioni -&gt; IronFox -&gt; Impostazioni di IronFox -&gt; Sicurezza -&gt; Abilita l\'installazione di add-ons.</string>
+    <string name="preference_always_use_private_browsing">Usa sempre la navigazione anonima</string>
 </resources>

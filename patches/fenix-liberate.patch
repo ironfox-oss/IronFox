@@ -323,7 +323,7 @@ index 0c73973e0468..7b619be4ab78 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 276ad8cf1df1..814c6dbf58f1 100644
+index c7db941b0f7e..ef6278366f2c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -354,7 +354,7 @@ class Settings(
@@ -335,7 +335,7 @@ index 276ad8cf1df1..814c6dbf58f1 100644
          default = { FxNimbus.features.customReviewPrompt.value().enabled },
      )
  
-@@ -2187,7 +2187,7 @@ class Settings(
+@@ -2195,7 +2195,7 @@ class Settings(
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),

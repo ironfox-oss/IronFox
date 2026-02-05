@@ -1,5 +1,5 @@
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index afd6d7b6fb49..9cd380312be6 100644
+index afd6d7b6fb49..8021693bdb12 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
 @@ -1826,8 +1826,8 @@ export var Policies = {
@@ -8,13 +8,13 @@ index afd6d7b6fb49..9cd380312be6 100644
        if ("Default" in param) {
 -        setAndLockPref("xpinstall.enabled", param.Default);
 -        if (!param.Default) {
-+        PoliciesUtils.setDefaultPref("xpinstall.enabled", param.Default);
-+        if (!Services.prefs.getBoolPref("xpinstall.enabled")) {
++//        setAndLockPref("xpinstall.enabled", param.Default);
++        if (!Services.prefs.getBoolPref("browser.ironfox.xpinstall.enabled")) {
            manager.disallowFeature("installTemporaryAddon");
            setAndLockPref(
              "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index bb451a279599..5d98093ac158 100644
+index bb451a279599..1caad93eaed5 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 @@ -415,11 +415,14 @@ EnterprisePoliciesManager.prototype = {
@@ -25,7 +25,7 @@ index bb451a279599..5d98093ac158 100644
 +    if (!Services.prefs.getBoolPref("browser.ironfox.onboardingCompleted") && addon.id === "uBlock0@raymondhill.net" && addon.type === "extension" && addon.isWebExtension && addon.sourceURI === "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi" && addon.name === "uBlock Origin" && addon.isCorrectlySigned && addon.providesUpdatesSecurely && addon.isCompatible && addon.isPlatformCompatible && addon.blocklistState === 0) {
        return true;
      }
-+    if (!addon.inDatabase && !Services.prefs.getBoolPref("xpinstall.enabled")) {
++    if (!addon.inDatabase && !Services.prefs.getBoolPref("browser.ironfox.xpinstall.enabled")) {
 +      return false;
 +    }
      if (addon.id in ExtensionSettings) {
@@ -34,16 +34,3 @@ index bb451a279599..5d98093ac158 100644
          switch (ExtensionSettings[addon.id].installation_mode) {
            case "blocked":
              return false;
-diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-index 358fcce396431..48dd5b7bc4176 100644
---- a/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-+++ b/toolkit/mozapps/extensions/internal/XPIInstall.sys.mjs
-@@ -4482,7 +4482,7 @@ export var XPIInstall = {
-    */
-   isInstallEnabled() {
-     // Default to enabled if the preference does not exist
--    return Services.prefs.getBoolPref(PREF_XPI_ENABLED, true);
-+    return true;
-   },
- 
-   /**

@@ -1,5 +1,5 @@
 // IronFox bootstrap...
-/// Preferences are configured at `ironfox.cfg` (located at `build/gecko/ironfox.cfg` within the IronFox source repo)
+/// Preferences are configured at `ironfox.cfg` (located at `patches/build/gecko/ironfox.cfg` within the IronFox source repo)
 
 /// Set-up AutoConfig
 // https://support.mozilla.org/kb/customizing-firefox-using-autoconfig
