@@ -136,14 +136,14 @@ build-docker:
 build-ironfox:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
-  timeout: 9h
+  timeout: 12h
   needs:
     - job: "build-docker"
       optional: true
   tags:
     - saas-linux-2xlarge-amd64
   variables:
-    RUNNER_SCRIPT_TIMEOUT: 8h
+    RUNNER_SCRIPT_TIMEOUT: 12h
     <<: *build_variables
   <<: *build_setup_steps
   script:
