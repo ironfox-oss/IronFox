@@ -37,13 +37,23 @@ bash -x "${IRONFOX_SCRIPTS}/build.sh" 'bundle'
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
+# Ensure our artifact directories exist
+mkdir -vp "${IRONFOX_ARTIFACTS_AAR}"
+mkdir -vp "${IRONFOX_ARTIFACTS_APK}"
+mkdir -vp "${IRONFOX_ARTIFACTS_APKS}"
+
+# Copy our GeckoView AAR builds
+cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM64}" "${IRONFOX_ARTIFACTS_AAR}/geckoview-arm64-v8a.zip"
+cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_ARTIFACTS_AAR}/geckoview-armeabi-v7a.zip"
+cp -vf "${IRONFOX_OUTPUTS_GV_AAR_X86_64}" "${IRONFOX_ARTIFACTS_AAR}/geckoview-armeabi-x86_64.zip"
+
 function sign_apk() {
     abi="$1"
 
     echo_green_text "Signing IronFox (${abi})..."
 
     APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${abi}-unsigned.apk"
-    APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${abi}.apk"
+    APK_OUT="${IRONFOX_ARTIFACTS_APK}/IronFox-v${IRONFOX_VERSION}-${abi}.apk"
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
         --ks="${KEYSTORE}" \
         --ks-pass="pass:${KEYSTORE_PASS}" \
@@ -68,7 +78,7 @@ sign_apk 'universal'
 # Build signed APK set
 echo_green_text "Creating IronFox bundle..."
 AAB_IN="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
-APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
+APKS_OUT="${IRONFOX_ARTIFACTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
 "${IRONFOX_BUNDLETOOL}" build-apks \
     --bundle="${AAB_IN}" \
     --output="${APKS_OUT}" \

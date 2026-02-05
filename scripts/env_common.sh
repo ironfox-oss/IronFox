@@ -67,6 +67,25 @@ export IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.
 export IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
 export IRONFOX_OUTPUTS_LOGS="${IRONFOX_OUTPUTS}/logs"
 
+# Artifacts directory
+## (This directory is used by CI for uploading our desired output files to GitLab)
+IRONFOX_ARTIFACTS_DEFAULT="${IRONFOX_BUILD}/artifacts"
+if [[ -z "${IRONFOX_ARTIFACTS+x}" ]]; then
+    export IRONFOX_ARTIFACTS="${IRONFOX_ARTIFACTS_DEFAULT}"
+fi
+
+## APK artifacts
+export IRONFOX_ARTIFACTS_APK="${IRONFOX_ARTIFACTS}/apk"
+
+## APKS artifacts
+export IRONFOX_ARTIFACTS_APKS="${IRONFOX_ARTIFACTS}/apks"
+
+## GeckoView AAR artifacts
+export IRONFOX_ARTIFACTS_AAR="${IRONFOX_ARTIFACTS}/aar"
+
+## Logs
+export IRONFOX_ARTIFACTS_LOGS="${IRONFOX_ARTIFACTS}/logs"
+
 # Android SDK
 IRONFOX_ANDROID_SDK_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk"
 if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]]; then
