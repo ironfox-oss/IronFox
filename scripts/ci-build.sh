@@ -68,8 +68,18 @@ bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-if [[ "${BUILD_VARIANT}" == "apk" ]]; then
-
+if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
+    # Build signed APK set
+    AAB_IN="$(ls "${IRONFOX_OUTPUTS_AAB}"/*.aab)"
+    APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
+    "${IRONFOX_BUNDLETOOL}" build-apks \
+        --bundle="${AAB_IN}" \
+        --output="${APKS_OUT}" \
+        --ks="${KEYSTORE}" \
+        --ks-pass="pass:${KEYSTORE_PASS}" \
+        --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
+        --key-pass="pass:${KEYSTORE_KEY_PASS}"
+else
     # Copy GeckoView AAR archives
     if [[ "${BUILD_VARIANT}" == 'arm' ]]; then
         cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_GV_AAR_ARM_ARTIFACT}"
@@ -89,17 +99,4 @@ if [[ "${BUILD_VARIANT}" == "apk" ]]; then
       --key-pass="pass:${KEYSTORE_KEY_PASS}" \
       --out="${APK_OUT}" \
       "${APK_IN}"
-fi
-
-if [[ "${BUILD_VARIANT}" == "bundle" ]]; then
-    # Build signed APK set
-    AAB_IN="$(ls "${IRONFOX_OUTPUTS_AAB}"/*.aab)"
-    APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
-    "${IRONFOX_BUNDLETOOL}" build-apks \
-        --bundle="${AAB_IN}" \
-        --output="${APKS_OUT}" \
-        --ks="${KEYSTORE}" \
-        --ks-pass="pass:${KEYSTORE_PASS}" \
-        --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
-        --key-pass="pass:${KEYSTORE_KEY_PASS}"
 fi
