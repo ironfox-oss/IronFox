@@ -32,15 +32,7 @@ echo_green_text() {
 }
 
 if [ -z "${1+x}" ]; then
-    echo_red_text "Usage: $0 apk|bundle" >&1
-    exit 1
-fi
-
-build_type="$1"
-
-if [ "${build_type}" != "apk" ] && [ "${build_type}" != "bundle" ]; then
-    echo_red_text "Unknown build type: '${build_type}'" >&1
-    echo_red_text "Usage: $0 apk|bundle" >&1
+    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
 
@@ -48,8 +40,42 @@ fi
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 
-# Configure our build target
-source "${IRONFOX_ENV_TARGET}"
+# Set up target parameters
+## (NOTE: IRONFOX_TARGET_ABI is exported here for use by `ci-build.sh`)
+case "$1" in
+arm64)
+    # arm64-v8a
+    export IRONFOX_TARGET_ARCH='arm64'
+    export IRONFOX_TARGET_ABI='arm64-v8a'
+    IRONFOX_TARGET_PRETTY='ARM64'
+    IRONFOX_TARGET_RUST='arm64'
+    ;;
+arm)
+    # armeabi-v7a
+    export IRONFOX_TARGET_ARCH='arm'
+    export IRONFOX_TARGET_ABI='armeabi-v7a'
+    IRONFOX_TARGET_PRETTY='ARM'
+    IRONFOX_TARGET_RUST='arm'
+    ;;
+x86_64)
+    # x86_64
+    export IRONFOX_TARGET_ARCH='x86_64'
+    export IRONFOX_TARGET_ABI='x86_64'
+    IRONFOX_TARGET_PRETTY='x86_64'
+    IRONFOX_TARGET_RUST='x86_64'
+    ;;
+bundle)
+    # arm64-v8a, armeabi-v7a, and x86_64
+    export IRONFOX_TARGET_ARCH='bundle'
+    export IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
+    IRONFOX_TARGET_PRETTY='Bundle'
+    IRONFOX_TARGET_RUST='arm64,arm,x86_64'
+    ;;
+*)
+    echo_red_text "Unknown build variant: '$1'" >&2
+    exit 1
+    ;;
+esac
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     source "${IRONFOX_ENV_FDROID}"
@@ -141,7 +167,7 @@ fi
 
 cp -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
 
-"${IRONFOX_SED}" -i -e "s/include \".*\"/include ${IRONFOX_TARGET_ABI}/" "${IRONFOX_FENIX}/app/build.gradle"
+"${IRONFOX_SED}" -i -e "s/include \".*\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle"
 
 if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
     rm -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
@@ -281,12 +307,12 @@ popd
 # Fenix
 pushd "${IRONFOX_FENIX}"
 
-if [[ "${build_type}" == "apk" ]]; then
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:assembleRelease
-    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
-elif [[ "${build_type}" == "bundle" ]]; then
+if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:bundleRelease -Paab
     cp -vr "$(ls "${IRONFOX_GECKO}"/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/*.aab)" "${IRONFOX_OUTPUTS_AAB}/"
+else
+    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:assembleRelease
+    cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
 fi
 
 popd

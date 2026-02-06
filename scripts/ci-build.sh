@@ -17,16 +17,12 @@ echo_green_text() {
 
 case "${BUILD_VARIANT}" in
 arm)
-    BUILD_TYPE='apk'
     ;;
 x86_64)
-    BUILD_TYPE='apk'
     ;;
 arm64)
-    BUILD_TYPE='apk'
     ;;
 bundle)
-    BUILD_TYPE='bundle'
     ;;
 *)
     echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
@@ -52,9 +48,9 @@ mkdir -vp "${AAR_ARTIFACTS}"
 bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
 
 # Prepare sources
-bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" "${BUILD_VARIANT}"
+bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
-if [[ "${BUILD_TYPE}" == 'bundle' ]]; then
+if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
     export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
     export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
@@ -67,15 +63,12 @@ export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m
 export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
 
 # Build
-bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_TYPE}"
+bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-# Configure our build target
-source "${IRONFOX_ENV_TARGET}"
-
-if [[ "${BUILD_TYPE}" == "apk" ]]; then
+if [[ "${BUILD_VARIANT}" == "apk" ]]; then
 
     # Copy GeckoView AAR archives
     if [[ "${BUILD_VARIANT}" == 'arm' ]]; then
@@ -98,7 +91,7 @@ if [[ "${BUILD_TYPE}" == "apk" ]]; then
       "${APK_IN}"
 fi
 
-if [[ "${BUILD_TYPE}" == "bundle" ]]; then
+if [[ "${BUILD_VARIANT}" == "bundle" ]]; then
     # Build signed APK set
     AAB_IN="$(ls "${IRONFOX_OUTPUTS_AAB}"/*.aab)"
     APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"

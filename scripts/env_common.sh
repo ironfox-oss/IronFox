@@ -22,10 +22,6 @@ export IRONFOX_SCRIPTS="${IRONFOX_ROOT}/scripts"
 IRONFOX_ENV_DEFAULTS="${IRONFOX_SCRIPTS}/env_defaults.sh"
 export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 
-## For build target configuration
-export IRONFOX_ENV_TARGET="${IRONFOX_SCRIPTS}/env_target.sh"
-export IRONFOX_ENV_TARGET_HELPERS="${IRONFOX_SCRIPTS}/env_target_helpers.sh"
-
 # Build directory
 export IRONFOX_BUILD="${IRONFOX_ROOT}/build"
 

@@ -59,11 +59,6 @@ function apply_overlay() {
     done
 }
 
-if [ -z "${1+x}" ]; then
-    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
-    exit 1
-fi
-
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     source "${IRONFOX_ENV_FDROID}"
 fi
@@ -373,38 +368,6 @@ mkdir -vp app/src/main/assets/wallpapers/firey-red
 # Display proper name and description for wallpaper collection
 "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_title|R.string.wallpaper_collection_fennec|' app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
 "${IRONFOX_SED}" -i -e 's|R.string.wallpaper_artist_series_description_with_learn_more|R.string.wallpaper_collection_fennec_description|' app/src/main/java/org/mozilla/fenix/settings/wallpaper/WallpaperSettings.kt
-
-# Set up target parameters
-case "$1" in
-arm64)
-    # APK for arm64-v8a
-    IRONFOX_TARGET_ARCH='arm64'
-    ;;
-arm)
-    # APK for armeabi-v7a
-    IRONFOX_TARGET_ARCH='arm'
-    ;;
-x86_64)
-    # APK for x86_64
-    IRONFOX_TARGET_ARCH='x86_64'
-    ;;
-bundle)
-    # AAB for arm64-v8a, armeabi-v7a, and x86_64
-    IRONFOX_TARGET_ARCH='bundle'
-    ;;
-*)
-    echo "Unknown build variant: '$1'" >&2
-    exit 1
-    ;;
-esac
-
-# Write env_target.sh
-echo "Writing ${IRONFOX_ENV_TARGET}..."
-cat > "${IRONFOX_ENV_TARGET}" << EOF
-export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
-
-source "\${IRONFOX_ENV_TARGET_HELPERS}"
-EOF
 
 # Apply Fenix overlay
 apply_overlay "${IRONFOX_FENIX_OVERLAY}/"
