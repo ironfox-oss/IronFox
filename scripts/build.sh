@@ -256,6 +256,9 @@ echo_green_text "Running ${IRONFOX_MACH} package-multi-locale..."
 
 export MOZ_CHROME_MULTILOCALE="${IRONFOX_GECKO_LOCALES}"
 
+echo_green_text "Running '${IRONFOX_GRADLE}' '${IRONFOX_GRADLE_FLAGS}' -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
+"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
+
 if [ "${IRONFOX_TARGET_ARCH}" != "bundle" ]; then
     # Create GeckoView AAR archives
     MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
