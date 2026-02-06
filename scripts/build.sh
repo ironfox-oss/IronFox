@@ -245,6 +245,8 @@ popd
 # Gecko (Firefox)
 pushd "${IRONFOX_GECKO}"
 
+echo_green_text "Running ${IRONFOX_MACH} configure..."
+"${IRONFOX_MACH}" configure
 echo_green_text "Running ${IRONFOX_MACH} build..."
 "${IRONFOX_MACH}" build
 echo_green_text "Running ${IRONFOX_MACH} package..."
@@ -254,18 +256,15 @@ echo_green_text "Running ${IRONFOX_MACH} package-multi-locale..."
 
 export MOZ_CHROME_MULTILOCALE="${IRONFOX_GECKO_LOCALES}"
 
-echo_green_text "Running '${IRONFOX_GRADLE}' '${IRONFOX_GRADLE_FLAGS}' -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal..."
-"${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial -x javadocRelease :geckoview:publishReleasePublicationToMavenLocal
-
-if [ "${IRONFOX_TARGET_ARCH_MOZ}" != "bundle" ]; then
+if [ "${IRONFOX_TARGET_ARCH}" != "bundle" ]; then
     # Create GeckoView AAR archives
     MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
     unset MOZ_AUTOMATION
-    if [[ "${IRONFOX_TARGET_ARCH_MOZ}" == 'arm' ]]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]]; then
         cp -vf "${IRONFOX_GV_AAR_ARM}" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-    elif [[ "${IRONFOX_TARGET_ARCH_MOZ}" == 'arm64' ]]; then
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
         cp -vf "${IRONFOX_GV_AAR_ARM64}" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-    elif [[ "${IRONFOX_TARGET_ARCH_MOZ}" == 'x86_64' ]]; then
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
         cp -vf "${IRONFOX_GV_AAR_X86_64}" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
     fi
 fi
