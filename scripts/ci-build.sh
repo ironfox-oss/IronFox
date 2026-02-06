@@ -16,13 +16,17 @@ echo_green_text() {
 }
 
 case "${BUILD_VARIANT}" in
+arm64)
+    IRONFOX_TARGET_ABI='arm64-v8a'
+    ;;
 arm)
+    IRONFOX_TARGET_ABI='armeabi-v7a'
     ;;
 x86_64)
-    ;;
-arm64)
+    IRONFOX_TARGET_ABI='x86_64'
     ;;
 bundle)
+    IRONFOX_TARGET_ABI='bundle'
     ;;
 *)
     echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2

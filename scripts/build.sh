@@ -41,33 +41,32 @@ bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 
 # Set up target parameters
-## (NOTE: IRONFOX_TARGET_ABI is exported here for use by `ci-build.sh`)
 case "$1" in
 arm64)
     # arm64-v8a
     export IRONFOX_TARGET_ARCH='arm64'
-    export IRONFOX_TARGET_ABI='arm64-v8a'
+    IRONFOX_TARGET_ABI='arm64-v8a'
     IRONFOX_TARGET_PRETTY='ARM64'
     IRONFOX_TARGET_RUST='arm64'
     ;;
 arm)
     # armeabi-v7a
     export IRONFOX_TARGET_ARCH='arm'
-    export IRONFOX_TARGET_ABI='armeabi-v7a'
+    IRONFOX_TARGET_ABI='armeabi-v7a'
     IRONFOX_TARGET_PRETTY='ARM'
     IRONFOX_TARGET_RUST='arm'
     ;;
 x86_64)
     # x86_64
     export IRONFOX_TARGET_ARCH='x86_64'
-    export IRONFOX_TARGET_ABI='x86_64'
+    IRONFOX_TARGET_ABI='x86_64'
     IRONFOX_TARGET_PRETTY='x86_64'
     IRONFOX_TARGET_RUST='x86_64'
     ;;
 bundle)
     # arm64-v8a, armeabi-v7a, and x86_64
     export IRONFOX_TARGET_ARCH='bundle'
-    export IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
+    IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
     IRONFOX_TARGET_PRETTY='Bundle'
     IRONFOX_TARGET_RUST='arm64,arm,x86_64'
     ;;
