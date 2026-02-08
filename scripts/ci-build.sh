@@ -74,7 +74,7 @@ source "${IRONFOX_VERSIONS}"
 
 if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
     # Build signed APK set
-    AAB_IN="$(ls "${IRONFOX_OUTPUTS_AAB}"/*.aab)"
+    AAB_IN="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
     APKS_OUT="${IRONFOX_OUTPUTS_APKS}/IronFox-v${IRONFOX_VERSION}.apks"
     "${IRONFOX_BUNDLETOOL}" build-apks \
         --bundle="${AAB_IN}" \
