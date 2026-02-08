@@ -56,9 +56,9 @@ bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
 if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GV_AAR_ARM64_ARTIFACT}"
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GV_AAR_ARM_ARTIFACT}"
+    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GV_AAR_X86_64_ARTIFACT}"
 fi
 
 # Set the build date to the date of commmit to ensure that the
@@ -85,10 +85,10 @@ if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
         --key-pass="pass:${KEYSTORE_KEY_PASS}"
 else
     # Copy GeckoView AAR archives
-    if [[ "${BUILD_VARIANT}" == 'arm' ]]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_GV_AAR_ARM_ARTIFACT}"
-    elif [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
+    if [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
         cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM64}" "${IRONFOX_GV_AAR_ARM64_ARTIFACT}"
+    elif [[ "${BUILD_VARIANT}" == 'arm' ]]; then
+        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_GV_AAR_ARM_ARTIFACT}"
     elif [[ "${BUILD_VARIANT}" == 'x86_64' ]]; then
         cp -vf "${IRONFOX_OUTPUTS_GV_AAR_X86_64}" "${IRONFOX_GV_AAR_X86_64_ARTIFACT}"
     fi
