@@ -79,10 +79,10 @@ if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
     "${IRONFOX_BUNDLETOOL}" build-apks \
         --bundle="${AAB_IN}" \
         --output="${APKS_OUT}" \
-        --ks="${KEYSTORE}" \
-        --ks-pass="pass:${KEYSTORE_PASS}" \
-        --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
-        --key-pass="pass:${KEYSTORE_KEY_PASS}"
+        --ks="${IRONFOX_KEYSTORE}" \
+        --ks-pass="pass:${IRONFOX_KEYSTORE_PASS}" \
+        --ks-key-alias="${IRONFOX_KEYSTORE_KEY_ALIAS}" \
+        --key-pass="pass:${IRONFOX_KEYSTORE_KEY_PASS}"
 else
     # Copy GeckoView AAR archives
     if [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
@@ -97,10 +97,10 @@ else
     APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
     APK_OUT="${IRONFOX_OUTPUTS_APK}/IronFox-v${IRONFOX_VERSION}-${IRONFOX_TARGET_ABI}.apk"
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
-      --ks="${KEYSTORE}" \
-      --ks-pass="pass:${KEYSTORE_PASS}" \
-      --ks-key-alias="${KEYSTORE_KEY_ALIAS}" \
-      --key-pass="pass:${KEYSTORE_KEY_PASS}" \
+      --ks="${IRONFOX_KEYSTORE}" \
+      --ks-pass="pass:${IRONFOX_KEYSTORE_PASS}" \
+      --ks-key-alias="${IRONFOX_KEYSTORE_KEY_ALIAS}" \
+      --key-pass="pass:${IRONFOX_KEYSTORE_KEY_PASS}" \
       --out="${APK_OUT}" \
       "${APK_IN}"
 fi

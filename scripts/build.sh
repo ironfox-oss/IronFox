@@ -76,6 +76,16 @@ bundle)
     ;;
 esac
 
+if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
+    echo_red_text "IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
+    read -p "Do you want to continue [y/N] " -n 1 -r
+    echo ""
+    if ! [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+        echo_red_text "Aborting..."
+        exit 1
+    fi
+fi
+
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     source "${IRONFOX_ENV_FDROID}"
 fi

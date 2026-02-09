@@ -89,16 +89,6 @@ if [[ -z "${IRONFOX_VERSION}" ]]; then
     exit 1
 fi
 
-if [[ -z "${SB_GAPI_KEY_FILE+x}" ]]; then
-    echo_red_text "SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
-    read -p "Do you want to continue [y/N] " -n 1 -r
-    echo ""
-    if ! [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-        echo_red_text "Aborting..."
-        exit 1
-    fi
-fi
-
 echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY}"
 
 # Create build directories

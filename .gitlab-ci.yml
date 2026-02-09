@@ -3,13 +3,13 @@
     - mkdir -p "${IRONFOX_GRADLE_HOME}"
     - mkdir -p "${IRONFOX_CARGO_HOME}"
     - mkdir -p /opt/IronFox
-    - echo "${SB_GAPI_KEY}" > "${SB_GAPI_KEY_FILE}"
+    - echo "${IRONFOX_SB_GAPI_KEY}" > "${IRONFOX_SB_GAPI_KEY_FILE}"
     - |
       curl \
         --request GET \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
         "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${KEYSTORE_SECFILEID}/download" \
-        --output "${KEYSTORE}"
+        --output "${IRONFOX_KEYSTORE}"
 
 .build_cache: &build_cache
   - key: cache-cargo-$CI_COMMIT_REF_SLUG
@@ -34,8 +34,8 @@ default:
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
-  KEYSTORE: /opt/IronFox/signing-key.jks
+  IRONFOX_SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
+  IRONFOX_KEYSTORE: /opt/IronFox/signing-key.jks
   IRONFOX_GRADLE_HOME: "${CI_PROJECT_DIR}/.cache/gradle"
   IRONFOX_CARGO_HOME: "${CI_PROJECT_DIR}/.cache/cargo"
   IF_CI_NAME: "IronFox CI"
