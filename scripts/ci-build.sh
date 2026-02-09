@@ -34,6 +34,8 @@ bundle)
     ;;
 esac
 
+export IRONFOX_CI=1
+
 if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     # Target release
     export IRONFOX_RELEASE=1
@@ -60,11 +62,6 @@ if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
     export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GV_AAR_ARM_ARTIFACT}"
     export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GV_AAR_X86_64_ARTIFACT}"
 fi
-
-# Set the build date to the date of commmit to ensure that the
-# MOZ_BUILDID is consistent across CI build jobs
-export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
-export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
 
 # Build
 bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"

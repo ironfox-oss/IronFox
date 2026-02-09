@@ -18,6 +18,18 @@ fi
 # Scripts directory
 export IRONFOX_SCRIPTS="${IRONFOX_ROOT}/scripts"
 
+# Are we in a CI environment?
+IRONFOX_CI_DEFAULT=0
+if [[ -z "${IRONFOX_CI+x}" ]]; then
+    export IRONFOX_CI="${IRONFOX_CI_DEFAULT}"
+fi
+
+## If so, set our CI environment variables
+IRONFOX_ENV_CI="${IRONFOX_SCRIPTS}/env_ci.sh"
+if [ "${IRONFOX_CI}" == 1 ]; then
+    source "${IRONFOX_ENV_CI}"
+fi
+
 # Environment configuration
 IRONFOX_ENV_DEFAULTS="${IRONFOX_SCRIPTS}/env_defaults.sh"
 export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
