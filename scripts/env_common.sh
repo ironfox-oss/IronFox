@@ -73,6 +73,12 @@ export IRONFOX_OUTPUTS_GV_AAR_ARM64="${IRONFOX_OUTPUTS_AAR}/geckoview-arm64-v8a.
 export IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
 export IRONFOX_OUTPUTS_LOGS="${IRONFOX_OUTPUTS}/logs"
 
+# CI artifacts
+export IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
+export IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
+export IRONFOX_APK_ARTIFACTS="${IRONFOX_ARTIFACTS}/apk"
+export IRONFOX_APKS_ARTIFACTS="${IRONFOX_ARTIFACTS}/apks"
+
 # Android SDK
 IRONFOX_ANDROID_SDK_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk"
 if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]]; then
@@ -415,14 +421,6 @@ elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
 else
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT} ${IRONFOX_RUST_FLAGS}"
 fi
-
-export ARTIFACTS="${IRONFOX_ROOT}/artifacts"
-export APK_ARTIFACTS="${ARTIFACTS}/apk"
-export APKS_ARTIFACTS="${ARTIFACTS}/apks"
-export AAR_ARTIFACTS="${ARTIFACTS}/aar"
-export IRONFOX_GV_AAR_ARM_ARTIFACT="${AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
-export IRONFOX_GV_AAR_ARM64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
-export IRONFOX_GV_AAR_X86_64_ARTIFACT="${AAR_ARTIFACTS}/geckoview-x86_64.zip"
 
 # Whether we're building IronFox for release or Nightly/CI (Default)
 IRONFOX_RELEASE_DEFAULT=0

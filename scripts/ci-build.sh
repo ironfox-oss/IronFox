@@ -46,9 +46,9 @@ bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 
 # Create artifact directories
-mkdir -vp "${APK_ARTIFACTS}"
-mkdir -vp "${APKS_ARTIFACTS}"
-mkdir -vp "${AAR_ARTIFACTS}"
+mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
+mkdir -vp "${IRONFOX_APK_ARTIFACTS}"
+mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
 
 # Get sources
 bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
@@ -58,9 +58,9 @@ bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
 if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GV_AAR_ARM64_ARTIFACT}"
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GV_AAR_ARM_ARTIFACT}"
-    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GV_AAR_X86_64_ARTIFACT}"
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
+    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
 fi
 
 # Build
@@ -83,11 +83,11 @@ if [[ "${BUILD_VARIANT}" == 'bundle' ]]; then
 else
     # Copy GeckoView AAR archives
     if [[ "${BUILD_VARIANT}" == 'arm64' ]]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM64}" "${IRONFOX_GV_AAR_ARM64_ARTIFACT}"
+        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
     elif [[ "${BUILD_VARIANT}" == 'arm' ]]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_GV_AAR_ARM_ARTIFACT}"
+        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
     elif [[ "${BUILD_VARIANT}" == 'x86_64' ]]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_X86_64}" "${IRONFOX_GV_AAR_X86_64_ARTIFACT}"
+        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/"
     fi
 
     # Sign APK
