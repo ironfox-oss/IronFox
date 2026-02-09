@@ -446,6 +446,18 @@ if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
     export IRONFOX_NO_PREBUILDS="${IRONFOX_NO_PREBUILDS_DEFAULT}"
 fi
 
+# Have we built Gecko?
+IRONFOX_GECKO_BUILT_DEFAULT=0
+if [[ -z "${IRONFOX_GECKO_BUILT+x}" ]]; then
+    export IRONFOX_GECKO_BUILT="${IRONFOX_GECKO_BUILT_DEFAULT}"
+fi
+
+# Have we packaged Gecko?
+IRONFOX_GECKO_PACKAGED_DEFAULT=0
+if [[ -z "${IRONFOX_GECKO_PACKAGED+x}" ]]; then
+    export IRONFOX_GECKO_PACKAGED="${IRONFOX_GECKO_PACKAGED_DEFAULT}"
+fi
+
 # Set locations for our GeckoView AAR archives
 
 ## Where our GeckoView ARM AAR archive is located within mozilla-central

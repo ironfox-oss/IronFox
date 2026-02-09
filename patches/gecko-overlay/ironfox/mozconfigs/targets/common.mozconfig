@@ -1,0 +1,6 @@
+if [ "${IRONFOX_GECKO_BUILT}" == 1 ] && [ "${IRONFOX_GECKO_PACKAGED}" != 1 ]; then
+    # If Gecko is built, but not packaged, then disable the compile environment - we don't want to build anything at this point
+    ac_add_options --disable-compile-environment
+else
+    . "$topsrcdir/ironfox/mozconfigs/build.mozconfig"
+fi

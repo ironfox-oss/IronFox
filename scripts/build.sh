@@ -254,10 +254,16 @@ popd
 # Gecko (Firefox)
 pushd "${IRONFOX_GECKO}"
 
+export IRONFOX_GECKO_BUILT=0
+export IRONFOX_GECKO_PACKAGED=0
+
 echo_green_text "Running ${IRONFOX_MACH} configure..."
 "${IRONFOX_MACH}" configure
 echo_green_text "Running ${IRONFOX_MACH} build..."
 "${IRONFOX_MACH}" build
+
+export IRONFOX_GECKO_BUILT=1
+
 echo_green_text "Running ${IRONFOX_MACH} package..."
 "${IRONFOX_MACH}" package
 echo_green_text "Running ${IRONFOX_MACH} package-multi-locale..."
@@ -280,6 +286,8 @@ if [ "${IRONFOX_TARGET_ARCH}" != "bundle" ]; then
         cp -vf "${IRONFOX_GV_AAR_X86_64}" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
     fi
 fi
+
+export IRONFOX_GECKO_PACKAGED=1
 
 popd
 
