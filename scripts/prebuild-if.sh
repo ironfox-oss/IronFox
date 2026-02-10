@@ -679,6 +679,10 @@ rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js tool
 # Remove the Clear Key CDM
 "${IRONFOX_SED}" -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' mobile/android/installer/package-manifest.in
 
+# Remove OpenAI components
+rm -vf toolkit/components/ml/content/backends/OpenAIPipeline.mjs
+rm -vrf toolkit/components/ml/vendor/openai
+
 # No-op AMO collections/recommendations
 "${IRONFOX_SED}" -i -e 's/DEFAULT_COLLECTION_NAME = ".*"/DEFAULT_COLLECTION_NAME = ""/' mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt
 "${IRONFOX_SED}" -i 's|7e8d6dc651b54ab385fb8791bf9dac||g' mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/amo/AMOAddonsProvider.kt

@@ -520,6 +520,13 @@ patches:
     effect: "Users are provided with fingerprinting protection that works as expected."
     category: "Privacy"
 
+  - file: "gecko-remove-openai.patch"
+    name: "Remove OpenAI Backend"
+    description: "Removes the OpenAI backend from Mozilla's ML (machine learning) component."
+    reason: "To improve privacy for users (and reduce attack surface) by removing integration with a privacy-invasive/unwanted LLM."
+    effect: "Users are provided with a more private browsing experience."
+    category: "Privacy"
+
   # Security
   - file: "gecko-certificate-pinning.patch"
     name: "Certificate Pinning"

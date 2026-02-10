@@ -1,0 +1,108 @@
+From 8ca2d1361a3f0a36f71b7e692319b800cf5c11c8 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Wed, 4 Feb 2026 04:27:07 +0000
+Subject: [PATCH] fix: Remove OpenAI backend
+
+Removes the OpenAI backend from Mozilla's ML (machine learning) component.
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ toolkit/components/aboutinference/content/aboutInference.js | 4 ++--
+ toolkit/components/ml/content/EngineProcess.sys.mjs         | 2 +-
+ toolkit/components/ml/content/backends/Pipeline.mjs         | 6 +++---
+ toolkit/components/ml/jar.mn                                | 4 ++--
+ toolkit/content/license.html                                | 2 +-
+ 5 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/toolkit/components/aboutinference/content/aboutInference.js b/toolkit/components/aboutinference/content/aboutInference.js
+index 01533ad4c9f2..041bdcaeaeaf 100644
+--- a/toolkit/components/aboutinference/content/aboutInference.js
++++ b/toolkit/components/aboutinference/content/aboutInference.js
+@@ -381,7 +381,7 @@ const INFERENCE_PAD_PRESETS = {
+     device: "cpu",
+     backend: "onnx",
+   },
+-  openai: {
++/*  openai: {
+     inputArgs: [
+       {
+         role: "system",
+@@ -400,7 +400,7 @@ const INFERENCE_PAD_PRESETS = {
+     apiKey: "ollama",
+     baseURL: "http://localhost:11434/v1",
+     backend: "openai",
+-  },
++  }, */
+ };
+ 
+ const PREDEFINED = Object.keys(INFERENCE_PAD_PRESETS);
+diff --git a/toolkit/components/ml/content/EngineProcess.sys.mjs b/toolkit/components/ml/content/EngineProcess.sys.mjs
+index 5dc3e3daa1eb..c3b9129c9eae 100644
+--- a/toolkit/components/ml/content/EngineProcess.sys.mjs
++++ b/toolkit/components/ml/content/EngineProcess.sys.mjs
+@@ -24,7 +24,7 @@ export const BACKENDS = Object.freeze({
+   onnxNative: "onnx-native",
+   llamaCpp: "llama.cpp",
+   bestLlama: "best-llama",
+-  openai: "openai",
++//  openai: "openai",
+   staticEmbeddings: "static-embeddings",
+ });
+ 
+diff --git a/toolkit/components/ml/content/backends/Pipeline.mjs b/toolkit/components/ml/content/backends/Pipeline.mjs
+index a4b997e9bc4d..4565f3e097be 100644
+--- a/toolkit/components/ml/content/backends/Pipeline.mjs
++++ b/toolkit/components/ml/content/backends/Pipeline.mjs
+@@ -12,7 +12,7 @@ ChromeUtils.defineESModuleGetters(
+     LlamaCppPipeline:
+       "chrome://global/content/ml/backends/LlamaCppPipeline.mjs",
+     PipelineOptions: "chrome://global/content/ml/EngineProcess.sys.mjs",
+-    OpenAIPipeline: "chrome://global/content/ml/backends/OpenAIPipeline.mjs",
++//    OpenAIPipeline: "chrome://global/content/ml/backends/OpenAIPipeline.mjs",
+     StaticEmbeddingsPipeline:
+       "chrome://global/content/ml/backends/StaticEmbeddingsPipeline.mjs",
+   },
+@@ -48,9 +48,9 @@ export async function getBackend(consumer, wasm, options) {
+     case "llama.cpp":
+       factory = lazy.LlamaCppPipeline.initialize;
+       break;
+-    case "openai":
++/*    case "openai":
+       factory = lazy.OpenAIPipeline.initialize;
+-      break;
++      break; */
+     case "static-embeddings":
+       factory = lazy.StaticEmbeddingsPipeline.initialize;
+       break;
+diff --git a/toolkit/components/ml/jar.mn b/toolkit/components/ml/jar.mn
+index 7dbb7c5afc7b..b2f07fd5bdcf 100644
+--- a/toolkit/components/ml/jar.mn
++++ b/toolkit/components/ml/jar.mn
+@@ -24,9 +24,9 @@ toolkit.jar:
+     content/global/ml/backends/LlamaPipeline.mjs          (content/backends/LlamaPipeline.mjs)
+     content/global/ml/ThomSample.mjs                      (content/ThomSample.mjs)
+     content/global/ml/backends/LlamaCppPipeline.mjs       (content/backends/LlamaCppPipeline.mjs)
+-    content/global/ml/backends/OpenAIPipeline.mjs         (content/backends/OpenAIPipeline.mjs)
++#    content/global/ml/backends/OpenAIPipeline.mjs         (content/backends/OpenAIPipeline.mjs)
+     content/global/ml/backends/StaticEmbeddingsPipeline.mjs (content/backends/StaticEmbeddingsPipeline.mjs)
+-    content/global/ml/openai.mjs                          (vendor/openai/dist/openai.mjs)
++#    content/global/ml/openai.mjs                          (vendor/openai/dist/openai.mjs)
+     content/global/ml/MLTelemetry.sys.mjs                 (MLTelemetry.sys.mjs)
+ #ifdef NIGHTLY_BUILD
+     content/global/ml/ort.webgpu-dev.mjs        	        (vendor/ort.webgpu-dev.mjs)
+diff --git a/toolkit/content/license.html b/toolkit/content/license.html
+index a7403c9241da..5ec2326bfa00 100644
+--- a/toolkit/content/license.html
++++ b/toolkit/content/license.html
+@@ -1531,7 +1531,7 @@ product.
+                 <li><code>third_party/perfetto/</code></li>
+ #endif
+                 <li><code>third_party/rust/calendrical_calculations</code></li>
+-                <li><code>toolkit/components/ml/vendor/openai/dist/openai.mjs</code></li>
++                <!-- <li><code>toolkit/components/ml/vendor/openai/dist/openai.mjs</code></li> -->
+                 <li><code>toolkit/components/ml/vendor/transformers.js</code></li>
+ #ifdef NIGHTLY_BUILD
+                 <li><code>toolkit/components/ml/vendor/transformers-dev.js</code></li>
+-- 
+2.52.0
+
