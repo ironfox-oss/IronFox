@@ -663,19 +663,17 @@ build_as
 if [ "${IRONFOX_CI}" == 1 ]; then
     if [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
         build_gecko_arm64
-        exit 1
     elif [ "${IRONFOX_TARGET_ARCH}" == 'arm' ]; then
         build_gecko_arm
-        exit 1
     elif [ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]; then
         build_gecko_x86_64
-        exit 1
     elif [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
         build_gecko_bundle
         build_ac
         build_up_ac
         build_ac_cont
         build_fenix
+        echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
     fi
 else
     # If we're not in CI, just build everything like usual
@@ -684,6 +682,5 @@ else
     build_up_ac
     build_ac_cont
     build_fenix
+    echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
 fi
-
-echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
