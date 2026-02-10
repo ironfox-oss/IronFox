@@ -74,13 +74,39 @@ export IRONFOX_OUTPUTS_APKS="${IRONFOX_OUTPUTS}/apks"
 export IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.zip"
 export IRONFOX_OUTPUTS_GV_AAR_ARM64="${IRONFOX_OUTPUTS_AAR}/geckoview-arm64-v8a.zip"
 export IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
-export IRONFOX_OUTPUTS_LOGS="${IRONFOX_OUTPUTS}/logs"
 
 # CI artifacts
 export IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
 export IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
 export IRONFOX_APK_ARTIFACTS="${IRONFOX_ARTIFACTS}/apk"
 export IRONFOX_APKS_ARTIFACTS="${IRONFOX_ARTIFACTS}/apks"
+export IRONFOX_LOG_ARTIFACTS="${IRONFOX_ARTIFACTS}/logs"
+
+# Should we create a log file for build.sh? (Default)
+IRONFOX_LOG_BUILD_DEFAULT=1
+if [[ -z "${IRONFOX_LOG_BUILD+x}" ]]; then
+    export IRONFOX_LOG_BUILD="${IRONFOX_LOG_BUILD_DEFAULT}"
+fi
+
+# Should we create a log file for prebuild.sh? (Default)
+IRONFOX_LOG_PREBUILD_DEFAULT=1
+if [[ -z "${IRONFOX_LOG_PREBUILD+x}" ]]; then
+    export IRONFOX_LOG_PREBUILD="${IRONFOX_LOG_PREBUILD_DEFAULT}"
+fi
+
+# Should we create a log file for get_sources.sh? (Default)
+IRONFOX_LOG_SOURCES_DEFAULT=1
+if [[ -z "${IRONFOX_LOG_SOURCES+x}" ]]; then
+    export IRONFOX_LOG_SOURCES="${IRONFOX_LOG_SOURCES_DEFAULT}"
+fi
+
+# Directory where we should store log files (if logging is desired)
+IRONFOX_LOG_DIR_DEFAULT="${IRONFOX_BUILD}/logs"
+if [ "${IRONFOX_CI}" == 1 ]; then
+    export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
+elif [[ -z "${IRONFOX_LOG_DIR+x}" ]]; then
+    export IRONFOX_LOG_DIR="${IRONFOX_LOG_DIR_DEFAULT}"
+fi
 
 # CI-specific build variables
 # These variables are set for CI primarily to allow parallel builds (for specific stages)
@@ -520,9 +546,9 @@ if [[ -z "${IRONFOX_KEYSTORE_PASS_FILE+x}" ]]; then
 fi
 
 # Alias of the Android keystore that we should use
-IRONFOX_KEYSTORE_ALIAS_DEFAULT='null'
-if [[ -z "${IRONFOX_KEYSTORE_ALIAS+x}" ]]; then
-    export IRONFOX_KEYSTORE_ALIAS="${IRONFOX_KEYSTORE_ALIAS_DEFAULT}"
+IRONFOX_KEYSTORE_KEY_ALIAS_DEFAULT='null'
+if [[ -z "${IRONFOX_KEYSTORE_KEY_ALIAS+x}" ]]; then
+    export IRONFOX_KEYSTORE_KEY_ALIAS="${IRONFOX_KEYSTORE_KEY_ALIAS_DEFAULT}"
 fi
 
 # Location to the Android keystore key pass file that we should use

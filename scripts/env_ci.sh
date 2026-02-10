@@ -2,7 +2,7 @@
 
 # Android keystore/app signing
 export IRONFOX_KEYSTORE='/opt/IronFox/signing-key.jks'
-export IRONFOX_KEYSTORE_ALIAS='ironfox'
+export IRONFOX_KEYSTORE_KEY_ALIAS='ironfox'
 export IRONFOX_KEYSTORE_KEY_PASS_FILE='/opt/IronFox/signing-key.pass'
 export IRONFOX_KEYSTORE_PASS_FILE='/opt/IronFox/keystore.pass'
 
