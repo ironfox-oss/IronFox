@@ -31,7 +31,7 @@ if [ "${IRONFOX_LOG_BUILD}" == 1 ]; then
     # Ensure our log directory exists
     mkdir -vp "${IRONFOX_LOG_DIR}"
 
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" >> "${BUILD_LOG_FILE}" 2>&1
+    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
 else
     bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}"
 fi

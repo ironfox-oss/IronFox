@@ -19,7 +19,7 @@ if [ "${IRONFOX_LOG_PREBUILD}" == 1 ]; then
     # Ensure our log directory exists
     mkdir -vp "${IRONFOX_LOG_DIR}"
 
-    bash -x "${IRONFOX_SCRIPTS}/prebuild-if.sh" >> "${PREBUILD_LOG_FILE}" 2>&1
+    bash -x "${IRONFOX_SCRIPTS}/prebuild-if.sh" > >(tee -a "${PREBUILD_LOG_FILE}") 2>&1
 else
     bash -x "${IRONFOX_SCRIPTS}/prebuild-if.sh"
 fi

@@ -19,7 +19,7 @@ if [ "${IRONFOX_LOG_SOURCES}" == 1 ]; then
     # Ensure our log directory exists
     mkdir -vp "${IRONFOX_LOG_DIR}"
 
-    bash -x "${IRONFOX_SCRIPTS}/get_sources-if.sh" >> "${SOURCES_LOG_FILE}" 2>&1
+    bash -x "${IRONFOX_SCRIPTS}/get_sources-if.sh" > >(tee -a "${SOURCES_LOG_FILE}") 2>&1
 else
     bash -x "${IRONFOX_SCRIPTS}/get_sources-if.sh"
 fi
