@@ -40,12 +40,12 @@ function sign_apk() {
 }
 
 function sign_bundle() {
-    AAB_IN="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
+    AAB_IN="${IRONFOX_OUTPUTS_FENIX_AAB}"
 
     if [ "${IRONFOX_CI}" == 1 ]; then
         APKS_OUT="${IRONFOX_APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
     else
-        APKS_OUT="${IRONFOX_OUTPUTS_APKS}/ironfox-${IRONFOX_CHANNEL}.apks"
+        APKS_OUT="${IRONFOX_OUTPUTS_FENIX_APKS}"
     fi
 
     "${IRONFOX_BUNDLETOOL}" build-apks \
@@ -83,8 +83,20 @@ if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
     sign_bundle
     echo_green_text 'SUCCESS: Created signed bundleset'
 else
-    # Sign APK
-    echo_red_text "Signing APK (${IRONFOX_TARGET_PRETTY})..."
-    sign_apk "${IRONFOX_TARGET_ABI}"
-    echo_green_text "SUCCESS: Signed APK (${IRONFOX_TARGET_PRETTY})"
+    if [ -f "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}" ]; then
+        # Sign ARM64 APK
+        echo_red_text 'Signing APK (ARM64)...'
+        sign_apk 'arm64-v8a'
+        echo_green_text 'SUCCESS: Signed APK (ARM64)'
+    elif [ -f "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}" ]; then
+        # Sign ARM APK
+        echo_red_text 'Signing APK (ARM)...'
+        sign_apk 'armeabi-v7a'
+        echo_green_text 'SUCCESS: Signed APK (ARM)'
+    elif [ -f "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}" ]; then
+        # Sign x86_64 APK
+        echo_red_text 'Signing APK (x86_64)...'
+        sign_apk 'x86_64'
+        echo_green_text 'SUCCESS: Signed APK (x86_64)'
+    fi
 fi

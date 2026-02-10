@@ -175,7 +175,7 @@ build-aar:
 build-final:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
-  timeout: 4h
+  timeout: 2h
   needs:
     - job: "build-docker"
       optional: true

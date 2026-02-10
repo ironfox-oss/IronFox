@@ -7,6 +7,10 @@ echo_red_text() {
 	echo -e "\033[31m$1\033[0m"
 }
 
+echo_green_text() {
+	echo -e "\033[32m$1\033[0m"
+}
+
 if [ -z "${1+x}" ]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
@@ -36,7 +40,18 @@ else
     bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}"
 fi
 
-# Sign IronFox
-if [ "${IRONFOX_SIGN}" == 1 ]; then
+function sign_ironfox() {
+    echo_red_text 'Signing IronFox...'
     bash "${IRONFOX_SCRIPTS}/sign.sh"
+    echo_green_text 'SUCCESS: Signed IronFox'
+}
+
+# Sign IronFox
+echo_red_text 'Signing IronFox...'
+if [ "${IRONFOX_CI}" == 1 ]; then
+    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+        sign_ironfox
+    fi
+elif [ "${IRONFOX_SIGN}" == 1 ]; then
+    sign_ironfox
 fi

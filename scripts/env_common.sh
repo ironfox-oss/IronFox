@@ -67,13 +67,40 @@ if [[ -z "${IRONFOX_OUTPUTS+x}" ]]; then
     export IRONFOX_OUTPUTS="${IRONFOX_OUTPUTS_DEFAULT}"
 fi
 
+# Whether we're building IronFox for release or Nightly/CI (Default)
+IRONFOX_RELEASE_DEFAULT=0
+if [[ -z "${IRONFOX_RELEASE+x}" ]]; then
+    export IRONFOX_RELEASE="${IRONFOX_RELEASE_DEFAULT}"
+fi
+
+# Set release channel
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+    export IRONFOX_CHANNEL='release'
+    export IRONFOX_CHANNEL_PRETTY='Release'
+else
+    export IRONFOX_CHANNEL='nightly'
+    export IRONFOX_CHANNEL_PRETTY='Nightly'
+fi
+
 export IRONFOX_OUTPUTS_AAB="${IRONFOX_OUTPUTS}/aab"
 export IRONFOX_OUTPUTS_AAR="${IRONFOX_OUTPUTS}/aar"
 export IRONFOX_OUTPUTS_APK="${IRONFOX_OUTPUTS}/apk"
 export IRONFOX_OUTPUTS_APKS="${IRONFOX_OUTPUTS}/apks"
+
 export IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.zip"
 export IRONFOX_OUTPUTS_GV_AAR_ARM64="${IRONFOX_OUTPUTS_AAR}/geckoview-arm64-v8a.zip"
 export IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
+
+export IRONFOX_OUTPUTS_FENIX_ARM64_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-arm64-v8a-signed.apk"
+export IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-arm64-v8a-unsigned.apk"
+export IRONFOX_OUTPUTS_FENIX_ARM_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-armeabi-v7a-signed.apk"
+export IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-armeabi-v7a-unsigned.apk"
+export IRONFOX_OUTPUTS_FENIX_X86_64_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-x86_64-signed.apk"
+export IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-x86_64-unsigned.apk"
+export IRONFOX_OUTPUTS_FENIX_UNIVERSAL_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-signed.apk"
+export IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
+export IRONFOX_OUTPUTS_FENIX_AAB="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
+export IRONFOX_OUTPUTS_FENIX_APKS="${IRONFOX_OUTPUTS_APKS}/ironfox-${IRONFOX_CHANNEL}.apks"
 
 # CI artifacts
 export IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
@@ -473,21 +500,6 @@ else
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT} ${IRONFOX_RUST_FLAGS}"
 fi
 
-# Whether we're building IronFox for release or Nightly/CI (Default)
-IRONFOX_RELEASE_DEFAULT=0
-if [[ -z "${IRONFOX_RELEASE+x}" ]]; then
-    export IRONFOX_RELEASE="${IRONFOX_RELEASE_DEFAULT}"
-fi
-
-# Set release channel
-if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-    export IRONFOX_CHANNEL='release'
-    export IRONFOX_CHANNEL_PRETTY='Release'
-else
-    export IRONFOX_CHANNEL='nightly'
-    export IRONFOX_CHANNEL_PRETTY='Nightly'
-fi
-
 # Whether we should use our prebuilt libraries (Default)
 ## (This is currently uniffi-bindgen and WASI SDK for us)
 IRONFOX_NO_PREBUILDS_DEFAULT=0
@@ -565,18 +577,18 @@ else
     export IRONFOX_SIGN="${IRONFOX_SIGN_DEFAULT}"
 fi
 
-# Set locations for our GeckoView AAR archives
-
-## Where our GeckoView ARM AAR archive is located within mozilla-central
-IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
-if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
-    export IRONFOX_GV_AAR_ARM="${IRONFOX_GV_AAR_ARM_DEFAULT}"
-fi
+# Locations for our GeckoView AAR archives
 
 ## Where our GeckoView ARM64 AAR archive is located within mozilla-central
 IRONFOX_GV_AAR_ARM64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_ARM64+x}" ]]; then
     export IRONFOX_GV_AAR_ARM64="${IRONFOX_GV_AAR_ARM64_DEFAULT}"
+fi
+
+## Where our GeckoView ARM AAR archive is located within mozilla-central
+IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
+if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
+    export IRONFOX_GV_AAR_ARM="${IRONFOX_GV_AAR_ARM_DEFAULT}"
 fi
 
 ## Where our GeckoView x86_64 AAR archive is located within mozilla-central
