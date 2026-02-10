@@ -34,6 +34,9 @@ fi
 IRONFOX_ENV_DEFAULTS="${IRONFOX_SCRIPTS}/env_defaults.sh"
 export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 
+# Build environment configuration
+export IRONFOX_ENV_BUILD="${IRONFOX_SCRIPTS}/env_build.sh"
+
 # Build directory
 export IRONFOX_BUILD="${IRONFOX_ROOT}/build"
 
@@ -78,6 +81,28 @@ export IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
 export IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
 export IRONFOX_APK_ARTIFACTS="${IRONFOX_ARTIFACTS}/apk"
 export IRONFOX_APKS_ARTIFACTS="${IRONFOX_ARTIFACTS}/apks"
+
+# CI-specific build variables
+# These variables are set for CI primarily to allow parallel builds (for specific stages)
+IRONFOX_CI_BUILD_GECKO_ARM64_DEFAULT=0
+if [[ -z "${IRONFOX_CI_BUILD_GECKO_ARM64+x}" ]]; then
+    export IRONFOX_CI_BUILD_GECKO_ARM64="${IRONFOX_CI_BUILD_GECKO_ARM64_DEFAULT}"
+fi
+
+IRONFOX_CI_BUILD_GECKO_ARM_DEFAULT=0
+if [[ -z "${IRONFOX_CI_BUILD_GECKO_ARM+x}" ]]; then
+    export IRONFOX_CI_BUILD_GECKO_ARM="${IRONFOX_CI_BUILD_GECKO_ARM_DEFAULT}"
+fi
+
+IRONFOX_CI_BUILD_GECKO_X86_64_DEFAULT=0
+if [[ -z "${IRONFOX_CI_BUILD_GECKO_X86_64+x}" ]]; then
+    export IRONFOX_CI_BUILD_GECKO_X86_64="${IRONFOX_CI_BUILD_GECKO_X86_64_DEFAULT}"
+fi
+
+IRONFOX_CI_BUILD_FINAL_DEFAULT=0
+if [[ -z "${IRONFOX_CI_BUILD_FINAL+x}" ]]; then
+    export IRONFOX_CI_BUILD_FINAL="${IRONFOX_CI_BUILD_FINAL_DEFAULT}"
+fi
 
 # Android SDK
 IRONFOX_ANDROID_SDK_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk"
@@ -444,6 +469,12 @@ if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
     export IRONFOX_NO_PREBUILDS="${IRONFOX_NO_PREBUILDS_DEFAULT}"
 fi
 
+# Location to the Google Safe Browsing API keyfile (if Safe Browsing is desired)
+IRONFOX_SB_GAPI_KEY_FILE_DEFAULT='null'
+if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
+    export IRONFOX_SB_GAPI_KEY_FILE="${IRONFOX_SB_GAPI_KEY_FILE_DEFAULT}"
+fi
+
 # Have we built Gecko?
 IRONFOX_GECKO_BUILT_DEFAULT=0
 if [[ -z "${IRONFOX_GECKO_BUILT+x}" ]]; then
@@ -454,6 +485,58 @@ fi
 IRONFOX_GECKO_PACKAGED_DEFAULT=0
 if [[ -z "${IRONFOX_GECKO_PACKAGED+x}" ]]; then
     export IRONFOX_GECKO_PACKAGED="${IRONFOX_GECKO_PACKAGED_DEFAULT}"
+fi
+
+# Have we built a GeckoView AAR archive for ARM64?
+IRONFOX_GV_AAR_BUILT_ARM64_DEFAULT=0
+if [[ -z "${IRONFOX_GV_AAR_BUILT_ARM64+x}" ]]; then
+    export IRONFOX_GV_AAR_BUILT_ARM64="${IRONFOX_GV_AAR_BUILT_ARM64_DEFAULT}"
+fi
+
+# Have we built a GeckoView AAR archive for ARM?
+IRONFOX_GV_AAR_BUILT_ARM_DEFAULT=0
+if [[ -z "${IRONFOX_GV_AAR_BUILT_ARM+x}" ]]; then
+    export IRONFOX_GV_AAR_BUILT_ARM="${IRONFOX_GV_AAR_BUILT_ARM_DEFAULT}"
+fi
+
+# Have we built a GeckoView AAR archive for x86_64?
+IRONFOX_GV_AAR_BUILT_X86_64_DEFAULT=0
+if [[ -z "${IRONFOX_GV_AAR_BUILT_X86_64+x}" ]]; then
+    export IRONFOX_GV_AAR_BUILT_X86_64="${IRONFOX_GV_AAR_BUILT_X86_64_DEFAULT}"
+fi
+
+# App signing
+
+# Location to the Android keystore file that we should use
+IRONFOX_KEYSTORE_DEFAULT='null'
+if [[ -z "${IRONFOX_KEYSTORE+x}" ]]; then
+    export IRONFOX_KEYSTORE="${IRONFOX_KEYSTORE_DEFAULT}"
+fi
+
+# Location to the Android keystore pass file that we should use
+IRONFOX_KEYSTORE_PASS_FILE_DEFAULT='null'
+if [[ -z "${IRONFOX_KEYSTORE_PASS_FILE+x}" ]]; then
+    export IRONFOX_KEYSTORE_PASS_FILE="${IRONFOX_KEYSTORE_PASS_FILE_DEFAULT}"
+fi
+
+# Alias of the Android keystore that we should use
+IRONFOX_KEYSTORE_ALIAS_DEFAULT='null'
+if [[ -z "${IRONFOX_KEYSTORE_ALIAS+x}" ]]; then
+    export IRONFOX_KEYSTORE_ALIAS="${IRONFOX_KEYSTORE_ALIAS_DEFAULT}"
+fi
+
+# Location to the Android keystore key pass file that we should use
+IRONFOX_KEYSTORE_KEY_PASS_FILE_DEFAULT='null'
+if [[ -z "${IRONFOX_KEYSTORE_KEY_PASS_FILE+x}" ]]; then
+    export IRONFOX_KEYSTORE_KEY_PASS_FILE="${IRONFOX_KEYSTORE_KEY_PASS_FILE_DEFAULT}"
+fi
+
+# Should we automatically sign our output APK(S) files?
+IRONFOX_SIGN_DEFAULT=0
+if [ "${IRONFOX_KEYSTORE}" != 'null' ] && [ "${IRONFOX_KEYSTORE_PASS}" != 'null' ] && [ "${IRONFOX_KEYSTORE_ALIAS}" != 'null' ] && [ "${IRONFOX_KEYSTORE_KEY_PASS}" != 'null' ]; then
+    export IRONFOX_SIGN=1
+else
+    export IRONFOX_SIGN="${IRONFOX_SIGN_DEFAULT}"
 fi
 
 # Set locations for our GeckoView AAR archives

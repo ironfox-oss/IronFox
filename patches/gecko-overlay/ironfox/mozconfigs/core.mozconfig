@@ -173,7 +173,7 @@ export RUSTDOC="${IRONFOX_RUSTDOC}"
 export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial"
 
 ## Safe Browsing
-if [ -n "${IRONFOX_SB_GAPI_KEY_FILE+x}" ] || [ "${IRONFOX_CI}" == 1 ]; then
+if [ "${IRONFOX_SB_GAPI_KEY_FILE}" != 'null' ] || [ "${IRONFOX_CI}" == 1 ]; then
     ac_add_options --with-google-safebrowsing-api-keyfile="${IRONFOX_SB_GAPI_KEY_FILE}"
 else
     ac_add_options --without-google-safebrowsing-api-keyfile
