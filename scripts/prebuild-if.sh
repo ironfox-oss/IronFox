@@ -106,7 +106,6 @@ mkdir -vp "${IRONFOX_OUTPUTS_AAB}"
 mkdir -vp "${IRONFOX_OUTPUTS_AAR}"
 mkdir -vp "${IRONFOX_OUTPUTS_APK}"
 mkdir -vp "${IRONFOX_OUTPUTS_APKS}"
-mkdir -vp "${IRONFOX_OUTPUTS_LOGS}"
 mkdir -vp "${IRONFOX_BUILD}/tmp/fenix"
 mkdir -vp "${IRONFOX_BUILD}/tmp/glean"
 
