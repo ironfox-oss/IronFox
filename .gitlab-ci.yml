@@ -17,17 +17,17 @@
     paths:
       # Cargo cache
       # See: https://doc.rust-lang.org/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
-      - .cache/cargo/.crates.toml
-      - .cache/cargo/.crates2.json
-      - .cache/cargo/bin/
-      - .cache/cargo/registry/index/
-      - .cache/cargo/registry/cache/
-      - .cache/cargo/git/db/
+      - $CI_PROJECT_DIR/build/.cargo/.crates.toml
+      - $CI_PROJECT_DIR/build/.cargo/.crates2.json
+      - $CI_PROJECT_DIR/build/.cargo/bin/
+      - $CI_PROJECT_DIR/build/.cargo/registry/index/
+      - $CI_PROJECT_DIR/build/.cargo/registry/cache/
+      - $CI_PROJECT_DIR/build/.cargo/git/db/
   - key: cache-gradle-$CI_COMMIT_REF_SLUG
     policy: pull-push
     paths:
-      - .cache/gradle/caches
-      - .cache/gradle/wrapper
+      - $CI_PROJECT_DIR/build/.gradle/caches
+      - $CI_PROJECT_DIR/build/gradle/cache
 
 default:
   cache: []
