@@ -191,6 +191,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "panoramax.xyz"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "paxhistoria.co"
         },
         {
