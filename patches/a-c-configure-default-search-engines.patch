@@ -1,5 +1,15 @@
+From be752a85556b6cc59c93bc560a7124ee7e519236 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 10 Feb 2026 17:43:13 +0000
+Subject: [PATCH] feat: Configure default search engines (Android Components)
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../search/storage/SearchEngineReader.kt       | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index 2bf9c12c929d..4216b343fecb 100644
+index 2bf9c12c929d4..4216b343fecb9 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 @@ -38,16 +38,16 @@ private const val MAX_SIZE = 32
@@ -28,3 +38,6 @@ index 2bf9c12c929d..4216b343fecb 100644
  )
  
  /**
+-- 
+2.52.0
+
