@@ -155,7 +155,6 @@ function prep_fenix() {
     if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
         rm -f "${IRONFOX_FENIX}/app/build.gradle"
     fi
-
     cp -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
 
     "${IRONFOX_SED}" -i -e "s/include \".*\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle"
@@ -168,16 +167,24 @@ function prep_fenix() {
     if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
         rm -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     fi
-
     cp -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
 
+     if [[ -d "${IRONFOX_FENIX}/app/src/main/res" ]]; then
+        rm -rf "${IRONFOX_FENIX}/app/src/main/res"
+    fi
+    cp -rf "${IRONFOX_BUILD}/tmp/fenix/res/" "${IRONFOX_FENIX}/app/src/main/res/"
+
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+        IRONFOX_NAME='IronFox'
         "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' "${IRONFOX_FENIX}/app/build.gradle"
         "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     else
+        IRONFOX_NAME='Ironfox Nightly'
         "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox.nightly"|' "${IRONFOX_FENIX}/app/build.gradle"
         "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox.nightly/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     fi
+
+    "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" ${IRONFOX_FENIX}/app/src/*/res/values*/*strings.xml
 
     echo_green_text "SUCCESS: Prepared Fenix"
 }

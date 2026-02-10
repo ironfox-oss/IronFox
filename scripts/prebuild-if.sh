@@ -106,7 +106,7 @@ mkdir -vp "${IRONFOX_OUTPUTS_AAB}"
 mkdir -vp "${IRONFOX_OUTPUTS_AAR}"
 mkdir -vp "${IRONFOX_OUTPUTS_APK}"
 mkdir -vp "${IRONFOX_OUTPUTS_APKS}"
-mkdir -vp "${IRONFOX_BUILD}/tmp/fenix"
+mkdir -vp "${IRONFOX_BUILD}/tmp/fenix/res"
 mkdir -vp "${IRONFOX_BUILD}/tmp/glean"
 
 ## Copy machrc config
@@ -299,21 +299,12 @@ rm -vrf app/src/main/java/org/mozilla/fenix/startupCrash
 ## Also ensure that Firefox Suggest isn't incorrectly labeled as "IronFox Suggest",
 ## because Firefox Suggest suggestions are provided by Mozilla, not us, and
 ## ensure text states to sign-in to a "Firefox-based web browser" instead of "IronFox" on desktop
-if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-    "${IRONFOX_SED}" -i \
-    -e 's/Firefox Daylight/IronFox/; s/Firefox Fenix/IronFox/; s/Mozilla Firefox/IronFox/; s/Firefox/IronFox/g' \
-    -e 's/IronFox Suggest/Firefox Suggest/' \
-    -e 's/On your computer open IronFox and/On your computer, open a Firefox-based web browser, and/' \
-    -e 's/To send a tab, sign in to IronFox/To send a tab, sign in to a Firefox-based web browser/' \
+"${IRONFOX_SED}" -i \
+    -e 's/Firefox Fenix/{IRONFOX_NAME}/; s/Mozilla Firefox/{IRONFOX_NAME}/; s/Firefox/{IRONFOX_NAME}/g' \
+    -e 's/{IRONFOX_NAME} Suggest/Firefox Suggest/' \
+    -e 's/On your computer open {IRONFOX_NAME} and/On your computer, open a Firefox-based web browser, and/' \
+    -e 's/To send a tab, sign in to {IRONFOX_NAME}/To send a tab, sign in to a Firefox-based web browser/' \
     app/src/*/res/values*/*strings.xml
-else
-    "${IRONFOX_SED}" -i \
-    -e 's/Firefox Daylight/IronFox Nightly/; s/Firefox Fenix/IronFox Nightly/; s/Mozilla Firefox/IronFox Nightly/; s/Firefox/IronFox Nightly/g' \
-    -e 's/IronFox Nightly Suggest/Firefox Suggest/' \
-    -e 's/On your computer open IronFox Nightly and/On your computer, open a Firefox-based web browser, and/' \
-    -e 's/To send a tab, sign in to IronFox Nightly/To send a tab, sign in to a Firefox-based web browser/' \
-    app/src/*/res/values*/*strings.xml
-fi
 
 # Refer to "account" as "Firefox account" and "Sync" as "Firefox Sync"
 ## This makes it clear that these are third-party services, not operated by us
@@ -1045,6 +1036,11 @@ if [[ -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml" ]]; then
     rm -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
 fi
 cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
+
+if [[ -d "${IRONFOX_BUILD}/tmp/fenix/res" ]]; then
+    rm -rf "${IRONFOX_BUILD}/tmp/fenix/res"
+fi
+cp -rf "${IRONFOX_FENIX}/app/src/main/res/" "${IRONFOX_BUILD}/tmp/fenix/res/"
 
 popd
 
