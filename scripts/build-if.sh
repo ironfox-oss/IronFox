@@ -103,25 +103,36 @@ source "${IRONFOX_VERSIONS}"
 
 # Functions
 
-function set_build_date() {
-    # Set build date for bundle builds, to avoid conflicts and ensure that MOZ_BUILDID is consistent across all builds
-    ## (CI handles this at `env_ci.sh` instead)
-    echo_red_text "Setting build date..."
+function set_build_env() {
+    echo_red_text "Setting build environment variables..."
 
     # Write env_build.sh
     if [[ -f "${IRONFOX_ENV_BUILD}" ]]; then
         rm "${IRONFOX_ENV_BUILD}"
     fi
-    BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
-    echo "Writing ${IRONFOX_ENV_BUILD}..."
-    cat > "${IRONFOX_ENV_BUILD}" << EOF
+
+    if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+        # Set build date for bundle builds, to avoid conflicts and ensure that MOZ_BUILDID is consistent across all builds
+        ## (CI handles this at `env_ci.sh` instead)
+        BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
+        cat > "${IRONFOX_ENV_BUILD}" << EOF
     export IF_BUILD_DATE="${BUILD_DATE}"
+    export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
+    else
+        echo "Writing ${IRONFOX_ENV_BUILD}..."
+        cat > "${IRONFOX_ENV_BUILD}" << EOF
+    export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+EOF
+    fi
 
     source "${IRONFOX_ENV_BUILD}"
-    export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
 
-    echo_green_text "SUCCESS: Set build date"
+    if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+        export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
+    fi
+
+    echo_green_text "SUCCESS: Set build environment variables"
 }
 
 function prep_as() {
@@ -623,6 +634,7 @@ function build_fenix() {
 ### change the variables, without them needing to re-run the entire prebuild script...)
 echo_red_text "Preparing your build environment..."
 
+set_build_env
 prep_as
 prep_gecko
 prep_glean
@@ -634,9 +646,6 @@ if [ "${IRONFOX_CI}" == 1 ]; then
         prep_up_ac
     fi
 else
-    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        set_build_date
-    fi
     # If we're not in CI, just prepare everything like usual
     prep_fenix
     prep_up_ac

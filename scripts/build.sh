@@ -48,6 +48,7 @@ function sign_ironfox() {
 
 # Sign IronFox
 echo_red_text 'Signing IronFox...'
+source "${IRONFOX_ENV_BUILD}"
 if [ "${IRONFOX_CI}" == 1 ]; then
     if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
         sign_ironfox
