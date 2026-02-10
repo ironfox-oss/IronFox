@@ -1,7 +1,5 @@
 .build_setup_steps: &build_setup_steps
   before_script:
-    - mkdir -p "${IRONFOX_GRADLE_HOME}"
-    - mkdir -p "${IRONFOX_CARGO_HOME}"
     - mkdir -p /opt/IronFox
     - echo "${IRONFOX_SB_GAPI_KEY}" > "${IRONFOX_SB_GAPI_KEY_FILE}"
     - echo "${IRONFOX_KEYSTORE_KEY_PASS}" > "${IRONFOX_KEYSTORE_KEY_PASS_FILE}"
@@ -40,8 +38,6 @@ variables: &build_variables
   IRONFOX_KEYSTORE: /opt/IronFox/signing-key.jks
   IRONFOX_KEYSTORE_KEY_PASS_FILE: /opt/IronFox/signing-key.pass
   IRONFOX_KEYSTORE_PASS_FILE: /opt/IronFox/keystore.pass
-  IRONFOX_GRADLE_HOME: "${CI_PROJECT_DIR}/.cache/gradle"
-  IRONFOX_CARGO_HOME: "${CI_PROJECT_DIR}/.cache/cargo"
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
