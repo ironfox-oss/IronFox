@@ -515,7 +515,7 @@ patches:
   - file: "gecko-fix-canvas-randomization.patch"
     name: "Fix Canvas Randomization"
     description: |
-      Backports a fix for an upstream bug that prevents Canvas randomization from working for getImageData and WebGL image hash: https://bugzilla.mozilla.org/show_bug.cgi?id=2013976
+      Backports a fix for an upstream bug that prevents Canvas randomization from working for getImageData and WebGL image hash: https://bugzilla.mozilla.org/show_bug.cgi?id=2013976, and enables Canvas randomization for solid colors.
     reason: "To protect against fingerprinting by ensuring that canvas data is fully randomized."
     effect: "Users are provided with fingerprinting protection that works as expected."
     category: "Privacy"
