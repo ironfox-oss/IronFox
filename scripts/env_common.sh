@@ -559,7 +559,7 @@ fi
 
 # Should we automatically sign our output APK(S) files?
 IRONFOX_SIGN_DEFAULT=0
-if [ "${IRONFOX_KEYSTORE}" != 'null' ] && [ "${IRONFOX_KEYSTORE_PASS}" != 'null' ] && [ "${IRONFOX_KEYSTORE_KEY_ALIAS}" != 'null' ] && [ "${IRONFOX_KEYSTORE_KEY_PASS}" != 'null' ]; then
+if [ "${IRONFOX_KEYSTORE}" != 'null' ] && [ "${IRONFOX_KEYSTORE_PASS_FILE}" != 'null' ] && [ "${IRONFOX_KEYSTORE_KEY_ALIAS}" != 'null' ] && [ "${IRONFOX_KEYSTORE_KEY_PASS_FILE}" != 'null' ]; then
     export IRONFOX_SIGN=1
 else
     export IRONFOX_SIGN="${IRONFOX_SIGN_DEFAULT}"
