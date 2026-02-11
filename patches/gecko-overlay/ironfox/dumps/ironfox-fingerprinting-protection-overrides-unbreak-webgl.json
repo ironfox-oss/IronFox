@@ -227,6 +227,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "svgrepo.com"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "tojicode.com"
         },
         {
