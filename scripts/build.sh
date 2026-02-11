@@ -40,18 +40,28 @@ else
     bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}"
 fi
 
-function sign_ironfox() {
-    echo_red_text 'Signing IronFox...'
-    bash "${IRONFOX_SCRIPTS}/sign.sh"
-    echo_green_text 'SUCCESS: Signed IronFox'
-}
-
 # Sign IronFox
 source "${IRONFOX_ENV_BUILD}"
-if [ "${IRONFOX_CI}" == 1 ]; then
-    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        sign_ironfox
+
+if [ "${IRONFOX_SIGN}" == 1 ]; then
+    if [ "${IRONFOX_LOG_SIGN}" == 1 ]; then
+        SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
+
+        # If the log file already exists, remove it
+        if [ -f "${SIGN_LOG_FILE}" ]; then
+            rm "${SIGN_LOG_FILE}"
+        fi
+
+        # Ensure our log directory exists
+        mkdir -vp "${IRONFOX_LOG_DIR}"
+
+        if [ "${IRONFOX_CI}" == 1 ] && [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
+            # CI should only try to sign bundle builds (which create/include all APKs)
+            exit 0
+        fi
+
+        bash -x "${IRONFOX_SCRIPTS}/sign.sh" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
+    else
+        bash -x "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
     fi
-elif [ "${IRONFOX_SIGN}" == 1 ]; then
-    sign_ironfox
 fi

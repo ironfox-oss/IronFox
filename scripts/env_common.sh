@@ -127,6 +127,12 @@ if [[ -z "${IRONFOX_LOG_SOURCES+x}" ]]; then
     export IRONFOX_LOG_SOURCES="${IRONFOX_LOG_SOURCES_DEFAULT}"
 fi
 
+# Should we create a log file for sign.sh? (Default)
+IRONFOX_LOG_SIGN_DEFAULT=1
+if [[ -z "${IRONFOX_LOG_SIGN+x}" ]]; then
+    export IRONFOX_LOG_SIGN="${IRONFOX_LOG_SIGN_DEFAULT}"
+fi
+
 # Directory where we should store log files (if logging is desired)
 IRONFOX_LOG_DIR_DEFAULT="${IRONFOX_BUILD}/logs"
 if [ "${IRONFOX_CI}" == 1 ]; then
