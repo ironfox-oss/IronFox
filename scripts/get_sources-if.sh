@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # Functions
-echo_red_text() {
+function echo_red_text() {
 	echo -e "\033[31m$1\033[0m"
 }
 
@@ -29,7 +29,7 @@ else
     PREBUILT_PLATFORM='linux'
 fi
 
-clone_repo() {
+function clone_repo() {
     url="$1"
     path="$2"
     revision="$3"
@@ -70,7 +70,7 @@ clone_repo() {
     git clone --revision="${revision}" --depth=1 "${url}" "${path}"
 }
 
-download() {
+function download() {
     local url="$1"
     local filepath="$2"
 
@@ -98,7 +98,7 @@ download() {
 }
 
 # Extract zip removing top level directory
-extract_rmtoplevel() {
+function extract_rmtoplevel() {
     local archive_path="$1"
     local to_name="$2"
     local extract_to="${IRONFOX_EXTERNAL}/${to_name}"
@@ -141,7 +141,7 @@ extract_rmtoplevel() {
     rm -rf "${temp_dir}"
 }
 
-download_and_extract() {
+function download_and_extract() {
     local repo_name="$1"
     local url="$2"
 

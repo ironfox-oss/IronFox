@@ -3,11 +3,11 @@
 set -euo pipefail
 
 # Functions
-echo_red_text() {
+function echo_red_text() {
 	echo -e "\033[31m$1\033[0m"
 }
 
-echo_green_text() {
+function echo_green_text() {
 	echo -e "\033[32m$1\033[0m"
 }
 
@@ -47,7 +47,6 @@ function sign_ironfox() {
 }
 
 # Sign IronFox
-echo_red_text 'Signing IronFox...'
 source "${IRONFOX_ENV_BUILD}"
 if [ "${IRONFOX_CI}" == 1 ]; then
     if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then

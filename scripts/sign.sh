@@ -14,6 +14,7 @@ echo_green_text() {
 # Set-up our environment
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
+source "${IRONFOX_ENV_BUILD}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"

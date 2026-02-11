@@ -23,16 +23,16 @@
 set -euo pipefail
 
 # Functions
-echo_red_text() {
+function echo_red_text() {
 	echo -e "\033[31m$1\033[0m"
 }
 
-echo_green_text() {
+function echo_green_text() {
 	echo -e "\033[32m$1\033[0m"
 }
 
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
-    echo_red_text "ERROR: Do not call build-if.sh directly. Instead, use build.sh." >&1
+    echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
     exit 1
 fi
 
@@ -82,11 +82,11 @@ bundle)
 esac
 
 if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
-    echo_red_text "IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build."
-    read -p "Do you want to continue [y/N] " -n 1 -r
-    echo ""
+    echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
+    read -p 'Do you want to continue [y/N] ' -n 1 -r
+    echo ''
     if ! [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-        echo_red_text "Aborting..."
+        echo_red_text 'Aborting...'
         exit 1
     fi
 fi
@@ -104,7 +104,7 @@ source "${IRONFOX_VERSIONS}"
 # Functions
 
 function set_build_env() {
-    echo_red_text "Setting build environment variables..."
+    echo_red_text 'Setting build environment variables...'
 
     # Write env_build.sh
     if [[ -f "${IRONFOX_ENV_BUILD}" ]]; then
@@ -132,12 +132,12 @@ EOF
         export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
     fi
 
-    echo_green_text "SUCCESS: Set build environment variables"
+    echo_green_text 'SUCCESS: Set build environment variables'
 }
 
 function prep_as() {
     # Application Services
-    echo_red_text "Preparing Application Services..."
+    echo_red_text 'Preparing Application Services...'
 
     if [[ -f "${IRONFOX_AS}/local.properties" ]]; then
         rm -f "${IRONFOX_AS}/local.properties"
@@ -149,12 +149,12 @@ function prep_as() {
     "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM_ARCH}|${IRONFOX_PLATFORM_ARCH}|" "${IRONFOX_AS}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|" "${IRONFOX_AS}/local.properties"
 
-    echo_green_text "SUCCESS: Prepared Application Services"
+    echo_green_text 'SUCCESS: Prepared Application Services'
 }
 
 function prep_fenix() {
     # Fenix
-    echo_red_text "Preparing Fenix..."
+    echo_red_text 'Preparing Fenix...'
 
     if [[ -f "${IRONFOX_FENIX}/local.properties" ]]; then
         rm -f "${IRONFOX_FENIX}/local.properties"
@@ -197,12 +197,12 @@ function prep_fenix() {
 
     "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" ${IRONFOX_FENIX}/app/src/*/res/values*/*strings.xml
 
-    echo_green_text "SUCCESS: Prepared Fenix"
+    echo_green_text 'SUCCESS: Prepared Fenix'
 }
 
 function prep_gecko() {
     # Gecko
-    echo_red_text "Preparing Gecko..."
+    echo_red_text 'Preparing Gecko...'
 
     if [[ -f "${IRONFOX_GECKO}/local.properties" ]]; then
         rm -f "${IRONFOX_GECKO}/local.properties"
@@ -220,12 +220,12 @@ function prep_gecko() {
     cp -f "${IRONFOX_PATCHES}/build/gecko/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
     "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
 
-    echo_green_text "SUCCESS: Prepared Gecko"
+    echo_green_text 'SUCCESS: Prepared Gecko'
 }
 
 function prep_glean() {
     # Glean
-    echo_red_text "Preparing Glean..."
+    echo_red_text 'Preparing Glean...'
 
     if [[ -f "${IRONFOX_GLEAN}/local.properties" ]]; then
         rm -f "${IRONFOX_GLEAN}/local.properties"
@@ -242,12 +242,12 @@ function prep_glean() {
     cp -f "${IRONFOX_BUILD}/tmp/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
     "${IRONFOX_SED}" -i "s|{IRONFOX_UNIFFI}|${IRONFOX_UNIFFI}|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
 
-    echo_green_text "SUCCESS: Prepared Glean"
+    echo_green_text 'SUCCESS: Prepared Glean'
 }
 
 function prep_up_ac() {
     # unifiedpush-ac
-    echo_red_text "Preparing UnifiedPush-AC..."
+    echo_red_text 'Preparing UnifiedPush-AC...'
 
     if [[ -f "${IRONFOX_UP_AC}/local.properties" ]]; then
         rm -f "${IRONFOX_UP_AC}/local.properties"
@@ -255,12 +255,12 @@ function prep_up_ac() {
     cp -f "${IRONFOX_PATCHES}/build/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_AS}|${IRONFOX_AS}|" "${IRONFOX_UP_AC}/local.properties"
 
-    echo_green_text "SUCCESS: Prepared UnifiedPush-AC"
+    echo_green_text 'SUCCESS: Prepared UnifiedPush-AC'
 }
 
 function prep_llvm() {
     # LLVM
-    echo_red_text "Preparing LLVM..."
+    echo_red_text 'Preparing LLVM...'
 
     # Set LLVM build targets
     if [[ -f "${IRONFOX_BUILD}/targets_to_build" ]]; then
@@ -268,23 +268,23 @@ function prep_llvm() {
     fi
     cp -f "${IRONFOX_PATCHES}/build/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${IRONFOX_BUILD}/targets_to_build"
 
-    echo_green_text "SUCCESS: Prepared LLVM"
+    echo_green_text 'SUCCESS: Prepared LLVM'
 }
 
 function build_bundletool() {
     # Bundletool
-    echo_red_text "Building Bundletool..."
+    echo_red_text 'Building Bundletool...'
 
     pushd "${IRONFOX_BUNDLETOOL}"
     "${IRONFOX_GRADLE}" assemble
     popd
 
-    echo_green_text "SUCCESS: Built Bundletool"
+    echo_green_text 'SUCCESS: Built Bundletool'
 }
 
 function build_llvm() {
     # LLVM
-    echo_red_text "Building LLVM..."
+    echo_red_text 'Building LLVM...'
 
     pushd "${llvm}"
     llvmtarget=$(cat "${IRONFOX_BUILD}/targets_to_build")
@@ -297,23 +297,23 @@ function build_llvm() {
     cmake --build build --target install -j"$(nproc)"
     popd
 
-    echo_green_text "SUCCESS: Built LLVM"
+    echo_green_text 'SUCCESS: Built LLVM'
 }
 
 function build_prebuilds() {
     # Build our prebuilt libraries from source
-    echo_red_text "Building prebuilt libraries..."
+    echo_red_text 'Building prebuilt libraries...'
 
     pushd "${IRONFOX_PREBUILDS}"
     bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh"
     popd
 
-    echo_green_text "SUCCESS: Built prebuilt libraries"
+    echo_green_text 'SUCCESS: Built prebuilt libraries'
 }
 
 function build_microg() {
     # microG
-    echo_red_text "Building microG..."
+    echo_red_text 'Building microG...'
 
     pushd "${IRONFOX_GMSCORE}"
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Dhttps.protocols=TLSv1.3 -x javaDocReleaseGeneration \
@@ -324,24 +324,24 @@ function build_microg() {
         :play-services-tasks:publishToMavenLocal
     popd
 
-    echo_green_text "SUCCESS: Built microG"
+    echo_green_text 'SUCCESS: Built microG'
 }
 
 function build_glean() {
     # Glean
-    echo_red_text "Building Glean..."
+    echo_red_text 'Building Glean...'
 
     pushd "${IRONFOX_GLEAN}"
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" :glean-native:publishToMavenLocal
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" publishToMavenLocal
     popd
 
-    echo_green_text "SUCCESS: Built Glean"
+    echo_green_text 'SUCCESS: Built Glean'
 }
 
 function build_as() {
     # Application Services
-    echo_red_text "Building Application Services..."
+    echo_red_text 'Building Application Services...'
 
     pushd "${IRONFOX_AS}"
     # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
@@ -350,7 +350,7 @@ function build_as() {
     CI='' bash -c "./libs/verify-android-environment.sh && ${IRONFOX_GRADLE} ${IRONFOX_GRADLE_FLAGS} :tooling-nimbus-gradle:publishToMavenLocal"
     popd
 
-    echo_green_text "SUCCESS: Built Application Services"
+    echo_green_text 'SUCCESS: Built Application Services'
 }
 
 function build_gecko_ind() {
@@ -402,13 +402,13 @@ function create_fat_aar() {
 function build_gecko_arm64() {
     # ARM64
     pushd "${IRONFOX_GECKO}"
-    echo_red_text "Building Gecko(View) - ARM64..."
+    echo_red_text 'Building Gecko(View) - ARM64...'
     build_gecko_ind
-    echo_green_text "SUCCESS: Built Gecko(View) - ARM64"
+    echo_green_text 'SUCCESS: Built Gecko(View) - ARM64'
 
-    echo_red_text "Packaging Gecko(View) - ARM64..."
+    echo_red_text 'Packaging Gecko(View) - ARM64...'
     package_gecko
-    echo_green_text "SUCCESS: Packaged Gecko(View) - ARM64"
+    echo_green_text 'SUCCESS: Packaged Gecko(View) - ARM64'
     popd
 
     cp -vf "${IRONFOX_GV_AAR_ARM64}" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
@@ -424,13 +424,13 @@ function build_gecko_arm() {
 
     # ARM
     pushd "${IRONFOX_GECKO}"
-    echo_red_text "Building Gecko(View) - ARM..."
+    echo_red_text 'Building Gecko(View) - ARM...'
     build_gecko_ind
-    echo_green_text "SUCCESS: Built Gecko(View) - ARM"
+    echo_green_text 'SUCCESS: Built Gecko(View) - ARM'
 
-    echo_red_text "Packaging Gecko - ARM..."
+    echo_red_text 'Packaging Gecko - ARM...'
     package_gecko
-    echo_green_text "SUCCESS: Packaged Gecko(View) - ARM"
+    echo_green_text 'SUCCESS: Packaged Gecko(View) - ARM'
     popd
 
     cp -vf "${IRONFOX_GV_AAR_ARM}" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
@@ -447,13 +447,13 @@ function build_gecko_x86_64() {
 
     # x86_64
     pushd "${IRONFOX_GECKO}"
-    echo_red_text "Building Gecko(View) - x86_64..."
+    echo_red_text 'Building Gecko(View) - x86_64...'
     build_gecko_ind
-    echo_green_text "SUCCESS: Built Gecko(View) - x86_64"
+    echo_green_text 'SUCCESS: Built Gecko(View) - x86_64'
 
-    echo_red_text "Packaging Gecko(View) - x86_64..."
+    echo_red_text 'Packaging Gecko(View) - x86_64...'
     package_gecko
-    echo_green_text "SUCCESS: Packaged Gecko(View) - x86_64"
+    echo_green_text 'SUCCESS: Packaged Gecko(View) - x86_64'
     popd
 
     cp -vf "${IRONFOX_GV_AAR_X86_64}" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
@@ -483,23 +483,23 @@ function build_gecko_bundle() {
     fi
 
     pushd "${IRONFOX_GECKO}"
-    echo_red_text "Creating GeckoView fat AAR..."
+    echo_red_text 'Creating GeckoView fat AAR...'
     create_fat_aar
-    echo_green_text "SUCCESS: Created GeckoView fat AAR"
+    echo_green_text 'SUCCESS: Created GeckoView fat AAR'
 
-    echo_red_text "Building Gecko(View) - Bundle..."
+    echo_red_text 'Building Gecko(View) - Bundle...'
     build_gecko_ind
-    echo_green_text "SUCCESS: Built Gecko(View) - Bundle"
+    echo_green_text 'SUCCESS: Built Gecko(View) - Bundle'
 
-    echo_red_text "Packaging Gecko(View) - Bundle..."
+    echo_red_text 'Packaging Gecko(View) - Bundle...'
     package_gecko
-    echo_green_text "SUCCESS: Packaged Gecko(View) - Bundle"
+    echo_green_text 'SUCCESS: Packaged Gecko(View) - Bundle'
     popd
 }
 
 function build_gecko() {
     # Gecko (Firefox)
-    echo_red_text "Building Gecko(View)..."
+    echo_red_text 'Building Gecko(View)...'
 
     pushd "${IRONFOX_GECKO}"
     "${IRONFOX_MACH}" configure
@@ -547,12 +547,12 @@ function build_gecko() {
     fi
     popd
 
-    echo_green_text "SUCCESS: Built Gecko(View)"
+    echo_green_text 'SUCCESS: Built Gecko(View)'
 }
 
 function build_ac() {
     # Android Components
-    echo_red_text "Building Android Components (Part 1/2)..."
+    echo_red_text 'Building Android Components (Part 1/2)...'
 
     # Ensure the CI env variable is not set here - otherwise this will cause build failure in Application Services, thanks to us removing MARS and friends
     unset CI
@@ -568,23 +568,23 @@ function build_ac() {
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:ui-icons:publishToMavenLocal
     popd
 
-    echo_green_text "SUCCESS: Built Android Components (Part 1/2)"
+    echo_green_text 'SUCCESS: Built Android Components (Part 1/2)'
 }
 
 function build_up_ac() {
     # unifiedpush-ac
-    echo_red_text "Building UnifiedPush-AC..."
+    echo_red_text 'Building UnifiedPush-AC...'
 
     pushd "${IRONFOX_UP_AC}"
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" publishToMavenLocal
     popd
 
-    echo_green_text "SUCCESS: Built UnifiedPush-AC"
+    echo_green_text 'SUCCESS: Built UnifiedPush-AC'
 }
 
 function build_ac_cont() {
     # Android Components (Part 2...)
-    echo_red_text "Building Android Components (Part 2/2)..."
+    echo_red_text 'Building Android Components (Part 2/2)...'
 
     pushd "${IRONFOX_AC}"
     # Enable the auto-publication workflow
@@ -593,12 +593,12 @@ function build_ac_cont() {
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial publishToMavenLocal
     popd
 
-    echo_green_text "SUCCESS: Built Android Components (Part 2/2)"
+    echo_green_text 'SUCCESS: Built Android Components (Part 2/2)'
 }
 
 function build_fenix() {
     # Fenix
-    echo_red_text "Building Fenix..."
+    echo_red_text 'Building Fenix...'
 
     pushd "${IRONFOX_FENIX}"
     # Build our APKs
@@ -626,13 +626,13 @@ function build_fenix() {
     fi
     popd
 
-    echo_green_text "SUCCESS: Built Fenix"
+    echo_green_text 'SUCCESS: Built Fenix'
 }
 
 # Prepare build environment...
 ## (These need to be performed here instead of in `prebuild.sh`, so that we can account for if users decide to
 ### change the variables, without them needing to re-run the entire prebuild script...)
-echo_red_text "Preparing your build environment..."
+echo_red_text 'Preparing your build environment...'
 
 set_build_env
 prep_as
@@ -658,7 +658,7 @@ if [ "${IRONFOX_CI}" == 1 ]; then
     mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
 fi
 
-echo_green_text "SUCCESS: Prepared build environment"
+echo_green_text 'SUCCESS: Prepared build environment'
 
 # Begin the build...
 echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
