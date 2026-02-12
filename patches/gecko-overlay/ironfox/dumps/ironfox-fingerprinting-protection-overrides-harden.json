@@ -869,6 +869,10 @@
             "firstPartyDomain": "apple.news"
         },
         {
+            "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+            "firstPartyDomain": "cengage.com"
+        },
+        {
             "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt,+JSDateTimeUTC",
             "firstPartyDomain": "cloudflare.com"
         },
