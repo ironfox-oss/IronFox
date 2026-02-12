@@ -32,10 +32,10 @@ function sign_apk() {
     fi
 
     "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_BUILDTOOLS_VERSION}/apksigner" sign \
-      --ks=${IRONFOX_KEYSTORE} \
-      --ks-pass=file:/${IRONFOX_KEYSTORE_PASS_FILE} \
+      --ks="${IRONFOX_KEYSTORE}" \
+      --ks-pass=file:${IRONFOX_KEYSTORE_PASS_FILE} \
       --ks-key-alias=${IRONFOX_KEYSTORE_KEY_ALIAS} \
-      --key-pass=file:/${IRONFOX_KEYSTORE_KEY_PASS_FILE} \
+      --key-pass=file:${IRONFOX_KEYSTORE_KEY_PASS_FILE} \
       --out=${APK_OUT} \
     "${APK_IN}"
 }
@@ -52,10 +52,10 @@ function sign_bundle() {
     "${IRONFOX_BUNDLETOOL}" build-apks \
       --bundle=${AAB_IN} \
       --output=${APKS_OUT} \
-      --ks=${IRONFOX_KEYSTORE} \
-      --ks-pass=file:/${IRONFOX_KEYSTORE_PASS_FILE} \
+      --ks="${IRONFOX_KEYSTORE}" \
+      --ks-pass=file:${IRONFOX_KEYSTORE_PASS_FILE} \
       --ks-key-alias=${IRONFOX_KEYSTORE_KEY_ALIAS} \
-      --key-pass=file:/${IRONFOX_KEYSTORE_KEY_PASS_FILE}
+      --key-pass=file:${IRONFOX_KEYSTORE_KEY_PASS_FILE}
 }
 
 if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
