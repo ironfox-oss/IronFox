@@ -5,7 +5,7 @@
     - echo "${IRONFOX_KEYSTORE_KEY_PASS}" > "${IRONFOX_KEYSTORE_KEY_PASS_FILE}"
     - echo "${IRONFOX_KEYSTORE_PASS}" > "${IRONFOX_KEYSTORE_PASS_FILE}"
     - |
-      curl \
+      curl --fail --location --show-error --silent \
         --request GET \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
         "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${KEYSTORE_SECFILEID}/download" \
