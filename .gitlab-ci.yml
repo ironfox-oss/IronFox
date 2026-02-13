@@ -8,7 +8,7 @@
       curl --fail --location --show-error --silent \
         --request GET \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
-        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${KEYSTORE_SECFILEID}/download" \
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${IRONFOX_KEYSTORE_SECFILEID}/download" \
         --output "${IRONFOX_KEYSTORE}"
 
 .build_cache: &build_cache
