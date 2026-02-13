@@ -34,10 +34,10 @@ default:
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  IRONFOX_SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
-  IRONFOX_KEYSTORE: /opt/IronFox/signing-key.jks
-  IRONFOX_KEYSTORE_KEY_PASS_FILE: /opt/IronFox/signing-key.pass
-  IRONFOX_KEYSTORE_PASS_FILE: /opt/IronFox/keystore.pass
+  IRONFOX_SB_GAPI_KEY_FILE: /opt/IronFox/ironfox-sb-gapi.data
+  IRONFOX_KEYSTORE: /opt/IronFox/ironfox-keystore.jks
+  IRONFOX_KEYSTORE_KEY_PASS_FILE: /opt/IronFox/ironfox-signing-key.pass
+  IRONFOX_KEYSTORE_PASS_FILE: /opt/IronFox/ironfox-keystore.pass
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
