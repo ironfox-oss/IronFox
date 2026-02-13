@@ -22,14 +22,9 @@
 
 set -euo pipefail
 
-# Functions
-function echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
-
-function echo_green_text() {
-	echo -e "\033[32m$1\033[0m"
-}
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
     echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
@@ -40,10 +35,6 @@ if [ -z "${1+x}" ]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
-
-# Set-up our environment
-bash -x $(dirname $0)/env.sh
-source $(dirname $0)/env.sh
 
 # Set up target parameters
 case "$1" in

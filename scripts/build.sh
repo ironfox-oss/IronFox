@@ -2,29 +2,9 @@
 
 set -euo pipefail
 
-# Functions
-function echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
-
-function echo_green_text() {
-	echo -e "\033[32m$1\033[0m"
-}
-
-function validate_ks_file() {
-    local file
-    file="${IRONFOX_KEYSTORE}"
-
-    if ! [[ -f "$file" ]]; then
-        echo_red_text "Keystore file ${file} does not exist!"
-        exit 1
-    fi
-
-    if ! [[ -s "$file"  ]]; then
-        echo_red_text "Keystore file ${file} is empty!"
-        exit 1
-    fi
-}
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 if [ -z "${1+x}" ]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
@@ -32,13 +12,6 @@ if [ -z "${1+x}" ]; then
 fi
 
 target="$1"
-
-# Set-up our environment
-bash -x $(dirname $0)/env.sh
-source $(dirname $0)/env.sh
-
-# Fail-fast in case the signing key is unavailable or empty file
-validate_ks_file
 
 # Build IronFox
 export IRONFOX_FROM_BUILD=1

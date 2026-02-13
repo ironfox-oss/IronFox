@@ -22,23 +22,14 @@
 
 set -euo pipefail
 
-# Functions
-echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
-
-echo_green_text() {
-	echo -e "\033[32m$1\033[0m"
-}
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
     echo_red_text "ERROR: Do not call prebuild-if.sh directly. Instead, use prebuild.sh." >&1
     exit 1
 fi
-
-# Set-up our environment
-bash -x $(dirname $0)/env.sh
-source $(dirname $0)/env.sh
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
@@ -451,7 +442,7 @@ rm -vf components/feature/search/src/main/assets/search/search_telemetry_v2.json
 
 # Remove unused/unwanted sample libraries
 ## Since we remove the Glean Service and Web Compat Reporter dependencies, the existence of these files causes build issues
-## We don't build or use these sample libraries at all anyways, so instead of patching these files, I don't see a reason why we shouldn't just delete them. 
+## We don't build or use these sample libraries at all anyways, so instead of patching these files, I don't see a reason why we shouldn't just delete them.
 rm -rvf samples/browser
 rm -rvf samples/crash
 

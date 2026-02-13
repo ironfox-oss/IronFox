@@ -2,19 +2,14 @@
 
 set -euo pipefail
 
-# Functions
-function echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
     echo_red_text "ERROR: Do not call get_sources-if.sh directly. Instead, use get_sources.sh." >&1
     exit 1
 fi
-
-# Set-up our environment
-bash -x $(dirname $0)/env.sh
-source $(dirname $0)/env.sh
 
 # Include version info
 source "${IRONFOX_VERSIONS}"

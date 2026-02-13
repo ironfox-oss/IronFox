@@ -7,22 +7,10 @@ set -eu
 set -o pipefail
 set -o xtrace
 
-function echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
-
-function echo_green_text() {
-	echo -e "\033[32m$1\033[0m"
-}
+source $(dirname $0)/utilities.sh
 
 case "${BUILD_VARIANT}" in
-arm64)
-    ;;
-arm)
-    ;;
-x86_64)
-    ;;
-bundle)
+arm64|arm|x86_64|bundle)
     ;;
 *)
     echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
@@ -40,6 +28,17 @@ fi
 # Set-up our environment
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
+
+# Fail-fast in case the signing key is unavailable or empty file
+if ! [[ -f "$IRONFOX_KEYSTORE" ]]; then
+    echo_red_text "Keystore file ${IRONFOX_KEYSTORE} does not exist!"
+    exit 1
+fi
+
+if ! [[ -s "$IRONFOX_KEYSTORE"  ]]; then
+    echo_red_text "Keystore file ${IRONFOX_KEYSTORE} is empty!"
+    exit 1
+fi
 
 # Get sources
 bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
