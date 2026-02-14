@@ -85,7 +85,7 @@ if [[ -z "${IRONFOX_VERSION}" ]]; then
     exit 1
 fi
 
-echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY}"
+echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}"
 
 # Create build directories
 mkdir -vp "${IRONFOX_CARGO_HOME}"
