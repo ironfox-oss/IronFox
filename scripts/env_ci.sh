@@ -1,5 +1,9 @@
 # IronFox CI environment variables
 
+# Set timezone to UTC for consistency
+unset TZ
+export TZ="UTC"
+
 # Android keystore/app signing
 export IRONFOX_KEYSTORE='/opt/IronFox/ironfox-keystore.jks'
 export IRONFOX_KEYSTORE_KEY_ALIAS='ironfox'

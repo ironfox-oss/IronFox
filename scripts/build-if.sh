@@ -92,6 +92,10 @@ source "${IRONFOX_PIP_ENV}"
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
+# Set timezone to UTC for consistency
+unset TZ
+export TZ="UTC"
+
 # Functions
 
 function set_build_env() {
