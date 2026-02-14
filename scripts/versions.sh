@@ -3,9 +3,9 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_3_RELEASE)
-FIREFOX_COMMIT='cd3b8173f16a0d8d2ef764a8840ef20209ad4d9f'
-FIREFOX_VERSION='147.0.3'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_4_BUILD1)
+FIREFOX_COMMIT='310a0cc30b21a4ddf7f0826a67f73bed6b050349'
+FIREFOX_VERSION='147.0.4'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v147.0.1'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='c476a531734e1f30560d7505c27cf386dca6240f'
+L10N_COMMIT='7cc48ece70e5a95cfad5d05488671d75f8597844'
 
 ## Glean
 ### https://github.com/mozilla/glean
@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-UNIFIEDPUSHAC_COMMIT='6794240412190535fc2791fbb87fef7bb4c9c0b7'
+UNIFIEDPUSHAC_COMMIT='c84df01551cd9fb7f7a88d6ca67709eb6d977b40'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
@@ -75,18 +75,18 @@ GRADLE_COMMIT='996b7829f40f33317d33c1b6ddcffcf976bd6181'
 
 ## Rust
 ### https://releases.rs/
-RUST_MAJOR_VERSION='1.93'
-RUST_VERSION="${RUST_MAJOR_VERSION}.0"
-#RUST_MAJOR_VERSION='1.91.1'
-#RUST_VERSION="${RUST_MAJOR_VERSION}"
+#RUST_MAJOR_VERSION='1.93'
+#RUST_VERSION="${RUST_MAJOR_VERSION}.0"
+RUST_MAJOR_VERSION='1.93.1'
+RUST_VERSION="${RUST_MAJOR_VERSION}"
 
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
-PREBUILDS_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
-UNIFFI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
-UNIFFI_LINUX_IRONFOX_REVISION='4'
-UNIFFI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'
-UNIFFI_OSX_IRONFOX_REVISION='4'
+PREBUILDS_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
+UNIFFI_LINUX_IRONFOX_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
+UNIFFI_LINUX_IRONFOX_REVISION='5'
+UNIFFI_OSX_IRONFOX_COMMIT='74d5b4bc62c3aa4ceab64c41e5185026574a86b6'
+UNIFFI_OSX_IRONFOX_REVISION='5'
 WASI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
 WASI_LINUX_IRONFOX_REVISION='4'
 WASI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'
