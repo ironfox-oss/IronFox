@@ -98,6 +98,7 @@ mkdir -vp "${IRONFOX_OUTPUTS_AAR}"
 mkdir -vp "${IRONFOX_OUTPUTS_APK}"
 mkdir -vp "${IRONFOX_OUTPUTS_APKS}"
 mkdir -vp "${IRONFOX_BUILD}/tmp/fenix/res"
+mkdir -vp "${IRONFOX_BUILD}/tmp/gecko/ironfox"
 mkdir -vp "${IRONFOX_BUILD}/tmp/glean"
 
 ## Copy machrc config
@@ -1064,6 +1065,19 @@ pushd "${IRONFOX_GMSCORE}"
 
 # Bump Android target SDK
 "${IRONFOX_SED}" -i -e "s|ext.androidTargetSdk = .*|ext.androidTargetSdk = ${ANDROID_SDK_TARGET}|g" build.gradle
+
+popd
+
+#
+# Phoenix
+#
+
+pushd "${IRONFOX_PHOENIX}"
+
+# Ensure we don't reset devtools.debugger.remote-enabled per-launch from Phoenix
+## We handle this ourselves with ironfox.cfg instead, so that we can allow that value to persist on Nightly builds (but not for Release)
+## I don't love this - it's hacky, and I probably need to find a better way to deal with this in Phoenix upstream...
+"${IRONFOX_SED}" -i -e 's|pref("devtools.debugger.remote-enabled"|// pref("devtools.debugger.remote-enabled"|g' "${IRONFOX_PHOENIX}/build/phoenix-user-pref.cfg"
 
 popd
 

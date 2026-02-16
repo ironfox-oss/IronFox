@@ -217,10 +217,9 @@ clone_repo "https://github.com/microg/GmsCore.git" "${IRONFOX_GMSCORE}" "${GMSCO
 echo "Cloning unifiedpush-ac..."
 clone_repo "https://gitlab.com/ironfox-oss/unifiedpush-ac.git" "${IRONFOX_UP_AC}" "${UNIFIEDPUSHAC_COMMIT}"
 
-# Download Phoenix
-echo "Downloading Phoenix..."
-download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/phoenix.js" "${IRONFOX_GECKO_OVERLAY}/ironfox/prefs/000-phoenix.js"
-download "https://gitlab.com/celenityy/Phoenix/-/raw/${PHOENIX_COMMIT}/android/phoenix-extended.js" "${IRONFOX_GECKO_OVERLAY}/ironfox/prefs/001-phoenix-extended.js"
+# Clone Phoenix
+echo "Cloning Phoenix..."
+clone_repo "https://gitlab.com/celenityy/Phoenix.git" "${IRONFOX_PHOENIX}" "${PHOENIX_COMMIT}"
 
 # Clone application-services
 echo "Cloning application-services..."

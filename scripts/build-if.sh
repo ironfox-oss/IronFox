@@ -195,6 +195,16 @@ function prep_fenix() {
     echo_green_text 'SUCCESS: Prepared Fenix'
 }
 
+function prep_gecko_prefs() {
+    # Prepare our Gecko preferences
+    if [[ -f "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg" ]]; then
+        rm -f "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
+    fi
+
+    cp -f "${IRONFOX_PATCHES}/build/gecko/ironfox.cfg" "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
+    "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
+}
+
 function prep_gecko() {
     # Gecko
     echo_red_text 'Preparing Gecko...'
@@ -207,13 +217,15 @@ function prep_gecko() {
     "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN}|${IRONFOX_GLEAN}|" "${IRONFOX_GECKO}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_GECKO}|${IRONFOX_GECKO}|" "${IRONFOX_GECKO}/local.properties"
 
-    # Set our Gecko prefs
+    # Ensure our cfg file doesn't already exist
     if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" ]]; then
         rm -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
     fi
 
-    cp -f "${IRONFOX_PATCHES}/build/gecko/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
+    # Ensure our policies file doesn't already exist
+    if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json" ]]; then
+        rm -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
+    fi
 
     echo_green_text 'SUCCESS: Prepared Gecko'
 }
@@ -293,6 +305,17 @@ function build_llvm() {
     popd
 
     echo_green_text 'SUCCESS: Built LLVM'
+}
+
+function build_phoenix() {
+    # Build Phoenix...
+    echo_red_text 'Building Phoenix...'
+
+    pushd "${IRONFOX_PHOENIX}"
+    bash -x "${IRONFOX_PHOENIX}/build/build.sh"
+    popd
+
+    echo_green_text 'SUCCESS: Built Phoenix'
 }
 
 function build_prebuilds() {
@@ -632,6 +655,7 @@ echo_red_text 'Preparing your build environment...'
 set_build_env
 prep_as
 prep_gecko
+prep_gecko_prefs
 prep_glean
 prep_llvm
 
@@ -656,7 +680,7 @@ fi
 echo_green_text 'SUCCESS: Prepared build environment'
 
 # Begin the build...
-echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
+echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})..."
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     build_bundletool
@@ -668,6 +692,7 @@ if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
 fi
 
 build_microg
+build_phoenix
 build_glean
 build_as
 

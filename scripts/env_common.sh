@@ -365,6 +365,12 @@ if [[ -z "${IRONFOX_PREBUILDS+x}" ]]; then
     export IRONFOX_PREBUILDS="${IRONFOX_PREBUILDS_DEFAULT}"
 fi
 
+# Phoenix
+IRONFOX_PHOENIX_DEFAULT="${IRONFOX_EXTERNAL}/phoenix"
+if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
+    export IRONFOX_PHOENIX="${IRONFOX_PHOENIX_DEFAULT}"
+fi
+
 # Python (Glean)
 export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
 
