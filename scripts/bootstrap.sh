@@ -137,6 +137,7 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
         clang \
         gawk \
         git \
+        jq \
         m4 \
         make \
         nasm \
