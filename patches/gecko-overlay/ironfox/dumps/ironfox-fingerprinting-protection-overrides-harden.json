@@ -926,6 +926,10 @@
         },
         {
             "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+            "firstPartyDomain": "porkbun.com"
+        },
+        {
+            "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
             "firstPartyDomain": "reddit.com"
         },
         {
