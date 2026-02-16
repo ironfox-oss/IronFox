@@ -32,6 +32,7 @@ object GeckoSettingsDictionary {
     val spoofEnglish = "privacy.spoof_english"
     val spoofTimezone = "browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled"
     val svgDisabled = "svg.disabled"
+    val translationsAiControl = "browser.ai.control.translations"
     val translationsEnabled = "browser.translations.enable"
     val translationsUnsupported = "browser.translations.simulateUnsupportedEngine"
     val wasm = "javascript.options.wasm"
