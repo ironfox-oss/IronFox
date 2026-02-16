@@ -67,6 +67,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
     # Install our dependencies...
     brew install \
         cmake \
+        jq \
         nasm \
         ninja \
         node \
