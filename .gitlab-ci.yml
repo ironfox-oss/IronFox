@@ -1,15 +1,15 @@
 .build_setup_steps: &build_setup_steps
   before_script:
-    - mkdir -p "${IRONFOX_GRADLE_HOME}"
-    - mkdir -p "${IRONFOX_CARGO_HOME}"
     - mkdir -p /opt/IronFox
-    - echo "${SB_GAPI_KEY}" > "${SB_GAPI_KEY_FILE}"
+    - echo "${IRONFOX_SB_GAPI_KEY}" > "${IRONFOX_SB_GAPI_KEY_FILE}"
+    - echo "${IRONFOX_KEYSTORE_KEY_PASS}" > "${IRONFOX_KEYSTORE_KEY_PASS_FILE}"
+    - echo "${IRONFOX_KEYSTORE_PASS}" > "${IRONFOX_KEYSTORE_PASS_FILE}"
     - |
-      curl \
+      curl --fail --location --show-error --silent \
         --request GET \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
-        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${KEYSTORE_SECFILEID}/download" \
-        --output "${KEYSTORE}"
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${IRONFOX_KEYSTORE_SECFILEID}/download" \
+        --output "${IRONFOX_KEYSTORE}"
 
 .build_cache: &build_cache
   - key: cache-cargo-$CI_COMMIT_REF_SLUG
@@ -17,27 +17,27 @@
     paths:
       # Cargo cache
       # See: https://doc.rust-lang.org/cargo/guide/cargo-home.html#caching-the-cargo-home-in-ci
-      - .cache/cargo/.crates.toml
-      - .cache/cargo/.crates2.json
-      - .cache/cargo/bin/
-      - .cache/cargo/registry/index/
-      - .cache/cargo/registry/cache/
-      - .cache/cargo/git/db/
+      - $CI_PROJECT_DIR/build/.cargo/.crates.toml
+      - $CI_PROJECT_DIR/build/.cargo/.crates2.json
+      - $CI_PROJECT_DIR/build/.cargo/bin/
+      - $CI_PROJECT_DIR/build/.cargo/registry/index/
+      - $CI_PROJECT_DIR/build/.cargo/registry/cache/
+      - $CI_PROJECT_DIR/build/.cargo/git/db/
   - key: cache-gradle-$CI_COMMIT_REF_SLUG
     policy: pull-push
     paths:
-      - .cache/gradle/caches
-      - .cache/gradle/wrapper
+      - $CI_PROJECT_DIR/build/.gradle/caches
+      - $CI_PROJECT_DIR/build/gradle/cache
 
 default:
   cache: []
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  SB_GAPI_KEY_FILE: /opt/IronFox/sb-gapi.data
-  KEYSTORE: /opt/IronFox/signing-key.jks
-  IRONFOX_GRADLE_HOME: "${CI_PROJECT_DIR}/.cache/gradle"
-  IRONFOX_CARGO_HOME: "${CI_PROJECT_DIR}/.cache/cargo"
+  IRONFOX_SB_GAPI_KEY_FILE: /opt/IronFox/ironfox-sb-gapi.data
+  IRONFOX_KEYSTORE: /opt/IronFox/ironfox-keystore.jks
+  IRONFOX_KEYSTORE_KEY_PASS_FILE: /opt/IronFox/ironfox-signing-key.pass
+  IRONFOX_KEYSTORE_PASS_FILE: /opt/IronFox/ironfox-keystore.pass
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
@@ -133,7 +133,7 @@ build-docker:
   tags:
     - saas-linux-2xlarge-amd64
 
-build-apk:
+build-aar:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
   timeout: 2h
@@ -146,13 +146,12 @@ build-apk:
     matrix:
       - BUILD_VARIANT: ["arm", "arm64", "x86_64"]
   variables:
+    RUNNER_SCRIPT_TIMEOUT: 8h
     <<: *build_variables
   <<: *build_setup_steps
   script:
-    - mkdir -vp "${CI_PROJECT_DIR}/artifacts/logs"
-    - BUILD_LOG_FILE="${CI_PROJECT_DIR}/artifacts/logs/build-apk-${BUILD_VARIANT}.log"
-    - echo "Building APK..." > "${BUILD_LOG_FILE}" 2>&1
-    - bash -x scripts/ci-build.sh >> "${BUILD_LOG_FILE}" 2>&1
+    - echo "Building AAR..."
+    - bash -x scripts/ci-build.sh
   artifacts:
     untracked: false
     when: always
@@ -160,7 +159,6 @@ build-apk:
     access: all
     expire_in: "30 days"
     paths:
-      - $CI_PROJECT_DIR/artifacts/apk/**/*
       - $CI_PROJECT_DIR/artifacts/aar/**/*
       - $CI_PROJECT_DIR/artifacts/logs/**/*
   rules:
@@ -174,14 +172,14 @@ build-apk:
     - if: $CI_COMMIT_TAG
       when: never
 
-build-bundle:
+build-final:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
   timeout: 2h
   needs:
     - job: "build-docker"
       optional: true
-    - job: "build-apk"
+    - job: "build-aar"
       artifacts: true
       optional: false
   tags:
@@ -191,10 +189,8 @@ build-bundle:
     <<: *build_variables
   <<: *build_setup_steps
   script:
-    - mkdir -vp "${CI_PROJECT_DIR}/artifacts/logs"
-    - BUILD_LOG_FILE="${CI_PROJECT_DIR}/artifacts/logs/build-bundle.log"
-    - echo "Building Bundle..." > "${BUILD_LOG_FILE}" 2>&1
-    - bash -x scripts/ci-build.sh >> "${BUILD_LOG_FILE}" 2>&1
+    - echo "Building Bundle..."
+    - bash -x scripts/ci-build.sh
   artifacts:
     untracked: false
     when: always
@@ -202,6 +198,7 @@ build-bundle:
     access: all
     expire_in: "30 days"
     paths:
+      - $CI_PROJECT_DIR/artifacts/apk/**/*
       - $CI_PROJECT_DIR/artifacts/apks/**/*
       - $CI_PROJECT_DIR/artifacts/logs/**/*
   rules:
@@ -222,10 +219,10 @@ prepare-release:
   needs:
     - job: "build-docker"
       optional: true
-    - job: "build-apk"
+    - job: "build-aar"
       artifacts: true
       optional: true
-    - job: "build-bundle"
+    - job: "build-final"
       artifacts: true
       optional: true
   rules:

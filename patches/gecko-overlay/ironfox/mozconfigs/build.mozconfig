@@ -1,0 +1,71 @@
+# IronFox build mozconfig
+
+# This mozconfig is home to arguments that are only necessary when the compile environment is enabled
+# (translation: when --disable-compile-environment is not set)
+# These are necessary to set in a different file, because setting --disable-compile-environment argument with them present results in build errors
+
+# Allow replacing the malloc implementation
+ac_add_options --enable-replace-malloc
+
+# Disable build cache
+ac_add_options --without-ccache
+export CCACHE=
+
+# Disable misc. debugging/development/test features
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-geckodriver
+ac_add_options --disable-gtest-in-build
+ac_add_options --disable-phc
+ac_add_options --disable-rust-debug
+ac_add_options --disable-rust-tests
+export MOZ_DEBUG_FLAGS=
+export MOZ_PHC=
+
+# Do not build with the Android GoogleVR SDK
+ac_add_options --without-android-googlevr-sdk
+
+# Enable misc. security hardening
+ac_add_options --enable-hardening
+ac_add_options --enable-stl-hardening
+export MOZ_SECURITY_HARDENING=1
+
+# Enable performance optimizations
+ac_add_options --enable-optimize='-O3 -ftree-vectorize'
+export MOZ_LTO=1
+export MOZ_OPTIMIZE_FLAGS='-O3 -ftree-vectorize'
+export RUSTC_OPT_LEVEL=3
+
+# Enable stripping
+ac_add_options --enable-install-strip
+ac_add_options --enable-strip
+export STRIP_FLAGS="--strip-debug --strip-unneeded"
+
+# Set Android NDK path
+ac_add_options --with-android-ndk="${IRONFOX_ANDROID_NDK}"
+
+# Set Clang/LLVM library paths
+ac_add_options --with-libclang-path="${IRONFOX_LIBCLANG}"
+ac_add_options CC="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/bin/clang"
+ac_add_options CXX="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/bin/clang++"
+ac_add_options STRIP="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/bin/llvm-strip"
+ac_add_options WASM_CC="${IRONFOX_WASI}/bin/clang"
+ac_add_options WASM_CXX="${IRONFOX_WASI}/bin/clang++"
+
+# Set compiler (toolchain) flags
+export ASFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export CFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export CPPFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export HOST_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export HOST_CPPFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export HOST_CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export HOST_LDFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export LDFLAGS="${IRONFOX_COMPILER_FLAGS}"
+
+# Set Rust flags
+export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS} -Crelro-level=full"
+export RUSTFLAGS="${IRONFOX_RUST_FLAGS} -Crelro-level=full"
+
+# Set WASI sysroot path
+ac_add_options --with-wasi-sysroot="${IRONFOX_WASI}/share/wasi-sysroot"
+export WASI_SYSROOT="${IRONFOX_WASI}/share/wasi-sysroot"

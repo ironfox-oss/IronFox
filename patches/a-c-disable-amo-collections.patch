@@ -1,5 +1,15 @@
+From 24639ff8f0808864a9b289f08ccb5c3a99e5095e Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 10 Feb 2026 17:47:31 +0000
+Subject: [PATCH] feat: Disable AMO featured collections/recommendations
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../java/mozilla/components/feature/addons/AddonManager.kt  | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
-index 0575b1166697..49b888dc3321 100644
+index 0575b1166697e..49b888dc33218 100644
 --- a/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 +++ b/mobile/android/android-components/components/feature/addons/src/main/java/mozilla/components/feature/addons/AddonManager.kt
 @@ -83,7 +83,7 @@ class AddonManager(
@@ -29,3 +39,6 @@ index 0575b1166697..49b888dc3321 100644
  
              // Build a list of installed extensions that are not built-in extensions.
              val installedAddons = installedExtensions
+-- 
+2.52.0
+

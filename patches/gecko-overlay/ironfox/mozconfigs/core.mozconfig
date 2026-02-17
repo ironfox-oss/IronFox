@@ -1,16 +1,18 @@
 # IronFox core mozconfig
 
+# Arguments specified in this mozconfig should ALWAYS be applied EVERYWHERE, regardless of target
+
 ## Allow installation of unsigned add-ons
 ### We still disable installation of unsigned add-ons by default, and we don't recommend installing them
 ### But this allows users to enable it and install unsigned extensions anyways if desired, at their own risk
 export MOZ_REQUIRE_SIGNING=
 
-## Allow replacing the malloc implementation
-ac_add_options --enable-replace-malloc
-
 ## Automatically clobber if necessary
 mk_add_options AUTOCLOBBER=1
 export AUTOCLOBBER=1
+
+## Configure allowed Gradle maven repositories
+export GRADLE_MAVEN_REPOSITORIES="file://${IRONFOX_HOME}/.m2/repository/","https://plugins.gradle.org/m2/","https://maven.google.com/"
 
 ## Disable android:debuggable
 ac_add_options --disable-android-debuggable
@@ -27,10 +29,6 @@ ac_add_options --enable-disk-remnant-avoidance
 
 ## Disable background tasks
 ac_add_options --disable-backgroundtasks
-
-## Disable build cache
-ac_add_options --without-ccache
-export CCACHE=
 
 ## Disable crash reporting
 ac_add_options --disable-crashreporter
@@ -64,22 +62,16 @@ export MOZ_PACKAGE_JSSHELL=
 ac_add_options --disable-callgrind
 ac_add_options --disable-debug
 ac_add_options --disable-debug-js-modules
-ac_add_options --disable-debug-symbols
 ac_add_options --disable-dump-painting
 ac_add_options --disable-execution-tracing
 ac_add_options --disable-extensions-webidl-bindings
-ac_add_options --disable-geckodriver
-ac_add_options --disable-gtest-in-build
 ac_add_options --disable-instruments
 ac_add_options --disable-jitdump
 ac_add_options --disable-layout-debugger
 ac_add_options --disable-logrefcnt
-ac_add_options --disable-phc
 ac_add_options --disable-profiling
 ac_add_options --disable-real-time-tracing
 ac_add_options --disable-reflow-perf
-ac_add_options --disable-rust-debug
-ac_add_options --disable-rust-tests
 ac_add_options --disable-simulator
 ac_add_options --disable-tests
 ac_add_options --disable-uniffi-fixtures
@@ -89,10 +81,8 @@ ac_add_options --disable-webdriver
 ac_add_options --disable-webrender-debugger
 ac_add_options --disable-webspeechtestbackend
 export MOZ_CALLGRIND=
-export MOZ_DEBUG_FLAGS=
 export MOZ_EXECUTION_TRACING=
 export MOZ_INSTRUMENTS=
-export MOZ_PHC=
 export MOZ_PROFILING=
 export MOZ_VTUNE=
 
@@ -130,30 +120,18 @@ ac_add_options --enable-isolated-zygote-process
 export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS=1
 export MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_WITH_ZYGOTE=1
 
-## Enable misc. security hardening
-ac_add_options --enable-hardening
-ac_add_options --enable-stl-hardening
-export MOZ_SECURITY_HARDENING=1
-
 ## Enable performance optimizations
 ac_add_options --enable-mobile-optimize
-ac_add_options --enable-optimize='-O3 -ftree-vectorize'
 ac_add_options --enable-rust-simd
 ac_add_options --enable-wasm-branch-hinting
-export MOZ_LTO=1
-export MOZ_OPTIMIZE_FLAGS='-O3 -ftree-vectorize'
 export MOZ_PGO=1
 export MOZ_RUST_SIMD=1
-export RUSTC_OPT_LEVEL=3
 
 ## Enable proxy bypass protection
 ac_add_options --enable-proxy-bypass-protection
 
-## Enable stripping/minification
-ac_add_options --enable-install-strip
+## Enable minification
 ac_add_options --enable-minify='properties'
-ac_add_options --enable-strip
-export STRIP_FLAGS="--strip-debug --strip-unneeded"
 
 ## Enable WebAssembly Memory Control support
 ac_add_options --enable-wasm-memory-control
@@ -170,9 +148,39 @@ export MOZ_INCLUDE_SOURCE_INFO=1
 ### https://gitlab.torproject.org/tpo/applications/tor-browser/-/issues/27623
 export MOZILLA_OFFICIAL=1
 
+## Set Android SDK path
+ac_add_options --with-android-sdk="${IRONFOX_ANDROID_SDK}"
+
+## Set Bundletool path
+export ANDROID_BUNDLETOOL_PATH="${IRONFOX_BUNDLETOOL_JAR}"
+
+## Set Gradle path
+ac_add_options --with-gradle="${IRONFOX_GRADLE}"
+
+## Set Java path
+ac_add_options --with-java-bin-path="${IRONFOX_JAVA_HOME}/bin"
+
+## Set l10n-central path
+ac_add_options --with-l10n-base="${IRONFOX_L10N_CENTRAL}"
+export L10NBASEDIR="${IRONFOX_L10N_CENTRAL}"
+
+## Set Rust path
+export CARGO="${IRONFOX_CARGO}"
+export RUSTC="${IRONFOX_RUSTC}"
+export RUSTDOC="${IRONFOX_RUSTDOC}"
+
+## Set Gradle flags
+export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial"
+
+## Safe Browsing
+if [ "${IRONFOX_SB_GAPI_KEY_FILE}" != 'null' ] || [ "${IRONFOX_CI}" == 1 ]; then
+    ac_add_options --with-google-safebrowsing-api-keyfile="${IRONFOX_SB_GAPI_KEY_FILE}"
+else
+    ac_add_options --without-google-safebrowsing-api-keyfile
+fi
+
 ## Skip checks for unwanted/unused API keys
 ac_add_options --without-adjust-sdk-keyfile
-ac_add_options --without-android-googlevr-sdk
 ac_add_options --without-bing-api-keyfile
 ac_add_options --without-google-location-service-api-keyfile
 ac_add_options --without-mozilla-api-keyfile
@@ -197,5 +205,3 @@ ac_add_options --enable-update-channel='release'
 ### But, by default, Fenix uses a modified "omni" variant that includes Glean
 ### We don't want Glean, so this is preferable for us
 ac_add_options --enable-geckoview-lite
-
-. "$topsrcdir/ironfox/mozconfigs/env.mozconfig"

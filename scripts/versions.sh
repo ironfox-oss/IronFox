@@ -3,9 +3,9 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_3_RELEASE)
-FIREFOX_COMMIT='cd3b8173f16a0d8d2ef764a8840ef20209ad4d9f'
-FIREFOX_VERSION='147.0.3'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_147_0_4_RELEASE)
+FIREFOX_COMMIT='310a0cc30b21a4ddf7f0826a67f73bed6b050349'
+FIREFOX_VERSION='147.0.4'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v147.0.1'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='c476a531734e1f30560d7505c27cf386dca6240f'
+L10N_COMMIT='85ab97c5bab770731dfb132306d0aba6bc6bd65f'
 
 ## Glean
 ### https://github.com/mozilla/glean
@@ -27,13 +27,13 @@ GLEAN_VERSION='v66.2.0'
 
 ## microG
 ### https://github.com/microg/GmsCore
-GMSCORE_COMMIT='cbb8dcfbe8e6155ef6e2276636a94f902041485f'
-GMSCORE_VERSION='v0.3.12.250932'
+GMSCORE_COMMIT='3ba21336181c846630242124176737c05b3e8b6f'
+GMSCORE_VERSION='v0.3.13.250932'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
-PHOENIX_COMMIT='964d320422c481ef5ff31c1a1ae0301e4e1c36e2'
-PHOENIX_VERSION='2026.01.21.1'
+PHOENIX_COMMIT='f668d431a8fe461f04f572b6e95865528b5e00a1'
+PHOENIX_VERSION='2026.02.16.1'
 
 ## uniffi-rs (Tor)
 ### https://gitlab.torproject.org/tpo/applications/uniffi-rs
@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-UNIFIEDPUSHAC_COMMIT='6794240412190535fc2791fbb87fef7bb4c9c0b7'
+UNIFIEDPUSHAC_COMMIT='c84df01551cd9fb7f7a88d6ca67709eb6d977b40'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
@@ -71,22 +71,22 @@ CBINDGEN_VERSION='0.29.2'
 
 ## Gradle (F-Droid)
 ### https://gitlab.com/fdroid/gradlew-fdroid
-GRADLE_COMMIT='e55f371891e02a45ee65d18cabc81aaf665c96d0'
+GRADLE_COMMIT='996b7829f40f33317d33c1b6ddcffcf976bd6181'
 
 ## Rust
 ### https://releases.rs/
-RUST_MAJOR_VERSION='1.93'
-RUST_VERSION="${RUST_MAJOR_VERSION}.0"
-#RUST_MAJOR_VERSION='1.91.1'
-#RUST_VERSION="${RUST_MAJOR_VERSION}"
+#RUST_MAJOR_VERSION='1.93'
+#RUST_VERSION="${RUST_MAJOR_VERSION}.0"
+RUST_MAJOR_VERSION='1.93.1'
+RUST_VERSION="${RUST_MAJOR_VERSION}"
 
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
-PREBUILDS_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
-UNIFFI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
-UNIFFI_LINUX_IRONFOX_REVISION='4'
-UNIFFI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'
-UNIFFI_OSX_IRONFOX_REVISION='4'
+PREBUILDS_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
+UNIFFI_LINUX_IRONFOX_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
+UNIFFI_LINUX_IRONFOX_REVISION='5'
+UNIFFI_OSX_IRONFOX_COMMIT='74d5b4bc62c3aa4ceab64c41e5185026574a86b6'
+UNIFFI_OSX_IRONFOX_REVISION='5'
 WASI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
 WASI_LINUX_IRONFOX_REVISION='4'
 WASI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'

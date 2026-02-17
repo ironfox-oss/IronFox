@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="restart_required_summary">سيؤدي تغيير هذا الإعداد إلى إعادة تشغيل المتصفح</string>
+    <string name="unsupported_summary">هذا الإعداد غير موصى به بتاتا وغير مدعوم. يرجى المتابعة بحذر.</string>
+    <string name="if_preferences">إعدادات IronFox</string>
+    <string name="if_preferences_misc">متفرقات</string>
+    <string name="if_preferences_privacy">خصوصية</string>
+    <string name="if_preferences_privacy_security">الأمن والخصوصية</string>
+    <string name="if_preferences_secret">إعدادات سرية</string>
+    <string name="if_preferences_security">الأمان</string>
+    <string name="preference_referer_policy_hosts_match">تعطيل محيلات المصادر عبر النطاقات</string>
 </resources>
