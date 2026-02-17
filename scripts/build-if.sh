@@ -260,6 +260,7 @@ function prep_up_ac() {
         rm -f "${IRONFOX_UP_AC}/local.properties"
     fi
     cp -f "${IRONFOX_PATCHES}/build/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties"
+    "${IRONFOX_SED}" -i "s|{FIREFOX_VERSION}|${FIREFOX_VERSION}|" "${IRONFOX_UP_AC}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_AS}|${IRONFOX_AS}|" "${IRONFOX_UP_AC}/local.properties"
 
     echo_green_text 'SUCCESS: Prepared UnifiedPush-AC'
@@ -335,7 +336,6 @@ function build_microg() {
 
     pushd "${IRONFOX_GMSCORE}"
     "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Dhttps.protocols=TLSv1.3 -x javaDocReleaseGeneration \
-        :play-services-ads-identifier:publishToMavenLocal \
         :play-services-base:publishToMavenLocal \
         :play-services-basement:publishToMavenLocal \
         :play-services-fido:publishToMavenLocal \

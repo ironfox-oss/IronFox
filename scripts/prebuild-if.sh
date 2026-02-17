@@ -471,17 +471,6 @@ apply_overlay "${IRONFOX_AC_OVERLAY}/"
 popd
 
 #
-# UnifiedPush-AC
-#
-
-pushd "${IRONFOX_UP_AC}"
-
-# Set target Firefox version
-"${IRONFOX_SED}" -i "s|{FIREFOX_VERSION}|${FIREFOX_VERSION}|" "${IRONFOX_UP_AC}/gradle/libs.versions.toml"
-
-popd
-
-#
 # Application Services
 #
 
