@@ -61,6 +61,18 @@ export TASKCLUSTER_ROOT_URL='https://noop.invalid'
 export NSS_DIR="${IRONFOX_NSS_DIR}"
 export NSS_STATIC=1
 
+# Phoenix
+export PHOENIX_ANDROID_ONLY=1
+export PHOENIX_EXTENDED_ONLY=1
+export PHOENIX_EXTRA_CFG=1
+export PHOENIX_EXTRA_CFG_FILE="${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
+export PHOENIX_EXTRA_CFG_OUTPUT_DIR="${IRONFOX_GECKO}/ironfox/prefs"
+export PHOENIX_EXTRA_EXTENDED_OUTPUT_FILENAME_ANDROID='ironfox'
+export PHOENIX_EXTRA_POLICIES_ANDROID=1
+export PHOENIX_EXTRA_POLICIES_FILE_ANDROID="${IRONFOX_PATCHES}/build/gecko/policies.json"
+export PHOENIX_EXTRA_POLICIES_OUTPUT_DIR_ANDROID="${IRONFOX_GECKO}/ironfox/prefs"
+export PHOENIX_SPECS=0
+
 # Python (Glean)
 export GLEAN_PYTHON="$(which python)"
 

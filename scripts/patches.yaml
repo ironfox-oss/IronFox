@@ -515,9 +515,16 @@ patches:
   - file: "gecko-fix-canvas-randomization.patch"
     name: "Fix Canvas Randomization"
     description: |
-      Backports a fix for an upstream bug that prevents Canvas randomization from working for getImageData and WebGL image hash: https://bugzilla.mozilla.org/show_bug.cgi?id=2013976
+      Backports a fix for an upstream bug that prevents Canvas randomization from working for getImageData and WebGL image hash: https://bugzilla.mozilla.org/show_bug.cgi?id=2013976, and enables Canvas randomization for solid colors.
     reason: "To protect against fingerprinting by ensuring that canvas data is fully randomized."
     effect: "Users are provided with fingerprinting protection that works as expected."
+    category: "Privacy"
+
+  - file: "gecko-remove-openai.patch"
+    name: "Remove OpenAI Backend"
+    description: "Removes the OpenAI backend from Mozilla's ML (machine learning) component."
+    reason: "To improve privacy for users (and reduce attack surface) by removing integration with a privacy-invasive/unwanted LLM."
+    effect: "Users are provided with a more private browsing experience."
     category: "Privacy"
 
   # Security
@@ -562,13 +569,6 @@ patches:
     description: "Enables encrypted storage (via Android's Keystore system: https://developer.android.com/privacy-and-security/keystore) for Firefox account state."
     reason: "To improve privacy and security for users, by adding extra protection for sensitive data."
     effect: "Protects users against unauthorized access/compromise to sensitive data."
-    category: "Security"
-
-  - file: "fenix-enable-isolated-process.patch"
-    name: "Enable Isolated Content Processes"
-    description: "Enables content process isolation by default."
-    reason: "To improve security for users, by providing stronger protection against various attacks."
-    effect: "Provides users with enhanced isolation."
     category: "Security"
 
   - file: "fenix-enable-memory-tagging.patch"

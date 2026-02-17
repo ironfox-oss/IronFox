@@ -235,12 +235,21 @@ object GeckoSettingsBridge {
 
     fun setTranslationsEnabled(context: Context, engine: Engine) {
         val translationsEnabled = IronFoxPreferences.isTranslationsEnabled(context)
+        val translationsAiControlGeckoPref = GeckoSettingsDictionary.translationsAiControl
         val translationsEnabledGeckoPref = GeckoSettingsDictionary.translationsEnabled
         val translationsSupportedGeckoPref = GeckoSettingsDictionary.translationsUnsupported
         setUserPref(engine, translationsEnabledGeckoPref, translationsEnabled)
         setDefaultPref(engine, translationsEnabledGeckoPref, translationsEnabled)
         setUserPref(engine, translationsSupportedGeckoPref, !translationsEnabled)
         setDefaultPref(engine, translationsSupportedGeckoPref, !translationsEnabled)
+
+        if (translationsEnabled) {
+            setUserPref(engine, translationsAiControlGeckoPref, "enabled")
+            setDefaultPref(engine, translationsAiControlGeckoPref, "enabled")
+        } else {
+            setUserPref(engine, translationsAiControlGeckoPref, "blocked")
+            setDefaultPref(engine, translationsAiControlGeckoPref, "blocked")
+        }
     }
 
     fun setIPv6Enabled(context: Context, engine: Engine) {

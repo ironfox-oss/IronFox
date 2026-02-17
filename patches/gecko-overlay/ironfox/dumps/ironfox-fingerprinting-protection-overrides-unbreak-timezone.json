@@ -1,901 +1,901 @@
 {
-  "data": [
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "browserleaks.com"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ad"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ae"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.af"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ag"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.al"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.am"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.ao"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ar"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.as"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.at"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.au"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.az"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ba"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.bd"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.be"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.bf"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.bg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.bh"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.bi"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.bj"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.bn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.bo"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.br"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.bs"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.bt"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.bw"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.by"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.bz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ca"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cd"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cf"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ch"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ci"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.ck"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cl"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.co"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.cr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.cu"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cv"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.cy"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.de"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.dj"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.dk"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.dm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.do"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.dz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ec"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ee"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.eg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.es"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.et"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.fi"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.fj"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.fm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.fr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ga"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ge"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.gg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.gh"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.gi"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.gl"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.gm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.gr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.gt"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.gy"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.hk"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.hn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.hr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ht"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.hu"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.id"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ie"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.il"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.im"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.in"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.iq"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.is"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.it"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.je"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.jm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.jo"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.jp"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.ke"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.kh"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ki"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.kg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.kr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.kw"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.kz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.la"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.lb"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.li"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.lk"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.ls"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.lt"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.lu"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.lv"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ly"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.ma"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.md"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.me"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.mg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.mk"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ml"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.mm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.mn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.mt"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.mu"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.mv"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.mw"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.mx"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.my"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.mz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.na"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ng"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ni"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ne"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.nl"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.no"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.np"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.nr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.nu"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.nz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.om"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.pa"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.pe"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.pg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ph"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.pk"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.pl"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.pn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.pr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ps"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.pt"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.py"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.qa"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ro"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ru"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.rw"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.sa"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.sb"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.sc"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.se"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.sg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.sh"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.si"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.sk"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.sl"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.sn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.so"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.sm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.sr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.st"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.sv"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.td"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.tg"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.th"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.tj"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.tl"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.tm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.tn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.to"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.tr"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.tt"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.tw"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.tz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.ua"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.ug"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.uk"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.uy"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.uz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.vc"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.ve"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.vi"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.com.vn"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.vu"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.ws"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.rs"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.za"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.zm"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.co.zw"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "google.cat"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "arcticfoxes.net"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "aria.im"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "bahn.expert"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "bitcoinist.org"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "chatwave.org"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "chipotle.com"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "cinny.in"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "citybbq.com"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "discord.com"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "doordash.com"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "duesen.chat"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "element.io"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "flieger.chat"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "g24.at"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "gemeinsam.jetzt"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "gnulinux.club"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "hot-chilli.im"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "kosmikdog.eu"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "mtrx.nz"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "neat.chat"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "nitro.chat"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "nope.chat"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "oblak.be"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "pcriot.org"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "pendora.io"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "proton.me"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "rollenspiel.chat"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "socialnetwork24.com"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "studichat.de"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "synod.im"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "temoos.app"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "the-apothecary.club"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "unredacted.org"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "utwente.io"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "we2.ee"
-    },
-    {
-      "overrides": "-JSDateTimeUTC",
-      "firstPartyDomain": "yatrix.org"
-    }
-  ],
-  "timestamp": 2147483647
+    "data": [
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "browserleaks.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ad"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ae"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.af"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ag"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.al"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.am"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.ao"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ar"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.as"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.at"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.au"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.az"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ba"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.bd"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.be"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.bf"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.bg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.bh"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.bi"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.bj"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.bn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.bo"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.br"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.bs"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.bt"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.bw"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.by"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.bz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ca"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cd"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cf"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ch"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ci"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.ck"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cl"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.co"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.cr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.cu"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cv"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.cy"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.de"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.dj"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.dk"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.dm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.do"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.dz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ec"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ee"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.eg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.es"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.et"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.fi"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.fj"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.fm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.fr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ga"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ge"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.gg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.gh"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.gi"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.gl"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.gm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.gr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.gt"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.gy"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.hk"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.hn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.hr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ht"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.hu"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.id"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ie"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.il"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.im"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.in"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.iq"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.is"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.it"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.je"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.jm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.jo"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.jp"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.ke"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.kh"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ki"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.kg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.kr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.kw"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.kz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.la"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.lb"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.li"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.lk"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.ls"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.lt"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.lu"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.lv"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ly"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.ma"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.md"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.me"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.mg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.mk"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ml"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.mm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.mn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.mt"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.mu"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.mv"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.mw"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.mx"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.my"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.mz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.na"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ng"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ni"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ne"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.nl"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.no"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.np"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.nr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.nu"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.nz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.om"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.pa"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.pe"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.pg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ph"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.pk"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.pl"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.pn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.pr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ps"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.pt"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.py"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.qa"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ro"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ru"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.rw"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.sa"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.sb"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.sc"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.se"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.sg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.sh"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.si"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.sk"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.sl"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.sn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.so"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.sm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.sr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.st"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.sv"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.td"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.tg"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.th"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.tj"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.tl"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.tm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.tn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.to"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.tr"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.tt"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.tw"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.tz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.ua"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.ug"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.uk"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.uy"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.uz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.vc"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.ve"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.vi"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.com.vn"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.vu"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.ws"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.rs"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.za"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.zm"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.co.zw"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "google.cat"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "arcticfoxes.net"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "aria.im"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "bahn.expert"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "bitcoinist.org"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "chatwave.org"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "chipotle.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "cinny.in"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "citybbq.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "discord.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "doordash.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "duesen.chat"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "element.io"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "flieger.chat"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "g24.at"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "gemeinsam.jetzt"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "gnulinux.club"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "hot-chilli.im"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "kosmikdog.eu"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "mtrx.nz"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "neat.chat"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "nitro.chat"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "nope.chat"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "oblak.be"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "pcriot.org"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "pendora.io"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "proton.me"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "rollenspiel.chat"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "socialnetwork24.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "studichat.de"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "synod.im"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "temoos.app"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "the-apothecary.club"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "unredacted.org"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "utwente.io"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "we2.ee"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "yatrix.org"
+        }
+    ],
+    "timestamp": 2147483647
 }

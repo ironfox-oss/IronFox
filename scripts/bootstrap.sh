@@ -4,14 +4,6 @@
 
 set -euo pipefail
 
-echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
-
-echo_green_text() {
-	echo -e "\033[32m$1\033[0m"
-}
-
 # Set-up our environment
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
@@ -75,6 +67,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
     # Install our dependencies...
     brew install \
         cmake \
+        jq \
         nasm \
         ninja \
         node \
@@ -144,6 +137,7 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
         clang \
         gawk \
         git \
+        jq \
         m4 \
         make \
         nasm \

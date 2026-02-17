@@ -14,6 +14,7 @@ RUN dnf install -y \
     clang \
     gawk \
     git \
+    jq \
     m4 \
     make \
     nasm \

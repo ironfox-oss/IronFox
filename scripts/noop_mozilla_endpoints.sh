@@ -2,9 +2,7 @@
 
 set -euo pipefail
 
-echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
+source "$(dirname $0)/utilities.sh"
 
 function noop_mozilla_endpoints() {
     local endpoint="$1"

@@ -1,0 +1,65 @@
+{
+    "policies": {
+        "AppAutoUpdate": false,
+        "AppUpdateURL": "https://localhost",
+        "Authentication": {
+            "AllowNonFQDN": {
+                "NTLM": false,
+                "SPNEGO": false
+            },
+            "AllowProxies": {
+                "NTLM": false,
+                "SPNEGO": false
+            },
+            "Delegated": [ ],
+            "Locked": false,
+            "NTLM": [ ],
+            "PrivateBrowsing": false,
+            "SPNEGO": [ ]
+        },
+        "BackgroundAppUpdate": false,
+        "DisableAppUpdate": true,
+        "DisableSetDesktopBackground": true,
+        "ExtensionSettings": {
+            "*": {
+                "blocked_install_message": "I am Iron Man.",
+                "allowed_types": [
+                    "extension"
+                ]
+            }
+        },
+        "HttpsOnlyMode": "enabled",
+        "InstallAddonsPermission": {
+            "Default": false
+        },
+        "LegacySameSiteCookieBehaviorEnabled": false,
+        "ManualAppUpdateOnly": true,
+        "MicrosoftEntraSSO": false,
+        "OfferToSaveLoginsDefault": false,
+        "Permissions": {
+            "Autoplay": {
+                "Default": "block-audio-video",
+                "Locked": false
+            },
+            "VirtualReality": {
+                "BlockNewRequests": true,
+                "Locked": false
+            }
+        },
+        "PopupBlocking": {
+            "Default": true,
+            "Locked": false
+        },
+        "Preferences": {
+            "browser.ironfox.applied.policies": {
+                "Status": "locked",
+                "Type": "boolean",
+                "Value": true
+            }
+        },
+        "SearchEngines": {
+            "PreventInstalls": true
+        },
+        "WindowsSSO": false
+    }
+}

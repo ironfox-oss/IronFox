@@ -2,13 +2,7 @@
 
 set -euo pipefail
 
-echo_red_text() {
-	echo -e "\033[31m$1\033[0m"
-}
-
-echo_green_text() {
-	echo -e "\033[32m$1\033[0m"
-}
+source "$(dirname $0)/utilities.sh"
 
 function deglean() {
     local dir="$1"

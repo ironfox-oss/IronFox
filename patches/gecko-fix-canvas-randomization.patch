@@ -1,3 +1,17 @@
+From 2659282b893adb9edba79e8b8fa74ec9063f0625 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 10 Feb 2026 17:31:22 +0000
+Subject: [PATCH] fix: Ensure Canvas Randomization is properly applied
+
+Adapted from any1here's LibreWolf patch: https://codeberg.org/librewolf/source/src/commit/343645241e58cb43b713968cb29614688e6d8979/patches/fpp-canvas-fix.patch
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ dom/canvas/CanvasRenderingContext2D.cpp                  | 4 ++--
+ dom/canvas/ClientWebGLContext.cpp                        | 4 ++--
+ toolkit/components/resistfingerprinting/nsRFPService.cpp | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
 diff --git a/dom/canvas/CanvasRenderingContext2D.cpp b/dom/canvas/CanvasRenderingContext2D.cpp
 index ee186c2b9a2b..46e8ec897cdc 100644
 --- a/dom/canvas/CanvasRenderingContext2D.cpp
@@ -42,3 +56,28 @@ index 11578f425f7c..d62409ff80b1 100644
          const auto pii = webgl::PackingInfoInfo::For(desc.pi);
          // DoReadPixels() requres pii to be Some().
          MOZ_ASSERT(pii.isSome());
+diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
+index 9554fbb21bf0..7b8e7198d9aa 100644
+--- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
++++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
+@@ -1806,7 +1806,7 @@ nsresult nsRFPService::RandomizeElements(
+   }
+ 
+   // Don't randomize if all groups are uniform.
+-  const bool allGroupsMatch = [&]() {
++/*  const bool allGroupsMatch = [&]() {
+     auto itr = RangedPtr<const uint8_t>(aData, aSizeInBytes);
+     const auto itrEnd = itr + (groupCount * groupSize);
+     for (; itr != itrEnd; itr += groupSize) {
+@@ -1818,7 +1818,7 @@ nsresult nsRFPService::RandomizeElements(
+   }();
+   if (allGroupsMatch) {
+     return NS_OK;
+-  }
++  } */
+ 
+   auto timerId =
+       glean::fingerprinting_protection::canvas_noise_calculate_time_2.Start();
+-- 
+2.52.0
+

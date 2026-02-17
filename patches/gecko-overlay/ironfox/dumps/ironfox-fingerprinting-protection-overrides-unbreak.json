@@ -1,151 +1,151 @@
 {
-  "data": [
-    {
-      "overrides": "-WebGLRenderCapability",
-      "firstPartyDomain": "abeto.co"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "brave.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "bsky.app"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "cryptpad.fr",
-      "thirdPartyDomain": "cryptpad.info"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "discord.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "favicon.io"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-WebGLRenderCapability",
-      "firstPartyDomain": "figma.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "fittingbox.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "gitlab.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "gsi.go.jp"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "harkins.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "icloud.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "icloud.com.cn"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "jerseymikes.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "jspaint.app"
-    },
-    {
-      "overrides": "-ScreenRect",
-      "firstPartyDomain": "letterboxd.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "mapple.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "megacloud.blog"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "megacloud.store"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "namemc.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "nperf.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "photopea.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "piskelapp.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "pogo.com",
-      "thirdPartyDomain": "pogospike.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "pogospike.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "pornhub.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "usgs.gov"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "viliusle.github.io"
-    },
-    {
-      "overrides": "-ReduceTimerPrecision",
-      "firstPartyDomain": "vsynctester.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "watchduty.org"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "x.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "zennioptical.com",
-      "thirdPartyDomain": "fittingbox.com"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "*",
-      "thirdPartyDomain": "megacloud.blog"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "*",
-      "thirdPartyDomain": "megacloud.store"
-    },
-    {
-      "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
-      "firstPartyDomain": "*",
-      "thirdPartyDomain": "pornhub.com"
-    }
-  ],
-  "timestamp": 2147483647
+    "data": [
+        {
+            "overrides": "-WebGLRenderCapability",
+            "firstPartyDomain": "abeto.co"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "brave.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "bsky.app"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "cryptpad.fr",
+            "thirdPartyDomain": "cryptpad.info"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "discord.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "favicon.io"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt,-WebGLRenderCapability",
+            "firstPartyDomain": "figma.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "fittingbox.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "gitlab.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "gsi.go.jp"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "harkins.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "icloud.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "icloud.com.cn"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "jerseymikes.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "jspaint.app"
+        },
+        {
+            "overrides": "-ScreenRect",
+            "firstPartyDomain": "letterboxd.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "mapple.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "megacloud.blog"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "megacloud.store"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "namemc.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "nperf.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "photopea.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "piskelapp.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "pogo.com",
+            "thirdPartyDomain": "pogospike.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "pogospike.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "pornhub.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "usgs.gov"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "viliusle.github.io"
+        },
+        {
+            "overrides": "-ReduceTimerPrecision",
+            "firstPartyDomain": "vsynctester.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "watchduty.org"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "x.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "zennioptical.com",
+            "thirdPartyDomain": "fittingbox.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "*",
+            "thirdPartyDomain": "megacloud.blog"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "*",
+            "thirdPartyDomain": "megacloud.store"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasExtractionFromThirdPartiesIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "*",
+            "thirdPartyDomain": "pornhub.com"
+        }
+    ],
+    "timestamp": 2147483647
 }

@@ -574,7 +574,7 @@ class IronFoxSettingsFragment : PreferenceFragmentCompat() {
         /**
         * Indicates whether or not we should enable Firefox Translations
         * Default: true
-        * Gecko preference(s) impacted: browser.translations.enable, browser.translations.simulateUnsupportedEngine
+        * Gecko preference(s) impacted: browser.ai.control.translations, browser.translations.enable, browser.translations.simulateUnsupportedEngine
         */
         val translationsEnabledPreference = requirePreference<SwitchPreference>(
             FenixSettingsDictionary.translationsEnabled

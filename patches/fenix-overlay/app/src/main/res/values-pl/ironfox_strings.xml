@@ -21,7 +21,7 @@
     <string name="preference_website_appearance_title">Preferowany wygląd strony internetowej</string>
     <string name="preference_website_appearance_description">Niektóre strony dostosowują swój schemat kolorów na podstawie preferencji użytkownika. Wybierz schemat kolorów, którego chcesz używać dla tych stron. Pamiętaj, że opcje inne niż Jasny sprawią, że przeglądarka będzie wyglądać bardziej unikalnie, co może ułatwić zbieranie odcisków palców.</string>
     <string name="preference_prefers_browser_color_scheme">Zgodny z motywem przeglądarki</string>
-    <string name="preference_prefers_light_color_scheme">Jasny</string>
+    <string name="preference_prefers_light_color_scheme">Jasny (Domyślny)</string>
     <string name="preference_prefers_dark_color_scheme">Ciemny</string>
     <string name="preference_print_enabled">Włącz funkcje drukowania</string>
     <string name="preference_safe_browsing_enabled">Włącz Bezpieczne przeglądanie</string>
@@ -40,7 +40,7 @@
     <string name="tor_spoof_english_caption">Zwiększ prywatność, maskując ustawienia językowe swojego urządzenia.</string>
     <string name="tor_spoof_english_description">Żądaj angielskiej (en-US) wersji stron internetowych. Dzięki temu przeglądarka będzie mniej unikatowa, co wzmocni ochronę przed technikami zbierania odcisków palców, które identyfikują użytkowników na podstawie ich preferencji językowych.</string>
     <string name="tor_spoof_english">Wymagaj angielskich wersji stron</string>
-    <string name="tor_spoof_english_summary">Po włączeniu wzmacnia ochronę przed zbieraniem odcisków palców</string>
+    <string name="tor_spoof_english_summary">Po włączeniu wzmacnia ochronę przed zbieraniem odcisków palców - Zmiana tego ustawienia spowoduje restart przeglądarki</string>
     <string name="preference_svg_enabled">Włącz skalowalną grafikę wektorową (SVG)</string>
     <string name="onboarding_install_ublock_description">uBlock Origin zwiększa prywatność i bezpieczeństwo, blokując niechciane treści. IronFox korzysta z niestandardowej konfiguracji uBlock Origin z wyselekcjonowanymi listami filtrów, aby zapewnić optymalną ochronę i wydajność.</string>
     <string name="unsupported_summary">To ustawienie NIE jest zalecane ani obsługiwane. Zachowaj ostrożność.</string>
@@ -51,7 +51,7 @@
     <string name="preference_referer_policy">Zasady zapytań między domenami</string>
     <string name="preference_referer_policy_summary">Skonfiguruj zachowanie zapytań między domenami</string>
     <string name="preference_referer_policy_hosts_match">Wyłącz żądania między domenami</string>
-    <string name="preference_referer_policy_always">Zawsze przesyłaj zapytania między domenami</string>
+    <string name="preference_referer_policy_always">Zawsze przesyłaj zapytania między domenami (Domyślne)</string>
     <string name="preference_referer_policy_base_domains_match">Przesyłaj zapytania między domenami, gdy domeny bazowe są takie same</string>
     <string name="spoof_timezone">Symuluj strefę czasową UTC-0</string>
     <string name="preference_autoplay_policy_click_to_play">Kliknij, aby odtworzyć</string>
@@ -64,4 +64,16 @@
     <string name="preference_jit_trusted_principals_enabled">Włącz kompilację Just-in-time (JIT) JavaScript dla rozszerzeń</string>
     <string name="spoof_timezone_summary">Po włączeniu wzmacnia ochronę przed zbieraniem odcisków palców</string>
     <string name="preference_translations_enabled">Włącz Firefox Translations</string>
+    <string name="preference_always_use_private_browsing">Zawsze używaj trybu prywatnego</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Włącz nadpisywanie ochrony przed pobieraniem odcisków palców przez IronFox</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Domyślnie rozluźnia zabezpieczenia odcisków palców dla niektórych stron internetowych, aby zmniejszyć liczbę awarii, korzystając z listy IronFox — Zmiana tego ustawienia spowoduje ponowne uruchomienie przeglądarki</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Włącz ochronę przed technologią Fingerprinting zapewnianą przez Mozilla</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Rozluźnia domyślne zabezpieczenie odcisków palców dla niektórych stron internetowych, aby zmniejszyć liczbę awarii, korzystając z listy Mozilli — Zmiana tego ustawienia spowoduje ponowne uruchomienie przeglądarki</string>
+    <string name="preference_autoplay_policy_sticky">Lepki</string>
+    <string name="preference_autoplay_policy_transient">Przejściowy (Domyślny)</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Zastosuj wyjątki IronFoxa w podmianie strefy czasowej</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Wyłącza podmianę strefy czasowej na niektórych stronach w celu prawidłowego ich wyświetlenia - Zmiana tego ustawienia zrestartuje przeglądarkę</string>
+    <string name="wallpaper_collection_fennec_description">Tapety z przeglądarki Fennec z F-Droid. %s</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Przy wyłączonym WebGL, włącza WebGL dla niektórych stron w celu poprawienia ich wyświetlania - Zmiana tego ustawienia zrestartuje przeglądarkę</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Instalacja dodatków jest domyślnie wyłączona. Można ją włączyć ­w Ustawienia -&gt; IronFox -&gt; Ustawienia IronFox -&gt; Bezpieczeństwo -&gt; Zezwól na instalację dodatków. Włączenie instalacji dodatków obniża poziom bezpieczeństwa.</string>
 </resources>

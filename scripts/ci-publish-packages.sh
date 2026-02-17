@@ -3,9 +3,14 @@
 # This file is expected to be executed in GitLab CI
 # DO NOT executed this manually!
 
-set -eu
+set -euo pipefail
 
-source "$(realpath $(dirname "$0"))/versions.sh"
+# Set-up our environment
+bash -x "$(realpath $(dirname "$0"))/env.sh"
+source "$(realpath $(dirname "$0"))/env.sh"
+
+# Include version info
+source "${IRONFOX_VERSIONS}"
 
 export GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
 
@@ -18,9 +23,6 @@ upload_to_package_registry() {
         "${GENERIC_PACKAGES_URL}/${package_name}/${IRONFOX_VERSION}/${file_name}"
 }
 
-export ARTIFACTS="${CI_PROJECT_DIR}/artifacts"
-export APK_ARTIFACTS="${ARTIFACTS}/apk"
-export APKS_ARTIFACTS="${ARTIFACTS}/apks"
 export BUILD_DIR="${CI_PROJECT_DIR}/build"
 
 mkdir -vp "${BUILD_DIR}"
@@ -44,12 +46,12 @@ upload_asset() {
 }
 
 # Upload packages to package registry
-for apk in "${APK_ARTIFACTS}"/*.apk; do
+for apk in "${IRONFOX_APK_ARTIFACTS}"/*.apk; do
     package_name="apk"
     upload_asset "${package_name}" "${apk}"
 
 done
-for apks in "${APKS_ARTIFACTS}"/*.apks; do
+for apks in "${IRONFOX_APKS_ARTIFACTS}"/*.apks; do
     package_name="apkset"
     upload_asset "${package_name}" "${apks}"
 done
