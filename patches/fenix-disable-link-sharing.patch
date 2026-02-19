@@ -1,14 +1,23 @@
+From df16fd7986c6a481e995b4355e56c93bc7bffd57 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 04:29:26 +0000
+Subject: [PATCH] fix: Disable 'Sent from Firefox' Link Sharing
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt     | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..415da6e0ba17 100644
+index 81d95a9666a1..d1d2024a7ae1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1012,13 +1012,13 @@ class Settings(
+@@ -1025,12 +1025,12 @@ class Settings(
  
-     var whatsappLinkSharingEnabled by lazyFeatureFlagPreference(
+     var whatsappLinkSharingEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_link_sharing),
--        featureFlag = true,
-+        featureFlag = false,
-         default = { FxNimbus.features.sentFromFirefox.value().enabled },
+-        default = { FxNimbus.features.sentFromFirefox.value().enabled },
++        default = { false },
      )
  
      var linkSharingSettingsSnackbarShown by booleanPreference(
@@ -18,3 +27,6 @@ index c7db941b0f7e..415da6e0ba17 100644
      )
  
      /**
+-- 
+2.53.0
+

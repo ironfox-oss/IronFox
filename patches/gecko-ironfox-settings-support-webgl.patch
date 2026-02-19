@@ -1,27 +1,42 @@
+From d92856883f414284337daa28dca561e5ddb3e19d Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 04:56:55 +0000
+Subject: [PATCH] feat: Implement a RFP target to control whether WebGL is
+ enabled or disabled
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ dom/canvas/ClientWebGLContext.cpp                      | 4 ++++
+ toolkit/components/resistfingerprinting/RFPTargets.inc | 1 +
+ 2 files changed, 5 insertions(+)
+
 diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
-index 11578f425f7c..68f29fff7470 100644
+index 12492d606cc2..0fd90c1a8b19 100644
 --- a/dom/canvas/ClientWebGLContext.cpp
 +++ b/dom/canvas/ClientWebGLContext.cpp
-@@ -879,7 +879,9 @@ bool ClientWebGLContext::CreateHostContext(const uvec2& requestedSize) {
-         .size = requestedSize,
+@@ -883,6 +883,10 @@ bool ClientWebGLContext::CreateHostContext(const uvec2& requestedSize) {
          .options = options,
      };
--
+ 
 +    if (ShouldResistFingerprinting(RFPTarget::DisableWebGL)) {
 +      return Err("WebGL is currently disabled.");
 +    }
++
      // -
  
      auto useOop = IsWebglOutOfProcessEnabled();
 diff --git a/toolkit/components/resistfingerprinting/RFPTargets.inc b/toolkit/components/resistfingerprinting/RFPTargets.inc
-index 540313664e..21c4668b9a 100644
+index b77c1fd1f9ac..b87224e93d7e 100644
 --- a/toolkit/components/resistfingerprinting/RFPTargets.inc
 +++ b/toolkit/components/resistfingerprinting/RFPTargets.inc
-@@ -109,6 +109,7 @@ ITEM_VALUE(MaxTouchPointsCollapse,      73)
- ITEM_VALUE(NavigatorHWConcurrencyTiered,74)
- ITEM_VALUE(WebGLRandomization,          75)
- ITEM_VALUE(EfficientCanvasRandomization, 76)
-+ITEM_VALUE(DisableWebGL,77)
+@@ -113,6 +113,7 @@ ITEM_VALUE(WebGLVendorSanitize,         77)
+ ITEM_VALUE(WebGLVendorConstant,         78)
+ ITEM_VALUE(WebGLVendorRandomize,        79)
+ ITEM_VALUE(WebGLRendererConstant,       80)
++ITEM_VALUE(DisableWebGL,81)
  
  // !!! Adding a new target? Rename PointerId and repurpose it.
  
+-- 
+2.53.0
+

@@ -198,6 +198,12 @@ pushd "${IRONFOX_FENIX}"
 "${IRONFOX_SED}" -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 "${IRONFOX_SED}" -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
+# Enable the "Choose download location" feature
+"${IRONFOX_SED}" -i -e 's|downloadsDefaultLocation = .*|downloadsDefaultLocation = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Enable Firefox Labs
+"${IRONFOX_SED}" -i -e 's|FIREFOX_LABS = .*|FIREFOX_LABS = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+
 # Ensure onboarding is always enabled
 "${IRONFOX_SED}" -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 

@@ -26,6 +26,7 @@ object FenixSettingsVisibilityManager {
         hideLinkSharing(context, prefFragment)
         hideLocalAddonInstall(context, prefFragment)
         hideNimbusExperiments(context, prefFragment)
+        hideRemoteImprovements(context, prefFragment)
         hideProfiler(context, prefFragment)
         hideRate(context, prefFragment)
         hideRemoteDebugging(context, prefFragment)
@@ -50,6 +51,7 @@ object FenixSettingsVisibilityManager {
         displayLnaBlocking(context, prefFragment)
         displayLnaFeature(context, prefFragment)
         displayLnaTrackerBlocking(context, prefFragment)
+        displayMinimalBottomToolbarWhenEnteringText(context, prefFragment)
         displayNewDynamicToolbarBehaviour(context, prefFragment)
         displayRelayFeature(context, prefFragment)
         displaySettingsSearch(context, prefFragment)
@@ -148,6 +150,20 @@ object FenixSettingsVisibilityManager {
     ) {
         val nimbusExperimentsKey = context.getPreferenceKey(FenixSettingsDictionary.nimbusExperiments)
         hidePreference(nimbusExperimentsKey, prefFragment)
+    }
+
+    /**
+     * Hide the Remote Improvements (Nimbus Rollouts) option
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun hideRemoteImprovements(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val remoteImprovementsKey = context.getPreferenceKey(FenixSettingsDictionary.remoteImprovements)
+        hidePreference(remoteImprovementsKey, prefFragment)
     }
 
     /**
@@ -319,6 +335,20 @@ object FenixSettingsVisibilityManager {
     ) {
         val lnaTrackerBlockingKey = context.getPreferenceKey(FenixSettingsDictionary.isLnaTrackerBlockingEnabled)
         displayPreference(lnaTrackerBlockingKey, prefFragment)
+    }
+
+    /**
+     * Display the setting to toggle the minimal bottom toolbar when entering text
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayMinimalBottomToolbarWhenEnteringText(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val minimalBottomToolbarWhenEnteringTextKey = context.getPreferenceKey(FenixSettingsDictionary.useMinimalBottomToolbarWhenEnteringText)
+        displayPreference(minimalBottomToolbarWhenEnteringTextKey, prefFragment)
     }
 
      /**

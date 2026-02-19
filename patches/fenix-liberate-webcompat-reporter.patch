@@ -11,6 +11,19 @@ index 95ded141876d..64c928f69685 100644
  
                      val isDesktopMode by store.observeAsState(initialValue = false) { state ->
                          state.isDesktopMode
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt
+index 00728e2ba98b..edeb6b7e0b50 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt
+@@ -38,7 +38,7 @@ data class MenuState(
+             val url = browserMenuState?.selectedTab?.content?.url
+             val isAboutUrl = url?.isAboutUrl() ?: false
+             val isContentUrl = url?.isContentUrl() ?: false
+-            return !isAboutUrl && !isContentUrl
++            return false
+         }
+ }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
 index b5cd2868a6eb..e8656993563e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
