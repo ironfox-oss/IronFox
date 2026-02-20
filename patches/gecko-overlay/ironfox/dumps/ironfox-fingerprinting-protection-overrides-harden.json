@@ -982,6 +982,10 @@
         },
         {
             "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+            "firstPartyDomain": "vhlcentral.com"
+        },
+        {
+            "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
             "firstPartyDomain": "yahoo.com"
         },
         {
