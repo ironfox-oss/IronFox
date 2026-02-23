@@ -137,27 +137,7 @@ if ! up_ac_check_patches; then
 fi
 popd
 
-# Set-up Rust
-curl ${IRONFOX_CURL_FLAGS} -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain --profile=minimal
-
-# Set-up cargo
-source "${IRONFOX_CARGO_ENV}"
-rustup set profile minimal
-rustup default "${RUST_VERSION}"
-rustup target add thumbv7neon-linux-androideabi
-rustup target add armv7-linux-androideabi
-rustup target add aarch64-linux-android
-rustup target add i686-linux-android
-rustup target add x86_64-linux-android
-cargo install --force --vers "${CBINDGEN_VERSION}" cbindgen
-
-# Set-up pip
-if [[ -d "${IRONFOX_PIP_DIR}" ]]; then
-    rm -rf "${IRONFOX_PIP_DIR}"
-fi
-python3.9 -m venv "${IRONFOX_PIP_DIR}"
-
-## Set symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
+# Set pip symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
 if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/pythonenv" ]]; then
     ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/pythonenv"
 fi
@@ -165,11 +145,6 @@ fi
 if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3" ]]; then
     ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3"
 fi
-
-source "${IRONFOX_PIP_ENV}"
-pip install --upgrade pip
-pip install glean-parser
-pip install gyp-next
 
 #
 # Fenix

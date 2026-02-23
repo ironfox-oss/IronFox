@@ -246,6 +246,16 @@ fi
 ## Glean overlay
 export IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
 
+# GNU awk
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    IRONFOX_AWK_DEFAULT='gawk'
+else
+    IRONFOX_AWK_DEFAULT='awk'
+fi
+if [[ -z "${IRONFOX_AWK+x}" ]]; then
+    export IRONFOX_AWK="${IRONFOX_AWK_DEFAULT}"
+fi
+
 # GNU date
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     IRONFOX_DATE_DEFAULT='gdate'
