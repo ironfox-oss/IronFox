@@ -1072,7 +1072,7 @@ pushd "${IRONFOX_PHOENIX}"
 # Ensure we don't reset devtools.debugger.remote-enabled per-launch from Phoenix
 ## We handle this ourselves with ironfox.cfg instead, so that we can allow that value to persist on Nightly builds (but not for Release)
 ## I don't love this - it's hacky, and I probably need to find a better way to deal with this in Phoenix upstream...
-"${IRONFOX_SED}" -i -e 's|pref("devtools.debugger.remote-enabled"|// pref("devtools.debugger.remote-enabled"|g' "${IRONFOX_PHOENIX}/build/phoenix-user-pref.cfg"
+"${IRONFOX_SED}" -i -e 's|pref("devtools.debugger.remote-enabled"|// pref("devtools.debugger.remote-enabled"|g' "${IRONFOX_PHOENIX}/build-resources/phoenix-user-pref.cfg"
 
 popd
 

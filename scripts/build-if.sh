@@ -318,7 +318,7 @@ function build_phoenix() {
     echo_red_text 'Building Phoenix...'
 
     pushd "${IRONFOX_PHOENIX}"
-    bash -x "${IRONFOX_PHOENIX}/build/build.sh"
+    bash -x "${IRONFOX_PHOENIX}/scripts/build.sh"
     popd
 
     echo_green_text 'SUCCESS: Built Phoenix'
