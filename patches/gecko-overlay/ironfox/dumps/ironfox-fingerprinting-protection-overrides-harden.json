@@ -978,6 +978,10 @@
         },
         {
             "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+            "firstPartyDomain": "usnews.com"
+        },
+        {
+            "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
             "firstPartyDomain": "usps.com"
         },
         {
