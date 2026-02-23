@@ -279,6 +279,11 @@ function prep_llvm() {
     echo_green_text 'SUCCESS: Prepared LLVM'
 }
 
+function clean_gradle() {
+    # This is used for cleaning Gradle to ensure builds are fresh
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} clean
+}
+
 function build_bundletool() {
     # Bundletool
     echo_red_text 'Building Bundletool...'
@@ -335,7 +340,9 @@ function build_microg() {
     echo_red_text 'Building microG...'
 
     pushd "${IRONFOX_GMSCORE}"
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Dhttps.protocols=TLSv1.3 -x javaDocReleaseGeneration \
+    clean_gradle
+
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dhttps.protocols=TLSv1.3 -x javaDocReleaseGeneration \
         :play-services-base:publishToMavenLocal \
         :play-services-basement:publishToMavenLocal \
         :play-services-fido:publishToMavenLocal \
@@ -350,8 +357,10 @@ function build_glean() {
     echo_red_text 'Building Glean...'
 
     pushd "${IRONFOX_GLEAN}"
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" publishToMavenLocal
+    clean_gradle
+
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} :glean-native:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publishToMavenLocal
     popd
 
     echo_green_text 'SUCCESS: Built Glean'
@@ -362,6 +371,8 @@ function build_as() {
     echo_red_text 'Building Application Services...'
 
     pushd "${IRONFOX_AS}"
+    clean_gradle
+
     # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
     # skips building the libraries as they are expected to be already downloaded in a CI environment
     # However, we want build those libraries always, so we set CI='' before invoking the script
@@ -388,6 +399,12 @@ function build_gecko_ind() {
 function package_gecko() {
     # Package Gecko
     pushd "${IRONFOX_GECKO}"
+
+    # We don't want to clean Gradle here on bundle builds, because doing so will cause it to clean after each architecture is built...
+    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
+        "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial geckoview:clean
+    fi
+
     echo_green_text "Running ${IRONFOX_MACH} package..."
     "${IRONFOX_MACH}" package
 
@@ -576,14 +593,17 @@ function build_ac() {
     unset CI
 
     pushd "${IRONFOX_AC}"
+    # Always clean Gradle to ensure builds are fresh
+    clean_gradle
+
     # Publish concept-fetch (required by A-S) with auto-publication disabled,
     # otherwise automatically triggered publication of A-S and publications of unifiedpush-ac will fail
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:concept-fetch:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial :components:concept-fetch:publishToMavenLocal
 
     # unifiedpush-ac also needs concept-base (dependency of support-base), support-base and ui-icons
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:concept-base:publishToMavenLocal
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:support-base:publishToMavenLocal
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :components:ui-icons:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial :components:concept-base:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial :components:support-base:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial :components:ui-icons:publishToMavenLocal
     popd
 
     echo_green_text 'SUCCESS: Built Android Components (Part 1/2)'
@@ -594,7 +614,10 @@ function build_up_ac() {
     echo_red_text 'Building UnifiedPush-AC...'
 
     pushd "${IRONFOX_UP_AC}"
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" publishToMavenLocal
+    # Always clean Gradle to ensure builds are fresh
+    clean_gradle
+
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publishToMavenLocal
     popd
 
     echo_green_text 'SUCCESS: Built UnifiedPush-AC'
@@ -608,7 +631,7 @@ function build_ac_cont() {
     # Enable the auto-publication workflow
     echo "## Enable the auto-publication workflow for Application Services" >>"${IRONFOX_GECKO}/local.properties"
     echo "autoPublish.application-services.dir=${IRONFOX_AS}" >>"${IRONFOX_GECKO}/local.properties"
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial publishToMavenLocal
     popd
 
     echo_green_text 'SUCCESS: Built Android Components (Part 2/2)'
@@ -618,9 +641,14 @@ function build_fenix() {
     # Fenix
     echo_red_text 'Building Fenix...'
 
-    pushd "${IRONFOX_FENIX}"
+    pushd "${IRONFOX_GECKO}"
+    # Always clean Gradle to ensure builds are fresh
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial fenix:clean
+
     # Build our APKs
-    "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:assembleRelease
+    ## (MOZ_AUTOMATION needs to be set here to prevent the outputs from being automatically signed with a debug key)
+    MOZ_AUTOMATION=1 "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial fenix:assembleRelease
+    unset MOZ_AUTOMATION
 
     if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
         # 1. Export APK for ARM64
@@ -636,7 +664,9 @@ function build_fenix() {
         cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/fenix/release/app-fenix-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
 
         # 5. Finally, build and export our AAB
-        "${IRONFOX_GRADLE}" "${IRONFOX_GRADLE_FLAGS}" -Pofficial :app:bundleRelease -Paab
+        ## (MOZ_AUTOMATION needs to be set here to prevent the outputs from being automatically signed with a debug key)
+        MOZ_AUTOMATION=1 "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Pofficial -Paab fenix:bundleRelease
+        unset MOZ_AUTOMATION
         cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/app-fenix-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
     else
         # Export APK
