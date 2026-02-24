@@ -3,7 +3,7 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_148_0_BUILD1)
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_148_0_RELEASE)
 FIREFOX_COMMIT='b2a8a4ec986ce61fd15ab1db980381d04ba85ada'
 FIREFOX_VERSION='148.0'
 
@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v148.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='96bf1382c99be6a4e841803baa7a6e91a3b3baff'
+L10N_COMMIT='89228d63d5e33a77a15a1d479fb82bfb07ad358f'
 
 ## Glean
 ### https://github.com/mozilla/glean
@@ -42,7 +42,7 @@ UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-UNIFIEDPUSHAC_COMMIT='3c25e2b1eaffa5dce19f04e4a93da04a29fdccdd'
+UNIFIEDPUSHAC_COMMIT='7ba42eb12d2ac8e7dd21603a79d8a7f4cdfd25f1'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
