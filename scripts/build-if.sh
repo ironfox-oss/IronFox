@@ -725,30 +725,30 @@ function build_fenix() {
     if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
         # 1. Export APK for ARM64
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-arm64-v8a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-arm64-v8a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-arm64-v8a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-arm64-v8a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
         fi
 
         # 2. Export APK for ARM
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-armeabi-v7a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-armeabi-v7a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-armeabi-v7a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-armeabi-v7a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
         fi
 
         # 3. Export APK for x86_64
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-x86_64-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-x86_64-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-x86_64-release.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-x86_64-release.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
         fi
 
         # 4. Export universal APK
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-universal-release.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-universal-release.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
         fi
 
         # 5. Finally, build and export our AAB
@@ -757,9 +757,9 @@ function build_fenix() {
     else
         # Export APK
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-fenix-${IRONFOX_TARGET_ABI}-release.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
         fi
     fi
     unset IRONFOX_MACH_TARGET_FENIX
