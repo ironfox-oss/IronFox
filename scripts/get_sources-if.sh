@@ -13,7 +13,7 @@ fi
 
 target="$1"
 
-# Set up target parameters
+# Set-up target parameters
 IRONFOX_GET_SOURCE_ANDROID_SDK=0
 IRONFOX_GET_SOURCE_AS=0
 IRONFOX_GET_SOURCE_BUNDLETOOL=0

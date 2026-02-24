@@ -1,3 +1,4 @@
+# IronFox - Nightly (x86_64) mozconfig
 
 . "$topsrcdir/ironfox/mozconfigs/core.mozconfig"
 . "$topsrcdir/ironfox/mozconfigs/branding/ironfox-nightly.mozconfig"
