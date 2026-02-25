@@ -402,9 +402,9 @@ function package_gecko() {
     "${IRONFOX_MACH}" configure
 
     # We don't want to clean Gradle here on bundle builds, because doing so will cause it to clean after each architecture is built...
-    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
-        "${IRONFOX_MACH}" gradle geckoview:clean
-    fi
+#    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
+#        "${IRONFOX_MACH}" gradle geckoview:clean
+#    fi
 
     echo_green_text "Running ${IRONFOX_MACH} package..."
     "${IRONFOX_MACH}" package
@@ -598,7 +598,7 @@ function build_gecko() {
     "${IRONFOX_MACH}" configure
 
     # Always clobber to ensure that builds are fresh
-    clobber_gecko
+#    clobber_gecko
 
     if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ] || [ "${IRONFOX_CI}" == 1 ]; then
         if [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
@@ -650,7 +650,7 @@ function build_ac() {
     "${IRONFOX_MACH}" configure
 
     # Always clean Gradle to ensure builds are fresh
-    "${IRONFOX_MACH}" gradle -p mobile/android/android-components clean
+#    "${IRONFOX_MACH}" gradle -p mobile/android/android-components clean
 
     # Publish concept-fetch (required by A-S) with auto-publication disabled,
     # otherwise automatically triggered publication of A-S and publications of unifiedpush-ac will fail
@@ -717,7 +717,7 @@ function build_fenix() {
     "${IRONFOX_MACH}" configure
 
     # Always clean Gradle to ensure builds are fresh
-    "${IRONFOX_MACH}" gradle fenix:clean
+#    "${IRONFOX_MACH}" gradle fenix:clean
 
     # Build our APKs
     "${IRONFOX_MACH}" gradle fenix:assembleRelease
