@@ -753,7 +753,7 @@ function build_fenix() {
 
         # 5. Finally, build and export our AAB
         "${IRONFOX_MACH}" gradle -Paab fenix:bundleRelease
-        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/fenixRelease/app-fenix-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
+        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/fenix-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
     else
         # Export APK
         if [ "${IRONFOX_SIGN}" == 1 ]; then
