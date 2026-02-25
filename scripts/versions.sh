@@ -18,7 +18,7 @@ APPSERVICES_VERSION='v148.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='89228d63d5e33a77a15a1d479fb82bfb07ad358f'
+L10N_COMMIT='2424c18f238c59e513ff13c17280f5ef26e1f68b'
 
 ## Glean
 ### https://github.com/mozilla/glean
