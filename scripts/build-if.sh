@@ -720,7 +720,7 @@ function build_fenix() {
     "${IRONFOX_MACH}" gradle fenix:clean
 
     # Build our APKs
-    "${IRONFOX_MACH}" gradle fenix:assembleRelease -x fenix:releaseOssLicensesTask
+    "${IRONFOX_MACH}" gradle fenix:assembleRelease
 
     if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
         # 1. Export APK for ARM64
