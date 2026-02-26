@@ -80,7 +80,7 @@ elif [ "${target}" == 'up-ac' ]; then
     # Get UnifiedPush-AC
     IRONFOX_GET_SOURCE_UP_AC=1
 else
-    # If no argument is specified (or argument is set to "all"), just build everything
+    # If no argument is specified (or argument is set to "all"), just get everything
     IRONFOX_GET_SOURCE_ANDROID_SDK=1
     IRONFOX_GET_SOURCE_AS=1
     IRONFOX_GET_SOURCE_BUNDLETOOL=1
@@ -312,7 +312,7 @@ function get_cbindgen() {
 
     source "${IRONFOX_CARGO_ENV}"
     echo_red_text "Downloading cbindgen..."
-    cargo install --force --vers "${CBINDGEN_VERSION}" cbindgen
+    cargo +"${RUST_VERSION}" install --force --vers "${CBINDGEN_VERSION}" cbindgen
     echo_green_text "SUCCESS: Set-up cbindgen at ${IRONFOX_CARGO_HOME}/bin/cbindgen"
 }
 
@@ -489,10 +489,11 @@ function get_rust() {
     source "${IRONFOX_CARGO_ENV}"
     rustup set profile minimal
     rustup default "${RUST_VERSION}"
-    rustup target add thumbv7neon-linux-androideabi
+    rustup override set "${RUST_VERSION}"
     rustup target add armv7-linux-androideabi
     rustup target add aarch64-linux-android
     rustup target add i686-linux-android
+    rustup target add thumbv7neon-linux-androideabi
     rustup target add x86_64-linux-android
 
     echo_green_text "SUCCESS: Set-up Rust environment at ${IRONFOX_CARGO_HOME}"

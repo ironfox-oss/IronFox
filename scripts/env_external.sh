@@ -129,5 +129,11 @@ export RUSTUP_TERM_PROGRESS_WHEN="${IRONFOX_RUSTUP_PROGRESS_BAR}"
 ## Enable colored output
 export RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
 
+# Include version info
+source "${IRONFOX_VERSIONS}"
+
+## Set Rust version
+export RUSTUP_TOOLCHAIN="${RUST_VERSION}"
+
 # unifiedpush-ac
 export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
