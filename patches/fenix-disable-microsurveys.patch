@@ -1,13 +1,26 @@
+From faba17635e8f00e799dab6cfa4144ebf552cea3b Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 04:34:16 +0000
+Subject: [PATCH] fix: Disable Mozilla Feedback Surveys (Microsurveys)
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..013dacbb7f2e 100644
+index 81d95a9666a1..81a966f053de 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2529,7 +2529,7 @@ class Settings(
-     var microsurveyFeatureEnabled by lazyFeatureFlagPreference(
+@@ -2577,7 +2577,7 @@ class Settings(
+      */
+     var microsurveyFeatureEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_microsurvey_feature_enabled),
-         default = { FxNimbus.features.microsurveys.value().enabled },
--        featureFlag = true,
-+        featureFlag = false,
+-        default = { FxNimbus.features.microsurveys.value().enabled },
++        default = { false },
      )
  
      /**
+-- 
+2.53.0
+

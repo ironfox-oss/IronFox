@@ -1,0 +1,10 @@
+# IronFox Fenix mozconfig
+
+# Ensure MOZ_AUTOMATION isn't set here to start
+unset MOZ_AUTOMATION
+
+# When building Fenix, if IRONFOX_SIGN is set, we need to set MOZ_AUTOMATION to prevent outputs from being automatically signed with a debug key
+## https://searchfox.org/firefox-main/rev/eea0f8f0/mobile/android/fenix/app/build.gradle#114
+if [ "${IRONFOX_SIGN}" == 1 ]; then
+    export MOZ_AUTOMATION=1
+fi

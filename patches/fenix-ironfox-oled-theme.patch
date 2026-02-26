@@ -1,32 +1,25 @@
-From b52c1221cf001dc7443dbfe9492e5d92abe9e334 Mon Sep 17 00:00:00 2001
+From aac64ddfd4859563a403ff24430ad0d11be6a5bb Mon Sep 17 00:00:00 2001
 From: Akash Yadav <itsaky01@gmail.com>
 Date: Tue, 23 Dec 2025 13:43:01 +0530
-Subject: [PATCH] fix: IronFox OLED theme support
+Subject: [PATCH] feat: IronFox OLED theme support
 
 Signed-off-by: Akash Yadav <itsaky01@gmail.com>
 ---
- .../org/mozilla/fenix/FenixApplication.kt     |  3 ++-
- .../java/org/mozilla/fenix/components/Core.kt | 15 +++++++++++----
- .../customtabs/FennecWebAppIntentProcessor.kt |  3 ++-
+ .../org/mozilla/fenix/FenixApplication.kt     |  2 +-
+ .../java/org/mozilla/fenix/components/Core.kt |  7 ++++++-
+ .../customtabs/FennecWebAppIntentProcessor.kt |  4 +++-
  .../fenix/settings/CustomizationFragment.kt   | 15 +++++++++++++--
  .../org/mozilla/fenix/theme/FirefoxTheme.kt   |  5 +++--
  .../org/mozilla/fenix/theme/ThemeManager.kt   | 19 +++++++++++++++++--
- .../drawable/home_bottom_bar_background.xml   |  2 +-
- .../home_bottom_bar_background_no_divider.xml |  2 +-
- .../home_bottom_bar_background_top.xml        |  2 +-
- .../res/drawable/recent_apps_background.xml   |  2 +-
- .../rounded_search_widget_background.xml      |  2 +-
- .../toolbar_background_no_divider.xml         |  2 +-
- .../app/src/main/res/values-v27/styles.xml    |  2 +-
- .../fenix/app/src/main/res/values/styles.xml  |  5 +++--
+ .../fenix/app/src/main/res/values/styles.xml  |  1 +
  .../res/xml/customization_preferences.xml     |  5 +++++
- 16 files changed, 64 insertions(+), 22 deletions(-)
+ 8 files changed, 49 insertions(+), 9 deletions(-)
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index da46df8f5cd7..7fbb6a935315 100644
+index 725fe78ce0cc..655f0f27b2e1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -618,7 +618,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -658,7 +658,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                      AppCompatDelegate.MODE_NIGHT_NO,
                  )
              }
@@ -165,10 +158,10 @@ index 2c737e026e40..2914d74cc830 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
-index 300af36b9c64..2c43680577a1 100644
+index bcde2e5ed7eb..db26367cf1c6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/ThemeManager.kt
-@@ -25,9 +25,14 @@ import org.mozilla.fenix.R
+@@ -26,9 +26,14 @@ import org.mozilla.fenix.R
  import org.mozilla.fenix.browser.browsingmode.BrowsingMode
  import org.mozilla.fenix.customtabs.ExternalAppBrowserActivity
  import com.google.android.material.R as materialR
@@ -183,7 +176,7 @@ index 300af36b9c64..2c43680577a1 100644
      abstract var currentTheme: BrowsingMode
  
      /**
-@@ -35,7 +40,11 @@ abstract class ThemeManager {
+@@ -36,7 +41,11 @@ abstract class ThemeManager {
       */
      @get:StyleRes
      val currentThemeResource get() = when (currentTheme) {
@@ -196,7 +189,7 @@ index 300af36b9c64..2c43680577a1 100644
          BrowsingMode.Private -> R.style.PrivateTheme
      }
  
-@@ -97,6 +106,12 @@ abstract class ThemeManager {
+@@ -98,6 +107,12 @@ abstract class ThemeManager {
              return typedValue.resourceId
          }
  
@@ -206,10 +199,10 @@ index 300af36b9c64..2c43680577a1 100644
 +            return ContextCompat.getColor(context, resourceId)
 +        }
 +
-         @Composable
-         fun resolveAttributeColor(attribute: Int): androidx.compose.ui.graphics.Color {
-             val resourceId = resolveAttribute(attribute, LocalContext.current)
-@@ -140,7 +155,7 @@ abstract class ThemeManager {
+         /**
+          * Resolves the attribute to a color.
+          *
+@@ -147,7 +162,7 @@ abstract class ThemeManager {
  
  class DefaultThemeManager(
      currentTheme: BrowsingMode,
@@ -219,17 +212,17 @@ index 300af36b9c64..2c43680577a1 100644
      override var currentTheme: BrowsingMode = currentTheme
          set(value) {
 diff --git a/mobile/android/fenix/app/src/main/res/values/styles.xml b/mobile/android/fenix/app/src/main/res/values/styles.xml
-index 87349322e6ab..c58d4d71feaa 100644
+index 13dc38547fe8..a4caa0ccb7d0 100644
 --- a/mobile/android/fenix/app/src/main/res/values/styles.xml
 +++ b/mobile/android/fenix/app/src/main/res/values/styles.xml
-@@ -109,6 +109,7 @@
+@@ -103,6 +103,7 @@
          <!-- Action -->
          <!-- Primary button, Snackbar, Floating action button, Chip selected -->
          <item name="actionPrimary">@color/fx_mobile_action_color_primary</item>
 +        <item name="actionSecondary">@color/fx_mobile_action_color_secondary</item>
          <!-- Primary button in a disabled state -->
          <item name="actionPrimaryDisabled">@color/fx_mobile_action_color_primary_disabled</item>
-         <!-- Selected chip -->
+ 
 diff --git a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
 index 313053c48c62..619cb8e8e997 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
@@ -247,5 +240,5 @@ index 313053c48c62..619cb8e8e997 100644
              android:defaultValue="false"
              android:key="@string/pref_key_auto_battery_theme"
 -- 
-2.52.0
+2.53.0
 

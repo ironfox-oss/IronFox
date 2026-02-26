@@ -246,6 +246,16 @@ fi
 ## Glean overlay
 export IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
 
+# GNU awk
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    IRONFOX_AWK_DEFAULT='gawk'
+else
+    IRONFOX_AWK_DEFAULT='awk'
+fi
+if [[ -z "${IRONFOX_AWK+x}" ]]; then
+    export IRONFOX_AWK="${IRONFOX_AWK_DEFAULT}"
+fi
+
 # GNU date
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     IRONFOX_DATE_DEFAULT='gdate'
@@ -525,34 +535,47 @@ if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
     export IRONFOX_SB_GAPI_KEY_FILE="${IRONFOX_SB_GAPI_KEY_FILE_DEFAULT}"
 fi
 
-# Have we built Gecko?
-IRONFOX_GECKO_BUILT_DEFAULT=0
-if [[ -z "${IRONFOX_GECKO_BUILT+x}" ]]; then
-    export IRONFOX_GECKO_BUILT="${IRONFOX_GECKO_BUILT_DEFAULT}"
+# Do we want Mach to actually build *something*? (Default)
+## This will generally always be true, but we want to disable it for ex. packaging
+IRONFOX_MACH_BUILD_DEFAULT=1
+if [[ -z "${IRONFOX_MACH_BUILD+x}" ]]; then
+    export IRONFOX_MACH_BUILD="${IRONFOX_MACH_BUILD_DEFAULT}"
 fi
 
-# Have we packaged Gecko?
-IRONFOX_GECKO_PACKAGED_DEFAULT=0
-if [[ -z "${IRONFOX_GECKO_PACKAGED+x}" ]]; then
-    export IRONFOX_GECKO_PACKAGED="${IRONFOX_GECKO_PACKAGED_DEFAULT}"
+# Should Mach target Android Components?
+IRONFOX_MACH_TARGET_AC_DEFAULT=0
+if [[ -z "${IRONFOX_MACH_TARGET_AC+x}" ]]; then
+    export IRONFOX_MACH_TARGET_AC="${IRONFOX_MACH_TARGET_AC_DEFAULT}"
 fi
 
-# Have we built a GeckoView AAR archive for ARM64?
-IRONFOX_GV_AAR_BUILT_ARM64_DEFAULT=0
-if [[ -z "${IRONFOX_GV_AAR_BUILT_ARM64+x}" ]]; then
-    export IRONFOX_GV_AAR_BUILT_ARM64="${IRONFOX_GV_AAR_BUILT_ARM64_DEFAULT}"
+# Should Mach target Fenix?
+IRONFOX_MACH_TARGET_FENIX_DEFAULT=0
+if [[ -z "${IRONFOX_MACH_TARGET_FENIX+x}" ]]; then
+    export IRONFOX_MACH_TARGET_FENIX="${IRONFOX_MACH_TARGET_FENIX_DEFAULT}"
 fi
 
-# Have we built a GeckoView AAR archive for ARM?
-IRONFOX_GV_AAR_BUILT_ARM_DEFAULT=0
-if [[ -z "${IRONFOX_GV_AAR_BUILT_ARM+x}" ]]; then
-    export IRONFOX_GV_AAR_BUILT_ARM="${IRONFOX_GV_AAR_BUILT_ARM_DEFAULT}"
+# Should Mach target Gecko(View)?
+IRONFOX_MACH_TARGET_GECKO_DEFAULT=0
+if [[ -z "${IRONFOX_MACH_TARGET_GECKO+x}" ]]; then
+    export IRONFOX_MACH_TARGET_GECKO="${IRONFOX_MACH_TARGET_GECKO_DEFAULT}"
 fi
 
-# Have we built a GeckoView AAR archive for x86_64?
-IRONFOX_GV_AAR_BUILT_X86_64_DEFAULT=0
-if [[ -z "${IRONFOX_GV_AAR_BUILT_X86_64+x}" ]]; then
-    export IRONFOX_GV_AAR_BUILT_X86_64="${IRONFOX_GV_AAR_BUILT_X86_64_DEFAULT}"
+# Should Mach target ARM64 (GeckoView AAR) if we're creating a bundle?
+IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT=0
+if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM64+x}" ]]; then
+    export IRONFOX_MACH_TARGET_BUNDLE_ARM64="${IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT}"
+fi
+
+# Should Mach target ARM (GeckoView AAR) if we're creating a bundle?
+IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT=0
+if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM+x}" ]]; then
+    export IRONFOX_MACH_TARGET_BUNDLE_ARM="$IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT}"
+fi
+
+# Should Mach target x86_64 (GeckoView AAR) if we're creating a bundle?
+IRONFOX_MACH_TARGET_BUNDLE_X86_64_DEFAULT=0
+if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_X86_64+x}" ]]; then
+    export IRONFOX_MACH_TARGET_BUNDLE_X86_64="${IRONFOX_MACH_TARGET_BUNDLE_X86_64_DEFAULT}"
 fi
 
 # App signing

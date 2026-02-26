@@ -1,8 +1,23 @@
+From 3fd4d9559b1bae6eaced62ea83dc22dbd4c4df97 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 04:11:12 +0000
+Subject: [PATCH] fix: Disable Firefox Suggest by default, remove unwanted
+ Firefox Suggest UI elements, and ensure that Fsuggestions from Firefox
+ Suggest are only queried if suggestions are actually enabled by the user
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../java/org/mozilla/fenix/FenixApplication.kt     |  4 ++--
+ .../SearchSuggestionsProvidersBuilder.kt           | 14 +++++++-------
+ .../fenix/settings/search/SearchEngineFragment.kt  |  2 +-
+ .../main/java/org/mozilla/fenix/utils/Settings.kt  |  6 +++---
+ 4 files changed, 13 insertions(+), 13 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index da46df8f5cd7..670f85556477 100644
+index 725fe78ce0cc..257bbd6ec406 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -380,7 +380,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -426,7 +426,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
                          // new search suggestions. The worker requires us to have called
                          // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
                          // scheduling these tasks. When disabled we stop the periodic work.
@@ -11,7 +26,7 @@ index da46df8f5cd7..670f85556477 100644
                              components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
                          } else {
                              components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
-@@ -469,7 +469,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -515,7 +515,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
          queueStorageMaintenance()
          queueNimbusFetchInForeground()
          queueDownloadWallpapers()
@@ -21,7 +36,7 @@ index da46df8f5cd7..670f85556477 100644
          }
          queueCollectProcessExitInfo()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
-index 7c68a88f9f45..5dca5252ffae 100644
+index 7c68a88f9f45..1ef39c9efaec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
 @@ -78,7 +78,7 @@ class SearchSuggestionsProvidersBuilder(
@@ -38,7 +53,7 @@ index 7c68a88f9f45..5dca5252ffae 100644
                  maxNumberOfSuggestions = METADATA_SUGGESTION_LIMIT,
                  showEditSuggestion = false,
 -                suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
-+//                suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
++ //               suggestionsHeader = suggestionsStringsProvider.firefoxSuggestHeader,
              )
  
          val searchBitmap = suggestionIconProvider.getSearchIconBitmap()
@@ -101,33 +116,36 @@ index c0fb12426e4d..dd229dcd1875 100644
          requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..b68ade9c5727 100644
+index 81d95a9666a1..00245c4cf04b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2439,7 +2439,7 @@ class Settings(
+@@ -2489,7 +2489,7 @@ class Settings(
       */
-     var enableFxSuggest by lazyFeatureFlagPreference(
+     var enableFxSuggest by lazyFeatureFlagBooleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
--        default = { FxNimbus.features.fxSuggest.value().enabled },
-+        default = { false },
+-        defaultValue = { FxNimbus.features.fxSuggest.value().enabled },
++        defaultValue = { false },
          featureFlag = FeatureFlags.FX_SUGGEST,
      )
  
-@@ -2464,7 +2464,7 @@ class Settings(
-     var showSponsoredSuggestions by lazyFeatureFlagPreference(
+@@ -2514,7 +2514,7 @@ class Settings(
+     var showSponsoredSuggestions by lazyFeatureFlagBooleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
-         default = { enableFxSuggest },
+         defaultValue = { enableFxSuggest },
 -        featureFlag = FeatureFlags.FX_SUGGEST,
 +        featureFlag = false,
      )
  
      /**
-@@ -2474,7 +2474,7 @@ class Settings(
+@@ -2524,7 +2524,7 @@ class Settings(
       */
-     var showNonSponsoredSuggestions by lazyFeatureFlagPreference(
+     var showNonSponsoredSuggestions by lazyFeatureFlagBooleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),
--        default = { enableFxSuggest },
-+        default = { false },
+-        defaultValue = { enableFxSuggest },
++        defaultValue = { false },
          featureFlag = FeatureFlags.FX_SUGGEST,
      )
  
+-- 
+2.53.0
+

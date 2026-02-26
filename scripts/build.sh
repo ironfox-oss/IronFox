@@ -11,7 +11,7 @@ if [ -z "${1+x}" ]; then
     exit 1
 fi
 
-target="$1"
+target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 # Build IronFox
 export IRONFOX_FROM_BUILD=1

@@ -1,5 +1,23 @@
+From 56d6d6bcf2da868fb5f39e736b49a071e6a7ad5e Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 03:35:42 +0000
+Subject: [PATCH] fix: Remove proprietary, tracking, and other unwanted
+ libraries from Fenix
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ mobile/android/fenix/.buildconfig.yml         | 10 +++---
+ mobile/android/fenix/app/build.gradle         | 20 +++++------
+ mobile/android/fenix/app/proguard-rules.pro   |  4 +--
+ .../fenix/app/src/main/AndroidManifest.xml    | 14 ++++----
+ .../mozilla/fenix/components/Components.kt    | 36 +++++++++----------
+ .../settings/SecretDebugSettingsFragment.kt   |  4 +--
+ .../fenix/settings/SettingsFragment.kt        |  2 +-
+ .../java/org/mozilla/fenix/utils/Settings.kt  |  2 +-
+ 8 files changed, 46 insertions(+), 46 deletions(-)
+
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
-index 1753bcbd86ff..07aedf78c7e9 100644
+index 5c550dfa554e..4b9882fa9fea 100644
 --- a/mobile/android/fenix/.buildconfig.yml
 +++ b/mobile/android/fenix/.buildconfig.yml
 @@ -59,19 +59,19 @@ projects:
@@ -28,10 +46,10 @@ index 1753bcbd86ff..07aedf78c7e9 100644
      - components:service-pocket
      - components:service-sync-autofill
 diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
-index d6f8ce2a2bd6..e70be804a1a5 100644
+index 1b27020a20ee..f0e4cd97c15a 100644
 --- a/mobile/android/fenix/app/build.gradle
 +++ b/mobile/android/fenix/app/build.gradle
-@@ -613,13 +613,13 @@ dependencies {
+@@ -598,13 +598,13 @@ dependencies {
      implementation project(':components:feature-top-sites')
      implementation project(':components:feature-webauthn')
      implementation project(':components:feature-webcompat')
@@ -48,7 +66,7 @@ index d6f8ce2a2bd6..e70be804a1a5 100644
      implementation project(':components:service-nimbus')
      implementation project(':components:service-pocket')
      implementation project(':components:service-sync-autofill')
-@@ -638,14 +638,14 @@ dependencies {
+@@ -623,14 +623,14 @@ dependencies {
      implementation project(':components:ui-tabcounter')
      implementation project(':components:ui-widgets')
      implementation project(':components:lib-crash')
@@ -66,7 +84,7 @@ index d6f8ce2a2bd6..e70be804a1a5 100644
      implementation libs.androidx.activity
      implementation libs.androidx.activity.ktx
      implementation libs.androidx.annotation
-@@ -693,15 +693,15 @@ dependencies {
+@@ -678,15 +678,15 @@ dependencies {
      implementation libs.androidx.viewpager2
      implementation libs.androidx.work.runtime
      implementation libs.google.material
@@ -106,7 +124,7 @@ index 39a6df6fb62e..b4208f9c266d 100644
 --keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 +# -keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 63398b2c715a..a6383d8aacac 100644
+index bc19c652029d..7db83dca9023 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 @@ -52,7 +52,7 @@
@@ -116,9 +134,9 @@ index 63398b2c715a..a6383d8aacac 100644
 -    <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
 +    <!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->
  
-     <application
-         android:name=".FenixApplication"
-@@ -751,13 +751,13 @@
+     <uses-permission android:name="${applicationId}.permission.PROFILER_INTERNAL" />
+ 
+@@ -757,13 +757,13 @@
              android:name=".messaging.NotificationDismissedService"
              android:exported="false" />
  
@@ -134,16 +152,16 @@ index 63398b2c715a..a6383d8aacac 100644
  
          <service
              android:name=".perf.ProfilerService"
-@@ -771,7 +771,7 @@
-             </intent-filter>
-         </service>
+@@ -781,7 +781,7 @@
+             android:readPermission="android.permission.DUMP"
+             android:grantUriPermissions="false" />
  
 -        <meta-data
-+        <!-- <meta-data
++         <!-- <meta-data
              android:name="firebase_messaging_auto_init_enabled"
              android:value="true" />
          <meta-data
-@@ -779,7 +779,7 @@
+@@ -789,7 +789,7 @@
              android:value="false" />
          <meta-data
              android:name="firebase_analytics_collection_deactivated"
@@ -152,7 +170,7 @@ index 63398b2c715a..a6383d8aacac 100644
          <!-- Removes the default Workmanager  initialization so that we can use on-demand initializer. -->
          <provider
              android:name="androidx.startup.InitializationProvider"
-@@ -794,14 +794,14 @@
+@@ -804,14 +804,14 @@
  
          <!-- For adjust pre-installs -->
          <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
@@ -170,7 +188,7 @@ index 63398b2c715a..a6383d8aacac 100644
  
  </manifest>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index a32764c2ea45..52d9fa0ddc06 100644
+index 211aac26e6e4..23b64b347078 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
@@ -270,8 +288,8 @@ index a32764c2ea45..52d9fa0ddc06 100644
 -                SetupChecklistTelemetryMiddleware(),
 +/*                SetupChecklistTelemetryMiddleware(),
                  ReviewPromptMiddleware(
-                     isReviewPromptFeatureEnabled = { settings.customReviewPromptFeatureEnabled },
-                     isTelemetryEnabled = { settings.isTelemetryEnabled },
+                     shouldUseNewTriggerCriteria = { settings.newReviewPromptTriggerCriteriaEnabled },
+                     shouldShowCustomPrompt = { settings.customReviewPromptUiEnabled && settings.isTelemetryEnabled },
 @@ -319,12 +319,12 @@ class Components(private val context: Context) {
                      nimbusEventStore = nimbus.events,
                  ).also {
@@ -310,10 +328,10 @@ index fc8f2e51ff1e..94135bbc5d85 100644
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 0c73973e0468..7b619be4ab78 100644
+index 4ecf8c8e6467..6e17bfe84822 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -494,7 +494,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -502,7 +502,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
  
              // About preferences
              resources.getString(R.string.pref_key_rate) -> {
@@ -323,19 +341,10 @@ index 0c73973e0468..7b619be4ab78 100644
              }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..ef6278366f2c 100644
+index 81d95a9666a1..eaee0f1fc5c1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -354,7 +354,7 @@ class Settings(
-      */
-     var customReviewPromptFeatureEnabled by lazyFeatureFlagPreference(
-         appContext.getPreferenceKey(R.string.pref_key_custom_review_prompt_enabled),
--        featureFlag = true,
-+        featureFlag = false,
-         default = { FxNimbus.features.customReviewPrompt.value().enabled },
-     )
- 
-@@ -2195,7 +2195,7 @@ class Settings(
+@@ -2218,7 +2218,7 @@ class Settings(
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
@@ -343,7 +352,7 @@ index c7db941b0f7e..ef6278366f2c 100644
 +        default = false,
      )
  
-     var shouldUseComposableToolbar by lazyFeatureFlagPreference(
+     var shouldUseComposableToolbar by booleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java b/mobile/android/fenix/app/src/main/java/com/google/firebase/messaging/FirebaseMessagingService.java
 new file mode 100644
 index 0000000000..4d5fd8153d
@@ -469,3 +478,6 @@ index 0000000000..b50a6f03a2
 +        return false
 +    }
 +}
+-- 
+2.53.0
+

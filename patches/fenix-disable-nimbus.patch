@@ -1,5 +1,20 @@
+From 9c9d314070b46893e93d23f29f6e725343e746d9 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 05:22:45 +0000
+Subject: [PATCH] fix: Disable Nimbus Experimentation and A/B testing
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ mobile/android/fenix/app/nimbus.fml.yaml       | 18 +++++++++---------
+ .../java/org/mozilla/fenix/FenixApplication.kt | 10 +++++-----
+ .../java/org/mozilla/fenix/HomeActivity.kt     |  2 +-
+ .../mozilla/fenix/settings/SettingsFragment.kt |  6 +++---
+ .../DefaultLocaleSettingsController.kt         |  6 +++---
+ .../java/org/mozilla/fenix/utils/Settings.kt   |  4 ++--
+ 6 files changed, 23 insertions(+), 23 deletions(-)
+
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 7c040fb83605..a1b3fabeba71 100644
+index 2a69ecf8ea01..4f0e9667b130 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
 @@ -13,15 +13,15 @@ includes:
@@ -28,10 +43,10 @@ index 7c040fb83605..a1b3fabeba71 100644
      channel: release
      features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index da46df8f5cd7..2949f131d9f9 100644
+index 725fe78ce0cc..c100bbf82929 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -89,7 +89,7 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -88,7 +88,7 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.initializeGlean
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
@@ -40,7 +55,7 @@ index da46df8f5cd7..2949f131d9f9 100644
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.containsQueryParameters
  import org.mozilla.fenix.ext.isCustomEngine
-@@ -436,13 +436,13 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -482,13 +482,13 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
          @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
          fun queueNimbusFetchInForeground() {
@@ -56,9 +71,9 @@ index da46df8f5cd7..2949f131d9f9 100644
          }
  
          @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
-@@ -536,9 +536,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-         beginSetupMegazord()
+@@ -580,9 +580,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
  
+     private fun initializeNimbus() {
          // This lazily constructs the Nimbus object…
 -        val nimbus = components.nimbus.sdk
 +//        val nimbus = components.nimbus.sdk
@@ -81,6 +96,24 @@ index 78ea4a42c618..150b9a4d4256 100644
          components.strictMode.attachListenerToDisablePenaltyDeath(supportFragmentManager)
          MarkersFragmentLifecycleCallbacks.register(supportFragmentManager, components.core.engine)
  
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 4ecf8c8e6467..fcd63590eb05 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -212,10 +212,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
+         super.onResume()
+ 
+         // Use nimbus to set the title, and a trivial addition
+-        val nimbusValidation = FxNimbus.features.nimbusValidation.value()
++//        val nimbusValidation = FxNimbus.features.nimbusValidation.value()
+ 
+-        val title = nimbusValidation.settingsTitle
+-        val suffix = nimbusValidation.settingsPunctuation
++        val title = getString(R.string.settings_title)
++        val suffix = ""
+         val toolbarTitle = "$title$suffix"
+ 
+         val showSearch = requireContext().settings().isSettingsSearchEnabled &&
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
 index 4cd5212dea9b..3b4ada79b960 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/advanced/DefaultLocaleSettingsController.kt
@@ -112,29 +145,11 @@ index 4cd5212dea9b..3b4ada79b960 100644
          recreateActivity()
      }
  
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 0c73973e0468..16713a16226e 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -212,10 +212,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
-         super.onResume()
- 
-         // Use nimbus to set the title, and a trivial addition
--        val nimbusValidation = FxNimbus.features.nimbusValidation.value()
-+//        val nimbusValidation = FxNimbus.features.nimbusValidation.value()
- 
--        val title = nimbusValidation.settingsTitle
--        val suffix = nimbusValidation.settingsPunctuation
-+        val title = getString(R.string.settings_title)
-+        val suffix = ""
-         val toolbarTitle = "$title$suffix"
- 
-         val showSearch = requireContext().settings().isSettingsSearchEnabled &&
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..f7bf9080a981 100644
+index 81d95a9666a1..2954b9fdcf90 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -393,7 +393,7 @@ class Settings(
+@@ -397,7 +397,7 @@ class Settings(
  
      var nimbusExperimentsFetched by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_nimbus_experiments_fetched),
@@ -143,3 +158,15 @@ index c7db941b0f7e..f7bf9080a981 100644
      )
  
      var utmParamsKnown by booleanPreference(
+@@ -725,7 +725,7 @@ class Settings(
+      */
+     var isRolloutsEnabled by lazyBooleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_rollouts),
+-        defaultValue = { appContext.components.nimbus.sdk.rolloutParticipation },
++        defaultValue = { false },
+     )
+ 
+     var isOverrideTPPopupsForPerformanceTest = false
+-- 
+2.53.0
+
