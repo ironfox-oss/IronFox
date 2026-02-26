@@ -464,6 +464,7 @@ fi
 # Compiler flags
 IRONFOX_COMPILER_FLAGS_DEFAULT='-DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv'
 if [[ -z "${IRONFOX_COMPILER_FLAGS+x}" ]]; then
+    export IRONFOX_COMPILER_FLAGS_OVERRIDE=1
     export IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_COMPILER_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS}"
@@ -481,6 +482,7 @@ fi
 # curl flags
 IRONFOX_CURL_FLAGS_DEFAULT='-q --disable --no-netrc -j -e "" -A "" -S --clobber --create-dirs --delegation none --disallow-username-in-url --doh-cert-status --ftp-create-dirs --ftp-ssl-control --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-proxy-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ntlm --no-proxy-ssl-allow-beast --no-proxy-ssl-auto-client-cert --no-sessionid --no-skip-existing --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-tls-earlydata --no-xattr --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --referer "" --remove-on-error --show-error --ssl-reqd --trace-time --user-agent "" --verbose'
 if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]]; then
+    export IRONFOX_CURL_FLAGS_OVERRIDE=1
     export IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_CURL_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS}"
@@ -498,6 +500,7 @@ fi
 # Gradle flags
 IRONFOX_GRADLE_FLAGS_DEFAULT='-Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon'
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
+    export IRONFOX_GRADLE_FLAGS_OVERRIDE=1
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_GRADLE_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS}"
@@ -515,6 +518,7 @@ fi
 # Rust flags
 IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo -O'
 if [[ -z "${IRONFOX_RUST_FLAGS+x}" ]]; then
+    export IRONFOX_RUST_FLAGS_OVERRIDE=1
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS}"

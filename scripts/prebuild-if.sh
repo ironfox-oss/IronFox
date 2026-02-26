@@ -34,14 +34,16 @@ fi
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-function localize_maven {
-    # Replace custom Maven repositories with mavenLocal()
-    find ./* -name '*.gradle' -type f -exec python3 "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
-    # Make gradlew scripts call our Gradle wrapper
+function localize_gradle() {
     find ./* -name gradlew -type f | while read -r gradlew; do
-        echo -e "#!/bin/sh\n${IRONFOX_GRADLE} \""'$@'"\"" >"${gradlew}"
+        echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} \""'$@'"\"" >"${gradlew}"
         chmod 755 "${gradlew}"
     done
+}
+
+function localize_maven() {
+    # Replace custom Maven repositories with mavenLocal()
+    find ./* -name '*.gradle' -type f -exec python3 "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
 }
 
 # Applies the overlay files in the given directory
@@ -347,6 +349,10 @@ pushd "${IRONFOX_GLEAN}"
 # Apply patches
 glean_apply_patches
 
+# Always use our Gradle wrapper with our Gradle flags/configuration
+localize_gradle
+
+# Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
 localize_maven
 
 # Break the dependency on older Rust
@@ -460,6 +466,9 @@ pushd "${IRONFOX_AS}"
 # Apply patches
 a-s_apply_patches
 
+# Always use our Gradle wrapper with our Gradle flags/configuration
+localize_gradle
+
 # Break the dependency on older A-C
 "${IRONFOX_SED}" -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 
@@ -476,6 +485,7 @@ a-s_apply_patches
 "${IRONFOX_SED}" -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 "${IRONFOX_SED}" -i -e '/content {/,/}/d' build.gradle
 
+# Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
 localize_maven
 
 # Fix stray
@@ -530,6 +540,9 @@ apply_patches
 
 ## For UnifiedPush-AC
 up_ac_apply_patches
+
+# Always use our Gradle wrapper with our Gradle flags/configuration
+localize_gradle
 
 # Let it be IronFox (part 2...)
 "${IRONFOX_SED}" -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
@@ -963,6 +976,10 @@ if [[ -n "${FDROID_BUILD+x}" ]]; then
 
     # Bundletool
     pushd "${IRONFOX_BUNDLETOOL_DIR}"
+    # Always use our Gradle wrapper with our Gradle flags/configuration
+    localize_gradle
+
+    # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
     localize_maven
     popd
 fi
@@ -1022,6 +1039,9 @@ popd
 #
 
 pushd "${IRONFOX_GMSCORE}"
+
+# Always use our Gradle wrapper with our Gradle flags/configuration
+localize_gradle
 
 # Bump Android build tools
 "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${ANDROID_BUILDTOOLS_VERSION}'|g" build.gradle
