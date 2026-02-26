@@ -318,21 +318,21 @@ object GeckoSettingsBridge {
     }
 
     fun setAddressAutofillEnabled(context: Context, engine: Engine) {
-        val addressAutofillEnabled = context.settings().shouldAutofillAddressDetails as Boolean
+        val addressAutofillEnabled = context.settings().shouldAutofillAddressDetails
         val addressAutofillGeckoPref = GeckoSettingsDictionary.addressAutofill
         setUserPref(engine, addressAutofillGeckoPref, addressAutofillEnabled)
         setDefaultPref(engine, addressAutofillGeckoPref, addressAutofillEnabled)
     }
 
     fun setCardAutofillEnabled(context: Context, engine: Engine) {
-        val cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails as Boolean
+        val cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails
         val cardAutofillGeckoPref = GeckoSettingsDictionary.cardAutofill
         setUserPref(engine, cardAutofillGeckoPref, cardAutofillEnabled)
         setDefaultPref(engine, cardAutofillGeckoPref, cardAutofillEnabled)
     }
 
     fun setPasswordManagerEnabled(context: Context, engine: Engine) {
-        val passwordManagerEnabled = context.settings().shouldPromptToSaveLogins as Boolean
+        val passwordManagerEnabled = context.settings().shouldPromptToSaveLogins
         val passwordManagerGeckoPref = GeckoSettingsDictionary.passwordManager
         setUserPref(engine, passwordManagerGeckoPref, passwordManagerEnabled)
         setDefaultPref(engine, passwordManagerGeckoPref, passwordManagerEnabled)

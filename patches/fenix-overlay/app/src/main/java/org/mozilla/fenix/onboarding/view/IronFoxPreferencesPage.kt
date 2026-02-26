@@ -188,7 +188,6 @@ fun IronFoxPreferencesOnboardingPage(
                     (contentState as? Configuration?)?.also { configuration ->
                         Text(
                             text = title,
-                            color = FirefoxTheme.colors.textPrimary,
                             textAlign = TextAlign.Center,
                             style = FirefoxTheme.typography.headline5,
                         )
@@ -197,7 +196,6 @@ fun IronFoxPreferencesOnboardingPage(
 
                         Text(
                             text = preferenceOptions[configuration.optionIndex].caption,
-                            color = FirefoxTheme.colors.textPrimary,
                             textAlign = TextAlign.Center,
                             style = FirefoxTheme.typography.body2,
                         )
@@ -296,7 +294,7 @@ private fun IronFoxPreferenceConfiguration(
                 .fillMaxWidth(),
             text = option.description,
             style = FirefoxTheme.typography.body2,
-            color = FirefoxTheme.colors.textSecondary,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -393,7 +391,6 @@ private fun IronFoxPreferenceSwitchItem(
             modifier = Modifier.weight(1f),
             text = option.label,
             style = FirefoxTheme.typography.body1,
-            color = FirefoxTheme.colors.textPrimary,
         )
 
         Switch(
@@ -420,7 +417,6 @@ private fun IronFoxPreferencesProgress(
             Text(
                 text = state.message,
                 style = FirefoxTheme.typography.body1,
-                color = FirefoxTheme.colors.textPrimary,
             )
 
             LinearProgressIndicator(

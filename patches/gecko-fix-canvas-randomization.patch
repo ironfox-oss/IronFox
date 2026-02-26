@@ -1,4 +1,4 @@
-From 2659282b893adb9edba79e8b8fa74ec9063f0625 Mon Sep 17 00:00:00 2001
+From 7f1c1b564bd365adfd92cb43f2c2bd3f650b5957 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 10 Feb 2026 17:31:22 +0000
 Subject: [PATCH] fix: Ensure Canvas Randomization is properly applied
@@ -7,16 +7,25 @@ Adapted from any1here's LibreWolf patch: https://codeberg.org/librewolf/source/s
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- dom/canvas/CanvasRenderingContext2D.cpp                  | 4 ++--
- dom/canvas/ClientWebGLContext.cpp                        | 4 ++--
+ dom/canvas/CanvasRenderingContext2D.cpp                  | 6 +++---
+ dom/canvas/ClientWebGLContext.cpp                        | 6 +++---
  toolkit/components/resistfingerprinting/nsRFPService.cpp | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/dom/canvas/CanvasRenderingContext2D.cpp b/dom/canvas/CanvasRenderingContext2D.cpp
-index ee186c2b9a2b..46e8ec897cdc 100644
+index 16eb6f61903a..321538d5eb71 100644
 --- a/dom/canvas/CanvasRenderingContext2D.cpp
 +++ b/dom/canvas/CanvasRenderingContext2D.cpp
-@@ -6554,7 +6554,7 @@ nsresult CanvasRenderingContext2D::GetImageDataArray(
+@@ -2284,7 +2284,7 @@ UniquePtr<uint8_t[]> CanvasRenderingContext2D::GetImageBuffer(
+         PrincipalOrNull(), ret.get(), out_imageSize->width,
+         out_imageSize->height,
+         out_imageSize->width * out_imageSize->height * 4);
+-    if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize) {
++    if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize || aExtractionBehavior == CanvasUtils::ImageExtraction::EfficientRandomize) {
+       nsRFPService::RandomizePixels(
+           GetCookieJarSettings(), PrincipalOrNull(), ret.get(),
+           out_imageSize->width, out_imageSize->height,
+@@ -6611,7 +6611,7 @@ nsresult CanvasRenderingContext2D::GetImageDataArray(
    //
    // Note that we don't need to clone if we will use the place holder because
    // the place holder doesn't use actual image data.
@@ -25,7 +34,7 @@ index ee186c2b9a2b..46e8ec897cdc 100644
      if (readback) {
        readback = CreateDataSourceSurfaceByCloning(readback);
      }
-@@ -6572,7 +6572,7 @@ nsresult CanvasRenderingContext2D::GetImageDataArray(
+@@ -6633,7 +6633,7 @@ nsresult CanvasRenderingContext2D::GetImageDataArray(
        // service) after we call JS_GetUint8ClampedArrayData, we will
        // pre-generate the randomness required for GeneratePlaceholderCanvasData.
        randomData = TryToGenerateRandomDataForPlaceholderCanvasData();
@@ -35,10 +44,19 @@ index ee186c2b9a2b..46e8ec897cdc 100644
        // need to calculate random noises if we are going to use the place
        // holder.
 diff --git a/dom/canvas/ClientWebGLContext.cpp b/dom/canvas/ClientWebGLContext.cpp
-index 11578f425f7c..d62409ff80b1 100644
+index 12492d606cc2..d16ecc6be00b 100644
 --- a/dom/canvas/ClientWebGLContext.cpp
 +++ b/dom/canvas/ClientWebGLContext.cpp
-@@ -3598,7 +3598,7 @@ void ClientWebGLContext::GetBufferSubData(GLenum target, GLintptr srcByteOffset,
+@@ -1362,7 +1362,7 @@ UniquePtr<uint8_t[]> ClientWebGLContext::GetImageBuffer(
+   *out_imageSize = dataSurface->GetSize();
+ 
+   nsRFPService::PotentiallyDumpImage(PrincipalOrNull(), dataSurface);
+-  if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize) {
++  if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize || aExtractionBehavior == CanvasUtils::ImageExtraction::EfficientRandomize) {
+     return gfxUtils::GetImageBufferWithRandomNoise(
+         dataSurface, premultAlpha, GetCookieJarSettings(), PrincipalOrNull(),
+         out_format);
+@@ -3632,7 +3632,7 @@ void ClientWebGLContext::GetBufferSubData(GLenum target, GLintptr srcByteOffset,
        if (extraction == CanvasUtils::ImageExtraction::Placeholder) {
          dom::GeneratePlaceholderCanvasData(destView->size_bytes(),
                                             destView->Elements());
@@ -47,20 +65,20 @@ index 11578f425f7c..d62409ff80b1 100644
          // We have no idea what's in the buffer. So, we randomize it as if each
          // elemSize bytes is a single element.
          uint8_t elementsPerGroup = 1,
-@@ -5354,7 +5354,7 @@ void ClientWebGLContext::ReadPixels(GLint x, GLint y, GLsizei width,
- 
-       if (extraction == CanvasUtils::ImageExtraction::Placeholder) {
-         dom::GeneratePlaceholderCanvasData(range->size(), range->Elements());
--      } else if (extraction == CanvasUtils::ImageExtraction::Randomize) {
-+      } else if (extraction == CanvasUtils::ImageExtraction::Randomize || extraction == CanvasUtils::ImageExtraction::EfficientRandomize) {
-         const auto pii = webgl::PackingInfoInfo::For(desc.pi);
-         // DoReadPixels() requres pii to be Some().
-         MOZ_ASSERT(pii.isSome());
+@@ -5391,7 +5391,7 @@ void ClientWebGLContext::ReadPixels(GLint x, GLint y, GLsizei width,
+       } else {
+         RecordCanvasUsage(CanvasExtractionAPI::ReadPixels,
+                           CSSIntSize(width, height));
+-        if (extraction == CanvasUtils::ImageExtraction::Randomize) {
++        if (extraction == CanvasUtils::ImageExtraction::Randomize || extraction == CanvasUtils::ImageExtraction::EfficientRandomize) {
+           const auto pii = webgl::PackingInfoInfo::For(desc.pi);
+           // DoReadPixels() requres pii to be Some().
+           MOZ_ASSERT(pii.isSome());
 diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-index 9554fbb21bf0..7b8e7198d9aa 100644
+index d900f49a3b1b..c81d308cb823 100644
 --- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
 +++ b/toolkit/components/resistfingerprinting/nsRFPService.cpp
-@@ -1806,7 +1806,7 @@ nsresult nsRFPService::RandomizeElements(
+@@ -1886,7 +1886,7 @@ nsresult nsRFPService::RandomizeElements(
    }
  
    // Don't randomize if all groups are uniform.
@@ -69,7 +87,7 @@ index 9554fbb21bf0..7b8e7198d9aa 100644
      auto itr = RangedPtr<const uint8_t>(aData, aSizeInBytes);
      const auto itrEnd = itr + (groupCount * groupSize);
      for (; itr != itrEnd; itr += groupSize) {
-@@ -1818,7 +1818,7 @@ nsresult nsRFPService::RandomizeElements(
+@@ -1898,7 +1898,7 @@ nsresult nsRFPService::RandomizeElements(
    }();
    if (allGroupsMatch) {
      return NS_OK;
@@ -79,5 +97,5 @@ index 9554fbb21bf0..7b8e7198d9aa 100644
    auto timerId =
        glean::fingerprinting_protection::canvas_noise_calculate_time_2.Start();
 -- 
-2.52.0
+2.53.0
 

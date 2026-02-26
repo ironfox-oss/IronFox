@@ -1,13 +1,26 @@
+From a6a90189dc4698c27c3677902d528cb2ff9d23f8 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 04:12:58 +0000
+Subject: [PATCH] fix: Disable remote configuration of search engines
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..c28f495da174 100644
+index 81d95a9666a1..a07f3ccb2cb4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2226,7 +2226,7 @@ class Settings(
-     var useRemoteSearchConfiguration by lazyFeatureFlagPreference(
+@@ -2252,7 +2252,7 @@ class Settings(
+      */
+     var useRemoteSearchConfiguration by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_use_remote_search_configuration),
-         default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
--        featureFlag = true,
-+        featureFlag = false,
+-        default = { FxNimbus.features.remoteSearchConfiguration.value().enabled },
++        default = { false },
      )
  
      /**
+-- 
+2.53.0
+

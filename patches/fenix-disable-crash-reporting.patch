@@ -1,8 +1,26 @@
+From ca75f2556d3c43a290ce5c0030670f7b30467fae Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 03:44:28 +0000
+Subject: [PATCH] fix: Disable crash reporting
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../fenix/app/src/main/AndroidManifest.xml       |  4 ++--
+ .../java/org/mozilla/fenix/FenixApplication.kt   | 16 ++++++++--------
+ .../fenix/components/BackgroundServices.kt       |  2 +-
+ .../fenix/debugsettings/crashtools/CrashTools.kt |  8 ++++----
+ .../debugsettings/navigation/DebugDrawerRoute.kt |  8 ++++----
+ .../store/DebugDrawerNavigationMiddleware.kt     |  2 +-
+ .../search/BrowserToolbarSearchMiddleware.kt     |  4 ++--
+ .../fenix/search/SearchDialogController.kt       |  4 ++--
+ .../java/org/mozilla/fenix/utils/Settings.kt     |  4 ++--
+ 9 files changed, 26 insertions(+), 26 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-index 63398b2c715a..dfe67f464347 100644
+index bc19c652029d..b64584dac276 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
 +++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
-@@ -488,12 +488,12 @@
+@@ -494,12 +494,12 @@
              </intent-filter>
          </activity-alias>
  
@@ -17,8 +35,68 @@ index 63398b2c715a..dfe67f464347 100644
  
          <activity
              android:name=".HomeActivity"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 725fe78ce0cc..b0e96c64db70 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -111,7 +111,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
+ import org.mozilla.fenix.session.VisibilityLifecycleCallback
+ import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
+ import org.mozilla.fenix.settings.doh.DohSettingsProvider
+-import org.mozilla.fenix.startupCrash.StartupCrashActivity
++// import org.mozilla.fenix.startupCrash.StartupCrashActivity
+ import org.mozilla.fenix.utils.Settings
+ import org.mozilla.fenix.utils.isLargeScreenSize
+ import org.mozilla.fenix.wallpapers.Wallpaper
+@@ -183,7 +183,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         //
+         // Note: This doesn't setup any [UncaughtExceptionHandler].
+         // Note: Gecko processes have their own crash handling mechanisms.
+-        CrashReporter.registerDeferredInitializer(::setupCrashReporting)
++//        CrashReporter.registerDeferredInitializer(::setupCrashReporting)
+ 
+         // While this [initializeFenixProcess] method is run for _all processes_ in the app, we only
+         // do global initialization for the _main process_ here. This main process initialization
+@@ -558,15 +558,15 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+         }
+     }
+ 
+-    private fun setupCrashReporting(): CrashReporter {
+-        return components
++    private fun setupCrashReporting() {
++/*        return components
+             .analytics
+             .crashReporter
+-            .install(this, ::handleCaughtException)
++            .install(this, ::handleCaughtException) */
+     }
+ 
+     private fun handleCaughtException() {
+-        if (
++/*        if (
+             isMainProcess() &&
+             Config.channel.isNightlyOrDebug &&
+             !components.performance.visualCompletenessQueue.isReady()
+@@ -575,7 +575,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+ 
+             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+             applicationContext.startActivity(intent)
+-        }
++        } */
+     }
+ 
+     private fun initializeNimbus() {
+@@ -602,7 +602,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+     private fun setupMegazordInitial() {
+         // Rust components must be initialized at the very beginning, before any other Rust call, ...
+         AppServicesInitializer.init(
+-            AppServicesConfig(components.analytics.crashReporter),
++            AppServicesConfig(),
+         )
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
-index 6ed5a8715f84..db4e444c7319 100644
+index 0bb38f8e5773..54dff3639970 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/BackgroundServices.kt
 @@ -225,7 +225,7 @@ class BackgroundServices(
@@ -31,10 +109,10 @@ index 6ed5a8715f84..db4e444c7319 100644
          }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
-index b1b4409c48c8..ce2a87cea097 100644
+index 2c3ba7d17816..f26488e890ba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/crashtools/CrashTools.kt
-@@ -31,7 +31,7 @@ import mozilla.components.compose.base.annotation.FlexibleWindowLightDarkPreview
+@@ -31,7 +31,7 @@ import mozilla.components.compose.base.annotation.FlexibleWindowPreview
  import mozilla.components.compose.base.button.FilledButton
  import org.mozilla.fenix.R
  import org.mozilla.fenix.components.components
@@ -42,8 +120,8 @@ index b1b4409c48c8..ce2a87cea097 100644
 +// import org.mozilla.fenix.startupCrash.StartupCrashActivity
  import org.mozilla.fenix.theme.FirefoxTheme
  import org.mozilla.fenix.theme.Theme
- import org.mozilla.fenix.utils.Settings
-@@ -96,10 +96,10 @@ internal fun CrashTools(
+ import org.mozilla.fenix.theme.ThemeProvider
+@@ -97,10 +97,10 @@ internal fun CrashTools(
                  text = stringResource(R.string.crash_debug_show_startup_crash_screen),
                  modifier = Modifier.fillMaxWidth(),
                  onClick = {
@@ -92,7 +170,7 @@ index b55e0e05dcbb..e4d8405be9d1 100644
  
                  DebugDrawerDestination(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-index 6ee469a2b5c2..d3c3e040d50e 100644
+index 07a2495fa830..d298ffd4555b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
 @@ -54,7 +54,7 @@ class DebugDrawerNavigationMiddleware(
@@ -104,60 +182,11 @@ index 6ee469a2b5c2..d3c3e040d50e 100644
                  is DebugDrawerAction.OnBackPressed -> navController.popBackStack()
                  is DebugDrawerAction.DrawerOpened, DebugDrawerAction.DrawerClosed -> Unit // no-op
              }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index da46df8f5cd7..4ce6f4de49d5 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -112,7 +112,7 @@ import org.mozilla.fenix.push.WebPushEngineIntegration
- import org.mozilla.fenix.session.VisibilityLifecycleCallback
- import org.mozilla.fenix.settings.doh.DefaultDohSettingsProvider
- import org.mozilla.fenix.settings.doh.DohSettingsProvider
--import org.mozilla.fenix.startupCrash.StartupCrashActivity
-+// import org.mozilla.fenix.startupCrash.StartupCrashActivity
- import org.mozilla.fenix.utils.Settings
- import org.mozilla.fenix.utils.isLargeScreenSize
- import org.mozilla.fenix.wallpapers.Wallpaper
-@@ -513,14 +513,14 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-     }
- 
-     private fun setupCrashReporting() {
--        components
-+/*        components
-             .analytics
-             .crashReporter
--            .install(this, ::handleCaughtException)
-+            .install(this, ::handleCaughtException) */
-     }
- 
-     private fun handleCaughtException() {
--        if (
-+/*        if (
-             isMainProcess() &&
-             Config.channel.isNightlyOrDebug &&
-             !components.performance.visualCompletenessQueue.isReady()
-@@ -529,7 +529,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
- 
-             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-             applicationContext.startActivity(intent)
--        }
-+        } */
-     }
- 
-     protected open fun initializeNimbus() {
-@@ -558,7 +558,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-     private fun beginSetupMegazord() {
-         // Rust components must be initialized at the very beginning, before any other Rust call, ...
-         AppServicesInitializer.init(
--            AppServicesConfig(components.analytics.crashReporter),
-+            AppServicesConfig(),
-         )
-     }
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-index 61bd0979b753..15ce7a485aef 100644
+index 18ce0dc862b4..9105fda4e133 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
-@@ -234,14 +234,14 @@ class BrowserToolbarSearchMiddleware(
+@@ -233,14 +233,14 @@ class BrowserToolbarSearchMiddleware(
                  }
  
                  when (action.text) {
@@ -195,10 +224,10 @@ index e597abe8ca10..a84c839972be 100644
                  val directions =
                      SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..8fbcaa83ae85 100644
+index 81d95a9666a1..dae32881c9be 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -562,7 +562,7 @@ class Settings(
+@@ -563,7 +563,7 @@ class Settings(
  
      var crashReportChoice by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_reporting_choice),
@@ -207,7 +236,7 @@ index c7db941b0f7e..8fbcaa83ae85 100644
      )
  
      val isRemoteDebuggingEnabled by booleanPreference(
-@@ -957,7 +957,7 @@ class Settings(
+@@ -970,7 +970,7 @@ class Settings(
       */
      var crashPullNeverShowAgain: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_crash_pull_never_show_again),
@@ -216,3 +245,6 @@ index c7db941b0f7e..8fbcaa83ae85 100644
      )
  
      @VisibleForTesting
+-- 
+2.53.0
+

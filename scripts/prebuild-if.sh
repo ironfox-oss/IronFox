@@ -137,27 +137,7 @@ if ! up_ac_check_patches; then
 fi
 popd
 
-# Set-up Rust
-curl ${IRONFOX_CURL_FLAGS} -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain --profile=minimal
-
-# Set-up cargo
-source "${IRONFOX_CARGO_ENV}"
-rustup set profile minimal
-rustup default "${RUST_VERSION}"
-rustup target add thumbv7neon-linux-androideabi
-rustup target add armv7-linux-androideabi
-rustup target add aarch64-linux-android
-rustup target add i686-linux-android
-rustup target add x86_64-linux-android
-cargo install --force --vers "${CBINDGEN_VERSION}" cbindgen
-
-# Set-up pip
-if [[ -d "${IRONFOX_PIP_DIR}" ]]; then
-    rm -rf "${IRONFOX_PIP_DIR}"
-fi
-python3.9 -m venv "${IRONFOX_PIP_DIR}"
-
-## Set symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
+# Set pip symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
 if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/pythonenv" ]]; then
     ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/pythonenv"
 fi
@@ -165,11 +145,6 @@ fi
 if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3" ]]; then
     ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3"
 fi
-
-source "${IRONFOX_PIP_ENV}"
-pip install --upgrade pip
-pip install glean-parser
-pip install gyp-next
 
 #
 # Fenix
@@ -197,6 +172,12 @@ pushd "${IRONFOX_FENIX}"
 "${IRONFOX_SED}" -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' app/build.gradle
 "${IRONFOX_SED}" -i -e '/TELEMETRY/s/true/false/' app/build.gradle
 "${IRONFOX_SED}" -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Enable the "Choose download location" feature
+"${IRONFOX_SED}" -i -e 's|downloadsDefaultLocation = .*|downloadsDefaultLocation = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Enable Firefox Labs
+"${IRONFOX_SED}" -i -e 's|FIREFOX_LABS = .*|FIREFOX_LABS = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
 # Ensure onboarding is always enabled
 "${IRONFOX_SED}" -i -e 's|onboardingFeatureEnabled = .*|onboardingFeatureEnabled = true|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
@@ -467,17 +448,6 @@ rm -vrf components/feature/webcompat-reporter
 
 # Apply a-c overlay
 apply_overlay "${IRONFOX_AC_OVERLAY}/"
-
-popd
-
-#
-# UnifiedPush-AC
-#
-
-pushd "${IRONFOX_UP_AC}"
-
-# Set target Firefox version
-"${IRONFOX_SED}" -i "s|{FIREFOX_VERSION}|${FIREFOX_VERSION}|" "${IRONFOX_UP_AC}/gradle/libs.versions.toml"
 
 popd
 
@@ -1077,7 +1047,7 @@ pushd "${IRONFOX_PHOENIX}"
 # Ensure we don't reset devtools.debugger.remote-enabled per-launch from Phoenix
 ## We handle this ourselves with ironfox.cfg instead, so that we can allow that value to persist on Nightly builds (but not for Release)
 ## I don't love this - it's hacky, and I probably need to find a better way to deal with this in Phoenix upstream...
-"${IRONFOX_SED}" -i -e 's|pref("devtools.debugger.remote-enabled"|// pref("devtools.debugger.remote-enabled"|g' "${IRONFOX_PHOENIX}/build/phoenix-user-pref.cfg"
+"${IRONFOX_SED}" -i -e 's|pref("devtools.debugger.remote-enabled"|// pref("devtools.debugger.remote-enabled"|g' "${IRONFOX_PHOENIX}/build-resources/phoenix-user-pref.cfg"
 
 popd
 

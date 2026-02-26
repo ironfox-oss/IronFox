@@ -1,3 +1,17 @@
+From 75a3b7b848d59f749f5e977550bd84247024bacb Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 05:35:54 +0000
+Subject: [PATCH] feat: add support for IronFox UI settings
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../java/org/mozilla/fenix/components/Core.kt |  2 ++
+ .../fenix/settings/SettingsFragment.kt        | 15 ++++++++++++++
+ .../java/org/mozilla/fenix/utils/Settings.kt  |  4 ++++
+ .../app/src/main/res/navigation/nav_graph.xml | 11 ++++++++++
+ .../app/src/main/res/xml/preferences.xml      | 20 +++++++++++++++++--
+ 5 files changed, 50 insertions(+), 2 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index 5cc1da059f7d..517c235062dd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
@@ -19,7 +33,7 @@ index 5cc1da059f7d..517c235062dd 100644
          }
      }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 0c73973e0468..d7062d27887d 100644
+index 4ecf8c8e6467..2035846c88b3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 @@ -72,6 +72,7 @@ import org.mozilla.fenix.snackbar.SnackbarBinding
@@ -30,7 +44,7 @@ index 0c73973e0468..d7062d27887d 100644
  
  @Suppress("LargeClass", "TooManyFunctions")
  class SettingsFragment : PreferenceFragmentCompat() {
-@@ -598,8 +599,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -609,8 +610,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
          setupHomepagePreference(settings)
          setupTrackingProtectionPreference(settings)
          setupDnsOverHttpsPreference(settings)
@@ -54,19 +68,19 @@ index 0c73973e0468..d7062d27887d 100644
       * For >=Q -> Use new RoleManager API to show in-app browser switching dialog.
       * For <Q && >=N -> Navigate user to Android Default Apps Settings.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..e148fd339278 100644
+index 81d95a9666a1..e483f0ceedb4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -76,6 +76,8 @@ import org.mozilla.fenix.wallpapers.Wallpaper
- import java.security.InvalidParameterException
- import java.util.UUID
- import java.util.concurrent.TimeUnit.MILLISECONDS
+@@ -4,6 +4,8 @@
+ 
+ package org.mozilla.fenix.utils
+ 
 +import org.ironfoxoss.ironfox.utils.IronFoxSettings
 +import org.mozilla.fenix.perf.lazyMonitored
- 
- private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
- 
-@@ -171,6 +173,8 @@ class Settings(
+ import android.accessibilityservice.AccessibilityServiceInfo.CAPABILITY_CAN_PERFORM_GESTURES
+ import android.appwidget.AppWidgetManager
+ import android.content.Context
+@@ -174,6 +176,8 @@ class Settings(
          private const val CLOUDFLARE_URI = "https://mozilla.cloudflare-dns.com/dns-query"
      }
  
@@ -76,7 +90,7 @@ index c7db941b0f7e..e148fd339278 100644
  
      @VisibleForTesting
 diff --git a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
-index 77c0a5cae4be..510e4ca0fb01 100644
+index 440da531952f..d4c4e78d2887 100644
 --- a/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 +++ b/mobile/android/fenix/app/src/main/res/navigation/nav_graph.xml
 @@ -692,6 +692,13 @@
@@ -93,7 +107,7 @@ index 77c0a5cae4be..510e4ca0fb01 100644
          <action
              android:id="@+id/action_settingsFragment_to_trackingProtectionFragment"
              app:destination="@id/trackingProtectionFragment"
-@@ -1020,6 +1027,10 @@
+@@ -1034,6 +1041,10 @@
              app:argType="string"
              app:nullable="true" />
      </fragment>
@@ -105,7 +119,7 @@ index 77c0a5cae4be..510e4ca0fb01 100644
          android:id="@+id/trackingProtectionFragment"
          android:name="org.mozilla.fenix.settings.TrackingProtectionFragment">
 diff --git a/mobile/android/fenix/app/src/main/res/xml/preferences.xml b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
-index 159944ab7d38..54bcd69b30b0 100644
+index 243eddddd9a3..5963a7073099 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 +++ b/mobile/android/fenix/app/src/main/res/xml/preferences.xml
 @@ -6,12 +6,12 @@
@@ -128,13 +142,13 @@ index 159944ab7d38..54bcd69b30b0 100644
          android:layout="@layout/preference_category_no_icon_style">
  
 +        <org.mozilla.fenix.settings.account.AccountPreference
-+            android:icon="@drawable/ic_account"
++            android:icon="@drawable/mozac_ic_avatar_circle_24"
 +            android:key="@string/pref_key_sign_in" />
 +
          <org.mozilla.fenix.settings.account.AccountPreference
-             android:icon="@drawable/ic_account"
+             android:icon="@drawable/mozac_ic_avatar_circle_24"
              android:key="@string/pref_key_account" />
-@@ -198,10 +202,22 @@
+@@ -209,10 +213,22 @@
          <androidx.preference.SwitchPreference
              android:defaultValue="false"
              android:key="@string/pref_key_enable_gecko_logs"
@@ -157,3 +171,6 @@ index 159944ab7d38..54bcd69b30b0 100644
      <androidx.preference.PreferenceCategory
          android:title="@string/preferences_category_about"
          app:iconSpaceReserved="false"
+-- 
+2.53.0
+

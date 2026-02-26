@@ -1,3 +1,4 @@
+# IronFox - Nightly (Bundle) mozconfig
 
 . "$topsrcdir/ironfox/mozconfigs/core.mozconfig"
 . "$topsrcdir/ironfox/mozconfigs/branding/ironfox-nightly.mozconfig"
@@ -5,13 +6,13 @@
 # To create a bundle, we first need to produce a GeckoView AAR for each architecture...
 
 # 1. ARM64
-if [ "${IRONFOX_GV_AAR_BUILT_ARM64}" != 1 ]; then
+if [ "${IRONFOX_MACH_TARGET_BUNDLE_ARM64}" == 1 ]; then
     . "$topsrcdir/ironfox/mozconfigs/ironfox-nightly-arm64.mozconfig"
 # 2. ARM
-elif [ "${IRONFOX_GV_AAR_BUILT_ARM}" != 1 ]; then
+elif [ "${IRONFOX_MACH_TARGET_BUNDLE_ARM}" == 1 ]; then
     . "$topsrcdir/ironfox/mozconfigs/ironfox-nightly-arm.mozconfig"
 # 3. x86_64
-elif [ "${IRONFOX_GV_AAR_BUILT_X86_64}" != 1 ]; then
+elif [ "${IRONFOX_MACH_TARGET_BUNDLE_X86_64}" == 1 ]; then
     . "$topsrcdir/ironfox/mozconfigs/ironfox-nightly-x86_64.mozconfig"
 else
     . "$topsrcdir/ironfox/mozconfigs/targets/bundle.mozconfig"

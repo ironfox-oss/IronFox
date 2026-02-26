@@ -72,7 +72,6 @@ fun TermsOfServiceOnboardingPage(
 
                         Text(
                             text = title,
-                            color = FirefoxTheme.colors.textPrimary,
                             textAlign = TextAlign.Center,
                             style = FirefoxTheme.typography.headline5,
                         )
@@ -81,7 +80,7 @@ fun TermsOfServiceOnboardingPage(
 
                         Text(
                             text = description,
-                            color = FirefoxTheme.colors.textSecondary,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center,
                             style = FirefoxTheme.typography.subtitle1,
                         )

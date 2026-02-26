@@ -1,8 +1,19 @@
+From 38c987f71933024453b04d5211611c80f127dbb9 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 05:25:17 +0000
+Subject: [PATCH] fix: Disable search suggestions by default
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../app/src/main/java/org/mozilla/fenix/utils/Settings.kt     | 4 ++--
+ .../app/src/main/res/xml/search_settings_preferences.xml      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..f08a30c2f70b 100644
+index 81d95a9666a1..5fc6b1cba9ae 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1503,7 +1503,7 @@ class Settings(
+@@ -1512,7 +1512,7 @@ class Settings(
  
      val shouldShowSearchSuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions),
@@ -11,7 +22,7 @@ index c7db941b0f7e..f08a30c2f70b 100644
      )
  
      val shouldAutocompleteInAwesomebar by booleanPreference(
-@@ -1539,7 +1539,7 @@ class Settings(
+@@ -1548,7 +1548,7 @@ class Settings(
  
      var showSearchSuggestionsInPrivateOnboardingFinished by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions_in_private_onboarding),
@@ -33,3 +44,6 @@ index 84f47aa47e78..fffc63c44cfe 100644
              android:key="@string/pref_key_show_search_suggestions"
              android:title="@string/preferences_show_search_suggestions" />
          <CheckBoxPreference
+-- 
+2.53.0
+

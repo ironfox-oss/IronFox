@@ -1,6 +1,17 @@
-if [ "${IRONFOX_GECKO_BUILT}" == 1 ] && [ "${IRONFOX_GECKO_PACKAGED}" != 1 ]; then
-    # If Gecko is built, but not packaged, then disable the compile environment - we don't want to build anything at this point
-    ac_add_options --disable-compile-environment
+# IronFox "common" mozconfig
+
+# Do we want Mach to actually build *something*?
+if [ "${IRONFOX_MACH_BUILD}" != 1 ]; then
+    . "$topsrcdir/ironfox/mozconfigs/no-build.mozconfig"
 else
     . "$topsrcdir/ironfox/mozconfigs/build.mozconfig"
+fi
+
+# Set project-specific options
+if [ "${IRONFOX_MACH_TARGET_AC}" == 1 ]; then
+    . "$topsrcdir/ironfox/mozconfigs/projects/android-components.mozconfig"
+elif [ "${IRONFOX_MACH_TARGET_FENIX}" == 1 ]; then
+    . "$topsrcdir/ironfox/mozconfigs/projects/fenix.mozconfig"
+elif [ "${IRONFOX_MACH_TARGET_GECKO}" == 1 ]; then
+    . "$topsrcdir/ironfox/mozconfigs/projects/gecko.mozconfig"
 fi

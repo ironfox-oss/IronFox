@@ -1,5 +1,17 @@
+From 2953eb450e3b54c462225155a9d9cf342ed9b0b9 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Tue, 17 Feb 2026 04:27:36 +0000
+Subject: [PATCH] fix: Disable and remove Mozilla Terms of Use/Privacy Policy
+ nags and entrypoints
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+ .../fenix/onboarding/view/OnboardingMapper.kt      |  2 +-
+ .../main/java/org/mozilla/fenix/utils/Settings.kt  | 14 ++++++++------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
+
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
-index ba8f67c8749c..2e1bcc5719bf 100644
+index 421a1d091fdd..7d3086b8568c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingMapper.kt
 @@ -32,7 +32,7 @@ internal fun Collection<OnboardingCardData>.toPageUiData(
@@ -12,10 +24,18 @@ index ba8f67c8749c..2e1bcc5719bf 100644
  }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..c7038359e56c 100644
+index 81d95a9666a1..8063b9145527 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -587,7 +587,7 @@ class Settings(
+@@ -79,6 +79,7 @@ import org.mozilla.fenix.wallpapers.Wallpaper
+ import java.security.InvalidParameterException
+ import java.util.UUID
+ import java.util.concurrent.TimeUnit.MILLISECONDS
++import org.mozilla.fenix.termsofuse.TOU_TIME_IN_MILLIS
+ 
+ private const val AUTOPLAY_USER_SETTING = "AUTOPLAY_USER_SETTING"
+ 
+@@ -588,24 +589,25 @@ class Settings(
  
      var hasAcceptedTermsOfService by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_terms_accepted),
@@ -24,21 +44,53 @@ index c7db941b0f7e..c7038359e56c 100644
          persistDefaultIfNotExists = true,
      )
  
-@@ -623,7 +623,7 @@ class Settings(
-     var isTermsOfUsePromptEnabled by lazyFeatureFlagPreference(
++    val tosTime = TOU_TIME_IN_MILLIS + 1_000
+     /**
+      * The date the user accepted the Terms of Use.
+      */
+     var termsOfUseAcceptedTimeInMillis by longPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_terms_accepted_date),
+         default = {
+-            if (hasAcceptedTermsOfService) {
++            if (false) {
+                 getApplicationInstalledTime(
+                     packageManagerCompatHelper = packageManagerCompatHelper,
+                     packageName = packageName,
+                     logger = logger,
+                 )
+             } else {
+-                0L
++                tosTime
+             }
+         },
+     )
+@@ -618,7 +620,7 @@ class Settings(
+ 
+     var privacyNoticeBannerLastDisplayedTimeInMillis by longPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_privacy_notice_banner_last_displayed_time),
+-        default = 0,
++        default = tosTime,
+     )
+ 
+     /**
+@@ -634,7 +636,7 @@ class Settings(
+      */
+     var isTermsOfUsePromptEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_terms_prompt_enabled),
-         default = { FxNimbus.features.termsOfUsePrompt.value().enabled },
--        featureFlag = true,
-+        featureFlag = false,
+-        default = { FxNimbus.features.termsOfUsePrompt.value().enabled },
++        default = { false },
      )
  
      /**
-@@ -632,7 +632,7 @@ class Settings(
-     var shouldShowTermsOfUsePromptDragHandle by lazyFeatureFlagPreference(
+@@ -642,7 +644,7 @@ class Settings(
+      */
+     var shouldShowTermsOfUsePromptDragHandle by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_terms_prompt_drag_handle_enabled),
-         default = { FxNimbus.features.termsOfUsePrompt.value().enableDragToDismiss },
--        featureFlag = true,
-+        featureFlag = false,
+-        default = { FxNimbus.features.termsOfUsePrompt.value().enableDragToDismiss },
++        default = { false },
      )
  
      /**
+-- 
+2.53.0
+

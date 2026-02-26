@@ -1,7 +1,7 @@
-From 260c414f0e43526b7e71ef00d7ff9a389cda54d9 Mon Sep 17 00:00:00 2001
+From c1dc2ed2db9ba760aebdd3a49abcd329717516ad Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Sat, 14 Feb 2026 04:05:55 +0000
-Subject: [PATCH] feat: Disable contextual feature recommendations,
+Subject: [PATCH] fix: Disable contextual feature recommendations,
  suggestions, and unwanted nags
 
 Signed-off-by: celenity <celenity@celenity.dev>
@@ -10,10 +10,10 @@ Signed-off-by: celenity <celenity@celenity.dev>
  1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c903ffcd95..2c8e25b970 100644
+index 81d95a9666a1..5e337f6be081 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -364,7 +364,7 @@ class Settings(
+@@ -368,7 +368,7 @@ class Settings(
      )
  
      val canShowCfr: Boolean
@@ -22,7 +22,7 @@ index c903ffcd95..2c8e25b970 100644
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -485,7 +485,7 @@ class Settings(
+@@ -489,7 +489,7 @@ class Settings(
       */
      var showWallpaperOnboarding by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_wallpapers_onboarding),
@@ -31,16 +31,16 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      var openLinksInAPrivateTab by booleanPreference(
-@@ -530,7 +530,7 @@ class Settings(
-     var shouldShowMenuBanner by lazyFeatureFlagPreference(
+@@ -531,7 +531,7 @@ class Settings(
+ 
+     var shouldShowMenuBanner by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_menu_banner),
-         default = { FxNimbus.features.menuRedesign.value().menuBanner },
--        featureFlag = true,
-+        featureFlag = false,
+-        default = { FxNimbus.features.menuRedesign.value().menuBanner },
++        default = { false },
      )
  
      var defaultSearchEngineName by stringPreference(
-@@ -940,7 +940,7 @@ class Settings(
+@@ -953,7 +953,7 @@ class Settings(
       */
      var showFirstTimeTranslation: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
@@ -49,7 +49,7 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      /**
-@@ -1126,7 +1126,7 @@ class Settings(
+@@ -1137,7 +1137,7 @@ class Settings(
  
      var reEngagementNotificationShown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
@@ -58,25 +58,25 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      /**
-@@ -1149,7 +1149,7 @@ class Settings(
-     var reEngagementNotificationEnabled by lazyFeatureFlagPreference(
+@@ -1159,7 +1159,7 @@ class Settings(
+      */
+     var reEngagementNotificationEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
-         default = { FxNimbus.features.reEngagementNotification.value().enabled },
--        featureFlag = true,
-+        featureFlag = false,
+-        default = { FxNimbus.features.reEngagementNotification.value().enabled },
++        default = { false },
      )
  
      /**
-@@ -1236,7 +1236,7 @@ class Settings(
+@@ -1246,7 +1246,7 @@ class Settings(
       */
-     var shouldShowCookieBannersCFR by lazyFeatureFlagPreference(
+     var shouldShowCookieBannersCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
--        featureFlag = true,
-+        featureFlag = false,
-         default = { shouldShowCookieBannerUI },
+-        default = { shouldShowCookieBannerUI },
++        default = { false },
      )
  
-@@ -1247,7 +1247,7 @@ class Settings(
+     var shouldShowTabSwipeCFR by booleanPreference(
+@@ -1256,7 +1256,7 @@ class Settings(
  
      var hasShownTabSwipeCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
@@ -85,7 +85,7 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-@@ -1573,12 +1573,12 @@ class Settings(
+@@ -1582,12 +1582,12 @@ class Settings(
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
@@ -100,7 +100,7 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      val shouldShowOpenInAppCfr: Boolean
-@@ -1586,17 +1586,17 @@ class Settings(
+@@ -1595,17 +1595,17 @@ class Settings(
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
@@ -121,7 +121,7 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      /**
-@@ -1604,7 +1604,7 @@ class Settings(
+@@ -1613,7 +1613,7 @@ class Settings(
       */
      var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
@@ -130,7 +130,7 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      /**
-@@ -2455,7 +2455,7 @@ class Settings(
+@@ -2504,7 +2504,7 @@ class Settings(
       */
      var isFirstTimeEngagingWithSignup: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
@@ -139,15 +139,15 @@ index c903ffcd95..2c8e25b970 100644
      )
  
      /**
-@@ -2808,7 +2808,7 @@ class Settings(
-             FxNimbus.features.setupChecklist.value().enabled &&
+@@ -2850,7 +2850,7 @@ class Settings(
+     var showSetupChecklist by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
+         default = {
+-            FxNimbus.features.setupChecklist.value().enabled &&
++            false &&
                      canShowAddSearchWidgetPrompt(AppWidgetManager.getInstance(appContext))
          },
--        featureFlag = true,
-+        featureFlag = false,
      )
- 
-     /**
 -- 
 2.53.0
 

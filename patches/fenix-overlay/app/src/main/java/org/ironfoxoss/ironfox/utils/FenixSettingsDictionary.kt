@@ -57,6 +57,7 @@ object FenixSettingsDictionary {
     val refererXOriginAlways = R.string.pref_key_referer_policy_always
     val refererXOriginBaseDomainsMatch = R.string.pref_key_referer_policy_base_domains_match
     val refererXOriginHostsMatch = R.string.pref_key_referer_policy_hosts_match
+    val remoteImprovements = R.string.pref_key_remote_improvements
     val safeBrowsingEnabled = R.string.pref_key_safe_browsing_enabled
     val showContileFeature = R.string.pref_key_enable_contile
     val showSponsoredSuggestions = R.string.pref_key_show_sponsored_suggestions
@@ -75,6 +76,7 @@ object FenixSettingsDictionary {
     val useNewCrashReporterDialog = R.string.pref_key_use_new_crash_reporter
     val useRemoteSearchConfiguration = R.string.pref_key_use_remote_search_configuration
     val useCustomTrackingProtection = R.string.pref_key_tracking_protection_custom_option
+    val useMinimalBottomToolbarWhenEnteringText = R.string.pref_key_use_minimal_bottom_toolbar_while_entering_text
     val useNewDynamicToolbarBehaviour = R.string.pref_key_use_scroll_data_for_dynamic_toolbar
     val useStandardTrackingProtection = R.string.pref_key_tracking_protection_standard_option
     val useStrictTrackingProtection = R.string.pref_key_tracking_protection_strict_default

@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 9a16eea8e262..3e1b6438790b 100644
+index 0e25603f7719d..87548644e857d 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1555,28 +1555,28 @@ projects:
+@@ -1561,28 +1561,28 @@ projects:
      - components:support-webextensions
      - components:tooling-lint
      - components:ui-icons
@@ -53,7 +53,7 @@ index 9a16eea8e262..3e1b6438790b 100644
    components:feature-webnotifications:
      description: Feature component for Web Notifications.
      path: components/feature/webnotifications
-@@ -1645,20 +1645,20 @@ projects:
+@@ -1652,20 +1652,20 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint
@@ -88,7 +88,7 @@ index 9a16eea8e262..3e1b6438790b 100644
    components:lib-dataprotect:
      description: A component using AndroidKeyStore to protect user data.
      path: components/lib/dataprotect
-@@ -1705,17 +1705,17 @@ projects:
+@@ -1712,17 +1712,17 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -117,10 +117,283 @@ index 9a16eea8e262..3e1b6438790b 100644
    components:lib-state:
      description: A library for maintaining application state.
      path: components/lib/state
-@@ -2063,22 +2063,22 @@ projects:
-     - components:concept-fetch
-     - components:support-base
+@@ -1736,84 +1736,84 @@ projects:
+     - components:support-test
+     - components:support-utils
      - components:tooling-lint
+-  components:samples-browser:
+-    description: A simple browser composed from browser components.
+-    path: samples/browser
+-    publish: false
+-    upstream_dependencies:
+-    - components:browser-domains
+-    - components:browser-engine-gecko
+-    - components:browser-engine-system
+-    - components:browser-errorpages
+-    - components:browser-icons
+-    - components:browser-menu
+-    - components:browser-menu2
+-    - components:browser-session-storage
+-    - components:browser-state
+-    - components:browser-storage-sync
+-    - components:browser-tabstray
+-    - components:browser-thumbnails
+-    - components:browser-toolbar
+-    - components:compose-awesomebar
+-    - components:compose-base
+-    - components:concept-awesomebar
+-    - components:concept-base
+-    - components:concept-engine
+-    - components:concept-fetch
+-    - components:concept-menu
+-    - components:concept-storage
+-    - components:concept-sync
+-    - components:concept-tabstray
+-    - components:concept-toolbar
+-    - components:feature-addons
+-    - components:feature-app-links
+-    - components:feature-autofill
+-    - components:feature-awesomebar
+-    - components:feature-contextmenu
+-    - components:feature-customtabs
+-    - components:feature-downloads
+-    - components:feature-findinpage
+-    - components:feature-intent
+-    - components:feature-media
+-    - components:feature-privatemode
+-    - components:feature-prompts
+-    - components:feature-pwa
+-    - components:feature-readerview
+-    - components:feature-screendetection
+-    - components:feature-search
+-    - components:feature-session
+-    - components:feature-sitepermissions
+-    - components:feature-tabs
+-    - components:feature-toolbar
+-    - components:feature-top-sites
+-    - components:feature-webcompat
+-    - components:feature-webcompat-reporter
+-    - components:feature-webnotifications
+-    - components:lib-crash
+-    - components:lib-dataprotect
+-    - components:lib-fetch-httpurlconnection
+-    - components:lib-publicsuffixlist
+-    - components:lib-state
+-    - components:service-digitalassetlinks
+-    - components:service-glean
+-    - components:service-location
+-    - components:service-nimbus
+-    - components:service-sync-logins
+-    - components:support-android-test
+-    - components:support-appservices
+-    - components:support-base
+-    - components:support-images
+-    - components:support-ktx
+-    - components:support-locale
+-    - components:support-remotesettings
+-    - components:support-utils
+-    - components:support-webextensions
+-    - components:tooling-lint
+-    - components:ui-autocomplete
+-    - components:ui-colors
+-    - components:ui-icons
+-    - components:ui-tabcounter
+-    - components:ui-widgets
++#  components:samples-browser:
++#    description: A simple browser composed from browser components.
++#    path: samples/browser
++#    publish: false
++#    upstream_dependencies:
++#    - components:browser-domains
++#    - components:browser-engine-gecko
++#    - components:browser-engine-system
++#    - components:browser-errorpages
++#    - components:browser-icons
++#    - components:browser-menu
++#    - components:browser-menu2
++#    - components:browser-session-storage
++#    - components:browser-state
++#    - components:browser-storage-sync
++#    - components:browser-tabstray
++#    - components:browser-thumbnails
++#    - components:browser-toolbar
++#    - components:compose-awesomebar
++#    - components:compose-base
++#    - components:concept-awesomebar
++#    - components:concept-base
++#    - components:concept-engine
++#    - components:concept-fetch
++#    - components:concept-menu
++#    - components:concept-storage
++#    - components:concept-sync
++#    - components:concept-tabstray
++#    - components:concept-toolbar
++#    - components:feature-addons
++#    - components:feature-app-links
++#    - components:feature-autofill
++#    - components:feature-awesomebar
++#    - components:feature-contextmenu
++#    - components:feature-customtabs
++#    - components:feature-downloads
++#    - components:feature-findinpage
++#    - components:feature-intent
++#    - components:feature-media
++#    - components:feature-privatemode
++#    - components:feature-prompts
++#    - components:feature-pwa
++#    - components:feature-readerview
++#    - components:feature-screendetection
++#    - components:feature-search
++#    - components:feature-session
++#    - components:feature-sitepermissions
++#    - components:feature-tabs
++#    - components:feature-toolbar
++#    - components:feature-top-sites
++#    - components:feature-webcompat
++#    - components:feature-webcompat-reporter
++#    - components:feature-webnotifications
++#    - components:lib-crash
++#    - components:lib-dataprotect
++#    - components:lib-fetch-httpurlconnection
++#    - components:lib-publicsuffixlist
++#    - components:lib-state
++#    - components:service-digitalassetlinks
++#    - components:service-glean
++#    - components:service-location
++#    - components:service-nimbus
++#    - components:service-sync-logins
++#    - components:support-android-test
++#    - components:support-appservices
++#    - components:support-base
++#    - components:support-images
++#    - components:support-ktx
++#    - components:support-locale
++#    - components:support-remotesettings
++#    - components:support-utils
++#    - components:support-webextensions
++#    - components:tooling-lint
++#    - components:ui-autocomplete
++#    - components:ui-colors
++#    - components:ui-icons
++#    - components:ui-tabcounter
++#    - components:ui-widgets
+   components:samples-compose-browser:
+     description: A simple browser composed from browser components using Jetpack Compose.
+     path: samples/compose-browser
+@@ -1868,21 +1868,21 @@ projects:
+     - components:ui-icons
+     - components:ui-tabcounter
+     - components:ui-widgets
+-  components:samples-crash:
+-    description: An app showing the integration of the lib-crash component.
+-    path: samples/crash
+-    publish: false
+-    upstream_dependencies:
+-    - components:concept-base
+-    - components:concept-fetch
+-    - components:lib-crash
+-    - components:lib-fetch-httpurlconnection
+-    - components:lib-publicsuffixlist
+-    - components:service-glean
+-    - components:support-base
+-    - components:support-ktx
+-    - components:support-utils
+-    - components:tooling-lint
++#  components:samples-crash:
++#    description: An app showing the integration of the lib-crash component.
++#    path: samples/crash
++#    publish: false
++#    upstream_dependencies:
++#    - components:concept-base
++#    - components:concept-fetch
++#    - components:lib-crash
++#    - components:lib-fetch-httpurlconnection
++#    - components:lib-publicsuffixlist
++#    - components:service-glean
++#    - components:support-base
++#    - components:support-ktx
++#    - components:support-utils
++#    - components:tooling-lint
+   components:samples-dataprotect:
+     description: An app demoing how to use the Dataprotect component to load and store
+       encrypted data in SharedPreferences.
+@@ -1941,39 +1941,39 @@ projects:
+     - components:tooling-lint
+     - components:ui-colors
+     - components:ui-icons
+-  components:samples-glean:
+-    description: An app demoing how to use the Glean library to collect and send telemetry
+-      data.
+-    path: samples/glean
+-    publish: false
+-    upstream_dependencies:
+-    - components:browser-errorpages
+-    - components:browser-state
+-    - components:concept-awesomebar
+-    - components:concept-base
+-    - components:concept-engine
+-    - components:concept-fetch
+-    - components:concept-storage
+-    - components:lib-fetch-httpurlconnection
+-    - components:lib-publicsuffixlist
+-    - components:lib-state
+-    - components:samples-glean-library
+-    - components:service-glean
+-    - components:service-nimbus
+-    - components:support-appservices
+-    - components:support-base
+-    - components:support-ktx
+-    - components:support-locale
+-    - components:support-utils
+-    - components:tooling-lint
+-    - components:ui-icons
+-  components:samples-glean-library:
+-    description: A third-party library used by samples-glean to demonstrate multi-library
+-      support for Glean.
+-    path: samples/glean/samples-glean-library
+-    publish: false
+-    upstream_dependencies:
+-    - components:tooling-lint
++#  components:samples-glean:
++#    description: An app demoing how to use the Glean library to collect and send telemetry
++#      data.
++#    path: samples/glean
++#    publish: false
++#    upstream_dependencies:
++#    - components:browser-errorpages
++#    - components:browser-state
++#    - components:concept-awesomebar
++#    - components:concept-base
++#    - components:concept-engine
++#    - components:concept-fetch
++#    - components:concept-storage
++#    - components:lib-fetch-httpurlconnection
++#    - components:lib-publicsuffixlist
++#    - components:lib-state
++#    - components:samples-glean-library
++#    - components:service-glean
++#    - components:service-nimbus
++#    - components:support-appservices
++#    - components:support-base
++#    - components:support-ktx
++#    - components:support-locale
++#    - components:support-utils
++#    - components:tooling-lint
++#    - components:ui-icons
++#  components:samples-glean-library:
++#    description: A third-party library used by samples-glean to demonstrate multi-library
++#      support for Glean.
++#    path: samples/glean/samples-glean-library
++#    publish: false
++#    upstream_dependencies:
++#    - components:tooling-lint
+   components:samples-sync:
+     description: A simple app demoing Firefox Sync (History, Bookmarks, etc) integration.
+     path: samples/sync
+@@ -2103,22 +2103,22 @@ projects:
+     - components:tooling-lint
+     - components:ui-colors
+     - components:ui-icons
 -  components:service-glean:
 -    description: A client-side telemetry SDK for collecting metrics and sending them
 -      to the Mozilla telemetry service
@@ -156,7 +429,7 @@ index 9a16eea8e262..3e1b6438790b 100644
    components:service-location:
      description: A library for providing location-based services.
      path: components/service/location
-@@ -2093,24 +2093,24 @@ projects:
+@@ -2133,24 +2133,24 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint
