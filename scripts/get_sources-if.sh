@@ -492,7 +492,6 @@ function get_rust() {
     rustup override set "${RUST_VERSION}"
     rustup target add armv7-linux-androideabi
     rustup target add aarch64-linux-android
-    rustup target add i686-linux-android
     rustup target add thumbv7neon-linux-androideabi
     rustup target add x86_64-linux-android
 
