@@ -313,10 +313,10 @@ if [[ -z "${IRONFOX_GRADLE_HOME+x}" ]]; then
     export IRONFOX_GRADLE_HOME="${IRONFOX_GRADLE_HOME_DEFAULT}"
 fi
 
-# Home
-## (ex. used by our mozconfigs for setting the local Maven repo)
-if [[ -z "${IRONFOX_HOME+x}" ]]; then
-    export IRONFOX_HOME="${HOME}"
+# Gradle local Maven repository
+IRONFOX_MAVEN_LOCAL_DEFAULT="${IRONFOX_BUILD}/.m2/repository"
+if [[ -z "${IRONFOX_MAVEN_LOCAL+x}" ]]; then
+    export IRONFOX_MAVEN_LOCAL="${IRONFOX_MAVEN_LOCAL_DEFAULT}"
 fi
 
 # Java home
@@ -496,7 +496,7 @@ if [[ -z "${IRONFOX_GRADLE_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # Gradle flags
-IRONFOX_GRADLE_FLAGS_DEFAULT='-Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon'
+IRONFOX_GRADLE_FLAGS_DEFAULT="-Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon"
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
     export IRONFOX_GRADLE_FLAGS_OVERRIDE=1
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"
