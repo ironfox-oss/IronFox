@@ -10,9 +10,9 @@ FIREFOX_VERSION='148.0'
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
+### Version: v148.0
 ### https://github.com/mozilla/application-services
 APPSERVICES_COMMIT='2ff0d7c78e7ca92ce48246d5a7c0af6a13ea5f53'
-APPSERVICES_VERSION='v148.0'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
@@ -21,14 +21,14 @@ APPSERVICES_VERSION='v148.0'
 L10N_COMMIT='2424c18f238c59e513ff13c17280f5ef26e1f68b'
 
 ## Glean
+### Version: v66.2.0
 ### https://github.com/mozilla/glean
 GLEAN_COMMIT='e95d7e50678aaa678b9556f4b8b98cdadc0f1c07'
-GLEAN_VERSION='v66.2.0'
 
 ## microG
+### Version: v0.3.13.250932
 ### https://github.com/microg/GmsCore
 GMSCORE_COMMIT='3ba21336181c846630242124176737c05b3e8b6f'
-GMSCORE_VERSION='v0.3.13.250932'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
@@ -79,6 +79,11 @@ GRADLE_COMMIT='996b7829f40f33317d33c1b6ddcffcf976bd6181'
 #RUST_VERSION="${RUST_MAJOR_VERSION}.0"
 RUST_MAJOR_VERSION='1.93.1'
 RUST_VERSION="${RUST_MAJOR_VERSION}"
+
+## rustup
+### Version: 1.28.2
+### https://github.com/rust-lang/rustup/tags
+RUSTUP_COMMIT='e4f3ad6f893e56ca10f0a329c401a5eafab69607'
 
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds

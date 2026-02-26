@@ -483,7 +483,7 @@ function get_rust() {
     fi
 
     echo_red_text "Downloading Rust..."
-    curl ${IRONFOX_CURL_FLAGS} -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --no-update-default-toolchain --profile=minimal
+    curl ${IRONFOX_CURL_FLAGS} -sSf "https://raw.githubusercontent.com/rust-lang/rustup/${RUSTUP_COMMIT}/rustup-init.sh" | sh -s -- -y --no-modify-path --no-update-default-toolchain --profile=minimal
 
     echo_red_text "Creating Rust environment..."
     source "${IRONFOX_CARGO_ENV}"
