@@ -122,6 +122,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "gulper.io"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "hoyoverse.com"
         },
         {
