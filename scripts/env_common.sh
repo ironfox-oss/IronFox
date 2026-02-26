@@ -135,9 +135,7 @@ fi
 
 # Directory where we should store log files (if logging is desired)
 IRONFOX_LOG_DIR_DEFAULT="${IRONFOX_BUILD}/logs"
-if [ "${IRONFOX_CI}" == 1 ]; then
-    export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
-elif [[ -z "${IRONFOX_LOG_DIR+x}" ]]; then
+if [[ -z "${IRONFOX_LOG_DIR+x}" ]]; then
     export IRONFOX_LOG_DIR="${IRONFOX_LOG_DIR_DEFAULT}"
 fi
 
