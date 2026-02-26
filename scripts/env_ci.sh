@@ -17,5 +17,8 @@ export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
 # Log directory
 export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
 
+# Log directory
+export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
+
 # Safe Browsing
 export IRONFOX_SB_GAPI_KEY_FILE='/opt/IronFox/ironfox-sb-gapi.data'
