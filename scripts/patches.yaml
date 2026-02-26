@@ -70,13 +70,6 @@ patches:
     effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
     category: "Build System"
 
-  - file: "fenix-disable-debug-signing.patch"
-    name: "Disable Debug Signing"
-    description: "Disables debug signing of Fenix (Firefox for Android)."
-    reason: "To allow IronFox devs to use our own signing keys instead."
-    effect: "Ensures that IronFox is signed with our own keys, instead of debug keys."
-    category: "Build System"
-
   - file: "fenix-disable-gms-licensing-task.patch"
     name: "Disable GMS Licensing task"
     description: "Disables running the GMS licensing plug-in at build-time."

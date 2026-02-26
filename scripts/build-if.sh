@@ -375,8 +375,11 @@ function build_as() {
 
     # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
     # skips building the libraries as they are expected to be already downloaded in a CI environment
-    # However, we want build those libraries always, so we set CI='' before invoking the script
-    CI='' bash -c "./libs/verify-android-environment.sh && ${IRONFOX_GRADLE} ${IRONFOX_GRADLE_FLAGS} :tooling-nimbus-gradle:publishToMavenLocal"
+    # However, we want build those libraries always, so we unset CI before invoking the script
+    unset CI
+
+    bash -x "${IRONFOX_AS}/libs/verify-android-environment.sh"
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} :tooling-nimbus-gradle:publishToMavenLocal
     popd
 
     echo_green_text 'SUCCESS: Built Application Services'
@@ -713,6 +716,13 @@ function build_fenix() {
     export IRONFOX_MACH_BUILD=1
     export IRONFOX_MACH_TARGET_FENIX=1
 
+    # When building Fenix, if IRONFOX_SIGN is set, we need to set MOZ_AUTOMATION to prevent outputs from being automatically signed with a debug key
+    ## https://searchfox.org/firefox-main/rev/eea0f8f0/mobile/android/fenix/app/build.gradle#114
+    ## CI should never use debug signing
+    if [ "${IRONFOX_SIGN}" == 1 ]; then
+        export MOZ_AUTOMATION=1
+    fi
+
     pushd "${IRONFOX_GECKO}"
     "${IRONFOX_MACH}" configure
 
@@ -762,6 +772,8 @@ function build_fenix() {
             cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
         fi
     fi
+
+    unset MOZ_AUTOMATION
     unset IRONFOX_MACH_TARGET_FENIX
     export IRONFOX_MACH_TARGET_FENIX=0
     "${IRONFOX_MACH}" configure

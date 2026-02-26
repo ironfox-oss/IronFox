@@ -1,4 +1,3 @@
 # IronFox Android Components mozconfig
 
-# Ensure MOZ_AUTOMATION isn't set here
-unset MOZ_AUTOMATION
+# Currently empty :(
