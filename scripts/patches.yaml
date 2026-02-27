@@ -70,6 +70,13 @@ patches:
     effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
     category: "Build System"
 
+  - file: "fenix-disable-gms-licensing-task.patch"
+    name: "Disable GMS Licensing task"
+    description: "Disables running the GMS licensing plug-in at build-time."
+    reason: "To resolve build issues."
+    effect: "Ensures that IronFox builds as expected."
+    category: "Build System"
+
   - file: "gecko-ensure-builds-reflect-changes.patch"
     name: "Ensure builds always reflect our (latest) changes"
     description: "Ensures that builds of GeckoView binaries always reflect our (latest) changes."
