@@ -729,9 +729,6 @@ function build_fenix() {
     # Always clean Gradle to ensure builds are fresh
     "${IRONFOX_MACH}" gradle fenix:clean
 
-    # Generate licenses
-    "${IRONFOX_MACH}" gradle fenix:releaseOssLicensesTask
-
     # Build our APKs
     "${IRONFOX_MACH}" gradle fenix:assembleRelease
 
@@ -763,9 +760,6 @@ function build_fenix() {
         else
             cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-universal-release.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
         fi
-
-        # Generate licenses
-        "${IRONFOX_MACH}" gradle fenix:releaseOssLicensesTask
 
         # 5. Finally, build and export our AAB
         "${IRONFOX_MACH}" gradle -Paab fenix:bundleRelease
