@@ -259,7 +259,7 @@ function get_android_sdk() {
     download_and_extract "android-cmdline-tools" "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip"
 
     # Validate checksum
-    ANDROID_SDK_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/android-cmdline-tools-linux.zip" | "${IRONFOX_AWK}" '{print $1}')
+    ANDROID_SDK_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/android-cmdline-tools.zip" | "${IRONFOX_AWK}" '{print $1}')
     if [ "${ANDROID_SDK_SHA512SUM_LOCAL}" != "${ANDROID_SDK_SHA512SUM_LINUX}" ] && [ "${ANDROID_SDK_SHA512SUM_LOCAL}" != "${ANDROID_SDK_SHA512SUM_OSX}" ]; then
         echo_red_text 'ERROR: Checksum validation failed.'
         if [ "${IRONFOX_OS}" == 'osx' ]; then
