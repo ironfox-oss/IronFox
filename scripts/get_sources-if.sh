@@ -257,6 +257,23 @@ function download_and_extract() {
 function get_android_sdk() {
     echo_red_text "Downloading the Android SDK..."
     download_and_extract "android-cmdline-tools" "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip"
+
+    # Validate checksum
+    ANDROID_SDK_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/android-cmdline-tools-linux.zip" | "${IRONFOX_AWK}" '{print $1}')
+    if [ "${ANDROID_SDK_SHA512SUM_LOCAL}" != "${ANDROID_SDK_SHA512SUM_LINUX}" ] && [ "${ANDROID_SDK_SHA512SUM_LOCAL}" != "${ANDROID_SDK_SHA512SUM_OSX}" ]; then
+        echo_red_text 'ERROR: Checksum validation failed.'
+        if [ "${IRONFOX_OS}" == 'osx' ]; then
+            echo "Expected SHA512sum: ${ANDROID_SDK_SHA512SUM_OSX}"
+        else
+            echo "Expected SHA512sum: ${ANDROID_SDK_SHA512SUM_LINUX}"
+        fi
+        echo "Actual SHA512sum: ${ANDROID_SDK_SHA512SUM_LOCAL}"
+        exit 1
+    else
+        echo_green_text 'SUCCESS: Checksum validated.'
+        echo "SHA512sum: ${ANDROID_SDK_SHA512SUM_LOCAL}"
+    fi
+
     mkdir -vp "${IRONFOX_ANDROID_SDK}/cmdline-tools"
     mv -v "${IRONFOX_EXTERNAL}/android-cmdline-tools" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest"
 
@@ -281,6 +298,18 @@ function get_as() {
 function get_bundletool() {
     echo_red_text "Downloading Bundletool..."
     download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "${IRONFOX_BUNDLETOOL_JAR}"
+
+    # Validate checksum
+    BUNDLETOOL_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_BUNDLETOOL_JAR}" | "${IRONFOX_AWK}" '{print $1}')
+    if [ "${BUNDLETOOL_SHA512SUM_LOCAL}" != "${BUNDLETOOL_SHA512SUM}" ]; then
+        echo_red_text 'ERROR: Checksum validation failed.'
+        echo "Expected SHA512sum: ${BUNDLETOOL_SHA512SUM}"
+        echo "Actual SHA512sum: ${BUNDLETOOL_SHA512SUM_LOCAL}"
+        exit 1
+    else
+        echo_green_text 'SUCCESS: Checksum validated.'
+        echo "SHA512sum: ${BUNDLETOOL_SHA512SUM_LOCAL}"
+    fi
 
     if ! [[ -f "${IRONFOX_BUNDLETOOL}" ]]; then
         echo_red_text "Creating bundletool script..."
@@ -334,6 +363,18 @@ function get_firefox_l10n() {
 function get_gradle() {
     echo_red_text "Downloading F-Droid's Gradle script..."
     download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${IRONFOX_GRADLE_DIR}/gradlew.py"
+
+    # Validate checksum
+    GRADLE_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_GRADLE_DIR}/gradlew.py" | "${IRONFOX_AWK}" '{print $1}')
+    if [ "${GRADLE_SHA512SUM_LOCAL}" != "${GRADLE_SHA512SUM}" ]; then
+        echo_red_text 'ERROR: Checksum validation failed.'
+        echo "Expected SHA512sum: ${GRADLE_SHA512SUM}"
+        echo "Actual SHA512sum: ${GRADLE_SHA512SUM_LOCAL}"
+        exit 1
+    else
+        echo_green_text 'SUCCESS: Checksum validated.'
+        echo "SHA512sum: ${GRADLE_SHA512SUM_LOCAL}"
+    fi
 
     if ! [[ -f "${IRONFOX_GRADLE}" ]]; then
         echo_red_text "Creating Gradle script..."
@@ -458,6 +499,23 @@ function get_prebuilds() {
         else
             download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
         fi
+
+        # Validate checksum
+        UNIFFI_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/uniffi.tar.xz" | "${IRONFOX_AWK}" '{print $1}')
+        if [ "${UNIFFI_SHA512SUM_LOCAL}" != "${UNIFFI_LINUX_IRONFOX_SHA512SUM}" ] && [ "${UNIFFI_SHA512SUM_LOCAL}" != "${UNIFFI_OSX_IRONFOX_SHA512SUM}" ]; then
+            echo_red_text 'ERROR: Checksum validation failed.'
+            if [ "${IRONFOX_OS}" == 'osx' ]; then
+                echo "Expected SHA512sum: ${UNIFFI_OSX_IRONFOX_SHA512SUM}"
+            else
+                echo "Expected SHA512sum: ${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
+            fi
+            echo "Actual SHA512sum: ${UNIFFI_SHA512SUM_LOCAL}"
+            exit 1
+        else
+            echo_green_text 'SUCCESS: Checksum validated.'
+            echo "SHA512sum: ${UNIFFI_SHA512SUM_LOCAL}"
+        fi
+
         echo_green_text "SUCCESS: Set-up the prebuilt uniffi-bindgen at ${IRONFOX_UNIFFI}"
 
         # Get WebAssembly SDK
@@ -467,6 +525,23 @@ function get_prebuilds() {
         else
             download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
         fi
+
+        # Validate checksum
+        WASI_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz" | "${IRONFOX_AWK}" '{print $1}')
+        if [ "${WASI_SHA512SUM_LOCAL}" != "${WASI_LINUX_IRONFOX_SHA512SUM}" ] && [ "${WASI_SHA512SUM_LOCAL}" != "${WASI_OSX_IRONFOX_SHA512SUM}" ]; then
+            echo_red_text 'ERROR: Checksum validation failed.'
+            if [ "${IRONFOX_OS}" == 'osx' ]; then
+                echo "Expected SHA512sum: ${WASI_OSX_IRONFOX_SHA512SUM}"
+            else
+                echo "Expected SHA512sum: ${WASI_LINUX_IRONFOX_SHA512SUM}"
+            fi
+            echo "Actual SHA512sum: ${WASI_SHA512SUM_LOCAL}"
+            exit 1
+        else
+            echo_green_text 'SUCCESS: Checksum validated.'
+            echo "SHA512sum: ${WASI_SHA512SUM_LOCAL}"
+        fi
+
         echo_green_text "SUCCESS: Set-up the prebuilt wasi-sdk at ${IRONFOX_WASI}"
     fi
 }
@@ -483,7 +558,21 @@ function get_rust() {
     fi
 
     echo_red_text "Downloading Rust..."
-    curl ${IRONFOX_CURL_FLAGS} -sSf "https://raw.githubusercontent.com/rust-lang/rustup/${RUSTUP_COMMIT}/rustup-init.sh" | sh -s -- -y --no-modify-path --no-update-default-toolchain --profile=minimal
+    download "https://raw.githubusercontent.com/rust-lang/rustup/${RUSTUP_COMMIT}/rustup-init.sh" "${IRONFOX_DOWNLOADS}/rustup-init.sh"
+
+    # Validate checksum
+    RUSTUP_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/rustup-init.sh" | "${IRONFOX_AWK}" '{print $1}')
+    if [ "${RUSTUP_SHA512SUM_LOCAL}" != "${RUSTUP_SHA512SUM}" ]; then
+        echo_red_text 'ERROR: Checksum validation failed.'
+        echo "Expected SHA512sum: ${RUSTUP_SHA512SUM}"
+        echo "Actual SHA512sum: ${RUSTUP_SHA512SUM_LOCAL}"
+        exit 1
+    else
+        echo_green_text 'SUCCESS: Checksum validated.'
+        echo "SHA512sum: ${RUSTUP_SHA512SUM_LOCAL}"
+    fi
+
+    bash -x "${IRONFOX_DOWNLOADS}/rustup-init.sh" -y --no-modify-path --no-update-default-toolchain --profile=minimal
 
     echo_red_text "Creating Rust environment..."
     source "${IRONFOX_CARGO_ENV}"

@@ -135,5 +135,8 @@ source "${IRONFOX_VERSIONS}"
 ## Set Rust version
 export RUSTUP_TOOLCHAIN="${RUST_VERSION}"
 
+## Set Rustup version
+export RUSTUP_VERSION="${RUSTUP_VERSION}"
+
 # unifiedpush-ac
 export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
