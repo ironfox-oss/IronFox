@@ -184,7 +184,7 @@ function download() {
 function extract_rmtoplevel() {
     local archive_path="$1"
     local to_name="$2"
-    local extract_to="${IRONFOX_EXTERNAL}/${to_name}"
+    local extract_to="$3"
 
     if ! [[ -f "${archive_path}" ]]; then
         echo_red_text "ERROR: Archive '${archive_path}' does not exist!"
@@ -227,6 +227,7 @@ function extract_rmtoplevel() {
 function download_and_extract() {
     local repo_name="$1"
     local url="$2"
+    local path="$3"
 
     local extension
     if [[ "${url}" =~ \.tar\.xz$ ]]; then
@@ -249,14 +250,14 @@ function download_and_extract() {
     fi
 
     echo_red_text "Extracting ${repo_archive}..."
-    extract_rmtoplevel "${repo_archive}" "${repo_name}"
+    extract_rmtoplevel "${repo_archive}" "${repo_name}" "${path}"
     echo
 }
 
 # Get + set-up Android SDK
 function get_android_sdk() {
     echo_red_text "Downloading the Android SDK..."
-    download_and_extract "android-cmdline-tools" "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip"
+    download "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_DOWNLOADS}/android-cmdline-tools.zip"
 
     # Validate checksum
     ANDROID_SDK_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/android-cmdline-tools.zip" | "${IRONFOX_AWK}" '{print $1}')
@@ -274,6 +275,7 @@ function get_android_sdk() {
         echo "SHA512sum: ${ANDROID_SDK_SHA512SUM_LOCAL}"
     fi
 
+    extract_rmtoplevel "${IRONFOX_DOWNLOADS}/android-cmdline-tools.zip" 'android-cmdline-tools' "${IRONFOX_ANDROID_SDK}"
     mkdir -vp "${IRONFOX_ANDROID_SDK}/cmdline-tools"
     mv -v "${IRONFOX_EXTERNAL}/android-cmdline-tools" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest"
 
@@ -495,9 +497,9 @@ function get_prebuilds() {
         # Get Tor's no-op UniFFi binding generator
         echo_red_text "Downloading prebuilt uniffi-bindgen..."
         if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-            download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
+            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/uniffi.tar.xz"
         else
-            download_and_extract "uniffi" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
+            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/uniffi.tar.xz"
         fi
 
         # Validate checksum
@@ -516,14 +518,15 @@ function get_prebuilds() {
             echo "SHA512sum: ${UNIFFI_SHA512SUM_LOCAL}"
         fi
 
+        extract_rmtoplevel "${IRONFOX_DOWNLOADS}/uniffi.tar.xz" 'uniffi' "${IRONFOX_UNIFFI}"
         echo_green_text "SUCCESS: Set-up the prebuilt uniffi-bindgen at ${IRONFOX_UNIFFI}"
 
         # Get WebAssembly SDK
         echo_red_text "Downloading prebuilt wasi-sdk..."
         if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-            download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
+            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz"
         else
-            download_and_extract "wasi-sdk" "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz"
+            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz"
         fi
 
         # Validate checksum
@@ -542,6 +545,7 @@ function get_prebuilds() {
             echo "SHA512sum: ${WASI_SHA512SUM_LOCAL}"
         fi
 
+        extract_rmtoplevel "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz" 'wasi-sdk' "${IRONFOX_WASI}"
         echo_green_text "SUCCESS: Set-up the prebuilt wasi-sdk at ${IRONFOX_WASI}"
     fi
 }
