@@ -239,6 +239,8 @@ function extract() {
 
     local top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
     mv "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}"/* "${target_path}"
+    # (files starting with . need to be moved separately...)
+    mv "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}"/.[!.]* "${target_path}"
     rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 }
 
