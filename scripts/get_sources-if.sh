@@ -103,14 +103,32 @@ fi
 source "${IRONFOX_VERSIONS}"
 
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    ANDROID_SDK_PLATFORM='mac'
     PLATFORM='macos'
     PREBUILT_PLATFORM='osx'
 else
-    ANDROID_SDK_PLATFORM='linux'
     PLATFORM='linux'
     PREBUILT_PLATFORM='linux'
 fi
+
+function validate_sha512sum() {
+    expected_sha512sum="$1"
+    file="$2"
+
+    local_sha512sum=$(sha512sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    if [ "${local_sha512sum}" != "${expected_sha512sum}" ]; then
+        echo_red_text 'ERROR: Checksum validation failed.'
+        echo "Expected SHA512sum: ${expected_sha512sum}"
+        echo "Actual SHA512sum: ${local_sha512sum}"
+
+        # If checksum validation fails, also just remove the file
+        rm -f "${file}"
+
+        exit 1
+    else
+        echo_green_text 'SUCCESS: Checksum validated.'
+        echo "SHA512sum: ${local_sha512sum}"
+    fi
+}
 
 function clone_repo() {
     url="$1"
@@ -180,54 +198,69 @@ function download() {
     curl ${IRONFOX_CURL_FLAGS} -sSL "${url}" -o "${filepath}"
 }
 
-# Extract zip removing top level directory
-function extract_rmtoplevel() {
+# Extract archives
+function extract() {
     local archive_path="$1"
-    local to_name="$2"
-    local extract_to="$3"
+    local target_path="$2"
+    local temp_repo_name="$3"
 
     if ! [[ -f "${archive_path}" ]]; then
         echo_red_text "ERROR: Archive '${archive_path}' does not exist!"
     fi
 
+    # If our temporary directory for extraction already exists, delete it
+    if [[ -d "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}" ]]; then
+        rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
+    fi
+
     # Create temporary directory for extraction
-    local temp_dir=$(mktemp -d)
+    mkdir -p "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 
     # Extract based on file extension
     case "${archive_path}" in
         *.zip)
-            unzip -q "${archive_path}" -d "${temp_dir}"
+            unzip -q "${archive_path}" -d "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
             ;;
         *.tar.gz)
-            "${IRONFOX_TAR}" xzf "${archive_path}" -C "${temp_dir}"
+            "${IRONFOX_TAR}" xzf "${archive_path}" -C "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
             ;;
         *.tar.xz)
-            "${IRONFOX_TAR}" xJf "${archive_path}" -C "${temp_dir}"
+            "${IRONFOX_TAR}" xJf "${archive_path}" -C "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
             ;;
         *.tar.zst)
-            "${IRONFOX_TAR}" --zstd -xvf "${archive_path}" -C "${temp_dir}"
+            "${IRONFOX_TAR}" --zstd -xvf "${archive_path}" -C "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
             ;;
         *)
             echo_red_text "ERROR: Unsupported archive format: ${archive_path}"
-            rm -rf "${temp_dir}"
+            rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
             exit 1
             ;;
     esac
 
-    local top_dir=$(ls "${temp_dir}")
-    local to_parent=$(dirname "${extract_to}")
-
-    rm -rf "${extract_to}"
-    mkdir -vp "${to_parent}"
-    mv "${temp_dir}/${top_dir}" "${to_parent}/${to_name}"
-
-    rm -rf "${temp_dir}"
+    local top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
+    mv "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}"/* "${target_path}"
+    rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 }
 
 function download_and_extract() {
     local repo_name="$1"
     local url="$2"
     local path="$3"
+    local expected_sha512sum="$4"
+
+    if [[ -d "${path}" ]]; then
+        echo_red_text "'${path}' already exists"
+        read -p "Do you want to re-download? [y/N] " -n 1 -r
+        echo
+        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+            echo_red_text "Removing ${path}..."
+            rm -rf "${path}"
+        else
+            return 0
+        fi
+    fi
+
+    mkdir -p "${path}"
 
     local extension
     if [[ "${url}" =~ \.tar\.xz$ ]]; then
@@ -249,35 +282,36 @@ function download_and_extract() {
         exit 1
     fi
 
+    # Before extracting, verify SHA512sum...
+    validate_sha512sum "${expected_sha512sum}" "${repo_archive}"
+
     echo_red_text "Extracting ${repo_archive}..."
-    extract_rmtoplevel "${repo_archive}" "${repo_name}" "${path}"
+    extract "${repo_archive}" "${path}" "${repo_name}"
     echo
 }
 
 # Get + set-up Android SDK
 function get_android_sdk() {
-    echo_red_text "Downloading the Android SDK..."
-    download "https://dl.google.com/android/repository/commandlinetools-${ANDROID_SDK_PLATFORM}-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_DOWNLOADS}/android-cmdline-tools.zip"
+    echo_red_text 'Downloading the Android SDK...'
 
-    # Validate checksum
-    ANDROID_SDK_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/android-cmdline-tools.zip" | "${IRONFOX_AWK}" '{print $1}')
-    if [ "${ANDROID_SDK_SHA512SUM_LOCAL}" != "${ANDROID_SDK_SHA512SUM_LINUX}" ] && [ "${ANDROID_SDK_SHA512SUM_LOCAL}" != "${ANDROID_SDK_SHA512SUM_OSX}" ]; then
-        echo_red_text 'ERROR: Checksum validation failed.'
-        if [ "${IRONFOX_OS}" == 'osx' ]; then
-            echo "Expected SHA512sum: ${ANDROID_SDK_SHA512SUM_OSX}"
+    # This is typically covered by "download_and_extract", but the Android SDK is a special case - we don't download it to IRONFOX_ANDROID_SDK directly
+    if [[ -d "${IRONFOX_ANDROID_SDK}" ]]; then
+        echo_red_text "'${IRONFOX_ANDROID_SDK}' already exists"
+        read -p "Do you want to re-download? [y/N] " -n 1 -r
+        echo
+        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+            echo_red_text "Removing ${IRONFOX_ANDROID_SDK}..."
+            rm -rf "${IRONFOX_ANDROID_SDK}"
         else
-            echo "Expected SHA512sum: ${ANDROID_SDK_SHA512SUM_LINUX}"
+            return 0
         fi
-        echo "Actual SHA512sum: ${ANDROID_SDK_SHA512SUM_LOCAL}"
-        exit 1
-    else
-        echo_green_text 'SUCCESS: Checksum validated.'
-        echo "SHA512sum: ${ANDROID_SDK_SHA512SUM_LOCAL}"
     fi
 
-    extract_rmtoplevel "${IRONFOX_DOWNLOADS}/android-cmdline-tools.zip" 'android-cmdline-tools' "${IRONFOX_ANDROID_SDK}"
-    mkdir -vp "${IRONFOX_ANDROID_SDK}/cmdline-tools"
-    mv -v "${IRONFOX_EXTERNAL}/android-cmdline-tools" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest"
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        download_and_extract 'android-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_OSX}"
+    else
+        download_and_extract 'android-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_LINUX}"
+    fi
 
     # Accept Android SDK licenses
     { yes || true; } | ${IRONFOX_ANDROID_SDKMANAGER} --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
@@ -291,30 +325,21 @@ function get_android_sdk() {
 
 # Get Application Services
 function get_as() {
-    echo_red_text "Cloning Application Services..."
-    clone_repo "https://github.com/mozilla/application-services.git" "${IRONFOX_AS}" "${APPSERVICES_COMMIT}"
+    echo_red_text 'Downloading Application Services...'
+    download_and_extract 'application-services' "https://github.com/mozilla/application-services/archive/${APPSERVICES_COMMIT}.tar.gz" "${IRONFOX_AS}" "${APPSERVICES_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up Application Services at ${IRONFOX_AS}"
 }
 
 # Get + set-up Bundletool
 function get_bundletool() {
-    echo_red_text "Downloading Bundletool..."
+    echo_red_text 'Downloading Bundletool...'
     download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "${IRONFOX_BUNDLETOOL_JAR}"
 
-    # Validate checksum
-    BUNDLETOOL_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_BUNDLETOOL_JAR}" | "${IRONFOX_AWK}" '{print $1}')
-    if [ "${BUNDLETOOL_SHA512SUM_LOCAL}" != "${BUNDLETOOL_SHA512SUM}" ]; then
-        echo_red_text 'ERROR: Checksum validation failed.'
-        echo "Expected SHA512sum: ${BUNDLETOOL_SHA512SUM}"
-        echo "Actual SHA512sum: ${BUNDLETOOL_SHA512SUM_LOCAL}"
-        exit 1
-    else
-        echo_green_text 'SUCCESS: Checksum validated.'
-        echo "SHA512sum: ${BUNDLETOOL_SHA512SUM_LOCAL}"
-    fi
+    # Validate SHA512sum
+    validate_sha512sum "${BUNDLETOOL_SHA512SUM}" "${IRONFOX_BUNDLETOOL_JAR}"
 
     if ! [[ -f "${IRONFOX_BUNDLETOOL}" ]]; then
-        echo_red_text "Creating bundletool script..."
+        echo_red_text 'Creating bundletool script...'
         {
             echo '#!/bin/bash'
             echo "exec java -jar ${IRONFOX_BUNDLETOOL_JAR} \"\$@\""
@@ -342,22 +367,22 @@ function get_cbindgen() {
     fi
 
     source "${IRONFOX_CARGO_ENV}"
-    echo_red_text "Downloading cbindgen..."
+    echo_red_text 'Downloading cbindgen...'
     cargo +"${RUST_VERSION}" install --force --vers "${CBINDGEN_VERSION}" cbindgen
     echo_green_text "SUCCESS: Set-up cbindgen at ${IRONFOX_CARGO_HOME}/bin/cbindgen"
 }
 
 # Get Firefox (Gecko/mozilla-central)
 function get_firefox() {
-    echo_red_text "Cloning Firefox..."
-    clone_repo "https://github.com/mozilla-firefox/firefox.git" "${IRONFOX_GECKO}" "${FIREFOX_COMMIT}"
+    echo_red_text 'Downloading Firefox...'
+    download_and_extract 'gecko' "https://github.com/mozilla-firefox/firefox/archive/${FIREFOX_COMMIT}.tar.gz" "${IRONFOX_GECKO}" "${FIREFOX_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up Firefox at ${IRONFOX_GECKO}"
 }
 
 # Get firefox-l10n
 function get_firefox_l10n() {
-    echo_red_text "Cloning firefox-l10n..."
-    clone_repo "https://github.com/mozilla-l10n/firefox-l10n.git" "${IRONFOX_L10N_CENTRAL}" "${L10N_COMMIT}"
+    echo_red_text 'Downloading firefox-l10n...'
+    download_and_extract 'l10n-central' "https://github.com/mozilla-l10n/firefox-l10n/archive/${L10N_COMMIT}.tar.gz" "${IRONFOX_L10N_CENTRAL}" "${L10N_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up firefox-l10n at ${IRONFOX_L10N_CENTRAL}"
 }
 
@@ -366,20 +391,11 @@ function get_gradle() {
     echo_red_text "Downloading F-Droid's Gradle script..."
     download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${IRONFOX_GRADLE_DIR}/gradlew.py"
 
-    # Validate checksum
-    GRADLE_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_GRADLE_DIR}/gradlew.py" | "${IRONFOX_AWK}" '{print $1}')
-    if [ "${GRADLE_SHA512SUM_LOCAL}" != "${GRADLE_SHA512SUM}" ]; then
-        echo_red_text 'ERROR: Checksum validation failed.'
-        echo "Expected SHA512sum: ${GRADLE_SHA512SUM}"
-        echo "Actual SHA512sum: ${GRADLE_SHA512SUM_LOCAL}"
-        exit 1
-    else
-        echo_green_text 'SUCCESS: Checksum validated.'
-        echo "SHA512sum: ${GRADLE_SHA512SUM_LOCAL}"
-    fi
+    # Validate SHA512sum
+    validate_sha512sum "${GRADLE_SHA512SUM}" "${IRONFOX_GRADLE_DIR}/gradlew.py"
 
     if ! [[ -f "${IRONFOX_GRADLE}" ]]; then
-        echo_red_text "Creating Gradle script..."
+        echo_red_text 'Creating Gradle script...'
         {
             echo '#!/bin/bash'
             echo "exec python3 ${IRONFOX_GRADLE_DIR}/gradlew.py \"\$@\""
@@ -392,8 +408,8 @@ function get_gradle() {
 
 # Get Glean
 function get_glean() {
-    echo_red_text "Cloning Glean..."
-    clone_repo "https://github.com/mozilla/glean.git" "${IRONFOX_GLEAN}" "${GLEAN_COMMIT}"
+    echo_red_text 'Downloading Glean...'
+    download_and_extract 'glean' "https://github.com/mozilla/glean/archive/${GLEAN_COMMIT}.tar.gz" "${IRONFOX_GLEAN}" "${GLEAN_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up Glean at ${IRONFOX_GLEAN}"
 }
 
@@ -436,29 +452,29 @@ function get_gyp() {
     fi
 
     source "${IRONFOX_PIP_ENV}"
-    echo_red_text "Downloading gyp-next..."
+    echo_red_text 'Downloading gyp-next...'
     pip install gyp-next
     echo_green_text "SUCCESS: Set-up gyp-next at ${IRONFOX_PIP_DIR}/bin/gyp"
 }
 
 # Get microG
 function get_microg() {
-    echo_red_text "Cloning microG..."
-    clone_repo "https://github.com/microg/GmsCore.git" "${IRONFOX_GMSCORE}" "${GMSCORE_COMMIT}"
+    echo_red_text 'Downloading microG...'
+    download_and_extract 'gmscore' "https://github.com/microg/GmsCore/archive/${GMSCORE_COMMIT}.tar.gz" "${IRONFOX_GMSCORE}" "${GMSCORE_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up microG at ${IRONFOX_GMSCORE}"
 }
 
 # Get UnifiedPush-AC
 function get_up_ac() {
-    echo_red_text "Cloning UnifiedPush-AC..."
-    clone_repo "https://gitlab.com/ironfox-oss/unifiedpush-ac.git" "${IRONFOX_UP_AC}" "${UNIFIEDPUSHAC_COMMIT}"
+    echo_red_text 'Downloading UnifiedPush-AC...'
+    download_and_extract 'unifiedpush-ac' "https://gitlab.com/ironfox-oss/unifiedpush-ac/-/archive/${UNIFIEDPUSHAC_COMMIT}/unifiedpush-ac-${UNIFIEDPUSHAC_COMMIT}.tar.gz" "${IRONFOX_UP_AC}" "${UNIFIEDPUSHAC_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up UnifiedPush-AC at ${IRONFOX_UP_AC}"
 }
 
 # Get Phoenix
 function get_phoenix() {
-    echo_red_text "Cloning Phoenix..."
-    clone_repo "https://gitlab.com/celenityy/Phoenix.git" "${IRONFOX_PHOENIX}" "${PHOENIX_COMMIT}"
+    echo_red_text 'Downloading Phoenix...'
+    download_and_extract 'phoenix' "https://gitlab.com/celenityy/Phoenix/-/archive/${PHOENIX_COMMIT}/Phoenix-${PHOENIX_COMMIT}.tar.gz" "${IRONFOX_PHOENIX}" "${PHOENIX_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up Phoenix at ${IRONFOX_PHOENIX}"
 }
 
@@ -473,9 +489,9 @@ function get_pip() {
         fi
     fi
 
-    echo_red_text "Creating pip environment..."
+    echo_red_text 'Creating pip environment...'
     python3.9 -m venv "${IRONFOX_PIP_DIR}"
-    echo_red_text "Updating pip..."
+    echo_red_text 'Updating pip...'
     source "${IRONFOX_PIP_ENV}"
     pip install --upgrade pip
     echo_green_text "SUCCESS: Set-up pip environment at ${IRONFOX_PIP_DIR}"
@@ -484,68 +500,32 @@ function get_pip() {
 # Get IronFox prebuilds
 function get_prebuilds() {
     if [[ "${IRONFOX_NO_PREBUILDS}" == "1" ]]; then
-        echo_red_text "Cloning the IronFox prebuilds repository..."
-        clone_repo "https://gitlab.com/ironfox-oss/prebuilds.git" "${IRONFOX_PREBUILDS}" "${PREBUILDS_COMMIT}"
+        echo_red_text 'Downloading the IronFox prebuilds repository...'
+        download_and_extract 'prebuilds' "https://gitlab.com/ironfox-oss/prebuilds/-/archive/${PREBUILDS_COMMIT}/prebuilds-${PREBUILDS_COMMIT}.tar.gz" "${IRONFOX_PREBUILDS}" "${PREBUILDS_SHA512SUM}"
 
         pushd "${IRONFOX_PREBUILDS}"
-        echo_red_text "Downloading prebuild sources..."
+        echo_red_text 'Downloading prebuild sources...'
         bash "${IRONFOX_PREBUILDS}/scripts/get_sources.sh"
         popd
 
         echo_green_text "SUCCESS: Set-up the IronFox prebuilds repository at ${IRONFOX_PREBUILDS}"
     else
         # Get Tor's no-op UniFFi binding generator
-        echo_red_text "Downloading prebuilt uniffi-bindgen..."
-        if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/uniffi.tar.xz"
+        echo_red_text 'Downloading prebuilt uniffi-bindgen...'
+        if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+            download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/osx/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_OSX_IRONFOX_SHA512SUM}"
         else
-            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/${PREBUILT_PLATFORM}/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/uniffi.tar.xz"
+            download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/linux/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
         fi
-
-        # Validate checksum
-        UNIFFI_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/uniffi.tar.xz" | "${IRONFOX_AWK}" '{print $1}')
-        if [ "${UNIFFI_SHA512SUM_LOCAL}" != "${UNIFFI_LINUX_IRONFOX_SHA512SUM}" ] && [ "${UNIFFI_SHA512SUM_LOCAL}" != "${UNIFFI_OSX_IRONFOX_SHA512SUM}" ]; then
-            echo_red_text 'ERROR: Checksum validation failed.'
-            if [ "${IRONFOX_OS}" == 'osx' ]; then
-                echo "Expected SHA512sum: ${UNIFFI_OSX_IRONFOX_SHA512SUM}"
-            else
-                echo "Expected SHA512sum: ${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
-            fi
-            echo "Actual SHA512sum: ${UNIFFI_SHA512SUM_LOCAL}"
-            exit 1
-        else
-            echo_green_text 'SUCCESS: Checksum validated.'
-            echo "SHA512sum: ${UNIFFI_SHA512SUM_LOCAL}"
-        fi
-
-        extract_rmtoplevel "${IRONFOX_DOWNLOADS}/uniffi.tar.xz" 'uniffi' "${IRONFOX_UNIFFI}"
         echo_green_text "SUCCESS: Set-up the prebuilt uniffi-bindgen at ${IRONFOX_UNIFFI}"
 
         # Get WebAssembly SDK
-        echo_red_text "Downloading prebuilt wasi-sdk..."
-        if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz"
+        echo_red_text 'Downloading prebuilt wasi-sdk...'
+        if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
+            download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/osx/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_WASI}" "${WASI_OSX_IRONFOX_SHA512SUM}"
         else
-            download "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/${PREBUILT_PLATFORM}/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-${PREBUILT_PLATFORM}.tar.xz" "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz"
+            download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/linux/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_WASI}" "${WASI_LINUX_IRONFOX_SHA512SUM}"
         fi
-
-        # Validate checksum
-        WASI_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz" | "${IRONFOX_AWK}" '{print $1}')
-        if [ "${WASI_SHA512SUM_LOCAL}" != "${WASI_LINUX_IRONFOX_SHA512SUM}" ] && [ "${WASI_SHA512SUM_LOCAL}" != "${WASI_OSX_IRONFOX_SHA512SUM}" ]; then
-            echo_red_text 'ERROR: Checksum validation failed.'
-            if [ "${IRONFOX_OS}" == 'osx' ]; then
-                echo "Expected SHA512sum: ${WASI_OSX_IRONFOX_SHA512SUM}"
-            else
-                echo "Expected SHA512sum: ${WASI_LINUX_IRONFOX_SHA512SUM}"
-            fi
-            echo "Actual SHA512sum: ${WASI_SHA512SUM_LOCAL}"
-            exit 1
-        else
-            echo_green_text 'SUCCESS: Checksum validated.'
-            echo "SHA512sum: ${WASI_SHA512SUM_LOCAL}"
-        fi
-
-        extract_rmtoplevel "${IRONFOX_DOWNLOADS}/wasi-sdk.tar.xz" 'wasi-sdk' "${IRONFOX_WASI}"
         echo_green_text "SUCCESS: Set-up the prebuilt wasi-sdk at ${IRONFOX_WASI}"
     fi
 }
@@ -561,24 +541,15 @@ function get_rust() {
         fi
     fi
 
-    echo_red_text "Downloading Rust..."
+    echo_red_text 'Downloading Rust...'
     download "https://raw.githubusercontent.com/rust-lang/rustup/${RUSTUP_COMMIT}/rustup-init.sh" "${IRONFOX_DOWNLOADS}/rustup-init.sh"
 
-    # Validate checksum
-    RUSTUP_SHA512SUM_LOCAL=$(sha512sum "${IRONFOX_DOWNLOADS}/rustup-init.sh" | "${IRONFOX_AWK}" '{print $1}')
-    if [ "${RUSTUP_SHA512SUM_LOCAL}" != "${RUSTUP_SHA512SUM}" ]; then
-        echo_red_text 'ERROR: Checksum validation failed.'
-        echo "Expected SHA512sum: ${RUSTUP_SHA512SUM}"
-        echo "Actual SHA512sum: ${RUSTUP_SHA512SUM_LOCAL}"
-        exit 1
-    else
-        echo_green_text 'SUCCESS: Checksum validated.'
-        echo "SHA512sum: ${RUSTUP_SHA512SUM_LOCAL}"
-    fi
+    # Validate SHA512sum
+    validate_sha512sum "${RUSTUP_SHA512SUM}" "${IRONFOX_DOWNLOADS}/rustup-init.sh"
 
     bash -x "${IRONFOX_DOWNLOADS}/rustup-init.sh" -y --no-modify-path --no-update-default-toolchain --profile=minimal
 
-    echo_red_text "Creating Rust environment..."
+    echo_red_text 'Creating Rust environment...'
     source "${IRONFOX_CARGO_ENV}"
     rustup set profile minimal
     rustup default "${RUST_VERSION}"

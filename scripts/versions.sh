@@ -5,6 +5,7 @@
 ### https://github.com/mozilla-firefox/firefox
 ### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_148_0_RELEASE)
 FIREFOX_COMMIT='b2a8a4ec986ce61fd15ab1db980381d04ba85ada'
+FIREFOX_SHA512SUM='bee5bfc4f60f758282aa3760f6e333d1fa1fd44ede2dbbfbdcd1309c2258987831169ceb1d2f1fc8225561dec618eb56bd94c53a07ba62d550b222a59846683e'
 FIREFOX_VERSION='148.0'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
@@ -13,40 +14,44 @@ IRONFOX_VERSION="${FIREFOX_VERSION}"
 ### Version: v148.0
 ### https://github.com/mozilla/application-services
 APPSERVICES_COMMIT='2ff0d7c78e7ca92ce48246d5a7c0af6a13ea5f53'
+APPSERVICES_SHA512SUM='01cab72477772e4c7b3a49b9a1b11493659794c70e02f15efc51f465739778547342154b09fab5a83fec00b0e9cfa2590db34ca658c4630064d31c53ed82b293'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
 L10N_COMMIT='2424c18f238c59e513ff13c17280f5ef26e1f68b'
+L10N_SHA512SUM='e44ff222d6f339b66f301423dce4e9bc3d00b1e82d61a488f13a7d5d34a1595888bc0b030c69ce7072580b2820e4b0ee4e852532bdddf3fd4d762ed238cc5b46'
 
 ## Glean
 ### Version: v66.2.0
 ### https://github.com/mozilla/glean
 GLEAN_COMMIT='e95d7e50678aaa678b9556f4b8b98cdadc0f1c07'
+GLEAN_SHA512SUM='752b3a8ca3ea246dd4a0dec6047875e342f07f68991c6daa29172661f29b4edc00301c417de93620ea60fc2ada992c8ee4cbfa0575220c8f619bfb555bb0f143'
 
 ## microG
 ### Version: v0.3.13.250932
 ### https://github.com/microg/GmsCore
 GMSCORE_COMMIT='3ba21336181c846630242124176737c05b3e8b6f'
+GMSCORE_SHA512SUM='c2c5e8c17a17b159550d696d97440b02bd8fb455f8ac9cbdbc81e05fb1dfcef36d564ed034c35c9d1dc58822354f5b72589c7c42826242b8b21c893f5c7c46ac'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
 PHOENIX_COMMIT='4514418a570603f7ae0670ad1f42371345ffff45'
+PHOENIX_SHA512SUM='247fcdba2cd97bb07f61a173d233927a0798168d4bfc46952c885bbd9fbea033f53ed198e27e746544258705cdc8304ed922162124fa5ffa8ad62b912743279e'
 PHOENIX_VERSION='2026.02.23.1'
 
 ## uniffi-rs (Tor)
 ### https://gitlab.torproject.org/tpo/applications/uniffi-rs
-UNIFFI_COMMIT='9f392cbaa07aaf83160e94ece2a32d3e9fef22e4'
 UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
 UNIFIEDPUSHAC_COMMIT='7ba42eb12d2ac8e7dd21603a79d8a7f4cdfd25f1'
+UNIFIEDPUSHAC_SHA512SUM='048fad650c57ea93520fb5ce2ee98b5c9543d589872c26a3529abf2c0ad3836ca6d6d1528fe29bda4187a0875e2a744e268465b74abdea8a3286f987bbe62211'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
-WASI_COMMIT='935fe1acd2fcd7ea4aed2d5ee4527482862b6344'
 WASI_VERSION='20'
 
 # Tools
@@ -95,6 +100,7 @@ RUSTUP_VERSION='1.28.2'
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
 PREBUILDS_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
+PREBUILDS_SHA512SUM='8d8af2f9c1fceafaf7f02f38933ede621f6c942c63a58c2438821ab6452ae0e8a4f52b0222cb2d6e62107ec99ee08784936d3977a9376e66082025e84ba9186d'
 UNIFFI_LINUX_IRONFOX_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
 UNIFFI_LINUX_IRONFOX_REVISION='5'
 UNIFFI_LINUX_IRONFOX_SHA512SUM='2821385fbe37af84b7985ce68f683472c7f6038a5cd7d1fc578ac7f9d243d0d352e9a0de12a80827422510784ba470cc8128c197f10454197f23d38db626e407'
