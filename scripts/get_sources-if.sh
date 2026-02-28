@@ -238,7 +238,7 @@ function extract() {
     esac
 
     local top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
-    mv "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}"/{.*,*} "${target_path}"
+    cp -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}"/ "${target_path}"
     rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 }
 
@@ -259,8 +259,6 @@ function download_and_extract() {
             return 0
         fi
     fi
-
-    mkdir -p "${path}"
 
     local extension
     if [[ "${url}" =~ \.tar\.xz$ ]]; then
@@ -306,6 +304,7 @@ function get_android_sdk() {
             return 0
         fi
     fi
+    mkdir -vp "${IRONFOX_ANDROID_SDK}/cmdline-tools"
 
     if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
         download_and_extract 'android-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_OSX}"
