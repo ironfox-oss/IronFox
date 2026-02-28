@@ -473,7 +473,7 @@ function get_gyp() {
 
     source "${IRONFOX_PIP_ENV}"
     echo_red_text 'Installing GYP...'
-    pip install -e "${IRONFOX_GYP}"
+    pip install "${IRONFOX_GYP}"
     echo_green_text "SUCCESS: Set-up GYP at ${IRONFOX_PIP_DIR}/bin/gyp"
 }
 
