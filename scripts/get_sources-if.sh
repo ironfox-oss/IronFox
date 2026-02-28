@@ -370,7 +370,7 @@ function get_cbindgen() {
 
     source "${IRONFOX_CARGO_ENV}"
     echo_red_text 'Installing cbindgen...'
-    cargo +"${RUST_VERSION}" install --offline --locked --frozen --force --vers "${CBINDGEN_VERSION}" --path "${IRONFOX_CBINDGEN}" cbindgen
+    cargo +"${RUST_VERSION}" install --locked --force --vers "${CBINDGEN_VERSION}" --path "${IRONFOX_CBINDGEN}" cbindgen
     echo_green_text "SUCCESS: Set-up cbindgen at ${IRONFOX_CARGO_HOME}/bin/cbindgen"
 }
 
@@ -378,6 +378,13 @@ function get_cbindgen() {
 function get_firefox() {
     echo_red_text 'Downloading Firefox...'
     download_and_extract 'gecko' "https://github.com/mozilla-firefox/firefox/archive/${FIREFOX_COMMIT}.tar.gz" "${IRONFOX_GECKO}" "${FIREFOX_SHA512SUM}"
+
+    # Because we use MOZ_AUTOMATION for certain parts of the build, we need to initialize a Git repository
+    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
+    pushd "${IRONFOX_GECKO}"
+    git init
+    popd
+
     echo_green_text "SUCCESS: Set-up Firefox at ${IRONFOX_GECKO}"
 }
 
