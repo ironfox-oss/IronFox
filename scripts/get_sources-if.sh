@@ -365,9 +365,12 @@ function get_cbindgen() {
         fi
     fi
 
+    echo_red_text "Downloading cbindgen..."
+    download_and_extract 'cbindgen' "https://github.com/mozilla/cbindgen/archive/${CBINDGEN_COMMIT}.tar.gz" "${IRONFOX_CBINDGEN}" "${CBINDGEN_SHA512SUM}"
+
     source "${IRONFOX_CARGO_ENV}"
-    echo_red_text 'Downloading cbindgen...'
-    cargo +"${RUST_VERSION}" install --force --vers "${CBINDGEN_VERSION}" cbindgen
+    echo_red_text 'Installing cbindgen...'
+    cargo +"${RUST_VERSION}" install --offline --locked --frozen --force --vers "${CBINDGEN_VERSION}" --path "${IRONFOX_CBINDGEN}" cbindgen
     echo_green_text "SUCCESS: Set-up cbindgen at ${IRONFOX_CARGO_HOME}/bin/cbindgen"
 }
 
@@ -412,15 +415,15 @@ function get_glean() {
     echo_green_text "SUCCESS: Set-up Glean at ${IRONFOX_GLEAN}"
 }
 
-# Get glean-parser
+# Get Glean Parser
 function get_glean_parser() {
     if  [ ! -d "${IRONFOX_PIP_DIR}" ] || [ ! -f "${IRONFOX_PIP_ENV}" ]; then
-        echo_red_text "ERROR: You tried to download glean-parser, but you don't have a pip environment set-up yet."
+        echo_red_text "ERROR: You tried to download Glean Parser, but you don't have a pip environment set-up yet."
         exit 1
     fi
 
     if [[ -d "${IRONFOX_PIP_DIR}/bin/glean_parser" ]]; then
-        echo_red_text "glean-parser is already installed at ${IRONFOX_PIP_DIR}/bin/glean_parser"
+        echo_red_text "Glean Parser is already installed at ${IRONFOX_PIP_DIR}/bin/glean_parser"
         read -p "Do you want to re-download it? [y/N] " -n 1 -r
         echo
         if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
@@ -428,21 +431,30 @@ function get_glean_parser() {
         fi
     fi
 
+    echo_red_text "Downloading Glean Parser..."
+    download_and_extract 'glean_parser' "https://github.com/mozilla/glean_parser/archive/${GLEAN_PARSER_COMMIT}.tar.gz" "${IRONFOX_GLEAN_PARSER}" "${GLEAN_PARSER_SHA512SUM}"
+
+    # For the pip install to work, we need to initialize a Git repository
+    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
+    pushd "${IRONFOX_GLEAN_PARSER}"
+    git init
+    popd
+
     source "${IRONFOX_PIP_ENV}"
-    echo_red_text "Downloading glean-parser..."
-    pip install glean-parser
-    echo_green_text "SUCCESS: Set-up glean-parser at ${IRONFOX_PIP_DIR}/bin/glean_parser"
+    echo_red_text 'Installing Glean Parser...'
+    pip install "${IRONFOX_GLEAN_PARSER}"
+    echo_green_text "SUCCESS: Set-up Glean Parser at ${IRONFOX_PIP_DIR}/bin/glean_parser"
 }
 
-# Get gyp-next
+# Get GYP
 function get_gyp() {
     if  [ ! -d "${IRONFOX_PIP_DIR}" ] || [ ! -f "${IRONFOX_PIP_ENV}" ]; then
-        echo_red_text "ERROR: You tried to download gyp-next, but you don't have a pip environment set-up yet."
+        echo_red_text "ERROR: You tried to download GYP, but you don't have a pip environment set-up yet."
         exit 1
     fi
 
     if [[ -d "${IRONFOX_PIP_DIR}/bin/gyp" ]]; then
-        echo_red_text "gyp-next is already installed at ${IRONFOX_PIP_DIR}/bin/gyp"
+        echo_red_text "GYP is already installed at ${IRONFOX_PIP_DIR}/bin/gyp"
         read -p "Do you want to re-download it? [y/N] " -n 1 -r
         echo
         if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
@@ -450,10 +462,19 @@ function get_gyp() {
         fi
     fi
 
+    echo_red_text "Downloading GYP..."
+    download_and_extract 'gyp-next' "https://github.com/nodejs/gyp-next/archive/${GYP_COMMIT}.tar.gz" "${IRONFOX_GYP}" "${GYP_SHA512SUM}"
+
+    # For the pip install to work, we need to initialize a Git repository
+    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
+    pushd "${IRONFOX_GYP}"
+    git init
+    popd
+
     source "${IRONFOX_PIP_ENV}"
-    echo_red_text 'Downloading gyp-next...'
-    pip install gyp-next
-    echo_green_text "SUCCESS: Set-up gyp-next at ${IRONFOX_PIP_DIR}/bin/gyp"
+    echo_red_text 'Installing GYP...'
+    pip install -e "${IRONFOX_GYP}"
+    echo_green_text "SUCCESS: Set-up GYP at ${IRONFOX_PIP_DIR}/bin/gyp"
 }
 
 # Get microG

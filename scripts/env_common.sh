@@ -193,6 +193,12 @@ fi
 export IRONFOX_BUNDLETOOL="${IRONFOX_BUNDLETOOL_DIR}/bundletool"
 export IRONFOX_BUNDLETOOL_JAR="${IRONFOX_BUNDLETOOL_DIR}/bundletool.jar"
 
+# cbindgen
+IRONFOX_CBINDGEN_DEFAULT="${IRONFOX_EXTERNAL}/cbindgen"
+if [[ -z "${IRONFOX_CBINDGEN+x}" ]]; then
+    export IRONFOX_CBINDGEN="${IRONFOX_CBINDGEN_DEFAULT}"
+fi
+
 # Firefox (mozilla-central)
 IRONFOX_GECKO_DEFAULT="${IRONFOX_EXTERNAL}/gecko"
 if [[ -z "${IRONFOX_GECKO+x}" ]]; then
@@ -243,6 +249,12 @@ fi
 
 ## Glean overlay
 export IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
+
+# Glean Parser
+IRONFOX_GLEAN_PARSER_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser"
+if [[ -z "${IRONFOX_GLEAN_PARSER+x}" ]]; then
+    export IRONFOX_GLEAN_PARSER="${IRONFOX_GLEAN_PARSER_DEFAULT}"
+fi
 
 # GNU awk
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -317,6 +329,12 @@ fi
 IRONFOX_MAVEN_LOCAL_DEFAULT="${IRONFOX_BUILD}/.m2/repository"
 if [[ -z "${IRONFOX_MAVEN_LOCAL+x}" ]]; then
     export IRONFOX_MAVEN_LOCAL="${IRONFOX_MAVEN_LOCAL_DEFAULT}"
+fi
+
+# GYP
+IRONFOX_GYP_DEFAULT="${IRONFOX_EXTERNAL}/gyp-next"
+if [[ -z "${IRONFOX_GYP+x}" ]]; then
+    export IRONFOX_GYP="${IRONFOX_GYP_DEFAULT}"
 fi
 
 # Java home

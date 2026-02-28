@@ -29,6 +29,19 @@ L10N_SHA512SUM='e44ff222d6f339b66f301423dce4e9bc3d00b1e82d61a488f13a7d5d34a15958
 GLEAN_COMMIT='e95d7e50678aaa678b9556f4b8b98cdadc0f1c07'
 GLEAN_SHA512SUM='752b3a8ca3ea246dd4a0dec6047875e342f07f68991c6daa29172661f29b4edc00301c417de93620ea60fc2ada992c8ee4cbfa0575220c8f619bfb555bb0f143'
 
+## Glean Parser
+### Version: v19.0.0
+### https://github.com/mozilla/glean_parser
+GLEAN_PARSER_COMMIT='d87316dd8ce2fa0122d8634660bb71397c2d5820'
+GLEAN_PARSER_SHA512SUM='f79554a2d6c55bdb7a92eab2fefae00e5fa935ae0159569d51b4173a484ee56dd27ce4c800b0a0b8a318a952784dbcf1bcd84ab6f9efedf928c6d5500c109e67'
+GLEAN_PARSER_VERSION='19.0.0'
+
+## GYP
+### Version: v0.21.1
+### https://github.com/nodejs/gyp-next
+GYP_COMMIT='eae394d0b489fa62235dfb82cc549d3422372542'
+GYP_SHA512SUM='f8aca737b54e19e0007d15fbf686c56d522d2eaf88de76208f91b894251c86ca0da59271ce948b77faaa60b3bde52c8af3aaa0a79df8b5d32ab484842698e0f5'
+
 ## microG
 ### Version: v0.3.13.250932
 ### https://github.com/microg/GmsCore
@@ -77,6 +90,9 @@ BUNDLETOOL_VERSION='1.18.3'
 
 ## cbindgen
 ### https://docs.rs/crate/cbindgen/latest
+### (This commit corresponds to https://github.com/mozilla/cbindgen/releases/tag/v0.29.2)
+CBINDGEN_COMMIT='76f41c090c0587d940a0ef81a41c8b995f074926'
+CBINDGEN_SHA512SUM='8363f69fc103343acc2b2545d833df6da876c8591f664b0f7ce6ebac28ce516e72cc615df4d2c07b93c646ed122b8a48c4a34b03c363d2d795c3013321c3fc5c'
 CBINDGEN_VERSION='0.29.2'
 
 ## Gradle (F-Droid)
