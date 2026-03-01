@@ -20,9 +20,13 @@ export CARGO_BUILD_RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
 export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
 
 # Android SDK
+## https://developer.android.com/tools/variables
 export ANDROID_HOME="${IRONFOX_ANDROID_SDK}"
 export ANDROID_SDK_ROOT="${IRONFOX_ANDROID_SDK}"
 export PATH="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin:${PATH}"
+
+## Android SDK preferences
+export ANDROID_USER_HOME="${IRONFOX_BUILD}/.android"
 
 # Android NDK
 export ANDROID_NDK_HOME="${IRONFOX_ANDROID_NDK}"
