@@ -24,6 +24,9 @@ export MOZ_ARTIFACT_BUILDS=
 ## Disable ASan crash reporting
 ac_add_options --disable-address-sanitizer-reporter
 
+## Disable automatic bootstrap/update of toolchains/dependencies
+ac_add_options --disable-bootstrap
+
 ## Disable auxiliary file persistence
 ac_add_options --enable-disk-remnant-avoidance
 
