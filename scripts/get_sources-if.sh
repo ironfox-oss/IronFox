@@ -532,15 +532,25 @@ function get_pip() {
         read -p "Do you want to re-create it? [y/N] " -n 1 -r
         echo
         if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-            rm -rf "${IRONFOX_PIP_DIR}"
+            rm -rf "${IRONFOX_PIP_DIR}" "${IRONFOX_PIP}"
         fi
     fi
 
     echo_red_text 'Creating pip environment...'
     python3.9 -m venv "${IRONFOX_PIP_DIR}"
-    echo_red_text 'Updating pip...'
+
+    echo_red_text 'Downloading pip...'
+    download_and_extract 'pip' "https://github.com/pypa/pip/archive/${PIP_COMMIT}.tar.gz" "${IRONFOX_PIP}" "${PIP_SHA512SUM}"
+
+    # For the pip install to work, we need to initialize a Git repository
+    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
+    pushd "${IRONFOX_PIP}"
+    git init
+    popd
+
     source "${IRONFOX_PIP_ENV}"
-    pip install --upgrade pip
+    echo_red_text 'Installing pip...'
+    pip install "${IRONFOX_PIP}"
     echo_green_text "SUCCESS: Set-up pip environment at ${IRONFOX_PIP_DIR}"
 }
 

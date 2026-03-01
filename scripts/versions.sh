@@ -100,6 +100,13 @@ CBINDGEN_VERSION='0.29.2'
 GRADLE_COMMIT='996b7829f40f33317d33c1b6ddcffcf976bd6181'
 GRADLE_SHA512SUM='0498fff4a729aa2458f2627635507c6e9a9bd3d1e914ac375e10b3b3061654e7f7544461c91a8db0882bfc1d09090d135eada40ee72f37ff9975e0f1116c3d9d'
 
+## pip
+### Version: 26.0.1
+### https://github.com/pypa/pip
+### (This commit corresponds to https://github.com/pypa/pip/releases/tag/26.0.1)
+PIP_COMMIT='5fe4ea4f24cd9756316a4b5ef05daa15d84f7d0c'
+PIP_SHA512SUM='3fca339b7c2596581fcf9691b8ef43664b4d0b25494b30eebda803586134c160a06db128437c2fcce9708e26d6ef9450af2e5d9fe0e724d56f65cfb7dda45e7a'
+
 ## Rust
 ### https://releases.rs/
 #RUST_MAJOR_VERSION='1.93'

@@ -397,10 +397,16 @@ if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
     export IRONFOX_PHOENIX="${IRONFOX_PHOENIX_DEFAULT}"
 fi
 
+# pip
+IRONFOX_PIP_DEFAULT="${IRONFOX_EXTERNAL}/pip"
+if [[ -z "${IRONFOX_PIP+x}" ]]; then
+    export IRONFOX_PIP="${IRONFOX_PIP_DEFAULT}"
+fi
+
 # Python (Glean)
 export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
 
-# Python (pip)
+# Python (pip) environment
 IRONFOX_PIP_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
 if [[ -z "${IRONFOX_PIP_DIR+x}" ]]; then
     export IRONFOX_PIP_DIR="${IRONFOX_PIP_DIR_DEFAULT}"
