@@ -14,6 +14,7 @@ fi
 target="$1"
 
 # Set-up target parameters
+IRONFOX_GET_SOURCE_ANDROID_NDK=0
 IRONFOX_GET_SOURCE_ANDROID_SDK=0
 IRONFOX_GET_SOURCE_AS=0
 IRONFOX_GET_SOURCE_BUNDLETOOL=0
@@ -31,7 +32,10 @@ IRONFOX_GET_SOURCE_PREBUILDS=0
 IRONFOX_GET_SOURCE_RUST=0
 IRONFOX_GET_SOURCE_UP_AC=0
 
-if [ "${target}" == 'android-sdk' ]; then
+if [ "${target}" == 'android-ndk' ]; then
+    # Get Android NDK
+    IRONFOX_GET_SOURCE_ANDROID_NDK=1
+elif [ "${target}" == 'android-sdk' ]; then
     # Get Android SDK
     IRONFOX_GET_SOURCE_ANDROID_SDK=1
 elif [ "${target}" == 'as' ]; then
@@ -81,6 +85,7 @@ elif [ "${target}" == 'up-ac' ]; then
     IRONFOX_GET_SOURCE_UP_AC=1
 else
     # If no argument is specified (or argument is set to "all"), just get everything
+    IRONFOX_GET_SOURCE_ANDROID_NDK=1
     IRONFOX_GET_SOURCE_ANDROID_SDK=1
     IRONFOX_GET_SOURCE_AS=1
     IRONFOX_GET_SOURCE_BUNDLETOOL=1
@@ -288,6 +293,24 @@ function download_and_extract() {
     echo
 }
 
+# Get Android NDK
+function get_android_ndk() {
+    if  [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
+        echo_red_text "ERROR: You tried to download the Android NDK, but you don't have the Android SDK set-up yet."
+        exit 1
+    fi
+
+    echo_red_text 'Downloading the Android NDK...'
+
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        download_and_extract 'android-ndk' "https://dl.google.com/android/repository/android-ndk-${ANDROID_NDK_VERSION}-darwin.zip" "${IRONFOX_ANDROID_NDK}" "${ANDROID_NDK_SHA512SUM_OSX}"
+    else
+        download_and_extract 'android-ndk' "https://dl.google.com/android/repository/android-ndk-${ANDROID_NDK_VERSION}-linux.zip" "${IRONFOX_ANDROID_NDK}" "${ANDROID_NDK_SHA512SUM_LINUX}"
+    fi
+
+    echo_green_text "SUCCESS: Set-up Android NDK at ${IRONFOX_ANDROID_NDK}"
+}
+
 # Get + set-up Android SDK
 function get_android_sdk() {
     echo_red_text 'Downloading the Android SDK...'
@@ -304,7 +327,8 @@ function get_android_sdk() {
             return 0
         fi
     fi
-    mkdir -vp "${IRONFOX_ANDROID_SDK}/cmdline-tools"
+    mkdir -p "${IRONFOX_ANDROID_SDK}/cmdline-tools"
+    mkdir -p "${IRONFOX_ANDROID_SDK}/ndk"
 
     if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
         download_and_extract 'android-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_OSX}"
@@ -316,7 +340,6 @@ function get_android_sdk() {
     { yes || true; } | ${IRONFOX_ANDROID_SDKMANAGER} --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
 
     ${IRONFOX_ANDROID_SDKMANAGER} "build-tools;${ANDROID_BUILDTOOLS_VERSION}"
-    ${IRONFOX_ANDROID_SDKMANAGER} "ndk;${ANDROID_NDK_REVISION}"
     ${IRONFOX_ANDROID_SDKMANAGER} "platforms;android-${ANDROID_PLATFORM_VERSION}"
 
     # These are currently required for Glean...
@@ -619,8 +642,13 @@ function get_rust() {
     echo_green_text "SUCCESS: Set-up Rust environment at ${IRONFOX_CARGO_HOME}"
 }
 
+# This needs to run before we get the Android NDK
 if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK}" == 1 ]; then
     get_android_sdk
+fi
+
+if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
+    get_android_ndk
 fi
 
 if [ "${IRONFOX_GET_SOURCE_AS}" == 1 ]; then
