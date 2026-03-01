@@ -442,6 +442,9 @@ function get_glean_parser() {
         echo
         if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
             return 0
+        else
+            source "${IRONFOX_PIP_ENV}"
+            pip uninstall glean-parser
         fi
     fi
 
@@ -473,6 +476,9 @@ function get_gyp() {
         echo
         if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
             return 0
+        else
+            source "${IRONFOX_PIP_ENV}"
+            pip uninstall gyp-next
         fi
     fi
 
