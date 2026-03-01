@@ -111,13 +111,13 @@ function set_build_env() {
         ## (CI handles this at `env_ci.sh` instead)
         BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-    export IF_BUILD_DATE="${BUILD_DATE}"
-    export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+export IF_BUILD_DATE="${BUILD_DATE}"
+export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     else
         echo "Writing ${IRONFOX_ENV_BUILD}..."
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-    export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     fi
 
