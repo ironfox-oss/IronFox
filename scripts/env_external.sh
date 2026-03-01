@@ -78,6 +78,7 @@ export PHOENIX_SPECS=0
 
 # Python (Glean)
 export GLEAN_PYTHON="$(which python)"
+export GLEAN_PYTHON_WHEELS_DIR="${IRONFOX_GLEAN_PARSER_WHEELS}"
 
 # Rust (cargo)
 export CARGO="${IRONFOX_CARGO}"

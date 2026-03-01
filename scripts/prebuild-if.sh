@@ -367,6 +367,10 @@ localize_maven
 "${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g" Cargo.toml
 "${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" Cargo.toml
 
+# Ensure that the Glean gradle plug-in/glean_parser always runs offline
+"${IRONFOX_SED}" -i "s|(isOffline)|(true)|" gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy
+"${IRONFOX_SED}" -i "s|pypi.python.org|noop.invalid|" gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy
+
 # No-op Glean
 "${IRONFOX_SED}" -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
 "${IRONFOX_SED}" -i -e '/minifyEnabled/s/false/true/' glean-core/android-native/build.gradle

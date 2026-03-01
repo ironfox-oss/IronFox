@@ -360,7 +360,7 @@ function build_glean() {
     clean_gradle
 
     "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publishToMavenLocal -x createGleanPythonVirtualEnv
     popd
 
     echo_green_text 'SUCCESS: Built Glean'

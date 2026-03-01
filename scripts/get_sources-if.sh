@@ -448,19 +448,26 @@ function get_glean_parser() {
         fi
     fi
 
-    echo_red_text "Downloading Glean Parser..."
-    download_and_extract 'glean_parser' "https://github.com/mozilla/glean_parser/archive/${GLEAN_PARSER_COMMIT}.tar.gz" "${IRONFOX_GLEAN_PARSER}" "${GLEAN_PARSER_SHA512SUM}"
-
-    # For the pip install to work, we need to initialize a Git repository
-    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
-    pushd "${IRONFOX_GLEAN_PARSER}"
-    git init
-    popd
+    if [[ -d "${IRONFOX_GLEAN_PARSER_WHEELS}" ]]; then
+        echo_red_text "Glean Parser wheels are already downloaded at ${IRONFOX_GLEAN_PARSER_WHEELS}"
+        read -p "Do you want to re-download it? [y/N] " -n 1 -r
+        echo
+        if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
+            return 0
+        else
+            rm -rf "${IRONFOX_GLEAN_PARSER_WHEELS}"
+        fi
+    fi
+    mkdir -p "${IRONFOX_GLEAN_PARSER_WHEELS}"
 
     source "${IRONFOX_PIP_ENV}"
-    echo_red_text 'Installing Glean Parser...'
-    pip install "${IRONFOX_GLEAN_PARSER}"
-    echo_green_text "SUCCESS: Set-up Glean Parser at ${IRONFOX_PIP_DIR}/bin/glean_parser"
+    echo_red_text 'Downloading Glean Parser wheels...'
+    pushd "${IRONFOX_GLEAN_PARSER_WHEELS}"
+    pip download glean-parser=="${GLEAN_PARSER_VERSION}"
+    popd
+
+    # Validate SHA512sum
+    validate_sha512sum "${GLEAN_PARSER_SHA512SUM}" "${IRONFOX_GLEAN_PARSER_WHEELS}/glean_parser-${GLEAN_PARSER_VERSION}-py3-none-any.whl"
 }
 
 # Get GYP

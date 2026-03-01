@@ -250,10 +250,10 @@ fi
 ## Glean overlay
 export IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
 
-# Glean Parser
-IRONFOX_GLEAN_PARSER_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser"
-if [[ -z "${IRONFOX_GLEAN_PARSER+x}" ]]; then
-    export IRONFOX_GLEAN_PARSER="${IRONFOX_GLEAN_PARSER_DEFAULT}"
+# Glean Parser wheels
+IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser-wheels"
+if [[ -z "${IRONFOX_GLEAN_PARSER_WHEELS+x}" ]]; then
+    export IRONFOX_GLEAN_PARSER_WHEELS="${IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT}"
 fi
 
 # GNU awk
