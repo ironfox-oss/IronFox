@@ -78,6 +78,11 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "egger.com",
+            "thirdPartyDomain": "netural.com"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "emulatrix.com"
         },
         {
@@ -175,6 +180,10 @@
         {
             "overrides": "-DisableWebGL",
             "firstPartyDomain": "neal.fun"
+        },
+        {
+            "overrides": "-DisableWebGL",
+            "firstPartyDomain": "netural.com"
         },
         {
             "overrides": "-DisableWebGL",
