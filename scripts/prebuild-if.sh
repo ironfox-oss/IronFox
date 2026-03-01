@@ -41,6 +41,14 @@ function localize_gradle() {
     done
 }
 
+# For Glean, we also need to set "-x createGleanPythonVirtualEnv"
+function glean_localize_gradle() {
+    find ./* -name gradlew -type f | while read -r gradlew; do
+        echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} -x createGleanPythonVirtualEnv \""'$@'"\"" >"${gradlew}"
+        chmod 755 "${gradlew}"
+    done
+}
+
 function localize_maven() {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -exec python3 "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
@@ -350,7 +358,7 @@ pushd "${IRONFOX_GLEAN}"
 glean_apply_patches
 
 # Always use our Gradle wrapper with our Gradle flags/configuration
-localize_gradle
+glean_localize_gradle
 
 # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
 localize_maven
