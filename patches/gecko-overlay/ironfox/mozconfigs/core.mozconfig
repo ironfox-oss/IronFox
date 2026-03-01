@@ -109,6 +109,9 @@ ac_add_options --disable-updater
 ### Windows-specific, but doesn't hurt to set here
 ac_add_options --disable-wmf
 
+## Do not require nimbus-fml for builds
+ac_add_options --without-nimbus-fml
+
 ## Do not require Node.js for builds
 ac_add_options --disable-nodejs
 export NODEJS=
