@@ -319,6 +319,13 @@ function get_android_sdk() {
     ${IRONFOX_ANDROID_SDKMANAGER} "ndk;${ANDROID_NDK_REVISION}"
     ${IRONFOX_ANDROID_SDKMANAGER} "platforms;android-${ANDROID_PLATFORM_VERSION}"
 
+    # These are currently required for Glean...
+    ## for reference:
+    ### https://github.com/mozilla/glean/blob/main/docs/dev/android/sdk-ndk-versions.md
+    ### https://github.com/mozilla/glean/blob/main/docs/dev/android/setup-android-build-environment.md
+    ${IRONFOX_ANDROID_SDKMANAGER} 'build-tools;35.0.0'
+    ${IRONFOX_ANDROID_SDKMANAGER} 'platforms;android-36'
+
     echo_green_text "SUCCESS: Set-up Android SDK at ${IRONFOX_ANDROID_SDK}"
 }
 
