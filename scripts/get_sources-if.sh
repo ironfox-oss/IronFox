@@ -459,24 +459,6 @@ function get_android_ndk() {
     echo_green_text "SUCCESS: Set-up Android NDK at ${IRONFOX_ANDROID_NDK}"
 }
 
-# Get Android NDK
-function get_android_ndk() {
-    if  [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
-        echo_red_text "ERROR: You tried to download the Android NDK, but you don't have the Android SDK set-up yet."
-        exit 1
-    fi
-
-    echo_red_text 'Downloading the Android NDK...'
-
-    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-        download_and_extract 'android-ndk' "https://dl.google.com/android/repository/android-ndk-${ANDROID_NDK_VERSION}-darwin.zip" "${IRONFOX_ANDROID_NDK}" "${ANDROID_NDK_SHA512SUM_OSX}"
-    else
-        download_and_extract 'android-ndk' "https://dl.google.com/android/repository/android-ndk-${ANDROID_NDK_VERSION}-linux.zip" "${IRONFOX_ANDROID_NDK}" "${ANDROID_NDK_SHA512SUM_LINUX}"
-    fi
-
-    echo_green_text "SUCCESS: Set-up Android NDK at ${IRONFOX_ANDROID_NDK}"
-}
-
 # Get + set-up Android SDK
 function get_android_sdk() {
     echo_red_text 'Downloading the Android SDK...'
