@@ -115,6 +115,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "globle-game.com"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "google.com"
         },
         {
