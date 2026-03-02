@@ -12,6 +12,7 @@ if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
 fi
 
 target="$1"
+mode="$2"
 
 # Set-up target parameters
 IRONFOX_GET_SOURCE_ANDROID_NDK=0
@@ -83,7 +84,7 @@ elif [ "${target}" == 'rust' ]; then
 elif [ "${target}" == 'up-ac' ]; then
     # Get UnifiedPush-AC
     IRONFOX_GET_SOURCE_UP_AC=1
-else
+elif [ "${target}" == 'all' ]; then
     # If no argument is specified (or argument is set to "all"), just get everything
     IRONFOX_GET_SOURCE_ANDROID_NDK=1
     IRONFOX_GET_SOURCE_ANDROID_SDK=1
@@ -102,7 +103,46 @@ else
     IRONFOX_GET_SOURCE_PREBUILDS=1
     IRONFOX_GET_SOURCE_RUST=1
     IRONFOX_GET_SOURCE_UP_AC=1
+else
+    echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
+    echo 'All: all (Default)'
+    echo 'Android NDK: android-ndk'
+    echo 'Android SDK: android-sdk'
+    echo 'Application Services: as'
+    echo 'Bundletool: bundletool'
+    echo 'cbindgen: cbindgen'
+    echo 'Firefox (Gecko/mozilla-central): firefox'
+    echo 'firefox-l10n (l10n-central): firefox-l10n'
+    echo 'Glean: glean'
+    echo 'Glean Parser: glean-parser'
+    echo 'Gradle: gradle'
+    echo 'GYP: gyp'
+    echo 'microG: microg'
+    echo 'Phoenix: phoenix'
+    echo 'pip: pip'
+    echo 'Prebuilds: prebuilds'
+    echo 'Rust: rust'
+    echo 'UnifiedPush-AC: up-ac'
+    exit 1
 fi
+
+# If the 'checksum-update' argument is specified, in addition to downloading the dependencies as usual,
+## we're also updating their checksums
+IRONFOX_GET_SOURCE_CHECKSUM_UPDATE=0
+if [ "${mode}" == 'checksum-update' ]; then
+    if [ "${IRONFOX_CI}" != 1 ]; then
+        IRONFOX_GET_SOURCE_CHECKSUM_UPDATE=1
+    else
+        echo_red_text 'ERROR: CI should never automatically update checksums.'
+        exit 1
+    fi
+elif [ "${mode}" != 'download' ]; then
+    echo_red_text "ERROR: Invalid mode: ${mode}\n You must enter one of the following:"
+    echo 'Download: download (Default)'
+    echo 'Download + update checksums: checksum-update'
+    exit 1
+fi
+
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
@@ -115,12 +155,118 @@ else
     PREBUILT_PLATFORM='linux'
 fi
 
+# Function to automate updating SHA512sums of dependencies
+function update_sha512sum() {
+    old_sha512sum="$1"
+    new_sha512sum="$2"
+    file="$3"
+
+    if [ "${old_sha512sum}" == "${ANDROID_NDK_SHA512SUM_LINUX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android NDK (Linux)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_NDK_SHA512SUM_LINUX='.*'|ANDROID_NDK_SHA512SUM_LINUX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android NDK (Linux)'
+    elif [ "${old_sha512sum}" == "${ANDROID_NDK_SHA512SUM_OSX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android NDK (OS X)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_NDK_SHA512SUM_OSX='.*'|ANDROID_NDK_SHA512SUM_OSX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android NDK (OS X)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_SHA512SUM_LINUX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK (Linux)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_SHA512SUM_LINUX='.*'|ANDROID_SDK_SHA512SUM_LINUX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK (Linux)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_SHA512SUM_OSX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK (OS X)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_SHA512SUM_OSX='.*'|ANDROID_SDK_SHA512SUM_OSX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK (OS X)'
+    elif [ "${old_sha512sum}" == "${APPSERVICES_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for Application Services...'
+        "${IRONFOX_SED}" -i -e "s|APPSERVICES_SHA512SUM='.*'|APPSERVICES_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Application Services'
+    elif [ "${old_sha512sum}" == "${BUNDLETOOL_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for Bundletool...'
+        "${IRONFOX_SED}" -i -e "s|BUNDLETOOL_SHA512SUM='.*'|BUNDLETOOL_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Bundletool'
+    elif [ "${old_sha512sum}" == "${CBINDGEN_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for cbindgen...'
+        "${IRONFOX_SED}" -i -e "s|CBINDGEN_SHA512SUM='.*'|CBINDGEN_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for cbindgen'
+    elif [ "${old_sha512sum}" == "${FIREFOX_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for Firefox...'
+        "${IRONFOX_SED}" -i -e "s|FIREFOX_SHA512SUM='.*'|FIREFOX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Firefox'
+    elif [ "${old_sha512sum}" == "${GLEAN_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for Glean...'
+        "${IRONFOX_SED}" -i -e "s|GLEAN_SHA512SUM='.*'|GLEAN_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Glean'
+    elif [ "${old_sha512sum}" == "${GLEAN_PARSER_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for Glean Parser...'
+        "${IRONFOX_SED}" -i -e "s|GLEAN_PARSER_SHA512SUM='.*'|GLEAN_PARSER_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Glean Parser'
+    elif [ "${old_sha512sum}" == "${GMSCORE_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for microG...'
+        "${IRONFOX_SED}" -i -e "s|GMSCORE_SHA512SUM='.*'|GMSCORE_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for microG'
+    elif [ "${old_sha512sum}" == "${GRADLE_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for F-Droid Gradle script...'
+        "${IRONFOX_SED}" -i -e "s|GRADLE_SHA512SUM='.*'|GRADLE_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for F-Droid Gradle script'
+    elif [ "${old_sha512sum}" == "${GYP_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for GYP...'
+        "${IRONFOX_SED}" -i -e "s|GYP_SHA512SUM='.*'|GYP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for GYP'
+    elif [ "${old_sha512sum}" == "${L10N_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for firefox-l10n...'
+        "${IRONFOX_SED}" -i -e "s|L10N_SHA512SUM='.*'|L10N_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for firefox-l10n'
+    elif [ "${old_sha512sum}" == "${PHOENIX_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for Phoenix...'
+        "${IRONFOX_SED}" -i -e "s|PHOENIX_SHA512SUM='.*'|PHOENIX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Phoenix'
+    elif [ "${old_sha512sum}" == "${PIP_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for pip...'
+        "${IRONFOX_SED}" -i -e "s|PIP_SHA512SUM='.*'|PIP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for pip'
+    elif [ "${old_sha512sum}" == "${RUSTUP_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for rustup...'
+        "${IRONFOX_SED}" -i -e "s|RUSTUP_SHA512SUM='.*'|RUSTUP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for rustup'
+    elif [ "${old_sha512sum}" == "${PREBUILDS_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for IronFox prebuilds...'
+        "${IRONFOX_SED}" -i -e "s|PREBUILDS_SHA512SUM='.*'|PREBUILDS_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for IronFox prebuilds'
+    elif [ "${old_sha512sum}" == "${UNIFFI_LINUX_IRONFOX_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for uniffi-bindgen (Linux)...'
+        "${IRONFOX_SED}" -i -e "s|UNIFFI_LINUX_IRONFOX_SHA512SUM='.*'|UNIFFI_LINUX_IRONFOX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for uniffi-bindgen (Linux)'
+    elif [ "${old_sha512sum}" == "${UNIFFI_OSX_IRONFOX_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for uniffi-bindgen (OS X)...'
+        "${IRONFOX_SED}" -i -e "s|UNIFFI_OSX_IRONFOX_SHA512SUM='.*'|UNIFFI_OSX_IRONFOX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for uniffi-bindgen (OS X)'
+    elif [ "${old_sha512sum}" == "${UNIFIEDPUSHAC_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for UnifiedPush-AC...'
+        "${IRONFOX_SED}" -i -e "s|UNIFIEDPUSHAC_SHA512SUM='.*'|UNIFIEDPUSHAC_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for UnifiedPush-AC'
+    elif [ "${old_sha512sum}" == "${WASI_LINUX_IRONFOX_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for WASI SDK (Linux)...'
+        "${IRONFOX_SED}" -i -e "s|WASI_LINUX_IRONFOX_SHA512SUM='.*'|WASI_LINUX_IRONFOX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for WASI SDK (Linux)'
+    elif [ "${old_sha512sum}" == "${WASI_OSX_IRONFOX_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for WASI SDK (OS X)...'
+        "${IRONFOX_SED}" -i -e "s|WASI_OSX_IRONFOX_SHA512SUM='.*'|WASI_OSX_IRONFOX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for WASI SDK (OS X)'
+    fi
+
+    rm "${file}"
+}
+
 function validate_sha512sum() {
     expected_sha512sum="$1"
     file="$2"
 
     local_sha512sum=$(sha512sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
-    if [ "${local_sha512sum}" != "${expected_sha512sum}" ]; then
+
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
+        update_sha512sum "${expected_sha512sum}" "${local_sha512sum}" "${file}"
+    elif [ "${local_sha512sum}" != "${expected_sha512sum}" ]; then
         echo_red_text 'ERROR: Checksum validation failed.'
         echo "Expected SHA512sum: ${expected_sha512sum}"
         echo "Actual SHA512sum: ${local_sha512sum}"
@@ -288,9 +434,11 @@ function download_and_extract() {
     # Before extracting, verify SHA512sum...
     validate_sha512sum "${expected_sha512sum}" "${repo_archive}"
 
-    echo_red_text "Extracting ${repo_archive}..."
-    extract "${repo_archive}" "${path}" "${repo_name}"
-    echo
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        echo_red_text "Extracting ${repo_archive}..."
+        extract "${repo_archive}" "${path}" "${repo_name}"
+        echo
+    fi
 }
 
 # Get Android NDK
