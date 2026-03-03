@@ -1,0 +1,51 @@
+diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
+index 6789b3d1d8ba..c18b4ac94ab0 100644
+--- a/docshell/base/nsAboutRedirector.cpp
++++ b/docshell/base/nsAboutRedirector.cpp
+@@ -172,11 +172,11 @@ static const RedirEntry kRedirMap[] = {
+          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+     {"processes", "chrome://global/content/aboutProcesses.html",
+      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
+-    {"restricted",
+-     "chrome://global/content/aboutRestricted/aboutRestricted.html",
+-     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+-         nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
+-         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
++//    {"restricted",
++//     "chrome://global/content/aboutRestricted/aboutRestricted.html",
++//     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
++//         nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
++//         nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+     // about:serviceworkers always wants to load in the parent process because
+     // the only place nsIServiceWorkerManager has any data is in the parent
+     // process.
+diff --git a/docshell/build/components.conf b/docshell/build/components.conf
+index 5c1543ab806f..d770131596c5 100644
+--- a/docshell/build/components.conf
++++ b/docshell/build/components.conf
+@@ -26,7 +26,7 @@ about_pages = [
+     'networking',
+     'performance',
+     'processes',
+-    'restricted',
++#    'restricted',
+     'serviceworkers',
+     'srcdoc',
+     'support',
+diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
+index 1485e2090e81..e00583d9145d 100644
+--- a/toolkit/content/jar.mn
++++ b/toolkit/content/jar.mn
+@@ -32,9 +32,9 @@ toolkit.jar:
+    content/global/aboutwebrtc/disclosure.mjs (aboutwebrtc/disclosure.mjs)
+    content/global/aboutwebrtc/copyButton.mjs (aboutwebrtc/copyButton.mjs)
+    content/global/aboutwebrtc/aboutWebrtc.html (aboutwebrtc/aboutWebrtc.html)
+-   content/global/aboutRestricted/aboutRestricted.mjs (aboutRestricted/aboutRestricted.mjs)
+-   content/global/aboutRestricted/aboutRestricted.html (aboutRestricted/aboutRestricted.html)
+-   content/global/aboutRestricted/aboutRestricted.css (aboutRestricted/aboutRestricted.css)
++   # content/global/aboutRestricted/aboutRestricted.mjs (aboutRestricted/aboutRestricted.mjs)
++   # content/global/aboutRestricted/aboutRestricted.html (aboutRestricted/aboutRestricted.html)
++   # content/global/aboutRestricted/aboutRestricted.css (aboutRestricted/aboutRestricted.css)
+    content/global/aboutSupport.js
+ *  content/global/aboutSupport.xhtml
+ #ifndef MOZ_GLEAN_ANDROID

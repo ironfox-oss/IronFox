@@ -149,6 +149,13 @@ patches:
     effect: "Prevents users from incorrectly believing telemetry is supported/enabled."
     category: "Mozilla"
 
+  - file: "gecko-remove-aboutrestricted.patch"
+    name: "Remove `about:restricted`"
+    description: "Removes the internal `about:restricted` page (used for parental controls)."
+    reason: "To improve UX and eliminate unwanted components."
+    effect: "Ensures that parental controls are not active and filtering webpages, and reduces unwanted resources."
+    category: "Mozilla"
+
   - file: "a-c-disable-crash-reporting.patch"
     name: "Disable Crash Reporting (Android Components)"
     description: "Disables the collection and submission of crash reports within Mozilla's Android Components."
