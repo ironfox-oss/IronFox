@@ -1,0 +1,5 @@
+toolkit.jar:
+% skin mozapps classic/1.0 %skin/classic/mozapps/
+    skin/classic/mozapps/aboutServiceWorkers.css                            (../../../toolkit/themes/shared/aboutServiceWorkers.css)
+    skin/classic/mozapps/extensions/extension.svg                           (../../../toolkit/themes/shared/extensions/extension.svg)
+    skin/classic/mozapps/extensions/extensionGeneric.svg                    (../../../toolkit/themes/shared/extensions/extensionGeneric.svg)

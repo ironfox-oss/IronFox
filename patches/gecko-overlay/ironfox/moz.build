@@ -5,4 +5,6 @@ DIRS += [
     "enterprisepolicies",
     "locales",
     "prefs",
+    "themes/global",
+    "themes/mozapps",
 ]

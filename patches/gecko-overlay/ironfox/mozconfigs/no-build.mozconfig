@@ -6,4 +6,3 @@ ac_add_options --disable-compile-environment
 # Disable checks for runtime dependencies
 ## (Needed to prevent failures)
 ac_add_options --without-embedded-uniffi-bindgen
-ac_add_options --without-nimbus-fml

@@ -3,75 +3,115 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_148_0_RELEASE)
-FIREFOX_COMMIT='b2a8a4ec986ce61fd15ab1db980381d04ba85ada'
-FIREFOX_VERSION='148.0'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_148_0_1_RELEASE)
+FIREFOX_COMMIT='d555441a1bdc6cdc541da1abf6559036d47f1e79'
+FIREFOX_SHA512SUM='b1d56aeff8b209c9a499dccb9a57d45d07e89794096c6bd9b740172ececa6ddbca8d29b389c0dd981c0edf2955524144bc282452837468f72d95da941048b14f'
+FIREFOX_VERSION='148.0.1'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
+### Version: v148.0
 ### https://github.com/mozilla/application-services
 APPSERVICES_COMMIT='2ff0d7c78e7ca92ce48246d5a7c0af6a13ea5f53'
-APPSERVICES_VERSION='v148.0'
+APPSERVICES_SHA512SUM='01cab72477772e4c7b3a49b9a1b11493659794c70e02f15efc51f465739778547342154b09fab5a83fec00b0e9cfa2590db34ca658c4630064d31c53ed82b293'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='2424c18f238c59e513ff13c17280f5ef26e1f68b'
+L10N_COMMIT='30b3418ff8444761bd219db03fa46c267a6813d3'
+L10N_SHA512SUM='91f21e267a7827a47e929248065767b849f9bd5e1e38feb3adcd5e4902e9a35ac12042a20f5a82d267e4ee0a66905a3b5b3b154e02b76f8e1d0e8db8ed20ccc6'
 
 ## Glean
+### Version: v66.2.0
 ### https://github.com/mozilla/glean
 GLEAN_COMMIT='e95d7e50678aaa678b9556f4b8b98cdadc0f1c07'
-GLEAN_VERSION='v66.2.0'
+GLEAN_SHA512SUM='752b3a8ca3ea246dd4a0dec6047875e342f07f68991c6daa29172661f29b4edc00301c417de93620ea60fc2ada992c8ee4cbfa0575220c8f619bfb555bb0f143'
+
+## Glean Parser
+### Version: v18.2.0
+### https://github.com/mozilla/glean_parser
+GLEAN_PARSER_COMMIT='39c9b070d429983db233e7435ae7dfe69f48a543'
+GLEAN_PARSER_SHA512SUM='3c856424aef82f1d793e7b2ed78df175e4bb445dc05e8a0b75752a6ed2aa1cbc097d0f355e13bf6f5b5aec9f3d53df53a23763c51f4a3747b57b80d45d37033d'
+GLEAN_PARSER_VERSION='18.2.0'
+
+## GYP
+### Version: v0.21.1
+### https://github.com/nodejs/gyp-next
+GYP_COMMIT='eae394d0b489fa62235dfb82cc549d3422372542'
+GYP_SHA512SUM='f8aca737b54e19e0007d15fbf686c56d522d2eaf88de76208f91b894251c86ca0da59271ce948b77faaa60b3bde52c8af3aaa0a79df8b5d32ab484842698e0f5'
 
 ## microG
+### Version: v0.3.13.250932
 ### https://github.com/microg/GmsCore
 GMSCORE_COMMIT='3ba21336181c846630242124176737c05b3e8b6f'
-GMSCORE_VERSION='v0.3.13.250932'
+GMSCORE_SHA512SUM='c2c5e8c17a17b159550d696d97440b02bd8fb455f8ac9cbdbc81e05fb1dfcef36d564ed034c35c9d1dc58822354f5b72589c7c42826242b8b21c893f5c7c46ac'
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
 PHOENIX_COMMIT='4514418a570603f7ae0670ad1f42371345ffff45'
+PHOENIX_SHA512SUM='247fcdba2cd97bb07f61a173d233927a0798168d4bfc46952c885bbd9fbea033f53ed198e27e746544258705cdc8304ed922162124fa5ffa8ad62b912743279e'
 PHOENIX_VERSION='2026.02.23.1'
 
 ## uniffi-rs (Tor)
 ### https://gitlab.torproject.org/tpo/applications/uniffi-rs
-UNIFFI_COMMIT='9f392cbaa07aaf83160e94ece2a32d3e9fef22e4'
 UNIFFI_VERSION='0.29.0'
 
 ## UnifiedPush-AC
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
 UNIFIEDPUSHAC_COMMIT='7ba42eb12d2ac8e7dd21603a79d8a7f4cdfd25f1'
+UNIFIEDPUSHAC_SHA512SUM='048fad650c57ea93520fb5ce2ee98b5c9543d589872c26a3529abf2c0ad3836ca6d6d1528fe29bda4187a0875e2a744e268465b74abdea8a3286f987bbe62211'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
-WASI_COMMIT='935fe1acd2fcd7ea4aed2d5ee4527482862b6344'
 WASI_VERSION='20'
 
 # Tools
 
+## Android NDK
+### https://developer.android.com/ndk/downloads
+ANDROID_NDK_REVISION='29.0.14206865'
+ANDROID_NDK_SHA512SUM_LINUX='b55819895a7fa3a0bc7ed411fb55ed15ad9e415b0122a81a4e026c9b696cd266cb4beebb2008cf1d6cac88d38187d52818734f87de793de303653eccb4ca68da'
+ANDROID_NDK_SHA512SUM_OSX='4091bc97a03266b869380874cb2d67a35dc74f9bc5f1cde30a3545547355e4ec4f3ebd79a17a19f9228d045f7a176d1e987ce4f787d81a02a044aa909f5ef5cb'
+ANDROID_NDK_VERSION='r29'
+
 ## Android SDK
 ### (for reference: https://searchfox.org/firefox-main/source/python/mozboot/mozboot/android.py)
 ANDROID_BUILDTOOLS_VERSION='36.1.0'
-ANDROID_NDK_REVISION='29.0.14206865' # r29
 ANDROID_PLATFORM_VERSION='36.1'
 ANDROID_SDK_REVISION='13114758'
+
+### (This is the checksum for android-cmdline-tools.zip)
+ANDROID_SDK_SHA512SUM_LINUX='8e4bce8fb1a9a2b83454ab9ea642caa08adc69d93df345238a9c110a29aeb3dd4211ce9464de6d5ce41182c77ad2ff8c1941ed8a0b1f40d267fdfc8a31f461dc'
+ANDROID_SDK_SHA512SUM_OSX='375e0594493ade7ab613bacdfbc751c5f004db213b02c6202ac28f4b6174ed9fc5d514b189bbfafd3d9d8c8d7d81b3fb312c0454b79e53ab9d139b90790d2a96'
 
 ### This is used for ex. setting microG's compile SDK and target SDK version
 ANDROID_SDK_TARGET='36'
 
 ## Bundletool
 ### https://github.com/google/bundletool
+BUNDLETOOL_SHA512SUM='50feda5f3f00931bad943a37b7cfc33d8ea53b33bd9bfa83832f612da6e99b72146206695ae25df5044030e305e1d718c833ad51c12b944079c263bba3cbffa0'
 BUNDLETOOL_VERSION='1.18.3'
 
 ## cbindgen
 ### https://docs.rs/crate/cbindgen/latest
+### (This commit corresponds to https://github.com/mozilla/cbindgen/releases/tag/v0.29.2)
+CBINDGEN_COMMIT='76f41c090c0587d940a0ef81a41c8b995f074926'
+CBINDGEN_SHA512SUM='8363f69fc103343acc2b2545d833df6da876c8591f664b0f7ce6ebac28ce516e72cc615df4d2c07b93c646ed122b8a48c4a34b03c363d2d795c3013321c3fc5c'
 CBINDGEN_VERSION='0.29.2'
 
 ## Gradle (F-Droid)
 ### https://gitlab.com/fdroid/gradlew-fdroid
 GRADLE_COMMIT='996b7829f40f33317d33c1b6ddcffcf976bd6181'
+GRADLE_SHA512SUM='0498fff4a729aa2458f2627635507c6e9a9bd3d1e914ac375e10b3b3061654e7f7544461c91a8db0882bfc1d09090d135eada40ee72f37ff9975e0f1116c3d9d'
+
+## pip
+### Version: 26.0.1
+### https://github.com/pypa/pip
+### (This commit corresponds to https://github.com/pypa/pip/releases/tag/26.0.1)
+PIP_COMMIT='5fe4ea4f24cd9756316a4b5ef05daa15d84f7d0c'
+PIP_SHA512SUM='3fca339b7c2596581fcf9691b8ef43664b4d0b25494b30eebda803586134c160a06db128437c2fcce9708e26d6ef9450af2e5d9fe0e724d56f65cfb7dda45e7a'
 
 ## Rust
 ### https://releases.rs/
@@ -80,14 +120,25 @@ GRADLE_COMMIT='996b7829f40f33317d33c1b6ddcffcf976bd6181'
 RUST_MAJOR_VERSION='1.93.1'
 RUST_VERSION="${RUST_MAJOR_VERSION}"
 
+## rustup
+### https://github.com/rust-lang/rustup/tags
+RUSTUP_COMMIT='e4f3ad6f893e56ca10f0a329c401a5eafab69607'
+RUSTUP_SHA512SUM='b44833a5cc74448c8ace263bea5499b9dccd0b3b5ad08bbd6c5aafcefe7f421a77d04cdf0e24f1e19de0bf4ff93e170d035665ea10afd3eb228a1633ad13dfaa'
+RUSTUP_VERSION='1.28.2'
+
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
 PREBUILDS_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
+PREBUILDS_SHA512SUM='8d8af2f9c1fceafaf7f02f38933ede621f6c942c63a58c2438821ab6452ae0e8a4f52b0222cb2d6e62107ec99ee08784936d3977a9376e66082025e84ba9186d'
 UNIFFI_LINUX_IRONFOX_COMMIT='5f3e3d5af8d990b57bd43bf2afd4bfb407e5e288'
 UNIFFI_LINUX_IRONFOX_REVISION='5'
+UNIFFI_LINUX_IRONFOX_SHA512SUM='2821385fbe37af84b7985ce68f683472c7f6038a5cd7d1fc578ac7f9d243d0d352e9a0de12a80827422510784ba470cc8128c197f10454197f23d38db626e407'
 UNIFFI_OSX_IRONFOX_COMMIT='74d5b4bc62c3aa4ceab64c41e5185026574a86b6'
 UNIFFI_OSX_IRONFOX_REVISION='5'
+UNIFFI_OSX_IRONFOX_SHA512SUM='1247ea28c18d37212a9eea3ace3ed4dbe5c192bc07e809ac3422ed17562c851b96a0ea9e5691b72ec84c62f6901fb7767e8d5134be9af6275f4ba15e80fe6314'
 WASI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
 WASI_LINUX_IRONFOX_REVISION='4'
+WASI_LINUX_IRONFOX_SHA512SUM='98d81e0f47229184fe767fb47906685eec6dd34ad425030e08d1eea42ddec1ebef678530e70dfc954aa2d0904ac44d38a869334c098b0baf9fff1b87233ff31e'
 WASI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'
 WASI_OSX_IRONFOX_REVISION='3'
+WASI_OSX_IRONFOX_SHA512SUM='eb0697f42c9838080fcf23fa0d9c230016212a15725e62e2fafed896751a9fcf8adf508461cf9118c02bff1bcd0791ae1113f13d0cca96de3b8f03244df25a30'
