@@ -111,13 +111,13 @@ function set_build_env() {
         ## (CI handles this at `env_ci.sh` instead)
         BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-    export IF_BUILD_DATE="${BUILD_DATE}"
-    export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+export IF_BUILD_DATE="${BUILD_DATE}"
+export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     else
         echo "Writing ${IRONFOX_ENV_BUILD}..."
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-    export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     fi
 
@@ -161,7 +161,7 @@ function prep_fenix() {
     if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
         rm -f "${IRONFOX_FENIX}/app/build.gradle"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
+    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
 
     "${IRONFOX_SED}" -i -e "s/include \"armeabi-v7a\", \"arm64-v8a\", \"x86_64\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle"
 
@@ -170,22 +170,27 @@ function prep_fenix() {
         "${IRONFOX_SED}" -i -e '/universalApk/s/true/false/' "${IRONFOX_FENIX}/app/build.gradle"
     fi
 
+    if [[ -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" ]]; then
+        rm -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
+    fi
+    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml" "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
+
     if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
         rm -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
+    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
 
-     if [[ -d "${IRONFOX_FENIX}/app/src/main/res" ]]; then
+    if [[ -d "${IRONFOX_FENIX}/app/src/main/res" ]]; then
         rm -rf "${IRONFOX_FENIX}/app/src/main/res"
     fi
-    cp -rf "${IRONFOX_BUILD}/tmp/fenix/res/" "${IRONFOX_FENIX}/app/src/main/res/"
+    cp -rf "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/"
 
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
         IRONFOX_NAME='IronFox'
         "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' "${IRONFOX_FENIX}/app/build.gradle"
         "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     else
-        IRONFOX_NAME='Ironfox Nightly'
+        IRONFOX_NAME='IronFox Nightly'
         "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox.nightly"|' "${IRONFOX_FENIX}/app/build.gradle"
         "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox.nightly/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     fi
@@ -226,6 +231,25 @@ function prep_gecko() {
     if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json" ]]; then
         rm -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
     fi
+
+    # Configure release channel
+    if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+        IRONFOX_NAME='IronFox'
+    else
+        IRONFOX_NAME='IronFox Nightly'
+    fi
+
+    if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
+        rm -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+    fi
+    cp -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+    "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+
+    if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
+        rm -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
+    fi
+    cp -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
+    "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
 
     echo_green_text 'SUCCESS: Prepared Gecko'
 }
@@ -360,7 +384,7 @@ function build_glean() {
     clean_gradle
 
     "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publishToMavenLocal -x createGleanPythonVirtualEnv
     popd
 
     echo_green_text 'SUCCESS: Built Glean'
@@ -375,8 +399,11 @@ function build_as() {
 
     # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
     # skips building the libraries as they are expected to be already downloaded in a CI environment
-    # However, we want build those libraries always, so we set CI='' before invoking the script
-    CI='' bash -c "./libs/verify-android-environment.sh && ${IRONFOX_GRADLE} ${IRONFOX_GRADLE_FLAGS} :tooling-nimbus-gradle:publishToMavenLocal"
+    # However, we want build those libraries always, so we unset CI before invoking the script
+    unset CI
+
+    bash -x "${IRONFOX_AS}/libs/verify-android-environment.sh"
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} :tooling-nimbus-gradle:publishToMavenLocal
     popd
 
     echo_green_text 'SUCCESS: Built Application Services'
@@ -713,6 +740,13 @@ function build_fenix() {
     export IRONFOX_MACH_BUILD=1
     export IRONFOX_MACH_TARGET_FENIX=1
 
+    # When building Fenix, if IRONFOX_SIGN is set, we need to set MOZ_AUTOMATION to prevent outputs from being automatically signed with a debug key
+    ## https://searchfox.org/firefox-main/rev/eea0f8f0/mobile/android/fenix/app/build.gradle#114
+    ## CI should never use debug signing
+    if [ "${IRONFOX_SIGN}" == 1 ]; then
+        export MOZ_AUTOMATION=1
+    fi
+
     pushd "${IRONFOX_GECKO}"
     "${IRONFOX_MACH}" configure
 
@@ -757,11 +791,13 @@ function build_fenix() {
     else
         # Export APK
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
         else
             cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
         fi
     fi
+
+    unset MOZ_AUTOMATION
     unset IRONFOX_MACH_TARGET_FENIX
     export IRONFOX_MACH_TARGET_FENIX=0
     "${IRONFOX_MACH}" configure

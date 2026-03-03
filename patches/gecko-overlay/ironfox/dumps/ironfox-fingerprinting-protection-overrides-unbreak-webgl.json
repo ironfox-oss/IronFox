@@ -78,6 +78,11 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "egger.com",
+            "thirdPartyDomain": "netural.com"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "emulatrix.com"
         },
         {
@@ -110,6 +115,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "globle-game.com"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "google.com"
         },
         {
@@ -119,6 +128,10 @@
         {
             "overrides": "-DisableWebGL",
             "firstPartyDomain": "gsi.go.jp"
+        },
+        {
+            "overrides": "-DisableWebGL",
+            "firstPartyDomain": "gulper.io"
         },
         {
             "overrides": "-DisableWebGL",
@@ -171,6 +184,10 @@
         {
             "overrides": "-DisableWebGL",
             "firstPartyDomain": "neal.fun"
+        },
+        {
+            "overrides": "-DisableWebGL",
+            "firstPartyDomain": "netural.com"
         },
         {
             "overrides": "-DisableWebGL",

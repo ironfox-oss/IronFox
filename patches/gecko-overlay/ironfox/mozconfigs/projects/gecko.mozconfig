@@ -1,6 +1,3 @@
 # IronFox Gecko(View) mozconfig
 
-# If we're doing a build, ensure MOZ_AUTOMATION isn't set here
-if [ "${IRONFOX_MACH_BUILD}" == 1 ]; then
-    unset MOZ_AUTOMATION
-fi
+# Currently empty :(

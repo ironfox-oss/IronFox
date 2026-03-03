@@ -12,7 +12,7 @@ mk_add_options AUTOCLOBBER=1
 export AUTOCLOBBER=1
 
 ## Configure allowed Gradle maven repositories
-export GRADLE_MAVEN_REPOSITORIES="file://${IRONFOX_HOME}/.m2/repository/","https://plugins.gradle.org/m2/","https://maven.google.com/"
+export GRADLE_MAVEN_REPOSITORIES="file://${IRONFOX_MAVEN_LOCAL}/","https://plugins.gradle.org/m2/","https://maven.google.com/"
 
 ## Disable android:debuggable
 ac_add_options --disable-android-debuggable
@@ -23,6 +23,9 @@ export MOZ_ARTIFACT_BUILDS=
 
 ## Disable ASan crash reporting
 ac_add_options --disable-address-sanitizer-reporter
+
+## Disable automatic bootstrap/update of toolchains/dependencies
+ac_add_options --disable-bootstrap
 
 ## Disable auxiliary file persistence
 ac_add_options --enable-disk-remnant-avoidance
@@ -105,6 +108,9 @@ ac_add_options --disable-updater
 ## Disable Windows Media Foundation support
 ### Windows-specific, but doesn't hurt to set here
 ac_add_options --disable-wmf
+
+## Do not require nimbus-fml for builds
+ac_add_options --without-nimbus-fml
 
 ## Do not require Node.js for builds
 ac_add_options --disable-nodejs

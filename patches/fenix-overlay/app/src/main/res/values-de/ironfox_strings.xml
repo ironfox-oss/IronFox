@@ -64,8 +64,8 @@
     <string name="spoof_timezone">Zeitzone auf UTC-0 fälschen</string>
     <string name="preference_webgl_disabled">WebGL deaktivieren</string>
     <string name="preference_fpp_overrides_ironfox_webgl_summary">Wenn WebGL deaktiviert ist, wird WebGL für bestimmte Websites standardmäßig wieder aktiviert, um Fehler zu reduzieren. Das Ändern dieser Einstellung startet den Browser neu</string>
-    <string name="preference_fpp_overrides_ironfox_enabled">Fingerprintschutz-Überschreibungen von IronFox aktivieren</string>
-    <string name="preference_fpp_overrides_mozilla_enabled">Fingerprintschutz-Überschreibungen von Mozilla aktivieren</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">IronFox-eigenen Fingerabdruck-Schutz aktivieren</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Mozilla-eigenen Fingerabdruck-Schutz aktivieren</string>
     <string name="preference_fpp_overrides_ironfox_timezone_enabled">Zeitzonenfälschungs-Überschreibungen von IronFox aktivieren</string>
     <string name="preference_fpp_overrides_ironfox_timezone_summary">Deaktiviert standardmäßig das Zeitzonen-Fälschen für bestimmte Websites, um Fehler zu reduzieren. Das Ändern dieser Einstellung startet den Browser neu</string>
     <string name="preference_fpp_overrides_ironfox_webgl_enabled">WebGL-Überschreibungen von IronFox aktivieren</string>

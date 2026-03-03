@@ -18,6 +18,13 @@ fi
 # Scripts directory
 export IRONFOX_SCRIPTS="${IRONFOX_ROOT}/scripts"
 
+# CI artifacts
+export IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
+export IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
+export IRONFOX_APK_ARTIFACTS="${IRONFOX_ARTIFACTS}/apk"
+export IRONFOX_APKS_ARTIFACTS="${IRONFOX_ARTIFACTS}/apks"
+export IRONFOX_LOG_ARTIFACTS="${IRONFOX_ARTIFACTS}/logs"
+
 # Are we in a CI environment?
 IRONFOX_CI_DEFAULT=0
 if [[ -z "${IRONFOX_CI+x}" ]]; then
@@ -102,13 +109,6 @@ export IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-
 export IRONFOX_OUTPUTS_FENIX_AAB="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
 export IRONFOX_OUTPUTS_FENIX_APKS="${IRONFOX_OUTPUTS_APKS}/ironfox-${IRONFOX_CHANNEL}.apks"
 
-# CI artifacts
-export IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
-export IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
-export IRONFOX_APK_ARTIFACTS="${IRONFOX_ARTIFACTS}/apk"
-export IRONFOX_APKS_ARTIFACTS="${IRONFOX_ARTIFACTS}/apks"
-export IRONFOX_LOG_ARTIFACTS="${IRONFOX_ARTIFACTS}/logs"
-
 # Should we create a log file for build.sh? (Default)
 IRONFOX_LOG_BUILD_DEFAULT=1
 if [[ -z "${IRONFOX_LOG_BUILD+x}" ]]; then
@@ -135,9 +135,7 @@ fi
 
 # Directory where we should store log files (if logging is desired)
 IRONFOX_LOG_DIR_DEFAULT="${IRONFOX_BUILD}/logs"
-if [ "${IRONFOX_CI}" == 1 ]; then
-    export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
-elif [[ -z "${IRONFOX_LOG_DIR+x}" ]]; then
+if [[ -z "${IRONFOX_LOG_DIR+x}" ]]; then
     export IRONFOX_LOG_DIR="${IRONFOX_LOG_DIR_DEFAULT}"
 fi
 
@@ -195,6 +193,12 @@ fi
 export IRONFOX_BUNDLETOOL="${IRONFOX_BUNDLETOOL_DIR}/bundletool"
 export IRONFOX_BUNDLETOOL_JAR="${IRONFOX_BUNDLETOOL_DIR}/bundletool.jar"
 
+# cbindgen
+IRONFOX_CBINDGEN_DEFAULT="${IRONFOX_EXTERNAL}/cbindgen"
+if [[ -z "${IRONFOX_CBINDGEN+x}" ]]; then
+    export IRONFOX_CBINDGEN="${IRONFOX_CBINDGEN_DEFAULT}"
+fi
+
 # Firefox (mozilla-central)
 IRONFOX_GECKO_DEFAULT="${IRONFOX_EXTERNAL}/gecko"
 if [[ -z "${IRONFOX_GECKO+x}" ]]; then
@@ -245,6 +249,12 @@ fi
 
 ## Glean overlay
 export IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
+
+# Glean Parser wheels
+IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser-wheels"
+if [[ -z "${IRONFOX_GLEAN_PARSER_WHEELS+x}" ]]; then
+    export IRONFOX_GLEAN_PARSER_WHEELS="${IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT}"
+fi
 
 # GNU awk
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
@@ -315,10 +325,16 @@ if [[ -z "${IRONFOX_GRADLE_HOME+x}" ]]; then
     export IRONFOX_GRADLE_HOME="${IRONFOX_GRADLE_HOME_DEFAULT}"
 fi
 
-# Home
-## (ex. used by our mozconfigs for setting the local Maven repo)
-if [[ -z "${IRONFOX_HOME+x}" ]]; then
-    export IRONFOX_HOME="${HOME}"
+# Gradle local Maven repository
+IRONFOX_MAVEN_LOCAL_DEFAULT="${IRONFOX_BUILD}/.m2/repository"
+if [[ -z "${IRONFOX_MAVEN_LOCAL+x}" ]]; then
+    export IRONFOX_MAVEN_LOCAL="${IRONFOX_MAVEN_LOCAL_DEFAULT}"
+fi
+
+# GYP
+IRONFOX_GYP_DEFAULT="${IRONFOX_EXTERNAL}/gyp-next"
+if [[ -z "${IRONFOX_GYP+x}" ]]; then
+    export IRONFOX_GYP="${IRONFOX_GYP_DEFAULT}"
 fi
 
 # Java home
@@ -381,10 +397,16 @@ if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
     export IRONFOX_PHOENIX="${IRONFOX_PHOENIX_DEFAULT}"
 fi
 
+# pip
+IRONFOX_PIP_DEFAULT="${IRONFOX_EXTERNAL}/pip"
+if [[ -z "${IRONFOX_PIP+x}" ]]; then
+    export IRONFOX_PIP="${IRONFOX_PIP_DEFAULT}"
+fi
+
 # Python (Glean)
 export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
 
-# Python (pip)
+# Python (pip) environment
 IRONFOX_PIP_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
 if [[ -z "${IRONFOX_PIP_DIR+x}" ]]; then
     export IRONFOX_PIP_DIR="${IRONFOX_PIP_DIR_DEFAULT}"
@@ -464,6 +486,7 @@ fi
 # Compiler flags
 IRONFOX_COMPILER_FLAGS_DEFAULT='-DNDEBUG -O3 -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv'
 if [[ -z "${IRONFOX_COMPILER_FLAGS+x}" ]]; then
+    export IRONFOX_COMPILER_FLAGS_OVERRIDE=1
     export IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_COMPILER_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS}"
@@ -481,6 +504,7 @@ fi
 # curl flags
 IRONFOX_CURL_FLAGS_DEFAULT='-q --disable --no-netrc -j -e "" -A "" -S --clobber --create-dirs --delegation none --disallow-username-in-url --doh-cert-status --ftp-create-dirs --ftp-ssl-control --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-proxy-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ntlm --no-proxy-ssl-allow-beast --no-proxy-ssl-auto-client-cert --no-sessionid --no-skip-existing --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-tls-earlydata --no-xattr --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --referer "" --remove-on-error --show-error --ssl-reqd --trace-time --user-agent "" --verbose'
 if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]]; then
+    export IRONFOX_CURL_FLAGS_OVERRIDE=1
     export IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_CURL_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS}"
@@ -496,8 +520,9 @@ if [[ -z "${IRONFOX_GRADLE_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # Gradle flags
-IRONFOX_GRADLE_FLAGS_DEFAULT='-Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon'
+IRONFOX_GRADLE_FLAGS_DEFAULT="-Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon"
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
+    export IRONFOX_GRADLE_FLAGS_OVERRIDE=1
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_GRADLE_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS}"
@@ -515,6 +540,7 @@ fi
 # Rust flags
 IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo -O'
 if [[ -z "${IRONFOX_RUST_FLAGS+x}" ]]; then
+    export IRONFOX_RUST_FLAGS_OVERRIDE=1
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS}"

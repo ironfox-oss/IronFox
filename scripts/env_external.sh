@@ -20,9 +20,13 @@ export CARGO_BUILD_RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
 export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
 
 # Android SDK
+## https://developer.android.com/tools/variables
 export ANDROID_HOME="${IRONFOX_ANDROID_SDK}"
 export ANDROID_SDK_ROOT="${IRONFOX_ANDROID_SDK}"
 export PATH="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin:${PATH}"
+
+## Android SDK preferences
+export ANDROID_USER_HOME="${IRONFOX_BUILD}/.android"
 
 # Android NDK
 export ANDROID_NDK_HOME="${IRONFOX_ANDROID_NDK}"
@@ -78,6 +82,7 @@ export PHOENIX_SPECS=0
 
 # Python (Glean)
 export GLEAN_PYTHON="$(which python)"
+export GLEAN_PYTHON_WHEELS_DIR="${IRONFOX_GLEAN_PARSER_WHEELS}"
 
 # Rust (cargo)
 export CARGO="${IRONFOX_CARGO}"
@@ -128,6 +133,15 @@ export RUSTUP_TERM_PROGRESS_WHEN="${IRONFOX_RUSTUP_PROGRESS_BAR}"
 
 ## Enable colored output
 export RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
+
+# Include version info
+source "${IRONFOX_VERSIONS}"
+
+## Set Rust version
+export RUSTUP_TOOLCHAIN="${RUST_VERSION}"
+
+## Set Rustup version
+export RUSTUP_VERSION="${RUSTUP_VERSION}"
 
 # unifiedpush-ac
 export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"

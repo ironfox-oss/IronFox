@@ -34,14 +34,24 @@ fi
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-function localize_maven {
-    # Replace custom Maven repositories with mavenLocal()
-    find ./* -name '*.gradle' -type f -exec python3 "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
-    # Make gradlew scripts call our Gradle wrapper
+function localize_gradle() {
     find ./* -name gradlew -type f | while read -r gradlew; do
-        echo -e "#!/bin/sh\n${IRONFOX_GRADLE} \""'$@'"\"" >"${gradlew}"
+        echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} \""'$@'"\"" >"${gradlew}"
         chmod 755 "${gradlew}"
     done
+}
+
+# For Glean, we also need to set "-x createGleanPythonVirtualEnv"
+function glean_localize_gradle() {
+    find ./* -name gradlew -type f | while read -r gradlew; do
+        echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} -x createGleanPythonVirtualEnv \""'$@'"\"" >"${gradlew}"
+        chmod 755 "${gradlew}"
+    done
+}
+
+function localize_maven() {
+    # Replace custom Maven repositories with mavenLocal()
+    find ./* -name '*.gradle' -type f -exec python3 "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
 }
 
 # Applies the overlay files in the given directory
@@ -88,18 +98,21 @@ fi
 echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}"
 
 # Create build directories
-mkdir -vp "${IRONFOX_CARGO_HOME}"
-mkdir -vp "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0"
-mkdir -vp "${IRONFOX_GRADLE_CACHE}"
-mkdir -vp "${IRONFOX_GRADLE_HOME}"
-mkdir -vp "${IRONFOX_MOZBUILD}"
-mkdir -vp "${IRONFOX_OUTPUTS_AAB}"
-mkdir -vp "${IRONFOX_OUTPUTS_AAR}"
-mkdir -vp "${IRONFOX_OUTPUTS_APK}"
-mkdir -vp "${IRONFOX_OUTPUTS_APKS}"
-mkdir -vp "${IRONFOX_BUILD}/tmp/fenix/res"
-mkdir -vp "${IRONFOX_BUILD}/tmp/gecko/ironfox"
-mkdir -vp "${IRONFOX_BUILD}/tmp/glean"
+mkdir -p "${IRONFOX_CARGO_HOME}"
+mkdir -p "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0"
+mkdir -p "${IRONFOX_GRADLE_CACHE}"
+mkdir -p "${IRONFOX_GRADLE_HOME}"
+mkdir -p "${IRONFOX_MOZBUILD}"
+mkdir -p "${IRONFOX_OUTPUTS_AAB}"
+mkdir -p "${IRONFOX_OUTPUTS_AAR}"
+mkdir -p "${IRONFOX_OUTPUTS_APK}"
+mkdir -p "${IRONFOX_OUTPUTS_APKS}"
+mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res"
+mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values"
+mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml"
+mkdir -p "${IRONFOX_BUILD}/tmp/gecko/ironfox"
+mkdir -p "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages"
+mkdir -p "${IRONFOX_BUILD}/tmp/glean"
 
 ## Copy machrc config
 cp -vf "${IRONFOX_PATCHES}/machrc" "${IRONFOX_MOZBUILD}/machrc"
@@ -347,6 +360,10 @@ pushd "${IRONFOX_GLEAN}"
 # Apply patches
 glean_apply_patches
 
+# Always use our Gradle wrapper with our Gradle flags/configuration
+glean_localize_gradle
+
+# Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
 localize_maven
 
 # Break the dependency on older Rust
@@ -360,6 +377,10 @@ localize_maven
 # Enable performance optimizations
 "${IRONFOX_SED}" -i -e "s|lto = .*|lto = true|g" Cargo.toml
 "${IRONFOX_SED}" -i -e "s|opt-level = .*|opt-level = 3|g" Cargo.toml
+
+# Ensure that the Glean gradle plug-in/glean_parser always runs offline
+"${IRONFOX_SED}" -i "s|(isOffline)|(true)|" gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy
+"${IRONFOX_SED}" -i "s|pypi.python.org|noop.invalid|" gradle-plugin/src/main/groovy/mozilla/telemetry/glean-gradle-plugin/GleanGradlePlugin.groovy
 
 # No-op Glean
 "${IRONFOX_SED}" -i -e 's|allowGleanInternal = .*|allowGleanInternal = false|g' glean-core/android/build.gradle
@@ -460,6 +481,9 @@ pushd "${IRONFOX_AS}"
 # Apply patches
 a-s_apply_patches
 
+# Always use our Gradle wrapper with our Gradle flags/configuration
+localize_gradle
+
 # Break the dependency on older A-C
 "${IRONFOX_SED}" -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 
@@ -476,6 +500,7 @@ a-s_apply_patches
 "${IRONFOX_SED}" -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 "${IRONFOX_SED}" -i -e '/content {/,/}/d' build.gradle
 
+# Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
 localize_maven
 
 # Fix stray
@@ -531,6 +556,9 @@ apply_patches
 ## For UnifiedPush-AC
 up_ac_apply_patches
 
+# Always use our Gradle wrapper with our Gradle flags/configuration
+localize_gradle
+
 # Let it be IronFox (part 2...)
 "${IRONFOX_SED}" -i -e 's|"MOZ_APP_VENDOR", ".*"|"MOZ_APP_VENDOR", "IronFox OSS"|g' mobile/android/moz.configure
 echo '' >>mobile/android/moz.configure
@@ -540,6 +568,10 @@ echo 'DIRS += ["ironfox"]' >>moz.build
 
 # Replace proprietary artwork
 "${IRONFOX_SED}" -i -e '/android:roundIcon/d' mobile/android/fenix/app/src/main/AndroidManifest.xml
+
+# Replace instances of "Firefox" with "IronFox" or "IronFox Nightly"
+"${IRONFOX_SED}" -i -e 's/Firefox/{IRONFOX_NAME}/' toolkit/content/neterror/supportpages/connection-not-secure.html
+"${IRONFOX_SED}" -i -e 's/Firefox/{IRONFOX_NAME}/' toolkit/content/neterror/supportpages/time-errors.html
 
 # Use `commit` instead of `rev` for source URL
 ## (ex. displayed at `about:buildconfig`)
@@ -633,14 +665,32 @@ echo '    "url-classifier-skip-urls.json",' >>services/settings/dumps/main/moz.b
 echo '    "url-parser-default-unknown-schemes-interventions.json",' >>services/settings/dumps/main/moz.build
 echo ']' >>services/settings/dumps/main/moz.build
 
+# Remove unused about:glean assets
+rm -vf toolkit/content/aboutGlean.css toolkit/content/aboutGlean.js toolkit/content/aboutGlean.html
+
+# Remove unused about:restricted (Used for parental controls) assets
+rm -vrf toolkit/content/aboutRestricted
+
 # Remove unused about:telemetry assets
 rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js toolkit/content/aboutTelemetry.xhtml
+
+# Remove unused localizations
+"${IRONFOX_SED}" -i 's|locale/@AB_CD@/global/aboutStudies|# locale/@AB_CD@/global/aboutStudies|' toolkit/locales/jar.mn
+"${IRONFOX_SED}" -i 's|crashreporter|# crashreporter|' toolkit/locales/jar.mn
+"${IRONFOX_SED}" -i 's|locales-preview/aboutRestricted|# locales-preview/aboutRestricted|' toolkit/locales/jar.mn
+rm -vrf toolkit/locales/en-US/crashreporter
+rm -vf toolkit/locales/en-US/toolkit/about/aboutGlean.ftl
+rm -vf toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl
+rm -vf toolkit/locales-preview/aboutRestricted.ftl
 
 # Prevent registration of the Glean add-on ping scheduler
 "${IRONFOX_SED}" -i 's|category update-timer amGleanDaily|# category update-timer amGleanDaily|' toolkit/mozapps/extensions/extensions.manifest
 
 # Remove the Clear Key CDM
 "${IRONFOX_SED}" -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' mobile/android/installer/package-manifest.in
+
+# Remove GMP sources
+rm -vrf "${IRONFOX_GECKO}/toolkit/content/gmp-sources"
 
 # Remove OpenAI components
 rm -vf toolkit/components/ml/content/backends/OpenAIPipeline.mjs
@@ -963,6 +1013,10 @@ if [[ -n "${FDROID_BUILD+x}" ]]; then
 
     # Bundletool
     pushd "${IRONFOX_BUNDLETOOL_DIR}"
+    # Always use our Gradle wrapper with our Gradle flags/configuration
+    localize_gradle
+
+    # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
     localize_maven
     popd
 fi
@@ -1000,20 +1054,35 @@ apply_overlay "${IRONFOX_GECKO_OVERLAY}/"
 ## The following are for the build script, so that it can update the environment variables if needed
 ### (ex. if the user changes them)
 
-if [[ -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" ]]; then
-    rm -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle"
 fi
-cp -f "${IRONFOX_FENIX}/app/build.gradle" "${IRONFOX_BUILD}/tmp/fenix/build.gradle"
+cp -f "${IRONFOX_FENIX}/app/build.gradle" "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle"
 
-if [[ -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml" ]]; then
-    rm -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml"
 fi
-cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
+cp -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml"
 
-if [[ -d "${IRONFOX_BUILD}/tmp/fenix/res" ]]; then
-    rm -rf "${IRONFOX_BUILD}/tmp/fenix/res"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml"
 fi
-cp -rf "${IRONFOX_FENIX}/app/src/main/res/" "${IRONFOX_BUILD}/tmp/fenix/res/"
+cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml"
+
+if [[ -d "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res" ]]; then
+    rm -rf "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res"
+fi
+cp -rf "${IRONFOX_FENIX}/app/src/main/res/" "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res/"
+
+if [[ -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
+fi
+cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
+
+if [[ -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html"
+fi
+cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html"
 
 popd
 
@@ -1022,6 +1091,9 @@ popd
 #
 
 pushd "${IRONFOX_GMSCORE}"
+
+# Always use our Gradle wrapper with our Gradle flags/configuration
+localize_gradle
 
 # Bump Android build tools
 "${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${ANDROID_BUILDTOOLS_VERSION}'|g" build.gradle
