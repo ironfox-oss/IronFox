@@ -665,14 +665,32 @@ echo '    "url-classifier-skip-urls.json",' >>services/settings/dumps/main/moz.b
 echo '    "url-parser-default-unknown-schemes-interventions.json",' >>services/settings/dumps/main/moz.build
 echo ']' >>services/settings/dumps/main/moz.build
 
+# Remove unused about:glean assets
+rm -vf toolkit/content/aboutGlean.css toolkit/content/aboutGlean.js toolkit/content/aboutGlean.html
+
+# Remove unused about:restricted (Used for parental controls) assets
+rm -vrf toolkit/content/aboutRestricted
+
 # Remove unused about:telemetry assets
 rm -vf toolkit/content/aboutTelemetry.css toolkit/content/aboutTelemetry.js toolkit/content/aboutTelemetry.xhtml
+
+# Remove unused localizations
+"${IRONFOX_SED}" -i 's|locale/@AB_CD@/global/aboutStudies|# locale/@AB_CD@/global/aboutStudies|' toolkit/locales/jar.mn
+"${IRONFOX_SED}" -i 's|crashreporter|# crashreporter|' toolkit/locales/jar.mn
+"${IRONFOX_SED}" -i 's|locales-preview/aboutRestricted|# locales-preview/aboutRestricted|' toolkit/locales/jar.mn
+rm -vrf toolkit/locales/en-US/crashreporter
+rm -vf toolkit/locales/en-US/toolkit/about/aboutGlean.ftl
+rm -vf toolkit/locales/en-US/toolkit/about/aboutTelemetry.ftl
+rm -vf toolkit/locales-preview/aboutRestricted.ftl
 
 # Prevent registration of the Glean add-on ping scheduler
 "${IRONFOX_SED}" -i 's|category update-timer amGleanDaily|# category update-timer amGleanDaily|' toolkit/mozapps/extensions/extensions.manifest
 
 # Remove the Clear Key CDM
 "${IRONFOX_SED}" -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' mobile/android/installer/package-manifest.in
+
+# Remove GMP sources
+rm -vrf "${IRONFOX_GECKO}/toolkit/content/gmp-sources"
 
 # Remove OpenAI components
 rm -vf toolkit/components/ml/content/backends/OpenAIPipeline.mjs
