@@ -678,13 +678,6 @@ patches:
     effect: "Users can fully disable password manager functionality from the UI."
     category: "User Experience"
 
-  - file: "fenix-enable-homepage-as-new-tab-by-default.patch"
-    name: "Enable Homepage as New Tab"
-    description: "Handles the homepage like a new tab by default."
-    reason: "Provides an enhanced user experience."
-    effect: "Users are provided with a superior browsing experience."
-    category: "User Experience"
-
   # User Interface
   - file: "fenix-ironfox-branding.patch"
     name: "IronFox Branding (Fenix)"
