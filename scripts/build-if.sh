@@ -161,7 +161,7 @@ function prep_fenix() {
     if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
         rm -f "${IRONFOX_FENIX}/app/build.gradle"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
+    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
 
     "${IRONFOX_SED}" -i -e "s/include \"armeabi-v7a\", \"arm64-v8a\", \"x86_64\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle"
 
@@ -170,15 +170,20 @@ function prep_fenix() {
         "${IRONFOX_SED}" -i -e '/universalApk/s/true/false/' "${IRONFOX_FENIX}/app/build.gradle"
     fi
 
+    if [[ -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" ]]; then
+        rm -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
+    fi
+    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml" "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
+
     if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
         rm -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
+    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
 
-     if [[ -d "${IRONFOX_FENIX}/app/src/main/res" ]]; then
+    if [[ -d "${IRONFOX_FENIX}/app/src/main/res" ]]; then
         rm -rf "${IRONFOX_FENIX}/app/src/main/res"
     fi
-    cp -rf "${IRONFOX_BUILD}/tmp/fenix/res/" "${IRONFOX_FENIX}/app/src/main/res/"
+    cp -rf "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/"
 
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
         IRONFOX_NAME='IronFox'
@@ -226,6 +231,25 @@ function prep_gecko() {
     if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json" ]]; then
         rm -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
     fi
+
+    # Configure release channel
+    if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
+        IRONFOX_NAME='IronFox'
+    else
+        IRONFOX_NAME='IronFox Nightly'
+    fi
+
+    if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
+        rm -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+    fi
+    cp -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+    "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+
+    if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
+        rm -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
+    fi
+    cp -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
+    "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
 
     echo_green_text 'SUCCESS: Prepared Gecko'
 }

@@ -98,18 +98,21 @@ fi
 echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}"
 
 # Create build directories
-mkdir -vp "${IRONFOX_CARGO_HOME}"
-mkdir -vp "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0"
-mkdir -vp "${IRONFOX_GRADLE_CACHE}"
-mkdir -vp "${IRONFOX_GRADLE_HOME}"
-mkdir -vp "${IRONFOX_MOZBUILD}"
-mkdir -vp "${IRONFOX_OUTPUTS_AAB}"
-mkdir -vp "${IRONFOX_OUTPUTS_AAR}"
-mkdir -vp "${IRONFOX_OUTPUTS_APK}"
-mkdir -vp "${IRONFOX_OUTPUTS_APKS}"
-mkdir -vp "${IRONFOX_BUILD}/tmp/fenix/res"
-mkdir -vp "${IRONFOX_BUILD}/tmp/gecko/ironfox"
-mkdir -vp "${IRONFOX_BUILD}/tmp/glean"
+mkdir -p "${IRONFOX_CARGO_HOME}"
+mkdir -p "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0"
+mkdir -p "${IRONFOX_GRADLE_CACHE}"
+mkdir -p "${IRONFOX_GRADLE_HOME}"
+mkdir -p "${IRONFOX_MOZBUILD}"
+mkdir -p "${IRONFOX_OUTPUTS_AAB}"
+mkdir -p "${IRONFOX_OUTPUTS_AAR}"
+mkdir -p "${IRONFOX_OUTPUTS_APK}"
+mkdir -p "${IRONFOX_OUTPUTS_APKS}"
+mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res"
+mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values"
+mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml"
+mkdir -p "${IRONFOX_BUILD}/tmp/gecko/ironfox"
+mkdir -p "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages"
+mkdir -p "${IRONFOX_BUILD}/tmp/glean"
 
 ## Copy machrc config
 cp -vf "${IRONFOX_PATCHES}/machrc" "${IRONFOX_MOZBUILD}/machrc"
@@ -565,6 +568,10 @@ echo 'DIRS += ["ironfox"]' >>moz.build
 
 # Replace proprietary artwork
 "${IRONFOX_SED}" -i -e '/android:roundIcon/d' mobile/android/fenix/app/src/main/AndroidManifest.xml
+
+# Replace instances of "Firefox" with "IronFox" or "IronFox Nightly"
+"${IRONFOX_SED}" -i -e 's/Firefox/{IRONFOX_NAME}/' toolkit/content/neterror/supportpages/connection-not-secure.html
+"${IRONFOX_SED}" -i -e 's/Firefox/{IRONFOX_NAME}/' toolkit/content/neterror/supportpages/time-errors.html
 
 # Use `commit` instead of `rev` for source URL
 ## (ex. displayed at `about:buildconfig`)
@@ -1029,20 +1036,35 @@ apply_overlay "${IRONFOX_GECKO_OVERLAY}/"
 ## The following are for the build script, so that it can update the environment variables if needed
 ### (ex. if the user changes them)
 
-if [[ -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle" ]]; then
-    rm -f "${IRONFOX_BUILD}/tmp/fenix/build.gradle"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle"
 fi
-cp -f "${IRONFOX_FENIX}/app/build.gradle" "${IRONFOX_BUILD}/tmp/fenix/build.gradle"
+cp -f "${IRONFOX_FENIX}/app/build.gradle" "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle"
 
-if [[ -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml" ]]; then
-    rm -f "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml"
 fi
-cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_BUILD}/tmp/fenix/shortcuts.xml"
+cp -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml"
 
-if [[ -d "${IRONFOX_BUILD}/tmp/fenix/res" ]]; then
-    rm -rf "${IRONFOX_BUILD}/tmp/fenix/res"
+if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml"
 fi
-cp -rf "${IRONFOX_FENIX}/app/src/main/res/" "${IRONFOX_BUILD}/tmp/fenix/res/"
+cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml"
+
+if [[ -d "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res" ]]; then
+    rm -rf "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res"
+fi
+cp -rf "${IRONFOX_FENIX}/app/src/main/res/" "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res/"
+
+if [[ -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
+fi
+cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
+
+if [[ -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
+    rm -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html"
+fi
+cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html"
 
 popd
 
