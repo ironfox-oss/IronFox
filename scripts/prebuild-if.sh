@@ -611,12 +611,6 @@ cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/locales/en-US/brows
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
 
-# Hack the timeout for
-# geckoview:generateJNIWrappersForGeneratedWithGeckoBinariesDebug
-"${IRONFOX_SED}" -i \
-    -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
-    mobile/android/gradle.py
-
 # Break the dependency on older Rust
 "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" Cargo.toml
 "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" intl/icu_capi/Cargo.toml
