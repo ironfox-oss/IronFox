@@ -68,23 +68,22 @@ index 4ecf8c8e6467..2035846c88b3 100644
       * For >=Q -> Use new RoleManager API to show in-app browser switching dialog.
       * For <Q && >=N -> Navigate user to Android Default Apps Settings.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 81d95a9666a1..e483f0ceedb4 100644
+index 81d95a9666a1a..d0e261c4cae8c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -4,6 +4,8 @@
+@@ -4,6 +4,7 @@
  
  package org.mozilla.fenix.utils
  
 +import org.ironfoxoss.ironfox.utils.IronFoxSettings
-+import org.mozilla.fenix.perf.lazyMonitored
  import android.accessibilityservice.AccessibilityServiceInfo.CAPABILITY_CAN_PERFORM_GESTURES
  import android.appwidget.AppWidgetManager
  import android.content.Context
-@@ -174,6 +176,8 @@ class Settings(
+@@ -174,6 +175,8 @@ class Settings(
          private const val CLOUDFLARE_URI = "https://mozilla.cloudflare-dns.com/dns-query"
      }
  
-+    val ironfox by lazyMonitored { IronFoxSettings(appContext) }
++    val ironfox = IronFoxSettings(appContext)
 +
      private val logger = Logger("Settings")
  

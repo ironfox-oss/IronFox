@@ -97,13 +97,7 @@ git commit -am "${PATCH_MSG}" --sign
 git format-patch -1 --stdout >"${IRONFOX_PATCHES}/${PATCH_NAME}.patch"
 
 # Finally, switch back to the original branch, and remove our temporary branch
-if [ "${PROJECT}" == 'AS' ]; then
-    git checkout "${APPSERVICES_COMMIT}"
-elif [ "${PROJECT}" == 'glean' ]; then
-    git checkout "${GLEAN_COMMIT}"
-else
-    git checkout "${FIREFOX_COMMIT}"
-fi
+git checkout main
 git branch -D "${PATCH_NAME}"
 
 echo_green_text "SUCCESS: Created patch: ${IRONFOX_PATCHES}/${PATCH_NAME}.patch :)"
