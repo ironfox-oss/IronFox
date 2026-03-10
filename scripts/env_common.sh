@@ -38,7 +38,6 @@ if [ "${IRONFOX_CI}" == 1 ]; then
 fi
 
 # Environment configuration
-IRONFOX_ENV_DEFAULTS="${IRONFOX_SCRIPTS}/env_defaults.sh"
 export IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 
 # Build environment configuration

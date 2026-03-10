@@ -998,7 +998,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     # Patch the LLVM source code
-    # Search clang- in https://android.googlesource.com/IRONFOX_PLATFORM/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
+    # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
     LLVM_SVN='530567'
     python3 "${toolchain_utils}/llvm_tools/patch_manager.py" \
         --svn_version $LLVM_SVN \
