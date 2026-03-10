@@ -12,10 +12,10 @@ index 5c1543ab806f..29eb4a27cf2f 100644
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
      about_pages.append('crashcontentjava')
 diff --git a/toolkit/modules/ActorManagerParent.sys.mjs b/toolkit/modules/ActorManagerParent.sys.mjs
-index dc976a7e8b11..0ec25692cff3 100644
+index e672ab192109f..f0e8f3e664700 100644
 --- a/toolkit/modules/ActorManagerParent.sys.mjs
 +++ b/toolkit/modules/ActorManagerParent.sys.mjs
-@@ -752,7 +752,7 @@ if (AppConstants.platform != "android") {
+@@ -754,7 +754,7 @@ if (AppConstants.platform != "android") {
      messageManagerGroups: ["browsers"],
      allFrames: true,
    };
@@ -24,3 +24,14 @@ index dc976a7e8b11..0ec25692cff3 100644
    JSWINDOWACTORS.AboutTranslations = {
      parent: {
        esModuleURI: "resource://gre/actors/AboutTranslationsParent.sys.mjs",
+@@ -772,8 +772,9 @@ if (AppConstants.platform != "android") {
+     },
+     matches: ["about:translations"],
+     remoteTypes: ["privilegedabout"],
++    enablePreference: "browser.translations.enable",
+   };
+-
++} if (AppConstants.platform != "android") {
+   JSWINDOWACTORS.ColorPicker = {
+     parent: {
+       esModuleURI: "moz-src:///toolkit/actors/ColorPickerParent.sys.mjs",

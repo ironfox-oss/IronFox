@@ -611,12 +611,6 @@ cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/locales/en-US/brows
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
 
-# Hack the timeout for
-# geckoview:generateJNIWrappersForGeneratedWithGeckoBinariesDebug
-"${IRONFOX_SED}" -i \
-    -e 's/max_wait_seconds=600/max_wait_seconds=1800/' \
-    mobile/android/gradle.py
-
 # Break the dependency on older Rust
 "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" Cargo.toml
 "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" intl/icu_capi/Cargo.toml
@@ -1004,7 +998,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     # Patch the LLVM source code
-    # Search clang- in https://android.googlesource.com/IRONFOX_PLATFORM/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
+    # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
     LLVM_SVN='530567'
     python3 "${toolchain_utils}/llvm_tools/patch_manager.py" \
         --svn_version $LLVM_SVN \
