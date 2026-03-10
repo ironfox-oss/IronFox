@@ -74,6 +74,19 @@ index 12492d606cc2..d16ecc6be00b 100644
            const auto pii = webgl::PackingInfoInfo::For(desc.pi);
            // DoReadPixels() requres pii to be Some().
            MOZ_ASSERT(pii.isSome());
+diff --git a/dom/canvas/OffscreenCanvasDisplayHelper.cpp b/dom/canvas/OffscreenCanvasDisplayHelper.cpp
+index 73bc8ae654..8c2d693317 100644
+--- a/dom/canvas/OffscreenCanvasDisplayHelper.cpp
++++ b/dom/canvas/OffscreenCanvasDisplayHelper.cpp
+@@ -610,7 +610,7 @@ UniquePtr<uint8_t[]> OffscreenCanvasDisplayHelper::GetImageBuffer(
+       principal, imageBuffer.get(), dataSurface->GetSize().width,
+       dataSurface->GetSize().height,
+       dataSurface->GetSize().width * dataSurface->GetSize().height * 4);
+-  if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize) {
++  if (aExtractionBehavior == CanvasUtils::ImageExtraction::Randomize || aExtractionBehavior == CanvasUtils::ImageExtraction::EfficientRandomize) {
+     nsRFPService::RandomizePixels(
+         cookieJarSettings, principal, imageBuffer.get(),
+         dataSurface->GetSize().width, dataSurface->GetSize().height,
 diff --git a/toolkit/components/resistfingerprinting/nsRFPService.cpp b/toolkit/components/resistfingerprinting/nsRFPService.cpp
 index d900f49a3b1b..c81d308cb823 100644
 --- a/toolkit/components/resistfingerprinting/nsRFPService.cpp
