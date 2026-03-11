@@ -21,6 +21,7 @@ IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS=0
 IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35=0
 IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM=0
 IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36=0
+IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS=0
 IRONFOX_GET_SOURCE_AS=0
 IRONFOX_GET_SOURCE_BUNDLETOOL=0
 IRONFOX_GET_SOURCE_CBINDGEN=0
@@ -55,6 +56,9 @@ elif [ "${target}" == 'android-sdk-platform' ]; then
 elif [ "${target}" == 'android-sdk-platform-36' ]; then
     # Get Android SDK Platform (36)
     IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36=1
+elif [ "${target}" == 'android-sdk-platform-tools' ]; then
+    # Get Android SDK Platform Tools
+    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS=1
 elif [ "${target}" == 'as' ]; then
     # Get Application Services
     IRONFOX_GET_SOURCE_AS=1
@@ -108,6 +112,7 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35=1
     IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM=1
     IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36=1
+    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS=1
     IRONFOX_GET_SOURCE_AS=1
     IRONFOX_GET_SOURCE_BUNDLETOOL=1
     IRONFOX_GET_SOURCE_CBINDGEN=1
@@ -132,6 +137,7 @@ else
     echo 'Android SDK Build Tools (35.0.0): android-sdk-build-tools-35'
     echo 'Android SDK Platform (latest): android-sdk-platform'
     echo 'Android SDK Platform (36): android-sdk-platform-36'
+    echo 'Android SDK Platform Tools: android-sdk-platform-tools'
     echo 'Application Services: as'
     echo 'Bundletool: bundletool'
     echo 'cbindgen: cbindgen'
@@ -148,6 +154,11 @@ else
     echo 'Rust: rust'
     echo 'UnifiedPush-AC: up-ac'
     exit 1
+fi
+
+# CI shouldn't need Platform Tools
+if [ "${IRONFOX_CI}" == 1 ]; then
+    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS=0
 fi
 
 # If the 'checksum-update' argument is specified, in addition to downloading the dependencies as usual,
@@ -216,6 +227,14 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for Android SDK Build Tools (35.0.0) (OS X)...'
         "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='.*'|ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK Build Tools (35.0.0) (OS X)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK Platform Tools (Linux)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='.*'|ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK Platform Tools (Linux)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK Platform Tools (OS X)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='.*'|ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK Platform Tools (OS X)'
     elif [ "${old_sha512sum}" == "${APPSERVICES_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for Application Services...'
         "${IRONFOX_SED}" -i -e "s|APPSERVICES_SHA512SUM='.*'|APPSERVICES_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -605,6 +624,19 @@ function get_android_sdk_platform_36() {
     echo_green_text "SUCCESS: Set-up Android SDK Platform (36) at ${IRONFOX_ANDROID_SDK}/platforms/android-36"
 }
 
+# Get Android SDK Platform Tools
+function get_android_sdk_platform_tools() {
+    echo_red_text 'Downloading Android SDK Platform Tools...'
+
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        download_and_extract 'android-sdk-platform-tools' "https://dl.google.com/android/repository/platform-tools_r${ANDROID_SDK_PLATFORM_TOOLS_VERSION}-darwin.zip" "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" "${ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX}"
+    else
+        download_and_extract 'android-sdk-platform-tools' "https://dl.google.com/android/repository/platform-tools_r${ANDROID_SDK_PLATFORM_TOOLS_VERSION}-linux.zip" "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" "${ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX}"
+    fi
+
+    echo_green_text "SUCCESS: Set-up Android SDK Platform Tools at ${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}"
+}
+
 # Get Application Services
 function get_as() {
     echo_red_text 'Downloading Application Services...'
@@ -917,6 +949,10 @@ fi
 
 if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36}" == 1 ]; then
     get_android_sdk_platform_36
+fi
+
+if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS}" == 1 ]; then
+    get_android_sdk_platform_tools
 fi
 
 if [ "${IRONFOX_GET_SOURCE_AS}" == 1 ]; then

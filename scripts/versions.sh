@@ -96,6 +96,12 @@ ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='991db0bbf23acd212b6be57033cdb3ecd5c8c8
 ### https://developer.android.com/tools/releases/platforms
 ANDROID_SDK_PLATFORM_VERSION='36.1'
 
+## Android SDK Platform Tools
+### https://developer.android.com/tools/releases/platform-tools
+ANDROID_SDK_PLATFORM_TOOLS_VERSION='36.0.2'
+ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='e7a024df013af813157794054a203506dfc7dc776479b82bb83e5ba8a538e8a749b662bf3e05a3822c77dfca9aa221c4ae67e69921f8dfc78fee7acc5bb4e63f'
+ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='1fefcd4ef10740bfbf1e46c4968d879c621315f7616c8eaecd297b3c89af2007a59a1c18f8a89afbd1afeeb9989c2eeb0d3f189e3502e42e62b76c79d69b7385'
+
 ### This is used for ex. setting microG's compile SDK and target SDK version
 ANDROID_SDK_TARGET='36'
 
