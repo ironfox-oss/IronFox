@@ -8,7 +8,7 @@ FIREFOX_COMMIT='6de52d04ec7b706f103e14bf37137b3a7a94556e'
 FIREFOX_SHA512SUM='89391b168d1e697ae59e2a5878050ebba960b90d7152b6ce3e526dd73db13241ee4087848cccd45fb4abb5e5adb02a99bbab973bc27b4242cc8f541856fbd747'
 FIREFOX_VERSION='148.0.2'
 
-IRONFOX_VERSION="${FIREFOX_VERSION}"
+IRONFOX_VERSION="${FIREFOX_VERSION}.1"
 
 ## Application Services
 ### Version: v148.0
@@ -20,8 +20,8 @@ APPSERVICES_SHA512SUM='01cab72477772e4c7b3a49b9a1b11493659794c70e02f15efc51f4657
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='487e1166cd4877adbd0b2e4754441bcd4715be58'
-L10N_SHA512SUM='7deacdf49eaa44d26c6fbdead71b10c0b42cba5db6904c8b7e203e016be1b0c6d13bad2d4a3dcceed8071caef8f994dff3f61545f2aab4caab0027a4027fa267'
+L10N_COMMIT='4dc0aefe1fb319a9efff5f70401dc8c0e02bd2de'
+L10N_SHA512SUM='5ab7c095f91c000803ddd62646e54ab0e5f0163a17336d4c1a95e337a2a283d2d370f82c3c903614d983581d138957dd7c24e3bca153793b873c1352a89c8b05'
 
 ## Glean
 ### Version: v66.2.0
