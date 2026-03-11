@@ -30,9 +30,8 @@ ac_add_options --enable-stl-hardening
 export MOZ_SECURITY_HARDENING=1
 
 # Enable performance optimizations
-ac_add_options --enable-lto='full'
 ac_add_options --enable-optimize='-O3 -ftree-vectorize'
-export MOZ_LTO='full'
+export MOZ_LTO=1
 export MOZ_OPTIMIZE_FLAGS='-O3 -ftree-vectorize'
 export RUSTC_OPT_LEVEL=3
 
