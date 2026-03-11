@@ -243,6 +243,10 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for Bundletool...'
         "${IRONFOX_SED}" -i -e "s|BUNDLETOOL_SHA512SUM='.*'|BUNDLETOOL_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for Bundletool'
+    elif [ "${old_sha512sum}" == "${BUNDLETOOL_REPO_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for Bundletool (repository)...'
+        "${IRONFOX_SED}" -i -e "s|BUNDLETOOL_REPO_SHA512SUM='.*'|BUNDLETOOL_REPO_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Bundletool (repository)'
     elif [ "${old_sha512sum}" == "${CBINDGEN_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for cbindgen...'
         "${IRONFOX_SED}" -i -e "s|CBINDGEN_SHA512SUM='.*'|CBINDGEN_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -647,10 +651,14 @@ function get_as() {
 # Get + set-up Bundletool
 function get_bundletool() {
     echo_red_text 'Downloading Bundletool...'
-    download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "${IRONFOX_BUNDLETOOL_JAR}"
+    if [[ "${IRONFOX_NO_PREBUILDS}" == "1" ]]; then
+        download_and_extract 'bundletool' "https://github.com/google/bundletool/archive/${BUNDLETOOL_REPO_COMMIT}.tar.gz" "${IRONFOX_BUNDLETOOL_DIR}" "${BUNDLETOOL_REPO_SHA512SUM}"
+    else
+        download "https://github.com/google/bundletool/releases/download/${BUNDLETOOL_VERSION}/bundletool-all-${BUNDLETOOL_VERSION}.jar" "${IRONFOX_BUNDLETOOL_JAR}"
 
-    # Validate SHA512sum
-    validate_sha512sum "${BUNDLETOOL_SHA512SUM}" "${IRONFOX_BUNDLETOOL_JAR}"
+        # Validate SHA512sum
+        validate_sha512sum "${BUNDLETOOL_SHA512SUM}" "${IRONFOX_BUNDLETOOL_JAR}"
+    fi
 
     if ! [[ -f "${IRONFOX_BUNDLETOOL}" ]]; then
         echo_red_text 'Creating bundletool script...'
