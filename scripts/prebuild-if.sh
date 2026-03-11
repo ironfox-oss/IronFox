@@ -1025,15 +1025,6 @@ if [[ -n "${FDROID_BUILD+x}" ]]; then
         --svn_version $LLVM_SVN \
         --patch_metadata_file "${llvm_android}/patches/PATCHES.json" \
         --src_path "${llvm}"
-
-    # Bundletool
-    pushd "${IRONFOX_BUNDLETOOL_DIR}"
-    # Always use our Gradle wrapper with our Gradle flags/configuration
-    localize_gradle
-
-    # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
-    localize_maven
-    popd
 fi
 
 # Fail on use of prebuilt binary
@@ -1146,5 +1137,21 @@ if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
     pushd "${IRONFOX_PREBUILDS}"
     echo "Preparing the prebuild build repository..."
     bash -x "${IRONFOX_PREBUILDS}/scripts/prebuild.sh"
+    popd
+fi
+
+#
+## Bundletool
+#
+
+if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
+    pushd "${IRONFOX_BUNDLETOOL_DIR}"
+    echo "Preparing the Bundletool repository..."
+
+    # Always use our Gradle wrapper with our Gradle flags/configuration
+    localize_gradle
+
+    # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
+    localize_maven
     popd
 fi

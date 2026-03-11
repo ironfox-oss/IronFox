@@ -312,9 +312,12 @@ function build_bundletool() {
     # Bundletool
     echo_red_text 'Building Bundletool...'
 
-    pushd "${IRONFOX_BUNDLETOOL}"
+    pushd "${IRONFOX_BUNDLETOOL_DIR}"
+    clean_gradle
     "${IRONFOX_GRADLE}" assemble
     popd
+
+    cp -f "${IRONFOX_BUNDLETOOL_DIR}/build/libs/bundletool.jar" "${IRONFOX_BUNDLETOOL_JAR}"
 
     echo_green_text 'SUCCESS: Built Bundletool'
 }
@@ -836,11 +839,11 @@ echo_green_text 'SUCCESS: Prepared build environment'
 echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})..."
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
-    build_bundletool
     build_llvm
 fi
 
 if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
+    build_bundletool
     build_prebuilds
 fi
 
