@@ -17,6 +17,10 @@ mode="$2"
 # Set-up target parameters
 IRONFOX_GET_SOURCE_ANDROID_NDK=0
 IRONFOX_GET_SOURCE_ANDROID_SDK=0
+IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS=0
+IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35=0
+IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM=0
+IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36=0
 IRONFOX_GET_SOURCE_AS=0
 IRONFOX_GET_SOURCE_BUNDLETOOL=0
 IRONFOX_GET_SOURCE_CBINDGEN=0
@@ -39,6 +43,18 @@ if [ "${target}" == 'android-ndk' ]; then
 elif [ "${target}" == 'android-sdk' ]; then
     # Get Android SDK
     IRONFOX_GET_SOURCE_ANDROID_SDK=1
+elif [ "${target}" == 'android-sdk-build-tools' ]; then
+    # Get Android SDK Build Tools (latest)
+    IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS=1
+elif [ "${target}" == 'android-sdk-build-tools-35' ]; then
+    # Get Android SDK Build Tools (35)
+    IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35=1
+elif [ "${target}" == 'android-sdk-platform' ]; then
+    # Get Android SDK Platform (latest)
+    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM=1
+elif [ "${target}" == 'android-sdk-platform-36' ]; then
+    # Get Android SDK Platform (36)
+    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36=1
 elif [ "${target}" == 'as' ]; then
     # Get Application Services
     IRONFOX_GET_SOURCE_AS=1
@@ -88,6 +104,10 @@ elif [ "${target}" == 'all' ]; then
     # If no argument is specified (or argument is set to "all"), just get everything
     IRONFOX_GET_SOURCE_ANDROID_NDK=1
     IRONFOX_GET_SOURCE_ANDROID_SDK=1
+    IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS=1
+    IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35=1
+    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM=1
+    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36=1
     IRONFOX_GET_SOURCE_AS=1
     IRONFOX_GET_SOURCE_BUNDLETOOL=1
     IRONFOX_GET_SOURCE_CBINDGEN=1
@@ -108,6 +128,10 @@ else
     echo 'All: all (Default)'
     echo 'Android NDK: android-ndk'
     echo 'Android SDK: android-sdk'
+    echo 'Android SDK Build Tools (latest): android-sdk-build-tools'
+    echo 'Android SDK Build Tools (35.0.0): android-sdk-build-tools-35'
+    echo 'Android SDK Platform (latest): android-sdk-platform'
+    echo 'Android SDK Platform (36): android-sdk-platform-36'
     echo 'Application Services: as'
     echo 'Bundletool: bundletool'
     echo 'cbindgen: cbindgen'
@@ -176,6 +200,22 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for Android SDK (OS X)...'
         "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_SHA512SUM_OSX='.*'|ANDROID_SDK_SHA512SUM_OSX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK (OS X)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK Build Tools (latest) (Linux)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX='.*'|ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK Build Tools (latest) (Linux)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK Build Tools (latest) (OS X)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX='.*'|ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK Build Tools (latest) (OS X)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK Build Tools (35.0.0) (Linux)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX='.*'|ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK Build Tools (35.0.0) (Linux)'
+    elif [ "${old_sha512sum}" == "${ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX}" ]; then
+        echo_red_text 'Updating SHA512sum for Android SDK Build Tools (35.0.0) (OS X)...'
+        "${IRONFOX_SED}" -i -e "s|ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='.*'|ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Android SDK Build Tools (35.0.0) (OS X)'
     elif [ "${old_sha512sum}" == "${APPSERVICES_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for Application Services...'
         "${IRONFOX_SED}" -i -e "s|APPSERVICES_SHA512SUM='.*'|APPSERVICES_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -442,11 +482,6 @@ function download_and_extract() {
 
 # Get Android NDK
 function get_android_ndk() {
-    if  [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
-        echo_red_text "ERROR: You tried to download the Android NDK, but you don't have the Android SDK set-up yet."
-        exit 1
-    fi
-
     echo_red_text 'Downloading the Android NDK...'
 
     if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
@@ -475,28 +510,99 @@ function get_android_sdk() {
         fi
     fi
     mkdir -p "${IRONFOX_ANDROID_SDK}/cmdline-tools"
-    mkdir -p "${IRONFOX_ANDROID_SDK}/ndk"
 
     if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-        download_and_extract 'android-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_OSX}"
+        download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_OSX}"
     else
-        download_and_extract 'android-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_LINUX}"
+        download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_LINUX}"
     fi
 
     # Accept Android SDK licenses
     { yes || true; } | ${IRONFOX_ANDROID_SDKMANAGER} --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
 
-    ${IRONFOX_ANDROID_SDKMANAGER} "build-tools;${ANDROID_BUILDTOOLS_VERSION}"
-    ${IRONFOX_ANDROID_SDKMANAGER} "platforms;android-${ANDROID_PLATFORM_VERSION}"
+    echo_green_text "SUCCESS: Set-up Android SDK at ${IRONFOX_ANDROID_SDK}"
+}
 
-    # These are currently required for Glean...
-    ## for reference:
-    ### https://github.com/mozilla/glean/blob/main/docs/dev/android/sdk-ndk-versions.md
-    ### https://github.com/mozilla/glean/blob/main/docs/dev/android/setup-android-build-environment.md
-    ${IRONFOX_ANDROID_SDKMANAGER} 'build-tools;35.0.0'
+# Get Android SDK Build Tools (latest)
+function get_android_sdk_build_tools() {
+    echo_red_text 'Downloading Android SDK Build Tools (latest)...'
+
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        download_and_extract 'android-sdk-build-tools' "https://dl.google.com/android/repository/build-tools_${ANDROID_SDK_BUILD_TOOLS_VERSION}_macosx.zip" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX}"
+    else
+        download_and_extract 'android-sdk-build-tools' "https://dl.google.com/android/repository/build-tools_${ANDROID_SDK_BUILD_TOOLS_VERSION}_linux.zip" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX}"
+    fi
+
+    echo_green_text "SUCCESS: Set-up Android SDK Build Tools (latest) at ${IRONFOX_ANDROID_SDK_BUILD_TOOLS}"
+}
+
+# Get Android SDK Build Tools (35)
+## (Needed by Glean:
+### https://github.com/mozilla/glean/blob/main/docs/dev/android/sdk-ndk-versions.md
+### https://github.com/mozilla/glean/blob/main/docs/dev/android/setup-android-build-environment.md)
+function get_android_sdk_build_tools_35() {
+    echo_red_text 'Downloading Android SDK Build Tools (35.0.0)...'
+
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        download_and_extract 'android-sdk-build-tools-35' "https://dl.google.com/android/repository/build-tools_r35_macosx.zip" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" "${ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX}"
+    else
+        download_and_extract 'android-sdk-build-tools-35' "https://dl.google.com/android/repository/build-tools_r35_linux.zip" "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" "${ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX}"
+    fi
+
+    echo_green_text "SUCCESS: Set-up Android SDK Build Tools (35.0.0) at ${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}"
+}
+
+# Get Android SDK Platform (latest)
+function get_android_sdk_platform() {
+    if  [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
+        echo_red_text "ERROR: You tried to download the Android SDK Platform (latest), but you don't have the Android SDK set-up yet."
+        exit 1
+    fi
+
+    if [[ -d "${IRONFOX_ANDROID_SDK}/platforms/android-${ANDROID_SDK_PLATFORM_VERSION}" ]]; then
+        echo_red_text "Android SDK Platform (latest) is already installed at ${IRONFOX_ANDROID_SDK}/platforms/android-${ANDROID_SDK_PLATFORM_VERSION}"
+        read -p "Do you want to re-download it? [y/N] " -n 1 -r
+        echo
+        if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
+            return 0
+        else
+            rm -rf "${IRONFOX_ANDROID_SDK}/platforms/android-${ANDROID_SDK_PLATFORM_VERSION}"
+        fi
+    fi
+
+    echo_red_text 'Downloading Android SDK Platform (latest)...'
+
+    ${IRONFOX_ANDROID_SDKMANAGER} "platforms;android-${ANDROID_SDK_PLATFORM_VERSION}"
+
+    echo_green_text "SUCCESS: Set-up Android SDK Platform (latest) at ${IRONFOX_ANDROID_SDK}/platforms/android-${ANDROID_SDK_PLATFORM_VERSION}"
+}
+
+# Get Android SDK Platform (36)
+## (Needed by Glean:
+### https://github.com/mozilla/glean/blob/main/docs/dev/android/sdk-ndk-versions.md
+### https://github.com/mozilla/glean/blob/main/docs/dev/android/setup-android-build-environment.md)
+function get_android_sdk_platform_36() {
+    if  [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
+        echo_red_text "ERROR: You tried to download the Android SDK Platform (36), but you don't have the Android SDK set-up yet."
+        exit 1
+    fi
+
+    if [[ -d "${IRONFOX_ANDROID_SDK}/platforms/android-36" ]]; then
+        echo_red_text "Android SDK Platform (36) is already installed at ${IRONFOX_ANDROID_SDK}/platforms/android-36"
+        read -p "Do you want to re-download it? [y/N] " -n 1 -r
+        echo
+        if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
+            return 0
+        else
+            rm -rf "${IRONFOX_ANDROID_SDK}/platforms/android-36"
+        fi
+    fi
+
+    echo_red_text 'Downloading Android SDK Platform (36)...'
+
     ${IRONFOX_ANDROID_SDKMANAGER} 'platforms;android-36'
 
-    echo_green_text "SUCCESS: Set-up Android SDK at ${IRONFOX_ANDROID_SDK}"
+    echo_green_text "SUCCESS: Set-up Android SDK Platform (36) at ${IRONFOX_ANDROID_SDK}/platforms/android-36"
 }
 
 # Get Application Services
@@ -789,13 +895,28 @@ function get_rust() {
     echo_green_text "SUCCESS: Set-up Rust environment at ${IRONFOX_CARGO_HOME}"
 }
 
-# This needs to run before we get the Android NDK
+if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
+    get_android_ndk
+fi
+
 if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK}" == 1 ]; then
     get_android_sdk
 fi
 
-if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
-    get_android_ndk
+if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS}" == 1 ]; then
+    get_android_sdk_build_tools
+fi
+
+if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35}" == 1 ]; then
+    get_android_sdk_build_tools_35
+fi
+
+if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM}" == 1 ]; then
+    get_android_sdk_platform
+fi
+
+if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36}" == 1 ]; then
+    get_android_sdk_platform_36
 fi
 
 if [ "${IRONFOX_GET_SOURCE_AS}" == 1 ]; then

@@ -159,6 +159,22 @@ if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3" ]]; then
     ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3"
 fi
 
+# Create Android NDK symlink
+if [[ ! -d "${IRONFOX_ANDROID_SDK}/ndk/${ANDROID_NDK_REVISION}" ]]; then
+    mkdir -p "${IRONFOX_ANDROID_SDK}/ndk"
+    ln -s "${IRONFOX_ANDROID_NDK}" "${IRONFOX_ANDROID_SDK}/ndk/${ANDROID_NDK_REVISION}"
+fi
+
+# Create Android SDK Build Tools symlinks
+if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}" ]]; then
+    mkdir -p "${IRONFOX_ANDROID_SDK}/build-tools"
+    ln -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" "${IRONFOX_ANDROID_SDK}/build-tools/${ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}"
+fi
+if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0" ]]; then
+    mkdir -p "${IRONFOX_ANDROID_SDK}/build-tools"
+    ln -s "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35}" "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0"
+fi
+
 #
 # Fenix
 #
@@ -1090,7 +1106,7 @@ pushd "${IRONFOX_GMSCORE}"
 localize_gradle
 
 # Bump Android build tools
-"${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${ANDROID_BUILDTOOLS_VERSION}'|g" build.gradle
+"${IRONFOX_SED}" -i -e "s|ext.androidBuildVersionTools = .*|ext.androidBuildVersionTools = '${ANDROID_SDK_BUILD_TOOLS_VERSION_STRING}'|g" build.gradle
 
 # Bump Android compile SDK
 "${IRONFOX_SED}" -i -e "s|ext.androidCompileSdk = .*|ext.androidCompileSdk = ${ANDROID_SDK_TARGET}|g" build.gradle
