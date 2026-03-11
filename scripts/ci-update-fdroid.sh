@@ -14,7 +14,7 @@ git lfs install
 # Download all assets from the release
 curl --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
 "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases/${CI_COMMIT_TAG}/assets/links" \
-| jq -c '.[] | select(.name | endswith(".apk"))' \
+| jq -c '.[] | select(.name | endswith(".apk") and (endswith("universal.apk") | not))' \
 | while read -r asset; do
     name=$(echo "${asset}" | jq -r '.name')
     url=$(echo "${asset}" | jq -r '.direct_asset_url')

@@ -63,9 +63,8 @@ export IRONFOX_REVISION="$(git log -1 --format="%H" | tail -n 1)"
 export IRONFOX_ENV_HELPERS="${IRONFOX_SCRIPTS}/env_helpers.sh"
 source "${IRONFOX_ENV_HELPERS}"
 
-# Include version info
+# Version info
 export IRONFOX_VERSIONS="${IRONFOX_SCRIPTS}/versions.sh"
-source "${IRONFOX_VERSIONS}"
 
 # IronFox outputs directory
 IRONFOX_OUTPUTS_DEFAULT="${IRONFOX_BUILD}/outputs"
@@ -160,20 +159,50 @@ if [[ -z "${IRONFOX_CI_BUILD_FINAL+x}" ]]; then
     export IRONFOX_CI_BUILD_FINAL="${IRONFOX_CI_BUILD_FINAL_DEFAULT}"
 fi
 
+# Android NDK
+IRONFOX_ANDROID_NDK_DEFAULT="${IRONFOX_EXTERNAL}/android-ndk"
+if [[ -z "${IRONFOX_ANDROID_NDK+x}" ]]; then
+    export IRONFOX_ANDROID_NDK="${IRONFOX_ANDROID_NDK_DEFAULT}"
+fi
+
 # Android SDK
 IRONFOX_ANDROID_SDK_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk"
 if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]]; then
     export IRONFOX_ANDROID_SDK="${IRONFOX_ANDROID_SDK_DEFAULT}"
 fi
 
-# Android NDK
-IRONFOX_ANDROID_NDK_DEFAULT="${IRONFOX_ANDROID_SDK}/ndk/${ANDROID_NDK_REVISION}"
-if [[ -z "${IRONFOX_ANDROID_NDK+x}" ]]; then
-    export IRONFOX_ANDROID_NDK="${IRONFOX_ANDROID_NDK_DEFAULT}"
-fi
-
 ## sdkmanager
 export IRONFOX_ANDROID_SDKMANAGER="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin/sdkmanager"
+
+# Android SDK Build Tools (Latest)
+IRONFOX_ANDROID_SDK_BUILD_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools"
+if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS+x}" ]]; then
+    export IRONFOX_ANDROID_SDK_BUILD_TOOLS="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_DEFAULT}"
+fi
+
+## apksigner
+IRONFOX_APKSIGNER_DEFAULT="${IRONFOX_ANDROID_SDK_BUILD_TOOLS}/apksigner"
+if [[ -z "${IRONFOX_APKSIGNER+x}" ]]; then
+    export IRONFOX_APKSIGNER="${IRONFOX_APKSIGNER_DEFAULT}"
+fi
+
+# Android SDK Build Tools (35 - needed by Glean)
+IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools-35"
+if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35+x}" ]]; then
+    export IRONFOX_ANDROID_SDK_BUILD_TOOLS_35="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_DEFAULT}"
+fi
+
+# Android SDK Platform Tools
+IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-platform-tools"
+if [[ -z "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS+x}" ]]; then
+    export IRONFOX_ANDROID_SDK_PLATFORM_TOOLS="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_DEFAULT}"
+fi
+
+## ADB
+IRONFOX_ADB_DEFAULT="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}/adb"
+if [[ -z "${IRONFOX_ADB+x}" ]]; then
+    export IRONFOX_ADB="${IRONFOX_ADB_DEFAULT}"
+fi
 
 # Application Services
 IRONFOX_AS_DEFAULT="${IRONFOX_EXTERNAL}/application-services"
