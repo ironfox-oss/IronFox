@@ -44,6 +44,7 @@ upload_asset() {
     echo "\`\`\`sh" >> "${CHECKSUMS_FILE}"
     echo "$(sha512sum -b "${file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
     echo "\`\`\`sh" >> "${CHECKSUMS_FILE}"
+    echo '' >> "${CHECKSUMS_FILE}"
     upload_to_package_registry "${file}" "${package_name}"
     assets+=("{\"name\": \"${file_name}\",\"url\": \"${GENERIC_PACKAGES_URL}/${package_name}/${IRONFOX_VERSION}/${file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${file_name}\"}")
 }
