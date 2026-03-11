@@ -451,6 +451,19 @@ index a8299a9eaf..83ec862a6b 100644
      customProviderUrl: String,
      customProviderErrorState: CustomProviderErrorState,
      onCustomCancelClicked: () -> Unit,
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 81d95a9666..66594afdef 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2210,7 +2210,7 @@ class Settings(
+      */
+     var useOnboardingRedesign by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_use_onboarding_redesign),
+-        default = { FxNimbus.features.junoOnboarding.value().useOnboardingRedesign },
++        default = { false },
+     )
+ 
+     /**
 -- 
 2.53.0
 
