@@ -20,8 +20,8 @@ APPSERVICES_SHA512SUM='01cab72477772e4c7b3a49b9a1b11493659794c70e02f15efc51f4657
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='4dc0aefe1fb319a9efff5f70401dc8c0e02bd2de'
-L10N_SHA512SUM='5ab7c095f91c000803ddd62646e54ab0e5f0163a17336d4c1a95e337a2a283d2d370f82c3c903614d983581d138957dd7c24e3bca153793b873c1352a89c8b05'
+L10N_COMMIT='0343a317cdd0cc9b0da5f11437d05f30d438bd72'
+L10N_SHA512SUM='dec038cae7ed4c68b5c1aca04f40bb371a19038ebc4c79bb0e2dd31c1dff328b46ea26b755d7ec209866b891939a52571f43d484e3df652177b87d6cf972aa98'
 
 ## Glean
 ### Version: v66.2.0
