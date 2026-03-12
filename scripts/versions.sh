@@ -141,9 +141,9 @@ RUST_VERSION="${RUST_MAJOR_VERSION}.0"
 
 ## rustup
 ### https://github.com/rust-lang/rustup/tags
-RUSTUP_COMMIT='e4f3ad6f893e56ca10f0a329c401a5eafab69607'
-RUSTUP_SHA512SUM='b44833a5cc74448c8ace263bea5499b9dccd0b3b5ad08bbd6c5aafcefe7f421a77d04cdf0e24f1e19de0bf4ff93e170d035665ea10afd3eb228a1633ad13dfaa'
-RUSTUP_VERSION='1.28.2'
+RUSTUP_COMMIT='28d1352dbcb436d3111c3594b9e1588e94950464'
+RUSTUP_SHA512SUM='cd9fd64eabc989f19a6a16e9cd2caabe935082e2715b9308150f86d3839c99eb9a7e42a7ef6730c6d956d870638ee89a04dd9e7e14fe243cc165967b7f2918da'
+RUSTUP_VERSION='1.29.0'
 
 # For prebuilds
 ## https://gitlab.com/ironfox-oss/prebuilds
