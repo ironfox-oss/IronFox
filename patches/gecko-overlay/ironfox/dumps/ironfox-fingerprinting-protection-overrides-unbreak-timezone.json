@@ -6,6 +6,10 @@
         },
         {
             "overrides": "-JSDateTimeUTC",
+            "firstPartyDomain": "calendly.com"
+        },
+        {
+            "overrides": "-JSDateTimeUTC",
             "firstPartyDomain": "google.com"
         },
         {
