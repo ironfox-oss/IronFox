@@ -721,21 +721,10 @@ function get_firefox_l10n() {
 # Get + set-up F-Droid's Gradle script
 function get_gradle() {
     echo_red_text "Downloading F-Droid's Gradle script..."
-    download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${IRONFOX_GRADLE_DIR}/gradlew.py"
+    download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${IRONFOX_GRADLE_PY}"
 
     # Validate SHA512sum
-    validate_sha512sum "${GRADLE_SHA512SUM}" "${IRONFOX_GRADLE_DIR}/gradlew.py"
-
-    if ! [[ -f "${IRONFOX_GRADLE}" ]]; then
-        echo_red_text 'Creating Gradle script...'
-        {
-            echo '#!/bin/bash'
-            echo "exec python3 ${IRONFOX_GRADLE_DIR}/gradlew.py \"\$@\""
-        } > "${IRONFOX_GRADLE}"
-        chmod +x "${IRONFOX_GRADLE}"
-    fi
-
-    echo_green_text "SUCCESS: Set-up Gradle at ${IRONFOX_GRADLE}"
+    validate_sha512sum "${GRADLE_SHA512SUM}" "${IRONFOX_GRADLE_PY}"
 }
 
 # Get Glean
@@ -853,7 +842,7 @@ function get_pip() {
     fi
 
     echo_red_text 'Creating pip environment...'
-    python3.9 -m venv "${IRONFOX_PIP_DIR}"
+    "${IRONFOX_PYTHON}" -m venv "${IRONFOX_PIP_DIR}"
 
     echo_red_text 'Downloading pip...'
     download_and_extract 'pip' "https://github.com/pypa/pip/archive/${PIP_COMMIT}.tar.gz" "${IRONFOX_PIP}" "${PIP_SHA512SUM}"

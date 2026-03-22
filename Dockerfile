@@ -21,7 +21,7 @@ RUN dnf install -y \
     ninja-build \
     patch \
     perl \
-    python3.9 \
+    python \
     shasum \
     temurin-8-jdk \
     temurin-17-jdk \
