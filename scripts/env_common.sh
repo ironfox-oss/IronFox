@@ -218,7 +218,7 @@ IRONFOX_BUNDLETOOL_DIR_DEFAULT="${IRONFOX_EXTERNAL}/bundletool"
 if [[ -z "${IRONFOX_BUNDLETOOl_DIR+x}" ]]; then
     export IRONFOX_BUNDLETOOL_DIR="${IRONFOX_BUNDLETOOL_DIR_DEFAULT}"
 fi
-export IRONFOX_BUNDLETOOL="${IRONFOX_BUNDLETOOL_DIR}/bundletool"
+export IRONFOX_BUNDLETOOL="${IRONFOX_SCRIPTS}/bundletool.sh"
 export IRONFOX_BUNDLETOOL_JAR="${IRONFOX_BUNDLETOOL_DIR}/bundletool.jar"
 
 # cbindgen
@@ -375,6 +375,7 @@ fi
 if [[ -z "${IRONFOX_JAVA_HOME+x}" ]]; then
     export IRONFOX_JAVA_HOME="${IRONFOX_JAVA_HOME_DEFAULT}"
 fi
+export IRONFOX_JAVA="${IRONFOX_JAVA_HOME}/bin/java"
 
 # libclang
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
