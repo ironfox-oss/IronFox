@@ -660,16 +660,7 @@ function get_bundletool() {
         validate_sha512sum "${BUNDLETOOL_SHA512SUM}" "${IRONFOX_BUNDLETOOL_JAR}"
     fi
 
-    if ! [[ -f "${IRONFOX_BUNDLETOOL}" ]]; then
-        echo_red_text 'Creating bundletool script...'
-        {
-            echo '#!/bin/bash'
-            echo "exec java -jar ${IRONFOX_BUNDLETOOL_JAR} \"\$@\""
-        } > "${IRONFOX_BUNDLETOOL}"
-        chmod +x "${IRONFOX_BUNDLETOOL}"
-    fi
-
-    echo_green_text "SUCCESS: Set-up Bundletool at ${IRONFOX_BUNDLETOOL}"
+    echo_green_text "SUCCESS: Set-up Bundletool at ${IRONFOX_BUNDLETOOL_DIR}"
 }
 
 # Get cbindgen
