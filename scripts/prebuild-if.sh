@@ -51,7 +51,7 @@ function glean_localize_gradle() {
 
 function localize_maven() {
     # Replace custom Maven repositories with mavenLocal()
-    find ./* -name '*.gradle' -type f -exec python3 "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
+    find ./* -name '*.gradle' -type f -exec "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
 }
 
 # Applies the overlay files in the given directory
@@ -1021,7 +1021,7 @@ if [[ -n "${FDROID_BUILD+x}" ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
     LLVM_SVN='530567'
-    python3 "${toolchain_utils}/llvm_tools/patch_manager.py" \
+    "${IRONFOX_PYTHON}" "${toolchain_utils}/llvm_tools/patch_manager.py" \
         --svn_version $LLVM_SVN \
         --patch_metadata_file "${llvm_android}/patches/PATCHES.json" \
         --src_path "${llvm}"

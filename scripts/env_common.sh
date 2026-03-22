@@ -339,7 +339,8 @@ IRONFOX_GRADLE_DIR_DEFAULT="${IRONFOX_EXTERNAL}/gradle"
 if [[ -z "${IRONFOX_GRADLE_DIR+x}" ]]; then
     export IRONFOX_GRADLE_DIR="${IRONFOX_GRADLE_DIR_DEFAULT}"
 fi
-export IRONFOX_GRADLE="${IRONFOX_GRADLE_DIR}/gradle"
+export IRONFOX_GRADLE="${IRONFOX_SCRIPTS}/gradle.sh"
+export IRONFOX_GRADLE_PY="${IRONFOX_GRADLE_DIR}/gradlew.py"
 
 ## Gradle cache
 IRONFOX_GRADLE_CACHE_DEFAULT="${IRONFOX_BUILD}/gradle/cache"
@@ -431,8 +432,15 @@ if [[ -z "${IRONFOX_PIP+x}" ]]; then
     export IRONFOX_PIP="${IRONFOX_PIP_DEFAULT}"
 fi
 
-# Python (Glean)
-export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
+# Python
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    IRONFOX_PYTHON_DEFAULT='/opt/homebrew/bin/python'
+else
+    IRONFOX_PYTHON_DEFAULT="$(which python)"
+fi
+if [[ -z "${IRONFOX_PYTHON+x}" ]]; then
+    export IRONFOX_PYTHON="${IRONFOX_PYTHON_DEFAULT}"
+fi
 
 # Python (pip) environment
 IRONFOX_PIP_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
@@ -441,10 +449,8 @@ if [[ -z "${IRONFOX_PIP_DIR+x}" ]]; then
 fi
 export IRONFOX_PIP_ENV="${IRONFOX_PIP_DIR}/bin/activate"
 
-## For macOS, ensure that Python 3.9 is in PATH
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    export PATH="${PATH}:$(brew --prefix)/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/bin"
-fi
+## Python (pip) environment - Glean
+export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
 
 # Rust (cargo)
 IRONFOX_CARGO_HOME_DEFAULT="${IRONFOX_BUILD}/.cargo"

@@ -13,7 +13,7 @@ function deglean() {
     if [ -n "${gradle_files}" ]; then
         for file in $gradle_files; do
             local modified=false
-            python3 "${IRONFOX_SCRIPTS}/deglean.py" "${file}"
+            "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/deglean.py" "${file}"
 
             if grep -q 'apply plugin.*glean' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*apply plugin:.*glean.*)$/\/\/ \1/' "${file}"

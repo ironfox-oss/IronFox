@@ -81,7 +81,7 @@ export PHOENIX_EXTRA_POLICIES_OUTPUT_DIR_ANDROID="${IRONFOX_GECKO}/ironfox/prefs
 export PHOENIX_SPECS=0
 
 # Python (Glean)
-export GLEAN_PYTHON="$(which python)"
+export GLEAN_PYTHON="${IRONFOX_PYTHON}"
 export GLEAN_PYTHON_WHEELS_DIR="${IRONFOX_GLEAN_PARSER_WHEELS}"
 
 # Rust (cargo)
