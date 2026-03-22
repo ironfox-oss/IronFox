@@ -58,6 +58,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
             gnu-tar \
             m4 \
             make \
+            python \
             temurin@17 \
             xz \
             zlib || error_fn
@@ -72,7 +73,6 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         ninja \
         node \
         perl \
-        python \
         yq || error_fn
     echo
 

@@ -437,7 +437,7 @@ fi
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
     IRONFOX_PYTHON_DEFAULT='/opt/homebrew/bin/python'
 else
-    IRONFOX_PYTHON_DEFAULT="$(which python)"
+    IRONFOX_PYTHON_DEFAULT='/usr/bin/python'
 fi
 if [[ -z "${IRONFOX_PYTHON+x}" ]]; then
     export IRONFOX_PYTHON="${IRONFOX_PYTHON_DEFAULT}"
