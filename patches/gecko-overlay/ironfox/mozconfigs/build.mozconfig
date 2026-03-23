@@ -4,6 +4,9 @@
 # (translation: when --disable-compile-environment is not set)
 # These are necessary to set in a different file, because setting --disable-compile-environment argument with them present results in build errors
 
+# We're building, so enable the compile environment
+ac_add_options --enable-compile-environment
+
 # Allow replacing the malloc implementation
 ac_add_options --enable-replace-malloc
 
