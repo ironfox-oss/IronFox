@@ -32,6 +32,7 @@ IRONFOX_GET_SOURCE_GLEAN_PARSER=0
 IRONFOX_GET_SOURCE_GRADLE=0
 IRONFOX_GET_SOURCE_GYP=0
 IRONFOX_GET_SOURCE_MICROG=0
+IRONFOX_GET_SOURCE_NODE=0
 IRONFOX_GET_SOURCE_PHOENIX=0
 IRONFOX_GET_SOURCE_PIP=0
 IRONFOX_GET_SOURCE_PREBUILDS=0
@@ -89,6 +90,9 @@ elif [ "${target}" == 'gyp' ]; then
 elif [ "${target}" == 'microg' ]; then
     # Get microG
     IRONFOX_GET_SOURCE_MICROG=1
+elif [ "${target}" == 'node' ]; then
+    # Get + set-up Node.js
+    IRONFOX_GET_SOURCE_NODE=1
 elif [ "${target}" == 'phoenix' ]; then
     # Get Phoenix
     IRONFOX_GET_SOURCE_PHOENIX=1
@@ -123,6 +127,7 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_GRADLE=1
     IRONFOX_GET_SOURCE_GYP=1
     IRONFOX_GET_SOURCE_MICROG=1
+    IRONFOX_GET_SOURCE_NODE=1
     IRONFOX_GET_SOURCE_PHOENIX=1
     IRONFOX_GET_SOURCE_PIP=1
     IRONFOX_GET_SOURCE_PREBUILDS=1
@@ -148,6 +153,7 @@ else
     echo 'Gradle: gradle'
     echo 'GYP: gyp'
     echo 'microG: microg'
+    echo 'Node.js: node'
     echo 'Phoenix: phoenix'
     echo 'pip: pip'
     echo 'Prebuilds: prebuilds'
@@ -279,6 +285,10 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for firefox-l10n...'
         "${IRONFOX_SED}" -i -e "s|L10N_SHA512SUM='.*'|L10N_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for firefox-l10n'
+    elif [ "${old_sha512sum}" == "${NVM_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for nvm...'
+        "${IRONFOX_SED}" -i -e "s|NVM_SHA512SUM='.*'|NVM_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for nvm'
     elif [ "${old_sha512sum}" == "${PHOENIX_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for Phoenix...'
         "${IRONFOX_SED}" -i -e "s|PHOENIX_SHA512SUM='.*'|PHOENIX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -807,6 +817,30 @@ function get_microg() {
     echo_green_text "SUCCESS: Set-up microG at ${IRONFOX_GMSCORE}"
 }
 
+# Get + set-up Node.js
+function get_node() {
+    if [[ -d "${IRONFOX_NVM_DIR}" ]]; then
+        echo_red_text "The nvm environment is already set-up at ${IRONFOX_NVM_DIR}"
+        read -p "Do you want to re-create it? [y/N] " -n 1 -r
+        echo
+        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+            rm -rf "${IRONFOX_NVM_DIR}"
+        fi
+    fi
+    mkdir -p "${IRONFOX_NVM_DIR}"
+
+    echo_red_text 'Downloading nvm...'
+    download "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_COMMIT}/install.sh" "${IRONFOX_DOWNLOADS}/nvm-install.sh"
+
+    # Validate SHA512sum
+    validate_sha512sum "${NVM_SHA512SUM}" "${IRONFOX_DOWNLOADS}/nvm-install.sh"
+
+    echo_red_text 'Installing Node.js...'
+    bash -x "${IRONFOX_DOWNLOADS}/nvm-install.sh"
+
+    echo_green_text "SUCCESS: Set-up Node.js at ${IRONFOX_NODEJS}"
+}
+
 # Get UnifiedPush-AC
 function get_up_ac() {
     echo_red_text 'Downloading UnifiedPush-AC...'
@@ -991,6 +1025,10 @@ fi
 
 if [ "${IRONFOX_GET_SOURCE_MICROG}" == 1 ]; then
     get_microg
+fi
+
+if [ "${IRONFOX_GET_SOURCE_NODE}" == 1 ]; then
+    get_node
 fi
 
 if [ "${IRONFOX_GET_SOURCE_PHOENIX}" == 1 ]; then

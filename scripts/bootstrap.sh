@@ -71,7 +71,6 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         jq \
         nasm \
         ninja \
-        node \
         perl \
         yq || error_fn
     echo

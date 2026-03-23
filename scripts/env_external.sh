@@ -68,6 +68,12 @@ export TASKCLUSTER_ROOT_URL='https://noop.invalid'
 export NSS_DIR="${IRONFOX_NSS_DIR}"
 export NSS_STATIC=1
 
+# nvm
+export NVM_DIR="${IRONFOX_NVM_DIR}"
+
+## This is necessary to prevent nvm from automatically trying to modify the system PATH
+export PROFILE='/dev/null'
+
 # Phoenix
 export PHOENIX_ANDROID_ONLY=1
 export PHOENIX_EXTENDED_ONLY=1
@@ -134,14 +140,17 @@ export RUSTUP_TERM_PROGRESS_WHEN="${IRONFOX_RUSTUP_PROGRESS_BAR}"
 ## Enable colored output
 export RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
 
+# UnifiedPush-AC
+export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
+
 # Include version info
 source "${IRONFOX_VERSIONS}"
+
+## Set Node.js version
+export NODE_VERSION="${NODE_VERSION}"
 
 ## Set Rust version
 export RUSTUP_TOOLCHAIN="${RUST_VERSION}"
 
 ## Set Rustup version
 export RUSTUP_VERSION="${RUSTUP_VERSION}"
-
-# unifiedpush-ac
-export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
