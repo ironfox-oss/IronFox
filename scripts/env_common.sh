@@ -421,6 +421,12 @@ if [[ -z "${IRONFOX_PREBUILDS+x}" ]]; then
     export IRONFOX_PREBUILDS="${IRONFOX_PREBUILDS_DEFAULT}"
 fi
 
+# nvm
+IRONFOX_NVM_DIR_DEFAULT="${IRONFOX_BUILD}/.nvm"
+if [[ -z "${IRONFOX_NVM_DIR+x}" ]]; then
+    export IRONFOX_NVM_DIR="${IRONFOX_NVM_DIR_DEFAULT}"
+fi
+
 # Phoenix
 IRONFOX_PHOENIX_DEFAULT="${IRONFOX_EXTERNAL}/phoenix"
 if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
@@ -696,3 +702,10 @@ fi
 # Set our external environment variables
 IRONFOX_ENV_EXTERNAL="${IRONFOX_SCRIPTS}/env_external.sh"
 source "${IRONFOX_ENV_EXTERNAL}"
+
+# Node.js
+source "${IRONFOX_VERSIONS}"
+IRONFOX_NODEJS_DEFAULT="${IRONFOX_NVM_DIR}/versions/node/v${NODE_VERSION}/bin/node"
+if [[ -z "${IRONFOX_NODEJS+x}" ]]; then
+    export IRONFOX_NODEJS="${IRONFOX_NODEJS_DEFAULT}"
+fi
