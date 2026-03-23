@@ -133,6 +133,6 @@ if [ "${IRONFOX_CI}" != 1 ]; then
         # Now that the app is installed, we can kill the server
         "${IRONFOX_ADB}" kill-server
     else
-        return 0
+        exit 0
     fi
 fi

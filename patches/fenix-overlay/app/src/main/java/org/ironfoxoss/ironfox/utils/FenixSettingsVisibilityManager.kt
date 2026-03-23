@@ -45,17 +45,16 @@ object FenixSettingsVisibilityManager {
         displayAddressSync(context, prefFragment)
         displayAppZygote(context, prefFragment)
         displayCustomTabExtensions(context, prefFragment)
+        displayEmailMaskFeature(context, prefFragment)
         displayEnableHomepageAsNewTab(context, prefFragment)
-        displayEnableMenuRedesign(context, prefFragment)
         displayIsolatedProcess(context, prefFragment)
         displayLnaBlocking(context, prefFragment)
         displayLnaFeature(context, prefFragment)
         displayLnaTrackerBlocking(context, prefFragment)
         displayMinimalBottomToolbarWhenEnteringText(context, prefFragment)
+        displayNativeShareSheet(context, prefFragment)
         displayNewDynamicToolbarBehaviour(context, prefFragment)
-        displayRelayFeature(context, prefFragment)
         displaySettingsSearch(context, prefFragment)
-        displayToolbarCustomization(context, prefFragment)
         hideCrashPullNeverShow(context, prefFragment)
         hideDiscoverMoreStories(context, prefFragment)
         hideMicrosurveyFeature(context, prefFragment)
@@ -254,6 +253,20 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
+     * Display the setting to toggle the Email Mask (Firefox Relay) feature
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayEmailMaskFeature(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val emailMaskFeatureKey = context.getPreferenceKey(FenixSettingsDictionary.isEmailMaskFeatureEnabled)
+        displayPreference(emailMaskFeatureKey, prefFragment)
+    }
+
+    /**
      * Display the setting to toggle the homepage as a new tab
      *
      * @param context The application context
@@ -265,20 +278,6 @@ object FenixSettingsVisibilityManager {
     ) {
         val homepageNewTabKey = context.getPreferenceKey(FenixSettingsDictionary.enableHomepageAsNewTab)
         displayPreference(homepageNewTabKey, prefFragment)
-    }
-
-    /**
-     * Display the setting to toggle the menu redesign
-     *
-     * @param context The application context
-     * @param prefFragment The preference fragment from where the preference should be displayed
-     */
-    internal fun displayEnableMenuRedesign(
-        context: Context,
-        prefFragment: PreferenceFragmentCompat
-    ) {
-        val menuRedesignKey = context.getPreferenceKey(FenixSettingsDictionary.enableMenuRedesign)
-        displayPreference(menuRedesignKey, prefFragment)
     }
 
     /**
@@ -351,6 +350,20 @@ object FenixSettingsVisibilityManager {
         displayPreference(minimalBottomToolbarWhenEnteringTextKey, prefFragment)
     }
 
+    /**
+     * Display the setting to toggle the native share sheet
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayNativeShareSheet(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val nativeShareSheetKey = context.getPreferenceKey(FenixSettingsDictionary.nativeShareSheetEnabled)
+        displayPreference(nativeShareSheetKey, prefFragment)
+    }
+
      /**
      * Display the setting to toggle the new dynamic toolbar behaviour
      *
@@ -366,20 +379,6 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
-     * Display the setting to toggle the Relay feature
-     *
-     * @param context The application context
-     * @param prefFragment The preference fragment from where the preference should be displayed
-     */
-    internal fun displayRelayFeature(
-        context: Context,
-        prefFragment: PreferenceFragmentCompat
-    ) {
-        val relayFeatureKey = context.getPreferenceKey(FenixSettingsDictionary.isRelayFeatureEnabled)
-        displayPreference(relayFeatureKey, prefFragment)
-    }
-
-    /**
      * Display the setting to toggle settings search
      *
      * @param context The application context
@@ -391,20 +390,6 @@ object FenixSettingsVisibilityManager {
     ) {
         val settingsSearchKey = context.getPreferenceKey(FenixSettingsDictionary.isSettingsSearchEnabled)
         displayPreference(settingsSearchKey, prefFragment)
-    }
-
-    /**
-     * Display the setting to toggle toolbar customization
-     *
-     * @param context The application context
-     * @param prefFragment The preference fragment from where the preference should be displayed
-     */
-    internal fun displayToolbarCustomization(
-        context: Context,
-        prefFragment: PreferenceFragmentCompat
-    ) {
-        val toolbarCustomizationKey = context.getPreferenceKey(FenixSettingsDictionary.shouldShowToolbarCustomization)
-        displayPreference(toolbarCustomizationKey, prefFragment)
     }
 
     /**

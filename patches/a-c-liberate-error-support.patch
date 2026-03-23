@@ -1,3 +1,49 @@
+diff --git a/mobile/android/android-components/components/feature/fxsuggest/build.gradle b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
+index fe9c0187892a2..41481a3ad1780 100644
+--- a/mobile/android/android-components/components/feature/fxsuggest/build.gradle
++++ b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
+@@ -30,7 +30,7 @@ dependencies {
+     implementation project(':components:support-remotesettings')
+     implementation project(':components:support-ktx')
+ 
+-    implementation ComponentsDependencies.mozilla_appservices_errorsupport
++//    implementation ComponentsDependencies.mozilla_appservices_errorsupport
+     implementation ComponentsDependencies.mozilla_appservices_suggest
+     implementation libs.androidx.work.runtime
+     implementation libs.kotlinx.coroutines
+diff --git a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
+index 3c07dfa3eb02f..020d2190d1e87 100644
+--- a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
++++ b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
+@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.cancelChildren
+ import kotlinx.coroutines.withContext
+-import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
++// import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
+ import mozilla.appservices.remotesettings.RemoteSettingsServer
+ import mozilla.appservices.suggest.SuggestApiException
+ import mozilla.appservices.suggest.SuggestIngestionConstraints
+@@ -21,7 +21,7 @@ import mozilla.appservices.suggest.SuggestionQuery
+ import mozilla.components.feature.fxsuggest.facts.emitSuggestionQueryCountFact
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.remotesettings.RemoteSettingsService
+-import mozilla.components.support.rusterrors.reportRustError
++// import mozilla.components.support.rusterrors.reportRustError
+ import mozilla.appservices.suggest.InternalException as UniffiInternalException
+ 
+ /**
+@@ -127,8 +127,8 @@ class FxSuggestStorage(
+             default
+         } catch (e: UniffiInternalException) {
+             Logger.error(e.toString())
+-            RustComponentsErrorTelemetry.submitErrorPing("suggest-internal-error", e.toString())
+-            reportRustError("suggest-internal-error", e.toString())
++//            RustComponentsErrorTelemetry.submitErrorPing("suggest-internal-error", e.toString())
++//            reportRustError("suggest-internal-error", e.toString())
+             default
+         }
+     }
 diff --git a/mobile/android/android-components/components/support/appservices/build.gradle b/mobile/android/android-components/components/support/appservices/build.gradle
 index d9af2a9b78e8..b525b51fd39e 100644
 --- a/mobile/android/android-components/components/support/appservices/build.gradle
@@ -11,3 +57,49 @@ index d9af2a9b78e8..b525b51fd39e 100644
      implementation ComponentsDependencies.mozilla_appservices_fxrelay
      implementation (ComponentsDependencies.mozilla_appservices_httpconfig) {
          // Override the version of concept-fetch that A-S depends on,
+diff --git a/mobile/android/android-components/components/support/remotesettings/build.gradle b/mobile/android/android-components/components/support/remotesettings/build.gradle
+index 5a007933c75cf..df2d2e9a59f92 100644
+--- a/mobile/android/android-components/components/support/remotesettings/build.gradle
++++ b/mobile/android/android-components/components/support/remotesettings/build.gradle
+@@ -29,7 +29,7 @@ dependencies {
+     implementation project(':components:support-ktx')
+     implementation project(':components:support-utils')
+ 
+-    implementation ComponentsDependencies.mozilla_appservices_errorsupport
++//    implementation ComponentsDependencies.mozilla_appservices_errorsupport
+     implementation ComponentsDependencies.mozilla_remote_settings
+     implementation libs.androidx.work.runtime
+     implementation libs.kotlinx.serialization.json
+diff --git a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
+index 954b1ebbfcdd9..1d4106516c0a6 100644
+--- a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
++++ b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
+@@ -17,7 +17,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
+ import kotlinx.serialization.encoding.Decoder
+ import kotlinx.serialization.encoding.Encoder
+ import kotlinx.serialization.json.Json
+-import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
++// import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
+ import mozilla.appservices.remotesettings.Attachment
+ import mozilla.appservices.remotesettings.RemoteSettings
+ import mozilla.appservices.remotesettings.RemoteSettingsConfig
+@@ -26,7 +26,7 @@ import mozilla.appservices.remotesettings.RemoteSettingsRecord
+ import mozilla.appservices.remotesettings.RemoteSettingsResponse
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.ktx.util.writeString
+-import mozilla.components.support.rusterrors.reportRustError
++// import mozilla.components.support.rusterrors.reportRustError
+ import org.json.JSONObject
+ import java.io.File
+ import java.io.FileNotFoundException
+@@ -80,8 +80,8 @@ class RemoteSettingsClient(
+             RemoteSettingsResult.NetworkFailure(e)
+         } catch (e: UniffiInternalException) {
+             Logger.error(e.toString())
+-            RustComponentsErrorTelemetry.submitErrorPing("remote-settings-internal-error", e.toString())
+-            reportRustError("remote-settings-internal-error", e.toString())
++//            RustComponentsErrorTelemetry.submitErrorPing("remote-settings-internal-error", e.toString())
++//            reportRustError("remote-settings-internal-error", e.toString())
+             RemoteSettingsResult.NetworkFailure(e)
+         }
+     }

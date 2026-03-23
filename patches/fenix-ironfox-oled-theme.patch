@@ -16,10 +16,10 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  8 files changed, 49 insertions(+), 9 deletions(-)
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 725fe78ce0cc..655f0f27b2e1 100644
+index 8dd1374d2d94f..601cf1cf2a38a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -658,7 +658,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -739,7 +739,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                      AppCompatDelegate.MODE_NIGHT_NO,
                  )
              }
@@ -29,10 +29,10 @@ index 725fe78ce0cc..655f0f27b2e1 100644
                      AppCompatDelegate.MODE_NIGHT_YES,
                  )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 5cc1da059f7d..c1909cd13e20 100644
+index ff4c7a014c2c1..78d7cddb9549a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -152,6 +152,11 @@ class Core(
+@@ -153,6 +153,11 @@ class Core(
       * configuration (see build variants).
       */
      val engine: Engine by lazyMonitored {
@@ -44,7 +44,7 @@ index 5cc1da059f7d..c1909cd13e20 100644
          val defaultSettings = DefaultSettings(
              requestInterceptor = requestInterceptor,
              remoteDebuggingEnabled = context.settings().isRemoteDebuggingEnabled,
-@@ -167,7 +172,7 @@ class Core(
+@@ -168,7 +173,7 @@ class Core(
              enterpriseRootsEnabled = context.settings().allowThirdPartyRootCerts,
              clearColor = ContextCompat.getColor(
                  context,
@@ -54,7 +54,7 @@ index 5cc1da059f7d..c1909cd13e20 100644
              httpsOnlyMode = context.settings().getHttpsOnlyMode(),
              dohSettingsMode = context.settings().getDohSettingsMode(),
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
-index 4066633bbc42..473e3c755765 100644
+index 4066633bbc427..473e3c755765c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/customtabs/FennecWebAppIntentProcessor.kt
 @@ -31,6 +31,8 @@ import org.mozilla.fenix.R
@@ -76,7 +76,7 @@ index 4066633bbc42..473e3c755765 100644
              ),
          )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
-index 55821be3746c..71f2a497458c 100644
+index 55821be3746cf..71f2a497458c9 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/CustomizationFragment.kt
 @@ -37,6 +37,7 @@ import org.mozilla.fenix.utils.view.addToRadioGroup
@@ -130,18 +130,19 @@ index 55821be3746c..71f2a497458c 100644
          with(requireComponents.core) {
              engine.settings.preferredColorScheme = getPreferredColorScheme()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
-index 2c737e026e40..2914d74cc830 100644
+index e335f9d4adc06..c287d12503ed1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/theme/FirefoxTheme.kt
-@@ -22,6 +22,7 @@ import mozilla.components.compose.base.theme.lightColorPalette
+@@ -18,6 +18,8 @@ import mozilla.components.compose.base.theme.layout.AcornLayout
+ import mozilla.components.compose.base.theme.layout.AcornWindowSize
+ import mozilla.components.compose.base.theme.lightColorPalette
  import mozilla.components.compose.base.theme.privateColorPalette
- import mozilla.components.compose.base.utils.inComposePreview
- import org.mozilla.fenix.ext.settings
++import androidx.compose.ui.platform.LocalContext
 +import org.ironfoxoss.ironfox.utils.maybeApplyOledColors
  
  /**
   * The theme for Mozilla Firefox for Android (Fenix).
-@@ -36,13 +37,13 @@ fun FirefoxTheme(
+@@ -32,13 +34,13 @@ fun FirefoxTheme(
  ) {
      val colors: AcornColors = when (theme) {
          Theme.Light -> lightColorPalette

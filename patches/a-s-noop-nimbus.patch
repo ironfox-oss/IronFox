@@ -1,8 +1,8 @@
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 0fed3ef9a..8ed7cc724 100644
+index 2b7f08734..8587e0752 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -140,23 +140,23 @@ open class Nimbus(
+@@ -136,23 +136,23 @@ open class Nimbus(
  
      private val nimbusClient: NimbusClientInterface
  
@@ -32,7 +32,7 @@ index 0fed3ef9a..8ed7cc724 100644
  
      init {
          NullVariables.instance.setContext(context)
-@@ -279,9 +279,9 @@ open class Nimbus(
+@@ -271,9 +271,9 @@ open class Nimbus(
          }
      }
  

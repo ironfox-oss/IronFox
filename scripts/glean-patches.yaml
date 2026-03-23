@@ -13,6 +13,13 @@ categories:
 
 patches:
   # Build System
+  - file: "glean-localize-maven.patch"
+    name: "Remove Mozilla Maven Repositories"
+    description: "Removes Mozilla repositories substitution and replaces them with local maven repositories."
+    reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
+    effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
+    category: "Build System"
+
   - file: "glean-remove-example-dependencies.patch"
     name: "Remove Unwanted Example/Sample Dependencies"
     description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."

@@ -1,5 +1,5 @@
 diff --git a/.buildconfig-android.yml b/.buildconfig-android.yml
-index ed1e132e9..9c0f4ef3d 100644
+index eec97ee42..7e4684542 100644
 --- a/.buildconfig-android.yml
 +++ b/.buildconfig-android.yml
 @@ -1,12 +1,12 @@

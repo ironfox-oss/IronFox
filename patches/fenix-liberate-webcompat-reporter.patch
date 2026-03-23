@@ -24,19 +24,6 @@ index 00728e2ba98b..edeb6b7e0b50 100644
          }
  }
  
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index b5cd2868a6eb..e8656993563e 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -217,7 +217,7 @@ open class DefaultToolbarMenu(
-         val url = store.state.selectedTab?.content?.url
-         val isAboutUrl = url?.isAboutUrl() ?: false
-         val isContentUrl = url?.isContentUrl() ?: false
--        return !isAboutUrl && !isContentUrl
-+        return false
-     }
-     // End of predicates //
- 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index da46df8f5cd7..9639bfb576b7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt

@@ -1,0 +1,12 @@
+diff --git a/build.gradle b/build.gradle
+index fa83f350..c07287cb 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -16,6 +16,7 @@ buildscript {
+     ]
+ 
+     repositories {
++        mavenLocal()
+         google()
+         mavenCentral()
+         maven {

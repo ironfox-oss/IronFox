@@ -14,27 +14,27 @@ Signed-off-by: celenity <celenity@celenity.dev>
  4 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 725fe78ce0cc..257bbd6ec406 100644
+index 8dd1374d2d94f..bd1322dfc5ab3 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -426,7 +426,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-                         // new search suggestions. The worker requires us to have called
-                         // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
-                         // scheduling these tasks. When disabled we stop the periodic work.
--                        if (settings().enableFxSuggest) {
-+                        if (settings().enableFxSuggest && settings().showNonSponsoredSuggestions) {
-                             components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
-                         } else {
-                             components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
-@@ -515,7 +515,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-         queueStorageMaintenance()
-         queueNimbusFetchInForeground()
-         queueDownloadWallpapers()
+@@ -417,7 +417,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+         queueSetAutofillMetrics(queue)
+         queueDownloadWallpapers(queue)
+ 
 -        if (settings().enableFxSuggest) {
 +        if (settings().enableFxSuggest && settings().showNonSponsoredSuggestions) {
-             queueSuggestIngest()
+             queueSuggestIngest(queue)
          }
-         queueCollectProcessExitInfo()
+ 
+@@ -478,7 +478,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+                     // new search suggestions. The worker requires us to have called
+                     // `GlobalFxSuggestDependencyProvider.initialize`, which we did before
+                     // scheduling these tasks. When disabled we stop the periodic work.
+-                    if (settings().enableFxSuggest) {
++                    if (settings().enableFxSuggest && settings().showNonSponsoredSuggestions) {
+                         components.fxSuggest.ingestionScheduler.startPeriodicIngestion()
+                     } else {
+                         components.fxSuggest.ingestionScheduler.stopPeriodicIngestion()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt
 index 7c68a88f9f45..1ef39c9efaec 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/awesomebar/SearchSuggestionsProvidersBuilder.kt

@@ -24,10 +24,10 @@ Signed-off-by: celenity <celenity@celenity.dev>
  15 files changed, 122 insertions(+), 122 deletions(-)
 
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 2a69ecf8ea01..99e76ed50151 100644
+index 4afd464e5af6..9e2b13bb1873 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -162,30 +162,30 @@ features:
+@@ -172,30 +172,30 @@ features:
          type: Boolean
          default: false
  
@@ -82,8 +82,8 @@ index 2a69ecf8ea01..99e76ed50151 100644
  
    splash-screen:
      description: "A feature that extends splash screen duration, allowing additional data fetching time for the app's initial run."
-@@ -1015,22 +1015,22 @@ features:
-           enabled: true
+@@ -1037,22 +1037,22 @@ features:
+         default: false
  
  types:
 -  objects:
@@ -122,11 +122,11 @@ index 2a69ecf8ea01..99e76ed50151 100644
    enums:
      HomeScreenSection:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 725fe78ce0cc..4917d2db30b5 100644
+index 8dd1374d2d94f..8ad7f0630a0dd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -68,7 +68,7 @@ import mozilla.components.support.rusthttp.RustHttpConfig
- import mozilla.components.support.utils.BrowsersCache
+@@ -73,7 +73,7 @@ import mozilla.components.support.utils.BrowsersCache
+ import mozilla.components.support.utils.RunWhenReadyQueue
  import mozilla.components.support.utils.logElapsedTime
  import mozilla.components.support.webextensions.WebExtensionSupport
 -import mozilla.telemetry.glean.Glean
@@ -134,7 +134,7 @@ index 725fe78ce0cc..4917d2db30b5 100644
  import org.mozilla.fenix.GleanMetrics.Addons
  import org.mozilla.fenix.GleanMetrics.Addresses
  import org.mozilla.fenix.GleanMetrics.AndroidAutofill
-@@ -81,12 +81,12 @@ import org.mozilla.fenix.GleanMetrics.PerfStartup
+@@ -86,12 +86,12 @@ import org.mozilla.fenix.GleanMetrics.PerfStartup
  import org.mozilla.fenix.GleanMetrics.Preferences
  import org.mozilla.fenix.GleanMetrics.SearchDefaultEngine
  import org.mozilla.fenix.GleanMetrics.TabStrip
@@ -147,9 +147,9 @@ index 725fe78ce0cc..4917d2db30b5 100644
 -import org.mozilla.fenix.components.metrics.MozillaProductDetector
 +// import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
+ import org.mozilla.fenix.experiments.NimbusGeckoPrefHandler
  import org.mozilla.fenix.experiments.maybeFetchExperiments
- import org.mozilla.fenix.ext.components
-@@ -165,7 +165,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -187,7 +187,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          // [TIMER] Record the start of the [PerfStartup.applicationOnCreate] metric here. Do this
          // manually because Glean has not started initializing yet. Note that by this point the
          // content providers from Fenix and its libraries have run their initializers already.
@@ -158,7 +158,7 @@ index 725fe78ce0cc..4917d2db30b5 100644
  
          // Capture A-C logs to Android logcat. Note that gecko maybe directly post to logcat
          // regardless of what we do here.
-@@ -205,9 +205,9 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -227,9 +227,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
  
              // [TIMER] Record the end of the `PerfStartup.applicationOnCreate` metric. Note that
              // glean will queue this if the backend is still starting up.
@@ -171,7 +171,7 @@ index 725fe78ce0cc..4917d2db30b5 100644
          }
      }
  
-@@ -350,7 +350,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -376,7 +376,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              VisibilityLifecycleObserver(),
          )
  
@@ -180,7 +180,27 @@ index 725fe78ce0cc..4917d2db30b5 100644
  
          CoroutineScope(IO).launch {
              components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
-@@ -788,12 +788,12 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -580,8 +580,8 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+      * @param queue The queue the function should use.
+      */
+     @OptIn(DelicateCoroutinesApi::class)
+-    private fun queueSetAutofillMetrics(queue: RunWhenReadyQueue) = runOnVisualCompleteness(queue) {
+-        GlobalScope.launch(IO) {
++    private fun queueSetAutofillMetrics(queue: RunWhenReadyQueue) {
++/*        GlobalScope.launch(IO) {
+             try {
+                 val autoFillStorage = applicationContext.components.core.autofillStorage
+                 Addresses.savedAll.set(autoFillStorage.countAllAddresses())
+@@ -596,7 +596,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+             } catch (e: LoginsApiException) {
+                 logger.error("Failed to fetch list of logins", e)
+             }
+-        }
++        } */
+     }
+ 
+     /**
+@@ -869,12 +869,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              settings,
          ),
          browsersCache: BrowsersCache = BrowsersCache,
@@ -197,14 +217,12 @@ index 725fe78ce0cc..4917d2db30b5 100644
  
              if (settings.hasAcceptedTermsOfService) {
                  setTermsOfUseStartUpMetrics(settings)
-@@ -908,14 +908,14 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -989,12 +989,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
                      }
                  }
              }
 -        }
 +        } */
- 
-         setAutofillMetrics()
      }
  
      private fun setTermsOfUseStartUpMetrics(settings: Settings) {
@@ -215,7 +233,7 @@ index 725fe78ce0cc..4917d2db30b5 100644
      }
  
      @VisibleForTesting
-@@ -953,7 +953,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -1032,7 +1032,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          settings: Settings,
          dohSettingsProvider: DohSettingsProvider,
      ) {
@@ -224,7 +242,7 @@ index 725fe78ce0cc..4917d2db30b5 100644
              searchSuggestionsEnabled.set(settings.shouldShowSearchSuggestions)
              showSponsorSuggestionsEnabled.set(settings.showSponsoredSuggestions)
              showNonSponsorSuggestionsEnabled.set(settings.showNonSponsoredSuggestions)
-@@ -1034,11 +1034,11 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -1113,7 +1113,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              httpsOnlyMode.set(settings.getHttpsOnlyMode().toString())
              globalPrivacyControlEnabled.set(settings.shouldEnableGlobalPrivacyControl)
          }
@@ -232,22 +250,8 @@ index 725fe78ce0cc..4917d2db30b5 100644
 +        reportHomeScreenMetrics(settings) */
      }
  
-     private fun setAutofillMetrics() {
--        @OptIn(DelicateCoroutinesApi::class)
-+/*        @OptIn(DelicateCoroutinesApi::class)
-         GlobalScope.launch(IO) {
-             try {
-                 val autoFillStorage = applicationContext.components.core.autofillStorage
-@@ -1054,7 +1054,7 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
-             } catch (e: LoginsApiException) {
-                 logger.error("Failed to fetch list of logins", e)
-             }
--        }
-+        } */
-     }
- 
      @VisibleForTesting
-@@ -1064,27 +1064,27 @@ open class FenixApplication : LocaleAwareApplication(), Provider {
+@@ -1123,27 +1123,27 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      }
  
      private fun reportOpeningScreenMetrics(settings: Settings) {
@@ -577,77 +581,59 @@ index a23df32558b2..32320d4715b5 100644
          }
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index b55e0e05dcbb..f40bd6081ed2 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-@@ -66,10 +66,10 @@ enum class DebugDrawerRoute(
-         route = "cfr_tools",
-         title = R.string.debug_drawer_cfr_tools_title,
-     ),
--    GleanDebugTools(
-+/*    GleanDebugTools(
-         route = "glean_debug_tools",
-         title = R.string.glean_debug_tools_title,
--    ),
-+    ), */
-     RegionDebugTools(
-         route = "region_debug_tools",
-         title = R.string.debug_drawer_region_tools_title,
-@@ -182,14 +182,14 @@ enum class DebugDrawerRoute(
-                         }
-                     }
- 
--                    GleanDebugTools -> {
-+/*                    GleanDebugTools -> {
-                         onClick = {
-                             debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.GleanDebugTools)
-                         }
-                         content = {
-                             GleanDebugToolsScreen(gleanDebugToolsStore = gleanDebugToolsStore)
-                         }
--                    }
-+                    } */
- 
-                     RegionDebugTools -> {
-                         onClick = {
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-index 07a2495fa830..4f486c93481b 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-@@ -48,7 +48,7 @@ class DebugDrawerNavigationMiddleware(
-                 is DebugDrawerAction.NavigateTo.CfrTools ->
-                     navController.navigate(route = DebugDrawerRoute.CfrTools.route)
-                 is DebugDrawerAction.NavigateTo.GleanDebugTools ->
--                    navController.navigate(route = DebugDrawerRoute.GleanDebugTools.route)
-+                    Unit // no-op
-                 is DebugDrawerAction.NavigateTo.RegionDebugTools ->
-                     navController.navigate(route = DebugDrawerRoute.RegionDebugTools.route)
-                 is DebugDrawerAction.NavigateTo.AddonsDebugTools ->
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-index db29d6ab3dc9..3f07feb32c02 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/ui/FenixOverlay.kt
-@@ -24,7 +24,7 @@ import mozilla.components.browser.state.store.BrowserStore
- import mozilla.components.concept.storage.CreditCardsAddressesStorage
- import mozilla.components.concept.storage.LoginsStorage
- import mozilla.components.lib.state.ext.observeAsState
--import mozilla.telemetry.glean.Glean
-+// import mozilla.telemetry.glean.Glean
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+index d3b5cb6187ac..7974d688a8d4 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
+@@ -29,15 +29,15 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.utils.BrowsersCache
+ import org.mozilla.fenix.FenixApplication
+-import org.mozilla.fenix.GleanMetrics.Pings
++// import org.mozilla.fenix.GleanMetrics.Pings
+ import org.mozilla.fenix.HomeActivity
  import org.mozilla.fenix.R
- import org.mozilla.fenix.debugsettings.addresses.AddressesDebugRegionRepository
- import org.mozilla.fenix.debugsettings.addresses.AddressesTools
-@@ -82,8 +82,8 @@ fun FenixOverlay(
-         ),
-         gleanDebugToolsStore = GleanDebugToolsStore(
-             initialState = GleanDebugToolsState(
--                logPingsToConsoleEnabled = Glean.getLogPings(),
--                debugViewTag = Glean.getDebugViewTag() ?: "",
-+                logPingsToConsoleEnabled = false,
-+                debugViewTag = "",
-             ),
-             middlewares = listOf(
-                 GleanDebugToolsMiddleware(
+ import org.mozilla.fenix.components.accounts.FenixFxAEntryPoint
+ import org.mozilla.fenix.components.appstate.AppAction
+ import org.mozilla.fenix.components.appstate.SupportedMenuNotifications
+-import org.mozilla.fenix.components.initializeGlean
++/* import org.mozilla.fenix.components.initializeGlean
+ import org.mozilla.fenix.components.metrics.installSourcePackage
+-import org.mozilla.fenix.components.startMetricsIfEnabled
++import org.mozilla.fenix.components.startMetricsIfEnabled */
+ import org.mozilla.fenix.compose.LinkTextState
+ import org.mozilla.fenix.ext.application
+ import org.mozilla.fenix.ext.components
+@@ -100,10 +100,7 @@ class OnboardingFragment : Fragment() {
+             } else {
+                 OnboardingReason.NEW_USER
+             },
+-            installSource = installSourcePackage(
+-                packageManager = requireContext().application.packageManager,
+-                packageName = requireContext().application.packageName,
+-            ),
++            installSource = ""
+         )
+     }
+ 
+@@ -463,7 +460,7 @@ class OnboardingFragment : Fragment() {
+     }
+ 
+     private fun startGlean() {
+-        val settings = requireContext().settings()
++/*        val settings = requireContext().settings()
+         viewLifecycleOwner.lifecycleScope.launch {
+             initializeGlean(
+                 requireContext().applicationContext,
+@@ -485,7 +482,7 @@ class OnboardingFragment : Fragment() {
+             isTelemetryEnabled = settings.isTelemetryEnabled,
+             isMarketingTelemetryEnabled = false,
+             isDailyUsagePingEnabled = settings.isDailyUsagePingEnabled,
+-        )
++        ) */
+     }
+ 
+     private fun onFinish(onboardingPageUiData: OnboardingPageUiData?) {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 index 18ce0dc862b4..43f45fd3f452 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt

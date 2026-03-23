@@ -196,9 +196,6 @@ pushd "${IRONFOX_FENIX}"
 # Disable crash reporting
 "${IRONFOX_SED}" -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
 
-# Disable the Mozilla Ads Client
-"${IRONFOX_SED}" -i -e 's|MOZILLA_ADS_CLIENT_ENABLED = .*|MOZILLA_ADS_CLIENT_ENABLED = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
-
 # Disable Pocket "Discover More Stories"
 "${IRONFOX_SED}" -i -e 's|DISCOVER_MORE_STORIES = .*|DISCOVER_MORE_STORIES = false|g' app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
 
@@ -244,7 +241,6 @@ pushd "${IRONFOX_FENIX}"
 "${IRONFOX_SED}" -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/downloads/listscreen/di/DownloadUIMiddlewareProvider.kt
 "${IRONFOX_SED}" -i -e 's|provideTelemetryMiddleware(|// provideTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
 "${IRONFOX_SED}" -i -e 's|SyncTelemetry.|// SyncTelemetry.|' app/src/main/java/org/mozilla/fenix/settings/account/AccountSettingsFragment.kt
-"${IRONFOX_SED}" -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/tabstray/TabsTrayFragment.kt
 "${IRONFOX_SED}" -i -e 's|TabsTrayTelemetryMiddleware(|// TabsTrayTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/tabstray/ui/TabManagementFragment.kt
 "${IRONFOX_SED}" -i -e 's|WebCompatReporterTelemetryMiddleware(|// WebCompatReporterTelemetryMiddleware(|' app/src/main/java/org/mozilla/fenix/webcompat/di/WebCompatReporterMiddlewareProvider.kt
 
@@ -476,6 +472,12 @@ rm -vrf components/browser/engine-gecko/src/main/java/mozilla/components/experim
 "${IRONFOX_SED}" -i -e 's|-keep class mozilla.components.service.nimbus|#-keep class mozilla.components.service.nimbus|' components/service/nimbus/proguard-rules-consumer.pro
 "${IRONFOX_SED}" -i -e '/buildConfig/s/true/false/' components/service/nimbus/build.gradle
 
+# Remove Firebase
+rm -vrf components/lib/push-firebase
+
+# Remove Google Play Integrity
+rm -vrf components/lib/integrity-googleplay
+
 # Remove MARS
 rm -vrf components/service/mars
 
@@ -484,9 +486,6 @@ rm -vrf components/lib/crash-sentry
 
 # Remove Web Compat Reporter
 rm -vrf components/feature/webcompat-reporter
-
-# Crash library
-"${IRONFOX_SED}" -i -e '/buildConfig/s/true/false/' components/lib/crash/build.gradle
 
 # Apply a-c overlay
 apply_overlay "${IRONFOX_AC_OVERLAY}/"
@@ -523,11 +522,6 @@ localize_gradle
 
 # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
 localize_maven
-
-# Fix stray
-"${IRONFOX_SED}" -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
-# Fail on use of prebuilt binary
-"${IRONFOX_SED}" -i 's|https://|hxxps://|' tools/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
 
 # No-op Nimbus (Experimentation)
 "${IRONFOX_SED}" -i -e 's|NimbusInterface.isLocalBuild() = .*|NimbusInterface.isLocalBuild() = true|g' components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusBuilder.kt
@@ -631,6 +625,9 @@ cp -vf browser/locales/en-US/browser/aboutRobots.ftl ironfox/locales/en-US/brows
 "${IRONFOX_SED}" -i \
     -e "s/singleVariant('debug')/singleVariant('release')/" \
     mobile/android/geckoview/build.gradle
+
+# Fail on use of prebuilt nimbus-fml
+"${IRONFOX_SED}" -i 's|https://|hxxps://|' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy"
 
 # Break the dependency on older Rust
 "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" Cargo.toml
@@ -737,6 +734,7 @@ rm -vrf mobile/android/android-components/components/support/appservices/src/mai
 "${IRONFOX_SED}" -i 's|- components:service-mars|# - components:service-mars|g' mobile/android/fenix/.buildconfig.yml
 "${IRONFOX_SED}" -i "s|implementation project(':components:service-mars')|// implementation project(':components:service-mars')|g" mobile/android/fenix/app/build.gradle
 
+rm -vf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Ads.kt
 rm -vf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/TopSitesRefresher.kt
 
 # No-op GeoIP/Region service
@@ -766,8 +764,6 @@ rm -vf mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/TopSitesRef
 "${IRONFOX_SED}" -i 's|nimbus-secure-experiments||g' toolkit/components/nimbus/lib/RemoteSettingsExperimentLoader.sys.mjs
 
 # No-op Pocket
-"${IRONFOX_SED}" -i -e 's/SPOCS_ENDPOINT_DEV_BASE_URL = ".*"/SPOCS_ENDPOINT_DEV_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
-"${IRONFOX_SED}" -i -e 's/SPOCS_ENDPOINT_PROD_BASE_URL = ".*"/SPOCS_ENDPOINT_PROD_BASE_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/spocs/api/SpocsEndpointRaw.kt
 "${IRONFOX_SED}" -i -e 's/POCKET_ENDPOINT_URL = ".*"/POCKET_ENDPOINT_URL = ""/' mobile/android/android-components/components/service/pocket/src/*/java/mozilla/components/service/pocket/stories/api/PocketEndpointRaw.kt
 
 # No-op search telemetry
@@ -826,8 +822,10 @@ rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozi
 "${IRONFOX_SED}" -i 's|adjust|# adjust|g' gradle/libs.versions.toml
 "${IRONFOX_SED}" -i 's|firebase-messaging|# firebase-messaging|g' gradle/libs.versions.toml
 "${IRONFOX_SED}" -i 's|installreferrer|# installreferrer|g' gradle/libs.versions.toml
+"${IRONFOX_SED}" -i 's|kotlinx-coroutines-play-services|# kotlinx-coroutines-play-services|g' gradle/libs.versions.toml
+"${IRONFOX_SED}" -i 's|play-integrity|# play-integrity|g' gradle/libs.versions.toml
 "${IRONFOX_SED}" -i 's|play-review|# play-review|g' gradle/libs.versions.toml
-"${IRONFOX_SED}" -i 's|play-services|# play-services|g' gradle/libs.versions.toml
+"${IRONFOX_SED}" -i 's|play-services-|# play-services-|g' gradle/libs.versions.toml
 "${IRONFOX_SED}" -i 's|sentry|# sentry|g' gradle/libs.versions.toml
 
 # Replace Google Play FIDO with microG
@@ -931,7 +929,6 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxhdpi/ic_launcher.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher_round.webp
 rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
 "${IRONFOX_SED}" -i -e 's|R.drawable.microsurvey_success|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt
-"${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_search_widget|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/widget/SetSearchWidgetMainImage.kt
 "${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt
 "${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt
 "${IRONFOX_SED}" -i -e 's|ic_onboarding_search_widget|fox_alert_crash_dark|' mobile/android/fenix/app/onboarding.fml.yaml

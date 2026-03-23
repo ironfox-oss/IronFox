@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index 6aa281b5e44c..9ee402466750 100644
+index 8da84caa8848a..94d6c190014d5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-@@ -145,6 +145,8 @@ fun MainMenu(
+@@ -147,6 +147,8 @@ fun MainMenu(
      showBanner: Boolean,
      isDownloadHighlighted: Boolean,
      webExtensionMenuCount: Int,
@@ -11,7 +11,7 @@ index 6aa281b5e44c..9ee402466750 100644
      onMoreMenuClick: () -> Unit,
      onCustomizeReaderViewMenuClick: () -> Unit,
      onMozillaAccountButtonClick: () -> Unit,
-@@ -295,6 +297,7 @@ fun MainMenu(
+@@ -297,6 +299,7 @@ fun MainMenu(
  
          LibraryMenuGroup(
              isDownloadHighlighted = isDownloadHighlighted,
@@ -19,7 +19,7 @@ index 6aa281b5e44c..9ee402466750 100644
              onBookmarksMenuClick = onBookmarksMenuClick,
              onHistoryMenuClick = onHistoryMenuClick,
              onDownloadsMenuClick = onDownloadsMenuClick,
-@@ -302,12 +305,14 @@ fun MainMenu(
+@@ -304,12 +307,14 @@ fun MainMenu(
          )
  
          MenuGroup {
@@ -40,7 +40,7 @@ index 6aa281b5e44c..9ee402466750 100644
  
              MenuItem(
                  label = stringResource(id = R.string.browser_menu_settings),
-@@ -491,6 +496,7 @@ private fun MoreMenuButtonGroup(
+@@ -492,6 +497,7 @@ private fun MoreMenuButtonGroup(
  @Suppress("LongMethod")
  private fun LibraryMenuGroup(
      isDownloadHighlighted: Boolean = false,
@@ -48,7 +48,7 @@ index 6aa281b5e44c..9ee402466750 100644
      onBookmarksMenuClick: () -> Unit,
      onHistoryMenuClick: () -> Unit,
      onDownloadsMenuClick: () -> Unit,
-@@ -567,16 +573,18 @@ private fun LibraryMenuGroup(
+@@ -568,16 +574,18 @@ private fun LibraryMenuGroup(
  
          Spacer(Modifier.width(spacerWidth))
  
@@ -77,7 +77,7 @@ index 6aa281b5e44c..9ee402466750 100644
      }
  }
  
-@@ -741,6 +749,8 @@ private fun MenuDialogPreview() {
+@@ -744,6 +752,8 @@ private fun MenuDialogPreview(
                  showBanner = true,
                  isDownloadHighlighted = true,
                  webExtensionMenuCount = 1,
@@ -86,7 +86,7 @@ index 6aa281b5e44c..9ee402466750 100644
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
-@@ -805,6 +815,8 @@ private fun MenuDialogPrivatePreview(
+@@ -808,6 +818,8 @@ private fun MenuDialogPrivatePreview(
                  showBanner = true,
                  isDownloadHighlighted = true,
                  webExtensionMenuCount = 0,
@@ -96,64 +96,86 @@ index 6aa281b5e44c..9ee402466750 100644
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
-index 8a0736344f9a..454c0594d7a4 100644
+index 818aea05441e5..07ab90b9e5cba 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
-@@ -37,6 +37,8 @@ internal fun MoreSettingsSubmenu(
+@@ -38,6 +38,8 @@ internal fun MoreSettingsSubmenu(
      translationInfo: TranslationInfo,
      showShortcuts: Boolean,
      isAndroidAutomotiveAvailable: Boolean,
 +    areCollectionsDisabled: Boolean,
 +    isPrintDisabled: Boolean,
+     showSummarization: Boolean,
      onWebCompatReporterClick: () -> Unit,
-     onShortcutsMenuClick: () -> Unit,
-     onAddToHomeScreenMenuClick: () -> Unit,
-@@ -83,11 +85,13 @@ internal fun MoreSettingsSubmenu(
-             )
-         }
- 
--        MenuItem(
--            label = stringResource(id = R.string.browser_menu_save_to_collection_2),
--            beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_collection_24),
--            onClick = onSaveToCollectionMenuClick,
--        )
-+        if (!areCollectionsDisabled) {
-+            MenuItem(
-+                label = stringResource(id = R.string.browser_menu_save_to_collection_2),
-+                beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_collection_24),
-+                onClick = onSaveToCollectionMenuClick,
-+            )
-+        }
- 
-         if (hasExternalApp) {
-             MenuItem(
-@@ -114,7 +118,7 @@ internal fun MoreSettingsSubmenu(
-             beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_save_file_24),
-             onClick = onSaveAsPDFMenuClick,
+     onSummarizePageClick: () -> Unit,
+@@ -75,6 +77,7 @@ internal fun MoreSettingsSubmenu(
+             onAddToHomeScreenMenuClick = onAddToHomeScreenMenuClick,
          )
--        if (!isAndroidAutomotiveAvailable) {
-+        if (!isPrintDisabled && !isAndroidAutomotiveAvailable) {
-             MenuItem(
-                 label = stringResource(id = R.string.browser_menu_print_2),
-                 beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_print_24),
-@@ -207,6 +211,8 @@ private fun MoreSettingsSubmenuPreview() {
+         SaveToCollectionMenuItem(
++            areCollectionsDisabled = areCollectionsDisabled,
+             onSaveToCollectionMenuClick = onSaveToCollectionMenuClick,
+         )
+         OpenInAppMenuItem(
+@@ -88,6 +91,7 @@ internal fun MoreSettingsSubmenu(
+         )
+         PrintMenuItem(
+             isAndroidAutomotiveAvailable = isAndroidAutomotiveAvailable,
++            isPrintDisabled = isPrintDisabled,
+             onPrintMenuClick = onPrintMenuClick,
+         )
+     }
+@@ -171,13 +175,16 @@ private fun AddToHomeScreenMenuItem(
+ 
+ @Composable
+ private fun SaveToCollectionMenuItem(
++    areCollectionsDisabled: Boolean,
+     onSaveToCollectionMenuClick: () -> Unit,
+ ) {
+-    MenuItem(
+-        label = stringResource(id = R.string.browser_menu_save_to_collection_2),
+-        beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_collection_24),
+-        onClick = onSaveToCollectionMenuClick,
+-    )
++    if (!areCollectionsDisabled) {
++        MenuItem(
++            label = stringResource(id = R.string.browser_menu_save_to_collection_2),
++            beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_collection_24),
++            onClick = onSaveToCollectionMenuClick,
++        )
++    }
+ }
+ 
+ @Composable
+@@ -222,9 +229,10 @@ private fun SaveAsPdfMenuItem(
+ @Composable
+ private fun PrintMenuItem(
+     isAndroidAutomotiveAvailable: Boolean,
++    isPrintDisabled: Boolean,
+     onPrintMenuClick: () -> Unit,
+ ) {
+-    if (!isAndroidAutomotiveAvailable) {
++    if (!isPrintDisabled && !isAndroidAutomotiveAvailable) {
+         MenuItem(
+             label = stringResource(id = R.string.browser_menu_print_2),
+             beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_print_24),
+@@ -317,6 +325,8 @@ private fun MoreSettingsSubmenuPreview(
                      ),
                      showShortcuts = true,
                      isAndroidAutomotiveAvailable = false,
 +                    areCollectionsDisabled = false,
 +                    isPrintDisabled = false,
+                     showSummarization = true,
                      onWebCompatReporterClick = {},
-                     onShortcutsMenuClick = {},
-                     onAddToHomeScreenMenuClick = {},
-@@ -249,6 +255,8 @@ private fun MoreSettingsSubmenuPrivatePreview() {
+                     onSummarizePageClick = {},
+@@ -363,6 +373,8 @@ private fun MoreSettingsSubmenuDisabledOpenPreview(
                      ),
                      showShortcuts = true,
                      isAndroidAutomotiveAvailable = false,
 +                    areCollectionsDisabled = false,
 +                    isPrintDisabled = false,
+                     showSummarization = false,
                      onWebCompatReporterClick = {},
-                     onShortcutsMenuClick = {},
-                     onAddToHomeScreenMenuClick = {},
+                     onSummarizePageClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 index 95ded141876d..fadfc00bcda6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
@@ -188,68 +210,3 @@ index 95ded141876d..fadfc00bcda6 100644
                                              onWebCompatReporterClick = {
                                                  store.dispatch(MenuAction.Navigate.WebCompatReporter)
                                              },
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index b5cd2868a6eb..c01f495c0128 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -439,9 +439,9 @@ open class DefaultToolbarMenu(
-                 bookmarksItem,
-                 historyItem,
-                 downloadsItem,
--                passwordsItem,
-+                if (context.settings().shouldPromptToSaveLogins) passwordsItem else null,
-                 extensionsItem,
--                syncMenuItem(),
-+                if (context.settings().signedInFxaAccount) syncMenuItem() else null,
-                 BrowserMenuDivider(),
-                 findInPageItem,
-                 translationsItem.apply { visible = ::shouldShowTranslations },
-@@ -453,9 +453,9 @@ open class DefaultToolbarMenu(
-                 BrowserMenuDivider(),
-                 addToHomeScreenItem.apply { visible = ::canAddToHomescreen },
-                 addAppToHomeScreenItem.apply { visible = ::canAddAppToHomescreen },
--                if (shouldShowTopSites) addRemoveTopSitesItem else null,
--                saveToCollectionItem,
--                if (FxNimbus.features.print.value().browserPrintEnabled &&
-+                if (shouldShowTopSites && !context.settings().ironfox.alwaysUsePrivateBrowsing) addRemoveTopSitesItem else null,
-+                if (context.settings().collections && !context.settings().ironfox.alwaysUsePrivateBrowsing) saveToCollectionItem else null,
-+                if (context.settings().ironfox.printEnabled &&
-                     !context.isAndroidAutomotiveAvailable()
-                 ) {
-                     printPageItem
-@@ -464,7 +464,7 @@ open class DefaultToolbarMenu(
-                 },
-                 BrowserMenuDivider(),
-                 settingsItem,
--                if (shouldDeleteDataOnQuit) deleteDataOnQuit else null,
-+                deleteDataOnQuit,
-                 if (shouldUseBottomToolbar) BrowserMenuDivider() else null,
-                 if (shouldUseBottomToolbar) menuToolbar else null,
-             )
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-index 849660153d6e..8e86d72a3945 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
-@@ -206,17 +206,17 @@ class HomeMenu(
-             bookmarksItem,
-             historyItem,
-             downloadsItem,
--            passwordsItem,
-+            if (settings.shouldPromptToSaveLogins) passwordsItem else null,
-             extensionsItem,
--            syncSignInMenuItem,
--            accountAuthItem,
-+            if (settings.signedInFxaAccount) syncSignInMenuItem else null,
-+            if (settings.signedInFxaAccount) accountAuthItem else null,
-             BrowserMenuDivider(),
-             BrowserMenuDivider(),
-             whatsNewItem,
-             helpItem,
--            customizeHomeItem,
-+            if (!settings.ironfox.alwaysUsePrivateBrowsing) customizeHomeItem else null,
-             settingsItem,
--            if (settings.shouldDeleteBrowsingDataOnQuit) quitItem else null,
-+            quitItem,
-         ).also { items ->
-             items.getHighlight()?.let { onHighlightPresent(it) }
-         }

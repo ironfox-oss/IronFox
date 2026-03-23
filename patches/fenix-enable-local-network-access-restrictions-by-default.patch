@@ -1,31 +1,31 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..faa6a52a4fbf 100644
+index 98b4c588e5c8..3e2a740129c5 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -872,7 +872,7 @@ class Settings(
-     var isLnaBlockingEnabled by lazyFeatureFlagPreference(
+@@ -896,7 +896,7 @@ class Settings(
+      */
+     var isLnaBlockingEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_blocking_enabled),
-         featureFlag = true,
--        default = { FxNimbus.features.lnaBlocking.value().blocking },
-+        default = { true },
+-        default = Config.channel.isNightlyOrDebug,
++        default = true,
      )
  
      /**
-@@ -881,7 +881,7 @@ class Settings(
-     var isLnaTrackerBlockingEnabled by lazyFeatureFlagPreference(
+@@ -904,7 +904,7 @@ class Settings(
+      */
+     var isLnaTrackerBlockingEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_tracker_blocking_enabled),
-         featureFlag = true,
--        default = { FxNimbus.features.lnaBlocking.value().blockTrackers },
-+        default = { true },
+-        default = false,
++        default = true,
      )
  
      /**
-@@ -894,7 +894,7 @@ class Settings(
-     var isLnaFeatureEnabled by lazyFeatureFlagPreference(
+@@ -916,7 +916,7 @@ class Settings(
+      */
+     var isLnaFeatureEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_lna_feature_enabled),
-         featureFlag = true,
--        default = { FxNimbus.features.lnaBlocking.value().enabled },
-+        default = { true },
+-        default = Config.channel.isNightlyOrDebug,
++        default = true,
      )
  
      /**
