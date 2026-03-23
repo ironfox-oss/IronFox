@@ -105,6 +105,13 @@ patches:
     effect: "Allows users to take advantage of additional customizations, and helps to provide a superior browsing experience."
     category: "Build System"
 
+  - file: "gecko-substitute-nimbus-fml.patch"
+    name: "Substitute nimbus-fml"
+    description: "Adds support for using a locally built nimbus-fml binary, instead of fetching an artifact from Mozilla."
+    reason: "Reduces dependency on Mozilla infrastructure and improves build reproducibility."
+    effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
+    category: "Build System"
+
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Remove Unwanted Libraries (Android Components)"
@@ -116,6 +123,13 @@ patches:
   - file: "fenix-liberate.patch"
     name: "Remove Unwanted Libraries (Fenix)"
     description: "Removes proprietary, tracking, and other unwanted libraries from Fenix (and replaces them with suitable alternatives if desired, such as microG)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
+  - file: "fenix-liberate-play-integrity.patch"
+    name: "Remove Google Play Integrity (Fenix)"
+    description: "Removes the unwanted Google Play Integrity library from Fenix (Firefox for Android)."
     reason: "To remove unwanted libraries, and dependencies on related services."
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"

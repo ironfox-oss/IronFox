@@ -18,7 +18,6 @@ object FenixSettingsDictionary {
     val emeSiteSetting = R.string.pref_key_browser_feature_media_key_system_access
     val enableDiscoverMoreStories = R.string.pref_key_enable_discover_more_stories
     val enableHomepageAsNewTab = R.string.pref_key_enable_homepage_as_new_tab
-    val enableMenuRedesign = R.string.pref_key_enable_menu_redesign
     val enableMozillaAdsClient = R.string.pref_key_enable_mozilla_ads_client
     val enableUnifiedPush = R.string.pref_key_enable_unifiedpush
     val fppOverridesIronFoxEnabled = R.string.pref_key_fpp_overrides_ironfox_enabled
@@ -31,11 +30,11 @@ object FenixSettingsDictionary {
     val ironfoxSecretSettings = R.string.pref_key_if_secret
     val isAddressSyncEnabled = R.string.pref_key_enable_address_sync
     val isAppZygoteEnabled = R.string.pref_key_enable_app_zygote_process
+    val isEmailMaskFeatureEnabled = R.string.pref_key_enable_email_masks
     val isIsolatedProcessEnabled = R.string.pref_key_enable_isolated_process
     val isLnaBlockingEnabled = R.string.pref_key_enable_lna_blocking_enabled
     val isLnaFeatureEnabled = R.string.pref_key_enable_lna_feature_enabled
     val isLnaTrackerBlockingEnabled = R.string.pref_key_enable_lna_tracker_blocking_enabled
-    val isRelayFeatureEnabled = R.string.pref_key_enable_relay_email_masks
     val isRemoteDebuggingEnabled = R.string.pref_key_remote_debugging
     val isSettingsSearchEnabled = R.string.pref_key_allow_settings_search
     val localAddonInstall = R.string.pref_key_install_local_addon
@@ -43,6 +42,7 @@ object FenixSettingsDictionary {
     val javascriptJitEnabled = R.string.pref_key_jit_enabled
     val javascriptJitTrustedPrincipalsEnabled = R.string.pref_key_jit_trusted_principals_enabled
     val microsurveyFeatureEnabled = R.string.pref_key_microsurvey_feature_enabled
+    val nativeShareSheetEnabled = R.string.pref_key_native_share_sheet
     val nimbusExperiments = R.string.pref_key_nimbus_experiments
     val nimbusUsePreview = R.string.pref_key_nimbus_use_preview
     val openLinksInAPrivateTab = R.string.pref_key_open_links_in_a_private_tab
@@ -66,7 +66,6 @@ object FenixSettingsDictionary {
     val shouldEnableGlobalPrivacyControl = R.string.pref_key_privacy_enable_global_privacy_control
     val shouldPromptToSaveLogins = R.string.pref_key_save_logins
     val shouldShowCustomTabExtensions = R.string.pref_key_should_show_custom_tab_extensions
-    val shouldShowToolbarCustomization = R.string.pref_key_enable_toolbar_customization
     val shouldUseOledTheme = R.string.pref_key_oled_theme
     val shouldUseTrackingProtection = R.string.pref_key_tracking_protection
     val spoofEnglish = R.string.pref_key_spoof_english

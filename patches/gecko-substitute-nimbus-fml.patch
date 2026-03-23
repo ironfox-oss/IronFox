@@ -1,0 +1,13 @@
+diff --git a/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy b/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+index e5bbd991c7f0e..a36cd85ab247d 100644
+--- a/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
++++ b/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy
+@@ -122,7 +122,7 @@ class NimbusPlugin implements Plugin<Project> {
+         // We need to locate our nimbus-fml tool - prior to app-services moving into mozilla-firefox, we
+         // download this tool from taskcluster. After the move of app-services, we expect the tool to exist
+         // locally having been built by `./mach build`.
+-        if (project.gradle.ext.mozconfig.substs.MOZ_APPSERVICES_IN_TREE) {
++        if (true) {
+             // we assume the binary has been built and `gradle.ext.mozconfig.substs.NIMBUS_FML` tells us where to find it.
+             def fmlBinaryFile = new File(project.gradle.mozconfig.substs.NIMBUS_FML)
+ 

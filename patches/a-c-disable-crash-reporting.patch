@@ -1,25 +1,3 @@
-diff --git a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
-index 4832f0356a2f..d7cea215d702 100644
---- a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
-+++ b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
-@@ -20,7 +20,7 @@ import mozilla.appservices.suggest.SuggestionQuery
- import mozilla.components.feature.fxsuggest.facts.emitSuggestionQueryCountFact
- import mozilla.components.support.base.log.logger.Logger
- import mozilla.components.support.remotesettings.RemoteSettingsService
--import mozilla.components.support.rusterrors.reportRustError
-+// import mozilla.components.support.rusterrors.reportRustError
- import mozilla.appservices.suggest.InternalException as UniffiInternalException
- 
- /**
-@@ -126,7 +126,7 @@ class FxSuggestStorage(
-             default
-         } catch (e: UniffiInternalException) {
-             Logger.error(e.toString())
--            reportRustError("suggest-internal-error", e.toString())
-+//            reportRustError("suggest-internal-error", e.toString())
-             default
-         }
-     }
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 index 01165b30bd49..72355618d296 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
@@ -269,25 +247,3 @@ index 93ec365f24be..1397755ffe22 100644
          val logLevel: Log.Priority = Log.Priority.INFO,
      )
  }
-diff --git a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-index f746b3f70959..08208c4cc5dc 100644
---- a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-+++ b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-@@ -25,7 +25,7 @@ import mozilla.appservices.remotesettings.RemoteSettingsRecord
- import mozilla.appservices.remotesettings.RemoteSettingsResponse
- import mozilla.components.support.base.log.logger.Logger
- import mozilla.components.support.ktx.util.writeString
--import mozilla.components.support.rusterrors.reportRustError
-+// import mozilla.components.support.rusterrors.reportRustError
- import org.json.JSONObject
- import java.io.File
- import java.io.FileNotFoundException
-@@ -79,7 +79,7 @@ class RemoteSettingsClient(
-             RemoteSettingsResult.NetworkFailure(e)
-         } catch (e: UniffiInternalException) {
-             Logger.error(e.toString())
--            reportRustError("remote-settings-internal-error", e.toString())
-+//            reportRustError("remote-settings-internal-error", e.toString())
-             RemoteSettingsResult.NetworkFailure(e)
-         }
-     }

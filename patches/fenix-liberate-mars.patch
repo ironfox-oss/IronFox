@@ -1,13 +1,15 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 5cc1da059f7d..e98f90b899d1 100644
+index ff4c7a014c2c1..63a75a005e955 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -84,12 +84,12 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
+@@ -84,14 +84,14 @@ import mozilla.components.service.digitalassetlinks.local.StatementApi
  import mozilla.components.service.digitalassetlinks.local.StatementRelationChecker
  import mozilla.components.service.location.LocationService
  import mozilla.components.service.location.MozillaLocationService
--import mozilla.components.service.mars.MarsTopSitesProvider
-+/* import mozilla.components.service.mars.MarsTopSitesProvider
+-import mozilla.components.service.mars.MacTopSitesProvider
++/* import mozilla.components.service.mars.MacTopSitesProvider
+ import mozilla.components.service.mars.MacTopSitesRequestConfig
+ import mozilla.components.service.mars.MarsTopSitesProvider
  import mozilla.components.service.mars.MarsTopSitesRequestConfig
  import mozilla.components.service.mars.NEW_TAB_TILE_1_PLACEMENT_KEY
  import mozilla.components.service.mars.NEW_TAB_TILE_2_PLACEMENT_KEY
@@ -16,8 +18,8 @@ index 5cc1da059f7d..e98f90b899d1 100644
 +import mozilla.components.service.mars.contile.ContileTopSitesUpdater */
  import mozilla.components.service.pocket.ContentRecommendationsRequestConfig
  import mozilla.components.service.pocket.PocketStoriesConfig
- import mozilla.components.service.pocket.PocketStoriesRequestConfig
-@@ -589,7 +589,7 @@ class Core(
+ import mozilla.components.service.pocket.PocketStoriesService
+@@ -585,7 +585,7 @@ class Core(
      }
      val pocketStoriesService by lazyMonitored { PocketStoriesService(context, pocketStoriesConfig) }
  
@@ -26,8 +28,8 @@ index 5cc1da059f7d..e98f90b899d1 100644
          MarsTopSitesProvider(
              context = context,
              client = client,
-@@ -618,13 +618,13 @@ class Core(
-             provider = marsTopSitesProvider,
+@@ -631,17 +631,17 @@ class Core(
+             },
              frequency = Frequency(3, TimeUnit.HOURS),
          )
 -    }
@@ -37,13 +39,138 @@ index 5cc1da059f7d..e98f90b899d1 100644
          DefaultTopSitesStorage(
              pinnedSitesStorage = pinnedSiteStorage,
              historyStorage = historyStorage,
--            topSitesProvider = marsTopSitesProvider,
-+            topSitesProvider = null,
+-            topSitesProvider = if (context.settings().enableMozillaAdsClient) {
+-                macTopSitesProvider
++            topSitesProvider = null
++/*                macTopSitesProvider
+             } else {
+                 marsTopSitesProvider
+-            },
++            }, */
          )
      }
  
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
+index b6b54c661bcad..0b35d2b930380 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/UseCases.kt
+@@ -26,9 +26,9 @@ import mozilla.components.feature.tabs.CustomTabsUseCases
+ import mozilla.components.feature.tabs.TabsUseCases
+ import mozilla.components.feature.top.sites.TopSitesStorage
+ import mozilla.components.feature.top.sites.TopSitesUseCases
+-import mozilla.components.lib.crash.CrashReporter
++/* import mozilla.components.lib.crash.CrashReporter
+ import mozilla.components.service.mars.MozAdsClientProvider
+-import mozilla.components.service.mars.MozAdsUseCases
++import mozilla.components.service.mars.MozAdsUseCases */
+ import mozilla.components.support.locale.LocaleManager
+ import mozilla.components.support.locale.LocaleUseCases
+ import org.mozilla.fenix.R
+@@ -47,7 +47,7 @@ import org.mozilla.fenix.wallpapers.WallpapersUseCases
+ @Suppress("LongParameterList")
+ class UseCases(
+     private val context: Context,
+-    private val crashReporter: Lazy<CrashReporter>,
++//    private val crashReporter: Lazy<CrashReporter>,
+     private val engine: Lazy<Engine>,
+     private val store: Lazy<BrowserStore>,
+     private val shortcutManager: Lazy<WebAppShortcutManager>,
+@@ -55,7 +55,7 @@ class UseCases(
+     private val bookmarksStorage: Lazy<BookmarksStorage>,
+     private val historyStorage: Lazy<HistoryStorage>,
+     private val syncedTabsCommands: Lazy<SyncedTabsCommands>,
+-    adsClientProvider: Lazy<MozAdsClientProvider>,
++//    adsClientProvider: Lazy<MozAdsClientProvider>,
+     appStore: Lazy<AppStore>,
+     client: Lazy<Client>,
+     strictMode: Lazy<StrictModeManager>,
+@@ -136,10 +136,10 @@ class UseCases(
+     val marsUseCases by lazyMonitored { MARSUseCases(client.value) }
+ 
+     val mozAdsUseCases by lazyMonitored {
+-        MozAdsUseCases(
++/*        MozAdsUseCases(
+             adsClientProvider = adsClientProvider,
+             crashReporter = crashReporter.value,
+-        )
++        ) */
+     }
+ 
+     val fenixBrowserUseCases by lazyMonitored {
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
+index 04a6052aaacae..14489d82bdc53 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/controller/TopSiteController.kt
+@@ -27,7 +27,7 @@ import mozilla.components.browser.state.store.BrowserStore
+ import mozilla.components.feature.tabs.TabsUseCases
+ import mozilla.components.feature.top.sites.TopSite
+ import mozilla.components.feature.top.sites.TopSitesUseCases
+-import mozilla.components.service.mars.MozAdsUseCases
++// import mozilla.components.service.mars.MozAdsUseCases
+ import mozilla.components.support.ktx.android.content.getColorFromAttr
+ import mozilla.components.support.ktx.android.view.showKeyboard
+ import mozilla.components.support.ktx.kotlin.isUrl
+@@ -40,7 +40,7 @@ import org.mozilla.fenix.GleanMetrics.TopSites
+ import org.mozilla.fenix.R
+ import org.mozilla.fenix.browser.browsingmode.BrowsingMode
+ import org.mozilla.fenix.components.appstate.AppAction
+-import org.mozilla.fenix.components.metrics.MetricsUtils
++// import org.mozilla.fenix.components.metrics.MetricsUtils
+ import org.mozilla.fenix.components.usecases.FenixBrowserUseCases
+ import org.mozilla.fenix.ext.components
+ import org.mozilla.fenix.ext.nav
+@@ -122,7 +122,7 @@ class DefaultTopSiteController(
+     private val fenixBrowserUseCases: FenixBrowserUseCases,
+     private val topSitesUseCases: TopSitesUseCases,
+     private val marsUseCases: MARSUseCases,
+-    private val mozAdsUseCases: MozAdsUseCases,
++    private val mozAdsUseCases: Any?,
+     private val viewLifecycleScope: CoroutineScope,
+ ) : TopSiteController {
+ 
+@@ -268,17 +268,17 @@ class DefaultTopSiteController(
+         }
+ 
+         val availableEngines: List<SearchEngine> = getAvailableSearchEngines()
+-        val searchAccessPoint = MetricsUtils.Source.TOPSITE
++//        val searchAccessPoint = MetricsUtils.Source.TOPSITE
+ 
+         availableEngines.firstOrNull { engine ->
+             engine.resultUrls.firstOrNull { it.contains(topSite.url) } != null
+         }?.let { searchEngine ->
+-            MetricsUtils.recordSearchMetrics(
++/*            MetricsUtils.recordSearchMetrics(
+                 searchEngine,
+                 searchEngine == store.state.search.selectedOrDefaultSearchEngine,
+                 searchAccessPoint,
+                 activity.components.nimbus.events,
+-            )
++            ) */
+         }
+ 
+         if (settings.enableHomepageAsNewTab) {
+@@ -358,15 +358,15 @@ class DefaultTopSiteController(
+     }
+ 
+     private fun sendMozAdsClickInteraction(clickUrl: String) {
+-        viewLifecycleScope.launch(Dispatchers.IO) {
++/*        viewLifecycleScope.launch(Dispatchers.IO) {
+             mozAdsUseCases.recordClickInteraction(clickUrl = clickUrl)
+-        }
++        } */
+     }
+ 
+     private fun sendMozAdsImpressionInteraction(impressionUrl: String) {
+-        viewLifecycleScope.launch(Dispatchers.IO) {
++/*        viewLifecycleScope.launch(Dispatchers.IO) {
+             mozAdsUseCases.recordImpressionInteraction(impressionUrl = impressionUrl)
+-        }
++        } */
+     }
+ 
+     override fun handleTopSiteSettingsClicked() {
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index 78ea4a42c618..3a020a097e62 100644
+index d16b6d17067eb..8d85872c26ead 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 @@ -125,7 +125,7 @@ import org.mozilla.fenix.ext.setNavigationIcon
@@ -55,14 +182,17 @@ index 78ea4a42c618..3a020a097e62 100644
  import org.mozilla.fenix.home.intent.AssistIntentProcessor
  import org.mozilla.fenix.home.intent.CrashReporterIntentProcessor
  import org.mozilla.fenix.home.intent.HomeDeepLinkIntentProcessor
-@@ -540,12 +540,12 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -538,7 +538,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              aboutHomeBinding,
              crashReporterBinding,
              defaultTopSitesBinding,
 -            TopSitesRefresher(
 +/*            TopSitesRefresher(
                  settings = settings(),
-                 topSitesProvider = components.core.marsTopSitesProvider,
+                 topSitesProvider = if (settings().enableMozillaAdsClient) {
+                     components.core.macTopSitesProvider
+@@ -547,7 +547,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+                 },
                  startupPathProvider = startupPathProvider,
                  visualCompletenessQueue = components.performance.visualCompletenessQueue,
 -            ),
@@ -70,7 +200,7 @@ index 78ea4a42c618..3a020a097e62 100644
              downloadSnackbar,
              privateBrowsingLockFeature,
              externalAppLinkStatusBinding,
-@@ -576,7 +576,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -578,7 +578,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          )
  
          if (settings().showContileFeature) {
@@ -79,12 +209,12 @@ index 78ea4a42c618..3a020a097e62 100644
          }
  
          if (!settings().hiddenEnginesRestored) {
-@@ -844,7 +844,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -848,7 +848,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
              ),
          )
  
 -        components.core.contileTopSitesUpdater.stopPeriodicWork()
 +//        components.core.contileTopSitesUpdater.stopPeriodicWork()
-         components.core.pocketStoriesService.stopPeriodicSponsoredStoriesRefresh()
          components.core.pocketStoriesService.stopPeriodicContentRecommendationsRefresh()
          components.core.pocketStoriesService.stopPeriodicSponsoredContentsRefresh()
+         privateNotificationObserver?.stop()

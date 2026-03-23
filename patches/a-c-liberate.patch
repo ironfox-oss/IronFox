@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index 0e25603f7719d..87548644e857d 100644
+index c26c00fa5a137..7a4bc148faf1f 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1561,28 +1561,28 @@ projects:
+@@ -1612,28 +1612,28 @@ projects:
      - components:support-webextensions
      - components:tooling-lint
      - components:ui-icons
@@ -53,10 +53,10 @@ index 0e25603f7719d..87548644e857d 100644
    components:feature-webnotifications:
      description: Feature component for Web Notifications.
      path: components/feature/webnotifications
-@@ -1652,20 +1652,20 @@ projects:
-     - components:support-test
+@@ -1726,20 +1726,20 @@ projects:
      - components:support-utils
      - components:tooling-lint
+     - components:ui-icons
 -  components:lib-crash-sentry:
 -    description: A crash reporter for Sentry.io that that uses lib-crash.
 -    path: components/lib/crash-sentry
@@ -88,7 +88,38 @@ index 0e25603f7719d..87548644e857d 100644
    components:lib-dataprotect:
      description: A component using AndroidKeyStore to protect user data.
      path: components/lib/dataprotect
-@@ -1712,17 +1712,17 @@ projects:
+@@ -1769,18 +1769,18 @@ projects:
+     - components:support-test
+     - components:tooling-fetch-tests
+     - components:tooling-lint
+-  components:lib-integrity-googleplay:
+-    description: A library for verifying the integrity of an installation using Google
+-      Play
+-    path: components/lib/integrity-googleplay
+-    publish: true
+-    upstream_dependencies:
+-    - components:concept-base
+-    - components:concept-fetch
+-    - components:concept-integrity
+-    - components:support-base
+-    - components:support-test
+-    - components:tooling-lint
++#  components:lib-integrity-googleplay:
++#    description: A library for verifying the integrity of an installation using Google
++#      Play
++#    path: components/lib/integrity-googleplay
++#    publish: true
++#    upstream_dependencies:
++#    - components:concept-base
++#    - components:concept-fetch
++#    - components:concept-integrity
++#    - components:support-base
++#    - components:support-test
++#    - components:tooling-lint
+   components:lib-jexl:
+     description: 'Javascript Expression Language: Powerful context-based expression
+       parser and evaluator.'
+@@ -1821,17 +1821,17 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -114,10 +145,10 @@ index 0e25603f7719d..87548644e857d 100644
 +#    - components:support-base
 +#    - components:support-test
 +#    - components:tooling-lint
-   components:lib-state:
-     description: A library for maintaining application state.
-     path: components/lib/state
-@@ -1736,84 +1736,84 @@ projects:
+   components:lib-shake:
+     description: A library to detect shake gestures from accelerometer data
+     path: components/lib/shake
+@@ -1856,85 +1856,85 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint
@@ -141,6 +172,7 @@ index 0e25603f7719d..87548644e857d 100644
 -    - components:browser-toolbar
 -    - components:compose-awesomebar
 -    - components:compose-base
+-    - components:compose-cfr
 -    - components:concept-awesomebar
 -    - components:concept-base
 -    - components:concept-engine
@@ -219,6 +251,7 @@ index 0e25603f7719d..87548644e857d 100644
 +#    - components:browser-toolbar
 +#    - components:compose-awesomebar
 +#    - components:compose-base
++#    - components:compose-cfr
 +#    - components:concept-awesomebar
 +#    - components:concept-base
 +#    - components:concept-engine
@@ -280,7 +313,7 @@ index 0e25603f7719d..87548644e857d 100644
    components:samples-compose-browser:
      description: A simple browser composed from browser components using Jetpack Compose.
      path: samples/compose-browser
-@@ -1868,21 +1868,21 @@ projects:
+@@ -1989,21 +1989,21 @@ projects:
      - components:ui-icons
      - components:ui-tabcounter
      - components:ui-widgets
@@ -317,7 +350,7 @@ index 0e25603f7719d..87548644e857d 100644
    components:samples-dataprotect:
      description: An app demoing how to use the Dataprotect component to load and store
        encrypted data in SharedPreferences.
-@@ -1941,39 +1941,39 @@ projects:
+@@ -2062,39 +2062,39 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons
@@ -390,7 +423,7 @@ index 0e25603f7719d..87548644e857d 100644
    components:samples-sync:
      description: A simple app demoing Firefox Sync (History, Bookmarks, etc) integration.
      path: samples/sync
-@@ -2103,22 +2103,22 @@ projects:
+@@ -2225,22 +2225,22 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons
@@ -429,7 +462,7 @@ index 0e25603f7719d..87548644e857d 100644
    components:service-location:
      description: A library for providing location-based services.
      path: components/service/location
-@@ -2133,24 +2133,24 @@ projects:
+@@ -2255,24 +2255,24 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint

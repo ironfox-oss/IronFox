@@ -48,7 +48,7 @@ index ab7ba29ba34c..dfe63e193aa5 100644
  
      private fun JSONObject.parseAsWallpapers(): List<Wallpaper> =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-index 2a696cacea3c..1f7af36190f6 100644
+index 4b3662a5a87b..97f7027b96c1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
 @@ -18,6 +18,8 @@ import org.mozilla.fenix.ext.settings
@@ -84,7 +84,7 @@ index 2a696cacea3c..1f7af36190f6 100644
      }
  
      // Use case for selecting a new wallpaper.
-@@ -188,7 +190,7 @@ class WallpapersUseCases(
+@@ -191,7 +193,7 @@ class WallpapersUseCases(
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal class DefaultLoadBitmapUseCase(
@@ -93,7 +93,7 @@ index 2a696cacea3c..1f7af36190f6 100644
      ) : LoadBitmapUseCase {
          override suspend fun invoke(wallpaper: Wallpaper, orientation: Int): Bitmap? =
              loadWallpaperFromDisk(wallpaper, orientation)
-@@ -198,10 +200,10 @@ class WallpapersUseCases(
+@@ -201,10 +203,10 @@ class WallpapersUseCases(
              wallpaper: Wallpaper,
              orientation: Int,
          ): Bitmap? = Result.runCatching {
@@ -107,7 +107,7 @@ index 2a696cacea3c..1f7af36190f6 100644
              }
          }.getOrNull()
  
-@@ -232,13 +234,13 @@ class WallpapersUseCases(
+@@ -235,13 +237,13 @@ class WallpapersUseCases(
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -125,12 +125,12 @@ index 2a696cacea3c..1f7af36190f6 100644
                  }
              }.getOrNull()
          }
-@@ -269,7 +271,7 @@ class WallpapersUseCases(
-          * @param wallpaper The selected wallpaper.
+@@ -273,7 +275,7 @@ class WallpapersUseCases(
           */
          override suspend fun invoke(wallpaper: Wallpaper): Wallpaper.ImageFileState {
--            return if (wallpaper == Wallpaper.Default || fileManager.wallpaperImagesExist(wallpaper)) {
-+            return if (true) {
+             return if (wallpaper.collection == Wallpaper.DefaultCollection ||
+-                fileManager.wallpaperImagesExist(wallpaper)
++                true
+             ) {
                  selectWallpaper(wallpaper)
                  dispatchDownloadState(wallpaper, Wallpaper.ImageFileState.Downloaded)
-                 Wallpaper.ImageFileState.Downloaded

@@ -1,0 +1,19 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 8dd1374d2d94f..e961a218b72ad 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -534,11 +534,11 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+     }
+ 
+     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+-    private fun queueIntegrityClientWarmUp(queue: RunWhenReadyQueue) =
+-        runOnVisualCompleteness(queue) {
++    private fun queueIntegrityClientWarmUp(queue: RunWhenReadyQueue) {
++/*        runOnVisualCompleteness(queue) {
+             GlobalScope.launch(IO) {
+                 components.integrityClient.warmUp()
+-            }
++            } */
+         }
+ 
+     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage

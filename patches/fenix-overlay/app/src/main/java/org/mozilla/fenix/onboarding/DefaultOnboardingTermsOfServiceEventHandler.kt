@@ -9,6 +9,7 @@ class DefaultOnboardingTermsOfServiceEventHandler(
     private val openLink: (String) -> Unit,
     private val showManagePrivacyPreferencesDialog: () -> Unit,
     private val settings: Any?,
+    private val startGlean: () -> Unit,
 ) : OnboardingTermsOfServiceEventHandler {
     override fun onTermsOfServiceLinkClicked(url: String) {}
     override fun onPrivacyNoticeLinkClicked(url: String) {}

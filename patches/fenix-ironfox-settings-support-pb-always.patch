@@ -1,16 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-index b5cd2868a6eb..05ac00c3a8f1 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/toolbar/DefaultToolbarMenu.kt
-@@ -180,7 +180,7 @@ open class DefaultToolbarMenu(
-     @VisibleForTesting(otherwise = PRIVATE)
-     fun shouldShowOpenInRegularTab(): Boolean = selectedSession?.let { session ->
-         // This feature is gated behind Nightly for the time being.
--        Config.channel.isNightlyOrDebug &&
-+        !context.settings().ironfox.alwaysUsePrivateBrowsing &&
-             // This feature is explicitly for users opening links in private tabs.
-             context.settings().openLinksInAPrivateTab &&
-             // and is only visible in private tabs.
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt
 index b600bf6b3d43..86fc25c15b52 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/PrivateBrowsingFragment.kt

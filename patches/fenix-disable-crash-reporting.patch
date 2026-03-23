@@ -135,53 +135,6 @@ index 2c3ba7d17816..f26488e890ba 100644
                      Process.killProcess(Process.myPid())
                  },
              )
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-index b55e0e05dcbb..e4d8405be9d1 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/navigation/DebugDrawerRoute.kt
-@@ -78,10 +78,10 @@ enum class DebugDrawerRoute(
-         route = "addons_debug_tools",
-         title = R.string.debug_drawer_addons_tools_title,
-     ),
--    CrashDebugTools(
-+/*    CrashDebugTools(
-         route = "crash_debug_tools",
-         title = R.string.crash_debug_tools_title,
--    ),
-+    ), */
-     ;
- 
-     companion object {
-@@ -211,14 +211,14 @@ enum class DebugDrawerRoute(
-                         }
-                     }
- 
--                    CrashDebugTools -> {
-+/*                    CrashDebugTools -> {
-                         onClick = {
-                             debugDrawerStore.dispatch(DebugDrawerAction.NavigateTo.CrashDebugTools)
-                         }
-                         content = {
-                             CrashTools()
-                         }
--                    }
-+                    } */
-                 }
- 
-                 DebugDrawerDestination(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-index 07a2495fa830..d298ffd4555b 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/debugsettings/store/DebugDrawerNavigationMiddleware.kt
-@@ -54,7 +54,7 @@ class DebugDrawerNavigationMiddleware(
-                 is DebugDrawerAction.NavigateTo.AddonsDebugTools ->
-                     navController.navigate(route = DebugDrawerRoute.AddonsDebugTools.route)
-                 is DebugDrawerAction.NavigateTo.CrashDebugTools ->
--                    navController.navigate(route = DebugDrawerRoute.CrashDebugTools.route)
-+                    Unit // no-op
-                 is DebugDrawerAction.OnBackPressed -> navController.popBackStack()
-                 is DebugDrawerAction.DrawerOpened, DebugDrawerAction.DrawerClosed -> Unit // no-op
-             }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt
 index 18ce0dc862b4..9105fda4e133 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/BrowserToolbarSearchMiddleware.kt

@@ -4,7 +4,10 @@ package org.mozilla.fenix.onboarding
 
 import org.mozilla.fenix.onboarding.view.OnboardingPageUiData
 
-class OnboardingTelemetryRecorder {
+class OnboardingTelemetryRecorder(
+    private val onboardingReason: OnboardingReason,
+    private val installSource: String,
+) {
     fun onOnboardingComplete(sequenceId: String, sequencePosition: String) {}
     fun onOnboardingStarted() {}
 
@@ -32,6 +35,7 @@ class OnboardingTelemetryRecorder {
     fun onMarketingDataContinueClicked(optIn: Boolean) {}
     fun onMarketingDataLearnMoreClick() = {}
     fun onMarketingDataOptInToggled(optIn: Boolean) {}
+    fun onNavigatedToNextPage() {}
 
     companion object {
         private const val ACTION_IMPRESSION = "impression"

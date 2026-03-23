@@ -1,28 +1,16 @@
 diff --git a/settings.gradle b/settings.gradle
-index 04bd9e969..fbba69c16 100644
+index c891c8ac1..44df67926 100644
 --- a/settings.gradle
 +++ b/settings.gradle
-@@ -31,14 +31,7 @@ buildscript {
-         gradle.ext.mozconfig = gradle.root.mozconfig
- 
+@@ -15,6 +15,7 @@ buildscript {
+     if (!gradle.root.hasProperty("mozconfig")) {
+         // in app-services
          repositories {
--            gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
--                maven {
--                    url = repository
--                    if (gradle.mozconfig.substs.ALLOW_INSECURE_GRADLE_REPOSITORIES) {
--                        allowInsecureProtocol = true
--                    }
--                }
--            }
 +            mavenLocal()
+             mavenCentral()
          }
-     }
- }
-diff --git a/tools/nimbus-gradle-plugin/settings.gradle b/tools/nimbus-gradle-plugin/settings.gradle
-index 7d907f057..8679108f7 100644
---- a/tools/nimbus-gradle-plugin/settings.gradle
-+++ b/tools/nimbus-gradle-plugin/settings.gradle
-@@ -21,14 +21,7 @@ buildscript {
+     } else {
+@@ -22,14 +23,7 @@ buildscript {
          gradle.ext.mozconfig = gradle.root.mozconfig
  
          repositories {
