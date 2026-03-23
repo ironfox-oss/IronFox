@@ -704,6 +704,14 @@ rm -vf toolkit/locales-preview/aboutRestricted.ftl
 # Remove GMP sources
 rm -vrf "${IRONFOX_GECKO}/toolkit/content/gmp-sources"
 
+# Remove Claude integration
+## (Necessary for those with IDEs that may try to parse/use this functionality)
+rm -vf "${IRONFOX_GECKO}/.mcp.json"
+rm -vf "${IRONFOX_GECKO}/AGENTS.md"
+rm -vf "${IRONFOX_GECKO}/CLAUDE.md"
+rm -vrf "${IRONFOX_GECKO}/.claude"
+rm -vrf "${IRONFOX_GECKO}/.codex"
+
 # Remove OpenAI components
 rm -vf toolkit/components/ml/content/backends/OpenAIPipeline.mjs
 rm -vrf toolkit/components/ml/vendor/openai
