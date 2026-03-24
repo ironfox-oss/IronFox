@@ -3,9 +3,9 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_149_0_BUILD1)
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_149_0_RELEASE)
 FIREFOX_COMMIT='c7fa3c91990bac266ee99a9e31863c202469f369'
-FIREFOX_SHA512SUM='f9932c76744593b1683d2f611c568d5d4bceff1104d3321fa90f05d13d0f9e62acaef7accf96e510982498828e29693202f554c9f3705b15dd957284b5ff6a71'
+FIREFOX_SHA512SUM='622a3b1b25bc40e90d7f7052bc70608cbe84fef92e3f42ef082002f90be4e66a49d5f7e5059036fcbe309c71a2a53643f1db699f662f5410b03200f99196fea2'
 FIREFOX_VERSION='149.0'
 
 IRONFOX_VERSION="${FIREFOX_VERSION}"
@@ -20,8 +20,8 @@ APPSERVICES_VERSION='149.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='547c346c9f8b10b8f5fe3d9ede6dc14a06eb510d'
-L10N_SHA512SUM='7fd893951930ff342ed8bcb7e15a95c2edf5fd189048cbaae1ff0a6488c349538361fd013ff6eb8a167c1f7fd38a9b7528f19b498737dd9d6784d30740380309'
+L10N_COMMIT='5af7ba5f1e44bfc854fb742cd33b18ffc76f1a21'
+L10N_SHA512SUM='d03a6e0aef66afb7f189b46c3ec73a454a03e405d24b0c7a7efbafaa84194d1b3d2afb60b3bf55b213e380ec86d91c7a68fb8cb2eb46f664cb39e3c42c748ed0'
 
 ## Glean
 ### Version: v67.0.0
