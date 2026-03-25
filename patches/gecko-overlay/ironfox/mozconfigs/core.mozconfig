@@ -111,7 +111,6 @@ ac_add_options --disable-wmf
 
 ## Disable Node.js
 ac_add_options --disable-nodejs
-export NODEJS=
 
 ## Enable AutoConfig
 ### https://support.mozilla.org/kb/customizing-firefox-using-autoconfig
@@ -168,7 +167,7 @@ ac_add_options --with-l10n-base="${IRONFOX_L10N_CENTRAL}"
 export L10NBASEDIR="${IRONFOX_L10N_CENTRAL}"
 
 ## Set Node.js path
-# export NODEJS="${IRONFOX_NODEJS}"
+export NODEJS="${IRONFOX_NODEJS}"
 
 ## Set Rust path
 export CARGO="${IRONFOX_CARGO}"
