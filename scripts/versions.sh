@@ -20,8 +20,8 @@ APPSERVICES_VERSION='149.0'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-L10N_COMMIT='5af7ba5f1e44bfc854fb742cd33b18ffc76f1a21'
-L10N_SHA512SUM='d03a6e0aef66afb7f189b46c3ec73a454a03e405d24b0c7a7efbafaa84194d1b3d2afb60b3bf55b213e380ec86d91c7a68fb8cb2eb46f664cb39e3c42c748ed0'
+L10N_COMMIT='2bef07b1af921d94ab9ddaa4cc3890cdb442fd83'
+L10N_SHA512SUM='e383fc23e2ea9ad96b5634f06281f8c4dac01c615fa8329059865b45824edcf0da5c62c03012591bb1054f48d0a16d3ce57af22722cbc8cb56957205d46c571b'
 
 ## Glean
 ### Version: v67.0.0
