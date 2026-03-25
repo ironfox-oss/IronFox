@@ -64,12 +64,66 @@ export MOZBUILD_STATE_PATH="${IRONFOX_MOZBUILD}"
 export TASKCLUSTER_PROXY_URL='https://noop.invalid'
 export TASKCLUSTER_ROOT_URL='https://noop.invalid'
 
+# Node.js
+## https://nodejs.org/api/cli.html#environment-variables-1
+
+## Disable compile cache
+### https://nodejs.org/api/cli.html#node-disable-compile-cache1
+export NODE_DISABLE_COMPILE_CACHE=1
+
+## Disable the system CA root store
+### https://nodejs.org/api/cli.html#node-use-system-ca1
+export NODE_USE_SYSTEM_CA=0
+
+## Do not attempt to use a system proxy
+### https://nodejs.org/api/cli.html#node-use-env-proxy1
+export NODE_USE_ENV_PROXY=0
+
+## Enforce certificate validation
+### https://nodejs.org/api/cli.html#node-tls-reject-unauthorizedvalue
+export NODE_TLS_REJECT_UNAUTHORIZED=1
+
+## Ensure npm always installs production/release modules
+export NODE_ENV='production'
+
+## Node options
+export NODE_OPTIONS="${IRONFOX_NODE_OPTIONS}"
+export npm_config_node_options="${IRONFOX_NODE_OPTIONS}"
+
+# npm
+
+## Always use our npm config file
+## https://docs.npmjs.com/cli/v11/using-npm/config#npmrc-files
+export NPM_CONFIG_GLOBALCONFIG="${IRONFOX_PATCHES}/npm/.npmrc"
+export npm_config_globalconfig="${IRONFOX_PATCHES}/npm/.npmrc"
+
+### Always install dependencies properly
+export npm_config_install_links='true'
+
+### Disable "funding" nags
+export npm_config_fund='false'
+
+### Disable submission of audit reports
+export npm_config_audit='false'
+
+### Enable verbose logging
+export npm_config_loglevel='verbose'
+
+### Enforce SSL key validation
+export npm_config_strict_ssl='true'
+
+### Write exact versions to package.json/package_lock.json
+export npm_config_save_exact='true'
+
+### Set cache directory
+export npm_config_cache="${IRONFOX_NPM_CACHE}"
+
 # NSS
 export NSS_DIR="${IRONFOX_NSS_DIR}"
 export NSS_STATIC=1
 
 # nvm
-export NVM_DIR="${IRONFOX_NVM_DIR}"
+export NVM_DIR="${IRONFOX_NVM}"
 
 ## This is necessary to prevent nvm from automatically trying to modify the system PATH
 export PROFILE='/dev/null'
@@ -145,6 +199,9 @@ export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
+
+## Set Node.js bin path
+export NVM_BIN="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin"
 
 ## Set Node.js version
 export NODE_VERSION="${NODE_VERSION}"

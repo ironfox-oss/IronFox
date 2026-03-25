@@ -87,6 +87,7 @@ if [[ -n "${FDROID_BUILD+x}" ]]; then
 fi
 
 source "${IRONFOX_CARGO_ENV}"
+source "${IRONFOX_NVM_ENV}"
 source "${IRONFOX_PIP_ENV}"
 
 # Include version info

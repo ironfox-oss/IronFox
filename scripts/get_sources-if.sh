@@ -33,6 +33,7 @@ IRONFOX_GET_SOURCE_GRADLE=0
 IRONFOX_GET_SOURCE_GYP=0
 IRONFOX_GET_SOURCE_MICROG=0
 IRONFOX_GET_SOURCE_NODE=0
+IRONFOX_GET_SOURCE_NPM=0
 IRONFOX_GET_SOURCE_PHOENIX=0
 IRONFOX_GET_SOURCE_PIP=0
 IRONFOX_GET_SOURCE_PREBUILDS=0
@@ -93,6 +94,9 @@ elif [ "${target}" == 'microg' ]; then
 elif [ "${target}" == 'node' ]; then
     # Get + set-up Node.js
     IRONFOX_GET_SOURCE_NODE=1
+elif [ "${target}" == 'npm' ]; then
+    # Get + set-up npm
+    IRONFOX_GET_SOURCE_NPM=1
 elif [ "${target}" == 'phoenix' ]; then
     # Get Phoenix
     IRONFOX_GET_SOURCE_PHOENIX=1
@@ -128,6 +132,7 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_GYP=1
     IRONFOX_GET_SOURCE_MICROG=1
     IRONFOX_GET_SOURCE_NODE=1
+    IRONFOX_GET_SOURCE_NPM=1
     IRONFOX_GET_SOURCE_PHOENIX=1
     IRONFOX_GET_SOURCE_PIP=1
     IRONFOX_GET_SOURCE_PREBUILDS=1
@@ -154,6 +159,7 @@ else
     echo 'GYP: gyp'
     echo 'microG: microg'
     echo 'Node.js: node'
+    echo 'npm: npm'
     echo 'Phoenix: phoenix'
     echo 'pip: pip'
     echo 'Prebuilds: prebuilds'
@@ -719,15 +725,6 @@ function get_firefox_l10n() {
     echo_green_text "SUCCESS: Set-up firefox-l10n at ${IRONFOX_L10N_CENTRAL}"
 }
 
-# Get + set-up F-Droid's Gradle script
-function get_gradle() {
-    echo_red_text "Downloading F-Droid's Gradle script..."
-    download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${IRONFOX_GRADLE_PY}"
-
-    # Validate SHA512sum
-    validate_sha512sum "${GRADLE_SHA512SUM}" "${IRONFOX_GRADLE_PY}"
-}
-
 # Get Glean
 function get_glean() {
     echo_red_text 'Downloading Glean...'
@@ -776,6 +773,15 @@ function get_glean_parser() {
     validate_sha512sum "${GLEAN_PARSER_SHA512SUM}" "${IRONFOX_GLEAN_PARSER_WHEELS}/glean_parser-${GLEAN_PARSER_VERSION}-py3-none-any.whl"
 }
 
+# Get + set-up F-Droid's Gradle script
+function get_gradle() {
+    echo_red_text "Downloading F-Droid's Gradle script..."
+    download "https://gitlab.com/fdroid/gradlew-fdroid/-/raw/${GRADLE_COMMIT}/gradlew.py" "${IRONFOX_GRADLE_PY}"
+
+    # Validate SHA512sum
+    validate_sha512sum "${GRADLE_SHA512SUM}" "${IRONFOX_GRADLE_PY}"
+}
+
 # Get GYP
 function get_gyp() {
     if  [ ! -d "${IRONFOX_PIP_DIR}" ] || [ ! -f "${IRONFOX_PIP_ENV}" ]; then
@@ -819,33 +825,37 @@ function get_microg() {
 
 # Get + set-up Node.js
 function get_node() {
-    if [[ -d "${IRONFOX_NVM_DIR}" ]]; then
-        echo_red_text "The nvm environment is already set-up at ${IRONFOX_NVM_DIR}"
+    if [[ -d "${IRONFOX_NVM}" ]]; then
+        echo_red_text "The Node.js environment is already set-up at ${IRONFOX_NVM}"
         read -p "Do you want to re-create it? [y/N] " -n 1 -r
         echo
         if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-            rm -rf "${IRONFOX_NVM_DIR}"
+            rm -rf "${IRONFOX_NPM_CACHE}" "${IRONFOX_NVM}" "${IRONFOX_ROOT}/node_modules"
         fi
     fi
-    mkdir -p "${IRONFOX_NVM_DIR}"
 
-    echo_red_text 'Downloading nvm...'
-    download "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_COMMIT}/install.sh" "${IRONFOX_DOWNLOADS}/nvm-install.sh"
-
-    # Validate SHA512sum
-    validate_sha512sum "${NVM_SHA512SUM}" "${IRONFOX_DOWNLOADS}/nvm-install.sh"
+    download_and_extract 'nvm' "https://github.com/nvm-sh/nvm/archive/${NVM_COMMIT}.tar.gz" "${IRONFOX_NVM}" "${NVM_SHA512SUM}"
 
     echo_red_text 'Installing Node.js...'
-    bash -x "${IRONFOX_DOWNLOADS}/nvm-install.sh"
+    source "${IRONFOX_NVM_ENV}"
+    nvm install "${NODE_VERSION}"
+    nvm alias default "${NODE_VERSION}"
+    nvm use "${NODE_VERSION}"
 
-    echo_green_text "SUCCESS: Set-up Node.js at ${IRONFOX_NODEJS}"
+    echo_green_text "SUCCESS: Set-up Node.js environment at ${IRONFOX_NVM}"
 }
 
-# Get UnifiedPush-AC
-function get_up_ac() {
-    echo_red_text 'Downloading UnifiedPush-AC...'
-    download_and_extract 'unifiedpush-ac' "https://gitlab.com/ironfox-oss/unifiedpush-ac/-/archive/${UNIFIEDPUSHAC_COMMIT}/unifiedpush-ac-${UNIFIEDPUSHAC_COMMIT}.tar.gz" "${IRONFOX_UP_AC}" "${UNIFIEDPUSHAC_SHA512SUM}"
-    echo_green_text "SUCCESS: Set-up UnifiedPush-AC at ${IRONFOX_UP_AC}"
+# Get npm
+function get_npm() {
+    if  [ ! -d "${IRONFOX_NVM}" ]; then
+        echo_red_text "ERROR: You tried to download npm, but you don't have a Node.js environment set-up yet."
+        exit 1
+    fi
+
+    echo_red_text 'Installing npm...'
+    source "${IRONFOX_NVM_ENV}"
+    "${IRONFOX_NPM}" install -g npm@"${NPM_VERSION}"
+    echo_green_text "SUCCESS: Set-up npm at ${IRONFOX_NPM}"
 }
 
 # Get Phoenix
@@ -949,6 +959,13 @@ function get_rust() {
     echo_green_text "SUCCESS: Set-up Rust environment at ${IRONFOX_CARGO_HOME}"
 }
 
+# Get UnifiedPush-AC
+function get_up_ac() {
+    echo_red_text 'Downloading UnifiedPush-AC...'
+    download_and_extract 'unifiedpush-ac' "https://gitlab.com/ironfox-oss/unifiedpush-ac/-/archive/${UNIFIEDPUSHAC_COMMIT}/unifiedpush-ac-${UNIFIEDPUSHAC_COMMIT}.tar.gz" "${IRONFOX_UP_AC}" "${UNIFIEDPUSHAC_SHA512SUM}"
+    echo_green_text "SUCCESS: Set-up UnifiedPush-AC at ${IRONFOX_UP_AC}"
+}
+
 if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
     get_android_ndk
 fi
@@ -1029,6 +1046,10 @@ fi
 
 if [ "${IRONFOX_GET_SOURCE_NODE}" == 1 ]; then
     get_node
+fi
+
+if [ "${IRONFOX_GET_SOURCE_NPM}" == 1 ]; then
+    get_npm
 fi
 
 if [ "${IRONFOX_GET_SOURCE_PHOENIX}" == 1 ]; then

@@ -421,11 +421,18 @@ if [[ -z "${IRONFOX_PREBUILDS+x}" ]]; then
     export IRONFOX_PREBUILDS="${IRONFOX_PREBUILDS_DEFAULT}"
 fi
 
-# nvm
-IRONFOX_NVM_DIR_DEFAULT="${IRONFOX_BUILD}/.nvm"
-if [[ -z "${IRONFOX_NVM_DIR+x}" ]]; then
-    export IRONFOX_NVM_DIR="${IRONFOX_NVM_DIR_DEFAULT}"
+# npm cache
+IRONFOX_NPM_CACHE_DEFAULT="${IRONFOX_BUILD}/.npm"
+if [[ -z "${IRONFOX_NPM_CACHE+x}" ]]; then
+    export IRONFOX_NPM_CACHE="${IRONFOX_NPM_CACHE_DEFAULT}"
 fi
+
+# nvm
+IRONFOX_NVM_DEFAULT="${IRONFOX_EXTERNAL}/nvm"
+if [[ -z "${IRONFOX_NVM+x}" ]]; then
+    export IRONFOX_NVM="${IRONFOX_NVM_DEFAULT}"
+fi
+export IRONFOX_NVM_ENV="${IRONFOX_NVM}/nvm.sh"
 
 # Phoenix
 IRONFOX_PHOENIX_DEFAULT="${IRONFOX_EXTERNAL}/phoenix"
@@ -571,6 +578,25 @@ else
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT} ${IRONFOX_GRADLE_FLAGS}"
 fi
 
+# If Node.js options are added, this determines whether they should be appended to our default flags (default),
+## or if they should override them entirely
+IRONFOX_NODE_OPTIONS_OVERRIDE_DEFAULT=0
+if [[ -z "${IRONFOX_NODE_OPTIONS_OVERRIDE+x}" ]]; then
+    export IRONFOX_NODE_OPTIONS_OVERRIDE="${IRONFOX_NODE_OPTIONS_OVERRIDE_DEFAULT}"
+fi
+
+# Node.js options
+### https://nodejs.org/api/cli.html#node-optionsoptions
+IRONFOX_NODE_OPTIONS_DEFAULT='--jitless --tls-min-v1.2 --use-bundled-ca'
+if [[ -z "${IRONFOX_NODE_OPTIONS+x}" ]]; then
+    export IRONFOX_NODE_OPTIONS_OVERRIDE=1
+    export IRONFOX_NODE_OPTIONS="${IRONFOX_NODE_OPTIONS_DEFAULT}"
+elif [[ "${IRONFOX_NODE_OPTIONS_OVERRIDE}" == 1 ]]; then
+    export IRONFOX_NODE_OPTIONS="${IRONFOX_NODE_OPTIONS}"
+else
+    export IRONFOX_NODE_OPTIONS="${IRONFOX_NODE_OPTIONS_DEFAULT} ${IRONFOX_NODE_OPTIONS}"
+fi
+
 # If Rust flags are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
 IRONFOX_RUST_FLAGS_OVERRIDE_DEFAULT=0
@@ -703,9 +729,17 @@ fi
 IRONFOX_ENV_EXTERNAL="${IRONFOX_SCRIPTS}/env_external.sh"
 source "${IRONFOX_ENV_EXTERNAL}"
 
-# Node.js
 source "${IRONFOX_VERSIONS}"
-IRONFOX_NODEJS_DEFAULT="${IRONFOX_NVM_DIR}/versions/node/v${NODE_VERSION}/bin/node"
+
+# Node.js
+IRONFOX_NODEJS_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/node"
 if [[ -z "${IRONFOX_NODEJS+x}" ]]; then
     export IRONFOX_NODEJS="${IRONFOX_NODEJS_DEFAULT}"
 fi
+
+# npm
+IRONFOX_NPM_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/npm"
+if [[ -z "${IRONFOX_NPM+x}" ]]; then
+    export IRONFOX_NPM="${IRONFOX_NPM_DEFAULT}"
+fi
+
