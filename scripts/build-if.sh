@@ -108,6 +108,11 @@ function set_build_env() {
     fi
 
     EPOCH_NS="$("${IRONFOX_DATE}" "+%s%N")"
+    if [ "${IRONFOX_CI}" == 1 ]; then
+        IF_LOCAL_VERSION_STAMP="${IF_BUILD_STAMP}"
+    else
+        IF_LOCAL_VERSION_STAMP="${EPOCH_NS}"
+    fi
 
     if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
         # Set build date for bundle builds, to avoid conflicts and ensure that MOZ_BUILDID is consistent across all builds
@@ -115,13 +120,13 @@ function set_build_env() {
         BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
         cat > "${IRONFOX_ENV_BUILD}" << EOF
 export IF_BUILD_DATE="${BUILD_DATE}"
-export IF_EPOCH_NS="${EPOCH_NS}"
+export IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
 export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     else
         echo "Writing ${IRONFOX_ENV_BUILD}..."
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-export IF_EPOCH_NS="${EPOCH_NS}"
+export IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
 export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     fi
@@ -130,6 +135,28 @@ EOF
 
     if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
         export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
+    fi
+
+    # Set versions for our local dependency substitutions
+    readonly IF_LOCAL_AC_VERSION_BASE="${FIREFOX_VERSION}-${IF_EPOCH_NS}"
+    readonly IF_LOCAL_AS_VERSION_BASE="${APPSERVICES_VERSION}-${IF_EPOCH_NS}"
+    readonly IF_LOCAL_GLEAN_VERSION_BASE="${GLEAN_VERSION}-${IF_EPOCH_NS}"
+
+    ## For CI, we set IF_EPOCH_NS from the pipeline creation time, and we don't add '-SNAPSHOT' to the end
+    if [ "${IRONFOX_CI}" == 1 ]; then
+        readonly IF_LOCAL_AC_VERSION="0.0.1-local-${IF_LOCAL_AC_VERSION_BASE}"
+        readonly IF_LOCAL_AC_VERSION_GRADLE="-${IF_LOCAL_AC_VERSION_BASE}"
+        readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_AS_VERSION_BASE}"
+        readonly IF_LOCAL_AS_VERSION_GRADLE="${IF_LOCAL_AS_VERSION_BASE}"
+        readonly IF_LOCAL_GLEAN_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_GLEAN_VERSION_BASE}"
+        readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${IF_LOCAL_GLEAN_VERSION_BASE}"
+    else
+        readonly IF_LOCAL_AC_VERSION="0.0.1-local-${IF_LOCAL_AC_VERSION_BASE}-SNAPSHOT"
+        readonly IF_LOCAL_AC_VERSION_GRADLE="-${IF_LOCAL_AC_VERSION_BASE}-SNAPSHOT"
+        readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_AS_VERSION_BASE}-SNAPSHOT"
+        readonly IF_LOCAL_AS_VERSION_GRADLE="${IF_LOCAL_AS_VERSION_BASE}-SNAPSHOT"
+        readonly IF_LOCAL_GLEAN_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_GLEAN_VERSION_BASE}-SNAPSHOT"
+        readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${IF_LOCAL_GLEAN_VERSION_BASE}-SNAPSHOT"
     fi
 
     echo_green_text 'SUCCESS: Set build environment variables'
@@ -143,11 +170,12 @@ function prep_as() {
         rm -f "${IRONFOX_AS}/local.properties"
     fi
     cp -f "${IRONFOX_PATCHES}/build/application-services/local.properties" "${IRONFOX_AS}/local.properties"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_AC}|${IRONFOX_AC}|" "${IRONFOX_AS}/local.properties"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN}|${IRONFOX_GLEAN}|" "${IRONFOX_AS}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|" "${IRONFOX_AS}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM_ARCH}|${IRONFOX_PLATFORM_ARCH}|" "${IRONFOX_AS}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|" "${IRONFOX_AS}/local.properties"
+
+    # Substitute our builds of Android Components
+    "${IRONFOX_SED}" -i -e "/^android-components = \"/c\\android-components = \"${IF_LOCAL_AC_VERSION}\"" "${IRONFOX_AS}/gradle/libs.versions.toml"
 
     echo_green_text 'SUCCESS: Prepared Application Services'
 }
@@ -217,14 +245,15 @@ function prep_gecko() {
         rm -f "${IRONFOX_GECKO}/local.properties"
     fi
     cp -f "${IRONFOX_PATCHES}/build/gecko/local.properties" "${IRONFOX_GECKO}/local.properties"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_AC}|${IRONFOX_AC}|" "${IRONFOX_GECKO}/local.properties"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_GLEAN}|${IRONFOX_GLEAN}|" "${IRONFOX_GECKO}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_GECKO}|${IRONFOX_GECKO}|" "${IRONFOX_GECKO}/local.properties"
 
-    # Substitute our local version of Application Services (for Android Components)
-    "${IRONFOX_SED}" -i -e "s|val VERSION = .*|val VERSION = \"0.0.1-SNAPSHOT-"${IF_EPOCH_NS}-${APPSERVICES_VERSION}\""|g" "${IRONFOX_AC}/plugins/dependencies/src/main/java/ApplicationServices.kt"
-    "${IRONFOX_SED}" -i "s|{APPSERVICES_VERSION}|${APPSERVICES_VERSION}|" "${IRONFOX_GECKO}/local.properties"
-    "${IRONFOX_SED}" -i "s|{IF_EPOCH_NS}|${IF_EPOCH_NS}|" "${IRONFOX_GECKO}/local.properties"
+    # Substitute our local versions of Android Components and Application Services
+    "${IRONFOX_SED}" -i -e "s|val VERSION = .*|val VERSION = \""${IF_LOCAL_AS_VERSION}\""|g" "${IRONFOX_AC}/plugins/dependencies/src/main/java/ApplicationServices.kt"
+    "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|" "${IRONFOX_GECKO}/local.properties"
+    "${IRONFOX_SED}" -i "s|{IF_LOCAL_AS_VERSION}|${IF_LOCAL_AS_VERSION}|" "${IRONFOX_GECKO}/local.properties"
+
+    # Substitute our local version of Glean
+    "${IRONFOX_SED}" -i -e "/^glean = \"/c\\glean = \"${IF_LOCAL_GLEAN_VERSION}\"" "${IRONFOX_GECKO}/gradle/libs.versions.toml"
 
     # Configure release channel
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
@@ -295,11 +324,10 @@ function prep_up_ac() {
         rm -f "${IRONFOX_UP_AC}/local.properties"
     fi
     cp -f "${IRONFOX_PATCHES}/build/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties"
-    "${IRONFOX_SED}" -i "s|{FIREFOX_VERSION}|${FIREFOX_VERSION}|" "${IRONFOX_UP_AC}/local.properties"
 
-    # Substitute our local version of Application Services
-    "${IRONFOX_SED}" -i "s|{APPSERVICES_VERSION}|${APPSERVICES_VERSION}|" "${IRONFOX_UP_AC}/local.properties"
-    "${IRONFOX_SED}" -i "s|{IF_EPOCH_NS}|${IF_EPOCH_NS}|" "${IRONFOX_UP_AC}/local.properties"
+    # Substitute our local versions of Android Components and Application Services
+    "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|" "${IRONFOX_UP_AC}/local.properties"
+    "${IRONFOX_SED}" -i "s|{IF_LOCAL_AS_VERSION}|${IF_LOCAL_AS_VERSION}|" "${IRONFOX_UP_AC}/local.properties"
 
     echo_green_text 'SUCCESS: Prepared UnifiedPush-AC'
 }
@@ -400,8 +428,8 @@ function build_glean() {
     pushd "${IRONFOX_GLEAN}"
     clean_gradle
 
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publishToMavenLocal -x createGleanPythonVirtualEnv
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
     popd
 
     echo_green_text 'SUCCESS: Built Glean'
@@ -422,7 +450,7 @@ function build_as() {
     bash -x "${IRONFOX_AS}/libs/verify-android-environment.sh"
 
     # Build Application Services
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publish -Plocal=${IF_EPOCH_NS}-${APPSERVICES_VERSION}
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publish -Plocal=${IF_LOCAL_AS_VERSION_GRADLE}
 
     popd
 
@@ -717,14 +745,12 @@ function build_ac() {
     # Always clean Gradle to ensure builds are fresh
     "${IRONFOX_MACH}" gradle -p mobile/android/android-components clean
 
-    # Publish concept-fetch (required by A-S) with auto-publication disabled,
-    # otherwise automatically triggered publication of A-S and publications of unifiedpush-ac will fail
-    "${IRONFOX_MACH}" gradle -p mobile/android/android-components :components:concept-fetch:publishToMavenLocal
-
-    # unifiedpush-ac also needs concept-base (dependency of support-base), support-base and ui-icons
-    "${IRONFOX_MACH}" gradle -p mobile/android/android-components :components:concept-base:publishToMavenLocal
-    "${IRONFOX_MACH}" gradle -p mobile/android/android-components :components:support-base:publishToMavenLocal
-    "${IRONFOX_MACH}" gradle -p mobile/android/android-components :components:ui-icons:publishToMavenLocal
+    # Build concept-fetch, concept-base (dependency of support-base), support-base and ui-icons
+    ## (Needed by UnifiedPush-AC)
+    "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-fetch:publishToMavenLocal
+    "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-base:publishToMavenLocal
+    "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:support-base:publishToMavenLocal
+    "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:ui-icons:publishToMavenLocal
 
     unset IRONFOX_MACH_TARGET_AC
     export IRONFOX_MACH_TARGET_AC=0
@@ -761,7 +787,7 @@ function build_ac_cont() {
     "${IRONFOX_MACH}" configure
 
     # Build Android Components
-    "${IRONFOX_MACH}" gradle -p mobile/android/android-components publishToMavenLocal
+    "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components publishToMavenLocal
     unset IRONFOX_MACH_TARGET_AC
     export IRONFOX_MACH_TARGET_AC=0
     "${IRONFOX_MACH}" configure
@@ -789,49 +815,49 @@ function build_fenix() {
     "${IRONFOX_MACH}" configure
 
     # Always clean Gradle to ensure builds are fresh
-    "${IRONFOX_MACH}" gradle fenix:clean
+    "${IRONFOX_MACH}" gradle -p mobile/android/fenix clean
 
     # Build Fenix
-    "${IRONFOX_MACH}" gradle fenix:assembleRelease
+    "${IRONFOX_MACH}" gradle -p mobile/android/fenix assembleRelease
 
     if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
         # 1. Export APK for ARM64
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-arm64-v8a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-arm64-v8a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-arm64-v8a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-arm64-v8a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED}"
         fi
 
         # 2. Export APK for ARM
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-armeabi-v7a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-armeabi-v7a-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-armeabi-v7a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-armeabi-v7a-release.apk" "${IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED}"
         fi
 
         # 3. Export APK for x86_64
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-x86_64-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-x86_64-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-x86_64-release.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-x86_64-release.apk" "${IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED}"
         fi
 
         # 4. Export universal APK
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-universal-release.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release.apk" "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED}"
         fi
 
         # 5. Finally, build and export our AAB
-        "${IRONFOX_MACH}" gradle -Paab fenix:bundleRelease
-        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/fenix-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
+        "${IRONFOX_MACH}" gradle -p mobile/android/fenix -Paab bundleRelease
+        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
     else
         # Export APK
         if [ "${IRONFOX_SIGN}" == 1 ]; then
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-${IRONFOX_TARGET_ABI}-release-unsigned.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}-unsigned.apk"
         else
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/fenix-${IRONFOX_TARGET_ABI}-release.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-${IRONFOX_TARGET_ABI}-release.apk" "${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ABI}.apk"
         fi
     fi
 
@@ -885,7 +911,6 @@ fi
 
 build_microg
 build_phoenix
-build_glean
 build_gecko
 
 if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
@@ -894,6 +919,7 @@ if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
     build_up_ac
     build_nimbus_fml
     build_ac_cont
+    build_glean
     build_fenix
     echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
 fi

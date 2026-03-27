@@ -1,3 +1,4 @@
 # IronFox Gecko(View) mozconfig
 
-# Currently empty :(
+## Prevent running the verifyGleanVersion Gradle task
+export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial -x verifyGleanVersion"

@@ -12,6 +12,7 @@ export IRONFOX_KEYSTORE_PASS_FILE='/opt/IronFox/ironfox-keystore.pass'
 
 # Build date
 export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
+export IF_BUILD_STAMP="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%s%N")"
 export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
 
 # Log directory

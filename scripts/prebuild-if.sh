@@ -41,14 +41,6 @@ function localize_gradle() {
     done
 }
 
-# For Glean, we also need to set "-x createGleanPythonVirtualEnv"
-function glean_localize_gradle() {
-    find ./* -name gradlew -type f | while read -r gradlew; do
-        echo -e "#!/bin/sh\n\""'${IRONFOX_GRADLE}'"\" \${IRONFOX_GRADLE_FLAGS} -x createGleanPythonVirtualEnv \""'$@'"\"" >"${gradlew}"
-        chmod 755 "${gradlew}"
-    done
-}
-
 function localize_maven() {
     # Replace custom Maven repositories with mavenLocal()
     find ./* -name '*.gradle' -type f -exec "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/localize_maven.py" {} \;
@@ -378,7 +370,7 @@ pushd "${IRONFOX_GLEAN}"
 glean_apply_patches
 
 # Always use our Gradle wrapper with our Gradle flags/configuration
-glean_localize_gradle
+localize_gradle
 
 # Replace undesired Maven repos (ex. Mozilla's) with mavenLocal
 localize_maven
@@ -503,9 +495,6 @@ a-s_apply_patches
 
 # Always use our Gradle wrapper with our Gradle flags/configuration
 localize_gradle
-
-# Break the dependency on older A-C
-"${IRONFOX_SED}" -i -e "/^android-components = \"/c\\android-components = \"${FIREFOX_VERSION}\"" gradle/libs.versions.toml
 
 # Break the dependency on older Rust
 "${IRONFOX_SED}" -i -e "s|channel = .*|channel = \""${RUST_VERSION}\""|g" rust-toolchain.toml
@@ -841,6 +830,7 @@ rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozi
 
 # Remove Glean
 source "${IRONFOX_SCRIPTS}/deglean.sh"
+"${IRONFOX_SED}" -i 's|classpath libs.mozilla.glean|// classpath libs.mozilla.glean|g' "${IRONFOX_GECKO}/build.gradle"
 
 # Nuke undesired Mozilla endpoints
 source "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh"
