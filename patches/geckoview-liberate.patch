@@ -1,0 +1,13 @@
+diff --git a/mobile/android/geckoview/build.gradle b/mobile/android/geckoview/build.gradle
+index 7185d5e89658b8..79e4b391c2f024 100644
+--- a/mobile/android/geckoview/build.gradle
++++ b/mobile/android/geckoview/build.gradle
+@@ -222,7 +222,7 @@ dependencies {
+     implementation libs.androidx.core
+     implementation libs.androidx.lifecycle.common
+     implementation libs.androidx.lifecycle.process
+-    implementation libs.play.services.fido
++    implementation "org.microg.gms:play-services-fido:v0.0.0.250932"
+     implementation "org.yaml:snakeyaml:2.2"
+ 
+     if (mozconfig.substs.MOZ_ANDROID_HLS_SUPPORT) {

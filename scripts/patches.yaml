@@ -127,6 +127,13 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
+  - file: "geckoview-liberate.patch"
+    name: "Replace Google Play FIDO with microG"
+    description: "Replaces the Google Play FIDO library with microG."
+    reason: "To remove unwanted proprietary libraries, and dependencies on related services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
   - file: "geckoview-prioritize-cred-manager-over-gms.patch"
     name: "Prioritize Credential Manager over microG/GMS"
     description: "Prioritizes the use of Android's standard Credential Manager API, instead of first attempting to use microG/Google Play Services (if they're installed by the user)."

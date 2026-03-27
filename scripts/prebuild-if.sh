@@ -825,9 +825,6 @@ rm -vf mobile/android/android-components/components/lib/crash/src/main/java/mozi
 "${IRONFOX_SED}" -i 's|play-services-|# play-services-|g' gradle/libs.versions.toml
 "${IRONFOX_SED}" -i 's|sentry|# sentry|g' gradle/libs.versions.toml
 
-# Replace Google Play FIDO with microG
-"${IRONFOX_SED}" -i 's|libs.play.services.fido|"org.microg.gms:play-services-fido:v0.0.0.250932"|g' mobile/android/geckoview/build.gradle
-
 # Remove Glean
 source "${IRONFOX_SCRIPTS}/deglean.sh"
 "${IRONFOX_SED}" -i 's|classpath libs.mozilla.glean|// classpath libs.mozilla.glean|g' "${IRONFOX_GECKO}/build.gradle"
