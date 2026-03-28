@@ -515,6 +515,17 @@ patches:
     effect: "Users are protected against tracking, and benefit from added attack surface reduction, without causing breakage and having to deal with the usual side effects that appear when the Beacon API is disabled."
     category: "Privacy"
 
+  - file: "gecko-prevent-exposing-branding.patch"
+    name: "Prevent exposing branding resources to websites"
+    description: |
+      Prevents exposing branding assets and certain other internal resources to websites
+      (https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/ecb798d066b039329223b4c31133e2f917ca477d).
+    reason: | 
+      Improves privacy by preventing websites from determining whether a user is on IronFox,
+      and improves compatibility, as we have reason to believe websites might be using this to block LibreWolf/IronFox users.
+    effect: "Users are protected against additional fingerprinting vectors, and websites work as expected."
+    category: "Privacy"
+
   - file: "gecko-prevent-exposing-name-and-vendor-to-extensions.patch"
     name: "Prevent exposing the browser name and vendor to extensions"
     description: |

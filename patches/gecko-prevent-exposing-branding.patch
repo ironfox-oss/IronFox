@@ -1,0 +1,29 @@
+diff --git a/caps/nsScriptSecurityManager.cpp b/caps/nsScriptSecurityManager.cpp
+index 1fb9bc0aba72..90afd8bf81d7 100644
+--- a/caps/nsScriptSecurityManager.cpp
++++ b/caps/nsScriptSecurityManager.cpp
+@@ -1039,6 +1039,24 @@ nsresult nsScriptSecurityManager::CheckLoadURIFlags(
+         }
+       }
+ 
++      if (targetScheme.EqualsLiteral("chrome")) {
++        nsAutoCString targetHost;
++        rv = aTargetBaseURI->GetHost(targetHost);
++        NS_ENSURE_SUCCESS(rv, rv);
++        if (targetHost.EqualsLiteral("branding") || targetHost.EqualsLiteral("browser") || targetHost.EqualsLiteral("ironfox")) {
++          if (!aSourceBaseURI->SchemeIs("about") ||
++              NS_IsContentAccessibleAboutURI(aSourceBaseURI)) {
++            return NS_ERROR_DOM_BAD_URI;
++          }
++          nsAutoCString sourcePath;
++          rv = aSourceBaseURI->GetFilePath(sourcePath);
++          NS_ENSURE_SUCCESS(rv, rv);
++          if (sourcePath.EqualsLiteral("reader")) {
++            return NS_ERROR_DOM_BAD_URI;
++          }
++        }
++      }
++
+       if (targetScheme.EqualsLiteral("resource")) {
+         if (StaticPrefs::security_all_resource_uri_content_accessible()) {
+           return NS_OK;
