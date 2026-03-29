@@ -850,7 +850,7 @@ function build_fenix() {
         fi
 
         # 5. Finally, build and export our AAB
-        "${IRONFOX_MACH}" gradle -p mobile/android/fenix -Paab bundleRelease
+        "${IRONFOX_MACH}" gradle -p mobile/android/fenix -Paab bundleRelease -x :app:releaseOssLicensesCleanUp
         cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
     else
         # Export APK
