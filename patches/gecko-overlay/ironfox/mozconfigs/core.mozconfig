@@ -133,7 +133,7 @@ export MOZ_RUST_SIMD=1
 ac_add_options --enable-proxy-bypass-protection
 
 ## Enable minification
-ac_add_options --enable-minify='properties'
+ac_add_options --enable-minify=properties,js
 
 ## Enable WebAssembly Memory Control support
 ac_add_options --enable-wasm-memory-control
