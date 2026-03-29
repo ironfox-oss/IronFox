@@ -59,7 +59,6 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
             m4 \
             make \
             python \
-            temurin@17 \
             xz \
             zlib || error_fn
         echo
@@ -75,9 +74,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         yq || error_fn
     echo
 
-    # For secureblue, we also need to install our JDKs,
-    ## which we unfortunately can't just get from Homebrew like we do for OS X
-    ## We also need clang and zlib-devel
+    # For secureblue, we also need clang and zlib-devel
     if [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         # Ensure we're up to date
         /usr/bin/rpm-ostree refresh-md --force || error_fn
@@ -91,24 +88,8 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
             zlib-devel || error_fn
         echo
 
-        # Now, add + enable the Adoptium Working Group's repository
-        /usr/bin/run0 /usr/bin/curl ${IRONFOX_CURL_FLAGS} --output-dir "/etc/yum.repos.d/" --remote-name https://src.fedoraproject.org/rpms/adoptium-temurin-java-repository/raw/6a468beba6d45d2b29e729196a8dbb12e96e3c33/f/adoptium-temurin-java-repository.repo || error_fn
-        echo
-        /usr/bin/run0 /usr/bin/chmod 644 /etc/yum.repos.d/adoptium-temurin-java-repository.repo || error_fn
-        echo
-        /usr/bin/run0 "${IRONFOX_SED}" -i -e '/enabled/s/0/1/' /etc/yum.repos.d/adoptium-temurin-java-repository.repo || error_fn
-        echo
-        /usr/bin/rpm-ostree refresh-md --force || error_fn
-        echo
-
-        # Install our JDKs
-        /usr/bin/rpm-ostree install \
-            temurin-8-jdk \
-            temurin-17-jdk || error_fn
-        echo
-
         # We now unfortunately have to restart the system :/
-        echo_red_text "To apply the clang, JDK, and zlib installations, your system will now reboot."
+        echo_red_text "To apply the clang and zlib installations, your system will now reboot."
         /usr/bin/sleep 5 || error_fn
         echo
         echo_green_text "Press enter to continue."
@@ -120,14 +101,6 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
 elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
     # Ensure we're up to date
     sudo dnf update -y --refresh || error_fn
-    echo
-
-    # Add + enable the Adoptium Working Group's repository
-    sudo dnf install -y adoptium-temurin-java-repository || error_fn
-    echo
-    sudo dnf config-manager setopt adoptium-temurin-java-repository.enabled=1 || error_fn
-    echo
-    sudo dnf makecache || error_fn
     echo
 
     # Install our dependencies...
@@ -145,8 +118,6 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
         perl \
         python \
         shasum \
-        temurin-8-jdk \
-        temurin-17-jdk \
         xz \
         yq \
         zlib-devel || error_fn
@@ -162,12 +133,6 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
 
     # Add the deadsnakes PPA
     sudo add-apt-repository ppa:deadsnakes/ppa || error_fn
-    echo
-
-    # Add + enable the Adoptium Working Group's repository
-    wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null || error_fn
-    echo
-    echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list || error_fn
     echo
 
     sudo apt update || error_fn
@@ -186,8 +151,6 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
         perl \
         python \
         tar \
-        temurin-8-jdk \
-        temurin-17-jdk \
         unzip \
         xz-utils \
         yq \

@@ -3,11 +3,6 @@ FROM fedora:43
 # Ensure we're up to date
 RUN dnf update -y --refresh
 
-# Add + enable the Adoptium Working Group's repository
-RUN dnf install -y adoptium-temurin-java-repository && \
-    dnf config-manager setopt adoptium-temurin-java-repository.enabled=1 && \
-    dnf makecache
-
 # Install our dependencies...
 RUN dnf install -y \
     cmake \
@@ -23,8 +18,6 @@ RUN dnf install -y \
     perl \
     python \
     shasum \
-    temurin-8-jdk \
-    temurin-17-jdk \
     xz \
     yq \
     zlib-devel

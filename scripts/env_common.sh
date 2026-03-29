@@ -366,14 +366,16 @@ if [[ -z "${IRONFOX_GYP+x}" ]]; then
     export IRONFOX_GYP="${IRONFOX_GYP_DEFAULT}"
 fi
 
-# Java home
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    IRONFOX_JAVA_HOME_DEFAULT='/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home'
-else
-    IRONFOX_JAVA_HOME_DEFAULT='/usr/lib/jvm/temurin-17-jdk'
+# JDK (17)
+## (Required by GeckoView)
+IRONFOX_JDK_17_DEFAULT="${IRONFOX_EXTERNAL}/jdk-17"
+if [[ -z "${IRONFOX_JDK_17+x}" ]]; then
+    export IRONFOX_JDK_17="${IRONFOX_JDK_17_DEFAULT}"
 fi
-if [[ -z "${IRONFOX_JAVA_HOME+x}" ]]; then
-    export IRONFOX_JAVA_HOME="${IRONFOX_JAVA_HOME_DEFAULT}"
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    export IRONFOX_JAVA_HOME="${IRONFOX_JDK_17}/Contents/Home"
+else
+    export IRONFOX_JAVA_HOME="${IRONFOX_JDK_17}"
 fi
 export IRONFOX_JAVA="${IRONFOX_JAVA_HOME}/bin/java"
 

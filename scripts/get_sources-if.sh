@@ -31,6 +31,7 @@ IRONFOX_GET_SOURCE_GLEAN=0
 IRONFOX_GET_SOURCE_GLEAN_PARSER=0
 IRONFOX_GET_SOURCE_GRADLE=0
 IRONFOX_GET_SOURCE_GYP=0
+IRONFOX_GET_SOURCE_JDK_17=0
 IRONFOX_GET_SOURCE_MICROG=0
 IRONFOX_GET_SOURCE_NODE=0
 IRONFOX_GET_SOURCE_NPM=0
@@ -50,7 +51,7 @@ elif [ "${target}" == 'android-sdk-build-tools' ]; then
     # Get Android SDK Build Tools (latest)
     IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS=1
 elif [ "${target}" == 'android-sdk-build-tools-35' ]; then
-    # Get Android SDK Build Tools (35)
+    # Get Android SDK Build Tools (35) (Required by Glean)
     IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35=1
 elif [ "${target}" == 'android-sdk-platform' ]; then
     # Get Android SDK Platform (latest)
@@ -68,7 +69,7 @@ elif [ "${target}" == 'bundletool' ]; then
     # Get + set-up Bundletool
     IRONFOX_GET_SOURCE_BUNDLETOOL=1
 elif [ "${target}" == 'cbindgen' ]; then
-    # Get cbindgen (from cargo)
+    # Get cbindgen
     IRONFOX_GET_SOURCE_CBINDGEN=1
 elif [ "${target}" == 'firefox' ]; then
     # Get Firefox (Gecko/mozilla-central)
@@ -80,14 +81,17 @@ elif [ "${target}" == 'glean' ]; then
     # Get Glean
     IRONFOX_GET_SOURCE_GLEAN=1
 elif [ "${target}" == 'glean-parser' ]; then
-    # Get glean-parser (from pip)
+    # Get glean-parser
     IRONFOX_GET_SOURCE_GLEAN_PARSER=1
 elif [ "${target}" == 'gradle' ]; then
     # Get + set-up Gradle
     IRONFOX_GET_SOURCE_GRADLE=1
 elif [ "${target}" == 'gyp' ]; then
-    # Get gyp-next (from pip)
+    # Get gyp-next
     IRONFOX_GET_SOURCE_GYP=1
+elif [ "${target}" == 'jdk-17' ]; then
+    # Get OpenJDK (17) (Required by GeckoView)
+    IRONFOX_GET_SOURCE_JDK_17=1
 elif [ "${target}" == 'microg' ]; then
     # Get microG
     IRONFOX_GET_SOURCE_MICROG=1
@@ -130,6 +134,7 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_GLEAN_PARSER=1
     IRONFOX_GET_SOURCE_GRADLE=1
     IRONFOX_GET_SOURCE_GYP=1
+    IRONFOX_GET_SOURCE_JDK_17=1
     IRONFOX_GET_SOURCE_MICROG=1
     IRONFOX_GET_SOURCE_NODE=1
     IRONFOX_GET_SOURCE_NPM=1
@@ -157,6 +162,7 @@ else
     echo 'Glean Parser: glean-parser'
     echo 'Gradle: gradle'
     echo 'GYP: gyp'
+    echo 'JDK (17): jdk-17'
     echo 'microG: microg'
     echo 'Node.js: node'
     echo 'npm: npm'
@@ -192,14 +198,6 @@ fi
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
-
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    PLATFORM='macos'
-    PREBUILT_PLATFORM='osx'
-else
-    PLATFORM='linux'
-    PREBUILT_PLATFORM='linux'
-fi
 
 # Function to automate updating SHA512sums of dependencies
 function update_sha512sum() {
@@ -287,6 +285,22 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for GYP...'
         "${IRONFOX_SED}" -i -e "s|GYP_SHA512SUM='.*'|GYP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for GYP'
+    elif [ "${old_sha512sum}" == "${JDK_17_SHA512SUM_LINUX_ARM64}" ]; then
+        echo_red_text 'Updating SHA512sum for JDK (17) (Linux - ARM64)...'
+        "${IRONFOX_SED}" -i -e "s|JDK_17_SHA512SUM_LINUX_ARM64='.*'|JDK_17_SHA512SUM_LINUX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (17) (Linux - ARM64)'
+    elif [ "${old_sha512sum}" == "${JDK_17_SHA512SUM_LINUX_X86_64}" ]; then
+        echo_red_text 'Updating SHA512sum for JDK (17) (Linux - x86_64)...'
+        "${IRONFOX_SED}" -i -e "s|JDK_17_SHA512SUM_LINUX_X86_64='.*'|JDK_17_SHA512SUM_LINUX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (17) (Linux - x86_64)'
+    elif [ "${old_sha512sum}" == "${JDK_17_SHA512SUM_OSX_ARM64}" ]; then
+        echo_red_text 'Updating SHA512sum for JDK (17) (OS X - ARM64)...'
+        "${IRONFOX_SED}" -i -e "s|JDK_17_SHA512SUM_OSX_ARM64='.*'|JDK_17_SHA512SUM_OSX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (17) (OS X - ARM64)'
+    elif [ "${old_sha512sum}" == "${JDK_17_SHA512SUM_OSX_X86_64}" ]; then
+        echo_red_text 'Updating SHA512sum for JDK (17) (OS X - x86_64)...'
+        "${IRONFOX_SED}" -i -e "s|JDK_17_SHA512SUM_OSX_X86_64='.*'|JDK_17_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (17) (OS X - x86_64)'
     elif [ "${old_sha512sum}" == "${L10N_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for firefox-l10n...'
         "${IRONFOX_SED}" -i -e "s|L10N_SHA512SUM='.*'|L10N_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -816,6 +830,43 @@ function get_gyp() {
     echo_green_text "SUCCESS: Set-up GYP at ${IRONFOX_PIP_DIR}/bin/gyp"
 }
 
+# Get JDK (17)
+## (Required by GeckoView)
+function get_jdk_17() {
+    # Set our platform
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        local readonly JDK_17_PLATFORM='mac'
+    else
+        local readonly JDK_17_PLATFORM='linux'
+    fi
+
+    # Set our platform architecture
+    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
+        local readonly JDK_17_ARCH='aarch64'
+    else
+        local readonly JDK_17_ARCH='x64'
+    fi
+
+    # Set our checksum to verify
+    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
+        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+            local readonly JDK_17_SHA512SUM="${JDK_17_SHA512SUM_OSX_ARM64}"
+        else
+            local readonly JDK_17_SHA512SUM="${JDK_17_SHA512SUM_LINUX_ARM64}"
+        fi
+    else
+        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+            local readonly JDK_17_SHA512SUM="${JDK_17_SHA512SUM_OSX_X86_64}"
+        else
+            local readonly JDK_17_SHA512SUM="${JDK_17_SHA512SUM_LINUX_X86_64}"
+        fi
+    fi
+
+    echo_red_text 'Downloading JDK (17)...'
+    download_and_extract 'jdk-17' "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JDK_17_VERSION}%2B${JDK_17_REVISION}/OpenJDK17U-jdk_${JDK_17_ARCH}_${JDK_17_PLATFORM}_hotspot_${JDK_17_VERSION}_${JDK_17_REVISION}.tar.gz" "${IRONFOX_JDK_17}" "${JDK_17_SHA512SUM}"
+    echo_green_text "SUCCESS: Set-up JDK (17) at ${IRONFOX_JDK_17}"
+}
+
 # Get microG
 function get_microg() {
     echo_red_text 'Downloading microG...'
@@ -968,6 +1019,11 @@ function get_up_ac() {
 
 if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
     get_android_ndk
+fi
+
+# This needs to run before we get the Android SDK
+if [ "${IRONFOX_GET_SOURCE_JDK_17}" == 1 ]; then
+    get_jdk_17
 fi
 
 if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK}" == 1 ]; then
