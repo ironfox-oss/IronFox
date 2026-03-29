@@ -11,7 +11,7 @@
     <string name="preference_accessibility_enabled">Ota käyttöön saavutettavuuspalvelut</string>
     <string name="preference_referer_policy">Cross-origin viittauspolitiikka</string>
     <string name="preference_referer_policy_summary">Määrittelee käytettävän viittauspolitiikan</string>
-    <string name="preference_referer_policy_always">Lähetä viittausdata aina</string>
+    <string name="preference_referer_policy_always">Lähetä viittausdata aina (Oletus)</string>
     <string name="preference_referer_policy_base_domains_match">Lähetä viittausdata kun verkkotunnuksen perusosa täsmää</string>
     <string name="preference_referer_policy_hosts_match">Älä lähetä viittausdataa</string>
     <string name="preference_cache_enabled">Ota käyttöön levyn välimuisti</string>
@@ -25,7 +25,7 @@
     <string name="preference_website_appearance_title">Ensisijainen sivuston ulkonäkö</string>
     <string name="preference_website_appearance_description">Jotkin sivustot mukauttavat väriteemaa mieltymystesi perusteella. Valitse mitä väriteemaa haluat käyttää näille sivustoille. Huomaa, että muut vaihtoehdot kuin Vaalea voivat auttaa muita yksilöimään selaintasi paremmin.</string>
     <string name="preference_prefers_browser_color_scheme">Seuraa selaimen teemaa</string>
-    <string name="preference_prefers_light_color_scheme">Vaalea</string>
+    <string name="preference_prefers_light_color_scheme">Vaalea (Oletus)</string>
     <string name="preference_prefers_dark_color_scheme">Tumma</string>
     <string name="preference_print_enabled">Ota käyttöön tulostusominaisuudet</string>
     <string name="preference_safe_browsing_enabled">Ota käyttöön Selaussuoja</string>
@@ -36,7 +36,7 @@
     <string name="tor_spoof_english_caption">Paranna yksityisyyttäsi naamioimalla laitteesi kieliasetukset.</string>
     <string name="tor_spoof_english_description">Pyydä englanninkielisiä (en-US) versioita verkkosivuista. Tämä auttaa selaintasi näyttäytymään vähemmän ainutlaatuiselta, vahvistaen suojaa seurantatekniikoilta, jotka tunnistavat käyttäjät perustuen heidän kieliasetukseen.</string>
     <string name="tor_spoof_english">Pyydä englanninkielisiä sivustoja</string>
-    <string name="tor_spoof_english_summary">Käyttöön otettuna vahvistaa suojausta seurantatekniikoilta</string>
+    <string name="tor_spoof_english_summary">Käyttöön otettuna vahvistaa suojausta seurantatekniikoilta - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
     <string name="preference_svg_enabled">Ota käyttöön skaalattavat vektorigrafiikat (SVG)</string>
     <string name="preferences_debug_settings_unifiedpush">Ota käyttöön UnifiedPush</string>
     <string name="preferences_unifiedpush">Käytä UnifiedPush</string>
@@ -55,4 +55,25 @@
     <string name="onboarding_action_retry">Yritä uudelleen</string>
     <string name="preference_translations_enabled">Laita Firefox käännökset päälle</string>
     <string name="preference_always_use_private_browsing">Käytä aina yksityinen-selaus tilaa</string>
+    <string name="preference_collections_enabled">Salli kokoelmat</string>
+    <string name="preference_fpp_overrides_ironfox_enabled">Salli IronFoxin yliajaa sormenjälkitunnistuksen esto</string>
+    <string name="preference_fpp_overrides_ironfox_summary">Keventää sormenjälkitunnistuksen estoja tietyiltä verkkosivuilta oletuksena vähentääkseen sivujen rikkoutumista, käyttäen IronFoxin listaa - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
+    <string name="preference_fpp_overrides_mozilla_enabled">Salli Mozillan yliajaa sormenjälkitunnistuksen esto</string>
+    <string name="preference_fpp_overrides_mozilla_summary">Keventää sormenjälkitunnistuksen estoja tietyiltä verkkosivuilta oletuksena vähentääkseen sivujen rikkoutumista, käyttäen Mozillan listaa - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
+    <string name="preference_jit_trusted_principals_enabled">Salli JavaScript Just-in-time Compilation (JIT) laajennuksille</string>
+    <string name="preference_media_autoplay_title">Median automaattinen toisto</string>
+    <string name="preference_media_autoplay_description">Määritä kuinka IronFox estää median automaattisen toiston.</string>
+    <string name="preference_autoplay_policy_sticky">Pysyvä</string>
+    <string name="preference_autoplay_policy_click_to_play">Click - to - play</string>
+    <string name="spoof_timezone">Huijaa aikavyöhykkeeksi UTC-0</string>
+    <string name="spoof_timezone_summary">Kun asetettu päälle, vahvistaa suojautumista seurantatekniikoilta</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_enabled">Ota käyttöön IronFoxin yliajama aikavyöhykenaamiointi</string>
+    <string name="wallpaper_collection_fennec_description">Fennec F-Droidin taustakuvat. %s</string>
+    <string name="preference_webgl_disabled">Poista käytöstä WebGL</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_enabled">Salli IronFoxin yliajamat WebGL:n käyttöönotot</string>
+    <string name="preference_jit_trusted_principals_enabled_summary">Kun JIT on pois käytöstä, uudelleenaktivoi JIT laajennuksille - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
+    <string name="preference_autoplay_policy_transient">Katoava (Oletus)</string>
+    <string name="preference_fpp_overrides_ironfox_timezone_summary">Poista aikavyöhykenaamiointi tietyiltä verkkosivuilta oletuksena vähentääksesi verkkosivujen rikkoutumista - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
+    <string name="preference_fpp_overrides_ironfox_webgl_summary">Kun WebGL on pois käytöstä, uudelleenkäynnistää WebGL:n tietyille verkkosivuille oletuksena vähentääkseen sivujen rikkoutumista - Tämän asetuksen muuttaminen käynnistää selaimen uudelleen</string>
+    <string name="extension_failed_to_install_xpinstall_disabled_error">Lisäosien asentaminen on toistaiseksi pois käytöstä. Jos halutaan, turvallisuuden kustannuksella, voit sallia laajennukset siirtymällä: Asetukset -&gt; IronFox -&gt; IronFoxin asetukset -&gt; Turvallisuus -&gt; Salli lisäosien asentaminen.</string>
 </resources>
