@@ -582,6 +582,13 @@ if [[ -z "${IRONFOX_WASI+x}" ]]; then
     export IRONFOX_WASI="${IRONFOX_WASI_DEFAULT}"
 fi
 
+# Cipher suites
+## (This enforces strong cipher suites - see ex. https://browserleaks.com/tls)
+IRONFOX_CIPHERS_DEFAULT='TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384'
+if [[ -z "${IRONFOX_CIPHERS+x}" ]]; then
+    export IRONFOX_CIPHERS="${IRONFOX_CIPHERS_DEFAULT}"
+fi
+
 # If compiler flags are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
 IRONFOX_COMPILER_FLAGS_OVERRIDE_DEFAULT=0
@@ -608,7 +615,7 @@ if [[ -z "${IRONFOX_CURL_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # curl flags
-IRONFOX_CURL_FLAGS_DEFAULT='-q --disable --no-netrc -j -e "" -A "" -S --clobber --create-dirs --delegation none --disallow-username-in-url --doh-cert-status --ftp-create-dirs --ftp-ssl-control --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-proxy-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ntlm --no-proxy-ssl-allow-beast --no-proxy-ssl-auto-client-cert --no-sessionid --no-skip-existing --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-tls-earlydata --no-xattr --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --referer "" --remove-on-error --show-error --ssl-reqd --trace-time --user-agent "" --verbose'
+IRONFOX_CURL_FLAGS_DEFAULT="-q --disable --no-netrc -j -e "" -A "" -S --ciphers ${IRONFOX_CIPHERS} --clobber --create-dirs --delegation none --disallow-username-in-url --doh-cert-status --ftp-create-dirs --ftp-ssl-control --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-proxy-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ntlm --no-proxy-ssl-allow-beast --no-proxy-ssl-auto-client-cert --no-sessionid --no-skip-existing --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-tls-earlydata --no-xattr --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --referer "" --remove-on-error --show-error --ssl-reqd --tlsv1.2 --trace-time --user-agent "" --verbose"
 if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]]; then
     export IRONFOX_CURL_FLAGS_OVERRIDE=1
     export IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT}"
@@ -626,7 +633,7 @@ if [[ -z "${IRONFOX_GRADLE_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # Gradle flags
-IRONFOX_GRADLE_FLAGS_DEFAULT="-Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
+IRONFOX_GRADLE_FLAGS_DEFAULT="-Dhttps.protocols=TLSv1.3,TLSv1.2 -Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
     export IRONFOX_GRADLE_FLAGS_OVERRIDE=1
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"
@@ -634,6 +641,24 @@ elif [[ "${IRONFOX_GRADLE_FLAGS_OVERRIDE}" == 1 ]]; then
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS}"
 else
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT} ${IRONFOX_GRADLE_FLAGS}"
+fi
+
+# If Java options are added, this determines whether they should be appended to our default flags (default),
+## or if they should override them entirely
+IRONFOX_JAVA_OPTS_OVERRIDE_DEFAULT=0
+if [[ -z "${IRONFOX_JAVA_OPTS_OVERRIDE+x}" ]]; then
+    export IRONFOX_JAVA_OPTS_OVERRIDE="${IRONFOX_JAVA_OPTS_OVERRIDE_DEFAULT}"
+fi
+
+# Java options
+IRONFOX_JAVA_OPTS_DEFAULT='-Dhttps.protocols=TLSv1.3,TLSv1.2'
+if [[ -z "${IRONFOX_JAVA_OPTS+x}" ]]; then
+    export IRONFOX_JAVA_OPTS_OVERRIDE=1
+    export IRONFOX_JAVA_OPTS="${IRONFOX_JAVA_OPTS_DEFAULT}"
+elif [[ "${IRONFOX_JAVA_OPTS_OVERRIDE}" == 1 ]]; then
+    export IRONFOX_JAVA_OPTS="${IRONFOX_JAVA_OPTS}"
+else
+    export IRONFOX_JAVA_OPTS="${IRONFOX_JAVA_OPTS_DEFAULT} ${IRONFOX_JAVA_OPTS}"
 fi
 
 # If Node.js options are added, this determines whether they should be appended to our default flags (default),
