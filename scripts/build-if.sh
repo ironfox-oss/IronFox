@@ -88,7 +88,7 @@ fi
 
 source "${IRONFOX_CARGO_ENV}"
 source "${IRONFOX_NVM_ENV}"
-source "${IRONFOX_PIP_ENV}"
+source "${IRONFOX_PYENV}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"

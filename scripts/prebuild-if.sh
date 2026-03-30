@@ -91,7 +91,7 @@ echo_green_text "Preparing to build IronFox ${IRONFOX_VERSION}"
 
 # Create build directories
 mkdir -p "${IRONFOX_CARGO_HOME}"
-mkdir -p "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0"
+mkdir -p "${IRONFOX_GLEAN_PYENV}/bootstrap-24.3.0-0"
 mkdir -p "${IRONFOX_GRADLE_CACHE}"
 mkdir -p "${IRONFOX_GRADLE_HOME}"
 mkdir -p "${IRONFOX_MOZBUILD}"
@@ -144,13 +144,13 @@ if ! up_ac_check_patches; then
 fi
 popd
 
-# Set pip symlinks so that Glean will use our Pip environment, instead of attempting to create its own...
-if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/pythonenv" ]]; then
-    ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/pythonenv"
+# Set Python symlinks so that Glean will use our Python environment, instead of attempting to create its own...
+if [[ ! -d "${IRONFOX_GLEAN_PYENV}/pythonenv" ]]; then
+    ln -s "${IRONFOX_PYENV_DIR}" "${IRONFOX_GLEAN_PYENV}/pythonenv"
 fi
 
-if [[ ! -d "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3" ]]; then
-    ln -s "${IRONFOX_PIP_DIR}" "${IRONFOX_GLEAN_PIP_ENV}/bootstrap-24.3.0-0/Miniconda3"
+if [[ ! -d "${IRONFOX_GLEAN_PYENV}/bootstrap-24.3.0-0/Miniconda3" ]]; then
+    ln -s "${IRONFOX_PYENV_DIR}" "${IRONFOX_GLEAN_PYENV}/bootstrap-24.3.0-0/Miniconda3"
 fi
 
 # Create Android NDK symlink

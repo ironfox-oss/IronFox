@@ -447,30 +447,28 @@ if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
 fi
 
 # pip
-IRONFOX_PIP_DEFAULT="${IRONFOX_EXTERNAL}/pip"
-if [[ -z "${IRONFOX_PIP+x}" ]]; then
-    export IRONFOX_PIP="${IRONFOX_PIP_DEFAULT}"
-fi
-
-# Python
-if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    IRONFOX_PYTHON_DEFAULT='/opt/homebrew/bin/python'
-else
-    IRONFOX_PYTHON_DEFAULT='/usr/bin/python'
-fi
-if [[ -z "${IRONFOX_PYTHON+x}" ]]; then
-    export IRONFOX_PYTHON="${IRONFOX_PYTHON_DEFAULT}"
-fi
-
-# Python (pip) environment
-IRONFOX_PIP_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
+IRONFOX_PIP_DIR_DEFAULT="${IRONFOX_EXTERNAL}/pip"
 if [[ -z "${IRONFOX_PIP_DIR+x}" ]]; then
     export IRONFOX_PIP_DIR="${IRONFOX_PIP_DIR_DEFAULT}"
 fi
-export IRONFOX_PIP_ENV="${IRONFOX_PIP_DIR}/bin/activate"
 
-## Python (pip) environment - Glean
-export IRONFOX_GLEAN_PIP_ENV="${IRONFOX_GRADLE_HOME}/glean"
+# Python
+IRONFOX_PYTHON_DIR_DEFAULT="${IRONFOX_EXTERNAL}/python"
+if [[ -z "${IRONFOX_PYTHON_DIR+x}" ]]; then
+    export IRONFOX_PYTHON_DIR="${IRONFOX_PYTHON_DIR_DEFAULT}"
+fi
+
+# Python (UV) environment
+IRONFOX_PYENV_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
+if [[ -z "${IRONFOX_PYENV_DIR+x}" ]]; then
+    export IRONFOX_PYENV_DIR="${IRONFOX_PYENV_DIR_DEFAULT}"
+fi
+export IRONFOX_PIP="${IRONFOX_PYENV_DIR}/bin/pip"
+export IRONFOX_PYENV="${IRONFOX_PYENV_DIR}/bin/activate"
+export IRONFOX_PYTHON="${IRONFOX_PYENV_DIR}/bin/python"
+
+## Python (UV) environment - Glean
+export IRONFOX_GLEAN_PYENV="${IRONFOX_GRADLE_HOME}/glean"
 
 # Rust (cargo)
 IRONFOX_CARGO_HOME_DEFAULT="${IRONFOX_BUILD}/.cargo"
@@ -522,6 +520,38 @@ fi
 IRONFOX_UP_AC_DEFAULT="${IRONFOX_EXTERNAL}/unifiedpush-ac"
 if [[ -z "${IRONFOX_UP_AC+x}" ]]; then
     export IRONFOX_UP_AC="${IRONFOX_UP_AC_DEFAULT}"
+fi
+
+# UV
+IRONFOX_UV_DIR_DEFAULT="${IRONFOX_EXTERNAL}/uv"
+if [[ -z "${IRONFOX_UV_DIR+x}" ]]; then
+    export IRONFOX_UV_DIR="${IRONFOX_UV_DIR_DEFAULT}"
+fi
+export IRONFOX_UV="${IRONFOX_UV_DIR}/uv"
+export IRONFOX_UV_LOCAL="${IRONFOX_BUILD}/uv"
+
+# UV (local directory)
+IRONFOX_UV_LOCAL_DEFAULT="${IRONFOX_BUILD}/uv"
+if [[ -z "${IRONFOX_UV_LOCAL+x}" ]]; then
+    export IRONFOX_UV_LOCAL="${IRONFOX_UV_LOCAL_DEFAULT}"
+fi
+
+# UV cache
+IRONFOX_UV_CACHE_DEFAULT="${IRONFOX_UV_LOCAL}/cache"
+if [[ -z "${IRONFOX_UV_CACHE+x}" ]]; then
+    export IRONFOX_UV_CACHE="${IRONFOX_UV_CACHE_DEFAULT}"
+fi
+
+# UV Python directory
+IRONFOX_UV_PYTHON_DEFAULT="${IRONFOX_UV_LOCAL}/python"
+if [[ -z "${IRONFOX_UV_PYTHON+x}" ]]; then
+    export IRONFOX_UV_PYTHON="${IRONFOX_UV_PYTHON_DEFAULT}"
+fi
+
+# UV tools
+IRONFOX_UV_TOOLS_DEFAULT="${IRONFOX_UV_LOCAL}/tools"
+if [[ -z "${IRONFOX_UV_TOOLS+x}" ]]; then
+    export IRONFOX_UV_TOOLS="${IRONFOX_UV_TOOLS_DEFAULT}"
 fi
 
 # WASI SDK

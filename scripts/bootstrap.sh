@@ -58,7 +58,6 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
             gnu-tar \
             m4 \
             make \
-            python \
             xz \
             zlib || error_fn
         echo
@@ -116,7 +115,6 @@ elif [[ "${IRONFOX_OS}" == 'fedora' ]]; then
         ninja-build \
         patch \
         perl \
-        python \
         shasum \
         xz \
         yq \
@@ -131,13 +129,6 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
     sudo apt upgrade || error_fn
     echo
 
-    # Add the deadsnakes PPA
-    sudo add-apt-repository ppa:deadsnakes/ppa || error_fn
-    echo
-
-    sudo apt update || error_fn
-    echo
-
     sudo apt install -y \
         apt-transport-https \
         cmake \
@@ -149,7 +140,6 @@ elif [[ "${IRONFOX_OS}" == 'ubuntu' ]]; then
         ninja-build \
         patch \
         perl \
-        python \
         tar \
         unzip \
         xz-utils \

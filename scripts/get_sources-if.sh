@@ -38,8 +38,10 @@ IRONFOX_GET_SOURCE_NPM=0
 IRONFOX_GET_SOURCE_PHOENIX=0
 IRONFOX_GET_SOURCE_PIP=0
 IRONFOX_GET_SOURCE_PREBUILDS=0
+IRONFOX_GET_SOURCE_PYTHON=0
 IRONFOX_GET_SOURCE_RUST=0
 IRONFOX_GET_SOURCE_UP_AC=0
+IRONFOX_GET_SOURCE_UV=0
 
 if [ "${target}" == 'android-ndk' ]; then
     # Get Android NDK
@@ -104,18 +106,24 @@ elif [ "${target}" == 'npm' ]; then
 elif [ "${target}" == 'phoenix' ]; then
     # Get Phoenix
     IRONFOX_GET_SOURCE_PHOENIX=1
-elif [ "${target}" == 'pip' ]; then
-    # Get + set-up pip
-    IRONFOX_GET_SOURCE_PIP=1
 elif [ "${target}" == 'prebuilds' ]; then
     # Get IronFox prebuilds
     IRONFOX_GET_SOURCE_PREBUILDS=1
+elif [ "${target}" == 'pip' ]; then
+    # Get + set-up pip
+    IRONFOX_GET_SOURCE_PIP=1
+elif [ "${target}" == 'python' ]; then
+    # Get Python
+    IRONFOX_GET_SOURCE_PYTHON=1
 elif [ "${target}" == 'rust' ]; then
     # Get + set-up rust/cargo
     IRONFOX_GET_SOURCE_RUST=1
 elif [ "${target}" == 'up-ac' ]; then
     # Get UnifiedPush-AC
     IRONFOX_GET_SOURCE_UP_AC=1
+elif [ "${target}" == 'uv' ]; then
+    # Get + set-up uv
+    IRONFOX_GET_SOURCE_UV=1
 elif [ "${target}" == 'all' ]; then
     # If no argument is specified (or argument is set to "all"), just get everything
     IRONFOX_GET_SOURCE_ANDROID_NDK=1
@@ -141,8 +149,10 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_PHOENIX=1
     IRONFOX_GET_SOURCE_PIP=1
     IRONFOX_GET_SOURCE_PREBUILDS=1
+    IRONFOX_GET_SOURCE_PYTHON=1
     IRONFOX_GET_SOURCE_RUST=1
     IRONFOX_GET_SOURCE_UP_AC=1
+    IRONFOX_GET_SOURCE_UV=1
 else
     echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
     echo 'All: all (Default)'
@@ -169,8 +179,10 @@ else
     echo 'Phoenix: phoenix'
     echo 'pip: pip'
     echo 'Prebuilds: prebuilds'
+    echo 'Python: python'
     echo 'Rust: rust'
     echo 'UnifiedPush-AC: up-ac'
+    echo 'uv: uv'
     exit 1
 fi
 
@@ -317,10 +329,42 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for pip...'
         "${IRONFOX_SED}" -i -e "s|PIP_SHA512SUM='.*'|PIP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for pip'
+    elif [ "${old_sha512sum}" == "${PYTHON_SHA512SUM_LINUX_ARM64}" ]; then
+        echo_red_text 'Updating SHA512sum for Python (Linux - ARM64)...'
+        "${IRONFOX_SED}" -i -e "s|PYTHON_SHA512SUM_LINUX_ARM64='.*'|PYTHON_SHA512SUM_LINUX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Python (Linux - ARM64)'
+    elif [ "${old_sha512sum}" == "${PYTHON_SHA512SUM_LINUX_X86_64}" ]; then
+        echo_red_text 'Updating SHA512sum for Python (Linux - x86_64)...'
+        "${IRONFOX_SED}" -i -e "s|PYTHON_SHA512SUM_LINUX_X86_64='.*'|PYTHON_SHA512SUM_LINUX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Python (Linux - x86_64)'
+    elif [ "${old_sha512sum}" == "${PYTHON_SHA512SUM_OSX_ARM64}" ]; then
+        echo_red_text 'Updating SHA512sum for Python (OS X - ARM64)...'
+        "${IRONFOX_SED}" -i -e "s|PYTHON_SHA512SUM_OSX_ARM64='.*'|PYTHON_SHA512SUM_OSX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Python (OS X - ARM64)'
+    elif [ "${old_sha512sum}" == "${PYTHON_SHA512SUM_OSX_X86_64}" ]; then
+        echo_red_text 'Updating SHA512sum for Python (OS X - x86_64)...'
+        "${IRONFOX_SED}" -i -e "s|PYTHON_SHA512SUM_OSX_X86_64='.*'|PYTHON_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for Python (OS X - x86_64)'
     elif [ "${old_sha512sum}" == "${RUSTUP_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for rustup...'
         "${IRONFOX_SED}" -i -e "s|RUSTUP_SHA512SUM='.*'|RUSTUP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for rustup'
+    elif [ "${old_sha512sum}" == "${UV_SHA512SUM_LINUX_ARM64}" ]; then
+        echo_red_text 'Updating SHA512sum for uv (Linux - ARM64)...'
+        "${IRONFOX_SED}" -i -e "s|UV_SHA512SUM_LINUX_ARM64='.*'|UV_SHA512SUM_LINUX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for uv (Linux - ARM64)'
+    elif [ "${old_sha512sum}" == "${UV_SHA512SUM_LINUX_X86_64}" ]; then
+        echo_red_text 'Updating SHA512sum for uv (Linux - x86_64)...'
+        "${IRONFOX_SED}" -i -e "s|UV_SHA512SUM_LINUX_X86_64='.*'|UV_SHA512SUM_LINUX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for uv (Linux - x86_64)'
+    elif [ "${old_sha512sum}" == "${UV_SHA512SUM_OSX_ARM64}" ]; then
+        echo_red_text 'Updating SHA512sum for uv (OS X - ARM64)...'
+        "${IRONFOX_SED}" -i -e "s|UV_SHA512SUM_OSX_ARM64='.*'|UV_SHA512SUM_OSX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for uv (OS X - ARM64)'
+    elif [ "${old_sha512sum}" == "${UV_SHA512SUM_OSX_X86_64}" ]; then
+        echo_red_text 'Updating SHA512sum for uv (OS X - x86_64)...'
+        "${IRONFOX_SED}" -i -e "s|UV_SHA512SUM_OSX_X86_64='.*'|UV_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for uv (OS X - x86_64)'
     elif [ "${old_sha512sum}" == "${PREBUILDS_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for IronFox prebuilds...'
         "${IRONFOX_SED}" -i -e "s|PREBUILDS_SHA512SUM='.*'|PREBUILDS_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -748,20 +792,25 @@ function get_glean() {
 
 # Get Glean Parser
 function get_glean_parser() {
-    if  [ ! -d "${IRONFOX_PIP_DIR}" ] || [ ! -f "${IRONFOX_PIP_ENV}" ]; then
-        echo_red_text "ERROR: You tried to download Glean Parser, but you don't have a pip environment set-up yet."
+    if  [ ! -d "${IRONFOX_UV_DIR}" ] || [ ! -f "${IRONFOX_PYENV}" ]; then
+        echo_red_text "ERROR: You tried to download Glean Parser, but you don't have a uv environment set-up yet."
         exit 1
     fi
 
-    if [[ -d "${IRONFOX_PIP_DIR}/bin/glean_parser" ]]; then
-        echo_red_text "Glean Parser is already installed at ${IRONFOX_PIP_DIR}/bin/glean_parser"
+    if  [ ! -d "${IRONFOX_PIP_DIR}" ]; then
+        echo_red_text "ERROR: You tried to download Glean Parser, but you don't have pip set-up yet."
+        exit 1
+    fi
+
+    if [[ -d "${IRONFOX_PYENV_DIR}/bin/glean_parser" ]]; then
+        echo_red_text "Glean Parser is already installed at ${IRONFOX_PYENV_DIR}/bin/glean_parser"
         read -p "Do you want to re-download it? [y/N] " -n 1 -r
         echo
         if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
             return 0
         else
-            source "${IRONFOX_PIP_ENV}"
-            pip uninstall glean-parser
+            source "${IRONFOX_PYENV}"
+            "${IRONFOX_UV}" pip uninstall glean-parser
         fi
     fi
 
@@ -777,10 +826,10 @@ function get_glean_parser() {
     fi
     mkdir -p "${IRONFOX_GLEAN_PARSER_WHEELS}"
 
-    source "${IRONFOX_PIP_ENV}"
+    source "${IRONFOX_PYENV}"
     echo_red_text 'Downloading Glean Parser wheels...'
     pushd "${IRONFOX_GLEAN_PARSER_WHEELS}"
-    pip download glean-parser=="${GLEAN_PARSER_VERSION}"
+    "${IRONFOX_PIP}" download glean-parser=="${GLEAN_PARSER_VERSION}"
     popd
 
     # Validate SHA512sum
@@ -798,36 +847,30 @@ function get_gradle() {
 
 # Get GYP
 function get_gyp() {
-    if  [ ! -d "${IRONFOX_PIP_DIR}" ] || [ ! -f "${IRONFOX_PIP_ENV}" ]; then
-        echo_red_text "ERROR: You tried to download GYP, but you don't have a pip environment set-up yet."
+    if  [ ! -d "${IRONFOX_UV_DIR}" ] || [ ! -f "${IRONFOX_PYENV}" ]; then
+        echo_red_text "ERROR: You tried to download GYP, but you don't have a uv environment set-up yet."
         exit 1
     fi
 
-    if [[ -d "${IRONFOX_PIP_DIR}/bin/gyp" ]]; then
-        echo_red_text "GYP is already installed at ${IRONFOX_PIP_DIR}/bin/gyp"
+    if [[ -d "${IRONFOX_PYENV_DIR}/bin/gyp" ]]; then
+        echo_red_text "GYP is already installed at ${IRONFOX_PYENV_DIR}/bin/gyp"
         read -p "Do you want to re-download it? [y/N] " -n 1 -r
         echo
         if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
             return 0
         else
-            source "${IRONFOX_PIP_ENV}"
-            pip uninstall gyp-next
+            source "${IRONFOX_PYENV}"
+            "${IRONFOX_UV}" pip uninstall gyp-next
         fi
     fi
 
     echo_red_text "Downloading GYP..."
     download_and_extract 'gyp-next' "https://github.com/nodejs/gyp-next/archive/${GYP_COMMIT}.tar.gz" "${IRONFOX_GYP}" "${GYP_SHA512SUM}"
 
-    # For the pip install to work, we need to initialize a Git repository
-    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
-    pushd "${IRONFOX_GYP}"
-    git init
-    popd
-
-    source "${IRONFOX_PIP_ENV}"
+    source "${IRONFOX_PYENV}"
     echo_red_text 'Installing GYP...'
-    pip install "${IRONFOX_GYP}"
-    echo_green_text "SUCCESS: Set-up GYP at ${IRONFOX_PIP_DIR}/bin/gyp"
+    "${IRONFOX_UV}" pip install --strict "${IRONFOX_GYP}"
+    echo_green_text "SUCCESS: Set-up GYP at ${IRONFOX_PYENV_DIR}/bin/gyp"
 }
 
 # Get JDK (17)
@@ -918,31 +961,18 @@ function get_phoenix() {
 
 # Get + set-up pip
 function get_pip() {
-    if [[ -d "${IRONFOX_PIP_DIR}" ]]; then
-        echo_red_text "The pip environment is already set-up at ${IRONFOX_PIP_DIR}"
-        read -p "Do you want to re-create it? [y/N] " -n 1 -r
-        echo
-        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
-            rm -rf "${IRONFOX_PIP_DIR}" "${IRONFOX_PIP}"
-        fi
+    if  [ ! -d "${IRONFOX_UV_DIR}" ] || [ ! -f "${IRONFOX_PYENV}" ]; then
+        echo_red_text "ERROR: You tried to download pip, but you don't have a uv environment set-up yet."
+        exit 1
     fi
 
-    echo_red_text 'Creating pip environment...'
-    "${IRONFOX_PYTHON}" -m venv "${IRONFOX_PIP_DIR}"
-
     echo_red_text 'Downloading pip...'
-    download_and_extract 'pip' "https://github.com/pypa/pip/archive/${PIP_COMMIT}.tar.gz" "${IRONFOX_PIP}" "${PIP_SHA512SUM}"
+    download_and_extract 'pip' "https://github.com/pypa/pip/archive/${PIP_COMMIT}.tar.gz" "${IRONFOX_PIP_DIR}" "${PIP_SHA512SUM}"
 
-    # For the pip install to work, we need to initialize a Git repository
-    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
-    pushd "${IRONFOX_PIP}"
-    git init
-    popd
-
-    source "${IRONFOX_PIP_ENV}"
+    source "${IRONFOX_PYENV}"
     echo_red_text 'Installing pip...'
-    pip install "${IRONFOX_PIP}"
-    echo_green_text "SUCCESS: Set-up pip environment at ${IRONFOX_PIP_DIR}"
+    "${IRONFOX_UV}" pip install "${IRONFOX_PIP_DIR}"
+    echo_green_text "SUCCESS: Set-up pip at ${IRONFOX_PIP}"
 }
 
 # Get IronFox prebuilds
@@ -976,6 +1006,46 @@ function get_prebuilds() {
         fi
         echo_green_text "SUCCESS: Set-up the prebuilt wasi-sdk at ${IRONFOX_WASI}"
     fi
+}
+
+# Get Python
+function get_python() {
+    # Set our platform
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        local readonly PYTHON_PLATFORM='apple-darwin'
+    else
+        local readonly PYTHON_PLATFORM='unknown-linux-gnu'
+    fi
+
+    # Set our platform architecture
+    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
+        local readonly PYTHON_ARCH='aarch64'
+    else
+        local readonly PYTHON_ARCH='x86_64'
+    fi
+
+    # Set our checksum to verify
+    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
+        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+            local readonly PYTHON_SHA512SUM="${PYTHON_SHA512SUM_OSX_ARM64}"
+        else
+            local readonly PYTHON_SHA512SUM="${PYTHON_SHA512SUM_LINUX_ARM64}"
+        fi
+    else
+        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+            local readonly PYTHON_SHA512SUM="${PYTHON_SHA512SUM_OSX_X86_64}"
+        else
+            local readonly PYTHON_SHA512SUM="${PYTHON_SHA512SUM_LINUX_X86_64}"
+        fi
+    fi
+
+    echo_red_text 'Downloading Python...'
+    download "https://github.com/astral-sh/python-build-standalone/releases/download/${PYTHON_GIT_RELEASE}/cpython-${PYTHON_VERSION}+${PYTHON_GIT_RELEASE}-${PYTHON_ARCH}-${PYTHON_PLATFORM}-install_only_stripped.tar.gz" "${IRONFOX_PYTHON_DIR}/${PYTHON_GIT_RELEASE}/cpython-${PYTHON_VERSION}+${PYTHON_GIT_RELEASE}-${PYTHON_ARCH}-${PYTHON_PLATFORM}-install_only_stripped.tar.gz"
+
+    # Validate SHA512sum
+    validate_sha512sum "${PYTHON_SHA512SUM}" "${IRONFOX_PYTHON_DIR}/${PYTHON_GIT_RELEASE}/cpython-${PYTHON_VERSION}+${PYTHON_GIT_RELEASE}-${PYTHON_ARCH}-${PYTHON_PLATFORM}-install_only_stripped.tar.gz"
+
+    echo_green_text "SUCCESS: Downloaded Python to ${IRONFOX_PYTHON_DIR}/${PYTHON_GIT_RELEASE}/cpython-${PYTHON_VERSION}+${PYTHON_GIT_RELEASE}-${PYTHON_ARCH}-${PYTHON_PLATFORM}-install_only_stripped.tar.gz"
 }
 
 # Get + set-up rust/cargo
@@ -1015,6 +1085,62 @@ function get_up_ac() {
     echo_red_text 'Downloading UnifiedPush-AC...'
     download_and_extract 'unifiedpush-ac' "https://gitlab.com/ironfox-oss/unifiedpush-ac/-/archive/${UNIFIEDPUSHAC_COMMIT}/unifiedpush-ac-${UNIFIEDPUSHAC_COMMIT}.tar.gz" "${IRONFOX_UP_AC}" "${UNIFIEDPUSHAC_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up UnifiedPush-AC at ${IRONFOX_UP_AC}"
+}
+
+# Get + set-up uv
+function get_uv() {
+    if  [ ! -d "${IRONFOX_PYTHON_DIR}" ]; then
+        echo_red_text "ERROR: You tried to download uv, but you don't have Python downloaded yet."
+        exit 1
+    fi
+
+    if [[ -d "${IRONFOX_PYENV_DIR}" ]]; then
+        echo_red_text "The uv environment is already set-up at ${IRONFOX_PYENV_DIR}"
+        read -p "Do you want to re-create it? [y/N] " -n 1 -r
+        echo
+        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+            rm -rf "${IRONFOX_PYENV_DIR}" "${IRONFOX_UV_DIR}" "${IRONFOX_UV_LOCAL}"
+        fi
+    fi
+
+    # Set our platform
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+        local readonly UV_PLATFORM='apple-darwin'
+    else
+        local readonly UV_PLATFORM='unknown-linux-gnu'
+    fi
+
+    # Set our platform architecture
+    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
+        local readonly UV_ARCH='aarch64'
+    else
+        local readonly UV_ARCH='x86_64'
+    fi
+
+    # Set our checksum to verify
+    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
+        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+            local readonly UV_SHA512SUM="${UV_SHA512SUM_OSX_ARM64}"
+        else
+            local readonly UV_SHA512SUM="${UV_SHA512SUM_LINUX_ARM64}"
+        fi
+    else
+        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
+            local readonly UV_SHA512SUM="${UV_SHA512SUM_OSX_X86_64}"
+        else
+            local readonly UV_SHA512SUM="${UV_SHA512SUM_LINUX_X86_64}"
+        fi
+    fi
+
+    echo_red_text 'Downloading uv...'
+    download_and_extract 'uv' "https://github.com/astral-sh/uv/releases/download/${UV_VERSION}/uv-${UV_ARCH}-${UV_PLATFORM}.tar.gz" "${IRONFOX_UV_DIR}" "${UV_SHA512SUM}"
+
+    echo_red_text 'Installing Python...'
+    "${IRONFOX_UV}" python install "${PYTHON_VERSION}"
+
+    echo_red_text 'Creating uv environment...'
+    "${IRONFOX_UV}" venv "${IRONFOX_PYENV_DIR}"
+    echo_green_text "SUCCESS: Set-up uv environment at ${IRONFOX_PYENV_DIR}"
 }
 
 if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
@@ -1079,7 +1205,16 @@ if [ "${IRONFOX_GET_SOURCE_GLEAN}" == 1 ]; then
     get_glean
 fi
 
-# This needs to run before we get glean_parser and gyp
+# These need to run before we get glean_parser and gyp
+if [ "${IRONFOX_GET_SOURCE_PYTHON}" == 1 ]; then
+    get_python
+fi
+
+if [ "${IRONFOX_GET_SOURCE_UV}" == 1 ]; then
+    get_uv
+fi
+
+# This needs to be run before we get glean_parser
 if [ "${IRONFOX_GET_SOURCE_PIP}" == 1 ]; then
     get_pip
 fi

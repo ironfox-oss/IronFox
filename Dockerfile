@@ -16,7 +16,6 @@ RUN dnf install -y \
     ninja-build \
     patch \
     perl \
-    python \
     shasum \
     xz \
     yq \
