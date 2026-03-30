@@ -377,9 +377,31 @@ if [[ -z "${IRONFOX_JDK_17+x}" ]]; then
     export IRONFOX_JDK_17="${IRONFOX_JDK_17_DEFAULT}"
 fi
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    export IRONFOX_JAVA_HOME="${IRONFOX_JDK_17}/Contents/Home"
+    export IRONFOX_JDK_17_HOME="${IRONFOX_JDK_17}/Contents/Home"
 else
-    export IRONFOX_JAVA_HOME="${IRONFOX_JDK_17}"
+    export IRONFOX_JDK_17_HOME="${IRONFOX_JDK_17}"
+fi
+
+# JDK (21)
+IRONFOX_JDK_21_DEFAULT="${IRONFOX_EXTERNAL}/jdk-21"
+if [[ -z "${IRONFOX_JDK_21+x}" ]]; then
+    export IRONFOX_JDK_21="${IRONFOX_JDK_21_DEFAULT}"
+fi
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    export IRONFOX_JDK_21_HOME="${IRONFOX_JDK_21}/Contents/Home"
+else
+    export IRONFOX_JDK_21_HOME="${IRONFOX_JDK_21}"
+fi
+
+# JDK (25)
+IRONFOX_JDK_25_DEFAULT="${IRONFOX_EXTERNAL}/jdk-25"
+if [[ -z "${IRONFOX_JDK_25+x}" ]]; then
+    export IRONFOX_JDK_25="${IRONFOX_JDK_25_DEFAULT}"
+fi
+if [[ "${IRONFOX_OS}" == 'osx' ]]; then
+    export IRONFOX_JAVA_HOME="${IRONFOX_JDK_25}/Contents/Home"
+else
+    export IRONFOX_JAVA_HOME="${IRONFOX_JDK_25}"
 fi
 export IRONFOX_JAVA="${IRONFOX_JAVA_HOME}/bin/java"
 
@@ -604,7 +626,7 @@ if [[ -z "${IRONFOX_GRADLE_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # Gradle flags
-IRONFOX_GRADLE_FLAGS_DEFAULT="-Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
+IRONFOX_GRADLE_FLAGS_DEFAULT="-Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
     export IRONFOX_GRADLE_FLAGS_OVERRIDE=1
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"

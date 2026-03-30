@@ -348,7 +348,7 @@ function prep_llvm() {
 
 function clean_gradle() {
     # This is used for cleaning Gradle to ensure builds are fresh
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} clean
+     "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
 }
 
 function build_bundletool() {
@@ -357,7 +357,7 @@ function build_bundletool() {
 
     pushd "${IRONFOX_BUNDLETOOL_DIR}"
     clean_gradle
-    "${IRONFOX_GRADLE}" assemble
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} assemble
     popd
 
     cp -f "${IRONFOX_BUNDLETOOL_DIR}/build/libs/bundletool.jar" "${IRONFOX_BUNDLETOOL_JAR}"
@@ -410,9 +410,9 @@ function build_microg() {
     echo_red_text 'Building microG...'
 
     pushd "${IRONFOX_GMSCORE}"
-    clean_gradle
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
 
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dhttps.protocols=TLSv1.3 -x javaDocReleaseGeneration \
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -x javaDocReleaseGeneration \
         :play-services-base:publishToMavenLocal \
         :play-services-basement:publishToMavenLocal \
         :play-services-fido:publishToMavenLocal \
@@ -427,10 +427,10 @@ function build_glean() {
     echo_red_text 'Building Glean...'
 
     pushd "${IRONFOX_GLEAN}"
-    clean_gradle
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
 
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
     popd
 
     echo_green_text 'SUCCESS: Built Glean'
@@ -441,17 +441,21 @@ function build_as() {
     echo_red_text 'Building Application Services...'
 
     pushd "${IRONFOX_AS}"
-    clean_gradle
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
 
     # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
     # skips building the libraries as they are expected to be already downloaded in a CI environment
     # However, we want build those libraries always, so we unset CI before invoking the script
     unset CI
 
+    unset JAVA_HOME
+    export JAVA_HOME="${IRONFOX_JDK_17_HOME}"
     bash -x "${IRONFOX_AS}/libs/verify-android-environment.sh"
+    unset JAVA_HOME
+    export JAVA_HOME="${IRONFOX_JAVA_HOME}"
 
     # Build Application Services
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publish -Plocal=${IF_LOCAL_AS_VERSION_GRADLE}
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -Plocal=${IF_LOCAL_AS_VERSION_GRADLE} publish
 
     popd
 
@@ -770,7 +774,7 @@ function build_up_ac() {
     clean_gradle
 
     # Build UnifiedPush-AC
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publish
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} publish
     popd
 
     echo_green_text 'SUCCESS: Built UnifiedPush-AC'
@@ -851,7 +855,7 @@ function build_fenix() {
         fi
 
         # 5. Finally, build and export our AAB
-        "${IRONFOX_MACH}" gradle -p mobile/android/fenix -Paab bundleRelease -x :app:releaseOssLicensesCleanUp
+        "${IRONFOX_MACH}" gradle -Paab -p mobile/android/fenix bundleRelease -x :app:releaseOssLicensesCleanUp
         cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
     else
         # Export APK
