@@ -910,6 +910,10 @@
         },
         {
             "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
+            "firstPartyDomain": "imdb.com"
+        },
+        {
+            "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
             "firstPartyDomain": "klippy.pro"
         },
         {
