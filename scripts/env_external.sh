@@ -176,32 +176,38 @@ export RUSTC="${IRONFOX_RUSTC}"
 export RUSTDOC="${IRONFOX_RUSTDOC}"
 
 ## Disable debug
-export CARGO_PROFILE_DEV_DEBUG=false
-export CARGO_PROFILE_DEV_DEBUG_ASSERTIONS=false
-export CARGO_PROFILE_RELEASE_DEBUG=false
-export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS=false
+export CARGO_PROFILE_DEV_DEBUG='false'
+export CARGO_PROFILE_DEV_DEBUG_ASSERTIONS='false'
+export CARGO_PROFILE_RELEASE_DEBUG='false'
+export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS='false'
 
 ## Disable HTTP debugging
-export CARGO_HTTP_DEBUG=false
+export CARGO_HTTP_DEBUG='false'
+
+## Disable incremental compilation
+### (Ensures builds are fresh)
+### https://doc.rust-lang.org/cargo/reference/profiles.html#incremental
+export CARGO_BUILD_INCREMENTAL='false'
+export CARGO_INCREMENTAL=0
 
 ## Display progress bars
 export CARGO_TERM_PROGRESS_WHEN="${IRONFOX_CARGO_PROGRESS_BAR}"
 export CARGO_TERM_PROGRESS_WIDTH=80
 
 ## Enable certificate revocation checks
-export CARGO_HTTP_CHECK_REVOKE=true
+export CARGO_HTTP_CHECK_REVOKE='true'
 
 ## Enable colored output
 export CARGO_TERM_COLOR="${IRONFOX_CARGO_COLORED_OUTPUT}"
 
 ## Enable overflow checks
-export CARGO_PROFILE_DEV_OVERFLOW_CHECKS=true
-export CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS=true
+export CARGO_PROFILE_DEV_OVERFLOW_CHECKS='true'
+export CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS='true'
 
 ## Enable performance optimizations
-export CARGO_PROFILE_DEV_LTO=true
+export CARGO_PROFILE_DEV_LTO='true'
 export CARGO_PROFILE_DEV_OPT_LEVEL=3
-export CARGO_PROFILE_RELEASE_LTO=true
+export CARGO_PROFILE_RELEASE_LTO='true'
 export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
 
 ## Strip debug info
