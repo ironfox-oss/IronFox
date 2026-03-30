@@ -107,10 +107,12 @@ mkdir -p "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages"
 mkdir -p "${IRONFOX_BUILD}/tmp/glean"
 
 ## Copy machrc config
-cp -vf "${IRONFOX_PATCHES}/machrc" "${IRONFOX_MOZBUILD}/machrc"
+cp -f "${IRONFOX_CONFIGS}/mach/machrc" "${IRONFOX_MOZBUILD}/machrc"
 
-## Copy Rust (cargo) config
-cp -vf "${IRONFOX_PATCHES}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
+## Symlink Rust (cargo) config
+if [[ ! -f "${IRONFOX_CARGO_HOME}/config.toml" ]]; then
+    ln -s "${IRONFOX_CONFIGS}/cargo/config.toml" "${IRONFOX_CARGO_HOME}/config.toml"
+fi
 
 # Check patch files
 source "${IRONFOX_SCRIPTS}/patches.sh"

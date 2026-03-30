@@ -1,0 +1,17 @@
+# IronFox "common" mozconfig
+
+# Do we want Mach to actually build *something*?
+if [ "${IRONFOX_MACH_BUILD}" != 1 ]; then
+    . "${IRONFOX_MOZCONFIGS}/no-build.mozconfig"
+else
+    . "${IRONFOX_MOZCONFIGS}/build.mozconfig"
+fi
+
+# Set project-specific options
+if [ "${IRONFOX_MACH_TARGET_AC}" == 1 ]; then
+    . "${IRONFOX_MOZCONFIGS}/projects/android-components.mozconfig"
+elif [ "${IRONFOX_MACH_TARGET_FENIX}" == 1 ]; then
+    . "${IRONFOX_MOZCONFIGS}/projects/fenix.mozconfig"
+elif [ "${IRONFOX_MACH_TARGET_GECKO}" == 1 ]; then
+    . "${IRONFOX_MOZCONFIGS}/projects/gecko.mozconfig"
+fi

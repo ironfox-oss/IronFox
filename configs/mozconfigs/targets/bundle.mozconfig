@@ -1,4 +1,4 @@
-. "$topsrcdir/ironfox/mozconfigs/targets/common.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/targets/common.mozconfig"
 
 ac_add_options --enable-android-bundle
 export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'

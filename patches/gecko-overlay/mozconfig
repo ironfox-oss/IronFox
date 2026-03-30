@@ -1,5 +1,0 @@
-# IronFox mozconfig...
-
-. "$topsrcdir/ironfox/mozconfigs/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}.mozconfig"
-
-# Any desired overrides can be added below:

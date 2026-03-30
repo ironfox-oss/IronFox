@@ -246,6 +246,7 @@ function prep_gecko() {
     fi
     cp -f "${IRONFOX_PATCHES}/build/gecko/local.properties" "${IRONFOX_GECKO}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_GECKO}|${IRONFOX_GECKO}|" "${IRONFOX_GECKO}/local.properties"
+    "${IRONFOX_SED}" -i "s|{IRONFOX_MOZCONFIGS}|${IRONFOX_MOZCONFIGS}|" "${IRONFOX_GECKO}/local.properties"
 
     # Substitute our local versions of Android Components and Application Services
     "${IRONFOX_SED}" -i -e "s|val VERSION = .*|val VERSION = \""${IF_LOCAL_AS_VERSION}\""|g" "${IRONFOX_AC}/plugins/dependencies/src/main/java/ApplicationServices.kt"
@@ -503,9 +504,9 @@ function package_gecko() {
     "${IRONFOX_MACH}" package
 
     echo_green_text "Running ${IRONFOX_MACH} package-multi-locale..."
-    "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_GECKO_LOCALES}
+    "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_LOCALES}
 
-    export MOZ_CHROME_MULTILOCALE="${IRONFOX_GECKO_LOCALES}"
+    export MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 
     # Package GeckoView
     ## (MOZ_AUTOMATION is set here to create the AAR zips)

@@ -1,0 +1,8 @@
+# IronFox mozconfig...
+
+. "${IRONFOX_MOZCONFIGS}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}.mozconfig"
+
+# If there is an `overrides.mozconfig` file (located at the root project directory), let's use it
+if [[ -f "${IRONFOX_ROOT}/overrides.mozconfig" ]]; then
+    . "${IRONFOX_ROOT}/overrides.mozconfig"
+fi

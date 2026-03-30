@@ -1,0 +1,10 @@
+# IronFox - Release (x86_64) mozconfig
+
+. "${IRONFOX_MOZCONFIGS}/core.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/branding/ironfox.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/targets/x86_64.mozconfig"
+
+## Set the destination object (output) directory
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj/ironfox-release-x86_64
+mk_add_options OBJDIR=@TOPSRCDIR@/obj/ironfox-release-x86_64
+export MOZ_OBJDIR="${IRONFOX_GECKO}/obj/ironfox-release-x86_64"

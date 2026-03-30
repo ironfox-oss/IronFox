@@ -1,0 +1,10 @@
+# IronFox - Nightly (ARM64) mozconfig
+
+. "${IRONFOX_MOZCONFIGS}/core.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/branding/ironfox-nightly.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/targets/arm64.mozconfig"
+
+## Set the destination object (output) directory
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj/ironfox-nightly-arm64
+mk_add_options OBJDIR=@TOPSRCDIR@/obj/ironfox-nightly-arm64
+export MOZ_OBJDIR="${IRONFOX_GECKO}/obj/ironfox-nightly-arm64"

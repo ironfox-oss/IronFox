@@ -1,23 +1,23 @@
 # IronFox - Release (Bundle) mozconfig
 
-. "$topsrcdir/ironfox/mozconfigs/core.mozconfig"
-. "$topsrcdir/ironfox/mozconfigs/branding/ironfox.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/core.mozconfig"
+. "${IRONFOX_MOZCONFIGS}/branding/ironfox.mozconfig"
 
 # To create a bundle, we first need to produce a GeckoView AAR for each architecture...
 
 # 1. ARM64
 if [ "${IRONFOX_MACH_TARGET_BUNDLE_ARM64}" == 1 ]; then
-    . "$topsrcdir/ironfox/mozconfigs/ironfox-release-arm64.mozconfig"
+    . "${IRONFOX_MOZCONFIGS}/ironfox-release-arm64.mozconfig"
 # 2. ARM
 elif [ "${IRONFOX_MACH_TARGET_BUNDLE_ARM}" == 1 ]; then
-    . "$topsrcdir/ironfox/mozconfigs/ironfox-release-arm.mozconfig"
+    . "${IRONFOX_MOZCONFIGS}/ironfox-release-arm.mozconfig"
 # 3. x86_64
 elif [ "${IRONFOX_MACH_TARGET_BUNDLE_X86_64}" == 1 ]; then
-    . "$topsrcdir/ironfox/mozconfigs/ironfox-release-x86_64.mozconfig"
+    . "${IRONFOX_MOZCONFIGS}/ironfox-release-x86_64.mozconfig"
 else
-    . "$topsrcdir/ironfox/mozconfigs/targets/bundle.mozconfig"
+    . "${IRONFOX_MOZCONFIGS}/targets/bundle.mozconfig"
     ## Set the destination object (output) directory
     mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj/ironfox-release-bundle
     mk_add_options OBJDIR=@TOPSRCDIR@/obj/ironfox-release-bundle
-    export MOZ_OBJDIR="$topsrcdir/obj/ironfox-release-bundle"
+    export MOZ_OBJDIR="${IRONFOX_GECKO}/obj/ironfox-release-bundle"
 fi

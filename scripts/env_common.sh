@@ -18,6 +18,10 @@ fi
 # Scripts directory
 export IRONFOX_SCRIPTS="${IRONFOX_ROOT}/scripts"
 
+# Configuration files
+export IRONFOX_CONFIGS="${IRONFOX_ROOT}/configs"
+export IRONFOX_MOZCONFIGS="${IRONFOX_CONFIGS}/mozconfigs"
+
 # CI artifacts
 export IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
 export IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
@@ -252,9 +256,9 @@ export IRONFOX_FENIX="${IRONFOX_GECKO}/mobile/android/fenix"
 export IRONFOX_FENIX_OVERLAY="${IRONFOX_PATCHES}/fenix-overlay"
 
 ## Gecko locales
-IRONFOX_GECKO_LOCALES_DEFAULT=$(<"${IRONFOX_PATCHES}/locales")
-if [[ -z "${IRONFOX_GECKO_LOCALES+x}" ]]; then
-    export IRONFOX_GECKO_LOCALES="${IRONFOX_GECKO_LOCALES_DEFAULT}"
+IRONFOX_LOCALES_DEFAULT=$(<"${IRONFOX_CONFIGS}/locales")
+if [[ -z "${IRONFOX_LOCALES+x}" ]]; then
+    export IRONFOX_LOCALES="${IRONFOX_LOCALES_DEFAULT}"
 fi
 
 ## Gecko l10n
@@ -570,7 +574,7 @@ if [[ -z "${IRONFOX_GRADLE_FLAGS_OVERRIDE+x}" ]]; then
 fi
 
 # Gradle flags
-IRONFOX_GRADLE_FLAGS_DEFAULT="-Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false --no-build-cache --no-configuration-cache --no-daemon"
+IRONFOX_GRADLE_FLAGS_DEFAULT="-Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
     export IRONFOX_GRADLE_FLAGS_OVERRIDE=1
     export IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"

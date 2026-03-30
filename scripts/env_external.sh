@@ -23,7 +23,6 @@ export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
 ## https://developer.android.com/tools/variables
 export ANDROID_HOME="${IRONFOX_ANDROID_SDK}"
 export ANDROID_SDK_ROOT="${IRONFOX_ANDROID_SDK}"
-export PATH="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin:${PATH}"
 
 ## Android SDK preferences
 export ANDROID_USER_HOME="${IRONFOX_BUILD}/.android"
@@ -40,7 +39,6 @@ export GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
 
 # Java home
 export JAVA_HOME="${IRONFOX_JAVA_HOME}"
-export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
 
 # llvm-profdata
 export LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA}"
@@ -50,8 +48,8 @@ export LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA}"
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#95
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#284
 export DISABLE_TELEMETRY=1
-export MACHRC="${IRONFOX_PATCHES}/machrc"
-export MOZCONFIG="${IRONFOX_GECKO}/mozconfig"
+export MACHRC="${IRONFOX_CONFIGS}/mach/machrc"
+export MOZCONFIG="${IRONFOX_MOZCONFIGS}/ironfox.mozconfig"
 
 # microG
 export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
@@ -94,8 +92,8 @@ export npm_config_node_options="${IRONFOX_NODE_OPTIONS}"
 
 ## Always use our npm config file
 ## https://docs.npmjs.com/cli/v11/using-npm/config#npmrc-files
-export NPM_CONFIG_GLOBALCONFIG="${IRONFOX_PATCHES}/npm/.npmrc"
-export npm_config_globalconfig="${IRONFOX_PATCHES}/npm/.npmrc"
+export NPM_CONFIG_GLOBALCONFIG="${IRONFOX_CONFIGS}/npm/.npmrc"
+export npm_config_globalconfig="${IRONFOX_CONFIGS}/npm/.npmrc"
 
 ### Always install dependencies properly
 export npm_config_install_links='true'
@@ -130,6 +128,9 @@ export PROFILE='/dev/null'
 
 # Phoenix
 export PHOENIX_ANDROID_ONLY=1
+export PHOENIX_AWK="${IRONFOX_AWK}"
+export PHOENIX_CURL_FLAGS="${IRONFOX_CURL_FLAGS}"
+export PHOENIX_CURL_FLAGS_OVERRIDE=1
 export PHOENIX_EXTENDED_ONLY=1
 export PHOENIX_EXTRA_CFG=1
 export PHOENIX_EXTRA_CFG_FILE="${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
@@ -138,6 +139,16 @@ export PHOENIX_EXTRA_EXTENDED_OUTPUT_FILENAME_ANDROID='ironfox'
 export PHOENIX_EXTRA_POLICIES_ANDROID=1
 export PHOENIX_EXTRA_POLICIES_FILE_ANDROID="${IRONFOX_PATCHES}/build/gecko/policies.json"
 export PHOENIX_EXTRA_POLICIES_OUTPUT_DIR_ANDROID="${IRONFOX_GECKO}/ironfox/prefs"
+export PHOENIX_PYENV_DIR="${IRONFOX_PYENV_DIR}"
+export PHOENIX_PYTHON="${IRONFOX_PYTHON}"
+export PHOENIX_PYTHON_DIR="${IRONFOX_PYTHON_DIR}"
+export PHOENIX_SED="${IRONFOX_SED}"
+export PHOENIX_TAR="${IRONFOX_TAR}"
+export PHOENIX_UV_CACHE="${IRONFOX_UV_CACHE}"
+export PHOENIX_UV_DIR="${IRONFOX_UV_DIR}"
+export PHOENIX_UV_LOCAL="${IRONFOX_UV_LOCAL}"
+export PHOENIX_UV_PYTHON="${IRONFOX_UV_PYTHON}"
+export PHOENIX_UV_TOOLS="${IRONFOX_UV_TOOLS}"
 export PHOENIX_SPECS=0
 
 # Python (Glean)
@@ -150,7 +161,6 @@ export CARGO_HOME="${IRONFOX_CARGO_HOME}"
 export CARGO_INSTALL_ROOT="${IRONFOX_CARGO_HOME}"
 export RUSTC="${IRONFOX_RUSTC}"
 export RUSTDOC="${IRONFOX_RUSTDOC}"
-export PATH="${IRONFOX_CARGO_HOME}/bin:${PATH}"
 
 ## Disable debug
 export CARGO_PROFILE_DEV_DEBUG=false
