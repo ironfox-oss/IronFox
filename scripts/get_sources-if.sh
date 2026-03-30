@@ -317,6 +317,10 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for firefox-l10n...'
         "${IRONFOX_SED}" -i -e "s|L10N_SHA512SUM='.*'|L10N_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for firefox-l10n'
+    elif [ "${old_sha512sum}" == "${NPM_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for npm...'
+        "${IRONFOX_SED}" -i -e "s|NPM_SHA512SUM='.*'|NPM_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for npm'
     elif [ "${old_sha512sum}" == "${NVM_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for nvm...'
         "${IRONFOX_SED}" -i -e "s|NVM_SHA512SUM='.*'|NVM_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -946,9 +950,15 @@ function get_npm() {
         exit 1
     fi
 
+    echo_red_text 'Downloading npm...'
+    download "https://registry.npmjs.org/npm/-/npm-${NPM_VERSION}.tgz" "${IRONFOX_DOWNLOADS}/npm.tgz"
+
+    # Validate SHA512sum
+    validate_sha512sum "${NPM_SHA512SUM}" "${IRONFOX_DOWNLOADS}/npm.tgz"
+
     echo_red_text 'Installing npm...'
     source "${IRONFOX_NVM_ENV}"
-    "${IRONFOX_NPM}" install -g npm@"${NPM_VERSION}"
+    "${IRONFOX_NPM}" install -g npm@file:"${IRONFOX_DOWNLOADS}/npm.tgz"
     echo_green_text "SUCCESS: Set-up npm at ${IRONFOX_NPM}"
 }
 

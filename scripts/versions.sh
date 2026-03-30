@@ -143,7 +143,8 @@ NODE_VERSION='25.8.1'
 
 ## npm
 ### https://github.com/npm/cli
-NPM_VERSION='11.12.0'
+NPM_SHA512SUM='cdca14b85d647b3192028d02aadbe82d75f79a446aceea9874be98e6d768f20ebd3555770a48d0e9906106007877bbc690f715e9372f2e2dc644a3c3157fb14c'
+NPM_VERSION='11.12.1'
 
 ## nvm
 ### Version: v0.40.4
