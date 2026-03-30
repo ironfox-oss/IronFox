@@ -10,6 +10,9 @@ source "${IRONFOX_ENV_BUILD}"
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
+# Temporarily add Java to PATH, as apksigner requires it
+export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
+
 # Functions
 
 function sign_apk() {
