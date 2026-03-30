@@ -71,7 +71,7 @@ if [ ! -d "${IRONFOX_ANDROID_NDK}" ]; then
     exit 1
 fi
 
-JAVA_VER=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}' | awk -F '.' '{sub("^$", "0", $2); print $1$2}')
+JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
 [ "${JAVA_VER}" -ge 15 ] || {
     echo_red_text "Java 17 or newer must be set as default JDK"
     exit 1
