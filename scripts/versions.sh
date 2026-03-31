@@ -50,9 +50,9 @@ readonly GMSCORE_SHA512SUM='c2c5e8c17a17b159550d696d97440b02bd8fb455f8ac9cbdbc81
 
 ## Phoenix
 ### https://gitlab.com/celenityy/Phoenix
-readonly PHOENIX_COMMIT='4514418a570603f7ae0670ad1f42371345ffff45'
-readonly PHOENIX_SHA512SUM='6433367e1c8d3014317e8d007730b904ae75e104c5c8e3800698a2330fa5e1e44be80b536a1c89bb7c94cb06bd165c1bc4e2b0b0fd3a861f3e28c23d8f66d9dd'
-readonly PHOENIX_VERSION='2026.02.23.1'
+readonly PHOENIX_COMMIT='9a7e49256837ce1928265734be1ea110c76b8aa4'
+readonly PHOENIX_SHA512SUM='faaaba69c47a0abedbf04146940102707f95ba34a91dfb1c92df3cf7bcbef69a499c20bfd19c02ab7277dab132c7b73d76c56c0dcbcb03803e969a0ff58f575c'
+readonly PHOENIX_VERSION='2026.03.31.1'
 
 ## uniffi-rs (Tor)
 ### https://gitlab.torproject.org/tpo/applications/uniffi-rs
