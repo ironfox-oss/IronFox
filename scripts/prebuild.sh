@@ -3,13 +3,16 @@
 set -euo pipefail
 
 # Set-up our environment
-bash -x $(dirname $0)/env.sh
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+    bash -x $(dirname $0)/env.sh
+fi
 source $(dirname $0)/env.sh
 
 # Prepare to build IronFox
-export IRONFOX_FROM_PREBUILD=1
+readonly IRONFOX_FROM_PREBUILD=1
+export IRONFOX_FROM_PREBUILD
 if [ "${IRONFOX_LOG_PREBUILD}" == 1 ]; then
-    PREBUILD_LOG_FILE="${IRONFOX_LOG_DIR}/prebuild.log"
+    readonly PREBUILD_LOG_FILE="${IRONFOX_LOG_DIR}/prebuild.log"
 
     # If the log file already exists, remove it
     if [ -f "${PREBUILD_LOG_FILE}" ]; then

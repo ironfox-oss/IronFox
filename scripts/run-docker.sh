@@ -4,15 +4,15 @@
 
 set -euo pipefail
 
-script="$(realpath "$0")"
-script_dir="$(dirname "${script}")"
-root_dir="$(dirname "${script_dir}")"
+readonly script="$(realpath "$0")"
+readonly script_dir="$(dirname "${script}")"
+readonly root_dir="$(dirname "${script_dir}")"
 
 # Configuration
-IMAGE_NAME="ironfox-builder"
-CONTAINER_NAME="ironfox-builder"
-DOCKERFILE_PATH="${root_dir}/Dockerfile"
-PROMPT='\[\033[1;36m\]🐳\[\033[0m\] \[\033[1;34m\]\u@ironfox\[\033[0m\]:\[\033[1;33m\]\w\[\033[0m\]\$ '
+readonly IMAGE_NAME="ironfox-builder"
+readonly CONTAINER_NAME="ironfox-builder"
+readonly DOCKERFILE_PATH="${root_dir}/Dockerfile"
+readonly PROMPT='\[\033[1;36m\]🐳\[\033[0m\] \[\033[1;34m\]\u@ironfox\[\033[0m\]:\[\033[1;33m\]\w\[\033[0m\]\$ '
 
 # Initialize variables
 MOUNT_ARGS=()
@@ -83,19 +83,19 @@ if [[ "${PARSE_COMMAND}" == true ]]; then
     COMMAND_ARGS=("$@")
 fi
 
-image_exists() {
+function image_exists() {
     docker image inspect "${IMAGE_NAME}" >/dev/null 2>&1
 }
 
-container_exists() {
+function container_exists() {
     docker container inspect "${CONTAINER_NAME}" >/dev/null 2>&1
 }
 
-container_running() {
+function container_running() {
     [[ "$(docker container inspect -f '{{.State.Running}}' "${CONTAINER_NAME}" 2>/dev/null)" == "true" ]]
 }
 
-build_image() {
+function build_image() {
     echo "Building Docker image '${IMAGE_NAME}'..."
     if [[ ! -f "${DOCKERFILE_PATH}" ]]; then
         echo "Error: Dockerfile not found at ${DOCKERFILE_PATH}"
@@ -105,10 +105,10 @@ build_image() {
     echo "Docker image '${IMAGE_NAME}' built successfully."
 }
 
-create_container() {
+function create_container() {
     echo "Creating container '${CONTAINER_NAME}'..."
     
-    local docker_cmd=(
+    local readonly docker_cmd=(
         "docker" "run" "-d" "-it"
         "--name" "${CONTAINER_NAME}"
         "-v" "${root_dir}:/app"
@@ -120,15 +120,15 @@ create_container() {
     echo "Container '${CONTAINER_NAME}' created successfully."
 }
 
-start_container() {
+function start_container() {
     if ! container_running; then
         echo "Starting container '${CONTAINER_NAME}'..."
         docker start "${CONTAINER_NAME}"
     fi
 }
 
-execute_in_container() {
-    local cmd=("$@")
+function execute_in_container() {
+    local readonly cmd=("$@")
     
     if [[ ${#cmd[@]} -eq 0 ]]; then
         echo "Starting interactive shell in container '${CONTAINER_NAME}'..."
@@ -139,7 +139,7 @@ execute_in_container() {
     fi
 }
 
-main() {
+function main() {
     echo "IronFox"
     echo "========================"
     

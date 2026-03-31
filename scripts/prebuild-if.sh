@@ -23,8 +23,10 @@
 set -euo pipefail
 
 # Set-up our environment
-bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
 
 if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
     echo_red_text "ERROR: Do not call prebuild-if.sh directly. Instead, use prebuild.sh." >&1
@@ -49,9 +51,9 @@ function localize_maven() {
 # Applies the overlay files in the given directory
 # to the current directory
 function apply_overlay() {
-    source_dir="$1"
+    local readonly source_dir="$1"
     find "${source_dir}" -type f| while read -r src; do
-        target="${src#"${source_dir}"}"
+        local target="${src#"${source_dir}"}"
         mkdir -vp "$(dirname "${target}")"
         cp -vrf "${src}" "${target}"
     done
@@ -71,7 +73,7 @@ if [ ! -d "${IRONFOX_ANDROID_NDK}" ]; then
     exit 1
 fi
 
-JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
+readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
 [ "${JAVA_VER}" -ge 15 ] || {
     echo_red_text "Java 17 or newer must be set as default JDK"
     exit 1
@@ -1014,7 +1016,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
 if [[ -n "${FDROID_BUILD+x}" ]]; then
     # Patch the LLVM source code
     # Search clang- in https://android.googlesource.com/platform/ndk/+/refs/tags/ndk-r28b/ndk/toolchains.py
-    LLVM_SVN='530567'
+    readonly LLVM_SVN='530567'
     "${IRONFOX_PYTHON}" "${toolchain_utils}/llvm_tools/patch_manager.py" \
         --svn_version $LLVM_SVN \
         --patch_metadata_file "${llvm_android}/patches/PATCHES.json" \

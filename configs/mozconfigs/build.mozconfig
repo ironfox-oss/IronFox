@@ -12,7 +12,8 @@ ac_add_options --enable-replace-malloc
 
 # Disable build cache
 ac_add_options --without-ccache
-export CCACHE=
+readonly CCACHE=
+export CCACHE
 
 # Disable misc. debugging/development/test features
 ac_add_options --disable-debug-symbols
@@ -21,8 +22,10 @@ ac_add_options --disable-gtest-in-build
 ac_add_options --disable-phc
 ac_add_options --disable-rust-debug
 ac_add_options --disable-rust-tests
-export MOZ_DEBUG_FLAGS=
-export MOZ_PHC=
+readonly MOZ_DEBUG_FLAGS=
+readonly MOZ_PHC=
+export MOZ_DEBUG_FLAGS
+export MOZ_PHC
 
 ## Disable Rust incremental compilation
 ### (Ensures builds are fresh)
@@ -38,15 +41,20 @@ ac_add_options --enable-stl-hardening
 export MOZ_SECURITY_HARDENING=1
 
 # Enable performance optimizations
+ac_add_options --enable-lto='full'
 ac_add_options --enable-optimize='-O3 -ftree-vectorize'
-export MOZ_LTO=1
-export MOZ_OPTIMIZE_FLAGS='-O3 -ftree-vectorize'
-export RUSTC_OPT_LEVEL=3
+readonly MOZ_LTO='full'
+readonly MOZ_OPTIMIZE_FLAGS='-O3 -ftree-vectorize'
+readonly RUSTC_OPT_LEVEL=3
+export MOZ_LTO
+export MOZ_OPTIMIZE_FLAGS
+export RUSTC_OPT_LEVEL
 
 # Enable stripping
 ac_add_options --enable-install-strip
 ac_add_options --enable-strip
-export STRIP_FLAGS="--strip-debug --strip-unneeded"
+readonly STRIP_FLAGS="--strip-debug --strip-unneeded"
+export STRIP_FLAGS
 
 # Set Android NDK path
 ac_add_options --with-android-ndk="${IRONFOX_ANDROID_NDK}"
@@ -60,15 +68,24 @@ ac_add_options WASM_CC="${IRONFOX_WASI}/bin/clang"
 ac_add_options WASM_CXX="${IRONFOX_WASI}/bin/clang++"
 
 # Set compiler (toolchain) flags
-export ASFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export CFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export CPPFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export HOST_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export HOST_CPPFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export HOST_CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export HOST_LDFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export LDFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly ASFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly CFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly CPPFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly HOST_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly HOST_CPPFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly HOST_CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly HOST_LDFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly LDFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export ASFLAGS
+export CFLAGS
+export CPPFLAGS
+export CXXFLAGS
+export HOST_CFLAGS
+export HOST_CPPFLAGS
+export HOST_CXXFLAGS
+export HOST_LDFLAGS
+export LDFLAGS
 
 # Set Rust flags
 export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS} -Crelro-level=full"
@@ -76,4 +93,5 @@ export RUSTFLAGS="${IRONFOX_RUST_FLAGS} -Crelro-level=full"
 
 # Set WASI sysroot path
 ac_add_options --with-wasi-sysroot="${IRONFOX_WASI}/share/wasi-sysroot"
-export WASI_SYSROOT="${IRONFOX_WASI}/share/wasi-sysroot"
+readonly WASI_SYSROOT="${IRONFOX_WASI}/share/wasi-sysroot"
+export WASI_SYSROOT

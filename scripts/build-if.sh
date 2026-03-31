@@ -23,8 +23,10 @@
 set -euo pipefail
 
 # Set-up our environment
-bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
 
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
     echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
@@ -40,37 +42,40 @@ fi
 case "$1" in
 arm64)
     # arm64-v8a
-    export IRONFOX_TARGET_ARCH='arm64'
-    export IRONFOX_TARGET_ABI='arm64-v8a'
-    export IRONFOX_TARGET_PRETTY='ARM64'
-    IRONFOX_TARGET_RUST='arm64'
+    IRONFOX_TARGET_ARCH='arm64'
+    readonly IRONFOX_TARGET_ABI='arm64-v8a'
+    readonly IRONFOX_TARGET_PRETTY='ARM64'
+    readonly IRONFOX_TARGET_RUST='arm64'
     ;;
 arm)
     # armeabi-v7a
-    export IRONFOX_TARGET_ARCH='arm'
-    export IRONFOX_TARGET_ABI='armeabi-v7a'
-    export IRONFOX_TARGET_PRETTY='ARM'
-    IRONFOX_TARGET_RUST='arm'
+    IRONFOX_TARGET_ARCH='arm'
+    readonly IRONFOX_TARGET_ABI='armeabi-v7a'
+    readonly IRONFOX_TARGET_PRETTY='ARM'
+    readonly IRONFOX_TARGET_RUST='arm'
     ;;
 x86_64)
     # x86_64
-    export IRONFOX_TARGET_ARCH='x86_64'
-    export IRONFOX_TARGET_ABI='x86_64'
-    export IRONFOX_TARGET_PRETTY='x86_64'
-    IRONFOX_TARGET_RUST='x86_64'
+    IRONFOX_TARGET_ARCH='x86_64'
+    readonly IRONFOX_TARGET_ABI='x86_64'
+    readonly IRONFOX_TARGET_PRETTY='x86_64'
+    readonly IRONFOX_TARGET_RUST='x86_64'
     ;;
 bundle)
     # arm64-v8a, armeabi-v7a, and x86_64
-    export IRONFOX_TARGET_ARCH='bundle'
-    export IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
-    export IRONFOX_TARGET_PRETTY='Bundle'
-    IRONFOX_TARGET_RUST='arm64,arm,x86_64'
+    IRONFOX_TARGET_ARCH='bundle'
+    readonly IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
+    readonly IRONFOX_TARGET_PRETTY='Bundle'
+    readonly IRONFOX_TARGET_RUST='arm64,arm,x86_64'
     ;;
 *)
     echo_red_text "Unknown build variant: '$1'" >&2
     exit 1
     ;;
 esac
+export IRONFOX_TARGET_ARCH
+export IRONFOX_TARGET_ABI
+export IRONFOX_TARGET_PRETTY
 
 if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
     echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
@@ -107,40 +112,46 @@ function set_build_env() {
         rm "${IRONFOX_ENV_BUILD}"
     fi
 
-    EPOCH_NS="$("${IRONFOX_DATE}" "+%s%N")"
+    local readonly EPOCH_NS="$("${IRONFOX_DATE}" "+%s%N")"
     if [ "${IRONFOX_CI}" == 1 ]; then
-        IF_LOCAL_VERSION_STAMP="${IF_BUILD_STAMP}"
+        local readonly IF_LOCAL_VERSION_STAMP="${IF_BUILD_STAMP}"
     else
-        IF_LOCAL_VERSION_STAMP="${EPOCH_NS}"
+        local readonly IF_LOCAL_VERSION_STAMP="${EPOCH_NS}"
     fi
 
     if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
         # Set build date for bundle builds, to avoid conflicts and ensure that MOZ_BUILDID is consistent across all builds
         ## (CI handles this at `env_ci.sh` instead)
-        BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
+        local readonly BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-export IF_BUILD_DATE="${BUILD_DATE}"
-export IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+readonly IF_BUILD_DATE="${BUILD_DATE}"
+readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
+readonly IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+export IF_BUILD_DATE
+export IF_EPOCH_NS
+export IRONFOX_TARGET_ARCH
 EOF
     else
         echo "Writing ${IRONFOX_ENV_BUILD}..."
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-export IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
+readonly IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
+export IF_EPOCH_NS
+export IRONFOX_TARGET_ARCH
 EOF
     fi
 
     source "${IRONFOX_ENV_BUILD}"
 
     if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
+        readonly MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
+        export MOZ_BUILD_DATE
     fi
 
     # Set versions for our local dependency substitutions
-    readonly IF_LOCAL_AC_VERSION_BASE="${FIREFOX_VERSION}-${IF_EPOCH_NS}"
-    readonly IF_LOCAL_AS_VERSION_BASE="${APPSERVICES_VERSION}-${IF_EPOCH_NS}"
-    readonly IF_LOCAL_GLEAN_VERSION_BASE="${GLEAN_VERSION}-${IF_EPOCH_NS}"
+    local readonly IF_LOCAL_AC_VERSION_BASE="${FIREFOX_VERSION}-${IF_EPOCH_NS}"
+    local readonly IF_LOCAL_AS_VERSION_BASE="${APPSERVICES_VERSION}-${IF_EPOCH_NS}"
+    local readonly IF_LOCAL_GLEAN_VERSION_BASE="${GLEAN_VERSION}-${IF_EPOCH_NS}"
 
     ## For CI, we set IF_EPOCH_NS from the pipeline creation time, and we don't add '-SNAPSHOT' to the end
     if [ "${IRONFOX_CI}" == 1 ]; then
@@ -258,9 +269,9 @@ function prep_gecko() {
 
     # Configure release channel
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        IRONFOX_NAME='IronFox'
+        local readonly IRONFOX_NAME='IronFox'
     else
-        IRONFOX_NAME='IronFox Nightly'
+        local readonly IRONFOX_NAME='IronFox Nightly'
     fi
 
     if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
@@ -370,7 +381,7 @@ function build_llvm() {
     echo_red_text 'Building LLVM...'
 
     pushd "${llvm}"
-    llvmtarget=$(cat "${IRONFOX_BUILD}/targets_to_build")
+    local readonly llvmtarget=$(cat "${IRONFOX_BUILD}/targets_to_build")
     echo_green_text "building llvm for ${llvmtarget}"
     cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
@@ -607,17 +618,21 @@ function build_gecko_x86_64() {
 
 function build_gecko_bundle() {
     # Bundle
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+    readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
 
     if [ "${IRONFOX_CI}" == 1 ]; then
-        export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
-        export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
-        export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
+        readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+        readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
+        readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
     else
-        export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-        export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-        export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
+        readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
+        readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
+        readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
     fi
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
+    export MOZ_ANDROID_FAT_AAR_X86_64
 
     pushd "${IRONFOX_GECKO}"
     echo_red_text 'Creating GeckoView fat AAR...'

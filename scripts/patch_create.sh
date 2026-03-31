@@ -3,8 +3,13 @@
 set -euo pipefail
 
 # Set-up our environment
-bash -x $(dirname $0)/env.sh
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+    bash -x $(dirname $0)/env.sh
+fi
 source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
@@ -25,17 +30,17 @@ read -p 'Please enter your desired project: ' PROJECT
 case ${PROJECT} in
 	"application services" | "application Services" | "Application services" | "Application Services" | "APPLICATION SERVICES" | "application-services" | "app-services" | "as" | "AS" | 1)
 		pushd "${IRONFOX_AS}"
-        PROJECT='AS'
+        readonly PROJECT='AS'
 		;;
 
 	"gecko" | "Gecko" | "GECKO" | "firefox" | "Firefox" | "FIREFOX" | "mozilla-central" | "mozilla-release" | 2)
 		pushd "${IRONFOX_GECKO}"
-        PROJECT='gecko'
+        readonly PROJECT='gecko'
 		;;
 
 	"glean" | "Glean" | "GLEAN" | 3)
 		pushd "${IRONFOX_GLEAN}"
-        PROJECT='glean'
+        readonly PROJECT='glean'
 		;;
 
 	*)

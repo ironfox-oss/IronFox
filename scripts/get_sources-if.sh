@@ -3,16 +3,18 @@
 set -euo pipefail
 
 # Set-up our environment
-bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
 
 if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
     echo_red_text "ERROR: Do not call get_sources-if.sh directly. Instead, use get_sources.sh." >&1
     exit 1
 fi
 
-target="$1"
-mode="$2"
+readonly target="$1"
+readonly mode="$2"
 
 # Set-up target parameters
 IRONFOX_GET_SOURCE_ANDROID_NDK=0
@@ -198,10 +200,35 @@ else
     exit 1
 fi
 
-# CI shouldn't need Platform Tools
-if [ "${IRONFOX_CI}" == 1 ]; then
-    IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS=0
-fi
+readonly IRONFOX_GET_SOURCE_ANDROID_NDK
+readonly IRONFOX_GET_SOURCE_ANDROID_SDK
+readonly IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS
+readonly IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35
+readonly IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM
+readonly IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36
+readonly IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS
+readonly IRONFOX_GET_SOURCE_AS
+readonly IRONFOX_GET_SOURCE_BUNDLETOOL
+readonly IRONFOX_GET_SOURCE_CBINDGEN
+readonly IRONFOX_GET_SOURCE_GECKO
+readonly IRONFOX_GET_SOURCE_GECKO_L10N
+readonly IRONFOX_GET_SOURCE_GLEAN
+readonly IRONFOX_GET_SOURCE_GLEAN_PARSER
+readonly IRONFOX_GET_SOURCE_GRADLE
+readonly IRONFOX_GET_SOURCE_GYP
+readonly IRONFOX_GET_SOURCE_JDK_17
+readonly IRONFOX_GET_SOURCE_JDK_21
+readonly IRONFOX_GET_SOURCE_JDK_25
+readonly IRONFOX_GET_SOURCE_MICROG
+readonly IRONFOX_GET_SOURCE_NODE
+readonly IRONFOX_GET_SOURCE_NPM
+readonly IRONFOX_GET_SOURCE_PHOENIX
+readonly IRONFOX_GET_SOURCE_PIP
+readonly IRONFOX_GET_SOURCE_PREBUILDS
+readonly IRONFOX_GET_SOURCE_PYTHON
+readonly IRONFOX_GET_SOURCE_RUST
+readonly IRONFOX_GET_SOURCE_UP_AC
+readonly IRONFOX_GET_SOURCE_UV
 
 # If the 'checksum-update' argument is specified, in addition to downloading the dependencies as usual,
 ## we're also updating their checksums
@@ -219,15 +246,16 @@ elif [ "${mode}" != 'download' ]; then
     echo 'Download + update checksums: checksum-update'
     exit 1
 fi
+readonly IRONFOX_GET_SOURCE_CHECKSUM_UPDATE
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
 # Function to automate updating SHA512sums of dependencies
 function update_sha512sum() {
-    old_sha512sum="$1"
-    new_sha512sum="$2"
-    file="$3"
+    local readonly old_sha512sum="$1"
+    local readonly new_sha512sum="$2"
+    local readonly file="$3"
 
     if [ "${old_sha512sum}" == "${ANDROID_NDK_SHA512SUM_LINUX}" ]; then
         echo_red_text 'Updating SHA512sum for Android NDK (Linux)...'
@@ -443,10 +471,10 @@ function update_sha512sum() {
 }
 
 function validate_sha512sum() {
-    expected_sha512sum="$1"
-    file="$2"
+    local readonly expected_sha512sum="$1"
+    local readonly file="$2"
 
-    local_sha512sum=$(sha512sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local readonly local_sha512sum=$(sha512sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
 
     if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
         update_sha512sum "${expected_sha512sum}" "${local_sha512sum}" "${file}"
@@ -466,9 +494,9 @@ function validate_sha512sum() {
 }
 
 function clone_repo() {
-    url="$1"
-    path="$2"
-    revision="$3"
+    local readonly url="$1"
+    local readonly path="$2"
+    local readonly revision="$3"
 
     if [[ "${url}" == "" ]]; then
         echo_red_text "ERROR: URL missing for clone"
@@ -507,8 +535,8 @@ function clone_repo() {
 }
 
 function download() {
-    local url="$1"
-    local filepath="$2"
+    local readonly url="$1"
+    local readonly filepath="$2"
 
     if [[ "${url}" == "" ]]; then
         echo_red_text "ERROR: URL is required (file: '${filepath}')"
@@ -535,9 +563,9 @@ function download() {
 
 # Extract archives
 function extract() {
-    local archive_path="$1"
-    local target_path="$2"
-    local temp_repo_name="$3"
+    local readonly archive_path="$1"
+    local readonly target_path="$2"
+    local readonly temp_repo_name="$3"
 
     if ! [[ -f "${archive_path}" ]]; then
         echo_red_text "ERROR: Archive '${archive_path}' does not exist!"
@@ -572,16 +600,16 @@ function extract() {
             ;;
     esac
 
-    local top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
+    local readonly top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
     cp -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}"/ "${target_path}"
     rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 }
 
 function download_and_extract() {
-    local repo_name="$1"
-    local url="$2"
-    local path="$3"
-    local expected_sha512sum="$4"
+    local readonly repo_name="$1"
+    local readonly url="$2"
+    local readonly path="$3"
+    local readonly expected_sha512sum="$4"
 
     if [[ -d "${path}" ]]; then
         echo_red_text "'${path}' already exists"
@@ -595,18 +623,17 @@ function download_and_extract() {
         fi
     fi
 
-    local extension
     if [[ "${url}" =~ \.tar\.xz$ ]]; then
-        extension=".tar.xz"
+        local readonly extension=".tar.xz"
     elif [[ "${url}" =~ \.tar\.gz$ ]]; then
-        extension=".tar.gz"
+        local readonly extension=".tar.gz"
     elif [[ "${url}" =~ \.tar\.zst$ ]]; then
-        extension=".tar.zst"
+        local readonly extension=".tar.zst"
     else
-        extension=".zip"
+        local readonly extension=".zip"
     fi
 
-    local repo_archive="${IRONFOX_DOWNLOADS}/${repo_name}${extension}"
+    local readonly repo_archive="${IRONFOX_DOWNLOADS}/${repo_name}${extension}"
 
     download "${url}" "${repo_archive}"
 
