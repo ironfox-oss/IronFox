@@ -438,10 +438,10 @@ function build_glean() {
     echo_red_text 'Building Glean...'
 
     pushd "${IRONFOX_GLEAN}"
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} clean
 
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
     popd
 
     echo_green_text 'SUCCESS: Built Glean'
