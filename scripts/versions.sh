@@ -4,8 +4,8 @@
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
 ### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_149_0_1_RELEASE)
-readonly FIREFOX_COMMIT='c7fa3c91990bac266ee99a9e31863c202469f369'
-readonly FIREFOX_SHA512SUM='622a3b1b25bc40e90d7f7052bc70608cbe84fef92e3f42ef082002f90be4e66a49d5f7e5059036fcbe309c71a2a53643f1db699f662f5410b03200f99196fea2'
+readonly FIREFOX_COMMIT='a395b8ce89f74c9a50acf7493052282e26477e38'
+readonly FIREFOX_SHA512SUM='870a09a7a5615400b128e33c84f71cd0dfa5d10b78d3282613386d43b7215b3f0755ce754e8e21ad13d7f1b8bdf1d4af42463635e99e8e95cb799c58c35f1650'
 readonly FIREFOX_VERSION='149.0.1'
 
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
