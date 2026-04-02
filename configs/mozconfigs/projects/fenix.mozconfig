@@ -1,3 +1,3 @@
 # IronFox Fenix mozconfig
 
-export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Pofficial"
+# export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Pofficial"
