@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 # Utility functions for frequently performed tasks
 # This file MUST NOT contain anything other than function definitions.
 

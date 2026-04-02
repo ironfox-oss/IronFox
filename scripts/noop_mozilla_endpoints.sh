@@ -2,29 +2,22 @@
 
 set -euo pipefail
 
-# Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
-fi
-source $(dirname $0)/env.sh
-
-# Include utilities
-source "${IRONFOX_UTILS}"
+source "$(dirname $0)/utilities.sh"
 
 function noop_mozilla_endpoints() {
-    local readonly endpoint="$1"
-    local readonly dir="$2"
+    local endpoint="$1"
+    local dir="$2"
 
     # Find files containing the endpoint
-    local readonly files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}[^\"']*\"" -e "'${endpoint}[^\"']*'")
-    local readonly files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}/[^\"']*\"" -e "'${endpoint}/[^\"']*'")
-    local readonly files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}.[^\"']*\"" -e "'${endpoint}.[^\"']*'")
-    local readonly http_files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}[^\"']*\"" -e "'http://${endpoint}[^\"']*'")
-    local readonly http_files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}/[^\"']*\"" -e "'http://${endpoint}/[^\"']*'")
-    local readonly http_files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}.[^\"']*\"" -e "'http://${endpoint}.[^\"']*'")
-    local readonly https_files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}[^\"']*\"" -e "'https://${endpoint}[^\"']*'")
-    local readonly https_files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}/[^\"']*\"" -e "'https://${endpoint}/[^\"']*'")
-    local readonly https_files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}.[^\"']*\"" -e "'https://${endpoint}.[^\"']*'")
+    local files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}[^\"']*\"" -e "'${endpoint}[^\"']*'")
+    local files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}/[^\"']*\"" -e "'${endpoint}/[^\"']*'")
+    local files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"${endpoint}.[^\"']*\"" -e "'${endpoint}.[^\"']*'")
+    local http_files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}[^\"']*\"" -e "'http://${endpoint}[^\"']*'")
+    local http_files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}/[^\"']*\"" -e "'http://${endpoint}/[^\"']*'")
+    local http_files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"http://${endpoint}.[^\"']*\"" -e "'http://${endpoint}.[^\"']*'")
+    local https_files=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}[^\"']*\"" -e "'https://${endpoint}[^\"']*'")
+    local https_files_slash=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}/[^\"']*\"" -e "'https://${endpoint}/[^\"']*'")
+    local https_files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}.[^\"']*\"" -e "'https://${endpoint}.[^\"']*'")
 
     # Check if any files were found and modify them
     if [ -n "${files}" ]; then

@@ -83,19 +83,19 @@ if [[ "${PARSE_COMMAND}" == true ]]; then
     COMMAND_ARGS=("$@")
 fi
 
-function image_exists() {
+image_exists() {
     docker image inspect "${IMAGE_NAME}" >/dev/null 2>&1
 }
 
-function container_exists() {
+container_exists() {
     docker container inspect "${CONTAINER_NAME}" >/dev/null 2>&1
 }
 
-function container_running() {
+container_running() {
     [[ "$(docker container inspect -f '{{.State.Running}}' "${CONTAINER_NAME}" 2>/dev/null)" == "true" ]]
 }
 
-function build_image() {
+build_image() {
     echo "Building Docker image '${IMAGE_NAME}'..."
     if [[ ! -f "${DOCKERFILE_PATH}" ]]; then
         echo "Error: Dockerfile not found at ${DOCKERFILE_PATH}"
@@ -105,7 +105,7 @@ function build_image() {
     echo "Docker image '${IMAGE_NAME}' built successfully."
 }
 
-function create_container() {
+create_container() {
     echo "Creating container '${CONTAINER_NAME}'..."
     
     local docker_cmd=(
@@ -120,14 +120,14 @@ function create_container() {
     echo "Container '${CONTAINER_NAME}' created successfully."
 }
 
-function start_container() {
+start_container() {
     if ! container_running; then
         echo "Starting container '${CONTAINER_NAME}'..."
         docker start "${CONTAINER_NAME}"
     fi
 }
 
-function execute_in_container() {
+execute_in_container() {
     local cmd=("$@")
     
     if [[ ${#cmd[@]} -eq 0 ]]; then
@@ -139,7 +139,7 @@ function execute_in_container() {
     fi
 }
 
-function main() {
+main() {
     echo "IronFox"
     echo "========================"
     

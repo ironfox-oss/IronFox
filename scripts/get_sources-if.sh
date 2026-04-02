@@ -3,18 +3,16 @@
 set -euo pipefail
 
 # Set-up our environment
+bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
-
-# Include utilities
-source "${IRONFOX_UTILS}"
 
 if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
     echo_red_text "ERROR: Do not call get_sources-if.sh directly. Instead, use get_sources.sh." >&1
     exit 1
 fi
 
-readonly target="$1"
-readonly mode="$2"
+target="$1"
+mode="$2"
 
 # Set-up target parameters
 IRONFOX_GET_SOURCE_ANDROID_NDK=0
@@ -34,8 +32,6 @@ IRONFOX_GET_SOURCE_GLEAN_PARSER=0
 IRONFOX_GET_SOURCE_GRADLE=0
 IRONFOX_GET_SOURCE_GYP=0
 IRONFOX_GET_SOURCE_JDK_17=0
-IRONFOX_GET_SOURCE_JDK_21=0
-IRONFOX_GET_SOURCE_JDK_25=0
 IRONFOX_GET_SOURCE_MICROG=0
 IRONFOX_GET_SOURCE_NODE=0
 IRONFOX_GET_SOURCE_NPM=0
@@ -98,12 +94,6 @@ elif [ "${target}" == 'gyp' ]; then
 elif [ "${target}" == 'jdk-17' ]; then
     # Get OpenJDK (17) (Required by GeckoView)
     IRONFOX_GET_SOURCE_JDK_17=1
-elif [ "${target}" == 'jdk-21' ]; then
-    # Get OpenJDK (21)
-    IRONFOX_GET_SOURCE_JDK_21=1
-elif [ "${target}" == 'jdk-25' ]; then
-    # Get OpenJDK (25)
-    IRONFOX_GET_SOURCE_JDK_25=1
 elif [ "${target}" == 'microg' ]; then
     # Get microG
     IRONFOX_GET_SOURCE_MICROG=1
@@ -153,8 +143,6 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_GRADLE=1
     IRONFOX_GET_SOURCE_GYP=1
     IRONFOX_GET_SOURCE_JDK_17=1
-    IRONFOX_GET_SOURCE_JDK_21=1
-    IRONFOX_GET_SOURCE_JDK_25=1
     IRONFOX_GET_SOURCE_MICROG=1
     IRONFOX_GET_SOURCE_NODE=1
     IRONFOX_GET_SOURCE_NPM=1
@@ -185,8 +173,6 @@ else
     echo 'Gradle: gradle'
     echo 'GYP: gyp'
     echo 'JDK (17): jdk-17'
-    echo 'JDK (21): jdk-21'
-    echo 'JDK (25): jdk-25'
     echo 'microG: microg'
     echo 'Node.js: node'
     echo 'npm: npm'
@@ -200,35 +186,6 @@ else
     exit 1
 fi
 
-readonly IRONFOX_GET_SOURCE_ANDROID_NDK
-readonly IRONFOX_GET_SOURCE_ANDROID_SDK
-readonly IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS
-readonly IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35
-readonly IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM
-readonly IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36
-readonly IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS
-readonly IRONFOX_GET_SOURCE_AS
-readonly IRONFOX_GET_SOURCE_BUNDLETOOL
-readonly IRONFOX_GET_SOURCE_CBINDGEN
-readonly IRONFOX_GET_SOURCE_GECKO
-readonly IRONFOX_GET_SOURCE_GECKO_L10N
-readonly IRONFOX_GET_SOURCE_GLEAN
-readonly IRONFOX_GET_SOURCE_GLEAN_PARSER
-readonly IRONFOX_GET_SOURCE_GRADLE
-readonly IRONFOX_GET_SOURCE_GYP
-readonly IRONFOX_GET_SOURCE_JDK_17
-readonly IRONFOX_GET_SOURCE_JDK_21
-readonly IRONFOX_GET_SOURCE_JDK_25
-readonly IRONFOX_GET_SOURCE_MICROG
-readonly IRONFOX_GET_SOURCE_NODE
-readonly IRONFOX_GET_SOURCE_NPM
-readonly IRONFOX_GET_SOURCE_PHOENIX
-readonly IRONFOX_GET_SOURCE_PIP
-readonly IRONFOX_GET_SOURCE_PREBUILDS
-readonly IRONFOX_GET_SOURCE_PYTHON
-readonly IRONFOX_GET_SOURCE_RUST
-readonly IRONFOX_GET_SOURCE_UP_AC
-readonly IRONFOX_GET_SOURCE_UV
 
 # If the 'checksum-update' argument is specified, in addition to downloading the dependencies as usual,
 ## we're also updating their checksums
@@ -246,16 +203,15 @@ elif [ "${mode}" != 'download' ]; then
     echo 'Download + update checksums: checksum-update'
     exit 1
 fi
-readonly IRONFOX_GET_SOURCE_CHECKSUM_UPDATE
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
 # Function to automate updating SHA512sums of dependencies
 function update_sha512sum() {
-    local readonly old_sha512sum="$1"
-    local readonly new_sha512sum="$2"
-    local readonly file="$3"
+    old_sha512sum="$1"
+    new_sha512sum="$2"
+    file="$3"
 
     if [ "${old_sha512sum}" == "${ANDROID_NDK_SHA512SUM_LINUX}" ]; then
         echo_red_text 'Updating SHA512sum for Android NDK (Linux)...'
@@ -353,38 +309,6 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for JDK (17) (OS X - x86_64)...'
         "${IRONFOX_SED}" -i -e "s|JDK_17_SHA512SUM_OSX_X86_64='.*'|JDK_17_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for JDK (17) (OS X - x86_64)'
-    elif [ "${old_sha512sum}" == "${JDK_21_SHA512SUM_LINUX_ARM64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (21) (Linux - ARM64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_21_SHA512SUM_LINUX_ARM64='.*'|JDK_21_SHA512SUM_LINUX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (21) (Linux - ARM64)'
-    elif [ "${old_sha512sum}" == "${JDK_21_SHA512SUM_LINUX_X86_64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (21) (Linux - x86_64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_21_SHA512SUM_LINUX_X86_64='.*'|JDK_21_SHA512SUM_LINUX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (21) (Linux - x86_64)'
-    elif [ "${old_sha512sum}" == "${JDK_21_SHA512SUM_OSX_ARM64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (21) (OS X - ARM64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_21_SHA512SUM_OSX_ARM64='.*'|JDK_21_SHA512SUM_OSX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (21) (OS X - ARM64)'
-    elif [ "${old_sha512sum}" == "${JDK_21_SHA512SUM_OSX_X86_64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (21) (OS X - x86_64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_21_SHA512SUM_OSX_X86_64='.*'|JDK_21_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (21) (OS X - x86_64)'
-    elif [ "${old_sha512sum}" == "${JDK_25_SHA512SUM_LINUX_ARM64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (25) (Linux - ARM64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_25_SHA512SUM_LINUX_ARM64='.*'|JDK_25_SHA512SUM_LINUX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (25) (Linux - ARM64)'
-    elif [ "${old_sha512sum}" == "${JDK_25_SHA512SUM_LINUX_X86_64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (25) (Linux - x86_64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_25_SHA512SUM_LINUX_X86_64='.*'|JDK_25_SHA512SUM_LINUX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (25) (Linux - x86_64)'
-    elif [ "${old_sha512sum}" == "${JDK_25_SHA512SUM_OSX_ARM64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (25) (OS X - ARM64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_25_SHA512SUM_OSX_ARM64='.*'|JDK_25_SHA512SUM_OSX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (25) (OS X - ARM64)'
-    elif [ "${old_sha512sum}" == "${JDK_25_SHA512SUM_OSX_X86_64}" ]; then
-        echo_red_text 'Updating SHA512sum for JDK (25) (OS X - x86_64)...'
-        "${IRONFOX_SED}" -i -e "s|JDK_25_SHA512SUM_OSX_X86_64='.*'|JDK_25_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for JDK (25) (OS X - x86_64)'
     elif [ "${old_sha512sum}" == "${L10N_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for firefox-l10n...'
         "${IRONFOX_SED}" -i -e "s|L10N_SHA512SUM='.*'|L10N_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -471,10 +395,10 @@ function update_sha512sum() {
 }
 
 function validate_sha512sum() {
-    local readonly expected_sha512sum="$1"
-    local readonly file="$2"
+    expected_sha512sum="$1"
+    file="$2"
 
-    local readonly local_sha512sum=$(sha512sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
+    local_sha512sum=$(sha512sum "${file}" | "${IRONFOX_AWK}" '{print $1}')
 
     if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
         update_sha512sum "${expected_sha512sum}" "${local_sha512sum}" "${file}"
@@ -494,9 +418,9 @@ function validate_sha512sum() {
 }
 
 function clone_repo() {
-    local readonly url="$1"
-    local readonly path="$2"
-    local readonly revision="$3"
+    url="$1"
+    path="$2"
+    revision="$3"
 
     if [[ "${url}" == "" ]]; then
         echo_red_text "ERROR: URL missing for clone"
@@ -535,8 +459,8 @@ function clone_repo() {
 }
 
 function download() {
-    local readonly url="$1"
-    local readonly filepath="$2"
+    local url="$1"
+    local filepath="$2"
 
     if [[ "${url}" == "" ]]; then
         echo_red_text "ERROR: URL is required (file: '${filepath}')"
@@ -563,9 +487,9 @@ function download() {
 
 # Extract archives
 function extract() {
-    local readonly archive_path="$1"
-    local readonly target_path="$2"
-    local readonly temp_repo_name="$3"
+    local archive_path="$1"
+    local target_path="$2"
+    local temp_repo_name="$3"
 
     if ! [[ -f "${archive_path}" ]]; then
         echo_red_text "ERROR: Archive '${archive_path}' does not exist!"
@@ -600,16 +524,16 @@ function extract() {
             ;;
     esac
 
-    local readonly top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
+    local top_input_dir=$(ls "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}")
     cp -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}/${top_input_dir}"/ "${target_path}"
     rm -rf "${IRONFOX_EXTERNAL}/temp/${temp_repo_name}"
 }
 
 function download_and_extract() {
-    local readonly repo_name="$1"
-    local readonly url="$2"
-    local readonly path="$3"
-    local readonly expected_sha512sum="$4"
+    local repo_name="$1"
+    local url="$2"
+    local path="$3"
+    local expected_sha512sum="$4"
 
     if [[ -d "${path}" ]]; then
         echo_red_text "'${path}' already exists"
@@ -623,17 +547,18 @@ function download_and_extract() {
         fi
     fi
 
+    local extension
     if [[ "${url}" =~ \.tar\.xz$ ]]; then
-        local readonly extension=".tar.xz"
+        extension=".tar.xz"
     elif [[ "${url}" =~ \.tar\.gz$ ]]; then
-        local readonly extension=".tar.gz"
+        extension=".tar.gz"
     elif [[ "${url}" =~ \.tar\.zst$ ]]; then
-        local readonly extension=".tar.zst"
+        extension=".tar.zst"
     else
-        local readonly extension=".zip"
+        extension=".zip"
     fi
 
-    local readonly repo_archive="${IRONFOX_DOWNLOADS}/${repo_name}${extension}"
+    local repo_archive="${IRONFOX_DOWNLOADS}/${repo_name}${extension}"
 
     download "${url}" "${repo_archive}"
 
@@ -985,78 +910,6 @@ function get_jdk_17() {
     echo_green_text "SUCCESS: Set-up JDK (17) at ${IRONFOX_JDK_17}"
 }
 
-# Get JDK (21)
-function get_jdk_21() {
-    # Set our platform
-    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-        local readonly JDK_21_PLATFORM='mac'
-    else
-        local readonly JDK_21_PLATFORM='linux'
-    fi
-
-    # Set our platform architecture
-    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
-        local readonly JDK_21_ARCH='aarch64'
-    else
-        local readonly JDK_21_ARCH='x64'
-    fi
-
-    # Set our checksum to verify
-    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
-        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-            local readonly JDK_21_SHA512SUM="${JDK_21_SHA512SUM_OSX_ARM64}"
-        else
-            local readonly JDK_21_SHA512SUM="${JDK_21_SHA512SUM_LINUX_ARM64}"
-        fi
-    else
-        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-            local readonly JDK_21_SHA512SUM="${JDK_21_SHA512SUM_OSX_X86_64}"
-        else
-            local readonly JDK_21_SHA512SUM="${JDK_21_SHA512SUM_LINUX_X86_64}"
-        fi
-    fi
-
-    echo_red_text 'Downloading JDK (21)...'
-    download_and_extract 'jdk-21' "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-${JDK_21_VERSION}%2B${JDK_21_REVISION}/OpenJDK21U-jdk_${JDK_21_ARCH}_${JDK_21_PLATFORM}_hotspot_${JDK_21_VERSION}_${JDK_21_REVISION}.tar.gz" "${IRONFOX_JDK_21}" "${JDK_21_SHA512SUM}"
-    echo_green_text "SUCCESS: Set-up JDK (21) at ${IRONFOX_JDK_21}"
-}
-
-# Get JDK (25)
-function get_jdk_25() {
-    # Set our platform
-    if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-        local readonly JDK_25_PLATFORM='mac'
-    else
-        local readonly JDK_25_PLATFORM='linux'
-    fi
-
-    # Set our platform architecture
-    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
-        local readonly JDK_25_ARCH='aarch64'
-    else
-        local readonly JDK_25_ARCH='x64'
-    fi
-
-    # Set our checksum to verify
-    if [ "${IRONFOX_PLATFORM_ARCH}" == 'aarch64' ]; then
-        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-            local readonly JDK_25_SHA512SUM="${JDK_25_SHA512SUM_OSX_ARM64}"
-        else
-            local readonly JDK_25_SHA512SUM="${JDK_25_SHA512SUM_LINUX_ARM64}"
-        fi
-    else
-        if [ "${IRONFOX_PLATFORM}" == 'darwin' ]; then
-            local readonly JDK_25_SHA512SUM="${JDK_25_SHA512SUM_OSX_X86_64}"
-        else
-            local readonly JDK_25_SHA512SUM="${JDK_25_SHA512SUM_LINUX_X86_64}"
-        fi
-    fi
-
-    echo_red_text 'Downloading JDK (25)...'
-    download_and_extract 'jdk-25' "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-${JDK_25_VERSION}%2B${JDK_25_REVISION}/OpenJDK25U-jdk_${JDK_25_ARCH}_${JDK_25_PLATFORM}_hotspot_${JDK_25_VERSION}_${JDK_25_REVISION}.tar.gz" "${IRONFOX_JDK_25}" "${JDK_25_SHA512SUM}"
-    echo_green_text "SUCCESS: Set-up JDK (25) at ${IRONFOX_JDK_25}"
-}
-
 # Get microG
 function get_microg() {
     echo_red_text 'Downloading microG...'
@@ -1108,7 +961,7 @@ function get_npm() {
 # Get Phoenix
 function get_phoenix() {
     echo_red_text 'Downloading Phoenix...'
-    download_and_extract 'phoenix' "https://gitlab.com/celenityy/Phoenix/-/archive/${PHOENIX_COMMIT}/Phoenix-${PHOENIX_COMMIT}.tar.gz" "${IRONFOX_PHOENIX}" "${PHOENIX_SHA512SUM}"
+    download_and_extract 'phoenix' "https://codeberg.org/celenity/Phoenix/archive/${PHOENIX_COMMIT}.tar.gz" "${IRONFOX_PHOENIX}" "${PHOENIX_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up Phoenix at ${IRONFOX_PHOENIX}"
 }
 
@@ -1301,8 +1154,8 @@ if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
 fi
 
 # This needs to run before we get the Android SDK
-if [ "${IRONFOX_GET_SOURCE_JDK_25}" == 1 ]; then
-    get_jdk_25
+if [ "${IRONFOX_GET_SOURCE_JDK_17}" == 1 ]; then
+    get_jdk_17
 fi
 
 if [ "${IRONFOX_GET_SOURCE_ANDROID_SDK}" == 1 ]; then
@@ -1356,14 +1209,6 @@ fi
 
 if [ "${IRONFOX_GET_SOURCE_GLEAN}" == 1 ]; then
     get_glean
-fi
-
-if [ "${IRONFOX_GET_SOURCE_JDK_17}" == 1 ]; then
-    get_jdk_17
-fi
-
-if [ "${IRONFOX_GET_SOURCE_JDK_21}" == 1 ]; then
-    get_jdk_21
 fi
 
 # These need to run before we get glean_parser and gyp

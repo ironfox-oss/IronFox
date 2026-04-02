@@ -3,11 +3,9 @@
 set -euo pipefail
 
 # Set-up our environment
+bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 source "${IRONFOX_ENV_BUILD}"
-
-# Include utilities
-source "${IRONFOX_UTILS}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
@@ -18,13 +16,13 @@ export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
 # Functions
 
 function sign_apk() {
-    local target="$1"
-    local APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-unsigned.apk"
+    target="$1"
+    APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-unsigned.apk"
 
     if [ "${IRONFOX_CI}" == 1 ]; then
-        local APK_OUT="${IRONFOX_APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${target}.apk"
+        APK_OUT="${IRONFOX_APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${target}.apk"
     else
-        local APK_OUT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-signed.apk"
+        APK_OUT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-signed.apk"
     fi
 
     "${IRONFOX_APKSIGNER}" sign \
@@ -63,12 +61,12 @@ function sign_universal() {
 function sign_bundle() {
     echo_red_text 'Building signed bundleset...'
 
-    local AAB_IN="${IRONFOX_OUTPUTS_FENIX_AAB}"
+    AAB_IN="${IRONFOX_OUTPUTS_FENIX_AAB}"
 
     if [ "${IRONFOX_CI}" == 1 ]; then
-        local APKS_OUT="${IRONFOX_APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
+        APKS_OUT="${IRONFOX_APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
     else
-        local APKS_OUT="${IRONFOX_OUTPUTS_FENIX_APKS}"
+        APKS_OUT="${IRONFOX_OUTPUTS_FENIX_APKS}"
     fi
 
     "${IRONFOX_BUNDLETOOL}" build-apks \

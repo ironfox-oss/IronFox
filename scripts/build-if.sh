@@ -23,10 +23,8 @@
 set -euo pipefail
 
 # Set-up our environment
+bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
-
-# Include utilities
-source "${IRONFOX_UTILS}"
 
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
     echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
@@ -42,40 +40,37 @@ fi
 case "$1" in
 arm64)
     # arm64-v8a
-    IRONFOX_TARGET_ARCH='arm64'
-    readonly IRONFOX_TARGET_ABI='arm64-v8a'
-    readonly IRONFOX_TARGET_PRETTY='ARM64'
-    readonly IRONFOX_TARGET_RUST='arm64'
+    export IRONFOX_TARGET_ARCH='arm64'
+    export IRONFOX_TARGET_ABI='arm64-v8a'
+    export IRONFOX_TARGET_PRETTY='ARM64'
+    IRONFOX_TARGET_RUST='arm64'
     ;;
 arm)
     # armeabi-v7a
-    IRONFOX_TARGET_ARCH='arm'
-    readonly IRONFOX_TARGET_ABI='armeabi-v7a'
-    readonly IRONFOX_TARGET_PRETTY='ARM'
-    readonly IRONFOX_TARGET_RUST='arm'
+    export IRONFOX_TARGET_ARCH='arm'
+    export IRONFOX_TARGET_ABI='armeabi-v7a'
+    export IRONFOX_TARGET_PRETTY='ARM'
+    IRONFOX_TARGET_RUST='arm'
     ;;
 x86_64)
     # x86_64
-    IRONFOX_TARGET_ARCH='x86_64'
-    readonly IRONFOX_TARGET_ABI='x86_64'
-    readonly IRONFOX_TARGET_PRETTY='x86_64'
-    readonly IRONFOX_TARGET_RUST='x86_64'
+    export IRONFOX_TARGET_ARCH='x86_64'
+    export IRONFOX_TARGET_ABI='x86_64'
+    export IRONFOX_TARGET_PRETTY='x86_64'
+    IRONFOX_TARGET_RUST='x86_64'
     ;;
 bundle)
     # arm64-v8a, armeabi-v7a, and x86_64
-    IRONFOX_TARGET_ARCH='bundle'
-    readonly IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
-    readonly IRONFOX_TARGET_PRETTY='Bundle'
-    readonly IRONFOX_TARGET_RUST='arm64,arm,x86_64'
+    export IRONFOX_TARGET_ARCH='bundle'
+    export IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
+    export IRONFOX_TARGET_PRETTY='Bundle'
+    IRONFOX_TARGET_RUST='arm64,arm,x86_64'
     ;;
 *)
     echo_red_text "Unknown build variant: '$1'" >&2
     exit 1
     ;;
 esac
-export IRONFOX_TARGET_ARCH
-export IRONFOX_TARGET_ABI
-export IRONFOX_TARGET_PRETTY
 
 if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
     echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
@@ -112,46 +107,40 @@ function set_build_env() {
         rm "${IRONFOX_ENV_BUILD}"
     fi
 
-    local readonly EPOCH_NS="$("${IRONFOX_DATE}" "+%s%N")"
+    EPOCH_NS="$("${IRONFOX_DATE}" "+%s%N")"
     if [ "${IRONFOX_CI}" == 1 ]; then
-        local readonly IF_LOCAL_VERSION_STAMP="${IF_BUILD_STAMP}"
+        IF_LOCAL_VERSION_STAMP="${IF_BUILD_STAMP}"
     else
-        local readonly IF_LOCAL_VERSION_STAMP="${EPOCH_NS}"
+        IF_LOCAL_VERSION_STAMP="${EPOCH_NS}"
     fi
 
     if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
         # Set build date for bundle builds, to avoid conflicts and ensure that MOZ_BUILDID is consistent across all builds
         ## (CI handles this at `env_ci.sh` instead)
-        local readonly BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
+        BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-readonly IF_BUILD_DATE="${BUILD_DATE}"
-readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-readonly IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
-export IF_BUILD_DATE
-export IF_EPOCH_NS
-export IRONFOX_TARGET_ARCH
+export IF_BUILD_DATE="${BUILD_DATE}"
+export IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
+export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     else
         echo "Writing ${IRONFOX_ENV_BUILD}..."
         cat > "${IRONFOX_ENV_BUILD}" << EOF
-readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-readonly IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
-export IF_EPOCH_NS
-export IRONFOX_TARGET_ARCH
+export IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
+export IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 EOF
     fi
 
     source "${IRONFOX_ENV_BUILD}"
 
     if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        readonly MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
-        export MOZ_BUILD_DATE
+        export MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
     fi
 
     # Set versions for our local dependency substitutions
-    local readonly IF_LOCAL_AC_VERSION_BASE="${FIREFOX_VERSION}-${IF_EPOCH_NS}"
-    local readonly IF_LOCAL_AS_VERSION_BASE="${APPSERVICES_VERSION}-${IF_EPOCH_NS}"
-    local readonly IF_LOCAL_GLEAN_VERSION_BASE="${GLEAN_VERSION}-${IF_EPOCH_NS}"
+    readonly IF_LOCAL_AC_VERSION_BASE="${FIREFOX_VERSION}-${IF_EPOCH_NS}"
+    readonly IF_LOCAL_AS_VERSION_BASE="${APPSERVICES_VERSION}-${IF_EPOCH_NS}"
+    readonly IF_LOCAL_GLEAN_VERSION_BASE="${GLEAN_VERSION}-${IF_EPOCH_NS}"
 
     ## For CI, we set IF_EPOCH_NS from the pipeline creation time, and we don't add '-SNAPSHOT' to the end
     if [ "${IRONFOX_CI}" == 1 ]; then
@@ -269,9 +258,9 @@ function prep_gecko() {
 
     # Configure release channel
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        local readonly IRONFOX_NAME='IronFox'
+        IRONFOX_NAME='IronFox'
     else
-        local readonly IRONFOX_NAME='IronFox Nightly'
+        IRONFOX_NAME='IronFox Nightly'
     fi
 
     if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
@@ -359,7 +348,7 @@ function prep_llvm() {
 
 function clean_gradle() {
     # This is used for cleaning Gradle to ensure builds are fresh
-     "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} clean
 }
 
 function build_bundletool() {
@@ -368,7 +357,7 @@ function build_bundletool() {
 
     pushd "${IRONFOX_BUNDLETOOL_DIR}"
     clean_gradle
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} assemble
+    "${IRONFOX_GRADLE}" assemble
     popd
 
     cp -f "${IRONFOX_BUNDLETOOL_DIR}/build/libs/bundletool.jar" "${IRONFOX_BUNDLETOOL_JAR}"
@@ -381,7 +370,7 @@ function build_llvm() {
     echo_red_text 'Building LLVM...'
 
     pushd "${llvm}"
-    local readonly llvmtarget=$(cat "${IRONFOX_BUILD}/targets_to_build")
+    llvmtarget=$(cat "${IRONFOX_BUILD}/targets_to_build")
     echo_green_text "building llvm for ${llvmtarget}"
     cmake -S llvm -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=out -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ -DLLVM_ENABLE_PROJECTS="clang" -DLLVM_TARGETS_TO_BUILD="$llvmtarget" \
@@ -421,9 +410,9 @@ function build_microg() {
     echo_red_text 'Building microG...'
 
     pushd "${IRONFOX_GMSCORE}"
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
+    clean_gradle
 
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -x javaDocReleaseGeneration \
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dhttps.protocols=TLSv1.3 -x javaDocReleaseGeneration \
         :play-services-base:publishToMavenLocal \
         :play-services-basement:publishToMavenLocal \
         :play-services-fido:publishToMavenLocal \
@@ -438,10 +427,10 @@ function build_glean() {
     echo_red_text 'Building Glean...'
 
     pushd "${IRONFOX_GLEAN}"
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} clean
+    clean_gradle
 
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
     popd
 
     echo_green_text 'SUCCESS: Built Glean'
@@ -452,21 +441,17 @@ function build_as() {
     echo_red_text 'Building Application Services...'
 
     pushd "${IRONFOX_AS}"
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} clean
+    clean_gradle
 
     # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
     # skips building the libraries as they are expected to be already downloaded in a CI environment
     # However, we want build those libraries always, so we unset CI before invoking the script
     unset CI
 
-    unset JAVA_HOME
-    export JAVA_HOME="${IRONFOX_JDK_17_HOME}"
     bash -x "${IRONFOX_AS}/libs/verify-android-environment.sh"
-    unset JAVA_HOME
-    export JAVA_HOME="${IRONFOX_JAVA_HOME}"
 
     # Build Application Services
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_AS_VERSION_GRADLE} publish
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publish -Plocal=${IF_LOCAL_AS_VERSION_GRADLE}
 
     popd
 
@@ -618,21 +603,17 @@ function build_gecko_x86_64() {
 
 function build_gecko_bundle() {
     # Bundle
-    readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
 
     if [ "${IRONFOX_CI}" == 1 ]; then
-        readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
-        readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
-        readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
+        export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+        export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
+        export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
     else
-        readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-        readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-        readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
+        export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
+        export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
+        export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
     fi
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
-    export MOZ_ANDROID_FAT_AAR_X86_64
 
     pushd "${IRONFOX_GECKO}"
     echo_red_text 'Creating GeckoView fat AAR...'
@@ -789,7 +770,7 @@ function build_up_ac() {
     clean_gradle
 
     # Build UnifiedPush-AC
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} publish
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} publish
     popd
 
     echo_green_text 'SUCCESS: Built UnifiedPush-AC'
@@ -870,7 +851,7 @@ function build_fenix() {
         fi
 
         # 5. Finally, build and export our AAB
-        "${IRONFOX_MACH}" gradle -Paab -p mobile/android/fenix bundleRelease -x :app:releaseOssLicensesCleanUp
+        "${IRONFOX_MACH}" gradle -p mobile/android/fenix -Paab bundleRelease -x :app:releaseOssLicensesCleanUp
         cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_FENIX_AAB}"
     else
         # Export APK

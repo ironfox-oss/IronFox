@@ -14,7 +14,7 @@ source "${IRONFOX_VERSIONS}"
 
 export GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
 
-function upload_to_package_registry() {
+upload_to_package_registry() {
     local file="$1"
     local package_name="$2"
     local file_name="$(basename "${file}")"
@@ -35,7 +35,7 @@ echo -n "" > "${RELEASE_NOTES_FILE}"
 echo -n "" > "${CHECKSUMS_FILE}"
 
 declare -a assets
-function upload_asset() {
+upload_asset() {
     package_name="$1"
     file="$2"
     file_name="$(basename "${file}")"

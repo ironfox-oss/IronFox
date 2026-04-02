@@ -11,13 +11,11 @@ if [[ ! -f "$(dirname $0)/env_local.sh" ]]; then
     # Write env_local.sh
     echo "Writing ${ENV_LOCAL}..."
     cat > "${ENV_LOCAL}" << EOF
-IRONFOX_ROOT="${ROOT}"
-export IRONFOX_ROOT
+export IRONFOX_ROOT="${ROOT}"
 
 source "\${IRONFOX_ROOT}/scripts/env_common.sh"
 EOF
 fi
 
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    source "$(dirname $0)/env_local.sh"
-fi
+source "$(dirname $0)/env_local.sh"
+source "$(dirname $0)/utilities.sh"

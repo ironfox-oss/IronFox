@@ -5,18 +5,13 @@
 set -euo pipefail
 
 # Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
-fi
+bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
-
-# Include utilities
-source "${IRONFOX_UTILS}"
 
 # Get our platform, OS, and architecture
 source "${IRONFOX_ENV_HELPERS}"
 
-function error_fn() {
+error_fn() {
 	echo
 	echo -e "\033[31mSomething went wrong! The script failed.\033[0m"
 	echo -e "\033[31mPlease report this (with the output message) to https://gitlab.com/ironfox-oss/IronFox/-/issues\033[0m"
