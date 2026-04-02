@@ -11,23 +11,18 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
-# Include version info
-source "${IRONFOX_VERSIONS}"
-
 readonly GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
-export GENERIC_PACKAGES_URL
 
 function upload_to_package_registry() {
-    local readonly file="$1"
-    local readonly package_name="$2"
-    local readonly file_name="$(basename "${file}")"
+    local readonly upload_file="$1"
+    local readonly upload_package_name="$2"
+    local readonly upload_file_name="$(basename "${upload_file}")"
     curl ${IRONFOX_CURL_FLAGS} --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
-        --upload-file "${file}" \
-        "${GENERIC_PACKAGES_URL}/${package_name}/${IRONFOX_VERSION}/${file_name}"
+        --upload-file "${upload_file}" \
+        "${GENERIC_PACKAGES_URL}/${upload_package_name}/${IRONFOX_VERSION}/${upload_file_name}"
 }
 
 readonly BUILD_DIR="${CI_PROJECT_DIR}/build"
-export BUILD_DIR
 
 mkdir -vp "${BUILD_DIR}"
 
@@ -40,17 +35,17 @@ echo -n "" > "${CHECKSUMS_FILE}"
 
 declare -a assets
 function upload_asset() {
-    local readonly package_name="$1"
-    local readonly file="$2"
-    local readonly file_name="$(basename "${file}")"
+    local readonly asset_package_name="$1"
+    local readonly asset_file="$2"
+    local readonly asset_file_name="$(basename "${asset_file}")"
 
-    echo "\`${file_name}\`: " >> "${CHECKSUMS_FILE}"
+    echo "\`${asset_file_name}\`: " >> "${CHECKSUMS_FILE}"
     echo "\`\`\`sh" >> "${CHECKSUMS_FILE}"
-    echo "$(sha512sum -b "${file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
+    echo "$(sha512sum -b "${asset_file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
     echo "\`\`\`sh" >> "${CHECKSUMS_FILE}"
     echo '' >> "${CHECKSUMS_FILE}"
-    upload_to_package_registry "${file}" "${package_name}"
-    assets+=("{\"name\": \"${file_name}\",\"url\": \"${GENERIC_PACKAGES_URL}/${package_name}/${IRONFOX_VERSION}/${file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${file_name}\"}")
+    upload_to_package_registry "${asset_file}" "${asset_package_name}"
+    assets+=("{\"name\": \"${asset_file_name}\",\"url\": \"${GENERIC_PACKAGES_URL}/${asset_package_name}/${IRONFOX_VERSION}/${asset_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${asset_file_name}\"}")
 }
 
 # Upload packages to package registry
@@ -61,7 +56,7 @@ for apk in "${IRONFOX_APK_ARTIFACTS}"/*.apk; do
 done
 for apks in "${IRONFOX_APKS_ARTIFACTS}"/*.apks; do
     readonly package_name_apkset="apkset"
-    upload_asset "${package_name}" "${apks}"
+    upload_asset "${package_name_apkset}" "${apks}"
 done
 
 {
