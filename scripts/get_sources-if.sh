@@ -961,7 +961,7 @@ function get_npm() {
 # Get Phoenix
 function get_phoenix() {
     echo_red_text 'Downloading Phoenix...'
-    download_and_extract 'phoenix' "https://codeberg.org/celenity/Phoenix/archive/${PHOENIX_COMMIT}.tar.gz" "${IRONFOX_PHOENIX}" "${PHOENIX_SHA512SUM}"
+    download_and_extract 'phoenix' "https://gitlab.com/celenityy/Phoenix/-/archive/${PHOENIX_COMMIT}/Phoenix-${PHOENIX_COMMIT}.tar.gz" "${IRONFOX_PHOENIX}" "${PHOENIX_SHA512SUM}"
     echo_green_text "SUCCESS: Set-up Phoenix at ${IRONFOX_PHOENIX}"
 }
 
