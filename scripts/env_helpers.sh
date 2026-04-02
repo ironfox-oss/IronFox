@@ -1,36 +1,36 @@
 
 # Set platform
 if [[ "${OSTYPE}" == "darwin"* ]]; then
-    readonly IRONFOX_PLATFORM='darwin'
+    IRONFOX_PLATFORM='darwin'
 else
-    readonly IRONFOX_PLATFORM='linux'
+    IRONFOX_PLATFORM='linux'
 fi
 export IRONFOX_PLATFORM
 
 # Set OS
 if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-    readonly IRONFOX_OS='osx'
+    IRONFOX_OS='osx'
 elif [[ "${IRONFOX_PLATFORM}" == 'linux' ]]; then
     if [[ -f "/etc/os-release" ]]; then
         source /etc/os-release
         if [[ -n "${ID}" ]]; then
-            readonly IRONFOX_OS="${ID}"
+            IRONFOX_OS="${ID}"
         else
-            readonly IRONFOX_OS='unknown'
+            IRONFOX_OS='unknown'
         fi
     else
-        readonly IRONFOX_OS='unknown'
+        IRONFOX_OS='unknown'
     fi
 else
-    readonly IRONFOX_OS='unknown'
+    IRONFOX_OS='unknown'
 fi
 export IRONFOX_OS
 
 # Set architecture
-readonly PLATFORM_ARCH=$(uname -m)
+PLATFORM_ARCH=$(uname -m)
 if [[ "${PLATFORM_ARCH}" == 'arm64' ]]; then
-    readonly IRONFOX_PLATFORM_ARCH='aarch64'
+    IRONFOX_PLATFORM_ARCH='aarch64'
 else
-    readonly IRONFOX_PLATFORM_ARCH='x86-64'
+    IRONFOX_PLATFORM_ARCH='x86-64'
 fi
 export IRONFOX_PLATFORM_ARCH

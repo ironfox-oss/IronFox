@@ -8,7 +8,7 @@
 
 # If variables are defined with a custom `env_override.sh` file (located at the root project directory), let's use those
 ## These need to be set first, to ensure that they don't interfere with certain variables
-readonly IRONFOX_ENV_OVERRIDE="${IRONFOX_ROOT}/env_override.sh"
+IRONFOX_ENV_OVERRIDE="${IRONFOX_ROOT}/env_override.sh"
 if [[ -f "${IRONFOX_ENV_OVERRIDE}" ]]; then
     source "${IRONFOX_ENV_OVERRIDE}"
 fi
@@ -16,25 +16,25 @@ fi
 # IronFox
 
 # Scripts directory
-readonly IRONFOX_SCRIPTS="${IRONFOX_ROOT}/scripts"
+IRONFOX_SCRIPTS="${IRONFOX_ROOT}/scripts"
 export IRONFOX_SCRIPTS
 
 ## IronFox utilities
-readonly IRONFOX_UTILS="${IRONFOX_SCRIPTS}/utilities.sh"
+IRONFOX_UTILS="${IRONFOX_SCRIPTS}/utilities.sh"
 export IRONFOX_UTILS
 
 # Configuration files
-readonly IRONFOX_CONFIGS="${IRONFOX_ROOT}/configs"
-readonly IRONFOX_MOZCONFIGS="${IRONFOX_CONFIGS}/mozconfigs"
+IRONFOX_CONFIGS="${IRONFOX_ROOT}/configs"
+IRONFOX_MOZCONFIGS="${IRONFOX_CONFIGS}/mozconfigs"
 export IRONFOX_CONFIGS
 export IRONFOX_MOZCONFIGS
 
 # CI artifacts
-readonly IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
-readonly IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
-readonly IRONFOX_APK_ARTIFACTS="${IRONFOX_ARTIFACTS}/apk"
-readonly IRONFOX_APKS_ARTIFACTS="${IRONFOX_ARTIFACTS}/apks"
-readonly IRONFOX_LOG_ARTIFACTS="${IRONFOX_ARTIFACTS}/logs"
+IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
+IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"
+IRONFOX_APK_ARTIFACTS="${IRONFOX_ARTIFACTS}/apk"
+IRONFOX_APKS_ARTIFACTS="${IRONFOX_ARTIFACTS}/apks"
+IRONFOX_LOG_ARTIFACTS="${IRONFOX_ARTIFACTS}/logs"
 export IRONFOX_ARTIFACTS
 export IRONFOX_AAR_ARTIFACTS
 export IRONFOX_APK_ARTIFACTS
@@ -42,110 +42,110 @@ export IRONFOX_APKS_ARTIFACTS
 export IRONFOX_LOG_ARTIFACTS
 
 # Are we in a CI environment?
-readonly IRONFOX_CI_DEFAULT=0
+IRONFOX_CI_DEFAULT=0
 if [[ -z "${IRONFOX_CI+x}" ]]; then
     IRONFOX_CI="${IRONFOX_CI_DEFAULT}"
 fi
-readonly IRONFOX_CI
+IRONFOX_CI
 export IRONFOX_CI
 
 ## If so, set our CI environment variables
-readonly IRONFOX_ENV_CI="${IRONFOX_SCRIPTS}/env_ci.sh"
+IRONFOX_ENV_CI="${IRONFOX_SCRIPTS}/env_ci.sh"
 if [ "${IRONFOX_CI}" == 1 ]; then
     source "${IRONFOX_ENV_CI}"
 fi
 
 # Environment configuration
-readonly IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
+IRONFOX_ENV_FDROID="${IRONFOX_SCRIPTS}/env_fdroid.sh"
 export IRONFOX_ENV_FDROID
 
 # Build environment configuration
-readonly IRONFOX_ENV_BUILD="${IRONFOX_SCRIPTS}/env_build.sh"
+IRONFOX_ENV_BUILD="${IRONFOX_SCRIPTS}/env_build.sh"
 export IRONFOX_ENV_BUILD
 
 # Build directory
-readonly IRONFOX_BUILD="${IRONFOX_ROOT}/build"
+IRONFOX_BUILD="${IRONFOX_ROOT}/build"
 export IRONFOX_BUILD
 
 # External sources directory
-readonly IRONFOX_EXTERNAL="${IRONFOX_ROOT}/external"
+IRONFOX_EXTERNAL="${IRONFOX_ROOT}/external"
 export IRONFOX_EXTERNAL
 
 # External downloads/resources directory
-readonly IRONFOX_DOWNLOADS="${IRONFOX_EXTERNAL}/downloads"
+IRONFOX_DOWNLOADS="${IRONFOX_EXTERNAL}/downloads"
 export IRONFOX_DOWNLOADS
 
 # Patches directory
-readonly IRONFOX_PATCHES="${IRONFOX_ROOT}/patches"
+IRONFOX_PATCHES="${IRONFOX_ROOT}/patches"
 export IRONFOX_PATCHES
 
 # Get our current commit
 ## (This is ex. displayed at `about:buildconfig` in Gecko/Firefox)
-readonly IRONFOX_REVISION="$(git log -1 --format="%H" | tail -n 1)"
+IRONFOX_REVISION="$(git log -1 --format="%H" | tail -n 1)"
 export IRONFOX_REVISION
 
 # Set our platform, OS, and architecture
-readonly IRONFOX_ENV_HELPERS="${IRONFOX_SCRIPTS}/env_helpers.sh"
+IRONFOX_ENV_HELPERS="${IRONFOX_SCRIPTS}/env_helpers.sh"
 export IRONFOX_ENV_HELPERS
 source "${IRONFOX_ENV_HELPERS}"
 
 # Version info
-readonly IRONFOX_VERSIONS="${IRONFOX_SCRIPTS}/versions.sh"
+IRONFOX_VERSIONS="${IRONFOX_SCRIPTS}/versions.sh"
 export IRONFOX_VERSIONS
 
 # IronFox outputs directory
-readonly IRONFOX_OUTPUTS_DEFAULT="${IRONFOX_BUILD}/outputs"
+IRONFOX_OUTPUTS_DEFAULT="${IRONFOX_BUILD}/outputs"
 if [[ -z "${IRONFOX_OUTPUTS+x}" ]]; then
     IRONFOX_OUTPUTS="${IRONFOX_OUTPUTS_DEFAULT}"
 fi
-readonly IRONFOX_OUTPUTS
+IRONFOX_OUTPUTS
 export IRONFOX_OUTPUTS
 
 # Whether we're building IronFox for release or Nightly/CI (Default)
-readonly IRONFOX_RELEASE_DEFAULT=0
+IRONFOX_RELEASE_DEFAULT=0
 if [[ -z "${IRONFOX_RELEASE+x}" ]]; then
     IRONFOX_RELEASE="${IRONFOX_RELEASE_DEFAULT}"
 fi
-readonly IRONFOX_RELEASE
+IRONFOX_RELEASE
 export IRONFOX_RELEASE
 
 # Set release channel
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-    readonly IRONFOX_CHANNEL='release'
-    readonly IRONFOX_CHANNEL_PRETTY='Release'
+    IRONFOX_CHANNEL='release'
+    IRONFOX_CHANNEL_PRETTY='Release'
 else
-    readonly IRONFOX_CHANNEL='nightly'
-    readonly IRONFOX_CHANNEL_PRETTY='Nightly'
+    IRONFOX_CHANNEL='nightly'
+    IRONFOX_CHANNEL_PRETTY='Nightly'
 fi
 export IRONFOX_CHANNEL
 export IRONFOX_CHANNEL_PRETTY
 
-readonly IRONFOX_OUTPUTS_AAB="${IRONFOX_OUTPUTS}/aab"
-readonly IRONFOX_OUTPUTS_AAR="${IRONFOX_OUTPUTS}/aar"
-readonly IRONFOX_OUTPUTS_APK="${IRONFOX_OUTPUTS}/apk"
-readonly IRONFOX_OUTPUTS_APKS="${IRONFOX_OUTPUTS}/apks"
+IRONFOX_OUTPUTS_AAB="${IRONFOX_OUTPUTS}/aab"
+IRONFOX_OUTPUTS_AAR="${IRONFOX_OUTPUTS}/aar"
+IRONFOX_OUTPUTS_APK="${IRONFOX_OUTPUTS}/apk"
+IRONFOX_OUTPUTS_APKS="${IRONFOX_OUTPUTS}/apks"
 export IRONFOX_OUTPUTS_AAB
 export IRONFOX_OUTPUTS_AAR
 export IRONFOX_OUTPUTS_APK
 export IRONFOX_OUTPUTS_APKS
 
-readonly IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.zip"
-readonly IRONFOX_OUTPUTS_GV_AAR_ARM64="${IRONFOX_OUTPUTS_AAR}/geckoview-arm64-v8a.zip"
-readonly IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
+IRONFOX_OUTPUTS_GV_AAR_ARM="${IRONFOX_OUTPUTS_AAR}/geckoview-armeabi-v7a.zip"
+IRONFOX_OUTPUTS_GV_AAR_ARM64="${IRONFOX_OUTPUTS_AAR}/geckoview-arm64-v8a.zip"
+IRONFOX_OUTPUTS_GV_AAR_X86_64="${IRONFOX_OUTPUTS_AAR}/geckoview-x86_64.zip"
 export IRONFOX_OUTPUTS_GV_AAR_ARM
 export IRONFOX_OUTPUTS_GV_AAR_ARM64
 export IRONFOX_OUTPUTS_GV_AAR_X86_64
 
-readonly IRONFOX_OUTPUTS_FENIX_ARM64_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-arm64-v8a-signed.apk"
-readonly IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-arm64-v8a-unsigned.apk"
-readonly IRONFOX_OUTPUTS_FENIX_ARM_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-armeabi-v7a-signed.apk"
-readonly IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-armeabi-v7a-unsigned.apk"
-readonly IRONFOX_OUTPUTS_FENIX_X86_64_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-x86_64-signed.apk"
-readonly IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-x86_64-unsigned.apk"
-readonly IRONFOX_OUTPUTS_FENIX_UNIVERSAL_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-signed.apk"
-readonly IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
-readonly IRONFOX_OUTPUTS_FENIX_AAB="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
-readonly IRONFOX_OUTPUTS_FENIX_APKS="${IRONFOX_OUTPUTS_APKS}/ironfox-${IRONFOX_CHANNEL}.apks"
+IRONFOX_OUTPUTS_FENIX_ARM64_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-arm64-v8a-signed.apk"
+IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-arm64-v8a-unsigned.apk"
+IRONFOX_OUTPUTS_FENIX_ARM_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-armeabi-v7a-signed.apk"
+IRONFOX_OUTPUTS_FENIX_ARM_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-armeabi-v7a-unsigned.apk"
+IRONFOX_OUTPUTS_FENIX_X86_64_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-x86_64-signed.apk"
+IRONFOX_OUTPUTS_FENIX_X86_64_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-x86_64-unsigned.apk"
+IRONFOX_OUTPUTS_FENIX_UNIVERSAL_SIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-signed.apk"
+IRONFOX_OUTPUTS_FENIX_UNIVERSAL_UNSIGNED="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-universal-unsigned.apk"
+IRONFOX_OUTPUTS_FENIX_AAB="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}.aab"
+IRONFOX_OUTPUTS_FENIX_APKS="${IRONFOX_OUTPUTS_APKS}/ironfox-${IRONFOX_CHANNEL}.apks"
 export IRONFOX_OUTPUTS_FENIX_ARM64_SIGNED
 export IRONFOX_OUTPUTS_FENIX_ARM64_UNSIGNED
 export IRONFOX_OUTPUTS_FENIX_ARM_SIGNED
@@ -158,518 +158,518 @@ export IRONFOX_OUTPUTS_FENIX_AAB
 export IRONFOX_OUTPUTS_FENIX_APKS
 
 # Should we create a log file for build.sh? (Default)
-readonly IRONFOX_LOG_BUILD_DEFAULT=1
+IRONFOX_LOG_BUILD_DEFAULT=1
 if [[ -z "${IRONFOX_LOG_BUILD+x}" ]]; then
     IRONFOX_LOG_BUILD="${IRONFOX_LOG_BUILD_DEFAULT}"
 fi
-readonly IRONFOX_LOG_BUILD
+IRONFOX_LOG_BUILD
 export IRONFOX_LOG_BUILD
 
 # Should we create a log file for prebuild.sh? (Default)
-readonly IRONFOX_LOG_PREBUILD_DEFAULT=1
+IRONFOX_LOG_PREBUILD_DEFAULT=1
 if [[ -z "${IRONFOX_LOG_PREBUILD+x}" ]]; then
     IRONFOX_LOG_PREBUILD="${IRONFOX_LOG_PREBUILD_DEFAULT}"
 fi
-readonly IRONFOX_LOG_PREBUILD
+IRONFOX_LOG_PREBUILD
 export IRONFOX_LOG_PREBUILD
 
 # Should we create a log file for get_sources.sh? (Default)
-readonly IRONFOX_LOG_SOURCES_DEFAULT=1
+IRONFOX_LOG_SOURCES_DEFAULT=1
 if [[ -z "${IRONFOX_LOG_SOURCES+x}" ]]; then
     IRONFOX_LOG_SOURCES="${IRONFOX_LOG_SOURCES_DEFAULT}"
 fi
-readonly IRONFOX_LOG_SOURCES
+IRONFOX_LOG_SOURCES
 export IRONFOX_LOG_SOURCES
 
 # Should we create a log file for sign.sh? (Default)
-readonly IRONFOX_LOG_SIGN_DEFAULT=1
+IRONFOX_LOG_SIGN_DEFAULT=1
 if [[ -z "${IRONFOX_LOG_SIGN+x}" ]]; then
     IRONFOX_LOG_SIGN="${IRONFOX_LOG_SIGN_DEFAULT}"
 fi
-readonly IRONFOX_LOG_SIGN
+IRONFOX_LOG_SIGN
 export IRONFOX_LOG_SIGN
 
 # Directory where we should store log files (if logging is desired)
-readonly IRONFOX_LOG_DIR_DEFAULT="${IRONFOX_BUILD}/logs"
+IRONFOX_LOG_DIR_DEFAULT="${IRONFOX_BUILD}/logs"
 if [[ -z "${IRONFOX_LOG_DIR+x}" ]]; then
     IRONFOX_LOG_DIR="${IRONFOX_LOG_DIR_DEFAULT}"
 fi
-readonly IRONFOX_LOG_DIR
+IRONFOX_LOG_DIR
 export IRONFOX_LOG_DIR
 
 # CI-specific build variables
 # These variables are set for CI primarily to allow parallel builds (for specific stages)
-readonly IRONFOX_CI_BUILD_GECKO_ARM64_DEFAULT=0
+IRONFOX_CI_BUILD_GECKO_ARM64_DEFAULT=0
 if [[ -z "${IRONFOX_CI_BUILD_GECKO_ARM64+x}" ]]; then
     IRONFOX_CI_BUILD_GECKO_ARM64="${IRONFOX_CI_BUILD_GECKO_ARM64_DEFAULT}"
 fi
-readonly IRONFOX_CI_BUILD_GECKO_ARM64
+IRONFOX_CI_BUILD_GECKO_ARM64
 export IRONFOX_CI_BUILD_GECKO_ARM64
 
-readonly IRONFOX_CI_BUILD_GECKO_ARM_DEFAULT=0
+IRONFOX_CI_BUILD_GECKO_ARM_DEFAULT=0
 if [[ -z "${IRONFOX_CI_BUILD_GECKO_ARM+x}" ]]; then
     IRONFOX_CI_BUILD_GECKO_ARM="${IRONFOX_CI_BUILD_GECKO_ARM_DEFAULT}"
 fi
-readonly IRONFOX_CI_BUILD_GECKO_ARM
+IRONFOX_CI_BUILD_GECKO_ARM
 export IRONFOX_CI_BUILD_GECKO_ARM
 
-readonly IRONFOX_CI_BUILD_GECKO_X86_64_DEFAULT=0
+IRONFOX_CI_BUILD_GECKO_X86_64_DEFAULT=0
 if [[ -z "${IRONFOX_CI_BUILD_GECKO_X86_64+x}" ]]; then
     IRONFOX_CI_BUILD_GECKO_X86_64="${IRONFOX_CI_BUILD_GECKO_X86_64_DEFAULT}"
 fi
-readonly IRONFOX_CI_BUILD_GECKO_X86_64
+IRONFOX_CI_BUILD_GECKO_X86_64
 export IRONFOX_CI_BUILD_GECKO_X86_64
 
-readonly IRONFOX_CI_BUILD_FINAL_DEFAULT=0
+IRONFOX_CI_BUILD_FINAL_DEFAULT=0
 if [[ -z "${IRONFOX_CI_BUILD_FINAL+x}" ]]; then
     IRONFOX_CI_BUILD_FINAL="${IRONFOX_CI_BUILD_FINAL_DEFAULT}"
 fi
-readonly IRONFOX_CI_BUILD_FINAL
+IRONFOX_CI_BUILD_FINAL
 export IRONFOX_CI_BUILD_FINAL
 
 # Android NDK
-readonly IRONFOX_ANDROID_NDK_DEFAULT="${IRONFOX_EXTERNAL}/android-ndk"
+IRONFOX_ANDROID_NDK_DEFAULT="${IRONFOX_EXTERNAL}/android-ndk"
 if [[ -z "${IRONFOX_ANDROID_NDK+x}" ]]; then
     IRONFOX_ANDROID_NDK="${IRONFOX_ANDROID_NDK_DEFAULT}"
 fi
-readonly IRONFOX_ANDROID_NDK
+IRONFOX_ANDROID_NDK
 export IRONFOX_ANDROID_NDK
 
 # Android SDK
-readonly IRONFOX_ANDROID_SDK_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk"
+IRONFOX_ANDROID_SDK_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk"
 if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]]; then
     IRONFOX_ANDROID_SDK="${IRONFOX_ANDROID_SDK_DEFAULT}"
 fi
-readonly IRONFOX_ANDROID_SDK
+IRONFOX_ANDROID_SDK
 export IRONFOX_ANDROID_SDK
 
 ## sdkmanager
-readonly IRONFOX_ANDROID_SDKMANAGER="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin/sdkmanager"
+IRONFOX_ANDROID_SDKMANAGER="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin/sdkmanager"
 export IRONFOX_ANDROID_SDKMANAGER
 
 # Android SDK Build Tools (Latest)
-readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools"
+IRONFOX_ANDROID_SDK_BUILD_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools"
 if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS+x}" ]]; then
     IRONFOX_ANDROID_SDK_BUILD_TOOLS="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_DEFAULT}"
 fi
-readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS
+IRONFOX_ANDROID_SDK_BUILD_TOOLS
 export IRONFOX_ANDROID_SDK_BUILD_TOOLS
 
 ## apksigner
-readonly IRONFOX_APKSIGNER_DEFAULT="${IRONFOX_ANDROID_SDK_BUILD_TOOLS}/apksigner"
+IRONFOX_APKSIGNER_DEFAULT="${IRONFOX_ANDROID_SDK_BUILD_TOOLS}/apksigner"
 if [[ -z "${IRONFOX_APKSIGNER+x}" ]]; then
     IRONFOX_APKSIGNER="${IRONFOX_APKSIGNER_DEFAULT}"
 fi
-readonly IRONFOX_APKSIGNER
+IRONFOX_APKSIGNER
 export IRONFOX_APKSIGNER
 
 # Android SDK Build Tools (35 - needed by Glean)
-readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools-35"
+IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools-35"
 if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35+x}" ]]; then
     IRONFOX_ANDROID_SDK_BUILD_TOOLS_35="${IRONFOX_ANDROID_SDK_BUILD_TOOLS_35_DEFAULT}"
 fi
-readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_35
+IRONFOX_ANDROID_SDK_BUILD_TOOLS_35
 export IRONFOX_ANDROID_SDK_BUILD_TOOLS_35
 
 # Android SDK Platform Tools
-readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-platform-tools"
+IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-platform-tools"
 if [[ -z "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS+x}" ]]; then
     IRONFOX_ANDROID_SDK_PLATFORM_TOOLS="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS_DEFAULT}"
 fi
-readonly IRONFOX_ANDROID_SDK_PLATFORM_TOOLS
+IRONFOX_ANDROID_SDK_PLATFORM_TOOLS
 export IRONFOX_ANDROID_SDK_PLATFORM_TOOLS
 
 ## ADB
-readonly IRONFOX_ADB_DEFAULT="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}/adb"
+IRONFOX_ADB_DEFAULT="${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}/adb"
 if [[ -z "${IRONFOX_ADB+x}" ]]; then
     IRONFOX_ADB="${IRONFOX_ADB_DEFAULT}"
 fi
-readonly IRONFOX_ADB
+IRONFOX_ADB
 export IRONFOX_ADB
 
 # Application Services
-readonly IRONFOX_AS_DEFAULT="${IRONFOX_EXTERNAL}/application-services"
+IRONFOX_AS_DEFAULT="${IRONFOX_EXTERNAL}/application-services"
 if [[ -z "${IRONFOX_AS+x}" ]]; then
     IRONFOX_AS="${IRONFOX_AS_DEFAULT}"
 fi
-readonly IRONFOX_AS
+IRONFOX_AS
 export IRONFOX_AS
 
 ## Application Services overlay
-readonly IRONFOX_AS_OVERLAY="${IRONFOX_PATCHES}/a-s-overlay"
+IRONFOX_AS_OVERLAY="${IRONFOX_PATCHES}/a-s-overlay"
 export IRONFOX_AS_OVERLAY
 
 # Bundletool
-readonly IRONFOX_BUNDLETOOL_DIR_DEFAULT="${IRONFOX_EXTERNAL}/bundletool"
+IRONFOX_BUNDLETOOL_DIR_DEFAULT="${IRONFOX_EXTERNAL}/bundletool"
 if [[ -z "${IRONFOX_BUNDLETOOl_DIR+x}" ]]; then
     IRONFOX_BUNDLETOOL_DIR="${IRONFOX_BUNDLETOOL_DIR_DEFAULT}"
 fi
-readonly IRONFOX_BUNDLETOOL_DIR
-readonly IRONFOX_BUNDLETOOL="${IRONFOX_SCRIPTS}/bundletool.sh"
-readonly IRONFOX_BUNDLETOOL_JAR="${IRONFOX_BUNDLETOOL_DIR}/bundletool.jar"
+IRONFOX_BUNDLETOOL_DIR
+IRONFOX_BUNDLETOOL="${IRONFOX_SCRIPTS}/bundletool.sh"
+IRONFOX_BUNDLETOOL_JAR="${IRONFOX_BUNDLETOOL_DIR}/bundletool.jar"
 export IRONFOX_BUNDLETOOL
 export IRONFOX_BUNDLETOOL_DIR
 export IRONFOX_BUNDLETOOL_JAR
 
 # cbindgen
-readonly IRONFOX_CBINDGEN_DEFAULT="${IRONFOX_EXTERNAL}/cbindgen"
+IRONFOX_CBINDGEN_DEFAULT="${IRONFOX_EXTERNAL}/cbindgen"
 if [[ -z "${IRONFOX_CBINDGEN+x}" ]]; then
     IRONFOX_CBINDGEN="${IRONFOX_CBINDGEN_DEFAULT}"
 fi
-readonly IRONFOX_CBINDGEN
+IRONFOX_CBINDGEN
 export IRONFOX_CBINDGEN
 
 # Firefox (mozilla-central)
-readonly IRONFOX_GECKO_DEFAULT="${IRONFOX_EXTERNAL}/gecko"
+IRONFOX_GECKO_DEFAULT="${IRONFOX_EXTERNAL}/gecko"
 if [[ -z "${IRONFOX_GECKO+x}" ]]; then
     IRONFOX_GECKO="${IRONFOX_GECKO_DEFAULT}"
 fi
-readonly IRONFOX_GECKO
+IRONFOX_GECKO
 export IRONFOX_GECKO
 
 ## mach
-readonly IRONFOX_MACH="${IRONFOX_GECKO}/mach"
+IRONFOX_MACH="${IRONFOX_GECKO}/mach"
 export IRONFOX_MACH
 
 ## Gecko overlay
-readonly IRONFOX_GECKO_OVERLAY="${IRONFOX_PATCHES}/gecko-overlay"
+IRONFOX_GECKO_OVERLAY="${IRONFOX_PATCHES}/gecko-overlay"
 export IRONFOX_GECKO_OVERLAY
 
 ## Android Components
-readonly IRONFOX_AC="${IRONFOX_GECKO}/mobile/android/android-components"
+IRONFOX_AC="${IRONFOX_GECKO}/mobile/android/android-components"
 export IRONFOX_AC
 
 ### Android Components overlay
-readonly IRONFOX_AC_OVERLAY="${IRONFOX_PATCHES}/a-c-overlay"
+IRONFOX_AC_OVERLAY="${IRONFOX_PATCHES}/a-c-overlay"
 export IRONFOX_AC_OVERLAY
 
 ## Fenix
-readonly IRONFOX_FENIX="${IRONFOX_GECKO}/mobile/android/fenix"
+IRONFOX_FENIX="${IRONFOX_GECKO}/mobile/android/fenix"
 export IRONFOX_FENIX
 
 ### Fenix overlay
-readonly IRONFOX_FENIX_OVERLAY="${IRONFOX_PATCHES}/fenix-overlay"
+IRONFOX_FENIX_OVERLAY="${IRONFOX_PATCHES}/fenix-overlay"
 export IRONFOX_FENIX_OVERLAY
 
 ## Gecko locales
-readonly IRONFOX_LOCALES_DEFAULT=$(<"${IRONFOX_CONFIGS}/locales")
+IRONFOX_LOCALES_DEFAULT=$(<"${IRONFOX_CONFIGS}/locales")
 if [[ -z "${IRONFOX_LOCALES+x}" ]]; then
     IRONFOX_LOCALES="${IRONFOX_LOCALES_DEFAULT}"
 fi
-readonly IRONFOX_LOCALES
+IRONFOX_LOCALES
 export IRONFOX_LOCALES
 
 ## Gecko l10n
-readonly IRONFOX_L10N_CENTRAL_DEFAULT="${IRONFOX_EXTERNAL}/l10n-central"
+IRONFOX_L10N_CENTRAL_DEFAULT="${IRONFOX_EXTERNAL}/l10n-central"
 if [[ -z "${IRONFOX_L10N_CENTRAL+x}" ]]; then
     IRONFOX_L10N_CENTRAL="${IRONFOX_L10N_CENTRAL_DEFAULT}"
 fi
-readonly IRONFOX_L10N_CENTRAL
+IRONFOX_L10N_CENTRAL
 export IRONFOX_L10N_CENTRAL
 
 ## .mozbuild
-readonly IRONFOX_MOZBUILD_DEFAULT="${IRONFOX_BUILD}/.mozbuild"
+IRONFOX_MOZBUILD_DEFAULT="${IRONFOX_BUILD}/.mozbuild"
 if [[ -z "${IRONFOX_MOZBUILD+x}" ]]; then
     IRONFOX_MOZBUILD="${IRONFOX_MOZBUILD_DEFAULT}"
 fi
-readonly IRONFOX_MOZBUILD
+IRONFOX_MOZBUILD
 export IRONFOX_MOZBUILD
 
 # Glean
-readonly IRONFOX_GLEAN_DEFAULT="${IRONFOX_EXTERNAL}/glean"
+IRONFOX_GLEAN_DEFAULT="${IRONFOX_EXTERNAL}/glean"
 if [[ -z "${IRONFOX_GLEAN+x}" ]]; then
     IRONFOX_GLEAN="${IRONFOX_GLEAN_DEFAULT}"
 fi
-readonly IRONFOX_GLEAN
+IRONFOX_GLEAN
 export IRONFOX_GLEAN
 
 ## Glean overlay
-readonly IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
+IRONFOX_GLEAN_OVERLAY="${IRONFOX_PATCHES}/glean-overlay"
 export IRONFOX_GLEAN_OVERLAY
 
 # Glean Parser wheels
-readonly IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser-wheels"
+IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT="${IRONFOX_EXTERNAL}/glean_parser-wheels"
 if [[ -z "${IRONFOX_GLEAN_PARSER_WHEELS+x}" ]]; then
     IRONFOX_GLEAN_PARSER_WHEELS="${IRONFOX_GLEAN_PARSER_WHEELS_DEFAULT}"
 fi
-readonly IRONFOX_GLEAN_PARSER_WHEELS
+IRONFOX_GLEAN_PARSER_WHEELS
 export IRONFOX_GLEAN_PARSER_WHEELS
 
 # GNU awk
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_AWK_DEFAULT='gawk'
+    IRONFOX_AWK_DEFAULT='gawk'
 else
-    readonly IRONFOX_AWK_DEFAULT='awk'
+    IRONFOX_AWK_DEFAULT='awk'
 fi
 if [[ -z "${IRONFOX_AWK+x}" ]]; then
     IRONFOX_AWK="${IRONFOX_AWK_DEFAULT}"
 fi
-readonly IRONFOX_AWK
+IRONFOX_AWK
 export IRONFOX_AWK
 
 # GNU date
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_DATE_DEFAULT='gdate'
+    IRONFOX_DATE_DEFAULT='gdate'
 else
-    readonly IRONFOX_DATE_DEFAULT='date'
+    IRONFOX_DATE_DEFAULT='date'
 fi
 if [[ -z "${IRONFOX_DATE+x}" ]]; then
     IRONFOX_DATE="${IRONFOX_DATE_DEFAULT}"
 fi
-readonly IRONFOX_DATE
+IRONFOX_DATE
 export IRONFOX_DATE
 
 # GNU make
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_MAKE_DEFAULT='gmake'
+    IRONFOX_MAKE_DEFAULT='gmake'
 else
-    readonly IRONFOX_MAKE_DEFAULT='make'
+    IRONFOX_MAKE_DEFAULT='make'
 fi
 if [[ -z "${IRONFOX_MAKE+x}" ]]; then
     IRONFOX_MAKE="${IRONFOX_MAKE_DEFAULT}"
 fi
-readonly IRONFOX_MAKE
+IRONFOX_MAKE
 export IRONFOX_MAKE
 
 # GNU sed
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_SED_DEFAULT='gsed'
+    IRONFOX_SED_DEFAULT='gsed'
 else
-    readonly IRONFOX_SED_DEFAULT='sed'
+    IRONFOX_SED_DEFAULT='sed'
 fi
 if [[ -z "${IRONFOX_SED+x}" ]]; then
     IRONFOX_SED="${IRONFOX_SED_DEFAULT}"
 fi
-readonly IRONFOX_SED
+IRONFOX_SED
 export IRONFOX_SED
 
 # GNU tar
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_TAR_DEFAULT='gtar'
+    IRONFOX_TAR_DEFAULT='gtar'
 else
-    readonly IRONFOX_TAR_DEFAULT='tar'
+    IRONFOX_TAR_DEFAULT='tar'
 fi
 if [[ -z "${IRONFOX_TAR+x}" ]]; then
     IRONFOX_TAR="${IRONFOX_TAR_DEFAULT}"
 fi
-readonly IRONFOX_TAR
+IRONFOX_TAR
 export IRONFOX_TAR
 
 # Gradle
-readonly IRONFOX_GRADLE_DIR_DEFAULT="${IRONFOX_EXTERNAL}/gradle"
+IRONFOX_GRADLE_DIR_DEFAULT="${IRONFOX_EXTERNAL}/gradle"
 if [[ -z "${IRONFOX_GRADLE_DIR+x}" ]]; then
     IRONFOX_GRADLE_DIR="${IRONFOX_GRADLE_DIR_DEFAULT}"
 fi
-readonly IRONFOX_GRADLE_DIR
-readonly IRONFOX_GRADLE="${IRONFOX_SCRIPTS}/gradle.sh"
-readonly IRONFOX_GRADLE_PY="${IRONFOX_GRADLE_DIR}/gradlew.py"
+IRONFOX_GRADLE_DIR
+IRONFOX_GRADLE="${IRONFOX_SCRIPTS}/gradle.sh"
+IRONFOX_GRADLE_PY="${IRONFOX_GRADLE_DIR}/gradlew.py"
 export IRONFOX_GRADLE
 export IRONFOX_GRADLE_DIR
 export IRONFOX_GRADLE_PY
 
 ## Gradle cache
-readonly IRONFOX_GRADLE_CACHE_DEFAULT="${IRONFOX_BUILD}/gradle/cache"
+IRONFOX_GRADLE_CACHE_DEFAULT="${IRONFOX_BUILD}/gradle/cache"
 if [[ -z "${IRONFOX_GRADLE_CACHE+x}" ]]; then
     IRONFOX_GRADLE_CACHE="${IRONFOX_GRADLE_CACHE_DEFAULT}"
 fi
-readonly IRONFOX_GRADLE_CACHE
+IRONFOX_GRADLE_CACHE
 export IRONFOX_GRADLE_CACHE
 
 ## Gradle home
-readonly IRONFOX_GRADLE_HOME_DEFAULT="${IRONFOX_BUILD}/.gradle"
+IRONFOX_GRADLE_HOME_DEFAULT="${IRONFOX_BUILD}/.gradle"
 if [[ -z "${IRONFOX_GRADLE_HOME+x}" ]]; then
     IRONFOX_GRADLE_HOME="${IRONFOX_GRADLE_HOME_DEFAULT}"
 fi
-readonly IRONFOX_GRADLE_HOME
+IRONFOX_GRADLE_HOME
 export IRONFOX_GRADLE_HOME
 
 # Gradle local Maven repository
-readonly IRONFOX_MAVEN_LOCAL_DEFAULT="${IRONFOX_BUILD}/.m2/repository"
+IRONFOX_MAVEN_LOCAL_DEFAULT="${IRONFOX_BUILD}/.m2/repository"
 if [[ -z "${IRONFOX_MAVEN_LOCAL+x}" ]]; then
     IRONFOX_MAVEN_LOCAL="${IRONFOX_MAVEN_LOCAL_DEFAULT}"
 fi
-readonly IRONFOX_MAVEN_LOCAL
+IRONFOX_MAVEN_LOCAL
 export IRONFOX_MAVEN_LOCAL
 
 # GYP
-readonly IRONFOX_GYP_DEFAULT="${IRONFOX_EXTERNAL}/gyp-next"
+IRONFOX_GYP_DEFAULT="${IRONFOX_EXTERNAL}/gyp-next"
 if [[ -z "${IRONFOX_GYP+x}" ]]; then
     IRONFOX_GYP="${IRONFOX_GYP_DEFAULT}"
 fi
-readonly IRONFOX_GYP
+IRONFOX_GYP
 export IRONFOX_GYP
 
 # JDK (17)
 ## (Required by GeckoView)
-readonly IRONFOX_JDK_17_DEFAULT="${IRONFOX_EXTERNAL}/jdk-17"
+IRONFOX_JDK_17_DEFAULT="${IRONFOX_EXTERNAL}/jdk-17"
 if [[ -z "${IRONFOX_JDK_17+x}" ]]; then
     IRONFOX_JDK_17="${IRONFOX_JDK_17_DEFAULT}"
 fi
-readonly IRONFOX_JDK_17
+IRONFOX_JDK_17
 export IRONFOX_JDK_17
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_JDK_17_HOME="${IRONFOX_JDK_17}/Contents/Home"
+    IRONFOX_JDK_17_HOME="${IRONFOX_JDK_17}/Contents/Home"
 else
-    readonly IRONFOX_JDK_17_HOME="${IRONFOX_JDK_17}"
+    IRONFOX_JDK_17_HOME="${IRONFOX_JDK_17}"
 fi
 export IRONFOX_JDK_17_HOME
 
 # JDK (21)
-readonly IRONFOX_JDK_21_DEFAULT="${IRONFOX_EXTERNAL}/jdk-21"
+IRONFOX_JDK_21_DEFAULT="${IRONFOX_EXTERNAL}/jdk-21"
 if [[ -z "${IRONFOX_JDK_21+x}" ]]; then
     IRONFOX_JDK_21="${IRONFOX_JDK_21_DEFAULT}"
 fi
-readonly IRONFOX_JDK_21
+IRONFOX_JDK_21
 export IRONFOX_JDK_21
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_JDK_21_HOME="${IRONFOX_JDK_21}/Contents/Home"
+    IRONFOX_JDK_21_HOME="${IRONFOX_JDK_21}/Contents/Home"
 else
-    readonly IRONFOX_JDK_21_HOME="${IRONFOX_JDK_21}"
+    IRONFOX_JDK_21_HOME="${IRONFOX_JDK_21}"
 fi
 export IRONFOX_JDK_21_HOME
 
 # JDK (25)
-readonly IRONFOX_JDK_25_DEFAULT="${IRONFOX_EXTERNAL}/jdk-25"
+IRONFOX_JDK_25_DEFAULT="${IRONFOX_EXTERNAL}/jdk-25"
 if [[ -z "${IRONFOX_JDK_25+x}" ]]; then
     IRONFOX_JDK_25="${IRONFOX_JDK_25_DEFAULT}"
 fi
-readonly IRONFOX_JDK_25
+IRONFOX_JDK_25
 export IRONFOX_JDK_25
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_JAVA_HOME="${IRONFOX_JDK_25}/Contents/Home"
+    IRONFOX_JAVA_HOME="${IRONFOX_JDK_25}/Contents/Home"
 else
-    readonly IRONFOX_JAVA_HOME="${IRONFOX_JDK_25}"
+    IRONFOX_JAVA_HOME="${IRONFOX_JDK_25}"
 fi
 export IRONFOX_JAVA_HOME
-readonly IRONFOX_JAVA="${IRONFOX_JAVA_HOME}/bin/java"
+IRONFOX_JAVA="${IRONFOX_JAVA_HOME}/bin/java"
 export IRONFOX_JAVA
 
 # libclang
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/lib"
+    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/lib"
 else
-    readonly IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/lib"
+    IRONFOX_LIBCLANG_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/musl/lib"
 fi
 if [[ -z "${IRONFOX_LIBCLANG+x}" ]]; then
     IRONFOX_LIBCLANG="${IRONFOX_LIBCLANG_DEFAULT}"
 fi
-readonly IRONFOX_LIBCLANG
+IRONFOX_LIBCLANG
 export IRONFOX_LIBCLANG
 
 # llvm-profdata
-readonly IRONFOX_LLVM_PROFDATA_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/bin/llvm-profdata"
+IRONFOX_LLVM_PROFDATA_DEFAULT="${IRONFOX_ANDROID_NDK}/toolchains/llvm/prebuilt/${IRONFOX_PLATFORM}-x86_64/bin/llvm-profdata"
 if [[ -z "${IRONFOX_LLVM_PROFDATA+x}" ]]; then
     IRONFOX_LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA_DEFAULT}"
 fi
-readonly IRONFOX_LLVM_PROFDATA
+IRONFOX_LLVM_PROFDATA
 export IRONFOX_LLVM_PROFDATA
 
 # microG
-readonly IRONFOX_GMSCORE_DEFAULT="${IRONFOX_EXTERNAL}/gmscore"
+IRONFOX_GMSCORE_DEFAULT="${IRONFOX_EXTERNAL}/gmscore"
 if [[ -z "${IRONFOX_GMSCORE+x}" ]]; then
     IRONFOX_GMSCORE="${IRONFOX_GMSCORE_DEFAULT}"
 fi
-readonly IRONFOX_GMSCORE
+IRONFOX_GMSCORE
 export IRONFOX_GMSCORE
 
 # nproc
 if [[ "${IRONFOX_OS}" == 'osx' ]]; then
-    readonly IRONFOX_NPROC_DEFAULT='sysctl -n hw.logicalcpu'
+    IRONFOX_NPROC_DEFAULT='sysctl -n hw.logicalcpu'
 else
-    readonly IRONFOX_NPROC_DEFAULT='nproc'
+    IRONFOX_NPROC_DEFAULT='nproc'
 fi
 if [[ -z "${IRONFOX_NPROC+x}" ]]; then
     IRONFOX_NPROC="${IRONFOX_NPROC_DEFAULT}"
 fi
-readonly IRONFOX_NPROC
+IRONFOX_NPROC
 export IRONFOX_NPROC
 
 # NSS
-readonly IRONFOX_NSS_DIR_DEFAULT="${IRONFOX_AS}/libs/desktop/${IRONFOX_PLATFORM}-${IRONFOX_PLATFORM_ARCH}/nss"
+IRONFOX_NSS_DIR_DEFAULT="${IRONFOX_AS}/libs/desktop/${IRONFOX_PLATFORM}-${IRONFOX_PLATFORM_ARCH}/nss"
 if [[ -z "${IRONFOX_NSS_DIR+x}" ]]; then
     IRONFOX_NSS_DIR="${IRONFOX_NSS_DIR_DEFAULT}"
 fi
-readonly IRONFOX_NSS_DIR
+IRONFOX_NSS_DIR
 export IRONFOX_NSS_DIR
 
 # IronFox prebuilds
-readonly IRONFOX_PREBUILDS_DEFAULT="${IRONFOX_EXTERNAL}/prebuilds"
+IRONFOX_PREBUILDS_DEFAULT="${IRONFOX_EXTERNAL}/prebuilds"
 if [[ -z "${IRONFOX_PREBUILDS+x}" ]]; then
     IRONFOX_PREBUILDS="${IRONFOX_PREBUILDS_DEFAULT}"
 fi
-readonly IRONFOX_PREBUILDS
+IRONFOX_PREBUILDS
 export IRONFOX_PREBUILDS
 
 # npm cache
-readonly IRONFOX_NPM_CACHE_DEFAULT="${IRONFOX_BUILD}/.npm"
+IRONFOX_NPM_CACHE_DEFAULT="${IRONFOX_BUILD}/.npm"
 if [[ -z "${IRONFOX_NPM_CACHE+x}" ]]; then
     IRONFOX_NPM_CACHE="${IRONFOX_NPM_CACHE_DEFAULT}"
 fi
-readonly IRONFOX_NPM_CACHE
+IRONFOX_NPM_CACHE
 export IRONFOX_NPM_CACHE
 
 # nvm
-readonly IRONFOX_NVM_DEFAULT="${IRONFOX_EXTERNAL}/nvm"
+IRONFOX_NVM_DEFAULT="${IRONFOX_EXTERNAL}/nvm"
 if [[ -z "${IRONFOX_NVM+x}" ]]; then
     IRONFOX_NVM="${IRONFOX_NVM_DEFAULT}"
 fi
-readonly IRONFOX_NVM
-readonly IRONFOX_NVM_ENV="${IRONFOX_NVM}/nvm.sh"
+IRONFOX_NVM
+IRONFOX_NVM_ENV="${IRONFOX_NVM}/nvm.sh"
 export IRONFOX_NVM
 export IRONFOX_NVM_ENV
 
 # Phoenix
-readonly IRONFOX_PHOENIX_DEFAULT="${IRONFOX_EXTERNAL}/phoenix"
+IRONFOX_PHOENIX_DEFAULT="${IRONFOX_EXTERNAL}/phoenix"
 if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
     IRONFOX_PHOENIX="${IRONFOX_PHOENIX_DEFAULT}"
 fi
-readonly IRONFOX_PHOENIX
+IRONFOX_PHOENIX
 export IRONFOX_PHOENIX
 
 # pip
-readonly IRONFOX_PIP_DIR_DEFAULT="${IRONFOX_EXTERNAL}/pip"
+IRONFOX_PIP_DIR_DEFAULT="${IRONFOX_EXTERNAL}/pip"
 if [[ -z "${IRONFOX_PIP_DIR+x}" ]]; then
     IRONFOX_PIP_DIR="${IRONFOX_PIP_DIR_DEFAULT}"
 fi
-readonly IRONFOX_PIP_DIR
+IRONFOX_PIP_DIR
 export IRONFOX_PIP_DIR
 
 # Python
-readonly IRONFOX_PYTHON_DIR_DEFAULT="${IRONFOX_EXTERNAL}/python"
+IRONFOX_PYTHON_DIR_DEFAULT="${IRONFOX_EXTERNAL}/python"
 if [[ -z "${IRONFOX_PYTHON_DIR+x}" ]]; then
     IRONFOX_PYTHON_DIR="${IRONFOX_PYTHON_DIR_DEFAULT}"
 fi
-readonly IRONFOX_PYTHON_DIR
+IRONFOX_PYTHON_DIR
 export IRONFOX_PYTHON_DIR
 
 # Python (UV) environment
-readonly IRONFOX_PYENV_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
+IRONFOX_PYENV_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
 if [[ -z "${IRONFOX_PYENV_DIR+x}" ]]; then
     IRONFOX_PYENV_DIR="${IRONFOX_PYENV_DIR_DEFAULT}"
 fi
-readonly IRONFOX_PYENV_DIR
-readonly IRONFOX_PIP="${IRONFOX_PYENV_DIR}/bin/pip"
-readonly IRONFOX_PYENV="${IRONFOX_PYENV_DIR}/bin/activate"
-readonly IRONFOX_PYTHON="${IRONFOX_PYENV_DIR}/bin/python"
+IRONFOX_PYENV_DIR
+IRONFOX_PIP="${IRONFOX_PYENV_DIR}/bin/pip"
+IRONFOX_PYENV="${IRONFOX_PYENV_DIR}/bin/activate"
+IRONFOX_PYTHON="${IRONFOX_PYENV_DIR}/bin/python"
 export IRONFOX_PIP
 export IRONFOX_PYENV
 export IRONFOX_PYENV_DIR
 export IRONFOX_PYTHON
 
 ## Python (UV) environment - Glean
-readonly IRONFOX_GLEAN_PYENV="${IRONFOX_GRADLE_HOME}/glean"
+IRONFOX_GLEAN_PYENV="${IRONFOX_GRADLE_HOME}/glean"
 export IRONFOX_GLEAN_PYENV
 
 # Rust (cargo)
-readonly IRONFOX_CARGO_HOME_DEFAULT="${IRONFOX_BUILD}/.cargo"
+IRONFOX_CARGO_HOME_DEFAULT="${IRONFOX_BUILD}/.cargo"
 if [[ -z "${IRONFOX_CARGO_HOME+x}" ]]; then
     IRONFOX_CARGO_HOME="${IRONFOX_CARGO_HOME_DEFAULT}"
 fi
-readonly IRONFOX_CARGO_HOME
-readonly IRONFOX_CARGO="${IRONFOX_CARGO_HOME}/bin/cargo"
-readonly IRONFOX_CARGO_ENV="${IRONFOX_CARGO_HOME}/env"
-readonly IRONFOX_RUSTC="${IRONFOX_CARGO_HOME}/bin/rustc"
-readonly IRONFOX_RUSTDOC="${IRONFOX_CARGO_HOME}/bin/rustdoc"
+IRONFOX_CARGO_HOME
+IRONFOX_CARGO="${IRONFOX_CARGO_HOME}/bin/cargo"
+IRONFOX_CARGO_ENV="${IRONFOX_CARGO_HOME}/env"
+IRONFOX_RUSTC="${IRONFOX_CARGO_HOME}/bin/rustc"
+IRONFOX_RUSTDOC="${IRONFOX_CARGO_HOME}/bin/rustdoc"
 export IRONFOX_CARGO
 export IRONFOX_CARGO_ENV
 export IRONFOX_CARGO_HOME
@@ -677,131 +677,131 @@ export IRONFOX_RUSTC
 export IRONFOX_RUSTDOC
 
 ## Display progress bars
-readonly IRONFOX_CARGO_PROGRESS_BAR_DEFAULT='always'
+IRONFOX_CARGO_PROGRESS_BAR_DEFAULT='always'
 if [[ -z "${IRONFOX_CARGO_PROGRESS_BAR+x}" ]]; then
     IRONFOX_CARGO_PROGRESS_BAR="${IRONFOX_CARGO_PROGRESS_BAR_DEFAULT}"
 fi
-readonly IRONFOX_CARGO_PROGRESS_BAR
+IRONFOX_CARGO_PROGRESS_BAR
 export IRONFOX_CARGO_PROGRESS_BAR
 
 ## Enable colored output
-readonly IRONFOX_CARGO_COLORED_OUTPUT_DEFAULT='always'
+IRONFOX_CARGO_COLORED_OUTPUT_DEFAULT='always'
 if [[ -z "${IRONFOX_CARGO_COLORED_OUTPUT+x}" ]]; then
     IRONFOX_CARGO_COLORED_OUTPUT="${IRONFOX_CARGO_COLORED_OUTPUT_DEFAULT}"
 fi
-readonly IRONFOX_CARGO_COLORED_OUTPUT
+IRONFOX_CARGO_COLORED_OUTPUT
 export IRONFOX_CARGO_COLORED_OUTPUT
 
 # rustup
-readonly IRONFOX_RUSTUP_HOME_DEFAULT="${IRONFOX_BUILD}/.rustup"
+IRONFOX_RUSTUP_HOME_DEFAULT="${IRONFOX_BUILD}/.rustup"
 if [[ -z "${IRONFOX_RUSTUP_HOME+x}" ]]; then
     IRONFOX_RUSTUP_HOME="${IRONFOX_RUSTUP_HOME_DEFAULT}"
 fi
-readonly IRONFOX_RUSTUP_HOME
+IRONFOX_RUSTUP_HOME
 export IRONFOX_RUSTUP_HOME
 
 ## Display progress bars
-readonly IRONFOX_RUSTUP_PROGRESS_BAR_DEFAULT='always'
+IRONFOX_RUSTUP_PROGRESS_BAR_DEFAULT='always'
 if [[ -z "${IRONFOX_RUSTUP_PROGRESS_BAR+x}" ]]; then
     IRONFOX_RUSTUP_PROGRESS_BAR="${IRONFOX_RUSTUP_PROGRESS_BAR_DEFAULT}"
 fi
-readonly IRONFOX_RUSTUP_PROGRESS_BAR
+IRONFOX_RUSTUP_PROGRESS_BAR
 export IRONFOX_RUSTUP_PROGRESS_BAR
 
 ## Enable colored output
-readonly IRONFOX_RUSTUP_COLORED_OUTPUT_DEFAULT='always'
+IRONFOX_RUSTUP_COLORED_OUTPUT_DEFAULT='always'
 if [[ -z "${IRONFOX_RUSTUP_COLORED_OUTPUT+x}" ]]; then
     IRONFOX_RUSTUP_COLORED_OUTPUT="${IRONFOX_RUSTUP_COLORED_OUTPUT_DEFAULT}"
 fi
-readonly IRONFOX_RUSTUP_COLORED_OUTPUT
+IRONFOX_RUSTUP_COLORED_OUTPUT
 export IRONFOX_RUSTUP_COLORED_OUTPUT
 
 # uniffi-bindgen
-readonly IRONFOX_UNIFFI_DEFAULT="${IRONFOX_EXTERNAL}/uniffi"
+IRONFOX_UNIFFI_DEFAULT="${IRONFOX_EXTERNAL}/uniffi"
 if [[ -z "${IRONFOX_UNIFFI+x}" ]]; then
     IRONFOX_UNIFFI="${IRONFOX_UNIFFI_DEFAULT}"
 fi
-readonly IRONFOX_UNIFFI
+IRONFOX_UNIFFI
 export IRONFOX_UNIFFI
 
 # unifiedpush-ac
-readonly IRONFOX_UP_AC_DEFAULT="${IRONFOX_EXTERNAL}/unifiedpush-ac"
+IRONFOX_UP_AC_DEFAULT="${IRONFOX_EXTERNAL}/unifiedpush-ac"
 if [[ -z "${IRONFOX_UP_AC+x}" ]]; then
     IRONFOX_UP_AC="${IRONFOX_UP_AC_DEFAULT}"
 fi
-readonly IRONFOX_UP_AC
+IRONFOX_UP_AC
 export IRONFOX_UP_AC
 
 # UV
-readonly IRONFOX_UV_DIR_DEFAULT="${IRONFOX_EXTERNAL}/uv"
+IRONFOX_UV_DIR_DEFAULT="${IRONFOX_EXTERNAL}/uv"
 if [[ -z "${IRONFOX_UV_DIR+x}" ]]; then
     IRONFOX_UV_DIR="${IRONFOX_UV_DIR_DEFAULT}"
 fi
-readonly IRONFOX_UV_DIR
-readonly IRONFOX_UV="${IRONFOX_UV_DIR}/uv"
+IRONFOX_UV_DIR
+IRONFOX_UV="${IRONFOX_UV_DIR}/uv"
 export IRONFOX_UV
 export IRONFOX_UV_DIR
 
 # UV (local directory)
-readonly IRONFOX_UV_LOCAL_DEFAULT="${IRONFOX_BUILD}/uv"
+IRONFOX_UV_LOCAL_DEFAULT="${IRONFOX_BUILD}/uv"
 if [[ -z "${IRONFOX_UV_LOCAL+x}" ]]; then
     IRONFOX_UV_LOCAL="${IRONFOX_UV_LOCAL_DEFAULT}"
 fi
-readonly IRONFOX_UV_LOCAL
+IRONFOX_UV_LOCAL
 export IRONFOX_UV_LOCAL
 
 # UV cache
-readonly IRONFOX_UV_CACHE_DEFAULT="${IRONFOX_UV_LOCAL}/cache"
+IRONFOX_UV_CACHE_DEFAULT="${IRONFOX_UV_LOCAL}/cache"
 if [[ -z "${IRONFOX_UV_CACHE+x}" ]]; then
     IRONFOX_UV_CACHE="${IRONFOX_UV_CACHE_DEFAULT}"
 fi
-readonly IRONFOX_UV_CACHE
+IRONFOX_UV_CACHE
 export IRONFOX_UV_CACHE
 
 # UV Python directory
-readonly IRONFOX_UV_PYTHON_DEFAULT="${IRONFOX_UV_LOCAL}/python"
+IRONFOX_UV_PYTHON_DEFAULT="${IRONFOX_UV_LOCAL}/python"
 if [[ -z "${IRONFOX_UV_PYTHON+x}" ]]; then
     IRONFOX_UV_PYTHON="${IRONFOX_UV_PYTHON_DEFAULT}"
 fi
-readonly IRONFOX_UV_PYTHON
+IRONFOX_UV_PYTHON
 export IRONFOX_UV_PYTHON
 
 # UV tools
-readonly IRONFOX_UV_TOOLS_DEFAULT="${IRONFOX_UV_LOCAL}/tools"
+IRONFOX_UV_TOOLS_DEFAULT="${IRONFOX_UV_LOCAL}/tools"
 if [[ -z "${IRONFOX_UV_TOOLS+x}" ]]; then
     IRONFOX_UV_TOOLS="${IRONFOX_UV_TOOLS_DEFAULT}"
 fi
-readonly IRONFOX_UV_TOOLS
+IRONFOX_UV_TOOLS
 export IRONFOX_UV_TOOLS
 
 # WASI SDK
-readonly IRONFOX_WASI_DEFAULT="${IRONFOX_EXTERNAL}/wasi-sdk"
+IRONFOX_WASI_DEFAULT="${IRONFOX_EXTERNAL}/wasi-sdk"
 if [[ -z "${IRONFOX_WASI+x}" ]]; then
     IRONFOX_WASI="${IRONFOX_WASI_DEFAULT}"
 fi
-readonly IRONFOX_WASI
+IRONFOX_WASI
 export IRONFOX_WASI
 
 # Cipher suites
 ## (This enforces strong cipher suites - see ex. https://browserleaks.com/tls)
-readonly IRONFOX_CIPHERS_DEFAULT='TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384'
+IRONFOX_CIPHERS_DEFAULT='TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384'
 if [[ -z "${IRONFOX_CIPHERS+x}" ]]; then
     IRONFOX_CIPHERS="${IRONFOX_CIPHERS_DEFAULT}"
 fi
-readonly IRONFOX_CIPHERS
+IRONFOX_CIPHERS
 export IRONFOX_CIPHERS
 
 # If compiler flags are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
-readonly IRONFOX_COMPILER_FLAGS_OVERRIDE_DEFAULT=0
+IRONFOX_COMPILER_FLAGS_OVERRIDE_DEFAULT=0
 if [[ -z "${IRONFOX_COMPILER_FLAGS_OVERRIDE+x}" ]]; then
     IRONFOX_COMPILER_FLAGS_OVERRIDE="${IRONFOX_COMPILER_FLAGS_OVERRIDE_DEFAULT}"
 fi
-readonly IRONFOX_COMPILER_FLAGS_OVERRIDE
+IRONFOX_COMPILER_FLAGS_OVERRIDE
 export IRONFOX_COMPILER_FLAGS_OVERRIDE
 
 # Compiler flags
-readonly IRONFOX_COMPILER_FLAGS_DEFAULT='-DNDEBUG -O3 -flto=full -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv'
+IRONFOX_COMPILER_FLAGS_DEFAULT='-DNDEBUG -O3 -flto=full -fstack-clash-protection -fstack-protector-strong -ftrivial-auto-var-init=zero -fwrapv'
 if [[ -z "${IRONFOX_COMPILER_FLAGS+x}" ]]; then
     IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_COMPILER_FLAGS_OVERRIDE}" == 1 ]]; then
@@ -809,20 +809,20 @@ elif [[ "${IRONFOX_COMPILER_FLAGS_OVERRIDE}" == 1 ]]; then
 else
     IRONFOX_COMPILER_FLAGS="${IRONFOX_COMPILER_FLAGS_DEFAULT} ${IRONFOX_COMPILER_FLAGS}"
 fi
-readonly IRONFOX_COMPILER_FLAGS
+IRONFOX_COMPILER_FLAGS
 export IRONFOX_COMPILER_FLAGS
 
 # If curl flags are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
-readonly IRONFOX_CURL_FLAGS_OVERRIDE_DEFAULT=0
+IRONFOX_CURL_FLAGS_OVERRIDE_DEFAULT=0
 if [[ -z "${IRONFOX_CURL_FLAGS_OVERRIDE+x}" ]]; then
     IRONFOX_CURL_FLAGS_OVERRIDE="${IRONFOX_CURL_FLAGS_OVERRIDE_DEFAULT}"
 fi
-readonly IRONFOX_CURL_FLAGS_OVERRIDE
+IRONFOX_CURL_FLAGS_OVERRIDE
 export IRONFOX_CURL_FLAGS_OVERRIDE
 
 # curl flags
-readonly IRONFOX_CURL_FLAGS_DEFAULT="-q --disable --no-netrc -j -e "" -A "" -S --ciphers ${IRONFOX_CIPHERS} --clobber --create-dirs --delegation none --disallow-username-in-url --doh-cert-status --ftp-create-dirs --ftp-ssl-control --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-proxy-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ntlm --no-proxy-ssl-allow-beast --no-proxy-ssl-auto-client-cert --no-sessionid --no-skip-existing --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-tls-earlydata --no-xattr --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --referer "" --remove-on-error --show-error --ssl-reqd --tlsv1.2 --trace-time --user-agent "" --verbose"
+IRONFOX_CURL_FLAGS_DEFAULT="-q --disable --no-netrc -j -e "" -A "" -S --ciphers ${IRONFOX_CIPHERS} --clobber --create-dirs --delegation none --disallow-username-in-url --doh-cert-status --ftp-create-dirs --ftp-ssl-control --junk-session-cookies --no-basic --no-ca-native --no-digest --no-doh-insecure --no-http0.9 --no-insecure --no-proxy-insecure --no-negotiate --no-ntlm --no-proxy-basic --no-proxy-ca-native --no-proxy-digest --no-proxy-insecure --no-proxy-ntlm --no-proxy-ssl-allow-beast --no-proxy-ssl-auto-client-cert --no-sessionid --no-skip-existing --no-ssl --no-ssl-allow-beast --no-ssl-auto-client-cert --no-ssl-no-revoke --no-ssl-revoke-best-effort --no-tls-earlydata --no-xattr --progress-meter --proto -all,https --proto-default https --proto-redir -all,https --referer "" --remove-on-error --show-error --ssl-reqd --tlsv1.2 --trace-time --user-agent "" --verbose"
 if [[ -z "${IRONFOX_CURL_FLAGS+x}" ]]; then
     IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_CURL_FLAGS_OVERRIDE}" == 1 ]]; then
@@ -830,20 +830,20 @@ elif [[ "${IRONFOX_CURL_FLAGS_OVERRIDE}" == 1 ]]; then
 else
     IRONFOX_CURL_FLAGS="${IRONFOX_CURL_FLAGS_DEFAULT} ${IRONFOX_CURL_FLAGS}"
 fi
-readonly IRONFOX_CURL_FLAGS
+IRONFOX_CURL_FLAGS
 export IRONFOX_CURL_FLAGS
 
 # If Gradle flags are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
-readonly IRONFOX_GRADLE_FLAGS_OVERRIDE_DEFAULT=0
+IRONFOX_GRADLE_FLAGS_OVERRIDE_DEFAULT=0
 if [[ -z "${IRONFOX_GRADLE_FLAGS_OVERRIDE+x}" ]]; then
     IRONFOX_GRADLE_FLAGS_OVERRIDE="${IRONFOX_GRADLE_FLAGS_OVERRIDE_DEFAULT}"
 fi
-readonly IRONFOX_GRADLE_FLAGS_OVERRIDE
+IRONFOX_GRADLE_FLAGS_OVERRIDE
 export IRONFOX_GRADLE_FLAGS_OVERRIDE
 
 # Gradle flags
-readonly IRONFOX_GRADLE_FLAGS_DEFAULT="-Dhttps.protocols=TLSv1.3,TLSv1.2 -Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.configureondemand=true -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
+IRONFOX_GRADLE_FLAGS_DEFAULT="-Dhttps.protocols=TLSv1.3,TLSv1.2 -Dmaven.repo.local=${IRONFOX_MAVEN_LOCAL} -Dorg.gradle.caching=false -Dorg.gradle.configuration-cache=false -Dorg.gradle.configureondemand=true -Dorg.gradle.console=verbose -Dorg.gradle.daemon=false -Dorg.gradle.debug=false -Dorg.gradle.java.installations.auto-detect=false -Dorg.gradle.java.installations.auto-download=false --no-build-cache --no-configuration-cache --no-daemon"
 if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
     IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_GRADLE_FLAGS_OVERRIDE}" == 1 ]]; then
@@ -851,20 +851,20 @@ elif [[ "${IRONFOX_GRADLE_FLAGS_OVERRIDE}" == 1 ]]; then
 else
     IRONFOX_GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS_DEFAULT} ${IRONFOX_GRADLE_FLAGS}"
 fi
-readonly IRONFOX_GRADLE_FLAGS
+IRONFOX_GRADLE_FLAGS
 export IRONFOX_GRADLE_FLAGS
 
 # If Java options are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
-readonly IRONFOX_JAVA_OPTS_OVERRIDE_DEFAULT=0
+IRONFOX_JAVA_OPTS_OVERRIDE_DEFAULT=0
 if [[ -z "${IRONFOX_JAVA_OPTS_OVERRIDE+x}" ]]; then
     IRONFOX_JAVA_OPTS_OVERRIDE="${IRONFOX_JAVA_OPTS_OVERRIDE_DEFAULT}"
 fi
-readonly IRONFOX_JAVA_OPTS_OVERRIDE
+IRONFOX_JAVA_OPTS_OVERRIDE
 export IRONFOX_JAVA_OPTS_OVERRIDE
 
 # Java options
-readonly IRONFOX_JAVA_OPTS_DEFAULT='-Dhttps.protocols=TLSv1.3,TLSv1.2'
+IRONFOX_JAVA_OPTS_DEFAULT='-Dhttps.protocols=TLSv1.3,TLSv1.2'
 if [[ -z "${IRONFOX_JAVA_OPTS+x}" ]]; then
     IRONFOX_JAVA_OPTS="${IRONFOX_JAVA_OPTS_DEFAULT}"
 elif [[ "${IRONFOX_JAVA_OPTS_OVERRIDE}" == 1 ]]; then
@@ -872,21 +872,21 @@ elif [[ "${IRONFOX_JAVA_OPTS_OVERRIDE}" == 1 ]]; then
 else
     IRONFOX_JAVA_OPTS="${IRONFOX_JAVA_OPTS_DEFAULT} ${IRONFOX_JAVA_OPTS}"
 fi
-readonly IRONFOX_JAVA_OPTS
+IRONFOX_JAVA_OPTS
 export IRONFOX_JAVA_OPTS
 
 # If Node.js options are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
-readonly IRONFOX_NODE_OPTIONS_OVERRIDE_DEFAULT=0
+IRONFOX_NODE_OPTIONS_OVERRIDE_DEFAULT=0
 if [[ -z "${IRONFOX_NODE_OPTIONS_OVERRIDE+x}" ]]; then
     IRONFOX_NODE_OPTIONS_OVERRIDE="${IRONFOX_NODE_OPTIONS_OVERRIDE_DEFAULT}"
 fi
-readonly IRONFOX_NODE_OPTIONS_OVERRIDE
+IRONFOX_NODE_OPTIONS_OVERRIDE
 export IRONFOX_NODE_OPTIONS_OVERRIDE
 
 # Node.js options
 ### https://nodejs.org/api/cli.html#node-optionsoptions
-readonly IRONFOX_NODE_OPTIONS_DEFAULT='--jitless --tls-min-v1.2 --use-bundled-ca'
+IRONFOX_NODE_OPTIONS_DEFAULT='--jitless --tls-min-v1.2 --use-bundled-ca'
 if [[ -z "${IRONFOX_NODE_OPTIONS+x}" ]]; then
     IRONFOX_NODE_OPTIONS="${IRONFOX_NODE_OPTIONS_DEFAULT}"
 elif [[ "${IRONFOX_NODE_OPTIONS_OVERRIDE}" == 1 ]]; then
@@ -894,20 +894,20 @@ elif [[ "${IRONFOX_NODE_OPTIONS_OVERRIDE}" == 1 ]]; then
 else
     IRONFOX_NODE_OPTIONS="${IRONFOX_NODE_OPTIONS_DEFAULT} ${IRONFOX_NODE_OPTIONS}"
 fi
-readonly IRONFOX_NODE_OPTIONS
+IRONFOX_NODE_OPTIONS
 export IRONFOX_NODE_OPTIONS
 
 # If Rust flags are added, this determines whether they should be appended to our default flags (default),
 ## or if they should override them entirely
-readonly IRONFOX_RUST_FLAGS_OVERRIDE_DEFAULT=0
+IRONFOX_RUST_FLAGS_OVERRIDE_DEFAULT=0
 if [[ -z "${IRONFOX_RUST_FLAGS_OVERRIDE+x}" ]]; then
     IRONFOX_RUST_FLAGS_OVERRIDE="${IRONFOX_RUST_FLAGS_OVERRIDE_DEFAULT}"
 fi
-readonly IRONFOX_RUST_FLAGS_OVERRIDE
+IRONFOX_RUST_FLAGS_OVERRIDE
 export IRONFOX_RUST_FLAGS_OVERRIDE
 
 # Rust flags
-readonly IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Cincremental=false -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo -O'
+IRONFOX_RUST_FLAGS_DEFAULT='-Ccontrol-flow-guard=true -Cdebug-assertions=false -Cdebuginfo=0 -Cincremental=false -Clink-dead-code=false -Copt-level=3 -Coverflow-checks=true -Cstrip=debuginfo -O'
 if [[ -z "${IRONFOX_RUST_FLAGS+x}" ]]; then
     IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT}"
 elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
@@ -915,72 +915,72 @@ elif [[ "${IRONFOX_RUST_FLAGS_OVERRIDE}" == 1 ]]; then
 else
     IRONFOX_RUST_FLAGS="${IRONFOX_RUST_FLAGS_DEFAULT} ${IRONFOX_RUST_FLAGS}"
 fi
-readonly IRONFOX_RUST_FLAGS
+IRONFOX_RUST_FLAGS
 export IRONFOX_RUST_FLAGS
 
 # Whether we should use our prebuilt libraries (Default)
 ## (This is currently uniffi-bindgen and WASI SDK for us)
-readonly IRONFOX_NO_PREBUILDS_DEFAULT=0
+IRONFOX_NO_PREBUILDS_DEFAULT=0
 if [[ -z "${IRONFOX_NO_PREBUILDS+x}" ]]; then
     IRONFOX_NO_PREBUILDS="${IRONFOX_NO_PREBUILDS_DEFAULT}"
 fi
-readonly IRONFOX_NO_PREBUILDS
+IRONFOX_NO_PREBUILDS
 export IRONFOX_NO_PREBUILDS
 
 # Location to the Google Safe Browsing API keyfile (if Safe Browsing is desired)
-readonly IRONFOX_SB_GAPI_KEY_FILE_DEFAULT='null'
+IRONFOX_SB_GAPI_KEY_FILE_DEFAULT='null'
 if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
     IRONFOX_SB_GAPI_KEY_FILE="${IRONFOX_SB_GAPI_KEY_FILE_DEFAULT}"
 fi
-readonly IRONFOX_SB_GAPI_KEY_FILE
+IRONFOX_SB_GAPI_KEY_FILE
 export IRONFOX_SB_GAPI_KEY_FILE
 
 # Do we want Mach to actually build *something*? (Default)
 ## This will generally always be true, but we want to disable it for ex. packaging
-readonly IRONFOX_MACH_BUILD_DEFAULT=1
+IRONFOX_MACH_BUILD_DEFAULT=1
 if [[ -z "${IRONFOX_MACH_BUILD+x}" ]]; then
     IRONFOX_MACH_BUILD="${IRONFOX_MACH_BUILD_DEFAULT}"
 fi
-readonly IRONFOX_MACH_BUILD
+IRONFOX_MACH_BUILD
 export IRONFOX_MACH_BUILD
 
 # Should Mach target Android Components?
-readonly IRONFOX_MACH_TARGET_AC_DEFAULT=0
+IRONFOX_MACH_TARGET_AC_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_AC+x}" ]]; then
     IRONFOX_MACH_TARGET_AC="${IRONFOX_MACH_TARGET_AC_DEFAULT}"
 fi
 export IRONFOX_MACH_TARGET_AC
 
 # Should Mach target Fenix?
-readonly IRONFOX_MACH_TARGET_FENIX_DEFAULT=0
+IRONFOX_MACH_TARGET_FENIX_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_FENIX+x}" ]]; then
     IRONFOX_MACH_TARGET_FENIX="${IRONFOX_MACH_TARGET_FENIX_DEFAULT}"
 fi
 export IRONFOX_MACH_TARGET_FENIX
 
 # Should Mach target Gecko(View)?
-readonly IRONFOX_MACH_TARGET_GECKO_DEFAULT=0
+IRONFOX_MACH_TARGET_GECKO_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_GECKO+x}" ]]; then
     IRONFOX_MACH_TARGET_GECKO="${IRONFOX_MACH_TARGET_GECKO_DEFAULT}"
 fi
 export IRONFOX_MACH_TARGET_GECKO
 
 # Should Mach target ARM64 (GeckoView AAR) if we're creating a bundle?
-readonly IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT=0
+IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM64+x}" ]]; then
     IRONFOX_MACH_TARGET_BUNDLE_ARM64="${IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT}"
 fi
 export IRONFOX_MACH_TARGET_BUNDLE_ARM64
 
 # Should Mach target ARM (GeckoView AAR) if we're creating a bundle?
-readonly IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT=0
+IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM+x}" ]]; then
     IRONFOX_MACH_TARGET_BUNDLE_ARM="$IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT}"
 fi
 export IRONFOX_MACH_TARGET_BUNDLE_ARM
 
 # Should Mach target x86_64 (GeckoView AAR) if we're creating a bundle?
-readonly IRONFOX_MACH_TARGET_BUNDLE_X86_64_DEFAULT=0
+IRONFOX_MACH_TARGET_BUNDLE_X86_64_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_X86_64+x}" ]]; then
     IRONFOX_MACH_TARGET_BUNDLE_X86_64="${IRONFOX_MACH_TARGET_BUNDLE_X86_64_DEFAULT}"
 fi
@@ -989,95 +989,95 @@ export IRONFOX_MACH_TARGET_BUNDLE_X86_64
 # App signing
 
 # Location to the Android keystore file that we should use
-readonly IRONFOX_KEYSTORE_DEFAULT='null'
+IRONFOX_KEYSTORE_DEFAULT='null'
 if [[ -z "${IRONFOX_KEYSTORE+x}" ]]; then
     IRONFOX_KEYSTORE="${IRONFOX_KEYSTORE_DEFAULT}"
 fi
-readonly IRONFOX_KEYSTORE
+IRONFOX_KEYSTORE
 export IRONFOX_KEYSTORE
 
 # Location to the Android keystore pass file that we should use
-readonly IRONFOX_KEYSTORE_PASS_FILE_DEFAULT='null'
+IRONFOX_KEYSTORE_PASS_FILE_DEFAULT='null'
 if [[ -z "${IRONFOX_KEYSTORE_PASS_FILE+x}" ]]; then
     IRONFOX_KEYSTORE_PASS_FILE="${IRONFOX_KEYSTORE_PASS_FILE_DEFAULT}"
 fi
-readonly IRONFOX_KEYSTORE_PASS_FILE
+IRONFOX_KEYSTORE_PASS_FILE
 export IRONFOX_KEYSTORE_PASS_FILE
 
 # Alias of the Android keystore that we should use
-readonly IRONFOX_KEYSTORE_KEY_ALIAS_DEFAULT='null'
+IRONFOX_KEYSTORE_KEY_ALIAS_DEFAULT='null'
 if [[ -z "${IRONFOX_KEYSTORE_KEY_ALIAS+x}" ]]; then
     IRONFOX_KEYSTORE_KEY_ALIAS="${IRONFOX_KEYSTORE_KEY_ALIAS_DEFAULT}"
 fi
-readonly IRONFOX_KEYSTORE_KEY_ALIAS
+IRONFOX_KEYSTORE_KEY_ALIAS
 export IRONFOX_KEYSTORE_KEY_ALIAS
 
 # Location to the Android keystore key pass file that we should use
-readonly IRONFOX_KEYSTORE_KEY_PASS_FILE_DEFAULT='null'
+IRONFOX_KEYSTORE_KEY_PASS_FILE_DEFAULT='null'
 if [[ -z "${IRONFOX_KEYSTORE_KEY_PASS_FILE+x}" ]]; then
     IRONFOX_KEYSTORE_KEY_PASS_FILE="${IRONFOX_KEYSTORE_KEY_PASS_FILE_DEFAULT}"
 fi
-readonly IRONFOX_KEYSTORE_KEY_PASS_FILE
+IRONFOX_KEYSTORE_KEY_PASS_FILE
 export IRONFOX_KEYSTORE_KEY_PASS_FILE
 
 # Should we automatically sign our output APK(S) files?
-readonly IRONFOX_SIGN_DEFAULT=0
+IRONFOX_SIGN_DEFAULT=0
 if [ "${IRONFOX_KEYSTORE}" != 'null' ] && [ "${IRONFOX_KEYSTORE_PASS_FILE}" != 'null' ] && [ "${IRONFOX_KEYSTORE_KEY_ALIAS}" != 'null' ] && [ "${IRONFOX_KEYSTORE_KEY_PASS_FILE}" != 'null' ]; then
     IRONFOX_SIGN=1
 else
     IRONFOX_SIGN="${IRONFOX_SIGN_DEFAULT}"
 fi
-readonly IRONFOX_SIGN
+IRONFOX_SIGN
 export IRONFOX_SIGN
 
 # Locations for our GeckoView AAR archives
 
 ## Where our GeckoView ARM64 AAR archive is located within mozilla-central
-readonly IRONFOX_GV_AAR_ARM64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
+IRONFOX_GV_AAR_ARM64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_ARM64+x}" ]]; then
     IRONFOX_GV_AAR_ARM64="${IRONFOX_GV_AAR_ARM64_DEFAULT}"
 fi
-readonly IRONFOX_GV_AAR_ARM64
+IRONFOX_GV_AAR_ARM64
 export IRONFOX_GV_AAR_ARM64
 
 ## Where our GeckoView ARM AAR archive is located within mozilla-central
-readonly IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
+IRONFOX_GV_AAR_ARM_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_ARM+x}" ]]; then
     IRONFOX_GV_AAR_ARM="${IRONFOX_GV_AAR_ARM_DEFAULT}"
 fi
-readonly IRONFOX_GV_AAR_ARM
+IRONFOX_GV_AAR_ARM
 export IRONFOX_GV_AAR_ARM
 
 ## Where our GeckoView x86_64 AAR archive is located within mozilla-central
-readonly IRONFOX_GV_AAR_X86_64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
+IRONFOX_GV_AAR_X86_64_DEFAULT="${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip"
 if [[ -z "${IRONFOX_GV_AAR_X86_64+x}" ]]; then
     IRONFOX_GV_AAR_X86_64="${IRONFOX_GV_AAR_X86_64_DEFAULT}"
 fi
-readonly IRONFOX_GV_AAR_X86_64
+IRONFOX_GV_AAR_X86_64
 export IRONFOX_GV_AAR_X86_64
 
 source "${IRONFOX_VERSIONS}"
 
 # Node.js
-readonly IRONFOX_NODEJS_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/node"
+IRONFOX_NODEJS_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/node"
 if [[ -z "${IRONFOX_NODEJS+x}" ]]; then
     IRONFOX_NODEJS="${IRONFOX_NODEJS_DEFAULT}"
 fi
-readonly IRONFOX_NODEJS
+IRONFOX_NODEJS
 export IRONFOX_NODEJS
 
 # npm
-readonly IRONFOX_NPM_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/npm"
+IRONFOX_NPM_DEFAULT="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin/npm"
 if [[ -z "${IRONFOX_NPM+x}" ]]; then
     IRONFOX_NPM="${IRONFOX_NPM_DEFAULT}"
 fi
-readonly IRONFOX_NPM
+IRONFOX_NPM
 export IRONFOX_NPM
 
 # Set our external environment variables
-readonly IRONFOX_ENV_EXTERNAL="${IRONFOX_SCRIPTS}/env_external.sh"
+IRONFOX_ENV_EXTERNAL="${IRONFOX_SCRIPTS}/env_external.sh"
 source "${IRONFOX_ENV_EXTERNAL}"
 
 # We've now set our environment variables...
-readonly IRONFOX_SET_ENVS=1
+IRONFOX_SET_ENVS=1
 export IRONFOX_SET_ENVS

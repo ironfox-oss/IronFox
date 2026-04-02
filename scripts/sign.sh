@@ -18,13 +18,13 @@ export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
 # Functions
 
 function sign_apk() {
-    local readonly target="$1"
-    local readonly APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-unsigned.apk"
+    local target="$1"
+    local APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-unsigned.apk"
 
     if [ "${IRONFOX_CI}" == 1 ]; then
-        local readonly APK_OUT="${IRONFOX_APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${target}.apk"
+        local APK_OUT="${IRONFOX_APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${target}.apk"
     else
-        local readonly APK_OUT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-signed.apk"
+        local APK_OUT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-signed.apk"
     fi
 
     "${IRONFOX_APKSIGNER}" sign \
@@ -63,12 +63,12 @@ function sign_universal() {
 function sign_bundle() {
     echo_red_text 'Building signed bundleset...'
 
-    local readonly AAB_IN="${IRONFOX_OUTPUTS_FENIX_AAB}"
+    local AAB_IN="${IRONFOX_OUTPUTS_FENIX_AAB}"
 
     if [ "${IRONFOX_CI}" == 1 ]; then
-        local readonly APKS_OUT="${IRONFOX_APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
+        local APKS_OUT="${IRONFOX_APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
     else
-        local readonly APKS_OUT="${IRONFOX_OUTPUTS_FENIX_APKS}"
+        local APKS_OUT="${IRONFOX_OUTPUTS_FENIX_APKS}"
     fi
 
     "${IRONFOX_BUNDLETOOL}" build-apks \

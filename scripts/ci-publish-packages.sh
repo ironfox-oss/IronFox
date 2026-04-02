@@ -6,61 +6,62 @@
 set -euo pipefail
 
 # Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x "$(realpath $(dirname "$0"))/env.sh"
-fi
+bash -x "$(realpath $(dirname "$0"))/env.sh"
 source "$(realpath $(dirname "$0"))/env.sh"
 
-readonly GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
+# Include version info
+source "${IRONFOX_VERSIONS}"
+
+export GENERIC_PACKAGES_URL="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic"
 
 function upload_to_package_registry() {
-    local readonly upload_file="$1"
-    local readonly upload_package_name="$2"
-    local readonly upload_file_name="$(basename "${upload_file}")"
-    curl ${IRONFOX_CURL_FLAGS} --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
-        --upload-file "${upload_file}" \
-        "${GENERIC_PACKAGES_URL}/${upload_package_name}/${IRONFOX_VERSION}/${upload_file_name}"
+    local file="$1"
+    local package_name="$2"
+    local file_name="$(basename "${file}")"
+    curl --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
+        --upload-file "${file}" \
+        "${GENERIC_PACKAGES_URL}/${package_name}/${IRONFOX_VERSION}/${file_name}"
 }
 
-readonly BUILD_DIR="${CI_PROJECT_DIR}/build"
+export BUILD_DIR="${CI_PROJECT_DIR}/build"
 
 mkdir -vp "${BUILD_DIR}"
 
-readonly RELEASE_NOTES_FILE="${BUILD_DIR}/release-notes.md"
-readonly CHECKSUMS_FILE="${BUILD_DIR}/asset-checksums.txt"
-readonly RELEASE_FILE="${BUILD_DIR}/release.yml"
+RELEASE_NOTES_FILE="${BUILD_DIR}/release-notes.md"
+CHECKSUMS_FILE="${BUILD_DIR}/asset-checksums.txt"
+RELEASE_FILE="${BUILD_DIR}/release.yml"
 
 echo -n "" > "${RELEASE_NOTES_FILE}"
 echo -n "" > "${CHECKSUMS_FILE}"
 
 declare -a assets
 function upload_asset() {
-    local readonly asset_package_name="$1"
-    local readonly asset_file="$2"
-    local readonly asset_file_name="$(basename "${asset_file}")"
+    package_name="$1"
+    file="$2"
+    file_name="$(basename "${file}")"
 
-    echo "\`${asset_file_name}\`: " >> "${CHECKSUMS_FILE}"
+    echo "\`${file_name}\`: " >> "${CHECKSUMS_FILE}"
     echo "\`\`\`sh" >> "${CHECKSUMS_FILE}"
-    echo "$(sha512sum -b "${asset_file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
+    echo "$(sha512sum -b "${file}" | cut -d ' ' -f 1)" >> "${CHECKSUMS_FILE}"
     echo "\`\`\`sh" >> "${CHECKSUMS_FILE}"
     echo '' >> "${CHECKSUMS_FILE}"
-    upload_to_package_registry "${asset_file}" "${asset_package_name}"
-    assets+=("{\"name\": \"${asset_file_name}\",\"url\": \"${GENERIC_PACKAGES_URL}/${asset_package_name}/${IRONFOX_VERSION}/${asset_file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${asset_file_name}\"}")
+    upload_to_package_registry "${file}" "${package_name}"
+    assets+=("{\"name\": \"${file_name}\",\"url\": \"${GENERIC_PACKAGES_URL}/${package_name}/${IRONFOX_VERSION}/${file_name}\",\"link_type\": \"package\",\"direct_asset_path\": \"/${file_name}\"}")
 }
 
 # Upload packages to package registry
 for apk in "${IRONFOX_APK_ARTIFACTS}"/*.apk; do
-    readonly package_name_apk="apk"
-    upload_asset "${package_name_apk}" "${apk}"
+    package_name="apk"
+    upload_asset "${package_name}" "${apk}"
 
 done
 for apks in "${IRONFOX_APKS_ARTIFACTS}"/*.apks; do
-    readonly package_name_apkset="apkset"
-    upload_asset "${package_name_apkset}" "${apks}"
+    package_name="apkset"
+    upload_asset "${package_name}" "${apks}"
 done
 
 {
-    readonly changelog_file="${CI_PROJECT_DIR}/changelogs/${IRONFOX_VERSION}.md"
+    changelog_file="${CI_PROJECT_DIR}/changelogs/${IRONFOX_VERSION}.md"
     if [[ -f "${changelog_file}" ]]; then
         cat "${changelog_file}"
     fi
@@ -100,7 +101,7 @@ done
     echo "name: IronFox v${IRONFOX_VERSION}"
     echo "tag-name: v${IRONFOX_VERSION}"
     echo "description: |"
-    "${IRONFOX_AWK}" '{print "  " $0}' < "${RELEASE_NOTES_FILE}"
+    awk '{print "  " $0}' < "${RELEASE_NOTES_FILE}"
     echo "assets-link:"
     for asset in "${assets[@]}"; do
         echo "  - '${asset}'"

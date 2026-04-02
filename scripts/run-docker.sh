@@ -4,15 +4,15 @@
 
 set -euo pipefail
 
-readonly script="$(realpath "$0")"
-readonly script_dir="$(dirname "${script}")"
-readonly root_dir="$(dirname "${script_dir}")"
+script="$(realpath "$0")"
+script_dir="$(dirname "${script}")"
+root_dir="$(dirname "${script_dir}")"
 
 # Configuration
-readonly IMAGE_NAME="ironfox-builder"
-readonly CONTAINER_NAME="ironfox-builder"
-readonly DOCKERFILE_PATH="${root_dir}/Dockerfile"
-readonly PROMPT='\[\033[1;36m\]🐳\[\033[0m\] \[\033[1;34m\]\u@ironfox\[\033[0m\]:\[\033[1;33m\]\w\[\033[0m\]\$ '
+IMAGE_NAME="ironfox-builder"
+CONTAINER_NAME="ironfox-builder"
+DOCKERFILE_PATH="${root_dir}/Dockerfile"
+PROMPT='\[\033[1;36m\]🐳\[\033[0m\] \[\033[1;34m\]\u@ironfox\[\033[0m\]:\[\033[1;33m\]\w\[\033[0m\]\$ '
 
 # Initialize variables
 MOUNT_ARGS=()
@@ -108,7 +108,7 @@ function build_image() {
 function create_container() {
     echo "Creating container '${CONTAINER_NAME}'..."
     
-    local readonly docker_cmd=(
+    local docker_cmd=(
         "docker" "run" "-d" "-it"
         "--name" "${CONTAINER_NAME}"
         "-v" "${root_dir}:/app"
@@ -128,7 +128,7 @@ function start_container() {
 }
 
 function execute_in_container() {
-    local readonly cmd=("$@")
+    local cmd=("$@")
     
     if [[ ${#cmd[@]} -eq 0 ]]; then
         echo "Starting interactive shell in container '${CONTAINER_NAME}'..."

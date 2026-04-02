@@ -7,21 +7,7 @@ set -eu
 set -o pipefail
 set -o xtrace
 
-export IRONFOX_CI=1
-
-if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
-    # Target release
-    export IRONFOX_RELEASE=1
-fi
-
-# Set-up our environment
-if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
-fi
-source $(dirname $0)/env.sh
-
-# Include utilities
-source "${IRONFOX_UTILS}"
+source $(dirname $0)/utilities.sh
 
 case "${BUILD_VARIANT}" in
 arm64|arm|x86_64|bundle)
@@ -31,6 +17,17 @@ arm64|arm|x86_64|bundle)
     exit 1
     ;;
 esac
+
+export IRONFOX_CI=1
+
+if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
+    # Target release
+    export IRONFOX_RELEASE=1
+fi
+
+# Set-up our environment
+bash -x $(dirname $0)/env.sh
+source $(dirname $0)/env.sh
 
 # Fail-fast in case the signing key is unavailable or empty file
 if ! [[ -f "${IRONFOX_KEYSTORE}" ]]; then
