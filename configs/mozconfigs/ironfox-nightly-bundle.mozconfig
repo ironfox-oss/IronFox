@@ -19,6 +19,5 @@ else
     ## Set the destination object (output) directory
     mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj/ironfox-nightly-bundle
     mk_add_options OBJDIR=@TOPSRCDIR@/obj/ironfox-nightly-bundle
-    readonly MOZ_OBJDIR="${IRONFOX_GECKO}/obj/ironfox-nightly-bundle"
-    export MOZ_OBJDIR
+    export MOZ_OBJDIR="${IRONFOX_GECKO}/obj/ironfox-nightly-bundle"
 fi

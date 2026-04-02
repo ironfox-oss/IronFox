@@ -1,9 +1,7 @@
 
 # Make it IronFox...
 ac_add_options --with-distribution-id='org.ironfoxoss'
-readonly MOZ_APP_VENDOR='IronFox OSS'
-readonly MOZ_SOURCE_REPO='https://gitlab.com/ironfox-oss/IronFox/-'
-export MOZ_APP_VENDOR
-export MOZ_SOURCE_REPO
+export MOZ_APP_VENDOR='IronFox OSS'
+export MOZ_SOURCE_REPO='https://gitlab.com/ironfox-oss/IronFox/-'
 
 . "${IRONFOX_MOZCONFIGS}/branding/env.mozconfig"
