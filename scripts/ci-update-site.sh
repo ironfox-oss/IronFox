@@ -11,9 +11,6 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
-# Include version info
-source "${IRONFOX_VERSIONS}"
-
 git clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${TARGET_REPO_PATH}.git" target-repo
 cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 

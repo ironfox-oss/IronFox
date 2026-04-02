@@ -155,7 +155,6 @@ build-aar:
   artifacts:
     untracked: false
     when: always
-    when: always
     access: all
     expire_in: "30 days"
     paths:
@@ -193,7 +192,6 @@ build-final:
     - bash -x scripts/ci-build.sh
   artifacts:
     untracked: false
-    when: always
     when: always
     access: all
     expire_in: "30 days"
