@@ -94,7 +94,7 @@ if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
     sign_universal
 
     # Build signed APK set
-    sign_bundle
+    # sign_bundle
 elif [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
     # Sign ARM64 APK
     sign_arm64
