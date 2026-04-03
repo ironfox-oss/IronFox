@@ -34,7 +34,7 @@ fi
 # Sign IronFox
 source "${IRONFOX_ENV_BUILD}"
 
-if false; then
+if [ "${IRONFOX_SIGN}" == 1 ]; then
     if [ "${IRONFOX_LOG_SIGN}" == 1 ]; then
         SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
 
