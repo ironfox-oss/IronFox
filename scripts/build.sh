@@ -26,13 +26,13 @@ if [ "${IRONFOX_LOG_BUILD}" == 1 ]; then
     # Ensure our log directory exists
     mkdir -vp "${IRONFOX_LOG_DIR}"
 
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
-else
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}"
+    # bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
+# else
+    # bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}"
 fi
 
 # Sign IronFox
-source "${IRONFOX_ENV_BUILD}"
+# source "${IRONFOX_ENV_BUILD}"
 
 if [ "${IRONFOX_SIGN}" == 1 ]; then
     if [ "${IRONFOX_LOG_SIGN}" == 1 ]; then
@@ -46,10 +46,10 @@ if [ "${IRONFOX_SIGN}" == 1 ]; then
         # Ensure our log directory exists
         mkdir -vp "${IRONFOX_LOG_DIR}"
 
-        if [ "${IRONFOX_CI}" == 1 ] && [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
+        #if [ "${IRONFOX_CI}" == 1 ] && [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
             # CI should only try to sign bundle builds (which create/include all APKs)
-            exit 0
-        fi
+            #exit 0
+        #fi
 
         bash -x "${IRONFOX_SCRIPTS}/sign.sh" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
     else

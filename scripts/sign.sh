@@ -5,7 +5,7 @@ set -euo pipefail
 # Set-up our environment
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
-source "${IRONFOX_ENV_BUILD}"
+# source "${IRONFOX_ENV_BUILD}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
@@ -80,32 +80,32 @@ function sign_bundle() {
     echo_green_text 'SUCCESS: Created signed bundleset'
 }
 
-if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if true; then
     # Sign ARM64 APK
-    sign_arm64
+    # sign_arm64
 
     # Sign ARM APK
-    sign_arm
+    # sign_arm
 
     # Sign x86_64 APK
-    sign_x86_64
+    # sign_x86_64
 
     # Sign universal APK
-    sign_universal
+    # sign_universal
 
     # Build signed APK set
-    # sign_bundle
-elif [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
+    sign_bundle
+#elif [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
     # Sign ARM64 APK
-    sign_arm64
-elif [ "${IRONFOX_TARGET_ARCH}" == 'arm' ]; then
+#    sign_arm64
+#elif [ "${IRONFOX_TARGET_ARCH}" == 'arm' ]; then
     # Sign ARM APK
-    sign_arm
-elif [ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]; then
+#    sign_arm
+#elif [ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]; then
     # Sign x86_64 APK
-    sign_x86_64
+#    sign_x86_64
 else
-    echo_red_text "ERROR: Unknown target architecture: ${IRONFOX_TARGET_ARCH}"
+    #echo_red_text "ERROR: Unknown target architecture: ${IRONFOX_TARGET_ARCH}"
     exit 1
 fi
 
