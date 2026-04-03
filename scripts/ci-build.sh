@@ -41,12 +41,10 @@ if ! [[ -s "${IRONFOX_KEYSTORE}"  ]]; then
 fi
 
 # Get sources
-# bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
-bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'bundletool'
-bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-17'
+bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
 
 # Prepare sources
-# bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
+bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
 # Build
 bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"
