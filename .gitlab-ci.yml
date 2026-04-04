@@ -162,10 +162,12 @@ build-aar:
     <<: *build_variables
   <<: *build_setup_steps
   script:
+    - unset BUILD_FAILED
     - echo "Building AAR..."
-    - bash -x scripts/ci-build.sh || BUILD_FAILED=$?
+    - bash -x scripts/ci-build.sh
+    - BUILD_EXIT=$?
     - bash -x scripts/ci-compress.sh
-    - '[ -n "$BUILD_FAILED" ] && exit $BUILD_FAILED'
+    - '[ "$BUILD_EXIT" -ne 0 ] && exit $BUILD_EXIT'
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -197,10 +199,12 @@ build-final:
     <<: *build_variables
   <<: *build_setup_steps
   script:
+    - unset BUILD_FAILED
     - echo "Building Bundle..."
-    - bash -x scripts/ci-build.sh|| BUILD_FAILED=$?
+    - bash -x scripts/ci-build.sh
+    - BUILD_EXIT=$?
     - bash -x scripts/ci-compress.sh
-    - '[ -n "$BUILD_FAILED" ] && exit $BUILD_FAILED'
+    - '[ "$BUILD_EXIT" -ne 0 ] && exit $BUILD_EXIT'
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
