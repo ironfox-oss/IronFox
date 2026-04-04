@@ -109,13 +109,6 @@ else
     exit 1
 fi
 
-if [ "${IRONFOX_CI}" == 1 ]; then
-    ## For now, remove .idsig files to reduce size of artifacts...
-    pushd "${IRONFOX_OUTPUTS_APK}"
-    rm -f *.idsig
-    popd
-fi
-
 if [ "${IRONFOX_CI}" != 1 ]; then
     echo_red_text 'Would you like to install IronFox to a connected device?'
     read -p "If you'd like to install IronFox, please ensure your device is connected before proceeding. [y/N] " -n 1 -r
