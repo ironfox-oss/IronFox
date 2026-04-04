@@ -23,7 +23,7 @@ function ironfox_package_artifacts() {
     for include in $includes; do
         path="${IRONFOX_ARTIFACTS}/$include"
         if [[ -e "$path" ]]; then
-            paths+=("$path")
+            paths+=("$include")
         else
             echo_red_text "Warning: $path does not exist!"
         fi
