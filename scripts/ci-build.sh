@@ -28,6 +28,17 @@ fi
 bash -x $(dirname $0)/env.sh
 source $(dirname $0)/env.sh
 
+# Extract our GeckoView AAR artifacts
+if [ "${BUILD_VARIANT}" == 'bundle' ]; then
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-arm64"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-arm"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-x86_64"
+
+    cp -vf "${IRONFOX_DOWNLOADS}/geckoview-arm64/aar/geckoview-arm64-v8a.zip" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
+    cp -vf "${IRONFOX_DOWNLOADS}/geckoview-arm/aar/geckoview-armeabi-v7a.zip" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
+    cp -vf "${IRONFOX_DOWNLOADS}/geckoview-x86_64/aar/geckoview-x86_64.zip" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
+fi
+
 # Fail-fast in case the signing key is unavailable or empty file
 if ! [[ -f "${IRONFOX_KEYSTORE}" ]]; then
     echo_red_text "ERROR: Keystore file ${IRONFOX_KEYSTORE} does not exist!"

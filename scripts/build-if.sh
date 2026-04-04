@@ -604,16 +604,9 @@ function build_gecko_x86_64() {
 function build_gecko_bundle() {
     # Bundle
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
-        export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
-        export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
-    else
-        export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-        export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-        export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
-    fi
+    export MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
+    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
+    export MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
 
     pushd "${IRONFOX_GECKO}"
     echo_red_text 'Creating GeckoView fat AAR...'
