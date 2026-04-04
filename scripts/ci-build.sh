@@ -47,6 +47,3 @@ bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
 # Build
 bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"
-
-# Compress artifacts
-bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh"

@@ -164,6 +164,7 @@ build-aar:
   script:
     - echo "Building AAR..."
     - bash -x scripts/ci-build.sh
+    - bash -x scripts/ci-compress.sh
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -199,6 +200,7 @@ build-final:
     - BUILD_LOG_FILE="$CI_PROJECT_DIR/artifacts/logs/sign-temp.log"
     - echo "Building Bundle..." >> "$BUILD_LOG_FILE" 2>&1
     - bash -x scripts/ci-build.sh >> "$BUILD_LOG_FILE" 2>&1
+    - bash -x scripts/ci-compress.sh
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"

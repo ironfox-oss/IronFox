@@ -8,21 +8,22 @@ set -o pipefail
 set -o xtrace
 
 source "$(dirname "$0")/utilities.sh"
-
-if [[ -z "${IRONFOX_CI+x}" ]]; then
-    echo_red_text "$0 must be run in a CI environment"
-    exit 1
-fi
+source "$(dirname "$0")"/env.sh
 
 artifact_name="${IRONFOX_JOB_ARTIFACT_NAME}.tar.xz"
 artifact_path="${IRONFOX_ARTIFACTS}/${artifact_name}"
 
 function ironfox_package_artifacts() {
+    # For debugging purposes
+    echo "Listing available artifacts"
+    find "$IRONFOX_ARTIFACTS"
+
     includes=$(echo "$IRONFOX_ARTIFACT_INCLUDES" | tr ";" "\n")
     paths=()
     for include in $includes; do
         path="${IRONFOX_ARTIFACTS}/$include"
         if [[ -e "$path" ]]; then
+            echo "Including $path"
             paths+=("$include")
         else
             echo_red_text "Warning: $path does not exist!"
@@ -35,6 +36,7 @@ function ironfox_package_artifacts() {
         return
     fi
 
+    mkdir -p "${IRONFOX_ARTIFACTS}"
     tar cvJf "$artifact_path" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}"
 }
 
