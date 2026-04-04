@@ -14,7 +14,7 @@ if [[ -z "${IRONFOX_CI+x}" ]]; then
     exit 1
 fi
 
-artifact_name="${CI_JOB_NAME_SLUG}.tar.xz"
+artifact_name="${IRONFOX_JOB_ARTIFACT_NAME}.tar.xz"
 artifact_path="${IRONFOX_ARTIFACTS}/${artifact_name}"
 
 function ironfox_package_artifacts() {
