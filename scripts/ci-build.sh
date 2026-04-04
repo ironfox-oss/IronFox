@@ -10,8 +10,7 @@ set -o xtrace
 source $(dirname $0)/utilities.sh
 
 case "${BUILD_VARIANT}" in
-arm64|arm|x86_64|bundle)
-    ;;
+arm64 | arm | x86_64 | bundle) ;;
 *)
     echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
     exit 1
@@ -35,7 +34,7 @@ if ! [[ -f "${IRONFOX_KEYSTORE}" ]]; then
     exit 1
 fi
 
-if ! [[ -s "${IRONFOX_KEYSTORE}"  ]]; then
+if ! [[ -s "${IRONFOX_KEYSTORE}" ]]; then
     echo_red_text "ERROR: Keystore file ${IRONFOX_KEYSTORE} is empty!"
     exit 1
 fi
@@ -48,3 +47,6 @@ bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
 # Build
 bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"
+
+# Compress artifacts
+bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh"
