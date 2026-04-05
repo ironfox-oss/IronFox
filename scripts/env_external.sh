@@ -9,291 +9,454 @@
 ## Use the IronFox equivalent variables (at `env_common.sh`) instead.
 
 # Compiler flags
-export TARGET_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
-export TARGET_CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly TARGET_CFLAGS="${IRONFOX_COMPILER_FLAGS}"
+readonly TARGET_CXXFLAGS="${IRONFOX_COMPILER_FLAGS}"
+export TARGET_CFLAGS
+export TARGET_CXXFLAGS
 
 # Gradle flags
-export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS}"
+GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS}"
+export GRADLE_FLAGS
 
 # Rust flags
-export CARGO_BUILD_RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
-export RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
+CARGO_BUILD_RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
+RUSTDOCFLAGS="${IRONFOX_RUST_FLAGS}"
+export CARGO_BUILD_RUSTDOCFLAGS
+export RUSTDOCFLAGS
 
 # Android SDK
 ## https://developer.android.com/tools/variables
-export ANDROID_HOME="${IRONFOX_ANDROID_SDK}"
-export ANDROID_SDK_ROOT="${IRONFOX_ANDROID_SDK}"
+readonly ANDROID_HOME="${IRONFOX_ANDROID_SDK}"
+readonly ANDROID_SDK_ROOT="${IRONFOX_ANDROID_SDK}"
+export ANDROID_HOME
+export ANDROID_SDK_ROOT
 
 ## Android SDK preferences
-export ANDROID_USER_HOME="${IRONFOX_BUILD}/.android"
+readonly ANDROID_USER_HOME="${IRONFOX_BUILD}/.android"
+export ANDROID_USER_HOME
 
 # Android NDK
-export ANDROID_NDK_HOME="${IRONFOX_ANDROID_NDK}"
-export ANDROID_NDK_ROOT="${IRONFOX_ANDROID_NDK}"
+readonly ANDROID_NDK_HOME="${IRONFOX_ANDROID_NDK}"
+readonly ANDROID_NDK_ROOT="${IRONFOX_ANDROID_NDK}"
+export ANDROID_NDK_HOME
+export ANDROID_NDK_ROOT
 
 # Gradle cache
-export CACHEDIR="${IRONFOX_GRADLE_CACHE}"
+readonly CACHEDIR="${IRONFOX_GRADLE_CACHE}"
+export CACHEDIR
 
 # Gradle home
-export GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
+readonly GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
+export GRADLE_USER_HOME
+
+# IronFox prebuilds
+readonly IRONFOX_PREBUILDS_AWK="${IRONFOX_AWK}"
+readonly IRONFOX_PREBUILDS_CARGO_COLORED_OUTPUT="${IRONFOX_CARGO_COLORED_OUTPUT}"
+readonly IRONFOX_PREBUILDS_CARGO_PROGRESS_BAR="${IRONFOX_CARGO_PROGRESS_BAR}"
+readonly IRONFOX_PREBUILDS_CIPHERS="${IRONFOX_CIPHERS}"
+readonly IRONFOX_PREBUILDS_CURL_FLAGS_OVERRIDE=1
+readonly IRONFOX_PREBUILDS_CURL_FLAGS="${IRONFOX_CURL_FLAGS}"
+readonly IRONFOX_PREBUILDS_MAKE="${IRONFOX_MAKE}"
+readonly IRONFOX_PREBUILDS_NPROC="${IRONFOX_NPROC}"
+readonly IRONFOX_PREBUILDS_RUSTUP_COLORED_OUTPUT="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
+readonly IRONFOX_PREBUILDS_RUSTUP_PROGRESS_BAR="${IRONFOX_RUSTUP_PROGRESS_BAR}"
+readonly IRONFOX_PREBUILDS_SED="${IRONFOX_SED}"
+readonly IRONFOX_PREBUILDS_TAR="${IRONFOX_TAR}"
+export IRONFOX_PREBUILDS_AWK
+export IRONFOX_PREBUILDS_CARGO_COLORED_OUTPUT
+export IRONFOX_PREBUILDS_CARGO_PROGRESS_BAR
+export IRONFOX_PREBUILDS_CIPHERS
+export IRONFOX_PREBUILDS_CURL_FLAGS_OVERRIDE
+export IRONFOX_PREBUILDS_CURL_FLAGS
+export IRONFOX_PREBUILDS_MAKE
+export IRONFOX_PREBUILDS_NPROC
+export IRONFOX_PREBUILDS_RUSTUP_COLORED_OUTPUT
+export IRONFOX_PREBUILDS_RUSTUP_PROGRESS_BAR
+export IRONFOX_PREBUILDS_SED
+export IRONFOX_PREBUILDS_TAR
 
 # Java home
-export JAVA_HOME="${IRONFOX_JAVA_HOME}"
+JAVA_HOME="${IRONFOX_JAVA_HOME}"
+export JAVA_HOME
+
+# Java options
+readonly GRADLE_OPTS="${IRONFOX_JAVA_OPTS}"
+readonly JAVA_OPTS="${IRONFOX_JAVA_OPTS}"
+readonly JAVA_TOOL_OPTIONS="${IRONFOX_JAVA_OPTS}"
+readonly JDK_JAVA_OPTIONS="${IRONFOX_JAVA_OPTS}"
+export GRADLE_OPTS
+export JAVA_OPTS
+export JAVA_TOOL_OPTIONS
+export JDK_JAVA_OPTIONS
 
 # llvm-profdata
-export LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA}"
+readonly LLVM_PROFDATA="${IRONFOX_LLVM_PROFDATA}"
+export LLVM_PROFDATA
 
 # Mach
 ## https://firefox-source-docs.mozilla.org/mach/usage.html#user-settings
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#95
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#284
-export DISABLE_TELEMETRY=1
-export MACHRC="${IRONFOX_CONFIGS}/mach/machrc"
-export MOZCONFIG="${IRONFOX_MOZCONFIGS}/ironfox.mozconfig"
+readonly DISABLE_TELEMETRY=1
+readonly MACHRC="${IRONFOX_CONFIGS}/mach/machrc"
+readonly MOZCONFIG="${IRONFOX_MOZCONFIGS}/ironfox.mozconfig"
+export DISABLE_TELEMETRY
+export MACHRC
+export MOZCONFIG
 
 # microG
-export GRADLE_MICROG_VERSION_WITHOUT_GIT=1
+readonly GRADLE_MICROG_VERSION_WITHOUT_GIT=1
+export GRADLE_MICROG_VERSION_WITHOUT_GIT
 
 # mozbuild
-export MOZBUILD_STATE_PATH="${IRONFOX_MOZBUILD}"
+readonly MOZBUILD_STATE_PATH="${IRONFOX_MOZBUILD}"
+export MOZBUILD_STATE_PATH
 
 # No-op Taskcluster
 ## This should help ensure we don't fetch Mozilla artifacts/prebuilds
-export TASKCLUSTER_PROXY_URL='https://noop.invalid'
-export TASKCLUSTER_ROOT_URL='https://noop.invalid'
+readonly TASKCLUSTER_PROXY_URL='https://noop.invalid'
+readonly TASKCLUSTER_ROOT_URL='https://noop.invalid'
+export TASKCLUSTER_PROXY_URL
+export TASKCLUSTER_ROOT_URL
 
 # Node.js
 ## https://nodejs.org/api/cli.html#environment-variables-1
 
 ## Disable compile cache
 ### https://nodejs.org/api/cli.html#node-disable-compile-cache1
-export NODE_DISABLE_COMPILE_CACHE=1
+readonly NODE_DISABLE_COMPILE_CACHE=1
+export NODE_DISABLE_COMPILE_CACHE
 
 ## Disable the system CA root store
 ### https://nodejs.org/api/cli.html#node-use-system-ca1
-export NODE_USE_SYSTEM_CA=0
+readonly NODE_USE_SYSTEM_CA=0
+export NODE_USE_SYSTEM_CA
 
 ## Do not attempt to use a system proxy
 ### https://nodejs.org/api/cli.html#node-use-env-proxy1
-export NODE_USE_ENV_PROXY=0
+readonly NODE_USE_ENV_PROXY=0
+export NODE_USE_ENV_PROXY
 
 ## Enforce certificate validation
 ### https://nodejs.org/api/cli.html#node-tls-reject-unauthorizedvalue
-export NODE_TLS_REJECT_UNAUTHORIZED=1
+readonly NODE_TLS_REJECT_UNAUTHORIZED=1
+export NODE_TLS_REJECT_UNAUTHORIZED
 
 ## Ensure npm always installs production/release modules
-export NODE_ENV='production'
+readonly NODE_ENV='production'
+export NODE_ENV
 
 ## Node options
-export NODE_OPTIONS="${IRONFOX_NODE_OPTIONS}"
-export npm_config_node_options="${IRONFOX_NODE_OPTIONS}"
+readonly NODE_OPTIONS="${IRONFOX_NODE_OPTIONS}"
+readonly npm_config_node_options="${IRONFOX_NODE_OPTIONS}"
+export NODE_OPTIONS
+export npm_config_node_options
 
 # npm
 
 ## Always use our npm config file
 ## https://docs.npmjs.com/cli/v11/using-npm/config#npmrc-files
-export NPM_CONFIG_GLOBALCONFIG="${IRONFOX_CONFIGS}/npm/.npmrc"
-export npm_config_globalconfig="${IRONFOX_CONFIGS}/npm/.npmrc"
+readonly NPM_CONFIG_GLOBALCONFIG="${IRONFOX_CONFIGS}/npm/.npmrc"
+readonly npm_config_globalconfig="${IRONFOX_CONFIGS}/npm/.npmrc"
+export NPM_CONFIG_GLOBALCONFIG
+export npm_config_globalconfig
 
 ### Always install dependencies properly
-export npm_config_install_links='true'
+readonly npm_config_install_links='true'
+export npm_config_install_links
 
 ### Disable "funding" nags
-export npm_config_fund='false'
+readonly npm_config_fund='false'
+export npm_config_fund
 
 ### Disable submission of audit reports
-export npm_config_audit='false'
+readonly npm_config_audit='false'
+export npm_config_audit
 
 ### Enable verbose logging
-export npm_config_loglevel='verbose'
+readonly npm_config_loglevel='verbose'
+export npm_config_loglevel
 
 ### Enforce SSL key validation
-export npm_config_strict_ssl='true'
+readonly npm_config_strict_ssl='true'
+export npm_config_strict_ssl
 
 ### Write exact versions to package.json/package_lock.json
-export npm_config_save_exact='true'
+readonly npm_config_save_exact='true'
+export npm_config_save_exact
 
 ### Set cache directory
-export npm_config_cache="${IRONFOX_NPM_CACHE}"
+readonly npm_config_cache="${IRONFOX_NPM_CACHE}"
+export npm_config_cache
 
 # NSS
-export NSS_DIR="${IRONFOX_NSS_DIR}"
-export NSS_STATIC=1
+readonly NSS_DIR="${IRONFOX_NSS_DIR}"
+readonly NSS_STATIC=1
+export NSS_DIR
+export NSS_STATIC
 
 # nvm
-export NVM_DIR="${IRONFOX_NVM}"
+readonly NVM_DIR="${IRONFOX_NVM}"
+export NVM_DIR
 
 ## This is necessary to prevent nvm from automatically trying to modify the system PATH
-export PROFILE='/dev/null'
+readonly PROFILE='/dev/null'
+export PROFILE
 
 # Phoenix
-export PHOENIX_ANDROID_ONLY=1
-export PHOENIX_AWK="${IRONFOX_AWK}"
-export PHOENIX_CURL_FLAGS="${IRONFOX_CURL_FLAGS}"
-export PHOENIX_CURL_FLAGS_OVERRIDE=1
-export PHOENIX_EXTENDED_ONLY=1
-export PHOENIX_EXTRA_CFG=1
-export PHOENIX_EXTRA_CFG_FILE="${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
-export PHOENIX_EXTRA_CFG_OUTPUT_DIR="${IRONFOX_GECKO}/ironfox/prefs"
-export PHOENIX_EXTRA_EXTENDED_OUTPUT_FILENAME_ANDROID='ironfox'
-export PHOENIX_EXTRA_POLICIES_ANDROID=1
-export PHOENIX_EXTRA_POLICIES_FILE_ANDROID="${IRONFOX_PATCHES}/build/gecko/policies.json"
-export PHOENIX_EXTRA_POLICIES_OUTPUT_DIR_ANDROID="${IRONFOX_GECKO}/ironfox/prefs"
-export PHOENIX_PYENV_DIR="${IRONFOX_PYENV_DIR}"
-export PHOENIX_PYTHON="${IRONFOX_PYTHON}"
-export PHOENIX_PYTHON_DIR="${IRONFOX_PYTHON_DIR}"
-export PHOENIX_SED="${IRONFOX_SED}"
-export PHOENIX_TAR="${IRONFOX_TAR}"
-export PHOENIX_UV_CACHE="${IRONFOX_UV_CACHE}"
-export PHOENIX_UV_DIR="${IRONFOX_UV_DIR}"
-export PHOENIX_UV_LOCAL="${IRONFOX_UV_LOCAL}"
-export PHOENIX_UV_PYTHON="${IRONFOX_UV_PYTHON}"
-export PHOENIX_UV_TOOLS="${IRONFOX_UV_TOOLS}"
-export PHOENIX_SPECS=0
+readonly PHOENIX_ANDROID_ONLY=1
+readonly PHOENIX_AWK="${IRONFOX_AWK}"
+readonly PHOENIX_CIPHERS="${IRONFOX_CIPHERS}"
+readonly PHOENIX_CURL_FLAGS="${IRONFOX_CURL_FLAGS}"
+readonly PHOENIX_CURL_FLAGS_OVERRIDE=1
+readonly PHOENIX_EXTENDED_ONLY=1
+readonly PHOENIX_EXTRA_CFG=1
+readonly PHOENIX_EXTRA_CFG_FILE="${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
+readonly PHOENIX_EXTRA_CFG_OUTPUT_DIR="${IRONFOX_GECKO}/ironfox/prefs"
+readonly PHOENIX_EXTRA_EXTENDED_OUTPUT_FILENAME_ANDROID='ironfox'
+readonly PHOENIX_EXTRA_POLICIES_ANDROID=1
+readonly PHOENIX_EXTRA_POLICIES_FILE_ANDROID="${IRONFOX_PATCHES}/build/gecko/policies.json"
+readonly PHOENIX_EXTRA_POLICIES_OUTPUT_DIR_ANDROID="${IRONFOX_GECKO}/ironfox/prefs"
+readonly PHOENIX_PYENV_DIR="${IRONFOX_PYENV_DIR}"
+readonly PHOENIX_PYTHON="${IRONFOX_PYTHON}"
+readonly PHOENIX_PYTHON_DIR="${IRONFOX_PYTHON_DIR}"
+readonly PHOENIX_SED="${IRONFOX_SED}"
+readonly PHOENIX_SPECS=0
+readonly PHOENIX_TAR="${IRONFOX_TAR}"
+readonly PHOENIX_UV_CACHE="${IRONFOX_UV_CACHE}"
+readonly PHOENIX_UV_DIR="${IRONFOX_UV_DIR}"
+readonly PHOENIX_UV_LOCAL="${IRONFOX_UV_LOCAL}"
+readonly PHOENIX_UV_PYTHON="${IRONFOX_UV_PYTHON}"
+readonly PHOENIX_UV_TOOLS="${IRONFOX_UV_TOOLS}"
+export PHOENIX_ANDROID_ONLY
+export PHOENIX_AWK
+export PHOENIX_CIPHERS
+export PHOENIX_CURL_FLAGS
+export PHOENIX_CURL_FLAGS_OVERRIDE
+export PHOENIX_EXTENDED_ONLY
+export PHOENIX_EXTRA_CFG
+export PHOENIX_EXTRA_CFG_FILE
+export PHOENIX_EXTRA_CFG_OUTPUT_DIR
+export PHOENIX_EXTRA_EXTENDED_OUTPUT_FILENAME_ANDROID
+export PHOENIX_EXTRA_POLICIES_ANDROID
+export PHOENIX_EXTRA_POLICIES_FILE_ANDROID
+export PHOENIX_EXTRA_POLICIES_OUTPUT_DIR_ANDROID
+export PHOENIX_PYENV_DIR
+export PHOENIX_PYTHON
+export PHOENIX_PYTHON_DIR
+export PHOENIX_SED
+export PHOENIX_SPECS
+export PHOENIX_TAR
+export PHOENIX_UV_CACHE
+export PHOENIX_UV_DIR
+export PHOENIX_UV_LOCAL
+export PHOENIX_UV_PYTHON
+export PHOENIX_UV_TOOLS
 
 # Python
 ## https://docs.python.org/3/using/cmdline.html#environment-variables
 
 ## Disable JIT
-export PYTHON_JIT=0
-export PYTHON_PERF_JIT_SUPPORT=0
+readonly PYTHON_JIT=0
+readonly PYTHON_PERF_JIT_SUPPORT=0
+export PYTHON_JIT
+export PYTHON_PERF_JIT_SUPPORT
 
 ## Disable remote debugging
-export PYTHON_DISABLE_REMOTE_DEBUG=1
+readonly PYTHON_DISABLE_REMOTE_DEBUG=1
+export PYTHON_DISABLE_REMOTE_DEBUG
 
 ## Enable performance optimizations
-export PYTHONOPTIMIZE=1
+readonly PYTHONOPTIMIZE=1
+export PYTHONOPTIMIZE
 
 # Python (Glean)
-export GLEAN_PYTHON="${IRONFOX_PYTHON}"
-export GLEAN_PYTHON_WHEELS_DIR="${IRONFOX_GLEAN_PARSER_WHEELS}"
+readonly GLEAN_PYTHON="${IRONFOX_PYTHON}"
+readonly GLEAN_PYTHON_WHEELS_DIR="${IRONFOX_GLEAN_PARSER_WHEELS}"
+export GLEAN_PYTHON
+export GLEAN_PYTHON_WHEELS_DIR
 
 # Rust (cargo)
-export CARGO="${IRONFOX_CARGO}"
-export CARGO_HOME="${IRONFOX_CARGO_HOME}"
-export CARGO_INSTALL_ROOT="${IRONFOX_CARGO_HOME}"
-export RUSTC="${IRONFOX_RUSTC}"
-export RUSTDOC="${IRONFOX_RUSTDOC}"
+readonly CARGO="${IRONFOX_CARGO}"
+readonly CARGO_HOME="${IRONFOX_CARGO_HOME}"
+readonly CARGO_INSTALL_ROOT="${IRONFOX_CARGO_HOME}"
+readonly RUSTC="${IRONFOX_RUSTC}"
+readonly RUSTDOC="${IRONFOX_RUSTDOC}"
+export CARGO
+export CARGO_HOME
+export CARGO_INSTALL_ROOT
+export RUSTC
+export RUSTDOC
+
+## Cipher suites
+readonly RUSTUP_TLS_CIPHERSUITES="${IRONFOX_CIPHERS}"
+export RUSTUP_TLS_CIPHERSUITES
 
 ## Disable debug
-export CARGO_PROFILE_DEV_DEBUG='false'
-export CARGO_PROFILE_DEV_DEBUG_ASSERTIONS='false'
-export CARGO_PROFILE_RELEASE_DEBUG='false'
-export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS='false'
+readonly CARGO_PROFILE_DEV_DEBUG='false'
+readonly CARGO_PROFILE_DEV_DEBUG_ASSERTIONS='false'
+readonly CARGO_PROFILE_RELEASE_DEBUG='false'
+readonly CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS='false'
+export CARGO_PROFILE_DEV_DEBUG
+export CARGO_PROFILE_DEV_DEBUG_ASSERTIONS
+export CARGO_PROFILE_RELEASE_DEBUG
+export CARGO_PROFILE_RELEASE_DEBUG_ASSERTIONS
 
 ## Disable HTTP debugging
-export CARGO_HTTP_DEBUG='false'
+readonly CARGO_HTTP_DEBUG='false'
+export CARGO_HTTP_DEBUG
 
 ## Disable incremental compilation
 ### (Ensures builds are fresh)
 ### https://doc.rust-lang.org/cargo/reference/profiles.html#incremental
-export CARGO_BUILD_INCREMENTAL='false'
-export CARGO_INCREMENTAL=0
+readonly CARGO_BUILD_INCREMENTAL='false'
+readonly CARGO_INCREMENTAL=0
+export CARGO_BUILD_INCREMENTAL
+export CARGO_INCREMENTAL
 
 ## Display progress bars
-export CARGO_TERM_PROGRESS_WHEN="${IRONFOX_CARGO_PROGRESS_BAR}"
-export CARGO_TERM_PROGRESS_WIDTH=80
+readonly CARGO_TERM_PROGRESS_WHEN="${IRONFOX_CARGO_PROGRESS_BAR}"
+readonly CARGO_TERM_PROGRESS_WIDTH=80
+export CARGO_TERM_PROGRESS_WHEN
+export CARGO_TERM_PROGRESS_WIDTH
 
 ## Enable certificate revocation checks
-export CARGO_HTTP_CHECK_REVOKE='true'
+readonly CARGO_HTTP_CHECK_REVOKE='true'
+export CARGO_HTTP_CHECK_REVOKE
 
 ## Enable colored output
-export CARGO_TERM_COLOR="${IRONFOX_CARGO_COLORED_OUTPUT}"
+readonly CARGO_TERM_COLOR="${IRONFOX_CARGO_COLORED_OUTPUT}"
+export CARGO_TERM_COLOR
 
 ## Enable overflow checks
-export CARGO_PROFILE_DEV_OVERFLOW_CHECKS='true'
-export CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS='true'
+readonly CARGO_PROFILE_DEV_OVERFLOW_CHECKS='true'
+readonly CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS='true'
+export CARGO_PROFILE_DEV_OVERFLOW_CHECKS
+export CARGO_PROFILE_RELEASE_OVERFLOW_CHECKS
 
 ## Enable performance optimizations
-export CARGO_PROFILE_DEV_LTO='true'
-export CARGO_PROFILE_DEV_OPT_LEVEL=3
-export CARGO_PROFILE_RELEASE_LTO='true'
-export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+readonly CARGO_PROFILE_DEV_LTO='true'
+readonly CARGO_PROFILE_DEV_OPT_LEVEL=3
+readonly CARGO_PROFILE_RELEASE_LTO='true'
+readonly CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+export CARGO_PROFILE_DEV_LTO
+export CARGO_PROFILE_DEV_OPT_LEVEL
+export CARGO_PROFILE_RELEASE_LTO
+export CARGO_PROFILE_RELEASE_OPT_LEVEL
 
 ## Strip debug info
-export CARGO_PROFILE_DEV_STRIP='debuginfo'
-export CARGO_PROFILE_RELEASE_STRIP='debuginfo'
+readonly CARGO_PROFILE_DEV_STRIP='debuginfo'
+readonly CARGO_PROFILE_RELEASE_STRIP='debuginfo'
+export CARGO_PROFILE_DEV_STRIP
+export CARGO_PROFILE_RELEASE_STRIP
 
 # rustup
-export RUSTUP_HOME="${IRONFOX_RUSTUP_HOME}"
+readonly RUSTUP_HOME="${IRONFOX_RUSTUP_HOME}"
+export RUSTUP_HOME
 
 ## Display progress bars
-export RUSTUP_TERM_PROGRESS_WHEN="${IRONFOX_RUSTUP_PROGRESS_BAR}"
+readonly RUSTUP_TERM_PROGRESS_WHEN="${IRONFOX_RUSTUP_PROGRESS_BAR}"
+export RUSTUP_TERM_PROGRESS_WHEN
 
 ## Enable colored output
-export RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
+readonly RUSTUP_TERM_COLOR="${IRONFOX_RUSTUP_COLORED_OUTPUT}"
+export RUSTUP_TERM_COLOR
 
 # UnifiedPush-AC
-export UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
+readonly UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
+export UP_AC_GRADLE_USER_HOME
 
 # UV
 ## https://docs.astral.sh/uv/reference/environment/
 
 ## Cache directory
-export UV_CACHE_DIR="${IRONFOX_UV_LOCAL}/cache"
+readonly UV_CACHE_DIR="${IRONFOX_UV_LOCAL}/cache"
+export UV_CACHE_DIR
 
 ## Disable cache
-export UV_NO_CACHE=1
+readonly UV_NO_CACHE=1
+export UV_NO_CACHE
 
 ## Disable the system CA root store
-export UV_SYSTEM_CERTS='false'
+readonly UV_SYSTEM_CERTS='false'
+export UV_SYSTEM_CERTS
 
 ## Exclude development dependencies
-export UV_NO_DEV=1
+readonly UV_NO_DEV=1
+export UV_NO_DEV
 
 ## Executables directory
-export UV_PYTHON_BIN_DIR="${IRONFOX_UV_LOCAL}/bin"
-export UV_PYTHON_INSTALL_BIN=1
+readonly UV_PYTHON_BIN_DIR="${IRONFOX_UV_LOCAL}/bin"
+readonly UV_PYTHON_INSTALL_BIN=1
+export UV_PYTHON_BIN_DIR
+export UV_PYTHON_INSTALL_BIN
 
 ## Ignore configuration files
-export UV_NO_CONFIG=1
+readonly UV_NO_CONFIG=1
+export UV_NO_CONFIG
 
 ## Ignore env files
-export UV_NO_ENV_FILE=1
+readonly UV_NO_ENV_FILE=1
+export UV_NO_ENV_FILE
 
 ## Location
-export UV_INSTALL_DIR="${IRONFOX_UV_DIR}"
+readonly UV_INSTALL_DIR="${IRONFOX_UV_DIR}"
+export UV_INSTALL_DIR
 
 ## Prevent automatic downloads/updates
-export UV_DISABLE_UPDATE=1
-export UV_PYTHON_DOWNLOADS='manual'
+readonly UV_DISABLE_UPDATE=1
+readonly UV_PYTHON_DOWNLOADS='manual'
+export UV_DISABLE_UPDATE
+export UV_PYTHON_DOWNLOADS
 
 ## Prevent modifying the system PATH
-export INSTALLER_NO_MODIFY_PATH=1
-export UV_NO_MODIFY_PATH=1
-export UV_UNMANAGED_INSTALL="${IRONFOX_UV_DIR}"
+readonly INSTALLER_NO_MODIFY_PATH=1
+readonly UV_NO_MODIFY_PATH=1
+readonly UV_UNMANAGED_INSTALL="${IRONFOX_UV_DIR}"
+export INSTALLER_NO_MODIFY_PATH
+export UV_NO_MODIFY_PATH
+export UV_UNMANAGED_INSTALL
 
 ## Prevent using the system Python
-export UV_MANAGED_PYTHON=1
-export UV_SYSTEM_PYTHON='false'
+readonly UV_MANAGED_PYTHON=1
+readonly UV_SYSTEM_PYTHON='false'
+export UV_MANAGED_PYTHON
+export UV_SYSTEM_PYTHON
 
 ## Python
-export UV_PYTHON_CACHE_DIR="${IRONFOX_UV_LOCAL}/python-cache"
-export UV_PYTHON_INSTALL_MIRROR="file://${IRONFOX_PYTHON_DIR}"
-export UV_PYTHON_INSTALL_DIR="${IRONFOX_UV_LOCAL}/python"
+readonly UV_PYTHON_CACHE_DIR="${IRONFOX_UV_LOCAL}/python-cache"
+readonly UV_PYTHON_INSTALL_MIRROR="file://${IRONFOX_PYTHON_DIR}"
+readonly UV_PYTHON_INSTALL_DIR="${IRONFOX_UV_LOCAL}/python"
+export UV_PYTHON_CACHE_DIR
+export UV_PYTHON_INSTALL_MIRROR
+export UV_PYTHON_INSTALL_DIR
 
 ## Python environment
-export UV_PROJECT_ENVIRONMENT="${IRONFOX_PYENV_DIR}"
-export VIRTUAL_ENV="${IRONFOX_PYENV_DIR}"
+readonly UV_PROJECT_ENVIRONMENT="${IRONFOX_PYENV_DIR}"
+readonly VIRTUAL_ENV="${IRONFOX_PYENV_DIR}"
+export UV_PROJECT_ENVIRONMENT
+export VIRTUAL_ENV
 
 ## Tools directory
-export UV_TOOL_BIN_DIR="${IRONFOX_UV_LOCAL}/tools/bin"
-export UV_TOOL_DIR="${IRONFOX_UV_LOCAL}/tools"
-
-# Include version info
-source "${IRONFOX_VERSIONS}"
+readonly UV_TOOL_BIN_DIR="${IRONFOX_UV_LOCAL}/tools/bin"
+readonly UV_TOOL_DIR="${IRONFOX_UV_LOCAL}/tools"
+export UV_TOOL_BIN_DIR
+export UV_TOOL_DIR
 
 ## Pin Python version
-export UV_PYTHON_CPYTHON_BUILD="${PYTHON_GIT_RELEASE}"
+readonly UV_PYTHON_CPYTHON_BUILD="${PYTHON_GIT_RELEASE}"
+export UV_PYTHON_CPYTHON_BUILD
 
 ## Set Node.js bin path
-export NVM_BIN="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin"
+readonly NVM_BIN="${IRONFOX_NVM}/versions/node/v${NODE_VERSION}/bin"
+export NVM_BIN
 
 ## Set Node.js version
-export NODE_VERSION="${NODE_VERSION}"
+export NODE_VERSION
 
 ## Set Rust version
-export RUSTUP_TOOLCHAIN="${RUST_VERSION}"
+readonly RUSTUP_TOOLCHAIN="${RUST_VERSION}"
+export RUSTUP_TOOLCHAIN
 
 ## Set Rustup version
-export RUSTUP_VERSION="${RUSTUP_VERSION}"
+export RUSTUP_VERSION

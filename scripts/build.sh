@@ -3,20 +3,26 @@
 set -euo pipefail
 
 # Set-up our environment
-bash -x $(dirname $0)/env.sh
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+    bash -x $(dirname $0)/env.sh
+fi
 source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
 
 if [ -z "${1+x}" ]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
 
-target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+readonly target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 # Build IronFox
-export IRONFOX_FROM_BUILD=1
+readonly IRONFOX_FROM_BUILD=1
+export IRONFOX_FROM_BUILD
 if [ "${IRONFOX_LOG_BUILD}" == 1 ]; then
-    BUILD_LOG_FILE="${IRONFOX_LOG_DIR}/build-${target}.log"
+    readonly BUILD_LOG_FILE="${IRONFOX_LOG_DIR}/build-${target}.log"
 
     # If the log file already exists, remove it
     if [ -f "${BUILD_LOG_FILE}" ]; then
@@ -36,7 +42,7 @@ source "${IRONFOX_ENV_BUILD}"
 
 if [ "${IRONFOX_SIGN}" == 1 ]; then
     if [ "${IRONFOX_LOG_SIGN}" == 1 ]; then
-        SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
+        readonly SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
 
         # If the log file already exists, remove it
         if [ -f "${SIGN_LOG_FILE}" ]; then

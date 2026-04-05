@@ -4,7 +4,13 @@
 # This script is expected to be run in a CI environment
 # DO NOT execute this manually!
 
-set -eu
+set -euo pipefail
+
+# Set-up our environment
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+    bash -x "$(realpath $(dirname "$0"))/env.sh"
+fi
+source "$(realpath $(dirname "$0"))/env.sh"
 
 git clone --recurse-submodules "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${FDROID_REPO_PATH}.git" fdroid
 pushd fdroid || { echo "Unable to pushd into 'fdroid'"; exit 1; };
@@ -24,9 +30,9 @@ done
 
 IFS=":" read -r vercode vername <<< "$("${CI_PROJECT_DIR}"/scripts/get_latest_version.py $(ls "${REPO_DIR_PATH}"/*.apk))"
 
-META_FILE_PATH="${META_DIR_PATH}/${META_FILE_NAME}"
+readonly META_FILE_PATH="${META_DIR_PATH}/${META_FILE_NAME}"
 
-sed -i \
+"${IRONFOX_SED}" -i \
     -e "s/CurrentVersion: .*/CurrentVersion: \"v${vername}\"/" \
     -e "s/CurrentVersionCode: .*/CurrentVersionCode: ${vercode}/" "${META_FILE_PATH}"
 

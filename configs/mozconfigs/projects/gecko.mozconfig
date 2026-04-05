@@ -1,4 +1,4 @@
 # IronFox Gecko(View) mozconfig
 
-## Prevent running the verifyGleanVersion Gradle task
-export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial -x verifyGleanVersion"
+## Use JDK 17 and prevent running the verifyGleanVersion Gradle task
+export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -Pofficial -x verifyGleanVersion"

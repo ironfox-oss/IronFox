@@ -2,13 +2,20 @@
 
 set -euo pipefail
 
-source "$(dirname $0)/utilities.sh"
+# Set-up our environment
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+    bash -x $(dirname $0)/env.sh
+fi
+source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
 
 function deglean() {
-    local dir="$1"
-    local gradle_files=$(find "${dir}" -type f -name "*.gradle")
-    local kt_files=$(find "${dir}" -type f -name "*.kt")
-    local yaml_files=$(find "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
+    local readonly dir="$1"
+    local readonly gradle_files=$(find "${dir}" -type f -name "*.gradle")
+    local readonly kt_files=$(find "${dir}" -type f -name "*.kt")
+    local readonly yaml_files=$(find "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
 
     if [ -n "${gradle_files}" ]; then
         for file in $gradle_files; do
@@ -17,27 +24,27 @@ function deglean() {
 
             if grep -q 'apply plugin.*glean' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*apply plugin:.*glean.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if grep -q 'classpath.*glean' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*classpath.*glean.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if grep -q 'compileOnly.*glean' "$file"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*compileOnly.*glean.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if grep -q 'implementation.*glean' "$file"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*implementation.*glean.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if grep -q 'testImplementation.*glean' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if [ "${modified}" = true ]; then
@@ -54,12 +61,12 @@ function deglean() {
 
             if grep -q 'import mozilla.telemetry.*' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*import mozilla.telemetry.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if grep -q 'import .*GleanMetrics' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*GleanMetrics.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if [ "${modified}" = true ]; then
@@ -81,8 +88,8 @@ function deglean() {
 }
 
 function deglean_fenix() {
-    local dir="$1"
-    local gradle_files=$(find "${dir}" -type f -name "*.gradle")
+    local readonly dir="$1"
+    local readonly gradle_files=$(find "${dir}" -type f -name "*.gradle")
 
     if [ -n "${gradle_files}" ]; then
         for file in $gradle_files; do
@@ -90,12 +97,12 @@ function deglean_fenix() {
 
             if grep -q 'implementation.*service-glean' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*implementation.*service-glean.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if grep -q 'testImplementation.*glean' "${file}"; then
                 "${IRONFOX_SED}" -i -r 's/^(.*testImplementation.*glean.*)$/\/\/ \1/' "${file}"
-                modified=true
+                local modified=true
             fi
 
             if [ "${modified}" = true ]; then

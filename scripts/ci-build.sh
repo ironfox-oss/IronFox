@@ -7,16 +7,6 @@ set -eu
 set -o pipefail
 set -o xtrace
 
-source $(dirname $0)/utilities.sh
-
-case "${BUILD_VARIANT}" in
-arm64 | arm | x86_64 | bundle) ;;
-*)
-    echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
-    exit 1
-    ;;
-esac
-
 export IRONFOX_CI=1
 
 if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
@@ -25,8 +15,22 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
 fi
 
 # Set-up our environment
-bash -x $(dirname $0)/env.sh
+if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
+    bash -x $(dirname $0)/env.sh
+fi
 source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
+
+case "${BUILD_VARIANT}" in
+arm64|arm|x86_64|bundle)
+    ;;
+*)
+    echo_red_text "Unknown build variant: '${BUILD_VARIANT}'." >&2
+    exit 1
+    ;;
+esac
 
 # Extract our GeckoView AAR artifacts
 if [ "${BUILD_VARIANT}" == 'bundle' ]; then
