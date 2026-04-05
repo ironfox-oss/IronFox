@@ -25,7 +25,7 @@ __pycache__/
 /scripts/env_target.sh
 
 # mozconfig for local builds
-/overrides.mozconfig/
+/overrides.mozconfig
 
 # WIP
 /wip/
