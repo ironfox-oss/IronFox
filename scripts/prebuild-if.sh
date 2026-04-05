@@ -1135,7 +1135,7 @@ if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
 fi
 
 #
-## Bundletool
+# Bundletool
 #
 
 if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then

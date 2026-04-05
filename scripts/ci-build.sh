@@ -30,6 +30,10 @@ source $(dirname $0)/env.sh
 
 # Extract our GeckoView AAR artifacts
 if [ "${BUILD_VARIANT}" == 'bundle' ]; then
+    mkdir -p "${IRONFOX_DOWNLOADS}/geckoview-arm64"
+    mkdir -p "${IRONFOX_DOWNLOADS}/geckoview-arm"
+    mkdir -p "${IRONFOX_DOWNLOADS}/geckoview-x86_64"
+
     "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-arm64"
     "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-arm"
     "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-x86_64"

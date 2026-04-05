@@ -698,7 +698,7 @@ fi
 # Should Mach target ARM (GeckoView AAR) if we're creating a bundle?
 IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM+x}" ]]; then
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM="$IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT}"
+    export IRONFOX_MACH_TARGET_BUNDLE_ARM="${IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT}"
 fi
 
 # Should Mach target x86_64 (GeckoView AAR) if we're creating a bundle?
