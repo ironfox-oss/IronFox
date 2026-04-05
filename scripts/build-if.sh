@@ -224,11 +224,9 @@ function prep_fenix() {
     cp -rf "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/"
 
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        IRONFOX_NAME='IronFox'
         "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' "${IRONFOX_FENIX}/app/build.gradle"
         "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     else
-        IRONFOX_NAME='IronFox Nightly'
         "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox.nightly"|' "${IRONFOX_FENIX}/app/build.gradle"
         "${IRONFOX_SED}" -i -e '/android:targetPackage/s/org.mozilla.firefox/org.ironfoxoss.ironfox.nightly/' "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     fi
@@ -268,12 +266,6 @@ function prep_gecko() {
     "${IRONFOX_SED}" -i -e "/^glean = \"/c\\glean = \"${IF_LOCAL_GLEAN_VERSION}\"" "${IRONFOX_GECKO}/gradle/libs.versions.toml"
 
     # Configure release channel
-    if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
-        local readonly IRONFOX_NAME='IronFox'
-    else
-        local readonly IRONFOX_NAME='IronFox Nightly'
-    fi
-
     if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
         rm -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
     fi

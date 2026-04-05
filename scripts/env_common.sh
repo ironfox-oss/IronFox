@@ -113,12 +113,15 @@ export IRONFOX_RELEASE
 if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_CHANNEL='release'
     readonly IRONFOX_CHANNEL_PRETTY='Release'
+    readonly IRONFOX_NAME='IronFox'
 else
     readonly IRONFOX_CHANNEL='nightly'
     readonly IRONFOX_CHANNEL_PRETTY='Nightly'
+    readonly IRONFOX_NAME='IronFox Nightly'
 fi
 export IRONFOX_CHANNEL
 export IRONFOX_CHANNEL_PRETTY
+export IRONFOX_NAME
 
 readonly IRONFOX_OUTPUTS_AAB="${IRONFOX_OUTPUTS}/aab"
 readonly IRONFOX_OUTPUTS_AAR="${IRONFOX_OUTPUTS}/aar"
