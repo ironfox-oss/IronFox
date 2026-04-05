@@ -186,7 +186,6 @@ else
     exit 1
 fi
 
-
 # If the 'checksum-update' argument is specified, in addition to downloading the dependencies as usual,
 ## we're also updating their checksums
 IRONFOX_GET_SOURCE_CHECKSUM_UPDATE=0
