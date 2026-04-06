@@ -17,7 +17,7 @@ function upload_to_package_registry() {
     local readonly upload_file="$1"
     local readonly upload_package_name="$2"
     local readonly upload_file_name="$(basename "${upload_file}")"
-    curl --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
+    curl ${IRONFOX_CURL_FLAGS} --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
         --upload-file "${upload_file}" \
         "${GENERIC_PACKAGES_URL}/${upload_package_name}/${IRONFOX_VERSION}/${upload_file_name}"
 }
@@ -25,8 +25,8 @@ function upload_to_package_registry() {
 # Extract compressed artifacts
 mkdir -p "${IRONFOX_ARTIFACTS}"
 for archive in "${IRONFOX_ARTIFACTS}"/*.tar.xz; do
-    [ -f "$archive" ] || continue
-    echo "Extracting $archive"
+    [ -f "${archive}" ] || continue
+    echo "Extracting ${archive}"
     "${IRONFOX_TAR}" xvJf "${archive}" -C "${IRONFOX_ARTIFACTS}"
 done
 
