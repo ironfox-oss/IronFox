@@ -34,18 +34,13 @@ esac
 
 # Extract our GeckoView AAR artifacts
 if [ "${BUILD_VARIANT}" == 'bundle' ]; then
-    mkdir -p "${IRONFOX_DOWNLOADS}/geckoview-arm64"
-    mkdir -p "${IRONFOX_DOWNLOADS}/geckoview-arm"
-    mkdir -p "${IRONFOX_DOWNLOADS}/geckoview-x86_64"
-    mkdir -p "${IRONFOX_OUTPUTS_AAR}"
+    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
+    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
+    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
 
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-arm64"
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-arm"
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_DOWNLOADS}/geckoview-x86_64"
-
-    cp -vf "${IRONFOX_DOWNLOADS}/geckoview-arm64/aar/geckoview-arm64-v8a.zip" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-    cp -vf "${IRONFOX_DOWNLOADS}/geckoview-arm/aar/geckoview-armeabi-v7a.zip" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-    cp -vf "${IRONFOX_DOWNLOADS}/geckoview-x86_64/aar/geckoview-x86_64.zip" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
 fi
 
 # Fail-fast in case the signing key is unavailable or empty file
@@ -67,3 +62,13 @@ bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
 
 # Build
 bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"
+
+# Copy our GeckoView AAR archives to the artifacts directory for publishing
+mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
+if [ "${BUILD_VARIANT}" == 'arm64' ]; then
+    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+elif [ "${BUILD_VARIANT}" == 'arm' ]; then
+    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
+elif [ "${BUILD_VARIANT}" == 'x86_64' ]; then
+    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
+fi

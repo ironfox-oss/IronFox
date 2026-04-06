@@ -556,11 +556,7 @@ function build_gecko_arm64() {
     "${IRONFOX_MACH}" configure
     popd
 
-    cp -vf "${IRONFOX_GV_AAR_ARM64}" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
-    fi
+    cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip" "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"
 }
 
 function build_gecko_arm() {
@@ -581,11 +577,7 @@ function build_gecko_arm() {
     "${IRONFOX_MACH}" configure
     popd
 
-    cp -vf "${IRONFOX_GV_AAR_ARM}" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
-    fi
+    cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip" "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"
 }
 
 function build_gecko_x86_64() {
@@ -606,19 +598,54 @@ function build_gecko_x86_64() {
     "${IRONFOX_MACH}" configure
     popd
 
-    cp -vf "${IRONFOX_GV_AAR_X86_64}" "${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
-
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        cp -vf "${IRONFOX_OUTPUTS_GV_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/"
-    fi
+    cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip" "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"
 }
 
 function build_gecko_bundle() {
     # Bundle
+
+    # Verify that our GeckoView AAR archives are not missing or broken
+
+    # Verify that our ARM64 GeckoView AAR archive exists
+    if ! [ -f "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]; then
+        echo_red_text "ERROR: ARM64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
+        exit 1
+    fi
+
+    # Verify that our ARM64 GeckoView AAR archive is not an empty file
+    if ! [ -s "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]; then
+        echo_red_text "ERROR: ARM64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
+        exit 1
+    fi
+
+    # Verify that our ARM GeckoView AAR archive exists
+    if ! [ -f "${IRONFOX_GECKOVIEW_AAR_ARM}" ]; then
+        echo_red_text "ERROR: ARM GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM})"
+        exit 1
+    fi
+
+    # Verify that our ARM GeckoView AAR archive is not an empty file
+    if ! [ -s "${IRONFOX_GECKOVIEW_AAR_ARM}" ]; then
+        echo_red_text "ERROR: ARM GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM})"
+        exit 1
+    fi
+
+    # Verify that our x86_64 GeckoView AAR archive exists
+    if ! [ -f "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]; then
+        echo_red_text "ERROR: x86_64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
+        exit 1
+    fi
+
+    # Verify that our x86_64 GeckoView AAR archive is not an empty file
+    if ! [ -s "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]; then
+        echo_red_text "ERROR: x86_64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
+        exit 1
+    fi
+
     readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
-    readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_OUTPUTS_GV_AAR_ARM}"
-    readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_OUTPUTS_GV_AAR_X86_64}"
+    readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64}"
+    readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM}"
+    readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GECKOVIEW_AAR_X86_64}"
     export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
     export MOZ_ANDROID_FAT_AAR_ARM64_V8A
     export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
@@ -900,7 +927,6 @@ fi
 
 ## Create CI artifact directories if necessary
 if [ "${IRONFOX_CI}" == 1 ]; then
-    mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
     mkdir -vp "${IRONFOX_APK_ARTIFACTS}"
     mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
 fi
