@@ -42,28 +42,28 @@ fi
 case "$1" in
 arm64)
     # arm64-v8a
-    IRONFOX_TARGET_ARCH='arm64'
+    readonly IRONFOX_TARGET_ARCH='arm64'
     readonly IRONFOX_TARGET_ABI='arm64-v8a'
     readonly IRONFOX_TARGET_PRETTY='ARM64'
     readonly IRONFOX_TARGET_RUST='arm64'
     ;;
 arm)
     # armeabi-v7a
-    IRONFOX_TARGET_ARCH='arm'
+    readonly IRONFOX_TARGET_ARCH='arm'
     readonly IRONFOX_TARGET_ABI='armeabi-v7a'
     readonly IRONFOX_TARGET_PRETTY='ARM'
     readonly IRONFOX_TARGET_RUST='arm'
     ;;
 x86_64)
     # x86_64
-    IRONFOX_TARGET_ARCH='x86_64'
+    readonly IRONFOX_TARGET_ARCH='x86_64'
     readonly IRONFOX_TARGET_ABI='x86_64'
     readonly IRONFOX_TARGET_PRETTY='x86_64'
     readonly IRONFOX_TARGET_RUST='x86_64'
     ;;
 bundle)
     # arm64-v8a, armeabi-v7a, and x86_64
-    IRONFOX_TARGET_ARCH='bundle'
+    readonly IRONFOX_TARGET_ARCH='bundle'
     readonly IRONFOX_TARGET_ABI='arm64-v8a", "armeabi-v7a", "x86_64'
     readonly IRONFOX_TARGET_PRETTY='Bundle'
     readonly IRONFOX_TARGET_RUST='arm64,arm,x86_64'
@@ -126,18 +126,14 @@ function set_build_env() {
         cat > "${IRONFOX_ENV_BUILD}" << EOF
 readonly IF_BUILD_DATE="${BUILD_DATE}"
 readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-readonly IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 export IF_BUILD_DATE
 export IF_EPOCH_NS
-export IRONFOX_TARGET_ARCH
 EOF
     else
         echo "Writing ${IRONFOX_ENV_BUILD}..."
         cat > "${IRONFOX_ENV_BUILD}" << EOF
 readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-readonly IRONFOX_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 export IF_EPOCH_NS
-export IRONFOX_TARGET_ARCH
 EOF
     fi
 

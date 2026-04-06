@@ -4,10 +4,11 @@ set -euo pipefail
 
 # Set-up our environment
 source $(dirname $0)/env.sh
-source "${IRONFOX_ENV_BUILD}"
 
 # Include utilities
 source "${IRONFOX_UTILS}"
+
+readonly target="$1"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
@@ -18,13 +19,13 @@ export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
 # Functions
 
 function sign_apk() {
-    local readonly target="$1"
-    local readonly APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-unsigned.apk"
+    local readonly target_arch="$1"
+    local readonly APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target_arch}-unsigned.apk"
 
     if [ "${IRONFOX_CI}" == 1 ]; then
-        local readonly APK_OUT="${IRONFOX_APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${target}.apk"
+        local readonly APK_OUT="${IRONFOX_APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${target_arch}.apk"
     else
-        local readonly APK_OUT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target}-signed.apk"
+        local readonly APK_OUT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target_arch}-signed.apk"
     fi
 
     "${IRONFOX_APKSIGNER}" sign \
@@ -63,8 +64,6 @@ function sign_universal() {
 function sign_bundle() {
     echo_red_text 'Building signed bundleset...'
 
-    local readonly AAB_IN="${IRONFOX_OUTPUTS_FENIX_AAB}"
-
     if [ "${IRONFOX_CI}" == 1 ]; then
         local readonly APKS_OUT="${IRONFOX_APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
     else
@@ -72,7 +71,7 @@ function sign_bundle() {
     fi
 
     "${IRONFOX_BUNDLETOOL}" build-apks \
-      --bundle="${AAB_IN}" \
+      --bundle="${IRONFOX_OUTPUTS_FENIX_AAB}" \
       --output="${APKS_OUT}" \
       --ks="${IRONFOX_KEYSTORE}" \
       --ks-pass="file:/${IRONFOX_KEYSTORE_PASS_FILE}" \
@@ -82,7 +81,7 @@ function sign_bundle() {
     echo_green_text 'SUCCESS: Created signed bundleset'
 }
 
-if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if [ "${target}" == 'bundle' ]; then
     # Sign ARM64 APK
     sign_arm64
 
@@ -97,17 +96,17 @@ if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
 
     # Build signed APK set
     sign_bundle
-elif [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
+elif [ "${target}" == 'arm64' ]; then
     # Sign ARM64 APK
     sign_arm64
-elif [ "${IRONFOX_TARGET_ARCH}" == 'arm' ]; then
+elif [ "${target}" == 'arm' ]; then
     # Sign ARM APK
     sign_arm
-elif [ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]; then
+elif [ "${target}" == 'x86_64' ]; then
     # Sign x86_64 APK
     sign_x86_64
 else
-    echo_red_text "ERROR: Unknown target architecture: ${IRONFOX_TARGET_ARCH}"
+    echo_red_text "ERROR: Unknown target architecture: ${target}"
     exit 1
 fi
 
@@ -122,16 +121,16 @@ if [ "${IRONFOX_CI}" != 1 ]; then
             ## so wait to ensure we allow them to accept it
             /bin/sleep 6
         fi
-        if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+        if [ "${target}" == 'bundle' ]; then
             # If we built a bundle, install the universal APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL_SIGNED}"
-        elif [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
+        elif [ "${target}" == 'arm64' ]; then
             # Install the ARM64 APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_ARM64_SIGNED}"
-        elif [ "${IRONFOX_TARGET_ARCH}" == 'arm' ]; then
+        elif [ "${target}" == 'arm' ]; then
             # Install the ARM APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_ARM_SIGNED}"
-        elif [ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]; then
+        elif [ "${target}" == 'x86_64' ]; then
             # Install the x86_64 APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_X86_64_SIGNED}"
         fi

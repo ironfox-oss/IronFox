@@ -38,8 +38,6 @@ else
 fi
 
 # Sign IronFox
-source "${IRONFOX_ENV_BUILD}"
-
 if [ "${IRONFOX_SIGN}" == 1 ]; then
     if [ "${IRONFOX_LOG_SIGN}" == 1 ]; then
         readonly SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
@@ -52,12 +50,12 @@ if [ "${IRONFOX_SIGN}" == 1 ]; then
         # Ensure our log directory exists
         mkdir -vp "${IRONFOX_LOG_DIR}"
 
-        if [ "${IRONFOX_CI}" == 1 ] && [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
+        if [ "${IRONFOX_CI}" == 1 ] && [ "${target}" != 'bundle' ]; then
             # CI should only try to sign bundle builds (which create/include all APKs)
             exit 0
         fi
 
-        bash -x "${IRONFOX_SCRIPTS}/sign.sh" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
+        bash -x "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
     else
         bash -x "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
     fi
