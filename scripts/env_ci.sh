@@ -23,3 +23,6 @@ export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
 
 # Safe Browsing
 export IRONFOX_SB_GAPI_KEY_FILE='/opt/IronFox/ironfox-sb-gapi.data'
+
+# Skip the prompt to install IronFox via ADB after signing
+export IRONFOX_SIGN_SKIP_ADB=1

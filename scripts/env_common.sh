@@ -1075,6 +1075,14 @@ fi
 readonly IRONFOX_SIGN
 export IRONFOX_SIGN
 
+# Do we want to skip the prompt to install IronFox via ADB after signing?
+readonly IRONFOX_SIGN_SKIP_ADB_DEFAULT=0
+if [[ -z "${IRONFOX_SIGN_SKIP_ADB+x}" ]]; then
+    IRONFOX_SIGN_SKIP_ADB="${IRONFOX_SIGN_SKIP_ADB_DEFAULT}"
+fi
+readonly IRONFOX_SIGN_SKIP_ADB
+export IRONFOX_SIGN_SKIP_ADB
+
 # Locations for our GeckoView AAR archives
 
 ## Where our GeckoView ARM64 AAR archive is located within mozilla-central
