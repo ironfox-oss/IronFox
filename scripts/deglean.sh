@@ -135,14 +135,6 @@ rm -rvf "${IRONFOX_AC}/samples/glean"
 # Remove unused/unnecessary Glean components (Application Services)
 rm -vf "${IRONFOX_AS}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"
 
-# Remove unused/unnecessary Glean components (Fenix)
-rm -vf "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/ext/Configuration.kt"
-rm -vf "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt"
-rm -vf "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReporting.kt"
-rm -vf "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingApi.kt"
-rm -vf "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingLifecycleObserver.kt"
-rm -vf "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanUsageReportingMetricsService.kt"
-
 # Remove Glean classes (Android Components)
 "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
 "${IRONFOX_SED}" -i -e 's|Microsurvey.confirmation|// Microsurvey.confirmation|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"

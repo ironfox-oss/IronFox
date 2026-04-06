@@ -548,6 +548,9 @@ function build_gecko_arm64() {
     echo_red_text 'Packaging Gecko(View) - ARM64...'
     package_gecko
     echo_green_text 'SUCCESS: Packaged Gecko(View) - ARM64'
+    unset IRONFOX_MACH_TARGET_BUNDLE_ARM64
+    export IRONFOX_MACH_TARGET_BUNDLE_ARM64=0
+    "${IRONFOX_MACH}" configure
     popd
 
     cp -vf "${IRONFOX_GV_AAR_ARM64}" "${IRONFOX_OUTPUTS_GV_AAR_ARM64}"
@@ -555,8 +558,6 @@ function build_gecko_arm64() {
     if [ "${IRONFOX_CI}" == 1 ]; then
         cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
     fi
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM64
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM64=0
 }
 
 function build_gecko_arm() {
@@ -572,6 +573,9 @@ function build_gecko_arm() {
     echo_red_text 'Packaging Gecko - ARM...'
     package_gecko
     echo_green_text 'SUCCESS: Packaged Gecko(View) - ARM'
+    unset IRONFOX_MACH_TARGET_BUNDLE_ARM
+    export IRONFOX_MACH_TARGET_BUNDLE_ARM=0
+    "${IRONFOX_MACH}" configure
     popd
 
     cp -vf "${IRONFOX_GV_AAR_ARM}" "${IRONFOX_OUTPUTS_GV_AAR_ARM}"
@@ -579,8 +583,6 @@ function build_gecko_arm() {
     if [ "${IRONFOX_CI}" == 1 ]; then
         cp -vf "${IRONFOX_OUTPUTS_GV_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
     fi
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM=0
 }
 
 function build_gecko_x86_64() {
