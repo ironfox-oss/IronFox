@@ -973,6 +973,17 @@ if [[ -z "${IRONFOX_MACH_TARGET_GECKO+x}" ]]; then
 fi
 export IRONFOX_MACH_TARGET_GECKO
 
+# If we're creating a bundle, instead of building GeckoView for each architecture and THEN creating our bundle GeckoView,
+## this just builds GeckoView as a bundle directly
+## NOTE: For this to work: IRONFOX_GECKOVIEW_AAR_ARM64, IRONFOX_GECKOVIEW_AAR_ARM, and IRONFOX_GECKOVIEW_AAR_X86_64 must point
+## to GeckoView AAR archives for ARM64, ARM, and x86_64 respectively
+## In general, this is primarily meant for CI - avoid unless you know what you're doing
+readonly IRONFOX_GECKOVIEW_BUNDLE_DIRECT=0
+if [[ -z "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT+x}" ]]; then
+    IRONFOX_GECKOVIEW_BUNDLE_DIRECT="${IRONFOX_GECKOVIEW_BUNDLE_DIRECT_DEFAULT}"
+fi
+export IRONFOX_GECKOVIEW_BUNDLE_DIRECT
+
 # Should Mach target ARM64 (GeckoView AAR) if we're creating a bundle?
 readonly IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT=0
 if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM64+x}" ]]; then
