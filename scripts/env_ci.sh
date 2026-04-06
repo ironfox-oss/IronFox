@@ -11,9 +11,12 @@ export IRONFOX_KEYSTORE_KEY_PASS_FILE='/opt/IronFox/ironfox-signing-key.pass'
 export IRONFOX_KEYSTORE_PASS_FILE='/opt/IronFox/ironfox-keystore.pass'
 
 # Build date
-export IF_BUILD_DATE="${CI_PIPELINE_CREATED_AT}"
-export IF_BUILD_STAMP="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%s%N")"
-export MOZ_BUILD_DATE="$(date -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
+export IRONFOX_DATE='date'
+export IRONFOX_BUILD_DATE_OVERRIDE="${CI_PIPELINE_CREATED_AT}"
+export IRONFOX_BUILD_ID_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%Y%m%d%H%M%S")"
+export IRONFOX_LOCAL_AC_VERSION_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%s%N")"
+export IRONFOX_LOCAL_AS_VERSION_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%s%N")"
+export IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE="$("${IRONFOX_DATE}" -d "${CI_PIPELINE_CREATED_AT}" "+%s%N")"
 
 # Log directory
 export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"

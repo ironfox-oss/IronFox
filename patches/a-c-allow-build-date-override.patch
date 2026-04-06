@@ -9,7 +9,7 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
-index f82613fdd621..52adbe4d7597 100644
+index f82613fdd6..cf55ee61b5 100644
 --- a/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
 +++ b/mobile/android/android-components/plugins/config/src/main/java/ConfigPlugin.kt
 @@ -60,7 +60,13 @@ object Config {
@@ -19,8 +19,8 @@ index f82613fdd621..52adbe4d7597 100644
 -        val build = Date()
 +        var build = Date()
 +
-+        val buildDate = System.getenv("IF_BUILD_DATE")
-+        if (!buildDate.isNullOrBlank()) {
++        val buildDate = System.getenv("IRONFOX_BUILD_DATE_OVERRIDE")
++        if (!buildDate.isNullOrBlank() && buildDate != "null") {
 +            println("[IronFox] Overriding build date to: '$buildDate'")
 +            build = Date.from(java.time.Instant.parse(buildDate))
 +        }

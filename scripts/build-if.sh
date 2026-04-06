@@ -112,59 +112,64 @@ function set_build_env() {
         rm "${IRONFOX_ENV_BUILD}"
     fi
 
-    local readonly EPOCH_NS="$("${IRONFOX_DATE}" "+%s%N")"
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        local readonly IF_LOCAL_VERSION_STAMP="${IF_BUILD_STAMP}"
+    local readonly IF_BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
+    local readonly IF_LOCAL_VERSION_STAMP="$("${IRONFOX_DATE}" "+%s%N")"
+
+    # Override Gecko(View)'s build ID (if desired)
+    if [ "${IRONFOX_BUILD_ID_OVERRIDE}" != 'null' ]; then
+        IF_BUILD_ID="${IRONFOX_BUILD_ID_OVERRIDE}"
+    elif [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+        IF_BUILD_ID="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
     else
-        local readonly IF_LOCAL_VERSION_STAMP="${EPOCH_NS}"
+        IF_BUILD_ID='null'
     fi
 
-    if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        # Set build date for bundle builds, to avoid conflicts and ensure that MOZ_BUILDID is consistent across all builds
-        ## (CI handles this at `env_ci.sh` instead)
-        local readonly BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
-        cat > "${IRONFOX_ENV_BUILD}" << EOF
-readonly IF_BUILD_DATE="${BUILD_DATE}"
-readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-export IF_BUILD_DATE
-export IF_EPOCH_NS
-EOF
+    # Override our version for local Android Components substitution (if desired)
+    if [ "${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}" != 'null' ]; then
+        IF_LOCAL_AC_VERSION_STAMP="${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}"
     else
-        echo "Writing ${IRONFOX_ENV_BUILD}..."
-        cat > "${IRONFOX_ENV_BUILD}" << EOF
-readonly IF_EPOCH_NS="${IF_LOCAL_VERSION_STAMP}"
-export IF_EPOCH_NS
-EOF
+        IF_LOCAL_AC_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
     fi
+
+    # Override our version for local Application Services substitution (if desired)
+    if [ "${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}" != 'null' ]; then
+        IF_LOCAL_AS_VERSION_STAMP="${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}"
+    else
+        IF_LOCAL_AS_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+    fi
+
+    # Override our version for local Glean substitution (if desired)
+    if [ "${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}" != 'null' ]; then
+        IF_LOCAL_GLEAN_VERSION_STAMP="${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}"
+    else
+        IF_LOCAL_GLEAN_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+    fi
+
+    echo "Writing ${IRONFOX_ENV_BUILD}..."
+    cat > "${IRONFOX_ENV_BUILD}" << EOF
+readonly IF_BUILD_ID="${IF_BUILD_ID}"
+readonly IF_LOCAL_AC_VERSION_STAMP="${IF_LOCAL_AC_VERSION_STAMP}"
+readonly IF_LOCAL_AS_VERSION_STAMP="${IF_LOCAL_AS_VERSION_STAMP}"
+readonly IF_LOCAL_GLEAN_VERSION_STAMP="${IF_LOCAL_GLEAN_VERSION_STAMP}"
+EOF
 
     source "${IRONFOX_ENV_BUILD}"
 
-    if [ "${IRONFOX_CI}" != 1 ] && [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        readonly MOZ_BUILD_DATE="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
+    # Set Gecko(View)'s build ID
+    if [ "${IF_BUILD_ID}" != 'null' ]; then
+        readonly MOZ_BUILD_DATE="${IF_BUILD_ID}"
         export MOZ_BUILD_DATE
     fi
 
     # Set versions for our local dependency substitutions
-    local readonly IF_LOCAL_AC_VERSION_BASE="${FIREFOX_VERSION}-${IF_EPOCH_NS}"
-    local readonly IF_LOCAL_AS_VERSION_BASE="${APPSERVICES_VERSION}-${IF_EPOCH_NS}"
-    local readonly IF_LOCAL_GLEAN_VERSION_BASE="${GLEAN_VERSION}-${IF_EPOCH_NS}"
+    readonly IF_LOCAL_AC_VERSION="0.0.1-local-${FIREFOX_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
+    readonly IF_LOCAL_AC_VERSION_GRADLE="-${FIREFOX_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
+    readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${APPSERVICES_VERSION}-${IF_LOCAL_AS_VERSION_STAMP}"
+    readonly IF_LOCAL_AS_VERSION_GRADLE="${APPSERVICES_VERSION}-${IF_LOCAL_AS_VERSION_STAMP}"
+    readonly IF_LOCAL_GLEAN_VERSION="0.0.1-SNAPSHOT-${GLEAN_VERSION}-${IF_LOCAL_GLEAN_VERSION_STAMP}"
+    readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${GLEAN_VERSION}-${IF_LOCAL_GLEAN_VERSION_STAMP}"
 
-    ## For CI, we set IF_EPOCH_NS from the pipeline creation time, and we don't add '-SNAPSHOT' to the end
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        readonly IF_LOCAL_AC_VERSION="0.0.1-local-${IF_LOCAL_AC_VERSION_BASE}"
-        readonly IF_LOCAL_AC_VERSION_GRADLE="-${IF_LOCAL_AC_VERSION_BASE}"
-        readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_AS_VERSION_BASE}"
-        readonly IF_LOCAL_AS_VERSION_GRADLE="${IF_LOCAL_AS_VERSION_BASE}"
-        readonly IF_LOCAL_GLEAN_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_GLEAN_VERSION_BASE}"
-        readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${IF_LOCAL_GLEAN_VERSION_BASE}"
-    else
-        readonly IF_LOCAL_AC_VERSION="0.0.1-local-${IF_LOCAL_AC_VERSION_BASE}-SNAPSHOT"
-        readonly IF_LOCAL_AC_VERSION_GRADLE="-${IF_LOCAL_AC_VERSION_BASE}-SNAPSHOT"
-        readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_AS_VERSION_BASE}-SNAPSHOT"
-        readonly IF_LOCAL_AS_VERSION_GRADLE="${IF_LOCAL_AS_VERSION_BASE}-SNAPSHOT"
-        readonly IF_LOCAL_GLEAN_VERSION="0.0.1-SNAPSHOT-${IF_LOCAL_GLEAN_VERSION_BASE}-SNAPSHOT"
-        readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${IF_LOCAL_GLEAN_VERSION_BASE}-SNAPSHOT"
-    fi
+    echo_green_text 'SUCCESS: Set build environment variables'
 
     echo_green_text 'SUCCESS: Set build environment variables'
 }
@@ -253,12 +258,14 @@ function prep_gecko() {
     "${IRONFOX_SED}" -i "s|{IRONFOX_GECKO}|${IRONFOX_GECKO}|" "${IRONFOX_GECKO}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_MOZCONFIGS}|${IRONFOX_MOZCONFIGS}|" "${IRONFOX_GECKO}/local.properties"
 
-    # Substitute our local versions of Android Components and Application Services
-    "${IRONFOX_SED}" -i -e "s|val VERSION = .*|val VERSION = \""${IF_LOCAL_AS_VERSION}\""|g" "${IRONFOX_AC}/plugins/dependencies/src/main/java/ApplicationServices.kt"
+    # Substitute Android Components
     "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|" "${IRONFOX_GECKO}/local.properties"
+
+    # Substitute Application Services
+    "${IRONFOX_SED}" -i -e "s|val VERSION = .*|val VERSION = \""${IF_LOCAL_AS_VERSION}\""|g" "${IRONFOX_AC}/plugins/dependencies/src/main/java/ApplicationServices.kt"
     "${IRONFOX_SED}" -i "s|{IF_LOCAL_AS_VERSION}|${IF_LOCAL_AS_VERSION}|" "${IRONFOX_GECKO}/local.properties"
 
-    # Substitute our local version of Glean
+    # Substitute Glean
     "${IRONFOX_SED}" -i -e "/^glean = \"/c\\glean = \"${IF_LOCAL_GLEAN_VERSION}\"" "${IRONFOX_GECKO}/gradle/libs.versions.toml"
 
     # Configure release channel

@@ -989,6 +989,48 @@ if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_X86_64+x}" ]]; then
 fi
 export IRONFOX_MACH_TARGET_BUNDLE_X86_64
 
+# Version overrides
+
+## Value we should use to set the build date (used to derive the app version code from) (if overriding it is desired)
+readonly IRONFOX_BUILD_DATE_OVERRIDE_DEFAULT='null'
+if [[ -z "${IRONFOX_BUILD_DATE_OVERRIDE+x}" ]]; then
+    IRONFOX_BUILD_DATE_OVERRIDE="${IRONFOX_BUILD_DATE_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_BUILD_DATE_OVERRIDE
+export IRONFOX_BUILD_DATE_OVERRIDE
+
+## Value we should use to set Gecko(View)'s build ID (if overriding it is desired)
+readonly IRONFOX_BUILD_ID_OVERRIDE_DEFAULT='null'
+if [[ -z "${IRONFOX_BUILD_ID_OVERRIDE+x}" ]]; then
+    IRONFOX_BUILD_ID_OVERRIDE="${IRONFOX_BUILD_ID_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_BUILD_ID_OVERRIDE
+export IRONFOX_BUILD_ID_OVERRIDE
+
+## Value we should use to set the version for our local Android Components substitution (if overriding it is desired)
+readonly IRONFOX_LOCAL_AC_VERSION_OVERRIDE_DEFAULT='null'
+if [[ -z "${IRONFOX_LOCAL_AC_VERSION_OVERRIDE+x}" ]]; then
+    IRONFOX_LOCAL_AC_VERSION_OVERRIDE="${IRONFOX_LOCAL_AC_VERSION_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_LOCAL_AC_VERSION_OVERRIDE
+export IRONFOX_LOCAL_AC_VERSION_OVERRIDE
+
+## Value we should use to set the version for our local Application Services substitution (if overriding it is desired)
+readonly IRONFOX_LOCAL_AS_VERSION_OVERRIDE_DEFAULT='null'
+if [[ -z "${IRONFOX_LOCAL_AS_VERSION_OVERRIDE+x}" ]]; then
+    IRONFOX_LOCAL_AS_VERSION_OVERRIDE="${IRONFOX_LOCAL_AS_VERSION_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_LOCAL_AS_VERSION_OVERRIDE
+export IRONFOX_LOCAL_AS_VERSION_OVERRIDE
+
+## Value we should use to set the version for our local Glean substitution (if overriding it is desired)
+readonly IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE_DEFAULT='null'
+if [[ -z "${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE+x}" ]]; then
+    IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE="${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE
+export IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE
+
 # App signing
 
 # Location to the Android keystore file that we should use
