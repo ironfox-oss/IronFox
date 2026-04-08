@@ -295,27 +295,22 @@ object GeckoSettingsBridge {
         setUserPref(engine, javascriptJitFenixPref, javascriptJitEnabled)
         setDefaultPref(engine, javascriptJitFenixPref, javascriptJitEnabled)
 
-        // If the UI toggle is left disabled (default), users may prefer to enable/disable individual JITs,
-        /// so ensure we only lock them if the UI toggle is actually set to disabled
-        if (!javascriptJitEnabled) {
-            setUserPref(engine, jitBaselineGeckoPref, javascriptJitEnabled)
-            setDefaultPref(engine, jitBaselineGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitIonGeckoPref, javascriptJitEnabled)
-            setDefaultPref(engine, jitIonGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitHintsGeckoPref, javascriptJitEnabled)
-            setDefaultPref(engine, jitHintsGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitNativeRegexpGeckoPref, javascriptJitEnabled)
-            setDefaultPref(engine, jitNativeRegexpGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitWasmIonGeckoPref, javascriptJitEnabled)
-            setDefaultPref(engine, jitWasmIonGeckoPref, javascriptJitEnabled)
-        } else {
-            // JIT still defaults to disabled from Phoenix, so ensure we are explicitly enabling it if the user decides to do so
-            setUserPref(engine, jitBaselineGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitIonGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitHintsGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitNativeRegexpGeckoPref, javascriptJitEnabled)
-            setUserPref(engine, jitWasmIonGeckoPref, javascriptJitEnabled)
+        setUserPref(engine, jitBaselineGeckoPref, javascriptJitEnabled)
+        setDefaultPref(engine, jitBaselineGeckoPref, javascriptJitEnabled)
 
+        setUserPref(engine, jitIonGeckoPref, javascriptJitEnabled)
+        setDefaultPref(engine, jitIonGeckoPref, javascriptJitEnabled)
+
+        setUserPref(engine, jitHintsGeckoPref, javascriptJitEnabled)
+        setDefaultPref(engine, jitHintsGeckoPref, javascriptJitEnabled)
+
+        setUserPref(engine, jitNativeRegexpGeckoPref, javascriptJitEnabled)
+        setDefaultPref(engine, jitNativeRegexpGeckoPref, javascriptJitEnabled)
+
+        setUserPref(engine, jitWasmIonGeckoPref, javascriptJitEnabled)
+        setDefaultPref(engine, jitWasmIonGeckoPref, javascriptJitEnabled)
+
+        if (javascriptJitEnabled) {
             setUserPref(engine, javascriptJitFenixModifiedPref, true)
             setDefaultPref(engine, javascriptJitFenixModifiedPref, true)
         }
@@ -362,18 +357,13 @@ object GeckoSettingsBridge {
         setUserPref(engine, safeBrowsingEnabledFenixPref, safeBrowsingEnabled)
         setDefaultPref(engine, safeBrowsingEnabledFenixPref, safeBrowsingEnabled)
 
-        // If the UI toggle is left enabled (default), users may prefer to enable/disable malware or phishing individually,
-        /// so ensure we only lock them if the UI toggle is actually set to enabled
-        if (safeBrowsingEnabled) {
-            setUserPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
-            setDefaultPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
-            setUserPref(engine, safeBrowsingPhishingGeckoPref, safeBrowsingEnabled)
-            setDefaultPref(engine, safeBrowsingPhishingGeckoPref, safeBrowsingEnabled)
-        } else {
-            // Safe Browsing still defaults to enabled from Phoenix, so ensure we are explicitly disabling it if the user decides to do so
-            setUserPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
-            setUserPref(engine, safeBrowsingPhishingGeckoPref, safeBrowsingEnabled)
+        setUserPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
+        setDefaultPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
 
+        setUserPref(engine, safeBrowsingPhishingGeckoPref, safeBrowsingEnabled)
+        setDefaultPref(engine, safeBrowsingPhishingGeckoPref, safeBrowsingEnabled)
+
+       if (!safeBrowsingEnabled) {
             setUserPref(engine, safeBrowsingEnabledFenixModifiedPref, true)
             setDefaultPref(engine, safeBrowsingEnabledFenixModifiedPref, true)
         }
