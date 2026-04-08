@@ -945,6 +945,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
 ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
 ## This is ideal for features that aren't exposed by the UI, it gives more freedom/control back to users, and it's great to ensure things are always configured how we want them...
 "${IRONFOX_SED}" -i \
+    -e 's|"browser.contentblocking.category"|"z99.ignore.string"|' \
     -e 's|"browser.safebrowsing.malware.enabled"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.phishing.enabled"|"z99.ignore.boolean"|' \
     -e 's|"browser.safebrowsing.provider."|"z99.ignore.string."|' \
@@ -967,10 +968,12 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
     -e 's|"privacy.trackingprotection.emailtracking.enabled"|"z99.ignore.boolean"|' \
     -e 's|"privacy.trackingprotection.emailtracking.pbmode.enabled"|"z99.ignore.boolean"|' \
     -e 's|"privacy.trackingprotection.fingerprinting.enabled"|"z99.ignore.boolean"|' \
+    -e 's|"privacy.trackingprotection.harmfuladdon.enabled"|"z99.ignore.boolean"|' \
     -e 's|"privacy.trackingprotection.socialtracking.enabled"|"z99.ignore.boolean"|' \
     -e 's|"urlclassifier.features.cryptomining.blacklistTables"|"z99.ignore.string"|' \
     -e 's|"urlclassifier.features.emailtracking.blocklistTables"|"z99.ignore.string"|' \
     -e 's|"urlclassifier.features.fingerprinting.blacklistTables"|"z99.ignore.string"|' \
+    -e 's|"urlclassifier.features.harmfuladdon.blocklistTables"|"z99.ignore.string"|' \
     -e 's|"urlclassifier.features.socialtracking.annotate.blacklistTables"|"z99.ignore.string"|' \
     -e 's|"urlclassifier.malwareTable"|"z99.ignore.string"|' \
     -e 's|"urlclassifier.phishTable"|"z99.ignore.string"|' \
@@ -982,6 +985,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
     -e 's|"browser.crashReports.requestedNeverShowAgain"|"z99.ignore.boolean"|' \
     -e 's|"browser.display.use_document_fonts"|"z99.ignore.integer"|' \
     -e 's|"devtools.debugger.remote-enabled"|"z99.ignore.boolean"|' \
+    -e 's|"devtools.console.stdout.chrome"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType"|"z99.ignore.boolean"|' \
     -e 's|"docshell.shistory.sameDocumentNavigationOverridesLoadType.forceDisable"|"z99.ignore.string"|' \
     -e 's|"dom.ipc.processCount"|"z99.ignore.integer"|' \
@@ -1004,6 +1008,7 @@ rm -vf mobile/android/fenix/app/src/nightly/res/mipmap-xxxhdpi/ic_launcher.webp
     -e 's|"network.fetchpriority.enabled"|"z99.ignore.boolean"|' \
     -e 's|"network.http.http3.enable_kyber"|"z99.ignore.boolean"|' \
     -e 's|"network.http.largeKeepaliveFactor"|"z99.ignore.integer"|' \
+    -e 's|"network.trr.default_provider_uri"|"z99.ignore.string"|' \
     -e 's|"network.security.ports.banned"|"z99.ignore.string"|' \
     -e 's|"privacy.baselineFingerprintingProtection"|"z99.ignore.boolean"|' \
     -e 's|"privacy.baselineFingerprintingProtection.overrides"|"z99.ignore.string"|' \
