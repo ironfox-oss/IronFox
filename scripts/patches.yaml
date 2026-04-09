@@ -240,6 +240,13 @@ patches:
     effect: "Cleaner, more private address bar experience, without web suggestions."
     category: "Mozilla"
 
+  - file: "fenix-disable-firefox-relay.patch"
+    name: "Disable Firefox Relay"
+    description: "Disables Firefox Relay functionality."
+    reason: "To reduce reliance/integration with external Mozilla services, and provide users with more control over whether they wish to use this functionality."
+    effect: "Cleaner browsing experience, with more control provided to users."
+    category: "Mozilla"
+
   - file: "fenix-disable-remote-search-configuration.patch"
     name: "Disable Remote Search Configuration"
     description: "Disables remote configuration of search engines from Mozilla."

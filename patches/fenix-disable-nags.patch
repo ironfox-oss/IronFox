@@ -10,10 +10,10 @@ Signed-off-by: celenity <celenity@celenity.dev>
  1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 81d95a9666a1..5e337f6be081 100644
+index 5c3035c5b371f..0629dad776227 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -368,7 +368,7 @@ class Settings(
+@@ -371,7 +371,7 @@ class Settings(
      )
  
      val canShowCfr: Boolean
@@ -22,7 +22,7 @@ index 81d95a9666a1..5e337f6be081 100644
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),
-@@ -489,7 +489,7 @@ class Settings(
+@@ -501,7 +501,7 @@ class Settings(
       */
      var showWallpaperOnboarding by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_wallpapers_onboarding),
@@ -31,7 +31,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      var openLinksInAPrivateTab by booleanPreference(
-@@ -531,7 +531,7 @@ class Settings(
+@@ -543,7 +543,7 @@ class Settings(
  
      var shouldShowMenuBanner by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_menu_banner),
@@ -40,7 +40,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      var defaultSearchEngineName by stringPreference(
-@@ -953,7 +953,7 @@ class Settings(
+@@ -975,7 +975,7 @@ class Settings(
       */
      var showFirstTimeTranslation: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
@@ -49,7 +49,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      /**
-@@ -1137,7 +1137,7 @@ class Settings(
+@@ -1159,7 +1159,7 @@ class Settings(
  
      var reEngagementNotificationShown by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_shown),
@@ -58,7 +58,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      /**
-@@ -1159,7 +1159,7 @@ class Settings(
+@@ -1181,7 +1181,7 @@ class Settings(
       */
      var reEngagementNotificationEnabled by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_re_engagement_notification_enabled),
@@ -67,7 +67,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      /**
-@@ -1246,7 +1246,7 @@ class Settings(
+@@ -1268,7 +1268,7 @@ class Settings(
       */
      var shouldShowCookieBannersCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
@@ -76,7 +76,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      var shouldShowTabSwipeCFR by booleanPreference(
-@@ -1256,7 +1256,7 @@ class Settings(
+@@ -1278,7 +1278,7 @@ class Settings(
  
      var hasShownTabSwipeCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
@@ -85,7 +85,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-@@ -1582,12 +1582,12 @@ class Settings(
+@@ -1604,12 +1604,12 @@ class Settings(
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
@@ -100,7 +100,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      val shouldShowOpenInAppCfr: Boolean
-@@ -1595,17 +1595,17 @@ class Settings(
+@@ -1617,17 +1617,17 @@ class Settings(
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
@@ -121,7 +121,7 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      /**
-@@ -1613,7 +1613,7 @@ class Settings(
+@@ -1635,7 +1635,7 @@ class Settings(
       */
      var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),
@@ -130,7 +130,22 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      /**
-@@ -2504,7 +2504,7 @@ class Settings(
+@@ -1971,12 +1971,12 @@ class Settings(
+ 
+     var isSearchOptimizationEnabled by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_search_optimization_feature),
+-        default = { FxNimbus.features.searchOptimizationOption.value().enabled },
++        default = { false },
+     )
+ 
+     var shouldShowSearchOptimizationStockCard by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_search_optimization_stocks),
+-        default = { FxNimbus.features.searchOptimizationOption.value().showStocksCard },
++        default = { false },
+     )
+ 
+     var isTabStripEnabled by booleanPreference(
+@@ -2461,7 +2461,7 @@ class Settings(
       */
      var isFirstTimeEngagingWithSignup: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_first_time_engage_with_signup),
@@ -139,7 +154,16 @@ index 81d95a9666a1..5e337f6be081 100644
      )
  
      /**
-@@ -2850,7 +2850,7 @@ class Settings(
+@@ -2518,7 +2518,7 @@ class Settings(
+      */
+     var shouldShowEmailMaskCfr by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_should_show_email_mask_cfr),
+-        default = true,
++        default = false,
+     )
+ 
+     /**
+@@ -2826,7 +2826,7 @@ class Settings(
      var showSetupChecklist by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_setup_checklist_complete),
          default = {
