@@ -79,6 +79,10 @@
         },
         {
             "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "mit.edu"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
             "firstPartyDomain": "namemc.com"
         },
         {
@@ -105,6 +109,10 @@
         {
             "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
             "firstPartyDomain": "pornhub.com"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "ttc.com.ge"
         },
         {
             "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
