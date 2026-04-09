@@ -57,13 +57,14 @@ function upload_asset() {
 }
 
 # Upload packages to package registry
-for apk in "${IRONFOX_APK_ARTIFACTS}"/*.apk; do
-    readonly package_name_apk="apk"
-    upload_asset "${package_name_apk}" "${apk}"
+readonly package_name_apk='apk'
+readonly package_name_apkset='apkset'
 
+for apk in "${IRONFOX_APK_ARTIFACTS}"/*.apk; do
+    upload_asset "${package_name_apk}" "${apk}"
 done
+
 for apks in "${IRONFOX_APKS_ARTIFACTS}"/*.apks; do
-    readonly package_name_apkset="apkset"
     upload_asset "${package_name_apkset}" "${apks}"
 done
 
