@@ -601,7 +601,12 @@ function build_gecko_x86_64() {
     cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip" "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"
 }
 
-function check_geckoview_aar_archives() {
+function build_gecko_bundle() {
+    # Bundle
+
+    # Verify that our GeckoView AAR archives are not missing or broken
+
+    # Verify that our ARM64 GeckoView AAR archive exists
     if ! [ -f "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]; then
         echo_red_text "ERROR: ARM64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
         exit 1
@@ -635,16 +640,6 @@ function check_geckoview_aar_archives() {
     if ! [ -s "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]; then
         echo_red_text "ERROR: x86_64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
         exit 1
-    fi
-}
-
-function build_gecko_bundle() {
-    # Bundle
-
-    # Verify that our GeckoView AAR archives are not missing or broken
-    ## If IRONFOX_GECKOVIEW_BUNDLE_DIRECT is set, we already run these checks earlier, so no need to run again
-    if [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]; then
-        check_geckoview_aar_archives
     fi
 
     readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
@@ -716,7 +711,7 @@ function clobber_gecko_x86_64() {
 function clobber_gecko() {
     "${IRONFOX_MACH}" configure
     "${IRONFOX_MACH}" clobber
-    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ] && [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]; then
+    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ] && [ "${IRONFOX_CI}" != 1 ]; then
         clobber_gecko_arm64
         clobber_gecko_arm
         clobber_gecko_x86_64
@@ -735,7 +730,7 @@ function build_gecko() {
     # Always clobber to ensure that builds are fresh
     clobber_gecko
 
-    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ] || [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" == 1 ]; then
+    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ] || [ "${IRONFOX_CI}" == 1 ]; then
         if [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
             # Build ARM64
             build_gecko_arm64
@@ -912,11 +907,6 @@ function build_fenix() {
     echo_green_text 'SUCCESS: Built Fenix'
 }
 
-# If we're building GeckoView as a bundle directly, fail-fast if our GeckoView AAR archives are missing or broken
-if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ] && [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" == 1 ]; then
-    check_geckoview_aar_archives
-fi
-
 # Prepare build environment...
 ## (These need to be performed here instead of in `prebuild.sh`, so that we can account for if users decide to
 ### change the variables, without them needing to re-run the entire prebuild script...)
@@ -930,7 +920,7 @@ prep_phoenix
 prep_glean
 prep_llvm
 
-if [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
     prep_fenix
     prep_up_ac
 fi
@@ -959,7 +949,7 @@ build_microg
 build_phoenix
 build_gecko
 
-if [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
     build_ac
     build_as
     build_up_ac
