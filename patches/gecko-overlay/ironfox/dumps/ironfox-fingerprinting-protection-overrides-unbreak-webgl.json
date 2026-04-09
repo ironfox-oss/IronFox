@@ -179,6 +179,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "mit.edu"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "namemc.com"
         },
         {
@@ -245,6 +249,10 @@
         {
             "overrides": "-DisableWebGL",
             "firstPartyDomain": "svgrepo.com"
+        },
+        {
+            "overrides": "-DisableWebGL",
+            "firstPartyDomain": "ttc.com.ge"
         },
         {
             "overrides": "-DisableWebGL",
