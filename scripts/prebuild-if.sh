@@ -172,7 +172,7 @@ if [[ ! -d "${IRONFOX_ANDROID_SDK}/build-tools/35.0.0" ]]; then
 fi
 
 # Create Android SDK Platform Tools symlink
-if [ "${IRONFOX_CI}" != 1 ] && [ ! -d "${IRONFOX_ANDROID_SDK}/platform-tools" ]; then
+if [ ! -d "${IRONFOX_ANDROID_SDK}/platform-tools" ]; then
     ln -s "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" "${IRONFOX_ANDROID_SDK}/platform-tools"
 fi
 
