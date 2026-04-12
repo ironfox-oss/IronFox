@@ -175,6 +175,10 @@ build-aar:
   script:
     - echo "Building AAR..."
     - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
+    - |
+      if [ "${IRONFOX_CI_BUILD_FAILED}" == 1 ]; then
+        exit 1
+      fi
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -208,6 +212,10 @@ build-final:
   script:
     - echo "Building Bundle..."
     - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
+    - |
+      if [ "${IRONFOX_CI_BUILD_FAILED}" == 1 ]; then
+        exit 1
+      fi
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"

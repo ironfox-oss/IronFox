@@ -30,14 +30,16 @@ function compress_archives() {
     bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
 }
 
+# By default, we know the build hasn't failed...
+IRONFOX_CI_BUILD_FAILED=0
+
 # Build IronFox
 readonly IRONFOX_FROM_CI_BUILD=1
 export IRONFOX_FROM_CI_BUILD
-bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" || CI_BUILD_FAILED=1
+bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" || IRONFOX_CI_BUILD_FAILED=1
 
 # Compress our archives
 compress_archives
 
-if [ "${CI_BUILD_FAILED+x}" == 1 ]; then
-    exit 1
-fi
+readonly IRONFOX_CI_BUILD_FAILED
+export IRONFOX_CI_BUILD_FAILED
