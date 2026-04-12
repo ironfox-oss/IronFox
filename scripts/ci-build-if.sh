@@ -14,9 +14,6 @@ if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
     export IRONFOX_RELEASE=1
 fi
 
-# To test, let's purposely fail...
-exit 1
-
 # Set-up our environment
 source $(dirname $0)/env.sh
 

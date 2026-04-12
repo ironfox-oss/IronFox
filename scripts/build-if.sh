@@ -25,6 +25,9 @@ set -euo pipefail
 # Set-up our environment
 source $(dirname $0)/env.sh
 
+# To test CI, let's purposely fail...
+exit 1
+
 # Include utilities
 source "${IRONFOX_UTILS}"
 
