@@ -3,12 +3,13 @@
 ## This script is expected to be executed in a CI environment, or possibly in our Docker image instance
 ## DO NOT execute this manually!
 
-set -eu
-set -o pipefail
-set -o xtrace
+set -euo pipefail
 
-source "$(dirname "$0")/utilities.sh"
-source "$(dirname "$0")"/env.sh
+# Set-up our environment
+source $(dirname $0)/env.sh
+
+# Include utilities
+source "${IRONFOX_UTILS}"
 
 readonly artifact_name="$1"
 readonly artifact_archive="${artifact_name}.tar.xz"

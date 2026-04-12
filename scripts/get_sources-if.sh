@@ -16,9 +16,6 @@ fi
 readonly target="$1"
 readonly mode="$2"
 
-# To test CI, let's purposely fail...
-exit 1
-
 # Set-up target parameters
 IRONFOX_GET_SOURCE_ANDROID_NDK=0
 IRONFOX_GET_SOURCE_ANDROID_SDK=0
