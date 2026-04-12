@@ -11,12 +11,12 @@ fi
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
+    bash -x $(dirname $0)/env.sh || exit 1
 fi
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 readonly ci_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
@@ -27,13 +27,13 @@ function compress_archives() {
     else
         local readonly ci_job_artifact="build-aar-${ci_target}"
     fi
-    bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
+    bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}" || exit 1
 }
 
 # Build IronFox
 readonly IRONFOX_FROM_CI_BUILD=1
 export IRONFOX_FROM_CI_BUILD
-bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" || true
+bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}"
 
 # Compress our archives
 if [ $? -ne 0 ]; then

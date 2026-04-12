@@ -23,10 +23,10 @@
 set -euo pipefail
 
 # Set-up our environment
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
     echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
@@ -88,15 +88,15 @@ if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
 fi
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
-    source "${IRONFOX_ENV_FDROID}"
+    source "${IRONFOX_ENV_FDROID}" || exit 1
 fi
 
-source "${IRONFOX_CARGO_ENV}"
-source "${IRONFOX_NVM_ENV}"
-source "${IRONFOX_PYENV}"
+source "${IRONFOX_CARGO_ENV}" || exit 1
+source "${IRONFOX_NVM_ENV}" || exit 1
+source "${IRONFOX_PYENV}" || exit 1
 
 # Include version info
-source "${IRONFOX_VERSIONS}"
+source "${IRONFOX_VERSIONS}" || exit 1
 
 # Set timezone to UTC for consistency
 unset TZ
@@ -156,7 +156,7 @@ readonly IF_LOCAL_AS_VERSION_STAMP="${IF_LOCAL_AS_VERSION_STAMP}"
 readonly IF_LOCAL_GLEAN_VERSION_STAMP="${IF_LOCAL_GLEAN_VERSION_STAMP}"
 EOF
 
-    source "${IRONFOX_ENV_BUILD}"
+    source "${IRONFOX_ENV_BUILD}" || exit 1
 
     # Set Gecko(View)'s build ID
     if [ "${IF_BUILD_ID}" != 'null' ]; then

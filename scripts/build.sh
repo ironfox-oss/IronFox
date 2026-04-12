@@ -4,12 +4,12 @@ set -euo pipefail
 
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
-    bash -x $(dirname $0)/env.sh
+    bash -x $(dirname $0)/env.sh || exit 1
 fi
-source $(dirname $0)/env.sh
+source $(dirname $0)/env.sh || exit 1
 
 # Include utilities
-source "${IRONFOX_UTILS}"
+source "${IRONFOX_UTILS}" || exit 1
 
 if [ -z "${1+x}" ]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
@@ -32,9 +32,9 @@ if [ "${IRONFOX_LOG_BUILD}" == 1 ]; then
     # Ensure our log directory exists
     mkdir -vp "${IRONFOX_LOG_DIR}"
 
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
+    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1 || exit 1
 else
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}"
+    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" || exit 1
 fi
 
 # Sign IronFox
@@ -55,8 +55,8 @@ if [ "${IRONFOX_SIGN}" == 1 ]; then
             exit 0
         fi
 
-        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
+        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1 || exit 1
     else
-        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
+        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" || exit 1
     fi
 fi
