@@ -168,14 +168,12 @@ build-aar:
       - BUILD_VARIANT: ["arm", "arm64", "x86_64"]
   variables:
     RUNNER_SCRIPT_TIMEOUT: 8h
-    IRONFOX_JOB_ARTIFACT_NAME: "build-aar-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "aar;logs"
     <<: *build_variables
   <<: *build_setup_steps
   script:
     - echo "Building AAR..."
-    - bash -x scripts/ci-build.sh
-    - bash -x scripts/ci-compress.sh
+    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -202,14 +200,12 @@ build-final:
     - saas-linux-2xlarge-amd64
   variables:
     BUILD_VARIANT: "bundle"
-    IRONFOX_JOB_ARTIFACT_NAME: "build-final-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "apk;apks;logs"
     <<: *build_variables
   <<: *build_setup_steps
   script:
     - echo "Building Bundle..."
-    - bash -x scripts/ci-build.sh
-    - bash -x scripts/ci-compress.sh
+    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"

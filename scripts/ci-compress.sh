@@ -10,39 +10,40 @@ set -o xtrace
 source "$(dirname "$0")/utilities.sh"
 source "$(dirname "$0")"/env.sh
 
-artifact_name="${IRONFOX_JOB_ARTIFACT_NAME}.tar.xz"
-artifact_path="${IRONFOX_ARTIFACTS}/${artifact_name}"
+readonly artifact_name="$1"
+readonly artifact_archive="${artifact_name}.tar.xz"
+readonly artifact_path="${IRONFOX_ARTIFACTS}/${artifact_archive}"
 
 function ironfox_package_artifacts() {
     # For debugging purposes
     echo "Listing available artifacts"
-    find "$IRONFOX_ARTIFACTS"
+    find "${IRONFOX_ARTIFACTS}"
 
-    includes=$(echo "$IRONFOX_ARTIFACT_INCLUDES" | tr ";" "\n")
-    paths=()
-    for include in $includes; do
-        path="${IRONFOX_ARTIFACTS}/$include"
-        if [[ -e "$path" ]]; then
-            echo "Including $path"
-            paths+=("$include")
+    local readonly includes=$(echo "${IRONFOX_ARTIFACT_INCLUDES}" | tr ";" "\n")
+    local paths=()
+    for include in "${includes}"; do
+        local path="${IRONFOX_ARTIFACTS}/${include}"
+        if [[ -e "${path}" ]]; then
+            echo "Including ${path}"
+            local paths+=("${include}")
         else
-            echo_red_text "Warning: $path does not exist!"
+            echo_red_text "Warning: ${path} does not exist!"
         fi
     done
 
     if [[ ${#paths[@]} -eq 0 ]]; then
         echo_red_text "No valid artifact paths found. Creating empty artifact."
-        touch "$artifact_path"
+        touch "${artifact_path}"
         return
     fi
 
     mkdir -p "${IRONFOX_ARTIFACTS}"
-    tar cvJf "$artifact_path" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}"
+    tar cvJf "${artifact_path}" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}"
 }
 
 if [[ -z "${IRONFOX_ARTIFACT_INCLUDES}" ]]; then
     echo_red_text "IRONFOX_ARTIFACT_INCLUDES has not been specified. Creating empty artifact."
-    touch "$artifact_path"
+    touch "${artifact_path}"
 else
     ironfox_package_artifacts
 fi
