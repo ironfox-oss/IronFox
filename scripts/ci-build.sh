@@ -34,7 +34,7 @@ function compress_archives() {
 readonly IRONFOX_FROM_CI_BUILD=1
 export IRONFOX_FROM_CI_BUILD
 set +e
-bash -x "${ci_target}/ci-build-if.sh" "${ci_target}"
+bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}"
 set -e
 
 # Compress our archives
