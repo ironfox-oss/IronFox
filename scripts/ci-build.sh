@@ -38,8 +38,8 @@ readonly IRONFOX_FROM_CI_BUILD=1
 export IRONFOX_FROM_CI_BUILD
 bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" || IRONFOX_CI_BUILD_FAILED=1
 
-# Compress our archives
-compress_archives
-
 readonly IRONFOX_CI_BUILD_FAILED
 export IRONFOX_CI_BUILD_FAILED
+
+# Compress our archives
+compress_archives

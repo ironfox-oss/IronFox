@@ -3,9 +3,7 @@
 ## This script is expected to be executed in a CI environment, or possibly in our Docker image instance
 ## DO NOT execute this manually!
 
-set -eu
-set -o pipefail
-set -o xtrace
+set -euo pipefail
 
 # Set-up our environment
 source $(dirname $0)/env.sh || exit 1

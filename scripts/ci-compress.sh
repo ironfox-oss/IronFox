@@ -47,3 +47,7 @@ if [[ -z "${IRONFOX_ARTIFACT_INCLUDES+x}" ]]; then
 else
     ironfox_package_artifacts
 fi
+
+if [ "${IRONFOX_CI_BUILD_FAILED}" == 1 ]; then
+    exit 1
+fi
