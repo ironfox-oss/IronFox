@@ -25,7 +25,7 @@ function ironfox_package_artifacts() {
         local path="${IRONFOX_ARTIFACTS}/${include}"
         if [[ -e "${path}" ]]; then
             echo "Including ${path}"
-            local paths+=("${include}")
+            paths+=("${include}")
         else
             echo_red_text "Warning: ${path} does not exist!"
         fi
