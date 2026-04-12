@@ -7,13 +7,6 @@ set -eu
 set -o pipefail
 set -o xtrace
 
-export IRONFOX_CI=1
-
-if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
-    # Target release
-    export IRONFOX_RELEASE=1
-fi
-
 # Set-up our environment
 source $(dirname $0)/env.sh
 

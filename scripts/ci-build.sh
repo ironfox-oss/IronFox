@@ -2,6 +2,13 @@
 
 set -euo pipefail
 
+export IRONFOX_CI=1
+
+if [[ "${CI_COMMIT_REF_NAME}" == "${PRODUCTION_BRANCH}" ]]; then
+    # Target release
+    export IRONFOX_RELEASE=1
+fi
+
 # Set-up our environment
 if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
     bash -x $(dirname $0)/env.sh
