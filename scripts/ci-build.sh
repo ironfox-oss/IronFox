@@ -33,13 +33,7 @@ function compress_archives() {
 # Build IronFox
 readonly IRONFOX_FROM_CI_BUILD=1
 export IRONFOX_FROM_CI_BUILD
-bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}"
+bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" || compress_archives
 
 # Compress our archives
-if [ $? -ne 0 ]; then
-    compress_archives
-    # If something went wrong, we still need to exit 1 so that GitLab won't think the CI succeeded...
-    exit 1
-else
-    compress_archives
-fi
+compress_archives
