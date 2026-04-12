@@ -19,9 +19,9 @@ function ironfox_package_artifacts() {
     echo "Listing available artifacts"
     find "${IRONFOX_ARTIFACTS}"
 
-    local readonly includes=$(echo ${IRONFOX_ARTIFACT_INCLUDES} | tr ";" "\n")
+    local readonly includes=$(echo "${IRONFOX_ARTIFACT_INCLUDES}" | tr ";" "\n")
     local paths=()
-    for include in "${includes}"; do
+    for include in ${includes}; do
         local path="${IRONFOX_ARTIFACTS}/${include}"
         if [[ -e "${path}" ]]; then
             echo "Including ${path}"
@@ -41,7 +41,7 @@ function ironfox_package_artifacts() {
     tar cvJf "${artifact_path}" -C "${IRONFOX_ARTIFACTS}" "${paths[@]}"
 }
 
-if [[ -z "${IRONFOX_ARTIFACT_INCLUDES}" ]]; then
+if [[ -z "${IRONFOX_ARTIFACT_INCLUDES+x}" ]]; then
     echo_red_text "IRONFOX_ARTIFACT_INCLUDES has not been specified. Creating empty artifact."
     touch "${artifact_path}"
 else
