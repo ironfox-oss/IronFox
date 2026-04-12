@@ -19,7 +19,7 @@ function ironfox_package_artifacts() {
     echo "Listing available artifacts"
     find "${IRONFOX_ARTIFACTS}"
 
-    local readonly includes=$(echo "${IRONFOX_ARTIFACT_INCLUDES}" | tr ";" "\n")
+    local readonly includes=$(echo ${IRONFOX_ARTIFACT_INCLUDES} | tr ";" "\n")
     local paths=()
     for include in "${includes}"; do
         local path="${IRONFOX_ARTIFACTS}/${include}"
