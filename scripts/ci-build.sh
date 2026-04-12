@@ -66,9 +66,20 @@ bash -x "${IRONFOX_SCRIPTS}/build.sh" "${BUILD_VARIANT}"
 # Copy our GeckoView AAR archives to the artifacts directory for publishing
 mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
 if [ "${BUILD_VARIANT}" == 'arm64' ]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/geckoview-arm64-v8a.zip"
+    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
 elif [ "${BUILD_VARIANT}" == 'arm' ]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/geckoview-armeabi-v7a.zip"
+    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
 elif [ "${BUILD_VARIANT}" == 'x86_64' ]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/geckoview-x86_64.zip"
+    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/"
+fi
+
+# Copy our Fenix outputs to the artifacts directory for publishing
+if [ "${BUILD_VARIANT}" == 'bundle' ]; then
+    mkdir -vp "${IRONFOX_APK_ARTIFACTS}"
+    mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
+
+    cp -v "${IRONFOX_OUTPUTS_ARM64}" "${IRONFOX_APK_ARTIFACTS}/"
+    cp -v "${IRONFOX_OUTPUTS_ARM}" "${IRONFOX_APK_ARTIFACTS}/"
+    cp -v "${IRONFOX_OUTPUTS_X86_64}" "${IRONFOX_APK_ARTIFACTS}/"
+    cp -v "${IRONFOX_OUTPUTS_UNIVERSAL}" "${IRONFOX_APK_ARTIFACTS}/"
 fi

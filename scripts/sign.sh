@@ -19,60 +19,27 @@ export PATH="${IRONFOX_JAVA_HOME}/bin:${PATH}"
 # Functions
 
 function sign_apk() {
-    local readonly target_arch="$1"
-    local readonly APK_IN="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target_arch}-unsigned.apk"
-
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        local readonly APK_OUT="${IRONFOX_APK_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}-${target_arch}.apk"
-    else
-        local readonly APK_OUT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${target_arch}-signed.apk"
-    fi
+    local readonly apk_in="$1"
+    local readonly apk_out="$2"
 
     "${IRONFOX_APKSIGNER}" sign \
       --ks="${IRONFOX_KEYSTORE}" \
       --ks-pass="file:/${IRONFOX_KEYSTORE_PASS_FILE}" \
       --ks-key-alias="${IRONFOX_KEYSTORE_KEY_ALIAS}" \
       --key-pass="file:/${IRONFOX_KEYSTORE_KEY_PASS_FILE}" \
-      --out="${APK_OUT}" \
-    "${APK_IN}"
-}
-
-function sign_arm64() {
-    echo_red_text 'Signing APK (ARM64)...'
-    sign_apk 'arm64-v8a'
-    echo_green_text 'SUCCESS: Signed APK (ARM64)'
-}
-
-function sign_arm() {
-    echo_red_text 'Signing APK (ARM)...'
-    sign_apk 'armeabi-v7a'
-    echo_green_text 'SUCCESS: Signed APK (ARM)'
-}
-
-function sign_x86_64() {
-    echo_red_text 'Signing APK (x86_64)...'
-    sign_apk 'x86_64'
-    echo_green_text 'SUCCESS: Signed APK (x86_64)'
-}
-
-function sign_universal() {
-    echo_red_text 'Signing APK (Universal)...'
-    sign_apk 'universal'
-    echo_green_text 'SUCCESS: Signed APK (Universal)'
+      --out="${apk_out}" \
+    "${apk_in}"
 }
 
 function sign_bundle() {
     echo_red_text 'Building signed bundleset...'
 
-    if [ "${IRONFOX_CI}" == 1 ]; then
-        local readonly APKS_OUT="${IRONFOX_APKS_ARTIFACTS}/IronFox-v${IRONFOX_VERSION}.apks"
-    else
-        local readonly APKS_OUT="${IRONFOX_OUTPUTS_FENIX_APKS}"
-    fi
+   # Create our output directory
+   mkdir -p $(dirname "${IRONFOX_OUTPUTS_BUNDLE}")
 
     "${IRONFOX_BUNDLETOOL}" build-apks \
-      --bundle="${IRONFOX_OUTPUTS_FENIX_AAB}" \
-      --output="${APKS_OUT}" \
+      --bundle="${IRONFOX_OUTPUTS_BUNDLE_AAB}" \
+      --output="${IRONFOX_OUTPUTS_BUNDLE}" \
       --ks="${IRONFOX_KEYSTORE}" \
       --ks-pass="file:/${IRONFOX_KEYSTORE_PASS_FILE}" \
       --ks-key-alias="${IRONFOX_KEYSTORE_KEY_ALIAS}" \
@@ -81,33 +48,49 @@ function sign_bundle() {
     echo_green_text 'SUCCESS: Created signed bundleset'
 }
 
+function sign_arm64() {
+    echo_red_text 'Signing APK (ARM64)...'
+    sign_apk "${IRONFOX_OUTPUTS_ARM64_UNSIGNED}" "${IRONFOX_OUTPUTS_ARM64}"
+    echo_green_text 'SUCCESS: Signed APK (ARM64)'
+}
+
+function sign_arm() {
+    echo_red_text 'Signing APK (ARM)...'
+    sign_apk "${IRONFOX_OUTPUTS_ARM_UNSIGNED}" "${IRONFOX_OUTPUTS_ARM}"
+    echo_green_text 'SUCCESS: Signed APK (ARM)'
+}
+
+function sign_x86_64() {
+    echo_red_text 'Signing APK (x86_64)...'
+    sign_apk "${IRONFOX_OUTPUTS_X86_64_UNSIGNED}" "${IRONFOX_OUTPUTS_X86_64}"
+    echo_green_text 'SUCCESS: Signed APK (x86_64)'
+}
+
+function sign_universal() {
+    echo_red_text 'Signing APK (Universal)...'
+    sign_apk "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}" "${IRONFOX_OUTPUTS_UNIVERSAL}"
+    echo_green_text 'SUCCESS: Signed APK (Universal)'
+}
+
+# Sign ARM64 APK
+if [ "${target}" == 'arm64' ] || [ "${target}" == 'bundle' ]; then
+    sign_arm64
+fi
+
+# Sign ARM APK
+if [ "${target}" == 'arm' ] || [ "${target}" == 'bundle' ]; then
+    sign_arm
+fi
+
+# Sign x86_64 APK
+if [ "${target}" == 'x86_64' ] || [ "${target}" == 'bundle' ]; then
+    sign_x86_64
+fi
+
+# Sign universal APK + build signed APK set
 if [ "${target}" == 'bundle' ]; then
-    # Sign ARM64 APK
-    sign_arm64
-
-    # Sign ARM APK
-    sign_arm
-
-    # Sign x86_64 APK
-    sign_x86_64
-
-    # Sign universal APK
     sign_universal
-
-    # Build signed APK set
     sign_bundle
-elif [ "${target}" == 'arm64' ]; then
-    # Sign ARM64 APK
-    sign_arm64
-elif [ "${target}" == 'arm' ]; then
-    # Sign ARM APK
-    sign_arm
-elif [ "${target}" == 'x86_64' ]; then
-    # Sign x86_64 APK
-    sign_x86_64
-else
-    echo_red_text "ERROR: Unknown target architecture: ${target}"
-    exit 1
 fi
 
 if [ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]; then

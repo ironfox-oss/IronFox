@@ -55,8 +55,8 @@ if [ "${IRONFOX_SIGN}" == 1 ]; then
             exit 0
         fi
 
-        bash -x "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
+        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
     else
-        bash -x "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
+        bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}"
     fi
 fi
