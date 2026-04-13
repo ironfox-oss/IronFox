@@ -33,6 +33,11 @@ if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
     exit 1
 fi
 
+if ! [ -f "${IRONFOX_BUILD}/finished-prebuild" ]; then
+    echo_red_text 'ERROR: Do not run build.sh until after you have ran prebuild.sh.'
+    exit 1
+fi
+
 if [ -z "${1+x}" ]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
@@ -77,7 +82,23 @@ export IRONFOX_TARGET_ARCH
 export IRONFOX_TARGET_ABI
 export IRONFOX_TARGET_PRETTY
 
-if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
+if [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
+    echo_red_text "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
+    exit 1
+fi
+
+if [ ! -d "${IRONFOX_ANDROID_NDK}" ]; then
+    echo_red_text "\$IRONFOX_ANDROID_NDK($IRONFOX_ANDROID_NDK) does not exist."
+    exit 1
+fi
+
+readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
+[ "${JAVA_VER}" -ge 15 ] || {
+    echo_red_text "Java 17 or newer must be set as default JDK"
+    exit 1
+}
+
+if [ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]; then
     echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
     read -p 'Do you want to continue [y/N] ' -n 1 -r
     echo ''
@@ -97,6 +118,16 @@ source "${IRONFOX_PYENV}"
 
 # Include version info
 source "${IRONFOX_VERSIONS}"
+
+if [[ -z "${FIREFOX_VERSION}" ]]; then
+    echo_red_text "\$FIREFOX_VERSION is not set! Aborting..."
+    exit 1
+fi
+
+if [[ -z "${IRONFOX_VERSION}" ]]; then
+    echo_red_text "\$IRONFOX_VERSION is not set! Aborting..."
+    exit 1
+fi
 
 # Set timezone to UTC for consistency
 unset TZ

@@ -11,6 +11,50 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set up target parameters
+if [[ -z "${1+x}" ]]; then
+    readonly deglean_target='all'
+else
+    readonly deglean_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+fi
+
+IRONFOX_DEGLEAN_AC=0
+IRONFOX_DEGLEAN_AS=0
+IRONFOX_DEGLEAN_FENIX=0
+IRONFOX_DEGLEAN_GECKO=0
+
+if [ "${deglean_target}" == 'ac' ]; then
+    # De-glean Android Components
+    IRONFOX_DEGLEAN_AC=1
+elif [ "${deglean_target}" == 'as' ]; then
+    # De-glean Application Services
+    IRONFOX_DEGLEAN_AS=1
+elif [ "${deglean_target}" == 'fenix' ]; then
+    # De-glean Fenix
+    IRONFOX_DEGLEAN_FENIX=1
+elif [ "${deglean_target}" == 'firefox' ]; then
+    # De-glean Firefox (Gecko/mozilla-central)
+    IRONFOX_DEGLEAN_GECKO=1
+elif [ "${deglean_target}" == 'all' ]; then
+    # If no argument is specified (or argument is set to "all"), just de-glean everything
+    IRONFOX_DEGLEAN_AC=1
+    IRONFOX_DEGLEAN_AS=1
+    IRONFOX_DEGLEAN_FENIX=1
+    IRONFOX_DEGLEAN_GECKO=1
+else
+    echo_red_text "ERROR: Invalid target: ${deglean_target}\n You must enter one of the following:"
+    echo 'All:                              all (Default)'
+    echo 'Android Components:               ac'
+    echo 'Application Services:             as'
+    echo 'Fenix:                            fenix'
+    echo 'Firefox (Gecko/mozilla-central):  firefox'
+    exit 1
+fi
+readonly IRONFOX_DEGLEAN_AC
+readonly IRONFOX_DEGLEAN_AS
+readonly IRONFOX_DEGLEAN_FENIX
+readonly IRONFOX_DEGLEAN_GECKO
+
 function deglean() {
     local readonly dir="$1"
     local readonly gradle_files=$(find "${dir}" -type f -name "*.gradle")
@@ -87,7 +131,7 @@ function deglean() {
     fi
 }
 
-function deglean_fenix() {
+function fenix_deglean() {
     local readonly dir="$1"
     local readonly gradle_files=$(find "${dir}" -type f -name "*.gradle")
 
@@ -114,52 +158,92 @@ function deglean_fenix() {
     fi
 }
 
-deglean "${IRONFOX_AS}"
-deglean "${IRONFOX_AC}"
-deglean "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko"
-deglean "${IRONFOX_GECKO}/mobile/android/geckoview"
-deglean "${IRONFOX_GECKO}/mobile/android/gradle"
-deglean_fenix "${IRONFOX_FENIX}"
+function deglean_ac() {
+    echo_red_text 'De-gleaning Android Components...'
 
-"${IRONFOX_SED}" -i 's|mozilla-glean|# mozilla-glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
-"${IRONFOX_SED}" -i 's|glean|# glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
+    deglean "${IRONFOX_AC}"
 
-"${IRONFOX_SED}" -i 's|classpath libs.glean.gradle.plugin|// classpath libs.glean.gradle.plugin|g' "${IRONFOX_GECKO}/build.gradle"
+    # Remove the Glean service
+    ## https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md
+    rm -rvf "${IRONFOX_AC}/components/service/glean"
+    rm -rvf "${IRONFOX_AC}/samples/glean"
 
-# Remove the Glean service
-## https://searchfox.org/firefox-main/source/mobile/android/android-components/components/service/glean/README.md
-"${IRONFOX_SED}" -i 's|- components:service-glean|# - components:service-glean|g' "${IRONFOX_FENIX}/.buildconfig.yml"
-rm -rvf "${IRONFOX_AC}/components/service/glean"
-rm -rvf "${IRONFOX_AC}/samples/glean"
+    # Remove Glean classes
+    "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+    "${IRONFOX_SED}" -i -e 's|Microsurvey.confirmation|// Microsurvey.confirmation|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+    "${IRONFOX_SED}" -i -e 's|Microsurvey.dismiss|// Microsurvey.dismiss|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+    "${IRONFOX_SED}" -i -e 's|Microsurvey.privacy|// Microsurvey.privacy|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+    "${IRONFOX_SED}" -i -e 's|Microsurvey.shown|// Microsurvey.shown|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
+    "${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt"
+    rm -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt"
 
-# Remove unused/unnecessary Glean components (Application Services)
-rm -vf "${IRONFOX_AS}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"
+    echo_green_text 'SUCCESS: De-gleaned Android Components'
+}
 
-# Remove Glean classes (Android Components)
-"${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-"${IRONFOX_SED}" -i -e 's|Microsurvey.confirmation|// Microsurvey.confirmation|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-"${IRONFOX_SED}" -i -e 's|Microsurvey.dismiss|// Microsurvey.dismiss|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-"${IRONFOX_SED}" -i -e 's|Microsurvey.privacy|// Microsurvey.privacy|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-"${IRONFOX_SED}" -i -e 's|Microsurvey.shown|// Microsurvey.shown|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingController.kt"
-"${IRONFOX_SED}" -i -e 's|GleanMessaging|// GleanMessaging|' "${IRONFOX_AC}/components/service/nimbus/src/main/java/mozilla/components/service/nimbus/messaging/NimbusMessagingStorage.kt"
-rm -vf "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/GleanCrashReporterService.kt"
+function deglean_as() {
+    echo_red_text 'De-gleaning Application Services...'
 
-# Remove Glean classes (Application Services)
-"${IRONFOX_SED}" -i 's|FxaClientMetrics|// FxaClientMetrics|g' "${IRONFOX_AS}/components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt"
-"${IRONFOX_SED}" -i 's|NimbusEvents.isReady|// NimbusEvents.isReady|g' "${IRONFOX_AS}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt"
-"${IRONFOX_SED}" -i 's|PlacesManagerMetrics|// PlacesManagerMetrics|g' "${IRONFOX_AS}/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt"
+    deglean "${IRONFOX_AS}"
+    "${IRONFOX_SED}" -i 's|mozilla-glean|# mozilla-glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
+    "${IRONFOX_SED}" -i 's|glean|# glean|g' "${IRONFOX_AS}/gradle/libs.versions.toml"
 
-# Remove Glean classes (Fenix)
-"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
-"${IRONFOX_SED}" -i 's|ErrorPage.visited|// ErrorPage.visited|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+    # Remove unused/unnecessary Glean components
+    rm -vf "${IRONFOX_AS}/components/sync_manager/android/src/main/java/mozilla/appservices/syncmanager/BaseGleanSyncPing.kt"
 
-"${IRONFOX_SED}" -i -e 's|import mozilla.telemetry|// import mozilla.telemetry|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
-"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.Awesomebar|// import org.mozilla.fenix.GleanMetrics.Awesomebar|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
-"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.Events|// import org.mozilla.fenix.GleanMetrics.Events|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
-"${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.VoiceSearch|// import org.mozilla.fenix.GleanMetrics.VoiceSearch|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
-"${IRONFOX_SED}" -i 's|Awesomebar.clipboardSuggestionClicked|// Awesomebar.clipboardSuggestionClicked|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
-"${IRONFOX_SED}" -i 's|Events.browserToolbarQrScanCompleted|// Events.browserToolbarQrScanCompleted|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
-"${IRONFOX_SED}" -i 's|VoiceSearch.tapped|// VoiceSearch.tapped|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+    # Remove Glean classes
+    "${IRONFOX_SED}" -i 's|FxaClientMetrics|// FxaClientMetrics|g' "${IRONFOX_AS}/components/fxa-client/android/src/main/java/mozilla/appservices/fxaclient/FxaClient.kt"
+    "${IRONFOX_SED}" -i 's|NimbusEvents.isReady|// NimbusEvents.isReady|g' "${IRONFOX_AS}/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/NimbusInterface.kt"
+    "${IRONFOX_SED}" -i 's|PlacesManagerMetrics|// PlacesManagerMetrics|g' "${IRONFOX_AS}/components/places/android/src/main/java/mozilla/appservices/places/PlacesConnection.kt"
 
-# Remove Glean classes (Gecko)
-"${IRONFOX_SED}" -i -e 's|Metrics|// Metrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt"
+    echo_green_text 'SUCCESS: De-gleaned Application Services'
+}
+
+function deglean_fenix() {
+    echo_red_text 'De-gleaning Fenix...'
+
+    deglean "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko"
+    fenix_deglean "${IRONFOX_FENIX}"
+
+    # Remove Glean classes
+    "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics|// import org.mozilla.fenix.GleanMetrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+    "${IRONFOX_SED}" -i 's|ErrorPage.visited|// ErrorPage.visited|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt"
+
+    "${IRONFOX_SED}" -i -e 's|import mozilla.telemetry|// import mozilla.telemetry|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+    "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.Awesomebar|// import org.mozilla.fenix.GleanMetrics.Awesomebar|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+    "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.Events|// import org.mozilla.fenix.GleanMetrics.Events|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+    "${IRONFOX_SED}" -i -e 's|import org.mozilla.fenix.GleanMetrics.VoiceSearch|// import org.mozilla.fenix.GleanMetrics.VoiceSearch|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+    "${IRONFOX_SED}" -i 's|Awesomebar.clipboardSuggestionClicked|// Awesomebar.clipboardSuggestionClicked|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+    "${IRONFOX_SED}" -i 's|Events.browserToolbarQrScanCompleted|// Events.browserToolbarQrScanCompleted|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+    "${IRONFOX_SED}" -i 's|VoiceSearch.tapped|// VoiceSearch.tapped|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/search/SearchDialogFragment.kt"
+
+    "${IRONFOX_SED}" -i -e 's|Metrics|// Metrics|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/gecko/search/SearchWidgetProvider.kt"
+
+    echo_green_text 'SUCCESS: De-gleaned Fenix'
+}
+
+function deglean_firefox() {
+    echo_red_text 'De-gleaning Firefox...'
+
+    deglean "${IRONFOX_GECKO}/mobile/android/geckoview"
+    deglean "${IRONFOX_GECKO}/mobile/android/gradle"
+
+    "${IRONFOX_SED}" -i 's|classpath libs.mozilla.glean|// classpath libs.mozilla.glean|g' "${IRONFOX_GECKO}/build.gradle"
+
+    echo_green_text 'SUCCESS: De-gleaned Firefox'
+}
+
+if [ "${IRONFOX_DEGLEAN_AC}" == 1 ]; then
+    deglean_ac
+fi
+
+if [ "${IRONFOX_DEGLEAN_AS}" == 1 ]; then
+    deglean_as
+fi
+
+if [ "${IRONFOX_DEGLEAN_FENIX}" == 1 ]; then
+    deglean_fenix
+fi
+
+if [ "${IRONFOX_DEGLEAN_GECKO}" == 1 ]; then
+    deglean_firefox
+fi
