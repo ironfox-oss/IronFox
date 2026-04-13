@@ -466,7 +466,6 @@ function prepare_fenix() {
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxhdpi/ic_logo_wordmark_private.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp"
-    rm -v "${IRONFOX_FENIX}/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private_round.xml"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/mipmap-anydpi-v26/ic_launcher_private.xml"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
