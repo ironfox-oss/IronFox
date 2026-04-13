@@ -600,7 +600,6 @@ function prepare_fenix() {
     rm -v "${IRONFOX_FENIX}/app/src/release/res/drawable/ic_launcher_foreground.xml"
     rm -v "${IRONFOX_FENIX}"/app/src/release/res/mipmap-*/ic_launcher.webp
     rm -v "${IRONFOX_FENIX}/app/src/release/res/values/colors.xml"
-    rm -v "${IRONFOX_FENIX}/app/src/main/res/values-v24/styles.xml"
     "${IRONFOX_SED}" -i -e '/android:roundIcon/d' "${IRONFOX_FENIX}/app/src/main/AndroidManifest.xml"
     "${IRONFOX_SED}" -i -e '/SplashScreen/,+5d' "${IRONFOX_FENIX}/app/src/main/res/values-v27/styles.xml"
     mkdir -vp "${IRONFOX_FENIX}/app/src/release/res/mipmap-anydpi-v26"
