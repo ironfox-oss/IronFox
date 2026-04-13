@@ -45,8 +45,10 @@ IRONFOX_GET_SOURCE_PREBUILDS=0
 IRONFOX_GET_SOURCE_PYTHON=0
 IRONFOX_GET_SOURCE_RUST=0
 IRONFOX_GET_SOURCE_S3CMD=0
+IRONFOX_GET_SOURCE_UNIFFI=0
 IRONFOX_GET_SOURCE_UP_AC=0
 IRONFOX_GET_SOURCE_UV=0
+IRONFOX_GET_SOURCE_WASI=0
 
 if [ "${target}" == 'android-ndk' ]; then
     # Get Android NDK
@@ -118,7 +120,7 @@ elif [ "${target}" == 'phoenix' ]; then
     # Get Phoenix
     IRONFOX_GET_SOURCE_PHOENIX=1
 elif [ "${target}" == 'prebuilds' ]; then
-    # Get IronFox prebuilds
+    # Get the IronFox prebuilds repo
     IRONFOX_GET_SOURCE_PREBUILDS=1
 elif [ "${target}" == 'pip' ]; then
     # Get + set-up pip
@@ -133,12 +135,18 @@ elif [ "${target}" == 's3cmd' ]; then
     # Get s3cmd
     ## NOTE: This isn't installed if "all" is used below, as it's only used in CI and targeted specifically when it's needed
     IRONFOX_GET_SOURCE_S3CMD=1
+elif [ "${target}" == 'uniffi' ]; then
+    # Get uniffi
+    IRONFOX_GET_SOURCE_UNIFFI=1
 elif [ "${target}" == 'up-ac' ]; then
     # Get UnifiedPush-AC
     IRONFOX_GET_SOURCE_UP_AC=1
 elif [ "${target}" == 'uv' ]; then
     # Get + set-up uv
     IRONFOX_GET_SOURCE_UV=1
+elif [ "${target}" == 'wasi' ]; then
+    # Get WASI SDK
+    IRONFOX_GET_SOURCE_WASI=1
 elif [ "${target}" == 'all' ]; then
     # If no argument is specified (or argument is set to "all"), just get everything
     IRONFOX_GET_SOURCE_ANDROID_NDK=1
@@ -165,11 +173,19 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_NPM=1
     IRONFOX_GET_SOURCE_PHOENIX=1
     IRONFOX_GET_SOURCE_PIP=1
-    IRONFOX_GET_SOURCE_PREBUILDS=1
     IRONFOX_GET_SOURCE_PYTHON=1
     IRONFOX_GET_SOURCE_RUST=1
     IRONFOX_GET_SOURCE_UP_AC=1
     IRONFOX_GET_SOURCE_UV=1
+
+    if [ "${IRONFOX_NO_PREBUILDS}" == 1 ]; then
+        # If IRONFOX_NO_PREBUILDS is true, we need to get the Prebuilds repo (so that they can be built from source)
+        IRONFOX_GET_SOURCE_PREBUILDS=1
+    else
+        # Otherwise,by default, we can just download the prebuilds directly
+        IRONFOX_GET_SOURCE_UNIFFI=1
+        IRONFOX_GET_SOURCE_WASI=1
+    fi
 else
     echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
     echo 'All:                              all (Default)'
@@ -197,12 +213,14 @@ else
     echo 'npm:                              npm'
     echo 'Phoenix:                          phoenix'
     echo 'pip:                              pip'
-    echo 'Prebuilds:                        prebuilds'
+    echo 'Prebuilds repo:                   prebuilds'
     echo 'Python:                           python'
     echo 'Rust:                             rust'
     echo 's3cmd:                            s3cmd'
     echo 'UnifiedPush-AC:                   up-ac'
+    echo 'uniffi-bindgen:                   uniffi'
     echo 'uv:                               uv'
+    echo 'WASI SDK:                         wasi'
     exit 1
 fi
 
@@ -234,8 +252,10 @@ readonly IRONFOX_GET_SOURCE_PREBUILDS
 readonly IRONFOX_GET_SOURCE_PYTHON
 readonly IRONFOX_GET_SOURCE_RUST
 readonly IRONFOX_GET_SOURCE_S3CMD
+readonly IRONFOX_GET_SOURCE_UNIFFI
 readonly IRONFOX_GET_SOURCE_UP_AC
 readonly IRONFOX_GET_SOURCE_UV
+readonly IRONFOX_GET_SOURCE_WASI
 
 # If the 'checksum-update' argument is specified, in addition to downloading the dependencies as usual,
 ## we're also updating their checksums
@@ -453,9 +473,9 @@ function update_sha512sum() {
         "${IRONFOX_SED}" -i -e "s|UV_SHA512SUM_OSX_X86_64='.*'|UV_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for uv (OS X - x86_64)'
     elif [ "${old_sha512sum}" == "${PREBUILDS_SHA512SUM}" ]; then
-        echo_red_text 'Updating SHA512sum for IronFox prebuilds...'
+        echo_red_text 'Updating SHA512sum for the IronFox prebuilds repo...'
         "${IRONFOX_SED}" -i -e "s|PREBUILDS_SHA512SUM='.*'|PREBUILDS_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
-        echo_green_text 'SUCCESS: Updated SHA512sum for IronFox prebuilds'
+        echo_green_text 'SUCCESS: Updated SHA512sum for the IronFox prebuilds repo'
     elif [ "${old_sha512sum}" == "${UNIFFI_LINUX_IRONFOX_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for uniffi-bindgen (Linux)...'
         "${IRONFOX_SED}" -i -e "s|UNIFFI_LINUX_IRONFOX_SHA512SUM='.*'|UNIFFI_LINUX_IRONFOX_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -1261,53 +1281,17 @@ function get_pip() {
     fi
 }
 
-# Get IronFox prebuilds
+# Get the IronFox prebuilds repo
 function get_prebuilds() {
-    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
-        echo_red_text 'Downloading the IronFox prebuilds repository...'
-        download_and_extract 'prebuilds' "https://gitlab.com/ironfox-oss/prebuilds/-/archive/${PREBUILDS_COMMIT}/prebuilds-${PREBUILDS_COMMIT}.tar.gz" "${IRONFOX_PREBUILDS}" "${PREBUILDS_SHA512SUM}"
+    echo_red_text 'Downloading the IronFox prebuilds repository...'
+    download_and_extract 'prebuilds' "https://gitlab.com/ironfox-oss/prebuilds/-/archive/${PREBUILDS_COMMIT}/prebuilds-${PREBUILDS_COMMIT}.tar.gz" "${IRONFOX_PREBUILDS}" "${PREBUILDS_SHA512SUM}"
 
-        echo_red_text 'Downloading prebuilt uniffi-bindgen (Linux)...'
-        download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/linux/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
-
-        echo_red_text 'Downloading prebuilt uniffi-bindgen (OS X)...'
-        download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/osx/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_OSX_IRONFOX_SHA512SUM}"
-
-        echo_red_text 'Downloading prebuilt WASI SDK (Linux)...'
-        download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/linux/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_WASI}" "${WASI_LINUX_IRONFOX_SHA512SUM}"
-
-        echo_red_text 'Downloading prebuilt WASI SDK (OS X)...'
-        download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/osx/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_WASI}" "${WASI_OSX_IRONFOX_SHA512SUM}"
-    else
-        if [[ "${IRONFOX_NO_PREBUILDS}" == "1" ]]; then
-            echo_red_text 'Downloading the IronFox prebuilds repository...'
-            download_and_extract 'prebuilds' "https://gitlab.com/ironfox-oss/prebuilds/-/archive/${PREBUILDS_COMMIT}/prebuilds-${PREBUILDS_COMMIT}.tar.gz" "${IRONFOX_PREBUILDS}" "${PREBUILDS_SHA512SUM}"
-
-            pushd "${IRONFOX_PREBUILDS}"
-            echo_red_text 'Downloading prebuild sources...'
-            bash "${IRONFOX_PREBUILDS}/scripts/get_sources.sh"
-            popd
-
-            echo_green_text "SUCCESS: Set-up the IronFox prebuilds repository at ${IRONFOX_PREBUILDS}"
-        else
-            # Get Tor's no-op UniFFi binding generator
-            echo_red_text 'Downloading prebuilt uniffi-bindgen...'
-            if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-                download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/osx/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_OSX_IRONFOX_SHA512SUM}"
-            else
-                download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/linux/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
-            fi
-            echo_green_text "SUCCESS: Set-up the prebuilt uniffi-bindgen at ${IRONFOX_UNIFFI}"
-
-            # Get WebAssembly SDK
-            echo_red_text 'Downloading prebuilt WASI SDK..'
-            if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-                download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/osx/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_WASI}" "${WASI_OSX_IRONFOX_SHA512SUM}"
-            else
-                download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/linux/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_WASI}" "${WASI_LINUX_IRONFOX_SHA512SUM}"
-            fi
-            echo_green_text "SUCCESS: Set-up the prebuilt WASI SDK at ${IRONFOX_WASI}"
-        fi
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        pushd "${IRONFOX_PREBUILDS}"
+        echo_red_text 'Downloading prebuild sources...'
+        bash "${IRONFOX_PREBUILDS}/scripts/get_sources.sh"
+        popd
+        echo_green_text "SUCCESS: Set-up the IronFox prebuilds repository at ${IRONFOX_PREBUILDS}"
     fi
 }
 
@@ -1447,6 +1431,25 @@ function get_s3cmd() {
     fi
 }
 
+# Get Tor's no-op UniFFi binding generator
+function get_uniffi() {
+    # Get uniffi-bindgen for Linux
+    if [ "${IRONFOX_PLATFORM}" == 'linux' ] || [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
+        echo_red_text 'Downloading prebuilt uniffi-bindgen (Linux)...'
+        download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_LINUX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/linux/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_LINUX_IRONFOX_SHA512SUM}"
+    fi
+
+    # Get uniffi-bindgen for OS X
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ] || [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
+        echo_red_text 'Downloading prebuilt uniffi-bindgen (OS X)...'
+        download_and_extract 'uniffi' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${UNIFFI_OSX_IRONFOX_COMMIT}/uniffi-bindgen/${UNIFFI_VERSION}/osx/uniffi-bindgen-${UNIFFI_VERSION}-${UNIFFI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_UNIFFI}" "${UNIFFI_OSX_IRONFOX_SHA512SUM}"
+    fi
+
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        echo_green_text "SUCCESS: Set-up the prebuilt uniffi-bindgen at ${IRONFOX_UNIFFI}"
+    fi
+}
+
 # Get UnifiedPush-AC
 function get_up_ac() {
     echo_red_text 'Downloading UnifiedPush-AC...'
@@ -1526,6 +1529,25 @@ function get_uv() {
         echo_red_text 'Creating uv environment...'
         "${IRONFOX_UV}" venv "${IRONFOX_PYENV_DIR}"
         echo_green_text "SUCCESS: Set-up uv environment at ${IRONFOX_PYENV_DIR}"
+    fi
+}
+
+# Get WebAssembly SDK
+function get_wasi() {
+    # Get WASI SDK for Linux
+    if [ "${IRONFOX_PLATFORM}" == 'linux' ] || [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
+        echo_red_text 'Downloading prebuilt WASI SDK (Linux)...'
+        download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_LINUX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/linux/wasi-sdk-${WASI_VERSION}-${WASI_LINUX_IRONFOX_REVISION}-linux.tar.xz" "${IRONFOX_WASI}" "${WASI_LINUX_IRONFOX_SHA512SUM}"
+    fi
+
+    # Get WASI SDK for OS X
+    if [ "${IRONFOX_PLATFORM}" == 'darwin' ] || [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]; then
+        echo_red_text 'Downloading prebuilt WASI SDK (OS X)...'
+        download_and_extract 'wasi-sdk' "https://gitlab.com/ironfox-oss/prebuilds/-/raw/${WASI_OSX_IRONFOX_COMMIT}/wasi-sdk/${WASI_VERSION}/osx/wasi-sdk-${WASI_VERSION}-${WASI_OSX_IRONFOX_REVISION}-osx.tar.xz" "${IRONFOX_WASI}" "${WASI_OSX_IRONFOX_SHA512SUM}"
+    fi
+
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        echo_green_text "SUCCESS: Set-up the prebuilt WASI SDK at ${IRONFOX_WASI}"
     fi
 }
 
@@ -1649,6 +1671,14 @@ if [ "${IRONFOX_GET_SOURCE_S3CMD}" == 1 ]; then
     get_s3cmd
 fi
 
+if [ "${IRONFOX_GET_SOURCE_UNIFFI}" == 1 ]; then
+    get_uniffi
+fi
+
 if [ "${IRONFOX_GET_SOURCE_UP_AC}" == 1 ]; then
     get_up_ac
+fi
+
+if [ "${IRONFOX_GET_SOURCE_WASI}" == 1 ]; then
+    get_wasi
 fi
