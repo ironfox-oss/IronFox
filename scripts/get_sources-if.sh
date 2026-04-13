@@ -44,6 +44,7 @@ IRONFOX_GET_SOURCE_PIP=0
 IRONFOX_GET_SOURCE_PREBUILDS=0
 IRONFOX_GET_SOURCE_PYTHON=0
 IRONFOX_GET_SOURCE_RUST=0
+IRONFOX_GET_SOURCE_S3CMD=0
 IRONFOX_GET_SOURCE_UP_AC=0
 IRONFOX_GET_SOURCE_UV=0
 
@@ -128,6 +129,10 @@ elif [ "${target}" == 'python' ]; then
 elif [ "${target}" == 'rust' ]; then
     # Get + set-up rust/cargo
     IRONFOX_GET_SOURCE_RUST=1
+elif [ "${target}" == 's3cmd' ]; then
+    # Get s3cmd
+    ## NOTE: This isn't installed if "all" is used below, as it's only used in CI and targeted specifically when it's needed
+    IRONFOX_GET_SOURCE_S3CMD=1
 elif [ "${target}" == 'up-ac' ]; then
     # Get UnifiedPush-AC
     IRONFOX_GET_SOURCE_UP_AC=1
@@ -167,36 +172,37 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_GET_SOURCE_UV=1
 else
     echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
-    echo 'All: all (Default)'
-    echo 'Android NDK: android-ndk'
-    echo 'Android SDK: android-sdk'
+    echo 'All:                              all (Default)'
+    echo 'Android NDK:                      android-ndk'
+    echo 'Android SDK:                      android-sdk'
     echo 'Android SDK Build Tools (latest): android-sdk-build-tools'
     echo 'Android SDK Build Tools (35.0.0): android-sdk-build-tools-35'
-    echo 'Android SDK Platform (latest): android-sdk-platform'
-    echo 'Android SDK Platform (36): android-sdk-platform-36'
-    echo 'Android SDK Platform Tools: android-sdk-platform-tools'
-    echo 'Application Services: as'
-    echo 'Bundletool: bundletool'
-    echo 'cbindgen: cbindgen'
-    echo 'Firefox (Gecko/mozilla-central): firefox'
-    echo 'firefox-l10n (l10n-central): firefox-l10n'
-    echo 'Glean: glean'
-    echo 'Glean Parser: glean-parser'
-    echo 'Gradle: gradle'
-    echo 'GYP: gyp'
-    echo 'JDK (17): jdk-17'
-    echo 'JDK (21): jdk-21'
-    echo 'JDK (25): jdk-25'
-    echo 'microG: microg'
-    echo 'Node.js: node'
-    echo 'npm: npm'
-    echo 'Phoenix: phoenix'
-    echo 'pip: pip'
-    echo 'Prebuilds: prebuilds'
-    echo 'Python: python'
-    echo 'Rust: rust'
-    echo 'UnifiedPush-AC: up-ac'
-    echo 'uv: uv'
+    echo 'Android SDK Platform (latest):    android-sdk-platform'
+    echo 'Android SDK Platform (36):        android-sdk-platform-36'
+    echo 'Android SDK Platform Tools:       android-sdk-platform-tools'
+    echo 'Application Services:             as'
+    echo 'Bundletool:                       bundletool'
+    echo 'cbindgen:                         cbindgen'
+    echo 'Firefox (Gecko/mozilla-central):  firefox'
+    echo 'firefox-l10n (l10n-central):      firefox-l10n'
+    echo 'Glean:                            glean'
+    echo 'Glean Parser:                     glean-parser'
+    echo 'Gradle:                           gradle'
+    echo 'GYP:                              gyp'
+    echo 'JDK (17):                         jdk-17'
+    echo 'JDK (21):                         jdk-21'
+    echo 'JDK (25):                         jdk-25'
+    echo 'microG:                           microg'
+    echo 'Node.js:                          node'
+    echo 'npm:                              npm'
+    echo 'Phoenix:                          phoenix'
+    echo 'pip:                              pip'
+    echo 'Prebuilds:                        prebuilds'
+    echo 'Python:                           python'
+    echo 'Rust:                             rust'
+    echo 's3cmd:                            s3cmd'
+    echo 'UnifiedPush-AC:                   up-ac'
+    echo 'uv:                               uv'
     exit 1
 fi
 
@@ -227,6 +233,7 @@ readonly IRONFOX_GET_SOURCE_PIP
 readonly IRONFOX_GET_SOURCE_PREBUILDS
 readonly IRONFOX_GET_SOURCE_PYTHON
 readonly IRONFOX_GET_SOURCE_RUST
+readonly IRONFOX_GET_SOURCE_S3CMD
 readonly IRONFOX_GET_SOURCE_UP_AC
 readonly IRONFOX_GET_SOURCE_UV
 
@@ -242,8 +249,8 @@ if [ "${mode}" == 'checksum-update' ]; then
     fi
 elif [ "${mode}" != 'download' ]; then
     echo_red_text "ERROR: Invalid mode: ${mode}\n You must enter one of the following:"
-    echo 'Download: download (Default)'
-    echo 'Download + update checksums: checksum-update'
+    echo 'Download:                     download (Default)'
+    echo 'Download + update checksums:  checksum-update'
     exit 1
 fi
 readonly IRONFOX_GET_SOURCE_CHECKSUM_UPDATE
@@ -425,6 +432,10 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for rustup...'
         "${IRONFOX_SED}" -i -e "s|RUSTUP_SHA512SUM='.*'|RUSTUP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for rustup'
+    elif [ "${old_sha512sum}" == "${S3CMD_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for s3cmd...'
+        "${IRONFOX_SED}" -i -e "s|S3CMD_SHA512SUM='.*'|S3CMD_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for s3cmd'
     elif [ "${old_sha512sum}" == "${UV_SHA512SUM_LINUX_ARM64}" ]; then
         echo_red_text 'Updating SHA512sum for uv (Linux - ARM64)...'
         "${IRONFOX_SED}" -i -e "s|UV_SHA512SUM_LINUX_ARM64='.*'|UV_SHA512SUM_LINUX_ARM64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -1403,6 +1414,39 @@ function get_rust() {
     fi
 }
 
+# Get s3cmd
+function get_s3cmd() {
+    # If all we're doing is updating the checksum, we don't care if the environment is prepared
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        if  [ ! -d "${IRONFOX_UV_DIR}" ] || [ ! -f "${IRONFOX_PYENV}" ]; then
+            echo_red_text "ERROR: You tried to download s3cmd, but you don't have a uv environment set-up yet."
+            exit 1
+        fi
+
+        if [[ -d "${IRONFOX_PYENV_DIR}/bin/s3cmd" ]]; then
+            echo_red_text "s3cmd is already installed at ${IRONFOX_PYENV_DIR}/bin/s3cmd"
+            read -p "Do you want to re-download it? [y/N] " -n 1 -r
+            echo
+            if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
+                return 0
+            else
+                source "${IRONFOX_PYENV}"
+                "${IRONFOX_UV}" pip uninstall s3cmd
+            fi
+        fi
+    fi
+
+    echo_red_text "Downloading s3cmd..."
+    download_and_extract 's3cmd' "https://github.com/s3tools/s3cmd/archive/${S3CMD_COMMIT}.tar.gz" "${IRONFOX_S3CMD_DIR}" "${S3CMD_SHA512SUM}"
+
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        source "${IRONFOX_PYENV}"
+        echo_red_text 'Installing s3cmd...'
+        "${IRONFOX_UV}" pip install --strict "${IRONFOX_S3CMD_DIR}"
+        echo_green_text "SUCCESS: Set-up s3cmd at ${IRONFOX_S3CMD}"
+    fi
+}
+
 # Get UnifiedPush-AC
 function get_up_ac() {
     echo_red_text 'Downloading UnifiedPush-AC...'
@@ -1555,7 +1599,7 @@ if [ "${IRONFOX_GET_SOURCE_JDK_21}" == 1 ]; then
     get_jdk_21
 fi
 
-# These need to run before we get glean_parser and gyp
+# These need to run before we get glean_parser, gyp, and s3cmd
 if [ "${IRONFOX_GET_SOURCE_PYTHON}" == 1 ]; then
     get_python
 fi
@@ -1599,6 +1643,10 @@ fi
 
 if [ "${IRONFOX_GET_SOURCE_PREBUILDS}" == 1 ]; then
     get_prebuilds
+fi
+
+if [ "${IRONFOX_GET_SOURCE_S3CMD}" == 1 ]; then
+    get_s3cmd
 fi
 
 if [ "${IRONFOX_GET_SOURCE_UP_AC}" == 1 ]; then

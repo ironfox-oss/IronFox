@@ -88,13 +88,14 @@ update-fdroid-repo:
     REPO_DIR_PATH: "./fdroid/repo"
     <<: *build_variables
   before_script:
+    - sudo dnf update -y --refresh
     - sudo dnf install -y bash curl git git-lfs jq make python3 python3-pip
     - pip install androguard
     - git config --global user.email "${IF_CI_EMAIL}"
     - git config --global user.name "${IF_CI_NAME}"
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
-    - bash -x scripts/ci-update-fdroid.sh
+    - bash scripts/ci-update-fdroid.sh
 
 update-site-repo:
   image: fedora:43
@@ -116,13 +117,14 @@ update-site-repo:
     TARGET_REPO_BRANCH: dev
     <<: *build_variables
   before_script:
+    - sudo dnf update -y --refresh
     - sudo dnf install -y bash curl git make python3 python3-pip yq
     - pip install pyyaml
     - git config --global user.email "${IF_CI_EMAIL}"
     - git config --global user.name "${IF_CI_NAME}"
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
-    - bash -x scripts/ci-update-site.sh
+    - bash scripts/ci-update-site.sh
 
 build-docker:
   image: docker:cli
@@ -223,7 +225,7 @@ build-final:
       when: never
 
 prepare-release:
-  image: alpine:latest
+  image: fedora:43
   stage: release
   interruptible: true
   needs:
@@ -244,11 +246,38 @@ prepare-release:
   tags:
     - saas-linux-2xlarge-amd64
   variables:
+    IRONFOX_RELEASES_S3_ACCESS_KEY_FILE: /opt/IronFox/ironfox-releases-s3-access-key.txt
+    IRONFOX_RELEASES_S3_BUCKET_NAME_FILE: /opt/IronFox/ironfox-releases-s3-bucket-name.txt
+    IRONFOX_RELEASES_S3_ENDPOINT_FILE: /opt/IronFox/ironfox-releases-s3-endpoint.txt
+    IRONFOX_RELEASES_S3_SECRET_KEY_FILE: /opt/IronFox/ironfox-releases-s3-secret-key.txt
     <<: *build_variables
   before_script:
-    - apk add --update --no-cache bash curl jq
+    - sudo dnf update -y --refresh
+    - sudo dnf install -y curl jq
+    - mkdir -p /opt/IronFox
+
+    - touch "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}"
+    - chmod 600 "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}"
+    - echo -n "${IRONFOX_RELEASES_S3_ACCESS_KEY}" > "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}"
+
+    - touch "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}"
+    - chmod 600 "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}"
+    - echo -n "${IRONFOX_RELEASES_S3_BUCKET_NAME}" > "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}"
+
+    - touch "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}"
+    - chmod 600 "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}"
+    - echo -n "${IRONFOX_RELEASES_S3_ENDPOINT}" > "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}"
+
+    - touch "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
+    - chmod 600 "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
+    - echo -n "${IRONFOX_RELEASES_S3_SECRET_KEY}" > "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
   script:
-    - bash -x scripts/ci-publish-packages.sh
+    - echo "Downloading dependencies..."
+    - bash -x scripts/get_sources.sh python
+    - bash -x scripts/get_sources.sh uv
+    - bash -x scripts/get_sources.sh s3cmd
+    - echo "Publishing packages..."
+    - bash scripts/ci-publish-packages.sh
   artifacts:
     untracked: false
     when: on_success

@@ -719,6 +719,16 @@ fi
 readonly IRONFOX_RUSTUP_COLORED_OUTPUT
 export IRONFOX_RUSTUP_COLORED_OUTPUT
 
+# s3cmd
+readonly IRONFOX_S3CMD_DIR_DEFAULT="${IRONFOX_EXTERNAL}/s3cmd"
+if [[ -z "${IRONFOX_S3CMD_DIR+x}" ]]; then
+    IRONFOX_S3CMD_DIR="${IRONFOX_S3CMD_DIR_DEFAULT}"
+fi
+readonly IRONFOX_S3CMD_DIR
+readonly IRONFOX_S3CMD="${IRONFOX_PYENV_DIR}/bin/s3cmd"
+export IRONFOX_S3CMD
+export IRONFOX_S3CMD_DIR
+
 # uniffi-bindgen
 readonly IRONFOX_UNIFFI_DEFAULT="${IRONFOX_EXTERNAL}/uniffi"
 if [[ -z "${IRONFOX_UNIFFI+x}" ]]; then
@@ -921,6 +931,27 @@ fi
 readonly IRONFOX_RUST_FLAGS
 export IRONFOX_RUST_FLAGS
 
+# If s3cmd flags are added, this determines whether they should be appended to our default flags (default),
+## or if they should override them entirely
+readonly IRONFOX_S3CMD_FLAGS_OVERRIDE_DEFAULT=0
+if [[ -z "${IRONFOX_S3CMD_FLAGS_OVERRIDE+x}" ]]; then
+    IRONFOX_S3CMD_FLAGS_OVERRIDE="${IRONFOX_S3CMD_FLAGS_OVERRIDE_DEFAULT}"
+fi
+readonly IRONFOX_S3CMD_FLAGS_OVERRIDE
+export IRONFOX_S3CMD_FLAGS_OVERRIDE
+
+# s3cmd flags
+readonly IRONFOX_S3CMD_FLAGS_DEFAULT='--check-certificate --check-hostname --check-md5 --progress --ssl'
+if [[ -z "${IRONFOX_S3CMD_FLAGS+x}" ]]; then
+    IRONFOX_S3CMD_FLAGS="${IRONFOX_S3CMD_FLAGS_DEFAULT}"
+elif [[ "${IRONFOX_S3CMD_FLAGS_OVERRIDE}" == 1 ]]; then
+    IRONFOX_S3CMD_FLAGS="${IRONFOX_S3CMD_FLAGS}"
+else
+    IRONFOX_S3CMD_FLAGS="${IRONFOX_S3CMD_FLAGS_DEFAULT} ${IRONFOX_S3CMD_FLAGS}"
+fi
+readonly IRONFOX_S3CMD_FLAGS
+export IRONFOX_S3CMD_FLAGS
+
 # Whether we should use our prebuilt libraries (Default)
 ## (This is currently uniffi-bindgen and WASI SDK for us)
 readonly IRONFOX_NO_PREBUILDS_DEFAULT=0
@@ -1093,6 +1124,40 @@ if [[ -z "${IRONFOX_SIGN_SKIP_ADB+x}" ]]; then
 fi
 readonly IRONFOX_SIGN_SKIP_ADB
 export IRONFOX_SIGN_SKIP_ADB
+
+# S3
+
+# S3 access key
+readonly IRONFOX_RELEASES_S3_ACCESS_KEY_FILE_DEFAULT='/opt/IronFox/ironfox-releases-s3-access-key.txt'
+if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE+x}" ]]; then
+    IRONFOX_RELEASES_S3_ACCESS_KEY_FILE="${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE_DEFAULT}"
+fi
+readonly IRONFOX_RELEASES_S3_ACCESS_KEY_FILE
+export IRONFOX_RELEASES_S3_ACCESS_KEY_FILE
+
+# S3 bucket name
+readonly IRONFOX_RELEASES_S3_BUCKET_NAME_FILE_DEFAULT='/opt/IronFox/ironfox-releases-s3-bucket-name.txt'
+if [[ -z "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE+x}" ]]; then
+    IRONFOX_RELEASES_S3_BUCKET_NAME_FILE="${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE_DEFAULT}"
+fi
+readonly IRONFOX_RELEASES_S3_BUCKET_NAME_FILE
+export IRONFOX_RELEASES_S3_BUCKET_NAME_FILE
+
+# S3 endpoint
+readonly IRONFOX_RELEASES_S3_ENDPOINT_FILE_DEFAULT='/opt/IronFox/ironfox-releases-s3-endpoint.txt'
+if [[ -z "${IRONFOX_RELEASES_S3_ENDPOINT_FILE+x}" ]]; then
+    IRONFOX_RELEASES_S3_ENDPOINT_FILE="${IRONFOX_RELEASES_S3_ENDPOINT_FILE_DEFAULT}"
+fi
+readonly IRONFOX_RELEASES_S3_ENDPOINT_FILE
+export IRONFOX_RELEASES_S3_ENDPOINT_FILE
+
+# S3 secret key
+readonly IRONFOX_RELEASES_S3_SECRET_KEY_FILE_DEFAULT='/opt/IronFox/ironfox-releases-s3-secret-key.txt'
+if [[ -z "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE+x}" ]]; then
+    IRONFOX_RELEASES_S3_SECRET_KEY_FILE="${IRONFOX_RELEASES_S3_SECRET_KEY_FILE_DEFAULT}"
+fi
+readonly IRONFOX_RELEASES_S3_SECRET_KEY_FILE
+export IRONFOX_RELEASES_S3_SECRET_KEY_FILE
 
 # Locations for our GeckoView AAR archives
 
