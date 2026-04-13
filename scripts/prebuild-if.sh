@@ -252,7 +252,6 @@ function prepare_ac() {
 
     # Remove unnecessary crash reporting components
     rm -vr "${IRONFOX_AC}/components/support/appservices/src/main/java/mozilla/components/support/rusterrors"
-    rm -v "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/MinidumpAnalyzer.kt"
     rm -v "${IRONFOX_AC}/components/lib/crash/src/main/java/mozilla/components/lib/crash/service/MozillaSocorroService.kt"
 
     # Remove Web Compat Reporter
