@@ -751,7 +751,7 @@ function clobber_gecko_x86_64() {
 function clobber_gecko() {
     "${IRONFOX_MACH}" configure
     "${IRONFOX_MACH}" clobber
-    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ] && [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]; then
+    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ] && [ "${IRONFOX_CI}" != 1 ]; then
         clobber_gecko_arm64
         clobber_gecko_arm
         clobber_gecko_x86_64
@@ -770,7 +770,7 @@ function build_gecko() {
     # Always clobber to ensure that builds are fresh
     clobber_gecko
 
-    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ] || [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" == 1 ]; then
+    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ] || [ "${IRONFOX_CI}" == 1 ]; then
         if [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
             # Build ARM64
             build_gecko_arm64
@@ -988,7 +988,7 @@ prep_phoenix
 prep_glean
 prep_llvm
 
-if [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
     prep_fenix
     prep_up_ac
 fi
@@ -1011,7 +1011,7 @@ build_microg
 build_phoenix
 build_gecko
 
-if [ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
     build_ac
     build_as
     build_up_ac
