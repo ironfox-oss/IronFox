@@ -40,7 +40,7 @@ if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
     exit 1
 fi
 
-if [ -f "${IRONFOX_BUILD}/finished-prebuild" ];
+if [ -f "${IRONFOX_BUILD}/finished-prebuild" ]; then
     rm -f "${IRONFOX_BUILD}/finished-prebuild"
 fi
 
