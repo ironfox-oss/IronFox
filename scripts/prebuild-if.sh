@@ -455,7 +455,6 @@ function prepare_fenix() {
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_wordmark_text_normal.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_wordmark_text_private.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/microsurvey_success.xml"
-    rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/onboarding_ctd_sync.xml"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/fenix_search_widget.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/ic_logo_wordmark_normal.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/ic_logo_wordmark_private.webp"
