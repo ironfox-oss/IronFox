@@ -49,24 +49,36 @@ function sign_bundle() {
 }
 
 function sign_arm64() {
+    # Create our output directory
+    mkdir -p $(dirname "${IRONFOX_OUTPUTS_ARM64}")
+
     echo_red_text 'Signing APK (ARM64)...'
     sign_apk "${IRONFOX_OUTPUTS_ARM64_UNSIGNED}" "${IRONFOX_OUTPUTS_ARM64}"
     echo_green_text 'SUCCESS: Signed APK (ARM64)'
 }
 
 function sign_arm() {
+    # Create our output directory
+    mkdir -p $(dirname "${IRONFOX_OUTPUTS_ARM}")
+
     echo_red_text 'Signing APK (ARM)...'
     sign_apk "${IRONFOX_OUTPUTS_ARM_UNSIGNED}" "${IRONFOX_OUTPUTS_ARM}"
     echo_green_text 'SUCCESS: Signed APK (ARM)'
 }
 
 function sign_x86_64() {
+    # Create our output directory
+    mkdir -p $(dirname "${IRONFOX_OUTPUTS_X86_64}")
+
     echo_red_text 'Signing APK (x86_64)...'
     sign_apk "${IRONFOX_OUTPUTS_X86_64_UNSIGNED}" "${IRONFOX_OUTPUTS_X86_64}"
     echo_green_text 'SUCCESS: Signed APK (x86_64)'
 }
 
 function sign_universal() {
+    # Create our output directory
+    mkdir -p $(dirname "${IRONFOX_OUTPUTS_UNIVERSAL}")
+
     echo_red_text 'Signing APK (Universal)...'
     sign_apk "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}" "${IRONFOX_OUTPUTS_UNIVERSAL}"
     echo_green_text 'SUCCESS: Signed APK (Universal)'
