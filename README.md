@@ -36,6 +36,9 @@
 
 IronFox is a fork of [Divested Computing Group](https://divested.dev/)'s [Mull Browser](https://web.archive.org/web/20250113132510/https://divestos.org/pages/our_apps#mull), based on [Mozilla Firefox](https://www.firefox.com/). **Our goal is to continue the legacy of Mull by providing a free and open source, privacy and security-oriented web browser for daily use.**
 
+> [!TIP]
+> Find a bug? Encounter an annoying problem? Have a tip, idea, or suggestion you'd like to share? **Please file any issues, bug reports, and suggestions over at [our unified issue tracker](https://codeberg.org/ironfox-oss/bugs/issues)!**
+
 > [!IMPORTANT]
 >**⚠️ All users are HIGHLY recommended to take a look at our [documentation](https://ironfoxoss.org/docs/), ESPECIALLY the [Limitations](https://ironfoxoss.org/docs/limitations/) and [Frequently Asked Questions](https://ironfoxoss.org/docs/faq/) pages!**
 

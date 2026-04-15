@@ -24,15 +24,15 @@ index fbd12fc813a3..3d0e6f9f5753 100644
  
  internal fun SharedPreferences.flowScopedBooleanPreference(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-index 4743fffb0411..ee48ed284bf6 100644
+index cb99e582c0..0af71912cc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/about/AboutFragment.kt
-@@ -208,11 +208,11 @@ class AboutFragment(
+@@ -209,11 +209,11 @@ class AboutFragment(
              AboutPageItem(
                  AboutItem.ExternalLink(
                      SUPPORT,
 -                    SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.HELP),
-+                    "https://gitlab.com/ironfox-oss/IronFox/-/issues",
++                    "https://codeberg.org/ironfox-oss/bugs/issues",
                  ),
                  getString(R.string.about_support),
              ),
@@ -41,7 +41,7 @@ index 4743fffb0411..ee48ed284bf6 100644
                  AboutItem.Crashes,
                  getString(R.string.about_crashes),
              ),
-@@ -229,7 +229,7 @@ class AboutFragment(
+@@ -230,7 +230,7 @@ class AboutFragment(
                      SupportUtils.getSumoURLForTopic(context, SupportUtils.SumoTopic.YOUR_RIGHTS),
                  ),
                  getString(R.string.about_know_your_rights),
