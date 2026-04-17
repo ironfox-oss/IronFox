@@ -14,7 +14,7 @@ Signed-off-by: celenity <celenity@celenity.dev>
  6 files changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 4afd464e5af64..1e24e2399f2f6 100644
+index 8c61dbb0291c..fbe56f557ec0 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
 @@ -13,15 +13,15 @@ includes:
@@ -43,40 +43,38 @@ index 4afd464e5af64..1e24e2399f2f6 100644
      channel: release
      features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 8dd1374d2d94f..7aff9c7045ca5 100644
+index f0ee597d00c8..35a6646470e4 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -93,8 +93,8 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -100,7 +100,7 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.initializeGlean
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
--import org.mozilla.fenix.experiments.NimbusGeckoPrefHandler
 -import org.mozilla.fenix.experiments.maybeFetchExperiments
-+// import org.mozilla.fenix.experiments.NimbusGeckoPrefHandler
 +// import org.mozilla.fenix.experiments.maybeFetchExperiments
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.containsQueryParameters
-@@ -542,15 +542,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -564,15 +564,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          }
  
-     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+     @OptIn(DelicateCoroutinesApi::class, ExperimentalAndroidComponentsApi::class) // GlobalScope usage
 -    private fun queueNimbusFetchInForeground(queue: RunWhenReadyQueue) =
 -        runOnVisualCompleteness(queue) {
 +    private fun queueNimbusFetchInForeground(queue: RunWhenReadyQueue) {
 +/*        runOnVisualCompleteness(queue) {
+             components.nimbus.geckoPrefHandler.start()
              GlobalScope.launch(IO) {
                  components.nimbus.sdk.maybeFetchExperiments(
                      context = this@FenixApplication,
                  )
-                 @ExperimentalGeckoViewApi
-                 NimbusGeckoPrefHandler.getPreferenceStateFromGecko().await()
+                 components.nimbus.geckoPrefHandler.getPreferenceStateFromGecko().await()
 -            }
 +            } */
          }
  
      @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
-@@ -661,9 +661,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -683,9 +683,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
  
      private fun initializeNimbus() {
          // This lazily constructs the Nimbus object…
@@ -89,10 +87,10 @@ index 8dd1374d2d94f..7aff9c7045ca5 100644
  
      /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-index 78ea4a42c618..150b9a4d4256 100644
+index 06c3de1f7a5d..69c936fd3478 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
-@@ -364,7 +364,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
+@@ -374,7 +374,7 @@ open class HomeActivity : LocaleAwareAppCompatActivity(), NavHostActivity {
          val startTimeProfiler = components.core.engine.profiler?.getProfilerTime()
  
          // Setup nimbus-cli tooling. This is a NOOP when launching normally.
@@ -102,10 +100,10 @@ index 78ea4a42c618..150b9a4d4256 100644
          MarkersFragmentLifecycleCallbacks.register(supportFragmentManager, components.core.engine)
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-index 4ecf8c8e6467..fcd63590eb05 100644
+index f448f7f0a79b..48b8b5e1ad30 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
-@@ -212,10 +212,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
+@@ -222,10 +222,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
          super.onResume()
  
          // Use nimbus to set the title, and a trivial addition
@@ -151,10 +149,10 @@ index 4cd5212dea9b..3b4ada79b960 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 81d95a9666a1..2954b9fdcf90 100644
+index a975ccd3d669..6d7e7c96f115 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -397,7 +397,7 @@ class Settings(
+@@ -421,7 +421,7 @@ class Settings(
  
      var nimbusExperimentsFetched by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_nimbus_experiments_fetched),
@@ -163,7 +161,7 @@ index 81d95a9666a1..2954b9fdcf90 100644
      )
  
      var utmParamsKnown by booleanPreference(
-@@ -725,7 +725,7 @@ class Settings(
+@@ -758,7 +758,7 @@ class Settings(
       */
      var isRolloutsEnabled by lazyBooleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_rollouts),
@@ -171,7 +169,7 @@ index 81d95a9666a1..2954b9fdcf90 100644
 +        defaultValue = { false },
      )
  
-     var isOverrideTPPopupsForPerformanceTest = false
+     /**
 -- 
 2.53.0
 

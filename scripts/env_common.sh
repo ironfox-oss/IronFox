@@ -29,6 +29,10 @@ readonly IRONFOX_MOZCONFIGS="${IRONFOX_CONFIGS}/mozconfigs"
 export IRONFOX_CONFIGS
 export IRONFOX_MOZCONFIGS
 
+# Templates
+readonly IRONFOX_TEMPLATES="${IRONFOX_ROOT}/templates"
+export IRONFOX_TEMPLATES
+
 # CI artifacts
 readonly IRONFOX_ARTIFACTS="${IRONFOX_ROOT}/artifacts"
 readonly IRONFOX_AAR_ARTIFACTS="${IRONFOX_ARTIFACTS}/aar"

@@ -1,24 +1,24 @@
-diff --git a/mobile/android/geckoview/src/main/AndroidManifest.xml b/mobile/android/geckoview/src/main/AndroidManifest.xml
-index f3ac290795d1a..5ee63c28fd72d 100644
---- a/mobile/android/geckoview/src/main/AndroidManifest.xml
-+++ b/mobile/android/geckoview/src/main/AndroidManifest.xml
-@@ -103,14 +103,14 @@
-                 android:isolatedProcess="false"
-                 android:process=":ipdlunittest">
-         </service>
+diff --git a/mobile/android/geckoview/src/main/AndroidManifest_overlay.jinja b/mobile/android/geckoview/src/main/AndroidManifest_overlay.jinja
+index c6a17be3b541..fe66b5a8695d 100644
+--- a/mobile/android/geckoview/src/main/AndroidManifest_overlay.jinja
++++ b/mobile/android/geckoview/src/main/AndroidManifest_overlay.jinja
+@@ -12,14 +12,14 @@
+     <application
+             android:zygotePreloadName="org.mozilla.gecko.process.ZygotePreload"
+             tools:targetApi="q">
 -        <service
 +        <!-- <service
                  android:name="org.mozilla.gecko.crashhelper.CrashHelper"
                  android:enabled="true"
                  android:exported="false"
                  android:isolatedProcess="false"
-                 android:process=":crashhelper"
+                 android:process=":crashhelper{{ tag }}"
                  android:stopWithTask="true">
 -        </service>
 +        </service> -->
-     </application>
- 
- </manifest>
+         <service
+                 android:name="org.mozilla.gecko.media.MediaManager"
+                 android:enabled="true"
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 index 20e44673a3348..14f9b805ad845 100644
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java

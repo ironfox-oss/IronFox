@@ -114,7 +114,6 @@ object IronFoxPreferences {
         val settings = context.settings()
 
         settings.ironfox.alwaysUsePrivateBrowsing = isEnabled
-        settings.showHomepageHeader = !isEnabled
 
         if (isEnabled) {
             // Set this to ensure that the user's choice sticks if they enable always private browsing mode and disable it later

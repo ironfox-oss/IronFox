@@ -96,19 +96,19 @@ index 8da84caa8848a..94d6c190014d5 100644
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
-index 818aea05441e5..07ab90b9e5cba 100644
+index 358dd1d0fc40..deefac2414f7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MoreSettingsSubmenu.kt
-@@ -38,6 +38,8 @@ internal fun MoreSettingsSubmenu(
+@@ -43,6 +43,8 @@ internal fun MoreSettingsSubmenu(
      translationInfo: TranslationInfo,
      showShortcuts: Boolean,
      isAndroidAutomotiveAvailable: Boolean,
 +    areCollectionsDisabled: Boolean,
 +    isPrintDisabled: Boolean,
-     showSummarization: Boolean,
+     summarizationMenuState: SummarizationMenuState,
      onWebCompatReporterClick: () -> Unit,
-     onSummarizePageClick: () -> Unit,
-@@ -75,6 +77,7 @@ internal fun MoreSettingsSubmenu(
+     onSummarizePageMenuExposed: () -> Unit,
+@@ -82,6 +84,7 @@ internal fun MoreSettingsSubmenu(
              onAddToHomeScreenMenuClick = onAddToHomeScreenMenuClick,
          )
          SaveToCollectionMenuItem(
@@ -116,7 +116,7 @@ index 818aea05441e5..07ab90b9e5cba 100644
              onSaveToCollectionMenuClick = onSaveToCollectionMenuClick,
          )
          OpenInAppMenuItem(
-@@ -88,6 +91,7 @@ internal fun MoreSettingsSubmenu(
+@@ -95,6 +98,7 @@ internal fun MoreSettingsSubmenu(
          )
          PrintMenuItem(
              isAndroidAutomotiveAvailable = isAndroidAutomotiveAvailable,
@@ -124,7 +124,7 @@ index 818aea05441e5..07ab90b9e5cba 100644
              onPrintMenuClick = onPrintMenuClick,
          )
      }
-@@ -171,13 +175,16 @@ private fun AddToHomeScreenMenuItem(
+@@ -209,13 +213,16 @@ private fun AddToHomeScreenMenuItem(
  
  @Composable
  private fun SaveToCollectionMenuItem(
@@ -146,7 +146,7 @@ index 818aea05441e5..07ab90b9e5cba 100644
  }
  
  @Composable
-@@ -222,9 +229,10 @@ private fun SaveAsPdfMenuItem(
+@@ -260,9 +267,10 @@ private fun SaveAsPdfMenuItem(
  @Composable
  private fun PrintMenuItem(
      isAndroidAutomotiveAvailable: Boolean,
@@ -158,29 +158,29 @@ index 818aea05441e5..07ab90b9e5cba 100644
          MenuItem(
              label = stringResource(id = R.string.browser_menu_print_2),
              beforeIconPainter = painterResource(id = iconsR.drawable.mozac_ic_print_24),
-@@ -317,6 +325,8 @@ private fun MoreSettingsSubmenuPreview(
+@@ -355,6 +363,8 @@ private fun MoreSettingsSubmenuPreview(
                      ),
                      showShortcuts = true,
                      isAndroidAutomotiveAvailable = false,
 +                    areCollectionsDisabled = false,
 +                    isPrintDisabled = false,
-                     showSummarization = true,
-                     onWebCompatReporterClick = {},
-                     onSummarizePageClick = {},
-@@ -363,6 +373,8 @@ private fun MoreSettingsSubmenuDisabledOpenPreview(
+                     summarizationMenuState = SummarizationMenuState.Default.copy(
+                         visible = true,
+                         highlighted = true,
+@@ -406,6 +416,8 @@ private fun MoreSettingsSubmenuDisabledOpenPreview(
                      ),
                      showShortcuts = true,
                      isAndroidAutomotiveAvailable = false,
 +                    areCollectionsDisabled = false,
 +                    isPrintDisabled = false,
-                     showSummarization = false,
+                     summarizationMenuState = SummarizationMenuState.Default,
                      onWebCompatReporterClick = {},
-                     onSummarizePageClick = {},
+                     onSummarizePageMenuExposed = {},
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 95ded141876d..fadfc00bcda6 100644
+index c2b6f661e9eb..e211cc4e792f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -590,7 +590,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -656,7 +656,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                      accessPoint = args.accesspoint,
                                      account = account,
                                      accountState = accountState,
@@ -189,7 +189,7 @@ index 95ded141876d..fadfc00bcda6 100644
                                      isBottomToolbar = settings.shouldUseBottomToolbar,
                                      isExpandedToolbarEnabled = settings.shouldUseExpandedToolbar,
                                      isSiteLoading = isSiteLoading,
-@@ -610,6 +610,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -677,6 +677,8 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                      showBanner = shouldShowMenuBanner && !defaultBrowser,
                                      isDownloadHighlighted = isDownloadHighlighted,
                                      webExtensionMenuCount = webExtensionsCount,
@@ -198,7 +198,7 @@ index 95ded141876d..fadfc00bcda6 100644
                                      isAllWebExtensionsDisabled = isAllWebExtensionsDisabled,
                                      onMozillaAccountButtonClick = {
                                          store.dispatch(
-@@ -708,8 +710,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
+@@ -775,8 +777,10 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
                                              isWebCompatReporterSupported = isWebCompatReporterSupported,
                                              isOpenInAppMenuHighlighted = isOpenInAppMenuHighlighted,
                                              translationInfo = translationInfo,
@@ -207,6 +207,6 @@ index 95ded141876d..fadfc00bcda6 100644
                                              isAndroidAutomotiveAvailable = context.isAndroidAutomotiveAvailable(),
 +                                            areCollectionsDisabled = !settings.collections,
 +                                            isPrintDisabled = !settings.ironfox.printEnabled,
+                                             summarizationMenuState = summarizationMenuState,
                                              onWebCompatReporterClick = {
                                                  store.dispatch(MenuAction.Navigate.WebCompatReporter)
-                                             },

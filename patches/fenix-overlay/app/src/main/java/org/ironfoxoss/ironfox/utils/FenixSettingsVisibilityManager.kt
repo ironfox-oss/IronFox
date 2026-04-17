@@ -45,22 +45,23 @@ object FenixSettingsVisibilityManager {
         displayAddressSync(context, prefFragment)
         displayAppZygote(context, prefFragment)
         displayCustomTabExtensions(context, prefFragment)
-        displayEmailMaskFeature(context, prefFragment)
         displayEnableHomepageAsNewTab(context, prefFragment)
         displayIsolatedProcess(context, prefFragment)
         displayLnaBlocking(context, prefFragment)
         displayLnaFeature(context, prefFragment)
         displayLnaTrackerBlocking(context, prefFragment)
+        displayLongfoxEnabled(context, prefFragment)
         displayMinimalBottomToolbarWhenEnteringText(context, prefFragment)
         displayNativeShareSheet(context, prefFragment)
         displayNewDynamicToolbarBehaviour(context, prefFragment)
+        displayPrivacyReport(context, prefFragment)
         displaySettingsSearch(context, prefFragment)
         hideCrashPullNeverShow(context, prefFragment)
-        hideDiscoverMoreStories(context, prefFragment)
         hideMicrosurveyFeature(context, prefFragment)
         hideMozillaAdsClient(context, prefFragment)
         hideNewCrashReporterDialog(context, prefFragment)
         hideNimbusPreview(context, prefFragment)
+        hidePrivateModeAndStories(context, prefFragment)
         hideRemoteSearchConfiguration(context, prefFragment)
     }
 
@@ -149,6 +150,20 @@ object FenixSettingsVisibilityManager {
     ) {
         val nimbusExperimentsKey = context.getPreferenceKey(FenixSettingsDictionary.nimbusExperiments)
         hidePreference(nimbusExperimentsKey, prefFragment)
+    }
+
+    /**
+     * Hide the private mode "stories" feature
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun hidePrivateModeAndStories(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val privateModeAndStoriesKey = context.getPreferenceKey(FenixSettingsDictionary.privateModeAndStoriesEntryPointEnabled)
+        hidePreference(privateModeAndStoriesKey, prefFragment)
     }
 
     /**
@@ -253,20 +268,6 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
-     * Display the setting to toggle the Email Mask (Firefox Relay) feature
-     *
-     * @param context The application context
-     * @param prefFragment The preference fragment from where the preference should be displayed
-     */
-    internal fun displayEmailMaskFeature(
-        context: Context,
-        prefFragment: PreferenceFragmentCompat
-    ) {
-        val emailMaskFeatureKey = context.getPreferenceKey(FenixSettingsDictionary.isEmailMaskFeatureEnabled)
-        displayPreference(emailMaskFeatureKey, prefFragment)
-    }
-
-    /**
      * Display the setting to toggle the homepage as a new tab
      *
      * @param context The application context
@@ -337,6 +338,34 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
+     * Display the setting to enable Longfox
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayLongfoxEnabled(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val longfoxEnabledKey = context.getPreferenceKey(FenixSettingsDictionary.longfoxEnabled)
+        displayPreference(longfoxEnabledKey, prefFragment)
+    }
+
+    /**
+     * Display the setting to toggle the browser's privacy report feature
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayPrivacyReport(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val privacyReportKey = context.getPreferenceKey(FenixSettingsDictionary.showPrivacyReportSectionToggle)
+        displayPreference(privacyReportKey, prefFragment)
+    }
+
+    /**
      * Display the setting to toggle the minimal bottom toolbar when entering text
      *
      * @param context The application context
@@ -404,20 +433,6 @@ object FenixSettingsVisibilityManager {
     ) {
         val crashPullNeverShowKey = context.getPreferenceKey(FenixSettingsDictionary.crashPullNeverShowAgain)
         hidePreference(crashPullNeverShowKey, prefFragment)
-    }
-
-    /**
-     * Hide the setting to toggle Pocket "Discover more stories"
-     *
-     * @param context The application context
-     * @param prefFragment The preference fragment from where the preference should be displayed
-     */
-    internal fun hideDiscoverMoreStories(
-        context: Context,
-        prefFragment: PreferenceFragmentCompat
-    ) {
-        val discoverMoreStoriesKey = context.getPreferenceKey(FenixSettingsDictionary.enableDiscoverMoreStories)
-        hidePreference(discoverMoreStoriesKey, prefFragment)
     }
 
     /**

@@ -412,10 +412,6 @@ function prepare_fenix() {
     # Disable telemetry
     "${IRONFOX_SED}" -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' "${IRONFOX_FENIX}/app/build.gradle"
     "${IRONFOX_SED}" -i -e '/TELEMETRY/s/true/false/' "${IRONFOX_FENIX}/app/build.gradle"
-    "${IRONFOX_SED}" -i -e 's|META_ATTRIBUTION_ENABLED = .*|META_ATTRIBUTION_ENABLED = false|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
-
-    # Enable the "Choose download location" feature
-    "${IRONFOX_SED}" -i -e 's|downloadsDefaultLocation = .*|downloadsDefaultLocation = true|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
 
     # Enable Firefox Labs
     "${IRONFOX_SED}" -i -e 's|FIREFOX_LABS = .*|FIREFOX_LABS = true|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
@@ -452,8 +448,6 @@ function prepare_fenix() {
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_onboarding_search_widget.xml"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_onboarding_sync.xml"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_wordmark_logo.webp"
-    rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_wordmark_text_normal.webp"
-    rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/ic_wordmark_text_private.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable/microsurvey_success.xml"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/fenix_search_widget.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-hdpi/ic_logo_wordmark_normal.webp"
@@ -731,7 +725,7 @@ function prepare_firefox() {
         "${IRONFOX_GECKO}/mobile/android/geckoview/build.gradle"
 
     # Fail on use of prebuilt nimbus-fml
-    "${IRONFOX_SED}" -i 's|https://|hxxps://|' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy"
+    "${IRONFOX_SED}" -i 's|https://|hxxps://|' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/kotlin/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.kt"
 
     # Break the dependency on older Rust
     "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GECKO}/Cargo.toml"
@@ -983,7 +977,6 @@ function prepare_firefox() {
         "${IRONFOX_GECKO}/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java"
 
     # Fail on use of prebuilt binary
-    "${IRONFOX_SED}" -i 's|https://|hxxps://|' "${IRONFOX_GECKO}/mobile/android/gradle/plugins/nimbus-gradle-plugin/src/main/groovy/org/mozilla/appservices/tooling/nimbus/NimbusGradlePlugin.groovy"
     "${IRONFOX_SED}" -i 's|https://github.com|hxxps://github.com|' "${IRONFOX_GECKO}/python/mozboot/mozboot/android.py"
 
     # Make the build system think we installed the emulator and an AVD

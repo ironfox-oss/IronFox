@@ -1,3 +1,72 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
+index c9e41120b3979..6064d053ef564 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
+@@ -7,7 +7,7 @@ package org.mozilla.fenix.components
+ import android.content.Context
+ import android.content.SharedPreferences
+ import androidx.core.content.edit
+-import mozilla.components.lib.integrity.googleplay.RequestHashProvider
++// import mozilla.components.lib.integrity.googleplay.RequestHashProvider
+ import mozilla.components.lib.llm.mlpa.UserIdProvider
+ import mozilla.components.lib.llm.mlpa.service.UserId
+ import mozilla.components.support.ktx.kotlin.toHexString
+@@ -41,7 +41,9 @@ fun interface Hasher {
+  * Generates and persists a stable per-install UUID, used to identify this client
+  * consistently across [UserIdProvider] and [RequestHashProvider] consumers.
+  */
+-interface ClientUUID : UserIdProvider, RequestHashProvider {
++interface ClientUUID : UserIdProvider {
++    fun generateHash(): String { return "" }
++    fun getUserID() {}
+     companion object {
+         /**
+          * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
+index 89826e869ef65..ee353948f7818 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
+@@ -5,12 +5,12 @@
+ package org.mozilla.fenix.components.llm
+ 
+ import mozilla.components.concept.fetch.Client
+-import mozilla.components.concept.integrity.IntegrityClient
++// import mozilla.components.concept.integrity.IntegrityClient
+ import mozilla.components.lib.llm.mlpa.MlpaLlmProvider
+ import mozilla.components.lib.llm.mlpa.MlpaTokenProvider
+ import mozilla.components.lib.llm.mlpa.UserIdProvider
+-import mozilla.components.lib.llm.mlpa.service.PackageName
+-import org.mozilla.fenix.BuildConfig
++import mozilla.components.lib.llm.mlpa.service.AuthorizationToken
++// import org.mozilla.fenix.BuildConfig
+ import org.mozilla.fenix.components.llm.ext.FxaAccessTokenProvider
+ import org.mozilla.fenix.components.llm.ext.choose
+ import org.mozilla.fenix.components.llm.ext.fxaTokenProvider
+@@ -22,7 +22,7 @@ import org.mozilla.fenix.perf.lazyMonitored
+ class Llm(
+     private val client: Client,
+     private val fxaTokenProvider: FxaAccessTokenProvider,
+-    private val integrityClient: IntegrityClient,
++    private val integrityClient: Unit?,
+     private val userIdProvider: UserIdProvider,
+ ) {
+ 
+@@ -32,12 +32,12 @@ class Llm(
+         MlpaLlmProvider(
+             MlpaTokenProvider.choose(
+                 MlpaTokenProvider.fxaTokenProvider(fxaTokenProvider),
+-                MlpaTokenProvider.mlpaIntegrityHandshake(
+-                    integrityClient = integrityClient,
++                MlpaTokenProvider.static(AuthorizationToken.Integrity("my-test-token")),
++/*                    integrityClient = integrityClient,
+                     authenticationService = fenixMlpaService,
+                     userIdProvider = userIdProvider,
+                     packageName = PackageName(BuildConfig.APPLICATION_ID),
+-                ),
++                ), */
+             ),
+             fenixMlpaService,
+         )
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index 8dd1374d2d94f..e961a218b72ad 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt

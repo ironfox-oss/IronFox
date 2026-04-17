@@ -47,9 +47,6 @@ ac_add_options --disable-default-browser-agent
 ## Disable FFmpeg
 ac_add_options --disable-ffmpeg
 
-## Disable the Gecko Profiler
-ac_add_options --disable-gecko-profiler
-
 ## Disable GSS-API/negotiate authentication
 ### Possibly investigate adding a pref for this instead of disabling at build-time
 ac_add_options --disable-negotiateauth

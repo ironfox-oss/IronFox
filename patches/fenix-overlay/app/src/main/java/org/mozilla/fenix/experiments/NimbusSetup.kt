@@ -8,7 +8,7 @@ import mozilla.components.service.nimbus.NimbusAppInfo
 import mozilla.components.service.nimbus.NimbusBuilder
 import org.json.JSONObject
 
-fun createNimbus(context: Context, urlString: String?, remoteSettingsService: Any?): NimbusApi {
+fun createNimbus(context: Context, urlString: String?, remoteSettingsService: Any?, geckoPrefHandler: Any?): NimbusApi {
     val serverSettings = null
 
     val appInfo = NimbusAppInfo(
@@ -27,6 +27,7 @@ fun createNimbus(context: Context, urlString: String?, remoteSettingsService: An
         featureManifest = null
         onFetchCallback = {}
         recordedContext = null
+        this.geckoPrefHandler = null
     }.build(appInfo, serverSettings)
 }
 

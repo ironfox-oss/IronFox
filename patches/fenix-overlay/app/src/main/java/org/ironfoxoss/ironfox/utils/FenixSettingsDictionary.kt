@@ -16,7 +16,6 @@ object FenixSettingsDictionary {
     val dataChoices = R.string.pref_key_data_choices
     val emeEnabled = R.string.pref_key_eme_enabled
     val emeSiteSetting = R.string.pref_key_browser_feature_media_key_system_access
-    val enableDiscoverMoreStories = R.string.pref_key_enable_discover_more_stories
     val enableHomepageAsNewTab = R.string.pref_key_enable_homepage_as_new_tab
     val enableMozillaAdsClient = R.string.pref_key_enable_mozilla_ads_client
     val enableUnifiedPush = R.string.pref_key_enable_unifiedpush
@@ -30,7 +29,6 @@ object FenixSettingsDictionary {
     val ironfoxSecretSettings = R.string.pref_key_if_secret
     val isAddressSyncEnabled = R.string.pref_key_enable_address_sync
     val isAppZygoteEnabled = R.string.pref_key_enable_app_zygote_process
-    val isEmailMaskFeatureEnabled = R.string.pref_key_enable_email_masks
     val isIsolatedProcessEnabled = R.string.pref_key_enable_isolated_process
     val isLnaBlockingEnabled = R.string.pref_key_enable_lna_blocking_enabled
     val isLnaFeatureEnabled = R.string.pref_key_enable_lna_feature_enabled
@@ -38,6 +36,7 @@ object FenixSettingsDictionary {
     val isRemoteDebuggingEnabled = R.string.pref_key_remote_debugging
     val isSettingsSearchEnabled = R.string.pref_key_allow_settings_search
     val localAddonInstall = R.string.pref_key_install_local_addon
+    val longfoxEnabled = R.string.pref_key_enable_longfox
     val javascriptEnabled = R.string.pref_key_javascript_enabled
     val javascriptJitEnabled = R.string.pref_key_jit_enabled
     val javascriptJitTrustedPrincipalsEnabled = R.string.pref_key_jit_trusted_principals_enabled
@@ -52,6 +51,7 @@ object FenixSettingsDictionary {
     val prefersDarkColorScheme = R.string.pref_key_prefers_dark_color_scheme
     val prefersLightColorScheme = R.string.pref_key_prefers_light_color_scheme
     val printEnabled = R.string.pref_key_print_enabled
+    val privateModeAndStoriesEntryPointEnabled = R.string.pref_key_private_mode_and_stories_entry_point
     val profiler = R.string.pref_key_start_profiler
     val rate = R.string.pref_key_rate
     val refererXOriginAlways = R.string.pref_key_referer_policy_always
@@ -68,6 +68,7 @@ object FenixSettingsDictionary {
     val shouldShowCustomTabExtensions = R.string.pref_key_should_show_custom_tab_extensions
     val shouldUseOledTheme = R.string.pref_key_oled_theme
     val shouldUseTrackingProtection = R.string.pref_key_tracking_protection
+    val showPrivacyReportSectionToggle = R.string.pref_key_enable_privacy_report
     val spoofEnglish = R.string.pref_key_spoof_english
     val spoofTimezone = R.string.pref_key_spoof_timezone
     val svgEnabled = R.string.pref_key_svg_enabled

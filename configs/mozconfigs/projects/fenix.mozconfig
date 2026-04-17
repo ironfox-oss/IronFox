@@ -1,3 +1,9 @@
 # IronFox Fenix mozconfig
 
-export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Pofficial"
+export GRADLE_FLAGS="${GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME}"
+
+# If we're signing our output, we need to disable Mozilla's debug signing
+## (So that we can use our own signing system at `sign.sh` instead...)
+if [ "${IRONFOX_SIGN}" == 1 ]; then
+    export GRADLE_FLAGS="${GRADLE_FLAGS} -PdisableDebugSigning"
+fi

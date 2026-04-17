@@ -118,16 +118,16 @@ if [ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]; then
         fi
         if [ "${target}" == 'bundle' ]; then
             # If we built a bundle, install the universal APK
-            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_UNIVERSAL}"
+            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_UNIVERSAL}"
         elif [ "${target}" == 'arm64' ]; then
             # Install the ARM64 APK
-            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_ARM64}"
+            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM64}"
         elif [ "${target}" == 'arm' ]; then
             # Install the ARM APK
-            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_ARM}"
+            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM}"
         elif [ "${target}" == 'x86_64' ]; then
             # Install the x86_64 APK
-            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_FENIX_X86_64}"
+            "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_X86_64}"
         fi
         # Now that the app is installed, we can kill the server
         "${IRONFOX_ADB}" kill-server

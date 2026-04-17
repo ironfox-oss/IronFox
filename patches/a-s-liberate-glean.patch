@@ -1,8 +1,8 @@
 diff --git a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-index 2b7f08734..de3b3f251 100644
+index 4e550544d..9f8b10fca 100644
 --- a/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
 +++ b/components/nimbus/android/src/main/java/org/mozilla/experiments/nimbus/Nimbus.kt
-@@ -25,11 +25,11 @@ import kotlinx.coroutines.launch
+@@ -27,11 +27,11 @@ import kotlinx.coroutines.launch
  import kotlinx.coroutines.runBlocking
  import kotlinx.coroutines.withContext
  import mozilla.appservices.remotesettings.RemoteSettingsService
@@ -16,17 +16,42 @@ index 2b7f08734..de3b3f251 100644
 +import org.mozilla.experiments.nimbus.GleanMetrics.Pings */
  import org.mozilla.experiments.nimbus.internal.AppContext
  import org.mozilla.experiments.nimbus.internal.AvailableExperiment
- import org.mozilla.experiments.nimbus.internal.EnrolledExperiment
-@@ -84,7 +84,7 @@ open class Nimbus(
+ import org.mozilla.experiments.nimbus.internal.DatabaseLoadExtraDef
+@@ -88,7 +88,7 @@ open class Nimbus(
  
      private val metricsHandler = object : MetricsHandler {
+         override fun recordDatabaseLoad(event: DatabaseLoadExtraDef) {
+-            NimbusEvents.databaseLoad.record(
++/*            NimbusEvents.databaseLoad.record(
+                 NimbusEvents.DatabaseLoadExtra(
+                     corrupt = event.corrupt,
+                     initialVersion = event.initialVersion?.toInt(),
+@@ -96,20 +96,20 @@ open class Nimbus(
+                     migratedVersion = event.migratedVersion?.toInt(),
+                     migrationError = event.migrationError,
+                 ),
+-            )
++            ) */
+         }
+         override fun recordDatabaseMigration(event: DatabaseMigrationExtraDef) {
+-            NimbusEvents.databaseMigration.record(
++/*            NimbusEvents.databaseMigration.record(
+                 NimbusEvents.DatabaseMigrationExtra(
+                     reason = event.reason,
+                     fromVersion = event.fromVersion.toInt(),
+                     toVersion = event.toVersion.toInt(),
+                     error = event.error,
+                 ),
+-            )
++            ) */
+         }
          override fun recordEnrollmentStatuses(enrollmentStatusExtras: List<EnrollmentStatusExtraDef>) {
 -            for (extra in enrollmentStatusExtras) {
 +/*            for (extra in enrollmentStatusExtras) {
                  NimbusEvents.enrollmentStatus.record(
                      NimbusEvents.EnrollmentStatusExtra(
                          branch = extra.branch,
-@@ -95,42 +95,42 @@ open class Nimbus(
+@@ -120,42 +120,42 @@ open class Nimbus(
                          conflictSlug = extra.conflictSlug,
                      ),
                  )
@@ -72,12 +97,12 @@ index 2b7f08734..de3b3f251 100644
          }
  
          override fun submitTargetingContext() {
--            Pings.nimbusTargetingContext.submit()
-+//            Pings.nimbusTargetingContext.submit()
+-            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
++//            org.mozilla.experiments.nimbus.GleanMetrics.Pings.nimbusTargetingContext.submit()
          }
      }
  
-@@ -199,11 +199,11 @@ open class Nimbus(
+@@ -224,11 +224,11 @@ open class Nimbus(
          try {
              nimbusClient.getFeatureConfigVariables(featureId)?.let { JSONObject(it) }
          } catch (e: NimbusException.DatabaseNotReady) {
@@ -91,7 +116,7 @@ index 2b7f08734..de3b3f251 100644
              null
          } catch (e: Throwable) {
              reportError("getFeatureConfigVariablesJson", e)
-@@ -279,9 +279,9 @@ open class Nimbus(
+@@ -304,9 +304,9 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun fetchExperimentsOnThisThread() = withCatchAll("fetchExperiments") {
          try {
@@ -104,7 +129,7 @@ index 2b7f08734..de3b3f251 100644
              updateObserver {
                  it.onExperimentsFetched()
              }
-@@ -316,7 +316,7 @@ open class Nimbus(
+@@ -341,7 +341,7 @@ open class Nimbus(
              val time = measureTimeMillis {
                  events = nimbusClient.applyPendingExperiments()
              }
@@ -113,7 +138,7 @@ index 2b7f08734..de3b3f251 100644
              recordExperimentTelemetryEvents(events!!)
              // Get the experiments to record in telemetry
              postEnrolmentCalculation()
-@@ -523,19 +523,19 @@ open class Nimbus(
+@@ -548,19 +548,19 @@ open class Nimbus(
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal fun recordExperimentTelemetry(experiments: List<EnrolledExperiment>) {
          // Call Glean.setExperimentActive() for each active experiment.
@@ -136,7 +161,7 @@ index 2b7f08734..de3b3f251 100644
              when (event.change) {
                  EnrollmentChangeEventType.ENROLLMENT -> {
                      NimbusEvents.enrollment.record(
-@@ -583,7 +583,7 @@ open class Nimbus(
+@@ -608,7 +608,7 @@ open class Nimbus(
                      )
                  }
              }
@@ -146,7 +171,7 @@ index 2b7f08734..de3b3f251 100644
  
      // The exposure event should be recorded when the expected treatment (or no-treatment, such as
 diff --git a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
-index c9078a52f..9ccb87acb 100644
+index c9078a52f..87f4e5078 100644
 --- a/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
 +++ b/components/logins/android/src/main/java/mozilla/appservices/logins/DatabaseLoginsStorage.kt
 @@ -13,9 +13,9 @@ package mozilla.appservices.logins
@@ -217,23 +242,23 @@ index c9078a52f..9ccb87acb 100644
              when (e) {
                  is LoginsApiException.NoSuchRecord -> {
 -                    errCount["no_such_record"].add()
-+                    // no-op
++                     // no-op
                  }
                  is LoginsApiException.Interrupted -> {
 -                    errCount["interrupted"].add()
-+                    // no-op
++                     // no-op
                  }
                  is LoginsApiException.InvalidRecord -> {
 -                    errCount["invalid_record"].add()
-+                    // no-op
++                     // no-op
                  }
                  is LoginsApiException -> {
 -                    errCount["storage_error"].add()
-+                    // no-op
++                     // no-op
                  }
                  else -> {
 -                    errCount["__other__"].add()
-+                    // no-op
++                     // no-op
                  }
              }
              throw e

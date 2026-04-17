@@ -268,6 +268,13 @@ patches:
     effect: "Prevents advertising Firefox and disclosing browser information when sharing links."
     category: "Mozilla"
 
+  - file: "fenix-disable-shake-to-summarize.patch"
+    name: "Disable the 'Shake to Summarize' feature"
+    description: "Disables the AI-powered 'Shake to Summarize' feature."
+    reason: "To prevent undesired AI functionality from being enabled in the browser."
+    effect: "Prevents unwanted AI features from being enabled for users."
+    category: "Mozilla"
+
   - file: "a-c-disable-amo-collections.patch"
     name: "Disable AMO Featured Collections and Recommendations."
     description: "Disables fetching featured collections, recommendations, and icons from AMO (addons.mozilla.org)."
@@ -652,6 +659,20 @@ patches:
     description: "Configures IronFox's default site permissions. Currently blocks Autoplay, Geolocation prompts, and Notification prompts by default."
     reason: "To prevent websites from prompting users to access Geolocation and send Notifications, and to prevent unwanted audio/video playback."
     effect: "Improves user experience, and blocking Autoplay reduces bandwidth usage."
+    category: "User Experience"
+
+  - file: "fenix-enable-custom-download-location.patch"
+    name: "Enable Custom Download Location"
+    description: "Enables the ability for users to specify a custom location for downloaded files."
+    reason: "To improve control and usability by allowing users to specify the location at which files are downloaded."
+    effect: "Improves user experience and control."
+    category: "User Experience"
+
+  - file: "fenix-enable-longfox.patch"
+    name: "Enable Longfox"
+    description: "Enables Longfox."
+    reason: "To enable Longfox."
+    effect: "Enables Longfox."
     category: "User Experience"
 
   - file: "gecko-ironfox-fingerprinting-protection-overrides.patch"

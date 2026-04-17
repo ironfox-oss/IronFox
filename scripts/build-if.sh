@@ -212,7 +212,7 @@ function prep_as() {
     if [[ -f "${IRONFOX_AS}/local.properties" ]]; then
         rm -f "${IRONFOX_AS}/local.properties"
     fi
-    cp -f "${IRONFOX_PATCHES}/build/application-services/local.properties" "${IRONFOX_AS}/local.properties"
+    cp -f "${IRONFOX_TEMPLATES}/application-services/local.properties" "${IRONFOX_AS}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|" "${IRONFOX_AS}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM_ARCH}|${IRONFOX_PLATFORM_ARCH}|" "${IRONFOX_AS}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|" "${IRONFOX_AS}/local.properties"
@@ -274,7 +274,7 @@ function prep_gecko_prefs() {
         rm -f "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
     fi
 
-    cp -f "${IRONFOX_PATCHES}/build/gecko/ironfox.cfg" "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
+    cp -f "${IRONFOX_TEMPLATES}/gecko/ironfox.cfg" "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
     "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
 }
 
@@ -285,7 +285,7 @@ function prep_gecko() {
     if [[ -f "${IRONFOX_GECKO}/local.properties" ]]; then
         rm -f "${IRONFOX_GECKO}/local.properties"
     fi
-    cp -f "${IRONFOX_PATCHES}/build/gecko/local.properties" "${IRONFOX_GECKO}/local.properties"
+    cp -f "${IRONFOX_TEMPLATES}/gecko/local.properties" "${IRONFOX_GECKO}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_GECKO}|${IRONFOX_GECKO}|" "${IRONFOX_GECKO}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_MOZCONFIGS}|${IRONFOX_MOZCONFIGS}|" "${IRONFOX_GECKO}/local.properties"
 
@@ -322,7 +322,7 @@ function prep_glean() {
     if [[ -f "${IRONFOX_GLEAN}/local.properties" ]]; then
         rm -f "${IRONFOX_GLEAN}/local.properties"
     fi
-    cp -f "${IRONFOX_PATCHES}/build/glean/local.properties" "${IRONFOX_GLEAN}/local.properties"
+    cp -f "${IRONFOX_TEMPLATES}/glean/local.properties" "${IRONFOX_GLEAN}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM}|${IRONFOX_PLATFORM}|" "${IRONFOX_GLEAN}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_PLATFORM_ARCH}|${IRONFOX_PLATFORM_ARCH}|" "${IRONFOX_GLEAN}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_TARGET_RUST}|${IRONFOX_TARGET_RUST}|" "${IRONFOX_GLEAN}/local.properties"
@@ -361,7 +361,7 @@ function prep_up_ac() {
     if [[ -f "${IRONFOX_UP_AC}/local.properties" ]]; then
         rm -f "${IRONFOX_UP_AC}/local.properties"
     fi
-    cp -f "${IRONFOX_PATCHES}/build/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties"
+    cp -f "${IRONFOX_TEMPLATES}/unifiedpush-ac/local.properties" "${IRONFOX_UP_AC}/local.properties"
 
     # Substitute our local versions of Android Components and Application Services
     "${IRONFOX_SED}" -i "s|{IF_LOCAL_AC_VERSION}|${IF_LOCAL_AC_VERSION}|" "${IRONFOX_UP_AC}/local.properties"
@@ -378,7 +378,7 @@ function prep_llvm() {
     if [[ -f "${IRONFOX_BUILD}/targets_to_build" ]]; then
         rm -f "${IRONFOX_BUILD}/targets_to_build"
     fi
-    cp -f "${IRONFOX_PATCHES}/build/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${IRONFOX_BUILD}/targets_to_build"
+    cp -f "${IRONFOX_TEMPLATES}/llvm/targets_to_build_${IRONFOX_TARGET_ARCH}" "${IRONFOX_BUILD}/targets_to_build"
 
     echo_green_text 'SUCCESS: Prepared LLVM'
 }
@@ -881,13 +881,6 @@ function build_fenix() {
     export IRONFOX_MACH_BUILD=1
     export IRONFOX_MACH_TARGET_FENIX=1
 
-    # When building Fenix, if IRONFOX_SIGN is set, we need to set MOZ_AUTOMATION to prevent outputs from being automatically signed with a debug key
-    ## https://searchfox.org/firefox-main/rev/eea0f8f0/mobile/android/fenix/app/build.gradle#114
-    ## CI should never use debug signing
-    if [ "${IRONFOX_SIGN}" == 1 ]; then
-        export MOZ_AUTOMATION=1
-    fi
-
     pushd "${IRONFOX_GECKO}"
     "${IRONFOX_MACH}" configure
 
@@ -966,7 +959,6 @@ function build_fenix() {
         cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_BUNDLE_AAB}"
     fi
 
-    unset MOZ_AUTOMATION
     unset IRONFOX_MACH_TARGET_FENIX
     export IRONFOX_MACH_TARGET_FENIX=0
     "${IRONFOX_MACH}" configure

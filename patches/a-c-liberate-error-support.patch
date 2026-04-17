@@ -1,8 +1,52 @@
+diff --git a/mobile/android/android-components/components/browser/storage-sync/build.gradle b/mobile/android/android-components/components/browser/storage-sync/build.gradle
+index 94e5a3956d3b..d5e7f0f481a0 100644
+--- a/mobile/android/android-components/components/browser/storage-sync/build.gradle
++++ b/mobile/android/android-components/components/browser/storage-sync/build.gradle
+@@ -29,7 +29,7 @@ dependencies {
+     implementation project(':components:support-appservices')
+     implementation project(':components:support-utils')
+ 
+-    implementation ComponentsDependencies.mozilla_appservices_errorsupport
++//    implementation ComponentsDependencies.mozilla_appservices_errorsupport
+     implementation ComponentsDependencies.mozilla_appservices_syncmanager
+     implementation libs.androidx.work.runtime
+ 
+diff --git a/mobile/android/android-components/components/browser/storage-sync/src/main/java/mozilla/components/browser/storage/sync/PlacesStorage.kt b/mobile/android/android-components/components/browser/storage-sync/src/main/java/mozilla/components/browser/storage/sync/PlacesStorage.kt
+index 7ddcd8605aeb..66240a2307ec 100644
+--- a/mobile/android/android-components/components/browser/storage-sync/src/main/java/mozilla/components/browser/storage/sync/PlacesStorage.kt
++++ b/mobile/android/android-components/components/browser/storage-sync/src/main/java/mozilla/components/browser/storage/sync/PlacesStorage.kt
+@@ -21,7 +21,7 @@ import mozilla.components.concept.sync.SyncStatus
+ import mozilla.components.concept.sync.SyncableStore
+ import mozilla.components.support.base.log.logger.Logger
+ import mozilla.components.support.base.utils.NamedThreadFactory
+-import mozilla.components.support.rusterrors.reportRustError
++// import mozilla.components.support.rusterrors.reportRustError
+ import mozilla.components.support.utils.logElapsedTime
+ import java.nio.charset.MalformedInputException
+ import java.util.concurrent.Executors
+@@ -160,7 +160,7 @@ abstract class PlacesStorage(
+             logger.warn("Ignoring PlacesApiException while running $operation", e)
+         } catch (e: UniffiInternalException) {
+             logger.error("Ignoring internal uniffi places exception when running $operation", e)
+-            reportRustError("places-internal-error", e)
++//            reportRustError("places-internal-error", e)
+         }
+     }
+ 
+@@ -193,7 +193,7 @@ abstract class PlacesStorage(
+             default
+         } catch (e: UniffiInternalException) {
+             logger.error("Ignoring internal uniffi places exception when running $operation", e)
+-            reportRustError("places-internal-error", e)
++//            reportRustError("places-internal-error", e)
+             default
+         }
+     }
 diff --git a/mobile/android/android-components/components/feature/fxsuggest/build.gradle b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
-index fe9c0187892a2..41481a3ad1780 100644
+index 53d8ba0abeda..c73af44cf4d9 100644
 --- a/mobile/android/android-components/components/feature/fxsuggest/build.gradle
 +++ b/mobile/android/android-components/components/feature/fxsuggest/build.gradle
-@@ -30,7 +30,7 @@ dependencies {
+@@ -31,7 +31,7 @@ dependencies {
      implementation project(':components:support-remotesettings')
      implementation project(':components:support-ktx')
  
@@ -12,19 +56,10 @@ index fe9c0187892a2..41481a3ad1780 100644
      implementation libs.androidx.work.runtime
      implementation libs.kotlinx.coroutines
 diff --git a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
-index 3c07dfa3eb02f..020d2190d1e87 100644
+index c8df3ab6d8e6..beed95e98e52 100644
 --- a/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
 +++ b/mobile/android/android-components/components/feature/fxsuggest/src/main/java/mozilla/components/feature/fxsuggest/FxSuggestStorage.kt
-@@ -10,7 +10,7 @@ import kotlinx.coroutines.CoroutineScope
- import kotlinx.coroutines.Dispatchers
- import kotlinx.coroutines.cancelChildren
- import kotlinx.coroutines.withContext
--import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
-+// import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
- import mozilla.appservices.remotesettings.RemoteSettingsServer
- import mozilla.appservices.suggest.SuggestApiException
- import mozilla.appservices.suggest.SuggestIngestionConstraints
-@@ -21,7 +21,7 @@ import mozilla.appservices.suggest.SuggestionQuery
+@@ -21,7 +21,7 @@ import mozilla.components.concept.base.crash.CrashReporting
  import mozilla.components.feature.fxsuggest.facts.emitSuggestionQueryCountFact
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.remotesettings.RemoteSettingsService
@@ -33,14 +68,12 @@ index 3c07dfa3eb02f..020d2190d1e87 100644
  import mozilla.appservices.suggest.InternalException as UniffiInternalException
  
  /**
-@@ -127,8 +127,8 @@ class FxSuggestStorage(
+@@ -129,7 +129,7 @@ class FxSuggestStorage(
              default
          } catch (e: UniffiInternalException) {
-             Logger.error(e.toString())
--            RustComponentsErrorTelemetry.submitErrorPing("suggest-internal-error", e.toString())
--            reportRustError("suggest-internal-error", e.toString())
-+//            RustComponentsErrorTelemetry.submitErrorPing("suggest-internal-error", e.toString())
-+//            reportRustError("suggest-internal-error", e.toString())
+             Logger.error("Ignoring internal exception from `$name`", e)
+-            reportRustError("suggest-internal-error", e)
++//            reportRustError("suggest-internal-error", e)
              default
          }
      }
@@ -71,19 +104,10 @@ index 5a007933c75cf..df2d2e9a59f92 100644
      implementation libs.androidx.work.runtime
      implementation libs.kotlinx.serialization.json
 diff --git a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-index 954b1ebbfcdd9..1d4106516c0a6 100644
+index 8a13299ef890..2445ba58db65 100644
 --- a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
 +++ b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-@@ -17,7 +17,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
- import kotlinx.serialization.encoding.Decoder
- import kotlinx.serialization.encoding.Encoder
- import kotlinx.serialization.json.Json
--import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
-+// import mozilla.appservices.errorsupport.RustComponentsErrorTelemetry
- import mozilla.appservices.remotesettings.Attachment
- import mozilla.appservices.remotesettings.RemoteSettings
- import mozilla.appservices.remotesettings.RemoteSettingsConfig
-@@ -26,7 +26,7 @@ import mozilla.appservices.remotesettings.RemoteSettingsRecord
+@@ -25,7 +25,7 @@ import mozilla.appservices.remotesettings.RemoteSettingsRecord
  import mozilla.appservices.remotesettings.RemoteSettingsResponse
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.ktx.util.writeString
@@ -92,14 +116,12 @@ index 954b1ebbfcdd9..1d4106516c0a6 100644
  import org.json.JSONObject
  import java.io.File
  import java.io.FileNotFoundException
-@@ -80,8 +80,8 @@ class RemoteSettingsClient(
+@@ -79,7 +79,7 @@ class RemoteSettingsClient(
              RemoteSettingsResult.NetworkFailure(e)
          } catch (e: UniffiInternalException) {
-             Logger.error(e.toString())
--            RustComponentsErrorTelemetry.submitErrorPing("remote-settings-internal-error", e.toString())
--            reportRustError("remote-settings-internal-error", e.toString())
-+//            RustComponentsErrorTelemetry.submitErrorPing("remote-settings-internal-error", e.toString())
-+//            reportRustError("remote-settings-internal-error", e.toString())
+             Logger.error("Ignoring UniffiInternalException from `fetch`", e)
+-            reportRustError("remote-settings-internal-error", e)
++//            reportRustError("remote-settings-internal-error", e)
              RemoteSettingsResult.NetworkFailure(e)
          }
      }

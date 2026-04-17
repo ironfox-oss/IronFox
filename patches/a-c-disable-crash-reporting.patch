@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-index 01165b30bd49..72355618d296 100644
+index 2b16913688f6e..c115de2c586a1 100644
 --- a/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
 +++ b/mobile/android/android-components/components/lib/crash/src/main/java/mozilla/components/lib/crash/CrashReporter.kt
-@@ -30,10 +30,10 @@ import mozilla.components.lib.crash.db.toReportEntity
+@@ -32,10 +32,10 @@ import mozilla.components.lib.crash.db.toReportEntity
  import mozilla.components.lib.crash.handler.ExceptionHandler
  import mozilla.components.lib.crash.notification.CrashNotification
  import mozilla.components.lib.crash.prompt.CrashPrompt
@@ -15,7 +15,7 @@ index 01165b30bd49..72355618d296 100644
  import mozilla.components.support.base.log.logger.Logger
  
  /**
-@@ -97,8 +97,8 @@ private const val START_OF_144_NIGHTLY_TIMESTAMP = 1755475200000L
+@@ -99,8 +99,8 @@ private const val START_OF_144_NIGHTLY_TIMESTAMP = 1755475200000L
   * @param useLegacyReporting Enable/Disable handling crash reporting through a notification or system dialog.
   */
  class CrashReporter internal constructor(
@@ -26,7 +26,7 @@ index 01165b30bd49..72355618d296 100644
      private val shouldPrompt: Prompt = Prompt.NEVER,
      enabled: Boolean = true,
      internal val promptConfiguration: PromptConfiguration = PromptConfiguration(),
-@@ -112,8 +112,8 @@ class CrashReporter internal constructor(
+@@ -115,8 +115,8 @@ class CrashReporter internal constructor(
  
      constructor(
          context: Context,
@@ -37,7 +37,7 @@ index 01165b30bd49..72355618d296 100644
          shouldPrompt: Prompt = Prompt.NEVER,
          enabled: Boolean = true,
          promptConfiguration: PromptConfiguration = PromptConfiguration(),
-@@ -149,9 +149,9 @@ class CrashReporter internal constructor(
+@@ -154,9 +154,9 @@ class CrashReporter internal constructor(
          get() = runtimeTagProviders.fold(emptyMap()) { acc, provider -> acc + provider() }
  
      init {
@@ -49,7 +49,7 @@ index 01165b30bd49..72355618d296 100644
      }
  
      /**
-@@ -160,8 +160,8 @@ class CrashReporter internal constructor(
+@@ -165,8 +165,8 @@ class CrashReporter internal constructor(
      fun install(
          applicationContext: Context,
          handleCaughtExceptionSideEffects: (() -> Unit)? = null,
@@ -60,7 +60,7 @@ index 01165b30bd49..72355618d296 100644
  
          val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
          val handler = ExceptionHandler(
-@@ -172,7 +172,7 @@ class CrashReporter internal constructor(
+@@ -177,7 +177,7 @@ class CrashReporter internal constructor(
          )
          Thread.setDefaultUncaughtExceptionHandler(handler)
  
@@ -69,7 +69,7 @@ index 01165b30bd49..72355618d296 100644
      }
  
      /**
-@@ -219,7 +219,7 @@ class CrashReporter internal constructor(
+@@ -224,7 +224,7 @@ class CrashReporter internal constructor(
       */
      fun submitReport(crash: Crash, then: () -> Unit = {}): Job {
          return scope.launch {
@@ -78,16 +78,16 @@ index 01165b30bd49..72355618d296 100644
                  val reportId = when (crash) {
                      is Crash.NativeCodeCrash -> service.report(crash)
                      is Crash.UncaughtExceptionCrash -> service.report(crash)
-@@ -237,7 +237,7 @@ class CrashReporter internal constructor(
+@@ -242,7 +242,7 @@ class CrashReporter internal constructor(
              logger.info("Crash report submitted to ${services.size} services")
-             withContext(Dispatchers.Main) {
+             withContext(mainDispatcher) {
                  then()
 -            }
 +            } */
          }
      }
  
-@@ -246,7 +246,7 @@ class CrashReporter internal constructor(
+@@ -251,7 +251,7 @@ class CrashReporter internal constructor(
       */
      fun submitCrashTelemetry(crash: Crash, then: () -> Unit = {}): Job {
          return scope.launch {
@@ -96,16 +96,16 @@ index 01165b30bd49..72355618d296 100644
                  when (crash) {
                      is Crash.NativeCodeCrash -> telemetryService.record(crash)
                      is Crash.UncaughtExceptionCrash -> telemetryService.record(crash)
-@@ -256,7 +256,7 @@ class CrashReporter internal constructor(
+@@ -261,7 +261,7 @@ class CrashReporter internal constructor(
              logger.info("Crash report submitted to ${telemetryServices.size} telemetry services")
-             withContext(Dispatchers.Main) {
+             withContext(mainDispatcher) {
                  then()
 -            }
 +            } */
          }
      }
  
-@@ -268,16 +268,16 @@ class CrashReporter internal constructor(
+@@ -273,16 +273,16 @@ class CrashReporter internal constructor(
           * if stacktrace is empty, replace throwable with UnexpectedlyMissingStacktrace exception so
           * we can figure out which module is submitting caught exception reports without a stacktrace.
           */
@@ -126,7 +126,7 @@ index 01165b30bd49..72355618d296 100644
          }
      }
  
-@@ -291,7 +291,7 @@ class CrashReporter internal constructor(
+@@ -296,14 +296,14 @@ class CrashReporter internal constructor(
       * ```
       */
      override fun recordCrashBreadcrumb(breadcrumb: Breadcrumb) {
@@ -135,7 +135,15 @@ index 01165b30bd49..72355618d296 100644
      }
  
      /**
-@@ -385,13 +385,13 @@ class CrashReporter internal constructor(
+      * Set whether telemetry has been enabled.
+      */
+     fun setTelemetryEnabled(enabled: Boolean) {
+-        telemetryServices.forEach { it.setTelemetryEnabled(enabled) }
++//        telemetryServices.forEach { it.setTelemetryEnabled(enabled) }
+     }
+ 
+     /**
+@@ -397,13 +397,13 @@ class CrashReporter internal constructor(
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -153,7 +161,7 @@ index 01165b30bd49..72355618d296 100644
              ContextCompat.startForegroundService(
                  context,
                  SendCrashReportService.createReportIntent(context, updatedCrash),
-@@ -405,17 +405,17 @@ class CrashReporter internal constructor(
+@@ -417,17 +417,17 @@ class CrashReporter internal constructor(
              logger.warn("ignored failed service start while backgrounded")
          } else {
              throw e
@@ -176,7 +184,7 @@ index 01165b30bd49..72355618d296 100644
              ContextCompat.startForegroundService(
                  context,
                  SendCrashTelemetryService.createReportIntent(context, updatedCrash),
-@@ -429,7 +429,7 @@ class CrashReporter internal constructor(
+@@ -441,7 +441,7 @@ class CrashReporter internal constructor(
              logger.warn("ignored failed service start while backgrounded")
          } else {
              throw e
@@ -185,7 +193,7 @@ index 01165b30bd49..72355618d296 100644
      }
  
      @VisibleForTesting
-@@ -452,8 +452,8 @@ class CrashReporter internal constructor(
+@@ -464,8 +464,8 @@ class CrashReporter internal constructor(
          }
      }
  

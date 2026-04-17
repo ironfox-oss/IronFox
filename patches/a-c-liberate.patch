@@ -1,8 +1,8 @@
 diff --git a/mobile/android/android-components/.buildconfig.yml b/mobile/android/android-components/.buildconfig.yml
-index c26c00fa5a137..7a4bc148faf1f 100644
+index e7d7e44f90..80c4b9a623 100644
 --- a/mobile/android/android-components/.buildconfig.yml
 +++ b/mobile/android/android-components/.buildconfig.yml
-@@ -1612,28 +1612,28 @@ projects:
+@@ -1631,28 +1631,28 @@ projects:
      - components:support-webextensions
      - components:tooling-lint
      - components:ui-icons
@@ -53,7 +53,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:feature-webnotifications:
      description: Feature component for Web Notifications.
      path: components/feature/webnotifications
-@@ -1726,20 +1726,20 @@ projects:
+@@ -1745,20 +1745,20 @@ projects:
      - components:support-utils
      - components:tooling-lint
      - components:ui-icons
@@ -88,7 +88,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:lib-dataprotect:
      description: A component using AndroidKeyStore to protect user data.
      path: components/lib/dataprotect
-@@ -1769,18 +1769,18 @@ projects:
+@@ -1788,18 +1788,18 @@ projects:
      - components:support-test
      - components:tooling-fetch-tests
      - components:tooling-lint
@@ -119,7 +119,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:lib-jexl:
      description: 'Javascript Expression Language: Powerful context-based expression
        parser and evaluator.'
-@@ -1821,17 +1821,17 @@ projects:
+@@ -1840,17 +1840,17 @@ projects:
      - components:support-base
      - components:support-test
      - components:tooling-lint
@@ -148,7 +148,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:lib-shake:
      description: A library to detect shake gestures from accelerometer data
      path: components/lib/shake
-@@ -1856,85 +1856,85 @@ projects:
+@@ -1875,85 +1875,85 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint
@@ -313,7 +313,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:samples-compose-browser:
      description: A simple browser composed from browser components using Jetpack Compose.
      path: samples/compose-browser
-@@ -1989,21 +1989,21 @@ projects:
+@@ -2008,21 +2008,21 @@ projects:
      - components:ui-icons
      - components:ui-tabcounter
      - components:ui-widgets
@@ -350,7 +350,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:samples-dataprotect:
      description: An app demoing how to use the Dataprotect component to load and store
        encrypted data in SharedPreferences.
-@@ -2062,39 +2062,39 @@ projects:
+@@ -2081,39 +2081,39 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons
@@ -423,7 +423,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:samples-sync:
      description: A simple app demoing Firefox Sync (History, Bookmarks, etc) integration.
      path: samples/sync
-@@ -2225,22 +2225,22 @@ projects:
+@@ -2244,22 +2244,22 @@ projects:
      - components:tooling-lint
      - components:ui-colors
      - components:ui-icons
@@ -462,7 +462,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
    components:service-location:
      description: A library for providing location-based services.
      path: components/service/location
-@@ -2255,24 +2255,24 @@ projects:
+@@ -2274,25 +2274,25 @@ projects:
      - components:support-test
      - components:support-utils
      - components:tooling-lint
@@ -479,6 +479,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
 -    - components:concept-toolbar
 -    - components:feature-top-sites
 -    - components:lib-publicsuffixlist
+-    - components:support-appservices
 -    - components:support-base
 -    - components:support-ktx
 -    - components:support-test
@@ -497,6 +498,7 @@ index c26c00fa5a137..7a4bc148faf1f 100644
 +#    - components:concept-toolbar
 +#    - components:feature-top-sites
 +#    - components:lib-publicsuffixlist
++#    - components:support-appservices
 +#    - components:support-base
 +#    - components:support-ktx
 +#    - components:support-test

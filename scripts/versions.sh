@@ -3,31 +3,33 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_149_0_2_RELEASE)
-readonly FIREFOX_COMMIT='d8bbe6c514825d2de3f47a26c177b3b523d4e459'
-readonly FIREFOX_SHA512SUM='94f8a3824aba13d847b36a0509a56e0128d58a4d27f874b83cef2518491e8cc176741919c71cb1de9e77a4d3eeb4ab6c7a36fb9dea2275d7a46d9860b5e92751'
-readonly FIREFOX_VERSION='149.0.2'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_150_0_BUILD1)
+readonly FIREFOX_COMMIT='9154e5a11da43c93b65b436b0b12fd894bdc6f76'
+readonly FIREFOX_SHA512SUM='fc117dd3b897c26c7768268507fa241ef50e56691061085185b8ff9fa9f25bb4b3cc0b18067c7cc2b07fa71a0e17c8e3506b04e627aa7afa424c223ccdfe8fc7'
+readonly FIREFOX_VERSION='150.0'
 
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
 ### https://github.com/mozilla/application-services
-readonly APPSERVICES_COMMIT='c19ea2c24eb2f116dae170f5f82054d325e94a42'
-readonly APPSERVICES_SHA512SUM='087de733cf9bbef46678c18a51f6b87a4a2fe92b62db57f68fb118ee05d9c497506883ec41696c04b156a47a1304cbdaa823128d7dcf42f1fa659ae188175f6c'
-readonly APPSERVICES_VERSION='149.0'
+### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
+readonly APPSERVICES_COMMIT='28e78b69f083c6879f39966dd58e58c2ea5db3d5'
+readonly APPSERVICES_SHA512SUM='4e0bc24afde9f311b124e325c2c6cbcd22f3479e2504e29c8cdc91366736e74def9af8c853d6fcb1eba36be7e16eda9e1e9af6392748c514e3c01bc2e26ff076'
+readonly APPSERVICES_VERSION='150.0.1'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='2c1fd95a5ad5c78ab96d8cf05ddc3047287b2a36'
-readonly L10N_SHA512SUM='1769898b0340b97e82c241dc78c9a7be8ae7a991210828da4ed9b8e2e10fad89d74c2676f53f28918473b5483506c341a44c0b6f787f6c26ca0ed2076baccbc8'
+readonly L10N_COMMIT='e202f4cf00c9b19d3750756c45f2e4afe56c6386'
+readonly L10N_SHA512SUM='5875cffe94ad387a0d6aeb42e3cdf8ecf40a2ff84341e6172f4dc96f1d0ee866532ed78e10f1d594f5c09badb3856194860465cbabc0abc2190960ae70a892f6'
 
 ## Glean
 ### https://github.com/mozilla/glean
-readonly GLEAN_COMMIT='a793015bad500379ec5480e280ac2631178a2013'
-readonly GLEAN_SHA512SUM='bc5602f409c392ce929ab62fe8d3ad3bd2f84e6821bae9c091b2f557230849bd27a244aa268b6c286a6a8a609c801b08bb23831dd2380eb5bf93dd375206a075'
-readonly GLEAN_VERSION='67.0.0'
+### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/gradle/libs.versions.toml)
+readonly GLEAN_COMMIT='667af08fa308ff8924ab9cd95f05d7887758c330'
+readonly GLEAN_SHA512SUM='a60da8666c7c3187b3602b5da0c74315f73f534e13cc6faa41b1f63909af97cc474bac5a92f4549ede90dba5c1acea11ae6c41526638283fe2e84b103946ed6b'
+readonly GLEAN_VERSION='67.1.0'
 
 ## Glean Parser
 ### Version: v18.2.0
@@ -79,13 +81,15 @@ readonly ANDROID_NDK_VERSION='r29'
 
 ## Android SDK (Command-Line Tools)
 ### https://developer.android.com/tools/releases/cmdline-tools
-### (for reference: https://searchfox.org/firefox-main/source/python/mozboot/mozboot/android.py)
-readonly ANDROID_SDK_REVISION='13114758'
-readonly ANDROID_SDK_SHA512SUM_LINUX='8e4bce8fb1a9a2b83454ab9ea642caa08adc69d93df345238a9c110a29aeb3dd4211ce9464de6d5ce41182c77ad2ff8c1941ed8a0b1f40d267fdfc8a31f461dc'
-readonly ANDROID_SDK_SHA512SUM_OSX='375e0594493ade7ab613bacdfbc751c5f004db213b02c6202ac28f4b6174ed9fc5d514b189bbfafd3d9d8c8d7d81b3fb312c0454b79e53ab9d139b90790d2a96'
+### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android.py
+### + https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
+readonly ANDROID_SDK_REVISION='14742923'
+readonly ANDROID_SDK_SHA512SUM_LINUX='b65e830d7655fb39cc9eee669806977f462c49375807ef2c6487fabcc9afdbc210465ce6a1e2429ff95c74ca519d1239daf9a403c30b8d0bdb7a0962af656c8e'
+readonly ANDROID_SDK_SHA512SUM_OSX='20fc87470d1850ecbaf254509caca1b45055d72d3d78c9079adbe97ff7754018979a548f0cf145e52f03afd65357a5653f556db15ba569bffd4a143202cca0f8'
 
 ## Android SDK Build Tools
 ### https://developer.android.com/tools/releases/build-tools
+### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
 readonly ANDROID_SDK_BUILD_TOOLS_VERSION='r36.1'
 readonly ANDROID_SDK_BUILD_TOOLS_VERSION_STRING='36.1.0'
 readonly ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX='32a1eea273980a96745ae5e0b141720e5f91c6c6f83f42da4244fad36025d7750521fdf678a7d332afe5946057b498264343c2533ba524967d84347af9cd7ce5'
@@ -95,6 +99,7 @@ readonly ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='991db0bbf23acd212b6be57033cdb
 
 ## Android SDK Platform
 ### https://developer.android.com/tools/releases/platforms
+### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
 readonly ANDROID_SDK_PLATFORM_VERSION='36.1'
 
 ## Android SDK Platform Tools
