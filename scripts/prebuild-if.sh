@@ -732,6 +732,9 @@ function prepare_firefox() {
     "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_capi/Cargo.toml"
     "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_segmenter_data/Cargo.toml"
 
+    ## Temporarily fix Rust 1.95 build failure
+    "${IRONFOX_SED}" -i 's/9456ca46168ef86c98399a2536f577ef7be3cdde90c0c51392d8ac48519d3fae/b9432f9ed39742015f4bb4c3e75c89a2b9a9eef943dd0fd7cd889fddd1e6d39c/g' "${IRONFOX_GECKO}/third_party/rust/encoding_rs/.cargo-checksum.json"
+
     # Disable debug
     "${IRONFOX_SED}" -i -e 's|debug-assertions = .*|debug-assertions = false|g' "${IRONFOX_GECKO}/Cargo.toml"
     "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' "${IRONFOX_GECKO}/gfx/harfbuzz/src/rust/Cargo.toml"

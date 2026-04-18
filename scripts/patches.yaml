@@ -77,6 +77,15 @@ patches:
     effect: "Ensures that our GeckoView binaries are always packaged as intended."
     category: "Build System"
 
+  - file: "gecko-fix-rust-build.patch"
+    name: "Fix Rust 1.95 build failure"
+    description: |
+      Temporarily fixes a build error when Rust 1.95 is used.
+      (Also see: https://codeberg.org/librewolf/source/pulls/167).
+    reason: "To support building Firefox with the latest version of Rust."
+    effect: "Allows Firefox to build successfully with the latest version of Rust."
+    category: "Build System"
+
   - file: "gecko-remove-example-dependencies.patch"
     name: "Remove Unwanted Example/Sample Dependencies"
     description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."
