@@ -343,11 +343,13 @@ function prepare_as() {
 
     # Remove the 'regions' configs
     rm -v "${IRONFOX_AS}/components/remote_settings/dumps/main/regions.json"
+    rm -v "${IRONFOX_AS}/components/remote_settings/dumps/main/regions.timestamp"
     rm -vr "${IRONFOX_AS}/components/remote_settings/dumps/main/attachments/regions"
     "${IRONFOX_SED}" -i -e 's|("main", "regions"),|// ("main", "regions"),|g' "${IRONFOX_AS}/components/remote_settings/src/client.rs"
 
     # Remove the 'search telemetry' config
     rm -v "${IRONFOX_AS}/components/remote_settings/dumps/main/search-telemetry-v2.json"
+    rm -v "${IRONFOX_AS}/components/remote_settings/dumps/main/search-telemetry-v2.timestamp"
     "${IRONFOX_SED}" -i -e 's|("main", "search-telemetry-v2"),|// ("main", "search-telemetry-v2"),|g' "${IRONFOX_AS}/components/remote_settings/src/client.rs"
 
     # Remove the Mozilla Ads Client library
