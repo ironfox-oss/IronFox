@@ -131,10 +131,12 @@
         "urls": {
           "search": {
             "base": "https://duckduckgo.com/",
+            "method": "POST",
             "searchTermParamName": "q"
           },
           "suggestions": {
             "base": "https://duckduckgo.com/ac/",
+            "method": "POST",
             "params": [
               {
                 "name": "type",
@@ -147,7 +149,7 @@
       },
       "id": "04e99a38-13ee-47d8-8aa4-64482b3dea99",
       "identifier": "ddg",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
@@ -169,10 +171,12 @@
         "urls": {
           "search": {
             "base": "https://noai.duckduckgo.com/",
+            "method": "POST",
             "searchTermParamName": "q"
           },
           "suggestions": {
             "base": "https://duckduckgo.com/ac/",
+            "method": "POST",
             "params": [
               {
                 "name": "type",
@@ -185,7 +189,7 @@
       },
       "id": "897700f8-fb6b-4352-b3b7-8ab4d1abe681",
       "identifier": "ddgnoai",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
@@ -207,10 +211,12 @@
         "urls": {
           "search": {
             "base": "https://html.duckduckgo.com/html/",
+            "method": "POST",
             "searchTermParamName": "q"
           },
           "suggestions": {
             "base": "https://duckduckgo.com/ac/",
+            "method": "POST",
             "params": [
               {
                 "name": "type",
@@ -223,7 +229,7 @@
       },
       "id": "3cf5b0ac-76cf-49bd-be0e-5d4e064a2252",
       "identifier": "ddghtml",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
@@ -245,10 +251,12 @@
         "urls": {
           "search": {
             "base": "https://lite.duckduckgo.com/lite/",
+            "method": "POST",
             "searchTermParamName": "q"
           },
           "suggestions": {
             "base": "https://duckduckgo.com/ac/",
+            "method": "POST",
             "params": [
               {
                 "name": "type",
@@ -261,7 +269,7 @@
       },
       "id": "63faf561-3cff-4344-baff-20c9c4abd2a2",
       "identifier": "ddglite",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
@@ -309,13 +317,14 @@
         "urls": {
           "search": {
             "base": "https://www.mojeek.com/search",
+            "method": "POST",
             "searchTermParamName": "q"
           }
         }
       },
       "id": "9db67390-4845-4a23-a83f-142f71c96131",
       "identifier": "mojeek",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
@@ -337,17 +346,19 @@
         "urls": {
           "search": {
             "base": "https://www.startpage.com/sp/search",
+            "method": "POST",
             "searchTermParamName": "query"
           },
           "suggestions": {
             "base": "https://www.startpage.com/osuggestions",
+            "method": "POST",
             "searchTermParamName": "query"
           }
         }
       },
       "id": "4383fc2e-3459-4faa-a987-82df91fb3567",
       "identifier": "startpage",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
@@ -369,17 +380,19 @@
         "urls": {
           "search": {
             "base": "https://eu.startpage.com/sp/search",
+            "method": "POST",
             "searchTermParamName": "query"
           },
           "suggestions": {
             "base": "https://eu.startpage.com/osuggestions",
+            "method": "POST",
             "searchTermParamName": "query"
           }
         }
       },
       "id": "1b718ce2-43c5-4a3e-a759-8e86061a0c73",
       "identifier": "startpage-eu",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
@@ -400,10 +413,12 @@
         "urls": {
           "search": {
             "base": "https://en.wikipedia.org/wiki/Special:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://en.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -416,7 +431,7 @@
       },
       "id": "7f6d23c2-191e-483e-af3a-ce6451e3a8dd",
       "identifier": "wikipedia",
-      "last_modified": 1702906502744,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901740904,
       "variants": [
@@ -537,10 +552,12 @@
         "urls": {
           "search": {
             "base": "https://nn.wikipedia.org/wiki/Spesial:Søk",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://nn.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -553,7 +570,7 @@
       },
       "id": "c3462c25-acc1-4003-a57b-3931bfacdce5",
       "identifier": "wikipedia-NN",
-      "last_modified": 1702906502462,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901792200,
       "variants": [
@@ -576,10 +593,12 @@
         "urls": {
           "search": {
             "base": "https://no.wikipedia.org/wiki/Spesial:Søk",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://no.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -592,7 +611,7 @@
       },
       "id": "607d401f-70cd-4810-b9b5-497d5a9489f6",
       "identifier": "wikipedia-NO",
-      "last_modified": 1722952002234,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1722848326841,
       "variants": [
@@ -615,10 +634,12 @@
         "urls": {
           "search": {
             "base": "https://af.wikipedia.org/wiki/Spesiaal:Soek",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://af.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -631,7 +652,7 @@
       },
       "id": "9dcc6d57-1b00-4cdc-bc11-d70593a3da30",
       "identifier": "wikipedia-af",
-      "last_modified": 1702906502739,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901741515,
       "variants": [
@@ -655,10 +676,12 @@
         "urls": {
           "search": {
             "base": "https://an.wikipedia.org/wiki/Especial:Mirar",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://an.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -671,7 +694,7 @@
       },
       "id": "1c2173e4-1ad3-4347-900a-17f4103c6bbe",
       "identifier": "wikipedia-an",
-      "last_modified": 1729004089205,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1728896622109,
       "variants": [
@@ -695,10 +718,12 @@
         "urls": {
           "search": {
             "base": "https://ar.wikipedia.org/wiki/خاص:بحث",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ar.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -711,7 +736,7 @@
       },
       "id": "3ed57e7f-df2a-4bb0-aecf-10327d5ff1ea",
       "identifier": "wikipedia-ar",
-      "last_modified": 1729004089207,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002476264,
       "variants": [
@@ -734,10 +759,12 @@
         "urls": {
           "search": {
             "base": "https://ast.wikipedia.org/wiki/Especial:Gueta",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ast.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -750,7 +777,7 @@
       },
       "id": "e5f07079-9153-4104-a8b9-a9d15ff75853",
       "identifier": "wikipedia-ast",
-      "last_modified": 1702906502729,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901743369,
       "variants": [
@@ -774,10 +801,12 @@
         "urls": {
           "search": {
             "base": "https://az.wikipedia.org/wiki/Xüsusi:Axtar",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://az.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -790,7 +819,7 @@
       },
       "id": "2230b4af-8fdf-4aa0-a496-5178b25382ed",
       "identifier": "wikipedia-az",
-      "last_modified": 1729004089209,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002478197,
       "variants": [
@@ -814,10 +843,12 @@
         "urls": {
           "search": {
             "base": "https://be.wikipedia.org/wiki/Адмысловае:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://be.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -830,7 +861,7 @@
       },
       "id": "5327659a-3b79-4071-95b5-b86f7cc25a25",
       "identifier": "wikipedia-be",
-      "last_modified": 1729004089289,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002480587,
       "variants": [
@@ -853,10 +884,12 @@
         "urls": {
           "search": {
             "base": "https://be-tarask.wikipedia.org/wiki/Спэцыяльныя:Пошук",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://be-tarask.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -869,7 +902,7 @@
       },
       "id": "d7cb9b4b-f53a-49ea-ae04-27172fb108e9",
       "identifier": "wikipedia-be-tarask",
-      "last_modified": 1729004089292,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002485955,
       "variants": [
@@ -893,10 +926,12 @@
         "urls": {
           "search": {
             "base": "https://bg.wikipedia.org/wiki/Специални:Търсене",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://bg.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -909,7 +944,7 @@
       },
       "id": "6324bcb4-9aad-4aa2-b10c-f320ae1242c3",
       "identifier": "wikipedia-bg",
-      "last_modified": 1729004089211,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002487482,
       "variants": [
@@ -933,10 +968,12 @@
         "urls": {
           "search": {
             "base": "https://bn.wikipedia.org/wiki/বিশেষ:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://bn.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -949,7 +986,7 @@
       },
       "id": "a0a95a2c-83b7-4507-a4e9-5632ca9825dd",
       "identifier": "wikipedia-bn",
-      "last_modified": 1729004089294,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002489104,
       "variants": [
@@ -974,10 +1011,12 @@
         "urls": {
           "search": {
             "base": "https://br.wikipedia.org/wiki/Dibar:Klask",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://br.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -990,7 +1029,7 @@
       },
       "id": "c9266f36-f954-44df-924b-a1c205f66d7c",
       "identifier": "wikipedia-br",
-      "last_modified": 1702906502718,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901745178,
       "variants": [
@@ -1013,10 +1052,12 @@
         "urls": {
           "search": {
             "base": "https://bs.wikipedia.org/wiki/Posebno:Pretraga",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://bs.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1029,7 +1070,7 @@
       },
       "id": "c88785cc-48de-4f07-a40f-5d6564de3183",
       "identifier": "wikipedia-bs",
-      "last_modified": 1702906502715,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901745796,
       "variants": [
@@ -1053,10 +1094,12 @@
         "urls": {
           "search": {
             "base": "https://ca.wikipedia.org/wiki/Especial:Cerca",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ca.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1069,7 +1112,7 @@
       },
       "id": "7ed640c7-bc86-45dc-b07a-f7d8b5a8e079",
       "identifier": "wikipedia-ca",
-      "last_modified": 1729004089296,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002490717,
       "variants": [
@@ -1094,10 +1137,12 @@
         "urls": {
           "search": {
             "base": "https://cy.wikipedia.org/wiki/Arbennig:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://cy.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1110,7 +1155,7 @@
       },
       "id": "0df7934b-5903-4382-ae3d-d898ac0487aa",
       "identifier": "wikipedia-cy",
-      "last_modified": 1729004089213,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002491953,
       "variants": [
@@ -1134,10 +1179,12 @@
         "urls": {
           "search": {
             "base": "https://cs.wikipedia.org/wiki/Speciální:Hledání",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://cs.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1150,7 +1197,7 @@
       },
       "id": "2574b200-f878-4b0c-b7e0-49804b3f4b8e",
       "identifier": "wikipedia-cz",
-      "last_modified": 1729004089298,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002493066,
       "variants": [
@@ -1173,10 +1220,12 @@
         "urls": {
           "search": {
             "base": "https://da.wikipedia.org/wiki/Speciel:Søgning",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://da.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1189,7 +1238,7 @@
       },
       "id": "ae42fcaa-ddee-4212-acb9-8bc15d09a39d",
       "identifier": "wikipedia-da",
-      "last_modified": 1702906502707,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901746995,
       "variants": [
@@ -1212,10 +1261,12 @@
         "urls": {
           "search": {
             "base": "https://de.wikipedia.org/wiki/Spezial:Suche",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://de.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1228,7 +1279,7 @@
       },
       "id": "def1d4ba-b8c8-46c4-9800-134b989ca058",
       "identifier": "wikipedia-de",
-      "last_modified": 1702906502704,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901747613,
       "variants": [
@@ -1252,10 +1303,12 @@
         "urls": {
           "search": {
             "base": "https://dsb.wikipedia.org/wiki/Specialne:Pytaś",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://dsb.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1268,7 +1321,7 @@
       },
       "id": "c8a9299d-c9d2-4bf3-8f94-812d38af35f7",
       "identifier": "wikipedia-dsb",
-      "last_modified": 1729004089216,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002494375,
       "variants": [
@@ -1292,10 +1345,12 @@
         "urls": {
           "search": {
             "base": "https://el.wikipedia.org/wiki/Ειδικό:Αναζήτηση",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://el.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1308,7 +1363,7 @@
       },
       "id": "6ebc40f2-9307-4e58-8fd7-0e1a23b80723",
       "identifier": "wikipedia-el",
-      "last_modified": 1729004089203,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002495941,
       "variants": [
@@ -1332,10 +1387,12 @@
         "urls": {
           "search": {
             "base": "https://eo.wikipedia.org/wiki/Specialaĵo:Serĉi",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://eo.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1348,7 +1405,7 @@
       },
       "id": "25b42f42-d6e4-4193-be32-b4ca61cb55c7",
       "identifier": "wikipedia-eo",
-      "last_modified": 1729004089218,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002497291,
       "variants": [
@@ -1371,10 +1428,12 @@
         "urls": {
           "search": {
             "base": "https://es.wikipedia.org/wiki/Especial:Buscar",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://es.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1387,7 +1446,7 @@
       },
       "id": "82025e38-8eda-48c2-b844-2b5e7d489c34",
       "identifier": "wikipedia-es",
-      "last_modified": 1702906502496,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901785455,
       "variants": [
@@ -1416,10 +1475,12 @@
         "urls": {
           "search": {
             "base": "https://et.wikipedia.org/wiki/Eri:Otsimine",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://et.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1432,7 +1493,7 @@
       },
       "id": "87388ad0-c470-4a90-b79d-231e28b86eda",
       "identifier": "wikipedia-et",
-      "last_modified": 1729004089220,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002498372,
       "variants": [
@@ -1455,10 +1516,12 @@
         "urls": {
           "search": {
             "base": "https://eu.wikipedia.org/wiki/Berezi:Bilatu",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://eu.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1471,7 +1534,7 @@
       },
       "id": "0d6704d1-3aed-420c-8c16-6aeefede499f",
       "identifier": "wikipedia-eu",
-      "last_modified": 1702906502688,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901750807,
       "variants": [
@@ -1495,10 +1558,12 @@
         "urls": {
           "search": {
             "base": "https://fa.wikipedia.org/wiki/ویژه:جستجو",
+            
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://fa.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1511,7 +1576,7 @@
       },
       "id": "ce737d17-06f0-46f2-8c88-97f796ad88dc",
       "identifier": "wikipedia-fa",
-      "last_modified": 1729004089222,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002499436,
       "variants": [
@@ -1534,10 +1599,12 @@
         "urls": {
           "search": {
             "base": "https://fi.wikipedia.org/wiki/Toiminnot:Haku",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://fi.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1550,7 +1617,7 @@
       },
       "id": "0820d593-6616-476a-ab3d-763c4d14dcc6",
       "identifier": "wikipedia-fi",
-      "last_modified": 1702906502682,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901752065,
       "variants": [
@@ -1574,10 +1641,12 @@
         "urls": {
           "search": {
             "base": "https://fr.wikipedia.org/wiki/Spécial:Recherche",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://fr.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1590,7 +1659,7 @@
       },
       "id": "a0261c4c-7b60-42c5-b35b-00ab57c5fbc4",
       "identifier": "wikipedia-fr",
-      "last_modified": 1729004089301,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002502123,
       "variants": [
@@ -1616,10 +1685,12 @@
         "urls": {
           "search": {
             "base": "https://fy.wikipedia.org/wiki/Wiki:Sykje",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://fy.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1632,7 +1703,7 @@
       },
       "id": "4a6a7952-460d-4951-a011-9fc414f2569a",
       "identifier": "wikipedia-fy-NL",
-      "last_modified": 1729004089224,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002503250,
       "variants": [
@@ -1656,10 +1727,12 @@
         "urls": {
           "search": {
             "base": "https://ga.wikipedia.org/wiki/Speisialta:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ga.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1672,7 +1745,7 @@
       },
       "id": "d8d0e94c-27e7-42b1-a5e2-b24198021234",
       "identifier": "wikipedia-ga-IE",
-      "last_modified": 1729004089227,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002504366,
       "variants": [
@@ -1696,10 +1769,12 @@
         "urls": {
           "search": {
             "base": "https://gd.wikipedia.org/wiki/Sònraichte:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://gd.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1712,7 +1787,7 @@
       },
       "id": "df26225d-6726-4630-94ce-7a398598139b",
       "identifier": "wikipedia-gd",
-      "last_modified": 1729004089229,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002505545,
       "variants": [
@@ -1735,10 +1810,12 @@
         "urls": {
           "search": {
             "base": "https://gl.wikipedia.org/wiki/Especial:Procurar",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://gl.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1751,7 +1828,7 @@
       },
       "id": "cd385c40-96bc-43c4-9f30-eff738828401",
       "identifier": "wikipedia-gl",
-      "last_modified": 1702906502668,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901754558,
       "variants": [
@@ -1775,10 +1852,12 @@
         "urls": {
           "search": {
             "base": "https://gn.wikipedia.org/wiki/Mba'echĩchĩ:Buscar",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://gn.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1791,7 +1870,7 @@
       },
       "id": "b66515df-d7b1-403c-b0df-22a5ce9dd07f",
       "identifier": "wikipedia-gn",
-      "last_modified": 1729004089231,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002506870,
       "variants": [
@@ -1815,10 +1894,12 @@
         "urls": {
           "search": {
             "base": "https://gu.wikipedia.org/wiki/વિશેષ:શોધ",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://gu.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1831,7 +1912,7 @@
       },
       "id": "ede0b78c-500a-4d1b-8236-cd5e7ceee815",
       "identifier": "wikipedia-gu",
-      "last_modified": 1729004089303,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002508415,
       "variants": [
@@ -1855,10 +1936,12 @@
         "urls": {
           "search": {
             "base": "https://he.wikipedia.org/wiki/מיוחד:חיפוש",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://he.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1871,7 +1954,7 @@
       },
       "id": "f96aab0d-3562-445c-a70f-5805ea1d25fe",
       "identifier": "wikipedia-he",
-      "last_modified": 1729004089235,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002509714,
       "variants": [
@@ -1895,10 +1978,12 @@
         "urls": {
           "search": {
             "base": "https://hi.wikipedia.org/wiki/विशेष:खोज",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://hi.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1911,7 +1996,7 @@
       },
       "id": "8fc18864-53e1-47b4-8730-2e67962c7b32",
       "identifier": "wikipedia-hi",
-      "last_modified": 1729004089305,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002511062,
       "variants": [
@@ -1935,10 +2020,12 @@
         "urls": {
           "search": {
             "base": "https://hr.wikipedia.org/wiki/Posebno:Traži",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://hr.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1951,7 +2038,7 @@
       },
       "id": "eb03a427-1f71-4df9-b609-a36064d2d0e2",
       "identifier": "wikipedia-hr",
-      "last_modified": 1729004089237,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002512016,
       "variants": [
@@ -1975,10 +2062,12 @@
         "urls": {
           "search": {
             "base": "https://hsb.wikipedia.org/wiki/Specialnje:Pytać",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://hsb.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -1991,7 +2080,7 @@
       },
       "id": "5235d5f1-e04d-4ba3-b53b-35a8d09d2142",
       "identifier": "wikipedia-hsb",
-      "last_modified": 1729004089239,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002513214,
       "variants": [
@@ -2015,10 +2104,12 @@
         "urls": {
           "search": {
             "base": "https://hu.wikipedia.org/wiki/Speciális:Keresés",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://hu.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2031,7 +2122,7 @@
       },
       "id": "9a10f883-2da7-4070-8a73-543153bdd52c",
       "identifier": "wikipedia-hu",
-      "last_modified": 1729004089241,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002514305,
       "variants": [
@@ -2055,10 +2146,12 @@
         "urls": {
           "search": {
             "base": "https://hy.wikipedia.org/wiki/Սպասարկող:Որոնել",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://hy.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2071,7 +2164,7 @@
       },
       "id": "c6286785-b61b-4288-aec1-9a7820c32694",
       "identifier": "wikipedia-hy",
-      "last_modified": 1729004089187,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002515482,
       "variants": [
@@ -2094,10 +2187,12 @@
         "urls": {
           "search": {
             "base": "https://ia.wikipedia.org/wiki/Special:Recerca",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ia.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2110,7 +2205,7 @@
       },
       "id": "6787b684-aa4f-48d2-9673-fce3b528c71c",
       "identifier": "wikipedia-ia",
-      "last_modified": 1702906502647,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901758249,
       "variants": [
@@ -2133,10 +2228,12 @@
         "urls": {
           "search": {
             "base": "https://id.wikipedia.org/wiki/Istimewa:Pencarian",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://id.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2149,7 +2246,7 @@
       },
       "id": "163da4a0-e59f-423a-bebc-3ec3bd68b941",
       "identifier": "wikipedia-id",
-      "last_modified": 1702906502644,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901758856,
       "variants": [
@@ -2172,10 +2269,12 @@
         "urls": {
           "search": {
             "base": "https://is.wikipedia.org/wiki/Kerfissíða:Leit",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://is.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2188,7 +2287,7 @@
       },
       "id": "26ca2f38-0472-45de-83fd-78d67aaecd22",
       "identifier": "wikipedia-is",
-      "last_modified": 1702906502640,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901759494,
       "variants": [
@@ -2211,10 +2310,12 @@
         "urls": {
           "search": {
             "base": "https://it.wikipedia.org/wiki/Speciale:Ricerca",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://it.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2227,7 +2328,7 @@
       },
       "id": "de65dd23-0d4b-4bf0-bd97-0f536e184ded",
       "identifier": "wikipedia-it",
-      "last_modified": 1702906502476,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901789119,
       "variants": [
@@ -2252,10 +2353,12 @@
         "urls": {
           "search": {
             "base": "https://ja.wikipedia.org/wiki/特別:検索",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ja.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2268,7 +2371,7 @@
       },
       "id": "a6bbf9df-acd4-47ea-9d26-6382b587c9c3",
       "identifier": "wikipedia-ja",
-      "last_modified": 1702906502473,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901789723,
       "variants": [
@@ -2293,10 +2396,12 @@
         "urls": {
           "search": {
             "base": "https://ka.wikipedia.org/wiki/სპეციალური:ძიება",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ka.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2309,7 +2414,7 @@
       },
       "id": "ca784382-7beb-4a93-b211-745d4d71ec6c",
       "identifier": "wikipedia-ka",
-      "last_modified": 1729004089244,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002516520,
       "variants": [
@@ -2332,10 +2437,12 @@
         "urls": {
           "search": {
             "base": "https://kab.wikipedia.org/wiki/Uslig:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://kab.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2348,7 +2455,7 @@
       },
       "id": "e6f20ba5-3013-4b18-ad7a-351a64e62ec4",
       "identifier": "wikipedia-kab",
-      "last_modified": 1702906502632,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901760752,
       "variants": [
@@ -2372,10 +2479,12 @@
         "urls": {
           "search": {
             "base": "https://kk.wikipedia.org/wiki/Арнайы:Іздеу",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://kk.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2388,7 +2497,7 @@
       },
       "id": "15f00a29-0d68-4ff1-89d1-5e58b95618b7",
       "identifier": "wikipedia-kk",
-      "last_modified": 1729004089246,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002517453,
       "variants": [
@@ -2412,10 +2521,12 @@
         "urls": {
           "search": {
             "base": "https://km.wikipedia.org/wiki/ពិសេស:ស្វែងរក",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://km.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2428,7 +2539,7 @@
       },
       "id": "c8a7bec0-7f33-44e1-9521-363530993acc",
       "identifier": "wikipedia-km",
-      "last_modified": 1729004089248,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002518717,
       "variants": [
@@ -2452,10 +2563,12 @@
         "urls": {
           "search": {
             "base": "https://kn.wikipedia.org/wiki/ವಿಶೇಷ:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://kn.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2468,7 +2581,7 @@
       },
       "id": "ce510c56-9d5e-416c-aef0-277bfbaac464",
       "identifier": "wikipedia-kn",
-      "last_modified": 1729004089200,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002519733,
       "variants": [
@@ -2492,10 +2605,12 @@
         "urls": {
           "search": {
             "base": "https://ko.wikipedia.org/wiki/특수기능:찾기",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ko.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2508,7 +2623,7 @@
       },
       "id": "831d7fed-79d2-4aac-9481-826300a03d65",
       "identifier": "wikipedia-kr",
-      "last_modified": 1729004089308,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002520757,
       "variants": [
@@ -2531,10 +2646,12 @@
         "urls": {
           "search": {
             "base": "https://lij.wikipedia.org/wiki/Speçiale:Riçerca",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://lij.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2547,7 +2664,7 @@
       },
       "id": "5ec04310-966d-40da-af5b-f24383d40c8a",
       "identifier": "wikipedia-lij",
-      "last_modified": 1702906502619,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901763202,
       "variants": [
@@ -2571,10 +2688,12 @@
         "urls": {
           "search": {
             "base": "https://lo.wikipedia.org/wiki/ພິເສດ:ຊອກຫາ",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://lo.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2587,7 +2706,7 @@
       },
       "id": "515c4522-284d-468f-926a-eb7eb8a55e22",
       "identifier": "wikipedia-lo",
-      "last_modified": 1729004089250,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002521798,
       "variants": [
@@ -2611,10 +2730,12 @@
         "urls": {
           "search": {
             "base": "https://lt.wikipedia.org/wiki/Specialus:Paieška",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://lt.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2627,7 +2748,7 @@
       },
       "id": "774990fb-aabc-4008-86d3-adf12f89ccd4",
       "identifier": "wikipedia-lt",
-      "last_modified": 1729004089198,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002522879,
       "variants": [
@@ -2651,10 +2772,12 @@
         "urls": {
           "search": {
             "base": "https://ltg.wikipedia.org/wiki/Seviškuo:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ltg.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2667,7 +2790,7 @@
       },
       "id": "52871fd0-a24a-443b-a2d4-17eb09951691",
       "identifier": "wikipedia-ltg",
-      "last_modified": 1729004089252,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002523991,
       "variants": [
@@ -2691,10 +2814,12 @@
         "urls": {
           "search": {
             "base": "https://lv.wikipedia.org/wiki/Special:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://lv.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2707,7 +2832,7 @@
       },
       "id": "395b6c93-f7ff-47b8-b895-6f7bb99f9c56",
       "identifier": "wikipedia-lv",
-      "last_modified": 1729004089196,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002525117,
       "variants": [
@@ -2731,10 +2856,12 @@
         "urls": {
           "search": {
             "base": "https://mk.wikipedia.org/wiki/Специјална:Барај",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://mk.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2747,7 +2874,7 @@
       },
       "id": "a3aa8882-cbb0-4002-b0fc-b6ff5cdb9d92",
       "identifier": "wikipedia-mk",
-      "last_modified": 1729004089255,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002525972,
       "variants": [
@@ -2771,10 +2898,12 @@
         "urls": {
           "search": {
             "base": "https://mr.wikipedia.org/wiki/विशेष:शोधा",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://mr.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2787,7 +2916,7 @@
       },
       "id": "09f48c9b-b420-4312-8c60-aeb4358e0b97",
       "identifier": "wikipedia-mr",
-      "last_modified": 1729004089257,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002526927,
       "variants": [
@@ -2810,10 +2939,12 @@
         "urls": {
           "search": {
             "base": "https://ms.wikipedia.org/wiki/Khas:Gelintar",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ms.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2826,7 +2957,7 @@
       },
       "id": "7039c888-4bd6-4b82-a164-ca3bfc93b24c",
       "identifier": "wikipedia-ms",
-      "last_modified": 1702906502595,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901767543,
       "variants": [
@@ -2850,10 +2981,12 @@
         "urls": {
           "search": {
             "base": "https://my.wikipedia.org/wiki/Special:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://my.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2866,7 +2999,7 @@
       },
       "id": "0616dd06-2bfd-46f0-9870-832a1db8a622",
       "identifier": "wikipedia-my",
-      "last_modified": 1729004089194,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002527903,
       "variants": [
@@ -2890,10 +3023,12 @@
         "urls": {
           "search": {
             "base": "https://ne.wikipedia.org/wiki/विशेष:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ne.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2906,7 +3041,7 @@
       },
       "id": "dd1c5a28-733d-46b4-ae5e-fff82f94aec9",
       "identifier": "wikipedia-ne",
-      "last_modified": 1729004089310,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002528998,
       "variants": [
@@ -2929,10 +3064,12 @@
         "urls": {
           "search": {
             "base": "https://nl.wikipedia.org/wiki/Speciaal:Zoeken",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://nl.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2945,7 +3082,7 @@
       },
       "id": "9e423eca-df00-4385-ab15-4e61bc220b05",
       "identifier": "wikipedia-nl",
-      "last_modified": 1702906502588,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901768793,
       "variants": [
@@ -2969,10 +3106,12 @@
         "urls": {
           "search": {
             "base": "https://oc.wikipedia.org/wiki/Especial:Recèrca",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://oc.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -2985,7 +3124,7 @@
       },
       "id": "e3e2c4a1-4914-4a27-96f8-63fb6a90f490",
       "identifier": "wikipedia-oc",
-      "last_modified": 1729004089259,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002529878,
       "variants": [
@@ -3009,10 +3148,12 @@
         "urls": {
           "search": {
             "base": "https://pa.wikipedia.org/wiki/ਖ਼ਾਸ:ਖੋਜੋ",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://pa.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3025,7 +3166,7 @@
       },
       "id": "fa428a75-44d5-4f21-84bd-64935d483540",
       "identifier": "wikipedia-pa",
-      "last_modified": 1729004089185,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002530859,
       "variants": [
@@ -3048,10 +3189,12 @@
         "urls": {
           "search": {
             "base": "https://pl.wikipedia.org/wiki/Specjalna:Szukaj",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://pl.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3064,7 +3207,7 @@
       },
       "id": "980cba80-0c46-4c05-8df0-aaea23d57732",
       "identifier": "wikipedia-pl",
-      "last_modified": 1702906502453,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901794065,
       "variants": [
@@ -3089,10 +3232,12 @@
         "urls": {
           "search": {
             "base": "https://pt.wikipedia.org/wiki/Especial:Pesquisar",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://pt.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3105,7 +3250,7 @@
       },
       "id": "f2e04c1b-b19f-40d9-841d-9b48b7ba9da2",
       "identifier": "wikipedia-pt",
-      "last_modified": 1729004089183,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002531798,
       "variants": [
@@ -3129,10 +3274,12 @@
         "urls": {
           "search": {
             "base": "https://rm.wikipedia.org/wiki/Spezial:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://rm.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3145,7 +3292,7 @@
       },
       "id": "4042df85-6b55-4a40-9c3f-ef74b05ef5be",
       "identifier": "wikipedia-rm",
-      "last_modified": 1702906502581,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901770011,
       "variants": [
@@ -3168,10 +3315,12 @@
         "urls": {
           "search": {
             "base": "https://ro.wikipedia.org/wiki/Special:Căutare",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ro.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3184,7 +3333,7 @@
       },
       "id": "c2f3213e-f43f-4776-b1cb-b70d8457b6c7",
       "identifier": "wikipedia-ro",
-      "last_modified": 1702906502577,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901770632,
       "variants": [
@@ -3208,10 +3357,12 @@
         "urls": {
           "search": {
             "base": "https://ru.wikipedia.org/wiki/Служебная:Поиск",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ru.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3224,7 +3375,7 @@
       },
       "id": "8f2b997a-8bfe-436d-9393-b9abb52522ef",
       "identifier": "wikipedia-ru",
-      "last_modified": 1729004089261,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002532830,
       "variants": [
@@ -3248,10 +3399,12 @@
         "urls": {
           "search": {
             "base": "https://si.wikipedia.org/wiki/විශේෂ:ගවේෂණය",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://si.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3264,7 +3417,7 @@
       },
       "id": "6a54dc6e-623a-4839-afd7-224e06d7ba73",
       "identifier": "wikipedia-si",
-      "last_modified": 1729004089191,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002533949,
       "variants": [
@@ -3288,10 +3441,12 @@
         "urls": {
           "search": {
             "base": "https://sk.wikipedia.org/wiki/Špeciálne:Hľadanie",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://sk.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3304,7 +3459,7 @@
       },
       "id": "f9d77028-e386-4093-aacd-a8c2a56acbc0",
       "identifier": "wikipedia-sk",
-      "last_modified": 1729004089264,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002534892,
       "variants": [
@@ -3328,10 +3483,12 @@
         "urls": {
           "search": {
             "base": "https://sl.wikipedia.org/wiki/Posebno:Iskanje",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://sl.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3344,7 +3501,7 @@
       },
       "id": "887d2a1b-7275-4a4e-afa2-9157eb98a7d5",
       "identifier": "wikipedia-sl",
-      "last_modified": 1729004089266,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002535884,
       "variants": [
@@ -3367,10 +3524,12 @@
         "urls": {
           "search": {
             "base": "https://sq.wikipedia.org/wiki/Speciale:Kërkim",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://sq.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3383,7 +3542,7 @@
       },
       "id": "bc8c03e7-747a-408c-a0ee-6598ca9fad4a",
       "identifier": "wikipedia-sq",
-      "last_modified": 1702906502561,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901773681,
       "variants": [
@@ -3407,10 +3566,12 @@
         "urls": {
           "search": {
             "base": "https://sr.wikipedia.org/wiki/Посебно:Претражи",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://sr.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3423,7 +3584,7 @@
       },
       "id": "d381964d-d1e3-4378-962c-6ac5b89161f8",
       "identifier": "wikipedia-sr",
-      "last_modified": 1729004089268,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002536927,
       "variants": [
@@ -3446,10 +3607,12 @@
         "urls": {
           "search": {
             "base": "https://sv.wikipedia.org/wiki/Special:Sök",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://sv.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3462,7 +3625,7 @@
       },
       "id": "d0708bee-d246-4eb9-81ff-50d5947837ec",
       "identifier": "wikipedia-sv-SE",
-      "last_modified": 1702906502555,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901774920,
       "variants": [
@@ -3486,10 +3649,12 @@
         "urls": {
           "search": {
             "base": "https://ta.wikipedia.org/wiki/சிறப்பு:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ta.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3502,7 +3667,7 @@
       },
       "id": "78ed73b5-4afd-467e-b7ee-c96658f345c6",
       "identifier": "wikipedia-ta",
-      "last_modified": 1729004089270,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002539071,
       "variants": [
@@ -3526,10 +3691,12 @@
         "urls": {
           "search": {
             "base": "https://te.wikipedia.org/wiki/ప్రత్యేక:అన్వేషణ",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://te.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3542,7 +3709,7 @@
       },
       "id": "391eb3c6-de7a-4aaf-8027-3ad1b8c3c00a",
       "identifier": "wikipedia-te",
-      "last_modified": 1729004089273,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002540762,
       "variants": [
@@ -3566,10 +3733,12 @@
         "urls": {
           "search": {
             "base": "https://th.wikipedia.org/wiki/พิเศษ:ค้นหา",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://th.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3582,7 +3751,7 @@
       },
       "id": "5c7903a3-5a44-41a0-aac2-fc26fe8f8fe7",
       "identifier": "wikipedia-th",
-      "last_modified": 1729004089275,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002542224,
       "variants": [
@@ -3605,10 +3774,12 @@
         "urls": {
           "search": {
             "base": "https://tl.wikipedia.org/wiki/Natatangi:Maghanap",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://tl.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3621,7 +3792,7 @@
       },
       "id": "d0c8b2f5-accc-45f4-adf4-a7377692869b",
       "identifier": "wikipedia-tl",
-      "last_modified": 1702906502542,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901777391,
       "variants": [
@@ -3645,10 +3816,12 @@
         "urls": {
           "search": {
             "base": "https://tr.wikipedia.org/wiki/Özel:Ara",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://tr.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3661,7 +3834,7 @@
       },
       "id": "8885ffbb-f450-4642-8204-ed9128b29e51",
       "identifier": "wikipedia-tr",
-      "last_modified": 1729004089189,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002543730,
       "variants": [
@@ -3685,10 +3858,12 @@
         "urls": {
           "search": {
             "base": "https://uk.wikipedia.org/wiki/Спеціальна:Пошук",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://uk.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3701,7 +3876,7 @@
       },
       "id": "3b65a693-177a-4bd2-9d66-8c038e005800",
       "identifier": "wikipedia-uk",
-      "last_modified": 1729004089277,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002544976,
       "variants": [
@@ -3725,10 +3900,12 @@
         "urls": {
           "search": {
             "base": "https://ur.wikipedia.org/wiki/خاص:تلاش",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://ur.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3741,7 +3918,7 @@
       },
       "id": "52a714ba-0471-47be-9557-fc5fe9c9ff50",
       "identifier": "wikipedia-ur",
-      "last_modified": 1729004089279,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002546136,
       "variants": [
@@ -3765,10 +3942,12 @@
         "urls": {
           "search": {
             "base": "https://uz.wikipedia.org/wiki/Maxsus:Search",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://uz.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3781,7 +3960,7 @@
       },
       "id": "1b07d255-6f2c-4e2d-a4b4-b0e99aae39e9",
       "identifier": "wikipedia-uz",
-      "last_modified": 1729004089282,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002547362,
       "variants": [
@@ -3804,10 +3983,12 @@
         "urls": {
           "search": {
             "base": "https://vi.wikipedia.org/wiki/Đặc_biệt:Tìm_kiếm",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://vi.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3820,7 +4001,7 @@
       },
       "id": "5b6f0a3f-1f94-473d-8bcc-c48984523b0c",
       "identifier": "wikipedia-vi",
-      "last_modified": 1702906502525,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901780448,
       "variants": [
@@ -3843,10 +4024,12 @@
         "urls": {
           "search": {
             "base": "https://wo.wikipedia.org/wiki/Jagleel:Ceet",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://wo.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3859,7 +4042,7 @@
       },
       "id": "3f1ba3c7-23f1-4ca1-aa0c-623fcae80ddd",
       "identifier": "wikipedia-wo",
-      "last_modified": 1702906502521,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1702901781072,
       "variants": [
@@ -3883,10 +4066,12 @@
         "urls": {
           "search": {
             "base": "https://zh.wikipedia.org/wiki/Special:搜索",
+            "method": "POST",
             "searchTermParamName": "search"
           },
           "suggestions": {
             "base": "https://zh.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3899,7 +4084,7 @@
       },
       "id": "c0f736ce-c219-4388-a242-48168237e3f5",
       "identifier": "wikipedia-zh-CN",
-      "last_modified": 1729004089284,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002548615,
       "variants": [
@@ -3923,6 +4108,7 @@
         "urls": {
           "search": {
             "base": "https://zh.wikipedia.org/wiki/Special:搜索",
+            "method": "POST",
             "params": [
               {
                 "name": "variant",
@@ -3933,6 +4119,7 @@
           },
           "suggestions": {
             "base": "https://zh.wikipedia.org/w/api.php",
+            "method": "POST",
             "params": [
               {
                 "name": "action",
@@ -3945,7 +4132,7 @@
       },
       "id": "864df79e-c03d-47ee-aacf-06242cffe951",
       "identifier": "wikipedia-zh-TW",
-      "last_modified": 1729004089287,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1729002549717,
       "variants": [
@@ -3967,13 +4154,14 @@
         "name": "No Search",
         "urls": {
           "search": {
-            "base": "https://nosearch.invalid/"
+            "base": "https://nosearch.invalid/",
+            "method": "POST"
           }
         }
       },
       "id": "bad4f466-d074-41cb-b217-3810257c699e",
       "identifier": "no-search",
-      "last_modified": 1718719100285,
+      "last_modified": 1776448723063,
       "recordType": "engine",
       "schema": 1718698362015,
       "variants": [
