@@ -338,6 +338,39 @@
     {
       "base": {
         "aliases": [
+          "searxdis"
+        ],
+        "classification": "general",
+        "name": "SearXNG (Disroot)",
+        "urls": {
+          "search": {
+            "base": "https://search.disroot.org/search",
+            "method": "POST",
+            "searchTermParamName": "q"
+          },
+          "suggestions": {
+            "base": "https://search.disroot.org/autocompleter",
+            "method": "POST",
+            "searchTermParamName": "q"
+          }
+        }
+      },
+      "id": "7f393c44-54b9-4eec-8f89-876ec2244d65",
+      "identifier": "searxdis",
+      "last_modified": 1776448723063,
+      "recordType": "engine",
+      "schema": 1718698362015,
+      "variants": [
+        {
+          "environment": {
+            "allRegionsAndLocales": true
+          }
+        }
+      ]
+    },
+    {
+      "base": {
+        "aliases": [
           "startpage",
           "sp"
         ],
@@ -4174,7 +4207,7 @@
     },
     {
       "id": "3e1fed64-5ec7-4b1c-bedc-741fe3c59bc3",
-      "last_modified": 1707833224345,
+      "last_modified": 1776448723063,
       "orders": [
         {
           "environment": {
@@ -4187,6 +4220,7 @@
             "ddglite",
             "marginalia",
             "mojeek",
+            "searxdis",
             "startpage",
             "startpage-eu",
             "wikipedia*",

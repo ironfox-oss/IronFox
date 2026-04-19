@@ -1,8 +1,8 @@
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
-index 84a720d3e..3ff7203f5 100644
+index 047c6f126..e21a98e41 100644
 --- a/components/remote_settings/src/client.rs
 +++ b/components/remote_settings/src/client.rs
-@@ -113,7 +113,7 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -122,7 +122,7 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
              "world-buffered",
          ],
          ("main", "search-config-icons") => [
@@ -11,7 +11,7 @@ index 84a720d3e..3ff7203f5 100644
              "06cf7432-efd7-f244-927b-5e423005e1ea",
              "0a57b0cf-34f0-4d09-96e4-dbd6e3355410",
              "0d7668a8-c3f4-cfee-cbc8-536511528937",
-@@ -137,9 +137,9 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -146,9 +146,9 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
              "5ded611d-44b2-dc46-fd67-fb116888d75d",
              "5e03d6f4-6ee9-8bc8-cf22-7a5f2cf55c41",
              "6644f26f-28ea-4222-929d-5d43a02dae05",
@@ -23,7 +23,7 @@ index 84a720d3e..3ff7203f5 100644
              "7072564d-a573-4750-bf33-f0a07631c9eb",
              "70fdd651-6c50-b7bb-09ec-7e85da259173",
              "71f41a0c-5b70-4116-b30f-e62089083522",
-@@ -163,9 +163,9 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -170,9 +170,9 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
              "96327a73-c433-5eb4-a16d-b090cadfb80b",
              "9802e63d-05ec-48ba-93f9-746e0981ad98",
              "9d96547d-7575-49ca-8908-1e046b8ea90e",
@@ -33,17 +33,19 @@ index 84a720d3e..3ff7203f5 100644
 -            "a2c7d4e9-f770-51e1-0963-3c2c8401631d",
 +/*            "a2c7d4e9-f770-51e1-0963-3c2c8401631d",
              "a83f24e4-602c-47bd-930c-ad0947ee1adf",
+             "b50c3e3d-7bd0-4118-856f-19b26b21d01f",
              "b64f09fd-52d1-c48e-af23-4ce918e7bf3b",
-             "b882b24d-1776-4ef9-9016-0bdbd935eda3",
-@@ -181,10 +181,10 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -188,11 +188,11 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+             "e7547f62-187b-b641-d462-e54a3f813d9a",
              "eb62e768-151b-45d1-9fe5-9e1d2a5991c5",
              "f312610a-ebfb-a106-ea92-fd643c5d3636",
-             "f943d7bc-872e-4a81-810f-94d26465da69",
+-            "f943d7bc-872e-4a81-810f-94d26465da69",
 -            "fa0fc42c-d91d-fca7-34eb-806ff46062dc",
 -            "fca3e3ee-56cd-f474-dc31-307fd24a891d",
 -            "fe75ce3f-1545-400c-b28c-ad771054e69f",
 -            "fed4f021-ff3e-942a-010e-afa43fda2136",
-+            "fa0fc42c-d91d-fca7-34eb-806ff46062dc", */
++            "f943d7bc-872e-4a81-810f-94d26465da69", */
++            "541819c3-35be-4ef3-9009-021b62c73545",
 +            "7cd086c7-43f6-42fe-a240-17deeeef034b",
 +            "b71f7782-aaa7-40de-9407-9fd505059b61",
 +            "be7ba9bc-d68f-4ba3-ad3b-4fc0aaea5f3c",

@@ -9,15 +9,14 @@ Signed-off-by: celenity <celenity@celenity.dev>
  1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-index 2bf9c12c929d4..4216b343fecb9 100644
+index a18f612a94570..0c95c4d4a9990 100644
 --- a/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
 +++ b/mobile/android/android-components/components/feature/search/src/main/java/mozilla/components/feature/search/storage/SearchEngineReader.kt
-@@ -38,16 +38,16 @@ private const val MAX_SIZE = 32
+@@ -40,16 +40,16 @@ private const val MAX_SIZE = 32
  // List of general search engine ids, taken from
  // https://searchfox.org/mozilla-central/rev/ef0aa879e94534ffd067a3748d034540a9fc10b0/toolkit/components/search/SearchUtils.sys.mjs#200
  internal val GENERAL_SEARCH_ENGINE_IDS = setOf(
 -    GOOGLE_ID,
-+//    GOOGLE_ID,
      "ddg",
 -    "bing",
 -    "baidu",
@@ -32,6 +31,7 @@ index 2bf9c12c929d4..4216b343fecb9 100644
 +    "ddglite",
 +    "marginalia",
 +    "mojeek",
++    "searxdis",
 +    "startpage",
 +    "startpage-eu",
 +    "no-search",

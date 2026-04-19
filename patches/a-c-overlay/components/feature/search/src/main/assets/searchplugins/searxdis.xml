@@ -1,0 +1,16 @@
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this
+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>SearXNG (Disroot)</ShortName>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="32" height="32">data:image/png;base64,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</Image>
+<Url type="application/x-suggestions+json" method="POST" template="https://search.disroot.org/autocompleter">
+  <Param name="q" value="{searchTerms}"/>
+</Url>
+<Url type="text/html" method="POST" template="https://search.disroot.org/search">
+  <Param name="q" value="{searchTerms}"/>
+</Url>
+<SearchForm>https://search.disroot.org/</SearchForm>
+</SearchPlugin>
