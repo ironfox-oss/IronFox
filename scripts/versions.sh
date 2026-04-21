@@ -3,9 +3,9 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_150_0_BUILD1)
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_150_0_RELEASE)
 readonly FIREFOX_COMMIT='9154e5a11da43c93b65b436b0b12fd894bdc6f76'
-readonly FIREFOX_SHA512SUM='fc117dd3b897c26c7768268507fa241ef50e56691061085185b8ff9fa9f25bb4b3cc0b18067c7cc2b07fa71a0e17c8e3506b04e627aa7afa424c223ccdfe8fc7'
+readonly FIREFOX_SHA512SUM='b3a325da83ea2088880f7b4bda5e4792d0d9fe5e90412106c3518eff8515b64fa2b7dd83f71c154ffa2be28be05057625589f22d44ace952c2d8d643574adcd8'
 readonly FIREFOX_VERSION='150.0'
 
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
@@ -21,8 +21,8 @@ readonly APPSERVICES_VERSION='150.0.1'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='e202f4cf00c9b19d3750756c45f2e4afe56c6386'
-readonly L10N_SHA512SUM='5875cffe94ad387a0d6aeb42e3cdf8ecf40a2ff84341e6172f4dc96f1d0ee866532ed78e10f1d594f5c09badb3856194860465cbabc0abc2190960ae70a892f6'
+readonly L10N_COMMIT='fa13341cbf4b532f1860ede5505805c07f923cc4'
+readonly L10N_SHA512SUM='71ca5d2482d4d5ac4ad471d7b2dbce58624864d13316e7f25a1f31d0ea4b93ab779dac14fc77472cda6f999d39a9b8a19c26b4e1a9eca2ab1fafbb22240d7a91'
 
 ## Glean
 ### https://github.com/mozilla/glean
@@ -64,7 +64,7 @@ readonly UNIFFI_VERSION='0.31.0'
 ### Version: 1.0.2
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
 readonly UNIFIEDPUSHAC_COMMIT='31b4fdfdfa8aeb7e7c93f405a351438ffe82fff6'
-readonly UNIFIEDPUSHAC_SHA512SUM='1a3fb43e137268db7bdd1b0d2bcd5149b795c63e4ab0225dab7f5a7928bda306b4f09a502da56f70f8f84f1e5aaf8f3ffe8256ffc54ce100904af3d7204f779e'
+readonly UNIFIEDPUSHAC_SHA512SUM='92653a1b1a36b9482abebf916080e41621915f4c11ee1453890525c0888ef977f7caa6bc4d73c2c1b682dfa0b74010002c44cbe5eb9bcaffbd600cc960663e3c'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
