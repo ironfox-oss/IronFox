@@ -6,3 +6,7 @@ FINAL_TARGET_FILES.defaults += [
 FINAL_TARGET_FILES.defaults.autoconfig += [
     "ironfox.cfg",
 ]
+
+EXTRA_JS_MODULES += [
+    "GeckoSettingsBridge.sys.mjs"
+]

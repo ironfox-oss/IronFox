@@ -1,3 +1,5 @@
+// IronFox GeckoSettingsBridge (Sender)
+
 package org.ironfoxoss.ironfox.utils
 
 import android.content.Context
@@ -8,7 +10,6 @@ import mozilla.components.concept.engine.preferences.Branch
 import mozilla.components.concept.engine.preferences.BrowserPreference
 import mozilla.components.ExperimentalAndroidComponentsApi
 import mozilla.components.concept.engine.Engine
-import org.ironfoxoss.ironfox.utils.GeckoSettingsDictionary
 import org.ironfoxoss.ironfox.utils.IronFoxPreferences
 import org.mozilla.fenix.ext.settings
 
@@ -56,10 +57,9 @@ object GeckoSettingsBridge {
         // We don't support EME, but, if a user enables it from the about:config,
         // we need to expose the permision UI for it.
         // If we don't, and a user enables it, Gecko will just allow every site unconditionally to use EME...
-        val emeGeckoPref = GeckoSettingsDictionary.emeEnabled
         @OptIn(ExperimentalAndroidComponentsApi::class)
         engine.getBrowserPref(
-            emeGeckoPref,
+            "media.eme.enabled",
             onSuccess = { emePref ->
                 IronFoxPreferences.setEMEEnabled(context, emePref.value as Boolean)
             },
@@ -67,576 +67,181 @@ object GeckoSettingsBridge {
                 IronFoxPreferences.setEMEEnabled(context, false)
             }
         )
+
+        setGeckoPrefsInitialized(context, engine)
     }
 
     fun setIronFoxOnboardingCompleted(context: Context, engine: Engine) {
         val ironFoxOnboardingCompleted = IronFoxPreferences.isIronFoxOnboardingCompleted(context)
-        val ironFoxOnboardingCompletedFenixPref = GeckoSettingsDictionary.fenixIronFoxOnboardingCompleted
-        val ironFoxOnboardingCompletedFenixModifiedPref = GeckoSettingsDictionary.fenixIronFoxOnboardingCompletedModified
-        val ironFoxOnboardingCompletedGeckoPref = GeckoSettingsDictionary.onboardingCompleted
-        setUserPref(engine, ironFoxOnboardingCompletedFenixPref, ironFoxOnboardingCompleted)
-        setDefaultPref(engine, ironFoxOnboardingCompletedFenixPref, ironFoxOnboardingCompleted)
-        setUserPref(engine, ironFoxOnboardingCompletedGeckoPref, ironFoxOnboardingCompleted)
-        setDefaultPref(engine, ironFoxOnboardingCompletedGeckoPref, ironFoxOnboardingCompleted)
-
-        if (ironFoxOnboardingCompleted) {
-            setUserPref(engine, ironFoxOnboardingCompletedFenixModifiedPref, true)
-            setDefaultPref(engine, ironFoxOnboardingCompletedGeckoPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.ironFoxOnboardingCompleted", ironFoxOnboardingCompleted)
     }
 
     fun setWebGLDisabled(context: Context, engine: Engine) {
         val webglDisabled = IronFoxPreferences.isWebGLDisabled(context)
-        val webglFenixPref = GeckoSettingsDictionary.fenixWebglDisabled
-        val webglFenixModifiedPref = GeckoSettingsDictionary.fenixWebglDisabledModified
-        val webglGeckoPref = GeckoSettingsDictionary.webglDisabled
-        setUserPref(engine, webglFenixPref, webglDisabled)
-        setDefaultPref(engine, webglFenixPref, webglDisabled)
-        setUserPref(engine, webglGeckoPref, webglDisabled)
-        setDefaultPref(engine, webglGeckoPref, webglDisabled)
-
-        if (!webglDisabled) {
-            setUserPref(engine, webglFenixModifiedPref, true)
-            setDefaultPref(engine, webglFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.webglDisabled", webglDisabled)
     }
 
     fun setAccessibilityEnabled(context: Context, engine: Engine) {
         val accessibilityEnabled = IronFoxPreferences.isAccessibilityEnabled(context)
-        val accessibilityFenixPref = GeckoSettingsDictionary.fenixAccessibilityEnabled
-        val accessibilityFenixModifiedPref = GeckoSettingsDictionary.fenixAccessibilityEnabledModified
-        val accessibilityGeckoPref = GeckoSettingsDictionary.accessibilityDisabled
-        setUserPref(engine, accessibilityFenixPref, accessibilityEnabled)
-        setDefaultPref(engine, accessibilityFenixPref, accessibilityEnabled)
-    
-        if (accessibilityEnabled) {
-            setUserPref(engine, accessibilityGeckoPref, 0)
-            setDefaultPref(engine, accessibilityGeckoPref, 0)
-            setUserPref(engine, accessibilityFenixModifiedPref, true)
-            setDefaultPref(engine, accessibilityFenixModifiedPref, true)
-        } else {
-            setUserPref(engine, accessibilityGeckoPref, 1)
-            setDefaultPref(engine, accessibilityGeckoPref, 1)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.accessibilityEnabled", accessibilityEnabled)
     }
 
     fun setJavaScriptEnabled(context: Context, engine: Engine) {
         val javascriptEnabled = IronFoxPreferences.isJavaScriptEnabled(context)
-        val javascriptFenixPref = GeckoSettingsDictionary.fenixJavascriptEnabled
-        val javascriptFenixModifiedPref = GeckoSettingsDictionary.fenixJavascriptEnabledModified
-        val javascriptGeckoPref = GeckoSettingsDictionary.javascriptEnabled
-        setUserPref(engine, javascriptFenixPref, javascriptEnabled)
-        setDefaultPref(engine, javascriptFenixPref, javascriptEnabled)
-        setUserPref(engine, javascriptGeckoPref, javascriptEnabled)
-        setDefaultPref(engine, javascriptGeckoPref, javascriptEnabled)
-
-        if (!javascriptEnabled) {
-            setUserPref(engine, javascriptFenixModifiedPref, true)
-            setDefaultPref(engine, javascriptFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.javascriptEnabled", javascriptEnabled)
     }
 
     fun setFPPOverridesIronFoxWebGLEnabled(context: Context, engine: Engine) {
         val fppOverridesIronFoxWebGLEnabled = IronFoxPreferences.isFPPOverridesIronFoxWebGLEnabled(context)
-        val fppOverridesIronFoxWebGLFenixPref = GeckoSettingsDictionary.fenixFppOverridesIronFoxWebGLEnabled
-        val fppOverridesIronFoxWebGLFenixModifiedPref = GeckoSettingsDictionary.fenixFppOverridesIronFoxWebGLEnabledModified
-        val fppOverridesIronFoxWebGLGeckoPref = GeckoSettingsDictionary.fppOverridesIFWebGL
-        setUserPref(engine, fppOverridesIronFoxWebGLFenixPref, fppOverridesIronFoxWebGLEnabled)
-        setDefaultPref(engine, fppOverridesIronFoxWebGLFenixPref, fppOverridesIronFoxWebGLEnabled)
-        setUserPref(engine, fppOverridesIronFoxWebGLGeckoPref, fppOverridesIronFoxWebGLEnabled)
-        setDefaultPref(engine, fppOverridesIronFoxWebGLGeckoPref, fppOverridesIronFoxWebGLEnabled)
-
-        if (!fppOverridesIronFoxWebGLEnabled) {
-            setUserPref(engine, fppOverridesIronFoxWebGLFenixModifiedPref, true)
-            setDefaultPref(engine, fppOverridesIronFoxWebGLFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesIronFoxWebGLEnabled", fppOverridesIronFoxWebGLEnabled)
     }
 
     fun setAlwaysUsePrivateBrowsing(context: Context, engine: Engine) {
         val alwaysUsePrivateBrowsing = IronFoxPreferences.isAlwaysUsePrivateBrowsing(context)
-        val alwaysUsePrivateBrowsingFenixPref = GeckoSettingsDictionary.fenixAlwaysUsePrivateBrowsing
-        val alwaysUsePrivateBrowsingFenixModifiedPref = GeckoSettingsDictionary.fenixAlwaysUsePrivateBrowsingModified
-        val alwaysUsePrivateBrowsingGeckoPref = GeckoSettingsDictionary.alwaysUsePrivateBrowsing
-        setUserPref(engine, alwaysUsePrivateBrowsingFenixPref, alwaysUsePrivateBrowsing)
-        setDefaultPref(engine, alwaysUsePrivateBrowsingFenixPref, alwaysUsePrivateBrowsing)
-        setUserPref(engine, alwaysUsePrivateBrowsingGeckoPref, alwaysUsePrivateBrowsing)
-        setDefaultPref(engine, alwaysUsePrivateBrowsingGeckoPref, alwaysUsePrivateBrowsing)
-
-        if (alwaysUsePrivateBrowsing) {
-            setUserPref(engine, alwaysUsePrivateBrowsingFenixModifiedPref, true)
-            setDefaultPref(engine, alwaysUsePrivateBrowsingFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.alwaysUsePrivateBrowsing", alwaysUsePrivateBrowsing)
     }
 
     fun setCacheEnabled(context: Context, engine: Engine) {
         val cacheEnabled = IronFoxPreferences.isCacheEnabled(context)
-        val cacheEnabledFenixPref = GeckoSettingsDictionary.fenixCacheEnabled
-        val cacheEnabledFenixModifiedPref = GeckoSettingsDictionary.fenixCacheEnabledModified
-        val cacheEnabledGeckoPref = GeckoSettingsDictionary.cacheEnabled
-        setUserPref(engine, cacheEnabledFenixPref, cacheEnabled)
-        setDefaultPref(engine, cacheEnabledFenixPref, cacheEnabled)
-        setUserPref(engine, cacheEnabledGeckoPref, cacheEnabled)
-        setDefaultPref(engine, cacheEnabledGeckoPref, cacheEnabled)
-
-        if (cacheEnabled) {
-            setUserPref(engine, cacheEnabledFenixModifiedPref, true)
-            setDefaultPref(engine, cacheEnabledFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.cacheEnabled", cacheEnabled)
     }
 
     fun setFPPOverridesIronFoxEnabled(context: Context, engine: Engine) {
         val fppOverridesIronFoxEnabled = IronFoxPreferences.isFPPOverridesIronFoxEnabled(context)
-        val fppOverridesIronFoxFenixPref = GeckoSettingsDictionary.fenixFppOverridesIronFoxEnabled
-        val fppOverridesIronFoxFenixModifiedPref = GeckoSettingsDictionary.fenixFppOverridesIronFoxEnabledModified
-        val fppOverridesIronFoxGeckoPref = GeckoSettingsDictionary.fppOverridesIFUnbreak
-        setUserPref(engine, fppOverridesIronFoxFenixPref, fppOverridesIronFoxEnabled)
-        setDefaultPref(engine, fppOverridesIronFoxFenixPref, fppOverridesIronFoxEnabled)
-        setUserPref(engine, fppOverridesIronFoxGeckoPref, fppOverridesIronFoxEnabled)
-        setDefaultPref(engine, fppOverridesIronFoxGeckoPref, fppOverridesIronFoxEnabled)
-
-        if (!fppOverridesIronFoxEnabled) {
-            setUserPref(engine, fppOverridesIronFoxFenixModifiedPref, true)
-            setDefaultPref(engine, fppOverridesIronFoxFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesIronFoxEnabled", fppOverridesIronFoxEnabled)
     }
 
     fun setFPPOverridesMozillaEnabled(context: Context, engine: Engine) {
         val fppOverridesMozillaEnabled = IronFoxPreferences.isFPPOverridesMozillaEnabled(context)
-        val fppOverridesMozillaFenixPref = GeckoSettingsDictionary.fenixFppOverridesMozillaEnabled
-        val fppOverridesMozillaFenixModifiedPref = GeckoSettingsDictionary.fenixFppOverridesMozillaEnabledModified
-        val fppOverridesMozillaGeckoPref = GeckoSettingsDictionary.fppOverridesMozUnbreak
-        setUserPref(engine, fppOverridesMozillaFenixPref, fppOverridesMozillaEnabled)
-        setDefaultPref(engine, fppOverridesMozillaFenixPref, fppOverridesMozillaEnabled)
-        setUserPref(engine, fppOverridesMozillaGeckoPref, fppOverridesMozillaEnabled)
-        setDefaultPref(engine, fppOverridesMozillaGeckoPref, fppOverridesMozillaEnabled)
-
-        if (!fppOverridesMozillaEnabled) {
-            setUserPref(engine, fppOverridesMozillaFenixModifiedPref, true)
-            setDefaultPref(engine, fppOverridesMozillaFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesMozillaEnabled", fppOverridesMozillaEnabled)
     }
 
     fun setFPPOverridesIronFoxTimezoneEnabled(context: Context, engine: Engine) {
         val fppOverridesIronFoxTimezoneEnabled = IronFoxPreferences.isFPPOverridesIronFoxTimezoneEnabled(context)
-        val fppOverridesIronFoxTimezoneFenixPref = GeckoSettingsDictionary.fenixFppOverridesIronFoxTimezoneEnabled
-        val fppOverridesIronFoxTimezoneFenixModifiedPref = GeckoSettingsDictionary.fenixFppOverridesIronFoxTimezoneEnabledModified
-        val fppOverridesIronFoxTimezoneGeckoPref = GeckoSettingsDictionary.fppOverridesIFTimezone
-        setUserPref(engine, fppOverridesIronFoxTimezoneFenixPref, fppOverridesIronFoxTimezoneEnabled)
-        setDefaultPref(engine, fppOverridesIronFoxTimezoneFenixPref, fppOverridesIronFoxTimezoneEnabled)
-        setUserPref(engine, fppOverridesIronFoxTimezoneGeckoPref, fppOverridesIronFoxTimezoneEnabled)
-        setDefaultPref(engine, fppOverridesIronFoxTimezoneGeckoPref, fppOverridesIronFoxTimezoneEnabled)
-
-        if (!fppOverridesIronFoxTimezoneEnabled) {
-            setUserPref(engine, fppOverridesIronFoxTimezoneFenixModifiedPref, true)
-            setDefaultPref(engine, fppOverridesIronFoxTimezoneFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesIronFoxTimezoneEnabled", fppOverridesIronFoxTimezoneEnabled)
     }
 
     fun setSpoofEnglishEnabled(context: Context, engine: Engine) {
         val spoofEnglish = IronFoxPreferences.isSpoofEnglishEnabled(context)
-        val spoofEnglishFenixPref = GeckoSettingsDictionary.fenixSpoofEnglish
-        val spoofEnglishFenixModifiedPref = GeckoSettingsDictionary.fenixSpoofEnglishModified
-        val spoofEnglishGeckoPref = GeckoSettingsDictionary.spoofEnglish
-        setUserPref(engine, spoofEnglishFenixPref, spoofEnglish)
-        setDefaultPref(engine, spoofEnglishFenixPref, spoofEnglish)
-
-        if (spoofEnglish) {
-            setUserPref(engine, spoofEnglishGeckoPref, 2)
-            setDefaultPref(engine, spoofEnglishGeckoPref, 2)
-        } else {
-            setUserPref(engine, spoofEnglishGeckoPref, 1)
-            setDefaultPref(engine, spoofEnglishGeckoPref, 1)
-            setUserPref(engine, spoofEnglishFenixModifiedPref, true)
-            setDefaultPref(engine, spoofEnglishFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.spoofEnglish", spoofEnglish)
     }
 
     fun setSpoofTimezoneEnabled(context: Context, engine: Engine) {
         val spoofTimezone = IronFoxPreferences.isSpoofTimezoneEnabled(context)
-        val spoofTimezoneFenixPref = GeckoSettingsDictionary.fenixSpoofTimezone
-        val spoofTimezoneFenixModifiedPref = GeckoSettingsDictionary.fenixSpoofTimezoneModified
-        val spoofTimezoneGeckoPref = GeckoSettingsDictionary.spoofTimezone
-        setUserPref(engine, spoofTimezoneFenixPref, spoofTimezone)
-        setDefaultPref(engine, spoofTimezoneFenixPref, spoofTimezone)
-        setUserPref(engine, spoofTimezoneGeckoPref, spoofTimezone)
-        setDefaultPref(engine, spoofTimezoneGeckoPref, spoofTimezone)
-
-        if (spoofTimezone) {
-            setUserPref(engine, spoofTimezoneFenixModifiedPref, true)
-            setDefaultPref(engine, spoofTimezoneFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.spoofTimezone", spoofTimezone)
     }
 
     fun setXPInstallEnabled(context: Context, engine: Engine) {
         val xpinstallEnabled = IronFoxPreferences.isXPInstallEnabled(context)
-        val xpinstallFenixPref = GeckoSettingsDictionary.fenixXpinstallEnabled
-        val xpinstallFenixModifiedPref = GeckoSettingsDictionary.fenixXpinstallEnabledModified
-        val xpinstallGeckoPref = GeckoSettingsDictionary.xpinstallEnabled
-        setUserPref(engine, xpinstallFenixPref, xpinstallEnabled)
-        setDefaultPref(engine, xpinstallFenixPref, xpinstallEnabled)
-        setUserPref(engine, xpinstallGeckoPref, xpinstallEnabled)
-        setDefaultPref(engine, xpinstallGeckoPref, xpinstallEnabled)
-
-        if (xpinstallEnabled) {
-            setUserPref(engine, xpinstallFenixModifiedPref, true)
-            setDefaultPref(engine, xpinstallFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.xpinstallEnabled", xpinstallEnabled)
     }
 
     fun setJITEnabled(context: Context, engine: Engine) {
         val javascriptJitEnabled = IronFoxPreferences.isJITEnabled(context)
-        val javascriptJitFenixPref = GeckoSettingsDictionary.fenixJavascriptJitEnabled
-        val javascriptJitFenixModifiedPref = GeckoSettingsDictionary.fenixJavascriptJitEnabledModified
-        val jitBaselineGeckoPref = GeckoSettingsDictionary.jitBaseline
-        val jitIonGeckoPref = GeckoSettingsDictionary.jitIon
-        val jitHintsGeckoPref = GeckoSettingsDictionary.jitHints
-        val jitNativeRegexpGeckoPref = GeckoSettingsDictionary.jitNativeRegexp
-        val jitWasmIonGeckoPref = GeckoSettingsDictionary.jitWasmIon
-        setUserPref(engine, javascriptJitFenixPref, javascriptJitEnabled)
-        setDefaultPref(engine, javascriptJitFenixPref, javascriptJitEnabled)
-
-        setUserPref(engine, jitBaselineGeckoPref, javascriptJitEnabled)
-        setDefaultPref(engine, jitBaselineGeckoPref, javascriptJitEnabled)
-
-        setUserPref(engine, jitIonGeckoPref, javascriptJitEnabled)
-        setDefaultPref(engine, jitIonGeckoPref, javascriptJitEnabled)
-
-        setUserPref(engine, jitHintsGeckoPref, javascriptJitEnabled)
-        setDefaultPref(engine, jitHintsGeckoPref, javascriptJitEnabled)
-
-        setUserPref(engine, jitNativeRegexpGeckoPref, javascriptJitEnabled)
-        setDefaultPref(engine, jitNativeRegexpGeckoPref, javascriptJitEnabled)
-
-        setUserPref(engine, jitWasmIonGeckoPref, javascriptJitEnabled)
-        setDefaultPref(engine, jitWasmIonGeckoPref, javascriptJitEnabled)
-
-        if (javascriptJitEnabled) {
-            setUserPref(engine, javascriptJitFenixModifiedPref, true)
-            setDefaultPref(engine, javascriptJitFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.javascriptJitEnabled", javascriptJitEnabled)
     }
 
     fun setJITTrustedPrincipalsEnabled(context: Context, engine: Engine) {
         val javascriptJitTrustedPrincipalsEnabled = IronFoxPreferences.isJITTrustedPrincipalsEnabled(context)
-        val jitTrustedPrincipalsFenixPref = GeckoSettingsDictionary.fenixJavascriptJitTrustedPrincipalsEnabled
-        val jitTrustedPrincipalsFenixModifiedPref = GeckoSettingsDictionary.fenixJavascriptJitTrustedPrincipalsEnabled
-        val jitTrustedPrincipalsGeckoPref = GeckoSettingsDictionary.jitTrustedPrincipals
-        setUserPref(engine, jitTrustedPrincipalsFenixPref, javascriptJitTrustedPrincipalsEnabled)
-        setDefaultPref(engine, jitTrustedPrincipalsFenixPref, javascriptJitTrustedPrincipalsEnabled)
-        setUserPref(engine, jitTrustedPrincipalsGeckoPref, javascriptJitTrustedPrincipalsEnabled)
-        setDefaultPref(engine, jitTrustedPrincipalsGeckoPref, javascriptJitTrustedPrincipalsEnabled)
-
-        if (javascriptJitTrustedPrincipalsEnabled) {
-            setUserPref(engine, jitTrustedPrincipalsFenixModifiedPref, true)
-            setDefaultPref(engine, jitTrustedPrincipalsFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.javascriptJitTrustedPrincipalsEnabled", javascriptJitTrustedPrincipalsEnabled)
     }
 
     fun setPrintEnabled(context: Context, engine: Engine) {
         val printEnabled = IronFoxPreferences.isPrintEnabled(context)
-        val printFenixPref = GeckoSettingsDictionary.fenixPrintEnabled
-        val printFenixModifiedPref = GeckoSettingsDictionary.fenixPrintEnabledModified
-        val printGeckoPref = GeckoSettingsDictionary.printEnabled
-        setUserPref(engine, printFenixPref, printEnabled)
-        setDefaultPref(engine, printFenixPref, printEnabled)
-        setUserPref(engine, printGeckoPref, printEnabled)
-        setDefaultPref(engine, printGeckoPref, printEnabled)
-
-        if (!printEnabled) {
-            setUserPref(engine, printFenixModifiedPref, true)
-            setDefaultPref(engine, printFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.printEnabled", printEnabled)
     }
 
     fun setSafeBrowsingEnabled(context: Context, engine: Engine) {
         val safeBrowsingEnabled = IronFoxPreferences.isSafeBrowsingEnabled(context)
-        val safeBrowsingEnabledFenixPref = GeckoSettingsDictionary.fenixSafeBrowsingEnabled
-        val safeBrowsingEnabledFenixModifiedPref = GeckoSettingsDictionary.fenixSafeBrowsingEnabledModified
-        val safeBrowsingMalwareGeckoPref = GeckoSettingsDictionary.sbMalware
-        val safeBrowsingPhishingGeckoPref = GeckoSettingsDictionary.sbPhishing
-        setUserPref(engine, safeBrowsingEnabledFenixPref, safeBrowsingEnabled)
-        setDefaultPref(engine, safeBrowsingEnabledFenixPref, safeBrowsingEnabled)
-
-        setUserPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
-        setDefaultPref(engine, safeBrowsingMalwareGeckoPref, safeBrowsingEnabled)
-
-        setUserPref(engine, safeBrowsingPhishingGeckoPref, safeBrowsingEnabled)
-        setDefaultPref(engine, safeBrowsingPhishingGeckoPref, safeBrowsingEnabled)
-
-       if (!safeBrowsingEnabled) {
-            setUserPref(engine, safeBrowsingEnabledFenixModifiedPref, true)
-            setDefaultPref(engine, safeBrowsingEnabledFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.safeBrowsingEnabled", safeBrowsingEnabled)
     }
 
     fun setSVGEnabled(context: Context, engine: Engine) {
         val svgEnabled = IronFoxPreferences.isSVGEnabled(context)
-        val svgFenixPref = GeckoSettingsDictionary.fenixSvgEnabled
-        val svgFenixModifiedPref = GeckoSettingsDictionary.fenixSvgEnabledModified
-        val svgGeckoPref = GeckoSettingsDictionary.svgDisabled
-        setUserPref(engine, svgFenixPref, svgEnabled)
-        setDefaultPref(engine, svgFenixPref, svgEnabled)
-        setUserPref(engine, svgGeckoPref, !svgEnabled)
-        setDefaultPref(engine, svgGeckoPref, !svgEnabled)
-
-        if (!svgEnabled) {
-            setUserPref(engine, svgFenixModifiedPref, true)
-            setDefaultPref(engine, svgFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.svgEnabled", svgEnabled)
     }
 
     fun setWASMEnabled(context: Context, engine: Engine) {
         val wasmEnabled = IronFoxPreferences.isWASMEnabled(context)
-        val wasmFenixPref = GeckoSettingsDictionary.fenixWasmEnabled
-        val wasmFenixModifiedPref = GeckoSettingsDictionary.fenixWasmEnabledModified
-        val wasmGeckoPref = GeckoSettingsDictionary.wasm
-        setUserPref(engine, wasmFenixPref, wasmEnabled)
-        setDefaultPref(engine, wasmFenixPref, wasmEnabled)
-        setUserPref(engine, wasmGeckoPref, wasmEnabled)
-        setDefaultPref(engine, wasmGeckoPref, wasmEnabled)
-
-        if (!wasmEnabled) {
-            setUserPref(engine, wasmFenixModifiedPref, true)
-            setDefaultPref(engine, wasmFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.wasmEnabled", wasmEnabled)
     }
 
     fun setWebRTCEnabled(context: Context, engine: Engine) {
         val webrtcEnabled = IronFoxPreferences.isWebRTCEnabled(context)
-        val webrtcFenixPref = GeckoSettingsDictionary.fenixWebrtcEnabled
-        val webrtcFenixModifiedPref = GeckoSettingsDictionary.fenixWebrtcEnabledModified
-        val webrtcGeckoPref = GeckoSettingsDictionary.webrtcEnabled
-        setUserPref(engine, webrtcFenixPref, webrtcEnabled)
-        setDefaultPref(engine, webrtcFenixPref, webrtcEnabled)
-        setUserPref(engine, webrtcGeckoPref, webrtcEnabled)
-        setDefaultPref(engine, webrtcGeckoPref, webrtcEnabled)
-
-        if (!webrtcEnabled) {
-            setUserPref(engine, webrtcFenixModifiedPref, true)
-            setDefaultPref(engine, webrtcFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.webrtcEnabled", webrtcEnabled)
     }
 
     fun setTranslationsEnabled(context: Context, engine: Engine) {
         val translationsEnabled = IronFoxPreferences.isTranslationsEnabled(context)
-        val translationsEnabledFenixPref = GeckoSettingsDictionary.fenixTranslationsEnabled
-        val translationsEnabledFenixModifiedPref = GeckoSettingsDictionary.fenixTranslationsEnabledModified
-        val translationsAiControlGeckoPref = GeckoSettingsDictionary.translationsAiControl
-        val translationsEnabledGeckoPref = GeckoSettingsDictionary.translationsEnabled
-        val translationsSupportedGeckoPref = GeckoSettingsDictionary.translationsUnsupported
-        setUserPref(engine, translationsEnabledFenixPref, translationsEnabled)
-        setDefaultPref(engine, translationsEnabledFenixPref, translationsEnabled)
-        setUserPref(engine, translationsEnabledGeckoPref, translationsEnabled)
-        setDefaultPref(engine, translationsEnabledGeckoPref, translationsEnabled)
-        setUserPref(engine, translationsSupportedGeckoPref, !translationsEnabled)
-        setDefaultPref(engine, translationsSupportedGeckoPref, !translationsEnabled)
-
-        if (translationsEnabled) {
-            setUserPref(engine, translationsAiControlGeckoPref, "enabled")
-            setDefaultPref(engine, translationsAiControlGeckoPref, "enabled")
-        } else {
-            setUserPref(engine, translationsAiControlGeckoPref, "blocked")
-            setDefaultPref(engine, translationsAiControlGeckoPref, "blocked")
-            setUserPref(engine, translationsEnabledFenixModifiedPref, true)
-            setDefaultPref(engine, translationsEnabledFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.translationsEnabled", translationsEnabled)
     }
 
     fun setIPv6Enabled(context: Context, engine: Engine) {
         val ipv6Enabled = IronFoxPreferences.isIPv6Enabled(context)
-        val ipv6FenixPref = GeckoSettingsDictionary.fenixIpv6Enabled
-        val ipv6FenixModifiedPref = GeckoSettingsDictionary.fenixIpv6EnabledModified
-        val ipv6GeckoPref = GeckoSettingsDictionary.ipv6Disabled
-        setUserPref(engine, ipv6FenixPref, ipv6Enabled)
-        setDefaultPref(engine, ipv6FenixPref, ipv6Enabled)
-        setUserPref(engine, ipv6GeckoPref, !ipv6Enabled)
-        setDefaultPref(engine, ipv6GeckoPref, !ipv6Enabled)
-
-        if (!ipv6Enabled) {
-            setUserPref(engine, ipv6FenixModifiedPref, true)
-            setDefaultPref(engine, ipv6FenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.ipv6Enabled", ipv6Enabled)
     }
 
     fun setPDFjsDisabled(context: Context, engine: Engine) {
         val pdfjsDisabled = IronFoxPreferences.isPDFjsDisabled(context)
-        val pdfjsFenixPref = GeckoSettingsDictionary.fenixPdfjsDisabled
-        val pdfjsFenixModifiedPref = GeckoSettingsDictionary.fenixPdfjsDisabledModified
-        val pdfjsGeckoPref = GeckoSettingsDictionary.pdfjsDisabled
-        setUserPref(engine, pdfjsFenixPref, pdfjsDisabled)
-        setDefaultPref(engine, pdfjsFenixPref, pdfjsDisabled)
-        setUserPref(engine, pdfjsGeckoPref, pdfjsDisabled)
-        setDefaultPref(engine, pdfjsGeckoPref, pdfjsDisabled)
-
-        if (pdfjsDisabled) {
-            setUserPref(engine, pdfjsFenixModifiedPref, true)
-            setDefaultPref(engine, pdfjsFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.pdfjsDisabled", pdfjsDisabled)
     }
 
     fun setAutoplayBlockingPolicy(context: Context, engine: Engine) {
         val autoplayBlockingClickToPlay = IronFoxPreferences.isAutoplayBlockingClickToPlay(context)
         val autoplayBlockingSticky = IronFoxPreferences.isAutoplayBlockingSticky(context)
-        val autoplayBlockingTransient = IronFoxPreferences.isAutoplayBlockingTransient(context)
-        val autoplayBlockingClickToPlayFenixPref = GeckoSettingsDictionary.fenixAutoplayBlockingClickToPlay
-        val autoplayBlockingClickToPlayFenixModifiedPref = GeckoSettingsDictionary.fenixAutoplayBlockingClickToPlayModified
-        val autoplayBlockingStickyFenixPref = GeckoSettingsDictionary.fenixAutoplayBlockingSticky
-        val autoplayBlockingStickyFenixModifiedPref = GeckoSettingsDictionary.fenixAutoplayBlockingStickyModified
-        val autoplayBlockingTransientFenixPref = GeckoSettingsDictionary.fenixAutoplayBlockingTransient
-        val autoplayBlockingTransientFenixModifiedPref = GeckoSettingsDictionary.fenixAutoplayBlockingTransientModified
-        val autoplayBlockingPolicyGeckoPref = GeckoSettingsDictionary.autoplayPolicy
-        setUserPref(engine, autoplayBlockingClickToPlayFenixPref, autoplayBlockingClickToPlay)
-        setDefaultPref(engine, autoplayBlockingClickToPlayFenixPref, autoplayBlockingClickToPlay)
-        setUserPref(engine, autoplayBlockingStickyFenixPref, autoplayBlockingSticky)
-        setDefaultPref(engine, autoplayBlockingStickyFenixPref, autoplayBlockingSticky)
-        setUserPref(engine, autoplayBlockingTransientFenixPref, autoplayBlockingTransient)
-        setDefaultPref(engine, autoplayBlockingTransientFenixPref, autoplayBlockingTransient)
 
         if (autoplayBlockingClickToPlay) {
-            setUserPref(engine, autoplayBlockingPolicyGeckoPref, 2)
-            setDefaultPref(engine, autoplayBlockingPolicyGeckoPref, 2)
+            setDefaultPref(engine, "browser.ironfox.fenix.autoplayBlockingPolicy", "click-to-play")
         } else if (autoplayBlockingSticky) {
-            setUserPref(engine, autoplayBlockingPolicyGeckoPref, 0)
-            setDefaultPref(engine, autoplayBlockingPolicyGeckoPref, 0)
+            setDefaultPref(engine, "browser.ironfox.fenix.autoplayBlockingPolicy", "sticky")
         } else {
-            setUserPref(engine, autoplayBlockingPolicyGeckoPref, 1)
-            setDefaultPref(engine, autoplayBlockingPolicyGeckoPref, 1)
-        }
- 
-        if (autoplayBlockingClickToPlay || autoplayBlockingSticky) {
-            setUserPref(engine, autoplayBlockingClickToPlayFenixModifiedPref, true)
-            setDefaultPref(engine, autoplayBlockingClickToPlayFenixModifiedPref, true)
-            setUserPref(engine, autoplayBlockingStickyFenixModifiedPref, true)
-            setDefaultPref(engine, autoplayBlockingStickyFenixModifiedPref, true)
-            setUserPref(engine, autoplayBlockingTransientFenixModifiedPref, true)
-            setDefaultPref(engine, autoplayBlockingTransientFenixModifiedPref, true)
+            setDefaultPref(engine, "browser.ironfox.fenix.autoplayBlockingPolicy", "transient")
         }
     }
 
     fun setPreferredWebsiteAppearance(context: Context, engine: Engine) {
         val prefersBrowserColorScheme = IronFoxPreferences.isPrefersBrowserColorScheme(context)
         val prefersDarkColorScheme = IronFoxPreferences.isPrefersDarkColorScheme(context)
-        val prefersLightColorScheme = IronFoxPreferences.isPrefersLightColorScheme(context)
-        val prefersBrowserColorSchemeFenixPref = GeckoSettingsDictionary.fenixPrefersBrowserColorScheme
-        val prefersBrowserColorSchemeFenixModifiedPref = GeckoSettingsDictionary.fenixPrefersBrowserColorSchemeModified
-        val prefersDarkColorSchemeFenixPref = GeckoSettingsDictionary.fenixPrefersDarkColorScheme
-        val prefersDarkColorSchemeFenixModifiedPref = GeckoSettingsDictionary.fenixPrefersDarkColorSchemeModified
-        val prefersLightColorSchemeFenixPref = GeckoSettingsDictionary.fenixPrefersLightColorScheme
-        val prefersLightColorSchemeFenixModifiedPref = GeckoSettingsDictionary.fenixPrefersLightColorSchemeModified
-        val preferredWebsiteAppearanceGeckoPref = GeckoSettingsDictionary.websiteAppearance
-        setUserPref(engine, prefersBrowserColorSchemeFenixPref, prefersBrowserColorScheme)
-        setDefaultPref(engine, prefersBrowserColorSchemeFenixPref, prefersBrowserColorScheme)
-        setUserPref(engine, prefersDarkColorSchemeFenixPref, prefersDarkColorScheme)
-        setDefaultPref(engine, prefersDarkColorSchemeFenixPref, prefersDarkColorScheme)
-        setUserPref(engine, prefersLightColorSchemeFenixPref, prefersLightColorScheme)
-        setDefaultPref(engine, prefersLightColorSchemeFenixPref, prefersLightColorScheme)
 
         if (prefersBrowserColorScheme) {
-            setUserPref(engine, preferredWebsiteAppearanceGeckoPref, 2)
-            setDefaultPref(engine, preferredWebsiteAppearanceGeckoPref, 2)
+            setDefaultPref(engine, "browser.ironfox.fenix.prefersColorScheme", "browser")
         } else if (prefersDarkColorScheme) {
-            setUserPref(engine, preferredWebsiteAppearanceGeckoPref, 0)
-            setDefaultPref(engine, preferredWebsiteAppearanceGeckoPref, 0)
+            setDefaultPref(engine, "browser.ironfox.fenix.prefersColorScheme", "dark")
         } else {
-            setUserPref(engine, preferredWebsiteAppearanceGeckoPref, 1)
-            setDefaultPref(engine, preferredWebsiteAppearanceGeckoPref, 1)
-        }
-
-        if (prefersBrowserColorScheme || prefersDarkColorScheme) {
-            setUserPref(engine, prefersBrowserColorSchemeFenixModifiedPref, true)
-            setDefaultPref(engine, prefersBrowserColorSchemeFenixModifiedPref, true)
-            setUserPref(engine, prefersDarkColorSchemeFenixModifiedPref, true)
-            setDefaultPref(engine, prefersDarkColorSchemeFenixModifiedPref, true)
-            setUserPref(engine, prefersLightColorSchemeFenixModifiedPref, true)
-            setDefaultPref(engine, prefersLightColorSchemeFenixModifiedPref, true)
+            setDefaultPref(engine, "browser.ironfox.fenix.prefersColorScheme", "light")
         }
     }
 
     fun setRefererXOriginPolicy(context: Context, engine: Engine) {
-        val refererXOriginAlways = IronFoxPreferences.isRefererXOriginAlways(context)
         val refererXOriginBaseDomainsMatch = IronFoxPreferences.isRefererXOriginBaseDomainsMatch(context)
         val refererXOriginHostsMatch = IronFoxPreferences.isRefererXOriginHostsMatch(context)
-        val refererXOriginAlwaysFenixPref = GeckoSettingsDictionary.fenixRefererXOriginAlways
-        val refererXOriginAlwaysFenixModifiedPref = GeckoSettingsDictionary.fenixRefererXOriginAlwaysModified
-        val refererXOriginBaseDomainsMatchFenixPref = GeckoSettingsDictionary.fenixRefererXOriginBaseDomainsMatch
-        val refererXOriginBaseDomainsMatchFenixModifiedPref = GeckoSettingsDictionary.fenixRefererXOriginBaseDomainsMatchModified
-        val refererXOriginHostsMatchFenixPref = GeckoSettingsDictionary.fenixRefererXOriginHostsMatch
-        val refererXOriginHostsMatchFenixModifiedPref = GeckoSettingsDictionary.fenixRefererXOriginHostsMatchModified
-        val refererXOriginPolicyGeckoPref = GeckoSettingsDictionary.refererXOriginPolicy
-        setUserPref(engine, refererXOriginAlwaysFenixPref, refererXOriginAlways)
-        setDefaultPref(engine, refererXOriginAlwaysFenixPref, refererXOriginAlways)
-        setUserPref(engine, refererXOriginBaseDomainsMatchFenixPref, refererXOriginBaseDomainsMatch)
-        setDefaultPref(engine, refererXOriginBaseDomainsMatchFenixPref, refererXOriginBaseDomainsMatch)
-        setUserPref(engine, refererXOriginHostsMatchFenixPref, refererXOriginHostsMatch)
-        setDefaultPref(engine, refererXOriginHostsMatchFenixPref, refererXOriginHostsMatch)
 
         if (refererXOriginHostsMatch) {
-            setUserPref(engine, refererXOriginPolicyGeckoPref, 2)
-            setDefaultPref(engine, refererXOriginPolicyGeckoPref, 2)
+            setDefaultPref(engine, "browser.ironfox.fenix.refererXOriginPolicy", "hosts-match")
         } else if (refererXOriginBaseDomainsMatch) {
-            setUserPref(engine, refererXOriginPolicyGeckoPref, 1)
-            setDefaultPref(engine, refererXOriginPolicyGeckoPref, 1)
+            setDefaultPref(engine, "browser.ironfox.fenix.refererXOriginPolicy", "base-domains-match")
         } else {
-            setUserPref(engine, refererXOriginPolicyGeckoPref, 0)
-            setDefaultPref(engine, refererXOriginPolicyGeckoPref, 0)
-        }
-
-        if (refererXOriginHostsMatch || refererXOriginBaseDomainsMatch) {
-            setUserPref(engine, refererXOriginHostsMatchFenixModifiedPref, true)
-            setDefaultPref(engine, refererXOriginHostsMatchFenixModifiedPref, true)
-            setUserPref(engine, refererXOriginBaseDomainsMatchFenixModifiedPref, true)
-            setDefaultPref(engine, refererXOriginBaseDomainsMatchFenixModifiedPref, true)
-            setUserPref(engine, refererXOriginAlwaysFenixModifiedPref, true)
-            setDefaultPref(engine, refererXOriginAlwaysFenixModifiedPref, true)
+            setDefaultPref(engine, "browser.ironfox.fenix.refererXOriginPolicy", "always")
         }
     }
 
     fun setAddressAutofillEnabled(context: Context, engine: Engine) {
         val addressAutofillEnabled = context.settings().shouldAutofillAddressDetails
-        val addressAutofillFenixPref = GeckoSettingsDictionary.fenixShouldAutofillAddressDetails
-        val addressAutofillFenixModifiedPref = GeckoSettingsDictionary.fenixShouldAutofillAddressDetailsModified
-        val addressAutofillGeckoPref = GeckoSettingsDictionary.addressAutofill
-        setUserPref(engine, addressAutofillFenixPref, addressAutofillEnabled)
-        setDefaultPref(engine, addressAutofillFenixPref, addressAutofillEnabled)
-        setUserPref(engine, addressAutofillGeckoPref, addressAutofillEnabled)
-        setDefaultPref(engine, addressAutofillGeckoPref, addressAutofillEnabled)
-
-        if (addressAutofillEnabled) {
-            setUserPref(engine, addressAutofillFenixModifiedPref, true)
-            setDefaultPref(engine, addressAutofillFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.shouldAutofillAddressDetails", addressAutofillEnabled)
     }
 
     fun setCardAutofillEnabled(context: Context, engine: Engine) {
         val cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails
-        val cardAutofillFenixPref = GeckoSettingsDictionary.fenixShouldAutofillCreditCardDetails
-        val cardAutofillFenixModifiedPref = GeckoSettingsDictionary.fenixShouldAutofillCreditCardDetailsModified
-        val cardAutofillGeckoPref = GeckoSettingsDictionary.cardAutofill
-        setUserPref(engine, cardAutofillFenixPref, cardAutofillEnabled)
-        setDefaultPref(engine, cardAutofillFenixPref, cardAutofillEnabled)
-        setUserPref(engine, cardAutofillGeckoPref, cardAutofillEnabled)
-        setDefaultPref(engine, cardAutofillGeckoPref, cardAutofillEnabled)
-
-        if (cardAutofillEnabled) {
-            setUserPref(engine, cardAutofillFenixModifiedPref, true)
-            setDefaultPref(engine, cardAutofillFenixModifiedPref, true)
-        }
+        setDefaultPref(engine, "browser.ironfox.fenix.shouldAutofillCreditCardDetails", cardAutofillEnabled)
     }
 
     fun setPasswordManagerEnabled(context: Context, engine: Engine) {
         val passwordManagerEnabled = context.settings().shouldPromptToSaveLogins
-        val passwordManagerFenixPref = GeckoSettingsDictionary.fenixShouldPromptToSaveLogins
-        val passwordManagerFenixModifiedPref = GeckoSettingsDictionary.fenixShouldPromptToSaveLoginsModified
-        val passwordManagerGeckoPref = GeckoSettingsDictionary.passwordManager
-        setUserPref(engine, passwordManagerFenixPref, passwordManagerEnabled)
-        setDefaultPref(engine, passwordManagerFenixPref, passwordManagerEnabled)
-        setUserPref(engine, passwordManagerGeckoPref, passwordManagerEnabled)
-        setDefaultPref(engine, passwordManagerGeckoPref, passwordManagerEnabled)
+        setDefaultPref(engine, "browser.ironfox.fenix.shouldPromptToSaveLogins", passwordManagerEnabled)
+    }
 
-        if (passwordManagerEnabled) {
-            setUserPref(engine, passwordManagerFenixModifiedPref, true)
-            setDefaultPref(engine, passwordManagerFenixModifiedPref, true)
-        }
+    fun setGeckoPrefsInitialized(context: Context, engine: Engine) {
+        setDefaultPref(engine, "browser.ironfox.geckoSettingsBridge.initialized", true)
     }
 
     // This is an (ideally temporary) solution to ensure that GeckoRuntimeSettings prefs are being properly configured based on Fenix's UI settings

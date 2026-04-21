@@ -12,31 +12,46 @@ index dcd5d39ad9a3b..b1791288f1759 100644
        set(newValue);
        commit();
 diff --git a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
-index a795b36e6a8f8..5c71ce7746408 100644
+index a795b36e6a8f8e..191d50f53ec960 100644
 --- a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
 @@ -7,6 +7,7 @@ import { GeckoViewUtils } from "resource://gre/modules/GeckoViewUtils.sys.mjs";
  const lazy = {};
  ChromeUtils.defineESModuleGetters(lazy, {
    EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
-+  RFPHelper: "resource://gre/modules/RFPHelper.sys.mjs",
++  GeckoSettingsBridge: "resource://gre/modules/GeckoSettingsBridge.sys.mjs",
  });
  
  const { PREF_STRING, PREF_BOOL, PREF_INT } = Ci.nsIPrefBranch;
-@@ -129,17 +130,47 @@ export const GeckoViewPreferences = {
+@@ -38,7 +39,8 @@ export const GeckoViewPreferences = {
+               pref.pref,
+               pref.type,
+               pref.value,
+-              pref.branch
++              pref.branch,
++              "GSB"
+             ),
+           })),
+         });
+@@ -123,7 +125,7 @@ export const GeckoViewPreferences = {
+    * @param {"user" | "default"} setBranch - The branch to operate on.
+    * @return {boolean} Will return true if the preference set as requested or else false.
+    */
+-  setPreference(pref, type, value, setBranch) {
++  setPreference(pref, type, value, setBranch, method) {
+     const branch =
+       setBranch == "user"
          ? Services.prefs
-         : Services.prefs.getDefaultBranch(null);
+@@ -131,15 +133,42 @@ export const GeckoViewPreferences = {
      try {
-+      if (setBranch == "user" && Services.prefs.prefIsLocked(pref) === true) {
-+        Services.prefs.unlockPref(pref);
-+      };
        switch (type) {
          case PREF_STRING:
 -          branch.setStringPref(pref, value);
++          if (method === "GSB" && setBranch !== "user") {
++            lazy.GeckoSettingsBridge.setPref(pref, value, "string");
++            return true;
++          };
 +          if (branch.getStringPref(pref) !== value) {
-+            if (setBranch !== "user" && Services.prefs.prefIsLocked(pref) === true) {
-+                Services.prefs.unlockPref(pref);
-+            }
 +            branch.setStringPref(pref, value);
 +          };
 +          if (Services.prefs.prefIsLocked(pref) !== true) {
@@ -46,10 +61,11 @@ index a795b36e6a8f8..5c71ce7746408 100644
  
          case PREF_BOOL:
 -          branch.setBoolPref(pref, value);
++          if (method === "GSB" && setBranch !== "user") {
++            lazy.GeckoSettingsBridge.setPref(pref, value, "boolean");
++            return true;
++          };
 +          if (branch.getBoolPref(pref) !== value) {
-+            if (setBranch !== "user" && Services.prefs.prefIsLocked(pref) === true) {
-+                Services.prefs.unlockPref(pref);
-+            };
 +            branch.setBoolPref(pref, value);
 +          };
 +          if (Services.prefs.prefIsLocked(pref) !== true) {
@@ -59,14 +75,12 @@ index a795b36e6a8f8..5c71ce7746408 100644
  
          case PREF_INT:
 -          branch.setIntPref(pref, value);
++          if (method === "GSB" && setBranch !== "user") {
++            lazy.GeckoSettingsBridge.setPref(pref, value, "int");
++            return true;
++          };
 +          if (branch.getIntPref(pref) !== value) {
-+            if (setBranch !== "user" && Services.prefs.prefIsLocked(pref) === true) {
-+                Services.prefs.unlockPref(pref);
-+            };
 +            branch.setIntPref(pref, value);
-+            if (pref === "privacy.spoof_english") {
-+                lazy.RFPHelper._handleSpoofEnglishChanged();
-+            };
 +          };
 +          if (Services.prefs.prefIsLocked(pref) !== true) {
 +            Services.prefs.lockPref(pref);
@@ -75,10 +89,10 @@ index a795b36e6a8f8..5c71ce7746408 100644
  
          default:
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 80214c8f38e91..75b2ed2de574d 100644
+index 83f98bb7196ab1..f06ae5912c64dd 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-@@ -340,23 +340,107 @@ export class GeckoViewStartup {
+@@ -347,23 +347,115 @@ export class GeckoViewStartup {
        }
        case "GeckoView:ResetUserPrefs": {
          for (const name of aData.names) {
@@ -90,102 +104,110 @@ index 80214c8f38e91..75b2ed2de574d 100644
        case "GeckoView:SetDefaultPrefs": {
          const prefs = Services.prefs.getDefaultBranch("");
 +        const ifPrefix = "browser.ironfox.geckoRuntimeSettings.";
-+        const ifSuffix = ".value";
 +        const ifModified = ".modified";
          for (const [name, value] of Object.entries(aData)) {
++          if (prefs.getBoolPref("browser.ironfox.geckoSettingsBridge.initialized") !== true) {
++            if (Services.prefs.prefIsLocked(name) === true) {
++                // If a preference is locked at this point, it means it was locked from ironfox.cfg (or ironfox.js) - so we don't want to try
++                /// to override it
++                break;
++            };
++          } else if (Services.prefs.prefIsLocked(name) === true) {
++            Services.prefs.unlockPref(name);
++          };
            try {
              switch (typeof value) {
                case "string":
 -                prefs.setStringPref(name, value);
 +                if (prefs.getStringPref(name) !== value) {
-+                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}`) === true) {
-+                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifSuffix}`);
++                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}`) === true) {
++                        Services.prefs.unlockPref(`${ifPrefix}${name}`);
 +                    };
-+                    Services.prefs.setStringPref(`${ifPrefix}${name}${ifSuffix}`, value);
-+                    prefs.setStringPref(`${ifPrefix}${name}${ifSuffix}`, value);
++                    Services.prefs.setStringPref(`${ifPrefix}${name}`, value);
++                    prefs.setStringPref(`${ifPrefix}${name}`, value);
 +                    if (Services.prefs.prefIsLocked(name) === true) {
 +                        Services.prefs.unlockPref(name);
 +                    };
 +                    Services.prefs.setStringPref(name, value);
 +                    prefs.setStringPref(name, value);
-+                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}${ifModified}`) === true) {
-+                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`);
++                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifModified}`) === true) {
++                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifModified}`);
 +                    };
-+                    if (Services.prefs.getBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`) !== true) {
-+                        Services.prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`, true);
-+                        prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`, true);
++                    if (Services.prefs.getBoolPref(`${ifPrefix}${name}${ifModified}`) !== true) {
++                        Services.prefs.setBoolPref(`${ifPrefix}${name}${ifModified}`, true);
++                        prefs.setBoolPref(`${ifPrefix}${name}${ifModified}`, true);
 +                    };
 +                };
-+                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}`) !== true) {
-+                    Services.prefs.lockPref(`${ifPrefix}${name}${ifSuffix}`);
++                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}`) !== true) {
++                    Services.prefs.lockPref(`${ifPrefix}${name}`);
 +                };
 +                if (Services.prefs.prefIsLocked(name) !== true) {
 +                    Services.prefs.lockPref(name);
 +                };
-+                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}${ifModified}`) !== true) {
-+                    Services.prefs.lockPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`);
++                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifModified}`) !== true) {
++                    Services.prefs.lockPref(`${ifPrefix}${name}${ifModified}`);
 +                };
                  break;
                case "number":
 -                prefs.setIntPref(name, value);
 +                if (prefs.getIntPref(name) !== value) {
-+                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}`) === true) {
-+                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifSuffix}`);
++                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}`) === true) {
++                        Services.prefs.unlockPref(`${ifPrefix}${name}`);
 +                    };
-+                    Services.prefs.setIntPref(`${ifPrefix}${name}${ifSuffix}`, value);
-+                    prefs.setIntPref(`${ifPrefix}${name}${ifSuffix}`, value);
++                    Services.prefs.setIntPref(`${ifPrefix}${name}`, value);
++                    prefs.setIntPref(`${ifPrefix}${name}`, value);
 +                    if (Services.prefs.prefIsLocked(name) === true) {
 +                        Services.prefs.unlockPref(name);
 +                    };
 +                    Services.prefs.setIntPref(name, value);
 +                    prefs.setIntPref(name, value);
-+                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}${ifModified}`) === true) {
-+                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`);
++                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifModified}`) === true) {
++                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifModified}`);
 +                    };
-+                    if (Services.prefs.getBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`) !== true) {
-+                        Services.prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`, true);
-+                        prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`, true);
++                    if (Services.prefs.getBoolPref(`${ifPrefix}${name}${ifModified}`) !== true) {
++                        Services.prefs.setBoolPref(`${ifPrefix}${name}${ifModified}`, true);
++                        prefs.setBoolPref(`${ifPrefix}${name}${ifModified}`, true);
 +                    };
 +                };
-+                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}`) !== true) {
-+                    Services.prefs.lockPref(`${ifPrefix}${name}${ifSuffix}`);
++                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}`) !== true) {
++                    Services.prefs.lockPref(`${ifPrefix}${name}`);
 +                };
 +                if (Services.prefs.prefIsLocked(name) !== true) {
 +                    Services.prefs.lockPref(name);
 +                };
-+                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}${ifModified}`) !== true) {
-+                    Services.prefs.lockPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`);
++                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifModified}`) !== true) {
++                    Services.prefs.lockPref(`${ifPrefix}${name}${ifModified}`);
 +                };
                  break;
                case "boolean":
 -                prefs.setBoolPref(name, value);
 +                if (prefs.getBoolPref(name) !== value) {
-+                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}`) === true) {
-+                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifSuffix}`);
++                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}`) === true) {
++                        Services.prefs.unlockPref(`${ifPrefix}${name}`);
 +                    };
-+                    Services.prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}`, value);
-+                    prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}`, value);
++                    Services.prefs.setBoolPref(`${ifPrefix}${name}`, value);
++                    prefs.setBoolPref(`${ifPrefix}${name}`, value);
 +                    if (Services.prefs.prefIsLocked(name) === true) {
 +                        Services.prefs.unlockPref(name);
 +                    };
 +                    Services.prefs.setBoolPref(name, value);
 +                    prefs.setBoolPref(name, value);
-+                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}${ifModified}`) === true) {
-+                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`);
++                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifModified}`) === true) {
++                        Services.prefs.unlockPref(`${ifPrefix}${name}${ifModified}`);
 +                    };
-+                    if (Services.prefs.getBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`) !== true) {
-+                        Services.prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`, true);
-+                        prefs.setBoolPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`, true);
++                    if (Services.prefs.getBoolPref(`${ifPrefix}${name}${ifModified}`) !== true) {
++                        Services.prefs.setBoolPref(`${ifPrefix}${name}${ifModified}`, true);
++                        prefs.setBoolPref(`${ifPrefix}${name}${ifModified}`, true);
 +                    };
 +                };
-+                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}`) !== true) {
-+                    Services.prefs.lockPref(`${ifPrefix}${name}${ifSuffix}`);
++                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}`) !== true) {
++                    Services.prefs.lockPref(`${ifPrefix}${name}`);
 +                };
 +                if (Services.prefs.prefIsLocked(name) !== true) {
 +                    Services.prefs.lockPref(name);
 +                };
-+                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifSuffix}${ifModified}`) !== true) {
-+                    Services.prefs.lockPref(`${ifPrefix}${name}${ifSuffix}${ifModified}`);
++                if (Services.prefs.prefIsLocked(`${ifPrefix}${name}${ifModified}`) !== true) {
++                    Services.prefs.lockPref(`${ifPrefix}${name}${ifModified}`);
 +                };
                  break;
                default:
