@@ -11,6 +11,9 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
+# Include utilities
+source "${IRONFOX_UTILS}"
+
 if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
     echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable is missing! Aborting...'
     exit 1
