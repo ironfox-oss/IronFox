@@ -77,4 +77,5 @@ if [ "${ci_build_target}" == 'bundle' ]; then
     cp -v "${IRONFOX_OUTPUTS_ARM}" "${IRONFOX_APK_ARTIFACTS}/"
     cp -v "${IRONFOX_OUTPUTS_X86_64}" "${IRONFOX_APK_ARTIFACTS}/"
     cp -v "${IRONFOX_OUTPUTS_UNIVERSAL}" "${IRONFOX_APK_ARTIFACTS}/"
+    cp -v "${IRONFOX_OUTPUTS_BUNDLE}" "${IRONFOX_APKS_ARTIFACTS}/"
 fi
