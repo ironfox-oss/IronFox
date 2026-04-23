@@ -220,6 +220,26 @@ upload_apk_x86_64
 upload_apk_universal
 upload_apkset
 
+# Update our universal updates.json file
+## (ex. used by Obtainium)
+cp -f "${IRONFOX_TEMPLATES}/updates.json" "${CI_PROJECT_DIR}/updates.json"
+
+readonly IRONFOX_ARM64_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_ARM_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_X86_64_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-x86_64.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_UNIVERSAL_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk" | "${IRONFOX_AWK}" '{print $1}')
+readonly IRONFOX_BUNDLE_SHA512SUM=$(sha512sum "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks" | "${IRONFOX_AWK}" '{print $1}')
+
+"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${CI_PROJECT_DIR}/updates.json"
+"${IRONFOX_SED}" -i "s|ironfox-{IRONFOX_VERSION}|ironfox-${IRONFOX_VERSION}|" "${CI_PROJECT_DIR}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
+
+upload_to_s3 "${CI_PROJECT_DIR}/updates.json" 'ironfox/releases'
+
 # Because we now upload all releases to releases.ironfoxoss.org, we only want to keep the last 3 releases in ex. F-Droid
 ## In order to do so, we need to store/upload the current and prior 2 versions of IronFox as text files
 curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/latest_release.txt' -o "${CI_PROJECT_DIR}/current-latest_release.txt"

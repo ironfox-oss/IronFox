@@ -1,0 +1,26 @@
+{
+    "org.ironfoxoss.ironfox": {
+        "version": "{IRONFOX_VERSION}",
+        "release-notes": "https://gitlab.com/ironfox-oss/IronFox/-/releases/v{IRONFOX_VERSION}",
+        "arm64-v8a": {
+            "sha512sum": "{IRONFOX_ARM64_SHA512SUM}",
+            "url": "https://releases.ironfoxoss.org/ironfox/releases/{IRONFOX_VERSION}/arm64-v8a/ironfox-{IRONFOX_VERSION}-arm64-v8a.apk"
+        },
+        "armeabi-v7a": {
+            "sha512sum": "{IRONFOX_ARM_SHA512SUM}",
+            "url": "https://releases.ironfoxoss.org/ironfox/releases/{IRONFOX_VERSION}/armeabi-v7a/ironfox-{IRONFOX_VERSION}-armeabi-v7a.apk"
+        },
+        "x86_64": {
+            "sha512sum": "{IRONFOX_X86_64_SHA512SUM}",
+            "url": "https://releases.ironfoxoss.org/ironfox/releases/{IRONFOX_VERSION}/x86_64/ironfox-{IRONFOX_VERSION}-x86_64.apk"
+        },
+        "universal": {
+            "sha512sum": "{IRONFOX_UNIVERSAL_SHA512SUM}",
+            "url": "https://releases.ironfoxoss.org/ironfox/releases/{IRONFOX_VERSION}/universal/ironfox-{IRONFOX_VERSION}-universal.apk"
+        },
+        "bundle": {
+            "sha512sum": "{IRONFOX_BUNDLE_SHA512SUM}",
+            "url": "https://releases.ironfoxoss.org/ironfox/releases/{IRONFOX_VERSION}/bundle/ironfox-{IRONFOX_VERSION}.apks"
+        }
+    }
+}
