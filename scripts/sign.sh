@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# Ensure this is never ran with xtrace...
+set +x
+
 # Set-up our environment
 source $(dirname $0)/env.sh
 

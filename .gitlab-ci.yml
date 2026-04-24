@@ -1,27 +1,3 @@
-.build_setup_steps: &build_setup_steps
-  before_script:
-    - mkdir -p /opt/IronFox
-
-    - touch "${IRONFOX_SB_GAPI_KEY_FILE}"
-    - chmod 600 "${IRONFOX_SB_GAPI_KEY_FILE}"
-    - echo -n "${IRONFOX_SB_GAPI_KEY}" > "${IRONFOX_SB_GAPI_KEY_FILE}"
-
-    - touch "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}"
-    - chmod 600 "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}"
-    - echo -n "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS}" > "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}"
-
-    - touch "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}"
-    - chmod 600 "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}"
-    - echo -n "${IRONFOX_ANDROID_KEYSTORE_PASS}" > "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}"
-
-    - |
-      curl --fail --location --show-error --silent \
-        --request GET \
-        --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
-        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${IRONFOX_ANDROID_KEYSTORE_SECFILEID}/download" \
-        --output "${IRONFOX_ANDROID_KEYSTORE}"
-    - chmod 600 "${IRONFOX_ANDROID_KEYSTORE}"
-
 .build_cache: &build_cache
   - key: cache-cargo-$CI_COMMIT_REF_SLUG
     policy: pull-push
@@ -55,10 +31,7 @@ default:
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  IRONFOX_SB_GAPI_KEY_FILE: /opt/IronFox/ironfox-sb-gapi-key.txt
-  IRONFOX_ANDROID_KEYSTORE: /opt/IronFox/ironfox-android-keystore.jks
-  IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE: /opt/IronFox/ironfox-android-signing-key-pass.txt
-  IRONFOX_ANDROID_KEYSTORE_PASS_FILE: /opt/IronFox/ironfox-android-keystore-pass.txt
+  IRONFOX_CI: 1
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
@@ -95,11 +68,11 @@ update-fdroid-repo:
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
-    - echo "Downloading dependencies..."
+    - echo 'Downloading dependencies...'
     - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
     - bash -x scripts/get_sources.sh androguard
-    - echo "Updating F-Droid repo..."
+    - echo 'Updating F-Droid repo...'
     - bash scripts/ci-update-fdroid.sh
 
 update-site-repo:
@@ -129,11 +102,11 @@ update-site-repo:
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
-    - echo "Downloading dependencies..."
+    - echo 'Downloading dependencies...'
     - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
     - bash -x scripts/get_sources.sh pyyaml
-    - echo "Updating website repo..."
+    - echo 'Updating website repo...'
     - bash scripts/ci-update-site.sh
 
 build-docker:
@@ -146,6 +119,7 @@ build-docker:
   before_script:
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
   script:
+    - set -euo pipefail
     - docker build --pull -t "${DOCKER_IMAGE_NAME}" .
     - docker push "${DOCKER_IMAGE_NAME}"
     - |
@@ -183,10 +157,11 @@ build-aar:
     IRONFOX_JOB_ARTIFACT_NAME: "build-aar-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "aar;logs"
     <<: *build_variables
-  <<: *build_setup_steps
   script:
     - set -euo pipefail
-    - echo "Building AAR..."
+    - echo 'Preparing secrets...'
+    - bash scripts/ci-prep.sh sb
+    - echo 'Building AAR...'
     - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
   <<: *compressed_artifact_output
   rules:
@@ -217,10 +192,12 @@ build-final:
     IRONFOX_JOB_ARTIFACT_NAME: "build-final-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "apk;apks;logs"
     <<: *build_variables
-  <<: *build_setup_steps
   script:
     - set -euo pipefail
-    - echo "Building Bundle..."
+    - echo 'Preparing secrets...'
+    - bash scripts/ci-prep.sh android-ks
+    - bash scripts/ci-prep.sh sb
+    - echo 'Building Bundle...'
     - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
   <<: *compressed_artifact_output
   rules:
@@ -256,38 +233,19 @@ prepare-release:
   tags:
     - saas-linux-2xlarge-amd64
   variables:
-    IRONFOX_RELEASES_S3_ACCESS_KEY_FILE: /opt/IronFox/ironfox-releases-s3-access-key.txt
-    IRONFOX_RELEASES_S3_BUCKET_NAME_FILE: /opt/IronFox/ironfox-releases-s3-bucket-name.txt
-    IRONFOX_RELEASES_S3_ENDPOINT_FILE: /opt/IronFox/ironfox-releases-s3-endpoint.txt
-    IRONFOX_RELEASES_S3_SECRET_KEY_FILE: /opt/IronFox/ironfox-releases-s3-secret-key.txt
     <<: *build_variables
   before_script:
     - sudo dnf update -y --refresh
     - sudo dnf install -y curl jq
-    - mkdir -p /opt/IronFox
-
-    - touch "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}"
-    - chmod 600 "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}"
-    - echo -n "${IRONFOX_RELEASES_S3_ACCESS_KEY}" > "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}"
-
-    - touch "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}"
-    - chmod 600 "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}"
-    - echo -n "${IRONFOX_RELEASES_S3_BUCKET_NAME}" > "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}"
-
-    - touch "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}"
-    - chmod 600 "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}"
-    - echo -n "${IRONFOX_RELEASES_S3_ENDPOINT}" > "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}"
-
-    - touch "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
-    - chmod 600 "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
-    - echo -n "${IRONFOX_RELEASES_S3_SECRET_KEY}" > "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
   script:
     - set -euo pipefail
-    - echo "Downloading dependencies..."
+    - echo 'Preparing secrets...'
+    - bash scripts/ci-prep.sh s3
+    - echo 'Downloading dependencies...'
     - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
     - bash -x scripts/get_sources.sh s3cmd
-    - echo "Publishing packages..."
+    - echo 'Publishing packages...'
     - bash scripts/ci-publish-packages.sh
   artifacts:
     untracked: false
@@ -316,6 +274,7 @@ publish-release:
   variables:
     <<: *build_variables
   script:
+    - set -euo pipefail
     - |
       release-cli \
         --server-url "${CI_SERVER_URL}" \
