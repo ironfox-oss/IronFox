@@ -30,8 +30,8 @@ arm64|arm|x86_64|bundle)
     ;;
 esac
 
-# Extract our GeckoView AAR artifacts
 if [ "${ci_build_target}" == 'bundle' ]; then
+    # Extract our GeckoView AAR artifacts
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
@@ -39,17 +39,17 @@ if [ "${ci_build_target}" == 'bundle' ]; then
     "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
     "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
     "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
-fi
 
-# Fail-fast in case the signing key is unavailable or empty file
-if ! [[ -f "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
-    echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} does not exist!"
-    exit 1
-fi
+    # Fail-fast in case the signing key is unavailable or empty file
+    if ! [[ -f "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
+        echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} does not exist!"
+        exit 1
+    fi
 
-if ! [[ -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
-    echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} is empty!"
-    exit 1
+    if ! [[ -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
+        echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} is empty!"
+        exit 1
+    fi
 fi
 
 # Get sources
