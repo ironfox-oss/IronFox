@@ -163,7 +163,7 @@ function prep_android_keystore() {
 }
 
 # S3 storage
-function prep_s3_storage() {
+function prep_s3() {
     echo_red_text 'Preparing S3 storage...'
 
     # First, ensure that environment variables specified externally (from CI) are properly set...
