@@ -72,6 +72,11 @@ readonly WASI_VERSION='20'
 
 # Tools
 
+## androguard
+### https://github.com/androguard/androguard
+readonly ANDROGUARD_COMMIT='dd458bead6165975c3ef0b1b78eaf2450e4889d9'
+readonly ANDROGUARD_SHA512SUM='b277363110c1984b43cb99b59685849551b7e5ec66c7a9783ea06ac4324d558094ee7e840695bada51d01fa690df34c0d02417001ddf087bec30adc205270166'
+
 ## Android NDK
 ### https://developer.android.com/ndk/downloads
 readonly ANDROID_NDK_REVISION='29.0.14206865'
@@ -192,6 +197,11 @@ readonly PYTHON_SHA512SUM_LINUX_X86_64='38bcec7bda37073ecdd92fccaf21353fd4d774c6
 readonly PYTHON_SHA512SUM_OSX_ARM64='e21f71ca3f7365f8fd962ea9df4fb693fddab04e11f34e4d0b4e15ec7eb0d9e44678abb4a6ae4a6c2e558035aa6fedd5399931b30c07fde0630d369d64dac514'
 readonly PYTHON_SHA512SUM_OSX_X86_64='ff82685a0f15d7d987c239b72b8d8148d476bbe82f3ef38a7a04541e4ef4f883c42349fa27b66de4f93e21d47cdb85660b8eedd6b257a13617d919a9462295ab'
 readonly PYTHON_VERSION='3.14.4'
+
+## PyYAML
+### https://github.com/yaml/pyyaml
+readonly PYYAML_COMMIT='49790e73684bebad1df05ef8d828fa12f685bffb'
+readonly PYYAML_SHA512SUM='2fd1334af2722c093592f93a5eee01d0b2e26976a12cb2e4859b4271a8fa47ff257d10c91b09bdb2b5aa9415b62693a69d6e6602e997c2bff6711aa02bf43937'
 
 ## Rust
 ### https://releases.rs/

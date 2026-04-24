@@ -15,7 +15,8 @@ git clone "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${TARGET
 cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 
 # Generate documentation for patches
-./scripts/gen_patch_pages.py ../scripts/patches.yaml
+source "${IRONFOX_PYENV}"
+"${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/gen_patch_pages.py" ../scripts/patches.yaml
 
 # Update version name
 "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \

@@ -31,11 +31,11 @@ done
 # Because we now upload releases to releases.ironfoxoss.org, the F-Droid repo doesn't need to store them all anymore
 # So to improve performance and reduce size, we can keep only the last 3 releases
 
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' -o "${CI_PROJECT_DIR}/previous_release.txt"
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_previous_release.txt' -o "${CI_PROJECT_DIR}/previous_previous_release.txt"
+curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' -o "${IRONFOX_ROOT}/previous_release.txt"
+curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_previous_release.txt' -o "${IRONFOX_ROOT}/previous_previous_release.txt"
 
-readonly previous_version=$(cat "${CI_PROJECT_DIR}/previous_release.txt" | xargs)
-readonly previous_previous_version=$(cat "${CI_PROJECT_DIR}/previous_previous_release.txt" | xargs)
+readonly previous_version=$(cat "${IRONFOX_ROOT}/previous_release.txt" | xargs)
+readonly previous_previous_version=$(cat "${IRONFOX_ROOT}/previous_previous_release.txt" | xargs)
 
 readonly current_apk_arm64="ironfox-${IRONFOX_VERSION}-arm64-v8a.apk"
 readonly previous_apk_arm64="ironfox-${previous_version}-arm64-v8a.apk"
@@ -60,7 +60,8 @@ for apk in "${REPO_DIR_PATH}"/*.apk; do
     fi
 done
 
-IFS=":" read -r vercode vername <<< "$("${CI_PROJECT_DIR}"/scripts/get_latest_version.py $(ls "${REPO_DIR_PATH}"/*.apk))"
+source "${IRONFOX_PYENV}"
+IFS=":" read -r vercode vername <<< "$("${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/get_latest_version.py" $(ls "${REPO_DIR_PATH}"/*.apk))"
 
 readonly META_FILE_PATH="${META_DIR_PATH}/${META_FILE_NAME}"
 

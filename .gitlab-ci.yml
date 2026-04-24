@@ -89,12 +89,17 @@ update-fdroid-repo:
     <<: *build_variables
   before_script:
     - sudo dnf update -y --refresh
-    - sudo dnf install -y bash curl git git-lfs jq make python3 python3-pip
-    - pip install androguard
+    - sudo dnf install -y bash curl git git-lfs jq make
     - git config --global user.email "${IF_CI_EMAIL}"
     - git config --global user.name "${IF_CI_NAME}"
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
+    - set -euo pipefail
+    - echo "Downloading dependencies..."
+    - bash -x scripts/get_sources.sh python
+    - bash -x scripts/get_sources.sh uv
+    - bash -x scripts/get_sources.sh androguard
+    - echo "Updating F-Droid repo..."
     - bash scripts/ci-update-fdroid.sh
 
 update-site-repo:
@@ -118,12 +123,17 @@ update-site-repo:
     <<: *build_variables
   before_script:
     - sudo dnf update -y --refresh
-    - sudo dnf install -y bash curl git make python3 python3-pip yq
-    - pip install pyyaml
+    - sudo dnf install -y bash curl git make yq
     - git config --global user.email "${IF_CI_EMAIL}"
     - git config --global user.name "${IF_CI_NAME}"
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
+    - set -euo pipefail
+    - echo "Downloading dependencies..."
+    - bash -x scripts/get_sources.sh python
+    - bash -x scripts/get_sources.sh uv
+    - bash -x scripts/get_sources.sh pyyaml
+    - echo "Updating website repo..."
     - bash scripts/ci-update-site.sh
 
 build-docker:
@@ -272,6 +282,7 @@ prepare-release:
     - chmod 600 "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
     - echo -n "${IRONFOX_RELEASES_S3_SECRET_KEY}" > "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
   script:
+    - set -euo pipefail
     - echo "Downloading dependencies..."
     - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv

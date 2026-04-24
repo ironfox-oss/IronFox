@@ -155,13 +155,11 @@ for archive in "${IRONFOX_ARTIFACTS}"/*.tar.xz; do
     "${IRONFOX_TAR}" xvJf "${archive}" -C "${IRONFOX_ARTIFACTS}"
 done
 
-readonly BUILD_DIR="${CI_PROJECT_DIR}/build"
+mkdir -vp "${IRONFOX_BUILD}"
 
-mkdir -vp "${BUILD_DIR}"
-
-readonly RELEASE_NOTES_FILE="${BUILD_DIR}/release-notes.md"
-readonly CHECKSUMS_FILE="${BUILD_DIR}/asset-checksums.txt"
-readonly RELEASE_FILE="${BUILD_DIR}/release.yml"
+readonly RELEASE_NOTES_FILE="${IRONFOX_BUILD}/release-notes.md"
+readonly CHECKSUMS_FILE="${IRONFOX_BUILD}/asset-checksums.txt"
+readonly RELEASE_FILE="${IRONFOX_BUILD}/release.yml"
 
 echo -n "" > "${RELEASE_NOTES_FILE}"
 echo -n "" > "${CHECKSUMS_FILE}"
@@ -222,7 +220,7 @@ upload_apkset
 
 # Update our universal updates.json file
 ## (ex. used by Obtainium)
-cp -f "${IRONFOX_TEMPLATES}/updates.json" "${CI_PROJECT_DIR}/updates.json"
+cp -f "${IRONFOX_TEMPLATES}/updates.json" "${IRONFOX_ROOT}/updates.json"
 
 readonly IRONFOX_ARM64_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-arm64-v8a.apk" | "${IRONFOX_AWK}" '{print $1}')
 readonly IRONFOX_ARM_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-armeabi-v7a.apk" | "${IRONFOX_AWK}" '{print $1}')
@@ -230,36 +228,36 @@ readonly IRONFOX_X86_64_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-
 readonly IRONFOX_UNIVERSAL_SHA512SUM=$(sha512sum "${IRONFOX_APK_ARTIFACTS}/ironfox-${IRONFOX_VERSION}-universal.apk" | "${IRONFOX_AWK}" '{print $1}')
 readonly IRONFOX_BUNDLE_SHA512SUM=$(sha512sum "${IRONFOX_APKS_ARTIFACTS}/ironfox-${IRONFOX_VERSION}.apks" | "${IRONFOX_AWK}" '{print $1}')
 
-"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${CI_PROJECT_DIR}/updates.json"
-"${IRONFOX_SED}" -i "s|ironfox-{IRONFOX_VERSION}|ironfox-${IRONFOX_VERSION}|" "${CI_PROJECT_DIR}/updates.json"
-"${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
-"${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
-"${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
-"${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
-"${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|" "${CI_PROJECT_DIR}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
+"${IRONFOX_SED}" -i "s|ironfox-{IRONFOX_VERSION}|ironfox-${IRONFOX_VERSION}|" "${IRONFOX_ROOT}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_ARM64_SHA512SUM}|${IRONFOX_ARM64_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_ARM_SHA512SUM}|${IRONFOX_ARM_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_X86_64_SHA512SUM}|${IRONFOX_X86_64_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_UNIVERSAL_SHA512SUM}|${IRONFOX_UNIVERSAL_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
+"${IRONFOX_SED}" -i "s|{IRONFOX_BUNDLE_SHA512SUM}|${IRONFOX_BUNDLE_SHA512SUM}|" "${IRONFOX_ROOT}/updates.json"
 
-upload_to_s3 "${CI_PROJECT_DIR}/updates.json" 'ironfox/releases'
+upload_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
 
 # Because we now upload all releases to releases.ironfoxoss.org, we only want to keep the last 3 releases in ex. F-Droid
 ## In order to do so, we need to store/upload the current and prior 2 versions of IronFox as text files
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/latest_release.txt' -o "${CI_PROJECT_DIR}/current-latest_release.txt"
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' -o "${CI_PROJECT_DIR}/current-previous_release.txt"
+curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/latest_release.txt' -o "${IRONFOX_ROOT}/current-latest_release.txt"
+curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' -o "${IRONFOX_ROOT}/current-previous_release.txt"
 
-echo -n "${IRONFOX_VERSION}" > "${CI_PROJECT_DIR}/latest_release.txt"
-cp "${CI_PROJECT_DIR}/current-latest_release.txt" "${CI_PROJECT_DIR}/previous_release.txt"
-cp "${CI_PROJECT_DIR}/current-previous_release.txt" "${CI_PROJECT_DIR}/previous_previous_release.txt"
+echo -n "${IRONFOX_VERSION}" > "${IRONFOX_ROOT}/latest_release.txt"
+cp "${IRONFOX_ROOT}/current-latest_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
+cp "${IRONFOX_ROOT}/current-previous_release.txt" "${IRONFOX_ROOT}/previous_previous_release.txt"
 
-upload_to_s3 "${CI_PROJECT_DIR}/latest_release.txt" 'ironfox/releases'
-add_sha512sum "${CI_PROJECT_DIR}/latest_release.txt" 'ironfox/releases'
+upload_to_s3 "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
+add_sha512sum "${IRONFOX_ROOT}/latest_release.txt" 'ironfox/releases'
 
-upload_to_s3 "${CI_PROJECT_DIR}/previous_release.txt" 'ironfox/releases'
-add_sha512sum "${CI_PROJECT_DIR}/previous_release.txt" 'ironfox/releases'
+upload_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
+add_sha512sum "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
 
-upload_to_s3 "${CI_PROJECT_DIR}/previous_release.txt" 'ironfox/releases'
-add_sha512sum "${CI_PROJECT_DIR}/previous_previous_release.txt" 'ironfox/releases'
+upload_to_s3 "${IRONFOX_ROOT}/previous_release.txt" 'ironfox/releases'
+add_sha512sum "${IRONFOX_ROOT}/previous_previous_release.txt" 'ironfox/releases'
 
 {
-    readonly changelog_file="${CI_PROJECT_DIR}/changelogs/${IRONFOX_VERSION}.md"
+    readonly changelog_file="${IRONFOX_ROOT}/changelogs/${IRONFOX_VERSION}.md"
     if [[ -f "${changelog_file}" ]]; then
         cat "${changelog_file}"
     fi

@@ -17,6 +17,7 @@ readonly target="$1"
 readonly mode="$2"
 
 # Set-up target parameters
+IRONFOX_GET_SOURCE_ANDROGUARD=0
 IRONFOX_GET_SOURCE_ANDROID_NDK=0
 IRONFOX_GET_SOURCE_ANDROID_SDK=0
 IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS=0
@@ -43,6 +44,7 @@ IRONFOX_GET_SOURCE_PHOENIX=0
 IRONFOX_GET_SOURCE_PIP=0
 IRONFOX_GET_SOURCE_PREBUILDS=0
 IRONFOX_GET_SOURCE_PYTHON=0
+IRONFOX_GET_SOURCE_PYYAML=0
 IRONFOX_GET_SOURCE_RUST=0
 IRONFOX_GET_SOURCE_S3CMD=0
 IRONFOX_GET_SOURCE_UNIFFI=0
@@ -50,7 +52,11 @@ IRONFOX_GET_SOURCE_UP_AC=0
 IRONFOX_GET_SOURCE_UV=0
 IRONFOX_GET_SOURCE_WASI=0
 
-if [ "${target}" == 'android-ndk' ]; then
+if [ "${target}" == 'androguard' ]; then
+    # Get androguard
+    ## NOTE: This isn't installed if "all" is used below, as it's only used in CI and targeted specifically when it's needed
+    IRONFOX_GET_SOURCE_ANDROGUARD=1
+elif [ "${target}" == 'android-ndk' ]; then
     # Get Android NDK
     IRONFOX_GET_SOURCE_ANDROID_NDK=1
 elif [ "${target}" == 'android-sdk' ]; then
@@ -128,6 +134,10 @@ elif [ "${target}" == 'pip' ]; then
 elif [ "${target}" == 'python' ]; then
     # Get Python
     IRONFOX_GET_SOURCE_PYTHON=1
+elif [ "${target}" == 'pyyaml' ]; then
+    # Get PyYAML
+    ## NOTE: This isn't installed if "all" is used below, as it's only used in CI and targeted specifically when it's needed
+    IRONFOX_GET_SOURCE_PYYAML=1
 elif [ "${target}" == 'rust' ]; then
     # Get + set-up rust/cargo
     IRONFOX_GET_SOURCE_RUST=1
@@ -189,6 +199,7 @@ elif [ "${target}" == 'all' ]; then
 else
     echo_red_text "ERROR: Invalid target: ${target}\n You must enter one of the following:"
     echo 'All:                              all (Default)'
+    echo 'androguard:                       androguard'
     echo 'Android NDK:                      android-ndk'
     echo 'Android SDK:                      android-sdk'
     echo 'Android SDK Build Tools (latest): android-sdk-build-tools'
@@ -215,6 +226,7 @@ else
     echo 'pip:                              pip'
     echo 'Prebuilds repo:                   prebuilds'
     echo 'Python:                           python'
+    echo 'PyYAML:                           pyyaml'
     echo 'Rust:                             rust'
     echo 's3cmd:                            s3cmd'
     echo 'UnifiedPush-AC:                   up-ac'
@@ -224,6 +236,7 @@ else
     exit 1
 fi
 
+readonly IRONFOX_GET_SOURCE_ANDROGUARD
 readonly IRONFOX_GET_SOURCE_ANDROID_NDK
 readonly IRONFOX_GET_SOURCE_ANDROID_SDK
 readonly IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS
@@ -250,6 +263,7 @@ readonly IRONFOX_GET_SOURCE_PHOENIX
 readonly IRONFOX_GET_SOURCE_PIP
 readonly IRONFOX_GET_SOURCE_PREBUILDS
 readonly IRONFOX_GET_SOURCE_PYTHON
+readonly IRONFOX_GET_SOURCE_PYYAML
 readonly IRONFOX_GET_SOURCE_RUST
 readonly IRONFOX_GET_SOURCE_S3CMD
 readonly IRONFOX_GET_SOURCE_UNIFFI
@@ -284,7 +298,11 @@ function update_sha512sum() {
     local readonly new_sha512sum="$2"
     local readonly file="$3"
 
-    if [ "${old_sha512sum}" == "${ANDROID_NDK_SHA512SUM_LINUX}" ]; then
+    if [ "${old_sha512sum}" == "${ANDROGUARD_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for androguard...'
+        "${IRONFOX_SED}" -i -e "s|ANDROGUARD_SHA512SUM='.*'|ANDROGUARD_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for androguard'
+    elif [ "${old_sha512sum}" == "${ANDROID_NDK_SHA512SUM_LINUX}" ]; then
         echo_red_text 'Updating SHA512sum for Android NDK (Linux)...'
         "${IRONFOX_SED}" -i -e "s|ANDROID_NDK_SHA512SUM_LINUX='.*'|ANDROID_NDK_SHA512SUM_LINUX='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for Android NDK (Linux)'
@@ -448,6 +466,10 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for Python (OS X - x86_64)...'
         "${IRONFOX_SED}" -i -e "s|PYTHON_SHA512SUM_OSX_X86_64='.*'|PYTHON_SHA512SUM_OSX_X86_64='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for Python (OS X - x86_64)'
+    elif [ "${old_sha512sum}" == "${PYYAML_SHA512SUM}" ]; then
+        echo_red_text 'Updating SHA512sum for PyYAML...'
+        "${IRONFOX_SED}" -i -e "s|PYYAML_SHA512SUM='.*'|PYYAML_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
+        echo_green_text 'SUCCESS: Updated SHA512sum for PyYAML'
     elif [ "${old_sha512sum}" == "${RUSTUP_SHA512SUM}" ]; then
         echo_red_text 'Updating SHA512sum for rustup...'
         "${IRONFOX_SED}" -i -e "s|RUSTUP_SHA512SUM='.*'|RUSTUP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
@@ -680,6 +702,39 @@ function download_and_extract() {
         echo_red_text "Extracting ${repo_archive}..."
         extract "${repo_archive}" "${path}" "${repo_name}"
         echo
+    fi
+}
+
+# Get androguard
+function get_androguard() {
+    # If all we're doing is updating the checksum, we don't care if the environment is prepared
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        if  [ ! -d "${IRONFOX_UV_DIR}" ] || [ ! -f "${IRONFOX_PYENV}" ]; then
+            echo_red_text "ERROR: You tried to download androguard, but you don't have a uv environment set-up yet."
+            exit 1
+        fi
+
+        if [[ -d "${IRONFOX_ANDROGUARD}" ]]; then
+            echo_red_text "androguard is already installed at ${IRONFOX_ANDROGUARD}"
+            read -p "Do you want to re-download it? [y/N] " -n 1 -r
+            echo
+            if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
+                return 0
+            else
+                source "${IRONFOX_PYENV}"
+                "${IRONFOX_UV}" pip uninstall androguard
+            fi
+        fi
+    fi
+
+    echo_red_text "Downloading androguard..."
+    download_and_extract 'androguard' "https://github.com/androguard/androguard/archive/${ANDROGUARD_COMMIT}.tar.gz" "${IRONFOX_ANDROGUARD_DIR}" "${ANDROGUARD_SHA512SUM}"
+
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        source "${IRONFOX_PYENV}"
+        echo_red_text 'Installing androguard...'
+        "${IRONFOX_UV}" pip install --strict "${IRONFOX_ANDROGUARD_DIR}"
+        echo_green_text "SUCCESS: Set-up androguard at ${IRONFOX_ANDROGUARD}"
     fi
 }
 
@@ -1361,6 +1416,39 @@ function get_python() {
     fi
 }
 
+# Get PyYAML
+function get_pyyaml() {
+    # If all we're doing is updating the checksum, we don't care if the environment is prepared
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        if  [ ! -d "${IRONFOX_UV_DIR}" ] || [ ! -f "${IRONFOX_PYENV}" ]; then
+            echo_red_text "ERROR: You tried to download PyYAML, but you don't have a uv environment set-up yet."
+            exit 1
+        fi
+
+        if [[ -d "${IRONFOX_PYYAML}" ]]; then
+            echo_red_text "PyYAML is already downloaded at ${IRONFOX_PYYAML}"
+            read -p "Do you want to re-download it? [y/N] " -n 1 -r
+            echo
+            if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
+                return 0
+            else
+                source "${IRONFOX_PYENV}"
+                "${IRONFOX_UV}" pip uninstall pyyaml
+            fi
+        fi
+    fi
+
+    echo_red_text "Downloading PyYAML..."
+    download_and_extract 'pyyaml' "https://github.com/yaml/pyyaml/archive/${PYYAML_COMMIT}.tar.gz" "${IRONFOX_PYYAML}" "${PYYAML_SHA512SUM}"
+
+    if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
+        source "${IRONFOX_PYENV}"
+        echo_red_text 'Installing PyYAML...'
+        "${IRONFOX_UV}" pip install --strict "${IRONFOX_PYYAML}"
+        echo_green_text 'SUCCESS: Set-up PyYAML'
+    fi
+}
+
 # Get + set-up rust/cargo
 function get_rust() {
     # If all we're doing is updating the checksum, we don't care if the environment is prepared
@@ -1407,8 +1495,8 @@ function get_s3cmd() {
             exit 1
         fi
 
-        if [[ -d "${IRONFOX_PYENV_DIR}/bin/s3cmd" ]]; then
-            echo_red_text "s3cmd is already installed at ${IRONFOX_PYENV_DIR}/bin/s3cmd"
+        if [[ -d "${IRONFOX_S3CMD}" ]]; then
+            echo_red_text "s3cmd is already installed at ${IRONFOX_S3CMD}"
             read -p "Do you want to re-download it? [y/N] " -n 1 -r
             echo
             if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
@@ -1551,6 +1639,19 @@ function get_wasi() {
     fi
 }
 
+# These need to run before we get androguard, glean_parser, gyp, PyYAML, and s3cmd
+if [ "${IRONFOX_GET_SOURCE_PYTHON}" == 1 ]; then
+    get_python
+fi
+
+if [ "${IRONFOX_GET_SOURCE_UV}" == 1 ]; then
+    get_uv
+fi
+
+if [ "${IRONFOX_GET_SOURCE_ANDROGUARD}" == 1 ]; then
+    get_androguard
+fi
+
 if [ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]; then
     get_android_ndk
 fi
@@ -1621,15 +1722,6 @@ if [ "${IRONFOX_GET_SOURCE_JDK_21}" == 1 ]; then
     get_jdk_21
 fi
 
-# These need to run before we get glean_parser, gyp, and s3cmd
-if [ "${IRONFOX_GET_SOURCE_PYTHON}" == 1 ]; then
-    get_python
-fi
-
-if [ "${IRONFOX_GET_SOURCE_UV}" == 1 ]; then
-    get_uv
-fi
-
 # This needs to be run before we get glean_parser
 if [ "${IRONFOX_GET_SOURCE_PIP}" == 1 ]; then
     get_pip
@@ -1665,6 +1757,10 @@ fi
 
 if [ "${IRONFOX_GET_SOURCE_PREBUILDS}" == 1 ]; then
     get_prebuilds
+fi
+
+if [ "${IRONFOX_GET_SOURCE_PYYAML}" == 1 ]; then
+    get_pyyaml
 fi
 
 if [ "${IRONFOX_GET_SOURCE_S3CMD}" == 1 ]; then
