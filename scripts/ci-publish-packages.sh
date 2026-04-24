@@ -19,6 +19,11 @@ if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
     exit 1
 fi
 
+if [ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == 'null' ]; then
+    echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable has not been specified! Aborting...'
+    exit 1
+fi
+
 if ! [[ -f "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
     echo_red_text "ERROR: S3 access key file not found! (${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE})"
     echo_green_text "Please ensure the IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable is set to the correct path in which the key file is located."
@@ -33,6 +38,11 @@ fi
 
 if [[ -z "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
     echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable is missing! Aborting...'
+    exit 1
+fi
+
+if [ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == 'null' ]; then
+    echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable has not been specified! Aborting...'
     exit 1
 fi
 
@@ -53,6 +63,11 @@ if [[ -z "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
     exit 1
 fi
 
+if [ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == 'null' ]; then
+    echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable has not been specified! Aborting...'
+    exit 1
+fi
+
 if ! [[ -f "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
     echo_red_text "ERROR: S3 endpoint file not found! (${IRONFOX_RELEASES_S3_ENDPOINT_FILE})"
     echo_green_text "Please ensure the IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable is set to the correct path in which the endpoint file is located."
@@ -62,6 +77,11 @@ fi
 
 if ! [[ -s "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
     echo_red_text "ERROR: S3 bucket name file ${IRONFOX_RELEASES_S3_ENDPOINT_FILE} is empty!"
+    exit 1
+fi
+
+if [ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == 'null' ]; then
+    echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_SECRET_KEY_FILE environment variable has not been specified! Aborting...'
     exit 1
 fi
 

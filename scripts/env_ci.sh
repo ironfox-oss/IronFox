@@ -30,6 +30,12 @@ export IRONFOX_GECKOVIEW_BUNDLE_DIRECT=1
 # Log directory
 export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
 
+# S3
+export IRONFOX_RELEASES_S3_ACCESS_KEY_FILE='/opt/IronFox/ironfox-releases-s3-access-key.txt'
+export IRONFOX_RELEASES_S3_BUCKET_NAME_FILE='/opt/IronFox/ironfox-releases-s3-bucket-name.txt'
+export IRONFOX_RELEASES_S3_ENDPOINT_FILE='/opt/IronFox/ironfox-releases-s3-endpoint.txt'
+export IRONFOX_RELEASES_S3_SECRET_KEY_FILE='/opt/IronFox/ironfox-releases-s3-secret-key.txt'
+
 # Safe Browsing
 export IRONFOX_SB_GAPI_KEY_FILE='/opt/IronFox/ironfox-sb-gapi.data'
 
