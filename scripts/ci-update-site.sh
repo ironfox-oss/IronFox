@@ -19,7 +19,7 @@ cd target-repo || { echo "Unable to cd into target-repo"; exit 1; };
 
 # Generate documentation for patches
 source "${IRONFOX_PYENV}"
-"${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/gen_patch_pages.py" ../scripts/patches.yaml
+"${IRONFOX_PYTHON}" ./scripts/gen_patch_pages.py ../scripts/patches.yaml
 
 # Update version name
 "${IRONFOX_SED}" -i "s/IRONFOX_VERSION = .*/IRONFOX_VERSION = \"${IRONFOX_VERSION}\";/g" \
