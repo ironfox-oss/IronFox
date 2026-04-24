@@ -39,13 +39,13 @@ if [ "${ci_build_target}" == 'bundle' ]; then
 fi
 
 # Fail-fast in case the signing key is unavailable or empty file
-if ! [[ -f "${IRONFOX_KEYSTORE}" ]]; then
-    echo_red_text "ERROR: Keystore file ${IRONFOX_KEYSTORE} does not exist!"
+if ! [[ -f "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
+    echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} does not exist!"
     exit 1
 fi
 
-if ! [[ -s "${IRONFOX_KEYSTORE}" ]]; then
-    echo_red_text "ERROR: Keystore file ${IRONFOX_KEYSTORE} is empty!"
+if ! [[ -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
+    echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} is empty!"
     exit 1
 fi
 

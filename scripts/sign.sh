@@ -23,10 +23,10 @@ function sign_apk() {
     local readonly apk_out="$2"
 
     "${IRONFOX_APKSIGNER}" sign \
-      --ks="${IRONFOX_KEYSTORE}" \
-      --ks-pass="file:/${IRONFOX_KEYSTORE_PASS_FILE}" \
-      --ks-key-alias="${IRONFOX_KEYSTORE_KEY_ALIAS}" \
-      --key-pass="file:/${IRONFOX_KEYSTORE_KEY_PASS_FILE}" \
+      --ks="${IRONFOX_ANDROID_KEYSTORE}" \
+      --ks-pass="file:/${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" \
+      --ks-key-alias="${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" \
+      --key-pass="file:/${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" \
       --out="${apk_out}" \
     "${apk_in}"
 }
@@ -40,10 +40,10 @@ function sign_bundle() {
     "${IRONFOX_BUNDLETOOL}" build-apks \
       --bundle="${IRONFOX_OUTPUTS_BUNDLE_AAB}" \
       --output="${IRONFOX_OUTPUTS_BUNDLE}" \
-      --ks="${IRONFOX_KEYSTORE}" \
-      --ks-pass="file:/${IRONFOX_KEYSTORE_PASS_FILE}" \
-      --ks-key-alias="${IRONFOX_KEYSTORE_KEY_ALIAS}" \
-      --key-pass="file:/${IRONFOX_KEYSTORE_KEY_PASS_FILE}"
+      --ks="${IRONFOX_ANDROID_KEYSTORE}" \
+      --ks-pass="file:/${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" \
+      --ks-key-alias="${IRONFOX_ANDROID_KEYSTORE_KEY_ALIAS}" \
+      --key-pass="file:/${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}"
 
     echo_green_text 'SUCCESS: Created signed bundleset'
 }

@@ -6,21 +6,21 @@
     - chmod 600 "${IRONFOX_SB_GAPI_KEY_FILE}"
     - echo -n "${IRONFOX_SB_GAPI_KEY}" > "${IRONFOX_SB_GAPI_KEY_FILE}"
 
-    - touch "${IRONFOX_KEYSTORE_KEY_PASS_FILE}"
-    - chmod 600 "${IRONFOX_KEYSTORE_KEY_PASS_FILE}"
-    - echo -n "${IRONFOX_KEYSTORE_KEY_PASS}" > "${IRONFOX_KEYSTORE_KEY_PASS_FILE}"
+    - touch "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}"
+    - chmod 600 "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}"
+    - echo -n "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS}" > "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}"
 
-    - touch "${IRONFOX_KEYSTORE_PASS_FILE}"
-    - chmod 600 "${IRONFOX_KEYSTORE_PASS_FILE}"
-    - echo -n "${IRONFOX_KEYSTORE_PASS}" > "${IRONFOX_KEYSTORE_PASS_FILE}"
+    - touch "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}"
+    - chmod 600 "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}"
+    - echo -n "${IRONFOX_ANDROID_KEYSTORE_PASS}" > "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}"
 
     - |
       curl --fail --location --show-error --silent \
         --request GET \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
-        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${IRONFOX_KEYSTORE_SECFILEID}/download" \
-        --output "${IRONFOX_KEYSTORE}"
-    - chmod 600 "${IRONFOX_KEYSTORE}"
+        "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/secure_files/${IRONFOX_ANDROID_KEYSTORE_SECFILEID}/download" \
+        --output "${IRONFOX_ANDROID_KEYSTORE}"
+    - chmod 600 "${IRONFOX_ANDROID_KEYSTORE}"
 
 .build_cache: &build_cache
   - key: cache-cargo-$CI_COMMIT_REF_SLUG
@@ -55,10 +55,10 @@ default:
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
-  IRONFOX_SB_GAPI_KEY_FILE: /opt/IronFox/ironfox-sb-gapi.data
-  IRONFOX_KEYSTORE: /opt/IronFox/ironfox-keystore.jks
-  IRONFOX_KEYSTORE_KEY_PASS_FILE: /opt/IronFox/ironfox-signing-key.pass
-  IRONFOX_KEYSTORE_PASS_FILE: /opt/IronFox/ironfox-keystore.pass
+  IRONFOX_SB_GAPI_KEY_FILE: /opt/IronFox/ironfox-sb-gapi-key.txt
+  IRONFOX_ANDROID_KEYSTORE: /opt/IronFox/ironfox-android-keystore.jks
+  IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE: /opt/IronFox/ironfox-android-signing-key-pass.txt
+  IRONFOX_ANDROID_KEYSTORE_PASS_FILE: /opt/IronFox/ironfox-android-keystore-pass.txt
   IF_CI_NAME: "IronFox CI"
   IF_CI_USERNAME: "ironfox-ci"
   IF_CI_EMAIL: "ci@ironfoxoss.org"
