@@ -196,7 +196,7 @@ function prep_s3_storage() {
     fi
     readonly IRONFOX_RELEASES_S3_SECRET_KEY
 
-    # Now, ensure that our Safe Browsing API key file variable (defined at `env_common.sh`, set at `env_ci.sh`) is properly set...
+    # Now, ensure that our S3 file variables (defined at `env_common.sh`, set at `env_ci.sh`) are properly set...
 
     if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
         echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable is missing! Aborting...'

@@ -11,7 +11,7 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
-# Set up target parameters
+# Set-up target parameters
 if [[ -z "${1+x}" ]]; then
     readonly deglean_target='all'
 else

@@ -8,7 +8,7 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 fi
 source $(dirname $0)/env.sh
 
-# Set up target parameters
+# Set-up target parameters
 if [[ -z "${1+x}" ]]; then
     readonly target='all'
 else
