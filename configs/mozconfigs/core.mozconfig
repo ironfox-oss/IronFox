@@ -95,6 +95,9 @@ ac_add_options --disable-spidermonkey-telemetry
 ## Disable system policies
 ac_add_options --disable-system-policies
 
+## Disable system preferences
+ac_add_options --disable-system-preferences
+
 ## Disable telemetry
 export MOZ_TELEMETRY_REPORTING=
 
