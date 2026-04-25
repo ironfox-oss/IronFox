@@ -46,7 +46,7 @@ fi
 
 readonly target="$1"
 
-# Set up target parameters
+# Set-up target parameters
 IRONFOX_PREPARE_AC=0
 IRONFOX_PREPARE_ANDROID_SDK=0
 IRONFOX_PREPARE_AS=0
@@ -896,6 +896,41 @@ function prepare_firefox() {
     # Nuke undesired Mozilla endpoints
     bash -x "${IRONFOX_SCRIPTS}/noop_mozilla_endpoints.sh" 'firefox'
 
+    # Fail on use of prebuilt binary
+    "${IRONFOX_SED}" -i 's|https://github.com|hxxps://github.com|' "${IRONFOX_GECKO}/python/mozboot/mozboot/android.py"
+
+    # Make the build system think we installed the emulator and an AVD
+    mkdir -vp "${IRONFOX_ANDROID_SDK}/emulator"
+    mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
+
+    # Do not check the "emulator" utility which is obviously absent in the empty directory we created above
+    "${IRONFOX_SED}" -i -e '/check_android_tools("emulator"/d' "${IRONFOX_GECKO}/build/moz.configure/android-sdk.configure"
+
+    # Do not define `browser.safebrowsing.features.` prefs by default
+    ## These are unnecessary, add extra confusion and complexity, and don't appear to interact well with our other prefs/settings
+    "${IRONFOX_SED}" -i \
+        -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.boolean"|' \
+        -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.boolean"|' \
+        -e 's|"browser.safebrowsing.features.harmfuladdon.update"|"z99.ignore.boolean"|' \
+        -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.boolean"|' \
+        -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.boolean"|' \
+        -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.boolean"|' \
+        -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.boolean"|' \
+        "${IRONFOX_GECKO}/mobile/android/app/geckoview-prefs.js"
+
+    # Gecko prefs
+    echo '' >>"${IRONFOX_GECKO}/mobile/android/app/geckoview-prefs.js"
+    echo '#include ../../../ironfox/prefs/ironfox.js' >>"${IRONFOX_GECKO}/mobile/android/app/geckoview-prefs.js"
+
+    # Apply Gecko overlay
+    apply_overlay "${IRONFOX_GECKO_OVERLAY}/"
+
+    # Convert prefs set by GeckoRuntimeSettings to static/standard prefs .js files
+    ## We need this because there have been instances in the past where upstream only defined default pref values
+    ## for Android as GeckoRuntimeSettings, and not elsewhere at ex. `all.js`/`geckoview-prefs.js`
+    bash -x "${IRONFOX_SCRIPTS}/extract-geckoruntimesettings-prefs.sh" "${IRONFOX_GECKO}/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java" "${IRONFOX_GECKO}/ironfox/prefs/geckoruntimesettings-prefs.js"
+    bash -x "${IRONFOX_SCRIPTS}/extract-contentblocking-prefs.sh" "${IRONFOX_GECKO}/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/ContentBlocking.java" "${IRONFOX_GECKO}/ironfox/prefs/contentblocking-prefs.js"
+    
     # Take back control of preferences
     ## This prevents GeckoView from overriding the follow prefs at runtime, which also means we don't have to worry about Nimbus overriding them, etc...
     ## The prefs will instead take the values we specify in the phoenix/ironfox .js files, and users will also be able to override them via the `about:config`
@@ -980,35 +1015,6 @@ function prepare_firefox() {
         -e 's|"toolkit.telemetry.user_characteristics_ping.current_version"|"z99.ignore.integer"|' \
         -e 's|"webgl.msaa-samples"|"z99.ignore.integer"|' \
         "${IRONFOX_GECKO}/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntimeSettings.java"
-
-    # Fail on use of prebuilt binary
-    "${IRONFOX_SED}" -i 's|https://github.com|hxxps://github.com|' "${IRONFOX_GECKO}/python/mozboot/mozboot/android.py"
-
-    # Make the build system think we installed the emulator and an AVD
-    mkdir -vp "${IRONFOX_ANDROID_SDK}/emulator"
-    mkdir -vp "${IRONFOX_MOZBUILD}/android-device/avd"
-
-    # Do not check the "emulator" utility which is obviously absent in the empty directory we created above
-    "${IRONFOX_SED}" -i -e '/check_android_tools("emulator"/d' "${IRONFOX_GECKO}/build/moz.configure/android-sdk.configure"
-
-    # Do not define `browser.safebrowsing.features.` prefs by default
-    ## These are unnecessary, add extra confusion and complexity, and don't appear to interact well with our other prefs/settings
-    "${IRONFOX_SED}" -i \
-        -e 's|"browser.safebrowsing.features.cryptomining.update"|"z99.ignore.boolean"|' \
-        -e 's|"browser.safebrowsing.features.fingerprinting.update"|"z99.ignore.boolean"|' \
-        -e 's|"browser.safebrowsing.features.harmfuladdon.update"|"z99.ignore.boolean"|' \
-        -e 's|"browser.safebrowsing.features.malware.update"|"z99.ignore.boolean"|' \
-        -e 's|"browser.safebrowsing.features.phishing.update"|"z99.ignore.boolean"|' \
-        -e 's|"browser.safebrowsing.features.trackingAnnotation.update"|"z99.ignore.boolean"|' \
-        -e 's|"browser.safebrowsing.features.trackingProtection.update"|"z99.ignore.boolean"|' \
-        "${IRONFOX_GECKO}/mobile/android/app/geckoview-prefs.js"
-
-    # Gecko prefs
-    echo '' >>"${IRONFOX_GECKO}/mobile/android/app/geckoview-prefs.js"
-    echo '#include ../../../ironfox/prefs/ironfox.js' >>"${IRONFOX_GECKO}/mobile/android/app/geckoview-prefs.js"
-
-    # Apply Gecko overlay
-    apply_overlay "${IRONFOX_GECKO_OVERLAY}/"
 
     ## The following are for the build script, so that it can update the environment variables if needed
     ### (ex. if the user changes them)

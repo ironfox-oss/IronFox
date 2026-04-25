@@ -3,6 +3,10 @@
 /// Actual preferences are set at `ironfox.cfg` (located at `patches/build/gecko/ironfox.cfg` within the IronFox source repo)
 // This is just a "bootstrap" of sorts...
 
+/// First, we need to set the default values for preferences set via GeckoRuntimeSettings
+#include geckoruntimesettings-prefs.js
+#include contentblocking-prefs.js
+
 /// Set-up AutoConfig
 // https://support.mozilla.org/kb/customizing-firefox-using-autoconfig
 pref("general.config.sandbox_enabled", true, locked); // Ensure AutoConfig is sandboxed

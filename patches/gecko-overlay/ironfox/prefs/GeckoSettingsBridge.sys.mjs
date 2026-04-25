@@ -26,6 +26,9 @@ export var GeckoSettingsBridge = {
         } else if (type !== "boolean" && type !== "string") {
             throw new Error(`Invalid type for ${pref}`);
         };
+        lazy.log.debug(
+            `Unlocking ${pref}`
+        );
         if (Services.prefs.prefIsLocked(pref) === true) {
             Services.prefs.unlockPref(pref);
         };
@@ -90,6 +93,8 @@ export var GeckoSettingsBridge = {
             this.setWebRTCEnabled(value);
         } else if (pref === "browser.ironfox.fenix.xpinstallEnabled") {
             this.setXPInstallEnabled(value);
+        } else {
+            throw new Error(`Unsupported preference: ${pref}`);
         };
         if (type === "boolean") {
             Services.prefs.getDefaultBranch(null).setBoolPref(pref, value);
@@ -98,6 +103,9 @@ export var GeckoSettingsBridge = {
         } else if (type === "string") {
             Services.prefs.getDefaultBranch(null).setStringPref(pref, value);
         };
+        lazy.log.debug(
+            `Locking ${pref}`
+        );
         Services.prefs.lockPref(pref);
         lazy.log.debug(
             `SUCCESS: Set ${pref} to ${value}`
