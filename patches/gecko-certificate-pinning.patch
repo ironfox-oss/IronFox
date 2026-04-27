@@ -1,5 +1,5 @@
 diff --git a/security/manager/ssl/StaticHPKPins.h b/security/manager/ssl/StaticHPKPins.h
-index 1b20240a185a..0ea55c7f6138 100644
+index 1b20240a185a..3925b911fb10 100644
 --- a/security/manager/ssl/StaticHPKPins.h
 +++ b/security/manager/ssl/StaticHPKPins.h
 @@ -183,6 +183,32 @@ static const char kUSERTrust_ECC_Certification_AuthorityFingerprint[] =
@@ -107,35 +107,6 @@ index 1b20240a185a..0ea55c7f6138 100644
  /* PreloadedHPKPins.json pinsets */
  static const char* const kPinset_google_root_pems_Data[] = {
    kCOMODO_ECC_Certification_AuthorityFingerprint,
-@@ -303,8 +394,8 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "apis.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "appengine.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "appspot.com", true, false, false, -1, &kPinset_google_root_pems },
--  { "aus4.mozilla.org", true, true, true, 3, &kPinset_mozilla_services },
--  { "aus5.mozilla.org", true, true, true, 7, &kPinset_mozilla_services },
-+  { "aus4.mozilla.org", true, false, true, 3, &kPinset_mozilla_services },
-+  { "aus5.mozilla.org", true, false, true, 7, &kPinset_mozilla_services },
-   { "blogger.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "blogspot.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "bugs.chromium.org", true, false, false, -1, &kPinset_google_root_pems },
-@@ -348,7 +439,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "exclude-subdomains.pinning.example.com", false, false, false, -1, &kPinset_mozilla_test },
-   { "fi.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "firebaseio.com", true, false, false, -1, &kPinset_google_root_pems },
--  { "firefox.com", true, true, true, 15, &kPinset_mozilla_services },
-+  { "firefox.com", true, false, true, 15, &kPinset_mozilla_services },
-   { "g.co", false, false, false, -1, &kPinset_google_root_pems },
-   { "g4w.co", true, false, false, -1, &kPinset_google_root_pems },
-   { "ggpht.com", true, false, false, -1, &kPinset_google_root_pems },
-@@ -640,7 +731,7 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
-   { "sync.services.mozilla.com", true, false, true, 13, &kPinset_mozilla_services },
-   { "talk.google.com", true, false, false, -1, &kPinset_google_root_pems },
-   { "talkgadget.google.com", true, false, false, -1, &kPinset_google_root_pems },
--  { "telemetry.mozilla.org", true, true, true, 8, &kPinset_mozilla_services },
-+  { "telemetry.mozilla.org", true, false, true, 8, &kPinset_mozilla_services },
-   { "test-mode.pinning.example.com", true, true, false, -1, &kPinset_mozilla_test },
-   { "testpilot.firefox.com", false, false, true, 9, &kPinset_mozilla_services },
-   { "translate.googleapis.com", true, false, false, -1, &kPinset_google_root_pems },
 @@ -675,9 +766,108 @@ static const TransportSecurityPreload kPublicKeyPinningPreloadList[] = {
    { "youtube-nocookie.com", true, false, false, -1, &kPinset_google_root_pems },
    { "youtube.com", true, false, false, -1, &kPinset_google_root_pems },
@@ -246,33 +217,3 @@ index 1b20240a185a..0ea55c7f6138 100644
  
  static const int32_t kUnknownId = -1;
  
-diff --git a/security/manager/tools/PreloadedHPKPins.json b/security/manager/tools/PreloadedHPKPins.json
-index e5c10e2975ce..63722cda85e4 100644
---- a/security/manager/tools/PreloadedHPKPins.json
-+++ b/security/manager/tools/PreloadedHPKPins.json
-@@ -127,13 +127,13 @@
-     // AUS servers MUST remain in test mode
-     // see: https://bugzilla.mozilla.org/show_bug.cgi?id=1301956#c23
-     { "name": "aus4.mozilla.org", "include_subdomains": true,
--      "pins": "mozilla_services", "test_mode": true, "id": 3 },
-+      "pins": "mozilla_services", "test_mode": false, "id": 3 },
-     { "name": "aus5.mozilla.org", "include_subdomains": true,
--      "pins": "mozilla_services", "test_mode": true, "id": 7 },
-+      "pins": "mozilla_services", "test_mode": false, "id": 7 },
-     // Catchall for applications hosted under firefox.com
-     // see https://bugzilla.mozilla.org/show_bug.cgi?id=1494431
-     { "name": "firefox.com", "include_subdomains": true,
--      "pins": "mozilla_services", "test_mode": true, "id": 15 },
-+      "pins": "mozilla_services", "test_mode": false, "id": 15 },
-     // Firefox Accounts & sync
-     // superseded by catchall for firefox.com, but leaving for tracking
-     { "name": "accounts.firefox.com", "include_subdomains": true,
-@@ -156,7 +156,7 @@
-     // Catch-all for everything hosted under telemetry.mozilla.org
-     // MUST remain in test mode in order to receive telemetry on broken pins
-     { "name": "telemetry.mozilla.org", "include_subdomains": true,
--      "pins": "mozilla_services", "test_mode": true, "id": 8 },
-+      "pins": "mozilla_services", "test_mode": false, "id": 8 },
-     // Test Pilot
-     // superseded by catchall for firefox.com, but leaving for tracking
-     { "name": "testpilot.firefox.com", "include_subdomains": false,
