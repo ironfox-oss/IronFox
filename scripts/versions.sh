@@ -183,11 +183,11 @@ readonly NVM_COMMIT='62387b8f92aa012d48202747fd75c40850e5e261'
 readonly NVM_SHA512SUM='7b88477aa7400050cea6dda3cd197dad7d030fd951cd9aca945c04159fdb98ea3bbdda8a2b1c0761d1cd5d3893c669370b493727298f3b8440f97452fd229abc'
 
 ## pip
-### Version: 26.0.1
+### Version: 26.1
 ### https://github.com/pypa/pip
-### (This commit corresponds to https://github.com/pypa/pip/releases/tag/26.0.1)
-readonly PIP_COMMIT='5fe4ea4f24cd9756316a4b5ef05daa15d84f7d0c'
-readonly PIP_SHA512SUM='3fca339b7c2596581fcf9691b8ef43664b4d0b25494b30eebda803586134c160a06db128437c2fcce9708e26d6ef9450af2e5d9fe0e724d56f65cfb7dda45e7a'
+### (This commit corresponds to https://github.com/pypa/pip/releases/tag/26.1)
+readonly PIP_COMMIT='90b2b3e0f7ef75c485155716d904e51654575803'
+readonly PIP_SHA512SUM='50a16d209f26a6e25cdf1c3c187523871e01e0c23cf8d8cf497de9eefce9fc967e28f96a5ab786070d334767e7728cc1caa4969e20d8a9a3f06688cb4b94eeac'
 
 ## Python
 ### https://github.com/astral-sh/python-build-standalone
