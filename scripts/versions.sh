@@ -173,8 +173,8 @@ readonly NODE_VERSION='25.8.1'
 
 ## npm
 ### https://github.com/npm/cli
-readonly NPM_SHA512SUM='cdca14b85d647b3192028d02aadbe82d75f79a446aceea9874be98e6d768f20ebd3555770a48d0e9906106007877bbc690f715e9372f2e2dc644a3c3157fb14c'
-readonly NPM_VERSION='11.12.1'
+readonly NPM_SHA512SUM='7119a16a0843580d65160977520e3f5710c974f04afd4fad36d9eb97d917ba716a856c35c78c4be6dc64367eeaccfb957ef5ce997ca31e9330b2e936ba2b1b92'
+readonly NPM_VERSION='11.13.0'
 
 ## nvm
 ### Version: v0.40.4
