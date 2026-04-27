@@ -419,8 +419,10 @@ export UV_UNMANAGED_INSTALL
 
 ## Prevent using the system Python
 readonly UV_MANAGED_PYTHON=1
+readonly UV_PYTHON_NO_REGISTRY=1
 readonly UV_SYSTEM_PYTHON='false'
 export UV_MANAGED_PYTHON
+export UV_PYTHON_NO_REGISTRY
 export UV_SYSTEM_PYTHON
 
 ## Python
