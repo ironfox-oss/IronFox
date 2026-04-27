@@ -3,23 +3,30 @@
 # Aliases
 [attr]lfs filter=lfs diff=lfs merge=lfs -text
 [attr]crlf eol=crlf
+
 # Normalize
 * text=auto eol=lf
+
 # Windows
 # *.bat crlf
+
 # LFS, binary files
-#*.png lfs
-#*.zip lfs
+*.png lfs
+*.zip lfs
+test/ironfox-nightly.aab lfs
+
 # GitLab: syntax highlight
 *.cfg            gitlab-language=javascript
 *.code-workspace gitlab-language=json
 *.jsonc          gitlab-language=json
+*.yml            gitlab-language=yaml
+
 # GitHub & Codeberg: languages and diffs
 *.cfg            linguist-language=JAVASCRIPT
 *.code-workspace linguist-language=JSON
 *.jsonc          linguist-language=JSON
+*.yml            linguist-language=YAML
+
 # Statistics
 *.json  linguist-detectable
 # *.md  linguist-detectable
-test/ironfox-nightly.aab filter=lfs diff=lfs merge=lfs -text
-*.png filter=lfs diff=lfs merge=lfs -text
