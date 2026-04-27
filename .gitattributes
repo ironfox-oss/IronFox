@@ -8,8 +8,8 @@
 # Windows
 # *.bat crlf
 # LFS, binary files
-*.png lfs
-*.zip lfs
+#*.png lfs
+#*.zip lfs
 # GitLab: syntax highlight
 *.cfg            gitlab-language=javascript
 *.code-workspace gitlab-language=json
