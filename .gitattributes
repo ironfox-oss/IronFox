@@ -16,16 +16,34 @@
 test/ironfox-nightly.aab lfs
 
 # GitLab: syntax highlight
-*.cfg            gitlab-language=javascript
-*.code-workspace gitlab-language=json
-*.jsonc          gitlab-language=json
-*.yml            gitlab-language=yaml
+*.build             gitlab-language=python
+*.cfg               gitlab-language=javascript
+*.code-workspace    gitlab-language=json
+*.conf              gitlab-language=python
+*.configure         gitlab-language=python
+*.ftl               gitlab-language=ini
+*.jsonc             gitlab-language=json
+*.mn                gitlab-language=makefile
+*.mozconfig         gitlab-language=shell
+*.properties        gitlab-language=ini
+*.yml               gitlab-language=yaml
+.npmrc*             gitlab-language=ini
+machrc*             gitlab-language=ini
 
 # GitHub & Codeberg: languages and diffs
-*.cfg            linguist-language=JAVASCRIPT
-*.code-workspace linguist-language=JSON
-*.jsonc          linguist-language=JSON
-*.yml            linguist-language=YAML
+*.build             linguist-language=PYTHON
+*.cfg               linguist-language=JAVASCRIPT
+*.code-workspace    linguist-language=JSON
+*.conf              linguist-language=PYTHON
+*.configure         linguist-language=PYTHON
+*.ftl               linguist-language=INI
+*.jsonc             linguist-language=JSON
+*.mn                linguist-language=MAKEFILE
+*.mozconfig         linguist-language=SHELL
+*.properties        linguist-language=INI
+*.yml               linguist-language=YAML
+.npmrc*             linguist-language=INI
+machrc*             linguist-language=INI
 
 # Statistics
 *.json  linguist-detectable
