@@ -2,7 +2,7 @@ about-attribution-title = Gracias.
 about-attribution-subtitle = IronFox no sería lo que es sin el esfuerzo de nuestros colaboradores:
 about-attribution-closing = Tus esfuerzos son valorados y apreciados.
 about-ironfox-title = "The Book of Iron" - 1:2
-about-ironfox-from = Extraído de <strong>"The Book of Iron",</strong> 1:2
+about-ironfox-from = de <strong>The Book of Iron,</strong> 1:2
 about-ironfox-quote =
     Entonces, el <em>Topo</em> había caído. Y la <em>Beastia</em> había perdido su camino, los creyentes
     perdieron su fé, y el mundo se sumergió en la <em class="f">oscuridad</em>. Cuando la esperanza estaba casi perdida, un
