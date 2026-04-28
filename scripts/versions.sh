@@ -3,10 +3,10 @@
 
 ## Firefox
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_150_0_RELEASE)
-readonly FIREFOX_COMMIT='9154e5a11da43c93b65b436b0b12fd894bdc6f76'
-readonly FIREFOX_SHA512SUM='b3a325da83ea2088880f7b4bda5e4792d0d9fe5e90412106c3518eff8515b64fa2b7dd83f71c154ffa2be28be05057625589f22d44ace952c2d8d643574adcd8'
-readonly FIREFOX_VERSION='150.0'
+### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_150_0_1_BUILD1)
+readonly FIREFOX_COMMIT='ec9aaac47d4c75159d041049a119cdf72f9d5a40'
+readonly FIREFOX_SHA512SUM='e520811384824b2cc9aff78666a45ea6fd5239cdb27bc15ba0975928237128f833cef1b7234f351df239222255b08c3207d834450c065d24a64f6b979edb7c6c'
+readonly FIREFOX_VERSION='150.0.1'
 
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
 
@@ -21,8 +21,8 @@ readonly APPSERVICES_VERSION='150.0.1'
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='fa13341cbf4b532f1860ede5505805c07f923cc4'
-readonly L10N_SHA512SUM='71ca5d2482d4d5ac4ad471d7b2dbce58624864d13316e7f25a1f31d0ea4b93ab779dac14fc77472cda6f999d39a9b8a19c26b4e1a9eca2ab1fafbb22240d7a91'
+readonly L10N_COMMIT='b056c494c2739585b1fca296837274908d034f92'
+readonly L10N_SHA512SUM='0141015a448901ac8f2a56404dd8fffeb3b08ac6e928e4eb1fc12e43b3ede869f1206e670f0fc16a9bfe8ddb9e39185f2f5c7a066a419388b0aacde5b10c10a2'
 
 ## Glean
 ### https://github.com/mozilla/glean
