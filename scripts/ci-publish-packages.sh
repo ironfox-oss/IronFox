@@ -134,6 +134,26 @@ function upload_to_s3() {
         exit 1
     fi
 
+    # Set our MIME type
+    case "${upload_file}" in
+        *.apk)
+            local readonly mime_type='application/vnd.android.package-archive'
+            ;;
+        *.apks)
+            local readonly mime_type='application/vnd.android.package-archive'
+            ;;
+        *.json)
+            local readonly mime_type='application/json'
+            ;;
+        *.txt)
+            local readonly mime_type='text/plain'
+            ;;
+        *)
+            echo_red_text "ERROR: Unsupported file type: ${upload_file}"
+            exit 1
+            ;;
+    esac
+
     local readonly s3_access_key=$(cat "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" | xargs)
     local readonly s3_bucket_name=$(cat "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" | xargs)
     local readonly s3_endpoint=$(cat "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" | xargs)
