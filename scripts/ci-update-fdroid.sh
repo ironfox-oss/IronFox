@@ -15,21 +15,64 @@ if [[ -z "${IRONFOX_SET_ENVS+x}" ]]; then
 fi
 source "$(realpath $(dirname "$0"))/env.sh"
 
+# Include utilities
+source "${IRONFOX_UTILS}"
+
+# Function to download an APK for a desired release
+function download_release() {
+    local readonly version="$1"
+    local readonly arch="$2"
+    local readonly output_dir="$3"
+    local readonly target_apk="ironfox-${version}-${arch}.apk"
+    local readonly target_expected_sha512sum="${target_apk}-sha512sum.txt"
+    local readonly target_expected_sha512sum_url="https://releases.ironfoxoss.org/ironfox/releases/${version}/${arch}/${target_expected_sha512sum}"
+    local readonly target_apk_url="https://releases.ironfoxoss.org/ironfox/releases/${version}/${arch}/${target_apk}"
+    local readonly output_apk="${output_dir}/${target_apk}"
+    local readonly output_expected_sha512sum="${output_dir}/${target_expected_sha512sum}"
+
+    # Download the APK
+    echo_red_text "Downloading ${target_apk} from ${target_apk_url}..."
+    curl ${IRONFOX_CURL_FLAGS} -sSL "${target_apk_url}" -o "${output_apk}"
+    echo_green_text "SUCCESS: Downloaded ${target_apk}"
+
+    # Check the SHA512sum
+    echo_red_text "Validating SHA512sum for ${target_apk}.."
+    curl ${IRONFOX_CURL_FLAGS} -sSL "${target_expected_sha512sum_url}" -o "${output_expected_sha512sum}"
+    local readonly expected_sha512sum=$(cat "${output_expected_sha512sum}" | xargs)
+    local readonly local_sha512sum=$(sha512sum "${output_apk}" | "${IRONFOX_AWK}" '{print $1}')
+    if [ "${local_sha512sum}" != "${expected_sha512sum}" ]; then
+        echo_red_text 'ERROR: Checksum validation failed.'
+        echo "Expected SHA512sum: ${expected_sha512sum}"
+        echo "Actual SHA512sum: ${local_sha512sum}"
+
+        # If checksum validation fails, also just clean-up the files
+        rm -f "${output_apk}"
+        rm -f "${output_expected_sha512sum}"
+        exit 1
+    fi
+    echo_green_text "SUCCESS: Checksum validated for ${target_apk}"
+    echo "SHA512sum: ${local_sha512sum}"
+}
+
+# Function to download all APKs for a desired release
+function download_releases() {
+    # ARM64
+    download_release "${IRONFOX_VERSION}" 'arm64-v8a' "${REPO_DIR_PATH}"
+
+    # ARM
+    download_release "${IRONFOX_VERSION}" 'armeabi-v7a' "${REPO_DIR_PATH}"
+
+    # x86_64
+    download_release "${IRONFOX_VERSION}" 'x86_64' "${REPO_DIR_PATH}"
+}
+
 git clone --recurse-submodules "https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/${FDROID_REPO_PATH}.git" fdroid
 pushd fdroid || { echo "Unable to pushd into 'fdroid'"; exit 1; };
 mkdir -vp "${REPO_DIR_PATH}"
 git lfs install
 
-# Download all assets from the release
-curl ${IRONFOX_CURL_FLAGS} --header "PRIVATE-TOKEN: ${GITLAB_CI_API_TOKEN}" \
-"${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/releases/${CI_COMMIT_TAG}/assets/links" \
-| jq -c '.[] | select(.name | endswith(".apk") and (endswith("universal.apk") | not))' \
-| while read -r asset; do
-    name=$(echo "${asset}" | jq -r '.name')
-    url=$(echo "${asset}" | jq -r '.direct_asset_url')
-    echo "Downloading ${name} from ${url}"
-    curl ${IRONFOX_CURL_FLAGS} "${url}" -o "${REPO_DIR_PATH}/${name}"
-done
+# Download all variants of the latest release
+download_releases
 
 # Because we now upload releases to releases.ironfoxoss.org, the F-Droid repo doesn't need to store them all anymore
 # So to improve performance and reduce size, we can keep only the last 3 releases
