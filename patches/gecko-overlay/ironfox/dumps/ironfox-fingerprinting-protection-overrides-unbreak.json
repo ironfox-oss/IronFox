@@ -112,6 +112,10 @@
         },
         {
             "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
+            "firstPartyDomain": "siapre.pl"
+        },
+        {
+            "overrides": "-CanvasExtractionBeforeUserInputIsBlocked,-CanvasImageExtractionPrompt",
             "firstPartyDomain": "ttc.com.ge"
         },
         {

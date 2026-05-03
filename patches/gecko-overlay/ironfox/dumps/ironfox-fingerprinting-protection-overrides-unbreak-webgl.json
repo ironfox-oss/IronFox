@@ -248,6 +248,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "siapre.pl"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "svgrepo.com"
         },
         {
@@ -302,6 +306,11 @@
         {
             "overrides": "-DisableWebGL",
             "firstPartyDomain": "zombs.io"
+        },
+        {
+            "overrides": "-DisableWebGL",
+            "firstPartyDomain": "*",
+            "thirdPartyDomain": "siapre.pl"
         }
     ],
     "timestamp": 2147483647
