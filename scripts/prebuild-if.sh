@@ -718,6 +718,9 @@ function prepare_firefox() {
     cp -vf browser/base/content/static-robot.png "${IRONFOX_GECKO}/ironfox/about/browser/robots/"
     cp -vf browser/locales/en-US/browser/aboutRobots.ftl "${IRONFOX_GECKO}/ironfox/locales/en-US/browser/"
 
+    # about:logo
+    "${IRONFOX_SED}" -i 's|chrome://branding/content/about.png|chrome://branding/content/about-if.png|' "${IRONFOX_GECKO}/docshell/base/nsAboutRedirector.cpp"
+
     # Ensure we're building for release
     "${IRONFOX_SED}" -i -e 's/variant=variant(.*)/variant=variant("release")/' "${IRONFOX_GECKO}/mobile/android/gradle.configure"
 
@@ -780,14 +783,8 @@ function prepare_firefox() {
     echo '    "url-parser-default-unknown-schemes-interventions.json",' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
     echo ']' >>"${IRONFOX_GECKO}/services/settings/dumps/main/moz.build"
 
-    # Remove unused about:glean assets
-    rm -v "${IRONFOX_GECKO}/toolkit/content/aboutGlean.css" "${IRONFOX_GECKO}/toolkit/content/aboutGlean.js" "${IRONFOX_GECKO}/toolkit/content/aboutGlean.html"
-
-    # Remove unused about:restricted (Used for parental controls) assets
-    rm -vr "${IRONFOX_GECKO}/toolkit/content/aboutRestricted"
-
-    # Remove unused about:telemetry assets
-    rm -v "${IRONFOX_GECKO}/toolkit/content/aboutTelemetry.css" "${IRONFOX_GECKO}/toolkit/content/aboutTelemetry.js" "${IRONFOX_GECKO}/toolkit/content/aboutTelemetry.xhtml"
+    # Remove unused about:telemetry CSS
+    rm -v "${IRONFOX_GECKO}/toolkit/content/aboutTelemetry.css"
 
     # Remove unused localizations
     "${IRONFOX_SED}" -i 's|locale/@AB_CD@/global/aboutStudies|# locale/@AB_CD@/global/aboutStudies|' "${IRONFOX_GECKO}/toolkit/locales/jar.mn"
@@ -804,9 +801,6 @@ function prepare_firefox() {
     # Remove the Clear Key CDM
     "${IRONFOX_SED}" -i 's|@BINPATH@/@DLL_PREFIX@clearkey|; @BINPATH@/@DLL_PREFIX@clearkey|' "${IRONFOX_GECKO}/mobile/android/installer/package-manifest.in"
 
-    # Remove GMP sources
-    rm -vr "${IRONFOX_GECKO}/toolkit/content/gmp-sources"
-
     # Remove Claude integration
     ## (Necessary for those with IDEs that may try to parse/use this functionality)
     rm -v "${IRONFOX_GECKO}/.mcp.json"
@@ -814,10 +808,6 @@ function prepare_firefox() {
     rm -v "${IRONFOX_GECKO}/CLAUDE.md"
     rm -vr "${IRONFOX_GECKO}/.claude"
     rm -vr "${IRONFOX_GECKO}/.codex"
-
-    # Remove OpenAI components
-    rm -v "${IRONFOX_GECKO}/toolkit/components/ml/content/backends/OpenAIPipeline.mjs"
-    rm -vr "${IRONFOX_GECKO}/toolkit/components/ml/vendor/openai"
 
     # No-op RemoteSettingsCrashPull
     "${IRONFOX_SED}" -i 's|crash-reports-ondemand||g' "${IRONFOX_GECKO}/toolkit/components/crashes/RemoteSettingsCrashPull.sys.mjs"

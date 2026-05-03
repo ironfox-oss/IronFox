@@ -1,9 +1,13 @@
 
 geckoview.jar:
 % content branding %content/branding/ contentaccessible=yes
-  content/branding/about.png                          (about.png)
+  content/branding/about.png                          (../../../../mobile/android/branding/unofficial/content/about.png)
+  content/branding/about-if.png                       (about-if.png)
   content/branding/about-logo.png                     (about-logo.png)
+  content/branding/about-logo.svg                     (about-logo.svg)
   content/branding/about-logo@2x.png                  (about-logo@2x.png)
+  content/branding/favicon32.png                      (../../../../mobile/android/branding/unofficial/content/favicon32.png)
+  content/branding/favicon64.png                      (../../../../mobile/android/branding/unofficial/content/favicon64.png)
   content/branding/icon16.png                         (icon16.png)
   content/branding/icon32.png                         (icon32.png)
   content/branding/icon64.png                         (icon64.png)

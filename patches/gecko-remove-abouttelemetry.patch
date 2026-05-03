@@ -29,18 +29,14 @@ index 5c1543ab806f5..1f58b563001ad 100644
      'webrtc',
  ]
 diff --git a/toolkit/content/jar.mn b/toolkit/content/jar.mn
-index 4793f2cd875de..65d861889f390 100644
+index f25490bdc554..2d1d5555fc6c 100644
 --- a/toolkit/content/jar.mn
 +++ b/toolkit/content/jar.mn
-@@ -42,9 +42,9 @@ toolkit.jar:
-    content/global/aboutGlean.html
-    content/global/aboutGlean.css
+@@ -44,7 +44,7 @@ toolkit.jar:
  #endif
--   content/global/aboutTelemetry.js
--   content/global/aboutTelemetry.xhtml
+    content/global/aboutTelemetry.js
+    content/global/aboutTelemetry.xhtml
 -   content/global/aboutTelemetry.css
-+#   content/global/aboutTelemetry.js
-+#   content/global/aboutTelemetry.xhtml
 +#   content/global/aboutTelemetry.css
     content/global/aboutUrlClassifier.js
     content/global/aboutUrlClassifier.xhtml

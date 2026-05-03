@@ -1,0 +1,108 @@
+diff --git a/caps/nsScriptSecurityManager.cpp b/caps/nsScriptSecurityManager.cpp
+index 7ee53592874e..44751adde8a8 100644
+--- a/caps/nsScriptSecurityManager.cpp
++++ b/caps/nsScriptSecurityManager.cpp
+@@ -1036,6 +1036,90 @@ nsresult nsScriptSecurityManager::CheckLoadURIFlags(
+           return NS_OK;
+         }
+       }
++      bool sourceIsRemote = false;
++      nsCOMPtr<nsINetUtil> netUtil = do_GetNetUtil();
++      rv = netUtil->ProtocolHasFlags(aSourceURI,
++                                     nsIProtocolHandler::ALLOWS_PROXY,
++                                     &sourceIsRemote);
++      NS_ENSURE_SUCCESS(rv, rv);
++      if (sourceIsRemote) {
++        nsAutoCString spec;
++        rv = aTargetURI->GetAsciiSpec(spec);
++        NS_ENSURE_SUCCESS(rv, rv);
++        if (StringBeginsWith(spec, "chrome://browser"_ns) || StringBeginsWith(spec, "chrome://ironfox"_ns) ||
++            StringBeginsWith(spec, "chrome://branding/content/about-"_ns) ||
++            StringBeginsWith(spec, "chrome://branding/content/icon"_ns) ||
++            StringBeginsWith(spec, "chrome://global/content/aboutInference"_ns) ||
++            StringBeginsWith(spec, "chrome://global/content/aboutProcesses.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/content/aboutUrlClassifier.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/content/certviewer/components/certificate-section.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/content/certviewer/components/error-section.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/content/elements/moz-fieldset.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/content/model-files-view"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/aboutCache.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/aboutCacheEntry.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/aboutLicense.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/aboutNetError.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/autocomplete.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/button.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/checkbox.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/close-icon.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/design-system/text-and-typography.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/design-system/tokens-brand.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/design-system/tokens-platform.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/design-system/tokens-shared.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/error-pages.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/global.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/global-shared.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-down.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-down-12.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-left.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-left-12.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-right.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-right-12.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-up.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/arrow-up-12.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/blocked.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/check.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/check-filled.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/close.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/columnpicker.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/defaultFavicon.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/delete.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/info.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/info-filled.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/link.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/performance.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/settings.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/icons/warning.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/illustrations/about-license.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/illustrations/no-connection.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/illustrations/security-error.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/in-content/common.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/in-content/common-shared.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/in-content/info-pages.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/in-content/wifi.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/menu.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/menulist.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/notification.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/numberinput.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/offlineSupportPages.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/popup.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/popupnotification.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/radio.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/richlistbox.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/splitter.css"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/tree/sort-asc.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/tree/sort-dsc.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://global/skin/tree/tree.css"_ns) ||
++            StringBeginsWith(spec, "chrome://mozapps/skin/aboutServiceWorkers.css"_ns) ||
++            StringBeginsWith(spec, "chrome://mozapps/skin/extensions/extension.svg"_ns) ||
++            StringBeginsWith(spec, "chrome://mozapps/skin/extensions/extensionGeneric.svg"_ns)) {
++          ReportError(errorTag, aSourceURI, aTargetURI, aFromPrivateWindow,
++                      aInnerWindowID);
++          return NS_ERROR_DOM_BAD_URI;
++        }
++      }
+ 
+       if (targetScheme.EqualsLiteral("resource")) {
+         if (StaticPrefs::security_all_resource_uri_content_accessible()) {
+diff --git a/toolkit/crashreporter/jar.mn b/toolkit/crashreporter/jar.mn
+index 641fcaa2fed3..965bb6d193c8 100644
+--- a/toolkit/crashreporter/jar.mn
++++ b/toolkit/crashreporter/jar.mn
+@@ -3,7 +3,7 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ toolkit.jar:
+-#ifdef MOZ_CRASHREPORTER
++#if defined(IRONFOX)
+   content/global/crashes.html            (content/crashes.html)
+   content/global/crashes.js               (content/crashes.js)
+   content/global/crashes.css              (content/crashes.css)
