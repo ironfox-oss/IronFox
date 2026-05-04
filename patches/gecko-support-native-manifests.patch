@@ -1,5 +1,5 @@
 diff --git a/toolkit/components/extensions/NativeManifests.sys.mjs b/toolkit/components/extensions/NativeManifests.sys.mjs
-index 5c9cee1b700d..a591196f51e7 100644
+index 5c9cee1b700d3..04d1eaa59d8f3 100644
 --- a/toolkit/components/extensions/NativeManifests.sys.mjs
 +++ b/toolkit/components/extensions/NativeManifests.sys.mjs
 @@ -35,7 +35,7 @@ export var NativeManifests = {
@@ -11,3 +11,15 @@ index 5c9cee1b700d..a591196f51e7 100644
          let dirs = [
            Services.dirsvc.get("XREUserNativeManifests", Ci.nsIFile).path,
            Services.dirsvc.get("XRESysNativeManifests", Ci.nsIFile).path,
+@@ -182,6 +182,11 @@ export var NativeManifests = {
+   },
+ 
+   async _tryPaths(type, name, dirs, context) {
++    if (AppConstants.platform == "android" && type !== "storage" && name !== "uBlock0@raymondhill.net") {
++      throw new Error(
++        `Native manifests are not supported on ${AppConstants.platform}`
++      );
++    }
+     for (let dir of dirs) {
+       let path = PathUtils.join(dir, TYPES[type], `${name}.json`);
+       let manifest = await this._tryPath(type, path, name, context, false);
