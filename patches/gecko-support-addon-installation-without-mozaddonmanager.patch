@@ -69,6 +69,47 @@ index 4fe6aaa127d12..e166515c880a3 100644
          startInstall("AMO");
        } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
          // Block without prompt
+diff --git a/toolkit/mozapps/extensions/amContentHandler.sys.mjs b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
+index 3218d50512106..c791c5254ff95 100644
+--- a/toolkit/mozapps/extensions/amContentHandler.sys.mjs
++++ b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
+@@ -6,6 +6,7 @@ const XPI_CONTENT_TYPE = "application/x-xpinstall";
+ const MSG_INSTALL_ADDON = "WebInstallerInstallAddonFromWebpage";
+ 
+ import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
++import { XPIExports } from "resource://gre/modules/addons/XPIExports.sys.mjs";
+ 
+ const lazy = {};
+ 
+@@ -55,8 +56,6 @@ amContentHandler.prototype = {
+       throw error;
+     }
+ 
+-    aRequest.cancel(Cr.NS_BINDING_ABORTED);
+-
+     let { loadInfo } = aRequest;
+     const { triggeringPrincipal } = loadInfo;
+ 
+@@ -74,6 +73,19 @@ amContentHandler.prototype = {
+       // an NS_ERROR_FAILURE when principal.host is accessed).
+     }
+ 
++    XPIExports.XPIDatabase.importPermissions();
++    let installPerm = Services.perms.testPermissionFromPrincipal(
++      triggeringPrincipal,
++      XPIExports.XPIInternal.XPI_PERMISSION
++    );
++    if (Services.prefs.getBoolPref("xpinstall.enabled") !== false && installPerm == Ci.nsIPermissionManager.ALLOW_ACTION) {
++        aRequest.cancel(Cr.NS_BINDING_ABORTED);
++    } else if (installPerm == Ci.nsIPermissionManager.DENY_ACTION) {
++        throw Components.Exception("", Cr.NS_ERROR_WONT_HANDLE_CONTENT);
++    } else {
++        return Cr.NS_OK;
++    };
++
+     let install = {
+       uri: uri.spec,
+       hash: null,
 diff --git a/toolkit/mozapps/extensions/components.conf b/toolkit/mozapps/extensions/components.conf
 index 20d433329de61..927ee950f854a 100644
 --- a/toolkit/mozapps/extensions/components.conf
@@ -83,14 +124,46 @@ index 20d433329de61..927ee950f854a 100644
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',
 diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-index f156a92bec1f7..58fc9bc36d7ac 100644
+index aca68ee50a1e8..31cf747d2390c 100644
 --- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-@@ -2275,6 +2275,7 @@ export const XPIDatabase = {
+@@ -2275,10 +2275,14 @@ export const XPIDatabase = {
     * manager for the user to change later.
     */
    importPermissions() {
-+    Services.perms.removeByType("install");
-     lazy.PermissionsUtils.importFromPrefs(
-       PREF_XPI_PERMISSIONS_BRANCH,
-       XPIExports.XPIInternal.XPI_PERMISSION
+-    lazy.PermissionsUtils.importFromPrefs(
+-      PREF_XPI_PERMISSIONS_BRANCH,
+-      XPIExports.XPIInternal.XPI_PERMISSION
+-    );
++    if (Services.prefs.getBoolPref("browser.ironfox.xpinstall.permsImported") !== true) {
++        Services.perms.removeByType("install");
++        lazy.PermissionsUtils.importFromPrefs(
++          PREF_XPI_PERMISSIONS_BRANCH,
++          XPIExports.XPIInternal.XPI_PERMISSION
++        );
++        Services.prefs.setBoolPref("browser.ironfox.xpinstall.permsImported", true);
++    };
+   },
+ 
+   /**
+diff --git a/uriloader/base/nsURILoader.cpp b/uriloader/base/nsURILoader.cpp
+index 545a358ed0001..08caf1e80e814 100644
+--- a/uriloader/base/nsURILoader.cpp
++++ b/uriloader/base/nsURILoader.cpp
+@@ -518,10 +518,14 @@ nsresult nsDocumentOpenInfo::DispatchContent(nsIRequest* request) {
+             request->Cancel(rv);
+           } else {
+             LOG(("  Content handler taking over load"));
+-            mUsedContentHandler = true;
++            if (mContentType != APPLICATION_XPINSTALL) {
++                mUsedContentHandler = true;
++            }
+           }
+ 
+-          return rv;
++          if (mContentType != APPLICATION_XPINSTALL) {
++            return rv;
++          }
+         }
+       }
+     } else {
