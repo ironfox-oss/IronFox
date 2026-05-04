@@ -1,5 +1,5 @@
 diff --git a/devtools/server/actors/thread.js b/devtools/server/actors/thread.js
-index 2d70647d0e59..512bc1f01e87 100644
+index 2d70647d0e59e..fc0d5c015e749 100644
 --- a/devtools/server/actors/thread.js
 +++ b/devtools/server/actors/thread.js
 @@ -8,6 +8,7 @@
@@ -15,7 +15,7 @@ index 2d70647d0e59..512bc1f01e87 100644
      // Note that the client avoids trying to call attach if already attached.
      // But just in case, avoid any possible duplicate call to attach.
 -    if (this.alreadyAttached) {
-+    let forceDetach = flags.ifDetach;
++    let forceDetach = flags.derDetach;
 +    if (this.alreadyAttached || forceDetach) {
        return;
      }
@@ -35,11 +35,11 @@ index cdf6a841a8dec..d8dfc0fd4edf3 100644
      }
  
 diff --git a/devtools/shared/flags.js b/devtools/shared/flags.js
-index 1b0ec2647299a..4b95f2983474f 100644
+index 1b0ec2647299a..e6958231d30b8 100644
 --- a/devtools/shared/flags.js
 +++ b/devtools/shared/flags.js
 @@ -67,3 +67,4 @@ makePrefTrackedFlag(exports, "wantVerbose", "devtools.debugger.log.verbose");
   * behaviors typically enable easier testing or enhanced debugging features.
   */
  makePrefTrackedFlag(exports, "testing", "devtools.testing");
-+makePrefTrackedFlag(exports, "ifDetach", "browser.ironfox.devtools.debugger.force_detach");
++makePrefTrackedFlag(exports, "derDetach", "browser.ironfox.devtools.debugger.force_detach");

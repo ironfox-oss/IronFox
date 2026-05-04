@@ -70,7 +70,7 @@ index 4fe6aaa127d12..e166515c880a3 100644
        } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
          // Block without prompt
 diff --git a/toolkit/mozapps/extensions/components.conf b/toolkit/mozapps/extensions/components.conf
-index 20d433329de61..1a6658d7f5457 100644
+index 20d433329de61..927ee950f854a 100644
 --- a/toolkit/mozapps/extensions/components.conf
 +++ b/toolkit/mozapps/extensions/components.conf
 @@ -35,7 +35,7 @@ Classes = [
@@ -78,7 +78,7 @@ index 20d433329de61..1a6658d7f5457 100644
  ]
  
 -if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
-+if defined('IRONFOX'):
++if True:
      Classes += [
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',

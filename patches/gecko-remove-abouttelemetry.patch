@@ -1,8 +1,8 @@
 diff --git a/docshell/base/nsAboutRedirector.cpp b/docshell/base/nsAboutRedirector.cpp
-index 49779b7cc79a6..c89ac931d64a3 100644
+index 76f707e5f1e8e..58e069cb6b720 100644
 --- a/docshell/base/nsAboutRedirector.cpp
 +++ b/docshell/base/nsAboutRedirector.cpp
-@@ -215,9 +215,9 @@ static const RedirEntry kRedirMap[] = {
+@@ -211,9 +211,9 @@ static const RedirEntry kRedirMap[] = {
  #  endif
           nsIAboutModule::ALLOW_SCRIPT},
  #endif
@@ -11,7 +11,7 @@ index 49779b7cc79a6..c89ac931d64a3 100644
 -#ifndef MOZ_WIDGET_ANDROID
 +//    {"telemetry", "chrome://global/content/aboutTelemetry.xhtml",
 +//     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::IS_SECURE_CHROME_UI},
-+#ifdef IRONFOX
++#if true
      {"translations",
       "chrome://global/content/translations/about-translations.html",
       nsIAboutModule::ALLOW_SCRIPT |

@@ -93,9 +93,16 @@ patches:
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
 
+  - file: "gecko-support-native-manifests.patch"
+    name: "Support Native Manifests"
+    description: "Adds support for native manifests to GeckoView."
+    reason: "Adds support for native manifests to GeckoView, in order to configure/harden uBlock Origin."
+    effect: "Users are provided with a strengthened/enhanced config for uBlock Origin out of the box."
+    category: "Build System"
+
   - file: "gecko-support-policies.patch"
     name: "Support Enterprise Policies"
-    description: "Adds support for, and configures a set of, enterprise policies for GeckoView."
+    description: "Adds support for enterprise policies to GeckoView."
     reason: "Allows for additional control/configuration of the browsing behavior."
     effect: "Allows users to take advantage of additional customizations, and helps to provide a superior browsing experience."
     category: "Build System"
@@ -105,6 +112,13 @@ patches:
     description: "Adds support for Firefox's AutoConfig functionality to GeckoView, and leverages it for advanced configuration."
     reason: "Allows for additional control/configuration of the browsing behavior."
     effect: "Allows users to take advantage of additional customizations, and helps to provide a superior browsing experience."
+    category: "Build System"
+
+  - file: "gecko-autoconfig-setenv.patch"
+    name: "Support setting environment variables via AutoConfig"
+    description: "Adds support for setting environment variables with Firefox's AutoConfig functionality."
+    reason: "Allows for advanced configuration of browsing behavior."
+    effect: "Provides more control and allows for more advanced browser configuration."
     category: "Build System"
 
   - file: "gecko-substitute-nimbus-fml.patch"
@@ -537,6 +551,16 @@ patches:
       Prevents exposing branding assets and certain other internal resources to websites
       (https://gitlab.torproject.org/tpo/applications/tor-browser/-/commit/ecb798d066b039329223b4c31133e2f917ca477d).
       Also adds the resources for `about:crashes` in order to match Firefox.
+    reason: | 
+      Improves privacy by preventing websites from determining whether a user is on IronFox,
+      and improves compatibility, as we have reason to believe websites might be using this to block users of derivatives (ex. IronFox and LibreWolf).
+    effect: "Users are protected against additional fingerprinting vectors, and websites work as expected."
+    category: "Privacy"
+
+  - file: "gecko-prevent-fingerprinting-via-crash-resources.patch"
+    name: "Prevent fingerprinting via the presence of resources used by `about:crashes`"
+    description: |
+      Adds the resources for `about:crashes` in order to match Firefox.
     reason: | 
       Improves privacy by preventing websites from determining whether a user is on IronFox,
       and improves compatibility, as we have reason to believe websites might be using this to block users of derivatives (ex. IronFox and LibreWolf).

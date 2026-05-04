@@ -1,13 +1,13 @@
 diff --git a/docshell/build/components.conf b/docshell/build/components.conf
-index 5c1543ab806f..29eb4a27cf2f 100644
+index 76a6380f849c2..589efb14c166b 100644
 --- a/docshell/build/components.conf
 +++ b/docshell/build/components.conf
-@@ -41,7 +41,7 @@ if defined('MOZ_CRASHREPORTER'):
+@@ -39,7 +39,7 @@ if defined('MOZ_CRASHREPORTER'):
      about_pages.append('crashes')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
      about_pages.append('profiles')
 -if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] != 'android':
-+if defined('IRONFOX'):
++if True:
      about_pages.append('translations')
  if buildconfig.substs['MOZ_WIDGET_TOOLKIT'] == 'android':
      about_pages.append('crashcontentjava')

@@ -36,7 +36,7 @@ index bb451a279599d..ecaaf717da955 100644
          this._policies = JSON.parse(data).policies;
  
 diff --git a/toolkit/components/enterprisepolicies/moz.build b/toolkit/components/enterprisepolicies/moz.build
-index 4fcb377c80145..539080df94edd 100644
+index 2a9906e1fbf2a..d04bfbdac21ca 100644
 --- a/toolkit/components/enterprisepolicies/moz.build
 +++ b/toolkit/components/enterprisepolicies/moz.build
 @@ -15,7 +15,7 @@ XPIDL_MODULE = "enterprisepolicies"
@@ -44,7 +44,7 @@ index 4fcb377c80145..539080df94edd 100644
  TEST_DIRS += ["tests"]
  
 -if CONFIG["MOZ_WIDGET_TOOLKIT"] != "android":
-+if CONFIG["IRONFOX"]:
++if True:
      EXTRA_JS_MODULES += [
          "EnterprisePolicies.sys.mjs",
          "EnterprisePoliciesContent.sys.mjs",
