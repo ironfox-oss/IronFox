@@ -635,6 +635,15 @@ patches:
     category: "Security"
 
   # User Control
+  - file: "gecko-devtools-bypass.patch"
+    name: "Bypass DevTools detection"
+    description: "Prevents websites from detecting that a user is using developer tools/debugging."
+    reason: |
+      To allow users to use developer tools/debugging if desired, without leading to undesired behavior from websites.
+      (See https://codeberg.org/librewolf/source/pulls/61 for more details).
+    effect: "Users are provided with more control over their browsing experience, and can freely use developer tools/debugging if they decide to."
+    category: "User Control"
+
   - file: "gecko-enable-aboutinference.patch"
     name: "Enable `about:inference`"
     description: "Enables the `about:inference` page."
@@ -649,13 +658,6 @@ patches:
     effect: "Users are provided with more control over their browsing experience, and can further improve their security if desired."
     category: "User Control"
 
-  - file: "fenix-display-extensions-in-custom-tabs-menu-by-default.patch"
-    name: "Display extensions in the custom tabs menu by default"
-    description: "Displays the status of extensions in the menu for custom tabs."
-    reason: "To improve freedom/control for users, by allowing them to see the status of extensions at any time, even when running with a custom tab."
-    effect: "Users are provided with more control over their browsing experience."
-    category: "User Interface"
-
   # User Experience
   - file: "fenix-default-site-permissions.patch"
     name: "Default Site Permissions"
@@ -663,6 +665,13 @@ patches:
     reason: "To prevent websites from prompting users to access Geolocation and send Notifications, and to prevent unwanted audio/video playback."
     effect: "Improves user experience, and blocking Autoplay reduces bandwidth usage."
     category: "User Experience"
+
+  - file: "fenix-display-extensions-in-custom-tabs-menu-by-default.patch"
+    name: "Display extensions in the custom tabs menu by default"
+    description: "Displays the status of extensions in the menu for custom tabs."
+    reason: "To improve freedom/control for users, by allowing them to see the status of extensions at any time, even when running with a custom tab."
+    effect: "Users are provided with more control over their browsing experience."
+    category: "User Interface"
 
   - file: "fenix-enable-custom-download-location.patch"
     name: "Enable Custom Download Location"

@@ -1,0 +1,45 @@
+diff --git a/devtools/server/actors/thread.js b/devtools/server/actors/thread.js
+index 2d70647d0e59..512bc1f01e87 100644
+--- a/devtools/server/actors/thread.js
++++ b/devtools/server/actors/thread.js
+@@ -8,6 +8,7 @@
+ // error packets.
+ /* eslint-disable no-throw-literal */
+ 
++var flags = require("resource://devtools/shared/flags.js");
+ const { Actor } = require("resource://devtools/shared/protocol/Actor.js");
+ const { Pool } = require("resource://devtools/shared/protocol/Pool.js");
+ const { threadSpec } = require("resource://devtools/shared/specs/thread.js");
+@@ -390,7 +391,8 @@ class ThreadActor extends Actor {
+   attach(options) {
+     // Note that the client avoids trying to call attach if already attached.
+     // But just in case, avoid any possible duplicate call to attach.
+-    if (this.alreadyAttached) {
++    let forceDetach = flags.ifDetach;
++    if (this.alreadyAttached || forceDetach) {
+       return;
+     }
+ 
+diff --git a/devtools/server/actors/webconsole/listeners/console-api.js b/devtools/server/actors/webconsole/listeners/console-api.js
+index cdf6a841a8dec..d8dfc0fd4edf3 100644
+--- a/devtools/server/actors/webconsole/listeners/console-api.js
++++ b/devtools/server/actors/webconsole/listeners/console-api.js
+@@ -98,7 +98,8 @@ class ConsoleAPIListener {
+    *        The message object receives from the ConsoleAPIStorage service.
+    */
+   onConsoleAPILogEvent(message) {
+-    if (!this.handler) {
++    let disableConsole = Services.prefs.getBoolPref("browser.ironfox.devtools.console.logging_disabled");
++    if (!this.handler || disableConsole) {
+       return;
+     }
+ 
+diff --git a/devtools/shared/flags.js b/devtools/shared/flags.js
+index 1b0ec2647299a..4b95f2983474f 100644
+--- a/devtools/shared/flags.js
++++ b/devtools/shared/flags.js
+@@ -67,3 +67,4 @@ makePrefTrackedFlag(exports, "wantVerbose", "devtools.debugger.log.verbose");
+  * behaviors typically enable easier testing or enhanced debugging features.
+  */
+ makePrefTrackedFlag(exports, "testing", "devtools.testing");
++makePrefTrackedFlag(exports, "ifDetach", "browser.ironfox.devtools.debugger.force_detach");
