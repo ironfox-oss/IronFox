@@ -93,8 +93,6 @@ export var GeckoSettingsBridge = {
             this.setWebRTCEnabled(value);
         } else if (pref === "browser.ironfox.fenix.xpinstallEnabled") {
             this.setXPInstallEnabled(value);
-        } else {
-            throw new Error(`Unsupported preference: ${pref}`);
         };
         if (type === "boolean") {
             Services.prefs.getDefaultBranch(null).setBoolPref(pref, value);
