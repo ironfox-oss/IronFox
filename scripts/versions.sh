@@ -168,8 +168,9 @@ readonly JDK_17_SHA512SUM_OSX_X86_64='f214734251b6662737e08fd8bdb3a351466ff10eb7
 readonly JDK_17_VERSION='17.0.18'
 
 ## Node.js
+### https://nodejs.org/about/previous-releases
 ### (Used by nvm)
-readonly NODE_VERSION='25.8.1'
+readonly NODE_VERSION='26.0.0'
 
 ## npm
 ### https://github.com/npm/cli
