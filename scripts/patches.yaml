@@ -415,23 +415,19 @@ patches:
     name: "Add DNS over HTTPS Providers"
     description: |
       Adds the following DoH providers to the browser's built-in list:
-        - Quad9
-        - AdGuard
-        - AdGuard (Unfiltered)
+        - Mullvad (Base)
         - Cloudflare (Malware Protection)
         - DNS4EU (Ad Blocking)
         - DNS4EU (Protective)
         - DNS4EU (Unfiltered)
-        - Mullvad (Base)
         - Mullvad (Unfiltered)
-        - Wikimedia
     reason: "To add support for multiple secure DNS providers in the UI settings."
     effect: "Adds a selection of carefully selected DoH providers for the users to choose from."
     category: "Privacy"
 
-  - file: "fenix-enable-doh-via-quad9-by-default.patch"
-    name: "Enable DNS over HTTPS (via Quad9) by default"
-    description: "Enables DNS over HTTPS without fallback by default, and sets Quad9 as the default provider."
+  - file: "fenix-enable-doh-via-mullvad-base-by-default.patch"
+    name: "Enable DNS over HTTPS (via Mullvad (Base)) by default"
+    description: "Enables DNS over HTTPS without fallback by default, and sets Mullvad (Base) as the default provider."
     reason: "To harden DoH out of the box."
     effect: "Improves DNS privacy and security by strengthening DoH's default protection level."
     category: "Privacy"

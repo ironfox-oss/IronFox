@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 5c3035c5b371f..066d464175888 100644
+index a975ccd3d669..d77f2c7b8e9b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2716,9 +2716,9 @@ class Settings(
+@@ -2804,9 +2804,9 @@ class Settings(
       * - 3: Maximum protection
       * - 5: DoH is disabled
       */
@@ -14,12 +14,12 @@ index 5c3035c5b371f..066d464175888 100644
      )
  
      /**
-@@ -2736,7 +2736,7 @@ class Settings(
+@@ -2824,7 +2824,7 @@ class Settings(
       */
      val dohDefaultProviderUrl by stringPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_doh_default_provider_uri),
 -        default = CLOUDFLARE_URI,
-+        default = "https://dns.quad9.net/dns-query",
++        default = "https://base.dns.mullvad.net/dns-query",
      )
  
      /**
