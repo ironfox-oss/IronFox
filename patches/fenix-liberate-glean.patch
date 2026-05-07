@@ -122,7 +122,7 @@ index 8c61dbb0291c..7f0f07924722 100644
    enums:
      HomeScreenSection:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index f0ee597d00c8..6cb691a6e9db 100644
+index 2ca71b6275..96bbb9426f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 @@ -80,7 +80,7 @@ import mozilla.components.support.utils.Browsers
@@ -179,27 +179,7 @@ index f0ee597d00c8..6cb691a6e9db 100644
  
          CoroutineScope(IO).launch {
              components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
-@@ -602,8 +602,8 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-      * @param queue The queue the function should use.
-      */
-     @OptIn(DelicateCoroutinesApi::class)
--    private fun queueSetAutofillMetrics(queue: RunWhenReadyQueue) = runOnVisualCompleteness(queue) {
--        GlobalScope.launch(IO) {
-+    private fun queueSetAutofillMetrics(queue: RunWhenReadyQueue) {
-+/*        GlobalScope.launch(IO) {
-             try {
-                 val autoFillStorage = applicationContext.components.core.autofillStorage
-                 Addresses.savedAll.set(autoFillStorage.countAllAddresses())
-@@ -618,7 +618,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-             } catch (e: LoginsApiException) {
-                 logger.error("Failed to fetch list of logins", e)
-             }
--        }
-+        } */
-     }
- 
-     /**
-@@ -899,12 +899,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -873,12 +873,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              components.core.engine,
              settings,
          ),
@@ -216,12 +196,12 @@ index f0ee597d00c8..6cb691a6e9db 100644
  
              if (settings.hasAcceptedTermsOfService) {
                  setTermsOfUseStartUpMetrics(settings)
-@@ -1019,12 +1019,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-                     }
-                 }
+@@ -995,12 +995,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              }
--        }
-+        } */
+         }
+ 
+-        setAutofillMetrics()
++        setAutofillMetrics() */
      }
  
      private fun setTermsOfUseStartUpMetrics(settings: Settings) {
@@ -232,7 +212,7 @@ index f0ee597d00c8..6cb691a6e9db 100644
      }
  
      @VisibleForTesting
-@@ -1062,7 +1062,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -1038,7 +1038,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          settings: Settings,
          dohSettingsProvider: DohSettingsProvider,
      ) {
@@ -241,7 +221,7 @@ index f0ee597d00c8..6cb691a6e9db 100644
              searchSuggestionsEnabled.set(settings.shouldShowSearchSuggestions)
              showSponsorSuggestionsEnabled.set(settings.showSponsoredSuggestions)
              showNonSponsorSuggestionsEnabled.set(settings.showNonSponsoredSuggestions)
-@@ -1143,7 +1143,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -1119,11 +1119,11 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              httpsOnlyMode.set(settings.getHttpsOnlyMode().toString())
              globalPrivacyControlEnabled.set(settings.shouldEnableGlobalPrivacyControl)
          }
@@ -249,8 +229,22 @@ index f0ee597d00c8..6cb691a6e9db 100644
 +        reportHomeScreenMetrics(settings) */
      }
  
+     private fun setAutofillMetrics() {
+-        @OptIn(DelicateCoroutinesApi::class)
++/*        @OptIn(DelicateCoroutinesApi::class)
+         GlobalScope.launch(IO) {
+             try {
+                 val autoFillStorage = applicationContext.components.core.autofillStorage
+@@ -1139,7 +1139,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+             } catch (e: LoginsApiException) {
+                 logger.error("Failed to fetch list of logins", e)
+             }
+-        }
++        } */
+     }
+ 
      @VisibleForTesting
-@@ -1153,27 +1153,27 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -1149,27 +1149,27 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
      }
  
      private fun reportOpeningScreenMetrics(settings: Settings) {
