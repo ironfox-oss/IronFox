@@ -11,8 +11,6 @@
 # *.bat crlf
 
 # LFS, binary files
-*.png lfs
-*.zip lfs
 test/ironfox-nightly.aab lfs
 
 # GitLab: syntax highlight
