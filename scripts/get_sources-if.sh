@@ -733,7 +733,7 @@ function get_androguard() {
     if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
         source "${IRONFOX_PYENV}"
         echo_red_text 'Installing androguard...'
-        "${IRONFOX_UV}" pip install --strict "${IRONFOX_ANDROGUARD_DIR}"
+        "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_ANDROGUARD_DIR}"
         echo_green_text "SUCCESS: Set-up androguard at ${IRONFOX_ANDROGUARD}"
     fi
 }
@@ -1090,7 +1090,7 @@ function get_gyp() {
     if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
         source "${IRONFOX_PYENV}"
         echo_red_text 'Installing GYP...'
-        "${IRONFOX_UV}" pip install --strict "${IRONFOX_GYP}"
+        "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_GYP}"
         echo_green_text "SUCCESS: Set-up GYP at ${IRONFOX_PYENV_DIR}/bin/gyp"
     fi
 }
@@ -1331,7 +1331,7 @@ function get_pip() {
     if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
         source "${IRONFOX_PYENV}"
         echo_red_text 'Installing pip...'
-        "${IRONFOX_UV}" pip install "${IRONFOX_PIP_DIR}"
+        "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_PIP_DIR}"
         echo_green_text "SUCCESS: Set-up pip at ${IRONFOX_PIP}"
     fi
 }
@@ -1444,7 +1444,7 @@ function get_pyyaml() {
     if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
         source "${IRONFOX_PYENV}"
         echo_red_text 'Installing PyYAML...'
-        "${IRONFOX_UV}" pip install --strict "${IRONFOX_PYYAML}"
+        "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_PYYAML}"
         echo_green_text 'SUCCESS: Set-up PyYAML'
     fi
 }
@@ -1514,7 +1514,7 @@ function get_s3cmd() {
     if [ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]; then
         source "${IRONFOX_PYENV}"
         echo_red_text 'Installing s3cmd...'
-        "${IRONFOX_UV}" pip install --strict "${IRONFOX_S3CMD_DIR}"
+        "${IRONFOX_UV}" pip install --no-editable --strict "${IRONFOX_S3CMD_DIR}"
         echo_green_text "SUCCESS: Set-up s3cmd at ${IRONFOX_S3CMD}"
     fi
 }
