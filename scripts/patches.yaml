@@ -914,6 +914,13 @@ patches:
     effect: "Users can maximize privacy and security by disabling WebGL, without compromising usability, by allowing it to be re-enabled on a per-site basis."
     category: "User Interface"
 
+  - file: "gecko-ironfox-settings-support-extension-blocklist.patch"
+    name: "IronFox Settings Support (Gecko) - Extension Blocklist"
+    description: "Adds a preference to enable/disable Phoenix's blocklist of malicious/unwanted/sketchy extensions."
+    reason: "To allow users to benefit from this protection, while being able to disable the blocklist if unwanted (at their own risk)."
+    effect: "Users can disable the extension blocklist if desired."
+    category: "User Interface"
+
   - file: "gecko-ironfox-settings-support-xpinstall.patch"
     name: "IronFox Settings Support (Gecko) - XPInstall"
     description: "Provides support for a UI toggle to enable/disable the installation of add-ons."

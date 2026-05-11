@@ -1,0 +1,17 @@
+diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+index d7f1cafba23a..f39858ebfe4b 100644
+--- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
++++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
+@@ -446,7 +446,11 @@ EnterprisePoliciesManager.prototype = {
+       if ("installation_mode" in ExtensionSettings[addon.id]) {
+         switch (ExtensionSettings[addon.id].installation_mode) {
+           case "blocked":
+-            return false;
++            if (Services.prefs.getBoolPref("browser.ironfox.extensions.blocklist.enabled") === true) {
++                return false;
++            } else {
++                return true;
++            };
+           default:
+             return true;
+         }
