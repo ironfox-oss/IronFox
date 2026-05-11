@@ -170,7 +170,7 @@ readonly JDK_17_VERSION='17.0.18'
 ## Node.js
 ### https://nodejs.org/about/previous-releases
 ### (Used by nvm)
-readonly NODE_VERSION='26.0.0'
+readonly NODE_VERSION='26.1.0'
 
 ## npm
 ### https://github.com/npm/cli
