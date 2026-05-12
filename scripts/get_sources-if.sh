@@ -533,8 +533,8 @@ function validate_sha512sum() {
         update_sha512sum "${expected_sha512sum}" "${local_sha512sum}" "${file}"
     elif [ "${local_sha512sum}" != "${expected_sha512sum}" ]; then
         echo_red_text 'ERROR: Checksum validation failed.'
-        echo "Expected SHA512sum: ${expected_sha512sum}"
-        echo "Actual SHA512sum: ${local_sha512sum}"
+        echo "Expected SHA512sum:   ${expected_sha512sum}"
+        echo "Actual SHA512sum:     ${local_sha512sum}"
 
         # If checksum validation fails, also just remove the file
         rm -f "${file}"
