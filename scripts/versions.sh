@@ -200,7 +200,9 @@ readonly PYTHON_SHA512SUM_OSX_X86_64='28d38843ee3be61a4bdcac150a8b3512d75911fd68
 readonly PYTHON_VERSION='3.14.5'
 
 ## PyYAML
+### Version: 6.0.3
 ### https://github.com/yaml/pyyaml
+### (This commit corresponds to https://github.com/yaml/pyyaml/releases/tag/6.0.3)
 readonly PYYAML_COMMIT='49790e73684bebad1df05ef8d828fa12f685bffb'
 readonly PYYAML_SHA512SUM='2fd1334af2722c093592f93a5eee01d0b2e26976a12cb2e4859b4271a8fa47ff257d10c91b09bdb2b5aa9415b62693a69d6e6602e997c2bff6711aa02bf43937'
 
