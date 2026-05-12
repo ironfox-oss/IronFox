@@ -200,7 +200,7 @@ index 324a25a10af0..7c57ab0f7d06 100644
          <receiver android:name="org.mozilla.fenix.components.share.SaveToPdfReceiver"
              android:exported="false">
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index 1c95e76d4dac9..b5534386cc510 100644
+index bb072d0e4b27..a6d218440598 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 @@ -10,18 +10,18 @@ import androidx.compose.runtime.Composable
@@ -322,9 +322,9 @@ index 1c95e76d4dac9..b5534386cc510 100644
 -                SetupChecklistTelemetryMiddleware(),
 +/*                SetupChecklistTelemetryMiddleware(),
                  ReviewPromptMiddleware(
-                     shouldUseNewTriggerCriteria = { settings.newReviewPromptTriggerCriteriaEnabled },
-                     shouldShowCustomPrompt = { settings.customReviewPromptUiEnabled && settings.isTelemetryEnabled },
-@@ -334,12 +334,12 @@ class Components(private val context: Context) {
+                     continuousOnboardingInProgress = {
+                         val continuousOnboardingCompleted = settings.seventhDayOnboardingCompletedTimestamp != -1L
+@@ -338,12 +338,12 @@ class Components(private val context: Context) {
                      nimbusEventStore = nimbus.events,
                  ).also {
                      settings.migrateLastReviewPromptTimePrefIfNeeded(nimbus.events)
@@ -339,7 +339,7 @@ index 1c95e76d4dac9..b5534386cc510 100644
          }
      }
  
-@@ -369,13 +369,13 @@ class Components(private val context: Context) {
+@@ -373,13 +373,13 @@ class Components(private val context: Context) {
      }
  
      val integrityClient by lazyMonitored {
@@ -355,7 +355,7 @@ index 1c95e76d4dac9..b5534386cc510 100644
      }
  
      val termsOfUsePromptRepository by lazyMonitored {
-@@ -391,7 +391,7 @@ class Components(private val context: Context) {
+@@ -395,7 +395,7 @@ class Components(private val context: Context) {
      }
  
      val ads by lazyMonitored {
@@ -364,7 +364,7 @@ index 1c95e76d4dac9..b5534386cc510 100644
      }
  
      val relayEligibilityStore by lazyMonitored {
-@@ -415,7 +415,7 @@ class Components(private val context: Context) {
+@@ -419,7 +419,7 @@ class Components(private val context: Context) {
          Llm(
              client = core.client,
              fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
