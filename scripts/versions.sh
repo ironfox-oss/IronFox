@@ -2,15 +2,17 @@
 # Sources
 
 ## Firefox
+### Version: 150.0.3 (RELEASE)
 ### https://github.com/mozilla-firefox/firefox
-### (This commit corresponds to https://github.com/mozilla-firefox/firefox/releases/tag/FIREFOX-ANDROID_150_0_3_RELEASE)
 readonly FIREFOX_COMMIT='a077abc2b0f43ed7cc59a8bfcd873e683500d23a'
 readonly FIREFOX_SHA512SUM='59a7efd87cd66fb5cafa3d3ca45f94b0388c14e22a6f40cd608729bf6ed1d557c0a67ba6958735eff0c316bd145040161a476a226967d4f1f9f884831f8e829d'
 readonly FIREFOX_VERSION='150.0.3'
 
+### IronFox
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
+### Version: 150.0.1
 ### https://github.com/mozilla/application-services
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
 readonly APPSERVICES_COMMIT='28e78b69f083c6879f39966dd58e58c2ea5db3d5'
@@ -25,6 +27,7 @@ readonly L10N_COMMIT='4db52ae666a85fcf69b98aadcb38bc1917b93dc0'
 readonly L10N_SHA512SUM='5499dcec38e1cfc784da5665a32fdadcaebd753585bb808fe132e278c36b254925ab3d52d4084158ff385d00faa798eeea12a356a855cf65f304c648478bb80e'
 
 ## Glean
+### Version: 67.1.0
 ### https://github.com/mozilla/glean
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/gradle/libs.versions.toml)
 readonly GLEAN_COMMIT='667af08fa308ff8924ab9cd95f05d7887758c330'
@@ -38,12 +41,6 @@ readonly GLEAN_PARSER_COMMIT='39c9b070d429983db233e7435ae7dfe69f48a543'
 readonly GLEAN_PARSER_SHA512SUM='3c856424aef82f1d793e7b2ed78df175e4bb445dc05e8a0b75752a6ed2aa1cbc097d0f355e13bf6f5b5aec9f3d53df53a23763c51f4a3747b57b80d45d37033d'
 readonly GLEAN_PARSER_VERSION='18.2.0'
 
-## GYP
-### Version: v0.22.1
-### https://github.com/nodejs/gyp-next
-readonly GYP_COMMIT='91c8e14b561ed375dcdc3951e271c84f635eddb7'
-readonly GYP_SHA512SUM='87e54e9e8f6a585438f2f24105c342d7809e29780c972082684df05ffc65fd7815d9f72ecbbe9e71c7e81399be1d46a7306fd650e97b59f6e067bea7eaaa3e70'
-
 ## microG
 ### Version: v0.3.15.250932
 ### https://github.com/microg/GmsCore
@@ -51,6 +48,7 @@ readonly GMSCORE_COMMIT='352f2d72fa52c6c3c4fdd79d575a071a0da72ad1'
 readonly GMSCORE_SHA512SUM='da38003f346cb7e86ce7bca89316e0c1d7c760b9312dd9505e63e0f6ef652563da102960e657cd37341d59d6ea00094a57837137d6835bafefe3c59d0839d4e9'
 
 ## Phoenix
+### Version: 2026.04.27.1
 ### https://gitlab.com/celenityy/Phoenix
 readonly PHOENIX_COMMIT='9ad10b5e54831a97a9c01cde09ea2351706d19dc'
 readonly PHOENIX_SHA512SUM='aaa70de11014e4e24e4787a6e9e000739c0266f30f3766f0ef86196e5f04b1e335921dff8d16b9ccce52f6f0c9c24f9b85d994dfd78f4aa20a31f279906933b7'
@@ -78,6 +76,7 @@ readonly ANDROGUARD_COMMIT='dd458bead6165975c3ef0b1b78eaf2450e4889d9'
 readonly ANDROGUARD_SHA512SUM='b277363110c1984b43cb99b59685849551b7e5ec66c7a9783ea06ac4324d558094ee7e840695bada51d01fa690df34c0d02417001ddf087bec30adc205270166'
 
 ## Android NDK
+### Version: 29.0.14206865 (r29)
 ### https://developer.android.com/ndk/downloads
 readonly ANDROID_NDK_REVISION='29.0.14206865'
 readonly ANDROID_NDK_SHA512SUM_LINUX='b55819895a7fa3a0bc7ed411fb55ed15ad9e415b0122a81a4e026c9b696cd266cb4beebb2008cf1d6cac88d38187d52818734f87de793de303653eccb4ca68da'
@@ -85,6 +84,7 @@ readonly ANDROID_NDK_SHA512SUM_OSX='4091bc97a03266b869380874cb2d67a35dc74f9bc5f1
 readonly ANDROID_NDK_VERSION='r29'
 
 ## Android SDK (Command-Line Tools)
+### Version: 14742923
 ### https://developer.android.com/tools/releases/cmdline-tools
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android.py
 ### + https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
@@ -93,6 +93,7 @@ readonly ANDROID_SDK_SHA512SUM_LINUX='b65e830d7655fb39cc9eee669806977f462c493758
 readonly ANDROID_SDK_SHA512SUM_OSX='20fc87470d1850ecbaf254509caca1b45055d72d3d78c9079adbe97ff7754018979a548f0cf145e52f03afd65357a5653f556db15ba569bffd4a143202cca0f8'
 
 ## Android SDK Build Tools
+### Version: 36.1.0
 ### https://developer.android.com/tools/releases/build-tools
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
 readonly ANDROID_SDK_BUILD_TOOLS_VERSION='r36.1'
@@ -103,11 +104,13 @@ readonly ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX='b45dc6b7298567f3b45428def0b
 readonly ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='991db0bbf23acd212b6be57033cdb3ecd5c8c8da79781a6e4326c046c2079b2827892084ee5f77b1fc5d5ef91fc62a4820d43218d3943f0c43e5c093c58c4999'
 
 ## Android SDK Platform
+### Version: 36.1
 ### https://developer.android.com/tools/releases/platforms
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
 readonly ANDROID_SDK_PLATFORM_VERSION='36.1'
 
 ## Android SDK Platform Tools
+### Version: 36.0.2
 ### https://developer.android.com/tools/releases/platform-tools
 readonly ANDROID_SDK_PLATFORM_TOOLS_VERSION='36.0.2'
 readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='e7a024df013af813157794054a203506dfc7dc776479b82bb83e5ba8a538e8a749b662bf3e05a3822c77dfca9aa221c4ae67e69921f8dfc78fee7acc5bb4e63f'
@@ -117,16 +120,16 @@ readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='1fefcd4ef10740bfbf1e46c4968d8
 readonly ANDROID_SDK_TARGET='36'
 
 ## Bundletool
+### Version: 1.18.3
 ### https://github.com/google/bundletool
-### (This commit corresponds to https://github.com/google/bundletool/releases/tag/1.18.3)
 readonly BUNDLETOOL_REPO_COMMIT='586a43a450712a1067f3d92cf7574dee68226302'
 readonly BUNDLETOOL_REPO_SHA512SUM='a72040449b3bd51a29bb562d8686b0338d630be12a5a590a88a753111b887d30f7b32ab256a556157271ed0071fc54b81205efcfd1ef93ccb8142fe41a741345'
 readonly BUNDLETOOL_SHA512SUM='50feda5f3f00931bad943a37b7cfc33d8ea53b33bd9bfa83832f612da6e99b72146206695ae25df5044030e305e1d718c833ad51c12b944079c263bba3cbffa0'
 readonly BUNDLETOOL_VERSION='1.18.3'
 
 ## cbindgen
-### https://docs.rs/crate/cbindgen/latest
-### (This commit corresponds to https://github.com/mozilla/cbindgen/releases/tag/v0.29.2)
+### Version: v0.29.2
+### https://github.com/mozilla/cbindgen
 readonly CBINDGEN_COMMIT='76f41c090c0587d940a0ef81a41c8b995f074926'
 readonly CBINDGEN_SHA512SUM='8363f69fc103343acc2b2545d833df6da876c8591f664b0f7ce6ebac28ce516e72cc615df4d2c07b93c646ed122b8a48c4a34b03c363d2d795c3013321c3fc5c'
 readonly CBINDGEN_VERSION='0.29.2'
@@ -136,9 +139,15 @@ readonly CBINDGEN_VERSION='0.29.2'
 readonly GRADLE_COMMIT='996b7829f40f33317d33c1b6ddcffcf976bd6181'
 readonly GRADLE_SHA512SUM='0498fff4a729aa2458f2627635507c6e9a9bd3d1e914ac375e10b3b3061654e7f7544461c91a8db0882bfc1d09090d135eada40ee72f37ff9975e0f1116c3d9d'
 
+## GYP
+### Version: v0.22.2
+### https://github.com/nodejs/gyp-next
+readonly GYP_COMMIT='6a2e12fdc30b521d11f781f986390525a54398bf'
+readonly GYP_SHA512SUM='b266341d794354a8816668971bcee8a5d555c82fb3164fd59d89a6c7774e4a123e78786341d4c22d6210ac10d5efb8bd39c27e9462b66b9e47e31d19c6d53335'
+
 ## JDK 25 (Temurin)
+### Version: 25.0.3+9
 ### https://github.com/adoptium/temurin25-binaries
-### (This commit corresponds to https://github.com/adoptium/temurin25-binaries/releases/tag/jdk-25.0.3%2B9)
 readonly JDK_25_REVISION='9'
 readonly JDK_25_SHA512SUM_LINUX_ARM64='5720a23247087c7bb61bc9939143466f333fc256c91c401d12022c6f86806a2bf7f6f7d973183cdb0b963ceb86ae0644806f2b91ce6af279c1b9e341d88f5a0d'
 readonly JDK_25_SHA512SUM_LINUX_X86_64='b40b97de14d0df0eece463388a605cf572d5e0e10a839d3bf2f85658ace607a66365681f19e22486c72662e3343c71cf0ccbbb570730c321dff12b0c24c0bbae'
@@ -147,8 +156,8 @@ readonly JDK_25_SHA512SUM_OSX_X86_64='6726ce00765fda7441adf355d266b0c00a00bc9b5d
 readonly JDK_25_VERSION='25.0.3'
 
 ## JDK 21 (Temurin)
+### Version: 21.0.11+10
 ### https://github.com/adoptium/temurin21-binaries
-### (This commit corresponds to https://github.com/adoptium/temurin21-binaries/releases/tag/jdk-21.0.11%2B10)
 readonly JDK_21_REVISION='10'
 readonly JDK_21_SHA512SUM_LINUX_ARM64='595115ab59958f9c62600f5af5286da498d6e2d9742e34be59899d0b03add9a8d5b667625b81ccbf5a905a33ea734e8dae690a42bae1b9ceb2cf0cedf30201fd'
 readonly JDK_21_SHA512SUM_LINUX_X86_64='e8293b3b4e9d55bd13271dd364637a9b19b6e677f4b4384eb6e7583d5c1270fcb183b81cb857e3162cf7ab584bed7cd4ad42d833e218b1223c3ab42b98f2266a'
@@ -157,8 +166,8 @@ readonly JDK_21_SHA512SUM_OSX_X86_64='2cb90849fd2b1f6b77283537aa98d35adde62ad578
 readonly JDK_21_VERSION='21.0.11'
 
 ## JDK 17 (Temurin)
+### Version: 17.0.19+10
 ### https://github.com/adoptium/temurin17-binaries
-### (This commit corresponds to https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.19%2B10)
 ### (Required by GeckoView)
 readonly JDK_17_REVISION='10'
 readonly JDK_17_SHA512SUM_LINUX_ARM64='c72400ca721fa0cfe5c40b928c6b091895cf2c1abf3c9a7d5ed3f3ca2bc899bd9e2dab79de80f068032b503e12509a20f0f67248369f0a77313cd14e719ea43a'
@@ -168,11 +177,13 @@ readonly JDK_17_SHA512SUM_OSX_X86_64='c871deedc3ccf0663aa584610c1390d1ae2fac2d47
 readonly JDK_17_VERSION='17.0.19'
 
 ## Node.js
+### Version: 26.1.0
 ### https://nodejs.org/about/previous-releases
 ### (Used by nvm)
 readonly NODE_VERSION='26.1.0'
 
 ## npm
+### Version: 11.14.1
 ### https://github.com/npm/cli
 readonly NPM_SHA512SUM='6a8a4d67478497a2dbc6815cad72e64c43f33413717e242756047d466241ab39bee61e691683a64658e94496ec5f1a1c05e4a5ec62dcc773280dfd949443a367'
 readonly NPM_VERSION='11.14.1'
@@ -186,11 +197,11 @@ readonly NVM_SHA512SUM='7b88477aa7400050cea6dda3cd197dad7d030fd951cd9aca945c0415
 ## pip
 ### Version: 26.1.1
 ### https://github.com/pypa/pip
-### (This commit corresponds to https://github.com/pypa/pip/releases/tag/26.1.1)
 readonly PIP_COMMIT='4432a371c6471e6a93c3eb39b3e9ab2b876b13b9'
 readonly PIP_SHA512SUM='495e78520f7c903c336ce2a0a5f3e0aba0f2871e8d0c7492201d79fba22952554c3d361539bf7d656f2b6524ea11b8b263b78a5756bf2e69eecc35c1f5aeb379'
 
 ## Python
+### Version: 20260510 (3.14.5)
 ### https://github.com/astral-sh/python-build-standalone
 readonly PYTHON_GIT_RELEASE='20260510'
 readonly PYTHON_SHA512SUM_LINUX_ARM64='2b63d6cd1aa82c3329b93c771e46028c311b0d8b9ddb24d72e58566d3729d15aedea3f5794e878febe9378b6b83d9084f104a6f11c962a4770e7a01bbb350280'
@@ -202,11 +213,11 @@ readonly PYTHON_VERSION='3.14.5'
 ## PyYAML
 ### Version: 6.0.3
 ### https://github.com/yaml/pyyaml
-### (This commit corresponds to https://github.com/yaml/pyyaml/releases/tag/6.0.3)
 readonly PYYAML_COMMIT='49790e73684bebad1df05ef8d828fa12f685bffb'
 readonly PYYAML_SHA512SUM='2fd1334af2722c093592f93a5eee01d0b2e26976a12cb2e4859b4271a8fa47ff257d10c91b09bdb2b5aa9415b62693a69d6e6602e997c2bff6711aa02bf43937'
 
 ## Rust
+### Version: 1.95.0
 ### https://releases.rs/
 readonly RUST_MAJOR_VERSION='1.95'
 readonly RUST_VERSION="${RUST_MAJOR_VERSION}.0"
@@ -214,6 +225,7 @@ readonly RUST_VERSION="${RUST_MAJOR_VERSION}.0"
 #readonly RUST_VERSION="${RUST_MAJOR_VERSION}"
 
 ## rustup
+### Version: 1.29.0
 ### https://github.com/rust-lang/rustup/tags
 readonly RUSTUP_COMMIT='28d1352dbcb436d3111c3594b9e1588e94950464'
 readonly RUSTUP_SHA512SUM='cd9fd64eabc989f19a6a16e9cd2caabe935082e2715b9308150f86d3839c99eb9a7e42a7ef6730c6d956d870638ee89a04dd9e7e14fe243cc165967b7f2918da'
@@ -225,6 +237,7 @@ readonly S3CMD_COMMIT='cee84f9c539a7bbf5ee73c7bf29a47632119c0c6'
 readonly S3CMD_SHA512SUM='b1b7c792265dfa1ccdd40f816e3463617c168e4317acac930b251ce73fcd3b8eb479d966d4ba93fbe8c0cf251bada64bcd9caf30d1e5e94c20a87a36447c1263'
 
 ## uv
+### Version: 0.11.14
 ### https://github.com/astral-sh/uv
 readonly UV_SHA512SUM_LINUX_ARM64='3d787490deccfafcddadbfe3c119dc8e7f653d510042629cd676daa595e82962ed24eecc3f5d24627673ec14317a4a46525b1fa61b678deaab30300199903a94'
 readonly UV_SHA512SUM_LINUX_X86_64='48141343c1635e839edb4827221339bc999ba8a475e5262a2c133b8a2bd30334330ded3c8d66b8f274df014ab7c70317b69f94091792407333f8ce7c9633a1aa'
@@ -236,15 +249,27 @@ readonly UV_VERSION='0.11.14'
 ## https://gitlab.com/ironfox-oss/prebuilds
 readonly PREBUILDS_COMMIT='c4e26779a2e270fdc9cbf1ebdf553390110812f2'
 readonly PREBUILDS_SHA512SUM='c58868a5fd92dd349d74bc37f123842f503f32d4c94fa894f56a9f534783bd6c69ed5230b042d644927cfc67963ffcf0e5d146c5602ecf683a53557414d371fe'
+
+## uniffi-bindgen (Linux)
+### Version: 9
 readonly UNIFFI_LINUX_IRONFOX_COMMIT='c4e26779a2e270fdc9cbf1ebdf553390110812f2'
 readonly UNIFFI_LINUX_IRONFOX_REVISION='9'
 readonly UNIFFI_LINUX_IRONFOX_SHA512SUM='b5f3457659f276c464d4e9ba6953f175d48c98f6b6f612a68e2f3625989e1961cf336538165bc046d52cb3db223e6739186a8ea80218bcd48390175990c48880'
+
+## uniffi-bindgen (OS X)
+### Version: 9
 readonly UNIFFI_OSX_IRONFOX_COMMIT='2923784a8fba97fb21a2998c8a7f729ae97621f6'
 readonly UNIFFI_OSX_IRONFOX_REVISION='9'
 readonly UNIFFI_OSX_IRONFOX_SHA512SUM='feadd643d650c849667ea7ad70974538f6b84d7d7f779b7ba40137a95520e6b10573706f1206f09ed44591a80f41144bdb360a5aeb298d8ce53969dbd20c3d5d'
+
+## WASI SDK (Linux)
+### Version: 4
 readonly WASI_LINUX_IRONFOX_COMMIT='b76a3b2a8f3124e9297036e3b27802a47c0263a4'
 readonly WASI_LINUX_IRONFOX_REVISION='4'
 readonly WASI_LINUX_IRONFOX_SHA512SUM='98d81e0f47229184fe767fb47906685eec6dd34ad425030e08d1eea42ddec1ebef678530e70dfc954aa2d0904ac44d38a869334c098b0baf9fff1b87233ff31e'
+
+## WASI SDK (OS X)
+### Version: 3
 readonly WASI_OSX_IRONFOX_COMMIT='97f5fb17ea756670c452e832ae3fca80d0498a82'
 readonly WASI_OSX_IRONFOX_REVISION='3'
 readonly WASI_OSX_IRONFOX_SHA512SUM='eb0697f42c9838080fcf23fa0d9c230016212a15725e62e2fafed896751a9fcf8adf508461cf9118c02bff1bcd0791ae1113f13d0cca96de3b8f03244df25a30'
