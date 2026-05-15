@@ -408,9 +408,6 @@ function prepare_fenix() {
     # Disable crash reporting
     "${IRONFOX_SED}" -i -e '/CRASH_REPORTING/s/true/false/' "${IRONFOX_FENIX}/app/build.gradle"
 
-    # Disable Pocket "Discover More Stories"
-    "${IRONFOX_SED}" -i -e 's|DISCOVER_MORE_STORIES = .*|DISCOVER_MORE_STORIES = false|g' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/FeatureFlags.kt"
-
     # Disable telemetry
     "${IRONFOX_SED}" -i -e 's|Telemetry enabled: " + .*)|Telemetry enabled: " + false)|g' "${IRONFOX_FENIX}/app/build.gradle"
     "${IRONFOX_SED}" -i -e '/TELEMETRY/s/true/false/' "${IRONFOX_FENIX}/app/build.gradle"
