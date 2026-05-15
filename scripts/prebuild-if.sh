@@ -492,6 +492,7 @@ function prepare_fenix() {
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ActivationPing.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt"
+    rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ConversionEventRecorder.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/Event.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/FirstSessionMetricsService.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/GleanMetricsService.kt"
@@ -734,14 +735,10 @@ function prepare_firefox() {
 
     # Break the dependency on older Rust
     "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GECKO}/Cargo.toml"
-    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_capi/Cargo.toml"
-    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_segmenter_data/Cargo.toml"
-
-    ## Temporarily fix Rust 1.95 build failure
-    "${IRONFOX_SED}" -i 's/9456ca46168ef86c98399a2536f577ef7be3cdde90c0c51392d8ac48519d3fae/b9432f9ed39742015f4bb4c3e75c89a2b9a9eef943dd0fd7cd889fddd1e6d39c/g' "${IRONFOX_GECKO}/third_party/rust/encoding_rs/.cargo-checksum.json"
+    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_capi/Cargo.toml"
+    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GECKO}/intl/icu_segmenter_data/Cargo.toml"
 
     # Disable debug
-    "${IRONFOX_SED}" -i -e 's|debug-assertions = .*|debug-assertions = false|g' "${IRONFOX_GECKO}/Cargo.toml"
     "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' "${IRONFOX_GECKO}/gfx/harfbuzz/src/rust/Cargo.toml"
     "${IRONFOX_SED}" -i -e 's|debug = .*|debug = false|g' "${IRONFOX_GECKO}/gfx/wr/Cargo.toml"
 
@@ -864,11 +861,6 @@ function prepare_firefox() {
     "${IRONFOX_SED}" -i "s|include ':annotations', .*|include ':annotations'|g" "${IRONFOX_GECKO}/settings.gradle"
     "${IRONFOX_SED}" -i "s|project(':messaging_example'|// project(':messaging_example'|g" "${IRONFOX_GECKO}/settings.gradle"
     "${IRONFOX_SED}" -i "s|project(':port_messaging_example'|// project(':port_messaging_example'|g" "${IRONFOX_GECKO}/settings.gradle"
-    "${IRONFOX_SED}" -i -e 's#if (rootDir.toString().contains("android-components") || !project.key.startsWith("samples"))#if (!project.key.startsWith("samples"))#' "${IRONFOX_GECKO}/mobile/android/shared-settings.gradle"
-
-    # Remove ExoPlayer
-    "${IRONFOX_SED}" -i "s|include ':exoplayer2'|// include ':exoplayer2'|g" "${IRONFOX_GECKO}/settings.gradle"
-    "${IRONFOX_SED}" -i "s|project(':exoplayer2'|// project(':exoplayer2'|g" "${IRONFOX_GECKO}/settings.gradle"
 
     # Remove proprietary/tracking libraries
     "${IRONFOX_SED}" -i 's|adjust|# adjust|g' "${IRONFOX_GECKO}/gradle/libs.versions.toml"
@@ -1053,9 +1045,9 @@ function prepare_glean() {
     localize_maven
 
     # Break the dependency on older Rust
-    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
-    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/build/Cargo.toml"
-    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_MAJOR_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/rlb/Cargo.toml"
+    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/Cargo.toml"
+    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/build/Cargo.toml"
+    "${IRONFOX_SED}" -i -e "s|rust-version = .*|rust-version = \""${RUST_VERSION}\""|g" "${IRONFOX_GLEAN}/glean-core/rlb/Cargo.toml"
 
     # Disable debug
     "${IRONFOX_SED}" -i -e "s|debug = .*|debug = false|g" "${IRONFOX_GLEAN}/Cargo.toml"

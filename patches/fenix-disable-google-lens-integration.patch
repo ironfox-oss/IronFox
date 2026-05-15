@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 741a1a7679..b15db7cb66 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -3199,7 +3199,7 @@ class Settings(
+ 
+     var googleLensIntegrationEnabled by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_google_lens_integration),
+-        default = { FxNimbus.features.googleLensIntegration.value().enabled },
++        default = false,
+     )
+ 
+     /**

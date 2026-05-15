@@ -1,0 +1,30 @@
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index 3788a543e8c0..beb7e7fa64bf 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -52,7 +52,7 @@
+ 
+     <!-- Needed to get distribution information from partners.
+     This is NOT required for the adjust plugin. -->
+-    <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/>
++    <!-- <uses-permission android:name="com.adjust.preinstall.READ_PERMISSION"/> -->
+ 
+     <uses-permission android:name="${applicationId}.permission.PROFILER_INTERNAL" />
+ 
+@@ -836,14 +836,14 @@
+ 
+         <!-- For adjust pre-installs -->
+         <!-- https://dev.adjust.com/en/sdk/android/setup/preinstalled#system-installer-receiver-->
+-        <receiver
++        <!-- <receiver
+             android:name="com.adjust.sdk.AdjustPreinstallReferrerReceiver"
+             android:exported="true"
+             tools:ignore="ExportedReceiver">
+             <intent-filter>
+                 <action android:name="com.attribution.SYSTEM_INSTALLER_REFERRER" />
+             </intent-filter>
+-        </receiver>
++        </receiver> -->
+ 
+         <receiver android:name="org.mozilla.fenix.components.share.SaveToPdfReceiver"
+             android:exported="false">

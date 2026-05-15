@@ -149,10 +149,10 @@ index 4cd5212dea9b..3b4ada79b960 100644
      }
  
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a975ccd3d669..6d7e7c96f115 100644
+index 741a1a7679bd..b1b1afaf0bb2 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -421,7 +421,7 @@ class Settings(
+@@ -422,7 +422,7 @@ class Settings(
  
      var nimbusExperimentsFetched by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_nimbus_experiments_fetched),
@@ -161,15 +161,6 @@ index a975ccd3d669..6d7e7c96f115 100644
      )
  
      var utmParamsKnown by booleanPreference(
-@@ -758,7 +758,7 @@ class Settings(
-      */
-     var isRolloutsEnabled by lazyBooleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_rollouts),
--        defaultValue = { appContext.components.nimbus.sdk.rolloutParticipation },
-+        defaultValue = { false },
-     )
- 
-     /**
 -- 
 2.53.0
 

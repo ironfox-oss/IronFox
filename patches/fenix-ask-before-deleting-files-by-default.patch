@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 741a1a7679bd..5ab64cad4980 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -1504,7 +1504,7 @@ class Settings(
+         get() = DeleteDownloadBehavior.fromInt(
+             preferences.getInt(
+                 appContext.getString(R.string.pref_key_downloads_delete_behavior),
+-                DeleteDownloadBehavior.DELETE_FROM_DEVICE.value,
++                DeleteDownloadBehavior.ASK_WHEN_DELETING.value,
+             ),
+         )
+         set(value) = preferences.edit {

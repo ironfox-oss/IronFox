@@ -2,44 +2,44 @@
 # Sources
 
 ## Firefox
-### Version: 150.0.3 (RELEASE)
+### Version: 151.0 (BUILD1)
 ### https://github.com/mozilla-firefox/firefox
-readonly FIREFOX_COMMIT='a077abc2b0f43ed7cc59a8bfcd873e683500d23a'
-readonly FIREFOX_SHA512SUM='59a7efd87cd66fb5cafa3d3ca45f94b0388c14e22a6f40cd608729bf6ed1d557c0a67ba6958735eff0c316bd145040161a476a226967d4f1f9f884831f8e829d'
-readonly FIREFOX_VERSION='150.0.3'
+readonly FIREFOX_COMMIT='91d93ddd290c6fc70df44dbdc363fc5a0a6306c5'
+readonly FIREFOX_SHA512SUM='5ea48d72381ac899d9f2d63b361dd6432585aaeedc1be18e21064ef0509f759b95fe8f164179b0b9a25c956a00ee50fde69734e6a247c321c5aab81e495afe3b'
+readonly FIREFOX_VERSION='151.0'
 
 ### IronFox
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
-### Version: 150.0.1
+### Version: v151.0.2
 ### https://github.com/mozilla/application-services
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly APPSERVICES_COMMIT='28e78b69f083c6879f39966dd58e58c2ea5db3d5'
-readonly APPSERVICES_SHA512SUM='4e0bc24afde9f311b124e325c2c6cbcd22f3479e2504e29c8cdc91366736e74def9af8c853d6fcb1eba36be7e16eda9e1e9af6392748c514e3c01bc2e26ff076'
-readonly APPSERVICES_VERSION='150.0.1'
+readonly APPSERVICES_COMMIT='3d13b5f0e3abffe2cba93b2de3edf2c4781a7fe5'
+readonly APPSERVICES_SHA512SUM='155229c7ea2d850ddba31e4080d1d7f8bdcd51f8b9701355cf9098645048b7de632ac7754e5d93ef7bc67f90edf5db1a96242278f9f31218d9b474aff7f98b48'
+readonly APPSERVICES_VERSION='151.0.2'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='4db52ae666a85fcf69b98aadcb38bc1917b93dc0'
-readonly L10N_SHA512SUM='5499dcec38e1cfc784da5665a32fdadcaebd753585bb808fe132e278c36b254925ab3d52d4084158ff385d00faa798eeea12a356a855cf65f304c648478bb80e'
+readonly L10N_COMMIT='9101b855cbd21288e361899668f0ff1baa8b0bd7'
+readonly L10N_SHA512SUM='0b0c1024ee75601a156ebaa2943efee12ad13b79a51af25d24b4814761fa28cd1edfcaf128cc66286025b1fdf95d8075f5a9fba89e95ceb17b02bd2a723a2ef8'
 
 ## Glean
-### Version: 67.1.0
+### Version: 67.2.0
 ### https://github.com/mozilla/glean
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/gradle/libs.versions.toml)
-readonly GLEAN_COMMIT='667af08fa308ff8924ab9cd95f05d7887758c330'
-readonly GLEAN_SHA512SUM='a60da8666c7c3187b3602b5da0c74315f73f534e13cc6faa41b1f63909af97cc474bac5a92f4549ede90dba5c1acea11ae6c41526638283fe2e84b103946ed6b'
-readonly GLEAN_VERSION='67.1.0'
+readonly GLEAN_COMMIT='0f15ce693d48b8d9c1e9e1e8c7a7000c1ace0cec'
+readonly GLEAN_SHA512SUM='ade178c5a72029da7cabc691f7c604abe149a8bc02f6dd0c16090197579bb2d2a757b740e788df54b99f8c378a5ed30a0e8062ed3bfeb04f22e91e5b1a3d0e0d'
+readonly GLEAN_VERSION='67.2.0'
 
 ## Glean Parser
-### Version: v18.2.0
+### Version: v19.0.0
 ### https://github.com/mozilla/glean_parser
-readonly GLEAN_PARSER_COMMIT='39c9b070d429983db233e7435ae7dfe69f48a543'
-readonly GLEAN_PARSER_SHA512SUM='3c856424aef82f1d793e7b2ed78df175e4bb445dc05e8a0b75752a6ed2aa1cbc097d0f355e13bf6f5b5aec9f3d53df53a23763c51f4a3747b57b80d45d37033d'
-readonly GLEAN_PARSER_VERSION='18.2.0'
+readonly GLEAN_PARSER_COMMIT='d87316dd8ce2fa0122d8634660bb71397c2d5820'
+readonly GLEAN_PARSER_SHA512SUM='acb6ba017549fe26b0b9af77fea98421509580d8c734adaf6de700e6abd24c7bb3c8a708ec2f8b5793c294dc74d0af09ce53d6042d1814baf4c50afd30bc7cef'
+readonly GLEAN_PARSER_VERSION='19.0.0'
 
 ## microG
 ### Version: v0.3.15.250932
@@ -78,6 +78,7 @@ readonly ANDROGUARD_SHA512SUM='b277363110c1984b43cb99b59685849551b7e5ec66c7a9783
 ## Android NDK
 ### Version: 29.0.14206865 (r29)
 ### https://developer.android.com/ndk/downloads
+### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android.py)
 readonly ANDROID_NDK_REVISION='29.0.14206865'
 readonly ANDROID_NDK_SHA512SUM_LINUX='b55819895a7fa3a0bc7ed411fb55ed15ad9e415b0122a81a4e026c9b696cd266cb4beebb2008cf1d6cac88d38187d52818734f87de793de303653eccb4ca68da'
 readonly ANDROID_NDK_SHA512SUM_OSX='4091bc97a03266b869380874cb2d67a35dc74f9bc5f1cde30a3545547355e4ec4f3ebd79a17a19f9228d045f7a176d1e987ce4f787d81a02a044aa909f5ef5cb'
@@ -219,10 +220,7 @@ readonly PYYAML_SHA512SUM='2fd1334af2722c093592f93a5eee01d0b2e26976a12cb2e4859b4
 ## Rust
 ### Version: 1.95.0
 ### https://releases.rs/
-readonly RUST_MAJOR_VERSION='1.95'
-readonly RUST_VERSION="${RUST_MAJOR_VERSION}.0"
-#readonly RUST_MAJOR_VERSION='1.94.1'
-#readonly RUST_VERSION="${RUST_MAJOR_VERSION}"
+readonly RUST_VERSION='1.95.0'
 
 ## rustup
 ### Version: 1.29.0

@@ -56,6 +56,9 @@ object FenixSettingsVisibilityManager {
         displayNewDynamicToolbarBehaviour(context, prefFragment)
         displayPrivacyReport(context, prefFragment)
         displaySettingsSearch(context, prefFragment)
+        displayTabGroups(context, prefFragment)
+        displayTabGroupsDragAndDrop(context, prefFragment)
+        displayTrackingProtectionDatabase(context, prefFragment)
         hideCrashPullNeverShow(context, prefFragment)
         hideMicrosurveyFeature(context, prefFragment)
         hideMozillaAdsClient(context, prefFragment)
@@ -419,6 +422,48 @@ object FenixSettingsVisibilityManager {
     ) {
         val settingsSearchKey = context.getPreferenceKey(FenixSettingsDictionary.isSettingsSearchEnabled)
         displayPreference(settingsSearchKey, prefFragment)
+    }
+
+    /**
+     * Display the setting to toggle Tab Groups
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayTabGroups(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val tabGroupsKey = context.getPreferenceKey(FenixSettingsDictionary.tabGroupsEnabled)
+        displayPreference(tabGroupsKey, prefFragment)
+    }
+
+    /**
+     * Display the setting to toggle drag and drop for Tab Groups
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayTabGroupsDragAndDrop(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val tabGroupsDragAndDropKey = context.getPreferenceKey(FenixSettingsDictionary.tabGroupsDragAndDropEnabled)
+        displayPreference(tabGroupsDragAndDropKey, prefFragment)
+    }
+
+    /**
+     * Display the setting to toggle the tracking protection database
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayTrackingProtectionDatabase(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val trackingProtectionDatabaseKey = context.getPreferenceKey(FenixSettingsDictionary.shouldUseTrackingProtectionDatabase)
+        displayPreference(trackingProtectionDatabaseKey, prefFragment)
     }
 
     /**

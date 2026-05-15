@@ -77,15 +77,6 @@ patches:
     effect: "Ensures that our GeckoView binaries are always packaged as intended."
     category: "Build System"
 
-  - file: "gecko-fix-rust-build.patch"
-    name: "Fix Rust 1.95 build failure"
-    description: |
-      Temporarily fixes a build error when Rust 1.95 is used.
-      (Also see: https://codeberg.org/librewolf/source/pulls/167).
-    reason: "To support building Firefox with the latest version of Rust."
-    effect: "Allows Firefox to build successfully with the latest version of Rust."
-    category: "Build System"
-
   - file: "gecko-remove-example-dependencies.patch"
     name: "Remove Unwanted Example/Sample Dependencies"
     description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."
@@ -143,11 +134,74 @@ patches:
     effect: "Improves privacy and protects the freedom of users."
     category: "Dependency"
 
+  - file: "fenix-liberate-adjust.patch"
+    name: "Remove Adjust (Fenix)"
+    description: "Removes the unwanted Adjust library from Fenix (Firefox for Android)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
+  - file: "a-c-liberate-error-support.patch"
+    name: "Remove Error Support (Android Components)"
+    description: "Removes the Rust 'Error Support' library."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Prevents unwanted data collection of users."
+    category: "Dependency"
+
+  - file: "a-c-liberate-glean.patch"
+    name: "Remove Glean (Android Components)"
+    description: "Removes the Glean SDK from Mozilla's Android Components."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted collection and transmission of telemetry data."
+    category: "Dependency"
+
+  - file: "fenix-liberate-glean.patch"
+    name: "Remove Glean (Fenix)"
+    description: "Removes the Glean SDK from Firefox for Android."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted collection and transmission of telemetry data."
+    category: "Dependency"
+
+  - file: "fenix-liberate-firebase.patch"
+    name: "Remove Google Play Firebase (Fenix)"
+    description: "Removes the unwanted Google Play Firebase library from Fenix (Firefox for Android)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
   - file: "fenix-liberate-play-integrity.patch"
     name: "Remove Google Play Integrity (Fenix)"
     description: "Removes the unwanted Google Play Integrity library from Fenix (Firefox for Android)."
     reason: "To remove unwanted libraries, and dependencies on related services."
     effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
+  - file: "fenix-liberate-play-review.patch"
+    name: "Remove Google Play Review (Fenix)"
+    description: "Removes the unwanted Google Play Review library from Fenix (Firefox for Android)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
+  - file: "fenix-liberate-mars.patch"
+    name: "Remove MARS (Fenix)"
+    description: "Removes the Mozilla Ad Routing Service (MARS) from Firefox for Android."
+    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
+    effect: "Prevents unwanted advertising."
+    category: "Dependency"
+
+  - file: "a-c-liberate-nimbus.patch"
+    name: "Remove Nimbus (Android Components)"
+    description: "Removes the Nimbus library/service from Android Components."
+    reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
+    effect: "Ensures user configurations remain consistent and are controlled locally, reduces attack surface, and reduces unwanted dependencies."
+    category: "Mozilla"
+
+  - file: "fenix-liberate-webcompat-reporter.patch"
+    name: "Remove Web Compatibility Reporter (Fenix)"
+    description: "Removes the Web Compatibility Reporter from Firefox for Android."
+    reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
+    effect: "Simplifies the browser UI and prevents issue reports from being sent to Mozilla."
     category: "Dependency"
 
   - file: "geckoview-liberate.patch"
@@ -207,30 +261,16 @@ patches:
     effect: "Prevents unwanted collection and transmission of crash reports."
     category: "Mozilla"
 
-  - file: "a-c-liberate-glean.patch"
-    name: "Remove Glean (Android Components)"
-    description: "Removes the Glean SDK from Mozilla's Android Components."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
-    effect: "Prevents unwanted collection and transmission of telemetry data."
-    category: "Mozilla"
-
-  - file: "a-c-liberate-error-support.patch"
-    name: "Remove Error Support (Android Components)"
-    description: "Removes the Rust 'Error Support' library."
-    reason: "To remove unwanted libraries, and dependencies on related services."
-    effect: "Prevents unwanted data collection of users."
-    category: "Mozilla"
-
-  - file: "fenix-liberate-glean.patch"
-    name: "Remove Glean (Fenix)"
-    description: "Removes the Glean SDK from Firefox for Android."
-    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla, to reduce attack surface, and to reduce unwanted dependencies."
-    effect: "Prevents unwanted collection and transmission of telemetry data."
-    category: "Mozilla"
-
   - file: "fenix-disable-nimbus.patch"
     name: "Disable Nimbus Experimentation (Fenix)"
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Firefox for Android."
+    reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
+    effect: "Ensures user configurations remain consistent and are controlled locally."
+    category: "Mozilla"
+
+  - file: "fenix-disable-nimbus-rollouts.patch"
+    name: "Disable Nimbus Rollouts (Fenix)"
+    description: "Prevents A/B testing via Nimbus within Firefox for Android."
     reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
     effect: "Ensures user configurations remain consistent and are controlled locally."
     category: "Mozilla"
@@ -240,13 +280,6 @@ patches:
     description: "Prevents A/B testing and remote configuration of settings via Nimbus within Gecko."
     reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
     effect: "Ensures user configurations remain consistent and are controlled locally."
-    category: "Mozilla"
-
-  - file: "a-c-liberate-nimbus.patch"
-    name: "Disable Nimbus Experimentation (Android Components)"
-    description: "Removes the Nimbus library/service from Android Components."
-    reason: "To reduce data collection and remove Mozilla's ability to remotely change browser settings."
-    effect: "Ensures user configurations remain consistent and are controlled locally, reduces attack surface, and reduces unwanted dependencies."
     category: "Mozilla"
 
   - file: "fenix-disable-firefox-suggest.patch"
@@ -284,6 +317,13 @@ patches:
     effect: "Prevents advertising Firefox and disclosing browser information when sharing links."
     category: "Mozilla"
 
+  - file: "fenix-disable-ai-controls.patch"
+    name: "Disable AI Controls"
+    description: "Disables the 'AI Controls' settings menu."
+    reason: "To prevent undesired AI functionality from being enabled in the browser and provide a cleaner UI."
+    effect: "Prevents unwanted AI features from being exposed to users."
+    category: "Mozilla"
+
   - file: "fenix-disable-shake-to-summarize.patch"
     name: "Disable the 'Shake to Summarize' feature"
     description: "Disables the AI-powered 'Shake to Summarize' feature."
@@ -310,13 +350,6 @@ patches:
     description: "Disables integration with Pocket."
     reason: "To remove unnecessary third-party services and sponsored content."
     effect: "Cleaner interface without promotional content or third-party integrations."
-    category: "Mozilla"
-
-  - file: "fenix-liberate-mars.patch"
-    name: "Remove MARS (Fenix)"
-    description: "Removes the Mozilla Ad Routing Service (MARS) from Firefox for Android."
-    reason: "To prevent unwanted advertising, to reduce attack surface, and to reduce unwanted dependencies."
-    effect: "Prevents unwanted advertising."
     category: "Mozilla"
 
   - file: "fenix-disable-sync-engines-by-default.patch"
@@ -352,13 +385,6 @@ patches:
     description: "Prevents Mozilla add-ons from returning the 'PRIVILEGED' and 'SYSTEM' add-on signing states."
     reason: "To improve privacy, security, and control for users, by preventing external add-ons developed By Mozilla from utilizing special privileged functionality."
     effect: "Users have improved privacy, security, and control over their extensions."
-    category: "Mozilla"
-
-  - file: "fenix-liberate-webcompat-reporter.patch"
-    name: "Remove Web Compatibility Reporter (Fenix)"
-    description: "Removes the Web Compatibility Reporter from Firefox for Android."
-    reason: "To eliminate unwanted dependencies, to declutter the user interface, and to prevent wasting Mozilla's time."
-    effect: "Simplifies the browser UI and prevents issue reports from being sent to Mozilla."
     category: "Mozilla"
 
   - file: "fenix-disable-nags.patch"
@@ -596,6 +622,13 @@ patches:
     effect: "Users are provided with fingerprinting protection that works as expected."
     category: "Privacy"
 
+  - file: "fenix-disable-google-lens-integration.patch"
+    name: "Disable Google Lens Integration"
+    description: "Disables integration with the Google Lens."
+    reason: "To improve privacy for users by removing integration with Google services."
+    effect: "Users are provided with a more private browsing experience."
+    category: "Privacy"
+
   - file: "gecko-remove-openai.patch"
     name: "Remove OpenAI Backend"
     description: "Removes the OpenAI backend from Mozilla's ML (machine learning) component."
@@ -676,6 +709,15 @@ patches:
     description: "Displays built-in add-ons at the Extensions fragment."
     reason: "To improve freedom/control for users, by allowing them to see the full list of extensions installed on their browser, as well as their permissions and other information. Also improves security/provides attack surface reduction by allowing users to disable unused extensions."
     effect: "Users are provided with more control over their browsing experience, and can further improve their security if desired."
+    category: "User Control"
+
+  - file: "fenix-ask-before-deleting-files-by-default.patch"
+    name: "Ask before deleting files by default"
+    description: |
+      Asks the user whether they'd like to only remove a file from download history, or both remove it
+      from download history AND delete it from the device.
+    reason: "To improve freedom/control for users, by preventing unintended file deletion/data loss."
+    effect: "Users are provided with more control over their downloaded files."
     category: "User Control"
 
   # User Experience

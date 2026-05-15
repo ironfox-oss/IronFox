@@ -23,10 +23,10 @@ index c9e41120b3979..6064d053ef564 100644
          /**
           * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
-index 89826e869ef65..ee353948f7818 100644
+index efb47806713b..d24a6609e9f7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
-@@ -5,12 +5,12 @@
+@@ -5,13 +5,13 @@
  package org.mozilla.fenix.components.llm
  
  import mozilla.components.concept.fetch.Client
@@ -34,6 +34,7 @@ index 89826e869ef65..ee353948f7818 100644
 +// import mozilla.components.concept.integrity.IntegrityClient
  import mozilla.components.lib.llm.mlpa.MlpaLlmProvider
  import mozilla.components.lib.llm.mlpa.MlpaTokenProvider
+ import mozilla.components.lib.llm.mlpa.MlpaTokenStorage
  import mozilla.components.lib.llm.mlpa.UserIdProvider
 -import mozilla.components.lib.llm.mlpa.service.PackageName
 -import org.mozilla.fenix.BuildConfig
@@ -42,16 +43,16 @@ index 89826e869ef65..ee353948f7818 100644
  import org.mozilla.fenix.components.llm.ext.FxaAccessTokenProvider
  import org.mozilla.fenix.components.llm.ext.choose
  import org.mozilla.fenix.components.llm.ext.fxaTokenProvider
-@@ -22,7 +22,7 @@ import org.mozilla.fenix.perf.lazyMonitored
- class Llm(
+@@ -24,7 +24,7 @@ class Llm(
      private val client: Client,
+     private val storage: MlpaTokenStorage,
      private val fxaTokenProvider: FxaAccessTokenProvider,
 -    private val integrityClient: IntegrityClient,
 +    private val integrityClient: Unit?,
      private val userIdProvider: UserIdProvider,
  ) {
  
-@@ -32,12 +32,12 @@ class Llm(
+@@ -34,13 +34,13 @@ class Llm(
          MlpaLlmProvider(
              MlpaTokenProvider.choose(
                  MlpaTokenProvider.fxaTokenProvider(fxaTokenProvider),
@@ -61,28 +62,37 @@ index 89826e869ef65..ee353948f7818 100644
 +/*                    integrityClient = integrityClient,
                      authenticationService = fenixMlpaService,
                      userIdProvider = userIdProvider,
+                     storage = storage,
                      packageName = PackageName(BuildConfig.APPLICATION_ID),
 -                ),
 +                ), */
              ),
-             fenixMlpaService,
-         )
+             storage = storage,
+             mlpaService = fenixMlpaService,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 8dd1374d2d94f..e961a218b72ad 100644
+index d8e4023d8790..45fd074db45b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -534,11 +534,11 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-     }
- 
-     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
--    private fun queueIntegrityClientWarmUp(queue: RunWhenReadyQueue) =
--        runOnVisualCompleteness(queue) {
-+    private fun queueIntegrityClientWarmUp(queue: RunWhenReadyQueue) {
-+/*        runOnVisualCompleteness(queue) {
-             GlobalScope.launch(IO) {
-                 components.integrityClient.warmUp()
--            }
-+            } */
+@@ -566,19 +566,19 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+     private fun queueIntegrityClientWarmUp(queue: RunWhenReadyQueue) {
+         // We want to avoid shipping this warmup into UI test builds to reduce quota impact, especially given
+         // that the Integrity verdicts will always fail anyway.
+-        if (!BuildConfig.MOZILLA_OFFICIAL) {
++        if (true) {
+             return
          }
- 
-     @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
+         runOnVisualCompleteness(queue) {
+             GlobalScope.launch(IO) {
+-                val start = System.currentTimeMillis()
++/*                val start = System.currentTimeMillis()
+                 val result = components.integrityClient.warmUp()
+                 Integrity.warmedUp.record(
+                     Integrity.WarmedUpExtra(
+                         durationMs = (System.currentTimeMillis() - start).toInt(),
+                         success = result,
+                         ),
+-                    )
++                    ) */
+             }
+         }
+     }

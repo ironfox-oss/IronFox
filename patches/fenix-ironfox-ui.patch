@@ -1,17 +1,17 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-index 8da84caa8848a..94d6c190014d5 100644
+index 547ba176cfd8..f6eec9b4adfd 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/compose/MainMenu.kt
-@@ -147,6 +147,8 @@ fun MainMenu(
-     showBanner: Boolean,
-     isDownloadHighlighted: Boolean,
+@@ -154,6 +154,8 @@ fun MainMenu(
      webExtensionMenuCount: Int,
+     showIPProtection: Boolean,
+     ipProtectionMenuState: IPProtectionMenuState,
 +    isPasswordManagerEnabled: Boolean,
 +    isSyncActive: Boolean,
      onMoreMenuClick: () -> Unit,
      onCustomizeReaderViewMenuClick: () -> Unit,
      onMozillaAccountButtonClick: () -> Unit,
-@@ -297,6 +299,7 @@ fun MainMenu(
+@@ -316,6 +318,7 @@ fun MainMenu(
  
          LibraryMenuGroup(
              isDownloadHighlighted = isDownloadHighlighted,
@@ -19,7 +19,7 @@ index 8da84caa8848a..94d6c190014d5 100644
              onBookmarksMenuClick = onBookmarksMenuClick,
              onHistoryMenuClick = onHistoryMenuClick,
              onDownloadsMenuClick = onDownloadsMenuClick,
-@@ -304,12 +307,14 @@ fun MainMenu(
+@@ -323,12 +326,14 @@ fun MainMenu(
          )
  
          MenuGroup {
@@ -40,7 +40,7 @@ index 8da84caa8848a..94d6c190014d5 100644
  
              MenuItem(
                  label = stringResource(id = R.string.browser_menu_settings),
-@@ -492,6 +497,7 @@ private fun MoreMenuButtonGroup(
+@@ -511,6 +516,7 @@ private fun MoreMenuButtonGroup(
  @Suppress("LongMethod")
  private fun LibraryMenuGroup(
      isDownloadHighlighted: Boolean = false,
@@ -48,7 +48,7 @@ index 8da84caa8848a..94d6c190014d5 100644
      onBookmarksMenuClick: () -> Unit,
      onHistoryMenuClick: () -> Unit,
      onDownloadsMenuClick: () -> Unit,
-@@ -568,16 +574,18 @@ private fun LibraryMenuGroup(
+@@ -587,16 +593,18 @@ private fun LibraryMenuGroup(
  
          Spacer(Modifier.width(spacerWidth))
  
@@ -77,16 +77,16 @@ index 8da84caa8848a..94d6c190014d5 100644
      }
  }
  
-@@ -744,6 +752,8 @@ private fun MenuDialogPreview(
-                 showBanner = true,
-                 isDownloadHighlighted = true,
+@@ -765,6 +773,8 @@ private fun MenuDialogPreview(
                  webExtensionMenuCount = 1,
+                 showIPProtection = true,
+                 ipProtectionMenuState = IPProtectionMenuState(),
 +                isPasswordManagerEnabled = false,
 +                isSyncActive = false,
                  onMoreMenuClick = {},
                  onCustomizeReaderViewMenuClick = {},
                  onMozillaAccountButtonClick = {},
-@@ -808,6 +818,8 @@ private fun MenuDialogPrivatePreview(
+@@ -831,6 +841,8 @@ private fun MenuDialogPrivatePreview(
                  showBanner = true,
                  isDownloadHighlighted = true,
                  webExtensionMenuCount = 0,

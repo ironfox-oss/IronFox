@@ -1,0 +1,13 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+index 741a1a7679..d83537831a 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+@@ -2769,7 +2769,7 @@ class Settings(
+ 
+     var aiControlsFeatureFlagEnabled by booleanPreference(
+         key = appContext.getPreferenceKey(R.string.pref_key_enable_ai_controls),
+-        default = true,
++        default = false,
+     )
+ 
+     var importBookmarksFeatureFlagEnabled by booleanPreference(

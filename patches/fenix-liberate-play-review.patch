@@ -1,0 +1,40 @@
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
+index 742b5d64e65d..b5ce0bc7723c 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/reviewprompt/CustomReviewPromptBottomSheetFragment.kt
+@@ -84,8 +84,8 @@ class CustomReviewPromptBottomSheetFragment : BottomSheetDialogFragment() {
+                 when (event) {
+                     CustomReviewPromptNavigationEvent.Dismiss -> dismissAllowingStateLoss()
+ 
+-                    CustomReviewPromptNavigationEvent.OpenPlayStoreReviewPrompt -> {
+-                        val activity = activity ?: return@collect
++                    CustomReviewPromptNavigationEvent.OpenPlayStoreReviewPrompt -> dismissAllowingStateLoss()
++/*                        val activity = activity ?: return@collect
+                         with(requireComponents.playStoreReviewPromptController) {
+                             tryPromptReview(
+                                 activity = activity,
+@@ -93,9 +93,9 @@ class CustomReviewPromptBottomSheetFragment : BottomSheetDialogFragment() {
+                                 onError = { tryLaunchPlayStoreReview(activity, ::openInNewTab) },
+                             )
+                         }
+-                    }
++                    } */
+ 
+-                    is CustomReviewPromptNavigationEvent.OpenInNewTab -> openInNewTab(event.url)
++                    is CustomReviewPromptNavigationEvent.OpenInNewTab -> dismissAllowingStateLoss()
+                 }
+             }
+         }
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+index 6200d8376b82..c6c96c24d6fe 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/SettingsFragment.kt
+@@ -532,7 +532,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SystemInsetsPaddedFragment
+ 
+             // About preferences
+             resources.getString(R.string.pref_key_rate) -> {
+-                components.playStoreReviewPromptController.tryLaunchPlayStoreReview(requireActivity(), ::openInNewTab)
++//                components.playStoreReviewPromptController.tryLaunchPlayStoreReview(requireActivity(), ::openInNewTab)
+                 null
+             }
+ 

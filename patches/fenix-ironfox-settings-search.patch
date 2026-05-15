@@ -1,11 +1,12 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
-index bf861611b2c5..76a933f31242 100644
+index ed66e4a3ea8e..800cab644b3b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
-@@ -319,6 +319,7 @@ class DefaultFenixSettingsIndexer(private val context: Context) : SettingsIndexe
+@@ -354,7 +354,7 @@ class DefaultFenixSettingsIndexer(
              PreferenceFileInformation.TabsPreferences,
              PreferenceFileInformation.TrackingProtectionPreferences,
              PreferenceFileInformation.SaveLoginsPreferences,
+-            PreferenceFileInformation.DataChoicesPreferences,
 +            PreferenceFileInformation.IronFoxPreferences,
          )
  

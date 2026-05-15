@@ -258,6 +258,7 @@ object GeckoSettingsBridge {
         setTrrMode(context, engine)
         setShouldAutofillLogins(context, engine)
         setShouldUseCookieBannerPrivateMode(context, engine)
+        setShouldUseTrackingProtectionDatabase(context, engine)
         setStrictAllowListBaselineTrackingProtection(context, engine)
         setStrictAllowListConvenienceTrackingProtection(context, engine)
     }
@@ -507,6 +508,22 @@ object GeckoSettingsBridge {
 
             setUserPref(engine, shouldUseCookieBannerPrivateModeGeckoViewModifiedPref, true)
             setDefaultPref(engine, shouldUseCookieBannerPrivateModeGeckoViewModifiedPref, true)
+        }
+    }
+
+    fun setShouldUseTrackingProtectionDatabase(context: Context, engine: Engine) {
+        val shouldUseTrackingProtectionDatabase = context.settings().shouldUseTrackingProtectionDatabase
+        val shouldUseTrackingProtectionDatabaseGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.browser.contentblocking.database.enabled.value"
+        val shouldUseTrackingProtectionDatabaseGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.browser.contentblocking.database.enabled.value.modified"
+        val shouldUseTrackingProtectionDatabaseGeckoPref = "browser.contentblocking.database.enabled"
+        setUserPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewPref, shouldUseTrackingProtectionDatabase)
+        setDefaultPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewPref, shouldUseTrackingProtectionDatabase)
+        setUserPref(engine, shouldUseTrackingProtectionDatabaseGeckoPref, shouldUseTrackingProtectionDatabase)
+        setDefaultPref(engine, shouldUseTrackingProtectionDatabaseGeckoPref, shouldUseTrackingProtectionDatabase)
+
+        if (!shouldUseTrackingProtectionDatabase) {
+            setUserPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewModifiedPref, true)
+            setDefaultPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewModifiedPref, true)
         }
     }
 

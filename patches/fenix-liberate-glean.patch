@@ -121,11 +121,30 @@ index 8c61dbb0291c..7f0f07924722 100644
  
    enums:
      HomeScreenSection:
+diff --git a/mobile/android/fenix/app/proguard-rules.pro b/mobile/android/fenix/app/proguard-rules.pro
+index 39a6df6fb62e..b4208f9c266d 100644
+--- a/mobile/android/fenix/app/proguard-rules.pro
++++ b/mobile/android/fenix/app/proguard-rules.pro
+@@ -9,7 +9,7 @@
+ # Raptor now writes a *-config.yaml file to specify Gecko runtime settings (e.g. the profile dir). This
+ # file gets deserialized into a DebugConfig object, which is why we need to keep this class
+ # and its members.
+--keep class org.mozilla.gecko.util.DebugConfig { *; }
++# -keep class org.mozilla.gecko.util.DebugConfig { *; }
+ 
+ ####################################################################################################
+ # Remove debug logs from release builds
+@@ -27,4 +27,4 @@
+ -keep class mozilla.appservices.** { *; }
+ 
+ # Keep code generated from Glean Metrics
+--keep class org.mozilla.fenix.GleanMetrics.** {  *; }
++# -keep class org.mozilla.fenix.GleanMetrics.** {  *; }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index 2ca71b6275..96bbb9426f 100644
+index d8e4023d8790..cbbfdeacb501 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -80,7 +80,7 @@ import mozilla.components.support.utils.Browsers
+@@ -83,7 +83,7 @@ import mozilla.components.support.utils.Browsers
  import mozilla.components.support.utils.RunWhenReadyQueue
  import mozilla.components.support.utils.logElapsedTime
  import mozilla.components.support.webextensions.WebExtensionSupport
@@ -134,12 +153,12 @@ index 2ca71b6275..96bbb9426f 100644
  import org.mozilla.fenix.GleanMetrics.Addons
  import org.mozilla.fenix.GleanMetrics.Addresses
  import org.mozilla.fenix.GleanMetrics.AndroidAutofill
-@@ -93,12 +93,12 @@ import org.mozilla.fenix.GleanMetrics.PerfStartup
- import org.mozilla.fenix.GleanMetrics.Preferences
- import org.mozilla.fenix.GleanMetrics.SearchDefaultEngine
+@@ -101,12 +101,12 @@ import org.mozilla.fenix.GleanMetrics.SearchDefaultEngine
+ import org.mozilla.fenix.GleanMetrics.SearchDefaultEngineForPrivate
  import org.mozilla.fenix.GleanMetrics.TabStrip
--import org.mozilla.fenix.GleanMetrics.TermsOfUse
-+import org.mozilla.fenix.GleanMetrics.TermsOfUse */
+ import org.mozilla.fenix.GleanMetrics.TermsOfUse
+-import org.mozilla.fenix.GleanMetrics.UserAiSummarize
++import org.mozilla.fenix.GleanMetrics.UserAiSummarize */
  import org.mozilla.fenix.components.Components
  import org.mozilla.fenix.components.Core
  import org.mozilla.fenix.components.appstate.AppAction
@@ -149,7 +168,7 @@ index 2ca71b6275..96bbb9426f 100644
  import org.mozilla.fenix.components.startMetricsIfEnabled
  import org.mozilla.fenix.experiments.maybeFetchExperiments
  import org.mozilla.fenix.ext.application
-@@ -194,7 +194,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -202,7 +202,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          // [TIMER] Record the start of the [PerfStartup.applicationOnCreate] metric here. Do this
          // manually because Glean has not started initializing yet. Note that by this point the
          // content providers from Fenix and its libraries have run their initializers already.
@@ -158,7 +177,7 @@ index 2ca71b6275..96bbb9426f 100644
  
          // Capture A-C logs to Android logcat. Note that gecko maybe directly post to logcat
          // regardless of what we do here.
-@@ -234,9 +234,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -242,9 +242,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
  
              // [TIMER] Record the end of the `PerfStartup.applicationOnCreate` metric. Note that
              // glean will queue this if the backend is still starting up.
@@ -170,7 +189,7 @@ index 2ca71b6275..96bbb9426f 100644
          }
      }
  
-@@ -388,7 +388,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -396,7 +396,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              VisibilityLifecycleObserver(),
          )
  
@@ -179,7 +198,7 @@ index 2ca71b6275..96bbb9426f 100644
  
          CoroutineScope(IO).launch {
              components.useCases.wallpaperUseCases.fetchCurrentWallpaperUseCase.invoke()
-@@ -873,12 +873,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+@@ -894,9 +894,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              components.core.engine,
              settings,
          ),
@@ -187,16 +206,11 @@ index 2ca71b6275..96bbb9426f 100644
 +//        mozillaProductDetector: MozillaProductDetector = MozillaProductDetector,
      ) {
 -        setPreferenceMetrics(settings, dohSettingsProvider)
--        with(Metrics) {
-+//        setPreferenceMetrics(settings, dohSettingsProvider)
-+//        with(Metrics) {
++/*        setPreferenceMetrics(settings, dohSettingsProvider)
+         with(Metrics) {
              // Set this early to guarantee it's in every ping from here on.
--            distributionId.set(components.distributionIdManager.getDistributionId())
-+/*            distributionId.set(components.distributionIdManager.getDistributionId())
- 
-             if (settings.hasAcceptedTermsOfService) {
-                 setTermsOfUseStartUpMetrics(settings)
-@@ -995,12 +995,12 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+             distributionId.set(components.distributionIdManager.getDistributionId())
+@@ -1053,10 +1053,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
              }
          }
  
@@ -204,78 +218,20 @@ index 2ca71b6275..96bbb9426f 100644
 +        setAutofillMetrics() */
      }
  
-     private fun setTermsOfUseStartUpMetrics(settings: Settings) {
--        TermsOfUse.version.set(settings.termsOfUseAcceptedVersion.toLong())
--        TermsOfUse.date.set(Date(settings.termsOfUseAcceptedTimeInMillis))
-+//        TermsOfUse.version.set(settings.termsOfUseAcceptedVersion.toLong())
-+//        TermsOfUse.date.set(Date(settings.termsOfUseAcceptedTimeInMillis))
+-    private fun setTermsOfUseStartUpMetrics(settings: Settings) {
++/*    private fun setTermsOfUseStartUpMetrics(settings: Settings) {
+         TermsOfUse.version.set(settings.termsOfUseAcceptedVersion.toLong())
+         TermsOfUse.date.set(Date(settings.termsOfUseAcceptedTimeInMillis))
      }
- 
-     @VisibleForTesting
-@@ -1038,7 +1038,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-         settings: Settings,
-         dohSettingsProvider: DohSettingsProvider,
-     ) {
--        with(Preferences) {
-+/*        with(Preferences) {
-             searchSuggestionsEnabled.set(settings.shouldShowSearchSuggestions)
-             showSponsorSuggestionsEnabled.set(settings.showSponsoredSuggestions)
-             showNonSponsorSuggestionsEnabled.set(settings.showNonSponsoredSuggestions)
-@@ -1119,11 +1119,11 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-             httpsOnlyMode.set(settings.getHttpsOnlyMode().toString())
-             globalPrivacyControlEnabled.set(settings.shouldEnableGlobalPrivacyControl)
-         }
--        reportHomeScreenMetrics(settings)
-+        reportHomeScreenMetrics(settings) */
-     }
- 
-     private fun setAutofillMetrics() {
--        @OptIn(DelicateCoroutinesApi::class)
-+/*        @OptIn(DelicateCoroutinesApi::class)
-         GlobalScope.launch(IO) {
-             try {
-                 val autoFillStorage = applicationContext.components.core.autofillStorage
-@@ -1139,7 +1139,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-             } catch (e: LoginsApiException) {
-                 logger.error("Failed to fetch list of logins", e)
-             }
--        }
-+        } */
-     }
- 
-     @VisibleForTesting
-@@ -1149,27 +1149,27 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-     }
- 
-     private fun reportOpeningScreenMetrics(settings: Settings) {
--        CustomizeHome.openingScreen.set(
-+/*        CustomizeHome.openingScreen.set(
-             when {
-                 settings.alwaysOpenTheHomepageWhenOpeningTheApp -> "homepage"
-                 settings.alwaysOpenTheLastTabWhenOpeningTheApp -> "last tab"
-                 settings.openHomepageAfterFourHoursOfInactivity -> "homepage after four hours"
-                 else -> ""
-             },
--        )
-+        ) */
-     }
- 
-     private fun reportHomeScreenSectionMetrics(settings: Settings) {
-         // These settings are backed by Nimbus features.
-         // We break them out here so they can be recorded when
-         // `nimbus.applyPendingExperiments()` is called.
--        CustomizeHome.jumpBackIn.set(settings.showRecentTabsFeature)
-+/*        CustomizeHome.jumpBackIn.set(settings.showRecentTabsFeature)
-         CustomizeHome.bookmarks.set(settings.showBookmarksHomeFeature)
-         CustomizeHome.mostVisitedSites.set(settings.showTopSitesFeature)
-         CustomizeHome.recentlyVisited.set(settings.historyMetadataUIFeature)
+@@ -1227,7 +1227,7 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          CustomizeHome.pocket.set(settings.showPocketRecommendationsFeature)
          CustomizeHome.sponsoredPocket.set(settings.showPocketSponsoredStories)
--        CustomizeHome.contile.set(settings.showContileFeature)
-+        CustomizeHome.contile.set(settings.showContileFeature) */
-     }
+         CustomizeHome.contile.set(settings.showContileFeature)
+-    }
++    } */
  
      override fun onConfigurationChanged(config: android.content.res.Configuration) {
+         // Workaround for androidx appcompat issue where follow system day/night mode config changes
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 index 06c3de1f7a5d..7cfd6bd40345 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
@@ -562,13 +518,13 @@ index a23df32558b2..32320d4715b5 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 3d0108791451..c84133a26166 100644
+index c9e399408ab8..09a138ce2a0a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -28,14 +28,14 @@ import mozilla.components.service.nimbus.messaging.use
- import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+@@ -29,15 +29,15 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.utils.Browsers
+ import mozilla.components.support.utils.BuildManufacturerChecker
 -import org.mozilla.fenix.GleanMetrics.Pings
 +// import org.mozilla.fenix.GleanMetrics.Pings
  import org.mozilla.fenix.R
@@ -577,13 +533,14 @@ index 3d0108791451..c84133a26166 100644
  import org.mozilla.fenix.components.appstate.SupportedMenuNotifications
 -import org.mozilla.fenix.components.initializeGlean
 +/* import org.mozilla.fenix.components.initializeGlean
+ import org.mozilla.fenix.components.metrics.Event
  import org.mozilla.fenix.components.metrics.installSourcePackage
 -import org.mozilla.fenix.components.startMetricsIfEnabled
 +import org.mozilla.fenix.components.startMetricsIfEnabled */
  import org.mozilla.fenix.compose.LinkTextState
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
-@@ -103,10 +103,10 @@ class OnboardingFragment : Fragment() {
+@@ -107,10 +107,10 @@ class OnboardingFragment : Fragment() {
              } else {
                  OnboardingReason.NEW_USER
              },
@@ -597,7 +554,7 @@ index 3d0108791451..c84133a26166 100644
          )
      }
  
-@@ -451,7 +451,7 @@ class OnboardingFragment : Fragment() {
+@@ -458,7 +458,7 @@ class OnboardingFragment : Fragment() {
      }
  
      private fun startGlean() {
@@ -606,7 +563,7 @@ index 3d0108791451..c84133a26166 100644
          viewLifecycleOwner.lifecycleScope.launch {
              initializeGlean(
                  requireContext().applicationContext,
-@@ -473,7 +473,7 @@ class OnboardingFragment : Fragment() {
+@@ -480,7 +480,7 @@ class OnboardingFragment : Fragment() {
              isTelemetryEnabled = settings.isTelemetryEnabled,
              isMarketingTelemetryEnabled = false,
              isDailyUsagePingEnabled = settings.isDailyUsagePingEnabled,

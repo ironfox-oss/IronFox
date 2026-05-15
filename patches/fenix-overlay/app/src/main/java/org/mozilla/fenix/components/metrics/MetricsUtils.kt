@@ -10,7 +10,7 @@ object MetricsUtils {
     private const val PBKDF2_KEY_LEN_BITS = 256
 
     enum class Source {
-        ACTION, SHORTCUT, SUGGESTION, TOPSITE, WIDGET, NONE
+        ACTION, SHORTCUT, SUGGESTION, TOPSITE, WIDGET, DIGITAL_ASSISTANT, NONE
     }
 
     fun recordSearchMetrics(

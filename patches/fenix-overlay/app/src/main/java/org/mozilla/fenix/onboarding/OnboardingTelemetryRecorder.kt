@@ -27,6 +27,7 @@ class OnboardingTelemetryRecorder(
     fun onTermsOfServiceManagePrivacyPreferencesLinkClick() {}
     fun onTermsOfServiceManagerAcceptTermsButtonClick() {}
     fun onMarketingDataContinueClicked(optIn: Boolean) {}
+    fun onMarketingDataSkipClicked() {}
     fun onMarketingDataLearnMoreClick() {}
     fun onMarketingDataOptInToggled(optIn: Boolean) {}
     fun onNavigatedToNextPage() {}
