@@ -973,6 +973,10 @@
             "firstPartyDomain": "t.co"
         },
         {
+            "overrides": "+CSSPrefersColorScheme",
+            "firstPartyDomain": "thunderbird.net"
+        },
+        {
             "overrides": "+CanvasExtractionBeforeUserInputIsBlocked,+CanvasImageExtractionPrompt",
             "firstPartyDomain": "tiktok.com"
         },
