@@ -59,10 +59,10 @@ readonly PHOENIX_VERSION='2026.04.27.1'
 readonly UNIFFI_VERSION='0.31.0'
 
 ## UnifiedPush-AC
-### Version: 1.0.2
+### Version: 1.0.3
 ### https://gitlab.com/ironfox-oss/unifiedpush-ac
-readonly UNIFIEDPUSHAC_COMMIT='31b4fdfdfa8aeb7e7c93f405a351438ffe82fff6'
-readonly UNIFIEDPUSHAC_SHA512SUM='1a3fb43e137268db7bdd1b0d2bcd5149b795c63e4ab0225dab7f5a7928bda306b4f09a502da56f70f8f84f1e5aaf8f3ffe8256ffc54ce100904af3d7204f779e'
+readonly UNIFIEDPUSHAC_COMMIT='3b8f666aa61a5fb236a403d1afdfc82f07fc4455'
+readonly UNIFIEDPUSHAC_SHA512SUM='c95d7c7150d3481938e7cb14adc4faa5cb48fc193d18a3602da3f6e3fd8f137bfd28b77dc9556a8bd92e2f0a59524b80c11f000cc9cbab2bdf707d9059bce945'
 
 ## WASI SDK
 ### https://github.com/WebAssembly/wasi-sdk
