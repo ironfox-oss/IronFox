@@ -5,7 +5,7 @@
 ### Version: 151.0 (BUILD1)
 ### https://github.com/mozilla-firefox/firefox
 readonly FIREFOX_COMMIT='91d93ddd290c6fc70df44dbdc363fc5a0a6306c5'
-readonly FIREFOX_SHA512SUM='5ea48d72381ac899d9f2d63b361dd6432585aaeedc1be18e21064ef0509f759b95fe8f164179b0b9a25c956a00ee50fde69734e6a247c321c5aab81e495afe3b'
+readonly FIREFOX_SHA512SUM='d71d01923c3164744b9ab13414db1122ad83233b68a5de8be8408ae41defbc9548b0a3c36f16a7c0bed39bf13721f631e3b0abd18e3d04a33541792412d0d7b5'
 readonly FIREFOX_VERSION='151.0'
 
 ### IronFox
