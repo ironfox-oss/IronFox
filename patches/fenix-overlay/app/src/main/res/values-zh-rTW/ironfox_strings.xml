@@ -10,4 +10,12 @@
     <string name="if_preferences_security">安全性</string>
     <string name="preference_accessibility_enabled">無障礙服務</string>
     <string name="preference_always_use_private_browsing">始終使用隱私瀏覽模式</string>
+    <string name="preference_collections_enabled">啟用收集</string>
+    <string name="preference_referer_policy">引薦來源網址政策</string>
+    <string name="preference_referer_policy_summary">設定跨域引用的行為</string>
+    <string name="preference_referer_policy_always">始終發送跨域引用（預設）</string>
+    <string name="preference_referer_policy_base_domains_match">在基礎域名匹配時發送跨域引用</string>
+    <string name="preference_referer_policy_hosts_match">禁用跨域引用</string>
+    <string name="preference_cache_enabled">啟用磁碟快取</string>
+    <string name="preference_translations_enabled">啟用火狐翻譯</string>
 </resources>
