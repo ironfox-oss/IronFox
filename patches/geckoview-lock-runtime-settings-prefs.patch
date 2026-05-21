@@ -89,10 +89,18 @@ index a795b36e6a8f8e..191d50f53ec960 100644
  
          default:
 diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-index 83f98bb7196ab1..f06ae5912c64dd 100644
+index f1495cbe4f799..1b0422dabffcf 100644
 --- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
 +++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
-@@ -347,23 +347,115 @@ export class GeckoViewStartup {
+@@ -15,6 +15,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "resource://gre/modules/NimbusGeckoViewQATelemetry.sys.mjs",
+   PdfJs: "resource://pdf.js/PdfJs.sys.mjs",
+   GeckoViewPreferences: "resource://gre/modules/GeckoViewPreferences.sys.mjs",
++  GeckoSettingsBridge: "resource://gre/modules/GeckoSettingsBridge.sys.mjs",
+ });
+ 
+ const { debug, warn } = GeckoViewUtils.initLogging("Startup");
+@@ -360,23 +361,117 @@ export class GeckoViewStartup {
        }
        case "GeckoView:ResetUserPrefs": {
          for (const name of aData.names) {
@@ -119,7 +127,9 @@ index 83f98bb7196ab1..f06ae5912c64dd 100644
              switch (typeof value) {
                case "string":
 -                prefs.setStringPref(name, value);
-+                if (prefs.getStringPref(name) !== value) {
++                if (name === "network.trr.uri") {
++                    lazy.GeckoSettingsBridge.setPref(name, value, "string");
++                } else if (prefs.getStringPref(name) !== value) {
 +                    if (Services.prefs.prefIsLocked(`${ifPrefix}${name}`) === true) {
 +                        Services.prefs.unlockPref(`${ifPrefix}${name}`);
 +                    };

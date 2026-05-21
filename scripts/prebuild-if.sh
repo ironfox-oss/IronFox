@@ -57,7 +57,6 @@ IRONFOX_PREPARE_GLEAN=0
 IRONFOX_PREPARE_LLVM=0
 IRONFOX_PREPARE_MICROG=0
 IRONFOX_PREPARE_RUST=0
-IRONFOX_PREPARE_PHOENIX=0
 IRONFOX_PREPARE_PREBUILDS=0
 
 if [ "${target}" == 'ac' ]; then
@@ -90,9 +89,6 @@ elif [ "${target}" == 'microg' ]; then
 elif [ "${target}" == 'rust' ]; then
     # Prepare rust/cargo
     IRONFOX_PREPARE_RUST=1
-elif [ "${target}" == 'phoenix' ]; then
-    # Prepare Phoenix
-    IRONFOX_PREPARE_PHOENIX=1
 elif [ "${target}" == 'prebuilds' ]; then
     # Prepare IronFox prebuilds
     IRONFOX_PREPARE_PREBUILDS=1
@@ -106,7 +102,6 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_PREPARE_GLEAN=1
     IRONFOX_PREPARE_MICROG=1
     IRONFOX_PREPARE_RUST=1
-    IRONFOX_PREPARE_PHOENIX=1
 
     # Respect IRONFOX_NO_PREBUILDS...
     if [ "${IRONFOX_NO_PREBUILDS}" == 1 ]; then
@@ -130,7 +125,6 @@ else
     echo 'LLVM:                             llvm'
     echo 'microG:                           microg'
     echo 'Rust:                             rust'
-    echo 'Phoenix:                          phoenix'
     echo 'Prebuilds:                        prebuilds'
     exit 1
 fi
@@ -144,7 +138,6 @@ readonly IRONFOX_PREPARE_GLEAN
 readonly IRONFOX_PREPARE_LLVM
 readonly IRONFOX_PREPARE_MICROG
 readonly IRONFOX_PREPARE_RUST
-readonly IRONFOX_PREPARE_PHOENIX
 readonly IRONFOX_PREPARE_PREBUILDS
 
 # Include version info
@@ -1145,21 +1138,6 @@ function prepare_microg() {
     echo_green_text 'SUCCESS: Prepared microG'
 }
 
-function prepare_phoenix() {
-    echo_red_text 'Preparing Phoenix...'
-
-    pushd "${IRONFOX_PHOENIX}"
-
-    # Ensure we don't reset devtools.debugger.remote-enabled per-launch from Phoenix
-    ## We handle this ourselves with ironfox.cfg instead, so that we can allow that value to persist on Nightly builds (but not for Release)
-    ## I don't love this - it's hacky, and I probably need to find a better way to deal with this in Phoenix upstream...
-    "${IRONFOX_SED}" -i -e 's|pref("devtools.debugger.remote-enabled"|// pref("devtools.debugger.remote-enabled"|g' "${IRONFOX_PHOENIX}/build-resources/phoenix-user-pref.cfg"
-
-    popd
-
-    echo_green_text 'SUCCESS: Prepared Phoenix'
-}
-
 function prepare_prebuilds() {
     echo_red_text 'Preparing IronFox prebuilds...'
 
@@ -1221,10 +1199,6 @@ fi
 
 if [ "${IRONFOX_PREPARE_MICROG}" == 1 ]; then
     prepare_microg
-fi
-
-if [ "${IRONFOX_PREPARE_PHOENIX}" == 1 ]; then
-    prepare_phoenix
 fi
 
 if [ "${IRONFOX_PREPARE_PREBUILDS}" == 1 ]; then

@@ -93,6 +93,8 @@ export var GeckoSettingsBridge = {
             this.setWebRTCEnabled(value);
         } else if (pref === "browser.ironfox.fenix.xpinstallEnabled") {
             this.setXPInstallEnabled(value);
+         } else if (pref === "network.trr.uri") {
+            this.setDohProviderUrl(value);
         };
         if (type === "boolean") {
             Services.prefs.getDefaultBranch(null).setBoolPref(pref, value);
@@ -534,5 +536,54 @@ export var GeckoSettingsBridge = {
         };
         Services.prefs.getDefaultBranch(null).setBoolPref("browser.ironfox.xpinstall.enabled", value);
         Services.prefs.lockPref("browser.ironfox.xpinstall.enabled");
+    },
+
+    // Configure the DoH provider
+    /// (Corresponds to the `dohProviderUrl` Fenix UI setting)
+    setDohProviderUrl(value) {
+        if (Services.prefs.prefIsLocked("network.trr.uri") === true) {
+            Services.prefs.unlockPref("network.trr.uri");
+        };
+        Services.prefs.getDefaultBranch(null).setStringPref("network.trr.uri", value);
+        Services.prefs.lockPref("network.trr.uri");
+
+        // Attempt to automatically set the bootstrap address for DNS over HTTPS
+        if (Services.prefs.getBoolPref("browser.phoenix.trr.autoBootstrap") === true) {
+            if (Services.prefs.prefIsLocked("network.trr.bootstrapAddr") === true) {
+                Services.prefs.unlockPref("network.trr.bootstrapAddr");
+            };
+            if (value === "https://base.dns.mullvad.net/dns-query" || value === "https://base.dns.mullvad.net:443/dns-query" || value === "") {
+                Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "194.242.2.4");
+                Services.prefs.lockPref("network.trr.bootstrapAddr");
+            } else if (value === "https://dns.mullvad.net/dns-query" || value === "https://dns.mullvad.net:443/dns-query") {
+                Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "194.242.2.2");
+                Services.prefs.lockPref("network.trr.bootstrapAddr");
+            } else if (value === "https://mozilla.cloudflare-dns.com/dns-query" || value === "https://mozilla.cloudflare-dns.com:443/dns-query" ||
+            value === "https://cloudflare-dns.com/dns-query" || value === "https://cloudflare-dns.com:443/dns-query" ||
+            value === "https://dns.cloudflare.com/dns-query" || value === "https://dns.cloudflare.com:443/dns-query") {
+                if (Services.prefs.getBoolPref("browser.phoenix.trr.autoBootstrap.useFallback") === true) {
+                    Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "1.0.0.1");
+                } else {
+                    Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "1.1.1.1");
+                };
+                Services.prefs.lockPref("network.trr.bootstrapAddr");
+            } else if (value === "https://security.cloudflare-dns.com/dns-query" || value === "https://security.cloudflare-dns.com:443/dns-query") {
+                if (Services.prefs.getBoolPref("browser.phoenix.trr.autoBootstrap.useFallback") === true) {
+                    Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "1.0.0.2");
+                } else {
+                    Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "1.1.1.2");
+                };
+                Services.prefs.lockPref("network.trr.bootstrapAddr");
+            } else if (value === "https://noads.joindns4.eu/dns-query" || value === "https://noads.joindns4.eu:443/dns-query") {
+                Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "86.54.11.13");
+                Services.prefs.lockPref("network.trr.bootstrapAddr");
+            } else if (value === "https://protective.joindns4.eu/dns-query" || value === "https://protective.joindns4.eu:443/dns-query") {
+                Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "86.54.11.1");
+                Services.prefs.lockPref("network.trr.bootstrapAddr");
+            } else if (value === "https://unfiltered.joindns4.eu/dns-query" || value === "https://unfiltered.joindns4.eu:443/dns-query") {
+                Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "86.54.11.100");
+                Services.prefs.lockPref("network.trr.bootstrapAddr");
+            };
+        };
     }
 };

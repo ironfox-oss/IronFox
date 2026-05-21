@@ -289,7 +289,7 @@ object GeckoSettingsBridge {
         setUserPref(engine, dohProviderUrlGeckoPref, dohProviderUrl)
         setDefaultPref(engine, dohProviderUrlGeckoPref, dohProviderUrl)
 
-        if (dohProviderUrl != "https://dns.quad9.net/dns-query") {
+        if (dohProviderUrl != "https://base.dns.mullvad.net/dns-query") {
             setUserPref(engine, dohProviderUrlGeckoViewModifiedPref, true)
             setDefaultPref(engine, dohProviderUrlGeckoViewModifiedPref, true)
         }

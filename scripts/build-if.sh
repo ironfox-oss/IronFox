@@ -268,16 +268,6 @@ function prep_fenix() {
     echo_green_text 'SUCCESS: Prepared Fenix'
 }
 
-function prep_gecko_prefs() {
-    # Prepare our Gecko preferences
-    if [[ -f "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
-    fi
-
-    cp -f "${IRONFOX_TEMPLATES}/gecko/ironfox.cfg" "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_BUILD}/tmp/gecko/ironfox-parsed.cfg"
-}
-
 function prep_gecko() {
     # Gecko
     echo_red_text 'Preparing Gecko...'
@@ -340,6 +330,15 @@ function prep_glean() {
 function prep_phoenix() {
     # Phoenix
     echo_red_text 'Preparing Phoenix...'
+    mkdir -p "${IRONFOX_BUILD}/tmp/phoenix"
+
+    if [[ -f "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg" ]]; then
+        rm -f "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
+    fi
+
+    cp -f "${IRONFOX_TEMPLATES}/phoenix/phoenix-overrides.cfg" "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
+    "${IRONFOX_SED}" -i "s|{IRONFOX_CHANNEL}|${IRONFOX_CHANNEL}|" "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
+    "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
 
     # Ensure our cfg file doesn't already exist in mozilla-central
     if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" ]]; then
@@ -427,6 +426,10 @@ function build_phoenix() {
     pushd "${IRONFOX_PHOENIX}"
     bash -x "${IRONFOX_PHOENIX}/scripts/build.sh"
     popd
+
+    # Copy our outputs to mozilla-central
+    cp "${IRONFOX_PHOENIX}/outputs/android/phoenix.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
+    cp "${IRONFOX_PHOENIX}/outputs/android/policies.json" "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
 
     echo_green_text 'SUCCESS: Built Phoenix'
 }
@@ -975,7 +978,6 @@ echo_red_text 'Preparing your build environment...'
 set_build_env
 prep_as
 prep_gecko
-prep_gecko_prefs
 prep_phoenix
 prep_glean
 prep_llvm
