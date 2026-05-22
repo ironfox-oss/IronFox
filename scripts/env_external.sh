@@ -389,7 +389,9 @@ export UV_PYTHON_INSTALL_BIN
 
 ## Ignore configuration files
 readonly UV_NO_CONFIG=1
+readonly UV_NO_SYSTEM_CONFIG=1
 export UV_NO_CONFIG
+export UV_NO_SYSTEM_CONFIG
 
 ## Ignore env files
 readonly UV_NO_ENV_FILE=1
