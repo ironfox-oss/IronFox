@@ -1,13 +1,13 @@
 diff --git a/mobile/android/fenix/app/nimbus.fml.yaml b/mobile/android/fenix/app/nimbus.fml.yaml
-index 7c040fb83605..d94136ca8395 100644
+index ee12faa474..a2de7a3ed5 100644
 --- a/mobile/android/fenix/app/nimbus.fml.yaml
 +++ b/mobile/android/fenix/app/nimbus.fml.yaml
-@@ -705,7 +705,7 @@ features:
+@@ -795,7 +795,7 @@ features:
          description: >
            Whether or not to hide frecent top sites on the homepage.
          type: Boolean
 -        default: false
 +        default: true
  
-   unified-trust-panel:
-     description: Enables the unified trust panel.
+   homepage-opening-screen-default:
+     description: Configure the default option for the homepage opening screen.
