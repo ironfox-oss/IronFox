@@ -1,0 +1,2750 @@
+{
+  "data": [
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-app-icon-selection",
+      "id": "ironfox-app-icon-selection",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "App Icon Selection",
+      "userFacingDescription": "Controls whether users can select an alternative app launcher icon (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-app-icon-selection-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "app-icon-selection"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "app-icon-selection",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "app-icon-selection",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-awesomebar-suggestion-provider",
+      "id": "ironfox-awesomebar-suggestion-provider",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Firefox Suggest Providers",
+      "userFacingDescription": "Controls unwanted Firefox Suggest providers",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-awesomebar-suggestion-provider-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "awesomebar-suggestion-provider"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "awesomebar-suggestion-provider",
+              "enabled": true,
+              "value": {
+                "available-suggestion-types": {
+                    "amp": false,
+                    "ampMobile": false,
+                    "wikipedia": true
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-baseline-fpp",
+      "id": "ironfox-baseline-fpp",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Nimbus Control of Baseline Fingerprinting Protection (BFP)",
+      "userFacingDescription": "Controls whether Nimbus should dictate if baseline fingerprinting protection (BFP) is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-baseline-fpp-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "baseline-fpp"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "baseline-fpp",
+              "enabled": true,
+              "value": {
+                "feat-enabled": false,
+                "enabled": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-cookie-banners",
+      "id": "ironfox-cookie-banners",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Cookie Banner Reduction",
+      "userFacingDescription": "Controls functionality related to Cookie Banner Reduction (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-cookie-banners-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "cookie-banners"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "cookie-banners",
+              "enabled": true,
+              "value": {
+                "sections-enabled": {
+                    "feature-setting-detect-only": 0,
+                    "feature-setting-global-rules": 1,
+                    "feature-setting-global-rules-sub-frames": 1,
+                    "feature-setting-value": 1,
+                    "feature-setting-value-pbm": 1,
+                    "feature-ui": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "cookie-banners",
+              "enabled": true,
+              "value": {
+                "sections-enabled": {
+                    "feature-setting-detect-only": 0,
+                    "feature-setting-global-rules": 0,
+                    "feature-setting-global-rules-sub-frames": 0,
+                    "feature-setting-value": 0,
+                    "feature-setting-value-pbm": 0,
+                    "feature-ui": 0
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-default-bottom-toolbar",
+      "id": "ironfox-default-bottom-toolbar",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Default Toolbar Position",
+      "userFacingDescription": "Controls where the toolbar should be displayed by default (Default: top)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-default-bottom-toolbar-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "default-bottom-toolbar"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "top",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "default-bottom-toolbar",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        },
+        {
+          "slug": "bottom",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "default-bottom-toolbar",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "top",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-default-browser-prompt",
+      "id": "ironfox-default-browser-prompt",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Default Browser Prompt",
+      "userFacingDescription": "Controls display of the default browser prompt",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-default-browser-prompt-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "default-browser-prompt"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "default-browser-prompt",
+              "enabled": true,
+              "value": {
+                "enabled": false,
+                "maxPromptsShown": 0
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-doh",
+      "id": "ironfox-doh",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "DNS over HTTPS",
+      "userFacingDescription": "Controls functionality related to DNS over HTTPS (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-doh-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "doh"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "doh",
+              "enabled": true,
+              "value": {
+                "autoselect-enabled": false,
+                "show-ui": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "doh",
+              "enabled": true,
+              "value": {
+                "autoselect-enabled": false,
+                "show-ui": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-downloads-custom-location",
+      "id": "ironfox-downloads-custom-location",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Custom Download Location",
+      "userFacingDescription": "Controls the ability to set a custom download location (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-downloads-custom-location-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "downloads-custom-location"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "downloads-custom-location",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "downloads-custom-location",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-email-masks",
+      "id": "ironfox-email-masks",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Firefox Relay",
+      "userFacingDescription": "Controls the ability to enable email masking with Firefox Relay (Default: disabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-email-masks-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "email-masks"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "email-masks",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        },
+        {
+          "slug": "enabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "email-masks",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-enable-popups",
+      "id": "ironfox-enable-popups",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "In-app Pop-ups",
+      "userFacingDescription": "Controls the display of in-app messages from Mozilla",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-enable-popups-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "enable-popups"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "enable-popups",
+              "enabled": true,
+              "value": {
+                "cfr-popups-enabled": false,
+                "in-app-messages-enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-encourage-search-cfr",
+      "id": "ironfox-encourage-search-cfr",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Search Encouragement Contextual Feature Recommendation",
+      "userFacingDescription": "Controls the display of a contextual feature recommendation to encourage users to search",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-encourage-search-cfr-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "encourage-search-cfr"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "encourage-search-cfr",
+              "enabled": true,
+              "value": {
+                "cfrText": "",
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-firefox-jp-guide-default-site",
+      "id": "ironfox-firefox-jp-guide-default-site",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Firefox Japanese Guide",
+      "userFacingDescription": "Controls whether the Firefox Japanese Guide should be added as a default shortcut",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-firefox-jp-guide-default-site-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "firefox-jp-guide-default-site"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "firefox-jp-guide-default-site",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-fingerprinting-protection",
+      "id": "ironfox-fingerprinting-protection",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Nimbus Control of Fingerprinting Protection (FPP)",
+      "userFacingDescription": "Controls whether Nimbus should dictate if fingerprinting protection (FPP) is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-fingerprinting-protection-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "fingerprinting-protection"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "fingerprinting-protection",
+              "enabled": true,
+              "value": {
+                "enabled": false,
+                "enabled-normal": true,
+                "enabled-private": true,
+                "fdlibm-math": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-fission",
+      "id": "ironfox-fission",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Nimbus Control of Fission",
+      "userFacingDescription": "Controls whether Nimbus should dictate if Fission is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-fission-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "fission"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "fission",
+              "enabled": true,
+              "value": {
+                "shouldUseNimbus": false,
+                "enabled": true,
+                "isolationStrategy": 1
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-fx-suggest",
+      "id": "ironfox-fx-suggest",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Firefox Suggest",
+      "userFacingDescription": "Controls whether Firefox Suggest is enabled by default (Default: disabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-fx-suggest-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "fx-suggest"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "fx-suggest",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        },
+        {
+          "slug": "enabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "fx-suggest",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-google-lens-integration",
+      "id": "ironfox-google-lens-integration",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Google Lens",
+      "userFacingDescription": "Controls whether Google Lens integration is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-google-lens-integration-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "google-lens-integration"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "google-lens-integration",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-homepage-hide-frecent-top-sites",
+      "id": "ironfox-homepage-hide-frecent-top-sites",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Pin Recently Visited Websites to Home",
+      "userFacingDescription": "Controls whether random recently visited websites should be automatically pinned to the browser homepage (Default: disabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-homepage-hide-frecent-top-sites-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "homepage-hide-frecent-top-sites"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "homepage-hide-frecent-top-sites",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "enabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "homepage-hide-frecent-top-sites",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-homepage-sports-widget",
+      "id": "ironfox-homepage-sports-widget",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Homepage Sports Widget",
+      "userFacingDescription": "Controls display of the homepage sports widget",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-homepage-sports-widget-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "homepage-sports-widget"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "homepage-sports-widget",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-homescreen",
+      "id": "ironfox-homescreen",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Homescreen",
+      "userFacingDescription": "Controls display of unwanted homescreen sections by default (Default: disabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-homescreen-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "homescreen"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "homescreen",
+              "enabled": true,
+              "value": {
+                "sections-enabled": {
+                    "bookmarks": false,
+                    "jump-back-in": false,
+                    "pocket": false,
+                    "pocket-sponsored-stories": false,
+                    "recent-explorations": false
+                }
+              }
+            }
+          ]
+        },
+        {
+          "slug": "enabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "homescreen",
+              "enabled": true,
+              "value": {
+                "sections-enabled": {
+                    "bookmarks": true,
+                    "jump-back-in": true,
+                    "pocket": false,
+                    "pocket-sponsored-stories": false,
+                    "recent-explorations": true
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-ip-protection",
+      "id": "ironfox-ip-protection",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "IP Protection",
+      "userFacingDescription": "Controls unwanted functionality related to IP Protection",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-ip-protection-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "ip-protection"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "ip-protection",
+              "enabled": true,
+              "value": {
+                "show-beta-badge": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-isolated-content-processes",
+      "id": "ironfox-isolated-content-processes",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Isolated Content Processes",
+      "userFacingDescription": "Controls unwanted functionality related to isolated content processes",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-isolated-content-processes-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "isolated-content-processes"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "isolated-content-processes",
+              "enabled": true,
+              "value": {
+                "app-zygote-preloading": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-marketing-onboarding-card",
+      "id": "ironfox-marketing-onboarding-card",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Marketing Onboarding Card",
+      "userFacingDescription": "Controls display of the marketing onboarding card",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-marketing-onboarding-card-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "marketing-onboarding-card"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "marketing-onboarding-card",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-menu-redesign",
+      "id": "ironfox-menu-redesign",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Menu Redesign",
+      "userFacingDescription": "Controls display of unwanted menu redesign elements",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-menu-redesign-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "menu-redesign"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "menu-redesign",
+              "enabled": true,
+              "value": {
+                "menu-banner": false,
+                "report-site-issue": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-microsurveys",
+      "id": "ironfox-microsurveys",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Microsurveys",
+      "userFacingDescription": "Controls whether feedback surveys from Mozilla are enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-microsurveys-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "microsurveys"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "microsurveys",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-mozilla-ads-client",
+      "id": "ironfox-mozilla-ads-client",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Mozilla Ads Client",
+      "userFacingDescription": "Controls whether the Mozilla Ads Client is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-mozilla-ads-client-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "mozilla-ads-client"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "mozilla-ads-client",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-nimbus-is-ready",
+      "id": "ironfox-nimbus-is-ready",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Nimbus 'is_ready' event submission",
+      "userFacingDescription": "Controls the submission of Nimbus 'is_ready' events",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-nimbus-is-ready-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "nimbus-is-ready"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "nimbus-is-ready",
+              "enabled": true,
+              "value": {
+                "event-count": 0
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-private-browsing-lock",
+      "id": "ironfox-private-browsing-lock",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Private Browsing Lock",
+      "userFacingDescription": "Controls whether users can require authentication to access tabs in private browsing mode (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-private-browsing-lock-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "private-browsing-lock"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "private-browsing-lock",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "private-browsing-lock",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-private-mode-and-stories-entry-point",
+      "id": "ironfox-private-mode-and-stories-entry-point",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Private Mode and Stories",
+      "userFacingDescription": "Controls whether the 'Private Mode and Stories' functionality is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-private-mode-and-stories-entry-point-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "private-mode-and-stories-entry-point"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "private-mode-and-stories-entry-point",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-remote-search-configuration",
+      "id": "ironfox-remote-search-configuration",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Remote Search Configuration",
+      "userFacingDescription": "Controls whether Remote Search Configuration is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-remote-search-configuration-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "remote-search-configuration"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "remote-search-configuration",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-safe-browsing-real-time",
+      "id": "ironfox-safe-browsing-real-time",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Nimbus Control of Safe Browsing Real-time Lookup/Simulation",
+      "userFacingDescription": "Controls whether Nimbus should dictate if Safe Browsing real-time lookup and simulation are enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-safe-browsing-real-time-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "safe-browsing-real-time"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "safe-browsing-real-time",
+              "enabled": true,
+              "value": {
+                "feature-enabled": false,
+                "real-time-enabled": false,
+                "simulation-enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-safe-browsing-v5",
+      "id": "ironfox-safe-browsing-v5",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Nimbus Control of Safe Browsing v5",
+      "userFacingDescription": "Controls whether Nimbus should dictate if Safe Browsing v5 is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-safe-browsing-v5-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "safe-browsing-v5"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "safe-browsing-v5",
+              "enabled": true,
+              "value": {
+                "feature-enabled": false,
+                "enable-v5": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-search-optimization-option",
+      "id": "ironfox-search-optimization-option",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Search Optimization Cards",
+      "userFacingDescription": "Controls the display of 'Search Optimization' cards",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-search-optimization-option-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "search-optimization-option"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "search-optimization-option",
+              "enabled": true,
+              "value": {
+                "enabled": false,
+                "show-flights-card": false,
+                "show-sports-card": false,
+                "show-stocks-card": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-sent-from-firefox",
+      "id": "ironfox-sent-from-firefox",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "'Sent from Firefox' Link Sharing",
+      "userFacingDescription": "Controls the 'Sent from Firefox' footer/link sharing feature",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-sent-from-firefox-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "sent-from-firefox"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "sent-from-firefox",
+              "enabled": true,
+              "value": {
+                "enabled": false,
+                "show-snackbar": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-settings-search",
+      "id": "ironfox-settings-search",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Settings Search",
+      "userFacingDescription": "Controls whether users can search settings (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-settings-search-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "settings-search"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "settings-search",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "settings-search",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-setup-checklist",
+      "id": "ironfox-setup-checklist",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Set-up Checklist",
+      "userFacingDescription": "Controls the Set-up Checklist feature",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-setup-checklist-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "setup-checklist"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "setup-checklist",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-shake-to-summarize",
+      "id": "ironfox-shake-to-summarize",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Shake to Summarize",
+      "userFacingDescription": "Controls the AI-powered 'Shake to Summarize' feature",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-shake-to-summarize-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "shake-to-summarize"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "shake-to-summarize",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-splash-screen",
+      "id": "ironfox-splash-screen",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Splash Screen",
+      "userFacingDescription": "Controls whether the browser should attempt to download and apply Nimbus experiments during the splash screen",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-splash-screen-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "splash-screen"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "splash-screen",
+              "enabled": true,
+              "value": {
+                "enabled": false,
+                "off-train-onboarding": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-suggest-shipped-domains",
+      "id": "ironfox-suggest-shipped-domains",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Suggest Shipped Domains",
+      "userFacingDescription": "Controls whether the browser should suggest sites from an outdated list of domains (which includes domains that have been squatted and used for malicious purposes/advertising",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-suggest-shipped-domains-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "suggest-shipped-domains"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "suggest-shipped-domains",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-suppress-sponsored-top-sites",
+      "id": "ironfox-suppress-sponsored-top-sites",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Suppress Sponsored Top Sites",
+      "userFacingDescription": "Suppresses the display of sponsored top sites",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-suppress-sponsored-top-sites-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "suppress-sponsored-top-sites"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "suppress-sponsored-top-sites",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-tab-strip",
+      "id": "ironfox-tab-strip",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Tab Strip",
+      "userFacingDescription": "Controls the ability to enable tab strip, if supported by the device (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-tab-strip-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "tab-strip"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "tab-strip",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "tab-strip",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-terms-of-use-prompt",
+      "id": "ironfox-terms-of-use-prompt",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Terms of Use Prompt",
+      "userFacingDescription": "Controls the Terms of use Prompt",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-terms-of-use-prompt-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "terms-of-use-prompt"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "terms-of-use-prompt",
+              "enabled": true,
+              "value": {
+                "enable-drag-to-dismiss": true,
+                "enabled": false,
+                "max-display-count": 0
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-third-party-cookie-blocking",
+      "id": "ironfox-third-party-cookie-blocking",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Nimbus Control of Third-party Cookie Blocking",
+      "userFacingDescription": "Controls whether Nimbus should dictate if third-party cookie blocking is enabled",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-third-party-cookie-blocking-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "third-party-cookie-blocking"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "third-party-cookie-blocking",
+              "enabled": true,
+              "value": {
+                "enabled": false,
+                "enabled-normal": true,
+                "enabled-private": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-toolbar-redesign-option",
+      "id": "ironfox-toolbar-redesign-option",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Toolbar Customization Options",
+      "userFacingDescription": "Controls the display of toolbar customization options (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-toolbar-redesign-option-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "toolbar-redesign-option"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "toolbar-redesign-option",
+              "enabled": true,
+              "value": {
+                "show-customization": true,
+                "show-options": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "toolbar-redesign-option",
+              "enabled": true,
+              "value": {
+                "show-customization": false,
+                "show-options": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-unified-trust-panel",
+      "id": "ironfox-unified-trust-panel",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Unified Trust Panel",
+      "userFacingDescription": "Controls whether the 'Unified Trust Panel' is enabled by default (Default: disabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-unified-trust-panel-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "unified-trust-panel"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "disabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "unified-trust-panel",
+              "enabled": true,
+              "value": {
+                "enabled": false
+              }
+            }
+          ]
+        },
+        {
+          "slug": "enabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "unified-trust-panel",
+              "enabled": true,
+              "value": {
+                "enabled": true
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    }
+  ]
+}

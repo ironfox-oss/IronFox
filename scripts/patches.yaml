@@ -296,13 +296,6 @@ patches:
     effect: "Cleaner browsing experience, with more control provided to users."
     category: "Mozilla"
 
-  - file: "fenix-disable-remote-search-configuration.patch"
-    name: "Disable Remote Search Configuration"
-    description: "Disables remote configuration of search engines from Mozilla."
-    reason: "To reduce unwanted network activity and ensure that users are in control of their search engines/configuration."
-    effect: "Reduces unwanted network activity and ensures search settings are controlled locally."
-    category: "Mozilla"
-
   - file: "fenix-remove-tos-privacy-policy.patch"
     name: "Remove ToS and Privacy Policy"
     description: "Removes unwanted elements related to Mozilla's terms of service and privacy policy."
@@ -310,25 +303,11 @@ patches:
     effect: "Users are provided with a cleaner browsing experience."
     category: "Mozilla"
 
-  - file: "fenix-disable-link-sharing.patch"
-    name: "Disable 'Sent from Firefox' Link Sharing"
-    description: "Disables the 'Sent from Firefox' footer/link sharing feature."
-    reason: "To prevent automatic inclusion of Firefox branding in shared links."
-    effect: "Prevents advertising Firefox and disclosing browser information when sharing links."
-    category: "Mozilla"
-
   - file: "fenix-disable-ai-controls.patch"
     name: "Disable AI Controls"
     description: "Disables the 'AI Controls' settings menu."
     reason: "To prevent undesired AI functionality from being enabled in the browser and provide a cleaner UI."
     effect: "Prevents unwanted AI features from being exposed to users."
-    category: "Mozilla"
-
-  - file: "fenix-disable-shake-to-summarize.patch"
-    name: "Disable the 'Shake to Summarize' feature"
-    description: "Disables the AI-powered 'Shake to Summarize' feature."
-    reason: "To prevent undesired AI functionality from being enabled in the browser."
-    effect: "Prevents unwanted AI features from being enabled for users."
     category: "Mozilla"
 
   - file: "a-c-disable-amo-collections.patch"
@@ -392,13 +371,6 @@ patches:
     description: "Disables Contextual Feature Recommendations, prompts encouraging users to set the browser as the system default, and other promotional messaging."
     reason: "To remove promotional suggestions for Firefox features, and to eliminate unnecessary engagement messages that may interrupt user workflows."
     effect: "Provides a cleaner interface without contextual prompts, recommendations, and unwanted nags."
-    category: "Mozilla"
-
-  - file: "fenix-disable-microsurveys.patch"
-    name: "Disable Mozilla Surveys"
-    description: "Disables Mozilla Feedback Surveys (Microsurveys)."
-    reason: "To prevent interruptions from survey prompts."
-    effect: "Improves user experience by removing survey notifications."
     category: "Mozilla"
 
   - file: "fenix-local-wallpapers.patch"
@@ -518,13 +490,6 @@ patches:
     effect: "Improves privacy and security for users."
     category: "Privacy"
 
-  - file: "fenix-block-cookie-banners-in-pb-by-default-and-expose-ui.patch"
-    name: "Block Cookie Banners in Private Browsing by default, and expose the UI to enable/disable it."
-    description: "Blocks cookie consent banners in Private Browsing windows by default, enables a UI setting to enable or disable blocking of cookie consent banners in Private Browsing, and allows users to enable or disable cookie banner blocking per-site (in both standard and Private Browsing windows)."
-    reason: "Improves privacy by preventing websites from co-ercing users to enable/agree to tracking, and improves the browsing experience by removing annoying consent pop-ups."
-    effect: "Cleaner websites without cookie banners, while automatically opting users out of tracking where possible."
-    category: "Privacy"
-
   - file: "gecko-configure-ublock-origin.patch"
     name: "Configure uBlock Origin"
     description: "Sets uBlock Origin to use a custom/enhanced config, and changes certain settings by default."
@@ -620,13 +585,6 @@ patches:
       Backports a fix for an upstream bug that prevents Canvas randomization from working for getImageData and WebGL image hash: https://bugzilla.mozilla.org/show_bug.cgi?id=2013976, and enables Canvas randomization for solid colors.
     reason: "To protect against fingerprinting by ensuring that canvas data is fully randomized."
     effect: "Users are provided with fingerprinting protection that works as expected."
-    category: "Privacy"
-
-  - file: "fenix-disable-google-lens-integration.patch"
-    name: "Disable Google Lens Integration"
-    description: "Disables integration with the Google Lens."
-    reason: "To improve privacy for users by removing integration with Google services."
-    effect: "Users are provided with a more private browsing experience."
     category: "Privacy"
 
   - file: "gecko-remove-openai.patch"
@@ -735,13 +693,6 @@ patches:
     effect: "Users are provided with more control over their browsing experience."
     category: "User Interface"
 
-  - file: "fenix-enable-custom-download-location.patch"
-    name: "Enable Custom Download Location"
-    description: "Enables the ability for users to specify a custom location for downloaded files."
-    reason: "To improve control and usability by allowing users to specify the location at which files are downloaded."
-    effect: "Improves user experience and control."
-    category: "User Experience"
-
   - file: "fenix-enable-longfox.patch"
     name: "Enable Longfox"
     description: "Enables Longfox."
@@ -768,13 +719,6 @@ patches:
     description: "Allows uBlock Origin to run in private browsing windows by default."
     reason: "To ensure that users are protected with strong content blocking in private browsing windows."
     effect: "Users are always protected against ads/tracking/malware/etc."
-    category: "User Experience"
-
-  - file: "fenix-disable-auto-pinning-recently-visited-sites-to-home.patch"
-    name: "Disable Automatically Pinning Recently Visited Sites to Home"
-    description: "Prevents Firefox from automatically pinning random recently visited website to the browser homepage."
-    reason: "To reduce annoyances and get rid of obnoxious/unwanted behavior."
-    effect: "Users are provided with a cleaner, faster, and more focused browser homepage."
     category: "User Experience"
 
   - file: "fenix-hide-remove-and-pb-for-builtin-addons.patch"
@@ -820,11 +764,11 @@ patches:
     effect: "Users can identify the fork as IronFox instead of Firefox."
     category: "User Interface"
 
-  - file: "fenix-ironfox-home.patch"
-    name: "IronFox Home"
-    description: "Customizes the default homepage."
-    reason: "Provides users with a cleaner browsing experience, and removes promotions of third party services."
-    effect: "Users have a clean new tab page without predetermined site suggestions or other content."
+  - file: "fenix-display-cookie-banner-ui-in-standard-browsing.patch"
+    name: "Display Cookie Banner Reduction UI in Standard Browsing."
+    description: "Enables the UI to control Cookie Banner Reduction per-site in standard browsing windows."
+    reason: "The ability to control Cookie Banner Reduction per-site is typically only displayed in private browsing windows."
+    effect: "Users are provided with more control by allowing them to control Cookie Banner Reduction on a per-site basis."
     category: "User Interface"
 
   - file: "fenix-disable-history-and-recent-search-suggestions-by-default.patch"
@@ -832,13 +776,6 @@ patches:
     description: "Disables recent and historical search suggestions by default."
     reason: "To provide users with a cleaner, focused URL bar and browsing experience."
     effect: "Cleaner interface so that users can focus on where they want to go now, instead of where they went in the past."
-    category: "User Interface"
-
-  - file: "fenix-disable-unified-trust-panel-by-default.patch"
-    name: "Disable Unified Trust Panel"
-    description: "Disables the new Unified Trust Panel by default."
-    reason: "The new Unified Trust Panel prevents users from being able to set per-site exceptions for the built-in cookie banner blocker."
-    effect: "Users can set per-site exceptions for the built-in cookie banner blocker."
     category: "User Interface"
 
   - file: "gecko-expose-hidden-aboutsupport-settings.patch"
@@ -926,6 +863,13 @@ patches:
     description: "Provides support for a UI toggle to enable/disable accessibility services."
     reason: "To disable accessibility services by default (due to privacy and security concerns), while still allowing users who need it to re-enable it if desired."
     effect: "Integration with accessibility services are disabled by default, but users can re-enable it from the UI."
+    category: "User Interface"
+
+  - file: "fenix-ironfox-settings-support-collections.patch"
+    name: "IronFox Settings (Fenix) - Collections"
+    description: "Provides support for a UI toggle to enable/disable collections."
+    reason: "To allow users to disable collections functionality if desired."
+    effect: "Users have more control over the new tab page."
     category: "User Interface"
 
   - file: "fenix-ironfox-settings-support-pb-always.patch"

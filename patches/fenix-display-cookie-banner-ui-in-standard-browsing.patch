@@ -11,23 +11,3 @@ index 1f81493c9f9e..be163913a0ef 100644
              state.cookieBannerUIMode != CookieBannerUIMode.HIDE
  
          binding.trackingProtectionDetails.setOnClickListener {
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..7474db553609 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1083,13 +1083,13 @@ class Settings(
-     )
- 
-     val shouldUseCookieBannerPrivateModeDefaultValue: Boolean
--        get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_VALUE_PBM] == 1
-+        get() = true
- 
-     val shouldUseCookieBanner: Boolean
-         get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_VALUE] == 1
- 
-     val shouldShowCookieBannerUI: Boolean
--        get() = cookieBannersSection[CookieBannersSection.FEATURE_UI] == 1
-+        get() = true
- 
-     val shouldEnableCookieBannerDetectOnly: Boolean
-         get() = cookieBannersSection[CookieBannersSection.FEATURE_SETTING_DETECT_ONLY] == 1

@@ -1,16 +1,3 @@
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-index 95ded141876d..64c928f69685 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/MenuDialogFragment.kt
-@@ -415,7 +415,7 @@ class MenuDialogFragment : BottomSheetDialogFragment() {
-                         ?.requestedTranslationPair?.toLanguage
-                     val isExtensionsProcessDisabled = browserStore.state.extensionsProcessDisabled
-                     val isWebCompatReporterSupported =
--                        FxNimbus.features.menuRedesign.value().reportSiteIssue
-+                        false
- 
-                     val isDesktopMode by store.observeAsState(initialValue = false) { state ->
-                         state.isDesktopMode
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt
 index 00728e2ba98b..edeb6b7e0b50 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/menu/store/MenuState.kt

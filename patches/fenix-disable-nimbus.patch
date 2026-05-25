@@ -43,10 +43,10 @@ index 8c61dbb0291c..fbe56f557ec0 100644
      channel: release
      features:
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index f0ee597d00c8..35a6646470e4 100644
+index d8e4023d8790..d3346ecfc902 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -100,7 +100,7 @@ import org.mozilla.fenix.components.appstate.AppAction
+@@ -108,7 +108,7 @@ import org.mozilla.fenix.components.appstate.AppAction
  import org.mozilla.fenix.components.initializeGlean
  import org.mozilla.fenix.components.metrics.MozillaProductDetector
  import org.mozilla.fenix.components.startMetricsIfEnabled
@@ -55,8 +55,8 @@ index f0ee597d00c8..35a6646470e4 100644
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.containsQueryParameters
-@@ -564,15 +564,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-         }
+@@ -584,15 +584,15 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+     }
  
      @OptIn(DelicateCoroutinesApi::class, ExperimentalAndroidComponentsApi::class) // GlobalScope usage
 -    private fun queueNimbusFetchInForeground(queue: RunWhenReadyQueue) =
@@ -74,18 +74,6 @@ index f0ee597d00c8..35a6646470e4 100644
          }
  
      @OptIn(DelicateCoroutinesApi::class) // GlobalScope usage
-@@ -683,9 +683,9 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
- 
-     private fun initializeNimbus() {
-         // This lazily constructs the Nimbus object…
--        val nimbus = components.nimbus.sdk
-+//        val nimbus = components.nimbus.sdk
-         // … which we then can populate the feature configuration.
--        FxNimbus.initialize { nimbus }
-+//        FxNimbus.initialize { nimbus }
-     }
- 
-     /**
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt
 index 06c3de1f7a5d..69c936fd3478 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/HomeActivity.kt

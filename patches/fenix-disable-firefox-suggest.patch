@@ -116,19 +116,10 @@ index c0fb12426e4d..dd229dcd1875 100644
          requirePreference<SwitchPreference>(R.string.pref_key_show_nonsponsored_suggestions).apply {
              isVisible = context.settings().enableFxSuggest
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 81d95a9666a1..00245c4cf04b 100644
+index 741a1a7679bd..62be96c3c89a 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2489,7 +2489,7 @@ class Settings(
-      */
-     var enableFxSuggest by lazyFeatureFlagBooleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_enable_fxsuggest),
--        defaultValue = { FxNimbus.features.fxSuggest.value().enabled },
-+        defaultValue = { false },
-         featureFlag = FeatureFlags.FX_SUGGEST,
-     )
- 
-@@ -2514,7 +2514,7 @@ class Settings(
+@@ -2672,7 +2672,7 @@ class Settings(
      var showSponsoredSuggestions by lazyFeatureFlagBooleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_sponsored_suggestions),
          defaultValue = { enableFxSuggest },
@@ -137,8 +128,8 @@ index 81d95a9666a1..00245c4cf04b 100644
      )
  
      /**
-@@ -2524,7 +2524,7 @@ class Settings(
-      */
+@@ -2683,7 +2683,7 @@ class Settings(
+     @Suppress("DEPRECATION")
      var showNonSponsoredSuggestions by lazyFeatureFlagBooleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_show_nonsponsored_suggestions),
 -        defaultValue = { enableFxSuggest },

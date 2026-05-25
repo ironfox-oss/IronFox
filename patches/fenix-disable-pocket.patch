@@ -10,16 +10,3 @@ index d211d3625dbf..cbdc241b9b4f 100644
 +        return false && CONTENT_RECOMMENDATIONS_SUPPORTED_LOCALE.contains(langTag)
      }
  }
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a975ccd3d669..949bf831d6bb 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2948,7 +2948,7 @@ class Settings(
-      */
-     var privateModeAndStoriesEntryPointEnabled by booleanPreference(
-         key = appContext.getPreferenceKey(R.string.pref_key_private_mode_and_stories_entry_point),
--        default = { FxNimbus.features.privateModeAndStoriesEntryPoint.value().enabled },
-+        default = { false },
-     )
- 
-     /**

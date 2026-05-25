@@ -634,7 +634,7 @@ index c63204ac7e16..75023e2a1a46 100644
          context?.let {
              requireView().findNavController().navigateWithBreadcrumb(
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a975ccd3d669..54b0beb97ff0 100644
+index 741a1a7679bd2..b2987f52cb7ef 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -41,7 +41,7 @@ import org.mozilla.experiments.nimbus.NimbusEventStore
@@ -646,12 +646,12 @@ index a975ccd3d669..54b0beb97ff0 100644
  import org.mozilla.fenix.R
  import org.mozilla.fenix.autofill.address.RegionAddressFeatureGate
  import org.mozilla.fenix.browser.browsingmode.BrowsingMode
-@@ -461,7 +461,7 @@ class Settings(
+@@ -462,7 +462,7 @@ class Settings(
  
      var contileContextId by stringPreference(
          appContext.getPreferenceKey(R.string.pref_key_contile_context_id),
 -        default = { TopSites.contextId.generateAndSet().toString() },
-+        default = { "" },
++        default = "",
          persistDefaultIfNotExists = true,
      )
  
