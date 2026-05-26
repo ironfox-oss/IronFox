@@ -4,7 +4,7 @@
 . "${IRONFOX_MOZCONFIGS}/branding/ironfox.mozconfig"
 . "${IRONFOX_MOZCONFIGS}/targets/arm.mozconfig"
 
-## Set the destination object (output) directory
+# Set the destination object (output) directory
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj/ironfox-release-arm
 mk_add_options OBJDIR=@TOPSRCDIR@/obj/ironfox-release-arm
 export MOZ_OBJDIR="${IRONFOX_GECKO}/obj/ironfox-release-arm"
