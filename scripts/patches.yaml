@@ -669,15 +669,6 @@ patches:
     effect: "Users are provided with more control over their browsing experience, and can further improve their security if desired."
     category: "User Control"
 
-  - file: "fenix-ask-before-deleting-files-by-default.patch"
-    name: "Ask before deleting files by default"
-    description: |
-      Asks the user whether they'd like to only remove a file from download history, or both remove it
-      from download history AND delete it from the device.
-    reason: "To improve freedom/control for users, by preventing unintended file deletion/data loss."
-    effect: "Users are provided with more control over their downloaded files."
-    category: "User Control"
-
   # User Experience
   - file: "fenix-default-site-permissions.patch"
     name: "Default Site Permissions"
