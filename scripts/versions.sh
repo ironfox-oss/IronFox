@@ -178,10 +178,10 @@ readonly JDK_17_SHA512SUM_OSX_X86_64='c871deedc3ccf0663aa584610c1390d1ae2fac2d47
 readonly JDK_17_VERSION='17.0.19'
 
 ## Node.js
-### Version: 26.1.0
+### Version: 26.2.0
 ### https://nodejs.org/about/previous-releases
 ### (Used by nvm)
-readonly NODE_VERSION='26.1.0'
+readonly NODE_VERSION='26.2.0'
 
 ## npm
 ### Version: 11.15.0
