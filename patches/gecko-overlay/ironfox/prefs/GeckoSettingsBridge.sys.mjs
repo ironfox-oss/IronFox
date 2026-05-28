@@ -583,6 +583,8 @@ export var GeckoSettingsBridge = {
             } else if (value === "https://unfiltered.joindns4.eu/dns-query" || value === "https://unfiltered.joindns4.eu:443/dns-query") {
                 Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "86.54.11.100");
                 Services.prefs.lockPref("network.trr.bootstrapAddr");
+            } else {
+                Services.prefs.getDefaultBranch(null).setStringPref("network.trr.bootstrapAddr", "");
             };
         };
     }
