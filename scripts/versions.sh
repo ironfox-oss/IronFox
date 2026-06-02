@@ -218,9 +218,9 @@ readonly PYYAML_COMMIT='49790e73684bebad1df05ef8d828fa12f685bffb'
 readonly PYYAML_SHA512SUM='2fd1334af2722c093592f93a5eee01d0b2e26976a12cb2e4859b4271a8fa47ff257d10c91b09bdb2b5aa9415b62693a69d6e6602e997c2bff6711aa02bf43937'
 
 ## Rust
-### Version: 1.95.0
+### Version: 1.96.0
 ### https://releases.rs/
-readonly RUST_VERSION='1.95.0'
+readonly RUST_VERSION='1.96.0'
 
 ## rustup
 ### Version: 1.29.0
