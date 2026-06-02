@@ -34,6 +34,10 @@ fi
 # Label all metrics from this job with the variant we're building
 export IRONFOX_METRICS_VARIANT="${ci_target}"
 
+# Start a fresh metrics trail so we never report phases inherited from an
+# upstream job's artifacts (ex. build-final pulling build-aar's AARs).
+ironfox_metric_init
+
 # Function to compress our archives
 function compress_archives() {
     if [[ "${ci_project}" == 'geckoview' ]]; then

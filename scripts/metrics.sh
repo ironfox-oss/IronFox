@@ -10,6 +10,24 @@
 # Collection is gated entirely by IRONFOX_METRICS_ENABLED (see env_common.sh):
 # when it is not '1', these helpers are no-ops with zero side effects.
 
+# Start a fresh metrics trail for this job.
+#
+# In CI, the metrics directory lives under ${IRONFOX_ARTIFACTS} and is therefore
+# part of the job's uploaded artifacts. A downstream job (ex. build-final, which
+# pulls the build-aar AARs via `needs:artifacts`) inherits that artifact bundle,
+# so a previous job's metrics.jsonl can already be on disk before this job writes
+# a single line. Since ironfox_metric_event *appends*, that stale trail would be
+# reported as duplicate phases. Truncating here guarantees a job only ever reports
+# its own work. Call once, before the first ironfox_metric_measure of a job.
+function ironfox_metric_init() {
+    if [[ "${IRONFOX_METRICS_ENABLED:-0}" != 1 ]]; then
+        return 0
+    fi
+
+    mkdir -p "${IRONFOX_METRICS_DIR}"
+    : >"${IRONFOX_METRICS_DIR}/metrics.jsonl"
+}
+
 # Record a single metric as one JSON object appended to metrics.jsonl.
 # Usage: ironfox_metric_event <name> <value> [unit] [extra_json_fields]
 #   <extra_json_fields> is raw JSON inserted verbatim, ex: '"status":1'

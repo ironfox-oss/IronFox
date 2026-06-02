@@ -37,8 +37,8 @@ mkdir -p "${IRONFOX_METRICS_DIR}"
 {
     echo "# HELP ironfox_phase_seconds Wall-clock duration of an IronFox build phase, in seconds."
     echo "# TYPE ironfox_phase_seconds gauge"
-    jq -rs '
-        map(select(.name | test("^phase_.*_seconds$")))
+    jq -rs --arg v "${IRONFOX_METRICS_VARIANT:-unknown}" '
+        map(select((.name | test("^phase_.*_seconds$")) and .variant == $v))
         | .[]
         | "ironfox_phase_seconds{phase=\"\(.name | sub("^phase_"; "") | sub("_seconds$"; ""))\",parent=\"\(.parent // "")\",variant=\"\(.variant)\",status=\"\(.status // 0)\"} \(.value)"
     ' "${metrics_file}"
@@ -54,8 +54,8 @@ mkdir -p "${IRONFOX_METRICS_DIR}"
     echo "IronFox build metrics - variant: ${IRONFOX_METRICS_VARIANT:-unknown}"
     echo "Pipeline: ${CI_PIPELINE_ID:-local}  Job: ${CI_JOB_NAME:-local}  Commit: ${CI_COMMIT_SHORT_SHA:-unknown}"
     echo
-    jq -rs '
-        ( map(select(.name | test("^phase_.*_seconds$"))
+    jq -rs --arg v "${IRONFOX_METRICS_VARIANT:-unknown}" '
+        ( map(select((.name | test("^phase_.*_seconds$")) and .variant == $v)
               | {task: (.name | sub("^phase_"; "") | sub("_seconds$"; "")),
                  value, parent: (.parent // ""), status: (.status // 0)}) ) as $all
         | ($all | map(select(.parent == ""))) as $roots
