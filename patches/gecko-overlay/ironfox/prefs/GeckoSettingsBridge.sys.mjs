@@ -518,6 +518,16 @@ export var GeckoSettingsBridge = {
         Services.prefs.lockPref("javascript.options.wasm");
     },
 
+    // Set whether to disable WebGL by default
+    /// (Corresponds to the `webglDisabled` Fenix UI setting)
+    setWebGLDisabled(value) {
+        if (Services.prefs.prefIsLocked("browser.ironfox.webgl.disabled") === true) {
+            Services.prefs.unlockPref("browser.ironfox.webgl.disabled");
+        };
+        Services.prefs.getDefaultBranch(null).setBoolPref("browser.ironfox.webgl.disabled", value);
+        Services.prefs.lockPref("browser.ironfox.webgl.disabled");
+    },
+
     // Set whether to enable WebRTC
     /// (Corresponds to the `webrtcEnabled` Fenix UI setting)
     setWebRTCEnabled(value) {
