@@ -25,19 +25,19 @@ if [[ -z "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
     exit 1
 fi
 
-if [ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == 'null' ]; then
+if [[ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == 'null' ]]; then
     echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable has not been specified! Aborting...'
     exit 1
 fi
 
-if ! [[ -f "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
+if [[ ! -f "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
     echo_red_text "ERROR: S3 access key file not found! (${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE})"
     echo_green_text "Please ensure the IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable is set to the correct path in which the key file is located."
     echo_red_text "Aborting..."
     exit 1
 fi
 
-if ! [[ -s "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
+if [[ ! -s "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
     echo_red_text "ERROR: S3 access key file ${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE} is empty!"
     exit 1
 fi
@@ -47,19 +47,19 @@ if [[ -z "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
     exit 1
 fi
 
-if [ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == 'null' ]; then
+if [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == 'null' ]]; then
     echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable has not been specified! Aborting...'
     exit 1
 fi
 
-if ! [[ -f "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
+if [[ ! -f "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
     echo_red_text "ERROR: S3 bucket name file not found! (${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE})"
     echo_green_text "Please ensure the IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable is set to the correct path in which the bucket name file is located."
     echo_red_text "Aborting..."
     exit 1
 fi
 
-if ! [[ -s "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
+if [[ ! -s "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
     echo_red_text "ERROR: S3 bucket name file ${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE} is empty!"
     exit 1
 fi
@@ -69,24 +69,24 @@ if [[ -z "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
     exit 1
 fi
 
-if [ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == 'null' ]; then
+if [[ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == 'null' ]]; then
     echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable has not been specified! Aborting...'
     exit 1
 fi
 
-if ! [[ -f "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
+if [[ ! -f "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
     echo_red_text "ERROR: S3 endpoint file not found! (${IRONFOX_RELEASES_S3_ENDPOINT_FILE})"
     echo_green_text "Please ensure the IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable is set to the correct path in which the endpoint file is located."
     echo_red_text "Aborting..."
     exit 1
 fi
 
-if ! [[ -s "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
+if [[ ! -s "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
     echo_red_text "ERROR: S3 bucket name file ${IRONFOX_RELEASES_S3_ENDPOINT_FILE} is empty!"
     exit 1
 fi
 
-if [ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == 'null' ]; then
+if [[ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == 'null' ]]; then
     echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_SECRET_KEY_FILE environment variable has not been specified! Aborting...'
     exit 1
 fi
@@ -96,14 +96,14 @@ if [[ -z "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
     exit 1
 fi
 
-if ! [[ -f "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
+if [[ ! -f "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
     echo_red_text "ERROR: S3 secret key file not found! (${IRONFOX_RELEASES_S3_SECRET_KEY_FILE})"
     echo_green_text "Please ensure the IRONFOX_RELEASES_S3_SECRET_KEY_FILE environment variable is set to the correct path in which the key file is located."
     echo_red_text "Aborting..."
     exit 1
 fi
 
-if ! [[ -s "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
+if [[ ! -s "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
     echo_red_text "ERROR: S3 secret key file ${IRONFOX_RELEASES_S3_SECRET_KEY_FILE} is empty!"
     exit 1
 fi
@@ -124,12 +124,12 @@ function upload_to_s3() {
     local readonly s3_path="$2"
     local readonly s3_full_path="${s3_path}/$(basename "${upload_file}")"
 
-    if ! [[ -f "${upload_file}" ]]; then
+    if [[ ! -f "${upload_file}" ]]; then
         echo_red_text "ERROR: File ${upload_file} does not exist!"
         exit 1
     fi
 
-    if ! [[ -s "${upload_file}" ]]; then
+    if [[ ! -s "${upload_file}" ]]; then
         echo_red_text "ERROR: File ${upload_file} is empty!"
         exit 1
     fi
@@ -183,7 +183,7 @@ function add_sha512sum() {
     local readonly sha512sum_file_out="${sha512sum_file_path}/${sha512sum_file_name}-sha512sum.txt"
 
     # If there's already a SHA512sum file, remove it
-    if [ -f "${sha512sum_file_out}" ]; then
+    if [[ -f "${sha512sum_file_out}" ]]; then
         rm -f "${sha512sum_file_out}"
     fi
 
@@ -196,7 +196,7 @@ function add_sha512sum() {
 # Extract compressed artifacts
 mkdir -p "${IRONFOX_ARTIFACTS}"
 for archive in "${IRONFOX_ARTIFACTS}"/*.tar.xz; do
-    [ -f "${archive}" ] || continue
+    [[ -f "${archive}" ]] || continue
     echo "Extracting ${archive}"
     "${IRONFOX_TAR}" xvJf "${archive}" -C "${IRONFOX_ARTIFACTS}"
 done

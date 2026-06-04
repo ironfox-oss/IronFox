@@ -23,7 +23,7 @@ readonly ci_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 # Function to compress our archives
 function compress_archives() {
-    if [ "${ci_target}" == 'bundle' ]; then
+    if [[ "${ci_target}" == 'bundle' ]]; then
         local readonly ci_job_artifact="build-final-${ci_target}"
     else
         local readonly ci_job_artifact="build-aar-${ci_target}"

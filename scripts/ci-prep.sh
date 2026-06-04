@@ -32,13 +32,13 @@ IRONFOX_CI_PREP_ANDROID_KEYSTORE=0
 IRONFOX_CI_PREP_S3=0
 IRONFOX_CI_PREP_SB_GAPI_KEY=0
 
-if [ "${ci_prep_target}" == 'android-ks' ]; then
+if [[ "${ci_prep_target}" == 'android-ks' ]]; then
     # Set-up the Android keystore
     IRONFOX_CI_PREP_ANDROID_KEYSTORE=1
-elif [ "${ci_prep_target}" == 's3' ]; then
+elif [[ "${ci_prep_target}" == 's3' ]]; then
     # Set-up S3 storage
     IRONFOX_CI_PREP_S3=1
-elif [ "${ci_prep_target}" == 'sb' ]; then
+elif [[ "${ci_prep_target}" == 'sb' ]]; then
     # Set-up the Google Safe Browsing API key
     IRONFOX_CI_PREP_SB_GAPI_KEY=1
 else
@@ -94,7 +94,7 @@ function prep_android_keystore() {
         exit 1
     fi
 
-    if [ "${IRONFOX_ANDROID_KEYSTORE}" == 'null' ]; then
+    if [[ "${IRONFOX_ANDROID_KEYSTORE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_ANDROID_KEYSTORE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -104,7 +104,7 @@ function prep_android_keystore() {
         exit 1
     fi
 
-    if [ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" == 'null' ]; then
+    if [[ "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -114,7 +114,7 @@ function prep_android_keystore() {
         exit 1
     fi
 
-    if [ "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" == 'null' ]; then
+    if [[ "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_ANDROID_KEYSTORE_PASS_FILE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -144,17 +144,17 @@ function prep_android_keystore() {
     echo -n "${IRONFOX_ANDROID_KEYSTORE_PASS}" > "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}"
 
     # Ensure nothing went wrong...
-    if ! [[ -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
+    if [[ ! -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
         echo_red_text "ERROR: Android keystore file ${IRONFOX_ANDROID_KEYSTORE} is empty!"
         exit 1
     fi
 
-    if ! [[ -s "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" ]]; then
+    if [[ ! -s "${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE}" ]]; then
         echo_red_text "ERROR: Android keystore key pass file ${IRONFOX_ANDROID_KEYSTORE_KEY_PASS_FILE} is empty!"
         exit 1
     fi
 
-    if ! [[ -s "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" ]]; then
+    if [[ ! -s "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}" ]]; then
         echo_red_text "ERROR: Android keystore pass file ${IRONFOX_ANDROID_KEYSTORE_PASS_FILE} is empty!"
         exit 1
     fi
@@ -203,7 +203,7 @@ function prep_s3() {
         exit 1
     fi
 
-    if [ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == 'null' ]; then
+    if [[ "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ACCESS_KEY_FILE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -213,7 +213,7 @@ function prep_s3() {
         exit 1
     fi
 
-    if [ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == 'null' ]; then
+    if [[ "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_BUCKET_NAME_FILE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -223,7 +223,7 @@ function prep_s3() {
         exit 1
     fi
 
-    if [ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == 'null' ]; then
+    if [[ "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_ENDPOINT_FILE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -233,7 +233,7 @@ function prep_s3() {
         exit 1
     fi
 
-    if [ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == 'null' ]; then
+    if [[ "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_RELEASES_S3_SECRET_KEY_FILE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -265,22 +265,22 @@ function prep_s3() {
     echo -n "${IRONFOX_RELEASES_S3_SECRET_KEY}" > "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}"
 
     # Ensure nothing went wrong...
-    if ! [[ -s "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
+    if [[ ! -s "${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE}" ]]; then
         echo_red_text "ERROR: S3 access key file ${IRONFOX_RELEASES_S3_ACCESS_KEY_FILE} is empty!"
         exit 1
     fi
 
-    if ! [[ -s "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
+    if [[ ! -s "${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE}" ]]; then
         echo_red_text "ERROR: S3 bucket name file ${IRONFOX_RELEASES_S3_BUCKET_NAME_FILE} is empty!"
         exit 1
     fi
 
-    if ! [[ -s "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
+    if [[ ! -s "${IRONFOX_RELEASES_S3_ENDPOINT_FILE}" ]]; then
         echo_red_text "ERROR: S3 endpoint file ${IRONFOX_RELEASES_S3_ENDPOINT_FILE} is empty!"
         exit 1
     fi
 
-    if ! [[ -s "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
+    if [[ ! -s "${IRONFOX_RELEASES_S3_SECRET_KEY_FILE}" ]]; then
         echo_red_text "ERROR: S3 secret key file ${IRONFOX_RELEASES_S3_SECRET_KEY_FILE} is empty!"
         exit 1
     fi
@@ -307,7 +307,7 @@ function prep_sb_gapi_key() {
         exit 1
     fi
 
-    if [ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]; then
+    if [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]]; then
         echo_red_text 'ERROR: The IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Aborting...'
         exit 1
     fi
@@ -321,7 +321,7 @@ function prep_sb_gapi_key() {
     echo -n "${IRONFOX_SB_GAPI_KEY}" > "${IRONFOX_SB_GAPI_KEY_FILE}"
 
     # Ensure nothing went wrong...
-    if ! [[ -s "${IRONFOX_SB_GAPI_KEY_FILE}" ]]; then
+    if [[ ! -s "${IRONFOX_SB_GAPI_KEY_FILE}" ]]; then
         echo_red_text "ERROR: Google Safe Browsing API key file ${IRONFOX_SB_GAPI_KEY_FILE} is empty!"
         exit 1
     fi
@@ -330,10 +330,10 @@ function prep_sb_gapi_key() {
 }
 
 # Prepare our secrets...
-if [ "${IRONFOX_CI_PREP_ANDROID_KEYSTORE}" == 1 ]; then
+if [[ "${IRONFOX_CI_PREP_ANDROID_KEYSTORE}" == 1 ]]; then
     prep_android_keystore
-elif [ "${IRONFOX_CI_PREP_S3}" == 1 ]; then
+elif [[ "${IRONFOX_CI_PREP_S3}" == 1 ]]; then
     prep_s3
-elif [ "${IRONFOX_CI_PREP_SB_GAPI_KEY}" == 1 ]; then
+elif [[ "${IRONFOX_CI_PREP_SB_GAPI_KEY}" == 1 ]]; then
     prep_sb_gapi_key
 fi

@@ -88,27 +88,27 @@ function sign_universal() {
 }
 
 # Sign ARM64 APK
-if [ "${target}" == 'arm64' ] || [ "${target}" == 'bundle' ]; then
+if [[ "${target}" == 'arm64' ]] || [[ "${target}" == 'bundle' ]]; then
     sign_arm64
 fi
 
 # Sign ARM APK
-if [ "${target}" == 'arm' ] || [ "${target}" == 'bundle' ]; then
+if [[ "${target}" == 'arm' ]] || [[ "${target}" == 'bundle' ]]; then
     sign_arm
 fi
 
 # Sign x86_64 APK
-if [ "${target}" == 'x86_64' ] || [ "${target}" == 'bundle' ]; then
+if [[ "${target}" == 'x86_64' ]] || [[ "${target}" == 'bundle' ]]; then
     sign_x86_64
 fi
 
 # Sign universal APK + build signed APK set
-if [ "${target}" == 'bundle' ]; then
+if [[ "${target}" == 'bundle' ]]; then
     sign_universal
     sign_bundle
 fi
 
-if [ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]; then
+if [[ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]]; then
     echo_red_text 'Would you like to install IronFox to a connected device?'
     read -p "If you'd like to install IronFox, please ensure your device is connected before proceeding. [y/N] " -n 1 -r
     echo
@@ -119,16 +119,16 @@ if [ "${IRONFOX_SIGN_SKIP_ADB}" != 1 ]; then
             ## so wait to ensure we allow them to accept it
             /bin/sleep 6
         fi
-        if [ "${target}" == 'bundle' ]; then
+        if [[ "${target}" == 'bundle' ]]; then
             # If we built a bundle, install the universal APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_UNIVERSAL}"
-        elif [ "${target}" == 'arm64' ]; then
+        elif [[ "${target}" == 'arm64' ]]; then
             # Install the ARM64 APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM64}"
-        elif [ "${target}" == 'arm' ]; then
+        elif [[ "${target}" == 'arm' ]]; then
             # Install the ARM APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_ARM}"
-        elif [ "${target}" == 'x86_64' ]; then
+        elif [[ "${target}" == 'x86_64' ]]; then
             # Install the x86_64 APK
             "${IRONFOX_ADB}" install -r "${IRONFOX_OUTPUTS_X86_64}"
         fi

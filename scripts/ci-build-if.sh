@@ -30,7 +30,7 @@ arm64|arm|x86_64|bundle)
     ;;
 esac
 
-if [ "${ci_build_target}" == 'bundle' ]; then
+if [[ "${ci_build_target}" == 'bundle' ]]; then
     # Extract our GeckoView AAR artifacts
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
@@ -41,12 +41,12 @@ if [ "${ci_build_target}" == 'bundle' ]; then
     "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
 
     # Fail-fast in case the signing key is unavailable or empty file
-    if ! [[ -f "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
+    if [[ ! -f "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
         echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} does not exist!"
         exit 1
     fi
 
-    if ! [[ -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
+    if [[ ! -s "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
         echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} is empty!"
         exit 1
     fi
@@ -63,16 +63,16 @@ bash -x "${IRONFOX_SCRIPTS}/build.sh" "${ci_build_target}"
 
 # Copy our GeckoView AAR archives to the artifacts directory for publishing
 mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
-if [ "${ci_build_target}" == 'arm64' ]; then
+if [[ "${ci_build_target}" == 'arm64' ]]; then
     cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
-elif [ "${ci_build_target}" == 'arm' ]; then
+elif [[ "${ci_build_target}" == 'arm' ]]; then
     cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
-elif [ "${ci_build_target}" == 'x86_64' ]; then
+elif [[ "${ci_build_target}" == 'x86_64' ]]; then
     cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/"
 fi
 
 # Copy our Fenix outputs to the artifacts directory for publishing
-if [ "${ci_build_target}" == 'bundle' ]; then
+if [[ "${ci_build_target}" == 'bundle' ]]; then
     mkdir -vp "${IRONFOX_APK_ARTIFACTS}"
     mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
 

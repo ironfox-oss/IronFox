@@ -27,7 +27,7 @@ readonly UP_AC_PATCH_FILES=($(yq '.patches[].file' "${IRONFOX_UP_AC}"/patches/pa
 
 function check_patch() {
     local readonly patch="${IRONFOX_PATCHES}/$1"
-    if ! [[ -f "${patch}" ]]; then
+    if [[ ! -f "${patch}" ]]; then
         printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "'${patch}' does not exist or is not a file"
         return 1
@@ -42,7 +42,7 @@ function check_patch() {
 
 function up_ac_check_patch() {
     local readonly patch="${IRONFOX_UP_AC}/patches/$1"
-    if ! [[ -f "${patch}" ]]; then
+    if [[ ! -f "${patch}" ]]; then
         printf "${RED}✗ %-45s: FAILED${NC}\n" "$(basename "${patch}")"
         echo "'${patch}' does not exist or is not a file"
         return 1

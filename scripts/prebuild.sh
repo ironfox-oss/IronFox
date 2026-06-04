@@ -18,11 +18,11 @@ fi
 # Prepare to build IronFox
 readonly IRONFOX_FROM_PREBUILD=1
 export IRONFOX_FROM_PREBUILD
-if [ "${IRONFOX_LOG_PREBUILD}" == 1 ]; then
+if [[ "${IRONFOX_LOG_PREBUILD}" == 1 ]]; then
     readonly PREBUILD_LOG_FILE="${IRONFOX_LOG_DIR}/prebuild.log"
 
     # If the log file already exists, remove it
-    if [ -f "${PREBUILD_LOG_FILE}" ]; then
+    if [[ -f "${PREBUILD_LOG_FILE}" ]]; then
         rm "${PREBUILD_LOG_FILE}"
     fi
 

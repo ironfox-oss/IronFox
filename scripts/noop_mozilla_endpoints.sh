@@ -24,22 +24,22 @@ IRONFOX_NOOP_FENIX=0
 IRONFOX_NOOP_GECKO=0
 IRONFOX_NOOP_GLEAN=0
 
-if [ "${noop_target}" == 'ac' ]; then
+if [[ "${noop_target}" == 'ac' ]]; then
     # No-op endpoints from Android Components
     IRONFOX_NOOP_AC=1
-elif [ "${noop_target}" == 'as' ]; then
+elif [[ "${noop_target}" == 'as' ]]; then
     # No-op endpoints from Application Services
     IRONFOX_NOOP_AS=1
-elif [ "${noop_target}" == 'fenix' ]; then
+elif [[ "${noop_target}" == 'fenix' ]]; then
     # No-op endpoints from Fenix
     IRONFOX_NOOP_FENIX=1
-elif [ "${noop_target}" == 'firefox' ]; then
+elif [[ "${noop_target}" == 'firefox' ]]; then
     # No-op endpoints from Firefox (Gecko/mozilla-central)
     IRONFOX_NOOP_GECKO=1
-elif [ "${noop_target}" == 'glean' ]; then
+elif [[ "${noop_target}" == 'glean' ]]; then
     # No-op endpoints from Glean
     IRONFOX_NOOP_GLEAN=1
-elif [ "${noop_target}" == 'all' ]; then
+elif [[ "${noop_target}" == 'all' ]]; then
     # If no argument is specified (or argument is set to "all"), just no-op endpoints for everything
     IRONFOX_NOOP_AC=1
     IRONFOX_NOOP_AS=1
@@ -78,47 +78,47 @@ function noop_mozilla_endpoints() {
     local readonly https_files_period=$(grep -rnlI --exclude=*.json --exclude=*.md --exclude=*.swift --exclude-dir=androidTest --exclude-dir=docs --exclude-dir=test --exclude-dir=tests "${dir}" -e "\"https://${endpoint}.[^\"']*\"" -e "'https://${endpoint}.[^\"']*'")
 
     # Check if any files were found and modify them
-    if [ -n "${files}" ]; then
+    if [[ -n "${files}" ]]; then
         echo_red_text "Removing ${endpoint} from files... ${files}"
         echo "${files}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}[^\"']*\"|\"\"|g" -e "s|'${endpoint}[^\"']*'|''|g"
     fi
 
-    if [ -n "${files_slash}" ]; then
+    if [[ -n "${files_slash}" ]]; then
         echo_red_text "Removing ${endpoint}/ from files... ${files_slash}"
         echo "${files_slash}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}/[^\"']*\"|\"\"|g" -e "s|'${endpoint}/[^\"']*'|''|g"
     fi
 
-    if [ -n "${files_period}" ]; then
+    if [[ -n "${files_period}" ]]; then
         echo_red_text "Removing ${endpoint}. from files... ${files_period}"
         echo "${files_period}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"${endpoint}.[^\"']*\"|\"\"|g" -e "s|'${endpoint}.[^\"']*'|''|g"
     fi
 
-    if [ -n "${http_files}" ]; then
+    if [[ -n "${http_files}" ]]; then
         echo_red_text "Removing http://${endpoint} from files... ${http_files}"
         echo "${http_files}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}[^\"']*'|''|g"
     fi
 
-    if [ -n "${http_files_slash}" ]; then
+    if [[ -n "${http_files_slash}" ]]; then
         echo_red_text "Removing http://${endpoint}/ from files... ${http_files_slash}"
         echo "${http_files_slash}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}/[^\"']*'|''|g"
     fi
 
-    if [ -n "${http_files_period}" ]; then
+    if [[ -n "${http_files_period}" ]]; then
         echo_red_text "Removing http://${endpoint}. from files... ${http_files_period}"
         echo "${http_files_period}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"http://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'http://${endpoint}.[^\"']*'|''|g"
     fi
 
-    if [ -n "${https_files}" ]; then
+    if [[ -n "${https_files}" ]]; then
         echo_red_text "Removing https://${endpoint} from files... ${https_files}"
         echo "${https_files}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}[^\"']*'|''|g"
     fi
 
-    if [ -n "${https_files_slash}" ]; then
+    if [[ -n "${https_files_slash}" ]]; then
         echo_red_text "Removing https://${endpoint}/ from files... ${https_files_slash}"
         echo "${https_files_slash}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}/[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}/[^\"']*'|''|g"
     fi
 
-    if [ -n "${https_files_period}" ]; then
+    if [[ -n "${https_files_period}" ]]; then
         echo_red_text "Removing https://${endpoint}. from files... ${https_files_period}"
         echo "${https_files_period}" | xargs -L1 "${IRONFOX_SED}" -i -r -e "s|\"https://${endpoint}.[^\"']*\"|\"\"|g" -e "s|'https://${endpoint}.[^\"']*'|''|g"
     fi
@@ -213,22 +213,22 @@ function noop_glean() {
     echo_green_text 'SUCCESS: No-oped endpoints from Glean'
 }
 
-if [ "${IRONFOX_NOOP_AC}" == 1 ]; then
+if [[ "${IRONFOX_NOOP_AC}" == 1 ]]; then
     noop_ac
 fi
 
-if [ "${IRONFOX_NOOP_AS}" == 1 ]; then
+if [[ "${IRONFOX_NOOP_AS}" == 1 ]]; then
     noop_as
 fi
 
-if [ "${IRONFOX_NOOP_FENIX}" == 1 ]; then
+if [[ "${IRONFOX_NOOP_FENIX}" == 1 ]]; then
     noop_fenix
 fi
 
-if [ "${IRONFOX_NOOP_GECKO}" == 1 ]; then
+if [[ "${IRONFOX_NOOP_GECKO}" == 1 ]]; then
     noop_firefox
 fi
 
-if [ "${IRONFOX_NOOP_GLEAN}" == 1 ]; then
+if [[ "${IRONFOX_NOOP_GLEAN}" == 1 ]]; then
     noop_glean
 fi

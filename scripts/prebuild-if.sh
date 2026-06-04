@@ -40,7 +40,7 @@ if [[ -z "${IRONFOX_FROM_PREBUILD+x}" ]]; then
     exit 1
 fi
 
-if [ -f "${IRONFOX_BUILD}/finished-prebuild" ]; then
+if [[ -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
     rm -f "${IRONFOX_BUILD}/finished-prebuild"
 fi
 
@@ -59,40 +59,40 @@ IRONFOX_PREPARE_MICROG=0
 IRONFOX_PREPARE_RUST=0
 IRONFOX_PREPARE_PREBUILDS=0
 
-if [ "${target}" == 'ac' ]; then
+if [[ "${target}" == 'ac' ]]; then
     # Prepare Android Components
     IRONFOX_PREPARE_AC=1
-elif [ "${target}" == 'android-sdk' ]; then
+elif [[ "${target}" == 'android-sdk' ]]; then
     # Prepare Android SDK
     IRONFOX_PREPARE_ANDROID_SDK=1
-elif [ "${target}" == 'as' ]; then
+elif [[ "${target}" == 'as' ]]; then
     # Prepare Application Services
     IRONFOX_PREPARE_AS=1
-elif [ "${target}" == 'bundletool' ]; then
+elif [[ "${target}" == 'bundletool' ]]; then
     # Prepare Bundletool
     IRONFOX_PREPARE_BUNDLETOOL=1
-elif [ "${target}" == 'fenix' ]; then
+elif [[ "${target}" == 'fenix' ]]; then
     # Prepare Fenix
     IRONFOX_PREPARE_FENIX=1
-elif [ "${target}" == 'firefox' ]; then
+elif [[ "${target}" == 'firefox' ]]; then
     # Prepare Firefox (Gecko/mozilla-central)
     IRONFOX_PREPARE_GECKO=1
-elif [ "${target}" == 'glean' ]; then
+elif [[ "${target}" == 'glean' ]]; then
     # Prepare Glean
     IRONFOX_PREPARE_GLEAN=1
-elif [ "${target}" == 'llvm' ]; then
+elif [[ "${target}" == 'llvm' ]]; then
     # Prepare LLVM
     IRONFOX_PREPARE_LLVM=1
-elif [ "${target}" == 'microg' ]; then
+elif [[ "${target}" == 'microg' ]]; then
     # Prepare microG
     IRONFOX_PREPARE_MICROG=1
-elif [ "${target}" == 'rust' ]; then
+elif [[ "${target}" == 'rust' ]]; then
     # Prepare rust/cargo
     IRONFOX_PREPARE_RUST=1
-elif [ "${target}" == 'prebuilds' ]; then
+elif [[ "${target}" == 'prebuilds' ]]; then
     # Prepare IronFox prebuilds
     IRONFOX_PREPARE_PREBUILDS=1
-elif [ "${target}" == 'all' ]; then
+elif [[ "${target}" == 'all' ]]; then
     # If no argument is specified (or argument is set to "all"), just prepare everything
     IRONFOX_PREPARE_AC=1
     IRONFOX_PREPARE_ANDROID_SDK=1
@@ -104,7 +104,7 @@ elif [ "${target}" == 'all' ]; then
     IRONFOX_PREPARE_RUST=1
 
     # Respect IRONFOX_NO_PREBUILDS...
-    if [ "${IRONFOX_NO_PREBUILDS}" == 1 ]; then
+    if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
         IRONFOX_PREPARE_BUNDLETOOL=1
         IRONFOX_PREPARE_PREBUILDS=1
         
@@ -278,7 +278,7 @@ function prepare_android_sdk() {
     fi
 
     # Create Android SDK Platform Tools symlink
-    if [ ! -d "${IRONFOX_ANDROID_SDK}/platform-tools" ]; then
+    if [[ ! -d "${IRONFOX_ANDROID_SDK}/platform-tools" ]]; then
         ln -s "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" "${IRONFOX_ANDROID_SDK}/platform-tools"
     fi
 
@@ -1164,48 +1164,48 @@ function prepare_rust() {
 
 echo_red_text "Preparing to build IronFox ${IRONFOX_VERSION}..."
 
-# This needs to run before we get Android Components, to ensure that ex. patches apply properly
-if [ "${IRONFOX_PREPARE_GECKO}" == 1 ]; then
+# This needs to run before we prepare Android Components, to ensure that ex. patches apply properly
+if [[ "${IRONFOX_PREPARE_GECKO}" == 1 ]]; then
    prepare_firefox
 fi
 
-if [ "${IRONFOX_PREPARE_AC}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_AC}" == 1 ]]; then
     prepare_ac
 fi
 
-if [ "${IRONFOX_PREPARE_ANDROID_SDK}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_ANDROID_SDK}" == 1 ]]; then
     prepare_android_sdk
 fi
 
-if [ "${IRONFOX_PREPARE_AS}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_AS}" == 1 ]]; then
     prepare_as
 fi
 
-if [ "${IRONFOX_PREPARE_BUNDLETOOL}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_BUNDLETOOL}" == 1 ]]; then
     prepare_bundletool
 fi
 
-if [ "${IRONFOX_PREPARE_FENIX}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_FENIX}" == 1 ]]; then
     prepare_fenix
 fi
 
-if [ "${IRONFOX_PREPARE_GLEAN}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_GLEAN}" == 1 ]]; then
     prepare_glean
 fi
 
-if [ "${IRONFOX_PREPARE_LLVM}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_LLVM}" == 1 ]]; then
     prepare_llvm
 fi
 
-if [ "${IRONFOX_PREPARE_MICROG}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_MICROG}" == 1 ]]; then
     prepare_microg
 fi
 
-if [ "${IRONFOX_PREPARE_PREBUILDS}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_PREBUILDS}" == 1 ]]; then
     prepare_prebuilds
 fi
 
-if [ "${IRONFOX_PREPARE_RUST}" == 1 ]; then
+if [[ "${IRONFOX_PREPARE_RUST}" == 1 ]]; then
     prepare_rust
 fi
 

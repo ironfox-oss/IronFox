@@ -61,7 +61,7 @@ echo_green_text "For Glean: glean-patch-name"
 read -p 'Please enter your desired patch name: ' PATCH_NAME
 
 # Ensure the patch doesn't already exist
-if [ -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" ]; then
+if [[ -f "${IRONFOX_PATCHES}/${PATCH_NAME}.patch" ]]; then
     echo_red_text "WARNING: A Patch with your chosen name already exists"
     read -p 'Are you sure you want to continue? (y/n): ' OVERWRITE
     case ${OVERWRITE} in

@@ -84,7 +84,7 @@ export IRONFOX_CI
 
 ## If so, set our CI environment variables
 readonly IRONFOX_ENV_CI="${IRONFOX_SCRIPTS}/env_ci.sh"
-if [ "${IRONFOX_CI}" == 1 ]; then
+if [[ "${IRONFOX_CI}" == 1 ]]; then
     source "${IRONFOX_ENV_CI}"
 fi
 
@@ -1252,12 +1252,12 @@ readonly IRONFOX_NPM
 export IRONFOX_NPM
 
 # Where our final ARM64 APK should be placed
-if [ "${IRONFOX_SIGN}" == 1 ]; then
+if [[ "${IRONFOX_SIGN}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_ARM64_SUFFIX='arm64-v8a'
 else
     readonly IRONFOX_OUTPUTS_ARM64_SUFFIX='arm64-v8a-debug-signed'
 fi
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_ARM64_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_ARM64_SUFFIX}.apk"
 else
     readonly IRONFOX_OUTPUTS_ARM64_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_ARM64_SUFFIX}.apk"
@@ -1269,7 +1269,7 @@ readonly IRONFOX_OUTPUTS_ARM64
 export IRONFOX_OUTPUTS_ARM64
 
 # If we're going to sign IronFox (translation: when IRONFOX_SIGN is set), this is where the unsigned ARM64 APK will be placed
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_ARM64_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_VERSION}-arm64-v8a-unsigned.apk"
 else
     readonly IRONFOX_OUTPUTS_ARM64_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-arm64-v8a-unsigned.apk"
@@ -1281,12 +1281,12 @@ readonly IRONFOX_OUTPUTS_ARM64_UNSIGNED
 export IRONFOX_OUTPUTS_ARM64_UNSIGNED
 
 # Where our final ARM APK should be placed
-if [ "${IRONFOX_SIGN}" == 1 ]; then
+if [[ "${IRONFOX_SIGN}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_ARM_SUFFIX='armeabi-v7a'
 else
     readonly IRONFOX_OUTPUTS_ARM_SUFFIX='armeabi-v7a-debug-signed'
 fi
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_ARM_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_ARM_SUFFIX}.apk"
 else
     readonly IRONFOX_OUTPUTS_ARM_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_ARM_SUFFIX}.apk"
@@ -1298,7 +1298,7 @@ readonly IRONFOX_OUTPUTS_ARM
 export IRONFOX_OUTPUTS_ARM
 
 # If we're going to sign IronFox (translation: when IRONFOX_SIGN is set), this is where the unsigned ARM APK will be placed
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_ARM_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_VERSION}-armeabi-v7a-unsigned.apk"
 else
     readonly IRONFOX_OUTPUTS_ARM_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-armeabi-v7a-unsigned.apk"
@@ -1310,12 +1310,12 @@ readonly IRONFOX_OUTPUTS_ARM_UNSIGNED
 export IRONFOX_OUTPUTS_ARM_UNSIGNED
 
 # Where our final x86_64 APK should be placed
-if [ "${IRONFOX_SIGN}" == 1 ]; then
+if [[ "${IRONFOX_SIGN}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_X86_64_SUFFIX='x86_64'
 else
     readonly IRONFOX_OUTPUTS_X86_64_SUFFIX='x86_64-debug-signed'
 fi
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_X86_64_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_X86_64_SUFFIX}.apk"
 else
     readonly IRONFOX_OUTPUTS_X86_64_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_X86_64_SUFFIX}.apk"
@@ -1327,7 +1327,7 @@ readonly IRONFOX_OUTPUTS_X86_64
 export IRONFOX_OUTPUTS_X86_64
 
 # If we're going to sign IronFox (translation: when IRONFOX_SIGN is set), this is where the unsigned x86_64 APK will be placed
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_X86_64_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_VERSION}-x86_64-unsigned.apk"
 else
     readonly IRONFOX_OUTPUTS_X86_64_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-x86_64-unsigned.apk"
@@ -1339,12 +1339,12 @@ readonly IRONFOX_OUTPUTS_X86_64_UNSIGNED
 export IRONFOX_OUTPUTS_X86_64_UNSIGNED
 
 # Where our final universal APK should be placed
-if [ "${IRONFOX_SIGN}" == 1 ]; then
+if [[ "${IRONFOX_SIGN}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_UNIVERSAL_SUFFIX='universal'
 else
     readonly IRONFOX_OUTPUTS_UNIVERSAL_SUFFIX='universal-debug-signed'
 fi
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_UNIVERSAL_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_UNIVERSAL_SUFFIX}.apk"
 else
     readonly IRONFOX_OUTPUTS_UNIVERSAL_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-${IRONFOX_OUTPUTS_UNIVERSAL_SUFFIX}.apk"
@@ -1356,7 +1356,7 @@ readonly IRONFOX_OUTPUTS_UNIVERSAL
 export IRONFOX_OUTPUTS_UNIVERSAL
 
 # If we're going to sign IronFox (translation: when IRONFOX_SIGN is set), this is where the unsigned universal APK will be placed
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_VERSION}-universal-unsigned.apk"
 else
     readonly IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED_DEFAULT="${IRONFOX_OUTPUTS_APK_UNSIGNED}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}-universal-unsigned.apk"
@@ -1368,7 +1368,7 @@ readonly IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED
 export IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED
 
 # Where our AAB should be placed
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_BUNDLE_AAB_DEFAULT="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_VERSION}.aab"
 else
     readonly IRONFOX_OUTPUTS_BUNDLE_AAB_DEFAULT="${IRONFOX_OUTPUTS_AAB}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}.aab"
@@ -1380,7 +1380,7 @@ readonly IRONFOX_OUTPUTS_BUNDLE_AAB
 export IRONFOX_OUTPUTS_BUNDLE_AAB
 
 # Where our final bundle ApkSet should be placed
-if [ "${IRONFOX_RELEASE}" == 1 ]; then
+if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
     readonly IRONFOX_OUTPUTS_BUNDLE_DEFAULT="${IRONFOX_OUTPUTS_APKS}/ironfox-${IRONFOX_VERSION}.apks"
 else
     readonly IRONFOX_OUTPUTS_BUNDLE_DEFAULT="${IRONFOX_OUTPUTS_APK}/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_VERSION}.apks"

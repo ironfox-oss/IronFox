@@ -33,12 +33,12 @@ if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
     exit 1
 fi
 
-if ! [ -f "${IRONFOX_BUILD}/finished-prebuild" ]; then
+if [[ ! -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
     echo_red_text 'ERROR: Do not run build.sh until after you have ran prebuild.sh.'
     exit 1
 fi
 
-if [ -z "${1+x}" ]; then
+if [[ -z "${1+x}" ]]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
@@ -82,23 +82,23 @@ export IRONFOX_TARGET_ARCH
 export IRONFOX_TARGET_ABI
 export IRONFOX_TARGET_PRETTY
 
-if [ ! -d "${IRONFOX_ANDROID_SDK}" ]; then
+if [[ ! -d "${IRONFOX_ANDROID_SDK}" ]]; then
     echo_red_text "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
     exit 1
 fi
 
-if [ ! -d "${IRONFOX_ANDROID_NDK}" ]; then
+if [[ ! -d "${IRONFOX_ANDROID_NDK}" ]]; then
     echo_red_text "\$IRONFOX_ANDROID_NDK($IRONFOX_ANDROID_NDK) does not exist."
     exit 1
 fi
 
 readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
-[ "${JAVA_VER}" -ge 15 ] || {
+[[ "${JAVA_VER}" -ge 15 ]] || {
     echo_red_text "Java 17 or newer must be set as default JDK"
     exit 1
 }
 
-if [ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]; then
+if [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]]; then
     echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
     read -p 'Do you want to continue [y/N] ' -n 1 -r
     echo ''
@@ -147,30 +147,30 @@ function set_build_env() {
     local readonly IF_LOCAL_VERSION_STAMP="$("${IRONFOX_DATE}" "+%s%N")"
 
     # Override Gecko(View)'s build ID (if desired)
-    if [ "${IRONFOX_BUILD_ID_OVERRIDE}" != 'null' ]; then
+    if [[ "${IRONFOX_BUILD_ID_OVERRIDE}" != 'null' ]]; then
         IF_BUILD_ID="${IRONFOX_BUILD_ID_OVERRIDE}"
-    elif [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
         IF_BUILD_ID="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
     else
         IF_BUILD_ID='null'
     fi
 
     # Override our version for local Android Components substitution (if desired)
-    if [ "${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}" != 'null' ]; then
+    if [[ "${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}" != 'null' ]]; then
         IF_LOCAL_AC_VERSION_STAMP="${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}"
     else
         IF_LOCAL_AC_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
     fi
 
     # Override our version for local Application Services substitution (if desired)
-    if [ "${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}" != 'null' ]; then
+    if [[ "${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}" != 'null' ]]; then
         IF_LOCAL_AS_VERSION_STAMP="${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}"
     else
         IF_LOCAL_AS_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
     fi
 
     # Override our version for local Glean substitution (if desired)
-    if [ "${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}" != 'null' ]; then
+    if [[ "${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}" != 'null' ]]; then
         IF_LOCAL_GLEAN_VERSION_STAMP="${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}"
     else
         IF_LOCAL_GLEAN_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
@@ -187,7 +187,7 @@ EOF
     source "${IRONFOX_ENV_BUILD}"
 
     # Set Gecko(View)'s build ID
-    if [ "${IF_BUILD_ID}" != 'null' ]; then
+    if [[ "${IF_BUILD_ID}" != 'null' ]]; then
         readonly MOZ_BUILD_DATE="${IF_BUILD_ID}"
         export MOZ_BUILD_DATE
     fi
@@ -235,7 +235,7 @@ function prep_fenix() {
 
     "${IRONFOX_SED}" -i -e "s/include \"armeabi-v7a\", \"arm64-v8a\", \"x86_64\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle"
 
-    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]]; then
         # Universal APKs make no sense for architecture-specific builds...
         "${IRONFOX_SED}" -i -e '/universalApk/s/true/false/' "${IRONFOX_FENIX}/app/build.gradle"
     fi
@@ -512,7 +512,7 @@ function build_nimbus_fml() {
     popd
 
     # Create symlink for mozilla-central
-    if [ -f "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/dist/host/bin/nimbus-fml" ]; then
+    if [[ -f "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/dist/host/bin/nimbus-fml" ]]; then
         rm -f "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/dist/host/bin/nimbus-fml"
         ln -s "${IRONFOX_AS}/target/release/nimbus-fml" "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/dist/host/bin/nimbus-fml"
     fi
@@ -540,7 +540,7 @@ function package_gecko() {
     "${IRONFOX_MACH}" configure
 
     # We don't want to clean Gradle here on bundle builds, because doing so will cause it to clean after each architecture is built...
-    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]]; then
         "${IRONFOX_MACH}" gradle geckoview:clean
     fi
 
@@ -650,37 +650,37 @@ function build_gecko_bundle() {
     # Verify that our GeckoView AAR archives are not missing or broken
 
     # Verify that our ARM64 GeckoView AAR archive exists
-    if ! [ -f "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]; then
+    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
         echo_red_text "ERROR: ARM64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
         exit 1
     fi
 
     # Verify that our ARM64 GeckoView AAR archive is not an empty file
-    if ! [ -s "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]; then
+    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
         echo_red_text "ERROR: ARM64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
         exit 1
     fi
 
     # Verify that our ARM GeckoView AAR archive exists
-    if ! [ -f "${IRONFOX_GECKOVIEW_AAR_ARM}" ]; then
+    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
         echo_red_text "ERROR: ARM GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM})"
         exit 1
     fi
 
     # Verify that our ARM GeckoView AAR archive is not an empty file
-    if ! [ -s "${IRONFOX_GECKOVIEW_AAR_ARM}" ]; then
+    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
         echo_red_text "ERROR: ARM GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM})"
         exit 1
     fi
 
     # Verify that our x86_64 GeckoView AAR archive exists
-    if ! [ -f "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]; then
+    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
         echo_red_text "ERROR: x86_64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
         exit 1
     fi
 
     # Verify that our x86_64 GeckoView AAR archive is not an empty file
-    if ! [ -s "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]; then
+    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
         echo_red_text "ERROR: x86_64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
         exit 1
     fi
@@ -754,7 +754,7 @@ function clobber_gecko_x86_64() {
 function clobber_gecko() {
     "${IRONFOX_MACH}" configure
     "${IRONFOX_MACH}" clobber
-    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ] && [ "${IRONFOX_CI}" != 1 ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_CI}" != 1 ]]; then
         clobber_gecko_arm64
         clobber_gecko_arm
         clobber_gecko_x86_64
@@ -773,21 +773,21 @@ function build_gecko() {
     # Always clobber to ensure that builds are fresh
     clobber_gecko
 
-    if [ "${IRONFOX_TARGET_ARCH}" != 'bundle' ] || [ "${IRONFOX_CI}" == 1 ]; then
-        if [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]] || [[ "${IRONFOX_CI}" == 1 ]]; then
+        if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
             # Build ARM64
             build_gecko_arm64
-        elif [ "${IRONFOX_TARGET_ARCH}" == 'arm' ]; then
+        elif [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]]; then
             # Build ARM
             build_gecko_arm
-        elif [ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]; then
+        elif [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
             # Build x86_64
             build_gecko_x86_64
-        elif [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+        elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
             # Create our bundle + fat AAR...
             build_gecko_bundle
         fi
-    elif [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
         # 1. Build ARM64
         build_gecko_arm64
 
@@ -894,8 +894,8 @@ function build_fenix() {
     "${IRONFOX_MACH}" gradle -p mobile/android/fenix assembleRelease
 
     # 1. Export APK for ARM64
-    if [ "${IRONFOX_TARGET_ARCH}" == 'arm64' ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        if [ "${IRONFOX_SIGN}" == 1 ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        if [[ "${IRONFOX_SIGN}" == 1 ]]; then
             # Create our output directory
             mkdir -p $(dirname "${IRONFOX_OUTPUTS_ARM64_UNSIGNED}")
 
@@ -909,8 +909,8 @@ function build_fenix() {
     fi
 
     # 2. Export APK for ARM
-    if [ "${IRONFOX_TARGET_ARCH}" == 'arm' ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        if [ "${IRONFOX_SIGN}" == 1 ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        if [[ "${IRONFOX_SIGN}" == 1 ]]; then
             # Create our output directory
             mkdir -p $(dirname "${IRONFOX_OUTPUTS_ARM_UNSIGNED}")
 
@@ -924,8 +924,8 @@ function build_fenix() {
     fi
 
     # 3. Export APK for x86_64
-    if [ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
-        if [ "${IRONFOX_SIGN}" == 1 ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        if [[ "${IRONFOX_SIGN}" == 1 ]]; then
             # Create our output directory
             mkdir -p $(dirname "${IRONFOX_OUTPUTS_X86_64_UNSIGNED}")
 
@@ -939,9 +939,9 @@ function build_fenix() {
     fi
 
     # 4. Export universal APK + build and export our AAB
-    if [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
         # 4. Export universal APK
-        if [ "${IRONFOX_SIGN}" == 1 ]; then
+        if [[ "${IRONFOX_SIGN}" == 1 ]]; then
             # Create our output directory
             mkdir -p $(dirname "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}")
 
@@ -982,7 +982,7 @@ prep_phoenix
 prep_glean
 prep_llvm
 
-if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if [[ "${IRONFOX_CI}" != 1 ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
     prep_fenix
     prep_up_ac
 fi
@@ -1005,7 +1005,7 @@ build_microg
 build_phoenix
 build_gecko
 
-if [ "${IRONFOX_CI}" != 1 ] || [ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]; then
+if [[ "${IRONFOX_CI}" != 1 ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
     build_ac
     build_as
     build_up_ac

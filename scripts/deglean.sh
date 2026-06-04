@@ -23,19 +23,19 @@ IRONFOX_DEGLEAN_AS=0
 IRONFOX_DEGLEAN_FENIX=0
 IRONFOX_DEGLEAN_GECKO=0
 
-if [ "${deglean_target}" == 'ac' ]; then
+if [[ "${deglean_target}" == 'ac' ]]; then
     # De-glean Android Components
     IRONFOX_DEGLEAN_AC=1
-elif [ "${deglean_target}" == 'as' ]; then
+elif [[ "${deglean_target}" == 'as' ]]; then
     # De-glean Application Services
     IRONFOX_DEGLEAN_AS=1
-elif [ "${deglean_target}" == 'fenix' ]; then
+elif [[ "${deglean_target}" == 'fenix' ]]; then
     # De-glean Fenix
     IRONFOX_DEGLEAN_FENIX=1
-elif [ "${deglean_target}" == 'firefox' ]; then
+elif [[ "${deglean_target}" == 'firefox' ]]; then
     # De-glean Firefox (Gecko/mozilla-central)
     IRONFOX_DEGLEAN_GECKO=1
-elif [ "${deglean_target}" == 'all' ]; then
+elif [[ "${deglean_target}" == 'all' ]]; then
     # If no argument is specified (or argument is set to "all"), just de-glean everything
     IRONFOX_DEGLEAN_AC=1
     IRONFOX_DEGLEAN_AS=1
@@ -61,7 +61,7 @@ function deglean() {
     local readonly kt_files=$(find "${dir}" -type f -name "*.kt")
     local readonly yaml_files=$(find "${dir}" -type f -name "metrics.yaml" -o -name "pings.yaml")
 
-    if [ -n "${gradle_files}" ]; then
+    if [[ -n "${gradle_files}" ]]; then
         for file in $gradle_files; do
             local modified=false
             "${IRONFOX_PYTHON}" "${IRONFOX_SCRIPTS}/deglean.py" "${file}"
@@ -99,7 +99,7 @@ function deglean() {
         echo_green_text "No *.gradle files found in ${dir}."
     fi
 
-    if [ -n "${kt_files}" ]; then
+    if [[ -n "${kt_files}" ]]; then
         for file in $kt_files; do
             local modified=false
 
@@ -121,7 +121,7 @@ function deglean() {
         echo_green_text "No *.kt files found in ${dir}."
     fi
 
-    if [ -n "${yaml_files}" ]; then
+    if [[ -n "${yaml_files}" ]]; then
         for yaml_file in $yaml_files; do
             rm -vf "${yaml_file}"
             echo_red_text "De-gleaned ${yaml_file}."
@@ -135,7 +135,7 @@ function fenix_deglean() {
     local readonly dir="$1"
     local readonly gradle_files=$(find "${dir}" -type f -name "*.gradle")
 
-    if [ -n "${gradle_files}" ]; then
+    if [[ -n "${gradle_files}" ]]; then
         for file in $gradle_files; do
             local modified=false
 
@@ -149,7 +149,7 @@ function fenix_deglean() {
                 local modified=true
             fi
 
-            if [ "${modified}" = true ]; then
+            if [[ "${modified}" = true ]]; then
                 echo_red_text "De-gleaned ${file}."
             fi
         done
@@ -232,18 +232,18 @@ function deglean_firefox() {
     echo_green_text 'SUCCESS: De-gleaned Firefox'
 }
 
-if [ "${IRONFOX_DEGLEAN_AC}" == 1 ]; then
+if [[ "${IRONFOX_DEGLEAN_AC}" == 1 ]]; then
     deglean_ac
 fi
 
-if [ "${IRONFOX_DEGLEAN_AS}" == 1 ]; then
+if [[ "${IRONFOX_DEGLEAN_AS}" == 1 ]]; then
     deglean_as
 fi
 
-if [ "${IRONFOX_DEGLEAN_FENIX}" == 1 ]; then
+if [[ "${IRONFOX_DEGLEAN_FENIX}" == 1 ]]; then
     deglean_fenix
 fi
 
-if [ "${IRONFOX_DEGLEAN_GECKO}" == 1 ]; then
+if [[ "${IRONFOX_DEGLEAN_GECKO}" == 1 ]]; then
     deglean_firefox
 fi

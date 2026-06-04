@@ -40,7 +40,7 @@ function download_release() {
     curl ${IRONFOX_CURL_FLAGS} -sSL "${target_expected_sha512sum_url}" -o "${output_expected_sha512sum}"
     local readonly expected_sha512sum=$(cat "${output_expected_sha512sum}" | xargs)
     local readonly local_sha512sum=$(sha512sum "${output_apk}" | "${IRONFOX_AWK}" '{print $1}')
-    if [ "${local_sha512sum}" != "${expected_sha512sum}" ]; then
+    if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
         echo_red_text 'ERROR: Checksum validation failed.'
         echo "Expected SHA512sum: ${expected_sha512sum}"
         echo "Actual SHA512sum: ${local_sha512sum}"
@@ -97,11 +97,11 @@ readonly previous_previous_apk_x86_64="ironfox-${previous_previous_version}-x86_
 
 for apk in "${REPO_DIR_PATH}"/*.apk; do
     apk_basename=$(basename "${apk}")
-    if [ "${apk_basename}" != "${current_apk_arm64}" ] && [ "${apk_basename}" != "${previous_apk_arm64}" ] &&
-     [ "${apk_basename}" != "${previous_previous_apk_arm64}" ] && [ "${apk_basename}" != "${current_apk_arm}" ] &&
-     [ "${apk_basename}" != "${previous_apk_arm}" ] && [ "${apk_basename}" != "${previous_previous_apk_arm}" ] &&
-     [ "${apk_basename}" != "${current_apk_x86_64}" ] && [ "${apk_basename}" != "${previous_apk_x86_64}" ] &&
-     [ "${apk_basename}" != "${previous_previous_apk_x86_64}" ]; then
+    if [[ "${apk_basename}" != "${current_apk_arm64}" ]] && [[ "${apk_basename}" != "${previous_apk_arm64}" ]] &&
+     [[ "${apk_basename}" != "${previous_previous_apk_arm64}" ]] && [[ "${apk_basename}" != "${current_apk_arm}" ]] &&
+     [[ "${apk_basename}" != "${previous_apk_arm}" ]] && [[ "${apk_basename}" != "${previous_previous_apk_arm}" ]] &&
+     [[ "${apk_basename}" != "${current_apk_x86_64}" ]] && [[ "${apk_basename}" != "${previous_apk_x86_64}" ]] &&
+     [[ "${apk_basename}" != "${previous_previous_apk_x86_64}" ]]; then
         rm -vf "${apk}"
     fi
 done
