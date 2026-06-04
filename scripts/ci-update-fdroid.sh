@@ -32,12 +32,12 @@ function download_release() {
 
     # Download the APK
     echo_red_text "Downloading ${target_apk} from ${target_apk_url}..."
-    curl ${IRONFOX_CURL_FLAGS} -sSL "${target_apk_url}" -o "${output_apk}"
+    curl ${IRONFOX_CURL_FLAGS} --location "${target_apk_url}" --output "${output_apk}"
     echo_green_text "SUCCESS: Downloaded ${target_apk}"
 
     # Check the SHA512sum
     echo_red_text "Validating SHA512sum for ${target_apk}.."
-    curl ${IRONFOX_CURL_FLAGS} -sSL "${target_expected_sha512sum_url}" -o "${output_expected_sha512sum}"
+    curl ${IRONFOX_CURL_FLAGS} --location "${target_expected_sha512sum_url}" --output "${output_expected_sha512sum}"
     local readonly expected_sha512sum=$(cat "${output_expected_sha512sum}" | xargs)
     local readonly local_sha512sum=$(sha512sum "${output_apk}" | "${IRONFOX_AWK}" '{print $1}')
     if [[ "${local_sha512sum}" != "${expected_sha512sum}" ]]; then
@@ -77,8 +77,8 @@ download_releases
 # Because we now upload releases to releases.ironfoxoss.org, the F-Droid repo doesn't need to store them all anymore
 # So to improve performance and reduce size, we can keep only the last 3 releases
 
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' -o "${IRONFOX_ROOT}/previous_release.txt"
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_previous_release.txt' -o "${IRONFOX_ROOT}/previous_previous_release.txt"
+curl ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' --output "${IRONFOX_ROOT}/previous_release.txt"
+curl ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/previous_previous_release.txt' --output "${IRONFOX_ROOT}/previous_previous_release.txt"
 
 readonly previous_version=$(cat "${IRONFOX_ROOT}/previous_release.txt" | xargs)
 readonly previous_previous_version=$(cat "${IRONFOX_ROOT}/previous_previous_release.txt" | xargs)

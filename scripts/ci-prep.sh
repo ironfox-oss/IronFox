@@ -125,7 +125,7 @@ function prep_android_keystore() {
     mkdir -p $(dirname "${IRONFOX_ANDROID_KEYSTORE_PASS_FILE}")
 
     # Download the Android keystore
-    curl ${IRONFOX_CURL_FLAGS} --fail --location --silent \
+    curl ${IRONFOX_CURL_FLAGS} --fail --location \
         --request GET \
         --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
         "${IRONFOX_ANDROID_KEYSTORE_URL}" \

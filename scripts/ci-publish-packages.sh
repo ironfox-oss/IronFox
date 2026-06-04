@@ -286,8 +286,8 @@ upload_to_s3 "${IRONFOX_ROOT}/updates.json" 'ironfox/releases'
 
 # Because we now upload all releases to releases.ironfoxoss.org, we only want to keep the last 3 releases in ex. F-Droid
 ## In order to do so, we need to store/upload the current and prior 2 versions of IronFox as text files
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/latest_release.txt' -o "${IRONFOX_ROOT}/current-latest_release.txt"
-curl ${IRONFOX_CURL_FLAGS} -sSL 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' -o "${IRONFOX_ROOT}/current-previous_release.txt"
+curl ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/latest_release.txt' --output "${IRONFOX_ROOT}/current-latest_release.txt"
+curl ${IRONFOX_CURL_FLAGS} --location 'https://releases.ironfoxoss.org/ironfox/releases/previous_release.txt' --output "${IRONFOX_ROOT}/current-previous_release.txt"
 
 echo -n "${IRONFOX_VERSION}" > "${IRONFOX_ROOT}/latest_release.txt"
 cp "${IRONFOX_ROOT}/current-latest_release.txt" "${IRONFOX_ROOT}/previous_release.txt"
