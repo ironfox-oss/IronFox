@@ -11,10 +11,10 @@ index 579db37cf75a..e2869c0a37e3 100644
              onPreferenceChangeListener = createMetricPreferenceChangeListener("contile")
          }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 741a1a7679bd..eae8b2342c22 100644
+index 83e0f40483..09a6f1582c 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2225,7 +2225,7 @@ class Settings(
+@@ -2188,7 +2188,7 @@ class Settings(
       */
      var showContileFeature by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_enable_contile),

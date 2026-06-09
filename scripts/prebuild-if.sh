@@ -481,6 +481,7 @@ function prepare_fenix() {
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksTelemetryMiddleware.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ActivationPing.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustMetricsService.kt"
+    rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/AdjustThirdPartySharingController.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/BreadcrumbsRecorder.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/ConversionEventRecorder.kt"
     rm -v "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/components/metrics/Event.kt"

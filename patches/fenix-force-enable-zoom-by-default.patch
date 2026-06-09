@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..c2175a061a04 100644
+index 83e0f40483b7..099aa373effe 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -368,7 +368,7 @@ class Settings(
+@@ -397,7 +397,7 @@ class Settings(
  
      var forceEnableZoom by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_accessibility_force_enable_zoom),

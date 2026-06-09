@@ -10,7 +10,7 @@ Signed-off-by: celenity <celenity@celenity.dev>
  1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 741a1a7679bd..cea4d6f43a04 100644
+index 83e0f40483..cf447ef5cc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -383,7 +383,7 @@ class Settings(
@@ -22,7 +22,7 @@ index 741a1a7679bd..cea4d6f43a04 100644
  
      val cfrPopupsEnabled by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_cfr_popups_enabled),
-@@ -523,7 +523,7 @@ class Settings(
+@@ -533,7 +533,7 @@ class Settings(
       */
      var showWallpaperOnboarding by booleanPreference(
          key = appContext.getPreferenceKey(R.string.pref_key_wallpapers_onboarding),
@@ -31,7 +31,7 @@ index 741a1a7679bd..cea4d6f43a04 100644
      )
  
      var openLinksInAPrivateTab by booleanPreference(
-@@ -992,7 +992,7 @@ class Settings(
+@@ -1002,7 +1002,7 @@ class Settings(
       */
      var showFirstTimeTranslation: Boolean by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_first_time_translation),
@@ -40,7 +40,7 @@ index 741a1a7679bd..cea4d6f43a04 100644
      )
  
      /**
-@@ -1274,7 +1274,7 @@ class Settings(
+@@ -1284,7 +1284,7 @@ class Settings(
       */
      var shouldShowCookieBannersCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_cookie_banners_action_popup),
@@ -49,7 +49,7 @@ index 741a1a7679bd..cea4d6f43a04 100644
      )
  
      var shouldShowTabSwipeCFR by booleanPreference(
-@@ -1284,7 +1284,7 @@ class Settings(
+@@ -1294,7 +1294,7 @@ class Settings(
  
      var hasShownTabSwipeCFR by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_toolbar_has_shown_tab_swipe_cfr),
@@ -58,7 +58,7 @@ index 741a1a7679bd..cea4d6f43a04 100644
      )
  
      val blockCookiesSelectionInCustomTrackingProtection by stringPreference(
-@@ -1710,12 +1710,12 @@ class Settings(
+@@ -1673,12 +1673,12 @@ class Settings(
  
      var userKnowsAboutPwas by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_user_knows_about_pwa),
@@ -73,7 +73,7 @@ index 741a1a7679bd..cea4d6f43a04 100644
      )
  
      val shouldShowOpenInAppCfr: Boolean
-@@ -1723,17 +1723,17 @@ class Settings(
+@@ -1686,17 +1686,17 @@ class Settings(
  
      var shouldShowAutoCloseTabsBanner by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_auto_close_tabs_banner),
@@ -94,7 +94,7 @@ index 741a1a7679bd..cea4d6f43a04 100644
      )
  
      /**
-@@ -1741,7 +1741,7 @@ class Settings(
+@@ -1704,7 +1704,7 @@ class Settings(
       */
      var hasInactiveTabsAutoCloseDialogBeenDismissed by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_has_inactive_tabs_auto_close_dialog_dismissed),

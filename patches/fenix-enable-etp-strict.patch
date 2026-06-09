@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index c7db941b0f7e..e15d0bc7e8cd 100644
+index 83e0f40483b7..61833cefeabf 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1066,10 +1066,10 @@ class Settings(
+@@ -1146,10 +1146,10 @@ class Settings(
          default = false,
      )
  
@@ -14,9 +14,9 @@ index c7db941b0f7e..e15d0bc7e8cd 100644
 -    )
 +    ) */
  
-     var shouldEnableGlobalPrivacyControl by booleanPreference(
-         appContext.getPreferenceKey(R.string.pref_key_privacy_enable_global_privacy_control),
-@@ -1164,20 +1164,20 @@ class Settings(
+     var shouldUseTrackingProtectionDatabase by booleanPreference(
+         appContext.getPreferenceKey(R.string.pref_key_tracking_protection_database_status),
+@@ -1212,20 +1212,20 @@ class Settings(
          default = false,
      )
  

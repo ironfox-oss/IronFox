@@ -10,10 +10,10 @@ Signed-off-by: celenity <celenity@celenity.dev>
  2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 81d95a9666a1..5fc6b1cba9ae 100644
+index 83e0f40483..a0285f57dc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -1512,7 +1512,7 @@ class Settings(
+@@ -1603,7 +1603,7 @@ class Settings(
  
      val shouldShowSearchSuggestions by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions),
@@ -22,7 +22,7 @@ index 81d95a9666a1..5fc6b1cba9ae 100644
      )
  
      val shouldAutocompleteInAwesomebar by booleanPreference(
-@@ -1548,7 +1548,7 @@ class Settings(
+@@ -1639,7 +1639,7 @@ class Settings(
  
      var showSearchSuggestionsInPrivateOnboardingFinished by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_show_search_suggestions_in_private_onboarding),

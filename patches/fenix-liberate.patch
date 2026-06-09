@@ -522,10 +522,10 @@ index 8fad2511e533..220c683013dc 100644
                  utmMedium: ${settings.utmMedium}
                  utmSource: ${settings.utmSource}
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index a975ccd3d669..6d4149ff1124 100644
+index 83e0f40483b7..1e9f892b6018 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-@@ -2227,7 +2227,7 @@ class Settings(
+@@ -2293,7 +2293,7 @@ class Settings(
       */
      var shouldShowMarketingOnboarding by booleanPreference(
          appContext.getPreferenceKey(R.string.pref_key_should_show_marketing_onboarding),
@@ -533,7 +533,7 @@ index a975ccd3d669..6d4149ff1124 100644
 +        default = false,
      )
  
-     var shouldUseComposableToolbar by booleanPreference(
+     val shouldUseComposableToolbar = true
 -- 
 2.53.0
 

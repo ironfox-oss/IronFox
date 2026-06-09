@@ -1,5 +1,18 @@
+diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+index 742522506d..d881cfe5a6 100644
+--- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
++++ b/mobile/android/fenix/app/src/main/AndroidManifest.xml
+@@ -525,7 +525,7 @@
+                 <data android:host="settings"/>
+                 <data android:host="settings_accessibility"/>
+                 <data android:host="settings_addon_manager"/>
+-                <data android:host="settings_ai_controls"/>
++                <!-- <data android:host="settings_ai_controls"/> -->
+                 <data android:host="settings_delete_browsing_data"/>
+                 <data android:host="settings_logins"/>
+                 <data android:host="settings_notifications"/>
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
-index 741a1a7679..d83537831a 100644
+index 83e0f40483..f15c7488c1 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 @@ -2769,7 +2769,7 @@ class Settings(
