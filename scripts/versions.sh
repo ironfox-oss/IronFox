@@ -71,9 +71,10 @@ readonly WASI_VERSION='20'
 # Tools
 
 ## androguard
+### Version: v4.1.4
 ### https://github.com/androguard/androguard
-readonly ANDROGUARD_COMMIT='dd458bead6165975c3ef0b1b78eaf2450e4889d9'
-readonly ANDROGUARD_SHA512SUM='b277363110c1984b43cb99b59685849551b7e5ec66c7a9783ea06ac4324d558094ee7e840695bada51d01fa690df34c0d02417001ddf087bec30adc205270166'
+readonly ANDROGUARD_COMMIT='d594fd39beb934e438a5bf8089b206d5800d81e0'
+readonly ANDROGUARD_SHA512SUM='d167b3ca58c073758bd478e68a92f6efe9cc93e14ac4abf52cdadc4917319bdd2fe24ae8c3ba9a584b746ce349247ac853eb7e77eb1125c6a870a199c2b756f2'
 
 ## Android NDK
 ### Version: 29.0.14206865 (r29)
