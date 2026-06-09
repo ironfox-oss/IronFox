@@ -378,7 +378,7 @@ function update_sha512sum() {
         echo_red_text 'Updating SHA512sum for F-Droid Gradle script...'
         "${IRONFOX_SED}" -i -e "s|GRADLE_SHA512SUM='.*'|GRADLE_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for F-Droid Gradle script'
-    elif [[ "${old_sha512sum}" == "${GYP_SHA512SUM}" ]] then
+    elif [[ "${old_sha512sum}" == "${GYP_SHA512SUM}" ]]; then
         echo_red_text 'Updating SHA512sum for GYP...'
         "${IRONFOX_SED}" -i -e "s|GYP_SHA512SUM='.*'|GYP_SHA512SUM='"${new_sha512sum}"'|g" "${IRONFOX_VERSIONS}"
         echo_green_text 'SUCCESS: Updated SHA512sum for GYP'
