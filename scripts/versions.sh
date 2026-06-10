@@ -130,11 +130,11 @@ readonly BUNDLETOOL_SHA512SUM='50feda5f3f00931bad943a37b7cfc33d8ea53b33bd9bfa838
 readonly BUNDLETOOL_VERSION='1.18.3'
 
 ## cbindgen
-### Version: v0.29.3
+### Version: v0.29.4
 ### https://github.com/mozilla/cbindgen
-readonly CBINDGEN_COMMIT='b5f2a978302e86fa06659a945a26c1b8b9aa9b8d'
-readonly CBINDGEN_SHA512SUM='f89a6887a1f4e0c7ef57247577b7be8eac4159843ff9cccf917d14af03d41ad005d25ca1f4dbf70e61cdd50d268ac1f5b2b0125488f564f175fe8a0a5c121d7f'
-readonly CBINDGEN_VERSION='0.29.3'
+readonly CBINDGEN_COMMIT='b826cb8911488fe8a209d2b693492c0c673e8cca'
+readonly CBINDGEN_SHA512SUM='b1d43c6820a210c809a029a3f7ec92720fca9bfa1bfecd5835615124b005dfb63e30fe1463ab071717f83b0928207dfd2a71d93f57642314b5bae92076ceb15f'
+readonly CBINDGEN_VERSION='0.29.4'
 
 ## Gradle (F-Droid)
 ### https://gitlab.com/fdroid/gradlew-fdroid
