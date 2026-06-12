@@ -554,6 +554,21 @@ patches:
     effect: "Users are protected against additional fingerprinting vectors, and websites work as expected."
     category: "Privacy"
 
+  - file: "gecko-prevent-fingerprinting-via-eme.patch"
+    name: "Prevent fingerprinting via EME"
+    description: "Prevents fingerprinting via the status of EME."
+    reason: | 
+      Fenix typically doesn't provide a way to configure `media.eme.enabled`. Due to a different
+      message being reported to websites when EME is disabled (than when its blocked via the permission),
+      this means that us disabling EME adds an additional fingerprinting vector and causes us to
+      stick out from standard Firefox users.
+      To prevent this, this patch makes it so that when EME is disabled, Firefox acts the same as if the
+      EME permission was blocked or ignored by the user.
+      This also helps ensure that users who enable EME and block a website from accessing it (on devices
+      that support Widevine) appear the same as those who leave EME disabled.
+    effect: "Users are protected against additional fingerprinting vectors."
+    category: "Privacy"
+
   - file: "gecko-prevent-exposing-name-and-vendor-to-extensions.patch"
     name: "Prevent exposing the browser name and vendor to extensions"
     description: |
