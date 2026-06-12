@@ -185,10 +185,10 @@ readonly JDK_17_VERSION='17.0.19'
 readonly NODE_VERSION='26.3.0'
 
 ## npm
-### Version: 11.16.0
+### Version: 11.17.0
 ### https://github.com/npm/cli
-readonly NPM_SHA512SUM='03be172fc3b199c7a06433163e459be5b110a6983c1dd6305b7ac10f6b0fa12e1440755a8df6b1064ab2ccb789df0474919fb9c684e322dc57685ede21752ccb'
-readonly NPM_VERSION='11.16.0'
+readonly NPM_SHA512SUM='3eeaf18997b11070d313849268b23766b9db0068997dec9471073170fe43fa17f2b4d0337bf0f52330ee2274e7f5754b21b01052742e48f5c9c74d8b1e32ef43'
+readonly NPM_VERSION='11.17.0'
 
 ## nvm
 ### Version: v0.40.5
