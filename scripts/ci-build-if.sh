@@ -19,18 +19,29 @@ if [[ -z "${IRONFOX_FROM_CI_BUILD+x}" ]]; then
     exit 1
 fi
 
-readonly ci_build_target="$1"
+readonly ci_build_arch="$1"
 
-case "${ci_build_target}" in
+case "${ci_build_arch}" in
 arm64|arm|x86_64|bundle)
     ;;
 *)
-    echo_red_text "Unknown build variant: '${ci_build_target}'." >&2
+    echo_red_text "Unknown build variant: '${ci_build_arch}'." >&2
     exit 1
     ;;
 esac
 
-if [[ "${ci_build_target}" == 'bundle' ]]; then
+readonly ci_build_project="$2"
+
+case "${ci_build_project}" in
+all|geckoview)
+    ;;
+*)
+    echo_red_text "Unknown build project: '${ci_build_project}'." >&2
+    exit 1
+    ;;
+esac
+
+if [[ "${ci_build_arch}" == 'bundle' ]]; then
     # Extract our GeckoView AAR artifacts
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
@@ -53,26 +64,62 @@ if [[ "${ci_build_target}" == 'bundle' ]]; then
 fi
 
 # Get sources
-bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
+if [[ "${ci_build_project}" == 'geckoview' ]]; then
+    # If we're only building GeckoView, we don't need to download all sources
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'python'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'uv'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-ndk'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-25'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-build-tools'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-36'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-tools'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'rust'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'cbindgen'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'bundletool'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'firefox'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-17'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-21'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'gradle'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'gyp'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'microg'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'node'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'npm'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'phoenix'
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'wasi'
+else
+    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
+fi
 
 # Prepare sources
-bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
+if [[ "${ci_build_project}" == 'geckoview' ]]; then
+    # If we're only building GeckoView, we don't need to prepare all sources
+    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'firefox'
+    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'android-sdk'
+    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'microg'
+    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'rust'
+else
+    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
+fi
 
 # Build
-bash -x "${IRONFOX_SCRIPTS}/build.sh" "${ci_build_target}"
+bash -x "${IRONFOX_SCRIPTS}/build.sh" "${ci_build_arch}" "${ci_build_project}"
 
 # Copy our GeckoView AAR archives to the artifacts directory for publishing
-mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
-if [[ "${ci_build_target}" == 'arm64' ]]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
-elif [[ "${ci_build_target}" == 'arm' ]]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
-elif [[ "${ci_build_target}" == 'x86_64' ]]; then
-    cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/"
+if [[ "${ci_build_project}" == 'geckoview' ]]; then
+    mkdir -vp "${IRONFOX_AAR_ARTIFACTS}"
+    if [[ "${ci_build_arch}" == 'arm64' ]]; then
+        cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}" "${IRONFOX_AAR_ARTIFACTS}/"
+    elif [[ "${ci_build_arch}" == 'arm' ]]; then
+        cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}" "${IRONFOX_AAR_ARTIFACTS}/"
+    elif [[ "${ci_build_arch}" == 'x86_64' ]]; then
+        cp -v "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}" "${IRONFOX_AAR_ARTIFACTS}/"
+    fi
 fi
 
 # Copy our Fenix outputs to the artifacts directory for publishing
-if [[ "${ci_build_target}" == 'bundle' ]]; then
+if [[ "${ci_build_project}" != 'geckoview' ]]; then
     mkdir -vp "${IRONFOX_APK_ARTIFACTS}"
     mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
 

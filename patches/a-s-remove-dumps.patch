@@ -1,0 +1,32 @@
+diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
+index b951d45c0..faf1ef996 100644
+--- a/components/remote_settings/src/client.rs
++++ b/components/remote_settings/src/client.rs
+@@ -93,11 +93,11 @@ struct RemoteSettingsClientConfig {
+ impl<C: ApiClient> RemoteSettingsClient<C> {
+     // One line per bucket + collection
+     packaged_collections! {
+-        ("main", "regions"),
++//        ("main", "regions"),
+         ("main", "search-config-icons"),
+         ("main", "search-config-v2"),
+-        ("main", "search-telemetry-v2"),
+-        ("main", "summarizer-models-config"),
++//        ("main", "search-telemetry-v2"),
++//        ("main", "summarizer-models-config"),
+         ("main", "translations-models"),
+         ("main", "translations-wasm"),
+     }
+@@ -113,10 +113,10 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+     // and check for the folder + name in
+     // `remote_settings/dumps/{bucket}/attachments/{collection}/{filename}
+     packaged_attachments! {
+-        ("main", "regions") => [
++/*        ("main", "regions") => [
+             "world",
+             "world-buffered",
+-        ],
++        ], */
+         ("main", "search-config-icons") => [
+             "001500a9-1a6c-3f5a-ba15-a5f5a075d256",
+             "06cf7432-efd7-f244-927b-5e423005e1ea",

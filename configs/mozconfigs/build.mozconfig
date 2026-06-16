@@ -1,5 +1,7 @@
 # IronFox build mozconfig
 
+set -euo pipefail
+
 # This mozconfig is home to arguments that are only necessary when the compile environment is enabled
 # (translation: when --disable-compile-environment is not set)
 # These are necessary to set in a different file, because setting --disable-compile-environment argument with them present results in build errors

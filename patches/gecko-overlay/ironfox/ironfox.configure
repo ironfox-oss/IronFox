@@ -3,7 +3,7 @@
 
 # NOTE: Unfortunately, we can't redefine options here that were implied to a different value at `mobile/android/moz.configure` here.
 ## (Ex. we can't set `MOZ_SERVICES_HEALTHREPORT` to `False` and `MOZ_APP_VENDOR` to `IronFox OSS` here) - We'll still need to drirectly modify the configure file directly for changes like this.
-## BUT we can use this as a form of validation, to ensure that our changes are properly applied/working as expected - ex. if we set `MOZ_SERVICES_HEALTHREPORT` to `False` here, and the build fails - we'll know something went wrong with the prebuild script.
+## BUT we can use this as a form of validation, to ensure that our changes are properly applied/working as expected - ex. if we set `MOZ_SERVICES_HEALTHREPORT` to `False` here, and the build fails - we'll know something went wrong with the`gecko-diasble-telemetry` patch.
 
 # Disable HLS (HTTP Live Streaming)
 ## To address privacy and security concerns due to the use of an external ExoPlayer library
@@ -14,7 +14,7 @@ imply_option("MOZ_ANDROID_HLS_SUPPORT", False)
 imply_option("MOZ_NORMANDY", False)
 
 # Disable telemetry
-## See the note at the top, we also configure this with our prebuild script
+## See the note at the top, we also set this with our `gecko-diasble-telemetry` patch
 imply_option("MOZ_SERVICES_HEALTHREPORT", False)
 
 # Ensure UA is set to Firefox
@@ -25,7 +25,7 @@ imply_option("MOZ_APP_UA_NAME", "Firefox")
 imply_option("MOZ_ANDROID_EXCLUDE_FONTS", False)
 
 # Make it IronFox...
-## See the note at the top, we also configure this with our prebuild script
+## See the note at the top, we also set this with our prebuild script
 imply_option("MOZ_APP_VENDOR", "IronFox OSS")
 
 set_config("IRONFOX", True)
@@ -39,3 +39,37 @@ option(
 
 set_config("IRONFOX_RELEASE", True, when="--enable-ironfox-release")
 set_define("IRONFOX_RELEASE", True, when="--enable-ironfox-release")
+
+# (This is inspired by mozilla-central's `--enable-android-subproject`)
+option(
+    "--enable-ironfox-subproject",
+    choices=(
+        "android-components",
+        "fenix",
+        "geckoview",
+    ),
+    nargs="?",
+    help="Build an Android subproject. Possible options: android-components/fenix/geckoview",
+)
+
+@depends("--enable-ironfox-subproject")
+def ironfox_subproject(value):
+    if value:
+        return value[0]
+
+
+set_config("IRONFOX_SUBPROJECT", ironfox_subproject)
+
+# This allows us to specify a custom path for nimbus-fml, instead of just using Mozilla's standard hardcoded locations
+option(
+    "--with-ironfox-nimbus-fml",
+    nargs="?",
+    help="Set the path to nimbus-fml",
+)
+
+@depends("--with-ironfox-nimbus-fml")
+def nimbus_fml_path(value):
+    if value:
+        return value[0]
+
+set_config("NIMBUS_FML", nimbus_fml_path)

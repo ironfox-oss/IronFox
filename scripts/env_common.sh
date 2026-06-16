@@ -258,10 +258,6 @@ fi
 readonly IRONFOX_ANDROID_SDK
 export IRONFOX_ANDROID_SDK
 
-## sdkmanager
-readonly IRONFOX_ANDROID_SDKMANAGER="${IRONFOX_ANDROID_SDK}/cmdline-tools/latest/bin/sdkmanager"
-export IRONFOX_ANDROID_SDKMANAGER
-
 # Android SDK Build Tools (Latest)
 readonly IRONFOX_ANDROID_SDK_BUILD_TOOLS_DEFAULT="${IRONFOX_EXTERNAL}/android-sdk-build-tools"
 if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS+x}" ]]; then
@@ -1008,36 +1004,6 @@ fi
 readonly IRONFOX_SB_GAPI_KEY_FILE
 export IRONFOX_SB_GAPI_KEY_FILE
 
-# Do we want Mach to actually build *something*? (Default)
-## This will generally always be true, but we want to disable it for ex. packaging
-readonly IRONFOX_MACH_BUILD_DEFAULT=1
-if [[ -z "${IRONFOX_MACH_BUILD+x}" ]]; then
-    IRONFOX_MACH_BUILD="${IRONFOX_MACH_BUILD_DEFAULT}"
-fi
-readonly IRONFOX_MACH_BUILD
-export IRONFOX_MACH_BUILD
-
-# Should Mach target Android Components?
-readonly IRONFOX_MACH_TARGET_AC_DEFAULT=0
-if [[ -z "${IRONFOX_MACH_TARGET_AC+x}" ]]; then
-    IRONFOX_MACH_TARGET_AC="${IRONFOX_MACH_TARGET_AC_DEFAULT}"
-fi
-export IRONFOX_MACH_TARGET_AC
-
-# Should Mach target Fenix?
-readonly IRONFOX_MACH_TARGET_FENIX_DEFAULT=0
-if [[ -z "${IRONFOX_MACH_TARGET_FENIX+x}" ]]; then
-    IRONFOX_MACH_TARGET_FENIX="${IRONFOX_MACH_TARGET_FENIX_DEFAULT}"
-fi
-export IRONFOX_MACH_TARGET_FENIX
-
-# Should Mach target Gecko(View)?
-readonly IRONFOX_MACH_TARGET_GECKO_DEFAULT=0
-if [[ -z "${IRONFOX_MACH_TARGET_GECKO+x}" ]]; then
-    IRONFOX_MACH_TARGET_GECKO="${IRONFOX_MACH_TARGET_GECKO_DEFAULT}"
-fi
-export IRONFOX_MACH_TARGET_GECKO
-
 # When this is set, it makes some changes to support bundle creation in certain circumstances - notably:
 ## If we're creating a bundle, instead of building GeckoView for each architecture and THEN creating our bundle GeckoView,
 ## this just builds GeckoView as a bundle directly
@@ -1050,27 +1016,6 @@ if [[ -z "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT+x}" ]]; then
     IRONFOX_GECKOVIEW_BUNDLE_DIRECT="${IRONFOX_GECKOVIEW_BUNDLE_DIRECT_DEFAULT}"
 fi
 export IRONFOX_GECKOVIEW_BUNDLE_DIRECT
-
-# Should Mach target ARM64 (GeckoView AAR) if we're creating a bundle?
-readonly IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT=0
-if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM64+x}" ]]; then
-    IRONFOX_MACH_TARGET_BUNDLE_ARM64="${IRONFOX_MACH_TARGET_BUNDLE_ARM64_DEFAULT}"
-fi
-export IRONFOX_MACH_TARGET_BUNDLE_ARM64
-
-# Should Mach target ARM (GeckoView AAR) if we're creating a bundle?
-readonly IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT=0
-if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_ARM+x}" ]]; then
-    IRONFOX_MACH_TARGET_BUNDLE_ARM="$IRONFOX_MACH_TARGET_BUNDLE_ARM_DEFAULT}"
-fi
-export IRONFOX_MACH_TARGET_BUNDLE_ARM
-
-# Should Mach target x86_64 (GeckoView AAR) if we're creating a bundle?
-readonly IRONFOX_MACH_TARGET_BUNDLE_X86_64_DEFAULT=0
-if [[ -z "${IRONFOX_MACH_TARGET_BUNDLE_X86_64+x}" ]]; then
-    IRONFOX_MACH_TARGET_BUNDLE_X86_64="${IRONFOX_MACH_TARGET_BUNDLE_X86_64_DEFAULT}"
-fi
-export IRONFOX_MACH_TARGET_BUNDLE_X86_64
 
 # Version overrides
 

@@ -19,14 +19,21 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set-up target parameters
 readonly ci_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+
+if [[ -z "${2+x}" ]]; then
+    readonly ci_project='all'
+else
+    readonly ci_project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+fi
 
 # Function to compress our archives
 function compress_archives() {
-    if [[ "${ci_target}" == 'bundle' ]]; then
-        local readonly ci_job_artifact="build-final-${ci_target}"
-    else
+    if [[ "${ci_project}" == 'geckoview' ]]; then
         local readonly ci_job_artifact="build-aar-${ci_target}"
+    else
+        local readonly ci_job_artifact="build-final-${ci_target}"
     fi
     bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"
 }
@@ -37,7 +44,7 @@ IRONFOX_CI_BUILD_FAILED=0
 # Build IronFox
 readonly IRONFOX_FROM_CI_BUILD=1
 export IRONFOX_FROM_CI_BUILD
-bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" || IRONFOX_CI_BUILD_FAILED=1
+bash -x "${IRONFOX_SCRIPTS}/ci-build-if.sh" "${ci_target}" "${ci_project}" || IRONFOX_CI_BUILD_FAILED=1
 
 readonly IRONFOX_CI_BUILD_FAILED
 export IRONFOX_CI_BUILD_FAILED

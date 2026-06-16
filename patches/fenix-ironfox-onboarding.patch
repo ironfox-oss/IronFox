@@ -141,7 +141,7 @@ index f0ee597d00c8..dc3972b77a11 100644
                  logger = logger,
                  analytics = components.analytics,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index c9e399408ab8..a09b3634ee83 100644
+index 47b6d4676695..f75bc6e327dc 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 @@ -4,6 +4,7 @@
@@ -152,7 +152,7 @@ index c9e399408ab8..a09b3634ee83 100644
  import android.annotation.SuppressLint
  import android.appwidget.AppWidgetManager
  import android.content.Context
-@@ -498,10 +499,12 @@ class OnboardingFragment : Fragment() {
+@@ -508,16 +509,18 @@ class OnboardingFragment : Fragment() {
          requireComponents.fenixOnboarding.finish()
  
          val settings = requireContext().settings()
@@ -166,12 +166,10 @@ index c9e399408ab8..a09b3634ee83 100644
              logger = logger,
              analytics = requireComponents.analytics,
              isTelemetryEnabled = false,
-@@ -509,7 +512,7 @@ class OnboardingFragment : Fragment() {
+             isMarketingTelemetryEnabled = settings.isMarketingTelemetryEnabled,
              isDailyUsagePingEnabled = false,
-         )
- 
--        requireComponents.analytics.metrics.track(Event.GrowthData.ConversionEvent6)
-+        requireComponents.analytics.metrics.track(Event.GrowthData.ConversionEvent6) */
+-        )
++        ) */
  
          findNavController().nav(
              id = R.id.onboardingFragment,

@@ -1,0 +1,65 @@
+# Environment cleaner...
+
+set -euo pipefail
+
+# Ensures environment variables are properly set upon each mach configuration (so that they can in be properly set by the other mozconfigs)
+# Also ensures we're not using/inheriting values set elsewhere...
+unset ANDROID_BUNDLETOOL_PATH
+unset ASFLAGS
+unset AUTOCLOBBER
+unset BUILD_BACKENDS
+unset CARGO
+unset CCACHE
+unset CFLAGS
+unset CPPFLAGS
+unset CXXFLAGS
+unset GRADLE_FLAGS
+unset GRADLE_MAVEN_REPOSITORIES
+unset HOST_CFLAGS
+unset HOST_CPPFLAGS
+unset HOST_CXXFLAGS
+unset HOST_LDFLAGS
+unset IRONFOX_MACH_BUILD
+unset IRONFOX_OBJDIR
+unset IRONFOX_SB
+unset L10NBASEDIR
+unset LDFLAGS
+unset MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_PROCESS
+unset MOZ_ANDROID_CONTENT_SERVICE_ISOLATED_WITH_ZYGOTE
+unset MOZ_APP_BASENAME
+unset MOZ_APP_NAME
+unset MOZ_APP_REMOTINGNAME
+unset MOZ_APP_UA_NAME
+unset MOZ_APP_VENDOR
+unset MOZ_ARTIFACT_BUILDS
+unset MOZ_BUILD_APP
+unset MOZ_CALLGRIND
+unset MOZ_CRASHREPORTER
+unset MOZ_CRASHREPORTER_URL
+unset MOZ_DEBUG_FLAGS
+unset MOZ_EXECUTION_TRACING
+unset MOZ_INCLUDE_SOURCE_INFO
+unset MOZ_INSTRUMENTS
+unset MOZ_LTO
+unset MOZ_OBJDIR
+unset MOZ_OPTIMIZE_FLAGS
+unset MOZ_PACKAGE_JSSHELL
+unset MOZ_PGO
+unset MOZ_PHC
+unset MOZ_PROFILING
+unset MOZ_REQUIRE_SIGNING
+unset MOZ_RUST_SIMD
+unset MOZ_SECURITY_HARDENING
+unset MOZ_SOURCE_CHANGESET
+unset MOZ_SOURCE_REPO
+unset MOZ_TELEMETRY_REPORTING
+unset MOZ_VTUNE
+unset MOZILLA_OFFICIAL
+unset NODEJS
+unset RUSTC
+unset RUSTC_OPT_LEVEL
+unset RUSTDOC
+unset RUSTDOCFLAGS
+unset RUSTFLAGS
+unset STRIP_FLAGS
+unset WASI_SYSROOT

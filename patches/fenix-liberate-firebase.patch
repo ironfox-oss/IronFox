@@ -1,3 +1,29 @@
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index e23ec109a522..831fd721680e 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -83,7 +83,7 @@ projects:
+     - components:lib-integrity-googleplay
+     - components:lib-llm-mlpa
+     - components:lib-publicsuffixlist
+-    - components:lib-push-firebase
++#    - components:lib-push-firebase
+     - components:lib-shake
+     - components:lib-state
+     - components:service-digitalassetlinks
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index ad28bfb8c8ff..802959c763bc 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -622,7 +622,7 @@ dependencies {
+     implementation project(':components:lib-crash')
+     implementation project(':components:lib-crash-sentry')
+     implementation project(':components:lib-dataprotect')
+-    implementation project(':components:lib-push-firebase')
++//    implementation project(':components:lib-push-firebase')
+     implementation project(':components:lib-state')
+     implementation project(':components:lib-accelerometer-sensormanager')
+     implementation project(':components:lib-integrity-googleplay')
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 index 3788a543e8c0..1723e113aa92 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml

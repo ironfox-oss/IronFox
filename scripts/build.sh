@@ -11,12 +11,19 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Set-up target parameters
 if [[ -z "${1+x}" ]]; then
     echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
     exit 1
 fi
 
 readonly target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+
+if [[ -z "${2+x}" ]]; then
+    readonly project='all'
+else
+    readonly project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
+fi
 
 # Build IronFox
 readonly IRONFOX_FROM_BUILD=1
@@ -32,13 +39,13 @@ if [[ "${IRONFOX_LOG_BUILD}" == 1 ]]; then
     # Ensure our log directory exists
     mkdir -vp "${IRONFOX_LOG_DIR}"
 
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
+    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}" > >(tee -a "${BUILD_LOG_FILE}") 2>&1
 else
-    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}"
+    bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}"
 fi
 
 # Sign IronFox
-if [[ "${IRONFOX_SIGN}" == 1 ]]; then
+if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${project}" != 'geckoview' ]]; then
     if [[ "${IRONFOX_LOG_SIGN}" == 1 ]]; then
         readonly SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
 
@@ -49,11 +56,6 @@ if [[ "${IRONFOX_SIGN}" == 1 ]]; then
 
         # Ensure our log directory exists
         mkdir -vp "${IRONFOX_LOG_DIR}"
-
-        if [[ "${IRONFOX_CI}" == 1 ]] && [[ "${target}" != 'bundle' ]]; then
-            # CI should only try to sign bundle builds (which create/include all APKs)
-            exit 0
-        fi
 
         bash "${IRONFOX_SCRIPTS}/sign.sh" "${target}" > >(tee -a "${SIGN_LOG_FILE}") 2>&1
     else

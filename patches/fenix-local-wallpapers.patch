@@ -48,10 +48,10 @@ index ab7ba29ba34c..dfe63e193aa5 100644
  
      private fun JSONObject.parseAsWallpapers(): List<Wallpaper> =
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-index 4b3662a5a87b..97f7027b96c1 100644
+index a6f1b2e91cad..6f407dd84354 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/wallpapers/WallpapersUseCases.kt
-@@ -18,6 +18,8 @@ import org.mozilla.fenix.ext.settings
+@@ -19,6 +19,8 @@ import org.mozilla.fenix.ext.settings
  import org.mozilla.fenix.utils.Settings
  import java.io.File
  import java.util.Date
@@ -60,7 +60,7 @@ index 4b3662a5a87b..97f7027b96c1 100644
  
  /**
   * Contains use cases related to the wallpaper feature.
-@@ -45,7 +47,7 @@ class WallpapersUseCases(
+@@ -46,7 +48,7 @@ class WallpapersUseCases(
      // Use case for initializing wallpaper feature. Should usually be called early
      // in the app's lifetime to ensure that any potential long-running tasks can complete quickly.
      val initialize: InitializeWallpapersUseCase by lazy {
@@ -69,7 +69,7 @@ index 4b3662a5a87b..97f7027b96c1 100644
          val migrationHelper = LegacyWallpaperMigration(
              storageRootDirectory = storageRootDirectory,
              settings = context.settings(),
-@@ -65,12 +67,12 @@ class WallpapersUseCases(
+@@ -66,12 +68,12 @@ class WallpapersUseCases(
      // Use case for loading specific wallpaper bitmaps.
      val loadBitmap: LoadBitmapUseCase by lazy {
          DefaultLoadBitmapUseCase(
@@ -84,7 +84,7 @@ index 4b3662a5a87b..97f7027b96c1 100644
      }
  
      // Use case for selecting a new wallpaper.
-@@ -191,7 +193,7 @@ class WallpapersUseCases(
+@@ -196,7 +198,7 @@ class WallpapersUseCases(
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
      internal class DefaultLoadBitmapUseCase(
@@ -93,21 +93,21 @@ index 4b3662a5a87b..97f7027b96c1 100644
      ) : LoadBitmapUseCase {
          override suspend fun invoke(wallpaper: Wallpaper, orientation: Int): Bitmap? =
              loadWallpaperFromDisk(wallpaper, orientation)
-@@ -201,10 +203,10 @@ class WallpapersUseCases(
+@@ -206,10 +208,10 @@ class WallpapersUseCases(
              wallpaper: Wallpaper,
              orientation: Int,
-         ): Bitmap? = Result.runCatching {
+         ): Bitmap? = try {
 -            val path = wallpaper.getLocalPathFromContext(orientation)
-+            val drawableRes = if (wallpaper.name !== Wallpaper.DEFAULT) IronFoxWallpaperUtils.getWallpaperDrawable(wallpaper.name, orientation) else return@runCatching null
++            val drawableRes = if (wallpaper.name !== Wallpaper.DEFAULT) IronFoxWallpaperUtils.getWallpaperDrawable(wallpaper.name, orientation) else return null
              withContext(Dispatchers.IO) {
 -                val file = File(getFilesDir(), path)
 -                BitmapFactory.decodeStream(file.inputStream())
 +//                val file = File(getFilesDir(), path)
 +                BitmapFactory.decodeResource(resources, drawableRes)
              }
-         }.getOrNull()
- 
-@@ -235,13 +237,13 @@ class WallpapersUseCases(
+         } catch (e: CancellationException) {
+             // CancellationException must not be swallowed: if the coroutine was canceled while loading,
+@@ -247,13 +249,13 @@ class WallpapersUseCases(
      }
  
      @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -125,7 +125,7 @@ index 4b3662a5a87b..97f7027b96c1 100644
                  }
              }.getOrNull()
          }
-@@ -273,7 +275,7 @@ class WallpapersUseCases(
+@@ -285,7 +287,7 @@ class WallpapersUseCases(
           */
          override suspend fun invoke(wallpaper: Wallpaper): Wallpaper.ImageFileState {
              return if (wallpaper.collection == Wallpaper.DefaultCollection ||

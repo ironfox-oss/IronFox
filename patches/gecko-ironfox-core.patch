@@ -1,0 +1,47 @@
+diff --git a/moz.build b/moz.build
+index bd4e5d2b9075..2fa61710b3ed 100644
+--- a/moz.build
++++ b/moz.build
+@@ -250,3 +250,5 @@ SPHINX_TREES["jsloader"] = "docs/jsloader"
+ SPHINX_TREES["ai-agent-tools"] = "docs/ai-agent-tools"
+ 
+ include("build/templates.mozbuild")
++
++DIRS += ["ironfox"]
+diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
+index 077c7ca2f14b..b33f5bb403ee 100644
+--- a/mobile/android/moz.configure
++++ b/mobile/android/moz.configure
+@@ -212,3 +212,5 @@ def check_host_bin_prog(var, prog, toolchain=None):
+ 
+ check_host_bin_prog("EMBEDDED_UNIFFI_BINDGEN", "embedded-uniffi-bindgen")
+ check_host_bin_prog("NIMBUS_FML", "nimbus-fml")
++
++include("../../ironfox/ironfox.configure")
+diff --git a/mobile/android/app/geckoview-prefs.js b/mobile/android/app/geckoview-prefs.js
+index 2f5b02eed2ff..cb667820c722 100644
+--- a/mobile/android/app/geckoview-prefs.js
++++ b/mobile/android/app/geckoview-prefs.js
+@@ -388,3 +388,5 @@ pref("xpinstall.whitelist.fileRequest", false);
+ pref("browser.ipProtection.enabled", true);
+ pref("browser.ipProtection.guardian.endpoint", "https://vpn.mozilla.org/");
+ pref("toolkit.ipProtection.android.authProvider", "fxa");
++
++#include ../../../ironfox/prefs/ironfox.js
+diff --git a/mobile/android/installer/package-manifest.in b/mobile/android/installer/package-manifest.in
+index b16d2c3df257..6289ff2ab764 100644
+--- a/mobile/android/installer/package-manifest.in
++++ b/mobile/android/installer/package-manifest.in
+@@ -199,3 +199,12 @@
+ #ifdef PKG_LOCALE_MANIFEST
+ #include @PKG_LOCALE_MANIFEST@
+ #endif
++
++@BINPATH@/chrome/browser@JAREXT@
++@BINPATH@/chrome/browser.manifest
++
++@BINPATH@/chrome/ironfox@JAREXT@
++@BINPATH@/chrome/ironfox.manifest
++
++@BINPATH@/defaults/autoconfig/ironfox.cfg
++@BINPATH@/defaults/policies.json

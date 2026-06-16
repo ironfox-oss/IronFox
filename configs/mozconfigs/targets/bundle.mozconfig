@@ -1,4 +1,10 @@
-. "${IRONFOX_MOZCONFIGS}/targets/common.mozconfig"
+# Bundle
+
+set -euo pipefail
 
 ac_add_options --enable-android-bundle
-export MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+
+# Set for multi-locale packaging
+if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'gecko' ]]; then
+    export BUILD_BACKENDS=FasterMake,RecursiveMake
+fi

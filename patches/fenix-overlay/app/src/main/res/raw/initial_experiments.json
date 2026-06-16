@@ -1198,6 +1198,7 @@
                     "jump-back-in": false,
                     "pocket": false,
                     "pocket-sponsored-stories": false,
+                    "privacy-report": false,
                     "recent-explorations": false
                 }
               }
@@ -1217,6 +1218,7 @@
                     "jump-back-in": true,
                     "pocket": false,
                     "pocket-sponsored-stories": false,
+                    "privacy-report": true,
                     "recent-explorations": true
                 }
               }
@@ -1345,6 +1347,80 @@
       "proposedDuration": 100,
       "proposedEnrollment": 100,
       "referenceBranch": "disabled",
+      "featureValidationOptOut": false,
+      "localizations": null,
+      "locales": null,
+      "publishedDate": "2024-12-13T20:55:47.460708Z",
+      "isFirefoxLabsOptIn": false,
+      "firefoxLabsTitle": null,
+      "firefoxLabsDescription": null,
+      "firefoxLabsGroup": null,
+      "requiresRestart": true
+    },
+    {
+      "schemaVersion": "1.12.0",
+      "slug": "ironfox-lna-blocking",
+      "id": "ironfox-lna-blocking",
+      "arguments": {},
+      "application": "org.mozilla.firefox",
+      "appName": "fenix",
+      "appId": "org.mozilla.firefox",
+      "channel": "release",
+      "userFacingName": "Local Network Access Restrictions",
+      "userFacingDescription": "Controls functionality related to Local Network Access Restrictions (Default: enabled)",
+      "isEnrollmentPaused": false,
+      "isRollout": false,
+      "bucketConfig": {
+        "count": 10000,
+        "start": 0,
+        "total": 10000,
+        "namespace": "fenix-lna-blocking-release-1",
+        "randomizationUnit": "nimbus_id"
+      },
+      "featureIds": [
+        "lna-blocking"
+      ],
+      "probeSets": [],
+      "outcomes": [],
+      "branches": [
+        {
+          "slug": "enabled",
+          "ratio": 100,
+          "features": [
+            {
+              "featureId": "lna-blocking",
+              "enabled": true,
+              "value": {
+                "block-trackers": true,
+                "blocking": true,
+                "enabled": true
+              }
+            }
+          ]
+        },
+        {
+          "slug": "disabled",
+          "ratio": 0,
+          "features": [
+            {
+              "featureId": "lna-blocking",
+              "enabled": true,
+              "value": {
+                "block-trackers": false,
+                "blocking": false,
+                "enabled": false
+              }
+            }
+          ]
+        }
+      ],
+      "targeting": "true",
+      "startDate": "2024-12-13",
+      "enrollmentEndDate": null,
+      "endDate": null,
+      "proposedDuration": 100,
+      "proposedEnrollment": 100,
+      "referenceBranch": "enabled",
       "featureValidationOptOut": false,
       "localizations": null,
       "locales": null,

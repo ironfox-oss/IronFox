@@ -1,0 +1,25 @@
+diff --git a/settings.gradle b/settings.gradle
+index 1ab99b9..d71198b 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -16,7 +16,13 @@ def hasModule = (String name, boolean enabledByDefault) -> {
+   return localProperties.getProperty("modules." + name, enabledByDefault.toString()).toBoolean()
+ }
+ 
+-include ':fake-signature'
++include ':safe-parcel-processor'
++include ':play-services-base'
++include ':play-services-basement'
++include ':play-services-fido'
++include ':play-services-tasks'
++
++/* include ':fake-signature'
+ include ':safe-parcel-processor'
+ include ':vending-app'
+ 
+@@ -120,4 +126,4 @@ sublude ':play-services-wearable:core'
+ sublude ':firebase-auth:core'
+ 
+ include ':play-services-core:microg-ui-tools' // Legacy
+-include ':play-services-core'
++include ':play-services-core' */

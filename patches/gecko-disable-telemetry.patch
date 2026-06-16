@@ -1,0 +1,68 @@
+diff --git a/mobile/android/moz.configure b/mobile/android/moz.configure
+index 077c7ca2f14b..e6fa430c772d 100644
+--- a/mobile/android/moz.configure
++++ b/mobile/android/moz.configure
+@@ -129,7 +129,7 @@ set_config("MOZ_ANDROID_DEBUGGABLE", android_debuggable)
+ 
+ 
+ imply_option("MOZ_NORMANDY", False)
+-imply_option("MOZ_SERVICES_HEALTHREPORT", True)
++imply_option("MOZ_SERVICES_HEALTHREPORT", False)
+ imply_option("MOZ_GECKOVIEW_HISTORY", True)
+ 
+ imply_option("MOZ_APP_UA_NAME", "Firefox")
+diff --git a/toolkit/components/glean/src/init/mod.rs b/toolkit/components/glean/src/init/mod.rs
+index 8ebf827d5612..d32cfe782d26 100644
+--- a/toolkit/components/glean/src/init/mod.rs
++++ b/toolkit/components/glean/src/init/mod.rs
+@@ -72,7 +72,7 @@ pub extern "C" fn fog_init(
+     disable_internal_pings: bool,
+ ) -> nsresult {
+     // On Android always enable Glean upload.
+-    let upload_enabled = true;
++    let upload_enabled = false;
+     // Don't set up an uploader.
+     let uploader = None;
+ 
+@@ -189,13 +189,13 @@ fn build_configuration(
+         delay_ping_lifetime_io: true,
+         server_endpoint: Some(server),
+         uploader: None,
+-        use_core_mps: true,
++        use_core_mps: false,
+         trim_data_to_registered_pings: true,
+         log_level: None,
+         rate_limit,
+         enable_event_timestamps: true,
+         experimentation_id: None,
+-        enable_internal_pings: true,
++        enable_internal_pings: false,
+         ping_schedule: pings::ping_schedule(),
+         ping_lifetime_threshold: 0,
+         ping_lifetime_max_time: Duration::ZERO,
+diff --git a/toolkit/components/telemetry/core/Telemetry.cpp b/toolkit/components/telemetry/core/Telemetry.cpp
+index 1e83d34cd007..2564de8f86ef 100644
+--- a/toolkit/components/telemetry/core/Telemetry.cpp
++++ b/toolkit/components/telemetry/core/Telemetry.cpp
+@@ -762,7 +762,7 @@ already_AddRefed<nsITelemetry> TelemetryImpl::CreateTelemetryInstance() {
+   }
+ 
+   bool useTelemetry = false;
+-#ifndef FUZZING
++#if false
+   if (XRE_IsParentProcess() || XRE_IsContentProcess() || XRE_IsGPUProcess() ||
+       XRE_IsRDDProcess() || XRE_IsSocketProcess() || XRE_IsUtilityProcess()) {
+     useTelemetry = true;
+diff --git a/toolkit/library/rust/gkrust-features.mozbuild b/toolkit/library/rust/gkrust-features.mozbuild
+index a3f1cc357366..2d814cbcbc40 100644
+--- a/toolkit/library/rust/gkrust-features.mozbuild
++++ b/toolkit/library/rust/gkrust-features.mozbuild
+@@ -57,7 +57,7 @@ if CONFIG["MOZ_WEBRTC"]:
+ # We need to tell Glean it is being built with Gecko.
+ gkrust_features += ["glean_with_gecko"]
+ 
+-if not CONFIG["MOZILLA_OFFICIAL"]:
++if not CONFIG["DER_NOOP"]:
+     gkrust_features += ["glean_disable_upload"]
+ 
+ if CONFIG["MOZ_ENABLE_DBUS"]:

@@ -69,11 +69,11 @@ patches:
     effect: "Network activity is further limited, less data is shared with Mozilla, and we can better control what specifically is downloaded from Remote Settings."
     category: "Mozilla"
 
-  - file: "a-s-remove-regions-dump.patch"
-    name: "Remove Regions Dump"
-    description: "Removes the unused/unwanted 'Regions' Remote Settings Dump."
-    reason: "To prevent geo-targeting and reduce package size."
-    effect: "Prevents unwanted regional targeting and provides users with a slimmer app."
+  - file: "a-s-remove-dumps.patch"
+    name: "Remove Remote Settings Dumps"
+    description: "Removes unwanted Remote Settings Dump."
+    reason: "To prevent unwanted functionality (such as regional targeting) and reduce package size."
+    effect: "Prevents unwanted functionality and provides users with a slimmer app."
     category: "Mozilla"
 
   # Privacy

@@ -1,0 +1,35 @@
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index e23ec109a522..a9ff3525c831 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -78,7 +78,7 @@ projects:
+     - components:lib-bookmark-parser-jsoup
+     - components:lib-bookmarks-file
+     - components:lib-crash
+-    - components:lib-crash-sentry
++#    - components:lib-crash-sentry
+     - components:lib-dataprotect
+     - components:lib-integrity-googleplay
+     - components:lib-llm-mlpa
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index ad28bfb8c8ff..a293840d3463 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -620,7 +620,7 @@ dependencies {
+     implementation project(':components:lib-bookmarks-file')
+     implementation project(':components:lib-bookmark-parser-jsoup')
+     implementation project(':components:lib-crash')
+-    implementation project(':components:lib-crash-sentry')
++//    implementation project(':components:lib-crash-sentry')
+     implementation project(':components:lib-dataprotect')
+     implementation project(':components:lib-push-firebase')
+     implementation project(':components:lib-state')
+@@ -689,7 +689,7 @@ dependencies {
+     implementation libs.play.review.ktx
+     implementation libs.play.services.ads.id
+     implementation libs.protobuf.javalite
+-    implementation libs.sentry
++//    implementation libs.sentry
+     implementation libs.androidx.documentfile
+     implementation libs.zxing
+ 

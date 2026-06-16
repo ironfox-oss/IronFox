@@ -775,20 +775,20 @@ function get_android_sdk() {
 
     if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" == 1 ]]; then
         echo_red_text 'Downloading the Android SDK (Linux)...'
-        download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_LINUX}"
+        download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}" "${ANDROID_SDK_SHA512SUM_LINUX}"
 
         echo_red_text 'Downloading the Android SDK (OS X)...'
-        download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_OSX}"
+        download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}" "${ANDROID_SDK_SHA512SUM_OSX}"
     else
         echo_red_text 'Downloading the Android SDK...'
         if [[ "${IRONFOX_PLATFORM}" == 'darwin' ]]; then
-            download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_OSX}"
+            download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-mac-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}" "${ANDROID_SDK_SHA512SUM_OSX}"
         else
-            download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/latest" "${ANDROID_SDK_SHA512SUM_LINUX}"
+            download_and_extract 'android-sdk-cmdline-tools' "https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_REVISION}_latest.zip" "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}" "${ANDROID_SDK_SHA512SUM_LINUX}"
         fi
 
         # Accept Android SDK licenses
-        { yes || true; } | ${IRONFOX_ANDROID_SDKMANAGER} --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
+        { yes || true; } | "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}/bin/sdkmanager" --sdk_root="${IRONFOX_ANDROID_SDK}" --licenses
 
         echo_green_text "SUCCESS: Set-up Android SDK at ${IRONFOX_ANDROID_SDK}"
     fi
@@ -855,13 +855,13 @@ function get_android_sdk_platform() {
 
     echo_red_text 'Downloading Android SDK Platform (latest)...'
 
-    ${IRONFOX_ANDROID_SDKMANAGER} "platforms;android-${ANDROID_SDK_PLATFORM_VERSION}"
+    "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}/bin/sdkmanager" "platforms;android-${ANDROID_SDK_PLATFORM_VERSION}"
 
     echo_green_text "SUCCESS: Set-up Android SDK Platform (latest) at ${IRONFOX_ANDROID_SDK}/platforms/android-${ANDROID_SDK_PLATFORM_VERSION}"
 }
 
 # Get Android SDK Platform (36)
-## (Needed by Glean:
+## (Needed by microG and Glean:
 ### https://github.com/mozilla/glean/blob/main/docs/dev/android/sdk-ndk-versions.md
 ### https://github.com/mozilla/glean/blob/main/docs/dev/android/setup-android-build-environment.md)
 function get_android_sdk_platform_36() {
@@ -883,7 +883,7 @@ function get_android_sdk_platform_36() {
 
     echo_red_text 'Downloading Android SDK Platform (36)...'
 
-    ${IRONFOX_ANDROID_SDKMANAGER} 'platforms;android-36'
+    "${IRONFOX_ANDROID_SDK}/cmdline-tools/${ANDROID_SDK_VERSION}/bin/sdkmanager" 'platforms;android-36'
 
     echo_green_text "SUCCESS: Set-up Android SDK Platform (36) at ${IRONFOX_ANDROID_SDK}/platforms/android-36"
 }
@@ -976,15 +976,7 @@ function get_cbindgen() {
 function get_firefox() {
     echo_red_text 'Downloading Firefox...'
     download_and_extract 'gecko' "https://github.com/mozilla-firefox/firefox/archive/${FIREFOX_COMMIT}.tar.gz" "${IRONFOX_GECKO}" "${FIREFOX_SHA512SUM}"
-
-    # Because we use MOZ_AUTOMATION for certain parts of the build, we need to initialize a Git repository
-    ## The Git repository isn't already created, due to our method of downloading and verifying the archive
-    ## This doesn't matter if we're just updating the checksum though
     if [[ "${IRONFOX_GET_SOURCE_CHECKSUM_UPDATE}" != 1 ]]; then
-        pushd "${IRONFOX_GECKO}"
-        git init
-        popd
-
         echo_green_text "SUCCESS: Set-up Firefox at ${IRONFOX_GECKO}"
     fi
 }
@@ -1614,8 +1606,10 @@ function get_uv() {
         echo_red_text 'Installing Python...'
         "${IRONFOX_UV}" python install "${PYTHON_VERSION}"
 
-        echo_red_text 'Creating uv environment...'
-        "${IRONFOX_UV}" venv "${IRONFOX_PYENV_DIR}"
+        if [[ ! -d "${IRONFOX_PYENV_DIR}" ]]; then
+            echo_red_text 'Creating uv environment...'
+            "${IRONFOX_UV}" venv "${IRONFOX_PYENV_DIR}"
+        fi
         echo_green_text "SUCCESS: Set-up uv environment at ${IRONFOX_PYENV_DIR}"
     fi
 }

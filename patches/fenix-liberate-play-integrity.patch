@@ -1,3 +1,29 @@
+diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
+index e23ec109a522..736c25ed8705 100644
+--- a/mobile/android/fenix/.buildconfig.yml
++++ b/mobile/android/fenix/.buildconfig.yml
+@@ -80,7 +80,7 @@ projects:
+     - components:lib-crash
+     - components:lib-crash-sentry
+     - components:lib-dataprotect
+-    - components:lib-integrity-googleplay
++#    - components:lib-integrity-googleplay
+     - components:lib-llm-mlpa
+     - components:lib-publicsuffixlist
+     - components:lib-push-firebase
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index ad28bfb8c8ff..d8c4a23dbdd0 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -625,7 +625,7 @@ dependencies {
+     implementation project(':components:lib-push-firebase')
+     implementation project(':components:lib-state')
+     implementation project(':components:lib-accelerometer-sensormanager')
+-    implementation project(':components:lib-integrity-googleplay')
++//    implementation project(':components:lib-integrity-googleplay')
+     implementation project(':components:lib-llm-mlpa')
+     implementation project(':components:lib-shake')
+     implementation project(':components:lib-ai-controls')
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
 index c9e41120b3979..6064d053ef564 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/ClientUUID.kt
@@ -22,6 +48,35 @@ index c9e41120b3979..6064d053ef564 100644
      companion object {
          /**
           * Convenience initializer that creates a [SharedPreferences] to be used by [ClientUUID].
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 87a4f911c0cf..79fae6d61680 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -427,13 +427,13 @@ class Components(private val context: Context) {
+     }
+ 
+     val integrityClient by lazyMonitored {
+-        GooglePlayIntegrityClient(
++/*        GooglePlayIntegrityClient(
+             TokenProviderFactory.create(
+                 IntegrityManagerProvider.create(context),
+                 GoogleProjectNumber.create(BuildConfig.GPS_INTEGRITY_TOKEN),
+             ),
+             clientUUID,
+-        )
++        ) */
+     }
+ 
+     val termsOfUsePromptRepository by lazyMonitored {
+@@ -525,7 +525,7 @@ class Components(private val context: Context) {
+             client = core.client,
+             storage = MlpaTokenStorage.sharedPrefs(context),
+             fxaTokenProvider = backgroundServices.accountManager.accessTokenProvider,
+-            integrityClient = integrityClient,
++            integrityClient = null,
+             userIdProvider = clientUUID,
+         )
+     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
 index efb47806713b..d24a6609e9f7 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/llm/Llm.kt
@@ -70,16 +125,10 @@ index efb47806713b..d24a6609e9f7 100644
              storage = storage,
              mlpaService = fenixMlpaService,
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-index d8e4023d8790..45fd074db45b 100644
+index 9d95e5b6f1de..2de03c8dbd06 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
-@@ -566,19 +566,19 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
-     private fun queueIntegrityClientWarmUp(queue: RunWhenReadyQueue) {
-         // We want to avoid shipping this warmup into UI test builds to reduce quota impact, especially given
-         // that the Integrity verdicts will always fail anyway.
--        if (!BuildConfig.MOZILLA_OFFICIAL) {
-+        if (true) {
-             return
+@@ -577,14 +577,14 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
          }
          runOnVisualCompleteness(queue) {
              GlobalScope.launch(IO) {

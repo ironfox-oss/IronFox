@@ -38,13 +38,11 @@ if [[ ! -f "${IRONFOX_BUILD}/finished-prebuild" ]]; then
     exit 1
 fi
 
-if [[ -z "${1+x}" ]]; then
-    echo_red_text "Usage: $0 arm|arm64|x86_64|bundle" >&1
-    exit 1
-fi
-
 # Set-up target parameters
-case "$1" in
+readonly build_arch="$1"
+readonly build_project="$2"
+
+case "${build_arch}" in
 arm64)
     # arm64-v8a
     readonly IRONFOX_TARGET_ARCH='arm64'
@@ -81,6 +79,25 @@ esac
 export IRONFOX_TARGET_ARCH
 export IRONFOX_TARGET_ABI
 export IRONFOX_TARGET_PRETTY
+
+# If a project-specific argument is specified, we only build that project
+## (ex. used by CI for building GeckoView AARs)
+IRONFOX_BUILD_GECKOVIEW_ONLY=0
+if [[ "${build_project}" == 'geckoview' ]]; then
+    IRONFOX_BUILD_GECKOVIEW_ONLY=1
+elif [[ "${build_project}" != 'all' ]]; then
+    echo_red_text "ERROR: Invalid target project: ${build_project}\n You must enter one of the following:"
+    echo 'All:          all (Default)'
+    echo 'GeckoView:    geckoview'
+    exit 1
+fi
+readonly IRONFOX_BUILD_GECKOVIEW_ONLY
+
+# Ensure IRONFOX_CHANNEL is properly set
+if [[ "${IRONFOX_CHANNEL}" != 'release' ]] && [[ "${IRONFOX_CHANNEL}" != 'nightly' ]]; then
+    echo_red_text "ERROR: Invalid release channel (IRONFOX_CHANNEL): ${IRONFOX_CHANNEL}"
+    exit 1
+fi
 
 if [[ ! -d "${IRONFOX_ANDROID_SDK}" ]]; then
     echo_red_text "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
@@ -135,8 +152,16 @@ export TZ="UTC"
 
 # Functions
 
+# Set-up our build environment
 function set_build_env() {
     echo_red_text 'Setting build environment variables...'
+
+    # First, clean our environment
+    unset IF_BUILD_ID
+    unset IF_LOCAL_AC_VERSION_STAMP
+    unset IF_LOCAL_AS_VERSION_STAMP
+    unset IF_LOCAL_GLEAN_VERSION_STAMP
+    unset MOZ_BUILD_DATE
 
     # Write env_build.sh
     if [[ -f "${IRONFOX_ENV_BUILD}" ]]; then
@@ -201,12 +226,10 @@ EOF
     readonly IF_LOCAL_GLEAN_VERSION_GRADLE="${GLEAN_VERSION}-${IF_LOCAL_GLEAN_VERSION_STAMP}"
 
     echo_green_text 'SUCCESS: Set build environment variables'
-
-    echo_green_text 'SUCCESS: Set build environment variables'
 }
 
+# Prepare Application Services
 function prep_as() {
-    # Application Services
     echo_red_text 'Preparing Application Services...'
 
     if [[ -f "${IRONFOX_AS}/local.properties" ]]; then
@@ -223,8 +246,8 @@ function prep_as() {
     echo_green_text 'SUCCESS: Prepared Application Services'
 }
 
+# Prepare Fenix
 function prep_fenix() {
-    # Fenix
     echo_red_text 'Preparing Fenix...'
 
     # Configure ABI + release channel
@@ -268,15 +291,14 @@ function prep_fenix() {
     echo_green_text 'SUCCESS: Prepared Fenix'
 }
 
+# Prepare mozilla-central
 function prep_gecko() {
-    # Gecko
     echo_red_text 'Preparing Gecko...'
 
     if [[ -f "${IRONFOX_GECKO}/local.properties" ]]; then
         rm -f "${IRONFOX_GECKO}/local.properties"
     fi
     cp -f "${IRONFOX_TEMPLATES}/gecko/local.properties" "${IRONFOX_GECKO}/local.properties"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_GECKO}|${IRONFOX_GECKO}|" "${IRONFOX_GECKO}/local.properties"
     "${IRONFOX_SED}" -i "s|{IRONFOX_MOZCONFIGS}|${IRONFOX_MOZCONFIGS}|" "${IRONFOX_GECKO}/local.properties"
 
     # Substitute Android Components
@@ -302,11 +324,15 @@ function prep_gecko() {
     cp -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
     "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
 
+    # Ensure we remove any existing Mach environment cache
+    ## (To ensure our configurations are properly updated/reflected...)
+    rm -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
+
     echo_green_text 'SUCCESS: Prepared Gecko'
 }
 
+# Prepare Glean
 function prep_glean() {
-    # Glean
     echo_red_text 'Preparing Glean...'
 
     if [[ -f "${IRONFOX_GLEAN}/local.properties" ]]; then
@@ -327,8 +353,8 @@ function prep_glean() {
     echo_green_text 'SUCCESS: Prepared Glean'
 }
 
+# Prepare Phoenix
 function prep_phoenix() {
-    # Phoenix
     echo_red_text 'Preparing Phoenix...'
     mkdir -p "${IRONFOX_BUILD}/tmp/phoenix"
 
@@ -353,8 +379,8 @@ function prep_phoenix() {
     echo_green_text 'SUCCESS: Prepared Phoenix'
 }
 
+# Prepare UnifiedPush-AC
 function prep_up_ac() {
-    # unifiedpush-ac
     echo_red_text 'Preparing UnifiedPush-AC...'
 
     if [[ -f "${IRONFOX_UP_AC}/local.properties" ]]; then
@@ -369,8 +395,8 @@ function prep_up_ac() {
     echo_green_text 'SUCCESS: Prepared UnifiedPush-AC'
 }
 
+# Prepare LLVM
 function prep_llvm() {
-    # LLVM
     echo_red_text 'Preparing LLVM...'
 
     # Set LLVM build targets
@@ -382,17 +408,11 @@ function prep_llvm() {
     echo_green_text 'SUCCESS: Prepared LLVM'
 }
 
-function clean_gradle() {
-    # This is used for cleaning Gradle to ensure builds are fresh
-     "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
-}
-
+# Bundletool
 function build_bundletool() {
-    # Bundletool
     echo_red_text 'Building Bundletool...'
 
     pushd "${IRONFOX_BUNDLETOOL_DIR}"
-    clean_gradle
     "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} assemble
     popd
 
@@ -401,8 +421,8 @@ function build_bundletool() {
     echo_green_text 'SUCCESS: Built Bundletool'
 }
 
+# LLVM
 function build_llvm() {
-    # LLVM
     echo_red_text 'Building LLVM...'
 
     pushd "${llvm}"
@@ -419,8 +439,8 @@ function build_llvm() {
     echo_green_text 'SUCCESS: Built LLVM'
 }
 
+# Phoenix
 function build_phoenix() {
-    # Build Phoenix...
     echo_red_text 'Building Phoenix...'
 
     pushd "${IRONFOX_PHOENIX}"
@@ -434,8 +454,8 @@ function build_phoenix() {
     echo_green_text 'SUCCESS: Built Phoenix'
 }
 
+# Build our prebuilt libraries from source
 function build_prebuilds() {
-    # Build our prebuilt libraries from source
     echo_red_text 'Building prebuilt libraries...'
 
     pushd "${IRONFOX_PREBUILDS}"
@@ -445,13 +465,11 @@ function build_prebuilds() {
     echo_green_text 'SUCCESS: Built prebuilt libraries'
 }
 
+# microG
 function build_microg() {
-    # microG
     echo_red_text 'Building microG...'
 
     pushd "${IRONFOX_GMSCORE}"
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} clean
-
     "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_21_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} -x javaDocReleaseGeneration \
         :play-services-base:publishToMavenLocal \
         :play-services-basement:publishToMavenLocal \
@@ -462,368 +480,352 @@ function build_microg() {
     echo_green_text 'SUCCESS: Built microG'
 }
 
+# Glean
 function build_glean() {
-    # Glean
     echo_red_text 'Building Glean...'
 
     pushd "${IRONFOX_GLEAN}"
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} clean
-
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} :glean-native:publishToMavenLocal
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_GLEAN_VERSION_GRADLE} publishToMavenLocal -x createGleanPythonVirtualEnv
     popd
 
     echo_green_text 'SUCCESS: Built Glean'
 }
 
+# Application Services
 function build_as() {
-    # Application Services
     echo_red_text 'Building Application Services...'
 
-    pushd "${IRONFOX_AS}"
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} clean
-
-    # When 'CI' environment variable is set to a non-zero value, the 'libs/verify-ci-android-environment.sh' script
-    # skips building the libraries as they are expected to be already downloaded in a CI environment
-    # However, we want build those libraries always, so we unset CI before invoking the script
+    # First, clean our environment
+    ## (The presence of CI prevents building libraries from `libs/verify-ci-android-environment.sh`)
     unset CI
-
     unset JAVA_HOME
+
+    pushd "${IRONFOX_AS}"
     export JAVA_HOME="${IRONFOX_JDK_17_HOME}"
     bash -x "${IRONFOX_AS}/libs/verify-android-environment.sh"
     unset JAVA_HOME
     export JAVA_HOME="${IRONFOX_JAVA_HOME}"
 
     # Build Application Services
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME},${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_AS_VERSION_GRADLE} publish
-
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} -Plocal=${IF_LOCAL_AS_VERSION_GRADLE} publish
     popd
 
     echo_green_text 'SUCCESS: Built Application Services'
 }
 
+# nimbus-fml
 function build_nimbus_fml() {
-    # nimbus-fml
     echo_red_text 'Building nimbus-fml...'
-
-    # Build nimbus-fml
     pushd "${IRONFOX_AS}/components/support/nimbus-fml"
     "${IRONFOX_CARGO}" build --release
     popd
-
-    # Create symlink for mozilla-central
-    if [[ -f "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/dist/host/bin/nimbus-fml" ]]; then
-        rm -f "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/dist/host/bin/nimbus-fml"
-        ln -s "${IRONFOX_AS}/target/release/nimbus-fml" "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/dist/host/bin/nimbus-fml"
-    fi
-
     echo_green_text 'SUCCESS: Built nimbus-fml'
 }
 
-function build_gecko_ind() {
-    # Build Gecko
-    unset IRONFOX_MACH_BUILD
-    unset MOZ_CHROME_MULTILOCALE
-    export IRONFOX_MACH_BUILD=1
-
-    pushd "${IRONFOX_GECKO}"
-    "${IRONFOX_MACH}" configure
-    "${IRONFOX_MACH}" build
-    popd
-}
-
-function package_gecko() {
-    # Package Gecko
-    unset IRONFOX_MACH_BUILD
-    export IRONFOX_MACH_BUILD=0
-    pushd "${IRONFOX_GECKO}"
-    "${IRONFOX_MACH}" configure
-
-    # We don't want to clean Gradle here on bundle builds, because doing so will cause it to clean after each architecture is built...
-    if [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]]; then
-        "${IRONFOX_MACH}" gradle geckoview:clean
+# GeckoView
+function _build_geckoview() {
+    if [[ -z "${1+x}" ]]; then
+        echo_red_text 'ERROR: Please specify a target architecture!'
+        exit 1
     fi
 
-    echo_green_text "Running ${IRONFOX_MACH} package..."
-    "${IRONFOX_MACH}" package
+    local readonly target_arch="$1"
 
-    echo_green_text "Running ${IRONFOX_MACH} package-multi-locale..."
-    "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_LOCALES}
+    # Ensure we have a valid architecture (+ set pretty architecture...)
+    case "${target_arch}" in
+    arm64)
+        local readonly pretty_arch='ARM64'
+        ;;
+    arm)
+        local readonly pretty_arch='ARM'
+        ;;
+    x86_64)
+        local readonly pretty_arch='x86_64'
+        ;;
+    bundle)
+        local readonly pretty_arch='Universal'
+        ;;
+    *)
+        echo_red_text "ERROR: Invalid target architecture: ${target_arch}"
+        exit 1
+        ;;
+    esac
 
+    # First, clean our environment
+    unset IRONFOX_MACH_GECKOVIEW_CREATE_AAR
+    unset IRONFOX_MACH_TARGET_ARCH
+    unset IRONFOX_MACH_TARGET_PROJECT
+    unset MOZ_AUTOMATION
+    unset MOZ_CHROME_MULTILOCALE
+
+    # Set our target architecture
+    export IRONFOX_MACH_TARGET_ARCH="${target_arch}"
+
+    # So, at this point, we either need to publish GeckoView (GV) to our local Maven repo, or create an AAR archive
+    # We *typically* just publish GV to our local Maven repo, but we INSTEAD create an AAR archive if:
+    # 1. Our current target does NOT match our final target
+    # OR:
+    # 2. We're in CI and our final target is NOT `bundle`
+    # (For reference, the final target is `IRONFOX_TARGET_ARCH`, and the current target is `target_arch`)
+    local publish_gv_to_maven_local=1
+    if [[ "${target_arch}" != "${IRONFOX_TARGET_ARCH}" ]]; then
+        local publish_gv_to_maven_local=0
+    elif [[ "${IRONFOX_CI}" == 1 ]] && [[ "${target_arch}" != 'bundle' ]]; then
+        local publish_gv_to_maven_local=0
+    fi
+    local readonly publish_gv_to_maven_local
+
+    # Tell Mach whether we need to create an AAR archive
+    if [[ "${publish_gv_to_maven_local}" == 0 ]]; then
+        export IRONFOX_MACH_GECKOVIEW_CREATE_AAR=1
+    else
+        export IRONFOX_MACH_GECKOVIEW_CREATE_AAR=0
+    fi
+
+    # Ensure we remove any existing Mach environment cache
+    # (To ensure our configurations are properly updated/reflected...)
+    rm -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
+    
+    # Set our target project
+    export IRONFOX_MACH_TARGET_PROJECT='geckoview'
+
+    # For multi-locale builds
     export MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
 
-    # Package GeckoView
-    ## (MOZ_AUTOMATION is set here to create the AAR zips)
-    echo_green_text "Running ${IRONFOX_MACH} android archive-geckoview..."
-    MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
-    unset MOZ_AUTOMATION
-    popd
-}
-
-# Create our fat GeckoView AAR...
-function create_fat_aar() {
-    # Fat AAR
-    unset IRONFOX_MACH_BUILD
-    export IRONFOX_MACH_BUILD=0
-
     pushd "${IRONFOX_GECKO}"
+
+    # Build GeckoView
+    echo_red_text "Building GeckoView (${pretty_arch})..."
     "${IRONFOX_MACH}" configure
-    "${IRONFOX_MACH}" build android-fat-aar-artifact
+
+    if [[ "${publish_gv_to_maven_local}" == 1 ]]; then
+        # Publish GeckoView to our local Maven repo
+        "${IRONFOX_MACH}" gradle :geckoview:publishReleasePublicationToMavenLocal
+    else
+        # Create our AAR archives
+        "${IRONFOX_MACH}" gradle :machConfigure
+        MOZ_AUTOMATION=1 "${IRONFOX_MACH}" android archive-geckoview
+        unset MOZ_AUTOMATION
+
+        if [[ "${target_arch}" == 'arm64' ]]; then
+            local readonly aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"
+        elif [[ "${target_arch}" == 'arm' ]]; then
+            local readonly aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"
+        elif [[ "${target_arch}" == 'x86_64' ]]; then
+            local readonly aar_output="${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"
+        fi
+
+        # Create our AAR output directory
+        mkdir -p $(dirname "${aar_output}")
+
+        cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${target_arch}/gradle/target.maven.zip" "${aar_output}"
+    fi
+
+    echo_green_text "SUCCESS: Built GeckoView (${pretty_arch})"
     popd
 }
 
-function build_gecko_arm64() {
+function build_geckoview() {
     # ARM64
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM64
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM64=1
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        _build_geckoview 'arm64'
+    fi
 
-    pushd "${IRONFOX_GECKO}"
-    echo_red_text 'Building Gecko(View) - ARM64...'
-    build_gecko_ind
-    echo_green_text 'SUCCESS: Built Gecko(View) - ARM64'
-
-    echo_red_text 'Packaging Gecko(View) - ARM64...'
-    package_gecko
-    echo_green_text 'SUCCESS: Packaged Gecko(View) - ARM64'
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM64
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM64=0
-    "${IRONFOX_MACH}" configure
-    popd
-
-    # Create our output directory
-    mkdir -p $(dirname "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}")
-
-    cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm64/gradle/target.maven.zip" "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM64}"
-}
-
-function build_gecko_arm() {
     # ARM
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM=1
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        _build_geckoview 'arm'
+    fi
 
-    pushd "${IRONFOX_GECKO}"
-    echo_red_text 'Building Gecko(View) - ARM...'
-    build_gecko_ind
-    echo_green_text 'SUCCESS: Built Gecko(View) - ARM'
-
-    echo_red_text 'Packaging Gecko - ARM...'
-    package_gecko
-    echo_green_text 'SUCCESS: Packaged Gecko(View) - ARM'
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM=0
-    "${IRONFOX_MACH}" configure
-    popd
-
-    # Create our output directory
-    mkdir -p $(dirname "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}")
-
-    cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-arm/gradle/target.maven.zip" "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_ARM}"
-}
-
-function build_gecko_x86_64() {
     # x86_64
-    unset IRONFOX_MACH_TARGET_BUNDLE_X86_64
-    export IRONFOX_MACH_TARGET_BUNDLE_X86_64=1
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        _build_geckoview 'x86_64'
+    fi
 
-    pushd "${IRONFOX_GECKO}"
-    echo_red_text 'Building Gecko(View) - x86_64...'
-    build_gecko_ind
-    echo_green_text 'SUCCESS: Built Gecko(View) - x86_64'
+    # Bundle (Universal)
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        # First, we need to produce our fat AAR
+        ## That process re-uses a lot of the same logic as `_build_gecko`, hence we re-use it
+        _build_gecko 'bundle'
 
-    echo_red_text 'Packaging Gecko(View) - x86_64...'
-    package_gecko
-    echo_green_text 'SUCCESS: Packaged Gecko(View) - x86_64'
-    unset IRONFOX_MACH_TARGET_BUNDLE_X86_64
-    export IRONFOX_MACH_TARGET_BUNDLE_X86_64=0
-    "${IRONFOX_MACH}" configure
-    popd
-
-    # Create our output directory
-    mkdir -p $(dirname "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}")
-
-    cp -vf "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-x86_64/gradle/target.maven.zip" "${IRONFOX_OUTPUTS_GECKOVIEW_AAR_X86_64}"
+        _build_geckoview 'bundle'
+    fi
 }
 
-function build_gecko_bundle() {
-    # Bundle
-
-    # Verify that our GeckoView AAR archives are not missing or broken
-
-    # Verify that our ARM64 GeckoView AAR archive exists
-    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
-        echo_red_text "ERROR: ARM64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
+# Gecko
+function _build_gecko() {
+    if [[ -z "${1+x}" ]]; then
+        echo_red_text 'ERROR: Please specify a target architecture!'
         exit 1
     fi
 
-    # Verify that our ARM64 GeckoView AAR archive is not an empty file
-    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
-        echo_red_text "ERROR: ARM64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
+    local readonly target_arch="$1"
+
+    # Ensure we have a valid architecture (+ set pretty architecture...)
+    case "${target_arch}" in
+    arm64)
+        local readonly pretty_arch='ARM64'
+        ;;
+    arm)
+        local readonly pretty_arch='ARM'
+        ;;
+    x86_64)
+        local readonly pretty_arch='x86_64'
+        ;;
+    bundle)
+        local readonly pretty_arch='Universal'
+        ;;
+    *)
+        echo_red_text "ERROR: Invalid target architecture: ${target_arch}"
         exit 1
+        ;;
+    esac
+
+    # First, clean our environment
+    ## (MOZ_CHROME_MULTILOCALE will cause a build failure if set...)
+    unset IRONFOX_MACH_GECKO_STAGE
+    unset IRONFOX_MACH_TARGET_ARCH
+    unset IRONFOX_MACH_TARGET_PROJECT
+    unset MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+    unset MOZ_ANDROID_FAT_AAR_ARM64_V8A
+    unset MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
+    unset MOZ_ANDROID_FAT_AAR_X86_64
+    unset MOZ_CHROME_MULTILOCALE
+
+    # If we're producing a bundle, we need to prepare to assemble our fat AAR
+    if [[ "${target_arch}" == 'bundle' ]]; then
+        # Verify that our ARM64 GeckoView AAR archive exists
+        if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
+            echo_red_text "ERROR: ARM64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
+            exit 1
+        fi
+
+        # Verify that our ARM64 GeckoView AAR archive is not an empty file
+        if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM64}" ]]; then
+            echo_red_text "ERROR: ARM64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM64})"
+            exit 1
+        fi
+
+        # Verify that our ARM GeckoView AAR archive exists
+        if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
+            echo_red_text "ERROR: ARM GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM})"
+            exit 1
+        fi
+
+        # Verify that our ARM GeckoView AAR archive is not an empty file
+        if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
+            echo_red_text "ERROR: ARM GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM})"
+            exit 1
+        fi
+
+        # Verify that our x86_64 GeckoView AAR archive exists
+        if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
+            echo_red_text "ERROR: x86_64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
+            exit 1
+        fi
+
+        # Verify that our x86_64 GeckoView AAR archive is not an empty file
+        if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
+            echo_red_text "ERROR: x86_64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
+            exit 1
+        fi
+
+        readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+        readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64}"
+        readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM}"
+        readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GECKOVIEW_AAR_X86_64}"
+        export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+        export MOZ_ANDROID_FAT_AAR_ARM64_V8A
+        export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
+        export MOZ_ANDROID_FAT_AAR_X86_64
     fi
 
-    # Verify that our ARM GeckoView AAR archive exists
-    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
-        echo_red_text "ERROR: ARM GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_ARM})"
-        exit 1
-    fi
+    # Set our target architecture
+    export IRONFOX_MACH_TARGET_ARCH="${target_arch}"
 
-    # Verify that our ARM GeckoView AAR archive is not an empty file
-    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_ARM}" ]]; then
-        echo_red_text "ERROR: ARM GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_ARM})"
-        exit 1
+    # Determine if we should package Gecko
+    # (This should only run if our current target matches our final target OR if we're in CI and our final target is `bundle`)
+    local package_gecko=1
+    if [[ "${target_arch}" != "${IRONFOX_TARGET_ARCH}" ]]; then
+        local package_gecko=0
+    elif [[ "${IRONFOX_CI}" == 1 ]] && [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]]; then
+        local package_gecko=0
     fi
+    local readonly package_gecko
 
-    # Verify that our x86_64 GeckoView AAR archive exists
-    if [[ ! -f "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
-        echo_red_text "ERROR: x86_64 GeckoView AAR archive not found! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
-        exit 1
-    fi
+    # Ensure we remove any existing Mach environment cache
+    ## (To ensure our configurations are properly updated/reflected...)
+    rm -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
 
-    # Verify that our x86_64 GeckoView AAR archive is not an empty file
-    if [[ ! -s "${IRONFOX_GECKOVIEW_AAR_X86_64}" ]]; then
-        echo_red_text "ERROR: x86_64 GeckoView AAR archive is empty! (${IRONFOX_GECKOVIEW_AAR_X86_64})"
-        exit 1
-    fi
-
-    readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-    readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64}"
-    readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM}"
-    readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GECKOVIEW_AAR_X86_64}"
-    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
-    export MOZ_ANDROID_FAT_AAR_ARM64_V8A
-    export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
-    export MOZ_ANDROID_FAT_AAR_X86_64
+    # Set our target project
+    export IRONFOX_MACH_TARGET_PROJECT='gecko'
 
     pushd "${IRONFOX_GECKO}"
-    echo_red_text 'Creating GeckoView fat AAR...'
-    create_fat_aar
-    echo_green_text 'SUCCESS: Created GeckoView fat AAR'
 
-    echo_red_text 'Building Gecko(View) - Bundle...'
-    build_gecko_ind
-    echo_green_text 'SUCCESS: Built Gecko(View) - Bundle'
-
-    echo_red_text 'Packaging Gecko(View) - Bundle...'
-    package_gecko
-    echo_green_text 'SUCCESS: Packaged Gecko(View) - Bundle'
-    popd
-}
-
-function clobber_gecko_arm64() {
-    # Clobber Gecko (ARM64)
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM64
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM64=1
-
-    pushd "${IRONFOX_GECKO}"
+    # Build Gecko
+    echo_red_text "Building Gecko (${pretty_arch})..."
+    export IRONFOX_MACH_GECKO_STAGE='build'
     "${IRONFOX_MACH}" configure
-    "${IRONFOX_MACH}" clobber
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM64
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM64=0
-    "${IRONFOX_MACH}" configure
-    popd
-}
+    "${IRONFOX_MACH}" build
+    echo_green_text "SUCCESS: Built Gecko (${pretty_arch})"
 
-function clobber_gecko_arm() {
-    # Clobber Gecko (ARM)
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM=1
+    # Package Gecko
+    if [[ "${package_gecko}" == 1 ]]; then
+        echo_red_text "Packaging Gecko (${pretty_arch})..."
+        export IRONFOX_MACH_GECKO_STAGE='package'
 
-    pushd "${IRONFOX_GECKO}"
-    "${IRONFOX_MACH}" configure
-    "${IRONFOX_MACH}" clobber
-    unset IRONFOX_MACH_TARGET_BUNDLE_ARM
-    export IRONFOX_MACH_TARGET_BUNDLE_ARM=0
-    "${IRONFOX_MACH}" configure
-    popd
-}
+        if [[ "${target_arch}" != 'bundle' ]]; then
+            # If we're building a bundle, no need to re-run mach configure here (since Mach is always set to package for Bundle builds)
+            "${IRONFOX_MACH}" configure
+        fi
 
-function clobber_gecko_x86_64() {
-    # Clobber Gecko (x86_64)
-    unset IRONFOX_MACH_TARGET_BUNDLE_X86_64
-    export IRONFOX_MACH_TARGET_BUNDLE_X86_64=1
-
-    pushd "${IRONFOX_GECKO}"
-    "${IRONFOX_MACH}" configure
-    "${IRONFOX_MACH}" clobber
-    unset IRONFOX_MACH_TARGET_BUNDLE_X86_64
-    export IRONFOX_MACH_TARGET_BUNDLE_X86_64=0
-    "${IRONFOX_MACH}" configure
-    popd
-}
-
-function clobber_gecko() {
-    "${IRONFOX_MACH}" configure
-    "${IRONFOX_MACH}" clobber
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_CI}" != 1 ]]; then
-        clobber_gecko_arm64
-        clobber_gecko_arm
-        clobber_gecko_x86_64
+        "${IRONFOX_MACH}" package-multi-locale --locales ${IRONFOX_LOCALES}
+        echo_green_text "SUCCESS: Packaged Gecko (${pretty_arch})"
     fi
+    popd
 }
 
 function build_gecko() {
-    # Gecko (Firefox)
-    echo_red_text 'Building Gecko(View)...'
-    unset IRONFOX_MACH_TARGET_GECKO
-    export IRONFOX_MACH_TARGET_GECKO=1
-
-    pushd "${IRONFOX_GECKO}"
-    "${IRONFOX_MACH}" configure
-
-    # Always clobber to ensure that builds are fresh
-    clobber_gecko
-
-    if [[ "${IRONFOX_TARGET_ARCH}" != 'bundle' ]] || [[ "${IRONFOX_CI}" == 1 ]]; then
-        if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
-            # Build ARM64
-            build_gecko_arm64
-        elif [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]]; then
-            # Build ARM
-            build_gecko_arm
-        elif [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
-            # Build x86_64
-            build_gecko_x86_64
-        elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
-            # Create our bundle + fat AAR...
-            build_gecko_bundle
-        fi
-    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
-        # 1. Build ARM64
-        build_gecko_arm64
-
-        # 2. Build ARM
-        build_gecko_arm
-
-        # 3. Build x86_64
-        build_gecko_x86_64
-
-        # 4. Finally, create our bundle + fat AAR...
-        build_gecko_bundle
+    # ARM64
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        _build_gecko 'arm64'
     fi
-    unset IRONFOX_MACH_TARGET_GECKO
-    export IRONFOX_MACH_TARGET_GECKO=0
-    "${IRONFOX_MACH}" configure
-    popd
 
-    echo_green_text 'SUCCESS: Built Gecko(View)'
+    # ARM
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        _build_gecko 'arm'
+    fi
+
+    # x86_64
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        _build_gecko 'x86_64'
+    fi
 }
 
-function build_ac() {
-    # Android Components
-    echo_red_text 'Building Android Components (Part 1/2)...'
-    unset IRONFOX_MACH_BUILD
-    unset IRONFOX_MACH_TARGET_AC
-    export IRONFOX_MACH_BUILD=1
-    export IRONFOX_MACH_TARGET_AC=1
+# Android Components (Core)
+function build_ac_core() {
+    echo_red_text 'Building Android Components (Core)...'
 
-    # Ensure the CI env variable is not set here - otherwise this will cause build failure in Application Services, thanks to us removing MARS and friends
+    # First, clean our environment
+    ## (The presence of CI causes build failures, due to us removing MARS and friends)
     unset CI
+    unset IRONFOX_MACH_TARGET_ARCH
+    unset IRONFOX_MACH_TARGET_PROJECT
+
+    # Set our target project
+    export IRONFOX_MACH_TARGET_PROJECT='ac-core'
+
+    # Set our target architecture
+    export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
     pushd "${IRONFOX_GECKO}"
-    "${IRONFOX_MACH}" configure
 
-    # Always clean Gradle to ensure builds are fresh
-    "${IRONFOX_MACH}" gradle -p mobile/android/android-components clean
+    # Ensure we remove any existing Mach environment cache
+    ## (To ensure our configurations are properly updated/reflected...)
+    rm -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
+
+    # Configure Mach
+    "${IRONFOX_MACH}" configure
 
     # Build concept-fetch, concept-base (dependency of support-base), support-base and ui-icons
     ## (Needed by UnifiedPush-AC)
@@ -831,64 +833,74 @@ function build_ac() {
     "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:concept-base:publishToMavenLocal
     "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:support-base:publishToMavenLocal
     "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components :components:ui-icons:publishToMavenLocal
-
-    unset IRONFOX_MACH_TARGET_AC
-    export IRONFOX_MACH_TARGET_AC=0
-    "${IRONFOX_MACH}" configure
     popd
 
-    echo_green_text 'SUCCESS: Built Android Components (Part 1/2)'
+    echo_green_text 'SUCCESS: Built Android Components (Core)'
 }
 
+# UnifiedPush-AC
 function build_up_ac() {
-    # unifiedpush-ac
     echo_red_text 'Building UnifiedPush-AC...'
 
     pushd "${IRONFOX_UP_AC}"
-    # Always clean Gradle to ensure builds are fresh
-    clean_gradle
-
-    # Build UnifiedPush-AC
-    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JAVA_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JAVA_HOME} publish
+    "${IRONFOX_GRADLE}" ${IRONFOX_GRADLE_FLAGS} -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME} publish
     popd
 
     echo_green_text 'SUCCESS: Built UnifiedPush-AC'
 }
 
-function build_ac_cont() {
-    # Android Components (Part 2...)
-    echo_red_text 'Building Android Components (Part 2/2)...'
-    unset IRONFOX_MACH_BUILD
-    unset IRONFOX_MACH_TARGET_AC
-    export IRONFOX_MACH_BUILD=1
-    export IRONFOX_MACH_TARGET_AC=1
+# Android Components
+function build_ac() {
+    echo_red_text 'Building Android Components...'
+
+    # First, clean our environment
+    unset IRONFOX_MACH_TARGET_ARCH
+    unset IRONFOX_MACH_TARGET_PROJECT
+
+    # Set our target project
+    export IRONFOX_MACH_TARGET_PROJECT='android-components'
+
+    # Set our target architecture
+    export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
     pushd "${IRONFOX_GECKO}"
+
+    # Ensure we remove any existing Mach environment cache
+    ## (To ensure our configurations are properly updated/reflected...)
+    rm -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
+
+    # Configure Mach
     "${IRONFOX_MACH}" configure
 
     # Build Android Components
     "${IRONFOX_MACH}" gradle -Plocal=${IF_LOCAL_AC_VERSION_GRADLE} -p mobile/android/android-components publishToMavenLocal
-    unset IRONFOX_MACH_TARGET_AC
-    export IRONFOX_MACH_TARGET_AC=0
-    "${IRONFOX_MACH}" configure
     popd
 
-    echo_green_text 'SUCCESS: Built Android Components (Part 2/2)'
+    echo_green_text 'SUCCESS: Built Android Components'
 }
 
 function build_fenix() {
     # Fenix
-    echo_red_text 'Building Fenix...'
-    unset IRONFOX_MACH_BUILD
-    unset IRONFOX_MACH_TARGET_FENIX
-    export IRONFOX_MACH_BUILD=1
-    export IRONFOX_MACH_TARGET_FENIX=1
+    echo_red_text "Building Fenix (${IRONFOX_TARGET_ARCH})..."
+
+    # First, clean our environment
+    unset IRONFOX_MACH_TARGET_ARCH
+    unset IRONFOX_MACH_TARGET_PROJECT
+
+    # Set our target project
+    export IRONFOX_MACH_TARGET_PROJECT='fenix'
+
+    # Set our target architecture
+    export IRONFOX_MACH_TARGET_ARCH="${IRONFOX_TARGET_ARCH}"
 
     pushd "${IRONFOX_GECKO}"
-    "${IRONFOX_MACH}" configure
 
-    # Always clean Gradle to ensure builds are fresh
-    "${IRONFOX_MACH}" gradle -p mobile/android/fenix clean
+    # Ensure we remove any existing Mach environment cache
+    ## (To ensure our configurations are properly updated/reflected...)
+    rm -rf "${IRONFOX_GECKO}/.gradle/mach-environment-cache"
+
+    # Configure Mach
+    "${IRONFOX_MACH}" configure
 
     # Build Fenix
     "${IRONFOX_MACH}" gradle -p mobile/android/fenix assembleRelease
@@ -945,29 +957,25 @@ function build_fenix() {
             # Create our output directory
             mkdir -p $(dirname "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}")
 
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release-unsigned.apk" "${IRONFOX_OUTPUTS_UNIVERSAL_UNSIGNED}"
         else
             # Create our output directory
             mkdir -p $(dirname "${IRONFOX_OUTPUTS_UNIVERSAL}")
 
-            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release.apk" "${IRONFOX_OUTPUTS_UNIVERSAL}"
+            cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/apk/release/app-universal-release.apk" "${IRONFOX_OUTPUTS_UNIVERSAL}"
         fi
 
         # 5. Finally, build and export our AAB
-        "${IRONFOX_MACH}" gradle -Paab -p mobile/android/fenix bundleRelease -x :app:releaseOssLicensesCleanUp
+        "${IRONFOX_MACH}" gradle -Paab -p mobile/android/fenix bundleRelease
 
         # Create our output directory
         mkdir -p $(dirname "${IRONFOX_OUTPUTS_BUNDLE_AAB}")
 
-        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-bundle/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_BUNDLE_AAB}"
+        cp -v "${IRONFOX_GECKO}/obj/ironfox-${IRONFOX_CHANNEL}-${IRONFOX_TARGET_ARCH}/gradle/build/mobile/android/fenix/app/outputs/bundle/release/app-release.aab" "${IRONFOX_OUTPUTS_BUNDLE_AAB}"
     fi
-
-    unset IRONFOX_MACH_TARGET_FENIX
-    export IRONFOX_MACH_TARGET_FENIX=0
-    "${IRONFOX_MACH}" configure
     popd
 
-    echo_green_text 'SUCCESS: Built Fenix'
+    echo_green_text "SUCCESS: Built Fenix (${IRONFOX_TARGET_ARCH})"
 }
 
 # Prepare build environment...
@@ -975,15 +983,29 @@ function build_fenix() {
 ### change the variables, without them needing to re-run the entire prebuild script...)
 echo_red_text 'Preparing your build environment...'
 
+# Set-up our build environment
 set_build_env
-prep_as
+
+# Prepare mozilla-central
 prep_gecko
+
+# Prepare Phoenix
 prep_phoenix
-prep_glean
+
+# Prepare LLVM
 prep_llvm
 
-if [[ "${IRONFOX_CI}" != 1 ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+if [[ "${IRONFOX_BUILD_GECKOVIEW_ONLY}" != 1 ]]; then
+    # Prepare Application Services
+    prep_as
+
+    # Prepare Fenix
     prep_fenix
+
+    # Prepare Glean
+    prep_glean
+
+    # Prepare UnifiedPush-AC
     prep_up_ac
 fi
 
@@ -993,25 +1015,65 @@ echo_green_text 'SUCCESS: Prepared build environment'
 echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})..."
 
 if [[ -n "${FDROID_BUILD+x}" ]]; then
+    # Build LLVM
     build_llvm
 fi
 
 if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
-    build_bundletool
+    # Build uniffi-bindgen + WASI SDK
     build_prebuilds
+    if [[ "${IRONFOX_BUILD_GECKOVIEW_ONLY}" != 1 ]]; then
+        # Build Bundletool
+        build_bundletool
+    fi
 fi
 
+# Build microG
 build_microg
+
+# Build Phoenix
 build_phoenix
+
+# Build Gecko
 build_gecko
 
-if [[ "${IRONFOX_CI}" != 1 ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
-    build_ac
+# Build GeckoView
+build_geckoview
+
+if [[ "${IRONFOX_BUILD_GECKOVIEW_ONLY}" != 1 ]]; then
+    # Ensure MOZ_CHROME_MULTILOCALE is always set at this point
+    if [[ -z "${MOZ_CHROME_MULTILOCALE+x}" ]]; then
+        MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
+    fi
+    readonly MOZ_CHROME_MULTILOCALE
+    export MOZ_CHROME_MULTILOCALE
+
+    # If we're building a bundle, ensure MOZ_ANDROID_FAT_AAR_ARCHITECTURES is always set at this point
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ -z "${MOZ_ANDROID_FAT_AAR_ARCHITECTURES+x}" ]]; then
+        readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+        export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+    fi
+
+    # Build Android Components (Core)
+    build_ac_core
+
+    # Build Application Services
     build_as
+
+    # Build UnifiedPush-AC
     build_up_ac
+
+    # Build nimbus-fml
     build_nimbus_fml
-    build_ac_cont
+
+    # Build Android Components
+    build_ac
+
+    # Build Glean
     build_glean
+
+    # Build Fenix
     build_fenix
+
     echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
 fi

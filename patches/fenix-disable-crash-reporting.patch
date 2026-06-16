@@ -12,10 +12,22 @@ Signed-off-by: celenity <celenity@celenity.dev>
  .../debugsettings/navigation/DebugDrawerRoute.kt |  8 ++++----
  .../store/DebugDrawerNavigationMiddleware.kt     |  2 +-
  .../search/BrowserToolbarSearchMiddleware.kt     |  4 ++--
- .../fenix/search/SearchDialogController.kt       |  4 ++--
  .../java/org/mozilla/fenix/utils/Settings.kt     |  4 ++--
- 9 files changed, 26 insertions(+), 26 deletions(-)
+ 8 files changed, 26 insertions(+), 26 deletions(-)
 
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index ad28bfb8c8ff..3f3a29843fcb 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -342,7 +342,7 @@ android.applicationVariants.configureEach { variant ->
+ 
+     buildConfigField 'String', 'SENTRY_TOKEN', 'null'
+     if (!isDebug) {
+-        buildConfigField 'boolean', 'CRASH_REPORTING', 'true'
++        buildConfigField 'boolean', 'CRASH_REPORTING', 'false'
+         // Reading sentry token from local file (if it exists). In a release task on taskcluster it will be available.
+         try {
+             def token = new File("${rootDir}/.sentry_token").text.trim()
 diff --git a/mobile/android/fenix/app/src/main/AndroidManifest.xml b/mobile/android/fenix/app/src/main/AndroidManifest.xml
 index 324a25a10af0..4225ec0a1ead 100644
 --- a/mobile/android/fenix/app/src/main/AndroidManifest.xml
@@ -35,6 +47,37 @@ index 324a25a10af0..4225ec0a1ead 100644
  
          <activity
              android:name=".HomeActivity"
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+index 87a4f911c0cf..4e136b311159 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
+@@ -145,7 +145,7 @@ class Components(private val context: Context) {
+     val useCases by lazyMonitored {
+         UseCases(
+             context = context,
+-            crashReporter = lazyMonitored { analytics.crashReporter },
++//            crashReporter = lazyMonitored { analytics.crashReporter },
+             engine = lazyMonitored { core.engine },
+             store = lazyMonitored { core.store },
+             shortcutManager = lazyMonitored { core.webAppShortcutManager },
+@@ -262,7 +262,7 @@ class Components(private val context: Context) {
+     val publicSuffixList by lazyMonitored { PublicSuffixList(context) }
+     val clipboardHandler by lazyMonitored { ClipboardHandler(context) }
+     val performance by lazyMonitored { PerformanceComponent() }
+-    val push by lazyMonitored { Push(context, analytics.crashReporter) }
++    val push by lazyMonitored { Push(context) }
+     val wifiConnectionMonitor by lazyMonitored { WifiConnectionMonitor(context as Application) }
+ 
+     val strictMode by lazyMonitored {
+@@ -388,7 +388,7 @@ class Components(private val context: Context) {
+             ),
+         ).also {
+             it.dispatch(AppAction.SetupChecklistAction.Init)
+-            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
++//            it.dispatch(AppAction.CrashActionWrapper(CrashAction.Initialize))
+         }
+     }
+ 
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
 index f0ee597d00c8..7136852819da 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
@@ -156,26 +199,6 @@ index 788cee797c10..61fb08c6e103 100644
  
              "about:addons" -> {
                  navController.navigate(
-diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-index aa2cd9e6ba8e..274326da94ca 100644
---- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-+++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/search/SearchDialogController.kt
-@@ -92,13 +92,13 @@ class SearchDialogController(
-         }
- 
-         when (url) {
--            "about:crashes" -> {
-+/*            "about:crashes" -> {
-                 // The list of past crashes can be accessed via "settings > about", but desktop and
-                 // fennec users may be used to navigating to "about:crashes". So we intercept this here
-                 // and open the crash list activity instead.
-                 val directions = SearchDialogFragmentDirections.actionCrashListFragment()
-                 navController.navigate(directions)
--            }
-+            } */
-             "about:addons" -> {
-                 val directions =
-                     SearchDialogFragmentDirections.actionGlobalAddonsManagementFragment()
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 83e0f40483..1b4526fd7e 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt

@@ -512,7 +512,7 @@ object GeckoSettingsBridge {
     }
 
     fun setShouldUseTrackingProtectionDatabase(context: Context, engine: Engine) {
-        val shouldUseTrackingProtectionDatabase = context.settings().shouldUseTrackingProtectionDatabase
+        val shouldUseTrackingProtectionDatabase = context.settings().shouldShowTrackingProtectionDashboard
         val shouldUseTrackingProtectionDatabaseGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.browser.contentblocking.database.enabled.value"
         val shouldUseTrackingProtectionDatabaseGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.browser.contentblocking.database.enabled.value.modified"
         val shouldUseTrackingProtectionDatabaseGeckoPref = "browser.contentblocking.database.enabled"

@@ -1,3 +1,6 @@
+# IronFox Nightly
+
+set -euo pipefail
 
 . "${IRONFOX_MOZCONFIGS}/branding/common.mozconfig"
 

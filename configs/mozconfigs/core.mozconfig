@@ -1,5 +1,7 @@
 # IronFox core mozconfig
 
+set -euo pipefail
+
 # Arguments specified in this mozconfig should ALWAYS be applied EVERYWHERE, regardless of target
 
 ## Allow installation of unsigned add-ons
@@ -82,6 +84,10 @@ export MOZ_INSTRUMENTS=
 export MOZ_PROFILING=
 export MOZ_VTUNE=
 
+## Disable Mozilla's runtime check for nimbus-fml
+### We replace this with our own (--with-ironfox-nimbus-fml), so that we can override the path of nimbus-fml directly
+ac_add_options --without-nimbus-fml
+
 ## Disable parental controls
 ac_add_options --disable-parental-controls
 
@@ -159,10 +165,6 @@ ac_add_options --with-gradle="${IRONFOX_GRADLE}"
 ## Set Java path
 ac_add_options --with-java-bin-path="${IRONFOX_JAVA_HOME}/bin"
 
-## Set l10n-central path
-ac_add_options --with-l10n-base="${IRONFOX_L10N_CENTRAL}"
-export L10NBASEDIR="${IRONFOX_L10N_CENTRAL}"
-
 ## Set Node.js path
 export NODEJS="${IRONFOX_NODEJS}"
 
@@ -172,14 +174,7 @@ export RUSTC="${IRONFOX_RUSTC}"
 export RUSTDOC="${IRONFOX_RUSTDOC}"
 
 ## Set Gradle flags
-export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial"
-
-## Safe Browsing
-if [[ "${IRONFOX_SB_GAPI_KEY_FILE}" != 'null' ]] || [[ "${IRONFOX_CI}" == 1 ]]; then
-    ac_add_options --with-google-safebrowsing-api-keyfile="${IRONFOX_SB_GAPI_KEY_FILE}"
-else
-    ac_add_options --without-google-safebrowsing-api-keyfile
-fi
+export GRADLE_FLAGS="${IRONFOX_GRADLE_FLAGS} -Pofficial -Dorg.gradle.java.home=${IRONFOX_JDK_17_HOME} -Dorg.gradle.java.installations.paths=${IRONFOX_JDK_17_HOME}"
 
 ## Skip checks for unwanted/unused API keys
 ac_add_options --without-adjust-sdk-keyfile
@@ -190,11 +185,12 @@ ac_add_options --without-pocket-api-keyfile
 
 ## Target Android
 ac_add_options --enable-application='mobile/android'
-ac_add_options --enable-default-toolkit='cairo-android'
 ac_add_options --enable-project='mobile/android'
 export MOZ_BUILD_APP='mobile/android'
 
 ## Target Fenix
+### (This is just used/always set to prevent Mach from configuring tasks for unwanted subprojects)
+### (To actually, target Fenix, use `--enable-ironfox-subproject` instead)
 ac_add_options --enable-android-subproject='fenix'
 
 ## Target release

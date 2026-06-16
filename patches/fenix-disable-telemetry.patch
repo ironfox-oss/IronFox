@@ -1,3 +1,16 @@
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index ad28bfb8c8ff..4f3136c67a91 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -353,7 +353,7 @@ android.applicationVariants.configureEach { variant ->
+     }
+ 
+     if (!isDebug) {
+-        buildConfigField 'boolean', 'TELEMETRY', 'true'
++        buildConfigField 'boolean', 'TELEMETRY', 'false'
+     } else {
+         buildConfigField 'boolean', 'TELEMETRY', 'false'
+     }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
 index 5cc1da059f7d..e40d569c88c6 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt

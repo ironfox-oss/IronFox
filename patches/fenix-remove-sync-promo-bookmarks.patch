@@ -1,22 +1,13 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
-index 85f4ad6c8316..5abf10930dcb 100644
+index 58b970f69707..b04bd854df1f 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/bookmarks/BookmarksScreen.kt
-@@ -1132,7 +1132,7 @@ private fun EmptyListState.drawableId(): Int = when (this) {
- 
- @StringRes
- private fun EmptyListState.descriptionId(): Int = when (this) {
--    is EmptyListState.NotAuthenticated -> R.string.bookmark_empty_list_guest_description
-+    is EmptyListState.NotAuthenticated -> R.string.bookmark_empty_list_folder_description
-     EmptyListState.Authenticated -> R.string.bookmark_empty_list_authenticated_description
-     EmptyListState.Folder -> R.string.bookmark_empty_list_folder_description
- }
-@@ -1175,7 +1175,7 @@ private fun EmptyList(
-                 textAlign = TextAlign.Center,
-             )
- 
--            if (state is EmptyListState.NotAuthenticated) {
-+            if (false) {
-                 Spacer(modifier = Modifier.height(FirefoxTheme.layout.space.static300))
- 
-                 FilledButton(
+@@ -1017,7 +1017,7 @@ private fun EmptyList(
+             when (state) {
+                 is EmptyListState.NotAuthenticated -> RootEmptyContent(
+                     dispatcher,
+-                    showSignIn = true,
++                    showSignIn = false,
+                     showBookmarksImport = showBookmarksImport,
+                 )
+                 EmptyListState.Authenticated -> RootEmptyContent(

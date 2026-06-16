@@ -9,7 +9,6 @@ import mozilla.components.compose.base.theme.darkColorPalette
 import mozilla.components.ui.colors.PhotonColors
 
 val oledColorPalette = darkColorPalette.copy(
-	layer2 = PhotonColors.DarkGrey90,
 	layer3 = PhotonColors.DarkGrey80,
 )
 

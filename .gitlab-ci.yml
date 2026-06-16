@@ -162,7 +162,7 @@ build-aar:
     - echo 'Preparing secrets...'
     - bash scripts/ci-prep.sh sb
     - echo 'Building AAR...'
-    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
+    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"

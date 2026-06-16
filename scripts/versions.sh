@@ -2,37 +2,37 @@
 # Sources
 
 ## Firefox
-### Version: 151.0.4 (RELEASE)
+### Version: 152.0 (BUILD2)
 ### https://github.com/mozilla-firefox/firefox
-readonly FIREFOX_COMMIT='8144198f707c32b78f738278ebd697a3fb10f146'
-readonly FIREFOX_SHA512SUM='78575372c99d1db10f5d53ad5679130f7e4a8ea3682e6532b0405c5620bc5e0a341b27c66f3ca2c4c44739dc1685c8108c0d70260212bc26a531fa147878af58'
-readonly FIREFOX_VERSION='151.0.4'
+readonly FIREFOX_COMMIT='bfe8ab2205dcbf88fb63ac0e1eaf264d43dbda66'
+readonly FIREFOX_SHA512SUM='e27a4dd70f38cbc83e58f68f0acefaee5fb001f2b04e522b924957c80eeb6b8f0c58dae28877f3c5933cd651442b298781ed773019955cd7e1a7a21354743055'
+readonly FIREFOX_VERSION='152.0'
 
 ### IronFox
 readonly IRONFOX_VERSION="${FIREFOX_VERSION}"
 
 ## Application Services
-### Version: v151.0.2
+### Version: v152.0
 ### https://github.com/mozilla/application-services
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/mobile/android/android-components/plugins/dependencies/src/main/java/ApplicationServices.kt)
-readonly APPSERVICES_COMMIT='3d13b5f0e3abffe2cba93b2de3edf2c4781a7fe5'
-readonly APPSERVICES_SHA512SUM='155229c7ea2d850ddba31e4080d1d7f8bdcd51f8b9701355cf9098645048b7de632ac7754e5d93ef7bc67f90edf5db1a96242278f9f31218d9b474aff7f98b48'
-readonly APPSERVICES_VERSION='151.0.2'
+readonly APPSERVICES_COMMIT='6e01445f7aa3d714920c808a83a92a0fccb5087c'
+readonly APPSERVICES_SHA512SUM='d568e676ffba9e6f72bd70d06af633e169d3bb4fde1cf59687f0af43a02f629c13ae4dcfaadb7e75ebd806fe7fba8cb99576a8bf0444b00b8a8550511ef7b373'
+readonly APPSERVICES_VERSION='152.0'
 
 ## firefox-l10n
 ### https://github.com/mozilla-l10n/firefox-l10n
 ### NOTE: This repo is updated several times a day...
 ### so I think best approach here will be for us to just update it alongside new releases
-readonly L10N_COMMIT='c4c1826408e661c180ee8cfe6fef022419806ea9'
-readonly L10N_SHA512SUM='a52beee4ccf95dde4152b3c3caab6677696449e3214a987bb3836e4b4df2cfb147e44703f822ad4ec70652175ce9cbd27dda76232802f45234e53ae492ea5670'
+readonly L10N_COMMIT='618b31247b48f2ab0fb9a2aeb3e791d401b86811'
+readonly L10N_SHA512SUM='9590fd508639059aa9d5051057ab2789c28938769801c882c1eb42f2240b5bed18167078c4d27868fd871e5a88886c89cf1da4c7d8d7eb1240c966e0eb96673f'
 
 ## Glean
-### Version: 67.2.0
+### Version: 67.3.2
 ### https://github.com/mozilla/glean
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/gradle/libs.versions.toml)
-readonly GLEAN_COMMIT='0f15ce693d48b8d9c1e9e1e8c7a7000c1ace0cec'
-readonly GLEAN_SHA512SUM='ade178c5a72029da7cabc691f7c604abe149a8bc02f6dd0c16090197579bb2d2a757b740e788df54b99f8c378a5ed30a0e8062ed3bfeb04f22e91e5b1a3d0e0d'
-readonly GLEAN_VERSION='67.2.0'
+readonly GLEAN_COMMIT='24c647f24faedfe6839c99d18e58df0e288132a8'
+readonly GLEAN_SHA512SUM='a80e30355c8b2ef86e999908e01cc510bd9d018c9a9d774714c90468d07ac4b14c8aa919df9093707cede5ed51c29afdbe2e76c4903e7868ce767cf34afe5435'
+readonly GLEAN_VERSION='67.3.2'
 
 ## Glean Parser
 ### Version: v19.0.0
@@ -86,40 +86,44 @@ readonly ANDROID_NDK_SHA512SUM_OSX='4091bc97a03266b869380874cb2d67a35dc74f9bc5f1
 readonly ANDROID_NDK_VERSION='r29'
 
 ## Android SDK (Command-Line Tools)
-### Version: 14742923
+### Version: 20.0 (14742923)
 ### https://developer.android.com/tools/releases/cmdline-tools
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android.py
 ### + https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
 readonly ANDROID_SDK_REVISION='14742923'
+readonly ANDROID_SDK_VERSION='20.0'
 readonly ANDROID_SDK_SHA512SUM_LINUX='b65e830d7655fb39cc9eee669806977f462c49375807ef2c6487fabcc9afdbc210465ce6a1e2429ff95c74ca519d1239daf9a403c30b8d0bdb7a0962af656c8e'
 readonly ANDROID_SDK_SHA512SUM_OSX='20fc87470d1850ecbaf254509caca1b45055d72d3d78c9079adbe97ff7754018979a548f0cf145e52f03afd65357a5653f556db15ba569bffd4a143202cca0f8'
 
 ## Android SDK Build Tools
-### Version: 36.1.0
+### Version: 37.0.0
 ### https://developer.android.com/tools/releases/build-tools
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
-readonly ANDROID_SDK_BUILD_TOOLS_VERSION='r36.1'
-readonly ANDROID_SDK_BUILD_TOOLS_VERSION_STRING='36.1.0'
-readonly ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX='32a1eea273980a96745ae5e0b141720e5f91c6c6f83f42da4244fad36025d7750521fdf678a7d332afe5946057b498264343c2533ba524967d84347af9cd7ce5'
-readonly ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX='07a78d5f4658c6809220012fc27560cfd8aefcbd29a6414aa309fc54d6df7751b7b1e59964e3942ff9b91030c2611639e2b7d7eb2f77aba1ab0933c015e7c802'
+readonly ANDROID_SDK_BUILD_TOOLS_VERSION='r37'
+readonly ANDROID_SDK_BUILD_TOOLS_VERSION_STRING='37.0.0'
+readonly ANDROID_SDK_BUILD_TOOLS_SHA512SUM_LINUX='0c1735b91da1088d824243bef3f5c070ee4d0b9ccc50d2c20d0c5afdeab41a0fd71f785b98d60579091bb48d1a703f9f5ea6775bab4781de51a9df570b9dba98'
+readonly ANDROID_SDK_BUILD_TOOLS_SHA512SUM_OSX='b3600aee0148835d7074748d5b6b2d56852e73a7f0081956def0d22e21170514bc0984c5dd4a4ed746eed5476e90dac042aeae571954745fbf2d6a239aa51a5e'
 readonly ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_LINUX='b45dc6b7298567f3b45428def0b85584b99b125a3719dfb74a82732bf2b86a0c66161682f3c3d7a50cefaf6e1a2d993975665272e16f00b231a15a9a4512cc1e'
 readonly ANDROID_SDK_BUILD_TOOLS_35_SHA512SUM_OSX='991db0bbf23acd212b6be57033cdb3ecd5c8c8da79781a6e4326c046c2079b2827892084ee5f77b1fc5d5ef91fc62a4820d43218d3943f0c43e5c093c58c4999'
 
 ## Android SDK Platform
-### Version: 36.1
+### Version: 37.0
 ### https://developer.android.com/tools/releases/platforms
 ### (for reference: https://github.com/mozilla-firefox/firefox/blob/main/python/mozboot/mozboot/android-packages.txt)
-readonly ANDROID_SDK_PLATFORM_VERSION='36.1'
+readonly ANDROID_SDK_PLATFORM_VERSION='37.0'
 
 ## Android SDK Platform Tools
-### Version: 36.0.2
+### Version: 37.0.0
 ### https://developer.android.com/tools/releases/platform-tools
-readonly ANDROID_SDK_PLATFORM_TOOLS_VERSION='36.0.2'
-readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='e7a024df013af813157794054a203506dfc7dc776479b82bb83e5ba8a538e8a749b662bf3e05a3822c77dfca9aa221c4ae67e69921f8dfc78fee7acc5bb4e63f'
-readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='1fefcd4ef10740bfbf1e46c4968d879c621315f7616c8eaecd297b3c89af2007a59a1c18f8a89afbd1afeeb9989c2eeb0d3f189e3502e42e62b76c79d69b7385'
+readonly ANDROID_SDK_PLATFORM_TOOLS_VERSION='37.0.0'
+readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_LINUX='9c5589319d3668ec0dcce0dbcd9fbd0f8c49e59f9004604f9d501ea626972e099579bfff202bf9a0586083e0fdd6f4f5d566a41fc33bf1702a862403e0fdfd38'
+readonly ANDROID_SDK_PLATFORM_TOOLS_SHA512SUM_OSX='a093db8388d4b8a212476c014eedb2b3d757d57dcc5b25ca3e38d556562129e5e6be264f8b9d8409df909f894f055cc7eb9ce27fa6de041a34f9419f247bb950'
 
-### This is used for ex. setting microG's compile SDK and target SDK version
-readonly ANDROID_SDK_TARGET='36'
+### This is used for setting microG's compile SDK version
+readonly MICROG_ANDROID_SDK_COMPILE_VERSION='36'
+
+### This is used for ex. setting microG's target SDK version
+readonly ANDROID_SDK_TARGET='37'
 
 ## Bundletool
 ### Version: 1.18.3

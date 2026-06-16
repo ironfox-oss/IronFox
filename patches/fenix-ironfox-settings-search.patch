@@ -1,12 +1,14 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
-index ed66e4a3ea8e..800cab644b3b 100644
+index 6bd919d8b664..6474f120ea9b 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/settings/settingssearch/DefaultFenixSettingsIndexer.kt
-@@ -354,7 +354,7 @@ class DefaultFenixSettingsIndexer(
+@@ -354,9 +354,8 @@ class DefaultFenixSettingsIndexer(
              PreferenceFileInformation.TabsPreferences,
              PreferenceFileInformation.TrackingProtectionPreferences,
              PreferenceFileInformation.SaveLoginsPreferences,
 -            PreferenceFileInformation.DataChoicesPreferences,
+-            PreferenceFileInformation.AIControlsPreferences,
+             PreferenceFileInformation.FirefoxLabsPreferences,
 +            PreferenceFileInformation.IronFoxPreferences,
          )
  

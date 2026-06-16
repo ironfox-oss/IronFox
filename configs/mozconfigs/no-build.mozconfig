@@ -1,9 +1,25 @@
 # IronFox "no-build" mozconfig
 
-# If Gecko is built, but not packaged, then disable the compile environment - we don't want to build anything at this point
+set -euo pipefail
+
+# Disable the compile environment, because we don't want/need to build native code at this point
 ac_add_options --disable-compile-environment
 
 # Disable checks for runtime dependencies
-## (Needed to prevent failures)
+# (Needed to prevent failures)
 ac_add_options --without-embedded-uniffi-bindgen
-ac_add_options --without-nimbus-fml
+
+# Set l10n-central path
+# (We only need l10n-central if we're packaging Gecko...)
+if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'gecko' ]]; then
+    ac_add_options --with-l10n-base="${IRONFOX_L10N_CENTRAL}"
+    export L10NBASEDIR="${IRONFOX_L10N_CENTRAL}"
+fi
+
+# Set nimbus-fml path
+# (We only need nimbus-fml if we're packaging Android Components or Fenix)
+if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'android-components' ]] || [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'fenix' ]]; then
+    ac_add_options --with-ironfox-nimbus-fml="${IRONFOX_AS}/target/release/nimbus-fml"
+else
+    ac_add_options --without-ironfox-nimbus-fml
+fi

@@ -98,9 +98,11 @@ export LLVM_PROFDATA
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#95
 ## https://searchfox.org/mozilla-central/rev/f008b9aa/python/mach/mach/telemetry.py#284
 readonly DISABLE_TELEMETRY=1
+readonly MACH_SHOW_PIP_OUTPUT=1
 readonly MACHRC="${IRONFOX_CONFIGS}/mach/machrc"
 readonly MOZCONFIG="${IRONFOX_MOZCONFIGS}/ironfox.mozconfig"
 export DISABLE_TELEMETRY
+export MACH_SHOW_PIP_OUTPUT
 export MACHRC
 export MOZCONFIG
 

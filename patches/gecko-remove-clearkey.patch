@@ -1,0 +1,13 @@
+diff --git a/mobile/android/installer/package-manifest.in b/mobile/android/installer/package-manifest.in
+index b16d2c3df257..95461d9663ca 100644
+--- a/mobile/android/installer/package-manifest.in
++++ b/mobile/android/installer/package-manifest.in
+@@ -84,7 +84,7 @@
+ #endif
+ 
+ ; GMP clearkey plugin
+-@BINPATH@/@DLL_PREFIX@clearkey@DLL_SUFFIX@
++; @BINPATH@/@DLL_PREFIX@clearkey@DLL_SUFFIX@
+ 
+ [browser]
+ ; [Base Browser Files]

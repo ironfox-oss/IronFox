@@ -70,16 +70,23 @@ patches:
     effect: "Ensures that the build dates are consistent for all variants of IronFox, in order to prevent unexpected version code issues."
     category: "Build System"
 
+  - file: "gecko-ironfox-core.patch"
+    name: "IronFox - Core (Gecko)"
+    description: "Provides support for core IronFox functionality."
+    reason: "To provide support for core functionality and IronFox-specific resources."
+    effect: "Ensures that core IronFox changes are always/properly applied as expected."
+    category: "Build System"
+
   - file: "gecko-ensure-builds-reflect-changes.patch"
     name: "Ensure builds always reflect our (latest) changes"
     description: "Ensures that builds of GeckoView binaries always reflect our (latest) changes."
     reason: "To ensure that our GeckoView binaries are always packaged as intended."
     effect: "Ensures that our GeckoView binaries are always packaged as intended."
-    category: "Build System"
 
-  - file: "gecko-remove-example-dependencies.patch"
-    name: "Remove Unwanted Example/Sample Dependencies"
-    description: "Prevents building and configuring unnecessary/unwanted example/sample libraries."
+  - file: "gecko-gradle-project-resolution.patch"
+    name: "Gradle Project Resolution"
+    description: |
+      Prevents building and configuring unnecessary/unwanted example/sample libraries, and ensures that only necessary projects are configured at build-time.
     reason: "Allows for faster builds, with less overhead."
     effect: "Reduces build-time, and reduces the complexity of the overall build process."
     category: "Build System"
@@ -197,6 +204,13 @@ patches:
     effect: "Ensures user configurations remain consistent and are controlled locally, reduces attack surface, and reduces unwanted dependencies."
     category: "Mozilla"
 
+  - file: "fenix-liberate-sentry.patch"
+    name: "Remove Sentry (Fenix)"
+    description: "Removes the unwanted Sentry library from Fenix (Firefox for Android)."
+    reason: "To remove unwanted libraries, and dependencies on related services."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
   - file: "fenix-liberate-webcompat-reporter.patch"
     name: "Remove Web Compatibility Reporter (Fenix)"
     description: "Removes the Web Compatibility Reporter from Firefox for Android."
@@ -218,6 +232,13 @@ patches:
     effect: "Improves privacy and freedom for users, by avoiding the use of Google Play Services."
     category: "Dependency"
 
+  - file: "gecko-remove-clearkey.patch"
+    name: "Remove Clear Key"
+    description: "Removes the Clear Key CDM from Gecko."
+    reason: "To remove the unwanted Clear Key CDM (used for playback of protected content)."
+    effect: "Improves privacy and security, and protects the freedom of users."
+    category: "Dependency"
+
   # Mozilla
   - file: "fenix-disable-telemetry.patch"
     name: "Disable Telemetry (Fenix)"
@@ -226,11 +247,18 @@ patches:
     effect: "Prevents unwanted collection and transmission of telemetry data."
     category: "Mozilla"
 
+  - file: "gecko-disable-telemetry.patch"
+    name: "Disable Telemetry (Gecko)"
+    description: "Disables data collection and submission mechanisms within Gecko."
+    reason: "To prevent any usage data, diagnostics, or technical metrics from being sent to Mozilla."
+    effect: "Prevents unwanted collection and transmission of telemetry data."
+    category: "Mozilla"
+
   - file: "gecko-remove-abouttelemetry.patch"
     name: "Remove `about:telemetry`"
     description: "Removes the internal `about:telemetry` page."
     reason: "To improve UX."
-    effect: "Prevents users from incorrectly believing telemetry is supported/enabled."
+    effect: "Prevents users from incorrectly believing telemetry is supported/enabled, and reduces unwanted resources."
     category: "Mozilla"
 
   - file: "gecko-remove-aboutrestricted.patch"
@@ -483,13 +511,6 @@ patches:
     effect: "Blocks more trackers and fingerprinting scripts out of the box, strengthens state partitioning, and enables protection against various other methods of cross-site tracking."
     category: "Privacy"
 
-  - file: "fenix-enable-local-network-access-restrictions-by-default.patch"
-    name: "Enable Local Network Access Restrictions"
-    description: "Enables Local Network Access Restrictions by default."
-    reason: "To provide websites from accessing local network resources, to reduce fingerprintability, and to prevent unauthorized access to the local network."
-    effect: "Improves privacy and security for users."
-    category: "Privacy"
-
   - file: "gecko-configure-ublock-origin.patch"
     name: "Configure uBlock Origin"
     description: "Sets uBlock Origin to use a custom/enhanced config, and changes certain settings by default."
@@ -660,6 +681,15 @@ patches:
     effect: "Protects users against memory safety bugs."
     category: "Security"
 
+  - file: "fenix-disable-profiling.patch"
+    name: "Disable Profiling"
+    description: "Disables profiling functionality/integration."
+    reason: |
+      To improve security for users, by reducing attack surface, and to ensure features meant for debugging/development
+      are not enabled.
+    effect: "Improves security of users."
+    category: "Security"
+
   # User Control
   - file: "gecko-devtools-bypass.patch"
     name: "Bypass DevTools detection"
@@ -698,13 +728,6 @@ patches:
     reason: "To improve freedom/control for users, by allowing them to see the status of extensions at any time, even when running with a custom tab."
     effect: "Users are provided with more control over their browsing experience."
     category: "User Interface"
-
-  - file: "fenix-enable-longfox.patch"
-    name: "Enable Longfox"
-    description: "Enables Longfox."
-    reason: "To enable Longfox."
-    effect: "Enables Longfox."
-    category: "User Experience"
 
   - file: "gecko-ironfox-fingerprinting-protection-overrides.patch"
     name: "IronFox Fingerprinting Protection (FPP) Overrides"

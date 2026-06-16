@@ -1,8 +1,8 @@
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-index a32764c2ea45..0a0ad4a8057a 100644
+index 87a4f911c0cf..80e9e7346880 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/components/Components.kt
-@@ -174,7 +174,7 @@ class Components(private val context: Context) {
+@@ -210,7 +210,7 @@ class Components(private val context: Context) {
  
      @Suppress("MagicNumber")
      val addonUpdater by lazyMonitored {
@@ -11,11 +11,11 @@ index a32764c2ea45..0a0ad4a8057a 100644
      }
  
      @Suppress("MagicNumber")
-@@ -189,7 +189,7 @@ class Components(private val context: Context) {
+@@ -225,7 +225,7 @@ class Components(private val context: Context) {
      val remoteSettingsSyncScheduler by lazyMonitored {
          DefaultRemoteSettingsSyncScheduler(
              context,
--            Frequency(24, TimeUnit.HOURS),
+-            Frequency(2, TimeUnit.HOURS),
 +            Frequency(1, TimeUnit.HOURS),
          )
      }

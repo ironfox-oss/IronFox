@@ -103,25 +103,3 @@ index 5a007933c75cf..df2d2e9a59f92 100644
      implementation ComponentsDependencies.mozilla_remote_settings
      implementation libs.androidx.work.runtime
      implementation libs.kotlinx.serialization.json
-diff --git a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-index 8a13299ef890..2445ba58db65 100644
---- a/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-+++ b/mobile/android/android-components/components/support/remotesettings/src/main/java/mozilla/components/support/remotesettings/RemoteSettingsClient.kt
-@@ -25,7 +25,7 @@ import mozilla.appservices.remotesettings.RemoteSettingsRecord
- import mozilla.appservices.remotesettings.RemoteSettingsResponse
- import mozilla.components.support.base.log.logger.Logger
- import mozilla.components.support.ktx.util.writeString
--import mozilla.components.support.rusterrors.reportRustError
-+// import mozilla.components.support.rusterrors.reportRustError
- import org.json.JSONObject
- import java.io.File
- import java.io.FileNotFoundException
-@@ -79,7 +79,7 @@ class RemoteSettingsClient(
-             RemoteSettingsResult.NetworkFailure(e)
-         } catch (e: UniffiInternalException) {
-             Logger.error("Ignoring UniffiInternalException from `fetch`", e)
--            reportRustError("remote-settings-internal-error", e)
-+//            reportRustError("remote-settings-internal-error", e)
-             RemoteSettingsResult.NetworkFailure(e)
-         }
-     }

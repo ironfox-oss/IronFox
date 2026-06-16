@@ -1,7 +1,9 @@
-. "${IRONFOX_MOZCONFIGS}/targets/common.mozconfig"
+# ARM64
 
-ac_add_options --disable-android-bundle
+set -euo pipefail
+
 ac_add_options --target='aarch64-linux-android'
+ac_add_options --disable-android-bundle
 
 # Enable performance optimizations for WebAssembly
 ac_add_options --enable-wasm-relaxed-simd

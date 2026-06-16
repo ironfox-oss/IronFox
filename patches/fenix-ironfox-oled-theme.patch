@@ -11,7 +11,6 @@ Signed-off-by: Akash Yadav <itsaky01@gmail.com>
  .../fenix/settings/CustomizationFragment.kt   | 15 +++++++++++++--
  .../org/mozilla/fenix/theme/FirefoxTheme.kt   |  5 +++--
  .../org/mozilla/fenix/theme/ThemeManager.kt   | 19 +++++++++++++++++--
- .../fenix/app/src/main/res/values/styles.xml  |  1 +
  .../res/xml/customization_preferences.xml     |  5 +++++
  8 files changed, 49 insertions(+), 9 deletions(-)
 
@@ -212,18 +211,6 @@ index bcde2e5ed7eb..db26367cf1c6 100644
  ) : ThemeManager() {
      override var currentTheme: BrowsingMode = currentTheme
          set(value) {
-diff --git a/mobile/android/fenix/app/src/main/res/values/styles.xml b/mobile/android/fenix/app/src/main/res/values/styles.xml
-index 13dc38547fe8..a4caa0ccb7d0 100644
---- a/mobile/android/fenix/app/src/main/res/values/styles.xml
-+++ b/mobile/android/fenix/app/src/main/res/values/styles.xml
-@@ -103,6 +103,7 @@
-         <!-- Action -->
-         <!-- Primary button, Snackbar, Floating action button, Chip selected -->
-         <item name="actionPrimary">@color/fx_mobile_action_color_primary</item>
-+        <item name="actionSecondary">@color/fx_mobile_action_color_secondary</item>
-         <!-- Primary button in a disabled state -->
-         <item name="actionPrimaryDisabled">@color/fx_mobile_action_color_primary_disabled</item>
- 
 diff --git a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml b/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml
 index 313053c48c62..619cb8e8e997 100644
 --- a/mobile/android/fenix/app/src/main/res/xml/customization_preferences.xml

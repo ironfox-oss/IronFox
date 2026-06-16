@@ -1,12 +1,14 @@
 diff --git a/components/remote_settings/src/client.rs b/components/remote_settings/src/client.rs
-index 84a720d3e..47cc9527b 100644
+index b951d45c0..f7106e898 100644
 --- a/components/remote_settings/src/client.rs
 +++ b/components/remote_settings/src/client.rs
-@@ -199,6 +199,11 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
+@@ -203,6 +203,13 @@ impl<C: ApiClient> RemoteSettingsClient<C> {
          jexl_filter: JexlFilter,
          api_client: C,
      ) -> Self {
-+        let collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") || collection_name == String::from("search-config-v2") || collection_name == String::from("translations-models") || collection_name == String::from("translations-wasm") {
++        let collection_name = if collection_name == String::from("quicksuggest-other") || collection_name == String::from("search-config-icons") ||
++         collection_name == String::from("search-config-v2") || collection_name == String::from("translations-models") ||
++         collection_name == String::from("translations-wasm") {
 +            collection_name
 +        } else {
 +            String::from("")
@@ -14,27 +16,6 @@ index 84a720d3e..47cc9527b 100644
          Self {
              collection_name,
              inner: Mutex::new(RemoteSettingsClientInner {
-@@ -673,11 +678,19 @@ impl Client {
-             ))?,
-         };
- 
-+        let collection_name = if config.collection_name == String::from("quicksuggest-other") ||  config.collection_name == String::from("translations-models") ||  config.collection_name == String::from("translations-wasm") {
-+            config.collection_name
-+        } else {
-+            Err(Error::ConfigError(
-+                "Download attempt to RS collection was blocked.".into(),
-+            ))?
-+        };
-+
-         let bucket_name = config.bucket_name.unwrap_or_else(|| String::from("main"));
-         let endpoints = RemoteSettingsEndpoints::new(
-             &server.get_base_url()?,
-             &bucket_name,
--            &config.collection_name,
-+            &collection_name,
-         );
- 
-         Ok(Self {
 diff --git a/components/remote_settings/src/service.rs b/components/remote_settings/src/service.rs
 index b19942604..f378f7897 100644
 --- a/components/remote_settings/src/service.rs

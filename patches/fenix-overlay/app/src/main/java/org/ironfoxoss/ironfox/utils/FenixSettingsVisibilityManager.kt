@@ -46,6 +46,8 @@ object FenixSettingsVisibilityManager {
         displayAppZygote(context, prefFragment)
         displayCustomTabExtensions(context, prefFragment)
         displayEnableHomepageAsNewTab(context, prefFragment)
+        displayImportBookmarks(context, prefFragment)
+        displayIPProtection(context, prefFragment)
         displayIsolatedProcess(context, prefFragment)
         displayLnaBlocking(context, prefFragment)
         displayLnaFeature(context, prefFragment)
@@ -54,12 +56,12 @@ object FenixSettingsVisibilityManager {
         displayMinimalBottomToolbarWhenEnteringText(context, prefFragment)
         displayNativeShareSheet(context, prefFragment)
         displayNewDynamicToolbarBehaviour(context, prefFragment)
-        displayPrivacyReport(context, prefFragment)
         displaySettingsSearch(context, prefFragment)
         displayTabGroups(context, prefFragment)
         displayTabGroupsDragAndDrop(context, prefFragment)
-        displayTrackingProtectionDatabase(context, prefFragment)
+        displayTrackingProtectionDashboard(context, prefFragment)
         hideCrashPullNeverShow(context, prefFragment)
+        hideHomepageSportsWidget(context, prefFragment)
         hideMicrosurveyFeature(context, prefFragment)
         hideMozillaAdsClient(context, prefFragment)
         hideNewCrashReporterDialog(context, prefFragment)
@@ -285,6 +287,34 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
+     * Display the setting to import bookmarks
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayImportBookmarks(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val importBookmarksKey = context.getPreferenceKey(FenixSettingsDictionary.importBookmarksFeatureFlagEnabled)
+        displayPreference(importBookmarksKey, prefFragment)
+    }
+
+    /**
+     * Display the setting to enable IP Protection
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun displayIPProtection(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val ipProtectionKey = context.getPreferenceKey(FenixSettingsDictionary.isIPProtectionEnabled)
+        displayPreference(ipProtectionKey, prefFragment)
+    }
+
+    /**
      * Display the setting to enable isolated content processes
      *
      * @param context The application context
@@ -352,20 +382,6 @@ object FenixSettingsVisibilityManager {
     ) {
         val longfoxEnabledKey = context.getPreferenceKey(FenixSettingsDictionary.longfoxEnabled)
         displayPreference(longfoxEnabledKey, prefFragment)
-    }
-
-    /**
-     * Display the setting to toggle the browser's privacy report feature
-     *
-     * @param context The application context
-     * @param prefFragment The preference fragment from where the preference should be displayed
-     */
-    internal fun displayPrivacyReport(
-        context: Context,
-        prefFragment: PreferenceFragmentCompat
-    ) {
-        val privacyReportKey = context.getPreferenceKey(FenixSettingsDictionary.showPrivacyReportSectionToggle)
-        displayPreference(privacyReportKey, prefFragment)
     }
 
     /**
@@ -453,17 +469,17 @@ object FenixSettingsVisibilityManager {
     }
 
     /**
-     * Display the setting to toggle the tracking protection database
+     * Display the setting to toggle the tracking protection dashboard
      *
      * @param context The application context
      * @param prefFragment The preference fragment from where the preference should be displayed
      */
-    internal fun displayTrackingProtectionDatabase(
+    internal fun displayTrackingProtectionDashboard(
         context: Context,
         prefFragment: PreferenceFragmentCompat
     ) {
-        val trackingProtectionDatabaseKey = context.getPreferenceKey(FenixSettingsDictionary.shouldUseTrackingProtectionDatabase)
-        displayPreference(trackingProtectionDatabaseKey, prefFragment)
+        val trackingProtectionDashboardKey = context.getPreferenceKey(FenixSettingsDictionary.shouldShowTrackingProtectionDashboard)
+        displayPreference(trackingProtectionDashboardKey, prefFragment)
     }
 
     /**
@@ -478,6 +494,20 @@ object FenixSettingsVisibilityManager {
     ) {
         val crashPullNeverShowKey = context.getPreferenceKey(FenixSettingsDictionary.crashPullNeverShowAgain)
         hidePreference(crashPullNeverShowKey, prefFragment)
+    }
+
+    /**
+     * Hide the setting to enable the homepage sports (World Cup) widget
+     *
+     * @param context The application context
+     * @param prefFragment The preference fragment from where the preference should be displayed
+     */
+    internal fun hideHomepageSportsWidget(
+        context: Context,
+        prefFragment: PreferenceFragmentCompat
+    ) {
+        val sportsWidgetKey = context.getPreferenceKey(FenixSettingsDictionary.enableHomepageSportsWidget)
+        hidePreference(sportsWidgetKey, prefFragment)
     }
 
     /**

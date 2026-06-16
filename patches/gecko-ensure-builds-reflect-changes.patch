@@ -1,8 +1,8 @@
 diff --git a/mobile/android/gradle/with_gecko_binaries.gradle b/mobile/android/gradle/with_gecko_binaries.gradle
-index 28ee7bdc70d2..ffd82b711cd8 100644
+index a625a53b8c9d..b9e2da58a75c 100644
 --- a/mobile/android/gradle/with_gecko_binaries.gradle
 +++ b/mobile/android/gradle/with_gecko_binaries.gradle
-@@ -24,7 +24,7 @@ ext.configureVariantWithGeckoBinaries = { variant ->
+@@ -23,7 +23,7 @@ ext.configureVariantWithGeckoBinaries = { variant ->
          // the moz.build system and should never be re-entrant in this way.
          def assetGenTask = tasks.findByName("generate${variant.name.capitalize()}Assets")
          def jniLibFoldersTask = tasks.findByName("merge${variant.name.capitalize()}JniLibFolders")

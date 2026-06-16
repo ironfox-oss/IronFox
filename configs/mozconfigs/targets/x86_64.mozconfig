@@ -1,7 +1,9 @@
-. "${IRONFOX_MOZCONFIGS}/targets/common.mozconfig"
+# x86_64
 
-ac_add_options --disable-android-bundle
+set -euo pipefail
+
 ac_add_options --target='x86_64-linux-android'
+ac_add_options --disable-android-bundle
 
 # Enable performance optimizations
 ac_add_options --enable-wasm-avx

@@ -39,7 +39,7 @@ if [[ "${IRONFOX_OS}" == 'osx' ]] || [[ "${IRONFOX_OS}" == 'secureblue' ]]; then
         exit 1
     fi
 
-    export HOMEBREW_ASK=0
+    export HOMEBREW_NO_ASK=1
 
     # Ensure we're up to date
     brew update --force || error_fn
