@@ -1,11 +1,11 @@
 about-attribution-title = Дякую вам.
-about-attribution-subtitle = IronFox не був би тим, ким він є, без часу та праці таких людей:
+about-attribution-subtitle = IronFox не був би таким, яким він є, без часу та праці таких людей:
 about-attribution-closing = Ваші зусилля цінуються та поважаються.
-about-ironfox-title = Книга Заліза, 1:2
+about-ironfox-title = Залізна книга, 1:2
 about-ironfox-quote =
-    І ось <em>Mole</em> впав. Оскільки <em>Звір</em> уже заблукав, віруючі
-    почали втрачати віру, і світ залишився в <em class="f">darkness</em>. Оскільки надія була майже втрачена, а
-    <em>Fox</em> створив <em class="f">spark</em>. Притягнутий до свого класу <em class="f">light</em>, зв'язаний <em>Phoenix</em>
-    з <em>Fox</em> для формування спеціального шару <em>Залізо</em>. З його новознайденим <em class="f">strength</em>, the
-    істота піднялася до <em class="f">avenge</em> the <em>Mole</em> і <em>Beast</em>], який впав перед нею.
-about-ironfox-from = з <strong>Книга заліза,</strong> 1:2
+    І ось <em>Кріт</em> поліг. Оскільки <em>Звір</em> уже збився зі шляху, віряни
+    почали втрачати віру, і світ поринув у <em class="f">темряву</em>. Коли надія була майже втрачена,
+    <em>Лис</em> висік <em class="f">іскру</em>. Притягнутий до її <em class="f">світла</em>, <em>Фенікс</em> злився
+    з <em>Лисом</em>, утворивши винятковий покрив із <em>заліза</em>. Зі здобутою <em class="f">силою</em>,
+    істота повстала, щоби <em class="f">помститися</em> за <em>Крота</em> і <em>Звіра</em>], ща полягли перед ним.
+about-ironfox-from = із <strong>Залізної книги,</strong> 1:2
