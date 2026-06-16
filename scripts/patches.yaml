@@ -82,6 +82,7 @@ patches:
     description: "Ensures that builds of GeckoView binaries always reflect our (latest) changes."
     reason: "To ensure that our GeckoView binaries are always packaged as intended."
     effect: "Ensures that our GeckoView binaries are always packaged as intended."
+    category: "Build System"
 
   - file: "gecko-gradle-project-resolution.patch"
     name: "Gradle Project Resolution"
