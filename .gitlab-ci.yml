@@ -166,7 +166,7 @@ build-aar:
     matrix:
       - BUILD_VARIANT: ["arm", "arm64", "x86_64"]
   variables:
-    RUNNER_SCRIPT_TIMEOUT: 8h
+    RUNNER_SCRIPT_TIMEOUT: 1h 50m
     IRONFOX_JOB_ARTIFACT_NAME: "build-aar-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "aar;logs"
     <<: *build_variables
@@ -191,7 +191,7 @@ build-aar:
 build-final:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
-  timeout: 6h
+  timeout: 3h
   needs:
     - job: "build-docker"
       optional: true
@@ -202,6 +202,7 @@ build-final:
     - saas-linux-2xlarge-amd64
   variables:
     BUILD_VARIANT: "bundle"
+    RUNNER_SCRIPT_TIMEOUT: 2h 50m
     IRONFOX_JOB_ARTIFACT_NAME: "build-final-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "apk;apks;logs"
     <<: *build_variables
