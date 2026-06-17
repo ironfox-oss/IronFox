@@ -28,6 +28,19 @@
 
 default:
   cache: []
+  retry:
+    max: 3
+    when:
+      - data_integrity_failure
+      - job_execution_timeout
+      - runner_configuration_error
+      - runner_external_dependency_failure
+      - runner_interrupted
+      - runner_system_failure
+      - scheduler_failure
+      - stale_schedule
+      - stuck_or_timeout_failure
+      - unknown_failure
 
 variables: &build_variables
   PRODUCTION_BRANCH: main
