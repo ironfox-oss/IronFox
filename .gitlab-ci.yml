@@ -29,7 +29,7 @@
 default:
   cache: []
   retry:
-    max: 3
+    max: 2
     when:
       - data_integrity_failure
       - job_execution_timeout
