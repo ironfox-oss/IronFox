@@ -388,9 +388,9 @@ function prepare_bundletool() {
 function prepare_fenix() {
     echo_red_text 'Preparing Fenix...'
 
-    mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res"
-    mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values"
-    mkdir -p "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml"
+    mkdir -p "${IRONFOX_TEMP}/fenix/app/src/main/res"
+    mkdir -p "${IRONFOX_TEMP}/fenix/app/src/release/res/values"
+    mkdir -p "${IRONFOX_TEMP}/fenix/app/src/release/res/xml"
 
     pushd "${IRONFOX_FENIX}"
 
@@ -613,25 +613,25 @@ function prepare_fenix() {
 
     ## The following are for the build script, so that it can update the environment variables if needed
     ### (ex. if the user changes them)
-    if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle"
+    if [[ -f "${IRONFOX_TEMP}/fenix/app/build.gradle" ]]; then
+        rm -f "${IRONFOX_TEMP}/fenix/app/build.gradle"
     fi
-    cp -f "${IRONFOX_FENIX}/app/build.gradle" "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle"
+    cp -f "${IRONFOX_FENIX}/app/build.gradle" "${IRONFOX_TEMP}/fenix/app/build.gradle"
 
-    if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml"
+    if [[ -f "${IRONFOX_TEMP}/fenix/app/src/release/res/values/static_strings.xml" ]]; then
+        rm -f "${IRONFOX_TEMP}/fenix/app/src/release/res/values/static_strings.xml"
     fi
-    cp -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml"
+    cp -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" "${IRONFOX_TEMP}/fenix/app/src/release/res/values/static_strings.xml"
 
-    if [[ -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml"
+    if [[ -f "${IRONFOX_TEMP}/fenix/app/src/release/res/xml/shortcuts.xml" ]]; then
+        rm -f "${IRONFOX_TEMP}/fenix/app/src/release/res/xml/shortcuts.xml"
     fi
-    cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml"
+    cp -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_TEMP}/fenix/app/src/release/res/xml/shortcuts.xml"
 
-    if [[ -d "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res" ]]; then
-        rm -rf "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res"
+    if [[ -d "${IRONFOX_TEMP}/fenix/app/src/main/res" ]]; then
+        rm -rf "${IRONFOX_TEMP}/fenix/app/src/main/res"
     fi
-    cp -rf "${IRONFOX_FENIX}/app/src/main/res/" "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res/"
+    cp -rf "${IRONFOX_FENIX}/app/src/main/res/" "${IRONFOX_TEMP}/fenix/app/src/main/res/"
 
     popd
 
@@ -641,8 +641,8 @@ function prepare_fenix() {
 function prepare_firefox() {
     echo_red_text 'Preparing Firefox...'
 
-    mkdir -p "${IRONFOX_BUILD}/tmp/gecko/ironfox"
-    mkdir -p "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages"
+    mkdir -p "${IRONFOX_TEMP}/gecko/ironfox"
+    mkdir -p "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages"
     mkdir -p "${IRONFOX_MOZBUILD}"
  
     ## Copy machrc config
@@ -957,15 +957,15 @@ function prepare_firefox() {
 
     ## The following are for the build script, so that it can update the environment variables if needed
     ### (ex. if the user changes them)
-    if [[ -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
+    if [[ -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
+        rm -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
     fi
-    cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
+    cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html"
 
-    if [[ -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html"
+    if [[ -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
+        rm -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/time-errors.html"
     fi
-    cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html"
+    cp -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/time-errors.html"
 
     popd
 
@@ -976,7 +976,7 @@ function prepare_glean() {
     echo_red_text 'Preparing Glean...'
 
     mkdir -p "${IRONFOX_GLEAN_PYENV}/bootstrap-24.3.0-0"
-    mkdir -p "${IRONFOX_BUILD}/tmp/glean"
+    mkdir -p "${IRONFOX_TEMP}/glean"
 
     # Set Python symlinks so that Glean will use our Python environment, instead of attempting to create its own...
     if [[ ! -d "${IRONFOX_GLEAN_PYENV}/pythonenv" ]]; then
@@ -1059,10 +1059,10 @@ function prepare_glean() {
     apply_overlay "${IRONFOX_GLEAN_OVERLAY}/"
 
     ## This is so the build script can set the uniffi path if needed (ex. if the user changes it)
-    if [[ -f "${IRONFOX_BUILD}/tmp/glean/build.gradle" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/glean/build.gradle"
+    if [[ -f "${IRONFOX_TEMP}/glean/build.gradle" ]]; then
+        rm -f "${IRONFOX_TEMP}/glean/build.gradle"
     fi
-    cp -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" "${IRONFOX_BUILD}/tmp/glean/build.gradle"
+    cp -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" "${IRONFOX_TEMP}/glean/build.gradle"
 
     popd
 

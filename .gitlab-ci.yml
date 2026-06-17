@@ -81,12 +81,14 @@ update-fdroid-repo:
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
-    - echo 'Downloading dependencies...'
+    - echo 'CI - Downloading dependencies...'
     - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
     - bash -x scripts/get_sources.sh androguard
+    - echo 'CI - Downloaded dependencies.'
     - echo 'Updating F-Droid repo...'
     - bash scripts/ci-update-fdroid.sh
+    - echo 'CI - Updated F-Droid repo.'
 
 update-site-repo:
   image: fedora:43
@@ -115,12 +117,14 @@ update-site-repo:
     - git config --global url."https://${IF_CI_USERNAME}:${GITLAB_CI_PUSH_TOKEN}@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - set -euo pipefail
-    - echo 'Downloading dependencies...'
+    - echo 'CI - Downloading dependencies...'
     - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
     - bash -x scripts/get_sources.sh pyyaml
-    - echo 'Updating website repo...'
+    - echo 'CI - Downloaded dependencies.'
+    - echo 'CI - Updating website repo...'
     - bash scripts/ci-update-site.sh
+    - echo 'CI - Updated website repo.'
 
 build-docker:
   image: docker:cli
@@ -153,7 +157,7 @@ build-docker:
   tags:
     - saas-linux-2xlarge-amd64
 
-build-aar:
+build-geckoview:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
   timeout: 2h
@@ -164,18 +168,20 @@ build-aar:
     - saas-linux-2xlarge-amd64
   parallel:
     matrix:
-      - BUILD_VARIANT: ["arm", "arm64", "x86_64"]
+      - BUILD_VARIANT: ["arm64", "arm", "x86_64"]
   variables:
     RUNNER_SCRIPT_TIMEOUT: 1h 50m
-    IRONFOX_JOB_ARTIFACT_NAME: "build-aar-$BUILD_VARIANT"
+    IRONFOX_JOB_ARTIFACT_NAME: "build-geckoview-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "aar;logs"
     <<: *build_variables
   script:
     - set -euo pipefail
-    - echo 'Preparing secrets...'
+    - echo 'CI - Preparing secrets...'
     - bash scripts/ci-prep.sh sb
-    - echo 'Building AAR...'
+    - echo 'CI - Prepared secrets.'
+    - echo "CI - Building GeckoView (${BUILD_VARIANT})..."
     - bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
+    - echo "CI - Built GeckoView (${BUILD_VARIANT})."
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -188,31 +194,35 @@ build-aar:
     - if: $CI_COMMIT_TAG
       when: never
 
-build-final:
+build-fenix:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   stage: build_ironfox
   timeout: 3h
   needs:
     - job: "build-docker"
       optional: true
-    - job: "build-aar"
+    - job: "build-geckoview"
       artifacts: true
       optional: false
   tags:
     - saas-linux-2xlarge-amd64
   variables:
     BUILD_VARIANT: "bundle"
+    BUILD_VARIANT_PRETTY: "Bundle"
     RUNNER_SCRIPT_TIMEOUT: 2h 50m
-    IRONFOX_JOB_ARTIFACT_NAME: "build-final-$BUILD_VARIANT"
+    IRONFOX_JOB_ARTIFACT_NAME: "build-fenix-$BUILD_VARIANT"
     IRONFOX_ARTIFACT_INCLUDES: "apk;apks;logs"
     <<: *build_variables
   script:
     - set -euo pipefail
-    - echo 'Preparing secrets...'
+    - echo 'CI - Preparing secrets...'
     - bash scripts/ci-prep.sh android-ks
     - bash scripts/ci-prep.sh sb
-    - echo 'Building Bundle...'
-    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}"
+    - echo 'CI - Prepared secrets.'
+    - echo "CI - Building Fenix (${BUILD_VARIANT_PRETTY})..."
+    - bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'fenix'
+    - echo "CI - Built Fenix (${BUILD_VARIANT_PRETTY})."
+    
   <<: *compressed_artifact_output
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
@@ -232,10 +242,10 @@ prepare-release:
   needs:
     - job: "build-docker"
       optional: true
-    - job: "build-aar"
+    - job: "build-geckoview"
       artifacts: true
       optional: true
-    - job: "build-final"
+    - job: "build-fenix"
       artifacts: true
       optional: true
   rules:
@@ -253,14 +263,17 @@ prepare-release:
     - sudo dnf install -y curl jq
   script:
     - set -euo pipefail
-    - echo 'Preparing secrets...'
+    - echo 'CI - Preparing secrets...'
     - bash scripts/ci-prep.sh s3
-    - echo 'Downloading dependencies...'
+    - echo 'CI - Prepared secrets.'
+    - echo 'CI - Downloading dependencies...'
     - bash -x scripts/get_sources.sh python
     - bash -x scripts/get_sources.sh uv
     - bash -x scripts/get_sources.sh s3cmd
-    - echo 'Publishing packages...'
+    - echo 'CI - Downloaded dependencies.'
+    - echo 'CI - Publishing packages...'
     - bash scripts/ci-publish-packages.sh
+    - echo 'CI - Published packages.'
   artifacts:
     untracked: false
     when: on_success

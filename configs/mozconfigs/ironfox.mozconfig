@@ -100,7 +100,7 @@ else
     . "${IRONFOX_MOZCONFIGS}/no-build.mozconfig"
 fi
 
-# We should only try to load the Safe Browsing API keyfile if we're *building* Gecko
+# We should only try to load the Safe Browsing API key file if we're *building* Gecko
 IRONFOX_SB=0
 if [[ "${IRONFOX_MACH_TARGET_PROJECT}" == 'gecko' ]] && [[ "${IRONFOX_MACH_BUILD}" == 1 ]]; then
     if [[ "${IRONFOX_SB_GAPI_KEY_FILE}" != 'null' ]] || [[ "${IRONFOX_CI}" == 1 ]]; then

@@ -20,7 +20,7 @@ fi
 readonly target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 if [[ -z "${2+x}" ]]; then
-    readonly project='all'
+    readonly project='fenix'
 else
     readonly project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 fi
@@ -44,8 +44,20 @@ else
     bash -x "${IRONFOX_SCRIPTS}/build-if.sh" "${target}" "${project}"
 fi
 
+# We should only try to sign IronFox if we actually built Fenix, so check that first
+## (All `rebuild-` targets eventually build Fenix, because eventually Fenix consumes everything...)
+if [[ "${project}" == 'fenix' ]] || [[ "${project}" == 'rebuild-ac-core' ]] || [[ "${project}" == 'rebuild-ac' ]] ||
+ [[ "${project}" == 'rebuild-as' ]] || [[ "${project}" == 'rebuild-fenix' ]] || [[ "${project}" == 'rebuild-gecko' ]] ||
+ [[ "${project}" == 'rebuild-geckoview' ]] || [[ "${project}" == 'rebuild-glean' ]] || [[ "${project}" == 'rebuild-llvm' ]] ||
+ [[ "${project}" == 'rebuild-microg' ]] || [[ "${project}" == 'rebuild-nimbus-fml' ]] || [[ "${project}" == 'rebuild-uniffi' ]] ||
+ [[ "${project}" == 'rebuild-up-ac' ]] || [[ "${project}" == 'rebuild-wasi' ]]; then
+    readonly IRONFOX_BUILT_FENIX=1
+else
+    readonly IRONFOX_BUILT_FENIX=0
+fi
+
 # Sign IronFox
-if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${project}" != 'geckoview' ]]; then
+if [[ "${IRONFOX_SIGN}" == 1 ]] && [[ "${IRONFOX_BUILT_FENIX}" == 1 ]]; then
     if [[ "${IRONFOX_LOG_SIGN}" == 1 ]]; then
         readonly SIGN_LOG_FILE="${IRONFOX_LOG_DIR}/sign.log"
 

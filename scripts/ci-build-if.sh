@@ -32,8 +32,9 @@ esac
 
 readonly ci_build_project="$2"
 
+# (For now, we only want to build Fenix and GeckoView directly from CI)
 case "${ci_build_project}" in
-all|geckoview)
+fenix|geckoview)
     ;;
 *)
     echo_red_text "Unknown build project: '${ci_build_project}'." >&2
@@ -41,16 +42,7 @@ all|geckoview)
     ;;
 esac
 
-if [[ "${ci_build_arch}" == 'bundle' ]]; then
-    # Extract our GeckoView AAR artifacts
-    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
-    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
-    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
-
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
-
+if [[ "${ci_build_project}" == 'fenix' ]]; then
     # Fail-fast in case the signing key is unavailable or empty file
     if [[ ! -f "${IRONFOX_ANDROID_KEYSTORE}" ]]; then
         echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} does not exist!"
@@ -61,6 +53,17 @@ if [[ "${ci_build_arch}" == 'bundle' ]]; then
         echo_red_text "ERROR: Keystore file ${IRONFOX_ANDROID_KEYSTORE} is empty!"
         exit 1
     fi
+fi
+
+if [[ "${ci_build_arch}" == 'bundle' ]]; then
+    # Extract our GeckoView AAR artifacts
+    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
+    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
+    mkdir -vp "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
+
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
 fi
 
 # Get sources
@@ -119,7 +122,7 @@ if [[ "${ci_build_project}" == 'geckoview' ]]; then
 fi
 
 # Copy our Fenix outputs to the artifacts directory for publishing
-if [[ "${ci_build_project}" != 'geckoview' ]]; then
+if [[ "${ci_build_project}" == 'fenix' ]]; then
     mkdir -vp "${IRONFOX_APK_ARTIFACTS}"
     mkdir -vp "${IRONFOX_APKS_ARTIFACTS}"
 

@@ -23,7 +23,7 @@ source "${IRONFOX_UTILS}"
 readonly ci_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
 if [[ -z "${2+x}" ]]; then
-    readonly ci_project='all'
+    readonly ci_project='fenix'
 else
     readonly ci_project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 fi
@@ -32,7 +32,7 @@ fi
 function compress_archives() {
     if [[ "${ci_project}" == 'geckoview' ]]; then
         local readonly ci_job_artifact="build-aar-${ci_target}"
-    else
+    elif [[ "${ci_project}" == 'fenix' ]]; then
         local readonly ci_job_artifact="build-final-${ci_target}"
     fi
     bash -x "${IRONFOX_SCRIPTS}/ci-compress.sh" "${ci_job_artifact}"

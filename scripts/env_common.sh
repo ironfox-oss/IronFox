@@ -65,6 +65,10 @@ export IRONFOX_EXTERNAL
 readonly IRONFOX_DOWNLOADS="${IRONFOX_EXTERNAL}/downloads"
 export IRONFOX_DOWNLOADS
 
+# Temporary build directory
+readonly IRONFOX_TEMP="${IRONFOX_BUILD}/tmp"
+export IRONFOX_TEMP
+
 # Patches directory
 readonly IRONFOX_PATCHES="${IRONFOX_ROOT}/patches"
 export IRONFOX_PATCHES
@@ -653,7 +657,7 @@ fi
 readonly IRONFOX_PYTHON_DIR
 export IRONFOX_PYTHON_DIR
 
-# Python (UV) environment
+# Python (uv) environment
 readonly IRONFOX_PYENV_DIR_DEFAULT="${IRONFOX_BUILD}/pyenv"
 if [[ -z "${IRONFOX_PYENV_DIR+x}" ]]; then
     IRONFOX_PYENV_DIR="${IRONFOX_PYENV_DIR_DEFAULT}"
@@ -669,7 +673,7 @@ export IRONFOX_PYENV
 export IRONFOX_PYENV_DIR
 export IRONFOX_PYTHON
 
-## Python (UV) environment - Glean
+## Python (uv) environment - Glean
 readonly IRONFOX_GLEAN_PYENV="${IRONFOX_GRADLE_HOME}/glean"
 export IRONFOX_GLEAN_PYENV
 
@@ -763,7 +767,7 @@ fi
 readonly IRONFOX_UP_AC
 export IRONFOX_UP_AC
 
-# UV
+# uv
 readonly IRONFOX_UV_DIR_DEFAULT="${IRONFOX_EXTERNAL}/uv"
 if [[ -z "${IRONFOX_UV_DIR+x}" ]]; then
     IRONFOX_UV_DIR="${IRONFOX_UV_DIR_DEFAULT}"
@@ -773,7 +777,7 @@ readonly IRONFOX_UV="${IRONFOX_UV_DIR}/uv"
 export IRONFOX_UV
 export IRONFOX_UV_DIR
 
-# UV (local directory)
+# uv (local directory)
 readonly IRONFOX_UV_LOCAL_DEFAULT="${IRONFOX_BUILD}/uv"
 if [[ -z "${IRONFOX_UV_LOCAL+x}" ]]; then
     IRONFOX_UV_LOCAL="${IRONFOX_UV_LOCAL_DEFAULT}"
@@ -781,7 +785,7 @@ fi
 readonly IRONFOX_UV_LOCAL
 export IRONFOX_UV_LOCAL
 
-# UV cache
+# uv cache
 readonly IRONFOX_UV_CACHE_DEFAULT="${IRONFOX_UV_LOCAL}/cache"
 if [[ -z "${IRONFOX_UV_CACHE+x}" ]]; then
     IRONFOX_UV_CACHE="${IRONFOX_UV_CACHE_DEFAULT}"
@@ -789,7 +793,7 @@ fi
 readonly IRONFOX_UV_CACHE
 export IRONFOX_UV_CACHE
 
-# UV Python directory
+# uv Python directory
 readonly IRONFOX_UV_PYTHON_DEFAULT="${IRONFOX_UV_LOCAL}/python"
 if [[ -z "${IRONFOX_UV_PYTHON+x}" ]]; then
     IRONFOX_UV_PYTHON="${IRONFOX_UV_PYTHON_DEFAULT}"
@@ -797,7 +801,7 @@ fi
 readonly IRONFOX_UV_PYTHON
 export IRONFOX_UV_PYTHON
 
-# UV tools
+# uv tools
 readonly IRONFOX_UV_TOOLS_DEFAULT="${IRONFOX_UV_LOCAL}/tools"
 if [[ -z "${IRONFOX_UV_TOOLS+x}" ]]; then
     IRONFOX_UV_TOOLS="${IRONFOX_UV_TOOLS_DEFAULT}"
@@ -996,7 +1000,7 @@ fi
 readonly IRONFOX_NO_PREBUILDS
 export IRONFOX_NO_PREBUILDS
 
-# Location to the Google Safe Browsing API keyfile (if Safe Browsing is desired)
+# Location to the Google Safe Browsing API key file (if Safe Browsing is desired)
 readonly IRONFOX_SB_GAPI_KEY_FILE_DEFAULT='null'
 if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
     IRONFOX_SB_GAPI_KEY_FILE="${IRONFOX_SB_GAPI_KEY_FILE_DEFAULT}"

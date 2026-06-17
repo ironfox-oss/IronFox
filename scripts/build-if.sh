@@ -80,46 +80,1131 @@ export IRONFOX_TARGET_ARCH
 export IRONFOX_TARGET_ABI
 export IRONFOX_TARGET_PRETTY
 
-# If a project-specific argument is specified, we only build that project
-## (ex. used by CI for building GeckoView AARs)
-IRONFOX_BUILD_GECKOVIEW_ONLY=0
-if [[ "${build_project}" == 'geckoview' ]]; then
-    IRONFOX_BUILD_GECKOVIEW_ONLY=1
-elif [[ "${build_project}" != 'all' ]]; then
+# Handle project-specific arguments
+IRONFOX_BUILD_AC_CORE=0
+IRONFOX_BUILD_AC_CORE_CONSUMERS=0
+IRONFOX_BUILD_AC=0
+IRONFOX_BUILD_AC_CONSUMERS=0
+IRONFOX_BUILD_AC_DEPS=0
+IRONFOX_BUILD_AS=0
+IRONFOX_BUILD_AS_CONSUMERS=0
+IRONFOX_BUILD_AS_DEPS=0
+IRONFOX_BUILD_BUNDLETOOL=0
+IRONFOX_BUILD_FENIX=0
+IRONFOX_BUILD_FENIX_DEPS=0
+IRONFOX_BUILD_GECKO=0
+IRONFOX_BUILD_GECKO_CONSUMERS=0
+IRONFOX_BUILD_GECKO_DEPS=0
+IRONFOX_BUILD_GECKOVIEW=0
+IRONFOX_BUILD_GECKOVIEW_CONSUMERS=0
+IRONFOX_BUILD_GECKOVIEW_DEPS=0
+IRONFOX_BUILD_GLEAN=0
+IRONFOX_BUILD_GLEAN_CONSUMERS=0
+IRONFOX_BUILD_GLEAN_DEPS=0
+IRONFOX_BUILD_LLVM=0
+IRONFOX_BUILD_LLVM_CONSUMERS=0
+IRONFOX_BUILD_MICROG=0
+IRONFOX_BUILD_MICROG_CONSUMERS=0
+IRONFOX_BUILD_NIMBUS_FML=0
+IRONFOX_BUILD_NIMBUS_FML_CONSUMERS=0
+IRONFOX_BUILD_PHOENIX=0
+IRONFOX_BUILD_PHOENIX_CONSUMERS=0
+IRONFOX_BUILD_UNIFFI=0
+IRONFOX_BUILD_UNIFFI_CONSUMERS=0
+IRONFOX_BUILD_UP_AC=0
+IRONFOX_BUILD_UP_AC_CONSUMERS=0
+IRONFOX_BUILD_UP_AC_DEPS=0
+IRONFOX_BUILD_WASI=0
+IRONFOX_BUILD_WASI_CONSUMERS=0
+
+if [[ "${build_project}" == 'fenix' ]]; then
+    # Build Fenix (and its dependencies)
+    ## (This is the default, and likely desired behavior in most cases)
+    IRONFOX_BUILD_FENIX=1
+    IRONFOX_BUILD_FENIX_DEPS=1
+elif [[ "${build_project}" == 'ac-core' ]]; then
+    # *Only* build core Android Components
+    IRONFOX_BUILD_AC_CORE=1
+elif [[ "${build_project}" == 'ac' ]]; then
+    # *Only* build Android Components (and their dependencies)
+    IRONFOX_BUILD_AC=1
+    IRONFOX_BUILD_AC_DEPS=1
+elif [[ "${build_project}" == 'as' ]]; then
+    # *Only* build Application Services (and its dependencies)
+    IRONFOX_BUILD_AS=1
+    IRONFOX_BUILD_AS_DEPS=1
+elif [[ "${build_project}" == 'bundletool' ]]; then
+    # *Only* build Bundletool
+    IRONFOX_BUILD_BUNDLETOOL=1
+elif [[ "${build_project}" == 'gecko' ]]; then
+    # *Only* build Gecko (and its dependencies)
+    IRONFOX_BUILD_GECKO=1
+    IRONFOX_BUILD_GECKO_DEPS=1
+elif [[ "${build_project}" == 'geckoview' ]]; then
+    # *Only* build GeckoView (and its dependencies)
+    ## (ex. used by CI for building GeckoView AARs)
+    IRONFOX_BUILD_GECKOVIEW=1
+    IRONFOX_BUILD_GECKOVIEW_DEPS=1
+elif [[ "${build_project}" == 'glean' ]]; then
+    # *Only* build Glean (and its dependencies)
+    IRONFOX_BUILD_GLEAN=1
+    IRONFOX_BUILD_GLEAN_DEPS=1
+elif [[ "${build_project}" == 'llvm' ]]; then
+    # *Only* build LLVM
+    IRONFOX_BUILD_LLVM=1
+elif [[ "${build_project}" == 'microg' ]]; then
+    # *Only* build microG
+    IRONFOX_BUILD_MICROG=1
+elif [[ "${build_project}" == 'nimbus-fml' ]]; then
+    # *Only* build nimbus-fml
+    IRONFOX_BUILD_NIMBUS_FML=1
+elif [[ "${build_project}" == 'phoenix' ]]; then
+    # *Only* build Phoenix
+    IRONFOX_BUILD_PHOENIX=1
+elif [[ "${build_project}" == 'uniffi' ]]; then
+    # *Only* build uniffi-bindgen
+    IRONFOX_BUILD_UNIFFI=1
+elif [[ "${build_project}" == 'up-ac' ]]; then
+    # *Only* build UnifiedPush-AC (and its dependencies)
+    IRONFOX_BUILD_UP_AC=1
+    IRONFOX_BUILD_UP_AC_DEPS=1
+elif [[ "${build_project}" == 'wasi' ]]; then
+    # *Only* build WASI SDK
+    IRONFOX_BUILD_ONLY_WASI=1
+elif [[ "${build_project}" == 'rebuild-ac-core' ]]; then
+    # Build core Android Components and their consumers
+    IRONFOX_BUILD_AC_CORE=1
+    IRONFOX_BUILD_AC_CORE_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-ac' ]]; then
+    # Build Android Components and their consumers
+    IRONFOX_BUILD_AC=1
+    IRONFOX_BUILD_AC_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-as' ]]; then
+    # Build Application Services and their consumers
+    IRONFOX_BUILD_AS=1
+    IRONFOX_BUILD_AS_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-fenix' ]]; then
+    # *Only* build Fenix
+    IRONFOX_BUILD_FENIX=1
+elif [[ "${build_project}" == 'rebuild-gecko' ]]; then
+    # Build Gecko and its consumers
+    IRONFOX_BUILD_GECKO=1
+    IRONFOX_BUILD_GECKO_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-geckoview' ]]; then
+    # Build GeckoView and its consumers
+    IRONFOX_BUILD_GECKOVIEW=1
+    IRONFOX_BUILD_GECKOVIEW_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-glean' ]]; then
+    # Build Glean and its consumers
+    IRONFOX_BUILD_GLEAN=1
+    IRONFOX_BUILD_GLEAN_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-llvm' ]]; then
+    # Build LLVM and its consumers
+    IRONFOX_BUILD_LLVM=1
+    IRONFOX_BUILD_LLVM_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-microg' ]]; then
+    # Build microG and its consumers
+    IRONFOX_BUILD_MICROG=1
+    IRONFOX_BUILD_MICROG_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-nimbus-fml' ]]; then
+    # Build nimbus-fml and its consumers
+    IRONFOX_BUILD_NIMBUS_FML=1
+    IRONFOX_BUILD_NIMBUS_FML_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-phoenix' ]]; then
+    # Build Phoenix and its consumers
+    IRONFOX_BUILD_PHOENIX=1
+    IRONFOX_BUILD_PHOENIX_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-uniffi' ]]; then
+    # Build uniffi-bindgen and its consumers
+    IRONFOX_BUILD_UNIFFI=1
+    IRONFOX_BUILD_UNIFFI_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-up-ac' ]]; then
+    # Build UnifiedPush-AC and its consumers
+    IRONFOX_BUILD_UP_AC=1
+    IRONFOX_BUILD_UP_AC_CONSUMERS=1
+elif [[ "${build_project}" == 'rebuild-wasi' ]]; then
+    # Build WASI SDK and its consumers
+    IRONFOX_BUILD_WASI=1
+    IRONFOX_BUILD_WASI_CONSUMERS=1
+else
     echo_red_text "ERROR: Invalid target project: ${build_project}\n You must enter one of the following:"
-    echo 'All:          all (Default)'
-    echo 'GeckoView:    geckoview'
+    echo 'Fenix:                                fenix (Default)'
+    echo 'Android Components (Core):            ac-core'
+    echo 'Android Components:                   ac'
+    echo 'Application Services:                 as'
+    echo 'Bundletool:                           bundletool'
+    echo 'Gecko:                                gecko'
+    echo 'GeckoView:                            geckoview'
+    echo 'Glean:                                glean'
+    echo 'LLVM:                                 llvm'
+    echo 'microG:                               microg'
+    echo 'nimbus-fml:                           nimbus-fml'
+    echo 'Phoenix:                              phoenix'
+    echo 'uniffi-bindgen:                       uniffi'
+    echo 'UnifiedPush-AC:                       up-ac'
+    echo 'WASI SDK:                             wasi'
+    echo 'Rebuild - Android Components (Core):  rebuild-ac-core'
+    echo 'Rebuild - Android Components:         rebuild-ac'
+    echo 'Rebuild - Application Services:       rebuild-as'
+    echo 'Rebuild - Fenix:                      rebuild-fenix'
+    echo 'Rebuild - Gecko:                      rebuild-gecko'
+    echo 'Rebuild - GeckoView:                  rebuild-geckoview'
+    echo 'Rebuild - Glean:                      rebuild-glean'
+    echo 'Rebuild - LLVM:                       rebuild-llvm'
+    echo 'Rebuild - microG:                     rebuild-microg'
+    echo 'Rebuild - nimbus-fml:                 rebuild-nimbus-fml'
+    echo 'Rebuild - Phoenix:                    rebuild-phoenix'
+    echo 'Rebuild - uniffi:                     rebuild-uniffi'
+    echo 'Rebuild - UnifiedPush-AC:             rebuild-up-ac'
+    echo 'Rebuild - WASI SDK:                   rebuild-wasi'
+    echo_green_text "TIP: If you're not sure, you *probably* want to stick to the default (fenix)."
     exit 1
 fi
-readonly IRONFOX_BUILD_GECKOVIEW_ONLY
 
-# Ensure IRONFOX_CHANNEL is properly set
+# Build projects that consume LLVM, microG, Phoenix, or WASI SDK directly
+if [[ "${IRONFOX_BUILD_LLVM_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_MICROG_CONSUMERS}" == 1 ]] ||
+ [[ "${IRONFOX_BUILD_PHOENIX_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_WASI_CONSUMERS}" == 1 ]]; then
+    # Build Gecko and its consumers
+    IRONFOX_BUILD_GECKO=1
+    IRONFOX_BUILD_GECKO_CONSUMERS=1
+fi
+
+# Build projects that consume Gecko directly
+if [[ "${IRONFOX_BUILD_GECKO_CONSUMERS}" == 1 ]]; then
+    # Build GeckoView and its consumers
+    IRONFOX_BUILD_GECKOVIEW=1
+    IRONFOX_BUILD_GECKOVIEW_CONSUMERS=1
+fi
+
+# Build projects that consume Android Components (Core) directly
+if [[ "${IRONFOX_BUILD_AC_CORE_CONSUMERS}" == 1 ]]; then
+    # Build Application Services and its consumers
+    IRONFOX_BUILD_AS=1
+    IRONFOX_BUILD_AS_CONSUMERS=1
+
+    # Build UnifiedPush-AC and its consumers
+    IRONFOX_BUILD_UP_AC=1
+    IRONFOX_BUILD_UP_AC_CONSUMERS=1
+fi
+
+# Build projects that consume Android Components (Core) or Application Services directly
+if [[ "${IRONFOX_BUILD_AC_CORE_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_AS_CONSUMERS}" == 1 ]]; then
+    # Build UnifiedPush-AC and its consumers
+    IRONFOX_BUILD_UP_AC=1
+    IRONFOX_BUILD_UP_AC_CONSUMERS=1
+fi
+
+# Build projects that consume Application Services, GeckoView, nimbus-fml, or UnifiedPush-AC directly
+if [[ "${IRONFOX_BUILD_AS_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW_CONSUMERS}" == 1 ]] ||
+ [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
+    # Build Android Components and its consumers
+    IRONFOX_BUILD_AC=1
+    IRONFOX_BUILD_AC_CONSUMERS=1
+fi
+
+# Build projects that consume uniffi-bindgen directly
+if [[ "${IRONFOX_BUILD_UNIFFI_CONSUMERS}" == 1 ]]; then
+    # Build Glean and its consumers
+    IRONFOX_BUILD_GLEAN=1
+    IRONFOX_BUILD_GLEAN_CONSUMERS=1
+fi
+
+# Build projects that consume Android Components, Glean, nimbus-fml, or UnifiedPush-AC directly
+if [[ "${IRONFOX_BUILD_AC_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_GLEAN_CONSUMERS}" == 1 ]] ||
+ [[ "${IRONFOX_BUILD_NIMBUS_FML_CONSUMERS}" == 1 ]] || [[ "${IRONFOX_BUILD_UP_AC_CONSUMERS}" == 1 ]]; then
+    # Build Fenix
+    IRONFOX_BUILD_FENIX=1
+fi
+
+# Build direct dependencies of Fenix
+if [[ "${IRONFOX_BUILD_FENIX_DEPS}" == 1 ]]; then
+    # Android Components
+    IRONFOX_BUILD_AC=1
+    IRONFOX_BUILD_AC_DEPS=1
+
+    # Glean
+    IRONFOX_BUILD_GLEAN=1
+
+    # nimbus-fml
+    IRONFOX_BUILD_NIMBUS_FML=1
+
+    # UnifiedPush-AC
+    IRONFOX_BUILD_UP_AC=1
+    IRONFOX_BUILD_UP_AC_DEPS=1
+
+    if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
+        # Bundletool
+        IRONFOX_BUILD_BUNDLETOOL=1
+    fi
+fi
+
+# Build direct dependencies of Glean
+if [[ "${IRONFOX_BUILD_GLEAN_DEPS}" == 1 ]]; then
+    if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
+        # uniffi-bindgen
+        IRONFOX_BUILD_UNIFFI=1
+    fi
+fi
+
+# Build direct dependencies of Android Components
+if [[ "${IRONFOX_BUILD_AC_DEPS}" == 1 ]]; then
+    # Application Services
+    IRONFOX_BUILD_AS=1
+
+    # GeckoView
+    IRONFOX_BUILD_GECKOVIEW=1
+    IRONFOX_BUILD_GECKOVIEW_DEPS=1
+
+    # nimbus-fml
+    IRONFOX_BUILD_NIMBUS_FML=1
+
+    # UnifiedPush-AC
+    IRONFOX_BUILD_UP_AC=1
+    IRONFOX_BUILD_UP_AC_DEPS=1
+fi
+
+# Build direct dependencies of UnifiedPush-AC
+if [[ "${IRONFOX_BUILD_UP_AC_DEPS}" == 1 ]]; then
+    # Android Components (Core)
+    IRONFOX_BUILD_AC_CORE=1
+
+    # Application Services
+    IRONFOX_BUILD_AS=1
+fi
+
+# Build direct dependencies of Application Services
+if [[ "${IRONFOX_BUILD_AS_DEPS}" == 1 ]]; then
+    # Android Components (Core)
+    IRONFOX_BUILD_AC_CORE=1
+fi
+
+# Build direct dependencies of GeckoView
+if [[ "${IRONFOX_BUILD_GECKOVIEW_DEPS}" == 1 ]]; then
+    # Gecko
+    IRONFOX_BUILD_GECKO=1
+    IRONFOX_BUILD_GECKO_DEPS=1
+
+    # microG
+    IRONFOX_BUILD_MICROG=1
+fi
+
+# Build direct dependencies of Gecko
+if [[ "${IRONFOX_BUILD_GECKO_DEPS}" == 1 ]]; then
+    # microG
+    IRONFOX_BUILD_MICROG=1
+
+    # Phoenix
+    IRONFOX_BUILD_PHOENIX=1
+
+    if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
+        # WASI SDK
+        IRONFOX_BUILD_WASI=1
+
+        if [[ -n "${FDROID_BUILD+x}" ]]; then
+            # LLVM
+            IRONFOX_BUILD_LLVM=1
+        fi
+    fi
+fi
+
+readonly IRONFOX_BUILD_AC_CORE
+readonly IRONFOX_BUILD_AC_CORE_CONSUMERS
+readonly IRONFOX_BUILD_AC
+readonly IRONFOX_BUILD_AC_CONSUMERS
+readonly IRONFOX_BUILD_AC_DEPS
+readonly IRONFOX_BUILD_AS
+readonly IRONFOX_BUILD_AS_CONSUMERS
+readonly IRONFOX_BUILD_AS_DEPS
+readonly IRONFOX_BUILD_BUNDLETOOL
+readonly IRONFOX_BUILD_FENIX
+readonly IRONFOX_BUILD_FENIX_DEPS
+readonly IRONFOX_BUILD_GECKO
+readonly IRONFOX_BUILD_GECKO_CONSUMERS
+readonly IRONFOX_BUILD_GECKO_DEPS
+readonly IRONFOX_BUILD_GECKOVIEW
+readonly IRONFOX_BUILD_GECKOVIEW_CONSUMERS
+readonly IRONFOX_BUILD_GECKOVIEW_DEPS
+readonly IRONFOX_BUILD_GLEAN
+readonly IRONFOX_BUILD_GLEAN_CONSUMERS
+readonly IRONFOX_BUILD_GLEAN_DEPS
+readonly IRONFOX_BUILD_LLVM
+readonly IRONFOX_BUILD_LLVM_CONSUMERS
+readonly IRONFOX_BUILD_MICROG
+readonly IRONFOX_BUILD_MICROG_CONSUMERS
+readonly IRONFOX_BUILD_NIMBUS_FML
+readonly IRONFOX_BUILD_NIMBUS_FML_CONSUMERS
+readonly IRONFOX_BUILD_PHOENIX
+readonly IRONFOX_BUILD_PHOENIX_CONSUMERS
+readonly IRONFOX_BUILD_UNIFFI
+readonly IRONFOX_BUILD_UNIFFI_CONSUMERS
+readonly IRONFOX_BUILD_UP_AC
+readonly IRONFOX_BUILD_UP_AC_CONSUMERS
+readonly IRONFOX_BUILD_UP_AC_DEPS
+readonly IRONFOX_BUILD_WASI
+readonly IRONFOX_BUILD_WASI_CONSUMERS
+
+# Ensure that critical variables are configured properly
+if [[ -z "${IRONFOX_CHANNEL+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_CHANNEL is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
 if [[ "${IRONFOX_CHANNEL}" != 'release' ]] && [[ "${IRONFOX_CHANNEL}" != 'nightly' ]]; then
-    echo_red_text "ERROR: Invalid release channel (IRONFOX_CHANNEL): ${IRONFOX_CHANNEL}"
+    echo_red_text "ERROR: Release channel (${IRONFOX_CHANNEL}) is invalid!"
+    echo "Please ensure that IRONFOX_CHANNEL is set to 'release' or 'nightly'."
+    echo_red_text 'Aborting...'
     exit 1
 fi
 
-if [[ ! -d "${IRONFOX_ANDROID_SDK}" ]]; then
-    echo_red_text "\$IRONFOX_ANDROID_SDK($IRONFOX_ANDROID_SDK) does not exist."
+if [[ -z "${IRONFOX_CHANNEL_PRETTY+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_CHANNEL_PRETTY is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ "${IRONFOX_CHANNEL_PRETTY}" != 'Release' ]] && [[ "${IRONFOX_CHANNEL_PRETTY}" != 'Nightly' ]]; then
+    echo_red_text "ERROR: Pretty release channel (${IRONFOX_CHANNEL_PRETTY}) is invalid!"
+    echo "Please ensure that IRONFOX_CHANNEL_PRETTY is set to 'Release' or 'Nightly'."
+    echo_red_text 'Aborting...'
     exit 1
 fi
 
+if [[ -z "${IRONFOX_RELEASE+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_RELEASE is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ "${IRONFOX_RELEASE}" != 1 ]] && [[ "${IRONFOX_RELEASE}" != 0 ]]; then
+    echo_red_text "ERROR: IRONFOX_RELEASE (${IRONFOX_RELEASE}) is invalid!"
+    echo "Please ensure that IRONFOX_RELEASE is set to 1 (for release) or 0 (for nightly)."
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+if [[ -z "${IRONFOX_NAME+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_NAME is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ "${IRONFOX_NAME}" != 'IronFox' ]] && [[ "${IRONFOX_NAME}" != 'IronFox Nightly' ]]; then
+    echo_red_text "ERROR: IRONFOX_NAME (${IRONFOX_NAME}) is invalid!"
+    echo "Please ensure that IRONFOX_NAME is set to 'IronFox' or 'IronFox Nightly'."
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+if [[ -z "${IRONFOX_BUILD+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_BUILD is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_BUILD}" ]]; then
+    echo_red_text "ERROR: Build directory (${IRONFOX_BUILD}) is missing!"
+    echo 'Please ensure that IRONFOX_BUILD is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+if [[ -z "${IRONFOX_TEMP+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_TEMP is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_TEMP}" ]]; then
+    echo_red_text "ERROR: Temporary directory (${IRONFOX_TEMP}) is missing!"
+    echo 'Please ensure that IRONFOX_TEMP is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+if [[ -z "${IRONFOX_TEMPLATES+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_TEMPLATES is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_TEMPLATES}" ]]; then
+    echo_red_text "ERROR: Templates directory (${IRONFOX_TEMPLATES}) is missing!"
+    echo 'Please ensure that IRONFOX_TEMPLATES is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Fail early if our source directories are missing...
+
+# mozilla-central
+if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
+ [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+    if [[ -z "${IRONFOX_GECKO+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_GECKO is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_GECKO}" ]]; then
+        echo_red_text "ERROR: mozilla-central (${IRONFOX_GECKO}) is missing!"
+        echo 'Please ensure that IRONFOX_GECKO is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+
+    if [[ -z "${IRONFOX_MOZCONFIGS+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_MOZCONFIGS is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_MOZCONFIGS}" ]]; then
+        echo_red_text "ERROR: The IronFox mozconfigs directory (${IRONFOX_MOZCONFIGS}) is missing!"
+        echo 'Please ensure that IRONFOX_MOZCONFIGS is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Android Components
+if [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] || [[ "${IRONFOX_BUILD_AC}" == 1 ]]; then
+    if [[ -z "${IRONFOX_AC+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_AC is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_AC}" ]]; then
+        echo_red_text "ERROR: Android Components (${IRONFOX_AC}) is missing!"
+        echo 'Please ensure that IRONFOX_AC is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Fenix
+if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+    if [[ -z "${IRONFOX_FENIX+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_FENIX is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_FENIX}" ]]; then
+        echo_red_text "ERROR: Fenix (${IRONFOX_FENIX}) is missing!"
+        echo 'Please ensure that IRONFOX_FENIX is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# l10n-central
+if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
+    if [[ -z "${IRONFOX_L10N_CENTRAL+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_L10N_CENTRAL is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_L10N_CENTRAL}" ]]; then
+        echo_red_text "ERROR: l10n-central (${IRONFOX_L10N_CENTRAL}) is missing!"
+        echo 'Please ensure that IRONFOX_L10N_CENTRAL is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# microG
+if [[ "${IRONFOX_BUILD_MICROG}" == 1 ]]; then
+    if [[ -z "${IRONFOX_GMSCORE+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_GMSCORE is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_GMSCORE}" ]]; then
+        echo_red_text "ERROR: microG (${IRONFOX_GMSCORE}) is missing!"
+        echo 'Please ensure that IRONFOX_GMSCORE is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Phoenix
+if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
+    if [[ -z "${IRONFOX_PHOENIX+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_PHOENIX is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_PHOENIX}" ]]; then
+        echo_red_text "ERROR: Phoenix (${IRONFOX_PHOENIX}) is missing!"
+        echo 'Please ensure that IRONFOX_PHOENIX is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Application Services
+if [[ "${IRONFOX_BUILD_AS}" == 1 ]] || [[ "${IRONFOX_BUILD_NIMBUS_FML}" == 1 ]]; then
+    if [[ -z "${IRONFOX_AS+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_AS is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_AS}" ]]; then
+        echo_red_text "ERROR: Application Services (${IRONFOX_AS}) is missing!"
+        echo 'Please ensure that IRONFOX_AS is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# UnifiedPush-AC
+if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
+    if [[ -z "${IRONFOX_UP_AC+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_UP_AC is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_UP_AC}" ]]; then
+        echo_red_text "ERROR: UnifiedPush-AC (${IRONFOX_UP_AC}) is missing!"
+        echo 'Please ensure that IRONFOX_UP_AC is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Glean
+if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
+    if [[ -z "${IRONFOX_GLEAN+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_GLEAN is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_GLEAN}" ]]; then
+        echo_red_text "ERROR: Glean (${IRONFOX_GLEAN}) is missing!"
+        echo 'Please ensure that IRONFOX_GLEAN is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Prebuilds repo
+if [[ "${IRONFOX_BUILD_UNIFFI}" == 1 ]] || [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
+    if [[ -z "${IRONFOX_PREBUILDS+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_PREBUILDS is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_PREBUILDS}" ]]; then
+        echo_red_text "ERROR: The IronFox prebuilds repository (${IRONFOX_PREBUILDS}) is missing!"
+        echo 'Please ensure that IRONFOX_PREBUILDS is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Bundletool
+if [[ "${IRONFOX_BUILD_BUNDLETOOL}" == 1 ]]; then
+    if [[ -z "${IRONFOX_BUNDLETOOL_DIR+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_BUNDLETOOL_DIR is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_BUNDLETOOL_DIR}" ]]; then
+        echo_red_text "ERROR: Bundletool (${IRONFOX_BUNDLETOOL_DIR}) is missing!"
+        echo 'Please ensure that IRONFOX_BUNDLETOOL_DIR is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ -z "${IRONFOX_BUNDLETOOL_JAR+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_BUNDLETOOL_JAR is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Now, fail early if our build dependencies are missing...
+
+# Android NDK
+if [[ -z "${IRONFOX_ANDROID_NDK+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_ANDROID_NDK is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
 if [[ ! -d "${IRONFOX_ANDROID_NDK}" ]]; then
-    echo_red_text "\$IRONFOX_ANDROID_NDK($IRONFOX_ANDROID_NDK) does not exist."
+    echo_red_text "ERROR: Android NDK (${IRONFOX_ANDROID_NDK}) is missing!"
+    echo 'Please ensure that IRONFOX_ANDROID_NDK is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Android SDK
+if [[ -z "${IRONFOX_ANDROID_SDK+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_ANDROID_SDK is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_ANDROID_SDK}" ]]; then
+    echo_red_text "ERROR: Android SDK (${IRONFOX_ANDROID_SDK}) is missing!"
+    echo 'Please ensure that IRONFOX_ANDROID_SDK is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Android SDK Build Tools
+if [[ -z "${IRONFOX_ANDROID_SDK_BUILD_TOOLS+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_ANDROID_SDK_BUILD_TOOLS is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_ANDROID_SDK_BUILD_TOOLS}" ]]; then
+    echo_red_text "ERROR: Android SDK Build Tools (${IRONFOX_ANDROID_SDK_BUILD_TOOLS}) is missing!"
+    echo 'Please ensure that IRONFOX_ANDROID_SDK_BUILD_TOOLS is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Android SDK Platform Tools
+if [[ -z "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_ANDROID_SDK_PLATFORM_TOOLS is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}" ]]; then
+    echo_red_text "ERROR: Android SDK Platform Tools (${IRONFOX_ANDROID_SDK_PLATFORM_TOOLS}) is missing!"
+    echo 'Please ensure that IRONFOX_ANDROID_SDK_PLATFORM_TOOLS is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# GNU awk
+if [[ -z "${IRONFOX_AWK+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_AWK is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# GNU date
+if [[ -z "${IRONFOX_DATE+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_DATE is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# GNU sed
+if [[ -z "${IRONFOX_SED+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_SED is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Gradle
+if [[ -z "${IRONFOX_GRADLE+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_GRADLE is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ -z "${IRONFOX_GRADLE_PY+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_GRADLE_PY is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ -z "${IRONFOX_GRADLE_FLAGS+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_GRADLE_FLAGS is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_GRADLE}" ]]; then
+    echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE}) is missing!"
+    echo 'Please ensure that IRONFOX_GRADLE is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_GRADLE}" ]]; then
+    echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE}) is empty!"
+    echo 'Please ensure that IRONFOX_GRADLE is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -x "${IRONFOX_GRADLE}" ]]; then
+    echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE}) is not executable!"
+    echo 'Please ensure that IRONFOX_GRADLE is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_GRADLE_PY}" ]]; then
+    echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE_PY}) is missing!"
+    echo 'Please ensure that IRONFOX_GRADLE_PY is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_GRADLE_PY}" ]]; then
+    echo_red_text "ERROR: Gradle (${IRONFOX_GRADLE_PY}) is empty!"
+    echo 'Please ensure that IRONFOX_GRADLE_PY is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Java
+if [[ -z "${IRONFOX_JAVA_HOME+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_JAVA_HOME is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ -z "${IRONFOX_JAVA+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_JAVA is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_JAVA_HOME}" ]]; then
+    echo_red_text "ERROR: JDK (${IRONFOX_JAVA_HOME}) is missing!"
+    echo 'Please ensure that IRONFOX_JAVA_HOME is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_JAVA}" ]]; then
+    echo_red_text "ERROR: Java (${IRONFOX_JAVA}) is missing!"
+    echo 'Please ensure that IRONFOX_JAVA is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_JAVA}" ]]; then
+    echo_red_text "ERROR: Java (${IRONFOX_JAVA}) is empty!"
+    echo 'Please ensure that IRONFOX_JAVA is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -x "${IRONFOX_JAVA}" ]]; then
+    echo_red_text "ERROR: Java (${IRONFOX_JAVA}) is not executable!"
+    echo 'Please ensure that IRONFOX_JAVA is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+## Java 21
+if [[ -z "${IRONFOX_JDK_21_HOME+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_JDK_21_HOME is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_JDK_21_HOME}" ]]; then
+    echo_red_text "ERROR: JDK 21 (${IRONFOX_JDK_21_HOME}) is missing!"
+    echo 'Please ensure that IRONFOX_JDK_21_HOME is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+## Java 17
+if [[ -z "${IRONFOX_JDK_17_HOME+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_JDK_17_HOME is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_JDK_17_HOME}" ]]; then
+    echo_red_text "ERROR: JDK 17 (${IRONFOX_JDK_17_HOME}) is missing!"
+    echo 'Please ensure that IRONFOX_JDK_17_HOME is set to a valid directory.'
+    echo_red_text 'Aborting...'
     exit 1
 fi
 
 readonly JAVA_VER=$("${IRONFOX_JAVA}" -version 2>&1 | "${IRONFOX_AWK}" -F '"' '/version/ {print $2}' | "${IRONFOX_AWK}" -F '.' '{sub("^$", "0", $2); print $1$2}')
 [[ "${JAVA_VER}" -ge 15 ]] || {
-    echo_red_text "Java 17 or newer must be set as default JDK"
+    echo_red_text "ERROR: Java 17 or newer must be set as the default JDK!"
+    echo_red_text 'Aborting...'
     exit 1
 }
 
-if [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]]; then
-    echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
-    read -p 'Do you want to continue [y/N] ' -n 1 -r
-    echo ''
-    if ! [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+# Node.js
+if [[ -z "${IRONFOX_NODEJS+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_NODEJS is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_NODEJS}" ]]; then
+    echo_red_text "ERROR: Node.js (${IRONFOX_NODEJS}) is missing!"
+    echo 'Please ensure that IRONFOX_NODEJS is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_NODEJS}" ]]; then
+    echo_red_text "ERROR: Node.js (${IRONFOX_NODEJS}) is empty!"
+    echo 'Please ensure that IRONFOX_NODEJS is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -x "${IRONFOX_NODEJS}" ]]; then
+    echo_red_text "ERROR: Node.js (${IRONFOX_NODEJS}) is not executable!"
+    echo 'Please ensure that IRONFOX_NODEJS is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# npm
+if [[ -z "${IRONFOX_NPM+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_NPM is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_NPM}" ]]; then
+    echo_red_text "ERROR: npm (${IRONFOX_NPM}) is missing!"
+    echo 'Please ensure that IRONFOX_NPM is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_NPM}" ]]; then
+    echo_red_text "ERROR: npm (${IRONFOX_NPM}) is empty!"
+    echo 'Please ensure that IRONFOX_NPM is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -x "${IRONFOX_NPM}" ]]; then
+    echo_red_text "ERROR: npm (${IRONFOX_NPM}) is not executable!"
+    echo 'Please ensure that IRONFOX_NPM is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# nvm
+if [[ -z "${IRONFOX_NVM+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_NVM is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ -z "${IRONFOX_NVM_ENV+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_NVM_ENV is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_NVM}" ]]; then
+    echo_red_text "ERROR: nvm (${IRONFOX_NVM}) is missing!"
+    echo 'Please ensure that IRONFOX_NVM is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_NVM_ENV}" ]]; then
+    echo_red_text "ERROR: nvm environment activation file (${IRONFOX_NVM_ENV}) is missing!"
+    echo 'Please ensure that IRONFOX_NVM_ENV is set to a valid file.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_NVM_ENV}" ]]; then
+    echo_red_text "ERROR: nvm environment activation file (${IRONFOX_NVM_ENV}) is empty!"
+    echo 'Please ensure that IRONFOX_NVM_ENV is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Python
+if [[ -z "${IRONFOX_PYTHON+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_PYTHON is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_PYTHON}" ]]; then
+    echo_red_text "ERROR: Python (${IRONFOX_PYTHON}) is missing!"
+    echo 'Please ensure that IRONFOX_PYTHON is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_PYTHON}" ]]; then
+    echo_red_text "ERROR: Python (${IRONFOX_PYTHON}) is empty!"
+    echo 'Please ensure that IRONFOX_PYTHON is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -x "${IRONFOX_PYTHON}" ]]; then
+    echo_red_text "ERROR: Python (${IRONFOX_PYTHON}) is not executable!"
+    echo 'Please ensure that IRONFOX_PYTHON is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Python (uv) environment
+if [[ -z "${IRONFOX_PYENV_DIR+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_PYENV_DIR is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ -z "${IRONFOX_PYENV+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_PYENV is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_PYENV_DIR}" ]]; then
+    echo_red_text "ERROR: Python (uv) environment (${IRONFOX_PYENV}) is missing!"
+    echo 'Please ensure that IRONFOX_PYENV_DIR is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_PYENV}" ]]; then
+    echo_red_text "ERROR: Python (uv) environment activation file (${IRONFOX_PYENV}) is missing!"
+    echo 'Please ensure that IRONFOX_PYENV is set to a valid file.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_PYENV}" ]]; then
+    echo_red_text "ERROR: Python (uv) environment activation file (${IRONFOX_PYENV}) is empty!"
+    echo 'Please ensure that IRONFOX_PYENV is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+## uv
+if [[ -z "${IRONFOX_UV+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_PYENV is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_UV}" ]]; then
+    echo_red_text "ERROR: uv (${IRONFOX_UV}) is missing!"
+    echo 'Please ensure that IRONFOX_UV is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_UV}" ]]; then
+    echo_red_text "ERROR: uv (${IRONFOX_UV}) is empty!"
+    echo 'Please ensure that IRONFOX_UV is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -x "${IRONFOX_UV}" ]]; then
+    echo_red_text "ERROR: uv (${IRONFOX_UV}) is not executable!"
+    echo 'Please ensure that IRONFOX_UV is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# uv local directory
+if [[ -z "${IRONFOX_UV_LOCAL+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_UV_LOCAL is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_UV_LOCAL}" ]]; then
+    echo_red_text "ERROR: uv local directory (${IRONFOX_UV_LOCAL}) is missing!"
+    echo 'Please ensure that IRONFOX_UV_LOCAL is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# Rust (cargo) environment
+if [[ -z "${IRONFOX_CARGO_HOME+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_CARGO_HOME is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ -z "${IRONFOX_CARGO_ENV+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_CARGO_ENV is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -d "${IRONFOX_CARGO_HOME}" ]]; then
+    echo_red_text "ERROR: Rust (cargo) environment (${IRONFOX_CARGO_HOME}) is missing!"
+    echo 'Please ensure that IRONFOX_CARGO_HOME is set to a valid directory.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_CARGO_ENV}" ]]; then
+    echo_red_text "ERROR: Rust (cargo) environment activation file (${IRONFOX_CARGO_ENV}) is missing!"
+    echo 'Please ensure that IRONFOX_CARGO_ENV is set to a valid file.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_CARGO_ENV}" ]]; then
+    echo_red_text "ERROR: Rust (cargo) environment activation file (${IRONFOX_CARGO_ENV}) is empty!"
+    echo 'Please ensure that IRONFOX_CARGO_ENV is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+## cargo
+if [[ -z "${IRONFOX_CARGO+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_CARGO is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -f "${IRONFOX_CARGO}" ]]; then
+    echo_red_text "ERROR: cargo (${IRONFOX_CARGO}) is missing!"
+    echo 'Please ensure that IRONFOX_CARGO is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -s "${IRONFOX_CARGO}" ]]; then
+    echo_red_text "ERROR: cargo (${IRONFOX_CARGO}) is empty!"
+    echo 'Please ensure that IRONFOX_CARGO is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+if [[ ! -x "${IRONFOX_CARGO}" ]]; then
+    echo_red_text "ERROR: cargo (${IRONFOX_CARGO}) is not executable!"
+    echo 'Please ensure that IRONFOX_CARGO is set to a valid executable.'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+# mach
+if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
+ [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+    if [[ -z "${IRONFOX_MACH+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_MACH is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -f "${IRONFOX_MACH}" ]]; then
+        echo_red_text "ERROR: mach (${IRONFOX_MACH}) is missing!"
+        echo 'Please ensure that IRONFOX_MACH is set to a valid executable.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -s "${IRONFOX_MACH}" ]]; then
+        echo_red_text "ERROR: mach (${IRONFOX_MACH}) is empty!"
+        echo 'Please ensure that IRONFOX_MACH is set to a valid executable.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -x "${IRONFOX_MACH}" ]]; then
+        echo_red_text "ERROR: mach (${IRONFOX_MACH}) is not executable!"
+        echo 'Please ensure that IRONFOX_MACH is set to a valid executable.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Glean's Python (uv) environment
+if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
+    if [[ -z "${IRONFOX_GLEAN_PYENV+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_GLEAN_PYENV is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ ! -d "${IRONFOX_GLEAN_PYENV}" ]]; then
+        echo_red_text "ERROR: Glean's Python (uv) environment (${IRONFOX_GLEAN_PYENV}) is missing!"
+        echo 'Please ensure that IRONFOX_GLEAN_PYENV is set to a valid directory.'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+fi
+
+# Safe Browsing API key
+if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
+    if [[ -z "${IRONFOX_SB_GAPI_KEY_FILE+x}" ]]; then
+        echo_red_text 'ERROR: IRONFOX_SB_GAPI_KEY_FILE is missing!'
+        echo_red_text 'Aborting...'
+        exit 1
+    fi
+    if [[ "${IRONFOX_SB_GAPI_KEY_FILE}" == 'null' ]]; then
+        echo_red_text 'IRONFOX_SB_GAPI_KEY_FILE environment variable has not been specified! Safe Browsing will not be supported in this build.'
+        if [[ "${IRONFOX_CI}" == 1 ]]; then
+            # CI should always include Safe Browsing, so always fail if it's missing here
+            echo_red_text "ERROR: IRONFOX_SB_GAPI_KEY_FILE has not been set! Aborting..."
+            exit 1
+        fi
+        read -p 'Do you want to continue [y/N] ' -n 1 -r
+        echo ''
+        if ! [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+            echo_red_text 'Aborting...'
+            exit 1
+        fi
+    # Verify that the Safe Browsing key file exists
+    elif [[ ! -f "${IRONFOX_SB_GAPI_KEY_FILE}" ]]; then
+        echo_red_text "ERROR: Safe Browsing API key file (${IRONFOX_SB_GAPI_KEY_FILE}) does not exist!"
+        echo 'Please ensure that IRONFOX_SB_GAPI_KEY_FILE is set to a valid file.'
+        echo_red_text 'Aborting...'
+        exit 1
+    # Verify that the Safe Browsing key file isn't empty
+    elif [[ ! -s "${IRONFOX_SB_GAPI_KEY_FILE}" ]]; then
+        echo_red_text "ERROR: Safe Browsing API key file (${IRONFOX_SB_GAPI_KEY_FILE}) is empty!"
+        echo 'Please ensure that IRONFOX_SB_GAPI_KEY_FILE is set to a valid file.'
         echo_red_text 'Aborting...'
         exit 1
     fi
@@ -136,13 +1221,27 @@ source "${IRONFOX_PYENV}"
 # Include version info
 source "${IRONFOX_VERSIONS}"
 
-if [[ -z "${FIREFOX_VERSION}" ]]; then
-    echo_red_text "\$FIREFOX_VERSION is not set! Aborting..."
+if [[ -z "${FIREFOX_VERSION+x}" ]]; then
+    echo_red_text 'ERROR: FIREFOX_VERSION is missing!'
+    echo_red_text 'Aborting...'
     exit 1
 fi
 
-if [[ -z "${IRONFOX_VERSION}" ]]; then
-    echo_red_text "\$IRONFOX_VERSION is not set! Aborting..."
+if [[ -z "${IRONFOX_VERSION+x}" ]]; then
+    echo_red_text 'ERROR: IRONFOX_VERSION is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+if [[ -z "${APPSERVICES_VERSION+x}" ]]; then
+    echo_red_text 'ERROR: APPSERVICES_VERSION is missing!'
+    echo_red_text 'Aborting...'
+    exit 1
+fi
+
+if [[ -z "${GLEAN_VERSION+x}" ]]; then
+    echo_red_text 'ERROR: GLEAN_VERSION is missing!'
+    echo_red_text 'Aborting...'
     exit 1
 fi
 
@@ -158,66 +1257,146 @@ function set_build_env() {
 
     # First, clean our environment
     unset IF_BUILD_ID
+    unset IF_BUILD_DATE
+    unset IF_LOCAL_AC_VERSION
+    unset IF_LOCAL_AC_VERSION_GRADLE
     unset IF_LOCAL_AC_VERSION_STAMP
+    unset IF_LOCAL_AS_VERSION
+    unset IF_LOCAL_AS_VERSION_GRADLE
     unset IF_LOCAL_AS_VERSION_STAMP
+    unset IF_LOCAL_GLEAN_VERSION
+    unset IF_LOCAL_GLEAN_VERSION_GRADLE
     unset IF_LOCAL_GLEAN_VERSION_STAMP
     unset MOZ_BUILD_DATE
 
-    # Write env_build.sh
-    if [[ -f "${IRONFOX_ENV_BUILD}" ]]; then
-        rm "${IRONFOX_ENV_BUILD}"
-    fi
+    # Create our directory
+    mkdir -p "${IRONFOX_TEMP}/env"
 
     local readonly IF_BUILD_DATE="$("${IRONFOX_DATE}" -u +"%Y-%m-%dT%H:%M:%SZ")"
     local readonly IF_LOCAL_VERSION_STAMP="$("${IRONFOX_DATE}" "+%s%N")"
 
-    # Override Gecko(View)'s build ID (if desired)
+    # Override Gecko(View)'s build ID
+    local readonly moz_build_id_file="${IRONFOX_TEMP}/env/moz-build-id.txt"
     if [[ "${IRONFOX_BUILD_ID_OVERRIDE}" != 'null' ]]; then
-        IF_BUILD_ID="${IRONFOX_BUILD_ID_OVERRIDE}"
+        local readonly IF_BUILD_ID="${IRONFOX_BUILD_ID_OVERRIDE}"
     elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
-        IF_BUILD_ID="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
+        local readonly IF_BUILD_ID="$("${IRONFOX_DATE}" -d "${IF_BUILD_DATE}" "+%Y%m%d%H%M%S")"
     else
-        IF_BUILD_ID='null'
+        local readonly IF_BUILD_ID='null'
     fi
 
-    # Override our version for local Android Components substitution (if desired)
-    if [[ "${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}" != 'null' ]]; then
-        IF_LOCAL_AC_VERSION_STAMP="${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}"
-    else
-        IF_LOCAL_AC_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
-    fi
-
-    # Override our version for local Application Services substitution (if desired)
-    if [[ "${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}" != 'null' ]]; then
-        IF_LOCAL_AS_VERSION_STAMP="${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}"
-    else
-        IF_LOCAL_AS_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
-    fi
-
-    # Override our version for local Glean substitution (if desired)
-    if [[ "${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}" != 'null' ]]; then
-        IF_LOCAL_GLEAN_VERSION_STAMP="${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}"
-    else
-        IF_LOCAL_GLEAN_VERSION_STAMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
-    fi
-
-    echo "Writing ${IRONFOX_ENV_BUILD}..."
-    cat > "${IRONFOX_ENV_BUILD}" << EOF
-readonly IF_BUILD_ID="${IF_BUILD_ID}"
-readonly IF_LOCAL_AC_VERSION_STAMP="${IF_LOCAL_AC_VERSION_STAMP}"
-readonly IF_LOCAL_AS_VERSION_STAMP="${IF_LOCAL_AS_VERSION_STAMP}"
-readonly IF_LOCAL_GLEAN_VERSION_STAMP="${IF_LOCAL_GLEAN_VERSION_STAMP}"
-EOF
-
-    source "${IRONFOX_ENV_BUILD}"
-
-    # Set Gecko(View)'s build ID
     if [[ "${IF_BUILD_ID}" != 'null' ]]; then
-        readonly MOZ_BUILD_DATE="${IF_BUILD_ID}"
-        export MOZ_BUILD_DATE
+        rm -f "${moz_build_id_file}"
+        touch "${moz_build_id_file}"
+        echo -n "${IF_BUILD_ID}" > "${moz_build_id_file}"
+    fi
+
+    # Override our version for local Android Components substitution
+    local IF_LOCAL_AC_VERSION_STAMP='undefined'
+    local IF_LOCAL_AC_VERSION_STAMP_TEMP='undefined'
+    local readonly ac_version_file="${IRONFOX_TEMP}/env/ac-version.txt"
+
+    # To support rebuilds, if we're *not* currently building Android Components, use the previously set version (if it exists)
+    # (If we are building Android Components, we always override the version for substitution)
+    if [[ "${IRONFOX_BUILD_AC}" != 1 ]]; then
+        if [[ -f "${ac_version_file}" ]] && [[ -s "${ac_version_file}" ]]; then
+            local readonly current_ac_version=$(cat "${ac_version_file}" | xargs)
+            # Ensure the specified Android Components version has actually been built before re-using it...
+            if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/components/browser-engine-gecko/0.0.1-local-${FIREFOX_VERSION}-${current_ac_version}" ]]; then
+                local readonly IF_LOCAL_AC_VERSION_STAMP="${current_ac_version}"
+            fi
+        fi
+    fi
+
+    if [[ "${IF_LOCAL_AC_VERSION_STAMP}" == 'undefined' ]]; then
+        # Next, try to use `IRONFOX_LOCAL_AC_VERSION_OVERRIDE` if it's set
+        if [[ "${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}" != 'null' ]]; then
+            local readonly IF_LOCAL_AC_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_AC_VERSION_OVERRIDE}"
+        # Otherwise, set our own version override
+        else
+            local readonly IF_LOCAL_AC_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+        fi
+        rm -f "${ac_version_file}"
+        touch "${ac_version_file}"
+        echo -n "${IF_LOCAL_AC_VERSION_STAMP_TEMP}" > "${ac_version_file}"
+    fi
+
+    # Override our version for local Application Services substitution
+    local IF_LOCAL_AS_VERSION_STAMP='undefined'
+    local IF_LOCAL_AS_VERSION_STAMP_TEMP='undefined'
+    local readonly as_version_file="${IRONFOX_TEMP}/env/as-version.txt"
+
+    # To support rebuilds, if we're *not* currently building Application Services, use the previously set version (if it exists)
+    # (If we are building Application Services, we always override the version for substitution)
+    if [[ "${IRONFOX_BUILD_AS}" != 1 ]]; then
+        if [[ -f "${as_version_file}" ]] && [[ -s "${as_version_file}" ]]; then
+            local readonly current_as_version=$(cat "${as_version_file}" | xargs)
+            # Ensure the specified Application Services version has actually been built before re-using it...
+            if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/appservices/full-megazord/0.0.1-SNAPSHOT-${APPSERVICES_VERSION}-${current_as_version}" ]]; then
+                local readonly IF_LOCAL_AS_VERSION_STAMP="${current_as_version}"
+            fi
+        fi
+    fi
+
+    if [[ "${IF_LOCAL_AS_VERSION_STAMP}" == 'undefined' ]]; then
+        # Next, try to use `IRONFOX_LOCAL_AS_VERSION_OVERRIDE` if it's set
+        if [[ "${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}" != 'null' ]]; then
+            local readonly IF_LOCAL_AS_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_AS_VERSION_OVERRIDE}"
+        # Otherwise, set our own version override
+        else
+            local readonly IF_LOCAL_AS_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+        fi
+        rm -f "${as_version_file}"
+        touch "${as_version_file}"
+        echo -n "${IF_LOCAL_AS_VERSION_STAMP_TEMP}" > "${as_version_file}"
+    fi
+
+    # Override our version for local Glean substitution
+    local IF_LOCAL_GLEAN_VERSION_STAMP='undefined'
+    local IF_LOCAL_GLEAN_VERSION_STAMP_TEMP='undefined'
+    local readonly glean_version_file="${IRONFOX_TEMP}/env/glean-version.txt"
+
+    # To support rebuilds, if we're *not* currently building Glean, use the previously set version (if it exists)
+    # (If we are building Glean, we always override the version for substitution)
+    if [[ "${IRONFOX_BUILD_GLEAN}" != 1 ]]; then
+        if [[ -f "${glean_version_file}" ]] && [[ -s "${glean_version_file}" ]]; then
+            local readonly current_glean_version=$(cat "${glean_version_file}" | xargs)
+            # Ensure the specified Glean version has actually been built before re-using it...
+            if [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean/0.0.1-SNAPSHOT-${GLEAN_VERSION}-${current_glean_version}" ]] &&
+             [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-gradle-plugin/0.0.1-SNAPSHOT-${GLEAN_VERSION}-${current_glean_version}" ]] &&
+             [[ -d "${IRONFOX_MAVEN_LOCAL}/org/mozilla/telemetry/glean-native/0.0.1-SNAPSHOT-${GLEAN_VERSION}-${current_glean_version}" ]]; then
+                local readonly IF_LOCAL_GLEAN_VERSION_STAMP="${current_glean_version}"
+            fi
+        fi
+    fi
+
+    if [[ "${IF_LOCAL_GLEAN_VERSION_STAMP}" == 'undefined' ]]; then
+        # Next, try to use `IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE` if it's set
+        if [[ "${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}" != 'null' ]]; then
+            local readonly IF_LOCAL_GLEAN_VERSION_STAMP_TEMP="${IRONFOX_LOCAL_GLEAN_VERSION_OVERRIDE}"
+        # Otherwise, set our own version override
+        else
+            local readonly IF_LOCAL_GLEAN_VERSION_STAMP_TEMP="${IF_LOCAL_VERSION_STAMP}-SNAPSHOT"
+        fi
+        rm -f "${glean_version_file}"
+        touch "${glean_version_file}"
+        echo -n "${IF_LOCAL_GLEAN_VERSION_STAMP_TEMP}" > "${glean_version_file}"
     fi
 
     # Set versions for our local dependency substitutions
+    if [[ "${IF_BUILD_ID}" != 'null' ]] && [[ -f "${moz_build_id_file}" ]] && [[ -s "${moz_build_id_file}" ]]; then
+        readonly MOZ_BUILD_DATE=$(cat "${moz_build_id_file}" | xargs)
+        export MOZ_BUILD_DATE
+    fi
+    if [[ "${IF_LOCAL_AC_VERSION_STAMP_TEMP}" != 'undefined' ]]; then
+        local readonly IF_LOCAL_AC_VERSION_STAMP=$(cat "${ac_version_file}" | xargs)
+    fi
+    if [[ "${IF_LOCAL_AS_VERSION_STAMP_TEMP}" != 'undefined' ]]; then
+        local readonly IF_LOCAL_AS_VERSION_STAMP=$(cat "${as_version_file}" | xargs)
+    fi
+    if [[ "${IF_LOCAL_GLEAN_VERSION_STAMP_TEMP}" != 'undefined' ]]; then
+        local readonly IF_LOCAL_GLEAN_VERSION_STAMP=$(cat "${glean_version_file}" | xargs)
+    fi
     readonly IF_LOCAL_AC_VERSION="0.0.1-local-${FIREFOX_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
     readonly IF_LOCAL_AC_VERSION_GRADLE="-${FIREFOX_VERSION}-${IF_LOCAL_AC_VERSION_STAMP}"
     readonly IF_LOCAL_AS_VERSION="0.0.1-SNAPSHOT-${APPSERVICES_VERSION}-${IF_LOCAL_AS_VERSION_STAMP}"
@@ -254,7 +1433,7 @@ function prep_fenix() {
     if [[ -f "${IRONFOX_FENIX}/app/build.gradle" ]]; then
         rm -f "${IRONFOX_FENIX}/app/build.gradle"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
+    cp -f "${IRONFOX_TEMP}/fenix/app/build.gradle" "${IRONFOX_FENIX}/app/build.gradle"
 
     "${IRONFOX_SED}" -i -e "s/include \"armeabi-v7a\", \"arm64-v8a\", \"x86_64\"/include \"${IRONFOX_TARGET_ABI}\"/" "${IRONFOX_FENIX}/app/build.gradle"
 
@@ -266,17 +1445,17 @@ function prep_fenix() {
     if [[ -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml" ]]; then
         rm -f "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/values/static_strings.xml" "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
+    cp -f "${IRONFOX_TEMP}/fenix/app/src/release/res/values/static_strings.xml" "${IRONFOX_FENIX}/app/src/release/res/values/static_strings.xml"
 
     if [[ -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml" ]]; then
         rm -f "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/fenix/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
+    cp -f "${IRONFOX_TEMP}/fenix/app/src/release/res/xml/shortcuts.xml" "${IRONFOX_FENIX}/app/src/release/res/xml/shortcuts.xml"
 
     if [[ -d "${IRONFOX_FENIX}/app/src/main/res" ]]; then
         rm -rf "${IRONFOX_FENIX}/app/src/main/res"
     fi
-    cp -rf "${IRONFOX_BUILD}/tmp/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/"
+    cp -rf "${IRONFOX_TEMP}/fenix/app/src/main/res/" "${IRONFOX_FENIX}/app/src/main/res/"
 
     if [[ "${IRONFOX_RELEASE}" == 1 ]]; then
         "${IRONFOX_SED}" -i -e 's|applicationIdSuffix ".firefox"|applicationIdSuffix ".ironfox"|' "${IRONFOX_FENIX}/app/build.gradle"
@@ -315,13 +1494,13 @@ function prep_gecko() {
     if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html" ]]; then
         rm -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
+    cp -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/connection-not-secure.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
     "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/connection-not-secure.html"
 
     if [[ -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html" ]]; then
         rm -f "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/gecko/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
+    cp -f "${IRONFOX_TEMP}/gecko/toolkit/content/neterror/supportpages/time-errors.html" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
     "${IRONFOX_SED}" -i "s/{IRONFOX_NAME}/${IRONFOX_NAME}/" "${IRONFOX_GECKO}/toolkit/content/neterror/supportpages/time-errors.html"
 
     # Ensure we remove any existing Mach environment cache
@@ -347,7 +1526,7 @@ function prep_glean() {
     if [[ -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle" ]]; then
         rm -f "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
     fi
-    cp -f "${IRONFOX_BUILD}/tmp/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
+    cp -f "${IRONFOX_TEMP}/glean/build.gradle" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
     "${IRONFOX_SED}" -i "s|{IRONFOX_UNIFFI}|${IRONFOX_UNIFFI}|" "${IRONFOX_GLEAN}/glean-core/android/build.gradle"
 
     echo_green_text 'SUCCESS: Prepared Glean'
@@ -356,25 +1535,15 @@ function prep_glean() {
 # Prepare Phoenix
 function prep_phoenix() {
     echo_red_text 'Preparing Phoenix...'
-    mkdir -p "${IRONFOX_BUILD}/tmp/phoenix"
+    mkdir -p "${IRONFOX_TEMP}/phoenix"
 
-    if [[ -f "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg" ]]; then
-        rm -f "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
+    if [[ -f "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg" ]]; then
+        rm -f "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
     fi
 
-    cp -f "${IRONFOX_TEMPLATES}/phoenix/phoenix-overrides.cfg" "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_CHANNEL}|${IRONFOX_CHANNEL}|" "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
-    "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_BUILD}/tmp/phoenix/phoenix-overrides-parsed.cfg"
-
-    # Ensure our cfg file doesn't already exist in mozilla-central
-    if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" ]]; then
-        rm -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
-    fi
-
-    # Ensure our policies file doesn't already exist in mozilla-central
-    if [[ -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json" ]]; then
-        rm -f "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
-    fi
+    cp -f "${IRONFOX_TEMPLATES}/phoenix/phoenix-overrides.cfg" "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
+    "${IRONFOX_SED}" -i "s|{IRONFOX_CHANNEL}|${IRONFOX_CHANNEL}|" "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
+    "${IRONFOX_SED}" -i "s|{IRONFOX_VERSION}|${IRONFOX_VERSION}|" "${IRONFOX_TEMP}/phoenix/phoenix-overrides-parsed.cfg"
 
     echo_green_text 'SUCCESS: Prepared Phoenix'
 }
@@ -447,6 +1616,9 @@ function build_phoenix() {
     bash -x "${IRONFOX_PHOENIX}/scripts/build.sh"
     popd
 
+    # Ensure our cfg and policy files don't already exist in mozilla-central
+    rm -f "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg" "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
+
     # Copy our outputs to mozilla-central
     cp "${IRONFOX_PHOENIX}/outputs/android/phoenix.cfg" "${IRONFOX_GECKO}/ironfox/prefs/ironfox.cfg"
     cp "${IRONFOX_PHOENIX}/outputs/android/policies.json" "${IRONFOX_GECKO}/ironfox/prefs/policies.json"
@@ -454,15 +1626,26 @@ function build_phoenix() {
     echo_green_text 'SUCCESS: Built Phoenix'
 }
 
-# Build our prebuilt libraries from source
-function build_prebuilds() {
-    echo_red_text 'Building prebuilt libraries...'
+# uniffi-bindgen
+function build_uniffi() {
+    echo_red_text 'Building uniffi-bindgen...'
 
     pushd "${IRONFOX_PREBUILDS}"
-    bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh"
+    bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh" 'uniffi'
     popd
 
-    echo_green_text 'SUCCESS: Built prebuilt libraries'
+    echo_green_text 'SUCCESS: Built uniffi-bindgen'
+}
+
+# WASI SDK
+function build_wasi() {
+    echo_red_text 'Building WASI SDK...'
+
+    pushd "${IRONFOX_PREBUILDS}"
+    bash -x "${IRONFOX_PREBUILDS}/scripts/build.sh" 'wasi'
+    popd
+
+    echo_green_text 'SUCCESS: Built WASI SDK'
 }
 
 # microG
@@ -881,7 +2064,7 @@ function build_ac() {
 
 function build_fenix() {
     # Fenix
-    echo_red_text "Building Fenix (${IRONFOX_TARGET_ARCH})..."
+    echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})..."
 
     # First, clean our environment
     unset IRONFOX_MACH_TARGET_ARCH
@@ -975,7 +2158,7 @@ function build_fenix() {
     fi
     popd
 
-    echo_green_text "SUCCESS: Built Fenix (${IRONFOX_TARGET_ARCH})"
+    echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
 }
 
 # Prepare build environment...
@@ -987,93 +2170,124 @@ echo_red_text 'Preparing your build environment...'
 set_build_env
 
 # Prepare mozilla-central
-prep_gecko
+if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]] || [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]] || [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]] ||
+ [[ "${IRONFOX_BUILD_AC}" == 1 ]] || [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+    prep_gecko
+fi
 
-# Prepare Phoenix
-prep_phoenix
+# Prepare Application Services
+if [[ "${IRONFOX_BUILD_AS}" == 1 ]]; then
+    prep_as
+fi
+
+# Prepare Fenix
+if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
+    prep_fenix
+fi
+
+# Prepare Glean
+if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
+    prep_glean
+fi
 
 # Prepare LLVM
-prep_llvm
+if [[ "${IRONFOX_BUILD_LLVM}" == 1 ]]; then
+    prep_llvm
+fi
 
-if [[ "${IRONFOX_BUILD_GECKOVIEW_ONLY}" != 1 ]]; then
-    # Prepare Application Services
-    prep_as
+# Prepare Phoenix
+if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
+    prep_phoenix
+fi
 
-    # Prepare Fenix
-    prep_fenix
-
-    # Prepare Glean
-    prep_glean
-
-    # Prepare UnifiedPush-AC
+# Prepare UnifiedPush-AC
+if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
     prep_up_ac
 fi
 
 echo_green_text 'SUCCESS: Prepared build environment'
 
-# Begin the build...
-echo_red_text "Building IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})..."
-
-if [[ -n "${FDROID_BUILD+x}" ]]; then
-    # Build LLVM
-    build_llvm
+# Build Phoenix
+if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
+    build_phoenix
 fi
 
-if [[ "${IRONFOX_NO_PREBUILDS}" == 1 ]]; then
-    # Build uniffi-bindgen + WASI SDK
-    build_prebuilds
-    if [[ "${IRONFOX_BUILD_GECKOVIEW_ONLY}" != 1 ]]; then
-        # Build Bundletool
-        build_bundletool
-    fi
+# Build Bundletool
+if [[ "${IRONFOX_BUILD_BUNDLETOOL}" == 1 ]]; then
+    build_bundletool
 fi
 
 # Build microG
-build_microg
+if [[ "${IRONFOX_BUILD_MICROG}" == 1 ]]; then
+    build_microg
+fi
 
-# Build Phoenix
-build_phoenix
+# Build LLVM
+if [[ "${IRONFOX_BUILD_LLVM}" == 1 ]]; then
+    build_llvm
+fi
+
+# Build WASI SDK
+if [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
+    build_wasi
+fi
 
 # Build Gecko
-build_gecko
+if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
+    build_gecko
+fi
+
+# If we're targetting a bundle, ensure `MOZ_ANDROID_FAT_AAR_ARCHITECTURES` is always set at this point
+## (This is usually set/handled by `build_gecko`, but the presence of this variable also influences other parts of the build process)
+if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ -z "${MOZ_ANDROID_FAT_AAR_ARCHITECTURES+x}" ]]; then
+    readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+    export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+fi
 
 # Build GeckoView
-build_geckoview
+if [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]]; then
+    build_geckoview
+fi
 
-if [[ "${IRONFOX_BUILD_GECKOVIEW_ONLY}" != 1 ]]; then
-    # Ensure MOZ_CHROME_MULTILOCALE is always set at this point
-    if [[ -z "${MOZ_CHROME_MULTILOCALE+x}" ]]; then
-        MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
-    fi
-    readonly MOZ_CHROME_MULTILOCALE
-    export MOZ_CHROME_MULTILOCALE
+# Ensure `MOZ_CHROME_MULTILOCALE` is always set at this point
+## (This is usually set/handled by `build_geckoview`, but the presence of this variable also influences other parts of the build process)
+if [[ -z "${MOZ_CHROME_MULTILOCALE+x}" ]]; then
+    MOZ_CHROME_MULTILOCALE="${IRONFOX_LOCALES}"
+fi
+readonly MOZ_CHROME_MULTILOCALE
+export MOZ_CHROME_MULTILOCALE
 
-    # If we're building a bundle, ensure MOZ_ANDROID_FAT_AAR_ARCHITECTURES is always set at this point
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ -z "${MOZ_ANDROID_FAT_AAR_ARCHITECTURES+x}" ]]; then
-        readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
-        export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
-    fi
-
-    # Build Android Components (Core)
+# Build Android Components (Core)
+if [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]]; then
     build_ac_core
+fi
 
-    # Build Application Services
+# Build Application Services
+if [[ "${IRONFOX_BUILD_AS}" == 1 ]]; then
     build_as
+fi
 
-    # Build UnifiedPush-AC
+# Build UnifiedPush-AC
+if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
     build_up_ac
+fi
 
-    # Build nimbus-fml
+# Build nimbus-fml
+if [[ "${IRONFOX_BUILD_NIMBUS_FML}" == 1 ]]; then
     build_nimbus_fml
+fi
 
-    # Build Android Components
+# Build Android Components
+if [[ "${IRONFOX_BUILD_AC}" == 1 ]]; then
     build_ac
+fi
 
-    # Build Glean
+# Build Glean
+if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
     build_glean
+fi
 
-    # Build Fenix
+# Build Fenix
+if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
     build_fenix
-
-    echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
 fi

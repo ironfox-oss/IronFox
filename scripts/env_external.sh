@@ -368,7 +368,7 @@ export RUSTUP_TERM_COLOR
 readonly UP_AC_GRADLE_USER_HOME="${IRONFOX_GRADLE_HOME}"
 export UP_AC_GRADLE_USER_HOME
 
-# UV
+# uv
 ## https://docs.astral.sh/uv/reference/environment/
 
 ## Cache directory
@@ -437,7 +437,7 @@ export UV_PYTHON_CACHE_DIR
 export UV_PYTHON_INSTALL_MIRROR
 export UV_PYTHON_INSTALL_DIR
 
-## Python environment
+## Python (uv) environment
 readonly UV_PROJECT_ENVIRONMENT="${IRONFOX_PYENV_DIR}"
 VIRTUAL_ENV="${IRONFOX_PYENV_DIR}"
 export UV_PROJECT_ENVIRONMENT
