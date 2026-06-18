@@ -61,9 +61,9 @@ if [[ "${ci_build_arch}" == 'bundle' ]]; then
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
     mkdir -vp "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
 
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-arm.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
-    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-aar-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-geckoview-arm64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM64_DIR}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-geckoview-arm.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_ARM_DIR}"
+    "${IRONFOX_TAR}" xvJf "${IRONFOX_ARTIFACTS}/build-geckoview-x86_64.tar.xz" -C "${IRONFOX_GECKOVIEW_AAR_X86_64_DIR}"
 fi
 
 # Get sources
