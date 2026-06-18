@@ -590,16 +590,19 @@ fi
 
 # l10n-central
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
-    if [[ -z "${IRONFOX_L10N_CENTRAL+x}" ]]; then
-        echo_red_text 'ERROR: IRONFOX_L10N_CENTRAL is missing!'
-        echo_red_text 'Aborting...'
-        exit 1
-    fi
-    if [[ ! -d "${IRONFOX_L10N_CENTRAL}" ]]; then
-        echo_red_text "ERROR: l10n-central (${IRONFOX_L10N_CENTRAL}) is missing!"
-        echo 'Please ensure that IRONFOX_L10N_CENTRAL is set to a valid directory.'
-        echo_red_text 'Aborting...'
-        exit 1
+    # CI only needs l10n-central if we're producing a bundle...
+    if [[ "${IRONFOX_CI}" == 1 ]] && [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+        if [[ -z "${IRONFOX_L10N_CENTRAL+x}" ]]; then
+            echo_red_text 'ERROR: IRONFOX_L10N_CENTRAL is missing!'
+            echo_red_text 'Aborting...'
+            exit 1
+        fi
+        if [[ ! -d "${IRONFOX_L10N_CENTRAL}" ]]; then
+            echo_red_text "ERROR: l10n-central (${IRONFOX_L10N_CENTRAL}) is missing!"
+            echo 'Please ensure that IRONFOX_L10N_CENTRAL is set to a valid directory.'
+            echo_red_text 'Aborting...'
+            exit 1
+        fi
     fi
 fi
 
