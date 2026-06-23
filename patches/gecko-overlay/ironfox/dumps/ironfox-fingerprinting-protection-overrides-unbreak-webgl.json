@@ -252,6 +252,10 @@
         },
         {
             "overrides": "-DisableWebGL",
+            "firstPartyDomain": "stefan-oltmann.de"
+        },
+        {
+            "overrides": "-DisableWebGL",
             "firstPartyDomain": "svgrepo.com"
         },
         {
@@ -311,6 +315,11 @@
             "overrides": "-DisableWebGL",
             "firstPartyDomain": "*",
             "thirdPartyDomain": "siapre.pl"
+        },
+        {
+            "overrides": "-DisableWebGL",
+            "firstPartyDomain": "*",
+            "thirdPartyDomain": "stefan-oltmann.de"
         }
     ],
     "timestamp": 2147483647
