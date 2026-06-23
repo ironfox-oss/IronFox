@@ -1,12 +1,8 @@
 
 FINAL_TARGET_FILES.defaults += [
-    "policies.json",
+  "policies.json",
 ]
 
 FINAL_TARGET_FILES.defaults.autoconfig += [
-    "ironfox.cfg",
-]
-
-EXTRA_JS_MODULES += [
-    "GeckoSettingsBridge.sys.mjs"
+  "ironfox.cfg",
 ]

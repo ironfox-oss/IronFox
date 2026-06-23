@@ -52,7 +52,6 @@ object GeckoSettingsBridge {
         setCardAutofillEnabled(context, engine)
         setPasswordManagerEnabled(context, engine)
         setIronFoxOnboardingCompleted(context, engine)
-        setGeckoRuntimeSettings(context, engine)
 
         // We don't support EME, but, if a user enables it from the about:config,
         // we need to expose the permision UI for it.
@@ -67,18 +66,16 @@ object GeckoSettingsBridge {
                 IronFoxPreferences.setEMEEnabled(context, false)
             }
         )
-
-        setGeckoPrefsInitialized(context, engine)
     }
 
     fun setIronFoxOnboardingCompleted(context: Context, engine: Engine) {
         val ironFoxOnboardingCompleted = IronFoxPreferences.isIronFoxOnboardingCompleted(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.ironFoxOnboardingCompleted", ironFoxOnboardingCompleted)
+        setDefaultPref(engine, "browser.ironfox.onboardingCompleted", ironFoxOnboardingCompleted)
     }
 
     fun setWebGLDisabled(context: Context, engine: Engine) {
         val webglDisabled = IronFoxPreferences.isWebGLDisabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.webglDisabled", webglDisabled)
+        setDefaultPref(engine, "browser.ironfox.webgl.disabled", webglDisabled)
     }
 
     fun setAccessibilityEnabled(context: Context, engine: Engine) {
@@ -88,37 +85,37 @@ object GeckoSettingsBridge {
 
     fun setJavaScriptEnabled(context: Context, engine: Engine) {
         val javascriptEnabled = IronFoxPreferences.isJavaScriptEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.javascriptEnabled", javascriptEnabled)
+        setDefaultPref(engine, "javascript.enabled", javascriptEnabled)
     }
 
     fun setFPPOverridesIronFoxWebGLEnabled(context: Context, engine: Engine) {
         val fppOverridesIronFoxWebGLEnabled = IronFoxPreferences.isFPPOverridesIronFoxWebGLEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesIronFoxWebGLEnabled", fppOverridesIronFoxWebGLEnabled)
+        setDefaultPref(engine, "browser.ironfox.fingerprintingProtection.unbreakWebGLOverrides.enabled", fppOverridesIronFoxWebGLEnabled)
     }
 
     fun setAlwaysUsePrivateBrowsing(context: Context, engine: Engine) {
         val alwaysUsePrivateBrowsing = IronFoxPreferences.isAlwaysUsePrivateBrowsing(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.alwaysUsePrivateBrowsing", alwaysUsePrivateBrowsing)
+        setDefaultPref(engine, "browser.privatebrowsing.autostart", alwaysUsePrivateBrowsing)
     }
 
     fun setCacheEnabled(context: Context, engine: Engine) {
         val cacheEnabled = IronFoxPreferences.isCacheEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.cacheEnabled", cacheEnabled)
+        setDefaultPref(engine, "browser.cache.disk.enable", cacheEnabled)
     }
 
     fun setFPPOverridesIronFoxEnabled(context: Context, engine: Engine) {
         val fppOverridesIronFoxEnabled = IronFoxPreferences.isFPPOverridesIronFoxEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesIronFoxEnabled", fppOverridesIronFoxEnabled)
+        setDefaultPref(engine, "browser.ironfox.fingerprintingProtection.unbreakOverrides.enabled", fppOverridesIronFoxEnabled)
     }
 
     fun setFPPOverridesMozillaEnabled(context: Context, engine: Engine) {
         val fppOverridesMozillaEnabled = IronFoxPreferences.isFPPOverridesMozillaEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesMozillaEnabled", fppOverridesMozillaEnabled)
+        setDefaultPref(engine, "browser.ironfox.fingerprintingProtection.mozillaOverrides.enabled", fppOverridesMozillaEnabled)
     }
 
     fun setFPPOverridesIronFoxTimezoneEnabled(context: Context, engine: Engine) {
         val fppOverridesIronFoxTimezoneEnabled = IronFoxPreferences.isFPPOverridesIronFoxTimezoneEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.fppOverridesIronFoxTimezoneEnabled", fppOverridesIronFoxTimezoneEnabled)
+        setDefaultPref(engine, "browser.ironfox.fingerprintingProtection.unbreakTimezoneOverrides.enabled", fppOverridesIronFoxTimezoneEnabled)
     }
 
     fun setSpoofEnglishEnabled(context: Context, engine: Engine) {
@@ -128,12 +125,12 @@ object GeckoSettingsBridge {
 
     fun setSpoofTimezoneEnabled(context: Context, engine: Engine) {
         val spoofTimezone = IronFoxPreferences.isSpoofTimezoneEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.spoofTimezone", spoofTimezone)
+        setDefaultPref(engine, "browser.ironfox.fingerprintingProtection.timezoneSpoofing.enabled", spoofTimezone)
     }
 
     fun setXPInstallEnabled(context: Context, engine: Engine) {
         val xpinstallEnabled = IronFoxPreferences.isXPInstallEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.xpinstallEnabled", xpinstallEnabled)
+        setDefaultPref(engine, "browser.ironfox.xpinstall.enabled", xpinstallEnabled)
     }
 
     fun setJITEnabled(context: Context, engine: Engine) {
@@ -143,12 +140,12 @@ object GeckoSettingsBridge {
 
     fun setJITTrustedPrincipalsEnabled(context: Context, engine: Engine) {
         val javascriptJitTrustedPrincipalsEnabled = IronFoxPreferences.isJITTrustedPrincipalsEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.javascriptJitTrustedPrincipalsEnabled", javascriptJitTrustedPrincipalsEnabled)
+        setDefaultPref(engine, "javascript.options.jit_trustedprincipals", javascriptJitTrustedPrincipalsEnabled)
     }
 
     fun setPrintEnabled(context: Context, engine: Engine) {
         val printEnabled = IronFoxPreferences.isPrintEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.printEnabled", printEnabled)
+        setDefaultPref(engine, "print.enabled", printEnabled)
     }
 
     fun setSafeBrowsingEnabled(context: Context, engine: Engine) {
@@ -163,12 +160,12 @@ object GeckoSettingsBridge {
 
     fun setWASMEnabled(context: Context, engine: Engine) {
         val wasmEnabled = IronFoxPreferences.isWASMEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.wasmEnabled", wasmEnabled)
+        setDefaultPref(engine, "javascript.options.wasm", wasmEnabled)
     }
 
     fun setWebRTCEnabled(context: Context, engine: Engine) {
         val webrtcEnabled = IronFoxPreferences.isWebRTCEnabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.webrtcEnabled", webrtcEnabled)
+        setDefaultPref(engine, "media.peerconnection.enabled", webrtcEnabled)
     }
 
     fun setTranslationsEnabled(context: Context, engine: Engine) {
@@ -183,7 +180,7 @@ object GeckoSettingsBridge {
 
     fun setPDFjsDisabled(context: Context, engine: Engine) {
         val pdfjsDisabled = IronFoxPreferences.isPDFjsDisabled(context)
-        setDefaultPref(engine, "browser.ironfox.fenix.pdfjsDisabled", pdfjsDisabled)
+        setDefaultPref(engine, "pdfjs.disabled", pdfjsDisabled)
     }
 
     fun setAutoplayBlockingPolicy(context: Context, engine: Engine) {
@@ -227,336 +224,17 @@ object GeckoSettingsBridge {
 
     fun setAddressAutofillEnabled(context: Context, engine: Engine) {
         val addressAutofillEnabled = context.settings().shouldAutofillAddressDetails
-        setDefaultPref(engine, "browser.ironfox.fenix.shouldAutofillAddressDetails", addressAutofillEnabled)
+        setDefaultPref(engine, "extensions.formautofill.addresses.enabled", addressAutofillEnabled)
     }
 
     fun setCardAutofillEnabled(context: Context, engine: Engine) {
         val cardAutofillEnabled = context.settings().shouldAutofillCreditCardDetails
-        setDefaultPref(engine, "browser.ironfox.fenix.shouldAutofillCreditCardDetails", cardAutofillEnabled)
+        setDefaultPref(engine, "extensions.formautofill.creditCards.enabled", cardAutofillEnabled)
     }
 
     fun setPasswordManagerEnabled(context: Context, engine: Engine) {
         val passwordManagerEnabled = context.settings().shouldPromptToSaveLogins
-        setDefaultPref(engine, "browser.ironfox.fenix.shouldPromptToSaveLogins", passwordManagerEnabled)
-    }
-
-    fun setGeckoPrefsInitialized(context: Context, engine: Engine) {
-        setDefaultPref(engine, "browser.ironfox.geckoSettingsBridge.initialized", true)
-    }
-
-    // This is an (ideally temporary) solution to ensure that GeckoRuntimeSettings prefs are being properly configured based on Fenix's UI settings
-    fun setGeckoRuntimeSettings(context: Context, engine: Engine) {
-        setAllowThirdPartyRootCerts(context, engine)
-        setDohProviderUrl(context, engine)
-        setEnableGeckoLogs(context, engine)
-        setForceEnableZoom(context, engine)
-        setHttpsOnlyMode(context, engine)
-        setIsLnaBlockingEnabled(context, engine)
-        setIsLnaFeatureEnabled(context, engine)
-        setIsLnaTrackerBlockingEnabled(context, engine)
-        setOfferTranslation(context, engine)
-        setTrrMode(context, engine)
-        setShouldAutofillLogins(context, engine)
-        setShouldUseCookieBannerPrivateMode(context, engine)
-        setShouldUseTrackingProtectionDatabase(context, engine)
-        setStrictAllowListBaselineTrackingProtection(context, engine)
-        setStrictAllowListConvenienceTrackingProtection(context, engine)
-    }
-
-    fun setAllowThirdPartyRootCerts(context: Context, engine: Engine) {
-        val allowThirdPartyRootCerts = context.settings().allowThirdPartyRootCerts
-        val allowThirdPartyRootCertsGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.security.enterprise_roots.enabled.value"
-        val allowThirdPartyRootCertsGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.security.enterprise_roots.enabled.value.modified"
-        val allowThirdPartyRootCertsGeckoPref = "security.enterprise_roots.enabled"
-        setUserPref(engine, allowThirdPartyRootCertsGeckoViewPref, allowThirdPartyRootCerts)
-        setDefaultPref(engine, allowThirdPartyRootCertsGeckoViewPref, allowThirdPartyRootCerts)
-        setUserPref(engine, allowThirdPartyRootCertsGeckoPref, allowThirdPartyRootCerts)
-        setDefaultPref(engine, allowThirdPartyRootCertsGeckoPref, allowThirdPartyRootCerts)
-
-        if (allowThirdPartyRootCerts) {
-            setUserPref(engine, allowThirdPartyRootCertsGeckoViewModifiedPref, true)
-            setDefaultPref(engine, allowThirdPartyRootCertsGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setDohProviderUrl(context: Context, engine: Engine) {
-        val dohProviderUrl = context.settings().dohProviderUrl
-        val dohProviderUrlGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.network.trr.uri.value"
-        val dohProviderUrlGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.network.trr.uri.value.modified"
-        val dohProviderUrlGeckoPref = "network.trr.uri"
-        setUserPref(engine, dohProviderUrlGeckoViewPref, dohProviderUrl)
-        setDefaultPref(engine, dohProviderUrlGeckoViewPref, dohProviderUrl)
-        setUserPref(engine, dohProviderUrlGeckoPref, dohProviderUrl)
-        setDefaultPref(engine, dohProviderUrlGeckoPref, dohProviderUrl)
-
-        if (dohProviderUrl != "https://base.dns.mullvad.net/dns-query") {
-            setUserPref(engine, dohProviderUrlGeckoViewModifiedPref, true)
-            setDefaultPref(engine, dohProviderUrlGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setEnableGeckoLogs(context: Context, engine: Engine) {
-        val enableGeckoLogs = context.settings().enableGeckoLogs
-        val consoleEnabledGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.geckoview.console.enabled.value"
-        val consoleEnabledGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.geckoview.console.enabled.value.modified"
-        val consoleEnabledGeckoPref = "geckoview.console.enabled"
-        val geckoviewLoggingGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.geckoview.logging.value"
-        val geckoviewLoggingGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.geckoview.logging.value.modified"
-        val geckoviewLoggingGeckoPref = "geckoview.logging"
-        val consoleLogcatGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.consoleservice.logcat.value"
-        val consoleLogcatGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.consoleservice.logcat.value.modified"
-        val consoleLogcatGeckoPref = "consoleservice.logcat"
-        setUserPref(engine, consoleEnabledGeckoViewPref, enableGeckoLogs)
-        setDefaultPref(engine, consoleEnabledGeckoViewPref, enableGeckoLogs)
-        setUserPref(engine, consoleEnabledGeckoPref, enableGeckoLogs)
-        setDefaultPref(engine, consoleEnabledGeckoPref, enableGeckoLogs)
-        setUserPref(engine, consoleLogcatGeckoViewPref, enableGeckoLogs)
-        setDefaultPref(engine, consoleLogcatGeckoViewPref, enableGeckoLogs)
-        setUserPref(engine, consoleLogcatGeckoPref, enableGeckoLogs)
-        setDefaultPref(engine, consoleLogcatGeckoPref, enableGeckoLogs)
-
-        if (enableGeckoLogs) {
-            setUserPref(engine, geckoviewLoggingGeckoViewPref, "Debug")
-            setDefaultPref(engine, geckoviewLoggingGeckoViewPref, "Debug")
-            setUserPref(engine, geckoviewLoggingGeckoPref, "Debug")
-            setDefaultPref(engine, geckoviewLoggingGeckoPref, "Debug")
-
-            setUserPref(engine, consoleEnabledGeckoViewModifiedPref, true)
-            setDefaultPref(engine, consoleEnabledGeckoViewModifiedPref, true)
-            setUserPref(engine, geckoviewLoggingGeckoViewModifiedPref, true)
-            setDefaultPref(engine, geckoviewLoggingGeckoViewModifiedPref, true)
-            setUserPref(engine, consoleLogcatGeckoViewModifiedPref, true)
-            setDefaultPref(engine, consoleLogcatGeckoViewModifiedPref, true)
-        } else {
-            setUserPref(engine, geckoviewLoggingGeckoViewPref, "Warn")
-            setDefaultPref(engine, geckoviewLoggingGeckoViewPref, "Warn")
-            setUserPref(engine, geckoviewLoggingGeckoPref, "Warn")
-            setDefaultPref(engine, geckoviewLoggingGeckoPref, "Warn")
-        }
-    }
-
-    fun setForceEnableZoom(context: Context, engine: Engine) {
-        val forceEnableZoom = context.settings().forceEnableZoom
-        val forceEnableZoomGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.browser.ui.zoom.force-user-scalable.value"
-        val forceEnableZoomGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.browser.ui.zoom.force-user-scalable.value.modified"
-        val forceEnableZoomGeckoPref = "browser.ui.zoom.force-user-scalable"
-        setUserPref(engine, forceEnableZoomGeckoViewPref, forceEnableZoom)
-        setDefaultPref(engine, forceEnableZoomGeckoViewPref, forceEnableZoom)
-        setUserPref(engine, forceEnableZoomGeckoPref, forceEnableZoom)
-        setDefaultPref(engine, forceEnableZoomGeckoPref, forceEnableZoom)
-
-        if (!forceEnableZoom) {
-            setUserPref(engine, forceEnableZoomGeckoViewModifiedPref, true)
-            setDefaultPref(engine, forceEnableZoomGeckoViewModifiedPref, true)
-        }
-    }
-    
-    fun setHttpsOnlyMode(context: Context, engine: Engine) {
-        val shouldUseHttpsOnly = context.settings().shouldUseHttpsOnly
-        val shouldUseHttpsOnlyInAllTabs = context.settings().shouldUseHttpsOnlyInAllTabs
-        val shouldUseHttpsOnlyInPrivateTabsOnly = context.settings().shouldUseHttpsOnlyInPrivateTabsOnly
-        val httpsOnlyGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.dom.security.https_only_mode.value"
-        val httpsOnlyGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.dom.security.https_only_mode.value.modified"
-        val httpsOnlyGeckoPref = "dom.security.https_only_mode"
-        val httpsOnlyPbmGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.dom.security.https_only_mode_pbm.value"
-        val httpsOnlyPbmGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.dom.security.https_only_mode_pbm.value.modified"
-        val httpsOnlyPbmGeckoPref = "dom.security.https_only_mode_pbm"
-
-        if (!shouldUseHttpsOnly) {
-            setUserPref(engine, httpsOnlyGeckoViewPref, shouldUseHttpsOnly)
-            setDefaultPref(engine, httpsOnlyGeckoViewPref, shouldUseHttpsOnly)
-            setUserPref(engine, httpsOnlyGeckoPref, shouldUseHttpsOnly)
-            setDefaultPref(engine, httpsOnlyGeckoPref, shouldUseHttpsOnly)
-
-            setUserPref(engine, httpsOnlyPbmGeckoViewPref, shouldUseHttpsOnly)
-            setDefaultPref(engine, httpsOnlyPbmGeckoViewPref, shouldUseHttpsOnly)
-            setUserPref(engine, httpsOnlyPbmGeckoPref, shouldUseHttpsOnly)
-            setDefaultPref(engine, httpsOnlyPbmGeckoPref, shouldUseHttpsOnly)
-
-            setUserPref(engine, httpsOnlyGeckoViewModifiedPref, true)
-            setDefaultPref(engine, httpsOnlyGeckoViewModifiedPref, true)
-            setUserPref(engine, httpsOnlyPbmGeckoViewModifiedPref, true)
-            setDefaultPref(engine, httpsOnlyPbmGeckoViewModifiedPref, true)
-        } else {
-            setUserPref(engine, httpsOnlyPbmGeckoViewPref, true)
-            setDefaultPref(engine, httpsOnlyPbmGeckoViewPref, true)
-            setUserPref(engine, httpsOnlyPbmGeckoPref, true)
-            setDefaultPref(engine, httpsOnlyPbmGeckoPref, true)
-
-            if (shouldUseHttpsOnlyInAllTabs) {
-                setUserPref(engine, httpsOnlyGeckoViewPref, shouldUseHttpsOnlyInAllTabs)
-                setDefaultPref(engine, httpsOnlyGeckoViewPref, shouldUseHttpsOnlyInAllTabs)
-                setUserPref(engine, httpsOnlyGeckoPref, shouldUseHttpsOnlyInAllTabs)
-                setDefaultPref(engine, httpsOnlyGeckoPref, shouldUseHttpsOnlyInAllTabs)
-            } else {
-                setUserPref(engine, httpsOnlyGeckoViewModifiedPref, true)
-                setDefaultPref(engine, httpsOnlyGeckoViewModifiedPref, true)
-            }
-        }
-    }
-
-    fun setIsLnaBlockingEnabled(context: Context, engine: Engine) {
-        val isLnaBlockingEnabled = context.settings().isLnaBlockingEnabled
-        val isLnaBlockingEnabledGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.network.lna.blocking.value"
-        val isLnaBlockingEnabledGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.network.lna.blocking.value.modified"
-        val isLnaBlockingEnabledGeckoPref = "network.lna.blocking"
-        setUserPref(engine, isLnaBlockingEnabledGeckoViewPref, isLnaBlockingEnabled)
-        setDefaultPref(engine, isLnaBlockingEnabledGeckoViewPref, isLnaBlockingEnabled)
-        setUserPref(engine, isLnaBlockingEnabledGeckoPref, isLnaBlockingEnabled)
-        setDefaultPref(engine, isLnaBlockingEnabledGeckoPref, isLnaBlockingEnabled)
-
-        if (!isLnaBlockingEnabled) {
-            setUserPref(engine, isLnaBlockingEnabledGeckoViewModifiedPref, true)
-            setDefaultPref(engine, isLnaBlockingEnabledGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setIsLnaFeatureEnabled(context: Context, engine: Engine) {
-        val isLnaFeatureEnabled = context.settings().isLnaFeatureEnabled
-        val isLnaFeatureEnabledGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.network.lna.enabled.value"
-        val isLnaFeatureEnabledGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.network.lna.enabled.value.modified"
-        val isLnaFeatureEnabledGeckoPref = "network.lna.enabled"
-        setUserPref(engine, isLnaFeatureEnabledGeckoViewPref, isLnaFeatureEnabled)
-        setDefaultPref(engine, isLnaFeatureEnabledGeckoViewPref, isLnaFeatureEnabled)
-        setUserPref(engine, isLnaFeatureEnabledGeckoPref, isLnaFeatureEnabled)
-        setDefaultPref(engine, isLnaFeatureEnabledGeckoPref, isLnaFeatureEnabled)
-
-        if (!isLnaFeatureEnabled) {
-            setUserPref(engine, isLnaFeatureEnabledGeckoViewModifiedPref, true)
-            setDefaultPref(engine, isLnaFeatureEnabledGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setIsLnaTrackerBlockingEnabled(context: Context, engine: Engine) {
-        val isLnaTrackerBlockingEnabled = context.settings().isLnaTrackerBlockingEnabled
-        val isLnaTrackerBlockingEnabledGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.network.lna.block_trackers.value"
-        val isLnaTrackerBlockingEnabledGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.network.lna.block_trackers.value.modified"
-        val isLnaTrackerBlockingEnabledGeckoPref = "network.lna.block_trackers"
-        setUserPref(engine, isLnaTrackerBlockingEnabledGeckoViewPref, isLnaTrackerBlockingEnabled)
-        setDefaultPref(engine, isLnaTrackerBlockingEnabledGeckoViewPref, isLnaTrackerBlockingEnabled)
-        setUserPref(engine, isLnaTrackerBlockingEnabledGeckoPref, isLnaTrackerBlockingEnabled)
-        setDefaultPref(engine, isLnaTrackerBlockingEnabledGeckoPref, isLnaTrackerBlockingEnabled)
-
-        if (!isLnaTrackerBlockingEnabled) {
-            setUserPref(engine, isLnaTrackerBlockingEnabledGeckoViewModifiedPref, true)
-            setDefaultPref(engine, isLnaTrackerBlockingEnabledGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setOfferTranslation(context: Context, engine: Engine) {
-        val offerTranslation = context.settings().offerTranslation
-        val offerTranslationGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.browser.translations.automaticallyPopup.value"
-        val offerTranslationGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.browser.translations.automaticallyPopup.value.modified"
-        val offerTranslationGeckoPref = "browser.translations.automaticallyPopup"
-        setUserPref(engine, offerTranslationGeckoViewPref, offerTranslation)
-        setDefaultPref(engine, offerTranslationGeckoViewPref, offerTranslation)
-        setUserPref(engine, offerTranslationGeckoPref, offerTranslation)
-        setDefaultPref(engine, offerTranslationGeckoPref, offerTranslation)
-
-        if (!offerTranslation) {
-            setUserPref(engine, offerTranslationGeckoViewModifiedPref, true)
-            setDefaultPref(engine, offerTranslationGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setTrrMode(context: Context, engine: Engine) {
-        val trrMode = context.settings().trrMode
-        val trrModeGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.network.trr.mode.value"
-        val trrModeGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.network.trr.mode.value.modified"
-        val trrModeGeckoPref = "network.trr.mode"
-        setUserPref(engine, trrModeGeckoViewPref, trrMode)
-        setDefaultPref(engine, trrModeGeckoViewPref, trrMode)
-        setUserPref(engine, trrModeGeckoPref, trrMode)
-        setDefaultPref(engine, trrModeGeckoPref, trrMode)
-
-        if (trrMode != 3) {
-            setUserPref(engine, trrModeGeckoViewModifiedPref, true)
-            setDefaultPref(engine, trrModeGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setShouldAutofillLogins(context: Context, engine: Engine) {
-        val shouldAutofillLogins = context.settings().shouldAutofillLogins
-        val shouldAutofillLoginsGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.signon.autofillForms.value"
-        val shouldAutofillLoginsGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.signon.autofillForms.value.modified"
-        val shouldAutofillLoginsGeckoPref = "signon.autofillForms"
-        setUserPref(engine, shouldAutofillLoginsGeckoViewPref, shouldAutofillLogins)
-        setDefaultPref(engine, shouldAutofillLoginsGeckoViewPref, shouldAutofillLogins)
-        setUserPref(engine, shouldAutofillLoginsGeckoPref, shouldAutofillLogins)
-        setDefaultPref(engine, shouldAutofillLoginsGeckoPref, shouldAutofillLogins)
-
-        if (shouldAutofillLogins) {
-            setUserPref(engine, shouldAutofillLoginsGeckoViewModifiedPref, true)
-            setDefaultPref(engine, shouldAutofillLoginsGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setShouldUseCookieBannerPrivateMode(context: Context, engine: Engine) {
-        val shouldUseCookieBannerPrivateMode = context.settings().shouldUseCookieBannerPrivateMode
-        val shouldUseCookieBannerPrivateModeGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.cookiebanners.service.mode.privateBrowsing.value"
-        val shouldUseCookieBannerPrivateModeGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.cookiebanners.service.mode.privateBrowsing.value.modified"
-        val shouldUseCookieBannerPrivateModeGeckoPref = "cookiebanners.service.mode.privateBrowsing"
-        setUserPref(engine, shouldUseCookieBannerPrivateModeGeckoViewPref, shouldUseCookieBannerPrivateMode)
-        setDefaultPref(engine, shouldUseCookieBannerPrivateModeGeckoViewPref, shouldUseCookieBannerPrivateMode)
-
-        if (shouldUseCookieBannerPrivateMode) {
-            setUserPref(engine, shouldUseCookieBannerPrivateModeGeckoPref, 1)
-            setDefaultPref(engine, shouldUseCookieBannerPrivateModeGeckoPref, 1)
-        } else {
-            setUserPref(engine, shouldUseCookieBannerPrivateModeGeckoPref, 0)
-            setDefaultPref(engine, shouldUseCookieBannerPrivateModeGeckoPref, 0)
-
-            setUserPref(engine, shouldUseCookieBannerPrivateModeGeckoViewModifiedPref, true)
-            setDefaultPref(engine, shouldUseCookieBannerPrivateModeGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setShouldUseTrackingProtectionDatabase(context: Context, engine: Engine) {
-        val shouldUseTrackingProtectionDatabase = context.settings().shouldShowTrackingProtectionDashboard
-        val shouldUseTrackingProtectionDatabaseGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.browser.contentblocking.database.enabled.value"
-        val shouldUseTrackingProtectionDatabaseGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.browser.contentblocking.database.enabled.value.modified"
-        val shouldUseTrackingProtectionDatabaseGeckoPref = "browser.contentblocking.database.enabled"
-        setUserPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewPref, shouldUseTrackingProtectionDatabase)
-        setDefaultPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewPref, shouldUseTrackingProtectionDatabase)
-        setUserPref(engine, shouldUseTrackingProtectionDatabaseGeckoPref, shouldUseTrackingProtectionDatabase)
-        setDefaultPref(engine, shouldUseTrackingProtectionDatabaseGeckoPref, shouldUseTrackingProtectionDatabase)
-
-        if (!shouldUseTrackingProtectionDatabase) {
-            setUserPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewModifiedPref, true)
-            setDefaultPref(engine, shouldUseTrackingProtectionDatabaseGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setStrictAllowListBaselineTrackingProtection(context: Context, engine: Engine) {
-        val strictAllowListBaselineTrackingProtection = context.settings().strictAllowListBaselineTrackingProtection
-        val strictAllowListBaselineTrackingProtectionGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.privacy.trackingprotection.allow_list.baseline.enabled.value"
-        val strictAllowListBaselineTrackingProtectionGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.privacy.trackingprotection.allow_list.baseline.enabled.value.modified"
-        val strictAllowListBaselineTrackingProtectionGeckoPref = "privacy.trackingprotection.allow_list.baseline.enabled"
-        setUserPref(engine, strictAllowListBaselineTrackingProtectionGeckoViewPref, strictAllowListBaselineTrackingProtection)
-        setDefaultPref(engine, strictAllowListBaselineTrackingProtectionGeckoViewPref, strictAllowListBaselineTrackingProtection)
-        setUserPref(engine, strictAllowListBaselineTrackingProtectionGeckoPref, strictAllowListBaselineTrackingProtection)
-        setDefaultPref(engine, strictAllowListBaselineTrackingProtectionGeckoPref, strictAllowListBaselineTrackingProtection)
-
-        if (!strictAllowListBaselineTrackingProtection) {
-            setUserPref(engine, strictAllowListBaselineTrackingProtectionGeckoViewModifiedPref, true)
-            setDefaultPref(engine, strictAllowListBaselineTrackingProtectionGeckoViewModifiedPref, true)
-        }
-    }
-
-    fun setStrictAllowListConvenienceTrackingProtection(context: Context, engine: Engine) {
-        val strictAllowListConvenienceTrackingProtection = context.settings().strictAllowListConvenienceTrackingProtection
-        val strictAllowListConvenienceTrackingProtectionGeckoViewPref = "browser.ironfox.geckoRuntimeSettings.privacy.trackingprotection.allow_list.convenience.enabled.value"
-        val strictAllowListConvenienceTrackingProtectionGeckoViewModifiedPref = "browser.ironfox.geckoRuntimeSettings.privacy.trackingprotection.allow_list.convenience.enabled.value.modified"
-        val strictAllowListConvenienceTrackingProtectionGeckoPref = "privacy.trackingprotection.allow_list.convenience.enabled"
-        setUserPref(engine, strictAllowListConvenienceTrackingProtectionGeckoViewPref, strictAllowListConvenienceTrackingProtection)
-        setDefaultPref(engine, strictAllowListConvenienceTrackingProtectionGeckoViewPref, strictAllowListConvenienceTrackingProtection)
-        setUserPref(engine, strictAllowListConvenienceTrackingProtectionGeckoPref, strictAllowListConvenienceTrackingProtection)
-        setDefaultPref(engine, strictAllowListConvenienceTrackingProtectionGeckoPref, strictAllowListConvenienceTrackingProtection)
-
-        if (strictAllowListConvenienceTrackingProtection) {
-            setUserPref(engine, strictAllowListConvenienceTrackingProtectionGeckoViewModifiedPref, true)
-            setDefaultPref(engine, strictAllowListConvenienceTrackingProtectionGeckoViewModifiedPref, true)
-        }
+        setDefaultPref(engine, "signon.rememberSignons", passwordManagerEnabled)
     }
 }
 

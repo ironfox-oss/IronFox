@@ -1,18 +1,26 @@
 diff --git a/toolkit/components/extensions/parent/ext-storage.js b/toolkit/components/extensions/parent/ext-storage.js
-index 0d6109c25019..7fa191ecab94 100644
+index 0d6109c25019c..d350ffeb608ad 100644
 --- a/toolkit/components/extensions/parent/ext-storage.js
 +++ b/toolkit/components/extensions/parent/ext-storage.js
-@@ -411,6 +411,46 @@ this.storage = class extends ExtensionAPIPersistent {
+@@ -10,6 +10,7 @@ ChromeUtils.defineESModuleGetters(this, {
+   ExtensionStorageIDB: "resource://gre/modules/ExtensionStorageIDB.sys.mjs",
+   NativeManifests: "resource://gre/modules/NativeManifests.sys.mjs",
+   extensionStorageSession: "resource://gre/modules/ExtensionStorage.sys.mjs",
++  IFPrefUtils:             "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+ });
+ 
+ var { ExtensionError } = ExtensionUtils;
+@@ -411,6 +412,46 @@ this.storage = class extends ExtensionAPIPersistent {
          managed: {
            async get(keys) {
              enforceNoTemporaryAddon(extension.id);
-+            const assetsBootstrapLocation = Services.prefs.getStringPref("browser.ironfox.uBO.assetsBootstrapLocation");
-+            const autoCommentFilterTemplate = Services.prefs.getStringPref("browser.ironfox.uBO.autoCommentFilterTemplate");
-+            const autoUpdateDelayAfterLaunch = Services.prefs.getStringPref("browser.ironfox.uBO.autoUpdateDelayAfterLaunch");
-+            const disableWebAssembly = Services.prefs.getStringPref("browser.ironfox.uBO.disableWebAssembly");
-+            const filterAuthorMode = Services.prefs.getStringPref("browser.ironfox.uBO.filterAuthorMode");
-+            const uiPopupConfig = Services.prefs.getStringPref("browser.ironfox.uBO.uiPopupConfig");
-+            const updateAssetBypassBrowserCache = Services.prefs.getStringPref("browser.ironfox.uBO.updateAssetBypassBrowserCache");
++            const assetsBootstrapLocation = IFPrefUtils.getStringPref("browser.ironfox.uBO.assetsBootstrapLocation");
++            const autoCommentFilterTemplate = IFPrefUtils.getStringPref("browser.ironfox.uBO.autoCommentFilterTemplate");
++            const autoUpdateDelayAfterLaunch = IFPrefUtils.getStringPref("browser.ironfox.uBO.autoUpdateDelayAfterLaunch");
++            const disableWebAssembly = IFPrefUtils.getStringPref("browser.ironfox.uBO.disableWebAssembly");
++            const filterAuthorMode = IFPrefUtils.getStringPref("browser.ironfox.uBO.filterAuthorMode");
++            const uiPopupConfig = IFPrefUtils.getStringPref("browser.ironfox.uBO.uiPopupConfig");
++            const updateAssetBypassBrowserCache = IFPrefUtils.getStringPref("browser.ironfox.uBO.updateAssetBypassBrowserCache");
 +            if (extension.id == "uBlock0@raymondhill.net") {
 +              return {
 +                adminSettings: {

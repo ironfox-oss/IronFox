@@ -127,6 +127,20 @@ patches:
     effect: "Provides more control over build dependencies with fewer connections to Mozilla servers."
     category: "Build System"
 
+  - file: "gecko-pref-handling.patch"
+    name: "Gecko Pref Handling (Gecko)"
+    description: "Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix (Firefox for Android)'s UI settings."
+    reason: "To avoid bugs/unexpected behavior from UI settings not matching with related Gecko preferences, and to prevent from users from attempting to change these preferences directly from `about:config` (as doing so simply results in the pref resetting on the next browser launch)."
+    effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
+    category: "Build System"
+
+  - file: "geckoview-pref-handling.patch"
+    name: "Gecko Pref Handling (GeckoView)"
+    description: "Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix (Firefox for Android)'s UI settings."
+    reason: "To avoid bugs/unexpected behavior from UI settings not matching with related Gecko preferences, and to prevent from users from attempting to change these preferences directly from `about:config` (as doing so simply results in the pref resetting on the next browser launch)."
+    effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
+    category: "Build System"
+
   # Dependency
   - file: "a-c-liberate.patch"
     name: "Remove Unwanted Libraries (Android Components)"
@@ -756,13 +770,6 @@ patches:
     description: "Hide the no-op 'Remove' and 'Run in private browsing' toggles for built-in add-ons."
     reason: "To improve UX and prevent users from seeing/attempting to use toggles that do not work (The 'Run in private browsing' toggle simply immediately resets, and built-in add-ons are simply re-installed on the next launch if uninstalled with the 'Remove' toggle)."
     effect: "Users are provided with a cleaner UI and won't try to use toggles that do not work as expected."
-    category: "User Experience"
-
-  - file: "geckoview-lock-runtime-settings-prefs.patch"
-    name: "Lock GeckoRuntimeSettings Preferences."
-    description: "Locks Gecko preferences controlled by GeckoRuntimeSettings to ensure they stay in sync with Fenix (Firefox for Android)'s UI settings."
-    reason: "To avoid bugs/unexpected behavior from UI settings not matching with related Gecko preferences, and to prevent from users from attempting to change these preferences directly from `about:config` (as doing so simply results in the pref resetting on the next browser launch)."
-    effect: "Gecko preferences remain in sync with their corresponding UI setting(s), users are provided with a more stable browsing experience, and users can avoid having their preferences unintentionally reset (when set from `about:config` directly)."
     category: "User Experience"
 
   - file: "fenix-control-autofill-gecko.patch"

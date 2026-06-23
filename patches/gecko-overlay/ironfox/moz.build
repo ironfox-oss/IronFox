@@ -1,10 +1,11 @@
 
 DIRS += [
-    "about",
-    "dumps",
-    "enterprisepolicies",
-    "locales",
-    "prefs",
-    "themes/global",
-    "themes/mozapps",
+  "about",
+  "dumps",
+  "enterprisepolicies",
+  "locales",
+  "prefs",
+  "themes/global",
+  "themes/mozapps",
+  "utils",
 ]

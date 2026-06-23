@@ -70,18 +70,23 @@ index 4fe6aaa127d12..e166515c880a3 100644
        } else if (installPerm === Ci.nsIPermissionManager.DENY_ACTION) {
          // Block without prompt
 diff --git a/toolkit/mozapps/extensions/amContentHandler.sys.mjs b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
-index 3218d50512106..c791c5254ff95 100644
+index 3218d50512106..e64ef8a250fc8 100644
 --- a/toolkit/mozapps/extensions/amContentHandler.sys.mjs
 +++ b/toolkit/mozapps/extensions/amContentHandler.sys.mjs
-@@ -6,6 +6,7 @@ const XPI_CONTENT_TYPE = "application/x-xpinstall";
+@@ -6,8 +6,12 @@ const XPI_CONTENT_TYPE = "application/x-xpinstall";
  const MSG_INSTALL_ADDON = "WebInstallerInstallAddonFromWebpage";
  
  import { XPCOMUtils } from "resource://gre/modules/XPCOMUtils.sys.mjs";
 +import { XPIExports } from "resource://gre/modules/addons/XPIExports.sys.mjs";
  
  const lazy = {};
++ChromeUtils.defineESModuleGetters(lazy, {
++  IFPrefUtils: "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
++});
  
-@@ -55,8 +56,6 @@ amContentHandler.prototype = {
+ XPCOMUtils.defineLazyServiceGetters(lazy, {
+   ThirdPartyUtil: ["@mozilla.org/thirdpartyutil;1", Ci.mozIThirdPartyUtil],
+@@ -55,8 +59,6 @@ amContentHandler.prototype = {
        throw error;
      }
  
@@ -90,7 +95,7 @@ index 3218d50512106..c791c5254ff95 100644
      let { loadInfo } = aRequest;
      const { triggeringPrincipal } = loadInfo;
  
-@@ -74,6 +73,19 @@ amContentHandler.prototype = {
+@@ -74,6 +76,19 @@ amContentHandler.prototype = {
        // an NS_ERROR_FAILURE when principal.host is accessed).
      }
  
@@ -99,7 +104,7 @@ index 3218d50512106..c791c5254ff95 100644
 +      triggeringPrincipal,
 +      XPIExports.XPIInternal.XPI_PERMISSION
 +    );
-+    if (Services.prefs.getBoolPref("xpinstall.enabled") !== false && installPerm == Ci.nsIPermissionManager.ALLOW_ACTION) {
++    if (lazy.IFPrefUtils.getBoolPref("xpinstall.enabled") && installPerm == Ci.nsIPermissionManager.ALLOW_ACTION) {
 +        aRequest.cancel(Cr.NS_BINDING_ABORTED);
 +    } else if (installPerm == Ci.nsIPermissionManager.DENY_ACTION) {
 +        throw Components.Exception("", Cr.NS_ERROR_WONT_HANDLE_CONTENT);
@@ -124,10 +129,18 @@ index 20d433329de61..927ee950f854a 100644
          {
              'cid': '{7beb3ba8-6ec3-41b4-b67c-da89b8518922}',
 diff --git a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-index aca68ee50a1e8..31cf747d2390c 100644
+index 256cb95fc1193..492f155ecac6b 100644
 --- a/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
 +++ b/toolkit/mozapps/extensions/internal/XPIDatabase.sys.mjs
-@@ -2275,10 +2275,14 @@ export const XPIDatabase = {
+@@ -29,6 +29,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   PermissionsUtils: "resource://gre/modules/PermissionsUtils.sys.mjs",
+   QuarantinedDomains: "resource://gre/modules/ExtensionPermissions.sys.mjs",
+   ExtensionPermissions: "resource://gre/modules/ExtensionPermissions.sys.mjs",
++  IFPrefUtils:          "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+ });
+ 
+ // A temporary hidden pref just meant to be used as a last resort, in case
+@@ -2283,10 +2284,14 @@ export const XPIDatabase = {
     * manager for the user to change later.
     */
    importPermissions() {
@@ -135,13 +148,13 @@ index aca68ee50a1e8..31cf747d2390c 100644
 -      PREF_XPI_PERMISSIONS_BRANCH,
 -      XPIExports.XPIInternal.XPI_PERMISSION
 -    );
-+    if (Services.prefs.getBoolPref("browser.ironfox.xpinstall.permsImported") !== true) {
++    if (!lazy.IFPrefUtils.getBoolPref("browser.ironfox.xpinstall.permsImported")) {
 +        Services.perms.removeByType("install");
 +        lazy.PermissionsUtils.importFromPrefs(
 +          PREF_XPI_PERMISSIONS_BRANCH,
 +          XPIExports.XPIInternal.XPI_PERMISSION
 +        );
-+        Services.prefs.setBoolPref("browser.ironfox.xpinstall.permsImported", true);
++        lazy.IFPrefUtils.setUserBoolPref("browser.ironfox.xpinstall.permsImported", true);
 +    };
    },
  

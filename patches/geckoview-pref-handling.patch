@@ -1,0 +1,104 @@
+diff --git a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
+index 2bf4ae1cc8fd2..99ec78b2ac046 100644
+--- a/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
++++ b/mobile/shared/components/geckoview/GeckoViewPreferences.sys.mjs
+@@ -7,6 +7,8 @@ import { GeckoViewUtils } from "resource://gre/modules/GeckoViewUtils.sys.mjs";
+ const lazy = {};
+ ChromeUtils.defineESModuleGetters(lazy, {
+   EventDispatcher: "resource://gre/modules/Messaging.sys.mjs",
++  GeckoSettingsBridge: "moz-src:///ironfox/utils/GeckoSettingsBridge.sys.mjs",
++  IFPrefUtils:         "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+ });
+ 
+ const { PREF_STRING, PREF_BOOL, PREF_INT } = Ci.nsIPrefBranch;
+@@ -45,7 +47,7 @@ export const GeckoViewPreferences = {
+         return;
+       }
+       case "GeckoView:Preferences:ClearPref": {
+-        Services.prefs.clearUserPref(aData.pref);
++        lazy.IFPrefUtils.clearPref(aData.pref);
+         aCallback.onSuccess();
+         break;
+       }
+@@ -101,15 +103,15 @@ export const GeckoViewPreferences = {
+       userValue: null,
+     };
+ 
+-    if (Services.prefs.prefHasDefaultValue(prefName)) {
+-      pref.defaultValue = this.readBranch(
+-        Services.prefs.getDefaultBranch(null),
++    if (lazy.IFPrefUtils.prefHasDefaultValue(prefName)) {
++      pref.defaultValue = lazy.IFPrefUtils.getDefaultPref(prefName);
++/*        Services.prefs.getDefaultBranch(null),
+         pref.type,
+         prefName
+-      );
++      ); */
+     }
+-    if (Services.prefs.prefHasUserValue(prefName)) {
+-      pref.userValue = this.readBranch(Services.prefs, pref.type, prefName);
++    if (lazy.IFPrefUtils.prefHasUserValue(prefName)) {
++      pref.userValue = lazy.IFPrefUtils.getUserPref(prefName);
+     }
+     return pref;
+   },
+@@ -131,15 +133,15 @@ export const GeckoViewPreferences = {
+     try {
+       switch (type) {
+         case PREF_STRING:
+-          branch.setStringPref(pref, value);
++          lazy.GeckoSettingsBridge.setStringPref(pref, value);
+           return true;
+ 
+         case PREF_BOOL:
+-          branch.setBoolPref(pref, value);
++          lazy.GeckoSettingsBridge.setBoolPref(pref, value);
+           return true;
+ 
+         case PREF_INT:
+-          branch.setIntPref(pref, value);
++          lazy.GeckoSettingsBridge.setIntPref(pref, value);
+           return true;
+ 
+         default:
+diff --git a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
+index 6996d0f77a2c5..e58be9c63d5b5 100644
+--- a/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
++++ b/mobile/shared/components/geckoview/GeckoViewStartup.sys.mjs
+@@ -15,6 +15,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+     "resource://gre/modules/NimbusGeckoViewQATelemetry.sys.mjs",
+   PdfJs: "resource://pdf.js/PdfJs.sys.mjs",
+   GeckoViewPreferences: "resource://gre/modules/GeckoViewPreferences.sys.mjs",
++  GeckoSettingsBridge:  "moz-src:///ironfox/utils/GeckoSettingsBridge.sys.mjs",
+ });
+ 
+ const { debug, warn } = GeckoViewUtils.initLogging("Startup");
+@@ -390,23 +391,23 @@ export class GeckoViewStartup {
+       }
+       case "GeckoView:ResetUserPrefs": {
+         for (const name of aData.names) {
+-          Services.prefs.clearUserPref(name);
++          lazy.GeckoSettingsBridge.initPref(name);
+         }
+         break;
+       }
+       case "GeckoView:SetDefaultPrefs": {
+-        const prefs = Services.prefs.getDefaultBranch("");
++//        const prefs = Services.prefs.getDefaultBranch("");
+         for (const [name, value] of Object.entries(aData)) {
+           try {
+             switch (typeof value) {
+               case "string":
+-                prefs.setStringPref(name, value);
++                lazy.GeckoSettingsBridge.setStringPref(name, value);
+                 break;
+               case "number":
+-                prefs.setIntPref(name, value);
++                lazy.GeckoSettingsBridge.setIntPref(name, value);
+                 break;
+               case "boolean":
+-                prefs.setBoolPref(name, value);
++                lazy.GeckoSettingsBridge.setBoolPref(name, value);
+                 break;
+               default:
+                 throw new Error(

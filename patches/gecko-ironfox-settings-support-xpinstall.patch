@@ -1,30 +1,38 @@
 diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
-index afd6d7b6fb49..8021693bdb12 100644
+index e612b78173584..e23ec87640457 100644
 --- a/browser/components/enterprisepolicies/Policies.sys.mjs
 +++ b/browser/components/enterprisepolicies/Policies.sys.mjs
-@@ -1826,8 +1826,8 @@ export var Policies = {
+@@ -31,6 +31,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   SearchService: "moz-src:///toolkit/components/search/SearchService.sys.mjs",
+   QuickSuggest: "moz-src:///browser/components/urlbar/QuickSuggest.sys.mjs",
+   WebsiteFilter: "resource:///modules/policies/WebsiteFilter.sys.mjs",
++  IFPrefUtils:   "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+ });
+ 
+ const PREF_LOGLEVEL = "browser.policies.loglevel";
+@@ -1954,8 +1955,8 @@ export var Policies = {
          addAllowDenyPermissions("install", param.Allow, null);
        }
        if ("Default" in param) {
 -        setAndLockPref("xpinstall.enabled", param.Default);
 -        if (!param.Default) {
 +//        setAndLockPref("xpinstall.enabled", param.Default);
-+        if (!Services.prefs.getBoolPref("browser.ironfox.xpinstall.enabled")) {
++        if (!lazy.IFPrefUtils.getBoolPref("browser.ironfox.xpinstall.enabled")) {
            manager.disallowFeature("installTemporaryAddon");
            setAndLockPref(
              "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index d7f1cafba23a..a8b7cd405b29 100644
+index 0d081a03a92d4..f81c6e95886cc 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -439,6 +439,12 @@ EnterprisePoliciesManager.prototype = {
+@@ -472,6 +472,12 @@ EnterprisePoliciesManager.prototype = {
  
    mayInstallAddon(addon) {
      // See https://dev.chromium.org/administrators/policy-list-3/extension-settings-full
-+    if (!Services.prefs.getBoolPref("browser.ironfox.onboardingCompleted") && addon.id === "uBlock0@raymondhill.net" && addon.type === "extension" && addon.isWebExtension && addon.sourceURI === "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi" && addon.name === "uBlock Origin" && addon.isCorrectlySigned && addon.providesUpdatesSecurely && addon.isCompatible && addon.isPlatformCompatible && addon.blocklistState === 0) {
++    if (!lazy.IFPrefUtils.getBoolPref("browser.ironfox.onboardingCompleted") && addon.id === "uBlock0@raymondhill.net" && addon.type === "extension" && addon.isWebExtension && addon.sourceURI === "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi" && addon.name === "uBlock Origin" && addon.isCorrectlySigned && addon.providesUpdatesSecurely && addon.isCompatible && addon.isPlatformCompatible && addon.blocklistState === 0) {
 +      return true;
 +    }
-+    if (!addon.inDatabase && !Services.prefs.getBoolPref("browser.ironfox.xpinstall.enabled")) {
++    if (!addon.inDatabase && !lazy.IFPrefUtils.getBoolPref("browser.ironfox.xpinstall.enabled")) {
 +      return false;
 +    }
      if (!ExtensionSettings) {

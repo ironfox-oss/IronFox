@@ -1,17 +1,21 @@
 diff --git a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-index d7f1cafba23a..f39858ebfe4b 100644
+index 0d081a03a92d4..a5c579bf7e9ef 100644
 --- a/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
 +++ b/toolkit/components/enterprisepolicies/EnterprisePoliciesParent.sys.mjs
-@@ -446,7 +446,11 @@ EnterprisePoliciesManager.prototype = {
+@@ -14,6 +14,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+   macOSPoliciesParser:
+     "resource://gre/modules/policies/macOSPoliciesParser.sys.mjs",
+   SitePolicyUtils: "resource://gre/modules/SitePolicyUtils.sys.mjs",
++  IFPrefUtils:     "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+ });
+ 
+ // This is the file that will be searched for in the
+@@ -479,7 +480,7 @@ EnterprisePoliciesManager.prototype = {
        if ("installation_mode" in ExtensionSettings[addon.id]) {
          switch (ExtensionSettings[addon.id].installation_mode) {
            case "blocked":
 -            return false;
-+            if (Services.prefs.getBoolPref("browser.ironfox.extensions.blocklist.enabled") === true) {
-+                return false;
-+            } else {
-+                return true;
-+            };
++            return !lazy.IFPrefUtils.getBoolPref("browser.ironfox.extensions.blocklist.enabled");
            default:
              return true;
          }

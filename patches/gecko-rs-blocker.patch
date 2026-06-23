@@ -41,27 +41,35 @@ index 8321c6cc97aea..d2e19db0698d7 100644
      const result = await lazy.RemoteSettingsWorker.importJSONDump(
        this.bucketName,
 diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
-index b6b61710c0c5..4e80b86f6126 100644
+index da12049e14b38..2adb23704f3cf 100644
 --- a/services/settings/Utils.sys.mjs
 +++ b/services/settings/Utils.sys.mjs
-@@ -75,6 +75,16 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURLOverride", () => {
+@@ -10,6 +10,7 @@ const lazy = {};
+ 
+ ChromeUtils.defineESModuleGetters(lazy, {
+   SharedUtils: "resource://services-settings/SharedUtils.sys.mjs",
++  IFPrefUtils: "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
+ });
+ 
+ XPCOMUtils.defineLazyServiceGetter(
+@@ -77,6 +78,16 @@ ChromeUtils.defineLazyGetter(lazy, "allowServerURL", () => {
    return false;
  });
  
 +ChromeUtils.defineLazyGetter(lazy, "allowedCollections", () =>
-+  Services.prefs
++  lazy.IFPrefUtils
 +    .getStringPref("browser.ironfox.services.settings.allowedCollections")
 +    .split(",")
 +);
 +ChromeUtils.defineLazyGetter(lazy, "allowedCollectionsFromDump", () =>
-+  Services.prefs
++  lazy.IFPrefUtils
 +    .getStringPref("browser.ironfox.services.settings.allowedCollectionsFromDump")
 +    .split(",")
 +);
  XPCOMUtils.defineLazyPreferenceGetter(
    lazy,
    "gServerURL",
-@@ -210,6 +220,72 @@ export var Utils = {
+@@ -221,6 +232,72 @@ export var Utils = {
      return false;
    },
  
@@ -134,7 +142,7 @@ index b6b61710c0c5..4e80b86f6126 100644
    /**
     * A wrapper around `ServiceRequest` that behaves like `fetch()`.
     *
-@@ -489,7 +565,9 @@ export var Utils = {
+@@ -500,7 +577,9 @@ export var Utils = {
      }
  
      return {
@@ -142,6 +150,6 @@ index b6b61710c0c5..4e80b86f6126 100644
 +      changes: changes.filter(change =>
 +        this.isCollectionAllowed(change.bucket, change.collection)
 +      ),
-       currentEtag: `"${timestamp}"`,
+       timestamp,
        serverTimeMillis,
        backoffSeconds,

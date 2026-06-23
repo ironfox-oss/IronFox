@@ -21,15 +21,32 @@ index 2d70647d0e59e..fc0d5c015e749 100644
      }
  
 diff --git a/devtools/server/actors/webconsole/listeners/console-api.js b/devtools/server/actors/webconsole/listeners/console-api.js
-index cdf6a841a8dec..d8dfc0fd4edf3 100644
+index cdf6a841a8dec..db60f1945516a 100644
 --- a/devtools/server/actors/webconsole/listeners/console-api.js
 +++ b/devtools/server/actors/webconsole/listeners/console-api.js
-@@ -98,7 +98,8 @@ class ConsoleAPIListener {
+@@ -4,6 +4,16 @@
+ 
+ "use strict";
+ 
++const lazy = {};
++ChromeUtils.defineESModuleGetters(
++  lazy,
++  {
++    IFPrefUtils:
++      "moz-src:///ironfox/utils/IFPrefUtils.sys.mjs",
++  },
++  { global: "contextual" }
++);
++
+ const {
+   CONSOLE_WORKER_IDS,
+   WebConsoleUtils,
+@@ -98,7 +108,8 @@ class ConsoleAPIListener {
     *        The message object receives from the ConsoleAPIStorage service.
     */
    onConsoleAPILogEvent(message) {
 -    if (!this.handler) {
-+    let disableConsole = Services.prefs.getBoolPref("browser.ironfox.devtools.console.logging_disabled");
++    let disableConsole = lazy.IFPrefUtils.getBoolPref("browser.ironfox.devtools.console.logging_disabled");
 +    if (!this.handler || disableConsole) {
        return;
      }

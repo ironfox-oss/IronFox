@@ -1,16 +1,16 @@
 
 DIRS += [
-    "browser",
+  "browser",
 ]
 
 JAR_MANIFESTS += [
-    "jar.mn",
+  "jar.mn",
 ]
 
 MOZ_SRC_FILES += [
-    "IronFoxAboutPages.sys.mjs",
+  "IronFoxAboutPages.sys.mjs",
 ]
 
 XPCOM_MANIFESTS += [
-    "components.conf",
+  "components.conf",
 ]
