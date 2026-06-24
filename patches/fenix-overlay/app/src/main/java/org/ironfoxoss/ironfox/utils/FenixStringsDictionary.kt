@@ -21,7 +21,7 @@ object FenixStringsDictionary {
     val onboardingActionRetry = R.string.onboarding_action_retry
     val onboardingInstallingUBlock = R.string.onboarding_state_installing_ublock
     val onboardingInstallingUBlockError = R.string.onboarding_state_installing_ublock_error
-    val onboardingSaveAndContinue = R.string.onboarding_save_and_continue_button
+    val onboardingSaveAndContinue = R.string.nova_onboarding_continue_button
     val quitApplication = R.string.quit_application
     val unifiedPushModified = R.string.toast_change_unifiedpush_done
     val unifiedPushPreference = R.string.preferences_unifiedpush

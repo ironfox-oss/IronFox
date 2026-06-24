@@ -452,7 +452,6 @@ function prepare_fenix() {
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_normal.webp"
     rm -v "${IRONFOX_FENIX}/app/src/main/res/drawable-xxxhdpi/ic_logo_wordmark_private.webp"
     "${IRONFOX_SED}" -i -e 's|R.drawable.microsurvey_success|R.drawable.fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/microsurvey/ui/MicrosurveyCompleted.kt"
-    "${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/redesign/view/OnboardingScreenRedesign.kt"
     "${IRONFOX_SED}" -i -e 's|R.drawable.ic_onboarding_sync|R.drawable.fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/src/main/java/org/mozilla/fenix/onboarding/view/OnboardingScreen.kt"
     "${IRONFOX_SED}" -i -e 's|ic_onboarding_search_widget|fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/onboarding.fml.yaml"
     "${IRONFOX_SED}" -i -e 's|ic_onboarding_sync|fox_alert_crash_dark|' "${IRONFOX_FENIX}/app/onboarding.fml.yaml"

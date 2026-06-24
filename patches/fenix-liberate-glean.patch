@@ -1,4 +1,4 @@
-From a13d7c49f573202cdb582edb8fb044e894359c64 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: celenity <celenity@celenity.dev>
 Date: Tue, 17 Feb 2026 03:58:09 +0000
 Subject: [PATCH] fix: Disable and remove integration with the Mozilla Glean
@@ -6,22 +6,6 @@ Subject: [PATCH] fix: Disable and remove integration with the Mozilla Glean
 
 Signed-off-by: celenity <celenity@celenity.dev>
 ---
- mobile/android/fenix/app/nimbus.fml.yaml      | 80 +++++++++----------
- .../org/mozilla/fenix/FenixApplication.kt     | 46 +++++------
- .../java/org/mozilla/fenix/HomeActivity.kt    | 42 +++++-----
- .../fenix/components/BackgroundServices.kt    | 26 +++---
- .../GleanDebugToolsFragment.kt                |  6 +-
- .../gleandebugtools/GleanDebugToolsStorage.kt | 10 +--
- .../navigation/DebugDrawerRoute.kt            |  8 +-
- .../store/DebugDrawerNavigationMiddleware.kt  |  2 +-
- .../fenix/debugsettings/ui/FenixOverlay.kt    |  6 +-
- .../search/BrowserToolbarSearchMiddleware.kt  |  4 +-
- .../fenix/settings/SecretSettingsFragment.kt  |  2 +-
- .../settings/TrackingProtectionFragment.kt    |  2 +-
- .../sitepermissions/SiteSettingsFragment.kt   |  2 +-
- .../java/org/mozilla/fenix/utils/Settings.kt  |  4 +-
- 14 files changed, 122 insertions(+), 122 deletions(-)
-
 diff --git a/mobile/android/fenix/.buildconfig.yml b/mobile/android/fenix/.buildconfig.yml
 index e23ec109a522..e80f83ecccbe 100644
 --- a/mobile/android/fenix/.buildconfig.yml
@@ -542,10 +526,10 @@ index a23df32558b2..32320d4715b5 100644
      }
  }
 diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-index 47b6d4676695..272ae32583ee 100644
+index a8a997445c27..148e12916400 100644
 --- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
 +++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/onboarding/OnboardingFragment.kt
-@@ -35,16 +35,16 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
+@@ -34,16 +34,16 @@ import mozilla.components.support.base.feature.ViewBoundFeatureWrapper
  import mozilla.components.support.base.log.logger.Logger
  import mozilla.components.support.utils.Browsers
  import mozilla.components.support.utils.BuildManufacturerChecker
@@ -565,19 +549,19 @@ index 47b6d4676695..272ae32583ee 100644
  import org.mozilla.fenix.ext.application
  import org.mozilla.fenix.ext.components
  import org.mozilla.fenix.ext.hideToolbar
-@@ -80,9 +80,9 @@ class OnboardingFragment : Fragment() {
+@@ -76,9 +76,9 @@ class OnboardingFragment : Fragment() {
  
      private val removeMarketingFeature = ViewBoundFeatureWrapper<MarketingPageRemovalSupport>()
  
 -    private val rtamoAttributionHandler by lazy {
-+    /* private val rtamoAttributionHandler by lazy {
++/*    private val rtamoAttributionHandler by lazy {
          RtamoAttributionHandler(requireContext(), requireContext().settings(), requireComponents.addonsProvider)
 -    }
 +    } */
  
      private val termsOfServiceEventHandler by lazy {
          DefaultOnboardingTermsOfServiceEventHandler(
-@@ -117,10 +117,10 @@ class OnboardingFragment : Fragment() {
+@@ -111,10 +111,10 @@ class OnboardingFragment : Fragment() {
              } else {
                  OnboardingReason.NEW_USER
              },
@@ -591,7 +575,7 @@ index 47b6d4676695..272ae32583ee 100644
          )
      }
  
-@@ -466,7 +466,7 @@ class OnboardingFragment : Fragment() {
+@@ -331,7 +331,7 @@ class OnboardingFragment : Fragment() {
      }
  
      private fun startGlean() {
@@ -600,7 +584,7 @@ index 47b6d4676695..272ae32583ee 100644
          viewLifecycleOwner.lifecycleScope.launch {
              initializeGlean(
                  requireContext().applicationContext,
-@@ -490,7 +490,7 @@ class OnboardingFragment : Fragment() {
+@@ -355,7 +355,7 @@ class OnboardingFragment : Fragment() {
              isTelemetryEnabled = settings.isTelemetryEnabled,
              isMarketingTelemetryEnabled = false,
              isDailyUsagePingEnabled = settings.isDailyUsagePingEnabled,
@@ -676,5 +660,3 @@ index 83e0f40483b7..ccb3b68e9094 100644
      )
  
 -- 
-2.53.0
-

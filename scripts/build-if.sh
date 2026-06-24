@@ -2088,6 +2088,11 @@ function build_fenix() {
     # Configure Mach
     "${IRONFOX_MACH}" configure
 
+    # If it's not our first time building Fenix, clean Gradle to ensure our builds are fresh
+    if [[ -f "${IRONFOX_TEMP}/built-fenix" ]]; then
+        "${IRONFOX_MACH}" gradle -p mobile/android/fenix :app:clean
+    fi
+
     # Build Fenix
     "${IRONFOX_MACH}" gradle -p mobile/android/fenix assembleRelease
 
@@ -2162,6 +2167,10 @@ function build_fenix() {
     popd
 
     echo_green_text "SUCCESS: Built IronFox ${IRONFOX_VERSION}: ${IRONFOX_CHANNEL_PRETTY} (${IRONFOX_TARGET_PRETTY})"
+
+    if [[ ! -f "${IRONFOX_TEMP}/built-fenix" ]]; then
+        touch "${IRONFOX_TEMP}/built-fenix"
+    fi
 }
 
 # Prepare build environment...

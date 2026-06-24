@@ -2,18 +2,16 @@ package org.mozilla.fenix.onboarding.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import mozilla.components.compose.base.button.FilledButton
+import org.mozilla.fenix.onboarding.view.CONTENT_WEIGHT
+import org.mozilla.fenix.onboarding.view.TITLE_TOP_SPACER_WEIGHT
+import org.mozilla.fenix.onboarding.view.OnboardingPageState
 import org.mozilla.fenix.theme.FirefoxTheme
 
 /**
@@ -35,72 +36,71 @@ fun TermsOfServiceOnboardingPage(
     pageState: OnboardingPageState,
     eventHandler: Any?,
 ) {
-    Surface {
-        BoxWithConstraints(
-            modifier = Modifier.padding(horizontal = 16.dp),
+    Card(
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(if (!pageState.isSmallDevice) 6.dp else 0.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = if (pageState.isSmallDevice) 0.dp else 24.dp,
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            val boxWithConstraintsScope = this
+            val scrollState = rememberScrollState()
 
-            // Base
+            if (pageState.isSmallDevice) {
+                Spacer(modifier = Modifier.height(16.dp))
+            } else {
+                Spacer(modifier = Modifier.weight(TITLE_TOP_SPACER_WEIGHT))
+            }
+
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                    .weight(CONTENT_WEIGHT)
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Spacer(Modifier)
+                Header(pageState)
 
-                with(pageState) {
-                    // Main content group
-                    Column(
-                        modifier = Modifier
-                            .padding(vertical = 32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Image(
-                            painter = painterResource(id = imageRes),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .heightIn(max = imageHeight(boxWithConstraintsScope))
-                                .height(167.dp)
-                                .width(161.dp),
-                        )
+                Spacer(Modifier.weight(1f))
 
-                        Spacer(Modifier.height(24.dp))
-
-                        Text(
-                            text = title,
-                            textAlign = TextAlign.Center,
-                            style = FirefoxTheme.typography.headline5,
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-
-                        Text(
-                            text = description,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                            style = FirefoxTheme.typography.subtitle1,
-                        )
-                    }
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(bottom = 24.dp),
-                    ) {
-                        Spacer(Modifier.height(24.dp))
-
-                        FilledButton(
-                            text = primaryButton.text,
-                            modifier = Modifier
-                            .width(width = FirefoxTheme.layout.size.maxWidth.small),
-                            onClick = primaryButton.onClick,
-                        )
-                    }
-                }
+                Spacer(Modifier.height(26.dp))
             }
+
+            FilledButton(
+                text = pageState.primaryButton.text,
+                modifier = Modifier
+                    .width(width = FirefoxTheme.layout.size.maxWidth.small),
+                onClick = pageState.primaryButton.onClick,
+            )
         }
     }
+}
+
+@Composable
+private fun Header(pageState: OnboardingPageState) {
+    Image(
+        painter = painterResource(id = pageState.imageRes),
+        contentDescription = null,
+        modifier = Modifier
+            .height(IconSize.heightDp)
+            .width(IconSize.widthDp),
+    )
+
+    Spacer(Modifier.height(20.dp))
+
+    Text(
+        text = pageState.title,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.headlineMedium,
+    )
+
+    Spacer(Modifier.height(10.dp))
+}
+
+private object IconSize {
+    val heightDp = 167.dp
+    val widthDp = 161.dp
 }
