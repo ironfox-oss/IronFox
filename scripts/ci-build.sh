@@ -19,6 +19,9 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Include metrics helpers
+source "${IRONFOX_METRICS_LIB}"
+
 # Set-up target parameters
 readonly ci_target=$(echo "${1}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 
@@ -27,6 +30,9 @@ if [[ -z "${2+x}" ]]; then
 else
     readonly ci_project=$(echo "${2}" | "${IRONFOX_AWK}" '{print tolower($0)}')
 fi
+
+# Label all metrics from this job with the variant we're building
+export IRONFOX_METRICS_VARIANT="${ci_target}"
 
 # Function to compress our archives
 function compress_archives() {
@@ -50,4 +56,4 @@ readonly IRONFOX_CI_BUILD_FAILED
 export IRONFOX_CI_BUILD_FAILED
 
 # Compress our archives
-compress_archives
+ironfox_metric_measure compress compress_archives

@@ -25,6 +25,18 @@
     paths:
       # Jobs must specify the IRONFOX_JOB_ARTIFACT_NAME variable
       - $CI_PROJECT_DIR/artifacts/$IRONFOX_JOB_ARTIFACT_NAME.tar.xz
+      # Build metrics + rendered report (see scripts/metrics.sh + scripts/ci-report.sh)
+      - $CI_PROJECT_DIR/artifacts/metrics/
+    reports:
+      # Surfaces phase durations as a diff vs. the target branch in the MR widget
+      metrics: $CI_PROJECT_DIR/artifacts/metrics/metrics.txt
+
+# Always render a build report, even when the build fails.
+# NOTE: after_script does not run on job timeout/cancel - the metrics.jsonl is
+# written incrementally during the build, so a partial trail still survives those.
+.metrics_report: &metrics_report
+  after_script:
+    - bash scripts/ci-report.sh || true
 
 default:
   cache: []
@@ -182,7 +194,7 @@ build-geckoview:
     - echo "CI - Building GeckoView (${BUILD_VARIANT})..."
     - bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'geckoview'
     - echo "CI - Built GeckoView (${BUILD_VARIANT})."
-  <<: *compressed_artifact_output
+  <<: [*compressed_artifact_output, *metrics_report]
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never
@@ -222,8 +234,8 @@ build-fenix:
     - echo "CI - Building Fenix (${BUILD_VARIANT_PRETTY})..."
     - bash -x scripts/ci-build.sh "${BUILD_VARIANT}" 'fenix'
     - echo "CI - Built Fenix (${BUILD_VARIANT_PRETTY})."
-    
-  <<: *compressed_artifact_output
+
+  <<: [*compressed_artifact_output, *metrics_report]
   rules:
     - if: $CI_PROJECT_NAMESPACE != "ironfox-oss"
       when: never

@@ -208,6 +208,31 @@ fi
 readonly IRONFOX_LOG_DIR
 export IRONFOX_LOG_DIR
 
+# Metrics
+
+## IronFox metrics library
+readonly IRONFOX_METRICS_LIB="${IRONFOX_SCRIPTS}/metrics.sh"
+export IRONFOX_METRICS_LIB
+
+## Should we collect build metrics? (Default)
+## This is the kill-switch for all metrics collection (see metrics.sh)
+readonly IRONFOX_METRICS_ENABLED_DEFAULT=1
+if [[ -z "${IRONFOX_METRICS_ENABLED+x}" ]]; then
+    IRONFOX_METRICS_ENABLED="${IRONFOX_METRICS_ENABLED_DEFAULT}"
+fi
+readonly IRONFOX_METRICS_ENABLED
+export IRONFOX_METRICS_ENABLED
+
+## Directory where we should store collected metrics + rendered reports
+## NOTE: This MUST live outside the source tree (ex. external/gecko) so that
+## metrics collection can never affect patch application or reproducibility
+readonly IRONFOX_METRICS_DIR_DEFAULT="${IRONFOX_BUILD}/metrics"
+if [[ -z "${IRONFOX_METRICS_DIR+x}" ]]; then
+    IRONFOX_METRICS_DIR="${IRONFOX_METRICS_DIR_DEFAULT}"
+fi
+readonly IRONFOX_METRICS_DIR
+export IRONFOX_METRICS_DIR
+
 # CI-specific build variables
 # These variables are set for CI primarily to allow parallel builds (for specific stages)
 readonly IRONFOX_CI_BUILD_GECKO_ARM64_DEFAULT=0

@@ -8,6 +8,9 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Include metrics helpers
+source "${IRONFOX_METRICS_LIB}"
+
 if [[ -z "${IRONFOX_FROM_SOURCES+x}" ]]; then
     echo_red_text "ERROR: Do not call get_sources-if.sh directly. Instead, use get_sources.sh." >&1
     exit 1
@@ -1633,142 +1636,62 @@ function get_wasi() {
     fi
 }
 
+# Run a single source-fetch step. When its flag is enabled, the step runs and its
+# wall-clock duration is recorded as a sub-task of the get_sources phase (see
+# metrics.sh). The order of the calls below is significant - some steps must run
+# before others (noted inline), so do not reorder them.
+function get_source_step() {
+    local readonly enabled="$1"
+    local readonly name="$2"
+    local readonly func="$3"
+    if [ "${enabled}" == 1 ]; then
+        ironfox_metric_measure "${name}" "${func}"
+    fi
+}
+
 # These need to run before we get androguard, glean_parser, gyp, PyYAML, and s3cmd
-if [[ "${IRONFOX_GET_SOURCE_PYTHON}" == 1 ]]; then
-    get_python
-fi
+get_source_step "${IRONFOX_GET_SOURCE_PYTHON}" python get_python
+get_source_step "${IRONFOX_GET_SOURCE_UV}" uv get_uv
 
-if [[ "${IRONFOX_GET_SOURCE_UV}" == 1 ]]; then
-    get_uv
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_ANDROGUARD}" == 1 ]]; then
-    get_androguard
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_ANDROID_NDK}" == 1 ]]; then
-    get_android_ndk
-fi
+get_source_step "${IRONFOX_GET_SOURCE_ANDROGUARD}" androguard get_androguard
+get_source_step "${IRONFOX_GET_SOURCE_ANDROID_NDK}" android-ndk get_android_ndk
 
 # This needs to run before we get the Android SDK
-if [[ "${IRONFOX_GET_SOURCE_JDK_25}" == 1 ]]; then
-    get_jdk_25
-fi
+get_source_step "${IRONFOX_GET_SOURCE_JDK_25}" jdk-25 get_jdk_25
 
-if [[ "${IRONFOX_GET_SOURCE_ANDROID_SDK}" == 1 ]]; then
-    get_android_sdk
-fi
+get_source_step "${IRONFOX_GET_SOURCE_ANDROID_SDK}" android-sdk get_android_sdk
+get_source_step "${IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS}" android-sdk-build-tools get_android_sdk_build_tools
+get_source_step "${IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35}" android-sdk-build-tools-35 get_android_sdk_build_tools_35
+get_source_step "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM}" android-sdk-platform get_android_sdk_platform
+get_source_step "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36}" android-sdk-platform-36 get_android_sdk_platform_36
+get_source_step "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS}" android-sdk-platform-tools get_android_sdk_platform_tools
 
-if [[ "${IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS}" == 1 ]]; then
-    get_android_sdk_build_tools
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_ANDROID_SDK_BUILD_TOOLS_35}" == 1 ]]; then
-    get_android_sdk_build_tools_35
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM}" == 1 ]]; then
-    get_android_sdk_platform
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_36}" == 1 ]]; then
-    get_android_sdk_platform_36
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_ANDROID_SDK_PLATFORM_TOOLS}" == 1 ]]; then
-    get_android_sdk_platform_tools
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_AS}" == 1 ]]; then
-    get_as
-fi
+get_source_step "${IRONFOX_GET_SOURCE_AS}" application-services get_as
 
 # This needs to run before we get cbindgen
-if [[ "${IRONFOX_GET_SOURCE_RUST}" == 1 ]]; then
-    get_rust
-fi
+get_source_step "${IRONFOX_GET_SOURCE_RUST}" rust get_rust
 
-if [[ "${IRONFOX_GET_SOURCE_CBINDGEN}" == 1 ]]; then
-    get_cbindgen
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_BUNDLETOOL}" == 1 ]]; then
-    get_bundletool
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_GECKO}" == 1 ]]; then
-    get_firefox
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_GECKO_L10N}" == 1 ]]; then
-    get_firefox_l10n
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_GLEAN}" == 1 ]]; then
-    get_glean
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_JDK_17}" == 1 ]]; then
-    get_jdk_17
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_JDK_21}" == 1 ]]; then
-    get_jdk_21
-fi
+get_source_step "${IRONFOX_GET_SOURCE_CBINDGEN}" cbindgen get_cbindgen
+get_source_step "${IRONFOX_GET_SOURCE_BUNDLETOOL}" bundletool get_bundletool
+get_source_step "${IRONFOX_GET_SOURCE_GECKO}" firefox get_firefox
+get_source_step "${IRONFOX_GET_SOURCE_GECKO_L10N}" firefox-l10n get_firefox_l10n
+get_source_step "${IRONFOX_GET_SOURCE_GLEAN}" glean get_glean
+get_source_step "${IRONFOX_GET_SOURCE_JDK_17}" jdk-17 get_jdk_17
+get_source_step "${IRONFOX_GET_SOURCE_JDK_21}" jdk-21 get_jdk_21
 
 # This needs to be run before we get glean_parser
-if [[ "${IRONFOX_GET_SOURCE_PIP}" == 1 ]]; then
-    get_pip
-fi
+get_source_step "${IRONFOX_GET_SOURCE_PIP}" pip get_pip
 
-if [[ "${IRONFOX_GET_SOURCE_GLEAN_PARSER}" == 1 ]]; then
-    get_glean_parser
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_GRADLE}" == 1 ]]; then
-    get_gradle
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_GYP}" == 1 ]]; then
-    get_gyp
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_MICROG}" == 1 ]]; then
-    get_microg
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_NODE}" == 1 ]]; then
-    get_node
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_NPM}" == 1 ]]; then
-    get_npm
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_PHOENIX}" == 1 ]]; then
-    get_phoenix
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_PREBUILDS}" == 1 ]]; then
-    get_prebuilds
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_PYYAML}" == 1 ]]; then
-    get_pyyaml
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_S3CMD}" == 1 ]]; then
-    get_s3cmd
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_UNIFFI}" == 1 ]]; then
-    get_uniffi
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_UP_AC}" == 1 ]]; then
-    get_up_ac
-fi
-
-if [[ "${IRONFOX_GET_SOURCE_WASI}" == 1 ]]; then
-    get_wasi
-fi
+get_source_step "${IRONFOX_GET_SOURCE_GLEAN_PARSER}" glean-parser get_glean_parser
+get_source_step "${IRONFOX_GET_SOURCE_GRADLE}" gradle get_gradle
+get_source_step "${IRONFOX_GET_SOURCE_GYP}" gyp get_gyp
+get_source_step "${IRONFOX_GET_SOURCE_MICROG}" microg get_microg
+get_source_step "${IRONFOX_GET_SOURCE_NODE}" node get_node
+get_source_step "${IRONFOX_GET_SOURCE_NPM}" npm get_npm
+get_source_step "${IRONFOX_GET_SOURCE_PHOENIX}" phoenix get_phoenix
+get_source_step "${IRONFOX_GET_SOURCE_PREBUILDS}" prebuilds get_prebuilds
+get_source_step "${IRONFOX_GET_SOURCE_PYYAML}" pyyaml get_pyyaml
+get_source_step "${IRONFOX_GET_SOURCE_S3CMD}" s3cmd get_s3cmd
+get_source_step "${IRONFOX_GET_SOURCE_UNIFFI}" uniffi get_uniffi
+get_source_step "${IRONFOX_GET_SOURCE_UP_AC}" unifiedpush-ac get_up_ac
+get_source_step "${IRONFOX_GET_SOURCE_WASI}" wasi get_wasi

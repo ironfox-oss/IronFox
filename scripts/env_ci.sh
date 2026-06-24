@@ -30,6 +30,11 @@ export IRONFOX_GECKOVIEW_BUNDLE_DIRECT=1
 # Log directory
 export IRONFOX_LOG_DIR="${IRONFOX_LOG_ARTIFACTS}"
 
+# Metrics directory
+## Stored under artifacts/ so the JSONL + rendered report are collected by CI
+## (even on failure) and so metrics.txt is reachable for `artifacts:reports:metrics`
+export IRONFOX_METRICS_DIR="${IRONFOX_ARTIFACTS}/metrics"
+
 # S3
 export IRONFOX_RELEASES_S3_ACCESS_KEY_FILE='/opt/IronFox/ironfox-releases-s3-access-key.txt'
 export IRONFOX_RELEASES_S3_BUCKET_NAME_FILE='/opt/IronFox/ironfox-releases-s3-bucket-name.txt'

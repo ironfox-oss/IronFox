@@ -28,6 +28,9 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Include metrics helpers
+source "${IRONFOX_METRICS_LIB}"
+
 if [[ -z "${IRONFOX_FROM_BUILD+x}" ]]; then
     echo_red_text 'ERROR: Do not call build-if.sh directly. Instead, use build.sh.' >&1
     exit 1
@@ -2279,32 +2282,32 @@ echo_green_text 'SUCCESS: Prepared build environment'
 
 # Build Phoenix
 if [[ "${IRONFOX_BUILD_PHOENIX}" == 1 ]]; then
-    build_phoenix
+    ironfox_metric_measure phoenix build_phoenix
 fi
 
 # Build Bundletool
 if [[ "${IRONFOX_BUILD_BUNDLETOOL}" == 1 ]]; then
-    build_bundletool
+    ironfox_metric_measure bundletool build_bundletool
 fi
 
 # Build microG
 if [[ "${IRONFOX_BUILD_MICROG}" == 1 ]]; then
-    build_microg
+    ironfox_metric_measure microg build_microg
 fi
 
 # Build LLVM
 if [[ "${IRONFOX_BUILD_LLVM}" == 1 ]]; then
-    build_llvm
+    ironfox_metric_measure llvm build_llvm
 fi
 
 # Build WASI SDK
 if [[ "${IRONFOX_BUILD_WASI}" == 1 ]]; then
-    build_wasi
+    ironfox_metric_measure wasi build_wasi
 fi
 
 # Build Gecko
 if [[ "${IRONFOX_BUILD_GECKO}" == 1 ]]; then
-    build_gecko
+    ironfox_metric_measure gecko build_gecko
 fi
 
 # If we're targetting a bundle, ensure `MOZ_ANDROID_FAT_AAR_ARCHITECTURES` is always set at this point
@@ -2316,7 +2319,7 @@ fi
 
 # Build GeckoView
 if [[ "${IRONFOX_BUILD_GECKOVIEW}" == 1 ]]; then
-    build_geckoview
+    ironfox_metric_measure geckoview build_geckoview
 fi
 
 # Ensure `MOZ_CHROME_MULTILOCALE` is always set at this point
@@ -2329,35 +2332,35 @@ export MOZ_CHROME_MULTILOCALE
 
 # Build Android Components (Core)
 if [[ "${IRONFOX_BUILD_AC_CORE}" == 1 ]]; then
-    build_ac_core
+    ironfox_metric_measure a-c-core build_ac_core
 fi
 
 # Build Application Services
 if [[ "${IRONFOX_BUILD_AS}" == 1 ]]; then
-    build_as
+    ironfox_metric_measure application-services build_as
 fi
 
 # Build UnifiedPush-AC
 if [[ "${IRONFOX_BUILD_UP_AC}" == 1 ]]; then
-    build_up_ac
+    ironfox_metric_measure unifiedpush-ac build_up_ac
 fi
 
 # Build nimbus-fml
 if [[ "${IRONFOX_BUILD_NIMBUS_FML}" == 1 ]]; then
-    build_nimbus_fml
+    ironfox_metric_measure nimbus-fml build_nimbus_fml
 fi
 
 # Build Android Components
 if [[ "${IRONFOX_BUILD_AC}" == 1 ]]; then
-    build_ac
+    ironfox_metric_measure a-c build_ac
 fi
 
 # Build Glean
 if [[ "${IRONFOX_BUILD_GLEAN}" == 1 ]]; then
-    build_glean
+    ironfox_metric_measure glean build_glean
 fi
 
 # Build Fenix
 if [[ "${IRONFOX_BUILD_FENIX}" == 1 ]]; then
-    build_fenix
+    ironfox_metric_measure fenix build_fenix
 fi

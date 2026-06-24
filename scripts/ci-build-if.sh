@@ -14,6 +14,9 @@ source $(dirname $0)/env.sh
 # Include utilities
 source "${IRONFOX_UTILS}"
 
+# Include metrics helpers
+source "${IRONFOX_METRICS_LIB}"
+
 if [[ -z "${IRONFOX_FROM_CI_BUILD+x}" ]]; then
     echo_red_text 'ERROR: Do not call ci-build-if.sh directly. Instead, use ci-build.sh.' >&1
     exit 1
@@ -31,6 +34,9 @@ arm64|arm|x86_64|bundle)
 esac
 
 readonly ci_build_project="$2"
+
+# Label all metrics from this job with the variant we're building
+export IRONFOX_METRICS_VARIANT="${ci_build_arch}"
 
 # (For now, we only want to build Fenix and GeckoView directly from CI)
 case "${ci_build_project}" in
@@ -67,47 +73,53 @@ if [[ "${ci_build_arch}" == 'bundle' ]]; then
 fi
 
 # Get sources
-if [[ "${ci_build_project}" == 'geckoview' ]]; then
-    # If we're only building GeckoView, we don't need to download all sources
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'python'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'uv'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-ndk'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-25'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-build-tools'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-36'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-tools'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'rust'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'cbindgen'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'bundletool'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'firefox'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-17'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-21'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'gradle'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'gyp'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'microg'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'node'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'npm'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'phoenix'
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'wasi'
-else
-    bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
-fi
+function ci_get_sources() {
+    if [[ "${ci_build_project}" == 'geckoview' ]]; then
+        # If we're only building GeckoView, we don't need to download all sources
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'python'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'uv'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-ndk'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-25'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-build-tools'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-36'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'android-sdk-platform-tools'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'rust'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'cbindgen'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'bundletool'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'firefox'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-17'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'jdk-21'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'gradle'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'gyp'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'microg'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'node'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'npm'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'phoenix'
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh" 'wasi'
+    else
+        bash -x "${IRONFOX_SCRIPTS}/get_sources.sh"
+    fi
+}
+ironfox_metric_measure get_sources ci_get_sources
 
 # Prepare sources
-if [[ "${ci_build_project}" == 'geckoview' ]]; then
-    # If we're only building GeckoView, we don't need to prepare all sources
-    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'firefox'
-    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'android-sdk'
-    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'microg'
-    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'rust'
-else
-    bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
-fi
+function ci_prebuild() {
+    if [[ "${ci_build_project}" == 'geckoview' ]]; then
+        # If we're only building GeckoView, we don't need to prepare all sources
+        bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'firefox'
+        bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'android-sdk'
+        bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'microg'
+        bash -x "${IRONFOX_SCRIPTS}/prebuild.sh" 'rust'
+    else
+        bash -x "${IRONFOX_SCRIPTS}/prebuild.sh"
+    fi
+}
+ironfox_metric_measure prebuild ci_prebuild
 
 # Build
-bash -x "${IRONFOX_SCRIPTS}/build.sh" "${ci_build_arch}" "${ci_build_project}"
+ironfox_metric_measure build bash -x "${IRONFOX_SCRIPTS}/build.sh" "${ci_build_arch}" "${ci_build_project}"
 
 # Copy our GeckoView AAR archives to the artifacts directory for publishing
 if [[ "${ci_build_project}" == 'geckoview' ]]; then
