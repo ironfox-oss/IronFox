@@ -1947,11 +1947,14 @@ function _build_gecko() {
             exit 1
         fi
 
-        readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+        if [[ -z "${MOZ_ANDROID_FAT_AAR_ARCHITECTURES+x}" ]]; then
+            readonly MOZ_ANDROID_FAT_AAR_ARCHITECTURES='arm64-v8a,armeabi-v7a,x86_64'
+            export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+        fi
+
         readonly MOZ_ANDROID_FAT_AAR_ARM64_V8A="${IRONFOX_GECKOVIEW_AAR_ARM64}"
         readonly MOZ_ANDROID_FAT_AAR_ARMEABI_V7A="${IRONFOX_GECKOVIEW_AAR_ARM}"
         readonly MOZ_ANDROID_FAT_AAR_X86_64="${IRONFOX_GECKOVIEW_AAR_X86_64}"
-        export MOZ_ANDROID_FAT_AAR_ARCHITECTURES
         export MOZ_ANDROID_FAT_AAR_ARM64_V8A
         export MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
         export MOZ_ANDROID_FAT_AAR_X86_64

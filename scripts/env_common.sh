@@ -1015,10 +1015,11 @@ export IRONFOX_SB_GAPI_KEY_FILE
 ## NOTE: For this to work: IRONFOX_GECKOVIEW_AAR_ARM64, IRONFOX_GECKOVIEW_AAR_ARM, and IRONFOX_GECKOVIEW_AAR_X86_64 must point
 ## to GeckoView AAR archives for ARM64, ARM, and x86_64 respectively
 ## In general, this is primarily meant for CI - avoid unless you know what you're doing
-readonly IRONFOX_GECKOVIEW_BUNDLE_DIRECT=0
+readonly IRONFOX_GECKOVIEW_BUNDLE_DIRECT_DEFAULT=0
 if [[ -z "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT+x}" ]]; then
     IRONFOX_GECKOVIEW_BUNDLE_DIRECT="${IRONFOX_GECKOVIEW_BUNDLE_DIRECT_DEFAULT}"
 fi
+readonly IRONFOX_GECKOVIEW_BUNDLE_DIRECT
 export IRONFOX_GECKOVIEW_BUNDLE_DIRECT
 
 # Version overrides
