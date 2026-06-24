@@ -1813,18 +1813,45 @@ function _build_geckoview() {
 }
 
 function build_geckoview() {
+    # Determine if we should build ARM64
+    local if_build_geckoview_arm64=0
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
+        local if_build_geckoview_arm64=1
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
+        local if_build_geckoview_arm64=1
+    fi
+    local readonly if_build_geckoview_arm64
+
+    # Determine if we should build ARM
+    local if_build_geckoview_arm=0
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]]; then
+        local if_build_geckoview_arm=1
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
+        local if_build_geckoview_arm=1
+    fi
+    local readonly if_build_geckoview_arm
+
+    # Determine if we should build x86_64
+    local if_build_geckoview_x86_64=0
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
+        local if_build_geckoview_x86_64=1
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
+        local if_build_geckoview_x86_64=1
+    fi
+    local readonly if_build_geckoview_x86_64
+
     # ARM64
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+    if [[ "${if_build_geckoview_arm64}" == 1 ]]; then
         _build_geckoview 'arm64'
     fi
 
     # ARM
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+    if [[ "${if_build_geckoview_arm}" == 1 ]]; then
         _build_geckoview 'arm'
     fi
 
     # x86_64
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+    if [[ "${if_build_geckoview_x86_64}" == 1 ]]; then
         _build_geckoview 'x86_64'
     fi
 
@@ -1872,11 +1899,15 @@ function _build_gecko() {
     unset IRONFOX_MACH_GECKO_STAGE
     unset IRONFOX_MACH_TARGET_ARCH
     unset IRONFOX_MACH_TARGET_PROJECT
-    unset MOZ_ANDROID_FAT_AAR_ARCHITECTURES
     unset MOZ_ANDROID_FAT_AAR_ARM64_V8A
     unset MOZ_ANDROID_FAT_AAR_ARMEABI_V7A
     unset MOZ_ANDROID_FAT_AAR_X86_64
     unset MOZ_CHROME_MULTILOCALE
+
+    if [[ "${target_arch}" != 'bundle' ]]; then
+        # Ensure we don't try to unset this here if we're doing a bundle build, because build_geckoview calls and sets this directly
+        unset MOZ_ANDROID_FAT_AAR_ARCHITECTURES
+    fi
 
     # If we're producing a bundle, we need to prepare to assemble our fat AAR
     if [[ "${target_arch}" == 'bundle' ]]; then
@@ -1972,18 +2003,45 @@ function _build_gecko() {
 }
 
 function build_gecko() {
+    # Determine if we should build ARM64
+    local if_build_gecko_arm64=0
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]]; then
+        local if_build_gecko_arm64=1
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
+        local if_build_gecko_arm64=1
+    fi
+    local readonly if_build_gecko_arm64
+
+    # Determine if we should build ARM
+    local if_build_gecko_arm=0
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]]; then
+        local if_build_gecko_arm=1
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
+        local if_build_gecko_arm=1
+    fi
+    local readonly if_build_gecko_arm
+
+    # Determine if we should build x86_64
+    local if_build_gecko_x86_64=0
+    if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]]; then
+        local if_build_gecko_x86_64=1
+    elif [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]] && [[ "${IRONFOX_GECKOVIEW_BUNDLE_DIRECT}" != 1 ]]; then
+        local if_build_gecko_x86_64=1
+    fi
+    local readonly if_build_gecko_x86_64
+
     # ARM64
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+    if [[ "${if_build_gecko_arm64}" == 1 ]]; then
         _build_gecko 'arm64'
     fi
 
     # ARM
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'arm' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+    if [[ "${if_build_gecko_arm}" == 1 ]]; then
         _build_gecko 'arm'
     fi
 
     # x86_64
-    if [[ "${IRONFOX_TARGET_ARCH}" == 'x86_64' ]] || [[ "${IRONFOX_TARGET_ARCH}" == 'bundle' ]]; then
+    if [[ "${if_build_gecko_x86_64}" == 1 ]]; then
         _build_gecko 'x86_64'
     fi
 }
