@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: celenity <celenity@celenity.dev>
+Date: Wed, 24 Jun 2026 17:25:39 +0000
+Subject: [PATCH] feat: Disable loading/requesting fonts from Google Play Services (or the OEM)
+
+Prevents the browser from downloading and attempting to load emojis from Google Play Services (or the OEM), and instead
+includes them locally
+
+Reduces our reliance on/use of proprietary services, mitigates fingerprinting by ensuring our users always have a common set of
+emojis, and improves compatibility as well by ensuring that emojis are always available
+
+(For reference: https://developer.android.com/develop/ui/views/text-and-emoji/emoji2#support-bundled-fonts)
+
+Signed-off-by: celenity <celenity@celenity.dev>
+---
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+index 193d1ddabcdac..81dc3ca827870 100644
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -159,6 +159,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
+ androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "documentfile" }
+ androidx-drawerlayout = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayout" }
+ androidx-emoji2 = { module = "androidx.emoji2:emoji2", version.ref = "emoji2" }
++androidx-emoji2-bundled = { module = "androidx.emoji2:emoji2-bundled", version.ref = "emoji2" }
+ androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
+ androidx-fragment-compose = { module = "androidx.fragment:fragment-compose", version.ref = "fragment" }
+ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }
+diff --git a/mobile/android/fenix/app/build.gradle b/mobile/android/fenix/app/build.gradle
+index ad28bfb8c8ffd..8f8e64238dbd0 100644
+--- a/mobile/android/fenix/app/build.gradle
++++ b/mobile/android/fenix/app/build.gradle
+@@ -659,6 +659,7 @@ dependencies {
+     implementation libs.androidx.datastore
+     implementation libs.androidx.datastore.preferences
+     implementation libs.androidx.emoji2
++    implementation libs.androidx.emoji2.bundled
+     implementation libs.androidx.fragment
+     implementation libs.androidx.fragment.compose
+     implementation libs.androidx.lifecycle.common
+diff --git a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+index 7a166ddc83aae..e554eb0eb352f 100644
+--- a/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
++++ b/mobile/android/fenix/app/src/main/java/org/mozilla/fenix/FenixApplication.kt
+@@ -20,7 +20,7 @@ import androidx.compose.runtime.Composable
+ import androidx.core.app.NotificationManagerCompat
+ import androidx.core.content.getSystemService
+ import androidx.core.net.toUri
+-import androidx.emoji2.text.DefaultEmojiCompatConfig
++import androidx.emoji2.bundled.BundledEmojiCompatConfig
+ import androidx.emoji2.text.EmojiCompat
+ import androidx.lifecycle.ProcessLifecycleOwner
+ import androidx.work.Configuration.Builder
+@@ -1291,9 +1291,10 @@ open class FenixApplication : Application(), Provider, ThemeProvider {
+      * Defaults to [ioDispatcher].
+      */
+     private suspend fun initializeEmojiCompat(dispatcher: CoroutineDispatcher = ioDispatcher) {
+-        withContext(dispatcher) {
++        if (true) {
+             // If the device has no compatible provider (e.g. no Play Services), config will be null.
+-            val config = DefaultEmojiCompatConfig.create(applicationContext) ?: return@withContext
++            @Suppress("DEPRECATION")
++            val config = BundledEmojiCompatConfig(applicationContext)
+ 
+             config.setReplaceAll(true)
+ 
+-- 

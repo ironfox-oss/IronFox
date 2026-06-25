@@ -247,6 +247,15 @@ patches:
     effect: "Improves privacy and freedom for users, by avoiding the use of Google Play Services."
     category: "Dependency"
 
+  - file: "fenix-disable-gms-fonts.patch"
+    name: "Disable loading fonts from Google Play Services (or the OEM)"
+    description: |
+      Prevents the browser from attempting to download/request fonts from Google Play Services (or the OEM), and instead
+      includes the necessary fonts locally.
+    reason: "Avoids unnecessary/unwanted use of Google Play Services, mitigates fingerprinting, and improves compatibility."
+    effect: "Improves privacy and protects the freedom of users."
+    category: "Dependency"
+
   - file: "gecko-remove-clearkey.patch"
     name: "Remove Clear Key"
     description: "Removes the Clear Key CDM from Gecko."
