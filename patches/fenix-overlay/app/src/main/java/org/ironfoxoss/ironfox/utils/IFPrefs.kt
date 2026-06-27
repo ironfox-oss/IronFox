@@ -259,6 +259,12 @@ object IFPrefs {
     /// Set the default DoH provider to Mullvad (Base)
     prefs.setStringPref(R.string.pref_key_doh_default_provider_uri, "https://base.dns.mullvad.net/dns-query")
 
+    // Enable ETP Strict
+    prefs.setBoolPref(R.string.pref_key_tracking_protection, true) // [DEFAULT]
+    prefs.setBoolPref(R.string.pref_key_tracking_protection_custom_option, false)
+    prefs.setBoolPref(R.string.pref_key_tracking_protection_standard_option, false)
+    prefs.setBoolPref(R.string.pref_key_tracking_protection_strict_default, true)
+
     // Enable exceptions required to avoid major breakage by default
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_custom_allow_list_baseline, true) // [DEFAULT]
     prefs.setDefaultBoolPref(R.string.pref_key_tracking_protection_strict_allow_list_baseline, true) // [DEFAULT]
@@ -269,12 +275,6 @@ object IFPrefs {
     // Enable Global Privacy Control by default
     /// We effectively no-op this anyways (in favor of using the Gecko pref directly)
     prefs.setDefaultBoolPref(R.string.pref_key_privacy_enable_global_privacy_control, true)
-
-    // Enable ETP Strict
-    prefs.setBoolPref(R.string.pref_key_tracking_protection, true) // [DEFAULT]
-    prefs.setBoolPref(R.string.pref_key_tracking_protection_custom_option, false)
-    prefs.setBoolPref(R.string.pref_key_tracking_protection_standard_option, false)
-    prefs.setBoolPref(R.string.pref_key_tracking_protection_strict_default, true)
 
     // Enable HTTPS-Only Mode by default
     prefs.setDefaultBoolPref(R.string.pref_key_https_only, true)
